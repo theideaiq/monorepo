@@ -23,7 +23,7 @@ class context {
 	}
 	async reply (text, inline_keyboard) {
 		await axios.post(this.url('sendMessage'), {
-			chat_id: this.ctx.message.chat.id,
+			chat_id: this.ctx.chat.id,
 			text,
 			reply_markup: {inline_keyboard}
 			})	
