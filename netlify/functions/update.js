@@ -1,53 +1,27 @@
 import axios from 'axios'
-import {Markup, Telegram} from 'telegraf'
+import telegram from './shard.js'
 
-const token = process.env.TOKEN
+// const token = process.env.TOKEN
+const inlinecallback = (text, callback_data) => {text ,callback_data}
+const inlinelink = (text, url) => {text, url}
 
-const reply = (ctx) => {
-	await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, {
-		chat_id: JSON.parse(event.body).message.chat.id,
-		text: "I got your message!",
-		reply_markup: {
-			inline_keyboard : [
-				Markup.button.callback('text','te'),
-				Markup.button.callback('test','te')
-			]
-		}
-	});
-	return { statusCode: 200 };
-}
-const groups = (ctx) => {
 
-}
-
-bot.commands('pin', ctx => {
-
-})
 
 const handler = async (event) => {
 	// console.log("Received an update from Telegram!", event.body);
 	// "type" "private"
-	const ctx = JSON.parse(event.body)
-	reply(ctx)
+	const bot = telegram(event.body)
+	bot.commands('/start', ctx => {
 
-	// switch (ctx.entities.type) {
-	// 	case 'bot_command':
-	// 		commands(ctx)
-	// 		break;
-	// 	case 'message' && ctx.chat.type === 'private':
-	// 		privates(ctx)
-	// 		break;
-	// 	case 'message' && ctx.chat.type === 'group':
-	// 		groups(ctx)
-	// 		break;
-	// 	case 'callback_query':
-	// 		callback(ctx)
-	// 		break;
-	// 	case 'poll':
-	// 		polls(ctx)
-	// 		break;
-	// }
-	
+		ctx.reply('the new test',[
+			[inlinecallback('text','wip'),
+			inlinecallback('test','wip')],
+			[inlinecallback('a work in progress', 'wip')],
+			[inlinelink('the post office', 'https://post-iq.com/')]
+		])
+
+	})
+		
 	return { statusCode: 200 };
 }
 export default handler
