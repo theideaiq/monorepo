@@ -2,9 +2,6 @@ import axios from 'axios'
 import {Markup, Telegram} from 'telegraf'
 
 const token = process.env.TOKEN
-const bot = new Telegraf(token)
-
-
 
 const reply = (ctx) => {
 	await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -12,7 +9,8 @@ const reply = (ctx) => {
 		text: "I got your message!",
 		reply_markup: {
 			inline_keyboard : [
-				Markup.button.callback()
+				Markup.button.callback('text','te'),
+				Markup.button.callback('test','te')
 			]
 		}
 	});
@@ -30,7 +28,6 @@ const handler = async (event) => {
 	// console.log("Received an update from Telegram!", event.body);
 	// "type" "private"
 	const ctx = JSON.parse(event.body)
-	bot.sendMessage(ctx.from.id, 'text sent back')
 	reply(ctx)
 
 	// switch (ctx.entities.type) {
