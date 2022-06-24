@@ -65,7 +65,7 @@ class telegram {
 	async on (event, callback){
 		if (this.ctx.entities[0].type == event) await callback(new context(this.ctx))
 	}
-	async commands (command) {
+	async commands (command, callback) {
 		if (this.ctx.entities[0].type == "bot_command" && this.text == command)
 			await callback(new context(this.ctx))
 		return this;
