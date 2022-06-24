@@ -68,18 +68,18 @@ class telegram {
 	async on (event, callback){
 		if (this.ctx.entities[0].type == event) await callback(new context(this.ctx))
 	}
-	commands (command) {
+	async commands (command) {
 		if (this.ctx.entities[0].type == "bot_command" && this.text == command)
 			await callback(new context(this.ctx))
 		return this;
 	}
-	delete (chat_id, message_id) {
+	async delete (chat_id, message_id) {
 		await axios.post(this.url('deleteMessage'), {
 			chat_id,
 			message_id
 		})
 	}
-	forward (chat_id, from_chat_id, message_id, disable_notification) {
+	async forward (chat_id, from_chat_id, message_id, disable_notification) {
 		await axios.post(this.url('forwardMessage'), {
 			chat_id,
 			from_chat_id,
