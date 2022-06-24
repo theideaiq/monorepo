@@ -6,7 +6,7 @@ const bot = new Telegraf(token)
 
 
 
-const reply = (ctx) {
+const reply = (ctx) => {
 	await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, {
 		chat_id: JSON.parse(event.body).message.chat.id,
 		text: "I got your message!",
@@ -28,7 +28,7 @@ bot.commands('pin', ctx => {
 
 const handler = async (event) => {
 	// console.log("Received an update from Telegram!", event.body);
-	"type" "private"
+	// "type" "private"
 	const ctx = JSON.parse(event.body)
 	bot.sendMessage(ctx.from.id, 'text sent back')
 	reply(ctx)
