@@ -1,4 +1,3 @@
-
 class context {
 	constructor (ctx) {
 		this.ctx = ctx
@@ -25,9 +24,7 @@ class context {
 			chat_id: this.ctx.message.chat.id,
 			text,
 			reply_markup: {inline_keyboard}
-			})
-		
-		return { statusCode: 200 };
+			})	
 	}
 }
 
