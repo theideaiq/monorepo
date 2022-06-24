@@ -1,4 +1,3 @@
-import axios from 'axios'
 import {telegram} from './shard.js'
 
 // const token = process.env.TOKEN

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 class context {
 	constructor (ctx) {
 		this.ctx = ctx
