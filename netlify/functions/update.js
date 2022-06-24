@@ -7,7 +7,7 @@ const inlinelink = (text, url) => {text, url}
 
 
 const handler = async (event) => {
-	// console.log("Received an update from Telegram!", event.body);
+	console.log("Received an update from Telegram! \n", event.body);
 	// "type" "private"
 	const bot = new telegram(event.body)
 	bot.commands('/start', ctx => {
