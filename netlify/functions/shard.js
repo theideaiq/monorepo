@@ -86,4 +86,4 @@ class telegram {
 	}
 }
 
-export default telegram
+export  {telegram}

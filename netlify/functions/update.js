@@ -1,5 +1,5 @@
 import axios from 'axios'
-import telegram from './shard.js'
+import {telegram} from './shard.js'
 
 // const token = process.env.TOKEN
 const inlinecallback = (text, callback_data) => {text ,callback_data}
@@ -10,7 +10,7 @@ const inlinelink = (text, url) => {text, url}
 const handler = async (event) => {
 	// console.log("Received an update from Telegram!", event.body);
 	// "type" "private"
-	const bot = telegram(event.body)
+	const bot = new telegram(event.body)
 	bot.commands('/start', ctx => {
 
 		ctx.reply('the new test',[
