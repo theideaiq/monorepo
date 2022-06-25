@@ -1,5 +1,5 @@
 import { Telegraf, Markup } from 'telegraf'
-import {inlineKeyboard, columns} from './shard.js'
+import {inlineKeyboard, columns, pin} from './shard.js'
 
 const bot = new Telegraf(process.env.TOKEN)
 
@@ -17,9 +17,13 @@ bot.start(ctx => {
 	)
 })
 
-bot.command('/pin', ctx => bot.telegram.forwardMessage(ctx.from.id , -1001502247742, 231))
+bot.command('/pin', ctx => ctx.reply(pin))
+const questions = {'شنو ايلب': 'ايلب برت اينشتاين', 'whats a test': 'testicle'}
 
-bot.hears([/\bسجاد\b/, /\bفرخ\b/], ctx => ctx.deleteMessage(ctx.message.message_id))
+bot.hears([/\bسجاد\b/, /\bطحين\b/], ctx => ctx.deleteMessage(ctx.message.message_id)) //black listed words idk
+bot.hears(['شنو ايلب', 'whats a test'], ctx => {
+	ctx.reply(ctx.match[0])
+})
 
 
 exports.handler = async event => {
