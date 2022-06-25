@@ -24,8 +24,8 @@ class context {
 	async reply (text, inline_keyboard) {
 		await axios.post(this.url('sendMessage'), {
 			chat_id: this.ctx.chat.id,
-			text,
-			reply_markup: {inline_keyboard}
+			text : text ,
+			reply_markup: {inline_keyboard : inline_keyboard}
 			})	
 	}
 }
@@ -69,7 +69,7 @@ class telegram {
 		if (this.ctx.entities[0].type == event) await callback(new context(this.ctx))
 	}
 	async commands (command, callback) {
-		if (this.ctx.entities[0]?.type == "bot_command" && this.ctx.text == command)
+		if (this.ctx.entities && this.ctx.entities[0].type == "bot_command" && this.ctx.text == command)
 			await callback(new context(this.ctx))
 		return this;
 	}
