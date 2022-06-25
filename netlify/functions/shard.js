@@ -33,9 +33,10 @@ class context {
 
 class telegram {
 	constructor (ctx) {
-		this.ctx = JSON.parse(ctx).message
-		this.text = this.ctx.text
+		this.ctx = JSON.parse(ctx)
+		this.ctx =	('my_chat_member' in this.ctx)? this.ctx.my_chat_member : this.ctx.message
 		this.url = (api) => `https://api.telegram.org/bot${process.env.TOKEN}/${api}`
+		this.newMember = this.ctx?.new_chat_member
 	}
 	async sendMessage (text, chat_id, inline_keyboard) {
 		await axios.post(this.url('sendMessage'), {
@@ -52,7 +53,7 @@ class telegram {
 					await callback(new context(this.ctx))
 					break;
 				}
-				else if (str == this.text) {
+				else if (str == this.ctx.text) {
 					await callback(new context(this.ctx))
 					break;
 				}
@@ -60,7 +61,7 @@ class telegram {
 			
 		}
 		else if (words instanceof RegExp && str.test(this.test)) await callback(new context(this.ctx))
-		else if (words == this.text ) await callback(new context(this.ctx))
+		else if (words == this.ctx.text ) await callback(new context(this.ctx))
 
 		return this;
 	}
@@ -68,7 +69,7 @@ class telegram {
 		if (this.ctx.entities[0].type == event) await callback(new context(this.ctx))
 	}
 	async commands (command, callback) {
-		if (this.ctx.entities[0].type == "bot_command" && this.text == command)
+		if (this.ctx.entities[0].type == "bot_command" && this.ctx.text == command)
 			await callback(new context(this.ctx))
 		return this;
 	}
