@@ -17,7 +17,7 @@ bot.start(ctx => {
 	)
 })
 
-bot.commands('/pin', ctx => bot.telegram.forwardMessage(ctx.from.id , -1001502247742, 231))
+bot.command('/pin', ctx => bot.telegram.forwardMessage(ctx.from.id , -1001502247742, 231))
 
 bot.hears([/\bسجاد\b/, /\bفرخ\b/], ctx => ctx.deleteMessage(ctx.message.message_id))
 
