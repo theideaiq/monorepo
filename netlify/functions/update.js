@@ -61,12 +61,12 @@ bot.hears(texts, ctx => ctx.reply(replies[texts.indexOf(ctx.match[0])]))
 
 bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 
-// exports.handler = async event => {
-// 	try {
-// 	  await bot.handleUpdate(JSON.parse(event.body));
-// 	  return { statusCode: 200, body: '' };
-// 	} catch (e) {
-// 	  console.log(e)
-// 	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
-// 	}  
-// }
+exports.handler = async event => {
+	try {
+	  await bot.handleUpdate(JSON.parse(event.body));
+	  return { statusCode: 200, body: '' };
+	} catch (e) {
+	  console.log(e)
+	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
+	}  
+}
