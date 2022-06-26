@@ -1,3 +1,5 @@
+import { Markup } from 'telegraf'
+
 export const inlineKeyboard = (buttons) => {
 	return { reply_markup: {
 	   inline_keyboard: buttons

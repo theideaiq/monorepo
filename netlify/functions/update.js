@@ -1,5 +1,5 @@
 import { Telegraf, Markup } from 'telegraf'
-import { getQuery, newUser, pagiQuery, banned  } from './components/fauna.js'
+import { getQuery, newUser, pagiQuery  } from './components/fauna.js'
 import {indexOf2d, columns, pin, panel, regex} from './components/shard.js'
 
 const bot = new Telegraf(process.env.TOKEN)
@@ -46,22 +46,27 @@ bot.action('FAQsub', async ctx => {
 		ctx.reply(indexOf2d(FAQs, FAQ).array[1])
 	})
 })
-const blacklist = await getQuery('by_option', 'banned_words') 
-blacklist = blacklist.map(regex)
+let blacklist = await getQuery('by_option', 'banned_words')
+blacklist = blacklist.data.words.map(regex)
 bot.hears(blacklist, ctx => ctx.deleteMessage(ctx.message.message_id)) //black listed words idk
 
-const replies = await getQuery('by_option', 'replies')
-const texts = Object.keys(replies).map(regex)
-bot.hears(texts, ctx => ctx.reply(replies[ctx.match[0]]))
+let holder = await getQuery('by_option', 'replies')
+holder = holder.data.words
+const [texts, replies] = [[], []]
+for (const lst of holder) {
+	texts.push(lst[0])
+	replies.push(lst[1])
+}
+bot.hears(texts, ctx => ctx.reply(replies[texts.indexOf(ctx.match[0])]))
 
 bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 
-exports.handler = async event => {
-	try {
-	  await bot.handleUpdate(JSON.parse(event.body));
-	  return { statusCode: 200, body: '' };
-	} catch (e) {
-	  console.log(e)
-	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
-	}  
-}
+// exports.handler = async event => {
+// 	try {
+// 	  await bot.handleUpdate(JSON.parse(event.body));
+// 	  return { statusCode: 200, body: '' };
+// 	} catch (e) {
+// 	  console.log(e)
+// 	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
+// 	}  
+// }
