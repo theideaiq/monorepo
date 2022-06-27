@@ -31,13 +31,7 @@ export const newUser = async (name, username, id, signed_to_newsletter) => {
 	})				
 }
 export const User = async (data) => await Get(Match(Index("get_username"), data.username))
-// export const banned = async (id) => {
-// 	// updateQuery('by_id', id, (data) => {
-		
-// 	// }, {
-// 	// 	unban_request : true
-// 	// })
-// }
+
 export const newQuery = (Collection_name, cond, data) => {
 	return new Promise((res, rej) => {
 		if (cond(data)) 

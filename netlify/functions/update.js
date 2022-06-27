@@ -46,20 +46,42 @@ bot.action('FAQsub', async ctx => {
 		ctx.reply(indexOf2d(FAQs, FAQ).array[1])
 	})
 })
-let blacklist = await getQuery('by_option', 'banned_words')
-blacklist = blacklist.data.words.map(regex)
-bot.hears(blacklist, ctx => ctx.deleteMessage(ctx.message.message_id)) //black listed words idk
 
-let holder = await getQuery('by_option', 'replies')
-holder = holder.data.words
-const [texts, replies] = [[], []]
-for (const lst of holder) {
-	texts.push(lst[0])
-	replies.push(lst[1])
-}
-bot.hears(texts, ctx => ctx.reply(replies[texts.indexOf(ctx.match[0])]))
+getQuery('by_option', 'banned_words')
+.then(holder => {
+
+	bot.hears(
+		holder.data.words.map(regex)
+		, ctx => ctx.deleteMessage(ctx.message.message_id)
+		) //blacklisted words idk
+	
+}).catch(console.error)
+
+getQuery('by_option', 'replies')
+.then(holder => {
+
+	holder = holder.data.words
+	const [texts, replies] = [[], []]
+	for (const lst of holder) {
+		texts.push(lst[0])
+		replies.push(lst[1])
+	}
+	bot.hears(texts, ctx => ctx.reply(replies[texts.indexOf(ctx.match[0])]))
+	
+}).catch(console.error)
 
 bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
+
+bot.command('/ban', async ctx => {
+
+	const [__, username ] = ctx.update.meessage.text.split(' ')
+	const status =(await ctx.getChatMember(ctx.from.id)).status 
+	if ( status === 'administrator' || status === 'creator' ) {
+		const holder = await pagiQuery('by_username', username.slice(1))
+		ctx.banChatMember(holder[0])
+	} else ctx.reply("you ain't a playa", {reply_to_message_id : ctx.message.message_id})
+
+})
 
 exports.handler = async event => {
 	try {
