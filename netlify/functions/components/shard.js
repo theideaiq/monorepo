@@ -1,15 +1,4 @@
 import { Markup } from 'telegraf'
-
-export const inlineKeyboard = (buttons) => {
-	return { reply_markup: {
-	   inline_keyboard: buttons
-   }}
-}
-export const columns = (buttons) => {
-   return { reply_markup: {
-	   inline_keyboard: buttons.map(el =>[el])
-   }}
-}
 const link = (text, url) => `<a href='${url}'>${text}</a>`
 
 export const pin = `هذه اللستة رح تكون لستة الPins الدائمة لاهم المواضيع المنشورة بالقناة ورح نظل نحدثها، شفنا هذا الشيء افضل لتنظيم القناة وتسهيل الامر على الي ديبحثون على شيء معين:
@@ -83,31 +72,49 @@ ${link('لستة بالجامعات الامريكية الاكثر رغبة و�
 ${link('المصادر', 'https://t.me/thepostiq/261')}
 `
 
-export const regex = (line) => new RegExp ('\\b' +line+ '\\b') 
-
+const isArabic = str => /[\u0600-\u06FF\u0750-\u077F]/.test(str)
+export const regex = str => {
+	if (isArabic(str)){
+		return new RegExp(
+			'\(?<![\u0621-\u064A])'
+			+ str + 
+			'\(?![\u0621-\u064A])'
+		)
+	} else {
+		str = Array.from(str)
+		.map(lit => `[${lit.toUpperCase()+lit}]`)
+		.reduce((pre, curr) => pre + curr)
+		return new RegExp('\\b' +str+'\\b')
+	}
+	
+}
 export const panel = [
-	'What do you need from me',
-	inlineKeyboard([
+	'welcome to the post droid', // temp message will have a better one later i think
+	Markup.keyboard([
 		[
-			Markup.button.callback('Unban request', 'unbanReq'),
-			Markup.button.callback('FAQ page', 'main FAQ'),
+			"Unban request؜",
+			'FAQ page؜'
 		],
-		[Markup.button.callback('The post family links', 'postLinks')],
-		[Markup.button.url('The post website', 'https://post-iq.com/')] 
+		['The post family links؜']
 	])
+	.resize(true)
+	.placeholder('pick your pick')
 ]
 
-export const indexOf2d = (lst, key) => {
-	let id = [-1, -1]
-	let array
-	for (const [index, value] of lst.entries()){
-		id[1] = value.indexOf(key)
-		if ( id[1] === -1) continue;
-		else {
-			id[0] = index 
-			array = value
-			break
-		}
-	}
-	return {id, array}
+
+export const splitArray = (array) => {
+	const lst = [[],[]]
+	array.forEach(el => {
+		lst[0].push(el[0])	
+		lst[1].push	(el[1])
+	})
+	return lst
+}
+export const toUnicode = (string) => {
+	return Array.from(string).reverse()
+	.map(letter => {	
+		const hex = letter.codePointAt(0).toString(16);
+		return "0000".substring(0, 4 - hex.length) + hex;
+	})
+	.reduce((pre, curr) =>  pre += curr )
 }

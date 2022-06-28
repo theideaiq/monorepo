@@ -7,7 +7,7 @@ const client = new faunadb.Client({
 	domain: "db.eu.fauna.com",
 	scheme: 'https',
 });
-const {
+ const {
 	Paginate,
 	Get,
 	Match,
@@ -72,12 +72,21 @@ export const getQuery = (index, values) => {
 		).catch(err => rej(err))
 	})
 }
+
 export const pagiQuery = (index, ...values) => {
 	return new Promise((res, rej) => {
 		client.query(
 				Paginate(
 				  Match(Index(index), ...values)
 				)
+		).then(ret => res(ret.data)	
+		).catch(err => rej(err))
+	})
+}
+export const banned = username => {
+	return new Promise((res, rej) => {
+		client.query(
+
 		).then(ret => res(ret.data)	
 		).catch(err => rej(err))
 	})

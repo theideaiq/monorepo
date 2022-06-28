@@ -1,52 +1,79 @@
 import { Telegraf, Markup } from 'telegraf'
 import { getQuery, newUser, pagiQuery  } from './components/fauna.js'
-import {indexOf2d, columns, pin, panel, regex} from './components/shard.js'
+import { pin, panel, regex, splitArray, toUnicode } from './components/shard.js'
 
 const bot = new Telegraf(process.env.TOKEN)
 
 bot.start(async ctx => {
 
 	const {first_name, last_name, username, id} = ctx.from
-	newUser(first_name+last_name, username, true)
-
+	if (typeof username === "undefined") {
+		username = '$-' + first_name + (typeof last_name === 'undefined')? '': last_name 
+		username += '/' + toUnicode(username)
+	} 
+	newUser(first_name+' '+last_name, username, id, true)
 	ctx.reply(...panel)
-})
-const FAQsub = ['General', 'Education', 'Sources', 'About the post']
 
-bot.action('main FAQ', ctx => {
-	ctx.editMessageText(
-		'Ask your question',
-		columns(
-			FAQsub.map(sub => 
-				Markup.button.callback(sub, 'FAQsub')
-				)
-		),
-		{disable_notification : true}
-		)
-})
-bot.action('unbanReq', ctx => {
-	ctx.editMessageText(...panel, {disable_notification : true})
-	ctx.reply( (false)? 'you have been put in the queue': 'you are not banned', {disable_notification : true})
 })
 
-bot.action('FAQsub', async ctx => {
-	const sub = ctx.match[0]
-	const FAQs = await pagiQuery('by_subject', sub)
-	ctx.reply('pick your question',
-		columns(
-			FAQs.map(faq => 
-				Markup.button.callback(faq[0], 'FAQ message')
-				)
-		),
-		{disable_notification : true}
+const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
+bot.hears("Unban request؜", ctx => {
+	ctx.reply(
+		(false)? 
+			'you have been put in the queue': 
+			'you are not banned', {disable_notification : true})
+})
+bot.hears('FAQ page؜', ctx => {
+	ctx.editMessageReplyMarkup(
+		Markup.keyboard(
+			[
+				FAQsub.slice(0,2),
+				FAQsub.slice(2)
+			]
+		).resize(true)
+		.placeholder('pick your question')
 	)
-	bot.action('FAQ message', ctx => {
-		const FAQ = ctx.match[0]
-		ctx.editMessageText(...panel, {disable_notification : true})
-		ctx.reply(indexOf2d(FAQs, FAQ).array[1])
+})
+new Promise((res, rej) => {
+	bot.hears(FAQsub, async ctx => {
+		const [que, ans] = splitArray(await pagiQuery('by_subject', ctx.match[0].replace('؜', '')))
+		
+		ctx.editMessageReplyMarkup(
+			Markup.keyboard(		// currrow.length referce to the row we are in
+				que, {
+					wrap : (btn, index, currentRow) => currentRow.length >= (index + 1) / 2
+				}
+			).resize(true)
+			.placeholder('FAQs for you')
+		)
+		res([que, ans])
+	})
+}).then(([que, ans]) => {
+	bot.hears(que, ctx => {
+		ctx.deleteMessage(ctx.message.message_id)
+		ctx.editMessageReplyMarkup(panel[1])
+		ctx.reply(ans[que.indexOf(ctx.match[0])])
 	})
 })
 
+bot.hears('The post family links؜', ctx => {
+	ctx.deleteMessage(ctx.message.message_id)
+	ctx.reply('here you go', 
+		{ reply_markup: {
+			inline_keyboard: [
+				Markup.button.url('the post website', 'https://t.me/thepostiq'),
+				Markup.button.url('the post group', 'https://t.me/thepostofficeiq'),
+				Markup.button.url('art club group','https://t.me/artclub_iq'),
+				Markup.button.url('the post instagram','https://instagram.com/thepostiq'),
+				Markup.button.url("art club instagram",'https://instagram.com/artclubiq'),
+				Markup.button.url('the post linkedin','https://linkedin.com/company/thepostproject'),
+				Markup.button.url('the post facebook','https://web.facebook.com/thepostiq'),
+				Markup.button.url('the post twitter','https://twitter.com/thepostiq')
+			]
+		}}
+	)
+})
+// handling deleting banned words
 getQuery('by_option', 'banned_words')
 .then(holder => {
 
@@ -56,7 +83,7 @@ getQuery('by_option', 'banned_words')
 		) //blacklisted words idk
 	
 }).catch(console.error)
-
+// handling the question replies 
 getQuery('by_option', 'replies')
 .then(holder => {
 
@@ -74,7 +101,10 @@ bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 
 bot.command('/ban', async ctx => {
 
-	const [__, username ] = ctx.update.meessage.text.split(' ')
+	const [__, username ] = ctx.message.text.split(' ')
+	if (!/@/.test(username)) 
+		username = '@$-' + username + '/'+ toUnicode(username)
+
 	const status =(await ctx.getChatMember(ctx.from.id)).status 
 	if ( status === 'administrator' || status === 'creator' ) {
 		const holder = await pagiQuery('by_username', username.slice(1))
@@ -82,13 +112,12 @@ bot.command('/ban', async ctx => {
 	} else ctx.reply("you ain't a playa", {reply_to_message_id : ctx.message.message_id})
 
 })
-
-exports.handler = async event => {
-	try {
-	  await bot.handleUpdate(JSON.parse(event.body));
-	  return { statusCode: 200, body: '' };
-	} catch (e) {
-	  console.log(e)
-	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
-	}  
-}
+// exports.handler = async event => {
+// 	try {
+// 	  await bot.handleUpdate(JSON.parse(event.body));
+// 	  return { statusCode: 200, body: '' };
+// 	} catch (e) {
+// 	  console.log(e)
+// 	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
+// 	}  
+// }
