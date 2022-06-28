@@ -112,12 +112,12 @@ bot.command('/ban', async ctx => {
 	} else ctx.reply("you ain't a playa", {reply_to_message_id : ctx.message.message_id})
 
 })
-// exports.handler = async event => {
-// 	try {
-// 	  await bot.handleUpdate(JSON.parse(event.body));
-// 	  return { statusCode: 200, body: '' };
-// 	} catch (e) {
-// 	  console.log(e)
-// 	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
-// 	}  
-// }
+exports.handler = async event => {
+	try {
+	  await bot.handleUpdate(JSON.parse(event.body));
+	  return { statusCode: 200, body: '' };
+	} catch (e) {
+	  console.log(e)
+	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
+	}  
+}
