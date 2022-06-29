@@ -19,17 +19,12 @@ bot.start(async ctx => {
 const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
 
 bot.hears("Unban request؜", ctx => {
-		
+
 	ctx.deleteMessage(ctx.message.message_id)
-	ctx.reply('send a request message')
-	
-	// bot.on('message', ctx => {
-	// 	if (banreq(ctx.from.id, ctx.message.text)) {
-	// 		ctx.reply('you have been put in the queue', {disable_notification : true})
-	// 	}
-	// 	else ctx.reply('you are not banned', {disable_notification : true})
-	// 	bot.on(null)
-	// })
+		if (banreq(ctx.from.id)) {
+			ctx.reply('you have been put in the queue', {disable_notification : true})
+		}
+		else ctx.reply('you are not banned', {disable_notification : true})
 
 })
 
@@ -110,7 +105,7 @@ getQuery('by_option', 'replies')
 	bot.hears(texts, ctx => ctx.reply(replies[texts.indexOf(ctx.match[0])]))
 	
 }).catch(console.error)
-
+bot.on('chat_member', console.log)
 
 bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 bot.command('/ban', async ctx => {
