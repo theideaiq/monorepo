@@ -67,7 +67,6 @@ new Promise((res, rej) => {
 })
 
 bot.hears('The post family links؜', ctx => {
-	ctx.deleteMessage(ctx.message.message_id)
 	ctx.reply('here you go', 
 		{ reply_markup: {
 			inline_keyboard: [
@@ -79,9 +78,11 @@ bot.hears('The post family links؜', ctx => {
 				Markup.button.url('the post linkedin','https://linkedin.com/company/thepostproject'),
 				Markup.button.url('the post facebook','https://web.facebook.com/thepostiq'),
 				Markup.button.url('the post twitter','https://twitter.com/thepostiq')
-			]
+			].map(el => [el])
 		}}
 	)
+	ctx.deleteMessage(ctx.message.message_id)
+
 })
 // handling deleting banned words
 getQuery('by_option', 'banned_words')
@@ -89,7 +90,10 @@ getQuery('by_option', 'banned_words')
 
 	bot.hears(
 		holder.data.words.map(regex)
-		, ctx => ctx.deleteMessage(ctx.message.message_id)
+		, ctx => {
+			if (typeof ctx.message.photo != 'undefined') return;
+			ctx.deleteMessage(ctx.message.message_id)
+		}
 		) //blacklisted words idk
 	
 }).catch(console.error)
