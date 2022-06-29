@@ -1,7 +1,5 @@
 import faunadb from 'faunadb'
 
-
-
 const client = new faunadb.Client({ 
 	secret: process.env.FAUNA_KEY ,
 	domain: "db.eu.fauna.com",
@@ -18,7 +16,13 @@ const client = new faunadb.Client({
 	Call,
 	Functions : fun
 } = faunadb.query
-
+export const banreq = async (id, request_message) => {
+	return await updateQuery('by_id', id, banned, {
+		ban_request : true,
+		request_message
+	}
+	) 
+}
 export const newUser = async (name, username, id, signed_to_newsletter) => {
 	return await newQuery('users', User, {
 		id,
@@ -26,12 +30,13 @@ export const newUser = async (name, username, id, signed_to_newsletter) => {
 		username,
 		banned : false,
 		status : 'user',
-		signed_to_newsletter,
-		unban_request_message : ''
+		ban_request: false,
+		request_message : '',
+		signed_to_newsletter
 	})				
 }
-export const User = async (data) => await Get(Match(Index("get_username"), data.username))
-
+const User = async (data) => await Get(Match(Index("get_username"), data.username))
+const banned = async (key) => await Paginate(Match(Index("is_banned"), key))[0]
 export const newQuery = (Collection_name, cond, data) => {
 	return new Promise((res, rej) => {
 		if (cond(data)) 
@@ -49,20 +54,19 @@ export const newQuery = (Collection_name, cond, data) => {
 }
 export const updateQuery = (index, key, cond, data) => {
 	return new Promise((res, rej) => {
-		if (cond(data)) res(false) 
+		if (cond(key)) res(false) 
 		else {
 			client.query(
 				Update(
 					Call(fun(index), key),
 					{ data }
 				)
-			).then(ret => res(ret)	
+			).then(ret => res(true)	
 			).catch(err => rej(err))
 		}
 	})
 }
-
-export const getQuery = (index, values) => {
+export const getQuery = (index, values ) => {
 	return new Promise((res, rej) => {
 		client.query(
 			Get(
@@ -79,14 +83,6 @@ export const pagiQuery = (index, ...values) => {
 				Paginate(
 				  Match(Index(index), ...values)
 				)
-		).then(ret => res(ret.data)	
-		).catch(err => rej(err))
-	})
-}
-export const banned = username => {
-	return new Promise((res, rej) => {
-		client.query(
-
 		).then(ret => res(ret.data)	
 		).catch(err => rej(err))
 	})

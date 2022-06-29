@@ -82,7 +82,7 @@ export const regex = str => {
 		)
 	} else {
 		str = Array.from(str)
-		.map(lit => `[${lit.toUpperCase()+lit}]`)
+		.map(lit => `[${lit.toUpperCase()+lit}]+`)
 		.reduce((pre, curr) => pre + curr)
 		return new RegExp('\\b' +str+'\\b')
 	}
@@ -91,11 +91,11 @@ export const regex = str => {
 export const panel = [
 	'welcome to the post droid', // temp message will have a better one later i think
 	Markup.keyboard([
+		['The post family links؜'],
 		[
 			"Unban request؜",
 			'FAQ page؜'
-		],
-		['The post family links؜']
+		]
 	])
 	.resize(true)
 	.placeholder('pick your pick')

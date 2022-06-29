@@ -1,5 +1,5 @@
 import { Telegraf, Markup } from 'telegraf'
-import { getQuery, newUser, pagiQuery  } from './components/fauna.js'
+import { getQuery, newUser, pagiQuery, updateQuery  } from './components/fauna.js'
 import { pin, panel, regex, splitArray, toUnicode } from './components/shard.js'
 
 const bot = new Telegraf(process.env.TOKEN)
@@ -17,42 +17,50 @@ bot.start(async ctx => {
 })
 
 const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
-bot.hears("Unban request؜", ctx => {
-	ctx.reply(
-		(false)? 
-			'you have been put in the queue': 
-			'you are not banned', {disable_notification : true})
+new Promise((res, rej) => {
+	bot.hears("Unban request؜", ctx => {
+		ctx.editMessageText('send a request message')
+		res("message")
+	})
+}).then(listen => {
+	bot.on(listen, ctx => {
+		if (banreq(ctx.from.id)) {
+			ctx.reply('you have been put in the queue', {disable_notification : true})
+		}
+		ctx.reply('you are not banned', {disable_notification : true})
+		
+	})
 })
 bot.hears('FAQ page؜', ctx => {
-	ctx.editMessageReplyMarkup(
+	ctx.editMessageText( 'pick your question',
 		Markup.keyboard(
 			[
 				FAQsub.slice(0,2),
 				FAQsub.slice(2)
 			]
 		).resize(true)
-		.placeholder('pick your question')
 	)
 })
+
 new Promise((res, rej) => {
 	bot.hears(FAQsub, async ctx => {
 		const [que, ans] = splitArray(await pagiQuery('by_subject', ctx.match[0].replace('؜', '')))
 		
-		ctx.editMessageReplyMarkup(
+		const lst = []
+		while(que.length) lst.push(que.splice(0,3));
+		lst.forEach(el => que.push(...el))
+		ctx.editMessageText('FAQs for you',
 			Markup.keyboard(		// currrow.length referce to the row we are in
-				que, {
-					wrap : (btn, index, currentRow) => currentRow.length >= (index + 1) / 2
-				}
+				lst
 			).resize(true)
-			.placeholder('FAQs for you')
 		)
 		res([que, ans])
 	})
 }).then(([que, ans]) => {
 	bot.hears(que, ctx => {
-		ctx.deleteMessage(ctx.message.message_id)
 		ctx.editMessageReplyMarkup(panel[1])
 		ctx.reply(ans[que.indexOf(ctx.match[0])])
+		ctx.deleteMessage(ctx.message.message_id)
 	})
 })
 
@@ -97,8 +105,8 @@ getQuery('by_option', 'replies')
 	
 }).catch(console.error)
 
-bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 
+bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 bot.command('/ban', async ctx => {
 
 	const [__, username ] = ctx.message.text.split(' ')
@@ -112,12 +120,13 @@ bot.command('/ban', async ctx => {
 	} else ctx.reply("you ain't a playa", {reply_to_message_id : ctx.message.message_id})
 
 })
-exports.handler = async event => {
-	try {
-	  await bot.handleUpdate(JSON.parse(event.body));
-	  return { statusCode: 200, body: '' };
-	} catch (e) {
-	  console.log(e)
-	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
-	}  
-}
+
+// exports.handler = async event => {
+// 	try {
+// 	  await bot.handleUpdate(JSON.parse(event.body));
+// 	  return { statusCode: 200, body: '' };
+// 	} catch (e) {
+// 	  console.log(e)
+// 	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
+// 	}  
+// }
