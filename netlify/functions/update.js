@@ -1,6 +1,6 @@
-import { Telegraf, Markup } from 'telegraf'
-import { getQuery, newUser, pagiQuery, banreq  } from './components/fauna.js'
 import { pin, panel, regex, splitArray, toUnicode } from './components/shard.js'
+import { getQuery, newUser, pagiQuery, banreq  } from './components/fauna.js'
+import { Telegraf, Markup } from 'telegraf'
 
 const bot = new Telegraf(process.env.TOKEN)
 
@@ -12,11 +12,18 @@ bot.start(async ctx => {
 		username += '/' + toUnicode(username)
 	} 
 	newUser(first_name+' '+last_name, username, id, true)
+	newUser(ctx.from.id,  {
+		id,
+		username,
+		banned: false,
+		status : 'user',
+		ban_request : false,
+		signed_to_newsletter: true,
+		name : first_name + ' ' + last_name
+	})
 	ctx.reply(...panel)
 
-})
-
-const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
+}) 
 
 bot.hears("Unban request؜", ctx => {
 
@@ -28,6 +35,7 @@ bot.hears("Unban request؜", ctx => {
 
 })
 
+const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
 bot.hears('FAQ page؜', ctx => {
 	ctx.deleteMessage(ctx.message.message_id)
 	ctx.reply( 'pick your question',
@@ -42,7 +50,6 @@ bot.hears('FAQ page؜', ctx => {
 
 bot.hears(FAQsub, async ctx => {
 	const [que, ans] = splitArray(await pagiQuery('by_subject', ctx.match[0].replace('؜', '')))
-	
 	const lst = []
 	while(que.length) lst.push(que.splice(0,3));
 	lst.forEach(el => que.push(...el))
@@ -59,7 +66,6 @@ bot.hears(FAQsub, async ctx => {
 	})
 
 })
-
 
 bot.hears('The post family links؜', ctx => {
 	ctx.reply('here you go', 
@@ -89,7 +95,7 @@ getQuery('by_option', 'banned_words')
 			if (typeof ctx.message.photo != 'undefined') return;
 			ctx.deleteMessage(ctx.message.message_id)
 		}
-		) //blacklisted words idk
+		)
 	
 }).catch(console.error)
 // handling the question replies 
@@ -105,8 +111,8 @@ getQuery('by_option', 'replies')
 	bot.hears(texts, ctx => ctx.reply(replies[texts.indexOf(ctx.match[0])]))
 	
 }).catch(console.error)
-bot.on('chat_member', console.log)
 
+bot.hears('the post pin؜', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 bot.command('/ban', async ctx => {
 

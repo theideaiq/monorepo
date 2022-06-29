@@ -92,6 +92,7 @@ export const panel = [
 	'welcome to the post droid', // temp message will have a better one later i think
 	Markup.keyboard([
 		['The post family links؜'],
+		['the post pin؜']
 		[
 			"Unban request؜",
 			'FAQ page؜'

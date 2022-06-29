@@ -17,7 +17,7 @@ const client = new faunadb.Client({
 	Functions : fun
 } = faunadb.query
 
-const User = async (data) => await Get(Match(Index("get_username"), data.username))
+const User = async (id) => await Get(Match(Index("by_id"), id))
 const banned = async (key) => await Paginate(Match(Index("is_banned"), key))[0]
 
 export const banreq = async (id) => {
@@ -26,17 +26,23 @@ export const banreq = async (id) => {
 	}
 	) 
 }
-export const newUser = async (name, username, id, signed_to_newsletter) => {
-	return await newQuery('users', User, {
-		id,
-		name,
-		username,
-		banned : false,
-		status : 'user',
-		ban_request: false,
-		request_message : '',
-		signed_to_newsletter
-	})				
+export const newUser = async (id , data) => {
+	return new Promise((res, rej) => {
+		client.query(
+			(typeof User(id) == 'undefined')?
+				Update(
+					Call(fun('by_id'), id),
+					{ data : data.signed_to_newsletter  }
+				):
+				Create(
+					Create(
+						Collection('users'),
+						{ data }
+					)
+				)
+		).then(ret => res(ret)	
+		).catch(err => rej(err))
+	})
 }
 const newQuery = (Collection_name, cond, data) => {
 	return new Promise((res, rej) => {
