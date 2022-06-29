@@ -23,13 +23,13 @@ bot.hears("Unban request؜", ctx => {
 	ctx.deleteMessage(ctx.message.message_id)
 	ctx.reply('send a request message')
 	
-	bot.on('message', ctx => {
-		if (banreq(ctx.from.id, ctx.message.text)) {
-			ctx.reply('you have been put in the queue', {disable_notification : true})
-		}
-		else ctx.reply('you are not banned', {disable_notification : true})
-		bot.on(null)
-	})
+	// bot.on('message', ctx => {
+	// 	if (banreq(ctx.from.id, ctx.message.text)) {
+	// 		ctx.reply('you have been put in the queue', {disable_notification : true})
+	// 	}
+	// 	else ctx.reply('you are not banned', {disable_notification : true})
+	// 	bot.on(null)
+	// })
 
 })
 
