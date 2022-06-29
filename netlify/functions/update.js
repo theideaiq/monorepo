@@ -58,7 +58,7 @@ new Promise((res, rej) => {
 	})
 }).then(([que, ans]) => {
 	bot.hears(que, ctx => {
-		ctx.editMessageReplyMarkup(panel[1])
+		ctx.editMessageText('hope it helps' ,panel[1])
 		ctx.reply(ans[que.indexOf(ctx.match[0])])
 		ctx.deleteMessage(ctx.message.message_id)
 	})
