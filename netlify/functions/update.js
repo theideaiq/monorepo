@@ -1,5 +1,5 @@
 import { Telegraf, Markup } from 'telegraf'
-import { getQuery, newUser, pagiQuery, updateQuery  } from './components/fauna.js'
+import { getQuery, newUser, pagiQuery, banreq  } from './components/fauna.js'
 import { pin, panel, regex, splitArray, toUnicode } from './components/shard.js'
 
 const bot = new Telegraf(process.env.TOKEN)
@@ -17,21 +17,22 @@ bot.start(async ctx => {
 })
 
 const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
-new Promise((res, rej) => {
-	bot.hears("Unban request؜", ctx => {
-		ctx.deleteMessage(ctx.message.message_id)
-		ctx.reply('send a request message')
-		res("message")
-	})
-}).then(listen => {
-	bot.on(listen, ctx => {
-		if (banreq(ctx.from.id)) {
+
+bot.hears("Unban request؜", ctx => {
+		
+	ctx.deleteMessage(ctx.message.message_id)
+	ctx.reply('send a request message')
+	
+	bot.on('message', ctx => {
+		if (banreq(ctx.from.id, ctx.message.text)) {
 			ctx.reply('you have been put in the queue', {disable_notification : true})
 		}
 		ctx.reply('you are not banned', {disable_notification : true})
-		
+		bot.on(null)
 	})
+
 })
+
 bot.hears('FAQ page؜', ctx => {
 	ctx.deleteMessage(ctx.message.message_id)
 	ctx.reply( 'pick your question',
@@ -44,27 +45,26 @@ bot.hears('FAQ page؜', ctx => {
 	)
 })
 
-new Promise((res, rej) => {
-	bot.hears(FAQsub, async ctx => {
-		const [que, ans] = splitArray(await pagiQuery('by_subject', ctx.match[0].replace('؜', '')))
-		
-		const lst = []
-		while(que.length) lst.push(que.splice(0,3));
-		lst.forEach(el => que.push(...el))
-		ctx.deleteMessage(ctx.message.message_id)
-		ctx.reply('here you go',
-			Markup.keyboard(		// currrow.length referce to the row we are in
-				lst
-			).resize(true)
-		)
-		res([que, ans])
-	})
-}).then(([que, ans]) => {
+bot.hears(FAQsub, async ctx => {
+	const [que, ans] = splitArray(await pagiQuery('by_subject', ctx.match[0].replace('؜', '')))
+	
+	const lst = []
+	while(que.length) lst.push(que.splice(0,3));
+	lst.forEach(el => que.push(...el))
+
+	ctx.reply('here you go',
+		Markup.keyboard(		// currrow.length referce to the row we are in
+			lst
+		).resize(true)
+	)
+	
 	bot.hears(que, ctx => {
 		ctx.reply(ans[que.indexOf(ctx.match[0])], panel[1])
 		ctx.deleteMessage(ctx.message.message_id)
 	})
+
 })
+
 
 bot.hears('The post family links؜', ctx => {
 	ctx.reply('here you go', 
