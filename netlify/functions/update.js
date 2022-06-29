@@ -19,7 +19,8 @@ bot.start(async ctx => {
 const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
 new Promise((res, rej) => {
 	bot.hears("Unban request؜", ctx => {
-		ctx.editMessageText('send a request message')
+		ctx.deleteMessage(ctx.message.message_id)
+		ctx.reply('send a request message')
 		res("message")
 	})
 }).then(listen => {
@@ -32,7 +33,8 @@ new Promise((res, rej) => {
 	})
 })
 bot.hears('FAQ page؜', ctx => {
-	ctx.editMessageText( 'pick your question',
+	ctx.deleteMessage(ctx.message.message_id)
+	ctx.reply( 'pick your question',
 		Markup.keyboard(
 			[
 				FAQsub.slice(0,2),
@@ -49,7 +51,8 @@ new Promise((res, rej) => {
 		const lst = []
 		while(que.length) lst.push(que.splice(0,3));
 		lst.forEach(el => que.push(...el))
-		ctx.editMessageText('FAQs for you',
+		ctx.deleteMessage(ctx.message.message_id)
+		ctx.reply('here you go',
 			Markup.keyboard(		// currrow.length referce to the row we are in
 				lst
 			).resize(true)
@@ -58,8 +61,7 @@ new Promise((res, rej) => {
 	})
 }).then(([que, ans]) => {
 	bot.hears(que, ctx => {
-		ctx.editMessageText('hope it helps' ,panel[1])
-		ctx.reply(ans[que.indexOf(ctx.match[0])])
+		ctx.reply(ans[que.indexOf(ctx.match[0])], panel[1])
 		ctx.deleteMessage(ctx.message.message_id)
 	})
 })
