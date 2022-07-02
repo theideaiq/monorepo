@@ -73,12 +73,25 @@ ${link('المصادر', 'https://t.me/thepostiq/261')}
 `
 
 const isArabic = str => /[\u0600-\u06FF\u0750-\u077F]/.test(str)
-export const regex = str => {
-	if (isArabic(str)){
-		return new RegExp(
-			'\(?<![\u0621-\u064A])'
-			+ str + 
-			'\(?![\u0621-\u064A])'
+export const regex = (str) => {
+	const suffix = ['ك' ,'ه' ,'نا' ,'ي' ,'ين' ,'ان' ,'ات' ,'بي' ,'بيك' ,'بيج' ,'مك' ,'مج' ,'مكم' ,'ون']
+	.reduce((pre, curr) => pre +'|'+ curr)
+	// made it a list so i can add more if needed since arabic ppl make new preffixes/preffixes each day
+	const preffix = ["ن", "ت", "بال", "بل", "ك", "س", "ال", "ل", "ف", "ب", "ي", "و"] 
+	.reduce((pre, curr) => pre +'|'+ curr)
+	if(isArabic(str)){
+		const signs = '[ًٌٍَُِّ]*'
+		str = Array.from(str)
+		.map(lit => {
+			if (lit === 'ا') return '[اأ]+' + signs
+			if (lit === 'ه') return '[ةه]+' + signs
+			return lit + '+' + signs
+		}).reduce((pre, curr) => pre + curr)
+
+		return RegExp(
+			'\(?<![\u0621-\u064A])' + `(${preffix})?`
+			+ str +
+			`(${suffix})?` + '\(?![\u0621-\u064A])'
 		)
 	} else {
 		str = Array.from(str)
@@ -86,7 +99,6 @@ export const regex = str => {
 		.reduce((pre, curr) => pre + curr)
 		return new RegExp('\\b' +str+'\\b')
 	}
-	
 }
 export const panel = [
 	'welcome to the post droid', // temp message will have a better one later i think
