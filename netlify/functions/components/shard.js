@@ -104,7 +104,7 @@ export const panel = [
 	'welcome to the post droid', // temp message will have a better one later i think
 	Markup.keyboard([
 		['The post family links؜'],
-		['the post pin؜']
+		['the post pin؜'],
 		[
 			"Unban request؜",
 			'FAQ page؜'
@@ -119,7 +119,7 @@ export const splitArray = (array) => {
 	const lst = [[],[]]
 	array.forEach(el => {
 		lst[0].push(el[0])	
-		lst[1].push	(el[1])
+		lst[1].push(el[1])
 	})
 	return lst
 }
