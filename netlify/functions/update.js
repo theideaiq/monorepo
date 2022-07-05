@@ -1,5 +1,5 @@
-import { pin, panel, regex, splitArray, toUnicode } from './components/shard.js'
-import { getQuery, newUser, pagiQuery, banreq  } from './components/fauna.js'
+import { panel, regex, splitArray, toUnicode } from './components/shard.js'
+import { getQuery, newUser, pagiQuery, banreq, updateQuery  } from './components/fauna.js'
 import { Telegraf, Markup } from 'telegraf'
 
 const bot = new Telegraf(process.env.TOKEN)
@@ -11,7 +11,6 @@ bot.start(async ctx => {
 		username = '$-' + first_name + (typeof last_name === 'undefined')? '': last_name 
 		username += '/' + toUnicode(username)
 	} 
-	newUser(first_name+' '+last_name, username, id, true)
 	newUser(ctx.from.id,  {
 		id,
 		username,
@@ -55,7 +54,7 @@ bot.hears(FAQsub, async ctx => {
 	lst.forEach(el => que.push(...el))
 
 	ctx.reply('here you go',
-		Markup.keyboard(		// currrow.length referce to the row we are in
+		Markup.keyboard(		
 			lst
 		).resize(true)
 	)
@@ -73,7 +72,7 @@ bot.hears('The post family links؜', ctx => {
 			inline_keyboard: [
 				Markup.button.url('the post website', 'https://t.me/thepostiq'),
 				Markup.button.url('the post group', 'https://t.me/thepostofficeiq'),
-				Markup.button.url('art club group','https://t.me/artclub_iq'),
+				Markup.button.url('art club group','https://t.me/artclubiq'),
 				Markup.button.url('the post instagram','https://instagram.com/thepostiq'),
 				Markup.button.url("art club instagram",'https://instagram.com/artclubiq'),
 				Markup.button.url('the post linkedin','https://linkedin.com/company/thepostproject'),
@@ -112,8 +111,6 @@ getQuery('by_option', 'replies')
 	
 }).catch(console.error)
 
-bot.hears('the post pin؜', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
-bot.command('/pin', ctx => ctx.reply(pin, {parse_mode: 'HTML'}))
 bot.command('/ban', async ctx => {
 
 	const [__, username ] = ctx.message.text.split(' ')
@@ -127,8 +124,7 @@ bot.command('/ban', async ctx => {
 	} else ctx.reply("you ain't a playa", {reply_to_message_id : ctx.message.message_id})
 
 })
-
-exports.handler = async event => {
+export const handler = async event => {
 	try {
 	  await bot.handleUpdate(JSON.parse(event.body));
 	  return { statusCode: 200, body: '' };
