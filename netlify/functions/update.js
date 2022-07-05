@@ -24,10 +24,10 @@ bot.start(async ctx => {
 
 }) 
 
-bot.hears("Unban request؜", ctx => {
+bot.hears("Unban request؜", async ctx => {
 
 	ctx.deleteMessage(ctx.message.message_id)
-		if (banreq(ctx.from.id)) {
+		if (await banreq(ctx.from.id)) {
 			ctx.reply('you have been put in the queue', {disable_notification : true})
 		}
 		else ctx.reply('you are not banned', {disable_notification : true})
