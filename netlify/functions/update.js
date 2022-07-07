@@ -92,6 +92,7 @@ getQuery('by_option', 'banned_words')
 		holder.data.words.map(regex)
 		, ctx => {
 			if (typeof ctx.message.photo != 'undefined') return;
+			if (ctx.from.username == 'Encephalopathy') return;
 			ctx.deleteMessage(ctx.message.message_id)
 		}
 		)
