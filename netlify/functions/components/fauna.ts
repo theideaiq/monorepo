@@ -1,11 +1,14 @@
-import faunadb from 'faunadb'
+import faunadb from 'faunadb' 
+
+if (process.env.FAUNA_KEY === undefined) throw TypeError("faunadb key is needed ")
 
 const client = new faunadb.Client({ 
 	secret: process.env.FAUNA_KEY ,
 	domain: "db.eu.fauna.com",
 	scheme: 'https',
 });
- const {
+
+const {
 	Paginate,
 	Get,
 	Match,
@@ -17,12 +20,8 @@ const client = new faunadb.Client({
 	Functions : fun
 } = faunadb.query
 
-const User = async (id) => await Get(Match(Index("by_id"), id))
-const banned = async (key) => await Paginate(Match(Index("is_banned"), key))[0]
-
-export const banreq = (id) => {
+export const banreq = (id : number) : Promise<boolean>=> {
 	return new Promise(async (res, rej) => {
-		if (await banned(id)){
 			client.query(
 				Update(
 					Call(fun('getRef'), id),
@@ -32,13 +31,12 @@ export const banreq = (id) => {
 				)	
 			).then(ret => res(true)	
 			).catch(err => rej(err))
-		} else res(false)
 	})
 }
-export const newUser = async (id , data) => {
-	return new Promise(async (res, rej) => {
+export const newUser = (id : number , data : user) : Promise<{}>  => {
+	return new Promise((res, rej) => {
 		client.query(
-			(typeof await User(id) == 'undefined')?
+			(Get(Match(Index("by_id"), id)) === undefined)?
 				Update(
 					Call(fun('getRef'), id),
 					{ data : data.signed_to_newsletter  }
@@ -53,21 +51,9 @@ export const newUser = async (id , data) => {
 		).catch(err => rej(err))
 	})
 }
-export const updateQuery = (index, key, data) => {
+export const getQuery = <schem>(index : string , values : string) : Promise<schema<schem>> => {
 	return new Promise((res, rej) => {
-		client.query(
-			Update(
-				Call(fun(index), key),
-				{ data }
-			)
-		).then(ret => res(true)	
-		).catch(err => rej(err))
-		
-	})
-}
-export const getQuery = (index, values ) => {
-	return new Promise((res, rej) => {
-		client.query(
+		client.query<schema<schem>>(
 			Get(
 				Match(Index(index), values)
 			)
@@ -75,13 +61,27 @@ export const getQuery = (index, values ) => {
 		).catch(err => rej(err))
 	})
 }
-export const pagiQuery = (index, ...values) => {
+export const pagiQuery = <T>(index : string, ...values : string[]) : Promise<T>  => {
 	return new Promise((res, rej) => {
-		client.query(
+		client.query<{data:T}>(
 				Paginate(
 				  Match(Index(index), ...values)
 				)
-		).then(ret => res(ret.data)	
+		).then((ret) => res(ret.data)	
 		).catch(err => rej(err))
 	})
+} 
+interface user {
+	id: number,
+	name: string,
+	status: string,
+	banned: boolean,
+	username: string,
+	ban_request: boolean,
+	signed_to_newsletter: boolean
 }
+type schema<schem> = {
+	ref: faunadb.Expr,
+	ts: number,
+	data: schem
+  }
