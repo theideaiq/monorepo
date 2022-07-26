@@ -98,7 +98,8 @@ bot.hears('The post family links؜', ctx => {
 	ctx.deleteMessage(ctx.message.message_id)
 
 })
-const pins = JSON.parse(readFileSync('resources/pin.json', 'utf8'))
+// const pins = JSON.parse(readFileSync('resources/pin.json', 'utf8'))
+import pins from "@resources/pin"
 bot.hears('post pins؜', ctx => {
 	ctx.reply('heres your pins',
 	Markup.keyboard(
@@ -122,7 +123,8 @@ bot.command('/ban', async ctx => {
 
 })
 
-const words: format = JSON.parse(readFileSync('resources/banned-words.json', 'utf8'))
+// const words: format = JSON.parse(readFileSync('resources/banned-words.json', 'utf8'))
+import words from "@resources/banned-words"
 bot.on("text", ctx => {
 	const {text, message_id, from} = ctx.message
 	const {username} = from
@@ -136,7 +138,7 @@ bot.use(session()); // still needed to use scenes
 bot.use(stage.middleware())
 
 // serverless funcition 
-export const handler : Handler = async event => {
+const handler : Handler = async event => {
 	try {
 		if (event.body === null) throw new TypeError()
 		await bot.handleUpdate(JSON.parse(event.body));
@@ -147,6 +149,7 @@ export const handler : Handler = async event => {
 	}  
 }
 
+export {handler}
 /* for server webhooks 
 bot.launch({
 	webhook: {

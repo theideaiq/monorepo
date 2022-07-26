@@ -1,4 +1,4 @@
-{
+export default { // dumb quick fix for netlify it does not matter at all
 	"الكورسات وتطوير المهارات؜" : {
 		"كورسات عامة" : "https://t.me/thepostiq/17",
 		"تطوير الانكليزي وكورساته" : "https://t.me/thepostiq/15",

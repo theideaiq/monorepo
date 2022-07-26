@@ -1,4 +1,5 @@
-{	
+import {format} from "@components/nlp"
+const words : format = { // dumb fix	
 	"arabic": [
 		"شاذ",
 		"شواذ",
@@ -189,3 +190,4 @@
 		"Wog"
 	]
 }
+export default words

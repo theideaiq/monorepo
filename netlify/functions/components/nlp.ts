@@ -75,7 +75,7 @@ const regel = (pattern : string) => {
 
 const matcher = (token : string, list : format, optinalsecound?: string) : boolean => {
 	let stem : ((str: string) => string) = stemAb
-	let words : Array<string|string[]> = []
+	let words : Array<string|[string, string][]> = []
 	if (arabic(token)) {
 		words = list.arabic
 	} else if (english(token)) {
@@ -117,4 +117,4 @@ export const compare = (text: string, list : format) => {
 	return false
 }
 
-export declare type format = {arabic: string[], english: Array<string|string[]>}
+export declare type format = {arabic: string[], english: Array<string|[string, string][]>}

@@ -6,6 +6,7 @@
     "baseUrl": "./netlify/functions/",
     "paths": {
       "@components/*": ["./components/*"],
+      "@resources/*": ["./resources/*"],
     },
     "types": ["node"],
     "esModuleInterop": true,
