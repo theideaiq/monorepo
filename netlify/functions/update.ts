@@ -10,7 +10,8 @@ if (process.env.TOKEN === undefined) throw new TypeError('BOT_TOKEN must be prov
   
 const bot = new Telegraf<Scenes.SceneContext>(process.env.TOKEN)
 
-bot.start(async ctx => {
+bot.start(async (ctx, next) => {
+	if (1000 - ctx.message.date < 5 * 60) next()
 
 	let {first_name, last_name, username, id}  = ctx.from
 
@@ -32,7 +33,10 @@ bot.start(async ctx => {
 	ctx.reply(...panel)
 
 }) 
-bot.hears("Unban request؜", async ctx => {
+
+// does not work for some reason 
+bot.hears("Unban request؜", async (ctx, next) => {
+	if (1000 - ctx.message.date < 5 * 60) next()
 
 	ctx.deleteMessage(ctx.message.message_id)
 		if (await banreq(ctx.from.id)) {
@@ -50,7 +54,10 @@ banroom.on('text', ctx => {
 })
 
 const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
-bot.hears('FAQ page؜', ctx => {
+
+bot.hears('FAQ page؜', (ctx, next) => {
+	if (1000 - ctx.message.date < 5 * 60) next()
+
 	ctx.deleteMessage(ctx.message.message_id)
 	ctx.reply( 'pick your question',
 		Markup.keyboard(
@@ -62,7 +69,8 @@ bot.hears('FAQ page؜', ctx => {
 	)
 })
 
-bot.hears(FAQsub, async ctx => {
+bot.hears(FAQsub, async (ctx, next) => {
+	if (1000 - ctx.message.date < 5 * 60) next()
 	const [que, ans] = splitArray(
 		(await pagiQuery<string[][]>('by_subject', ctx.match[0].replace('؜', '')))
 		)
@@ -73,14 +81,17 @@ bot.hears(FAQsub, async ctx => {
 		).resize(true)
 	)
 	
-	bot.hears(que, ctx => {
+	bot.hears(que, (ctx, next) => {
+		if (1000 - ctx.message.date < 5 * 60) next()
+
 		ctx.reply(ans[que.indexOf(ctx.match[0])], panel[1])
 		ctx.deleteMessage(ctx.message.message_id)
 	})
 
 })
 
-bot.hears('The post family links؜', ctx => {
+bot.hears('The post family links؜', (ctx, next) => {
+	if (1000 - ctx.message.date < 5 * 60) next()
 	ctx.reply('here you go', 
 		{ reply_markup: {
 			inline_keyboard: [
@@ -100,7 +111,9 @@ bot.hears('The post family links؜', ctx => {
 })
 // const pins = JSON.parse(readFileSync('resources/pin.json', 'utf8'))
 import pins from "@resources/pin"
-bot.hears('post pins؜', ctx => {
+bot.hears('post pins؜', (ctx, next) => {
+	if (1000 - ctx.message.date < 5 * 60) next()
+
 	ctx.reply('heres your pins',
 	Markup.keyboard(
 		reshape(Object.keys(pins), 2)
@@ -109,7 +122,8 @@ bot.hears('post pins؜', ctx => {
 })
 bot.hears(Object.keys(pins), ctx => ctx.reply('not here yet', panel[1]))
 
-bot.command('/ban', async ctx => {
+bot.command('/ban', async (ctx, next) => {
+	if (1000 - ctx.message.date < 5 * 60) next()
 
 	let [__, username ] = ctx.message.text.split(' ')
 	if (!/@/.test(username)) username = '@$-' + username + '/'+ toUnicode(username)
@@ -125,7 +139,8 @@ bot.command('/ban', async ctx => {
 
 // const words: format = JSON.parse(readFileSync('resources/banned-words.json', 'utf8'))
 import words from "@resources/banned-words"
-bot.on("text", ctx => {
+bot.on("text", (ctx, next) => {
+	if (1000 - ctx.message.date < 5 * 60) next()
 	const {text, message_id, from} = ctx.message
 	const {username} = from
 	if (compare(text, words)) {
