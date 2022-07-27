@@ -16,7 +16,7 @@ const tokenize = (text: string) => {
 	const out: string[] = []
 	let lang : RegExp | boolean = arabic(text)
 	for (let dex = 0; dex < len ; dex++) {
-		let token = tokens[dex]
+		let token = stripurl(tokens[dex])
 		if (lang) token = cleanArb(token)
 		else if (lang = english(text)) {} // i wish there could be heaven, where earth isn't seen unitl the day god flutters and kills everything there has been
 		else throw TypeError('unsupported language')		
@@ -71,7 +71,12 @@ const regel = (pattern : string) => {
 	if (arabic(pattern)) return RegExp("\(?<![\u0621-\u064A])" +pattern+ "\(?![\u0621-\u064A])")
 	return RegExp("\\b" +pattern+ "\\b", 'i')
 }
-
+const stripurl = (text : string) => {
+	if (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(text)) {
+		text = pregReplace(text, [/https?:\/\/(www\.)?/g, /\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g], [''])
+	}
+	return text
+}
 
 const matcher = (token : string, list : format, optinalsecound?: string) : boolean => {
 	let stem : ((str: string) => string) = stemAb
