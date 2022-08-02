@@ -26,7 +26,7 @@ export const banreq = (id : number) : Promise<boolean>=> {
 				Update(
 					Call(fun('getRef'), id),
 					{ data : 
-						{ban_request : true}
+						{ban_request : 'true'}
 					}
 				)	
 			).then(ret => res(true)	
@@ -71,13 +71,16 @@ export const pagiQuery = <T>(index : string, ...values : string[]) : Promise<T> 
 		).catch(err => rej(err))
 	})
 } 
-interface user {
+export interface user {
+	chat_id?: number
 	id: number,
-	name: string,
-	status: string,
+	last?: string,
+	messages?: number[]
+	status?: string,
 	banned: boolean,
-	username: string,
-	ban_request: boolean,
+	username?: string,
+	samecount?: number,
+	ban_request: string,
 	signed_to_newsletter: boolean
 }
 type schema<schem> = {

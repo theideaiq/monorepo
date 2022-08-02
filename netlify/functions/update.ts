@@ -1,16 +1,25 @@
-import { panel, reshape, splitArray, toUnicode } from '@components/shard'
-import { newUser, pagiQuery, banreq  } from '@components/fauna'
+import { cache, panel, reshape, splitArray, toUnicode } from '@components/shard'
+import { newUser, pagiQuery, user  } from '@components/fauna'
 import {compare, format} from "@components/nlp"
-import { Telegraf, Markup, Scenes, session } from 'telegraf'
+import { Telegraf, Markup, Scenes, session, } from 'telegraf'
 import { Handler } from "@netlify/functions";
-import { readFileSync } from 'node:fs';
 // use the cache to declare 
 
 if (process.env.TOKEN === undefined) throw new TypeError('BOT_TOKEN must be provided')
-  
-const bot = new Telegraf<Scenes.SceneContext>(process.env.TOKEN)
+interface mine extends Scenes.SceneContext {
+	status? : string
+}
 
-bot.use((ctx, next) => {
+const bot = new Telegraf<mine>(process.env.TOKEN)
+const banroom = new Scenes.BaseScene<mine>('banroom')
+
+bot.use(async (ctx, next) => {
+	const {from} = ctx
+	if (from !== undefined) {
+		let {status} = await ctx.getChatMember(from.id)
+		ctx.status = status 
+	}
+	
 	const date = ctx.message?.date
 	if (date === undefined) return next()
 	switch (ctx.updateType) {
@@ -37,7 +46,7 @@ bot.use((ctx, next) => {
 })
 
 
-bot.start(async (ctx, next) => {
+bot.start(async ctx => {
 
 	let {first_name, last_name, username, id}  = ctx.from
 
@@ -50,37 +59,34 @@ bot.start(async (ctx, next) => {
 		id,
 		username,
 		banned: false,
-		status : 'user',
-		ban_request : false,
+		status : 'member',
+		ban_request : '',
 		signed_to_newsletter: true,
-		name : first_name + ' ' + last_name
 	})
 
 	ctx.reply(...panel)
 
 }) 
-
 // does not work for some reason 
-bot.hears("Unban request؜", async (ctx, next) => {
+bot.hears("Unban request؜", async ctx => {
 
 	ctx.deleteMessage(ctx.message.message_id)
-		if (await banreq(ctx.from.id)) {
-			ctx.scene.enter('banroom')
-		}
-		else ctx.reply('you are not banned', {disable_notification : true})
+	ctx.scene.enter('banroom')
 
 })
 
-const banroom = new Scenes.BaseScene<Scenes.SceneContext>('banroom')
-banroom.enter(ctx => ctx.reply('send a unban request message'))
-banroom.on('text', ctx => {
-	ctx.reply('not here yet, tho your need is known')
+banroom.enter(ctx => ctx.reply('send an unban request message'))
+banroom.on('text', async ctx => {
+	ctx.reply('the fox is not here yet, tho your need is known to me')
+	const holder = await pagiQuery<number[]>('by-status', "administrator") // index does not exist 
+	const theOne = holder[Math.floor(Math.random() * holder.length)]
+	bot.telegram.sendMessage(theOne, ctx.message.text)
 	ctx.scene.leave()
 })
 
-const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜']
+const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜', 'back؜']
 
-bot.hears('FAQ page؜', (ctx, next) => {
+bot.hears('FAQ page؜', ctx => {
 
 	ctx.deleteMessage(ctx.message.message_id)
 	ctx.reply( 'pick your question',
@@ -92,27 +98,26 @@ bot.hears('FAQ page؜', (ctx, next) => {
 		).resize(true)
 	)
 })
+FAQsub.forEach(el => {
+	pagiQuery<string[][]>('by_subject', el.replace('؜', ''))
+	.then(holder => {
+		const [que, ans] = splitArray(holder)	
 
-bot.hears(FAQsub, async (ctx, next) => {
-	const [que, ans] = splitArray(
-		(await pagiQuery<string[][]>('by_subject', ctx.match[0].replace('؜', '')))
-		)
+		bot.hears(FAQsub, async ctx => {
+			ctx.reply('here you go',
+				Markup.keyboard(		
+					reshape(que, 3)
+				).resize(true)
+			)
+		})
 
-	ctx.reply('here you go',
-		Markup.keyboard(		
-			reshape(que, 3)
-		).resize(true)
-	)
-	
-	bot.hears(que, (ctx, next) => {
-
-		ctx.reply(ans[que.indexOf(ctx.match[0])], panel[1])
-		ctx.deleteMessage(ctx.message.message_id)
+		bot.hears(que, ctx => {
+			ctx.reply(ans[que.indexOf(ctx.match[0])], panel[1])
+			ctx.deleteMessage(ctx.message.message_id)
+		})			
 	})
-
 })
-
-bot.hears('The post family links؜', (ctx, next) => {
+bot.hears('The post family links؜', ctx => {
 	ctx.reply('here you go', 
 		{ reply_markup: {
 			inline_keyboard: [
@@ -130,9 +135,8 @@ bot.hears('The post family links؜', (ctx, next) => {
 	ctx.deleteMessage(ctx.message.message_id)
 
 })
-// const pins = JSON.parse(readFileSync('resources/pin.json', 'utf8'))
-import pins from "@resources/pin"
-bot.hears('post pins؜', (ctx, next) => {
+const pins = require("@resources/pin.json")
+bot.hears('post pins؜', ctx => {
 
 	ctx.reply('heres your pins',
 	Markup.keyboard(
@@ -142,31 +146,65 @@ bot.hears('post pins؜', (ctx, next) => {
 })
 bot.hears(Object.keys(pins), ctx => ctx.reply('not here yet', panel[1]))
 
-bot.command('/ban', async (ctx, next) => {
+bot.command('/ban', async ctx => {
 
-	let [__, username ] = ctx.message.text.split(' ')
+	const {status, message} = ctx
+	let [__, username ] = message.text.split(' ')
 	if (!/@/.test(username)) username = '@$-' + username + '/'+ toUnicode(username)
 
-	const {status} = await ctx.getChatMember(ctx.from.id)
 	if ( status === 'administrator' || status === 'creator' ) {
 		const holder = await pagiQuery<[number]>('by_username', username.slice(1))
 
 		ctx.banChatMember(holder[0])
-	} else ctx.reply("nothing happened", {reply_to_message_id : ctx.message.message_id})
+	} else ctx.reply("nothing happened", {reply_to_message_id : message.message_id})
 
 })
 
 // const words: format = JSON.parse(readFileSync('resources/banned-words.json', 'utf8'))
-import words from "@resources/banned-words"
-bot.on("text", (ctx, next) => {
-	
-	const {text, message_id, from} = ctx.message
-	const {username} = from
+const words = require("@resources/banned-words")
+bot.on("text", async ctx => {
+	const {message, status} = ctx
+	const {text, message_id, from, chat} = message
+	const {username, id} = from
+	const {id : chat_id} = chat
+	if (!cache.has(id)) {
+		cache.set(id, {
+			id,
+			status,
+			chat_id,
+			username,
+			last: text,
+			samecount: 0,
+			messages : [], 
+			banned: false,
+			ban_request : '',
+			signed_to_newsletter: false,
+		})
+	}
 	if (compare(text, words)) {
 		ctx.deleteMessage(message_id)
+	} 
+	const user = cache.get<user>(id)
+	if (user!.samecount! > 3){
+		user!.messages!.forEach(el => {
+			ctx.deleteMessage(el)
+		}) 
+		ctx.restrictChatMember(id, {
+			until_date : Math.floor((Date.now() /1000.0) + 350), 
+			permissions : {can_send_messages: false, can_send_other_messages: false}
+		})
+	}
+	if (user!.last === text && user!.chat_id === chat_id) {
+		user!.samecount !+= 1 
+		user!.messages!.push(message_id)
+	} else {
+		user!.last = text
+		user!.chat_id = chat_id
+		user!.messages![0]= message_id
+		user!.samecount != 0 
 	}
 })
-const stage = new Scenes.Stage<Scenes.SceneContext>([banroom], { ttl: 10 })
+const stage = new Scenes.Stage<mine>([banroom], { ttl: 10 })
 bot.use(session()); // still needed to use scenes 
 bot.use(stage.middleware())
 
@@ -175,13 +213,12 @@ const handler : Handler = async event => {
 	try {
 		if (event.body === null) throw new TypeError()
 		await bot.handleUpdate(JSON.parse(event.body));
-		return { statusCode: 200, body: 'not important' };
+		return { statusCode: 200, body: '' };
 	} catch (e) {
 	  console.log(e)
 	  return { statusCode: 400, body: 'This endpoint is meant for bot and telegram communication' };
 	}  
 }
-
 export {handler}
 /* for server webhooks 
 bot.launch({

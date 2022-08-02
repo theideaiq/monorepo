@@ -1,4 +1,5 @@
 import { Markup } from 'telegraf'
+import {newUser, user} from "@components/fauna"
 import LRU from "lru-cache"
 
 
@@ -39,27 +40,21 @@ export const toUnicode = (str : string) => {
 	return str	
 }
 export const reshape = <T>(original : Array<T>, size : number) : Array<T[]> => {
-	const lst: T[][] = []
-	while(original.length) lst.push(original.splice(0, size))
-	const len = lst.length
-	for (let dex = 0; dex < len; dex++) {
-		original.push(...lst[dex])
-	}
+	const lst: T[][] = [], copy = [...original]
+	while(copy.length) lst.push(copy.splice(0, size))
 	return lst
 }
 
 // just a facade to make using the cache a bit easier 
-export default new LRU({
+export const cache =  new LRU({
 	max: 750,
 
 	// for use when you need to clean up something when objects
 	// are evicted from the cache
-	dispose: (value, key) => {
-		
-	},
+	dispose: (value : user, key : number) => newUser(key, value),
 
 	// how long to live in ms
-	ttl: 1000 * 60 * 10, // -> 5 min
+	ttl: 1000 * 60 * 30, // -> 10 min
 
 	// return stale items before removing from cache?
 	allowStale: false,
