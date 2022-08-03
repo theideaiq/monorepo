@@ -1,12 +1,6 @@
-import Stemmer from 'arabic-stem'
 import natrual from "natural" 
 
-const {LancasterStemmer, JaroWinklerDistance : jarodist, LevenshteinDistance: levedist} = natrual
-export const stemAb = (str : string) => {
-	const val = new Stemmer().stem(cleanArb(str))
-	const stemval = val.stem.map(el => jarodist(el, cleanArb(str)))
-	return val.stem[stemval.indexOf(Math.max(...stemval))] ?? cleanArb(str)
-}
+const {JaroWinklerDistance : jarodist, LevenshteinDistance: levedist} = natrual
 
 // the natrual tokenizer doesn't work great for this use, so i had to write a custom one
 export function* tokenize (text: string) {
@@ -84,19 +78,15 @@ const stripurl = (text : string) => {
 }
 
 const matcher = (token : string, list : format, optinalsecound?: string, ) : boolean => {
-	let stem : ((str: string) => string) = stemAb
-	let words : Array<string | string[][]> = []
+	let words : Array<string | string[]> = []
 	if (arabic(token)) {
 		words = list.arabic
 	} else if (english(token)) {
-		stem = LancasterStemmer.stem
 		words = list.english
 	} else if (/\p{Script=Han}/u.test(token)) {
 		const chinese = list.chinese, len = words.length
 		for (let dex = 0; dex < len; dex++) {
-			const word = words[dex];
-			if (Array.isArray(word)) throw TypeError()
-			if (new RegExp(word).test(token)) return true
+			if (new RegExp(chinese[dex]).test(token)) return true
 		}
 	}
 	words = words.filter(word => {
@@ -104,9 +94,7 @@ const matcher = (token : string, list : format, optinalsecound?: string, ) : boo
 		return word.length <= token.length
 	})
 	
-	token = stem(token)
-	if (optinalsecound !== undefined) optinalsecound = token +" "+ stem(optinalsecound)
-	
+	if (optinalsecound !== undefined) optinalsecound = token +" "+ optinalsecound
 	const len = words.length
 	for (let dex = 0; dex < len; dex++) {
 		let word = words[dex]
@@ -114,19 +102,14 @@ const matcher = (token : string, list : format, optinalsecound?: string, ) : boo
 			const inlen = word.length
 			for (let index = 0; index < inlen; index++) {
 				if (optinalsecound === undefined) continue;
-				
-				const inword = word[index]
-				const nested = stem(inword[0]) + ' ' + stem(inword[1])
+				const nested = word[index]
 
 				if ( levedist(optinalsecound, nested) > 1) continue
-				if ((jarodist(optinalsecound, nested) > .925) || regel(optinalsecound).test(nested)) return true
-				
+				if ((jarodist(optinalsecound, nested) > .91) || regel(optinalsecound).test(nested)) return true
 			}
 		} else {
-			word = stem(word)
 			if ( levedist(token, word) > 1) continue
 			if ((jarodist(token, word) > .93) || regel(token).test(word)) return true
-			
 		}
 	} 
 	return false
@@ -139,5 +122,4 @@ export const compare = (text: string, list : format) => {
 	}
 	return false
 }
-
-export declare type format = { english: (string | string[][])[]; arabic: string[]; chinese: string[]; }
+export declare type format = { english: Array<string | string[]>; arabic: string[]; chinese: string[]; }

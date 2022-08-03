@@ -19,7 +19,6 @@ bot.use(async (ctx, next) => {
 		let {status} = await ctx.getChatMember(from.id)
 		ctx.status = status 
 	}
-	
 	const date = ctx.message?.date
 	if (date === undefined) return next()
 	switch (ctx.updateType) {
@@ -151,22 +150,32 @@ bot.command('/ban', async ctx => {
 	const {status, message} = ctx
 	let [__, username ] = message.text.split(' ')
 	if (!/@/.test(username)) username = '@$-' + username + '/'+ toUnicode(username)
+	
+	const user = cache.find(el => {
+		el.username === username
+	})
 
 	if ( status === 'administrator' || status === 'creator' ) {
-		const holder = await pagiQuery<[number]>('by_username', username.slice(1))
-
-		ctx.banChatMember(holder[0])
+		const holder = (user !== undefined)? user.id :(await pagiQuery<[number]>('by_username', username.slice(1)))[0]
+		
+		ctx.banChatMember(holder)
 	} else ctx.reply("nothing happened", {reply_to_message_id : message.message_id})
 
 })
+
 
 // const words: format = JSON.parse(readFileSync('resources/banned-words.json', 'utf8'))
 import words from "@resources/banned-words.json"
 bot.on("text", async ctx => {
 	const {message, status} = ctx
 	const {text, message_id, from, chat} = message
-	const {username, id} = from
+	let {username, id, first_name, last_name} = from
 	const {id : chat_id} = chat
+
+	if (username === undefined) {
+		username = '$-' + first_name + (last_name === undefined)? '': last_name
+		username += '/' + toUnicode(username!)
+	} 
 	if (!cache.has(id)) {
 		cache.set(id, {
 			id,
@@ -182,17 +191,20 @@ bot.on("text", async ctx => {
 		})
 	}
 	if (compare(text, words)) {
-		ctx.deleteMessage(message_id)
+		try {ctx.deleteMessage(message_id)}
+		catch (e) {console.log(e)}
 	} 
 	const user = cache.get<user>(id)
 	if (user!.samecount! > 3){
 		user!.messages!.forEach(el => {
 			ctx.deleteMessage(el)
+			user!.messages!.pop()
 		}) 
-		ctx.restrictChatMember(id, {
-			until_date : Math.floor((Date.now() /1000.0) + 350), 
-			permissions : {can_send_messages: false, can_send_other_messages: false}
-		})
+		if (ctx.chat.type === "supergroup")
+			ctx.restrictChatMember(id, {
+				until_date : Math.floor((Date.now() /1000.0) + 350), 
+				permissions : {can_send_messages: false, can_send_other_messages: false}
+			})
 	}
 	if (user!.last === text && user!.chat_id === chat_id) {
 		user!.samecount !+= 1 
@@ -200,10 +212,12 @@ bot.on("text", async ctx => {
 	} else {
 		user!.last = text
 		user!.chat_id = chat_id
+		while (user!.messages!.length) user!.messages!.pop()
 		user!.messages![0]= message_id
 		user!.samecount != 0 
 	}
 })
+
 const stage = new Scenes.Stage<mine>([banroom], { ttl: 10 })
 bot.use(session()); // still needed to use scenes 
 bot.use(stage.middleware())
