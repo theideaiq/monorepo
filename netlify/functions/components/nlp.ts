@@ -82,9 +82,10 @@ const stripurl = (text : string) => {
 	}
 	return text
 }
+
 const matcher = (token : string, list : format, optinalsecound?: string, ) : boolean => {
 	let stem : ((str: string) => string) = stemAb
-	let words : Array<string| string[]> = []
+	let words : Array<string | string[][]> = []
 	if (arabic(token)) {
 		words = list.arabic
 	} else if (english(token)) {
@@ -139,4 +140,4 @@ export const compare = (text: string, list : format) => {
 	return false
 }
 
-export declare type format = {arabic: string[], chinese: string[], english: Array<string|string[]>}
+export declare type format = { english: (string | string[][])[]; arabic: string[]; chinese: string[]; }

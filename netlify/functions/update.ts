@@ -135,7 +135,7 @@ bot.hears('The post family links؜', ctx => {
 	ctx.deleteMessage(ctx.message.message_id)
 
 })
-const pins = require("@resources/pin.json")
+import pins from "@resources/pin.json"
 bot.hears('post pins؜', ctx => {
 
 	ctx.reply('heres your pins',
@@ -161,7 +161,7 @@ bot.command('/ban', async ctx => {
 })
 
 // const words: format = JSON.parse(readFileSync('resources/banned-words.json', 'utf8'))
-const words = require("@resources/banned-words")
+import words from "@resources/banned-words.json"
 bot.on("text", async ctx => {
 	const {message, status} = ctx
 	const {text, message_id, from, chat} = message
