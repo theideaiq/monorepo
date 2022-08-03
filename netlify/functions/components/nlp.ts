@@ -16,7 +16,7 @@ export function* tokenize (text: string) {
 		}
 		else if (lang = english(token[0])) {
 			token = token.map(tkn => 
-				pregReplace(tkn, [/([^\w]+)$/g, /^([^\w]+)/g], [''])
+				pregReplace(tkn, [/([^\w]+)$/g, /^([^\w]+)/g], ['']).toLocaleLowerCase()
 			)
 		} // i wish there could be heaven, where earth isn't seen unitl the day god flutters and kills everything there has been
 		else throw TypeError('unsupported language')
