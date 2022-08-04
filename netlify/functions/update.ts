@@ -58,8 +58,8 @@ bot.start(async ctx => {
 		id,
 		username,
 		banned: false,
-		status : 'member',
 		ban_request : '',
+		status : ctx.status,
 		signed_to_newsletter: true,
 	})
 
@@ -67,10 +67,10 @@ bot.start(async ctx => {
 
 }) 
 // does not work for some reason 
-bot.hears("Unban request؜", async ctx => {
+bot.hears("Unban request؜", ctx => {
 
 	ctx.deleteMessage(ctx.message.message_id)
-	ctx.scene.enter('banroom')
+	return ctx.scene.enter('banroom')
 
 })
 
@@ -80,7 +80,7 @@ banroom.on('text', async ctx => {
 	const holder = await pagiQuery<number[]>('by-status', "administrator") // index does not exist 
 	const theOne = holder[Math.floor(Math.random() * holder.length)]
 	bot.telegram.sendMessage(theOne, ctx.message.text)
-	ctx.scene.leave()
+	return ctx.scene.leave()
 })
 
 const FAQsub = ['General؜', 'Education؜', 'Sources؜', 'About the post؜', 'back؜']
@@ -97,25 +97,25 @@ bot.hears('FAQ page؜', ctx => {
 		).resize(true)
 	)
 })
-FAQsub.forEach(el => {
-	pagiQuery<string[][]>('by_subject', el.replace('؜', ''))
-	.then(holder => {
-		const [que, ans] = splitArray(holder)	
 
-		bot.hears(FAQsub, async ctx => {
-			ctx.reply('here you go',
-				Markup.keyboard(		
-					reshape(que, 3)
-				).resize(true)
-			)
-		})
+	
+bot.hears(FAQsub, async ctx => {
+	const [que, ans] = splitArray(
+			await pagiQuery<string[][]>('by_subject', ctx.match[0].replace('؜', ''))
+		)	
 
+		ctx.reply('here you go',
+			Markup.keyboard(		
+				reshape(que, 3)
+			).resize(true)
+		)
+		
 		bot.hears(que, ctx => {
 			ctx.reply(ans[que.indexOf(ctx.match[0])], panel[1])
 			ctx.deleteMessage(ctx.message.message_id)
 		})			
 	})
-})
+			
 bot.hears('The post family links؜', ctx => {
 	ctx.reply('here you go', 
 		{ reply_markup: {
@@ -196,10 +196,10 @@ bot.on("text", async ctx => {
 	} 
 	const user = cache.get<user>(id)
 	if (user!.samecount! > 3){
-		user!.messages!.forEach(el => {
+		user!.messages!.forEach(el => 
 			ctx.deleteMessage(el)
-			user!.messages!.pop()
-		}) 
+		) 
+		while (user!.messages!.length) user!.messages!.pop()
 		if (ctx.chat.type === "supergroup")
 			ctx.restrictChatMember(id, {
 				until_date : Math.floor((Date.now() /1000.0) + 350), 

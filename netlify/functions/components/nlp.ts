@@ -1,6 +1,6 @@
 import natrual from "natural" 
 
-const {JaroWinklerDistance : jarodist, LevenshteinDistance: levedist} = natrual
+const {JaroWinklerDistance : jarodist,} = natrual
 
 // the natrual tokenizer doesn't work great for this use, so i had to write a custom one
 export function* tokenize (text: string) {
@@ -76,7 +76,10 @@ const stripurl = (text : string) => {
 	}
 	return text
 }
+const elper = (token : string, optinalsecound : string) => {
 
+}
+const filter = (token : string) => new RegExp("["+token+"]") 
 const matcher = (token : string, list : format, optinalsecound?: string, ) : boolean => {
 	let words : Array<string | string[]> = []
 	if (arabic(token)) {
@@ -88,13 +91,12 @@ const matcher = (token : string, list : format, optinalsecound?: string, ) : boo
 		for (let dex = 0; dex < len; dex++) {
 			if (new RegExp(chinese[dex]).test(token)) return true
 		}
+	}	
+	let optinal : string
+	if (optinalsecound !== undefined) {
+		optinalsecound = token +" "+ optinalsecound
+		optinal = token + optinalsecound
 	}
-	words = words.filter(word => {
-		if (Array.isArray(word)) return true;
-		return word.length <= token.length
-	})
-	
-	if (optinalsecound !== undefined) optinalsecound = token +" "+ optinalsecound
 	const len = words.length
 	for (let dex = 0; dex < len; dex++) {
 		let word = words[dex]
@@ -103,13 +105,13 @@ const matcher = (token : string, list : format, optinalsecound?: string, ) : boo
 			for (let index = 0; index < inlen; index++) {
 				if (optinalsecound === undefined) continue;
 				const nested = word[index]
-
-				if ( levedist(optinalsecound, nested) > 1) continue
-				if ((jarodist(optinalsecound, nested) > .91) || regel(optinalsecound).test(nested)) return true
+				if ((jarodist(optinalsecound, nested) > .92) || regel(optinalsecound).test(nested)) return true
 			}
 		} else {
-			if ( levedist(token, word) > 1) continue
-			if ((jarodist(token, word) > .93) || regel(token).test(word)) return true
+			if (!filter(token).test(word)) continue
+
+			if ((jarodist(token, word) > .96) || regel(token).test(word)) return true
+			if (optinal! && (jarodist(optinal, word) > .96 || regel(optinal).test(word))) return true			
 		}
 	} 
 	return false
