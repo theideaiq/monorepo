@@ -33,7 +33,7 @@ export const banreq = (id : number) : Promise<boolean>=> {
 			).catch(err => rej(err))
 	})
 }
-export const newUser = (id : number , data : user) : Promise<{}>  => {
+export const newUser = (id : number , data : user) : Promise<object>  => {
 	return new Promise((res, rej) => {
 		client.query(
 			(Get(Match(Index("by_id"), id)) === undefined)?
@@ -79,7 +79,7 @@ export interface user {
 	status?: string,
 	banned: boolean,
 	username?: string,
-	samecount?: number,
+	count?: number,
 	ban_request: string,
 	signed_to_newsletter: boolean
 }

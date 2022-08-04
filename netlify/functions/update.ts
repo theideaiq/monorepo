@@ -98,7 +98,7 @@ bot.hears('FAQ page؜', ctx => {
 	)
 })
 
-	
+// fixme broke after switching to typesciprt idk why gonna fix it by using the cache
 bot.hears(FAQsub, async ctx => {
 	const [que, ans] = splitArray(
 			await pagiQuery<string[][]>('by_subject', ctx.match[0].replace('؜', ''))
@@ -183,7 +183,7 @@ bot.on("text", async ctx => {
 			chat_id,
 			username,
 			last: text,
-			samecount: 0,
+			count: 0,
 			messages : [], 
 			banned: false,
 			ban_request : '',
@@ -195,11 +195,11 @@ bot.on("text", async ctx => {
 		catch (e) {console.log(e)}
 	} 
 	const user = cache.get<user>(id)
-	if (user!.samecount! > 3){
-		user!.messages!.forEach(el => 
-			ctx.deleteMessage(el)
-		) 
+	// fixme message deletion does not work like wanted,
+	if (user!.count! > 3){
+		for (const el of user!.messages!) ctx.deleteMessage(el)
 		while (user!.messages!.length) user!.messages!.pop()
+		user!.count! = 0 
 		if (ctx.chat.type === "supergroup")
 			ctx.restrictChatMember(id, {
 				until_date : Math.floor((Date.now() /1000.0) + 350), 
@@ -207,14 +207,15 @@ bot.on("text", async ctx => {
 			})
 	}
 	if (user!.last === text && user!.chat_id === chat_id) {
-		user!.samecount !+= 1 
+		user!.count !+= 1 
 		user!.messages!.push(message_id)
+
 	} else {
+		while (user!.messages!.length) user!.messages!.pop()
 		user!.last = text
 		user!.chat_id = chat_id
-		while (user!.messages!.length) user!.messages!.pop()
-		user!.messages![0]= message_id
-		user!.samecount != 0 
+		user!.messages!.push(message_id)
+		user!.count != 0 
 	}
 })
 
