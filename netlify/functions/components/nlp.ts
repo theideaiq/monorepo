@@ -76,9 +76,6 @@ const stripurl = (text : string) => {
 	}
 	return text
 }
-const elper = (token : string, optinalsecound : string) => {
-
-}
 const filter = (token : string) => new RegExp("["+token+"]") 
 const matcher = (token : string, list : format, optinalsecound?: string, ) : boolean => {
 	let words : Array<string | string[]> = []
