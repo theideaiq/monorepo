@@ -3,14 +3,14 @@ import LRU from "lru-cache"
 
 
 export const panel : [string, {}]  = [
-	'welcome to the post droid', // temp message will have a better one later i think
+	'Welcome to The Post Droid!', // temp message will have a better one later i think
 	Markup.keyboard([
 		[
-			"Unban request؜",
-			'FAQ page؜'
+			"Unban Request؜",
+			'FAQ؜'
 		],
-		['The post family links؜'],
-		["post pins؜"]
+		['Links؜'],
+		["Pin؜"]
 	])
 	.resize(true)
 	.placeholder('pick your pick')

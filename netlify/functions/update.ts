@@ -80,18 +80,18 @@ bot.hears(FAQsub, async ctx => {
 
 })
 
-bot.hears('The post family links؜', ctx => {
+bot.hears('Links؜', ctx => {
 	ctx.reply('here you go', 
 		{ reply_markup: {
 			inline_keyboard: [
-				['the post website','https://t.me/thepostiq'],
-				['the post group','https://t.me/thepostofficeiq'],
-				['art club group','https://t.me/artclubiq'],
-				['the post instagram','https://instagram.com/thepostiq'],
-				["art club instagram",'https://instagram.com/artclubiq'],
-				['the post linkedin','https://linkedin.com/company/thepostproject'],
-				['the post facebook','https://web.facebook.com/thepostiq'],
-				['the post twitter','https://twitter.com/thepostiq']
+				['Website','https://t.me/thepostiq'],
+				['The Post Office','https://t.me/thepostofficeiq'],
+				['Art Club','https://t.me/artclubiq'],
+				['Instagram','https://instagram.com/thepostiq'],
+				["Art Club Instagram",'https://instagram.com/artclubiq'],
+				['Linkedin','https://linkedin.com/company/thepostproject'],
+				['Facebook','https://web.facebook.com/thepostiq'],
+				['Twitter','https://twitter.com/thepostiq']
 			].map(([el, ln]) => [Markup.button.url(el, ln)])
 		}}
 	)
@@ -99,7 +99,7 @@ bot.hears('The post family links؜', ctx => {
 
 })
 const pins = JSON.parse(readFileSync('resources/pin.json', 'utf8'))
-bot.hears('post pins؜', ctx => {
+bot.hears('Pin؜', ctx => {
 	ctx.reply('heres your pins',
 	Markup.keyboard(
 		reshape(Object.keys(pins), 2)
