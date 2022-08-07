@@ -194,7 +194,7 @@ bot.hears(Object.keys(pins), async ctx => {
 	}
 	const msg = await ctx.reply("don't mind me", panel[1])
 	ctx.deleteMessage(msg.message_id)
-	ctx.editMessageText("beep poob pick a thing",
+	ctx.reply("beep poob pick a thing",
 	 {
 		 reply_markup : {
 			// @ts-ignore
@@ -206,7 +206,7 @@ bot.hears(Object.keys(pins), async ctx => {
 		// Markup.inlineKeyboard(keypins)
 	)
 })
-bot.hears("back؜", ctx => ctx.reply('back you go', panel[1]))
+bot.hears("back", ctx => ctx.reply('back you go', panel[1]))
 
 
 bot.command('/ban', async ctx => {
