@@ -3,8 +3,15 @@
 
 links & commands needed to set the boot
 
-<https://api.telegram.org/bot[yoursite]/getUpdates?allowed_updates>=["update_id", "message", "edited_message", "inline_query", "chosen_inline_result", "callback_query", "poll", "poll_answer", "my_chat_member", "chat_member"]
+command to update the telegram api updates:
+check the [api](https://core.telegram.org/bots/api#getting-updates) documantation for the full list of availabile updates
 
-<https://api.telegram.org/bot[yoursite]/setWebhook>
+<https://api.telegram.org/bot[yoursite]/getUpdates?allowed_updates=[updates]>
 
-curl -F "url=<https://[yoursite].netlify.app/.netlify/functions/update>" <https://api.telegram.org/bot[botkey]/setWebhook>
+ones we're using= ["update_id", "message", "edited_message", "inline_query", "chosen_inline_result", "callback_query", "poll", "poll_answer", "my_chat_member", "chat_member"]
+
+small article to set the webhook
+<https://xabaras.medium.com/setting-your-telegram-bot-webhook-the-easy-way-c7577b2d6f72>
+
+TL;DR put this url in da browser with the bot token and teh webhook url
+<https://api.telegram.org/bot[bottkoen]/setWebhook?url=https://[siteurl]>

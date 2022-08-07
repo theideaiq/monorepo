@@ -1,18 +1,21 @@
 {
   "compilerOptions": {
+    "strict": true,
     "target":"ES2021",
     "lib": ["es2021", "DOM" ],
     "module": "ES2022",
     "baseUrl": "./netlify/functions/",
     "paths": {
       "@components/*": ["./components/*"],
+      "@resources/*": ["./resources/*"],
     },
+    
     "types": ["node"],
     "esModuleInterop": true,
     "isolatedModules": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true
   }
 }

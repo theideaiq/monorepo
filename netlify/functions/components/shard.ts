@@ -1,29 +1,28 @@
 import { Markup } from 'telegraf'
+import {newUser, user} from "@components/fauna"
 import LRU from "lru-cache"
 
 
 export const panel : [string, {}]  = [
-	'welcome to the post droid', // temp message will have a better one later i think
+	'Welcome to The Post Droid!', // temp message will have a better one later i think
 	Markup.keyboard([
 		[
-			"Unban request؜",
-			'FAQ page؜'
+			"Unban Request؜",
+			'FAQ؜'
 		],
-		['The post family links؜'],
-		["post pins؜"]
+		['Links؜'],
+		["Pin؜"]
 	])
 	.resize(true)
 	.placeholder('pick your pick')
 ]
 
 export const splitArray = <T>(array : T[][]) => {
-	const lst : T[][] = [[],[]]
-	const len = array.length
+	const lst : T[][] = [[],[]], len = array.length
 	for (let dex = 0; dex < len; dex++) {
 		const el = array[dex]
 		lst[0].push(el[0])	
 		lst[1].push(el[1])
-		
 	}
 	return lst
 }
@@ -39,31 +38,48 @@ export const toUnicode = (str : string) => {
 	return str	
 }
 export const reshape = <T>(original : Array<T>, size : number) : Array<T[]> => {
-	const lst: T[][] = []
-	while(original.length) lst.push(original.splice(0, size))
-	const len = lst.length
-	for (let dex = 0; dex < len; dex++) {
-		original.push(...lst[dex])
-	}
+	const lst: T[][] = [], copy = [...original]
+	while(copy.length) lst.push(copy.splice(0, size))
 	return lst
 }
 
 // just a facade to make using the cache a bit easier 
-export default new LRU({
-	max: 750,
+export const cache =  new LRU({
+	max: 100,
 
 	// for use when you need to clean up something when objects
 	// are evicted from the cache
-	dispose: (value, key) => {
-		
+	// todo does not get called when stale items are auto purged
+	dispose (value : user, key : number) {
+		const {username, status, id} = value
+		return newUser(key, {
+			id,
+			status,
+			username,
+			banned: false,
+		})
 	},
 
 	// how long to live in ms
-	ttl: 1000 * 60 * 10, // -> 5 min
+	ttl: 1000 * 60 * 30, // -> 30 min
+	ttlResolution : 2,
+	ttlAutopurge : true,
+	updateAgeOnGet: true,
+	updateAgeOnHas: true,
+})
 
+export const Secache = new LRU({
+	max: 100,
+
+	// for use when you need to clean up something when objects
+	// are evicted from the cache
+	dispose (value : string[], key : string) {},
+
+	// how long to live in ms
+	ttl: 1000 * 60 * 10, // -> 10 min
+	ttlResolution : 2,
 	// return stale items before removing from cache?
-	allowStale: false,
-
-	updateAgeOnGet: false,
-	updateAgeOnHas: false,
+	allowStale:true,
+	updateAgeOnGet: true,
+	updateAgeOnHas: true,
 })

@@ -1,34 +1,33 @@
-import Stemmer from 'arabic-stem'
 import natrual from "natural" 
 
-const {LancasterStemmer, JaroWinklerDistance : jarodist} = natrual
-
-const stemAb = (str : string) => {
-	const val = new Stemmer().stem(cleanArb(str))
-	const stemval = val.stem.map(el => jarodist(el, cleanArb(str)))
-	return val.stem[stemval.indexOf(Math.max(...stemval))] ?? cleanArb(str)
-}
+const {JaroWinklerDistance : jarodist,} = natrual
 
 // the natrual tokenizer doesn't work great for this use, so i had to write a custom one
-
-const tokenize = (text: string) => {
-	const tokens = text.trim().replace(/\.\s/g, ' ').split(/\s+/) , len = tokens.length // th*ng -> /th.ng/ && [th, ng]
-	const out: string[] = []
-	let lang : RegExp | boolean = arabic(text)
+function* tokenize (text: string) {
+	const emoji = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
+	const tokens = text.trim().replace(emoji, '').split(/\s+/) , len = tokens.length // th@ng -> /th.*ng/ && [th, ng]
+	let lang : RegExp | undefined 
 	for (let dex = 0; dex < len ; dex++) {
-		let token = tokens[dex]
-		if (lang) token = cleanArb(token)
-		else if (lang = english(text)) {} // i wish there could be heaven, where earth isn't seen unitl the day god flutters and kills everything there has been
-		else throw TypeError('unsupported language')		
-		!lang.test(token)?
-			out.push(token):
-			out.push(
-				token.replace(lang, '.*'),
-				...token.split(lang)
+		let token = [stripurl(tokens[dex]), stripurl(tokens[dex+1]) ?? '' ]
+
+		if (lang = arabic(token[0])) {
+			token = token.map(tkn => 
+				pregReplace(cleanArb(tkn), [/([^\u0600-\u06FF\u0750-\u077F]|\u061F+)$/g, /^([^\u0600-\u06FF\u0750-\u077F]|\u061F+)/g], [''])
 			)
+		}
+		else if (lang = english(token[0])) {
+			token = token.map(tkn => 
+				pregReplace(tkn, [/([^\w]+)$/g, /^([^\w]+)/g], ['']).toLocaleLowerCase()
+			)
+		} // i wish there could be heaven, where earth isn't seen unitl the day god flutters and kills everything there has been
+		else throw TypeError('unsupported language')
+		yield token.map(tkn => tkn.replace(lang!, '.*'))
+		if(lang.test(token[0])){
+			yield token[0].split(lang)
+		}
 	}
-	return out
 }
+
 const cleanArb = (text: string) => {
 	text = pregReplace(text, [/[ًٌٍَُِّ]/g,/[کگ]/g,'ڤ',/[ێي]/g,/[ۆؤ]/g,'ڵ','پ','ژ','ڕ'], ["", "ك", "ف", "ي", "و", "ل", "ب", "ز", "ر"])
 	if (text[0] === "و") text = shift(text)
@@ -43,12 +42,12 @@ const shift =  (text : string) => {
 const english = (text : string) => 	
 	/\w/.test(text)?
 		/[^\w]+/:
-		false
+		undefined
 
 const arabic = (text: string) => 
 	/[\u0600-\u06FF\u0750-\u077F]/.test(text)?
-		/[^\u0600-\u06FF\u0750-\u077F]+/:
-		false
+		/[^\u0600-\u06FF\u0750-\u077F]|\u061F+/:
+		undefined
 
 const pregReplace = (text: string, pattern: Array<string|RegExp>, replaceto: string[]) => {
 	const len = pattern.length
@@ -72,49 +71,57 @@ const regel = (pattern : string) => {
 	return RegExp("\\b" +pattern+ "\\b", 'i')
 }
 
-
-const matcher = (token : string, list : format, optinalsecound?: string) : boolean => {
-	let stem : ((str: string) => string) = stemAb
-	let words : Array<string|string[]> = []
+const stripurl = (text : string) => {
+	if (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(text)) {
+		text = pregReplace(text, [/https?:\/\/(www\.)?/g, /\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g], [''])
+	}
+	return text
+}
+const filter = (token : string) => new RegExp(`[${token}](?![^${token}])`) 
+const matcher = (token : string, list : format, optinalsecound: string, ) : boolean => {
+	let words : Array<string | string[]> = []
 	if (arabic(token)) {
 		words = list.arabic
 	} else if (english(token)) {
-		stem = LancasterStemmer.stem
 		words = list.english
-	} 
-	words = words.filter(word => {
-		if (Array.isArray(word)) return true;
-		return word.length <= token.length
-	})
-	
-	token = stem(token)
-	if (optinalsecound !== undefined) optinalsecound = token +" "+ stem(optinalsecound)
-	
+	} else if (/\p{Script=Han}/u.test(token)) {
+		const chinese = list.chinese, len = words.length
+		for (let dex = 0; dex < len; dex++) {
+			if (new RegExp(chinese[dex]).test(token)) return true
+		}
+	}	
+	let optinal : string
+	if (optinalsecound !== '') {
+		optinal = token + optinalsecound
+		optinalsecound = token +" "+ optinalsecound
+	}
+
 	const len = words.length
 	for (let dex = 0; dex < len; dex++) {
 		let word = words[dex]
 		if (Array.isArray(word)) {
+			if (optinalsecound === '') continue;
 			const inlen = word.length
 			for (let index = 0; index < inlen; index++) {
-				const inword = word[index]
-				const nested = stem(inword[0]) + ' ' + stem(inword[1])
-				if (optinalsecound === undefined) continue;
-				if ((jarodist(optinalsecound, nested) > .8999) || regel(optinalsecound).test(nested)) return true
+				const nested = word[index]
+				if ((jarodist(optinalsecound, nested) > .92) || regel(nested).test(optinalsecound)) return true
 			}
 		} else {
-            word = stem(word)
-			if ((jarodist(token, word) > .8999) || regel(token).test(word)) return true
+			const rgx = regel(word)
+			if (!filter(token).test(word)) continue
+
+			if ((jarodist(token, word) > .96) || rgx.test(token)) return true
+			if (optinal! && (jarodist(optinal, word) > .96 || rgx.test(optinal))) return true			
 		}
 	} 
 	return false
 }
+
 export const compare = (text: string, list : format) => {
-	const tokens = tokenize(text.replace(/[ًٌٍَُِّ]/g, '')), len = tokens.length
-	for (let dex = 0; dex < len; dex++) {
-		if (matcher(tokens[dex], list, tokens[dex+1])) 
+	for (const [first, second] of tokenize(text.replace(/[ًٌٍَُِّ]/g, ''))) {
+		if (matcher(first, list, second)) 
 			return true
-	} 
+	}
 	return false
 }
-
-export declare type format = {arabic: string[], english: Array<string|string[]>}
+export declare type format = { english: Array<string | string[]>; arabic: string[]; chinese: string[]; }
