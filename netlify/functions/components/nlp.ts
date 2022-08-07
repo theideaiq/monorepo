@@ -3,8 +3,9 @@ import natrual from "natural"
 const {JaroWinklerDistance : jarodist,} = natrual
 
 // the natrual tokenizer doesn't work great for this use, so i had to write a custom one
-export function* tokenize (text: string) {
-	const tokens = text.trim().split(/\s+/) , len = tokens.length // th@ng -> /th.*ng/ && [th, ng]
+function* tokenize (text: string) {
+	const emoji = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
+	const tokens = text.trim().replace(emoji, '').split(/\s+/) , len = tokens.length // th@ng -> /th.*ng/ && [th, ng]
 	let lang : RegExp | undefined 
 	for (let dex = 0; dex < len ; dex++) {
 		let token = [stripurl(tokens[dex]), stripurl(tokens[dex+1]) ?? '' ]
@@ -76,8 +77,8 @@ const stripurl = (text : string) => {
 	}
 	return text
 }
-const filter = (token : string) => new RegExp("["+token+"]") 
-const matcher = (token : string, list : format, optinalsecound?: string, ) : boolean => {
+const filter = (token : string) => new RegExp(`[${token}](?![^${token}])`) 
+const matcher = (token : string, list : format, optinalsecound: string, ) : boolean => {
 	let words : Array<string | string[]> = []
 	if (arabic(token)) {
 		words = list.arabic
@@ -90,25 +91,27 @@ const matcher = (token : string, list : format, optinalsecound?: string, ) : boo
 		}
 	}	
 	let optinal : string
-	if (optinalsecound !== undefined) {
-		optinalsecound = token +" "+ optinalsecound
+	if (optinalsecound !== '') {
 		optinal = token + optinalsecound
+		optinalsecound = token +" "+ optinalsecound
 	}
+
 	const len = words.length
 	for (let dex = 0; dex < len; dex++) {
 		let word = words[dex]
 		if (Array.isArray(word)) {
+			if (optinalsecound === '') continue;
 			const inlen = word.length
 			for (let index = 0; index < inlen; index++) {
-				if (optinalsecound === undefined) continue;
 				const nested = word[index]
-				if ((jarodist(optinalsecound, nested) > .92) || regel(optinalsecound).test(nested)) return true
+				if ((jarodist(optinalsecound, nested) > .92) || regel(nested).test(optinalsecound)) return true
 			}
 		} else {
+			const rgx = regel(word)
 			if (!filter(token).test(word)) continue
 
-			if ((jarodist(token, word) > .96) || regel(token).test(word)) return true
-			if (optinal! && (jarodist(optinal, word) > .96 || regel(optinal).test(word))) return true			
+			if ((jarodist(token, word) > .96) || rgx.test(token)) return true
+			if (optinal! && (jarodist(optinal, word) > .96 || rgx.test(optinal))) return true			
 		}
 	} 
 	return false
