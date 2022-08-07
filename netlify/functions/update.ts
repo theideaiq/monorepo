@@ -192,10 +192,9 @@ bot.hears(Object.keys(pins), async ctx => {
 			))
 		}
 	}
-	const msg = await ctx.reply("don't mind me", panel[1])
-	ctx.deleteMessage(msg.message_id)
 	ctx.reply("beep poob pick a thing",
-	 { reply_markup : {
+	 { reply_markup : { 
+		...panel[1],
 			inline_keyboard : 
 				keypins
 			
