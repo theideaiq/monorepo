@@ -130,6 +130,10 @@ bot.hears(FAQsub, async ctx => {
 
 		})			
 })
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3ce823a25d5e1eafa891c2a9b92a79bef404aafa
 bot.hears('Links؜', ctx => {
 	ctx.reply('here you go', 
 		{ reply_markup: {
@@ -148,11 +152,16 @@ bot.hears('Links؜', ctx => {
 	ctx.deleteMessage(ctx.message.message_id)
 
 })
+<<<<<<< HEAD
 import pi from "@resources/pin.json"
 const pins = <Record<string, Record<string, string|Record<string, string>>>>pi
 
 bot.hears('Pin؜', ctx => {
 	
+=======
+const pins = JSON.parse(readFileSync('resources/pin.json', 'utf8'))
+bot.hears('Pin؜', ctx => {
+>>>>>>> 3ce823a25d5e1eafa891c2a9b92a79bef404aafa
 	ctx.reply('heres your pins',
 		Markup.keyboard(
 			reshape([...Object.keys(pins), "back"], 2)
