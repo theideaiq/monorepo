@@ -103,7 +103,7 @@ bot.hears('FAQ؜', ctx => {
 			[
 				FAQsub.slice(0,2),
 				FAQsub.slice(2),
-				["back؜"],
+				["back"],
 				
 			]
 		).resize(true)
@@ -157,7 +157,7 @@ bot.hears('Pin؜', ctx => {
 	
 	ctx.reply('heres your pins',
 		Markup.keyboard(
-			reshape([...Object.keys(pins), "back؜"], 2)
+			reshape([...Object.keys(pins), "back"], 2)
 	))
 	ctx.deleteMessage(ctx.message.message_id)
 })
@@ -182,9 +182,9 @@ bot.hears(Object.keys(pins), async ctx => {
 	for (const el of keys) {
 		const pi = pin[el] 
 		
-		if (typeof pi === 'string') keypins.push(Markup.button.url(el, pi))
+		if (typeof pi === 'string') keypins.push([Markup.button.url(el, pi)])
 		else { 
-			keypins.push(Markup.button.url(el, ''))
+			keypins.push([Markup.button.url(el, '')])
 			keypins.push(Object.keys(pi).map(key => {
 				const keypi = pi[key];
 				return Markup.button.url(key, keypi)
@@ -195,9 +195,7 @@ bot.hears(Object.keys(pins), async ctx => {
 	const msg = await ctx.reply("don't mind me", panel[1])
 	ctx.deleteMessage(msg.message_id)
 	ctx.reply("beep poob pick a thing",
-	 {
-		 reply_markup : {
-			// @ts-ignore
+	 { reply_markup : {
 			inline_keyboard : 
 				keypins
 			
