@@ -111,6 +111,7 @@ bot.hears('FAQ؜', ctx => {
 })
 
 // fixme broke after switching to typesciprt idk why gonna fix it by using the cache
+// todo still does not work
 bot.hears(FAQsub, async ctx => {
 	const [que, ans] = splitArray(
 			await pagiQuery<string[]>('by_subject', ctx.match[0].replace('؜', ''))
@@ -128,10 +129,7 @@ bot.hears(FAQsub, async ctx => {
 			ctx.deleteMessage(ctx.message.message_id)
 
 		})			
-	})
-			
-
-	
+})
 bot.hears('Links؜', ctx => {
 	ctx.reply('here you go', 
 		{ reply_markup: {
@@ -180,28 +178,18 @@ bot.hears(Object.keys(pins), async ctx => {
 	const keys = Object.keys(pin)
 	const keypins = []
 	for (const el of keys) {
-		const pi = pin[el] 
-		
+		const pi = pin[el] 	
 		if (typeof pi === 'string') keypins.push([Markup.button.url(el, pi)])
 		else { 
-			keypins.push([Markup.button.url(el, '')])
-			keypins.push(Object.keys(pi).map(key => {
+			keypins.push([Markup.button.url(el, '')]) // [[before], [this], [many, stuff, here], [after]] 
+			keypins.push(...Object.keys(pi).map(key => {
 				const keypi = pi[key];
-				return Markup.button.url(key, keypi)
+				return [Markup.button.url(key, keypi)]
 				}
 			))
 		}
 	}
-	ctx.reply("beep poob pick a thing",
-	 { reply_markup : { 
-		...panel[1],
-			inline_keyboard : 
-				keypins
-			
-		}
-	 }
-		// Markup.inlineKeyboard(keypins)
-	)
+	ctx.editMessageReplyMarkup({  inline_keyboard : keypins })
 })
 bot.hears("back", ctx => ctx.reply('back you go', panel[1]))
 

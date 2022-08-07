@@ -49,6 +49,7 @@ export const cache =  new LRU({
 
 	// for use when you need to clean up something when objects
 	// are evicted from the cache
+	// todo does not get called when stale items are auto purged
 	dispose (value : user, key : number) {
 		const {username, status, id} = value
 		return newUser(key, {

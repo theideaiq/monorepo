@@ -27,7 +27,7 @@ const {
 export const banreq = (id : number, message : string) : Promise<boolean>=> {
 	return new Promise(async (res, rej) => {
 		client.query(
-			If ( Exists(Call(fun('getRef'), id)) && !Select(["data", 0], Paginate(Match(Index("is_banned"), id))),
+			If ( Exists(Call(fun('getRef'), id)) && Select(["data", 0], Paginate(Match(Index("is_banned"), id))),
 				Update(
 					Call(fun('getRef'), id),
 					{ data : {
@@ -35,9 +35,9 @@ export const banreq = (id : number, message : string) : Promise<boolean>=> {
 						}
 					}
 				),
-			'nothing'	
+			"nothing"
 			)
-		).then(ret =>{
+		).then(ret => {
 			// @ts-ignore
 			if (res === "nothing") return res(false)
 			return res(true)
