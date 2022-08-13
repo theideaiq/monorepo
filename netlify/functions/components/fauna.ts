@@ -1,7 +1,6 @@
 import faunadb from 'faunadb' 
 
 if (process.env.FAUNA_KEY === undefined) throw TypeError("faunadb key is needed ")
-
 const client = new faunadb.Client({ 
 	secret: process.env.FAUNA_KEY ,
 	domain: "db.eu.fauna.com",
@@ -10,6 +9,8 @@ const client = new faunadb.Client({
 
 const {
 	And,
+	Var,
+	Let,
 	Select,
 	If,
 	Exists,
@@ -19,54 +20,70 @@ const {
 	Index,
 	Create,
 	Collection,
-	Update,
-	Call,
-	Function : fun
+	Update
 } = faunadb.query
 
-export const banreq = (id : number, message : string) : Promise<boolean>=> {
+export const banreq = (id : number, message : string) : Promise<boolean> => {
 	return new Promise(async (res, rej) => {
 		client.query(
-			If ( Exists(Call(fun('getRef'), id)) && Select(["data", 0], Paginate(Match(Index("is_banned"), id))),
+			Let(
+				{
+					match: Match(Index("by_id"), id),
+					exist : Exists(Var("match")),
+					doc : If (
+						Var("exist"), Get(Var("match")), false
+					)
+				},
+			If (And(Var("exist"), Select(['data','banned'], Var("doc"))),
 				Update(
-					Call(fun('getRef'), id),
+					Select("ref", Var("doc")),
 					{ data : {
 							ban_request : message
 						}
 					}
 				),
-			"nothing"
+				"nothing"
+			)
 			)
 		).then(ret => {
-			// @ts-ignore
-			if (res === "nothing") return res(false)
+			// @ts-ignore 
+			if (ret === "nothing") return res(false)
 			return res(true)
 		}
-		
 		).catch(err => rej(err))
 	})
 }
-export const newUser = (id : number , data : user)  => {
-	let ref 
-	client.query(
-		If ( Exists(ref = Call(fun('getRef'), id)),
-		Update(
-			ref,
-			{ data : {
-					signed_to_newsletter: true,
-				}  
-			}
-		),
-			Create(
-				Collection('users'),
-				{ data }
+export const newUser = async (id : number , data : {})  => {
+	try {
+		await client.query(
+			Let(
+				{
+					match: Match(Index("by_id"), id),
+					exist : Exists(Var("match")),
+					doc : If (
+						Var("exist"), Get(Var("match")), false
+					)
+				},
+			If ( Var("exist"),
+			Update(
+				Select("ref",Var("doc")),
+				{ data : {
+						signed_to_newsletter: true,
+					}  
+				}
+			),
+				Create(
+					Collection('users'),
+					{ data }
+				)
+			)
 			)
 		)
-	)
+	} catch (er) {console.error(er)}
 }
 export const userWCache = (id : number , data : user) => {
 	client.query(
-		If ( Exists(Call(fun('getRef'), id)),
+		If ( Exists(Match(Index("by_id"), id)),
 			"nothing",
 			Create(
 				Collection('users'),
@@ -101,7 +118,10 @@ export const pagiQuery = <T>(index : string, ...values : string[]) : Promise<T[]
 		).catch(err => rej(err))
 	})
 } 
-export interface user {
+
+
+  
+export interface user  {
 	chat_id?: number
 	id: number,
 	last?: string,
@@ -111,7 +131,7 @@ export interface user {
 	username?: string,
 	count?: number,
 	ban_request?: string,
-	signed_to_newsletter?: boolean
+	signed_to_newsletter?: boolean,
 }
 type schema<schem> = {
 	ref: faunadb.Expr,

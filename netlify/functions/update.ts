@@ -1,6 +1,6 @@
 import { cache, Secache, panel, reshape, splitArray, toUnicode } from '@components/shard'
-import { banreq, newUser, pagiQuery, user  } from '@components/fauna'
-import {compare} from "@components/nlp"
+import { banreq, newUser, pagiQuery, userWCache  } from '@components/fauna'
+import compare from "@components/nlp"
 import { Telegraf, Markup, Scenes, session, } from 'telegraf'
 
 import { Handler } from "@netlify/functions";
@@ -13,8 +13,8 @@ interface mine extends Scenes.SceneContext {
 
 const bot = new Telegraf<mine>(process.env.TOKEN)
 const banroom = new Scenes.BaseScene<mine>('banroom') // scenes work as a sort of private room inside of the bot <):^)
-
 const stage = new Scenes.Stage<mine>([banroom], { ttl: 10 })
+
 bot.use(session()); // still needed to use scenes 
 bot.use(stage.middleware())
 bot.use(async (ctx, next) => {
@@ -57,7 +57,7 @@ bot.start(async ctx => {
 		username = '$-' + first_name + (last_name === undefined)? '': last_name!
 		username += '/' + toUnicode(username!)
 	} 
-
+	
 	newUser(id,  {
 		id,
 		username,
@@ -76,7 +76,6 @@ bot.hears("Unban Request؜", ctx => {
 	return ctx.scene.enter('banroom')
 
 })
-
 banroom.enter(ctx => ctx.reply('send an unban request message'))
 banroom.on('text', async ctx => {
 	const {text, from} = ctx.message
@@ -191,8 +190,8 @@ bot.hears(Object.keys(pins), async ctx => {
 	}
 	ctx.editMessageReplyMarkup({  inline_keyboard : keypins })
 })
-bot.hears("back", ctx => ctx.reply('back you go', panel[1]))
 
+bot.hears("back", ctx => ctx.reply('back you go', panel[1]))
 
 bot.command('/ban', async ctx => {
 
@@ -213,20 +212,25 @@ bot.command('/ban', async ctx => {
 })
 
 
-// const words: format = JSON.parse(readFileSync('resources/banned-words.json', 'utf8'))
 import words from "@resources/banned-words.json"
-
-bot.on("text", async ctx => {
+bot.on("text", async (ctx, next) => {
 	const {message, status} = ctx
 	const {text, message_id, from, chat} = message
 	let {username, id, first_name, last_name} = from
-	const {id : chat_id} = chat
+	const {id : chat_id, type} = chat
 
 	if (username === undefined) {
 		username = '$-' + first_name + (last_name === undefined)? '': last_name
 		username += '/' + toUnicode(username!)
 	} 
+	
 	if (!cache.has(id)) {
+		if (type === "supergroup")
+			userWCache(id, {
+				id,
+				status,
+				username,
+			})
 		cache.set(id, {
 			id,
 			status,
@@ -242,10 +246,14 @@ bot.on("text", async ctx => {
 		try {ctx.deleteMessage(message_id)}
 		catch (e) {console.log(e)}
 	} 
-	const user = cache.get<user>(id)
+	const user = cache.get(id)
+	
 	if (user!.count! > 3 && user!.last === text){
-		for (const msg of user!.messages!) bot.telegram.deleteMessage(user!.chat_id! , msg)
-		user!.messages = []
+		for await (const msg of user!.messages!) bot.telegram.deleteMessage(user!.chat_id! , msg)
+		cache.update(id, {
+			messages : []
+		})
+
 		if (ctx.chat.type === "supergroup")
 			ctx.reply(username +", you have been put in a timeout, go chill a little")
 			ctx.restrictChatMember(id, {
@@ -254,18 +262,27 @@ bot.on("text", async ctx => {
 			})
 	}
 	else if (user!.last === text && user!.chat_id === chat_id) {
-		user!.count !+= 1 
 		user!.messages!.push(message_id)
-
+		cache.update(id,
+			{
+				count : user!.count! +1,
+				messages : user!.messages!
+			}
+		)
 	} else {
 		user!.messages = []
-		user!.last = text
-		user!.chat_id = chat_id
 		user!.messages.push(message_id)
-		user!.count = 0 
+		cache.update(id ,
+			{
+				last : text,
+				chat_id : chat_id,
+				messages: user!.messages!,
+				count : 0 
+			}
+		)
+		next()
 	}
 })
-
 
 // serverless funcition 
 const handler : Handler = async event => {
