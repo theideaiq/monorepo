@@ -117,11 +117,19 @@ const matcher = (token : string, list : format, optinalsecound: string, ) : bool
 	return false
 }
 
+<<<<<<< HEAD
 export const compare = (text: string, list : format) => {
+=======
+export default (text: string, list : format) => {
+>>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 	for (const [first, second] of tokenize(text.replace(/[ًٌٍَُِّ]/g, ''))) {
 		if (matcher(first, list, second)) 
 			return true
 	}
 	return false
 }
+<<<<<<< HEAD
 export declare type format = { english: Array<string | string[]>; arabic: string[]; chinese: string[]; }
+=======
+declare type format = { english: Array<string | string[]>; arabic: string[]; chinese: string[]; }
+>>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd

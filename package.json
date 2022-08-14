@@ -12,7 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "@netlify/functions": "^1.0.0",
+<<<<<<< HEAD
     "arabic-stem": "^0.0.7",
+=======
+>>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
     "faunadb": "^4.6.0",
     "lru-cache": "^7.13.1",
     "natural": "^5.2.3",

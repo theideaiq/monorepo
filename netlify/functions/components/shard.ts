@@ -1,5 +1,9 @@
 import { Markup } from 'telegraf'
+<<<<<<< HEAD
 import {newUser, user} from "@components/fauna"
+=======
+import {user} from "@components/fauna"
+>>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 import LRU from "lru-cache"
 
 
@@ -43,6 +47,7 @@ export const reshape = <T>(original : Array<T>, size : number) : Array<T[]> => {
 	return lst
 }
 
+<<<<<<< HEAD
 // just a facade to make using the cache a bit easier 
 export const cache =  new LRU({
 	max: 100,
@@ -66,13 +71,40 @@ export const cache =  new LRU({
 	ttlAutopurge : true,
 	updateAgeOnGet: true,
 	updateAgeOnHas: true,
+=======
+
+class lru extends LRU<number ,user> {
+	update (key : number, updated : {}) {
+		const original = this.peek(key)
+		if (original === undefined) throw TypeError("cache object does not exist")		
+		this.set(key,
+			{...original, ...updated}
+		)
+	}
+}
+
+export const cache =  new lru({
+	max: 150,
+
+	// how long to live in ms
+	ttl: 1000 * 60 * 15, // -> 15 min
+	ttlResolution : 2,
+	allowStale: true,
+	updateAgeOnGet: true,
+	updateAgeOnHas: true,
+
+>>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 })
 
 export const Secache = new LRU({
 	max: 100,
 
+<<<<<<< HEAD
 	// for use when you need to clean up something when objects
 	// are evicted from the cache
+=======
+	// using it to auto set the type checking 
+>>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 	dispose (value : string[], key : string) {},
 
 	// how long to live in ms
@@ -82,4 +114,9 @@ export const Secache = new LRU({
 	allowStale:true,
 	updateAgeOnGet: true,
 	updateAgeOnHas: true,
+<<<<<<< HEAD
 })
+=======
+})
+
+>>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
