@@ -1,11 +1,6 @@
 import { cache, Secache, panel, reshape, splitArray, toUnicode } from '@components/shard'
-<<<<<<< HEAD
-import { banreq, newUser, pagiQuery, user  } from '@components/fauna'
-import {compare} from "@components/nlp"
-=======
 import { banreq, newUser, pagiQuery, userWCache  } from '@components/fauna'
 import compare from "@components/nlp"
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 import { Telegraf, Markup, Scenes, session, } from 'telegraf'
 
 import { Handler } from "@netlify/functions";
@@ -18,13 +13,8 @@ interface mine extends Scenes.SceneContext {
 
 const bot = new Telegraf<mine>(process.env.TOKEN)
 const banroom = new Scenes.BaseScene<mine>('banroom') // scenes work as a sort of private room inside of the bot <):^)
-<<<<<<< HEAD
-
-const stage = new Scenes.Stage<mine>([banroom], { ttl: 10 })
-=======
 const stage = new Scenes.Stage<mine>([banroom], { ttl: 10 })
 
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 bot.use(session()); // still needed to use scenes 
 bot.use(stage.middleware())
 bot.use(async (ctx, next) => {
@@ -72,10 +62,6 @@ bot.start(async ctx => {
 		id,
 		username,
 		ban_request : '',
-<<<<<<< HEAD
-		status : ctx.status,
-=======
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 		signed_to_newsletter: true,
 	})
 
@@ -89,14 +75,11 @@ bot.hears("Unban Request؜", ctx => {
 	return ctx.scene.enter('banroom')
 
 })
-<<<<<<< HEAD
-
-=======
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 banroom.enter(ctx => ctx.reply('send an unban request message'))
 banroom.on('text', async ctx => {
 	const {text, from} = ctx.message
 	if (compare(text, words)) ctx.reply("it seems like you need a different kind of help")
+	//todo should be caching this value so we won't spam the db if a person tried to
 	else if (await banreq(from.id, text)) {
 		ctx.reply('the fox is not here yet, tho your need is known to me')
 		
@@ -171,11 +154,7 @@ bot.hears('Pin؜', ctx => {
 	
 	ctx.reply('heres your pins',
 		Markup.keyboard(
-<<<<<<< HEAD
-			reshape([...Object.keys(pins), "back"], 2)
-=======
 			reshape([...Object.keys(pins), "المصادر؜", "back"], 2)
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 	))
 	ctx.deleteMessage(ctx.message.message_id)
 })
@@ -202,30 +181,17 @@ bot.hears(Object.keys(pins), async ctx => {
 		if (typeof pi === 'string') keypins.push([Markup.button.url(el, pi)])
 		else { 
 			keypins.push([Markup.button.url(el, '')]) // [[before], [this], [many, stuff, here], [after]] 
-<<<<<<< HEAD
-			keypins.push(...Object.keys(pi).map(key => {
-				const keypi = pi[key];
-				return [Markup.button.url(key, keypi)]
-=======
 			keypins.push(Object.keys(pi).map(key => {
 				const keypi = pi[key];
 				return Markup.button.url(key, keypi)
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 				}
 			))
 		}
 	}
-<<<<<<< HEAD
-	ctx.editMessageReplyMarkup({  inline_keyboard : keypins })
-})
-bot.hears("back", ctx => ctx.reply('back you go', panel[1]))
-
-=======
 	ctx.reply("here you go", Markup.inlineKeyboard(keypins))
 })
 
 bot.hears("back", ctx => ctx.reply('back you go', panel[1]))
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 
 bot.command('/ban', async ctx => {
 
@@ -246,31 +212,17 @@ bot.command('/ban', async ctx => {
 })
 
 
-<<<<<<< HEAD
-// const words: format = JSON.parse(readFileSync('resources/banned-words.json', 'utf8'))
-import words from "@resources/banned-words.json"
-
-bot.on("text", async ctx => {
-	const {message, status} = ctx
-	const {text, message_id, from, chat} = message
-	let {username, id, first_name, last_name} = from
-	const {id : chat_id} = chat
-=======
 import words from "@resources/banned-words.json"
 bot.on("text", async (ctx, next) => {
 	const {message, status} = ctx
 	const {text, message_id, from, chat} = message
 	let {username, id, first_name, last_name} = from
 	const {id : chat_id, type} = chat
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 
 	if (username === undefined) {
 		username = '$-' + first_name + (last_name === undefined)? '': last_name
 		username += '/' + toUnicode(username!)
 	} 
-<<<<<<< HEAD
-	if (!cache.has(id)) {
-=======
 	
 	if (!cache.has(id)) {
 		if (type === "supergroup")
@@ -279,7 +231,6 @@ bot.on("text", async (ctx, next) => {
 				status,
 				username,
 			})
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 		cache.set(id, {
 			id,
 			status,
@@ -295,12 +246,6 @@ bot.on("text", async (ctx, next) => {
 		try {ctx.deleteMessage(message_id)}
 		catch (e) {console.log(e)}
 	} 
-<<<<<<< HEAD
-	const user = cache.get<user>(id)
-	if (user!.count! > 3 && user!.last === text){
-		for (const msg of user!.messages!) bot.telegram.deleteMessage(user!.chat_id! , msg)
-		user!.messages = []
-=======
 	const user = cache.get(id)
 	
 	if (user!.count! > 3 && user!.last === text){
@@ -309,7 +254,6 @@ bot.on("text", async (ctx, next) => {
 			messages : []
 		})
 
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 		if (ctx.chat.type === "supergroup")
 			ctx.reply(username +", you have been put in a timeout, go chill a little")
 			ctx.restrictChatMember(id, {
@@ -318,21 +262,6 @@ bot.on("text", async (ctx, next) => {
 			})
 	}
 	else if (user!.last === text && user!.chat_id === chat_id) {
-<<<<<<< HEAD
-		user!.count !+= 1 
-		user!.messages!.push(message_id)
-
-	} else {
-		user!.messages = []
-		user!.last = text
-		user!.chat_id = chat_id
-		user!.messages.push(message_id)
-		user!.count = 0 
-	}
-})
-
-
-=======
 		user!.messages!.push(message_id)
 		cache.update(id,
 			{
@@ -355,7 +284,6 @@ bot.on("text", async (ctx, next) => {
 	}
 })
 
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 // serverless funcition 
 const handler : Handler = async event => {
 	try {

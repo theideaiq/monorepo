@@ -1,8 +1,5 @@
 node_modules
-<<<<<<< HEAD
 .vscode
-=======
 .vscode
 # Local Netlify folder
 .netlify
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd

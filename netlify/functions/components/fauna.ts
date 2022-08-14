@@ -1,10 +1,6 @@
 import faunadb from 'faunadb' 
 
 if (process.env.FAUNA_KEY === undefined) throw TypeError("faunadb key is needed ")
-<<<<<<< HEAD
-
-=======
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 const client = new faunadb.Client({ 
 	secret: process.env.FAUNA_KEY ,
 	domain: "db.eu.fauna.com",
@@ -13,11 +9,8 @@ const client = new faunadb.Client({
 
 const {
 	And,
-<<<<<<< HEAD
-=======
 	Var,
 	Let,
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 	Select,
 	If,
 	Exists,
@@ -27,19 +20,6 @@ const {
 	Index,
 	Create,
 	Collection,
-<<<<<<< HEAD
-	Update,
-	Call,
-	Function : fun
-} = faunadb.query
-
-export const banreq = (id : number, message : string) : Promise<boolean>=> {
-	return new Promise(async (res, rej) => {
-		client.query(
-			If ( Exists(Call(fun('getRef'), id)) && Select(["data", 0], Paginate(Match(Index("is_banned"), id))),
-				Update(
-					Call(fun('getRef'), id),
-=======
 	Update
 } = faunadb.query
 
@@ -57,47 +37,11 @@ export const banreq = (id : number, message : string) : Promise<boolean> => {
 			If (And(Var("exist"), Select(['data','banned'], Var("doc"))),
 				Update(
 					Select("ref", Var("doc")),
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 					{ data : {
 							ban_request : message
 						}
 					}
 				),
-<<<<<<< HEAD
-			"nothing"
-			)
-		).then(ret => {
-			// @ts-ignore
-			if (res === "nothing") return res(false)
-			return res(true)
-		}
-		
-		).catch(err => rej(err))
-	})
-}
-export const newUser = (id : number , data : user)  => {
-	let ref 
-	client.query(
-		If ( Exists(ref = Call(fun('getRef'), id)),
-		Update(
-			ref,
-			{ data : {
-					signed_to_newsletter: true,
-				}  
-			}
-		),
-			Create(
-				Collection('users'),
-				{ data }
-			)
-		)
-	)
-}
-export const userWCache = (id : number , data : user) => {
-	client.query(
-		If ( Exists(Call(fun('getRef'), id)),
-			"nothing",
-=======
 				"nothing"
 			)
 			)
@@ -154,7 +98,6 @@ export const userWCache = (id : number , data : user) => {
 					status : data.status
 				} }
 			),
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 			Create(
 				Collection('users'),
 				{ data : {
@@ -165,10 +108,7 @@ export const userWCache = (id : number , data : user) => {
 				}
 			)
 		)
-<<<<<<< HEAD
-=======
 		)
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 	)
 }
 
@@ -192,14 +132,10 @@ export const pagiQuery = <T>(index : string, ...values : string[]) : Promise<T[]
 		).catch(err => rej(err))
 	})
 } 
-<<<<<<< HEAD
-export interface user {
-=======
 
 
   
 export interface user  {
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 	chat_id?: number
 	id: number,
 	last?: string,
@@ -209,11 +145,7 @@ export interface user  {
 	username?: string,
 	count?: number,
 	ban_request?: string,
-<<<<<<< HEAD
-	signed_to_newsletter?: boolean
-=======
 	signed_to_newsletter?: boolean,
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
 }
 type schema<schem> = {
 	ref: faunadb.Expr,

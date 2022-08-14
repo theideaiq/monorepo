@@ -2,11 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "target":"ES2021",
-<<<<<<< HEAD
-    "lib": ["es2021", "DOM" ],
-=======
     "lib": ["es2022", "DOM" ],
->>>>>>> 95bf1ca6b58964bbff179e34339bda3913c3efcd
     "module": "ES2022",
     "baseUrl": "./netlify/functions/",
     "paths": {
