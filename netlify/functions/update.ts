@@ -57,12 +57,11 @@ bot.start(async ctx => {
 		username = '$-' + first_name + (last_name === undefined)? '': last_name!
 		username += '/' + toUnicode(username!)
 	} 
-	
+
 	newUser(id,  {
 		id,
 		username,
 		ban_request : '',
-		status : ctx.status,
 		signed_to_newsletter: true,
 	})
 
@@ -154,7 +153,7 @@ bot.hears('Pin؜', ctx => {
 	
 	ctx.reply('heres your pins',
 		Markup.keyboard(
-			reshape([...Object.keys(pins), "back"], 2)
+			reshape([...Object.keys(pins), "المصادر؜", "back"], 2)
 	))
 	ctx.deleteMessage(ctx.message.message_id)
 })
@@ -181,14 +180,14 @@ bot.hears(Object.keys(pins), async ctx => {
 		if (typeof pi === 'string') keypins.push([Markup.button.url(el, pi)])
 		else { 
 			keypins.push([Markup.button.url(el, '')]) // [[before], [this], [many, stuff, here], [after]] 
-			keypins.push(...Object.keys(pi).map(key => {
+			keypins.push(Object.keys(pi).map(key => {
 				const keypi = pi[key];
-				return [Markup.button.url(key, keypi)]
+				return Markup.button.url(key, keypi)
 				}
 			))
 		}
 	}
-	ctx.editMessageReplyMarkup({  inline_keyboard : keypins })
+	ctx.reply("here you go", Markup.inlineKeyboard(keypins))
 })
 
 bot.hears("back", ctx => ctx.reply('back you go', panel[1]))

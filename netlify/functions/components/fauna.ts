@@ -83,8 +83,21 @@ export const newUser = async (id : number , data : {})  => {
 }
 export const userWCache = (id : number , data : user) => {
 	client.query(
-		If ( Exists(Match(Index("by_id"), id)),
-			"nothing",
+		Let(
+			{
+				match: Match(Index("by_id"), id),
+				exist : Exists(Var("match")),
+				doc : If (
+					Var("exist"), Get(Var("match")), false
+				)
+			},
+		If ( Var("exist"),
+			Update( Select('ref', Var("doc")),
+				{ data : {
+					banned: false,
+					status : data.status
+				} }
+			),
 			Create(
 				Collection('users'),
 				{ data : {
@@ -94,6 +107,7 @@ export const userWCache = (id : number , data : user) => {
 					}
 				}
 			)
+		)
 		)
 	)
 }
