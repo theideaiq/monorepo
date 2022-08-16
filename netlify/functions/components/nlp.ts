@@ -1,4 +1,5 @@
 import natrual from "natural" 
+import {format} from "@components/elpers"
 
 const {JaroWinklerDistance : jarodist,} = natrual
 
@@ -27,13 +28,11 @@ function* tokenize (text: string) {
 		}
 	}
 }
-
 const cleanArb = (text: string) => {
 	text = pregReplace(text, [/[ًٌٍَُِّ]/g,/[کگ]/g,'ڤ',/[ێي]/g,/[ۆؤ]/g,'ڵ','پ','ژ','ڕ'], ["", "ك", "ف", "ي", "و", "ل", "ب", "ز", "ر"])
 	if (text[0] === "و") text = shift(text)
 	return text
 }
-
 const shift =  (text : string) => {
 	const str = Array.from(text)
 	if (str.shift() === undefined) throw RangeError("can't use shift with an empty string")
@@ -59,7 +58,6 @@ const pregReplace = (text: string, pattern: Array<string|RegExp>, replaceto: str
 	}
 	return text
 }
-
 const regel = (pattern : string) => {
 	const lst = Array.from(pattern), len = lst.length
 	pattern = ""
@@ -70,7 +68,6 @@ const regel = (pattern : string) => {
 	if (arabic(pattern)) return RegExp("\(?<![\u0621-\u064A])" +pattern+ "\(?![\u0621-\u064A])")
 	return RegExp("\\b" +pattern+ "\\b", 'i')
 }
-
 const stripurl = (text : string) => {
 	if (/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/.test(text)) {
 		text = pregReplace(text, [/https?:\/\/(www\.)?/g, /\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g], [''])
@@ -124,4 +121,3 @@ export default (text: string, list : format) => {
 	}
 	return false
 }
-declare type format = { english: Array<string | string[]>; arabic: string[]; chinese: string[]; }

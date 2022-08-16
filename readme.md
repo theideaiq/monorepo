@@ -15,3 +15,13 @@ small article to set the webhook
 
 TL;DR put this url in da browser with the bot token and teh webhook url
 <https://api.telegram.org/bot[bottkoen]/setWebhook?url=https://[siteurl]>
+
+	for server webhooks
+``` javascript
+	bot.launch({
+		webhook: {
+			domain: 'url direction',
+			port: 'port number' look at the telegram bot api for the available ports 
+		}
+	})
+```

@@ -1,4 +1,5 @@
 import faunadb from 'faunadb' 
+import {user} from "@components/elpers"
 
 if (process.env.FAUNA_KEY === undefined) throw TypeError("faunadb key is needed ")
 const client = new faunadb.Client({ 
@@ -53,7 +54,7 @@ export const banreq = (id : number, message : string) : Promise<boolean> => {
 		).catch(err => rej(err))
 	})
 }
-export const newUser = async (id : number , data : {})  => {
+export const newUser = async (id : number , data : {}) => {
 	try {
 		await client.query(
 			Let(
@@ -102,7 +103,6 @@ export const userWCache = (id : number , data : user) => {
 				Collection('users'),
 				{ data : {
 					...data,
-					banned: false,
 					signed_to_newsletter: false,
 					}
 				}
@@ -111,20 +111,9 @@ export const userWCache = (id : number , data : user) => {
 		)
 	)
 }
-
-export const getQuery = <schem>(index : string , values : string) : Promise<schema<schem>> => {
+export const pagiQuery = <schem>(index : string, ...values : string[]) : Promise<schem[]>  => {
 	return new Promise((res, rej) => {
-		client.query<schema<schem>>(
-			Get(
-				Match(Index(index), values)
-			)
-		).then(ret => res(ret)	
-		).catch(err => rej(err))
-	})
-}
-export const pagiQuery = <T>(index : string, ...values : string[]) : Promise<T[]>  => {
-	return new Promise((res, rej) => {
-		client.query<T[]>(
+		client.query<schem[]>(
 			Select('data' , Paginate(
 				Match(Index(index), ...values)
 			))
@@ -132,23 +121,3 @@ export const pagiQuery = <T>(index : string, ...values : string[]) : Promise<T[]
 		).catch(err => rej(err))
 	})
 } 
-
-
-  
-export interface user  {
-	chat_id?: number
-	id: number,
-	last?: string,
-	messages?: number[]
-	status?: string,
-	banned?: boolean,
-	username?: string,
-	count?: number,
-	ban_request?: string,
-	signed_to_newsletter?: boolean,
-}
-type schema<schem> = {
-	ref: faunadb.Expr,
-	ts: number,
-	data: schem
-  }

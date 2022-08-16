@@ -8,6 +8,7 @@
     "paths": {
       "@components/*": ["./components/*"],
       "@resources/*": ["./resources/*"],
+      "@scenes/*": ["./scenes/*"],
     },
     
     "types": ["node"],

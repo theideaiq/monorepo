@@ -1,6 +1,7 @@
 import { Markup } from 'telegraf'
-import {user} from "@components/fauna"
 import LRU from "lru-cache"
+import {cacheUser} from "@components/elpers"
+
 
 
 export const panel : [string, {}]  = [
@@ -44,7 +45,7 @@ export const reshape = <T>(original : Array<T>, size : number) : Array<T[]> => {
 }
 
 
-class lru extends LRU<number ,user> {
+class lru extends LRU<number , cacheUser> {
 	update (key : number, updated : {}) {
 		const original = this.peek(key)
 		if (original === undefined) throw TypeError("cache object does not exist")		
@@ -69,9 +70,6 @@ export const cache =  new lru({
 export const Secache = new LRU({
 	max: 100,
 
-	// using it to auto set the type checking 
-	dispose (value : string[], key : string) {},
-
 	// how long to live in ms
 	ttl: 1000 * 60 * 10, // -> 10 min
 	ttlResolution : 2,
@@ -80,4 +78,3 @@ export const Secache = new LRU({
 	updateAgeOnGet: true,
 	updateAgeOnHas: true,
 })
-
