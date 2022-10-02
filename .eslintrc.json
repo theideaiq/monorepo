@@ -22,6 +22,6 @@
         "yield-star-spacing": "warn",
         "semi-style": "warn",
         "no-extra-semi": "warn",
-        "quotes": "warn"
+        "quotes": ["warn", "double", { "allowTemplateLiterals": true }]
     }
 }
