@@ -103,7 +103,7 @@ privateChat.hears("المصادر؜", (ctx) => {
 	- @uwc_iraq (@uwc2021)
 	- @thegrinders10 (@TGY10)
 	- @codergirl21
-	- @teamx70 (@TeamXGroup)`);
+	- @teamx70 (@TeamXGroup)`, {disable_web_page_preview:true});
 });
 
 privateChat.hears(Object.keys(pins), async (ctx) => {
