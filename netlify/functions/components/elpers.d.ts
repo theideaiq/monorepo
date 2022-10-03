@@ -3,10 +3,10 @@ import { ChatMemberAdministrator, InlineKeyboardButton } from "typegram";
 
 export declare interface user {
 	id: number;
-	status?: "administrator" | "creator" | "member" | "restricted" | "left" | "kicked";
-	banned: boolean;
 	username?: string;
 	signed_to_newsletter?: string;
+	banned : boolean;
+	status?: "administrator" | "creator" | "member" | "restricted" | "left" | "kicked";
 }
 export declare interface schema<T> {
 	ref: unknown;

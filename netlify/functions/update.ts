@@ -79,7 +79,7 @@ bot.start(async (ctx, next) => {
 		return ctx.scene.enter("admin");
 	} else {
 		ctx.reply(...panel);
-		return ctx.scene.enter("private");
+		return ctx.scene.enter("private"); 
 	}
 });
 bot.on("channel_post", ctx => {

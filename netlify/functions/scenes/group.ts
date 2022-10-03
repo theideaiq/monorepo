@@ -17,10 +17,10 @@ groupChat.command("/ban", async (ctx, next) => {
 	const user = cache.find((el) => el?.username === username);
 
 	if (status === "administrator" || status === "creator") {
+		const groups = await import("@resources/groups.json");
 		const holder =
 			user !== undefined ? user.id : (await pagiQuery<number>("by_username", username.slice(1)))[0];
-
-		return await ctx.banChatMember(holder);
+		return groups.forEach(async (group) => await ctx.telegram.banChatMember(group, holder));
 	}
 	ctx.reply("nothing happened", { reply_to_message_id: message.message_id });
 	return await next();
@@ -98,9 +98,9 @@ groupChat.on("text", async (ctx, next) => {
 });
 
 groupChat.on("edited_message", async (ctx, next) => {
-	const { text, message_id, photo } = <typeof ctx.update.edited_message & { photo?: unknown[] }>(
-		ctx.editedMessage
-	);
+	const { text, message_id, photo } = <
+		typeof ctx.update.edited_message & { photo?: unknown[]; text: string }
+	>ctx.editedMessage;
 	if (text === undefined && photo !== undefined) return await next();
 	const { ...rights } = <rights>await ctx.getChatMember(ctx.botInfo.id);
 

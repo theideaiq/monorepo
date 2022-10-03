@@ -12,7 +12,7 @@
     "faunadb": "^4.6.0",
     "lru-cache": "^7.13.1",
     "natural": "^5.2.3",
-    "telegraf": "^4.8.5"
+    "telegraf": "^4.10.0"
   },
   "devDependencies": {
     "@types/natural": "^5.1.1",
