@@ -37,26 +37,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-brand-dark font-sans selection:bg-brand-yellow selection:text-brand-pink">
       
-      {/* Navigation */}
-      <nav className="fixed w-full bg-white/95 backdrop-blur-md border-b border-slate-100 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center gap-3">
-              {/* Logo Area */}
-              <div className="relative w-10 h-10 overflow-hidden rounded-lg">
-                 <Image src="/logo.svg" alt="The IDEA Logo"/>
-              </div>
-              <span className="text-2xl font-bold tracking-tight text-brand-pink">
-                The IDEA<span className="text-brand-yellow">.</span>
-              </span>
-            </div>
-            <button className="hidden md:block bg-brand-dark text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-800 transition">
-              Sign In
-            </button>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section className="pt-40 pb-24 px-4 bg-brand-pink text-white text-center rounded-b-[3rem] shadow-xl">
         <div className="max-w-4xl mx-auto">
