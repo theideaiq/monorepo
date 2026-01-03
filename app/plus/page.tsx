@@ -41,16 +41,6 @@ export default function PlusHome() {
   return (
     <div className="min-h-screen bg-[#0f1014] text-white font-sans selection:bg-brand-yellow selection:text-brand-dark">
       
-      {/* Navigation (Transparent) */}
-      <nav className="fixed w-full z-50 px-6 py-6 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
-        <div className="flex items-center gap-2">
-           <Image src="/logo.svg" width={32} height={32} alt="Logo" />
-           <span className="font-bold text-xl tracking-tight">IDEA <span className="text-brand-yellow">PLUS</span></span>
-        </div>
-        <button className="bg-white/10 backdrop-blur-md border border-white/20 px-6 py-2 rounded-full font-medium hover:bg-white hover:text-black transition">
-          Log In
-        </button>
-      </nav>
 
       {/* Hero Section (Cinematic) */}
       <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
