@@ -1,10 +1,15 @@
 import { Poppins, Cairo } from "next/font/google";
-// FIXED: Path now goes up two levels to find the CSS in the root app folder
 import "../globals.css"; 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ToastProvider from "@/components/providers/ToastProvider";
 import GlobalLoader from "@/components/ui/GlobalLoader";
+
+// NEW: Imports for translation data
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { routing } from '@/navigation';
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -19,21 +24,25 @@ const cairo = Cairo({
 });
 
 export const metadata = {
-  title: "The IDEA IQ",
+  title: "The IDEA",
   description: "Innovation for Every Aspect of Life",
 };
 
-// FIXED: Define the type where params is a Promise
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>; 
 };
 
-// FIXED: Added 'async' so we can await the params
 export default async function LocaleLayout({ children, params }: Props) {
-  
-  // FIXED: We MUST await the params to get the locale in Next.js 15+
   const { locale } = await params;
+
+  // 1. Validate the locale against your config
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
+
+  // 2. Fetch the messages (JSON files) for the client side
+  const messages = await getMessages();
   
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
@@ -43,16 +52,17 @@ export default async function LocaleLayout({ children, params }: Props) {
         ${poppins.variable} ${cairo.variable} 
         font-sans antialiased bg-slate-50
       `}>
-        <GlobalLoader />
-        <ToastProvider />
-        <Navbar locale={locale} /> 
-        {/* We use the Cairo font if the direction is RTL */}
-        <div className={dir === 'rtl' ? 'font-arabic' : 'font-sans'}>
-            {children}
-        </div>
-        <Footer />
+        {/* 3. Wrap everything in the Client Provider */}
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <GlobalLoader />
+          <ToastProvider />
+          <Navbar locale={locale} /> 
+          <div className={dir === 'rtl' ? 'font-arabic' : 'font-sans'}>
+              {children}
+          </div>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );
 }
-
