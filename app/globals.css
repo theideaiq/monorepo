@@ -1,19 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  /* This tells Tailwind to use your Poppins font as the default */
+  /* Default (English) Font */
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
-  /* These define your Brand Colors */
+  /* NEW: Arabic Font - This creates the 'font-arabic' utility */
+  --font-arabic: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand Colors */
   --color-brand-pink: #E91E63;
   --color-brand-yellow: #FFD600;
   --color-brand-dark: #0F172A;
 }
 
-/* This fixes the plain text look by applying the font to the whole page */
+/* Base Body Styles */
 body {
   font-family: var(--font-sans);
-  background-color: #f8fafc; /* slight grey background */
+  background-color: #f8fafc;
   color: var(--color-brand-dark);
 }
 
+/* UTILITY: Hide Scrollbar (Useful for horizontal categories in Megastore) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
