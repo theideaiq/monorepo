@@ -44,7 +44,7 @@ export default function Home() {
             <div className="flex items-center gap-3">
               {/* Logo Area */}
               <div className="relative w-10 h-10 overflow-hidden rounded-lg">
-                 <Image src="/logo.webp" alt="The IDEA Logo" fill className="object-cover" />
+                 <Image src="/logo.svg" alt="The IDEA Logo"/>
               </div>
               <span className="text-2xl font-bold tracking-tight text-brand-pink">
                 The IDEA<span className="text-brand-yellow">.</span>
