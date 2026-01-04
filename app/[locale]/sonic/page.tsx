@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, OrbitControls, PerspectiveCamera, Float, Text, Grid } from '@react-three/drei';
-import { EffectComposer, Bloom, Vignette, Noise } from '@react-three/postprocessing';
+import { Environment, OrbitControls, PerspectiveCamera, Float, Grid } from '@react-three/drei';
+import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import * as Tone from 'tone';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -64,6 +64,7 @@ function Node({ position, color }: { position: [number, number, number], color: 
 }
 
 function Connections({ nodes }: { nodes: SonicNode[] }) {
+    // OPTIMIZATION: Match connection limit to fetch limit
     if (nodes.length > 50 || nodes.length < 2) return null;
     const points: THREE.Vector3[] = [];
     for (let i = 0; i < nodes.length - 1; i++) {
@@ -109,7 +110,6 @@ export default function SonicEcosystemPage() {
 
   useEffect(() => {
     async function init() {
-        // Setup Audio
         reverbRef.current = new Tone.Reverb({ decay: 5, wet: 0.3 }).toDestination();
         synthRef.current = new Tone.PolySynth(Tone.Synth, {
             oscillator: { type: 'sine' },
@@ -117,12 +117,12 @@ export default function SonicEcosystemPage() {
         }).connect(reverbRef.current);
         synthRef.current.volume.value = -6;
 
-        // Fetch Data
         const { data } = await supabase
             .from('sonic_nodes')
             .select('*')
             .order('created_at', { ascending: false })
-            .limit(100);
+            // OPTIMIZATION: Lowered limit to reduce initial load
+            .limit(50);
 
         if (data) {
             const formattedNodes = data.map((dbNode: any) => ({
@@ -157,16 +157,13 @@ export default function SonicEcosystemPage() {
   const handlePlaceNode = async (point: THREE.Vector3) => {
     if (muted) return;
 
-    // Logic
     const noteIndex = Math.floor(((point.x + 10) / 20) * SCALE.length);
     const clampedIndex = Math.max(0, Math.min(SCALE.length - 1, noteIndex));
     const note = SCALE[clampedIndex];
     const color = BRAND_COLORS[clampedIndex % BRAND_COLORS.length];
 
-    // Sound
     synthRef.current?.triggerAttackRelease(note, '8n');
 
-    // State Update
     const newNode: SonicNode = {
       id: uuidv4(),
       position: [point.x, point.y + Math.random() * 2, point.z],
@@ -177,7 +174,6 @@ export default function SonicEcosystemPage() {
 
     setNodes((prev) => [...prev, newNode]);
 
-    // DB Update
     await supabase.from('sonic_nodes').insert({
         id: newNode.id,
         position: { x: newNode.position[0], y: newNode.position[1], z: newNode.position[2] },
@@ -188,7 +184,8 @@ export default function SonicEcosystemPage() {
   return (
     <div className="h-screen w-full bg-[#05070a] overflow-hidden relative cursor-crosshair">
         
-        <Canvas shadows gl={{ antialias: false }} dpr={[1, 2]}>
+        {/* OPTIMIZATION: Lowered max dpr from 2 to 1.5 for mobile performance */}
+        <Canvas shadows gl={{ antialias: false }} dpr={[1, 1.5]}>
             <color attach="background" args={['#05070a']} />
             <fog attach="fog" args={['#05070a', 10, 50]} />
             <PerspectiveCamera makeDefault position={[0, 5, 15]} fov={50} />
@@ -206,28 +203,12 @@ export default function SonicEcosystemPage() {
                     <Grid infiniteGrid fadeDistance={30} sectionColor="#333" cellColor="#111" position={[0, -0.01, 0]} />
                 </group>
 
-                <Float speed={1} rotationIntensity={0.1} floatIntensity={0.2} position={[0, 6, -10]}>
-                    <Text
-                        fontSize={2}
-                        color="#ffffff"
-                        anchorX="center"
-                        anchorY="middle"
-                        maxWidth={10}
-                        textAlign="center"
-                    >
-                        THE IDEA ECOSYSTEM
-                        <meshStandardMaterial 
-                            color="white" 
-                            emissive="#E91E63"
-                            emissiveIntensity={0.5}
-                            toneMapped={false}
-                        />
-                    </Text>
-                </Float>
+                {/* REMOVED: The 3D Text "THE IDEA ECOSYSTEM" is gone */}
 
                 <EffectComposer>
                     <Bloom luminanceThreshold={1} intensity={1.5} levels={9} mipmapBlur />
-                    <Noise opacity={0.05} />
+                    {/* OPTIMIZATION: Removed Noise effect. It's very heavy on mobile GPUs. */}
+                    {/* <Noise opacity={0.05} /> */}
                     <Vignette eskil={false} offset={0.1} darkness={1.1} />
                 </EffectComposer>
 
@@ -256,17 +237,23 @@ export default function SonicEcosystemPage() {
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                     className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm text-white p-4 text-center pointer-events-auto"
                 >
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6">
+                    {/* UPDATED Title */}
+                    <h1 className="text-4xl md:text-7xl font-black tracking-tighter mb-4">
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-pink to-brand-yellow">
-                            SONIC ECOSYSTEM
+                            SONIC EXPERIENCE
                         </span>
                     </h1>
+                    {/* ADDED Description */}
+                    <p className="text-slate-300 max-w-md text-base md:text-lg mb-8 leading-relaxed font-light">
+                        Every interaction creates a unique frequency. Together, we compose the collective digital soundscape of Iraq. Tap to add your voice to the eternal harmony.
+                    </p>
                     <Button 
                         onClick={handleStart} 
-                        className="h-16 px-12 text-xl rounded-full bg-white text-black hover:bg-brand-yellow transition-transform hover:scale-105"
+                        className="h-14 px-10 text-lg rounded-full bg-white text-black hover:bg-brand-yellow transition-transform hover:scale-105"
                     >
-                        Enter Experience <Volume2 className="ml-4" />
+                        Enter the Void <Volume2 className="ml-3 w-5 h-5" />
                     </Button>
+                    <p className="text-slate-500 text-xs mt-6 uppercase tracking-widest">Audio Required • Headphones Recommended</p>
                 </motion.div>
             )}
         </AnimatePresence>
@@ -276,15 +263,15 @@ export default function SonicEcosystemPage() {
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
                 className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-4 pointer-events-none"
             >
-                <p className="text-slate-400 text-sm uppercase tracking-widest">Tap floor to play</p>
-                 <button onClick={() => setMuted(!muted)} className="text-slate-400 hover:text-white transition pointer-events-auto">
-                    {muted ? <VolumeX /> : <Volume2 />}
+                <p className="text-slate-400 text-sm uppercase tracking-widest">Tap floor to create sound</p>
+                 <button onClick={() => setMuted(!muted)} className="text-slate-400 hover:text-white transition pointer-events-auto bg-white/10 p-3 rounded-full backdrop-blur-md">
+                    {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
                  </button>
             </motion.div>
         )}
 
         <div className="absolute top-8 left-8 z-30 pointer-events-none mix-blend-difference">
-            <span className="text-2xl font-black tracking-tighter text-white">
+            <span className="text-xl md:text-2xl font-black tracking-tighter text-white">
               IDEA<span className="text-brand-yellow">.</span>
             </span>
         </div>
