@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, Suspense } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment, OrbitControls, PerspectiveCamera, Float, Text, Grid } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette, Noise } from '@react-three/postprocessing';
 import * as THREE from 'three';
@@ -84,9 +84,8 @@ function ClickPlane({ onPlaceNode }: { onPlaceNode: (pos: THREE.Vector3) => void
   return (
     <mesh 
       rotation={[-Math.PI / 2, 0, 0]} 
-      position={[0, 0, 0]} // Moved to 0 height so it's easier to hit
+      position={[0, 0, 0]} 
       onPointerDown={(e) => {
-        // Critical: Stop the touch from passing to OrbitControls
         e.stopPropagation(); 
         onPlaceNode(e.point);
       }}
@@ -204,11 +203,9 @@ export default function SonicEcosystemPage() {
                     ))}
                     <Connections nodes={nodes} />
                     {started && <ClickPlane onPlaceNode={handlePlaceNode} />}
-                    {/* Helper Grid so you know where the floor is */}
                     <Grid infiniteGrid fadeDistance={30} sectionColor="#333" cellColor="#111" position={[0, -0.01, 0]} />
                 </group>
 
-                {/* Removed Font Prop to prevent crashing */}
                 <Float speed={1} rotationIntensity={0.1} floatIntensity={0.2} position={[0, 6, -10]}>
                     <Text
                         fontSize={2}
@@ -245,7 +242,6 @@ export default function SonicEcosystemPage() {
         </Canvas>
         
         <AnimatePresence>
-            {/* Loading */}
             {loading && (
                 <motion.div 
                     initial={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -255,7 +251,6 @@ export default function SonicEcosystemPage() {
                 </motion.div>
             )}
 
-            {/* Start Screen - Critical Fix: pointer-events-auto */}
             {!started && !loading && (
                 <motion.div 
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -276,10 +271,23 @@ export default function SonicEcosystemPage() {
             )}
         </AnimatePresence>
 
-        {/* HUD - Critical Fix: pointer-events-none for the container so clicks pass through */}
         {started && (
              <motion.div 
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
                 className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-4 pointer-events-none"
             >
-                <p className="text-slate-400
+                <p className="text-slate-400 text-sm uppercase tracking-widest">Tap floor to play</p>
+                 <button onClick={() => setMuted(!muted)} className="text-slate-400 hover:text-white transition pointer-events-auto">
+                    {muted ? <VolumeX /> : <Volume2 />}
+                 </button>
+            </motion.div>
+        )}
+
+        <div className="absolute top-8 left-8 z-30 pointer-events-none mix-blend-difference">
+            <span className="text-2xl font-black tracking-tighter text-white">
+              IDEA<span className="text-brand-yellow">.</span>
+            </span>
+        </div>
+    </div>
+  );
+}
