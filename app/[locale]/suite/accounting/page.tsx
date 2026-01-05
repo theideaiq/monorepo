@@ -1,14 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import { ArrowRightLeft, Save } from 'lucide-react';
-
-// Initialize Supabase (Use your environment variables)
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function AccountingPage() {
   const [loading, setLoading] = useState(false);

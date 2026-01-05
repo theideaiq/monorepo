@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { 
-  Search, PlayCircle, Globe, BookOpen, Users, 
+  Search, Globe, Users,
   ArrowRight, Star, Clock, Award, Plane, Landmark 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -251,7 +251,7 @@ export default function AcademyPage() {
                 <Landmark className="w-12 h-12 text-brand-pink mb-6" />
                 <h3 className="text-2xl font-bold text-brand-dark mb-3">Heritage Reborn</h3>
                 <p className="text-slate-600 mb-6 text-sm leading-relaxed">
-                  A collaborative residency for artists and historians to digitize Iraq's ancient history using VR and AI technology.
+                A collaborative residency for artists and historians to digitize Iraq&apos;s ancient history using VR and AI technology.
                 </p>
                 <div className="space-y-2 mb-8">
                   <div className="flex items-center gap-2 text-xs font-bold text-slate-500 bg-slate-100 p-2 rounded">

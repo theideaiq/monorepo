@@ -20,13 +20,10 @@ const supabase = createClient(
 
 export default function PlusBrowsePage() {
   const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [rentingId, setRentingId] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetchCatalog();
-  }, []);
 
   const fetchCatalog = async () => {
     // 1. Fetch the items from the catalog table
@@ -36,6 +33,12 @@ export default function PlusBrowsePage() {
     setLoading(false);
   };
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchCatalog();
+  }, []);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleRent = async (item: any) => {
     setRentingId(item.id);
     
@@ -124,6 +127,7 @@ export default function PlusBrowsePage() {
 }
 
 // Sub-component for Horizontal Scrolling Rows
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
   if (items.length === 0) return null;
 
@@ -135,6 +139,7 @@ function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
       
       {/* Horizontal Scroll Container */}
       <div className="flex gap-4 overflow-x-auto pb-8 pr-12 no-scrollbar snap-x">
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {items.map((item: any) => (
           <motion.div 
             key={item.id}

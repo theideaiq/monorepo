@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shield, Lock, Eye, FileText, Globe, Server } from 'lucide-react';
+import { Shield, Globe } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 
 export default function PrivacyPolicy() {
@@ -23,10 +23,10 @@ export default function PrivacyPolicy() {
           {/* Introduction */}
           <section className="space-y-4">
             <p className="leading-relaxed text-slate-600">
-              We understand that online privacy is important to our users ("You" and "Your"), especially when conducting business. 
-              This statement governs our privacy policies ("Privacy Policy") concerning those users ("Visitors") who visit without 
-              transacting business and users ("Authorized Customers") who register to transact business and make use of the various 
-              services ("Service"), operationally offered by The IDEA ("Company", "Ourselves", "We", "Our", and "Us").
+              We understand that online privacy is important to our users (&quot;You&quot; and &quot;Your&quot;), especially when conducting business.
+              This statement governs our privacy policies (&quot;Privacy Policy&quot;) concerning those users (&quot;Visitors&quot;) who visit without
+              transacting business and users (&quot;Authorized Customers&quot;) who register to transact business and make use of the various
+              services (&quot;Service&quot;), operationally offered by The IDEA (&quot;Company&quot;, &quot;Ourselves&quot;, &quot;We&quot;, &quot;Our&quot;, and &quot;Us&quot;).
             </p>
             <p className="leading-relaxed text-slate-600">
               This page applies to information collected through both our online and offline funnels. It informs you of our policies 
@@ -239,7 +239,7 @@ export default function PrivacyPolicy() {
             </h2>
             <div className="pl-11 text-slate-600">
               <p>
-                Our Service does not address anyone under the age of 13 ("Children"). We do not knowingly collect personally identifiable information from anyone under the age of 13. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.
+                Our Service does not address anyone under the age of 13 (&quot;Children&quot;). We do not knowingly collect personally identifiable information from anyone under the age of 13. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.
               </p>
             </div>
           </section>

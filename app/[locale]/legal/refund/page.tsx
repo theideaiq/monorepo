@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { RefreshCw, RotateCcw, AlertCircle, CheckCircle, Calendar, CreditCard } from 'lucide-react';
+import { RefreshCw, RotateCcw, AlertCircle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 
 export default function RefundPolicy() {
@@ -51,7 +51,7 @@ export default function RefundPolicy() {
                 <h3 className="font-bold text-brand-dark mb-2">How to Start a Return</h3>
                 <p className="text-sm mb-2">Contact us at <a href="mailto:returns@theideaiq.com" className="text-brand-pink underline">returns@theideaiq.com</a>.</p>
                 <p className="text-sm">
-                  If accepted, we’ll send you a return shipping label. Items sent back without requesting a return will not be accepted.
+                  If accepted, we&apos;ll send you a return shipping label. Items sent back without requesting a return will not be accepted.
                   <br /><br />
                   <strong>Return Address:</strong><br />
                   The IDEA<br />
@@ -127,7 +127,7 @@ export default function RefundPolicy() {
               <p className="mb-4">Generally, we do not offer refunds on digital goods once accessed/downloaded.</p>
               <ul className="space-y-2 text-sm">
                 <li><strong>Defects:</strong> If a file is corrupted, contact <a href="mailto:hi@theideaiq.com" className="text-brand-pink underline">hi@theideaiq.com</a> for a replacement.</li>
-                <li><strong>Non-Delivery:</strong> If you don't receive your access link, contact us within 7 days.</li>
+                <li><strong>Non-Delivery:</strong> If you don&apos;t receive your access link, contact us within 7 days.</li>
               </ul>
             </div>
           </section>

@@ -3,6 +3,7 @@ import { wayl } from '@/lib/wayl';
 import { createClient } from '@supabase/supabase-js';
 
 // Connect to Supabase to verify user is logged in
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -24,6 +25,7 @@ export async function POST(req: Request) {
     // 2. Return the link to the frontend
     return NextResponse.json({ url: paymentUrl });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Checkout Error:", error);
     return NextResponse.json(

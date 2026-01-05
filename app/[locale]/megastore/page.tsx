@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { 
-  Search, Filter, ShoppingCart, Heart, Star, 
-  Zap, ShieldCheck, Tag, Gamepad2, Laptop, Book, Smartphone 
+  Search, ShoppingCart, Heart, Star,
+  Zap, ShieldCheck, Gamepad2, Laptop, Book, Smartphone
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -247,7 +247,7 @@ export default function MegastorePage() {
             </div>
             <h2 className="text-4xl font-bold mb-6">Logitech G Pro X Superlight</h2>
             <p className="text-slate-400 mb-8">
-              The world's lightest wireless gaming mouse. Used by pros. Verified refurbished condition available.
+              The world&apos;s lightest wireless gaming mouse. Used by pros. Verified refurbished condition available.
             </p>
             <div className="flex items-center gap-4 mb-8">
               <span className="text-4xl font-bold text-white">120,000 IQD</span>

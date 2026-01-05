@@ -1,9 +1,7 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Target, Lightbulb, Heart, Globe } from 'lucide-react';
+import { Target, Lightbulb } from 'lucide-react';
 
 export default function AboutPage() {
   return (
@@ -44,7 +42,7 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-brand-dark">Our Vision</h3>
-                  <p className="text-slate-600 mt-2">A future where "The IDEA" is the standard for trust, quality, and innovation in the Middle East.</p>
+                  <p className="text-slate-600 mt-2">A future where &quot;The IDEA&quot; is the standard for trust, quality, and innovation in the Middle East.</p>
                 </div>
              </div>
           </div>

@@ -125,6 +125,7 @@ export default function SonicEcosystemPage() {
             .limit(50);
 
         if (data) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const formattedNodes = data.map((dbNode: any) => ({
                 id: dbNode.id,
                 position: [dbNode.position.x, dbNode.position.y, dbNode.position.z] as [number, number, number],

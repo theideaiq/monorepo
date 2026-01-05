@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { 
   LayoutDashboard, ShoppingBag, Truck, Users, 
-  Settings, LogOut, ShieldAlert 
+  LogOut, ShieldAlert
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { PageLoader } from '@/components/ui/Spinner';

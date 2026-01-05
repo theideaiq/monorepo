@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FileText, Gavel, ShieldAlert, AlertTriangle, Scale, Globe } from 'lucide-react';
+import { Gavel, AlertTriangle, Scale, Globe } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 
 export default function TermsPage() {
@@ -33,7 +33,7 @@ export default function TermsPage() {
                 <strong> Al-Sinaha St, Eastern Karradah, Baghdad, Iraq</strong>.
               </p>
               <p>
-                By accessing or using our website, mobile application, or services (collectively, the "Service"), you agree that you have read, 
+                By accessing or using our website, mobile application, or services (collectively, the &quot;Service&quot;), you agree that you have read,
                 understood, and agreed to be bound by these Terms.
               </p>
               <div className="p-4 bg-red-50 text-red-700 border border-red-100 rounded-lg text-sm font-bold">
@@ -84,7 +84,7 @@ export default function TermsPage() {
             <div className="pl-11 text-slate-600">
               <p>
                 Unless otherwise indicated, the Service is our proprietary property. All source code, databases, software, website designs, audio, video, text, 
-                and graphics (the “Content”) and the trademarks (the “Marks”) are owned or controlled by us or licensed to us, and are protected by copyright and trademark laws.
+                and graphics (the &ldquo;Content&rdquo;) and the trademarks (the &ldquo;Marks&rdquo;) are owned or controlled by us or licensed to us, and are protected by copyright and trademark laws.
               </p>
             </div>
           </section>
@@ -152,7 +152,7 @@ export default function TermsPage() {
             <div className="pl-11 text-slate-600">
               <p>
                 The Megastore may include products sold by third-party sellers. While we verify sellers, The IDEA acts as a venue. 
-                We are not responsible for the quality, safety, or legality of items advertised by third parties, except where "Verified by IDEA" is explicitly stated.
+                We are not responsible for the quality, safety, or legality of items advertised by third parties, except where &quot;Verified by IDEA&quot; is explicitly stated.
               </p>
             </div>
           </section>
@@ -181,7 +181,7 @@ export default function TermsPage() {
             </h2>
             <div className="pl-11 text-slate-600 uppercase text-sm font-bold tracking-wide">
               <p className="mb-4">
-                THE SERVICE IS PROVIDED "AS-IS". TO THE FULLEST EXTENT PERMITTED BY LAW, WE DISCLAIM ALL WARRANTIES.
+                THE SERVICE IS PROVIDED &quot;AS-IS&quot;. TO THE FULLEST EXTENT PERMITTED BY LAW, WE DISCLAIM ALL WARRANTIES.
               </p>
               <p>
                 IN NO EVENT WILL THE IDEA BE LIABLE FOR ANY DIRECT, INDIRECT, CONSEQUENTIAL, OR INCIDENTAL DAMAGES ARISING FROM YOUR USE OF THE SERVICE, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.

@@ -3,9 +3,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Phone, Instagram, Leaf, MapPin, ArrowRight } from 'lucide-react';
+import { Phone, Instagram, Leaf, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 
 // --- MENU DATA (From your Menu Image) ---
 const MENU_ITEMS = [

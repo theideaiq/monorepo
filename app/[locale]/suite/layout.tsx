@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LayoutDashboard, Receipt, Users, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Receipt, Users, LogOut } from 'lucide-react';
 
 export default function SuiteLayout({ children }: { children: React.ReactNode }) {
   return (

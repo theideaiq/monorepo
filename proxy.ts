@@ -8,6 +8,7 @@ const intlMiddleware = createMiddleware({
 });
 
 // 2. Export it as 'proxy' to satisfy Next.js 15+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function proxy(request: any) {
   return intlMiddleware(request);
 }

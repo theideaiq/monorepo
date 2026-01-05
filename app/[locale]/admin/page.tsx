@@ -32,6 +32,7 @@ export default function AdminDashboard() {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function StatsCard({ title, value, icon }: any) {
   return (
     <Card className="p-6 flex items-center gap-4">

@@ -55,6 +55,7 @@ export default function PlusHome() {
     }
   ];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubscribe = async (tier: any) => {
     setLoadingTier(tier.id);
 
@@ -89,7 +90,7 @@ export default function PlusHome() {
         toast.error("Payment system offline. Try again.");
       }
 
-    } catch (err) {
+    } catch {
       toast.error("Something went wrong");
     } finally {
       setLoadingTier(null);

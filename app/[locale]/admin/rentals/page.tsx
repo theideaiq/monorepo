@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Truck, CheckCircle, Package } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -14,6 +13,7 @@ const supabase = createClient(
 );
 
 export default function RentalsManager() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [rentals, setRentals] = useState<any[]>([]);
 
   const fetchOrders = async () => {
@@ -21,7 +21,10 @@ export default function RentalsManager() {
     setRentals(data || []);
   };
 
-  useEffect(() => { fetchOrders(); }, []);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchOrders();
+  }, []);
 
   const updateStatus = async (id: number, status: string) => {
     await supabase.from('rentals').update({ status }).eq('id', id);

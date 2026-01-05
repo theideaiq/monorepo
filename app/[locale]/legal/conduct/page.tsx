@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Heart, Users, ShieldAlert, AlertTriangle, Accessibility, Beer, GraduationCap, Truck } from 'lucide-react';
+import { Heart, Users, AlertTriangle, Accessibility, Beer, GraduationCap, Truck } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 
 export default function CodeOfConduct() {
@@ -139,7 +139,7 @@ export default function CodeOfConduct() {
             <div className="pl-11 text-slate-600">
               <p className="mb-2 flex items-center gap-2"><Accessibility size={18} className="text-brand-pink"/> We strive to make our venues welcome to all.</p>
               <ul className="list-disc pl-5 space-y-1">
-                <li><strong>Captions:</strong> Most presentations can be live-captioned upon request (please provide 1 week's notice).</li>
+                <li><strong>Captions:</strong> Most presentations can be live-captioned upon request (please provide 1 week&apos;s notice).</li>
                 <li><strong>Mobility:</strong> If a venue is not wheelchair-accessible, please notify the organizers in advance.</li>
                 <li><strong>Photography:</strong> Please let the organizers know if you do not wish to have your picture taken.</li>
               </ul>
@@ -173,7 +173,7 @@ export default function CodeOfConduct() {
             <div className="pl-11 text-slate-600">
               <p className="mb-2 flex items-center gap-2"><GraduationCap size={18} className="text-blue-500"/> For students in our courses:</p>
               <p>
-                We value honesty above all. Plagiarism, cheating on assessments, or claiming others' work as your own in The Academy will result in immediate expulsion from the cohort without refund. Certification is earned, not bought.
+                We value honesty above all. Plagiarism, cheating on assessments, or claiming others&apos; work as your own in The Academy will result in immediate expulsion from the cohort without refund. Certification is earned, not bought.
               </p>
             </div>
           </section>

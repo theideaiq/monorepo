@@ -23,8 +23,10 @@ export default function AccountPage() {
   // 1. Use translation hook for static text
   const t = useTranslations('Account'); // We'll create this section next
   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [rentals, setRentals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userData, setUserData] = useState<any>(null);
   const router = useRouter();
 
@@ -208,6 +210,7 @@ export default function AccountPage() {
 }
 
 // Helper function to generate deterministic card data from the user object
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function generateCardData(user: any) {
   // Create a short ID from the user's UUID (e.g., first 4 + last 4 chars)
   const shortId = `${user.id.substring(0, 4)}-${user.id.substring(user.id.length - 4)}`.toUpperCase();

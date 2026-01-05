@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Heart, Users, ShieldAlert, MessageCircle, Gavel, ShoppingBag, Truck } from 'lucide-react';
+import { Heart, Users, ShieldAlert, MessageCircle, ShoppingBag, Truck } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 
 export default function CommunityGuidelines() {
@@ -45,7 +45,7 @@ export default function CommunityGuidelines() {
                   <Heart size={16} className="text-brand-pink" /> Treat Others With Respect
                 </h3>
                 <p className="text-sm text-slate-600">
-                  Follow the "Golden Rule": Treat others as you would like to be treated. We do not tolerate harassment, bullying, or toxicity.
+                  Follow the &quot;Golden Rule&quot;: Treat others as you would like to be treated. We do not tolerate harassment, bullying, or toxicity.
                 </p>
               </div>
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
@@ -101,7 +101,7 @@ export default function CommunityGuidelines() {
               <div>
                 <h3 className="font-bold text-brand-dark text-lg mb-2">3. NSFW & Inappropriate Content</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li><strong>No Nudity:</strong> Sexually explicit content and "NSFW" media are prohibited, including in profile pictures.</li>
+                  <li><strong>No Nudity:</strong> Sexually explicit content and &quot;NSFW&quot; media are prohibited, including in profile pictures.</li>
                   <li><strong>Protecting Minors:</strong> Zero-tolerance policy towards harmful content involving minors. We cooperate with law enforcement regarding predatory behavior.</li>
                   <li><strong>Sensitive Topics:</strong> Do not share content glorifying self-harm, suicide, gore, or animal cruelty.</li>
                 </ul>
@@ -210,7 +210,7 @@ export default function CommunityGuidelines() {
 
           <section className="pt-8 border-t border-slate-100 text-center text-slate-500 text-sm">
             <p>
-              By staying in this community, you agree to follow these guidelines and the platform's Terms of Service. 
+              By staying in this community, you agree to follow these guidelines and the platform&apos;s Terms of Service.
               These rules are provided as a courtesy, and Staff reserves the right to deviate from them if necessary to protect the community.
             </p>
           </section>
