@@ -1,26 +1,34 @@
 @import "tailwindcss";
 
 @theme {
-  /* Default (English) Font */
+  /* 1. Define Fonts */
+  /* This maps the Next.js font variables to Tailwind utilities */
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-
-  /* NEW: Arabic Font - This creates the 'font-arabic' utility */
+  
+  /* Creates the 'font-arabic' utility class */
   --font-arabic: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
 
-  /* Brand Colors */
+  /* 2. Define Brand Colors */
+  /* Usage: bg-brand-pink, text-brand-yellow, border-brand-dark */
   --color-brand-pink: #E91E63;
   --color-brand-yellow: #FFD600;
   --color-brand-dark: #0F172A;
 }
 
-/* Base Body Styles */
+/* 3. Global Styles */
 body {
   font-family: var(--font-sans);
-  background-color: #f8fafc;
+  background-color: #f8fafc; /* Slate-50 equivalent */
   color: var(--color-brand-dark);
+  
+  /* Font Smoothing: Makes text look sharper, especially important for Arabic script */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* UTILITY: Hide Scrollbar (Useful for horizontal categories in Megastore) */
+/* 4. Utilities */
+
+/* Hide Scrollbar but allow scrolling (for horizontal sliders) */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
