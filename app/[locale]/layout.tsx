@@ -36,6 +36,14 @@ type Props = {
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
+  // =========================================================
+  // 🚨 CRASH TEST: This line forces the Critical Error Screen
+  // =========================================================
+  if (true) {
+    throw new Error("CRITICAL FAILURE: The root layout has crashed.");
+  }
+  // =========================================================
+
   // 1. Validate the locale against your config
   if (!routing.locales.includes(locale as any)) {
     notFound();
