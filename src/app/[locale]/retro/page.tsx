@@ -1,21 +1,35 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
-import { Gamepad2, Disc, Tv, Zap, MonitorPlay, ArrowDown, Play } from 'lucide-react';
+import { Gamepad2, Disc, Tv, Zap, MonitorPlay, ArrowDown, Play, LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 // --- DATA: The Eras of Iraqi Gaming ---
-const ERAS = [
+// FIX: We store the component itself (LucideIcon), not a JSX Element
+interface Era {
+  id: string;
+  year: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  color: string;
+  bg: string;
+  icon: LucideIcon; // <--- Changed from JSX.Element to Component Type
+  memories: string[];
+  quote: string;
+}
+
+const ERAS: Era[] = [
   {
     id: "era-80s",
     year: "1980s-1990s",
     title: "The Pixel Dawn",
     subtitle: "When everything was 'Atari'",
     description: "The era of the 'Sakhr' computer and cloned NES consoles. We didn't save games; we memorized them. The screen flickered, the controllers were blocky, and Captain Majid was the hero.",
-    color: "#4ade80", // Retro Green
+    color: "#4ade80", 
     bg: "bg-slate-950",
-    icon: <Gamepad2 size={64} />,
+    icon: Gamepad2, // <--- Passing the component directly
     memories: ["Captain Majid", "Super Mario Bros", "Duck Hunt", "Contra"],
     quote: "Blow into the cartridge if it doesn't work."
   },
@@ -25,9 +39,9 @@ const ERAS = [
     title: "The Grey Legend",
     subtitle: "The PlayStation 1 Revolution",
     description: "The startup sound that defined a generation. Gaming cafes (salas) opened on every corner. We learned teamwork from Crash Bash and rivalry from Tekken 3.",
-    color: "#a855f7", // PS1 Purple/Grey
+    color: "#a855f7", 
     bg: "bg-[#111827]",
-    icon: <Disc size={64} />,
+    icon: Disc, // <--- Passing the component directly
     memories: ["Pepsiman", "Winning Eleven 3", "Crash Bandicoot", "Tekken 3", "Driver"],
     quote: "Roberto Carlos at Forward. Speed 99."
   },
@@ -37,9 +51,9 @@ const ERAS = [
     title: "The Golden Age",
     subtitle: "San Andreas & The Black Box",
     description: "The PS2 era. The world got bigger. We spent hours in GTA San Andreas (often the modded 'Baghdad' versions) and perfected our master league teams.",
-    color: "#3b82f6", // PS2 Blue
+    color: "#3b82f6", 
     bg: "bg-black",
-    icon: <MonitorPlay size={64} />,
+    icon: MonitorPlay, // <--- Passing the component directly
     memories: ["GTA: San Andreas", "God of War", "Need for Speed: Underground", "PES 6"],
     quote: "Red Screen of Death = Pure Panic."
   }
@@ -62,7 +76,7 @@ const FloatingItem = ({ children, speed = 1, className }: { children: React.Reac
 };
 
 // 3. Era Section
-const EraSection = ({ data, index }: { data: typeof ERAS[0], index: number }) => {
+const EraSection = ({ data, index }: { data: Era, index: number }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" });
 
@@ -129,7 +143,8 @@ const EraSection = ({ data, index }: { data: typeof ERAS[0], index: number }) =>
              className="relative z-20 text-white drop-shadow-[0_0_50px_rgba(255,255,255,0.3)]"
            >
              <div style={{ color: data.color }}>
-                {React.cloneElement(data.icon as React.ReactElement, { size: 200 })}
+                {/* FIX: Render the component directly with the size prop */}
+                <data.icon size={200} />
              </div>
            </motion.div>
 
