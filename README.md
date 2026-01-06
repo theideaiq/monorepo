@@ -46,6 +46,7 @@ This is a modern web application built with [Next.js 16](https://nextjs.org/), l
     NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
     NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
     NEXT_PUBLIC_ADMIN_EMAIL=your_admin_email
+    YOUTUBE_API_KEY=your_youtube_api_key
     ```
 
 4.  **Run the development server**:
