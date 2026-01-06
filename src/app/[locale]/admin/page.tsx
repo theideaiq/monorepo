@@ -14,10 +14,26 @@ export default function AdminDashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatsCard title="Total Revenue" value="2.4M IQD" icon={<TrendingUp className="text-green-500" />} />
-        <StatsCard title="Active Rentals" value="12" icon={<ShoppingCart className="text-brand-yellow" />} />
-        <StatsCard title="Registered Users" value="1,240" icon={<Users className="text-blue-500" />} />
-        <StatsCard title="Low Stock Alerts" value="3 Items" icon={<AlertCircle className="text-red-500" />} />
+        <StatsCard
+          title="Total Revenue"
+          value="2.4M IQD"
+          icon={<TrendingUp className="text-green-500" />}
+        />
+        <StatsCard
+          title="Active Rentals"
+          value="12"
+          icon={<ShoppingCart className="text-brand-yellow" />}
+        />
+        <StatsCard
+          title="Registered Users"
+          value="1,240"
+          icon={<Users className="text-blue-500" />}
+        />
+        <StatsCard
+          title="Low Stock Alerts"
+          value="3 Items"
+          icon={<AlertCircle className="text-red-500" />}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -25,7 +41,7 @@ export default function AdminDashboard() {
           <p className="text-slate-400">Sales Chart Coming Soon...</p>
         </Card>
         <Card className="p-6 h-64 flex items-center justify-center border-dashed border-2">
-           <p className="text-slate-400">Recent Activity Log Coming Soon...</p>
+          <p className="text-slate-400">Recent Activity Log Coming Soon...</p>
         </Card>
       </div>
     </div>

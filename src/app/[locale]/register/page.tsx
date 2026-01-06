@@ -13,7 +13,7 @@ import { Card } from '@/components/ui/Card';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 export default function RegisterPage() {
@@ -35,7 +35,7 @@ export default function RegisterPage() {
       toast.error(error.message);
       setLoading(false);
     } else {
-      toast.success("Account created! Logging you in...");
+      toast.success('Account created! Logging you in...');
       router.push('/account'); // Send them to their new dashboard
     }
   };
@@ -52,16 +52,16 @@ export default function RegisterPage() {
         </div>
 
         <form onSubmit={handleRegister} className="space-y-6">
-          <Input 
+          <Input
             label="Email Address"
-            type="email" 
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <Input 
+          <Input
             label="Create Password"
-            type="password" 
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -73,7 +73,10 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-slate-500">
             Already have an account?{' '}
-            <Link href="/login" className="text-brand-pink font-bold hover:underline">
+            <Link
+              href="/login"
+              className="text-brand-pink font-bold hover:underline"
+            >
               Sign In
             </Link>
           </p>

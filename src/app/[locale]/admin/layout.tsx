@@ -4,9 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { 
-  LayoutDashboard, ShoppingBag, Truck, Users, 
-  LogOut, ShieldAlert
+import {
+  LayoutDashboard,
+  ShoppingBag,
+  Truck,
+  Users,
+  LogOut,
+  ShieldAlert,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { PageLoader } from '@/components/ui/Spinner';
@@ -16,10 +20,14 @@ const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
   const router = useRouter();
@@ -27,7 +35,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     async function checkUser() {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user || user.email !== ADMIN_EMAIL) {
         setAuthorized(false);
       } else {
@@ -49,26 +59,42 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 text-center p-4">
         <ShieldAlert className="w-24 h-24 text-red-500 mb-6" />
-        <h1 className="text-3xl font-bold text-brand-dark mb-2">Restricted Area</h1>
-        <Button onClick={() => router.push('/')} variant="dark">Exit</Button>
+        <h1 className="text-3xl font-bold text-brand-dark mb-2">
+          Restricted Area
+        </h1>
+        <Button onClick={() => router.push('/')} variant="dark">
+          Exit
+        </Button>
       </div>
     );
   }
 
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
-    { name: 'Rentals & Orders', href: '/admin/rentals', icon: <Truck size={20} /> },
-    { name: 'Store Inventory', href: '/admin/store', icon: <ShoppingBag size={20} /> },
+    {
+      name: 'Rentals & Orders',
+      href: '/admin/rentals',
+      icon: <Truck size={20} />,
+    },
+    {
+      name: 'Store Inventory',
+      href: '/admin/store',
+      icon: <ShoppingBag size={20} />,
+    },
     { name: 'User Database', href: '/admin/users', icon: <Users size={20} /> },
   ];
 
   return (
     <div className="min-h-screen bg-slate-100 flex font-sans">
-      
       {/* SIDEBAR */}
       <aside className="w-64 bg-brand-dark text-white hidden md:flex flex-col fixed h-full inset-y-0 z-50">
         <div className="p-6 border-b border-white/10">
-          <h2 className="text-2xl font-black tracking-tighter">IDEA<span className="text-brand-yellow">.</span> <span className="text-xs font-normal text-slate-400 block mt-1">COMMAND CENTER</span></h2>
+          <h2 className="text-2xl font-black tracking-tighter">
+            IDEA<span className="text-brand-yellow">.</span>{' '}
+            <span className="text-xs font-normal text-slate-400 block mt-1">
+              COMMAND CENTER
+            </span>
+          </h2>
         </div>
 
         <nav className="flex-1 p-4 space-y-2">
@@ -76,7 +102,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             const isActive = pathname === item.href;
             return (
               <Link key={item.href} href={item.href}>
-                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-brand-pink text-white font-bold shadow-lg' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}>
+                <div
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-brand-pink text-white font-bold shadow-lg' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
+                >
                   {item.icon}
                   {item.name}
                 </div>
@@ -86,7 +114,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         <div className="p-4 border-t border-white/10">
-          <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 w-full transition-colors">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 w-full transition-colors"
+          >
             <LogOut size={20} /> Logout
           </button>
         </div>
@@ -96,7 +127,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <main className="flex-1 md:ml-64 p-4 md:p-8 pt-24 md:pt-8 overflow-y-auto">
         {children}
       </main>
-
     </div>
   );
 }

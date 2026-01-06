@@ -23,7 +23,9 @@ describe('Button', () => {
   });
 
   it('applies variant classes', () => {
-    const { container } = render(<Button variant="secondary">Secondary</Button>);
+    const { container } = render(
+      <Button variant="secondary">Secondary</Button>,
+    );
     expect(container.firstChild).toHaveClass('bg-brand-yellow');
   });
 });

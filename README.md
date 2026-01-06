@@ -4,37 +4,39 @@ This is a modern web application built with [Next.js 16](https://nextjs.org/), l
 
 ## Features
 
--   **App Router**: Utilizes the latest Next.js App Router for efficient routing and layouts.
--   **Internationalization**: Built-in support for multiple languages using `next-intl`.
--   **Authentication**: Secure authentication via Supabase.
--   **Animations**: Smooth UI transitions and animations powered by `framer-motion` and `Three.js` (via `@react-three/fiber`).
--   **Styling**: Modern, utility-first styling with Tailwind CSS v4.
+- **App Router**: Utilizes the latest Next.js App Router for efficient routing and layouts.
+- **Internationalization**: Built-in support for multiple languages using `next-intl`.
+- **Authentication**: Secure authentication via Supabase.
+- **Animations**: Smooth UI transitions and animations powered by `framer-motion` and `Three.js` (via `@react-three/fiber`).
+- **Styling**: Modern, utility-first styling with Tailwind CSS v4.
 
 ## Tech Stack
 
--   **Framework**: Next.js 16
--   **Language**: TypeScript
--   **Backend**: Supabase (PostgreSQL, Auth)
--   **Styling**: Tailwind CSS 4
--   **State/Payment**: Wayl integration (via `lib/wayl.ts`)
--   **Icons**: Lucide React
+- **Framework**: Next.js 16
+- **Language**: TypeScript
+- **Backend**: Supabase (PostgreSQL, Auth)
+- **Styling**: Tailwind CSS 4
+- **State/Payment**: Wayl integration (via `lib/wayl.ts`)
+- **Icons**: Lucide React
 
 ## Getting Started
 
 ### Prerequisites
 
--   Node.js (v18+ recommended)
--   pnpm
+- Node.js (v18+ recommended)
+- pnpm
 
 ### Installation
 
 1.  **Clone the repository**:
+
     ```bash
     git clone <repository-url>
     cd <project-directory>
     ```
 
 2.  **Install dependencies**:
+
     ```bash
     pnpm install
     ```
@@ -50,6 +52,7 @@ This is a modern web application built with [Next.js 16](https://nextjs.org/), l
     ```
 
 4.  **Run the development server**:
+
     ```bash
     pnpm run dev
     ```
@@ -58,28 +61,28 @@ This is a modern web application built with [Next.js 16](https://nextjs.org/), l
 
 ## Project Structure
 
--   `app/`: Application source code (pages, layouts, api routes).
-    -   `[locale]/`: Locale-dependent routes.
--   `components/`: Reusable React components.
--   `lib/`: Utility libraries and configurations (e.g., `wayl.ts`).
--   `messages/`: Translation files for `next-intl`.
--   `public/`: Static assets.
+- `app/`: Application source code (pages, layouts, api routes).
+  - `[locale]/`: Locale-dependent routes.
+- `components/`: Reusable React components.
+- `lib/`: Utility libraries and configurations (e.g., `wayl.ts`).
+- `messages/`: Translation files for `next-intl`.
+- `public/`: Static assets.
 
 ## Scripts
 
--   `pnpm run dev`: Starts the development server.
--   `pnpm run build`: Builds the application for production.
--   `pnpm run start`: Starts the production server.
--   `pnpm run lint`: Runs ESLint to check for code quality issues.
+- `pnpm run dev`: Starts the development server.
+- `pnpm run build`: Builds the application for production.
+- `pnpm run start`: Starts the production server.
+- `pnpm run lint`: Runs ESLint to check for code quality issues.
 
 ## Learn More
 
 To learn more about the technologies used:
 
--   [Next.js Documentation](https://nextjs.org/docs)
--   [Supabase Documentation](https://supabase.com/docs)
--   [Tailwind CSS Documentation](https://tailwindcss.com/docs)
--   [Framer Motion](https://www.framer.com/motion/)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Supabase Documentation](https://supabase.com/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Framer Motion](https://www.framer.com/motion/)
 
 ## License
 

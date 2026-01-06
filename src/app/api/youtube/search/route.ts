@@ -11,9 +11,11 @@ export async function GET(request: Request) {
     // Call the library function
     const items = await searchYouTube(q);
     return NextResponse.json({ items });
-    
   } catch (error) {
     console.error('YouTube Search Error:', error);
-    return NextResponse.json({ error: 'Failed to fetch music' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to fetch music' },
+      { status: 500 },
+    );
   }
 }

@@ -12,7 +12,7 @@ import { Card } from '@/components/ui/Card';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 export default function LoginPage() {
@@ -34,7 +34,7 @@ export default function LoginPage() {
       toast.error(error.message);
       setLoading(false);
     } else {
-      toast.success("Welcome back!");
+      toast.success('Welcome back!');
       // Check if admin (simple check)
       if (email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         router.push('/admin');
@@ -59,7 +59,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
       <Card className="w-full max-w-md p-8 shadow-xl">
-        
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-brand-dark rounded-xl flex items-center justify-center text-white mx-auto mb-4">
             <Lock size={24} />
@@ -69,7 +68,7 @@ export default function LoginPage() {
         </div>
 
         {/* GOOGLE BUTTON */}
-        <Button 
+        <Button
           type="button"
           onClick={handleGoogleLogin}
           className="w-full bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 mb-6 flex items-center justify-center gap-2"
@@ -78,38 +77,39 @@ export default function LoginPage() {
         </Button>
 
         <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
-          <div className="relative flex justify-center text-sm"><span className="px-2 bg-white text-slate-500">Or continue with email</span></div>
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-slate-500">
+              Or continue with email
+            </span>
+          </div>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
-          <Input 
+          <Input
             label="Email Address"
-            type="email" 
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="admin@theideaiq.com"
             required
           />
-          
-          <Input 
+
+          <Input
             label="Password"
-            type="password" 
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
             required
           />
 
-          <Button 
-            isLoading={loading}
-            className="w-full"
-            variant="dark"
-          >
+          <Button isLoading={loading} className="w-full" variant="dark">
             Sign In <ArrowRight size={18} className="ml-2" />
           </Button>
         </form>
-
       </Card>
     </div>
   );

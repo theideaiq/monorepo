@@ -23,7 +23,9 @@ describe('Input Component', () => {
     fireEvent.click(toggleButton);
 
     expect(input).toHaveAttribute('type', 'text');
-    expect(screen.getByRole('button', { name: /hide password/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /hide password/i }),
+    ).toBeInTheDocument();
 
     fireEvent.click(toggleButton);
     expect(input).toHaveAttribute('type', 'password');

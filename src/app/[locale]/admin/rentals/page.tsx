@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/Badge';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 export default function RentalsManager() {
@@ -17,7 +17,10 @@ export default function RentalsManager() {
   const [rentals, setRentals] = useState<any[]>([]);
 
   const fetchOrders = async () => {
-    const { data } = await supabase.from('rentals').select('*').order('created_at', { ascending: false });
+    const { data } = await supabase
+      .from('rentals')
+      .select('*')
+      .order('created_at', { ascending: false });
     setRentals(data || []);
   };
 
@@ -28,15 +31,19 @@ export default function RentalsManager() {
 
   const updateStatus = async (id: number, status: string) => {
     await supabase.from('rentals').update({ status }).eq('id', id);
-    toast.success("Status Updated");
+    toast.success('Status Updated');
     fetchOrders();
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-brand-dark">Rental Management</h1>
-        <Button variant="outline" onClick={fetchOrders}>Refresh Data</Button>
+        <h1 className="text-2xl font-bold text-brand-dark">
+          Rental Management
+        </h1>
+        <Button variant="outline" onClick={fetchOrders}>
+          Refresh Data
+        </Button>
       </div>
 
       <Card className="overflow-hidden">
@@ -54,10 +61,32 @@ export default function RentalsManager() {
               <tr key={r.id} className="hover:bg-slate-50">
                 <td className="p-4 text-slate-500">#{r.id}</td>
                 <td className="p-4 font-bold">{r.item_name}</td>
-                <td className="p-4"><Badge variant={r.status === 'active' ? 'warning' : 'success'}>{r.status}</Badge></td>
+                <td className="p-4">
+                  <Badge
+                    variant={r.status === 'active' ? 'warning' : 'success'}
+                  >
+                    {r.status}
+                  </Badge>
+                </td>
                 <td className="p-4 text-right gap-2 flex justify-end">
-                   {r.status === 'active' && <Button onClick={() => updateStatus(r.id, 'delivered')} variant="dark" className="h-8 px-2 text-xs">Deliver</Button>}
-                   {r.status === 'delivered' && <Button onClick={() => updateStatus(r.id, 'returned')} variant="outline" className="h-8 px-2 text-xs">Return</Button>}
+                  {r.status === 'active' && (
+                    <Button
+                      onClick={() => updateStatus(r.id, 'delivered')}
+                      variant="dark"
+                      className="h-8 px-2 text-xs"
+                    >
+                      Deliver
+                    </Button>
+                  )}
+                  {r.status === 'delivered' && (
+                    <Button
+                      onClick={() => updateStatus(r.id, 'returned')}
+                      variant="outline"
+                      className="h-8 px-2 text-xs"
+                    >
+                      Return
+                    </Button>
+                  )}
                 </td>
               </tr>
             ))}

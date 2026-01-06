@@ -17,7 +17,9 @@ describe('searchYouTube', () => {
 
   it('should throw error if YOUTUBE_API_KEY is missing', async () => {
     vi.stubEnv('YOUTUBE_API_KEY', '');
-    await expect(searchYouTube('query')).rejects.toThrow('YOUTUBE_API_KEY is missing');
+    await expect(searchYouTube('query')).rejects.toThrow(
+      'YOUTUBE_API_KEY is missing',
+    );
   });
 
   it('should return empty array if no videos found', async () => {
@@ -34,7 +36,8 @@ describe('searchYouTube', () => {
     const fetchMock = vi.mocked(fetch);
 
     // Mock search response
-    fetchMock.mockResolvedValueOnce({
+    fetchMock
+      .mockResolvedValueOnce({
         json: async () => ({
           items: [
             { id: { videoId: 'v1' } },
@@ -101,26 +104,26 @@ describe('searchYouTube', () => {
     });
 
     expect(result[1]).toEqual({
-        id: 'v3',
-        title: 'Too Short (only seconds)',
-        thumbnail: 'http://thumb3.jpg',
-        channel: 'Channel 3',
-        duration: '0:30',
+      id: 'v3',
+      title: 'Too Short (only seconds)',
+      thumbnail: 'http://thumb3.jpg',
+      channel: 'Channel 3',
+      duration: '0:30',
     });
 
     expect(result[2]).toEqual({
-        id: 'v4',
-        title: 'Valid Video 2',
-        thumbnail: 'http://thumb4.jpg',
-        channel: 'Channel 4',
-        duration: '1:05',
+      id: 'v4',
+      title: 'Valid Video 2',
+      thumbnail: 'http://thumb4.jpg',
+      channel: 'Channel 4',
+      duration: '1:05',
     });
   });
 
   it('should parse duration correctly for edge cases', async () => {
     const fetchMock = vi.mocked(fetch);
 
-     fetchMock
+    fetchMock
       .mockResolvedValueOnce({
         json: async () => ({ items: [{ id: { videoId: 'v1' } }] }),
       } as Response)

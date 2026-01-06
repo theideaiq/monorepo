@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { AlertOctagon } from 'lucide-react';
-import "./globals.css"; // We must import CSS manually since Layout is gone
+import './globals.css'; // We must import CSS manually since Layout is gone
 
 export default function GlobalError({
   error,
@@ -22,14 +22,14 @@ export default function GlobalError({
           <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <AlertOctagon size={48} className="text-red-600" />
           </div>
-          
+
           <h1 className="text-4xl font-black mb-4">Critical System Failure</h1>
           <p className="text-slate-500 mb-8 text-lg">
-            The application core has encountered an unrecoverable error. 
-            We apologize for the interruption.
+            The application core has encountered an unrecoverable error. We
+            apologize for the interruption.
           </p>
 
-          <button 
+          <button
             onClick={() => reset()}
             className="bg-brand-dark text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition shadow-lg"
           >

@@ -23,21 +23,21 @@ We welcome contributions! Please follow these guidelines to ensure a smooth proc
 
 ## Code Quality & Standards
 
--   **Linting**: We use ESLint. Run `pnpm run lint` before committing to ensure your code follows the standards.
--   **Translations**: We use `next-intl`. If you add text, please use `t()` and add keys to `messages/en.json` (and other languages if applicable).
--   **Component Structure**: Place reusable components in `components/` and page-specific logic in `app/`.
--   **Animations**: Use `framer-motion` for animations, preferably in client components.
+- **Linting**: We use ESLint. Run `pnpm run lint` before committing to ensure your code follows the standards.
+- **Translations**: We use `next-intl`. If you add text, please use `t()` and add keys to `messages/en.json` (and other languages if applicable).
+- **Component Structure**: Place reusable components in `components/` and page-specific logic in `app/`.
+- **Animations**: Use `framer-motion` for animations, preferably in client components.
 
 ## Development Workflow
 
 1.  **Branching**: Create a new branch for your feature or fix.
-    -   `feature/your-feature-name`
-    -   `fix/your-fix-name`
+    - `feature/your-feature-name`
+    - `fix/your-fix-name`
 2.  **Commits**: Use descriptive commit messages.
 3.  **Pull Requests**:
-    -   Push your branch and open a PR against `main`.
-    -   Describe your changes clearly.
-    -   Ensure the build passes (`pnpm run build`).
+    - Push your branch and open a PR against `main`.
+    - Describe your changes clearly.
+    - Ensure the build passes (`pnpm run build`).
 
 ## Testing
 

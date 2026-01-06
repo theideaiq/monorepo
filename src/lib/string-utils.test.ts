@@ -23,6 +23,8 @@ describe('decodeHtmlEntities', () => {
     // However, we verify that it returns the script tag as a string string, not executed.
     // The key here is that the OUTPUT of this function will be put into {variable},
     // which React escapes. So if we decode &lt;script&gt; to <script>, React will display <script> literally.
-    expect(decodeHtmlEntities('&lt;script&gt;alert(1)&lt;/script&gt;')).toBe('<script>alert(1)</script>');
+    expect(decodeHtmlEntities('&lt;script&gt;alert(1)&lt;/script&gt;')).toBe(
+      '<script>alert(1)</script>',
+    );
   });
 });

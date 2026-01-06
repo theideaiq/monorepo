@@ -1,0 +1,17 @@
+# Ignore artifacts:
+.next/
+dist/
+build/
+coverage/
+
+# Ignore dependency directories:
+node_modules/
+
+# Ignore public assets (optional, usually good to ignore large binaries):
+public/
+
+# Ignore other config files/env:
+.env
+.env.*
+.DS_Store
+pnpm-lock.yaml

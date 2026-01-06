@@ -58,7 +58,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
               {/* Header */}
               <div className="flex justify-between items-center p-6 border-b border-slate-100">
                 <h3 className="text-xl font-bold text-brand-dark">{title}</h3>
-                <button 
+                <button
                   onClick={onClose}
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-brand-pink"
                 >
@@ -67,9 +67,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
               </div>
 
               {/* Content */}
-              <div className="p-6">
-                {children}
-              </div>
+              <div className="p-6">{children}</div>
             </motion.div>
           </div>
         </>

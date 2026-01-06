@@ -6,7 +6,7 @@
  * DO NOT use this result with dangerouslySetInnerHTML.
  */
 export function decodeHtmlEntities(text: string): string {
-  if (!text) return "";
+  if (!text) return '';
 
   const entities: Record<string, string> = {
     '&amp;': '&',
@@ -15,17 +15,17 @@ export function decodeHtmlEntities(text: string): string {
     '&quot;': '"',
     '&#39;': "'",
     '&nbsp;': ' ',
-    '&apos;': "'"
+    '&apos;': "'",
   };
 
   return text.replace(/&[a-zA-Z0-9#]+;/g, (match) => {
-      if (entities[match]) return entities[match];
+    if (entities[match]) return entities[match];
 
-      // Handle numeric entities
-      if (match.match(/^&#\d+;$/)) {
-          return String.fromCharCode(parseInt(match.slice(2, -1), 10));
-      }
+    // Handle numeric entities
+    if (match.match(/^&#\d+;$/)) {
+      return String.fromCharCode(parseInt(match.slice(2, -1), 10));
+    }
 
-      return match;
+    return match;
   });
 }

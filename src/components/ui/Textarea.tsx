@@ -16,9 +16,10 @@ export function Textarea({ label, error, className, ...props }: TextareaProps) {
       <textarea
         className={`
           w-full px-4 py-3 rounded-lg border bg-white transition-all outline-none min-h-[120px] resize-y
-          ${error 
-            ? 'border-red-500 focus:ring-2 focus:ring-red-200' 
-            : 'border-slate-200 focus:border-brand-pink focus:ring-2 focus:ring-pink-100'
+          ${
+            error
+              ? 'border-red-500 focus:ring-2 focus:ring-red-200'
+              : 'border-slate-200 focus:border-brand-pink focus:ring-2 focus:ring-pink-100'
           }
           ${className}
         `}
