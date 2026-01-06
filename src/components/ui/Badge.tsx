@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../../lib/utils';
 
 type BadgeVariant = 'success' | 'warning' | 'danger' | 'neutral' | 'brand';
 
@@ -18,11 +19,11 @@ export function Badge({ children, variant = 'neutral', className = "" }: BadgePr
   };
 
   return (
-    <span className={`
-      inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border
-      ${styles[variant]}
-      ${className}
-    `}>
+    <span className={cn(
+      "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border",
+      styles[variant],
+      className
+    )}>
       {children}
     </span>
   );
