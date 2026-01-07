@@ -1,18 +1,34 @@
 import { NextResponse } from 'next/server';
 import { wayl } from '@/lib/wayl';
-import { createClient } from '@supabase/supabase-js';
-
-// Connect to Supabase to verify user is logged in
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co',
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'example-key',
-);
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { amount, planName, userEmail } = body;
+
+    // Input Validation
+    if (!amount || typeof amount !== 'number' || amount <= 0) {
+      return NextResponse.json(
+        { error: 'Invalid amount: must be a positive number' },
+        { status: 400 },
+      );
+    }
+
+    if (!planName || typeof planName !== 'string' || planName.trim().length === 0) {
+      return NextResponse.json(
+        { error: 'Invalid planName: must be a non-empty string' },
+        { status: 400 },
+      );
+    }
+
+    // Basic email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!userEmail || typeof userEmail !== 'string' || !emailRegex.test(userEmail)) {
+      return NextResponse.json(
+        { error: 'Invalid userEmail: must be a valid email address' },
+        { status: 400 },
+      );
+    }
 
     // 1. Create the Payment Link with Wayl
     // This uses the "wayl.ts" helper we built earlier

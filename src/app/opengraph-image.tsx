@@ -104,7 +104,7 @@ export default async function Image() {
             textTransform: 'uppercase',
           }}
         >
-          Baghdad's Digital Headquarters
+          Baghdad&apos;s Digital Headquarters
         </p>
       </div>
     ),
