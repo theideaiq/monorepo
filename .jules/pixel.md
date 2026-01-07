@@ -1,0 +1,3 @@
+## 2024-02-14 - Inconsistent Style Merging
+**Learning:** Found critical inconsistency in how UI components handle class merging. `Button` and `Input` use a robust `cn` utility (clsx + tailwind-merge) which allows safe class overrides, while `Select` and `Card` used hardcoded template literals, making them fragile and harder to extend.
+**Action:** Always verify if a `cn` utility exists in the project before writing new components. If modifying existing ones, standardize on `cn` to prevent "specificity wars" and allow clean overrides (e.g. `className` props passed from parents should reliably override defaults).

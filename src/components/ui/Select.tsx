@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
+import { cn } from '../../lib/cn';
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -23,18 +24,17 @@ export function Select({
       )}
       <div className="relative">
         <select
-          className={`
-            w-full px-4 py-3 rounded-lg border bg-white transition-all outline-none appearance-none
-            ${
-              error
-                ? 'border-red-500 focus:ring-2 focus:ring-red-200'
-                : 'border-slate-200 focus:border-brand-pink focus:ring-2 focus:ring-pink-100'
-            }
-            ${className}
-          `}
+          className={cn(
+            'w-full px-4 py-3 rounded-lg border bg-white transition-all outline-none appearance-none',
+            'pr-10',
+            error
+              ? 'border-red-500 focus:ring-2 focus:ring-red-200'
+              : 'border-slate-200 focus:border-brand-pink focus:ring-2 focus:ring-pink-100',
+            className,
+          )}
           {...props}
         >
-          <option value="" disabled selected>
+          <option value="" disabled>
             Select an option
           </option>
           {options.map((opt) => (
@@ -45,7 +45,7 @@ export function Select({
         </select>
         {/* Custom Arrow Icon */}
         <ChevronDown
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
           size={18}
         />
       </div>
