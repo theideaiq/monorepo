@@ -14,7 +14,11 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!planName || typeof planName !== 'string' || planName.trim().length === 0) {
+    if (
+      !planName ||
+      typeof planName !== 'string' ||
+      planName.trim().length === 0
+    ) {
       return NextResponse.json(
         { error: 'Invalid planName: must be a non-empty string' },
         { status: 400 },
@@ -23,7 +27,11 @@ export async function POST(req: Request) {
 
     // Basic email validation regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!userEmail || typeof userEmail !== 'string' || !emailRegex.test(userEmail)) {
+    if (
+      !userEmail ||
+      typeof userEmail !== 'string' ||
+      !emailRegex.test(userEmail)
+    ) {
       return NextResponse.json(
         { error: 'Invalid userEmail: must be a valid email address' },
         { status: 400 },

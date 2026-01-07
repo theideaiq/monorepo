@@ -4,7 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'The IDEA IQ',
     short_name: 'IDEA',
-    description: 'The digital headquarters for innovators, artists, and thinkers in Iraq.',
+    description:
+      'The digital headquarters for innovators, artists, and thinkers in Iraq.',
     start_url: '/',
     display: 'standalone',
     background_color: '#000000',
