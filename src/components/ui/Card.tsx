@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '../../lib/cn';
 
 export function Card({
   children,
@@ -9,11 +10,10 @@ export function Card({
 }) {
   return (
     <div
-      className={`
-      bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden
-      hover:shadow-xl hover:-translate-y-1 transition-all duration-300
-      ${className}
-    `}
+      className={cn(
+        'bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300',
+        className,
+      )}
     >
       {children}
     </div>
