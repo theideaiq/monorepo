@@ -16,6 +16,8 @@ const ENTITIES: Record<string, string> = {
 };
 
 const ENTITY_REGEX = /&[a-zA-Z0-9#]+;/g;
+// ⚡ Bolt Optimization: Hoist regex to avoid re-compilation and use .test() for performance
+const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
 
 export function decodeHtmlEntities(text: string): string {
   if (!text) return '';
@@ -24,7 +26,7 @@ export function decodeHtmlEntities(text: string): string {
     if (ENTITIES[match]) return ENTITIES[match];
 
     // Handle numeric entities
-    if (match.match(/^&#\d+;$/)) {
+    if (NUMERIC_ENTITY_REGEX.test(match)) {
       return String.fromCharCode(parseInt(match.slice(2, -1), 10));
     }
 
