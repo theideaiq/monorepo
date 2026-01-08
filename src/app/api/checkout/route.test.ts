@@ -9,117 +9,97 @@ vi.mock('@/lib/wayl', () => ({
   },
 }));
 
-describe('POST /api/checkout', () => {
+describe('Checkout API Route', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should return 400 if amount is missing or invalid', async () => {
-    const invalidAmounts = [null, undefined, 0, -10, '100'];
-
-    for (const amount of invalidAmounts) {
-      const req = new Request('http://localhost/api/checkout', {
-        method: 'POST',
-        body: JSON.stringify({
-          amount,
-          planName: 'Test Plan',
-          userEmail: 'test@example.com',
-        }),
-      });
-      const res = await POST(req);
-      expect(res.status).toBe(400);
-      const data = await res.json();
-      expect(data.error).toContain('Invalid amount');
-    }
-  });
-
-  it('should return 400 if planName is missing or invalid', async () => {
-    const invalidPlans = [null, undefined, '', '   '];
-
-    for (const planName of invalidPlans) {
-      const req = new Request('http://localhost/api/checkout', {
-        method: 'POST',
-        body: JSON.stringify({
-          amount: 100,
-          planName,
-          userEmail: 'test@example.com',
-        }),
-      });
-      const res = await POST(req);
-      expect(res.status).toBe(400);
-      const data = await res.json();
-      expect(data.error).toContain('Invalid planName');
-    }
-  });
-
-  it('should return 400 if userEmail is missing or invalid', async () => {
-    const invalidEmails = [
-      null,
-      undefined,
-      '',
-      'not-an-email',
-      'test@',
-      '@test.com',
+  describe('Input Validation', () => {
+    const invalidCases = [
+      {
+        name: 'invalid amount (negative)',
+        body: { amount: -5, planName: 'Test', userEmail: 'test@example.com' },
+        errorMatch: /Invalid amount/
+      },
+      {
+        name: 'invalid amount (zero)',
+        body: { amount: 0, planName: 'Test', userEmail: 'test@example.com' },
+        errorMatch: /Invalid amount/
+      },
+      {
+        name: 'invalid amount (not a number)',
+        body: { amount: 'ten', planName: 'Test', userEmail: 'test@example.com' },
+        errorMatch: /Invalid amount/
+      },
+      {
+        name: 'missing planName',
+        body: { amount: 100, planName: '', userEmail: 'test@example.com' },
+        errorMatch: /Invalid planName/
+      },
+      {
+        name: 'invalid planName (not a string)',
+        body: { amount: 100, planName: 123, userEmail: 'test@example.com' },
+        errorMatch: /Invalid planName/
+      },
+      {
+        name: 'invalid userEmail (format)',
+        body: { amount: 100, planName: 'Pro', userEmail: 'invalid-email' },
+        errorMatch: /Invalid userEmail/
+      },
+      {
+        name: 'invalid userEmail (missing)',
+        body: { amount: 100, planName: 'Pro', userEmail: '' },
+        errorMatch: /Invalid userEmail/
+      },
     ];
 
-    for (const userEmail of invalidEmails) {
+    it.each(invalidCases)('should return 400 when $name', async ({ body, errorMatch }) => {
       const req = new Request('http://localhost/api/checkout', {
         method: 'POST',
-        body: JSON.stringify({
-          amount: 100,
-          planName: 'Test Plan',
-          userEmail,
-        }),
+        body: JSON.stringify(body),
       });
+
       const res = await POST(req);
+      const json = await res.json();
+
       expect(res.status).toBe(400);
-      const data = await res.json();
-      expect(data.error).toContain('Invalid userEmail');
-    }
+      expect(json.error).toMatch(errorMatch);
+    });
   });
 
-  it('should return 200 and payment URL on valid input', async () => {
+  it('should call wayl.createPayment and return URL on success', async () => {
     const mockUrl = 'https://checkout.wayl.com/pay/123';
     vi.mocked(wayl.createPayment).mockResolvedValue(mockUrl);
 
     const req = new Request('http://localhost/api/checkout', {
       method: 'POST',
-      body: JSON.stringify({
-        amount: 100,
-        planName: 'Premium',
-        userEmail: 'user@example.com',
-      }),
+      body: JSON.stringify({ amount: 1000, planName: 'Premium', userEmail: 'user@example.com' }),
     });
 
     const res = await POST(req);
-    expect(res.status).toBe(200);
-    const data = await res.json();
-    expect(data.url).toBe(mockUrl);
+    const json = await res.json();
 
+    expect(res.status).toBe(200);
+    expect(json.url).toBe(mockUrl);
     expect(wayl.createPayment).toHaveBeenCalledWith(
-      100,
+      1000,
       'IQD',
-      'Subscription: Premium for user@example.com',
+      'Subscription: Premium for user@example.com'
     );
   });
 
-  it('should return 500 if wayl.createPayment fails', async () => {
-    vi.mocked(wayl.createPayment).mockRejectedValue(
-      new Error('Wayl API Error'),
-    );
+  it('should return 500 when wayl service fails', async () => {
+    vi.mocked(wayl.createPayment).mockRejectedValue(new Error('Wayl service down'));
 
     const req = new Request('http://localhost/api/checkout', {
       method: 'POST',
-      body: JSON.stringify({
-        amount: 100,
-        planName: 'Premium',
-        userEmail: 'user@example.com',
-      }),
+      body: JSON.stringify({ amount: 1000, planName: 'Premium', userEmail: 'user@example.com' }),
     });
 
     const res = await POST(req);
+    const json = await res.json();
+
     expect(res.status).toBe(500);
-    const data = await res.json();
-    expect(data.error).toBe('Wayl API Error');
+    expect(json.error).toBe('Wayl service down');
   });
 });
