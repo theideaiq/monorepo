@@ -12,7 +12,7 @@ import {
   Radio,
   Clock,
 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/services/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { decodeHtmlEntities } from '@/lib/string-utils';

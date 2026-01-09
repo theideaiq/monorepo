@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { wayl } from '@/lib/wayl';
+import { wayl } from '@/lib/services/wayl';
 
 export async function POST(req: Request) {
   try {

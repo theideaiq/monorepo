@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { POST } from './route';
-import { wayl } from '@/lib/wayl';
+import { wayl } from '@/lib/services/wayl';
 
 // Mock the wayl library
-vi.mock('@/lib/wayl', () => ({
+vi.mock('@/lib/services/wayl', () => ({
   wayl: {
     createPayment: vi.fn(),
   },

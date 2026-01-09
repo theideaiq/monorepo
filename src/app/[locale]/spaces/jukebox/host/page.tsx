@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/services/supabase/client';
 import {
   SkipForward,
   Play,
