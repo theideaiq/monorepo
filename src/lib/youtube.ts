@@ -1,12 +1,16 @@
 // src/lib/youtube.ts
 
+// ⚡ Bolt Optimization: Pre-compile regexes to avoid re-compilation on every call
+const ISO_DURATION_REGEX = /PT(\d+H)?(\d+M)?(\d+S)?/;
+const DURATION_MINUTES_REGEX = /(\d+)M/;
+
 /**
  * Converts an ISO 8601 duration string to a human-readable format.
  * @example parseDuration('PT4M13S') // Returns '4:13'
  * @param isoDuration - The duration string from YouTube API (e.g., 'PT1H2M10S')
  */
 function parseDuration(isoDuration: string) {
-  const match = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+  const match = isoDuration.match(ISO_DURATION_REGEX);
   if (!match) return '0:00';
 
   const hours = (match[1] || '').replace('H', '');
@@ -59,7 +63,7 @@ export async function searchYouTube(query: string) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .filter((video: any) => {
         const duration = video.contentDetails.duration;
-        const minutesMatch = duration.match(/(\d+)M/);
+        const minutesMatch = duration.match(DURATION_MINUTES_REGEX);
         const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
 
         // Strict Rules: 1 min < Length < 10 mins
