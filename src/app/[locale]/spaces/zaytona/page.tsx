@@ -1,10 +1,9 @@
 'use client';
 
-import React from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Phone, Instagram, Leaf, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { motion } from 'framer-motion';
+import { ArrowRight, Instagram, Leaf, Phone } from 'lucide-react';
+import Image from 'next/image';
 
 // --- MENU DATA (From your Menu Image) ---
 const MENU_ITEMS = [
@@ -91,7 +90,7 @@ export default function ZaytonaPage() {
             backgroundImage: 'radial-gradient(#4d7c0f 1px, transparent 1px)',
             backgroundSize: '30px 30px',
           }}
-        ></div>
+        />
 
         <div className="container relative z-10 flex flex-col items-center text-center px-4">
           <motion.div
@@ -115,14 +114,14 @@ export default function ZaytonaPage() {
         {/* Floating Abstract Vegetables (Visual Flair) */}
         <motion.div
           animate={{ y: [0, -20, 0] }}
-          transition={{ repeat: Infinity, duration: 6 }}
+          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 6 }}
           className="absolute top-20 left-[10%] opacity-20 w-32 h-32 bg-green-500 rounded-full blur-3xl"
-        ></motion.div>
+        />
         <motion.div
           animate={{ y: [0, 20, 0] }}
-          transition={{ repeat: Infinity, duration: 7 }}
+          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 7 }}
           className="absolute bottom-20 right-[10%] opacity-20 w-40 h-40 bg-yellow-500 rounded-full blur-3xl"
-        ></motion.div>
+        />
       </section>
 
       {/* 2. MENU GRID */}

@@ -1,5 +1,4 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Input } from './Input';
 
 describe('Input Component', () => {
@@ -38,10 +37,7 @@ describe('Input Component', () => {
 
     expect(errorMessage).toBeInTheDocument();
     expect(input).toHaveAttribute('aria-invalid', 'true');
-    expect(input).toHaveAttribute(
-      'aria-describedby',
-      'email-error-test-error',
-    );
+    expect(input).toHaveAttribute('aria-describedby', 'email-error-test-error');
     expect(errorMessage).toHaveAttribute('id', 'email-error-test-error');
   });
 });

@@ -1,27 +1,27 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
+import { motion } from 'framer-motion';
 import {
-  SkipForward,
-  Play,
-  Volume2,
-  VolumeX,
-  Radio,
+  AlertCircle,
   Disc3,
   Mic2,
   Pause,
-  AlertCircle,
+  Play,
+  Radio,
+  SkipForward,
+  Volume2,
+  VolumeX,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Revert to standard import as submodule might be problematic in this env
 
 const ReactPlayer = dynamic(() => import('react-player'), {
   ssr: false,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
 }) as any;
 
 interface QueueItem {
@@ -47,7 +47,7 @@ export default function JukeboxHost() {
   const [volume, setVolume] = useState(1);
 
   const supabase = createClient();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const playerRef = useRef<any>(null);
 
   // Derived origin for player config
@@ -108,7 +108,7 @@ export default function JukeboxHost() {
     }
   }, [queue, currentVideo, isReady, playNext]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const handlePlayerError = (e: any) => {
     console.error('ReactPlayer Error:', e);
     setError('Playback Error');
@@ -191,18 +191,22 @@ export default function JukeboxHost() {
             }}
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/60 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/60 backdrop-blur-sm" />
       </div>
 
       {/* === LEFT PANEL (Vinyl) === */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center p-8 min-h-[50vh] md:min-h-full border-r border-white/5">
         <motion.div
           animate={{ rotate: isPlaying && !error ? 360 : 0 }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
+          transition={{
+            duration: 6,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: 'linear',
+          }}
           className="relative w-64 h-64 md:w-[450px] md:h-[450px] rounded-full shadow-2xl border-8 border-slate-900 bg-black flex items-center justify-center"
         >
-          <div className="absolute inset-0 rounded-full border-[2px] border-white/10 opacity-50"></div>
-          <div className="absolute inset-0 rounded-full border-[40px] border-neutral-900/80 pointer-events-none"></div>
+          <div className="absolute inset-0 rounded-full border-[2px] border-white/10 opacity-50" />
+          <div className="absolute inset-0 rounded-full border-[40px] border-neutral-900/80 pointer-events-none" />
 
           <div className="relative w-[35%] h-[35%] rounded-full overflow-hidden border-4 border-slate-950 shadow-inner z-20 bg-brand-dark">
             {currentVideo ? (
@@ -225,6 +229,7 @@ export default function JukeboxHost() {
             <AlertCircle size={20} />
             <span>{error}</span>
             <button
+              type="button"
               onClick={() => playNext()}
               className="underline text-sm ml-2"
             >
@@ -240,6 +245,7 @@ export default function JukeboxHost() {
 
           <div className="flex flex-wrap items-center justify-center gap-4">
             <button
+              type="button"
               onClick={() => setIsPlaying(!isPlaying)}
               className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold uppercase tracking-widest transition-all ${isPlaying ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-brand-pink text-white hover:bg-pink-600 shadow-[0_0_20px_rgba(233,30,99,0.5)]'}`}
             >
@@ -255,6 +261,7 @@ export default function JukeboxHost() {
             </button>
 
             <button
+              type="button"
               onClick={() => setIsMuted(!isMuted)}
               className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold uppercase tracking-widest transition-all ${isMuted ? 'bg-red-600 animate-pulse text-white shadow-lg' : 'bg-white/10 text-slate-400'}`}
             >
@@ -286,6 +293,7 @@ export default function JukeboxHost() {
           </div>
           {currentVideo && (
             <button
+              type="button"
               onClick={playNext}
               className="text-xs font-bold text-white hover:text-brand-yellow flex items-center gap-2 transition-colors"
             >
@@ -335,7 +343,7 @@ export default function JukeboxHost() {
               step="0.1"
               value={volume}
               onChange={(e) => {
-                setVolume(parseFloat(e.target.value));
+                setVolume(Number.parseFloat(e.target.value));
                 setIsMuted(false);
               }}
               className="flex-1 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brand-pink"

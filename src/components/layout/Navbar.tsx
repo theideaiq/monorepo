@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
 import { Link, usePathname } from '@/i18n/navigation';
-import { Menu, X, ShoppingCart, User, Globe } from 'lucide-react';
-import Image from 'next/image';
+import { Globe, Menu, ShoppingCart, User, X } from 'lucide-react';
 import { useTranslations } from 'next-intl'; // Import this
+import Image from 'next/image';
+import { useState } from 'react';
 
 export default function Navbar({ locale }: { locale: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -105,7 +105,10 @@ export default function Navbar({ locale }: { locale: string }) {
               href="/register"
               className="focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-full outline-none"
             >
-              <button className="bg-brand-dark text-white px-5 py-2 rounded-full font-bold hover:bg-slate-800 transition shadow-lg shadow-brand-dark/20">
+              <button
+                type="button"
+                className="bg-brand-dark text-white px-5 py-2 rounded-full font-bold hover:bg-slate-800 transition shadow-lg shadow-brand-dark/20"
+              >
                 {t('join')}
               </button>
             </Link>
@@ -114,6 +117,7 @@ export default function Navbar({ locale }: { locale: string }) {
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
               className="text-slate-700 focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-lg p-1 outline-none transition-colors"
               aria-label={isOpen ? t('menu_close') : t('menu_open')}

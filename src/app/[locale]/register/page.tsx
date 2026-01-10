@@ -1,18 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
+import { ArrowRight, UserPlus } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { UserPlus, ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 

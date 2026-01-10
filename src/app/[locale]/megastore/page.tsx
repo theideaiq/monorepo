@@ -1,27 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import {
-  Search,
-  ShoppingCart,
-  Heart,
-  Star,
-  Zap,
-  ShieldCheck,
-  Gamepad2,
-  Laptop,
-  Book,
-  Smartphone,
-} from 'lucide-react';
-import { toast } from 'react-hot-toast';
-
+import { Badge } from '@/components/ui/Badge';
 // UI Kit
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
+import { motion } from 'framer-motion';
+import {
+  Book,
+  Gamepad2,
+  Heart,
+  Laptop,
+  Search,
+  ShieldCheck,
+  ShoppingCart,
+  Smartphone,
+  Star,
+  Zap,
+} from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 // Mock Data (The Marketplace)
 const PRODUCTS = [
@@ -117,8 +116,8 @@ export default function MegastorePage() {
     <div className="min-h-screen bg-slate-50 pt-20">
       {/* 1. HERO (PlayStation Store Style) */}
       <section className="relative h-[60vh] bg-[#0f1014] overflow-hidden flex items-center">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070')] bg-cover bg-center opacity-40"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0f1014] via-[#0f1014]/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070')] bg-cover bg-center opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0f1014] via-[#0f1014]/60 to-transparent" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 w-full">
           <motion.div
@@ -156,6 +155,7 @@ export default function MegastorePage() {
           {/* Categories */}
           <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto no-scrollbar">
             <button
+              type="button"
               onClick={() => setFilter('All')}
               className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${filter === 'All' ? 'bg-brand-dark text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
             >
@@ -163,6 +163,7 @@ export default function MegastorePage() {
             </button>
             {CATEGORIES.map((cat) => (
               <button
+                type="button"
                 key={cat.name}
                 onClick={() => setFilter(cat.name)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${filter === cat.name ? 'bg-brand-dark text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
@@ -210,12 +211,16 @@ export default function MegastorePage() {
                   {/* Overlay Action */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                     <button
+                      type="button"
                       onClick={() => addToCart(product.title)}
                       className="p-3 bg-white rounded-full hover:bg-brand-yellow hover:scale-110 transition text-brand-dark"
                     >
                       <ShoppingCart size={20} />
                     </button>
-                    <button className="p-3 bg-white rounded-full hover:bg-brand-pink hover:scale-110 transition text-brand-dark">
+                    <button
+                      type="button"
+                      className="p-3 bg-white rounded-full hover:bg-brand-pink hover:scale-110 transition text-brand-dark"
+                    >
                       <Heart size={20} />
                     </button>
                   </div>

@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-  Ghost,
-  Terminal,
-  Gamepad2,
-  Coffee,
   AlertTriangle,
   ArrowLeft,
+  Coffee,
+  Gamepad2,
+  Ghost,
   RefreshCw,
+  Terminal,
 } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 
 // The "Multiverse" of 404 Errors
 const scenarios = [
@@ -125,6 +125,7 @@ export default function NotFound() {
             </Link>
 
             <button
+              type="button"
               onClick={reroll}
               className="px-6 py-3 rounded-full font-medium opacity-60 hover:opacity-100 transition-opacity flex items-center gap-2"
             >

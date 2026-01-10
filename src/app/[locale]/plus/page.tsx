@@ -1,18 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Check, Zap, BookOpen, Gamepad2, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
-import { createClient } from '@supabase/supabase-js';
-
+import { Badge } from '@/components/ui/Badge';
 // UI Kit
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { createClient } from '@supabase/supabase-js';
+import { motion } from 'framer-motion';
+import { BookOpen, Check, Gamepad2, Loader2, Zap } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
@@ -69,7 +70,7 @@ export default function PlusHome() {
     },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const handleSubscribe = async (tier: any) => {
     setLoadingTier(tier.id);
 
@@ -116,8 +117,8 @@ export default function PlusHome() {
     <div className="min-h-screen bg-[#0f1014] text-white font-sans -mt-20 pt-20">
       {/* Hero Section */}
       <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0f1014] via-[#0f1014]/50 to-transparent"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0f1014] via-[#0f1014]/50 to-transparent" />
 
         <div className="relative z-10 text-center max-w-4xl px-4">
           <motion.div
@@ -166,6 +167,7 @@ export default function PlusHome() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {tiers.map((tier, i) => (
             <motion.div
+              // biome-ignore lint/suspicious/noArrayIndexKey: static list
               key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -195,6 +197,7 @@ export default function PlusHome() {
               <ul className="flex-1 space-y-4 mb-8">
                 {tier.features.map((feature, f) => (
                   <li
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static list
                     key={f}
                     className="flex items-start gap-3 text-sm text-slate-300"
                   >
@@ -207,6 +210,7 @@ export default function PlusHome() {
               </ul>
 
               <button
+                type="button"
                 onClick={() => handleSubscribe(tier)}
                 disabled={loadingTier !== null}
                 className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2

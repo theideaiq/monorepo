@@ -1,25 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/Button';
+import { PageLoader } from '@/components/ui/Spinner';
 import { createClient } from '@supabase/supabase-js';
-import { useRouter, usePathname } from 'next/navigation';
-import Link from 'next/link';
 import {
   LayoutDashboard,
+  LogOut,
+  ShieldAlert,
   ShoppingBag,
   Truck,
   Users,
-  LogOut,
-  ShieldAlert,
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { PageLoader } from '@/components/ui/Spinner';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 
 // CHANGE TO YOUR ADMIN EMAIL
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
@@ -115,6 +118,7 @@ export default function AdminLayout({
 
         <div className="p-4 border-t border-white/10">
           <button
+            type="button"
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 w-full transition-colors"
           >

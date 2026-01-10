@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, RefreshCw } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { RefreshCw, Terminal } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 /* --- ASSETS & CONFIG --- */
 const SCENES = ['VINYL', 'TERMINAL', 'TV'];
@@ -74,6 +74,7 @@ export default function ComingSoonPage() {
           THE IDEA <span className="text-xs align-top opacity-50">BETA</span>
         </h1>
         <button
+          type="button"
           onClick={switchScene}
           className="hover:rotate-180 transition-transform duration-500"
         >
@@ -119,7 +120,8 @@ function VinylScene() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neutral-800 to-black opacity-50" />
 
       {/* The Turntable */}
-      <div
+      <button
+        type="button"
         className="relative z-10 scale-75 md:scale-100 cursor-pointer group"
         onClick={() => setIsPlaying(!isPlaying)}
       >
@@ -135,7 +137,11 @@ function VinylScene() {
         {/* The Record */}
         <motion.div
           animate={{ rotate: isPlaying ? 360 : 0 }}
-          transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
+          transition={{
+            repeat: Number.POSITIVE_INFINITY,
+            duration: 4,
+            ease: 'linear',
+          }}
           className="w-96 h-96 rounded-full bg-black border-4 border-neutral-800 shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex items-center justify-center relative overflow-hidden"
         >
           {/* Grooves */}
@@ -155,7 +161,7 @@ function VinylScene() {
             </div>
           </div>
         </motion.div>
-      </div>
+      </button>
 
       <div className="mt-12 text-center z-10 space-y-2">
         <h2 className="text-4xl font-black italic tracking-tighter">
@@ -187,12 +193,12 @@ function TerminalScene() {
     ];
 
     let delay = 0;
-    bootSequence.forEach((line) => {
+    for (const line of bootSequence) {
       delay += Math.random() * 800 + 500;
       setTimeout(() => {
         setLines((prev) => [...prev, line]);
       }, delay);
-    });
+    }
   }, []);
 
   return (
@@ -204,8 +210,9 @@ function TerminalScene() {
     >
       <div className="max-w-3xl space-y-2">
         {lines.map((line, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: log lines
           <div key={i} className="flex gap-2">
-            <span className="opacity-50">{`>`}</span>
+            <span className="opacity-50">{'>'}</span>
             <span
               className={
                 line.includes('ERROR') ? 'text-red-500' : 'text-brand-yellow'
@@ -243,7 +250,11 @@ function TVScene() {
     >
       {/* Static Noise Animation */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <svg className="w-full h-full filter contrast-150 brightness-150">
+        <svg
+          className="w-full h-full filter contrast-150 brightness-150"
+          aria-label="Static noise"
+        >
+          <title>Static Noise</title>
           <filter id="noise">
             <feTurbulence
               type="fractalNoise"

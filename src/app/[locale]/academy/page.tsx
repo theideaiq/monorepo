@@ -1,25 +1,24 @@
 'use client';
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import {
-  Search,
-  Globe,
-  Users,
-  ArrowRight,
-  Star,
-  Clock,
-  Award,
-  Plane,
-  Landmark,
-} from 'lucide-react';
-import { motion } from 'framer-motion';
-
+import { Badge } from '@/components/ui/Badge';
 // UI Kit
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
+import { motion } from 'framer-motion';
+import {
+  ArrowRight,
+  Award,
+  Clock,
+  Globe,
+  Landmark,
+  Plane,
+  Search,
+  Star,
+  Users,
+} from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
 
 // --- MOCK DATA ---
 const COURSES = [
@@ -165,12 +164,14 @@ export default function AcademyPage() {
       <div className="sticky top-20 z-30 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 flex gap-8">
           <button
+            type="button"
             onClick={() => setActiveTab('learn')}
             className={`py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-colors ${activeTab === 'learn' ? 'border-brand-pink text-brand-dark' : 'border-transparent text-slate-500 hover:text-brand-dark'}`}
           >
             Online Learning
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab('exchange')}
             className={`py-4 font-bold text-sm uppercase tracking-wide border-b-2 transition-colors ${activeTab === 'exchange' ? 'border-brand-pink text-brand-dark' : 'border-transparent text-slate-500 hover:text-brand-dark'}`}
           >
@@ -214,7 +215,7 @@ export default function AcademyPage() {
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-6 h-6 rounded-full bg-slate-200 overflow-hidden relative">
                         {/* Placeholder for org logo */}
-                        <div className="absolute inset-0 bg-brand-dark"></div>
+                        <div className="absolute inset-0 bg-brand-dark" />
                       </div>
                       <span className="text-xs font-medium text-slate-500">
                         {course.org}
@@ -248,6 +249,7 @@ export default function AcademyPage() {
                 {['Data Scientist', 'Product Manager', 'UX Designer'].map(
                   (role, i) => (
                     <div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: static list
                       key={i}
                       className="bg-white border border-slate-200 p-6 rounded-xl flex items-center justify-between hover:border-brand-pink cursor-pointer transition-colors"
                     >
@@ -369,6 +371,7 @@ export default function AcademyPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {ARTICLES.map((article, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static list
               <div key={i} className="group cursor-pointer">
                 <div className="relative h-56 rounded-2xl overflow-hidden mb-4">
                   <Image

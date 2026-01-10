@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { ArrowRightLeft, Save } from 'lucide-react';
+import { useState } from 'react';
 
 export default function AccountingPage() {
   const [loading, setLoading] = useState(false);
@@ -42,10 +42,14 @@ export default function AccountingPage() {
           {/* Currency Toggle */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label
+                htmlFor="currency"
+                className="block text-sm font-medium text-slate-700 mb-1"
+              >
                 Transaction Currency
               </label>
               <select
+                id="currency"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
                 className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
@@ -56,11 +60,15 @@ export default function AccountingPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label
+                htmlFor="rate"
+                className="block text-sm font-medium text-slate-700 mb-1"
+              >
                 Exchange Rate
               </label>
               <div className="relative">
                 <input
+                  id="rate"
                   type="number"
                   value={rate}
                   onChange={(e) => setRate(Number(e.target.value))}
@@ -76,10 +84,14 @@ export default function AccountingPage() {
 
           {/* Amount & Description */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="amount"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Amount
             </label>
             <input
+              id="amount"
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
@@ -89,10 +101,14 @@ export default function AccountingPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-slate-700 mb-1"
+            >
               Description
             </label>
             <textarea
+              id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -102,6 +118,7 @@ export default function AccountingPage() {
           </div>
 
           <button
+            type="button"
             onClick={handleSave}
             disabled={loading}
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2 transition-all"

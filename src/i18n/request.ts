@@ -6,7 +6,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
 
   // Validate that the incoming locale is supported, otherwise fallback
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   if (!locale || !routing.locales.includes(locale as any)) {
     locale = routing.defaultLocale;
   }

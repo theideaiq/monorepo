@@ -27,7 +27,7 @@ export function decodeHtmlEntities(text: string): string {
 
     // Handle numeric entities
     if (NUMERIC_ENTITY_REGEX.test(match)) {
-      return String.fromCharCode(parseInt(match.slice(2, -1), 10));
+      return String.fromCharCode(Number.parseInt(match.slice(2, -1), 10));
     }
 
     return match;

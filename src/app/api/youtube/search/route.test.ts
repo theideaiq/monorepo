@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GET } from './route';
 import { searchYouTube } from '@/lib/youtube';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { GET } from './route';
 
 // Mock the youtube library
 vi.mock('@/lib/youtube', () => ({
@@ -36,8 +36,20 @@ describe('YouTube Search API Route', () => {
 
   it('should call searchYouTube and return items on success', async () => {
     const mockItems = [
-      { id: 'v1', title: 'Test Video 1', thumbnail: 'thumb1.jpg', channel: 'Channel 1', duration: '3:00' },
-      { id: 'v2', title: 'Test Video 2', thumbnail: 'thumb2.jpg', channel: 'Channel 2', duration: '4:00' },
+      {
+        id: 'v1',
+        title: 'Test Video 1',
+        thumbnail: 'thumb1.jpg',
+        channel: 'Channel 1',
+        duration: '3:00',
+      },
+      {
+        id: 'v2',
+        title: 'Test Video 2',
+        thumbnail: 'thumb2.jpg',
+        channel: 'Channel 2',
+        duration: '4:00',
+      },
     ];
     vi.mocked(searchYouTube).mockResolvedValue(mockItems);
 
@@ -52,7 +64,9 @@ describe('YouTube Search API Route', () => {
   });
 
   it('should return 500 when searchYouTube throws', async () => {
-    vi.mocked(searchYouTube).mockRejectedValue(new Error('YouTube API quota exceeded'));
+    vi.mocked(searchYouTube).mockRejectedValue(
+      new Error('YouTube API quota exceeded'),
+    );
 
     const req = new Request('http://localhost/api/youtube/search?q=test');
 

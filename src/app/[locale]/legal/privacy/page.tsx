@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-import { Shield, Globe } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
+import { Globe, Shield } from 'lucide-react';
 
 export default function PrivacyPolicy() {
   return (
@@ -159,10 +158,11 @@ export default function PrivacyPolicy() {
                   'Fulfillment of obligations under Iraqi Consumer Protection Law No. 1 of 2010',
                 ].map((item, i) => (
                   <li
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static list
                     key={i}
                     className="flex items-start gap-2 text-slate-600 text-sm"
                   >
-                    <div className="min-w-[6px] h-[6px] rounded-full bg-brand-pink mt-1.5"></div>
+                    <div className="min-w-[6px] h-[6px] rounded-full bg-brand-pink mt-1.5" />
                     {item}
                   </li>
                 ))}

@@ -1,5 +1,6 @@
-import React from 'react';
 import { cn } from '@/lib/cn';
+import type React from 'react';
+import { useId } from 'react';
 
 interface TextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -8,14 +9,20 @@ interface TextareaProps
 }
 
 export function Textarea({ label, error, className, ...props }: TextareaProps) {
+  const uniqueId = useId();
+  const id = props.id || uniqueId;
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-slate-700 mb-1.5"
+        >
           {label}
         </label>
       )}
       <textarea
+        id={id}
         className={cn(
           'w-full px-4 py-3 rounded-lg border bg-white transition-all outline-none min-h-[120px] resize-y',
           error

@@ -1,5 +1,5 @@
+import { LayoutDashboard, LogOut, Receipt, Users } from 'lucide-react';
 import Link from 'next/link';
-import { LayoutDashboard, Receipt, Users, LogOut } from 'lucide-react';
 
 export default function SuiteLayout({
   children,
@@ -44,7 +44,10 @@ export default function SuiteLayout({
         </nav>
 
         <div className="p-4 border-t border-slate-800">
-          <button className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-900/20 w-full rounded-lg transition-colors">
+          <button
+            type="button"
+            className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-900/20 w-full rounded-lg transition-colors"
+          >
             <LogOut size={20} />
             <span>Sign Out</span>
           </button>

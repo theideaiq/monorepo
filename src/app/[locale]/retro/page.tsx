@@ -1,26 +1,27 @@
 'use client';
 
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { Button } from '@/components/ui/Button';
 import {
   motion,
-  useScroll,
-  useTransform,
-  useSpring,
   useInView,
+  useScroll,
+  useSpring,
+  useTransform,
 } from 'framer-motion';
 import {
-  Gamepad2,
-  Disc,
-  Tv,
-  Zap,
-  MonitorPlay,
   ArrowDown,
+  Disc,
+  Gamepad2,
+  type LucideIcon,
+  MonitorPlay,
   Play,
-  LucideIcon,
+  Tv,
   Volume2,
   VolumeX,
+  Zap,
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as Tone from 'tone';
 
 // --- DATA: The Eras ---
@@ -98,7 +99,7 @@ const ERAS: Era[] = [
 
 const CRTOverlay = () => (
   <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden opacity-10">
-    <div className="h-full w-full bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]"></div>
+    <div className="h-full w-full bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
   </div>
 );
 
@@ -236,6 +237,7 @@ const EraSection = ({
             <div className="flex flex-wrap gap-3">
               {data.memories.map((mem, i) => (
                 <motion.span
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static list
                   key={i}
                   onMouseEnter={() => playSound(data.synthType)} // PLAY SOUND ON HOVER
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -267,7 +269,7 @@ const EraSection = ({
             }
             transition={{
               duration: 5,
-              repeat: Infinity,
+              repeat: Number.POSITIVE_INFINITY,
               repeatType: 'reverse',
             }}
             className="relative z-20 text-white drop-shadow-[0_0_50px_rgba(255,255,255,0.3)]"
@@ -318,6 +320,7 @@ export default function RetroPage() {
       {/* Sound Toggle */}
       <div className="fixed top-24 right-6 z-50">
         <button
+          type="button"
           onClick={toggleMute}
           className="bg-black/50 backdrop-blur border border-white/20 p-3 rounded-full hover:bg-white hover:text-black transition-all"
         >
@@ -332,8 +335,8 @@ export default function RetroPage() {
 
       {/* 1. HERO SECTION */}
       <section className="h-screen flex flex-col items-center justify-center relative overflow-hidden bg-black">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000')] bg-cover bg-center opacity-20 blur-sm"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000')] bg-cover bg-center opacity-20 blur-sm" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
 
         <motion.div
           initial={{ y: 50, opacity: 0 }}
@@ -367,7 +370,11 @@ export default function RetroPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, y: [0, 10, 0] }}
-          transition={{ delay: 2, duration: 2, repeat: Infinity }}
+          transition={{
+            delay: 2,
+            duration: 2,
+            repeat: Number.POSITIVE_INFINITY,
+          }}
           className="absolute bottom-12 text-slate-500 flex flex-col items-center gap-2"
         >
           <span className="text-xs uppercase tracking-widest">
@@ -391,7 +398,7 @@ export default function RetroPage() {
 
       {/* 3. CTA */}
       <section className="h-[80vh] flex flex-col items-center justify-center bg-[#0F172A] relative px-4 text-center">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
 
         <div className="relative z-10 max-w-4xl">
           <h2 className="text-5xl md:text-7xl font-black mb-8 text-white">

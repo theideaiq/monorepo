@@ -1,22 +1,25 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { Plus, Trash2 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Select } from '@/components/ui/Select';
+import { createClient } from '@supabase/supabase-js';
+import { Plus, Trash2 } from 'lucide-react';
+import type React from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 export default function StoreManager() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const [products, setProducts] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProduct, setNewProduct] = useState({
@@ -25,25 +28,24 @@ export default function StoreManager() {
     category: 'Gaming',
   });
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     const { data } = await supabase
       .from('products')
       .select('*')
       .order('created_at', { ascending: false });
     setProducts(data || []);
-  };
+  }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     const { error } = await supabase.from('products').insert([
       {
         title: newProduct.title,
-        price: parseInt(newProduct.price),
+        price: Number.parseInt(newProduct.price, 10),
         category: newProduct.category,
         image_url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f', // Default placeholder
       },
@@ -77,6 +79,7 @@ export default function StoreManager() {
         {products.map((p) => (
           <Card key={p.id} className="p-4 relative group">
             <button
+              type="button"
               onClick={() => handleDelete(p.id)}
               className="absolute top-2 right-2 p-2 bg-red-100 text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -85,7 +88,7 @@ export default function StoreManager() {
             <div
               className="h-32 bg-slate-100 rounded-lg mb-4 bg-cover bg-center"
               style={{ backgroundImage: `url(${p.image_url})` }}
-            ></div>
+            />
             <h3 className="font-bold text-brand-dark truncate">{p.title}</h3>
             <div className="flex justify-between mt-2 text-sm">
               <span className="text-slate-500">{p.category}</span>

@@ -1,31 +1,32 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { useRouter } from '@/i18n/navigation'; // Use localized router
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { PlayCircle, BookOpen, Camera, Info, ArrowLeft } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-
+import { Badge } from '@/components/ui/Badge';
 // UI
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { PageLoader } from '@/components/ui/Spinner';
+import { useRouter } from '@/i18n/navigation'; // Use localized router
+import { createClient } from '@supabase/supabase-js';
+import { motion } from 'framer-motion';
+import { ArrowLeft, BookOpen, Camera, Info, PlayCircle } from 'lucide-react';
+import Image from 'next/image';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 export default function PlusBrowsePage() {
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [rentingId, setRentingId] = useState<number | null>(null);
 
-  const fetchCatalog = async () => {
+  const fetchCatalog = useCallback(async () => {
     // 1. Fetch the items from the catalog table
     const { data, error } = await supabase
       .from('rental_catalog')
@@ -34,14 +35,13 @@ export default function PlusBrowsePage() {
     if (error) console.error(error);
     setItems(data || []);
     setLoading(false);
-  };
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchCatalog();
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  useEffect(() => {
+    fetchCatalog();
+  }, [fetchCatalog]);
+
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const handleRent = async (item: any) => {
     setRentingId(item.id);
 
@@ -89,8 +89,8 @@ export default function PlusBrowsePage() {
             fill
             className="object-cover opacity-50"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-[#141414]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#141414]/40 to-transparent" />
         </div>
 
         <div className="relative z-10 max-w-2xl mt-20">
@@ -158,7 +158,7 @@ export default function PlusBrowsePage() {
 }
 
 // Sub-component for Horizontal Scrolling Rows
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: migration
 function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
   if (items.length === 0) return null;
 
@@ -170,7 +170,7 @@ function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
 
       {/* Horizontal Scroll Container */}
       <div className="flex gap-4 overflow-x-auto pb-8 pr-12 no-scrollbar snap-x">
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {/* biome-ignore lint/suspicious/noExplicitAny: migration */}
         {items.map((item: any) => (
           <motion.div
             key={item.id}

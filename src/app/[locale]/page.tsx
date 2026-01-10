@@ -1,20 +1,19 @@
-import React from 'react';
-import Image from 'next/image';
-import { Link } from '@/i18n/navigation';
+import Hero from '@/components/home/Hero';
 import {
-  ShoppingBag,
+  Building2,
   Gamepad2,
   GraduationCap,
-  Building2,
+  ShieldCheck,
+  ShoppingBag,
   Star,
   Truck,
-  ShieldCheck,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import Hero from '@/components/home/Hero';
+import { Link } from '@/i18n/navigation';
 
 export default function Home() {
   const t = useTranslations('Home');
@@ -65,6 +64,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: static list
             <Link key={i} href={service.href}>
               <Card
                 className={`p-8 h-full hover:-translate-y-2 transition-transform duration-300 border-t-4 ${service.color}`}
@@ -123,7 +123,7 @@ export default function Home() {
 
           <div className="md:w-1/2 relative h-[400px] w-full bg-slate-800 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
             {/* Placeholder for a cool lifestyle image */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-brand-pink/20 to-brand-yellow/20"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-brand-pink/20 to-brand-yellow/20" />
             <div className="absolute inset-0 flex items-center justify-center">
               <Image
                 src="/icon.svg"

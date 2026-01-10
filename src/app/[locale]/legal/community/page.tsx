@@ -1,15 +1,14 @@
 'use client';
 
-import React from 'react';
+import { Card } from '@/components/ui/Card';
 import {
   Heart,
-  Users,
-  ShieldAlert,
   MessageCircle,
+  ShieldAlert,
   ShoppingBag,
   Truck,
+  Users,
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
 
 export default function CommunityGuidelines() {
   return (

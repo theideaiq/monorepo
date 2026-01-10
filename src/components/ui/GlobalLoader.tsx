@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, Terminal, Coffee, Gamepad2, Wifi, Zap } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Coffee, Gamepad2, Loader2, Terminal, Wifi, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const LOADING_MESSAGES = [
   { text: 'Calibrating Flux Capacitor...', icon: <Zap size={24} /> },
@@ -28,6 +28,7 @@ function SearchIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
       className="lucide lucide-search"
+      aria-hidden="true"
     >
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
@@ -70,7 +71,7 @@ export default function GlobalLoader() {
               transition={{ duration: 0.5 }}
               className="relative w-20 h-20"
             >
-              <div className="absolute inset-0 bg-brand-pink/20 rounded-full blur-xl animate-pulse"></div>
+              <div className="absolute inset-0 bg-brand-pink/20 rounded-full blur-xl animate-pulse" />
               <div className="relative z-10 w-full h-full bg-slate-900 rounded-2xl border border-white/10 flex items-center justify-center">
                 <span className="text-3xl font-black text-white">
                   I<span className="text-brand-yellow">.</span>

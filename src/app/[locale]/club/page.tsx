@@ -1,22 +1,21 @@
 'use client';
 
-import React from 'react';
+import { Button } from '@/components/ui/Button';
 import { motion } from 'framer-motion';
 import {
-  Send,
-  BookOpen,
-  Music,
-  Trophy,
-  Briefcase,
-  Gamepad2,
-  Palette,
-  Clapperboard,
-  Users,
-  Sparkles,
   ArrowRight,
+  BookOpen,
+  Briefcase,
+  Clapperboard,
+  Gamepad2,
   Megaphone,
+  Music,
+  Palette,
+  Send,
+  Sparkles,
+  Trophy,
+  Users,
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
 
 // Data structure mapping the Telegram channels
 const clubChannels = [

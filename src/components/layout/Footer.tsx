@@ -1,7 +1,7 @@
-import React from 'react';
 import { Link } from '@/i18n/navigation';
+import { Facebook, Globe, Instagram, Linkedin, Twitter } from 'lucide-react';
 import Image from 'next/image';
-import { Facebook, Twitter, Instagram, Linkedin, Globe } from 'lucide-react';
+import type React from 'react';
 
 export default function Footer() {
   return (
@@ -189,7 +189,7 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-white/10 my-8"></div>
+        <div className="border-t border-white/10 my-8" />
 
         {/* Bottom Section: Sony Style Copyright */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
@@ -216,7 +216,7 @@ export default function Footer() {
 function SocialIcon({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <a
-      href="#"
+      href="/"
       aria-label={label}
       className="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center text-slate-400 hover:bg-brand-pink hover:text-white transition-all"
     >

@@ -1,17 +1,16 @@
 'use client';
 
-import React from 'react';
-import {
-  Building2,
-  Briefcase,
-  TrendingUp,
-  Users,
-  ShoppingCart,
-  GraduationCap,
-  CheckCircle,
-} from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import {
+  Briefcase,
+  Building2,
+  CheckCircle,
+  GraduationCap,
+  ShoppingCart,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
 
 export default function SuitePage() {
   return (
@@ -44,7 +43,7 @@ export default function SuitePage() {
 
           {/* Abstract B2B Graphic */}
           <div className="relative h-[500px] bg-gradient-to-tr from-brand-pink/20 to-brand-yellow/20 rounded-3xl border border-white/10 backdrop-blur-sm p-8 flex flex-col justify-center">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop')] opacity-20 bg-cover bg-center mix-blend-overlay rounded-3xl"></div>
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop')] opacity-20 bg-cover bg-center mix-blend-overlay rounded-3xl" />
 
             {/* Floating Stats Cards */}
             <div className="bg-white text-brand-dark p-6 rounded-xl shadow-xl max-w-xs ml-auto mb-6 transform hover:-translate-y-1 transition-transform">

@@ -1,11 +1,10 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/Button';
 import { Link } from '@/i18n/navigation';
+import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/Button';
 
 export default function Hero() {
   const t = useTranslations('Home');
@@ -51,8 +50,8 @@ export default function Hero() {
       </div>
 
       {/* Abstract Background Blobs */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-brand-yellow/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-brand-pink/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-brand-yellow/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-brand-pink/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
     </section>
   );
 }

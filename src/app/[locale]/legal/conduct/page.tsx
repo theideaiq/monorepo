@@ -1,16 +1,15 @@
 'use client';
 
-import React from 'react';
+import { Card } from '@/components/ui/Card';
 import {
-  Heart,
-  Users,
-  AlertTriangle,
   Accessibility,
+  AlertTriangle,
   Beer,
   GraduationCap,
+  Heart,
   Truck,
+  Users,
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
 
 export default function CodeOfConduct() {
   return (

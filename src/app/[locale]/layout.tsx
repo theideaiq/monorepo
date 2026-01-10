@@ -1,16 +1,15 @@
-import { Poppins, Cairo } from 'next/font/google';
+import { Cairo, Poppins } from 'next/font/google';
 import '../globals.css';
-import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/layout/Navbar';
 import ToastProvider from '@/components/providers/ToastProvider';
 import GlobalLoader from '@/components/ui/GlobalLoader';
+import { routing } from '@/i18n/navigation';
 import { GoogleTagManager } from '@next/third-parties/google';
-
 // NEW: Imports for translation data
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { routing } from '@/i18n/navigation';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -38,7 +37,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
   // 1. Validate the locale against your config
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }

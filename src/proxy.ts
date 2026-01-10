@@ -1,5 +1,5 @@
-import createMiddleware from 'next-intl/middleware';
 import { routing } from '@/i18n/navigation';
+import createMiddleware from 'next-intl/middleware';
 
 // 1. Create the Intl Middleware with the "as-needed" override
 const intlMiddleware = createMiddleware({
@@ -8,7 +8,7 @@ const intlMiddleware = createMiddleware({
 });
 
 // 2. Export it as 'proxy' to satisfy Next.js 15+
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: migration
 export default function proxy(request: any) {
   return intlMiddleware(request);
 }

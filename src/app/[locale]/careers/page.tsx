@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
 export default function CareersPage() {
@@ -45,6 +44,7 @@ export default function CareersPage() {
         <div className="space-y-4">
           {jobs.map((job, i) => (
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: static list
               key={i}
               className="group bg-white border border-slate-200 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center hover:border-brand-pink hover:shadow-lg transition-all cursor-pointer"
             >
@@ -60,7 +60,10 @@ export default function CareersPage() {
                   <span>{job.type}</span>
                 </div>
               </div>
-              <button className="px-6 py-2 rounded-full bg-slate-50 text-brand-dark font-medium group-hover:bg-brand-pink group-hover:text-white transition-colors flex items-center gap-2">
+              <button
+                type="button"
+                className="px-6 py-2 rounded-full bg-slate-50 text-brand-dark font-medium group-hover:bg-brand-pink group-hover:text-white transition-colors flex items-center gap-2"
+              >
                 Apply Now <ArrowRight size={16} />
               </button>
             </div>

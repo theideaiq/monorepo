@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/cn';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import type React from 'react';
+import { useEffect } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -73,6 +74,7 @@ export function Modal({
               <div className="flex justify-between items-center p-6 border-b border-slate-100">
                 <h3 className="text-xl font-bold text-brand-dark">{title}</h3>
                 <button
+                  type="button"
                   onClick={onClose}
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-brand-pink"
                   aria-label={t('close')}

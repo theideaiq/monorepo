@@ -1,6 +1,7 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { ChevronDown } from 'lucide-react';
+import type React from 'react';
+import { useId } from 'react';
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -15,15 +16,21 @@ export function Select({
   className,
   ...props
 }: SelectProps) {
+  const uniqueId = useId();
+  const id = props.id || uniqueId;
   return (
     <div className="w-full">
       {label && (
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-slate-700 mb-1.5"
+        >
           {label}
         </label>
       )}
       <div className="relative">
         <select
+          id={id}
           className={cn(
             'w-full px-4 py-3 rounded-lg border bg-white transition-all outline-none appearance-none',
             'pr-10',

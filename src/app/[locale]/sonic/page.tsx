@@ -1,26 +1,28 @@
 'use client';
 
-import React, { useState, useRef, useEffect, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Button } from '@/components/ui/Button';
 import {
   Environment,
-  OrbitControls,
-  PerspectiveCamera,
   Float,
   Grid,
+  OrbitControls,
+  PerspectiveCamera,
 } from '@react-three/drei';
-import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing';
+import { createClient } from '@supabase/supabase-js';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Loader2, Volume2, VolumeX } from 'lucide-react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import * as Tone from 'tone';
-import { motion, AnimatePresence } from 'framer-motion';
-import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
-import { Loader2, Volume2, VolumeX } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
 
 // --- Configuration ---
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
@@ -162,7 +164,7 @@ export default function SonicEcosystemPage() {
         .limit(50);
 
       if (data) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: migration
         const formattedNodes = data.map((dbNode: any) => ({
           id: dbNode.id,
           position: [
@@ -334,6 +336,7 @@ export default function SonicEcosystemPage() {
             Tap floor to create sound
           </p>
           <button
+            type="button"
             onClick={() => setMuted(!muted)}
             className="text-slate-400 hover:text-white transition pointer-events-auto bg-white/10 p-3 rounded-full backdrop-blur-md"
           >

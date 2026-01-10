@@ -1,4 +1,4 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { type CookieOptions, createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -11,7 +11,9 @@ export async function GET(request: Request) {
     const cookieStore = await cookies();
 
     const supabase = createServerClient(
+      // biome-ignore lint/style/noNonNullAssertion: migration
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      // biome-ignore lint/style/noNonNullAssertion: migration
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {

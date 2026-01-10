@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { wayl } from '@/lib/wayl';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     // 2. Return the link to the frontend
     return NextResponse.json({ url: paymentUrl });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: migration
   } catch (error: any) {
     console.error('Checkout Error:', error);
     return NextResponse.json(

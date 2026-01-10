@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-import { TrendingUp, Users, ShoppingCart, AlertCircle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
+import { AlertCircle, ShoppingCart, TrendingUp, Users } from 'lucide-react';
 
 export default function AdminDashboard() {
   return (
@@ -48,7 +47,7 @@ export default function AdminDashboard() {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: migration
 function StatsCard({ title, value, icon }: any) {
   return (
     <Card className="p-6 flex items-center gap-4">

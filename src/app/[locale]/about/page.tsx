@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { Target, Lightbulb } from 'lucide-react';
+import { Lightbulb, Target } from 'lucide-react';
 
 export default function AboutPage() {
   return (
@@ -23,8 +22,8 @@ export default function AboutPage() {
           </p>
         </div>
         {/* Abstract Background Elements */}
-        <div className="absolute top-0 left-0 w-64 h-64 bg-brand-pink/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-yellow/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+        <div className="absolute top-0 left-0 w-64 h-64 bg-brand-pink/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-yellow/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
       </section>
 
       {/* Mission & Vision Grid */}
@@ -65,7 +64,7 @@ export default function AboutPage() {
           {/* Image Placeholder */}
           <div className="relative h-96 rounded-3xl overflow-hidden shadow-2xl bg-slate-100">
             {/* Replace with a real photo of Baghdad or Team later */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-brand-pink to-brand-yellow opacity-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-brand-pink to-brand-yellow opacity-10" />
             <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-medium">
               [Team Photo / Baghdad Skyline]
             </div>
@@ -82,6 +81,7 @@ export default function AboutPage() {
             { label: 'Courses', value: '120+' },
             { label: 'Cities', value: '18' },
           ].map((stat, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: static list
             <div key={i}>
               <div className="text-4xl font-bold text-brand-dark mb-2">
                 {stat.value}

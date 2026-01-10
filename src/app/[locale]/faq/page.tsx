@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 export default function FAQPage() {
   return (
     <div className="min-h-screen bg-slate-50 pt-28 pb-20 px-4">

@@ -1,21 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import {
-  Search,
-  Plus,
-  Check,
-  Disc3,
-  Music,
-  Info,
-  Radio,
-  Clock,
-} from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
-import { motion, AnimatePresence } from 'framer-motion';
 import { decodeHtmlEntities } from '@/lib/string-utils';
+import { createClient } from '@/lib/supabase/client';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Check,
+  Clock,
+  Disc3,
+  Info,
+  Music,
+  Plus,
+  Radio,
+  Search,
+} from 'lucide-react';
+import Image from 'next/image';
+import type React from 'react';
+import { useState } from 'react';
 
 interface VideoResult {
   id: string;
@@ -100,7 +101,7 @@ export default function JukeboxGuest() {
       <div className="sticky top-24 z-40 px-4 -mt-8 mb-8">
         <div className="max-w-xl mx-auto drop-shadow-2xl">
           <form onSubmit={handleSearch} className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-pink to-brand-yellow blur-xl rounded-2xl opacity-0 group-focus-within:opacity-50 transition duration-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-pink to-brand-yellow blur-xl rounded-2xl opacity-0 group-focus-within:opacity-50 transition duration-500" />
             <div className="relative flex bg-slate-900 border border-white/10 rounded-2xl overflow-hidden">
               <input
                 type="text"
@@ -174,6 +175,7 @@ export default function JukeboxGuest() {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => addToQueue(video)}
                 disabled={cooldown !== null}
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-lg transform ${cooldown === video.id ? 'bg-green-500 text-black scale-100' : 'bg-white/10 text-white hover:bg-brand-pink hover:scale-110'}`}

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { Eye, EyeOff } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;

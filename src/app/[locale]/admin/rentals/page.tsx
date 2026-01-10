@@ -1,33 +1,34 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { toast } from 'react-hot-toast';
+import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import { createClient } from '@supabase/supabase-js';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 export default function RentalsManager() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const [rentals, setRentals] = useState<any[]>([]);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     const { data } = await supabase
       .from('rentals')
       .select('*')
       .order('created_at', { ascending: false });
     setRentals(data || []);
-  };
+  }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOrders();
-  }, []);
+  }, [fetchOrders]);
 
   const updateStatus = async (id: number, status: string) => {
     await supabase.from('rentals').update({ status }).eq('id', id);

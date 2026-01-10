@@ -1,28 +1,30 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/Badge';
 import { createClient } from '@supabase/supabase-js';
-// Use the localized router and translations
-import { useRouter } from '@/i18n/navigation';
-import { useTranslations } from 'next-intl';
 import {
-  Package,
-  LogOut,
-  User,
   Clock,
-  Sparkles,
+  LogOut,
+  Package,
   ShieldCheck,
+  Sparkles,
+  User,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Tilt from 'react-parallax-tilt'; // For the 3D Card effect
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
 import { PageLoader } from '@/components/ui/Spinner';
+// Use the localized router and translations
+import { useRouter } from '@/i18n/navigation';
 
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
@@ -30,10 +32,10 @@ export default function AccountPage() {
   // 1. Use translation hook for static text
   const t = useTranslations('Account'); // We'll create this section next
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const [rentals, setRentals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: migration
   const [userData, setUserData] = useState<any>(null);
   const router = useRouter();
 
@@ -106,8 +108,8 @@ export default function AccountPage() {
               {/* Dynamic Background */}
               <div className="absolute inset-0 bg-brand-dark">
                 {/* Generative Blobs based on User ID to make it look unique */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-pink/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-70"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-yellow/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 opacity-70"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-pink/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-70" />
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-yellow/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 opacity-70" />
                 {/* Noise Texture */}
                 <div
                   className="absolute inset-0 opacity-30 mix-blend-overlay"
@@ -115,7 +117,7 @@ export default function AccountPage() {
                     backgroundImage:
                       'url("https://grainy-gradients.vercel.app/noise.svg")',
                   }}
-                ></div>
+                />
               </div>
 
               {/* Card Content */}
@@ -140,7 +142,7 @@ export default function AccountPage() {
                   </div>
                   {/* Holographic Sticker */}
                   <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-slate-200/80 via-white/90 to-slate-200/80 backdrop-blur-md flex items-center justify-center shadow-lg border border-white/50 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shine"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shine" />
                     <Sparkles className="text-slate-900 w-6 h-6 relative z-10" />
                   </div>
                 </div>
@@ -148,8 +150,8 @@ export default function AccountPage() {
                 {/* Middle Row (Chip) */}
                 <div className="pl-1">
                   <div className="w-12 h-9 bg-gradient-to-br from-[#d4af37] to-[#c5a028] rounded-md shadow-md border border-[#a88520]/50 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-50 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,rgba(0,0,0,0.2)_2px,rgba(0,0,0,0.2)_4px)]"></div>
-                    <div className="absolute inset-0 opacity-50 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(0,0,0,0.2)_2px,rgba(0,0,0,0.2)_4px)]"></div>
+                    <div className="absolute inset-0 opacity-50 bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,rgba(0,0,0,0.2)_2px,rgba(0,0,0,0.2)_4px)]" />
+                    <div className="absolute inset-0 opacity-50 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgba(0,0,0,0.2)_2px,rgba(0,0,0,0.2)_4px)]" />
                   </div>
                 </div>
 
@@ -184,7 +186,7 @@ export default function AccountPage() {
               </div>
 
               {/* Glass Shine Effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none mix-blend-overlay"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none mix-blend-overlay" />
             </Tilt>
           </div>
 
@@ -257,7 +259,7 @@ export default function AccountPage() {
 }
 
 // Helper function to generate deterministic card data from the user object
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: migration
 function generateCardData(user: any) {
   // Create a short ID from the user's UUID (e.g., first 4 + last 4 chars)
   const shortId =

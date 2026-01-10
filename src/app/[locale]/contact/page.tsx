@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, MapPin, Phone, Send } from 'lucide-react';
+import type React from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 // Import your new UI System
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-import { Card } from '@/components/ui/Card';
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);

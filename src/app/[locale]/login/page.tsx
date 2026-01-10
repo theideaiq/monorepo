@@ -1,17 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { ArrowRight, Chrome, Lock } from 'lucide-react'; // Added Chrome icon for Google
 import { useRouter } from 'next/navigation';
-import { Lock, ArrowRight, Chrome } from 'lucide-react'; // Added Chrome icon for Google
+import type React from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: migration
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
@@ -78,7 +81,7 @@ export default function LoginPage() {
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-200"></div>
+            <div className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="px-2 bg-white text-slate-500">

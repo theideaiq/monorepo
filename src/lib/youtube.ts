@@ -49,7 +49,7 @@ export async function searchYouTube(query: string) {
   // 2. GET DETAILS (For Duration)
 
   const videoIds = searchData.items
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: migration
     .map((item: any) => item.id.videoId)
     .join(',');
   const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds}&key=${key}`;
@@ -60,16 +60,16 @@ export async function searchYouTube(query: string) {
   // 3. FILTER & FORMAT
   return (
     detailsData.items
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: migration
       .filter((video: any) => {
         const duration = video.contentDetails.duration;
         const minutesMatch = duration.match(DURATION_MINUTES_REGEX);
-        const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
+        const minutes = minutesMatch ? Number.parseInt(minutesMatch[1], 10) : 0;
 
         // Strict Rules: 1 min < Length < 10 mins
         return minutes < 10 && (minutes >= 1 || duration.includes('S'));
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: migration
       .map((video: any) => ({
         id: video.id,
         title: video.snippet.title,

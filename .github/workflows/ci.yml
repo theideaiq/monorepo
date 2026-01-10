@@ -38,11 +38,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check Formatting
-        run: pnpm prettier --check .
-
-      - name: Lint
-        run: pnpm lint
+      - name: Biome CI
+        run: pnpm biome ci .
 
       - name: Type Check
         run: pnpm tsc --noEmit
