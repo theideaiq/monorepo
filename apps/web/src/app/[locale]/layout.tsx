@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
+import QueryProvider from '@/components/providers/QueryProvider';
 import ToastProvider from '@/components/providers/ToastProvider';
 import GlobalLoader from '@/components/ui/GlobalLoader';
 import { routing } from '@/i18n/navigation';
@@ -58,13 +59,15 @@ export default async function LocaleLayout({ children, params }: Props) {
       >
         {/* 3. Wrap everything in the Client Provider */}
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <GlobalLoader />
-          <ToastProvider />
-          <Navbar locale={locale} />
-          <div className={dir === 'rtl' ? 'font-arabic' : 'font-sans'}>
-            {children}
-          </div>
-          <Footer />
+          <QueryProvider>
+            <GlobalLoader />
+            <ToastProvider />
+            <Navbar locale={locale} />
+            <div className={dir === 'rtl' ? 'font-arabic' : 'font-sans'}>
+              {children}
+            </div>
+            <Footer />
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

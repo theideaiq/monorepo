@@ -21,82 +21,8 @@ import { toast } from 'react-hot-toast';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-
-// Mock Data (The Marketplace)
-const PRODUCTS = [
-  {
-    id: 1,
-    title: 'PlayStation 5 Slim Console',
-    price: 650000,
-    category: 'Gaming',
-    condition: 'New',
-    seller: 'The IDEA Official',
-    rating: 5.0,
-    image:
-      'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&q=80&w=800',
-    isVerified: true,
-  },
-  {
-    id: 2,
-    title: 'MacBook Air M2 (Midnight)',
-    price: 1450000,
-    category: 'Laptops',
-    condition: 'Open Box',
-    seller: 'TechResale Baghdad',
-    rating: 4.8,
-    image:
-      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800',
-    isVerified: true,
-  },
-  {
-    id: 3,
-    title: 'Xbox Series X Controller',
-    price: 85000,
-    category: 'Accessories',
-    condition: 'Used - Good',
-    seller: 'GamerAli99',
-    rating: 4.5,
-    image:
-      'https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?auto=format&fit=crop&q=80&w=800',
-    isVerified: false,
-  },
-  {
-    id: 4,
-    title: 'iPhone 15 Pro Max',
-    price: 1850000,
-    category: 'Phones',
-    condition: 'New',
-    seller: 'The IDEA Official',
-    rating: 5.0,
-    image:
-      'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=800',
-    isVerified: true,
-  },
-  {
-    id: 5,
-    title: 'Atomic Habits (Hardcover)',
-    price: 25000,
-    category: 'Books',
-    condition: 'New',
-    seller: 'Baghdad Books',
-    rating: 4.9,
-    image:
-      'https://images.unsplash.com/photo-1592496431122-2349e0fbc666?auto=format&fit=crop&q=80&w=800',
-    isVerified: true,
-  },
-  {
-    id: 6,
-    title: 'Sony WH-1000XM5',
-    price: 450000,
-    category: 'Audio',
-    condition: 'New',
-    seller: 'AudioKings',
-    rating: 4.7,
-    image:
-      'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=800',
-    isVerified: true,
-  },
-];
+import { useProducts } from '@/hooks/queries/use-products';
+import { useCartStore } from '@/stores/cart-store';
 
 const CATEGORIES = [
   { name: 'Gaming', icon: <Gamepad2 size={18} /> },
@@ -107,10 +33,21 @@ const CATEGORIES = [
 
 export default function MegastorePage() {
   const [filter, setFilter] = useState('All');
+  const { data: products, isLoading } = useProducts();
+  const addItem = useCartStore((s) => s.addItem);
 
   const addToCart = (product: string) => {
+    addItem(product);
     toast.success(`${product} added to cart`);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 pt-20 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-dark" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20">
@@ -190,11 +127,11 @@ export default function MegastorePage() {
       {/* 3. PRODUCT GRID */}
       <section className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {PRODUCTS.filter(
-            (p) => filter === 'All' || p.category === filter,
-          ).map((product) => (
-            <motion.div
-              key={product.id}
+          {products
+            ?.filter((p) => filter === 'All' || p.category === filter)
+            .map((product) => (
+              <motion.div
+                key={product.id}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
