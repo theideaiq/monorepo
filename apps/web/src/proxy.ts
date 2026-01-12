@@ -4,7 +4,7 @@ import createMiddleware from 'next-intl/middleware';
 // 1. Create the Intl Middleware with the "as-needed" override
 const intlMiddleware = createMiddleware({
   ...routing, // Keep your locales and defaultLocale from the config file
-  localePrefix: 'as-needed', // <--- THIS IS THE KEY CHANGE
+  localePrefix: 'always', // <--- THIS IS THE KEY CHANGE
 });
 
 // 2. Export it as 'proxy' to satisfy Next.js 15+
