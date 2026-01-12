@@ -20,6 +20,8 @@ test-results/
 # next.js
 /.next/
 /out/
+apps/web/out/
+apps/web/.next/
 
 # production
 /build
@@ -60,4 +62,3 @@ dev_server.log
 # IDE Settings (Optional - keeps your personal settings out of the repo)
 .vscode/
 .idea/
-apps/web/.next

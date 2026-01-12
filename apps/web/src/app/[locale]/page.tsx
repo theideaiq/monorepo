@@ -8,15 +8,23 @@ import {
   Star,
   Truck,
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Link } from '@/i18n/navigation';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export default function Home() {
-  const t = useTranslations('Home');
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  // Use getTranslations instead of useTranslations for async server component
+  const t = await getTranslations({ locale, namespace: 'Home' });
 
   const services = [
     {

@@ -8,7 +8,7 @@ import { routing } from '@/i18n/navigation';
 import { GoogleTagManager } from '@next/third-parties/google';
 // NEW: Imports for translation data
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 const poppins = Poppins({
@@ -28,6 +28,10 @@ export const metadata = {
   description: 'Innovation for Every Aspect of Life',
 };
 
+export function generateStaticParams() {
+  return [{ locale: 'en' }, { locale: 'ar' }];
+}
+
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -35,6 +39,7 @@ type Props = {
 
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
+  setRequestLocale(locale);
 
   // 1. Validate the locale against your config
   // biome-ignore lint/suspicious/noExplicitAny: migration

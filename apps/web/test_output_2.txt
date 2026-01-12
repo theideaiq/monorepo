@@ -1,0 +1,26 @@
+
+> web@0.1.0 test /app/apps/web
+> vitest
+
+
+[1m[46m RUN [49m[22m [36mv4.0.17 [39m[90m/app/apps/web[39m
+
+ [32m✓[39m src/components/ui/Textarea.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 364[2mms[22m[39m
+ [32m✓[39m src/components/ui/Select.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 505[2mms[22m[39m
+     [33m[2m✓[22m[39m shows error message when provided [33m 342[2mms[22m[39m
+ [32m✓[39m src/components/ui/Input.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 676[2mms[22m[39m
+     [33m[2m✓[22m[39m toggles password visibility [33m 485[2mms[22m[39m
+ [32m✓[39m src/components/ui/Button.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 407[2mms[22m[39m
+ [32m✓[39m src/components/ui/Modal.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 144[2mms[22m[39m
+ [32m✓[39m src/components/ui/GlobalLoader.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32m✓[39m src/components/ui/Card.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32m✓[39m src/components/ui/Badge.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+ [32m✓[39m src/components/ui/Spinner.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 172[2mms[22m[39m
+ [32m✓[39m src/lib/cn.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/lib/youtube.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/lib/string-utils.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[32m42 passed[39m[22m[90m (42)[39m
+[2m   Start at [22m 20:18:28
+[2m   Duration [22m 7.28s[2m (transform 592ms, setup 1.16s, import 3.66s, tests 2.62s, environment 11.47s)[22m
