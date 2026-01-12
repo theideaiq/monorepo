@@ -1,5 +1,5 @@
-import { Loader2 } from 'lucide-react';
 import { cn } from '@repo/utils';
+import { Loader2 } from 'lucide-react';
 
 export function Spinner({
   size = 24,

@@ -1,5 +1,5 @@
-import type React from 'react';
 import { cn } from '@repo/utils';
+import type React from 'react';
 
 type BadgeVariant = 'success' | 'warning' | 'danger' | 'neutral' | 'brand';
 

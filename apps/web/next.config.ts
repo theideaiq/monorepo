@@ -1,6 +1,6 @@
+import withBundleAnalyzer from '@next/bundle-analyzer';
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
-import withBundleAnalyzer from '@next/bundle-analyzer';
 
 const withNextIntl = createNextIntlPlugin();
 const withAnalyzer = withBundleAnalyzer({
@@ -16,19 +16,44 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
-      // --- ADD THIS BLOCK ---
       {
         protocol: 'https',
-        hostname: 'i.ytimg.com', // <--- YouTube Thumbnails live here
+        hostname: 'i.ytimg.com',
       },
-      // ----------------------
     ],
   },
   async headers() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    let supabaseDomain = '';
+
+    if (supabaseUrl) {
+      try {
+        const url = new URL(supabaseUrl);
+        supabaseDomain = url.hostname;
+      } catch (e) {
+        console.error('Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP', e);
+      }
+    }
+
+    const csp = [
+      "default-src 'self'",
+      `img-src 'self' data: blob: images.unsplash.com i.ytimg.com ${supabaseDomain}`,
+      "style-src 'self' 'unsafe-inline'",
+      `connect-src 'self' ${supabaseDomain}`,
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // unsafe-eval needed for Next.js in dev, unsafe-inline for scripts
+      "font-src 'self' data:",
+    ]
+      .filter(Boolean)
+      .join('; ');
+
     return [
       {
         source: '/:path*',
         headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: csp.replace(/\s{2,}/g, ' ').trim(),
+          },
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',

@@ -12,7 +12,8 @@
     "test": "turbo test",
     "prepare": "husky",
     "sync": "syncpack list-mismatches",
-    "release": "turbo build && changeset publish"
+    "release": "turbo build && changeset publish",
+    "audit": "pnpm audit --prod"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
@@ -27,7 +28,7 @@
   "packageManager": "pnpm@10.27.0",
   "engines": {
     "node": ">=24.12.0",
-    "pnpm": ">=9"
+    "pnpm": ">=10.27.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,json,css}": [
