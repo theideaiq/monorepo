@@ -33,7 +33,7 @@ export const routing = defineRouting({
   // CHANGE THIS:
   // 'always' -> forces /en on everything
   // 'as-needed' -> hides /en, keeps /ar
-  localePrefix: 'as-needed',
+  localePrefix: 'always',
 });
 
 export const { Link, redirect, usePathname, useRouter } =
