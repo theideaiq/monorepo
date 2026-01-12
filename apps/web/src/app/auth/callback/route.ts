@@ -9,12 +9,16 @@ export async function GET(request: Request) {
 
   if (code) {
     const cookieStore = await cookies();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Missing Supabase environment variables');
+    }
 
     const supabase = createServerClient(
-      // biome-ignore lint/style/noNonNullAssertion: migration
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      // biome-ignore lint/style/noNonNullAssertion: migration
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseUrl,
+      supabaseKey,
       {
         cookies: {
           get(name: string) {
