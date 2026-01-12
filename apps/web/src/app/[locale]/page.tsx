@@ -11,7 +11,7 @@ import {
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button/Button';
 import { Card } from '@/components/ui/Card';
 import { Link } from '@/i18n/navigation';
 

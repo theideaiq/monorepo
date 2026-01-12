@@ -8,9 +8,9 @@ import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button/Button';
 import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input/Input';
 
 const supabase = createClient(
   // biome-ignore lint/style/noNonNullAssertion: migration

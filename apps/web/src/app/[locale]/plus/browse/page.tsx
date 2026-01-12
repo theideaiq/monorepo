@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Badge } from '@/components/ui/Badge';
 // UI
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button/Button';
 import { PageLoader } from '@/components/ui/Spinner';
 import { useRouter } from '@/i18n/navigation'; // Use localized router
 import { createClient } from '@/lib/supabase/client';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button/Button';
 import { Card } from '@/components/ui/Card';
 import { createClient } from '@supabase/supabase-js';
 import { useCallback, useEffect, useState } from 'react';

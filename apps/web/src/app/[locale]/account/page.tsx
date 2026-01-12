@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Tilt from 'react-parallax-tilt'; // For the 3D Card effect
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button/Button';
 import { Card } from '@/components/ui/Card';
 import { PageLoader } from '@/components/ui/Spinner';
 // Use the localized router and translations

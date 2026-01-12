@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/Badge';
 // UI Kit
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button/Button';
 import { createClient } from '@supabase/supabase-js';
 import { motion } from 'framer-motion';
 import { BookOpen, Check, Gamepad2, Loader2, Zap } from 'lucide-react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button/Button';
 import { PageLoader } from '@/components/ui/Spinner';
 import { createClient } from '@supabase/supabase-js';
 import {

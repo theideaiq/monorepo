@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button/Button';
 import { decodeHtmlEntities } from '@/lib/string-utils';
 import { createClient } from '@/lib/supabase/client';
 import { AnimatePresence, motion } from 'framer-motion';
