@@ -1,90 +1,85 @@
-# Next.js 16 Project
+# The IDEA IQ Monorepo
 
-This is a modern web application built with [Next.js 16](https://nextjs.org/), leveraging [Supabase](https://supabase.com/) for the backend and [Tailwind CSS 4](https://tailwindcss.com/) for styling.
+![CI Status](https://github.com/theideaiq/monorepo/actions/workflows/ci.yml/badge.svg)
+![Deployment Status](https://img.shields.io/netlify/status/theideaiq-web)
+![License](https://img.shields.io/badge/License-Proprietary-red.svg)
+![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)
 
-## Features
+This is the central routing hub and monorepo for The IDEA IQ ecosystem. It houses the main web application, shared packages, and configuration.
 
-- **App Router**: Utilizes the latest Next.js App Router for efficient routing and layouts.
-- **Internationalization**: Built-in support for multiple languages using `next-intl`.
-- **Authentication**: Secure authentication via Supabase.
-- **Animations**: Smooth UI transitions and animations powered by `framer-motion` and `Three.js` (via `@react-three/fiber`).
-- **Styling**: Modern, utility-first styling with Tailwind CSS v4.
+## 🏗 Architecture
 
-## Tech Stack
+The architecture consists of a Next.js web application communicating with Supabase for backend services (Auth, Database) and Wayl for payments/state, along with external integrations.
 
-- **Framework**: Next.js 16
-- **Language**: TypeScript
-- **Backend**: Supabase (PostgreSQL, Auth)
-- **Styling**: Tailwind CSS 4
-- **State/Payment**: Wayl integration (via `lib/wayl.ts`)
-- **Icons**: Lucide React
+```mermaid
+graph TD
+    Client[Web App (Next.js 16)]
+    Sub[Supabase (Auth & DB)]
+    Wayl[Wayl (State & Payments)]
+    Ext[External Services]
 
-## Getting Started
+    Client -->|Auth/Data| Sub
+    Client -->|Payments| Wayl
+    Client -->|API| Ext
+    Sub -->|Webhooks| Client
+```
+
+## 📦 Project Structure
+
+The project is structured as a Monorepo using [Turbo](https://turbo.build/) and [pnpm](https://pnpm.io/).
+
+- `apps/`
+  - [`web`](./apps/web/README.md): The main consumer-facing Next.js application.
+- `packages/`
+  - `ui`: Shared UI components (Tailwind CSS).
+  - `config`: Shared configuration (Biome, TypeScript).
+  - `utils`: Shared utility functions.
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v18+ recommended)
-- pnpm
+- Node.js (v24.12.0+ recommended)
+- pnpm (v9+)
 
 ### Installation
 
 1.  **Clone the repository**:
-
     ```bash
     git clone <repository-url>
     cd <project-directory>
     ```
 
 2.  **Install dependencies**:
-
     ```bash
     pnpm install
     ```
 
-3.  **Configure Environment Variables**:
-    Create a `.env.local` file in the root directory based on the following template:
-
-    ```env
-    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-    NEXT_PUBLIC_ADMIN_EMAIL=your_admin_email
-    YOUTUBE_API_KEY=your_youtube_api_key
-    NEXT_PUBLIC_SITE_URL=http://localhost:3000
-    ```
-
-4.  **Run the development server**:
+3.  **Environment Setup**:
+    Copy the example environment file to `.env.local` (or `.env` as needed) in `apps/web`.
 
     ```bash
-    pnpm run dev
+    cp apps/web/.env.example apps/web/.env.local
     ```
 
-    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    Ensure you populate the following variables:
+    ```env
+    NEXT_PUBLIC_SUPABASE_URL=...
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+    ```
 
-## Project Structure
+4.  **Run Development Server**:
+    ```bash
+    pnpm dev
+    ```
 
-- `app/`: Application source code (pages, layouts, api routes).
-  - `[locale]/`: Locale-dependent routes.
-- `components/`: Reusable React components.
-- `lib/`: Utility libraries and configurations (e.g., `wayl.ts`).
-- `messages/`: Translation files for `next-intl`.
-- `public/`: Static assets.
+## 🛠 Tooling
 
-## Scripts
+- **Build System**: TurboRepo
+- **Package Manager**: pnpm
+- **Linting/Formatting**: Biome
+- **Testing**: Vitest, Playwright
 
-- `pnpm run dev`: Starts the development server.
-- `pnpm run build`: Builds the application for production.
-- `pnpm run start`: Starts the production server.
-- `pnpm run lint`: Runs ESLint to check for code quality issues.
+## 📄 License
 
-## Learn More
-
-To learn more about the technologies used:
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Supabase Documentation](https://supabase.com/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [Framer Motion](https://www.framer.com/motion/)
-
-## License
-
-[Add License Information Here]
+All Rights Reserved. Copyright © The IDEA.

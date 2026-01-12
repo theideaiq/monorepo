@@ -1,7 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
-import { PageLoader } from '@/components/ui/Spinner';
 import { createClient } from '@supabase/supabase-js';
 import {
   LayoutDashboard,
@@ -15,6 +13,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/Button';
+import { PageLoader } from '@/components/ui/Spinner';
 
 // CHANGE TO YOUR ADMIN EMAIL
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;

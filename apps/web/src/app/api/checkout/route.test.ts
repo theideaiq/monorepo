@@ -1,5 +1,5 @@
-import { wayl } from '@/lib/wayl';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { wayl } from '@/lib/wayl';
 import { POST } from './route';
 
 // Mock the wayl library

@@ -1,14 +1,14 @@
 'use client';
 
-import { Badge } from '@/components/ui/Badge';
-// UI Kit
-import { Button } from '@/components/ui/Button';
 import { createClient } from '@supabase/supabase-js';
 import { motion } from 'framer-motion';
 import { BookOpen, Check, Gamepad2, Loader2, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { Badge } from '@/components/ui/Badge';
+// UI Kit
+import { Button } from '@/components/ui/Button';
 
 interface Tier {
   id: string;

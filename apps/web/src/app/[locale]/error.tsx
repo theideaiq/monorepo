@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 import { useEffect } from 'react';
+import { Button } from '@/components/ui/Button';
 
 // Error components must be Client Components
 export default function ErrorPage({

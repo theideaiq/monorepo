@@ -1,15 +1,15 @@
 import { Cairo, Poppins } from 'next/font/google';
 import '../globals.css';
+import { GoogleTagManager } from '@next/third-parties/google';
+import { notFound } from 'next/navigation';
+// NEW: Imports for translation data
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import ToastProvider from '@/components/providers/ToastProvider';
 import GlobalLoader from '@/components/ui/GlobalLoader';
 import { routing } from '@/i18n/navigation';
-import { GoogleTagManager } from '@next/third-parties/google';
-// NEW: Imports for translation data
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 
 const poppins = Poppins({
   subsets: ['latin'],

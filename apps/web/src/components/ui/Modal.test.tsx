@@ -9,7 +9,9 @@ vi.mock('next-intl', () => ({
 
 // Mock framer-motion to avoid animation issues in tests
 vi.mock('framer-motion', () => ({
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
   motion: {
     // biome-ignore lint/suspicious/noExplicitAny: mocking framework internals
     div: ({ children, onClick, className, ...props }: any) => (

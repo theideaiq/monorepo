@@ -4,7 +4,9 @@ import GlobalLoader from './GlobalLoader';
 
 // Mock framer-motion to avoid animation delays
 vi.mock('framer-motion', () => ({
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
   motion: {
     // biome-ignore lint/suspicious/noExplicitAny: mocking framework internals
     div: ({ children, className, ...props }: any) => (

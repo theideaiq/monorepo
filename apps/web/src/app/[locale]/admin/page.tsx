@@ -1,7 +1,7 @@
 'use client';
 
-import { Card } from '@/components/ui/Card';
 import { AlertCircle, ShoppingCart, TrendingUp, Users } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
 export default function AdminDashboard() {
   return (

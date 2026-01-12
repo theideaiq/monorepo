@@ -1,5 +1,5 @@
-import { cn } from '@/lib/cn';
 import type React from 'react';
+import { cn } from '@/lib/cn';
 
 type BadgeVariant = 'success' | 'warning' | 'danger' | 'neutral' | 'brand';
 

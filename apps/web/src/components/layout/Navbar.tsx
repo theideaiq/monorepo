@@ -1,10 +1,10 @@
 'use client';
 
-import { Link, usePathname } from '@/i18n/navigation';
 import { Globe, Menu, ShoppingCart, User, X } from 'lucide-react';
-import { useTranslations } from 'next-intl'; // Import this
 import Image from 'next/image';
+import { useTranslations } from 'next-intl'; // Import this
 import { useState } from 'react';
+import { Link, usePathname } from '@/i18n/navigation';
 
 export default function Navbar({ locale }: { locale: string }) {
   const [isOpen, setIsOpen] = useState(false);

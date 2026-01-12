@@ -1,7 +1,7 @@
-import { Link } from '@/i18n/navigation';
 import { Facebook, Globe, Instagram, Linkedin, Twitter } from 'lucide-react';
 import Image from 'next/image';
 import type React from 'react';
+import { Link } from '@/i18n/navigation';
 
 export default function Footer() {
   return (

@@ -1,7 +1,7 @@
 'use client';
 
-import { Card } from '@/components/ui/Card';
 import { AlertTriangle, Gavel, Globe, Scale } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
 
 export default function TermsPage() {
   return (

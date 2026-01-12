@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
 import {
   motion,
   useInView,
@@ -372,60 +371,19 @@ export default function RetroPage() {
           animate={{ opacity: 1, y: [0, 10, 0] }}
           transition={{
             delay: 2,
-            duration: 2,
             repeat: Number.POSITIVE_INFINITY,
+            duration: 2,
           }}
-          className="absolute bottom-12 text-slate-500 flex flex-col items-center gap-2"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-slate-500"
         >
-          <span className="text-xs uppercase tracking-widest">
-            Scroll to Time Travel
-          </span>
-          <ArrowDown size={20} />
+          <ArrowDown size={32} />
         </motion.div>
       </section>
 
-      {/* 2. THE JOURNEY */}
-      <div className="relative">
-        {ERAS.map((era, index) => (
-          <EraSection
-            key={era.id}
-            data={era}
-            index={index}
-            playSound={playHover} // Pass sound function down
-          />
-        ))}
-      </div>
-
-      {/* 3. CTA */}
-      <section className="h-[80vh] flex flex-col items-center justify-center bg-[#0F172A] relative px-4 text-center">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-
-        <div className="relative z-10 max-w-4xl">
-          <h2 className="text-5xl md:text-7xl font-black mb-8 text-white">
-            Ready for <span className="text-brand-pink">Player One?</span>
-          </h2>
-          <p className="text-xl text-slate-400 mb-12 leading-relaxed">
-            The Retro Room is real. Located at The IDEA Spaces. <br />
-            Grab a controller, challenge your friends, and relive the glory
-            days.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button
-              onClick={() => playHover('square')}
-              className="h-16 px-12 text-xl bg-brand-pink hover:bg-pink-600 rounded-full font-bold shadow-[0_0_30px_rgba(233,30,99,0.4)]"
-            >
-              Book a Session
-            </Button>
-            <Button
-              variant="outline"
-              className="h-16 px-12 text-xl border-slate-700 text-white hover:bg-white hover:text-black rounded-full font-bold"
-            >
-              View Games List
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* 2. THE ERAS */}
+      {ERAS.map((era, i) => (
+        <EraSection key={era.id} data={era} index={i} playSound={playHover} />
+      ))}
     </div>
   );
 }

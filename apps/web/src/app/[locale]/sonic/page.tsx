@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
 import {
   Environment,
   Float,
@@ -17,6 +16,7 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import * as Tone from 'tone';
 import { v4 as uuidv4 } from 'uuid';
+import { Button } from '@/components/ui/Button';
 
 // --- Configuration ---
 const supabase = createClient(

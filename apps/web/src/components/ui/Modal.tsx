@@ -1,11 +1,11 @@
 'use client';
 
-import { cn } from '@/lib/cn';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type React from 'react';
 import { useEffect, useId, useRef } from 'react';
+import { cn } from '@/lib/cn';
 
 interface ModalProps {
   isOpen: boolean;

@@ -1,10 +1,5 @@
 'use client';
 
-import { Badge } from '@/components/ui/Badge';
-// UI Kit
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -19,6 +14,11 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { Badge } from '@/components/ui/Badge';
+// UI Kit
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 
 // --- MOCK DATA ---
 const COURSES = [
