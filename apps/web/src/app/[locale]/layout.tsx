@@ -1,4 +1,5 @@
 import { Cairo, Poppins } from 'next/font/google';
+import type { Metadata } from 'next';
 import '../globals.css';
 import { GoogleTagManager } from '@next/third-parties/google';
 import { notFound } from 'next/navigation';
@@ -26,20 +27,45 @@ const cairo = Cairo({
   variable: '--font-cairo',
 });
 
-export const metadata = {
-  title: 'The IDEA',
-  description: 'Innovation for Every Aspect of Life',
+type Props = {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({
+  params,
+}: Omit<Props, 'children'>): Promise<Metadata> {
+  const { locale } = await params;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://www.theideaiq.com';
+
+  return {
+    metadataBase: new URL(baseUrl),
+    title: {
+      default: 'The IDEA',
+      template: '%s | The IDEA',
+    },
+    description: 'Innovation for Every Aspect of Life',
+    openGraph: {
+      title: 'The IDEA',
+      description: 'Innovation for Every Aspect of Life',
+      url: baseUrl,
+      siteName: 'The IDEA',
+      locale: locale,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'The IDEA',
+      description: 'Innovation for Every Aspect of Life',
+    },
+  };
+}
 
 // Required for static export with next-intl
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
-
-type Props = {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-};
 
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
