@@ -14,9 +14,9 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Tilt from 'react-parallax-tilt'; // For the 3D Card effect
-import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/Card';
-import { PageLoader } from '@/components/ui/Spinner';
+import { Badge } from '@repo/ui';
+import { Card } from '@repo/ui';
+import { PageLoader } from '@repo/ui';
 // Use the localized router and translations
 import { useRouter } from '@/i18n/navigation';
 

@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { Card } from '@repo/ui';
+import { Input } from '@repo/ui';
 
 const supabase = createClient(
   // biome-ignore lint/style/noNonNullAssertion: migration

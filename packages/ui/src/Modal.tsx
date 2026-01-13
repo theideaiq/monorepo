@@ -3,7 +3,6 @@
 import { cn } from '@repo/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import type React from 'react';
 import { useEffect, useId, useRef } from 'react';
 
@@ -13,6 +12,7 @@ interface ModalProps {
   title?: string;
   children: React.ReactNode;
   className?: string;
+  closeLabel?: string;
 }
 
 export function Modal({
@@ -21,8 +21,8 @@ export function Modal({
   title,
   children,
   className,
+  closeLabel = 'Close',
 }: ModalProps) {
-  const t = useTranslations('Common');
   const titleId = useId();
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -92,7 +92,7 @@ export function Modal({
                   type="button"
                   onClick={onClose}
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-brand-pink focus-visible:ring-2 focus-visible:ring-brand-pink"
-                  aria-label={t('close')}
+                  aria-label={closeLabel}
                 >
                   <X size={20} />
                 </button>

@@ -18,9 +18,9 @@ import {
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { Badge } from '@repo/ui';
+import { Card } from '@repo/ui';
+import { Input } from '@repo/ui';
 import { useProducts } from '@/hooks/queries/use-products';
 import { useCartStore } from '@/stores/cart-store';
 

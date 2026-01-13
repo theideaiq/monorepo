@@ -10,7 +10,7 @@ import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import QueryProvider from '@/components/providers/QueryProvider';
 import ToastProvider from '@/components/providers/ToastProvider';
-import GlobalLoader from '@/components/ui/GlobalLoader';
+import { GlobalLoader } from '@repo/ui';
 import { routing } from '@/i18n/navigation';
 
 const poppins = Poppins({

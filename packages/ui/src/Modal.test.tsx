@@ -2,11 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Modal } from './Modal';
 
-// Mock next-intl
-vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string) => key,
-}));
-
 // Mock framer-motion to avoid animation issues in tests
 vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => (
@@ -52,7 +47,7 @@ describe('Modal', () => {
       </Modal>,
     );
 
-    const closeButton = screen.getByLabelText('close');
+    const closeButton = screen.getByLabelText('Close');
     fireEvent.click(closeButton);
     expect(onClose).toHaveBeenCalled();
   });

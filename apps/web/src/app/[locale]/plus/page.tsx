@@ -8,7 +8,7 @@ import { BookOpen, Check, Gamepad2, Loader2, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@repo/ui';
 
 interface Tier {
   id: string;

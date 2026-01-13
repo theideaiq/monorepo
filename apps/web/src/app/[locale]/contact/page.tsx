@@ -6,9 +6,9 @@ import { Mail, MapPin, Phone, Send } from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
+import { Card } from '@repo/ui';
+import { Input } from '@repo/ui';
+import { Textarea } from '@repo/ui';
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);

@@ -8,7 +8,7 @@ import {
   Truck,
   Users,
 } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@repo/ui';
 
 export default function CommunityGuidelines() {
   return (

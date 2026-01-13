@@ -1,7 +1,7 @@
 'use client';
 
 import { Globe, Shield } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@repo/ui';
 
 export default function PrivacyPolicy() {
   return (

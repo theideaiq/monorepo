@@ -7,8 +7,8 @@ import { ArrowLeft, BookOpen, Camera, Info, PlayCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Badge } from '@/components/ui/Badge';
-import { PageLoader } from '@/components/ui/Spinner';
+import { Badge } from '@repo/ui';
+import { PageLoader } from '@repo/ui';
 import { useRouter } from '@/i18n/navigation'; // Use localized router
 import { createClient } from '@/lib/supabase/client';
 import { Logger } from '@repo/utils';

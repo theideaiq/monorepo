@@ -215,6 +215,9 @@ importers:
       '@repo/utils':
         specifier: workspace:*
         version: link:../utils
+      framer-motion:
+        specifier: ^12.25.0
+        version: 12.25.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@19.2.3)
@@ -237,6 +240,9 @@ importers:
       '@types/react':
         specifier: ^19.2.8
         version: 19.2.8
+      jsdom:
+        specifier: ^27.4.0
+        version: 27.4.0
       react:
         specifier: 19.2.3
         version: 19.2.3

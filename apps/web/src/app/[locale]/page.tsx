@@ -11,7 +11,7 @@ import {
 import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Hero from '@/components/home/Hero';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@repo/ui';
 import { Link } from '@/i18n/navigation';
 
 type Props = {

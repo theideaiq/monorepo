@@ -16,9 +16,9 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
+import { Badge } from '@repo/ui';
+import { Card } from '@repo/ui';
+import { Input } from '@repo/ui';
 
 // --- MOCK DATA ---
 const COURSES = [
