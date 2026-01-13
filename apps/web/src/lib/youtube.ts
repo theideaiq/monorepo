@@ -95,7 +95,8 @@ export async function searchYouTube(query: string): Promise<FormattedVideo[]> {
   // 1. SEARCH
   const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoCategoryId=${MUSIC_CATEGORY_ID}&maxResults=${SEARCH_RESULT_LIMIT}&q=${encodeURIComponent(query)}&key=${key}`;
 
-  const searchRes = await fetch(searchUrl);
+  // ⚡ Bolt Optimization: Cache search results for 1 hour to reduce API quota usage and latency
+  const searchRes = await fetch(searchUrl, { next: { revalidate: 3600 } });
   const searchData: YouTubeSearchResponse = await searchRes.json();
 
   if (!searchData.items?.length) return [];
@@ -104,7 +105,8 @@ export async function searchYouTube(query: string): Promise<FormattedVideo[]> {
   const videoIds = searchData.items.map((item) => item.id.videoId).join(',');
   const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds}&key=${key}`;
 
-  const detailsRes = await fetch(detailsUrl);
+  // ⚡ Bolt Optimization: Cache video details for 1 hour
+  const detailsRes = await fetch(detailsUrl, { next: { revalidate: 3600 } });
   const detailsData: YouTubeVideoDetailsResponse = await detailsRes.json();
 
   if (!detailsData.items) return [];
