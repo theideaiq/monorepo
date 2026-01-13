@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { ChartOfAccount, LedgerTransaction, LedgerEntry, LedgerLine, HRStaffPlan, EquityHolder, EquityRound } from '@/types/finance';
+import { redirect } from 'next/navigation';
 
 // --- PROFIT & LOSS ---
 
@@ -35,8 +36,9 @@ export async function getProfitAndLoss(startDate: string, endDate: string): Prom
     .lte('ledger_entries.transaction_date', endDate);
 
   if (error) {
+    // biome-ignore lint/suspicious/noConsole: Log critical data fetching error
     console.error('Error fetching P&L data:', error);
-    throw new Error('Failed to fetch P&L data');
+    redirect('/login');
   }
 
   let revenue = 0;
@@ -103,8 +105,9 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
     .order('transaction_date', { ascending: false });
 
   if (error) {
+    // biome-ignore lint/suspicious/noConsole: Log critical data fetching error
     console.error('Error fetching ledger entries:', error);
-    throw new Error('Failed to fetch ledger entries');
+    redirect('/login');
   }
 
   return data as LedgerTransaction[];
@@ -113,7 +116,7 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
 export async function getChartOfAccounts(): Promise<ChartOfAccount[]> {
     const supabase = await createClient();
     const { data, error } = await supabase.from('chart_of_accounts').select('*').order('code');
-    if (error) throw error;
+    if (error) redirect('/login');
     return data as ChartOfAccount[];
 }
 
@@ -138,7 +141,7 @@ export async function createJournalEntry(
     .select()
     .single();
 
-  if (entryError) throw entryError;
+  if (entryError) redirect('/login');
 
   const linesToInsert = lines.map(line => ({
       entry_id: entry.id,
@@ -154,7 +157,7 @@ export async function createJournalEntry(
   if (linesError) {
       // Rollback entry? We can try to delete it.
       await supabase.from('ledger_entries').delete().eq('id', entry.id);
-      throw linesError;
+      redirect('/login');
   }
 
   return entry;
@@ -166,25 +169,25 @@ export async function createJournalEntry(
 export async function getStaff(): Promise<HRStaffPlan[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from('hr_staff_plan').select('*').order('role_title');
-  if (error) throw error;
+  if (error) redirect('/login');
   return data as HRStaffPlan[];
 }
 
 export async function updateStaff(id: string, updates: Partial<HRStaffPlan>) {
   const supabase = await createClient();
   const { error } = await supabase.from('hr_staff_plan').update(updates).eq('id', id);
-  if (error) throw error;
+  if (error) redirect('/login');
 }
 
 export async function createStaff(staff: Omit<HRStaffPlan, 'id'>) {
     const supabase = await createClient();
     const { error } = await supabase.from('hr_staff_plan').insert(staff);
-    if (error) throw error;
+    if (error) redirect('/login');
 }
 export async function deleteStaff(id: string) {
     const supabase = await createClient();
     const { error } = await supabase.from('hr_staff_plan').delete().eq('id', id);
-    if (error) throw error;
+    if (error) redirect('/login');
 }
 
 // --- EQUITY ---
@@ -202,8 +205,7 @@ export async function getEquityData(): Promise<EquityData> {
       supabase.from('equity_rounds').select('*')
   ]);
 
-  if (holdersResult.error) throw holdersResult.error;
-  if (roundsResult.error) throw roundsResult.error;
+  if (holdersResult.error || roundsResult.error) redirect('/login');
 
   return {
       holders: holdersResult.data as EquityHolder[],

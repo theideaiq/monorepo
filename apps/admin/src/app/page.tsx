@@ -1,17 +1,23 @@
 import { createClient } from '@/lib/supabase/server';
 import { Card } from '@repo/ui';
 import { Users, Package, ShoppingBag } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
 
   // Fetch counts
-  const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-  const { count: productCount } = await supabase.from('products').select('*', { count: 'exact', head: true });
-  const { count: activeRentalsCount } = await supabase
+  const { count: userCount, error: userError } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+  if (userError) redirect('/login');
+
+  const { count: productCount, error: productError } = await supabase.from('products').select('*', { count: 'exact', head: true });
+  if (productError) redirect('/login');
+
+  const { count: activeRentalsCount, error: rentalError } = await supabase
     .from('rentals')
     .select('*', { count: 'exact', head: true })
     .eq('status', 'active');
+  if (rentalError) redirect('/login');
 
   const stats = [
     {

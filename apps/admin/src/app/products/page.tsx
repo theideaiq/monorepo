@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import { columns, type Product } from './columns';
 import { DataTable } from './data-table';
 
@@ -12,7 +13,7 @@ async function getProducts(): Promise<Product[]> {
   if (error) {
     // biome-ignore lint/suspicious/noConsole: Log error for debugging
     console.error('Error fetching products:', error);
-    return [];
+    redirect('/login');
   }
 
   return (data as Product[]) || [];
