@@ -1,12 +1,23 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Coffee, Gamepad2, Loader2, Terminal, Wifi, Zap } from 'lucide-react';
+import {
+  Coffee,
+  Gamepad2,
+  Loader2,
+  Search,
+  Terminal,
+  Wifi,
+  Zap,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const LOADING_MESSAGES = [
   { text: 'Calibrating Flux Capacitor...', icon: <Zap size={24} /> },
-  { text: 'Searching for best Shawarma in Baghdad...', icon: <SearchIcon /> },
+  {
+    text: 'Searching for best Shawarma in Baghdad...',
+    icon: <Search size={24} />,
+  },
   { text: 'Connecting to the Matrix...', icon: <Terminal size={24} /> },
   { text: 'Brewing Iraqi Tea...', icon: <Coffee size={24} /> },
   { text: 'Loading PS5 Graphics...', icon: <Gamepad2 size={24} /> },
@@ -14,27 +25,6 @@ const LOADING_MESSAGES = [
   { text: 'Mining imaginary Bitcoin...', icon: <Loader2 size={24} /> },
   { text: 'Waking up the hamsters...', icon: <Zap size={24} /> },
 ];
-
-function SearchIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="lucide lucide-search"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
 
 export default function GlobalLoader() {
   const [isVisible, setIsVisible] = useState(true);
