@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
-  return [];
+  return [{ trap: ['not-found'] }];
 }
 
 export default function CatchAll() {

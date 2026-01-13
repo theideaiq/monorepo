@@ -9,13 +9,23 @@ import {
   Truck,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Hero from '@/components/home/Hero';
 import { Card } from '@/components/ui/Card';
 import { Link } from '@/i18n/navigation';
 
-export default function Home() {
-  const t = useTranslations('Home');
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
+
+  // Enable static rendering
+  setRequestLocale(locale);
+
+  // Use await getTranslations for async server components
+  const t = await getTranslations('Home');
 
   const services = [
     {
