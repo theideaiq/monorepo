@@ -10,7 +10,11 @@
     "academy": "Academy",
     "business": "Business",
     "login": "Sign In",
-    "join": "Join Now"
+    "join": "Join Now",
+    "account": "My Account",
+    "cart": "Cart",
+    "menu_open": "Open Menu",
+    "switch_lang_ar": "العربية"
   },
   "Home": {
     "badge": "THE DIGITAL ECOSYSTEM FOR IRAQ",
@@ -49,6 +53,13 @@
     "active_rentals": "Active Rentals",
     "no_rentals": "You haven't rented anything yet.",
     "browse_catalog": "Browse Catalog",
-    "rented_on": "Rented on"
+    "rented_on": "Rented on",
+    "profile": "Profile Details",
+    "subscription": "Subscription & Billing",
+    "currentTier": "Current Tier",
+    "manageSubscription": "Manage Billing",
+    "save": "Save Changes",
+    "returnInstructions": "Return Instructions",
+    "returnText": "Please return this item to our nearest kiosk or mail it back using the prepaid label."
   }
 }
