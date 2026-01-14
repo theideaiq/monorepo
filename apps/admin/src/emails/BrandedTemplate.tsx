@@ -1,12 +1,26 @@
+import {
+  Body,
+  Container,
+  Head,
+  Hr,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Section,
+  Text,
+} from '@react-email/components';
 import * as React from 'react';
-import { Html, Head, Preview, Body, Container, Section, Img, Text, Link, Hr } from '@react-email/components';
 
 interface BrandedTemplateProps {
   subject: string;
   bodyHtml: string;
 }
 
-export const BrandedTemplate = ({ subject, bodyHtml }: BrandedTemplateProps) => {
+export const BrandedTemplate = ({
+  subject,
+  bodyHtml,
+}: BrandedTemplateProps) => {
   return (
     <Html>
       <Head />
@@ -23,14 +37,19 @@ export const BrandedTemplate = ({ subject, bodyHtml }: BrandedTemplateProps) => 
             />
           </Section>
           <Section style={content}>
+            {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Email content needs HTML */}
             <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
           </Section>
           <Hr style={hr} />
           <Section style={footer}>
             <Text style={footerText}>
-              The IDEA Admin Platform<br />
-              123 Innovation Drive<br />
-              <Link href="#" style={link}>Unsubscribe</Link>
+              The IDEA Admin Platform
+              <br />
+              123 Innovation Drive
+              <br />
+              <Link href="#" style={link}>
+                Unsubscribe
+              </Link>
             </Text>
           </Section>
         </Container>
@@ -41,7 +60,8 @@ export const BrandedTemplate = ({ subject, bodyHtml }: BrandedTemplateProps) => 
 
 const main = {
   backgroundColor: '#f6f9fc',
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
 };
 
 const container = {

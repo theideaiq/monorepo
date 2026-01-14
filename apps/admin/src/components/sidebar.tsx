@@ -1,11 +1,10 @@
 'use client';
 
 import { cn } from '@repo/utils';
-import { LayoutDashboard, Package, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, LogOut, Package, Settings } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
 
 const sidebarItems = [
   {
@@ -32,9 +31,9 @@ export function Sidebar() {
   const supabase = createClient();
 
   const handleSignOut = async () => {
-      await supabase.auth.signOut();
-      router.push('/login'); // Assuming a login page exists or we redirect
-      router.refresh();
+    await supabase.auth.signOut();
+    router.push('/login'); // Assuming a login page exists or we redirect
+    router.refresh();
   };
 
   return (
@@ -52,7 +51,7 @@ export function Sidebar() {
                 'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground',
                 pathname === item.href
                   ? 'bg-accent text-accent-foreground'
-                  : 'text-muted-foreground'
+                  : 'text-muted-foreground',
               )}
             >
               <item.icon className="h-4 w-4" />
@@ -61,7 +60,7 @@ export function Sidebar() {
           ))}
         </nav>
       </div>
-       <div className="border-t p-4">
+      <div className="border-t p-4">
         <button
           type="button"
           onClick={handleSignOut}

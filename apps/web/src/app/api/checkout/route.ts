@@ -49,7 +49,6 @@ export async function POST(req: Request) {
 
     // 2. Return the link to the frontend
     return NextResponse.json({ url: paymentUrl });
-
   } catch (error) {
     Logger.error('Checkout Error:', error);
     return NextResponse.json(

@@ -1,7 +1,7 @@
 'use client';
 
-import { AlertCircle, RefreshCw, RotateCcw } from 'lucide-react';
 import { Card } from '@repo/ui';
+import { AlertCircle, RefreshCw, RotateCcw } from 'lucide-react';
 
 export default function RefundPolicy() {
   return (

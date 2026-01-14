@@ -51,7 +51,11 @@ export const columns: ColumnDef<Product>[] = [
     header: 'Rental Tier',
     cell: ({ row }) => {
       const tier = row.getValue('rental_tier') as string;
-      return tier ? <span className="capitalize">{tier}</span> : <span className="text-muted-foreground">-</span>;
+      return tier ? (
+        <span className="capitalize">{tier}</span>
+      ) : (
+        <span className="text-muted-foreground">-</span>
+      );
     },
   },
 ];

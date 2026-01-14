@@ -14,7 +14,9 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Optional: b
 
 if (!supabaseUrl || (!supabaseKey && !supabaseServiceKey)) {
   console.error('Error: Missing Supabase environment variables.');
-  console.error('Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (or SUPABASE_SERVICE_ROLE_KEY) are set.');
+  console.error(
+    'Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (or SUPABASE_SERVICE_ROLE_KEY) are set.',
+  );
   process.exit(1);
 }
 

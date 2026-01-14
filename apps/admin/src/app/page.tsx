@@ -1,16 +1,20 @@
-import { createClient } from '@/lib/supabase/server';
 import { Card } from '@repo/ui';
-import { Users, Package, ShoppingBag } from 'lucide-react';
+import { Package, ShoppingBag, Users } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
 
   // Fetch counts
-  const { count: userCount, error: userError } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+  const { count: userCount, error: userError } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true });
   if (userError) redirect('/login');
 
-  const { count: productCount, error: productError } = await supabase.from('products').select('*', { count: 'exact', head: true });
+  const { count: productCount, error: productError } = await supabase
+    .from('products')
+    .select('*', { count: 'exact', head: true });
   if (productError) redirect('/login');
 
   const { count: activeRentalsCount, error: rentalError } = await supabase
@@ -48,11 +52,15 @@ export default async function DashboardPage() {
           <Card key={stat.title} className="p-4">
             <div className="flex flex-col gap-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">{stat.title}</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  {stat.title}
+                </span>
                 <stat.icon className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">{stat.value}</div>
-              <span className="text-xs text-muted-foreground">{stat.description}</span>
+              <span className="text-xs text-muted-foreground">
+                {stat.description}
+              </span>
             </div>
           </Card>
         ))}

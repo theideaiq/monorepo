@@ -13,9 +13,11 @@ The system is designed as a centralized routing hub and application suite.
 ```mermaid
 graph TD
     User((User)) -->|HTTPS| Web["Web App (Next.js 16)"]
+    User -->|HTTPS| Admin["Admin Console (Next.js 16)"]
 
     subgraph "Infrastructure"
         Web -->|Data & Auth| Supabase[Supabase]
+        Admin -->|Data & Auth| Supabase
         Web -->|Payments & State| Wayl[Wayl]
     end
 
@@ -25,83 +27,89 @@ graph TD
         Supabase --> Storage[Storage]
         Supabase --> Edge[Edge Functions]
     end
-
 ```
 
-## 📦 Packages & Apps
+## 🛠 Tech Stack
 
-This monorepo is managed with [Turbo](https://turbo.build/) and [pnpm](https://pnpm.io/).
+- **Apps**: Next.js 16 (App Router), React 19
+- **Styling**: Tailwind CSS 4, Framer Motion
+- **State**: Zustand, React Query
+- **Backend**: Supabase (PostgreSQL, Auth, Edge Functions)
+- **Monorepo**: Turborepo, pnpm
+- **Tooling**: Biome (Lint/Format), Syncpack (Dependency Sync), Changesets
 
-- **Apps**
-  - [`apps/web`](./apps/web): The main corporate landing page and application (Next.js 16).
+## 📦 Repository Structure
 
-- **Packages**
-  - [`packages/ui`](./packages/ui): Shared UI components (Tailwind 4 + React).
-  - [`packages/config`](./packages/config): Shared configurations (Biome, TypeScript).
-  - [`packages/utils`](./packages/utils): Shared utility functions.
+This monorepo is managed with [Turborepo](https://turbo.build/) and [pnpm](https://pnpm.io/).
+
+### Apps
+- [`apps/web`](./apps/web): Public-facing web application.
+- [`apps/admin`](./apps/admin): Internal administration dashboard.
+
+### Packages
+- [`packages/ui`](./packages/ui): Shared UI component library (Tailwind 4 + React).
+- [`packages/config`](./packages/config): Shared configuration (TypeScript, Biome).
+- [`packages/utils`](./packages/utils): Shared utility functions (Date, String, Math helpers).
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
 - **Node.js**: v24.12.0 or higher
-- **pnpm**: v9 or higher
+- **pnpm**: v10.27.0 or higher
 
 ### Installation
 
 1.  **Clone the repository:**
-
     ```bash
     git clone <repository-url>
     cd <project-directory>
     ```
 
 2.  **Install dependencies:**
-
     ```bash
     pnpm install
     ```
 
 3.  **Environment Setup:**
-
-    Copy the example environment file in `apps/web`:
+    Create a local environment file in `apps/web` and `apps/admin`:
 
     ```bash
     cp apps/web/.env.example apps/web/.env.local
-    ```
-
-    Update `apps/web/.env.local` with your credentials:
-
-    ```env
-    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-    NEXT_PUBLIC_ADMIN_EMAIL=your_admin_email
-    YOUTUBE_API_KEY=your_youtube_api_key
-    NEXT_PUBLIC_SITE_URL=http://localhost:3000
+    cp apps/web/.env.example apps/admin/.env.local
     ```
 
 4.  **Run Development Server:**
-
     ```bash
     pnpm dev
     ```
+    - Web: [http://localhost:3000](http://localhost:3000)
+    - Admin: [http://localhost:3001](http://localhost:3001)
 
-    The web app will be available at [http://localhost:3000](http://localhost:3000).
+## 🔐 Environment Variables
 
-## 🛠 Tooling
+Proper management of environment variables is crucial for security and deployment.
 
-- **Build System**: [Turborepo](https://turbo.build/)
-- **Package Manager**: [pnpm](https://pnpm.io/)
-- **Linting & Formatting**: [Biome](https://biomejs.dev/)
-- **Versioning**: [Changesets](https://github.com/changesets/changesets)
+### Development
+Use `.env.local` files in the respective app directories (`apps/web`, `apps/admin`). **Never commit these files.**
 
-### Commands
+### CI/CD & Production
+**Do not store secrets in the codebase.**
 
-- `pnpm dev`: Start all apps in development mode.
-- `pnpm build`: Build all apps and packages.
-- `pnpm lint`: Lint all code using Biome.
-- `pnpm test`: Run tests across the workspace.
-- `pnpm changeset`: Generate a changeset for versioning.
+- **Vercel**: Navigate to **Settings > Environment Variables** in your Vercel project dashboard to add secrets (e.g., `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`).
+- **GitHub Actions**: Navigate to **Settings > Secrets and variables > Actions** in your GitHub repository. Add secrets required for the CI workflow (e.g., `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_ADMIN_EMAIL`).
+
+## 📜 Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `pnpm dev` | Start all apps in development mode. |
+| `pnpm build` | Build all apps and packages for production. |
+| `pnpm check` | Run Biome linting and formatting check. |
+| `pnpm format` | Fix linting and formatting issues automatically. |
+| `pnpm test` | Run unit tests across the workspace. |
+| `pnpm sync` | Ensure dependency versions are consistent across packages (Syncpack). |
+| `pnpm changeset` | Generate a changeset for versioning. |
 
 ## 🧠 Memory (.jules)
 
@@ -111,8 +119,12 @@ The `.jules/` directory contains journal files that serve as long-term memory an
 - **palette.md**: UI/UX design tokens and accessibility standards.
 - **sentinel.md**: Security protocols and vulnerability patterns.
 - **bolt.md**: Performance optimization guidelines.
+- **scribe.md**: Documentation standards and project learnings.
+- **testudo.md**: Testing patterns and stability risks.
+- **signal.md**: SEO and crawlability learnings.
+- **curator.md**: File system hierarchy and organization rules.
 
-Please **do not delete** these files, as they ensure continuity and high-quality assistance from AI tools.
+**Please do not delete these files**, as they ensure continuity and high-quality assistance from AI tools.
 
 ## 📄 License
 

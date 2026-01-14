@@ -1,12 +1,7 @@
-import Link from 'next/link';
-import { ReactNode } from 'react';
-import {
-  LayoutDashboard,
-  BookOpen,
-  Users,
-  PieChart
-} from 'lucide-react';
 import { cn } from '@repo/utils';
+import { BookOpen, LayoutDashboard, PieChart, Users } from 'lucide-react';
+import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 export default function FinanceLayout({ children }: { children: ReactNode }) {
   return (
@@ -20,9 +15,7 @@ export default function FinanceLayout({ children }: { children: ReactNode }) {
 
       <FinanceNav />
 
-      <div className="flex-1">
-        {children}
-      </div>
+      <div className="flex-1">{children}</div>
     </div>
   );
 }

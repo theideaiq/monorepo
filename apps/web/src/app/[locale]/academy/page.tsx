@@ -1,7 +1,7 @@
 'use client';
 
 // UI Kit
-import { Button } from '@repo/ui';
+import { Badge, Button, Card, Input } from '@repo/ui';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -16,9 +16,6 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { Badge } from '@repo/ui';
-import { Card } from '@repo/ui';
-import { Input } from '@repo/ui';
 
 // --- MOCK DATA ---
 const COURSES = [

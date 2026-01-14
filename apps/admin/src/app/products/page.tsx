@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
 import { columns, type Product } from './columns';
 import { DataTable } from './data-table';
 
@@ -24,7 +24,7 @@ export default async function ProductsPage() {
 
   return (
     <div className="space-y-6">
-       <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Products</h1>
       </div>
       <DataTable columns={columns} data={data} />

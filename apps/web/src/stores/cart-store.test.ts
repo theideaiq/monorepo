@@ -66,8 +66,8 @@ describe('Cart Store', () => {
     const stored = localStorage.getItem('cart-storage');
     expect(stored).toBeDefined();
     if (stored) {
-       const parsed = JSON.parse(stored);
-       expect(parsed.state.items).toEqual(['persistent-item']);
+      const parsed = JSON.parse(stored);
+      expect(parsed.state.items).toEqual(['persistent-item']);
     }
   });
 });

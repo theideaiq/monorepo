@@ -1,10 +1,10 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import React from 'react';
-import { createClient } from '@/lib/supabase/server';
 import { Resend } from 'resend';
 import { BrandedTemplate } from '@/emails/BrandedTemplate';
-import { revalidatePath } from 'next/cache';
+import { createClient } from '@/lib/supabase/server';
 
 const BATCH_SIZE = 50;
 
@@ -42,7 +42,8 @@ export async function sendCampaign(campaignId: string) {
   const { data: profiles, error: profError } = await query;
 
   if (profError) throw new Error('Failed to fetch profiles');
-  if (!profiles || profiles.length === 0) throw new Error('No users found for this segment');
+  if (!profiles || profiles.length === 0)
+    throw new Error('No users found for this segment');
 
   const emails = profiles.map((p: any) => p.email).filter(Boolean);
 
@@ -55,8 +56,8 @@ export async function sendCampaign(campaignId: string) {
       to: email,
       subject: campaign.subject,
       react: React.createElement(BrandedTemplate, {
-          subject: campaign.subject,
-          bodyHtml: campaign.body_html
+        subject: campaign.subject,
+        bodyHtml: campaign.body_html,
       }),
     }));
 
@@ -67,9 +68,9 @@ export async function sendCampaign(campaignId: string) {
   await supabase
     .from('marketing_campaigns')
     .update({
-        status: 'sent',
-        sent_count: emails.length,
-        sent_at: new Date().toISOString()
+      status: 'sent',
+      sent_count: emails.length,
+      sent_at: new Date().toISOString(),
     })
     .eq('id', campaignId);
 

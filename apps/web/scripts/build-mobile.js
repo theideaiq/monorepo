@@ -13,7 +13,10 @@ const directoriesToHide = [
 
 // Files to hide/rename
 const filesToHide = [
-    { original: '../src/app/opengraph-image.tsx', temp: '../src/app/_opengraph-image.tsx' }
+  {
+    original: '../src/app/opengraph-image.tsx',
+    temp: '../src/app/_opengraph-image.tsx',
+  },
 ];
 
 // Function to move file or dir
@@ -53,8 +56,14 @@ function cleanup() {
 }
 
 process.on('exit', cleanup);
-process.on('SIGINT', () => { cleanup(); process.exit(); });
-process.on('SIGTERM', () => { cleanup(); process.exit(); });
+process.on('SIGINT', () => {
+  cleanup();
+  process.exit();
+});
+process.on('SIGTERM', () => {
+  cleanup();
+  process.exit();
+});
 process.on('uncaughtException', (err) => {
   console.error(err);
   cleanup();
@@ -79,10 +88,9 @@ try {
   console.log('Starting build...');
   execSync('cross-env APP_ENV=mobile next build', {
     stdio: 'inherit',
-    env: { ...process.env, APP_ENV: 'mobile' }
+    env: { ...process.env, APP_ENV: 'mobile' },
   });
   console.log('Build completed successfully.');
-
 } catch (error) {
   console.error('Build failed:', error);
   process.exit(1);

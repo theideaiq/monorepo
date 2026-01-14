@@ -1,7 +1,7 @@
 'use client';
 
-import { AlertTriangle, Gavel, Globe, Scale } from 'lucide-react';
 import { Card } from '@repo/ui';
+import { AlertTriangle, Gavel, Globe, Scale } from 'lucide-react';
 
 export default function TermsPage() {
   return (

@@ -1,14 +1,12 @@
 'use client';
 
-import { Button } from '@repo/ui';
+import { Button, Card, Input } from '@repo/ui';
 import { createClient } from '@supabase/supabase-js';
 import { ArrowRight, Chrome, Lock } from 'lucide-react'; // Added Chrome icon for Google
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Card } from '@repo/ui';
-import { Input } from '@repo/ui';
 
 const supabase = createClient(
   // biome-ignore lint/style/noNonNullAssertion: migration

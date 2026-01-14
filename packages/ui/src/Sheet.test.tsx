@@ -1,6 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from './Sheet';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from './Sheet';
 
 // Radix uses ResizeObserver which might not be in jsdom
 global.ResizeObserver = class ResizeObserver {
@@ -15,8 +15,8 @@ describe('Sheet', () => {
       <Sheet>
         <SheetTrigger>Open Sheet</SheetTrigger>
         <SheetContent>
-            <SheetTitle>Test Sheet</SheetTitle>
-            <div>Sheet Content</div>
+          <SheetTitle>Test Sheet</SheetTitle>
+          <div>Sheet Content</div>
         </SheetContent>
       </Sheet>,
     );

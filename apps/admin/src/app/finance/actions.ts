@@ -1,8 +1,16 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
-import { ChartOfAccount, LedgerTransaction, LedgerEntry, LedgerLine, HRStaffPlan, EquityHolder, EquityRound } from '@/types/finance';
 import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import {
+  type ChartOfAccount,
+  type EquityHolder,
+  type EquityRound,
+  type HRStaffPlan,
+  LedgerEntry,
+  LedgerLine,
+  type LedgerTransaction,
+} from '@/types/finance';
 
 // --- PROFIT & LOSS ---
 
@@ -14,7 +22,10 @@ interface PnLResult {
   breakdown: Record<string, number>; // Category breakdown
 }
 
-export async function getProfitAndLoss(startDate: string, endDate: string): Promise<PnLResult> {
+export async function getProfitAndLoss(
+  startDate: string,
+  endDate: string,
+): Promise<PnLResult> {
   const supabase = await createClient();
 
   // Fetch all ledger lines within the date range, joined with accounts
@@ -64,17 +75,17 @@ export async function getProfitAndLoss(startDate: string, endDate: string): Prom
       amount = credit - debit;
       revenue += amount;
     } else if (account.type === 'expense') {
-       // Check category for COGS
-       amount = debit - credit;
-       if (account.category?.toUpperCase().includes('COGS')) {
-         cogs += amount;
-       } else {
-         expenses += amount;
-       }
+      // Check category for COGS
+      amount = debit - credit;
+      if (account.category?.toUpperCase().includes('COGS')) {
+        cogs += amount;
+      } else {
+        expenses += amount;
+      }
     }
 
     if (amount !== 0) {
-        breakdown[account.name] = (breakdown[account.name] || 0) + amount;
+      breakdown[account.name] = (breakdown[account.name] || 0) + amount;
     }
   });
 
@@ -83,10 +94,9 @@ export async function getProfitAndLoss(startDate: string, endDate: string): Prom
     cogs,
     expenses,
     netIncome: revenue - cogs - expenses,
-    breakdown
+    breakdown,
   };
 }
-
 
 // --- LEDGER ---
 
@@ -114,16 +124,19 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
 }
 
 export async function getChartOfAccounts(): Promise<ChartOfAccount[]> {
-    const supabase = await createClient();
-    const { data, error } = await supabase.from('chart_of_accounts').select('*').order('code');
-    if (error) redirect('/login');
-    return data as ChartOfAccount[];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('chart_of_accounts')
+    .select('*')
+    .order('code');
+  if (error) redirect('/login');
+  return data as ChartOfAccount[];
 }
 
 export async function createJournalEntry(
   date: string,
   description: string,
-  lines: { accountId: string; debit: number; credit: number }[]
+  lines: { accountId: string; debit: number; credit: number }[],
 ) {
   const supabase = await createClient();
 
@@ -135,19 +148,19 @@ export async function createJournalEntry(
   const { data: entry, error: entryError } = await supabase
     .from('ledger_entries')
     .insert({
-        transaction_date: date,
-        description
+      transaction_date: date,
+      description,
     })
     .select()
     .single();
 
   if (entryError) redirect('/login');
 
-  const linesToInsert = lines.map(line => ({
-      entry_id: entry.id,
-      account_id: line.accountId,
-      debit: line.debit,
-      credit: line.credit
+  const linesToInsert = lines.map((line) => ({
+    entry_id: entry.id,
+    account_id: line.accountId,
+    debit: line.debit,
+    credit: line.credit,
   }));
 
   const { error: linesError } = await supabase
@@ -155,39 +168,44 @@ export async function createJournalEntry(
     .insert(linesToInsert);
 
   if (linesError) {
-      // Rollback entry? We can try to delete it.
-      await supabase.from('ledger_entries').delete().eq('id', entry.id);
-      redirect('/login');
+    // Rollback entry? We can try to delete it.
+    await supabase.from('ledger_entries').delete().eq('id', entry.id);
+    redirect('/login');
   }
 
   return entry;
 }
 
-
 // --- STAFF ---
 
 export async function getStaff(): Promise<HRStaffPlan[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from('hr_staff_plan').select('*').order('role_title');
+  const { data, error } = await supabase
+    .from('hr_staff_plan')
+    .select('*')
+    .order('role_title');
   if (error) redirect('/login');
   return data as HRStaffPlan[];
 }
 
 export async function updateStaff(id: string, updates: Partial<HRStaffPlan>) {
   const supabase = await createClient();
-  const { error } = await supabase.from('hr_staff_plan').update(updates).eq('id', id);
+  const { error } = await supabase
+    .from('hr_staff_plan')
+    .update(updates)
+    .eq('id', id);
   if (error) redirect('/login');
 }
 
 export async function createStaff(staff: Omit<HRStaffPlan, 'id'>) {
-    const supabase = await createClient();
-    const { error } = await supabase.from('hr_staff_plan').insert(staff);
-    if (error) redirect('/login');
+  const supabase = await createClient();
+  const { error } = await supabase.from('hr_staff_plan').insert(staff);
+  if (error) redirect('/login');
 }
 export async function deleteStaff(id: string) {
-    const supabase = await createClient();
-    const { error } = await supabase.from('hr_staff_plan').delete().eq('id', id);
-    if (error) redirect('/login');
+  const supabase = await createClient();
+  const { error } = await supabase.from('hr_staff_plan').delete().eq('id', id);
+  if (error) redirect('/login');
 }
 
 // --- EQUITY ---
@@ -201,14 +219,14 @@ export async function getEquityData(): Promise<EquityData> {
   const supabase = await createClient();
 
   const [holdersResult, roundsResult] = await Promise.all([
-      supabase.from('equity_holders').select('*'),
-      supabase.from('equity_rounds').select('*')
+    supabase.from('equity_holders').select('*'),
+    supabase.from('equity_rounds').select('*'),
   ]);
 
   if (holdersResult.error || roundsResult.error) redirect('/login');
 
   return {
-      holders: holdersResult.data as EquityHolder[],
-      rounds: roundsResult.data as EquityRound[]
+    holders: holdersResult.data as EquityHolder[],
+    rounds: roundsResult.data as EquityRound[],
   };
 }

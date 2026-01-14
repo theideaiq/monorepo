@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { Card, Button, Input } from '@repo/ui';
-import { UserRole } from '@/types/auth';
-import toast from 'react-hot-toast';
+import { Button, Card, Input } from '@repo/ui';
 import { Lock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { createClient } from '@/lib/supabase/client';
+import type { UserRole } from '@/types/auth';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -20,10 +20,12 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error: authError } = await supabase.auth.signInWithPassword(
+        {
+          email,
+          password,
+        },
+      );
 
       if (authError) throw authError;
       if (!data.user) throw new Error('No user returned');
@@ -36,8 +38,8 @@ export default function LoginPage() {
         .single();
 
       if (profileError) {
-         await supabase.auth.signOut();
-         throw new Error('Failed to verify permissions');
+        await supabase.auth.signOut();
+        throw new Error('Failed to verify permissions');
       }
 
       const role = profile?.role as UserRole;
@@ -50,7 +52,6 @@ export default function LoginPage() {
       toast.success('Welcome back, Admin');
       router.push('/');
       router.refresh();
-
     } catch (error: any) {
       toast.error(error.message || 'Failed to login');
     } finally {
@@ -89,11 +90,7 @@ export default function LoginPage() {
             required
           />
 
-          <Button
-            type="submit"
-            className="w-full mt-4"
-            isLoading={loading}
-          >
+          <Button type="submit" className="w-full mt-4" isLoading={loading}>
             Sign In
           </Button>
         </form>

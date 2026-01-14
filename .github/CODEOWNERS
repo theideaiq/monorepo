@@ -1,0 +1,17 @@
+# Code Owners
+
+# Global owners
+*       @theideaiq/maintainers
+
+# Infrastructure
+/.github/   @theideaiq/devops
+/scripts/   @theideaiq/devops
+
+# Apps
+/apps/web/   @theideaiq/frontend
+/apps/admin/ @theideaiq/frontend
+
+# Packages
+/packages/ui/      @theideaiq/design-system
+/packages/config/  @theideaiq/arch
+/packages/utils/   @theideaiq/arch

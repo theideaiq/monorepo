@@ -7,7 +7,11 @@ export class Logger {
     }
   }
 
-  static error(message: string, error?: unknown, meta?: Record<string, unknown>) {
+  static error(
+    message: string,
+    error?: unknown,
+    meta?: Record<string, unknown>,
+  ) {
     if (process.env.NODE_ENV !== 'test') {
       // biome-ignore lint/suspicious/noConsole: Centralized logging
       console.error(message, error, meta);

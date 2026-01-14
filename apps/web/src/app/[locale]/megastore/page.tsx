@@ -1,7 +1,7 @@
 'use client';
 
 // UI Kit
-import { Button } from '@repo/ui';
+import { Badge, Button, Card, Input } from '@repo/ui';
 import { motion } from 'framer-motion';
 import {
   Book,
@@ -18,9 +18,6 @@ import {
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { Badge } from '@repo/ui';
-import { Card } from '@repo/ui';
-import { Input } from '@repo/ui';
 import { useProducts } from '@/hooks/queries/use-products';
 import { useCartStore } from '@/stores/cart-store';
 
@@ -132,99 +129,99 @@ export default function MegastorePage() {
             .map((product) => (
               <motion.div
                 key={product.id}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <Card className="h-full hover:shadow-2xl transition-all duration-300 group cursor-pointer relative overflow-hidden border-slate-100">
-                {/* Image Area */}
-                <div className="relative h-64 bg-slate-100 overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  {/* Overlay Action */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => addToCart(product.title)}
-                      className="p-3 bg-white rounded-full hover:bg-brand-yellow hover:scale-110 transition text-brand-dark"
-                    >
-                      <ShoppingCart size={20} />
-                    </button>
-                    <button
-                      type="button"
-                      className="p-3 bg-white rounded-full hover:bg-brand-pink hover:scale-110 transition text-brand-dark"
-                    >
-                      <Heart size={20} />
-                    </button>
-                  </div>
-
-                  {/* Badges */}
-                  <div className="absolute top-3 left-3 flex flex-col gap-2">
-                    {product.condition === 'New' ? (
-                      <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">
-                        NEW
-                      </span>
-                    ) : (
-                      <span className="bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase">
-                        {product.condition}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Details Area */}
-                <div className="p-5">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-slate-800 line-clamp-2 leading-tight">
-                      {product.title}
-                    </h3>
-                  </div>
-
-                  {/* Seller Info (eBay Style) */}
-                  <div className="flex items-center gap-1 mb-4 text-xs text-slate-500">
-                    <span className="font-medium text-slate-700">
-                      {product.seller}
-                    </span>
-                    {product.isVerified && (
-                      <ShieldCheck size={14} className="text-blue-500" />
-                    )}
-                    <span>•</span>
-                    <Star
-                      size={12}
-                      className="text-brand-yellow fill-brand-yellow"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <Card className="h-full hover:shadow-2xl transition-all duration-300 group cursor-pointer relative overflow-hidden border-slate-100">
+                  {/* Image Area */}
+                  <div className="relative h-64 bg-slate-100 overflow-hidden">
+                    <Image
+                      src={product.image}
+                      alt={product.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
-                    <span>{product.rating}</span>
+                    {/* Overlay Action */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => addToCart(product.title)}
+                        className="p-3 bg-white rounded-full hover:bg-brand-yellow hover:scale-110 transition text-brand-dark"
+                      >
+                        <ShoppingCart size={20} />
+                      </button>
+                      <button
+                        type="button"
+                        className="p-3 bg-white rounded-full hover:bg-brand-pink hover:scale-110 transition text-brand-dark"
+                      >
+                        <Heart size={20} />
+                      </button>
+                    </div>
+
+                    {/* Badges */}
+                    <div className="absolute top-3 left-3 flex flex-col gap-2">
+                      {product.condition === 'New' ? (
+                        <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">
+                          NEW
+                        </span>
+                      ) : (
+                        <span className="bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase">
+                          {product.condition}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Price & Action */}
-                  <div className="flex items-end justify-between border-t border-slate-100 pt-4">
-                    <div>
-                      <p className="text-xs text-slate-400 font-medium">
-                        Price
-                      </p>
-                      <p className="text-xl font-black text-brand-dark">
-                        {product.price.toLocaleString()}{' '}
-                        <span className="text-xs font-normal text-slate-500">
-                          IQD
-                        </span>
-                      </p>
+                  {/* Details Area */}
+                  <div className="p-5">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-bold text-slate-800 line-clamp-2 leading-tight">
+                        {product.title}
+                      </h3>
                     </div>
-                    <Button
-                      onClick={() => addToCart(product.title)}
-                      variant="ghost"
-                      className="h-10 w-10 p-0 rounded-full bg-slate-100 text-slate-600 hover:bg-brand-dark hover:text-white"
-                    >
-                      <ShoppingCart size={18} />
-                    </Button>
+
+                    {/* Seller Info (eBay Style) */}
+                    <div className="flex items-center gap-1 mb-4 text-xs text-slate-500">
+                      <span className="font-medium text-slate-700">
+                        {product.seller}
+                      </span>
+                      {product.isVerified && (
+                        <ShieldCheck size={14} className="text-blue-500" />
+                      )}
+                      <span>•</span>
+                      <Star
+                        size={12}
+                        className="text-brand-yellow fill-brand-yellow"
+                      />
+                      <span>{product.rating}</span>
+                    </div>
+
+                    {/* Price & Action */}
+                    <div className="flex items-end justify-between border-t border-slate-100 pt-4">
+                      <div>
+                        <p className="text-xs text-slate-400 font-medium">
+                          Price
+                        </p>
+                        <p className="text-xl font-black text-brand-dark">
+                          {product.price.toLocaleString()}{' '}
+                          <span className="text-xs font-normal text-slate-500">
+                            IQD
+                          </span>
+                        </p>
+                      </div>
+                      <Button
+                        onClick={() => addToCart(product.title)}
+                        variant="ghost"
+                        className="h-10 w-10 p-0 rounded-full bg-slate-100 text-slate-600 hover:bg-brand-dark hover:text-white"
+                      >
+                        <ShoppingCart size={18} />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
+                </Card>
+              </motion.div>
+            ))}
         </div>
       </section>
 

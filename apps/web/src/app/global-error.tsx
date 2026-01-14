@@ -1,8 +1,8 @@
 'use client';
 
+import { Logger } from '@repo/utils';
 import { AlertOctagon } from 'lucide-react';
 import { useEffect } from 'react';
-import { Logger } from '@repo/utils';
 import './globals.css'; // We must import CSS manually since Layout is gone
 
 export default function GlobalError({

@@ -1,4 +1,4 @@
-import { Button } from '@repo/ui';
+import { Button, Card } from '@repo/ui';
 import {
   Building2,
   Gamepad2,
@@ -11,7 +11,6 @@ import {
 import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Hero from '@/components/home/Hero';
-import { Card } from '@repo/ui';
 import { Link } from '@/i18n/navigation';
 
 type Props = {

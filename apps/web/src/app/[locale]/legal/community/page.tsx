@@ -1,5 +1,6 @@
 'use client';
 
+import { Card } from '@repo/ui';
 import {
   Heart,
   MessageCircle,
@@ -8,7 +9,6 @@ import {
   Truck,
   Users,
 } from 'lucide-react';
-import { Card } from '@repo/ui';
 
 export default function CommunityGuidelines() {
   return (

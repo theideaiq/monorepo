@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
+import type { Profile } from '@/types/crm';
 import { ContactsTable } from './ContactsTable';
-import { Profile } from '@/types/crm';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +14,7 @@ export default async function ContactsPage() {
     .order('updated_at', { ascending: false });
 
   if (error) {
+    // biome-ignore lint/suspicious/noConsole: Error logging
     console.error('Error fetching profiles:', error);
     return <div>Error loading profiles</div>;
   }

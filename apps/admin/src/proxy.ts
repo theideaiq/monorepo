@@ -1,6 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { createMiddlewareClient } from '@/lib/supabase/middleware';
-import { UserRole } from '@/types/auth';
+import type { UserRole } from '@/types/auth';
 
 export async function proxy(request: NextRequest) {
   const { supabase, response } = await createMiddlewareClient(request);

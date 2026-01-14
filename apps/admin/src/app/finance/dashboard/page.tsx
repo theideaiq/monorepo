@@ -39,22 +39,26 @@ export default async function FinanceDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <KPICard title="YTD Revenue" value={ytdRevenue} type="currency" />
         <KPICard title="Est. MRR" value={mrr} type="currency" />
-        <KPICard title="Avg Monthly Burn" value={avgMonthlyBurn} type="currency" />
+        <KPICard
+          title="Avg Monthly Burn"
+          value={avgMonthlyBurn}
+          type="currency"
+        />
         <KPICard title="Net Income YTD" value={pnl.netIncome} type="currency" />
       </div>
 
       <div className="grid gap-4 md:grid-cols-1">
-         <Card className="p-6">
-            <h3 className="text-lg font-medium mb-4">Cash Flow Forecast (YTD)</h3>
-             {/* We need monthly breakdown for the chart. getProfitAndLoss returns totals.
+        <Card className="p-6">
+          <h3 className="text-lg font-medium mb-4">Cash Flow Forecast (YTD)</h3>
+          {/* We need monthly breakdown for the chart. getProfitAndLoss returns totals.
                  We might need to adjust getProfitAndLoss to return monthly data or fetch it here.
                  For now, let's update getProfitAndLoss or handle it.
                  Actually, the prompt said: "Use recharts to plot the 'Cash Flow Forecast' (Revenue vs Expenses)."
                  To plot a chart, I need data points (e.g. Jan, Feb, Mar).
                  I will need to modify getProfitAndLoss or fetch ledger entries and group by month here.
              */}
-             <CashFlowChartWrapper startDate={startOfYear} endDate={endOfYear} />
-         </Card>
+          <CashFlowChartWrapper startDate={startOfYear} endDate={endOfYear} />
+        </Card>
       </div>
     </div>
   );

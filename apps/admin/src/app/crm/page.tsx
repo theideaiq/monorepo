@@ -6,7 +6,9 @@ export default function CRMPage() {
       </div>
       <div className="rounded-md border p-4">
         <h2 className="text-lg font-semibold">Contacts & Users</h2>
-        <p className="text-muted-foreground">Manage your customer relationships here.</p>
+        <p className="text-muted-foreground">
+          Manage your customer relationships here.
+        </p>
         {/* TODO: Implement Contacts Table */}
       </div>
     </div>
