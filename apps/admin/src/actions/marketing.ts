@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { logAdminAction } from '@/lib/audit';
 import { createClient } from '@/lib/supabase/server';
 
 export async function createSegment(
@@ -37,6 +38,7 @@ export async function createCampaign(
     .single();
 
   if (error) throw new Error(error.message);
+  await logAdminAction('create_campaign', 'marketing', { subject, segment_id });
   revalidatePath('/marketing/campaigns');
   return data.id;
 }

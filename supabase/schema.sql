@@ -59,12 +59,21 @@ CREATE TABLE IF NOT EXISTS profiles (
   username TEXT UNIQUE,
   full_name TEXT,
   avatar_url TEXT,
-  website TEXT
+  website TEXT,
+  email TEXT,
+  banned BOOLEAN DEFAULT FALSE
 );
 
 -- Add role column if it doesn't exist
 DO $$ BEGIN
     ALTER TABLE profiles ADD COLUMN role user_role DEFAULT 'user';
+EXCEPTION
+    WHEN duplicate_column THEN null;
+END $$;
+
+-- Add banned column if it doesn't exist (for existing tables)
+DO $$ BEGIN
+    ALTER TABLE profiles ADD COLUMN banned BOOLEAN DEFAULT FALSE;
 EXCEPTION
     WHEN duplicate_column THEN null;
 END $$;
@@ -116,7 +125,15 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   admin_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   action TEXT NOT NULL,
   target_resource TEXT NOT NULL,
+  details JSONB,
   timestamp TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- RATE LIMITS
+CREATE TABLE IF NOT EXISTS rate_limits (
+  key TEXT PRIMARY KEY,
+  count INTEGER DEFAULT 0,
+  last_request TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
 -- -----------------------------------------------------------------------------
@@ -129,6 +146,11 @@ ALTER TABLE rentals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE academy_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE rate_limits ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public can manage rate limits" ON rate_limits
+  USING (true)
+  WITH CHECK (true);
 
 -- Helper function to check if user is admin
 CREATE OR REPLACE FUNCTION is_admin()
@@ -211,3 +233,29 @@ CREATE POLICY "Users can update own profile" ON profiles
 -- Only superadmin should change roles ideally, but for now 'admin' rule:
 CREATE POLICY "Admins can update profiles" ON profiles
   FOR UPDATE USING (is_admin());
+
+-- -----------------------------------------------------------------------------
+-- 4. TRIGGERS
+-- -----------------------------------------------------------------------------
+
+-- Sync Email Function
+CREATE OR REPLACE FUNCTION public.sync_user_email()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, email)
+  VALUES (NEW.id, NEW.email)
+  ON CONFLICT (id) DO UPDATE
+  SET email = EXCLUDED.email;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Sync Email Trigger
+-- Note: This requires permissions to create triggers on auth.users (usually superuser)
+-- In pure SQL dump, we can include it, but applying it might require specific privileges.
+-- We assume this schema represents the desired state.
+-- DROP TRIGGER IF EXISTS on_auth_user_email_sync ON auth.users;
+-- CREATE TRIGGER on_auth_user_email_sync
+-- AFTER INSERT OR UPDATE OF email ON auth.users
+-- FOR EACH ROW
+-- EXECUTE FUNCTION public.sync_user_email();

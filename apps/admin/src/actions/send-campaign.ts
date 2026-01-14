@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import React from 'react';
+import { logAdminAction } from '@/lib/audit';
 import { Resend } from 'resend';
 import { BrandedTemplate } from '@/emails/BrandedTemplate';
 import { createClient } from '@/lib/supabase/server';
@@ -74,5 +75,9 @@ export async function sendCampaign(campaignId: string) {
     })
     .eq('id', campaignId);
 
+  await logAdminAction('send_campaign', 'marketing', {
+    campaign_id: campaignId,
+    count: emails.length,
+  });
   revalidatePath('/marketing/campaigns');
 }

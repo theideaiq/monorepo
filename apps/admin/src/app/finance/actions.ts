@@ -1,6 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { logAdminAction } from '@/lib/audit';
 import { createClient } from '@/lib/supabase/server';
 import {
   type ChartOfAccount,
@@ -173,6 +174,11 @@ export async function createJournalEntry(
     redirect('/login');
   }
 
+  await logAdminAction('create_journal_entry', 'finance', {
+    date,
+    description,
+    amount: lines[0]?.debit,
+  });
   return entry;
 }
 
@@ -195,17 +201,20 @@ export async function updateStaff(id: string, updates: Partial<HRStaffPlan>) {
     .update(updates)
     .eq('id', id);
   if (error) redirect('/login');
+  await logAdminAction('update_staff_plan', 'finance', { staff_id: id, updates });
 }
 
 export async function createStaff(staff: Omit<HRStaffPlan, 'id'>) {
   const supabase = await createClient();
   const { error } = await supabase.from('hr_staff_plan').insert(staff);
   if (error) redirect('/login');
+  await logAdminAction('create_staff_plan', 'finance', { staff });
 }
 export async function deleteStaff(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from('hr_staff_plan').delete().eq('id', id);
   if (error) redirect('/login');
+  await logAdminAction('delete_staff_plan', 'finance', { staff_id: id });
 }
 
 // --- EQUITY ---
