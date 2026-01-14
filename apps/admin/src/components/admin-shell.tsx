@@ -10,6 +10,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:m-4 focus:block focus:rounded-md focus:bg-background focus:p-4 focus:text-foreground focus:shadow-lg focus:ring-2 focus:ring-ring"
+      >
+        Skip to content
+      </a>
+
       {/* Desktop Sidebar - hidden on mobile, visible on md+ */}
       <aside className="hidden w-64 flex-col border-r bg-card md:flex">
         <Sidebar className="h-full border-r-0" />
@@ -40,7 +47,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-muted/10 p-4 sm:p-6">
+        <main
+          id="main-content"
+          className="flex-1 overflow-y-auto bg-muted/10 p-4 sm:p-6"
+        >
           {children}
         </main>
       </div>
