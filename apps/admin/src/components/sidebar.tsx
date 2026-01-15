@@ -5,6 +5,7 @@ import {
   BarChart3,
   BadgeDollarSign,
   LayoutDashboard,
+  Loader2,
   LogOut,
   Megaphone,
   Package,
@@ -14,7 +15,7 @@ import {
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import type { ComponentProps } from 'react';
+import { type ComponentProps, useState } from 'react';
 
 const sidebarItems = [
   {
@@ -57,8 +58,10 @@ export function Sidebar({ className, onLinkClick, ...props }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const handleSignOut = async () => {
+    setIsSigningOut(true);
     await supabase.auth.signOut();
     router.push('/login');
     router.refresh();
@@ -86,6 +89,7 @@ export function Sidebar({ className, onLinkClick, ...props }: SidebarProps) {
                 key={item.href}
                 href={item.href}
                 onClick={onLinkClick}
+                aria-current={isActive ? 'page' : undefined}
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground',
                   isActive
@@ -104,10 +108,15 @@ export function Sidebar({ className, onLinkClick, ...props }: SidebarProps) {
         <button
           type="button"
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-accent hover:text-accent-foreground"
+          disabled={isSigningOut}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-accent hover:text-accent-foreground disabled:opacity-50 disabled:pointer-events-none"
         >
-          <LogOut className="h-4 w-4" />
-          Sign Out
+          {isSigningOut ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <LogOut className="h-4 w-4" />
+          )}
+          {isSigningOut ? 'Signing out...' : 'Sign Out'}
         </button>
       </div>
     </div>
