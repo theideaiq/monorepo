@@ -97,7 +97,7 @@ Use `.env.local` files in the respective app directories (`apps/web`, `apps/admi
 **Do not store secrets in the codebase.**
 
 - **Vercel**: Navigate to **Settings > Environment Variables** in your Vercel project dashboard to add secrets (e.g., `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`).
-- **GitHub Actions**: Navigate to **Settings > Secrets and variables > Actions** in your GitHub repository. Add secrets required for the CI workflow (e.g., `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_ADMIN_EMAIL`).
+- **GitHub Actions**: Navigate to **Settings > Secrets and variables > Actions** in your GitHub repository. Add secrets required for the CI workflow (e.g., `NEXT_PUBLIC_SUPABASE_URL`).
 
 ## 📜 Scripts
 

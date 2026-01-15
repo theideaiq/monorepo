@@ -34,12 +34,7 @@ export default function LoginPage() {
       setLoading(false);
     } else {
       toast.success('Welcome back!');
-      // Check if admin (simple check)
-      if (email === env.NEXT_PUBLIC_ADMIN_EMAIL) {
-        router.push('/admin');
-      } else {
-        router.push('/account');
-      }
+      router.push('/account');
     }
   };
 
