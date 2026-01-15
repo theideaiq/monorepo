@@ -80,9 +80,9 @@ export default function GlobalLoader() {
                 className="animate-spin text-brand-pink"
                 suppressHydrationWarning
               >
-                {message.icon}
+                {message?.icon}
               </span>
-              <p suppressHydrationWarning>{message.text}</p>
+              <p suppressHydrationWarning>{message?.text}</p>
             </motion.div>
 
             {/* Progress Bar */}
