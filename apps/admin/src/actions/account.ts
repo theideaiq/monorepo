@@ -1,16 +1,18 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { createClient } from '@/lib/supabase/server';
 
 export async function updateProfile(formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) throw new Error('Unauthorized');
 
   const fullName = formData.get('fullName') as string;
-  
+
   if (!fullName) return;
 
   const { error } = await supabase

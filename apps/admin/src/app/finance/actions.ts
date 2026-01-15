@@ -201,7 +201,10 @@ export async function updateStaff(id: string, updates: Partial<HRStaffPlan>) {
     .update(updates)
     .eq('id', id);
   if (error) redirect('/login');
-  await logAdminAction('update_staff_plan', 'finance', { staff_id: id, updates });
+  await logAdminAction('update_staff_plan', 'finance', {
+    staff_id: id,
+    updates,
+  });
 }
 
 export async function createStaff(staff: Omit<HRStaffPlan, 'id'>) {

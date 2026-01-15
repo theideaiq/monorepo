@@ -1,8 +1,8 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { logAdminAction } from '@/lib/audit';
+import { createClient } from '@/lib/supabase/server';
 import type { UserRole } from '@/types/auth';
 
 export async function getStaff() {
@@ -19,10 +19,16 @@ export async function getStaff() {
 
 export async function updateRole(userId: string, newRole: UserRole) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthorized');
 
-  const { data: requester } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+  const { data: requester } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
   if (requester?.role !== 'superadmin') {
     throw new Error('Only Superadmins can change roles');
   }
@@ -34,18 +40,27 @@ export async function updateRole(userId: string, newRole: UserRole) {
 
   if (error) throw new Error(error.message);
 
-  await logAdminAction('update_role', 'staff', { target_user_id: userId, new_role: newRole });
+  await logAdminAction('update_role', 'staff', {
+    target_user_id: userId,
+    new_role: newRole,
+  });
   revalidatePath('/settings/staff');
 }
 
 export async function toggleBan(userId: string, banStatus: boolean) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthorized');
 
-  const { data: requester } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+  const { data: requester } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
   if (requester?.role !== 'superadmin') {
-     throw new Error('Only Superadmins can ban users');
+    throw new Error('Only Superadmins can ban users');
   }
 
   const { error } = await supabase
@@ -55,16 +70,25 @@ export async function toggleBan(userId: string, banStatus: boolean) {
 
   if (error) throw new Error(error.message);
 
-  await logAdminAction('toggle_ban', 'staff', { target_user_id: userId, banned: banStatus });
+  await logAdminAction('toggle_ban', 'staff', {
+    target_user_id: userId,
+    banned: banStatus,
+  });
   revalidatePath('/settings/staff');
 }
 
 export async function addStaff(email: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthorized');
 
-  const { data: requester } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+  const { data: requester } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
   if (requester?.role !== 'superadmin') {
     throw new Error('Only Superadmins can add staff');
   }
@@ -77,7 +101,9 @@ export async function addStaff(email: string) {
     .single();
 
   if (searchError || !target) {
-     throw new Error('User not found. Ensure they have signed up and their profile has an email set.');
+    throw new Error(
+      'User not found. Ensure they have signed up and their profile has an email set.',
+    );
   }
 
   const { error } = await supabase
@@ -87,6 +113,9 @@ export async function addStaff(email: string) {
 
   if (error) throw new Error(error.message);
 
-  await logAdminAction('promote_staff', 'staff', { target_user_id: target.id, email });
+  await logAdminAction('promote_staff', 'staff', {
+    target_user_id: target.id,
+    email,
+  });
   revalidatePath('/settings/staff');
 }

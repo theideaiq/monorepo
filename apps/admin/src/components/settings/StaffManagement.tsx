@@ -1,11 +1,11 @@
 'use client';
 
+import { Badge, Button, Card, Input, Modal } from '@repo/ui';
+import { Check, Shield, ShieldAlert, UserCheck, UserX, X } from 'lucide-react';
 import { useState } from 'react';
-import { Card, Button, Input, Badge, Modal } from '@repo/ui';
-import { updateRole, toggleBan, addStaff } from '@/actions/staff';
-import type { UserRole, UserProfile } from '@/types/auth';
 import toast from 'react-hot-toast';
-import { Check, X, Shield, ShieldAlert, UserX, UserCheck } from 'lucide-react';
+import { addStaff, toggleBan, updateRole } from '@/actions/staff';
+import type { UserProfile, UserRole } from '@/types/auth';
 
 interface StaffManagementProps {
   initialStaff: UserProfile[];
@@ -13,7 +13,11 @@ interface StaffManagementProps {
   currentUserId: string;
 }
 
-export default function StaffManagement({ initialStaff, currentUserRole, currentUserId }: StaffManagementProps) {
+export default function StaffManagement({
+  initialStaff,
+  currentUserRole,
+  currentUserId,
+}: StaffManagementProps) {
   const [staff, setStaff] = useState(initialStaff);
   const [loading, setLoading] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -89,9 +93,13 @@ export default function StaffManagement({ initialStaff, currentUserRole, current
                   <td className="p-4 font-medium">{user.full_name || 'N/A'}</td>
                   <td className="p-4 text-slate-500">{user.email || 'N/A'}</td>
                   <td className="p-4">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      user.role === 'superadmin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
-                    }`}>
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        user.role === 'superadmin'
+                          ? 'bg-purple-100 text-purple-700'
+                          : 'bg-blue-100 text-blue-700'
+                      }`}
+                    >
                       {user.role}
                     </span>
                   </td>
@@ -111,18 +119,20 @@ export default function StaffManagement({ initialStaff, currentUserRole, current
                     {isSuperAdmin && user.id !== currentUserId && (
                       <>
                         {user.role === 'admin' ? (
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             className="px-2 py-1 h-8 w-8 p-0"
-                            onClick={() => handleRoleChange(user.id, 'superadmin')}
+                            onClick={() =>
+                              handleRoleChange(user.id, 'superadmin')
+                            }
                             disabled={loading === user.id}
                             title="Promote to Superadmin"
                           >
                             <ShieldAlert className="h-4 w-4" />
                           </Button>
                         ) : (
-                          <Button 
-                            variant="outline" 
+                          <Button
+                            variant="outline"
                             className="px-2 py-1 h-8 w-8 p-0"
                             onClick={() => handleRoleChange(user.id, 'admin')}
                             disabled={loading === user.id}
@@ -131,17 +141,21 @@ export default function StaffManagement({ initialStaff, currentUserRole, current
                             <Shield className="h-4 w-4" />
                           </Button>
                         )}
-                        
-                        <Button 
-                          variant="outline" 
+
+                        <Button
+                          variant="outline"
                           className={`px-2 py-1 h-8 w-8 p-0 ${user.banned ? 'text-green-600' : 'text-red-600'}`}
-                          // @ts-ignore 
+                          // @ts-expect-error
                           onClick={() => handleBanToggle(user.id, user.banned)}
                           disabled={loading === user.id}
                           title={user.banned ? 'Unban' : 'Ban'}
                         >
                           {/* @ts-ignore */}
-                          {user.banned ? <UserCheck className="h-4 w-4" /> : <UserX className="h-4 w-4" />}
+                          {user.banned ? (
+                            <UserCheck className="h-4 w-4" />
+                          ) : (
+                            <UserX className="h-4 w-4" />
+                          )}
                         </Button>
                       </>
                     )}
@@ -149,31 +163,48 @@ export default function StaffManagement({ initialStaff, currentUserRole, current
                 </tr>
               ))}
               {staff.length === 0 && (
-                 <tr><td colSpan={5} className="p-4 text-center text-slate-500">No staff found.</td></tr>
+                <tr>
+                  <td colSpan={5} className="p-4 text-center text-slate-500">
+                    No staff found.
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
       </Card>
 
-      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} title="Add Staff Member">
-         <form onSubmit={handleAddStaff} className="space-y-4">
-            <Input 
-               label="User Email" 
-               type="email" 
-               value={newStaffEmail} 
-               onChange={(e) => setNewStaffEmail(e.target.value)}
-               placeholder="Enter user email..."
-               required
-            />
-            <p className="text-xs text-slate-500">
-               Note: The user must already exist in the system and have an email set in their profile.
-            </p>
-            <div className="flex justify-end gap-2">
-               <Button variant="outline" type="button" onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
-               <Button type="submit" isLoading={loading === 'add'}>Promote to Admin</Button>
-            </div>
-         </form>
+      <Modal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        title="Add Staff Member"
+      >
+        <form onSubmit={handleAddStaff} className="space-y-4">
+          <Input
+            label="User Email"
+            type="email"
+            value={newStaffEmail}
+            onChange={(e) => setNewStaffEmail(e.target.value)}
+            placeholder="Enter user email..."
+            required
+          />
+          <p className="text-xs text-slate-500">
+            Note: The user must already exist in the system and have an email
+            set in their profile.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => setIsAddModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" isLoading={loading === 'add'}>
+              Promote to Admin
+            </Button>
+          </div>
+        </form>
       </Modal>
     </div>
   );

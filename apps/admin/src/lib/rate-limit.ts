@@ -5,7 +5,7 @@ const MAX_REQUESTS = 5; // 5 requests per minute
 
 export async function checkRateLimit(key: string): Promise<boolean> {
   const supabase = await createClient();
-  
+
   // 1. Get current limit
   const { data, error } = await supabase
     .from('rate_limits')
@@ -31,10 +31,13 @@ export async function checkRateLimit(key: string): Promise<boolean> {
 
   if (timeDiff > WINDOW_SIZE_MS) {
     // Reset
-    await supabase.from('rate_limits').update({
-      count: 1,
-      last_request: now.toISOString(),
-    }).eq('key', key);
+    await supabase
+      .from('rate_limits')
+      .update({
+        count: 1,
+        last_request: now.toISOString(),
+      })
+      .eq('key', key);
     return true;
   }
 
@@ -43,10 +46,13 @@ export async function checkRateLimit(key: string): Promise<boolean> {
   }
 
   // Increment
-  await supabase.from('rate_limits').update({
-    count: data.count + 1,
-    last_request: now.toISOString(),
-  }).eq('key', key);
+  await supabase
+    .from('rate_limits')
+    .update({
+      count: data.count + 1,
+      last_request: now.toISOString(),
+    })
+    .eq('key', key);
 
   return true;
 }

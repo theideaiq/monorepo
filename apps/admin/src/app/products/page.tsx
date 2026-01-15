@@ -8,7 +8,9 @@ async function getProducts(): Promise<Product[]> {
   const { data, error } = await supabase
     .from('products')
     // Select only necessary fields to reduce payload size and improve query performance
-    .select('id, name, price, category, type, stock_count, rental_tier, created_at')
+    .select(
+      'id, name, price, category, type, stock_count, rental_tier, created_at',
+    )
     .order('created_at', { ascending: false });
 
   if (error) {

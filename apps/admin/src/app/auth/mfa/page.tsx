@@ -1,11 +1,11 @@
 'use client';
 
-import { createClient } from '@/lib/supabase/client';
 import { Button, Card, Input } from '@repo/ui';
 import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { createClient } from '@/lib/supabase/client';
 
 export default function MFAPage() {
   const [mode, setMode] = useState<'enroll' | 'verify'>('verify');
