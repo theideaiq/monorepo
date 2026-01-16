@@ -38,6 +38,9 @@ export default function MegastorePage() {
     toast.success(`${product} added to cart`);
   };
 
+  const filteredProducts =
+    products?.filter((p) => filter === 'All' || p.category === filter) ?? [];
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 pt-20 flex items-center justify-center">
@@ -123,10 +126,9 @@ export default function MegastorePage() {
 
       {/* 3. PRODUCT GRID */}
       <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products
-            ?.filter((p) => filter === 'All' || p.category === filter)
-            .map((product) => (
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 10 }}
@@ -148,12 +150,14 @@ export default function MegastorePage() {
                         type="button"
                         onClick={() => addToCart(product.title)}
                         className="p-3 bg-white rounded-full hover:bg-brand-yellow hover:scale-110 transition text-brand-dark"
+                        aria-label={`Add ${product.title} to cart`}
                       >
                         <ShoppingCart size={20} />
                       </button>
                       <button
                         type="button"
                         className="p-3 bg-white rounded-full hover:bg-brand-pink hover:scale-110 transition text-brand-dark"
+                        aria-label={`Add ${product.title} to favorites`}
                       >
                         <Heart size={20} />
                       </button>
@@ -214,6 +218,7 @@ export default function MegastorePage() {
                         onClick={() => addToCart(product.title)}
                         variant="ghost"
                         className="h-10 w-10 p-0 rounded-full bg-slate-100 text-slate-600 hover:bg-brand-dark hover:text-white"
+                        aria-label={`Add ${product.title} to cart`}
                       >
                         <ShoppingCart size={18} />
                       </Button>
@@ -222,7 +227,27 @@ export default function MegastorePage() {
                 </Card>
               </motion.div>
             ))}
-        </div>
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <div className="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+              <Search size={32} />
+            </div>
+            <h3 className="text-lg font-bold text-slate-700">
+              No products found
+            </h3>
+            <p className="text-slate-500">
+              We couldn&apos;t find any items in this category.
+            </p>
+            <Button
+              variant="ghost"
+              className="mt-4"
+              onClick={() => setFilter('All')}
+            >
+              Clear Filters
+            </Button>
+          </div>
+        )}
       </section>
 
       {/* 4. FLASH DEALS (Amazon Lightning Deal Style) */}
