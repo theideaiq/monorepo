@@ -14,7 +14,9 @@
     "account": "My Account",
     "cart": "Cart",
     "menu_open": "Open Menu",
-    "switch_lang_ar": "العربية"
+    "menu_close": "Close Menu",
+    "switch_lang_ar": "Switch to Arabic",
+    "switch_lang_en": "Switch to English"
   },
   "Home": {
     "badge": "THE DIGITAL ECOSYSTEM FOR IRAQ",

@@ -2,14 +2,26 @@
 
 import { Globe, Menu, ShoppingCart, User, X } from 'lucide-react';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl'; // Import this
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Link, usePathname } from '@/i18n/navigation';
+import { cn } from '@repo/utils';
 
 export default function Navbar({ locale }: { locale: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const t = useTranslations('Nav'); // Use the 'Nav' section from your JSON
+  const t = useTranslations('Nav');
+
+  // Shared classes for consistency
+  const navLinkClasses = cn(
+    'text-slate-600 hover:text-brand-pink font-medium transition',
+    'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none'
+  );
+
+  const iconButtonClasses = cn(
+    'text-slate-600 hover:text-brand-dark transition-colors',
+    'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-full p-1 outline-none'
+  );
 
   return (
     <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-200">
@@ -32,28 +44,16 @@ export default function Navbar({ locale }: { locale: string }) {
 
           {/* Desktop Links - Translated */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/megastore"
-              className="text-slate-600 hover:text-brand-pink font-medium transition focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none"
-            >
+            <Link href="/megastore" className={navLinkClasses}>
               {t('store')}
             </Link>
-            <Link
-              href="/plus"
-              className="text-slate-600 hover:text-brand-pink font-medium transition focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none"
-            >
+            <Link href="/plus" className={navLinkClasses}>
               {t('plus')}
             </Link>
-            <Link
-              href="/academy"
-              className="text-slate-600 hover:text-brand-pink font-medium transition focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none"
-            >
+            <Link href="/academy" className={navLinkClasses}>
               {t('academy')}
             </Link>
-            <Link
-              href="/suite"
-              className="text-slate-600 hover:text-brand-pink font-medium transition focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none"
-            >
+            <Link href="/suite" className={navLinkClasses}>
               {t('business')}
             </Link>
           </div>
@@ -63,39 +63,24 @@ export default function Navbar({ locale }: { locale: string }) {
             {/* LANGUAGE SWITCHER */}
             <div className="flex items-center gap-2 border-r border-slate-200 pr-6 mr-2">
               <Globe size={18} className="text-slate-400" />
-              {locale === 'en' ? (
-                <Link
-                  href={pathname}
-                  locale="ar"
-                  className="font-arabic font-bold text-slate-700 hover:text-brand-pink focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none"
-                  aria-label={t('switch_lang_ar')}
-                >
-                  عربي
-                </Link>
-              ) : (
-                <Link
-                  href={pathname}
-                  locale="en"
-                  className="font-sans font-bold text-slate-700 hover:text-brand-pink focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none"
-                  aria-label={t('switch_lang_en')}
-                >
-                  English
-                </Link>
-              )}
+              <Link
+                href={pathname}
+                locale={locale === 'en' ? 'ar' : 'en'}
+                className={cn(
+                  'font-bold text-slate-700 hover:text-brand-pink',
+                  'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none',
+                  locale === 'en' ? 'font-arabic' : 'font-sans'
+                )}
+                aria-label={locale === 'en' ? t('switch_lang_ar') : t('switch_lang_en')}
+              >
+                {locale === 'en' ? 'عربي' : 'English'}
+              </Link>
             </div>
 
-            <Link
-              href="/account"
-              className="text-slate-600 hover:text-brand-dark focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-full p-1 outline-none transition-colors"
-              aria-label={t('account')}
-            >
+            <Link href="/account" className={iconButtonClasses} aria-label={t('account')}>
               <User size={22} />
             </Link>
-            <Link
-              href="/cart"
-              className="relative text-slate-600 hover:text-brand-dark focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-full p-1 outline-none transition-colors"
-              aria-label={t('cart')}
-            >
+            <Link href="/cart" className={cn(iconButtonClasses, 'relative')} aria-label={t('cart')}>
               <ShoppingCart size={22} />
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[0.625rem] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 0
@@ -103,7 +88,11 @@ export default function Navbar({ locale }: { locale: string }) {
             </Link>
             <Link
               href="/register"
-              className="bg-brand-dark text-white px-5 py-2 rounded-full font-bold hover:bg-slate-800 transition shadow-lg shadow-brand-dark/20 focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 outline-none"
+              className={cn(
+                'bg-brand-dark text-white px-5 py-2 rounded-full font-bold hover:bg-slate-800 transition',
+                'shadow-lg shadow-brand-dark/20',
+                'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 outline-none'
+              )}
             >
               {t('join')}
             </Link>
@@ -114,7 +103,10 @@ export default function Navbar({ locale }: { locale: string }) {
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-slate-700 focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-lg p-1 outline-none transition-colors"
+              className={cn(
+                'text-slate-700 p-1 rounded-lg transition-colors outline-none',
+                'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2'
+              )}
               aria-label={isOpen ? t('menu_close') : t('menu_open')}
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -127,30 +119,20 @@ export default function Navbar({ locale }: { locale: string }) {
       {isOpen && (
         <div className="md:hidden bg-white border-t border-slate-100">
           <div className="px-4 pt-2 pb-6 space-y-2">
-            <Link
-              href="/megastore"
-              className="block py-3 text-slate-600 font-medium border-b border-slate-50"
-            >
-              {t('store')}
-            </Link>
-            <Link
-              href="/plus"
-              className="block py-3 text-slate-600 font-medium border-b border-slate-50"
-            >
-              {t('plus')}
-            </Link>
-            <Link
-              href="/academy"
-              className="block py-3 text-slate-600 font-medium border-b border-slate-50"
-            >
-              {t('academy')}
-            </Link>
-            <Link
-              href="/suite"
-              className="block py-3 text-slate-600 font-medium border-b border-slate-50"
-            >
-              {t('business')}
-            </Link>
+            {[
+              { href: '/megastore', label: t('store') },
+              { href: '/plus', label: t('plus') },
+              { href: '/academy', label: t('academy') },
+              { href: '/suite', label: t('business') },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="block py-3 text-slate-600 font-medium border-b border-slate-50 hover:text-brand-pink transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
 
             <div className="flex items-center justify-between py-4">
               <span className="text-slate-400 text-sm">
@@ -160,14 +142,20 @@ export default function Navbar({ locale }: { locale: string }) {
                 <Link
                   href={pathname}
                   locale="en"
-                  className={`font-bold ${locale === 'en' ? 'text-brand-pink' : 'text-slate-500'}`}
+                  className={cn(
+                    'font-bold transition-colors',
+                    locale === 'en' ? 'text-brand-pink' : 'text-slate-500 hover:text-brand-pink'
+                  )}
                 >
                   EN
                 </Link>
                 <Link
                   href={pathname}
                   locale="ar"
-                  className={`font-bold font-arabic ${locale === 'ar' ? 'text-brand-pink' : 'text-slate-500'}`}
+                  className={cn(
+                    'font-bold font-arabic transition-colors',
+                    locale === 'ar' ? 'text-brand-pink' : 'text-slate-500 hover:text-brand-pink'
+                  )}
                 >
                   عربي
                 </Link>
@@ -176,7 +164,7 @@ export default function Navbar({ locale }: { locale: string }) {
 
             <Link
               href="/login"
-              className="block w-full text-center bg-brand-dark text-white py-3 rounded-xl font-bold mt-4"
+              className="block w-full text-center bg-brand-dark text-white py-3 rounded-xl font-bold mt-4 hover:bg-slate-800 transition-colors shadow-lg shadow-brand-dark/10"
             >
               {t('login')}
             </Link>
