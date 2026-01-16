@@ -1,5 +1,5 @@
-import type { Redis } from "@upstash/redis";
-import type { StorageAdapter } from "grammy";
+import type { Redis } from '@upstash/redis';
+import type { StorageAdapter } from 'grammy';
 
 export class UpstashAdapter<T> implements StorageAdapter<T> {
   private redis: Redis;
