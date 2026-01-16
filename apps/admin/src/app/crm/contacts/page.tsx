@@ -10,7 +10,9 @@ export default async function ContactsPage() {
   // Fetch profiles
   const { data: profiles, error } = await supabase
     .from('profiles')
-    .select('*')
+    .select(
+      'id, email, full_name, avatar_url, role, updated_at, crm_tags, crm_status',
+    )
     .order('updated_at', { ascending: false });
 
   if (error) {

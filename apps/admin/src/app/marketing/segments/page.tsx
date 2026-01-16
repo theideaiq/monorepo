@@ -9,7 +9,7 @@ export default async function SegmentsPage() {
   const supabase = await createClient();
   const { data: segments } = await supabase
     .from('marketing_segments')
-    .select('*')
+    .select('id, name, criteria, created_at')
     .order('created_at', { ascending: false });
 
   return (
