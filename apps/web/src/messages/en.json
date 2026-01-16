@@ -46,6 +46,10 @@
     "footer_cta": "Join 10,000+ Members Today",
     "footer_btn": "Create Free Account"
   },
+  "About": {
+    "meta_title": "About Us",
+    "meta_description": "Building the Digital Future of Baghdad. The IDEA is an ecosystem bridging commerce, education, and entertainment."
+  },
   "Account": {
     "title": "My Account",
     "sign_out": "Sign Out",

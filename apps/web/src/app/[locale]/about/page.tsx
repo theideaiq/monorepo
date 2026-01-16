@@ -1,8 +1,26 @@
-'use client';
-
+import type { Metadata } from 'next';
 import { Lightbulb, Target } from 'lucide-react';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export default function AboutPage() {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'About' });
+
+  return {
+    title: t('meta_title'),
+    description: t('meta_description'),
+  };
+}
+
+export default async function AboutPage({ params }: Props) {
+  const { locale } = await params;
+  // Enable static rendering
+  setRequestLocale(locale);
+
   return (
     <div className="min-h-screen bg-white pt-20">
       {/* Hero Section */}
