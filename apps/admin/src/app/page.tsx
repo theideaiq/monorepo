@@ -6,22 +6,21 @@ import { createClient } from '@/lib/supabase/server';
 export default async function DashboardPage() {
   const supabase = await createClient();
 
-  // Fetch counts
-  const { count: userCount, error: userError } = await supabase
-    .from('profiles')
-    .select('*', { count: 'exact', head: true });
-  if (userError) redirect('/login');
+  // Fetch counts in parallel to reduce waterfall latency
+  const [
+    { count: userCount, error: userError },
+    { count: productCount, error: productError },
+    { count: activeRentalsCount, error: rentalError },
+  ] = await Promise.all([
+    supabase.from('profiles').select('*', { count: 'exact', head: true }),
+    supabase.from('products').select('*', { count: 'exact', head: true }),
+    supabase
+      .from('rentals')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'active'),
+  ]);
 
-  const { count: productCount, error: productError } = await supabase
-    .from('products')
-    .select('*', { count: 'exact', head: true });
-  if (productError) redirect('/login');
-
-  const { count: activeRentalsCount, error: rentalError } = await supabase
-    .from('rentals')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'active');
-  if (rentalError) redirect('/login');
+  if (userError || productError || rentalError) redirect('/login');
 
   const stats = [
     {
