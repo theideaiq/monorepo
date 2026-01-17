@@ -1,5 +1,5 @@
 {
-  "name": "www-root",
+  "name": "monorepo-root",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -10,9 +10,13 @@
     "check": "turbo check",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
+    "storybook": "turbo storybook",
+    "build-storybook": "turbo build-storybook",
     "prepare": "husky",
     "sync": "syncpack list-mismatches",
+    "fix:sync": "syncpack fix-mismatches",
     "release": "turbo build && changeset publish",
+    "clean": "turbo clean && rimraf node_modules",
     "audit": "pnpm audit --prod"
   },
   "devDependencies": {
@@ -23,6 +27,7 @@
     "@playwright/test": "^1.57.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
+    "rimraf": "^6.0.0",
     "syncpack": "^13.0.4",
     "turbo": "^2.7.4"
   },
@@ -32,12 +37,13 @@
       "esbuild",
       "sharp",
       "@parcel/watcher",
-      "@swc/core"
+      "@swc/core",
+      "biome"
     ]
   },
   "engines": {
     "node": ">=24.12.0",
-    "pnpm": ">=10.27.0"
+    "pnpm": ">=10.0.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,json,css}": [
