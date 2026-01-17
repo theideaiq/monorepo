@@ -4,6 +4,7 @@ import { z } from 'zod';
 export const webEnv = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
+    WAYL_SECRET_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
