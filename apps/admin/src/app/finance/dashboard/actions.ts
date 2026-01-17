@@ -21,7 +21,6 @@ export async function getCashFlowData(year: number) {
     .lte('ledger_entries.transaction_date', endDate);
 
   if (error) {
-    console.error('Error fetching cash flow data:', error);
     return [];
   }
 

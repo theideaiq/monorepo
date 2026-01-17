@@ -48,7 +48,6 @@ export default function LoginPage() {
         .maybeSingle();
 
       if (profileError) {
-        console.error('Profile fetch error:', profileError);
         await supabase.auth.signOut();
         throw new Error(
           `Failed to verify permissions: ${profileError.message}`,

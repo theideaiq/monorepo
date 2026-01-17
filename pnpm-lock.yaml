@@ -29,6 +29,9 @@ importers:
       lint-staged:
         specifier: ^15.5.2
         version: 15.5.2
+      rimraf:
+        specifier: ^6.0.0
+        version: 6.1.2
       syncpack:
         specifier: ^13.0.4
         version: 13.0.4(typescript@5.9.3)

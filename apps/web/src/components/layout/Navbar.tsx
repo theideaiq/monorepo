@@ -1,11 +1,11 @@
 'use client';
 
+import { cn } from '@repo/utils';
 import { Globe, Menu, ShoppingCart, User, X } from 'lucide-react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Link, usePathname } from '@/i18n/navigation';
-import { cn } from '@repo/utils';
 
 export default function Navbar({ locale }: { locale: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,12 +15,12 @@ export default function Navbar({ locale }: { locale: string }) {
   // Shared classes for consistency
   const navLinkClasses = cn(
     'text-slate-600 hover:text-brand-pink font-medium transition',
-    'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none'
+    'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none',
   );
 
   const iconButtonClasses = cn(
     'text-slate-600 hover:text-brand-dark transition-colors',
-    'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-full p-1 outline-none'
+    'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-full p-1 outline-none',
   );
 
   return (
@@ -69,18 +69,28 @@ export default function Navbar({ locale }: { locale: string }) {
                 className={cn(
                   'font-bold text-slate-700 hover:text-brand-pink',
                   'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 rounded-md outline-none',
-                  locale === 'en' ? 'font-arabic' : 'font-sans'
+                  locale === 'en' ? 'font-arabic' : 'font-sans',
                 )}
-                aria-label={locale === 'en' ? t('switch_lang_ar') : t('switch_lang_en')}
+                aria-label={
+                  locale === 'en' ? t('switch_lang_ar') : t('switch_lang_en')
+                }
               >
                 {locale === 'en' ? 'عربي' : 'English'}
               </Link>
             </div>
 
-            <Link href="/account" className={iconButtonClasses} aria-label={t('account')}>
+            <Link
+              href="/account"
+              className={iconButtonClasses}
+              aria-label={t('account')}
+            >
               <User size={22} />
             </Link>
-            <Link href="/cart" className={cn(iconButtonClasses, 'relative')} aria-label={t('cart')}>
+            <Link
+              href="/cart"
+              className={cn(iconButtonClasses, 'relative')}
+              aria-label={t('cart')}
+            >
               <ShoppingCart size={22} />
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[0.625rem] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 0
@@ -91,7 +101,7 @@ export default function Navbar({ locale }: { locale: string }) {
               className={cn(
                 'bg-brand-dark text-white px-5 py-2 rounded-full font-bold hover:bg-slate-800 transition',
                 'shadow-lg shadow-brand-dark/20',
-                'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 outline-none'
+                'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 outline-none',
               )}
             >
               {t('join')}
@@ -105,7 +115,7 @@ export default function Navbar({ locale }: { locale: string }) {
               onClick={() => setIsOpen(!isOpen)}
               className={cn(
                 'text-slate-700 p-1 rounded-lg transition-colors outline-none',
-                'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2'
+                'focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2',
               )}
               aria-label={isOpen ? t('menu_close') : t('menu_open')}
             >
@@ -144,7 +154,9 @@ export default function Navbar({ locale }: { locale: string }) {
                   locale="en"
                   className={cn(
                     'font-bold transition-colors',
-                    locale === 'en' ? 'text-brand-pink' : 'text-slate-500 hover:text-brand-pink'
+                    locale === 'en'
+                      ? 'text-brand-pink'
+                      : 'text-slate-500 hover:text-brand-pink',
                   )}
                 >
                   EN
@@ -154,7 +166,9 @@ export default function Navbar({ locale }: { locale: string }) {
                   locale="ar"
                   className={cn(
                     'font-bold font-arabic transition-colors',
-                    locale === 'ar' ? 'text-brand-pink' : 'text-slate-500 hover:text-brand-pink'
+                    locale === 'ar'
+                      ? 'text-brand-pink'
+                      : 'text-slate-500 hover:text-brand-pink',
                   )}
                 >
                   عربي

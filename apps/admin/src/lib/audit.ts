@@ -12,12 +12,6 @@ export async function logAdminAction(
     } = await supabase.auth.getUser();
 
     if (!user) {
-      // If no user context (e.g. strict server-side job), logging might be restricted
-      // but usually this is called within a user request.
-      console.warn('Attempted to log admin action without user context', {
-        action,
-        resource,
-      });
       return;
     }
 
@@ -29,9 +23,6 @@ export async function logAdminAction(
     });
 
     if (error) {
-      console.error('Failed to write audit log:', error);
     }
-  } catch (err) {
-    console.error('Error in logAdminAction:', err);
-  }
+  } catch (_err) {}
 }

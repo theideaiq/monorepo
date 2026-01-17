@@ -7,17 +7,6 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false,
-    "ignore": [
-      "**/node_modules",
-      "**/.next",
-      "**/out",
-      "**/build",
-      "**/dist",
-      "**/public",
-      "**/.turbo",
-      "**/coverage",
-      "**/src/app/globals.css"
-    ]
+    "ignoreUnknown": false
   }
 }

@@ -1,0 +1,13 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./apps/admin" },
+    { "path": "./apps/droid" },
+    { "path": "./apps/web" },
+    { "path": "./packages/config" },
+    { "path": "./packages/database" },
+    { "path": "./packages/env" },
+    { "path": "./packages/ui" },
+    { "path": "./packages/utils" }
+  ]
+}

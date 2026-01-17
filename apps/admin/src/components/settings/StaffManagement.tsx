@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge, Button, Card, Input, Modal } from '@repo/ui';
-import { Check, Shield, ShieldAlert, UserCheck, UserX, X } from 'lucide-react';
+import { Button, Card, Input, Modal } from '@repo/ui';
+import { Shield, ShieldAlert, UserCheck, UserX } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { addStaff, toggleBan, updateRole } from '@/actions/staff';
@@ -18,7 +18,7 @@ export default function StaffManagement({
   currentUserRole,
   currentUserId,
 }: StaffManagementProps) {
-  const [staff, setStaff] = useState(initialStaff);
+  const [staff, _setStaff] = useState(initialStaff);
   const [loading, setLoading] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newStaffEmail, setNewStaffEmail] = useState('');

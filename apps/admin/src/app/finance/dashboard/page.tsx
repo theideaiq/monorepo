@@ -1,6 +1,5 @@
 import { Card } from '@repo/ui';
 import { getProfitAndLoss, getStaff } from '../actions';
-import { CashFlowChart } from './components/CashFlowChart';
 import { KPICard } from './components/KPICard';
 
 export default async function FinanceDashboard() {
@@ -10,7 +9,7 @@ export default async function FinanceDashboard() {
   const endOfYear = new Date(today.getFullYear(), 11, 31).toISOString();
 
   // Parallel data fetching
-  const [pnl, staff] = await Promise.all([
+  const [pnl, _staff] = await Promise.all([
     getProfitAndLoss(startOfYear, endOfYear),
     getStaff(),
   ]);

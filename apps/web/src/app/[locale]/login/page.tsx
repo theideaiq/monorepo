@@ -1,13 +1,12 @@
 'use client';
 
-import { webEnv as env } from '@repo/env/web';
-import { createClient } from '@/lib/supabase/client';
 import { Button, Card, Input } from '@repo/ui';
 import { ArrowRight, Chrome, Lock } from 'lucide-react'; // Added Chrome icon for Google
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { createClient } from '@/lib/supabase/client';
 
 const supabase = createClient();
 

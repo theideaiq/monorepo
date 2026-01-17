@@ -1,6 +1,3 @@
-import { cn } from '@repo/utils';
-import { BookOpen, LayoutDashboard, PieChart, Users } from 'lucide-react';
-import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 export default function FinanceLayout({ children }: { children: ReactNode }) {

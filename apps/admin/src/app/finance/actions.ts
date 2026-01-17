@@ -3,14 +3,12 @@
 import { redirect } from 'next/navigation';
 import { logAdminAction } from '@/lib/audit';
 import { createClient } from '@/lib/supabase/server';
-import {
-  type ChartOfAccount,
-  type EquityHolder,
-  type EquityRound,
-  type HRStaffPlan,
-  LedgerEntry,
-  LedgerLine,
-  type LedgerTransaction,
+import type {
+  ChartOfAccount,
+  EquityHolder,
+  EquityRound,
+  HRStaffPlan,
+  LedgerTransaction,
 } from '@/types/finance';
 
 // --- PROFIT & LOSS ---

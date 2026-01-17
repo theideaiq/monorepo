@@ -2,17 +2,17 @@ import type { Metadata } from 'next';
 import { Cairo, Poppins } from 'next/font/google';
 import '../globals.css';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { webEnv as env } from '@repo/env/web';
 import { notFound } from 'next/navigation';
 // NEW: Imports for translation data
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import { webEnv as env } from '@repo/env/web';
 import Footer from '@/components/layout/Footer';
 import Navbar from '@/components/layout/Navbar';
 import SkipLink from '@/components/layout/SkipLink';
-import JsonLd from '@/components/seo/JsonLd';
 import QueryProvider from '@/components/providers/QueryProvider';
 import ToastProvider from '@/components/providers/ToastProvider';
+import JsonLd from '@/components/seo/JsonLd';
 import { routing } from '@/i18n/navigation';
 
 const poppins = Poppins({

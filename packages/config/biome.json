@@ -7,9 +7,6 @@
     "lineEnding": "lf",
     "lineWidth": 80
   },
-  "organizeImports": {
-    "enabled": true
-  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -46,6 +43,12 @@
       "semicolons": "always",
       "arrowParentheses": "always",
       "bracketSpacing": true
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
     }
   },
   "overrides": [

@@ -63,8 +63,7 @@ export function NewJournalEntryModal({
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
       setDescription('');
       router.refresh(); // Refresh server data
-    } catch (error) {
-      console.error(error);
+    } catch (_error) {
       toast.error('Failed to create entry');
     } finally {
       setIsSubmitting(false);

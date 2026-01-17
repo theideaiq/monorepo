@@ -1,6 +1,5 @@
 import { format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
-import { MarketingSegment } from '@/types/crm';
 import { SegmentForm } from './SegmentForm';
 
 export const dynamic = 'force-dynamic';

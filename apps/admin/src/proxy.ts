@@ -47,10 +47,7 @@ export async function proxy(request: NextRequest) {
           .from('rate_limits')
           .insert({ key: ip, count: 1, last_request: now.toISOString() });
       }
-    } catch (e) {
-      // Fail open on rate limit error
-      console.error('Rate limit error', e);
-    }
+    } catch (_e) {}
   }
 
   // Check auth

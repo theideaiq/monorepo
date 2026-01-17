@@ -3,7 +3,6 @@
 import { cn } from '@repo/utils';
 import {
   BadgeDollarSign,
-  BarChart3,
   LayoutDashboard,
   Loader2,
   LogOut,
