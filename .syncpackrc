@@ -6,6 +6,13 @@
       "dependencies": ["@repo/**"],
       "dependencyTypes": ["dev", "prod"],
       "pinVersion": "workspace:*"
+    },
+    {
+      "label": "Use specific versions for core framework dependencies",
+      "packages": ["**"],
+      "dependencies": ["react", "react-dom", "next", "typescript", "tailwindcss"],
+      "dependencyTypes": ["dev", "prod", "peer"],
+      "pinVersion": "highestSemver"
     }
   ]
 }
