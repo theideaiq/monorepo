@@ -116,20 +116,11 @@ Use `.env.local` files in the respective app directories (`apps/web`, `apps/admi
 | `pnpm sync` | Ensure dependency versions are consistent across packages (Syncpack). |
 | `pnpm changeset` | Generate a changeset for versioning. |
 
-## 🧠 Memory (.jules)
+## 🧠 Memory (AGENTS.md)
 
-The `.jules/` directory contains journal files that serve as long-term memory and context for AI agents working on this project. These files document architectural decisions, design patterns, security protocols, and operational learnings.
+The `AGENTS.md` file contains the long-term memory and context for AI agents working on this project. It documents architectural decisions, design patterns, security protocols, and operational learnings.
 
-- **architect.md**: System architecture and design patterns.
-- **palette.md**: UI/UX design tokens and accessibility standards.
-- **sentinel.md**: Security protocols and vulnerability patterns.
-- **bolt.md**: Performance optimization guidelines.
-- **scribe.md**: Documentation standards and project learnings.
-- **testudo.md**: Testing patterns and stability risks.
-- **signal.md**: SEO and crawlability learnings.
-- **curator.md**: File system hierarchy and organization rules.
-
-**Please do not delete these files**, as they ensure continuity and high-quality assistance from AI tools.
+**Please do not delete this file**, as it ensures continuity and high-quality assistance from AI tools.
 
 ## 📄 License
 

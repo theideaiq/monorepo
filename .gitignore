@@ -55,3 +55,4 @@ Thumbs.db
 # Security
 *.pem
 *.key
+lint_output.txt
