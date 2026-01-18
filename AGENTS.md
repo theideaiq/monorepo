@@ -104,6 +104,11 @@ Rule: Do not assume similar-looking commands are identical. Always verify setup 
 Insight: The `apps/droid` application was completely missing from the root `README.md`, making it invisible to developers and causing setup gaps.
 Rule: The root `README.md` must serve as the single source of truth for ALL applications in the `apps/` directory, including their specific environment setup commands.
 
+### 2025-05-24 - Ghost Environment Variables
+
+Insight: `STRIPE_SECRET_KEY` was present in `apps/admin/.env.example` but unused in the codebase, while `NEXT_PUBLIC_SITE_URL` was required by validation but missing.
+Rule: Routinely audit `.env.example` files against the strict Zod validation schemas in `packages/env` to prevent "ghost" variables and missing requirements.
+
 ## Sentinel (Security)
 
 ### 2025-02-14 - Information Leakage in Checkout API
