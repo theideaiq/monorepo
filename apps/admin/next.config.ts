@@ -25,22 +25,32 @@ const nextConfig: NextConfig = {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     let supabaseDomain = '';
 
+    // Safely parse the Supabase URL for CSP
     if (supabaseUrl) {
       try {
         const url = new URL(supabaseUrl);
         supabaseDomain = url.hostname;
       } catch (e) {
-        // biome-ignore lint/suspicious/noConsole: Critical build-time error logging
-        console.error('Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP', e);
+        // biome-ignore lint/suspicious/noConsole: Critical build-time warning
+        console.warn('⚠️ Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP. API calls might be blocked.');
       }
     }
 
+    // specific directives
+    const connectSrc = supabaseDomain 
+      ? `connect-src 'self' ${supabaseDomain}` 
+      : "connect-src 'self'";
+      
+    const imgSrc = supabaseDomain 
+      ? `img-src 'self' data: blob: images.unsplash.com i.ytimg.com ${supabaseDomain}` 
+      : "img-src 'self' data: blob: images.unsplash.com i.ytimg.com";
+
     const csp = [
       "default-src 'self'",
-      `img-src 'self' data: blob: images.unsplash.com i.ytimg.com ${supabaseDomain}`,
+      imgSrc,
       "style-src 'self' 'unsafe-inline'",
-      `connect-src 'self' ${supabaseDomain}`,
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // unsafe-eval needed for Next.js in dev, unsafe-inline for scripts
+      connectSrc,
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // unsafe-eval needed for Next.js in dev
       "font-src 'self' data:",
     ]
       .filter(Boolean)
