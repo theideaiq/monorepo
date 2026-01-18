@@ -12,6 +12,7 @@ import Navbar from '@/components/layout/Navbar';
 import SkipLink from '@/components/layout/SkipLink';
 import QueryProvider from '@/components/providers/QueryProvider';
 import ToastProvider from '@/components/providers/ToastProvider';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import JsonLd from '@/components/seo/JsonLd';
 import { routing } from '@/i18n/navigation';
 
@@ -94,6 +95,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       `}
       >
         <JsonLd baseUrl={baseUrl} />
+        <BreadcrumbJsonLd />
         {/* 3. Wrap everything in the Client Provider */}
         <NextIntlClientProvider locale={locale} messages={messages}>
           <QueryProvider>
