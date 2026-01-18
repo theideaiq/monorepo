@@ -14,6 +14,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -35,6 +36,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -43,7 +45,10 @@ export default function LoginPage() {
       },
     });
 
-    if (error) toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      setGoogleLoading(false);
+    }
   };
 
   return (
@@ -60,10 +65,12 @@ export default function LoginPage() {
         {/* GOOGLE BUTTON */}
         <Button
           type="button"
+          isLoading={googleLoading}
           onClick={handleGoogleLogin}
           className="w-full bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 mb-6 flex items-center justify-center gap-2"
         >
-          <Chrome size={20} className="text-blue-500" /> Continue with Google
+          {!googleLoading && <Chrome size={20} className="text-blue-500" />}{' '}
+          Continue with Google
         </Button>
 
         <div className="relative mb-6">
