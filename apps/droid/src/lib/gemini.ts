@@ -2,13 +2,16 @@ import {
   type Content,
   GoogleGenerativeAI,
   SchemaType,
+  type FunctionDeclarationSchema,
+  type Tool,
 } from '@google/generative-ai';
 import { droidEnv as env } from '@repo/env/droid';
 import { supabase } from './supabase';
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
 
-const tools = [
+// explicitly typed to satisfy strict TypeScript checks
+const tools: Tool[] = [
   {
     functionDeclarations: [
       {
@@ -22,10 +25,11 @@ const tools = [
               type: SchemaType.STRING,
               description:
                 "The product name or keyword to search for (e.g. 'PlayStation', 'Adele')",
+              nullable: false,
             },
           },
           required: ['query'],
-        },
+        } as FunctionDeclarationSchema,
       },
     ],
   },
