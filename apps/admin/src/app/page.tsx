@@ -1,4 +1,4 @@
-import { Card } from '@repo/ui';
+import { MetricCard } from '@repo/ui';
 import { Package, ShoppingBag, Users } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
@@ -26,42 +26,35 @@ export default async function DashboardPage() {
     {
       title: 'Total Users',
       value: userCount ?? 0,
-      icon: Users,
+      icon: <Users className="h-4 w-4" />,
       description: 'Registered profiles',
     },
     {
       title: 'Total Products',
       value: productCount ?? 0,
-      icon: Package,
+      icon: <Package className="h-4 w-4" />,
       description: 'Available items',
     },
     {
       title: 'Active Rentals',
       value: activeRentalsCount ?? 0,
-      icon: ShoppingBag,
+      icon: <ShoppingBag className="h-4 w-4" />,
       description: 'Currently rented out',
     },
   ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
+      <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard Overview</h1>
       <div className="grid gap-4 md:grid-cols-3">
         {stats.map((stat) => (
-          <Card key={stat.title} className="p-4">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">
-                  {stat.title}
-                </span>
-                <stat.icon className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <span className="text-xs text-muted-foreground">
-                {stat.description}
-              </span>
-            </div>
-          </Card>
+          <MetricCard
+            key={stat.title}
+            title={stat.title}
+            value={stat.value}
+            icon={stat.icon}
+            description={stat.description}
+          />
         ))}
       </div>
     </div>

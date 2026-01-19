@@ -1,6 +1,17 @@
 'use client';
 
-import { Card } from '@repo/ui';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@repo/ui';
 import {
   createColumnHelper,
   flexRender,
@@ -41,40 +52,37 @@ export function StaffTable({ data }: { data: HRStaffPlan[] }) {
   });
 
   return (
-    <div className="rounded-md border overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead className="bg-muted/50 border-b">
+    <div className="rounded-md border border-slate-200 overflow-hidden shadow-sm">
+      <Table>
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
-                >
+                <TableHead key={header.id}>
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
                   )}
-                </th>
+                </TableHead>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </thead>
-        <tbody>
+        </TableHeader>
+        <TableBody>
           {table.getRowModel().rows.map((row) => (
-            <tr
+            <TableRow
               key={row.id}
-              className="border-b transition-colors hover:bg-muted/50"
+              className="hover:bg-slate-50"
             >
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="p-4 align-middle">
+                <TableCell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }
@@ -100,11 +108,11 @@ export function StaffProjection({ data }: { data: HRStaffPlan[] }) {
           id="simulate"
           checked={simulate}
           onChange={(e) => setSimulate(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+          className="h-4 w-4 rounded border-slate-300 text-brand-pink focus:ring-brand-pink"
         />
         <label
           htmlFor="simulate"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="text-sm font-medium leading-none text-slate-700"
         >
           Simulate 12-Month Projection
         </label>
@@ -112,35 +120,44 @@ export function StaffProjection({ data }: { data: HRStaffPlan[] }) {
 
       {simulate && (
         <div className="grid grid-cols-2 gap-4">
-          <Card className="p-6 bg-muted/20">
-            <h4 className="text-sm font-medium text-muted-foreground">
-              Current Annual Payroll
-            </h4>
-            <p className="text-2xl font-bold mt-2">
-              {new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              }).format(currentAnnual)}
-            </p>
+          <Card className="bg-slate-50">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-slate-500">
+                Current Annual Payroll
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-slate-900">
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(currentAnnual)}
+              </div>
+            </CardContent>
           </Card>
-          <Card className="p-6 bg-brand-pink/10 border-brand-pink/20">
-            <h4 className="text-sm font-medium text-brand-pink">
-              Projected (w/ Increases)
-            </h4>
-            <p className="text-2xl font-bold mt-2 text-brand-pink">
-              {new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              }).format(projectedAnnual)}
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              (+
-              {new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              }).format(projectedAnnual - currentAnnual)}
-              )
-            </p>
+
+          <Card className="bg-brand-pink/5 border-brand-pink/20">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-brand-pink">
+                Projected (w/ Increases)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-brand-pink">
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(projectedAnnual)}
+              </div>
+              <p className="text-xs text-brand-pink/80 mt-1">
+                (+
+                {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                }).format(projectedAnnual - currentAnnual)}
+                )
+              </p>
+            </CardContent>
           </Card>
         </div>
       )}

@@ -1,6 +1,14 @@
 'use client';
 
-import { Button } from '@repo/ui';
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@repo/ui';
 import {
   type ColumnDef,
   flexRender,
@@ -27,67 +35,60 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-md border overflow-x-auto">
-        <table className="w-full caption-bottom text-sm">
-          <thead className="[&_tr]:border-b">
+      <div className="rounded-md border border-slate-200 overflow-hidden bg-white shadow-sm">
+        <Table>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr
-                key={headerGroup.id}
-                className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-              >
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <th
-                      key={header.id}
-                      className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
-                    >
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
-                    </th>
+                    </TableHead>
                   );
                 })}
-              </tr>
+              </TableRow>
             ))}
-          </thead>
-          <tbody className="[&_tr:last-child]:border-0">
+          </TableHeader>
+          <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <tr
+                <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className="p-4 align-middle [&:has([role=checkbox])]:pr-0"
-                    >
+                    <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
                       )}
-                    </td>
+                    </TableCell>
                   ))}
-                </tr>
+                </TableRow>
               ))
             ) : (
-              <tr>
-                <td colSpan={columns.length} className="h-24 text-center">
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
-          className="px-4 py-2"
+          size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
@@ -95,7 +96,7 @@ export function DataTable<TData, TValue>({
         </Button>
         <Button
           variant="outline"
-          className="px-4 py-2"
+          size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >

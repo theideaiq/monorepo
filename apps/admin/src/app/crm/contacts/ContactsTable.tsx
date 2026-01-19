@@ -9,6 +9,12 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
   Textarea,
 } from '@repo/ui';
 import {
@@ -57,14 +63,14 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
               `https://ui-avatars.com/api/?name=${encodeURIComponent(row.original.email)}`
             }
             alt="Avatar"
-            className="w-8 h-8 rounded-full bg-gray-200"
+            className="w-8 h-8 rounded-full bg-slate-200"
           />
         ),
       },
       {
         accessorKey: 'full_name',
         header: 'Name',
-        cell: ({ row }) => row.original.full_name || 'N/A',
+        cell: ({ row }) => <span className="font-medium text-slate-900">{row.original.full_name || 'N/A'}</span>,
       },
       {
         accessorKey: 'email',
@@ -124,8 +130,9 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
         cell: ({ row }) => (
           <Button
             variant="ghost"
-            className="px-2 py-1 h-auto"
+            size="icon"
             onClick={() => handleEdit(row.original)}
+            className="h-8 w-8 text-slate-500 hover:text-brand-pink"
           >
             <Edit size={16} />
           </Button>
@@ -204,12 +211,12 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
             placeholder="Search profiles..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-10"
+            className="pl-10 bg-white"
           />
         </div>
         <div className="flex gap-2">
           <select
-            className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white"
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-pink/20"
             onChange={(e) =>
               table
                 .getColumn('crm_status')
@@ -223,7 +230,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
             <option value={CRM_STATUSES.CHURNED}>Churned</option>
           </select>
           <select
-            className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white"
+            className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-pink/20"
             onChange={(e) =>
               table
                 .getColumn('role')
@@ -238,51 +245,51 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
         </div>
       </div>
 
-      <div className="border border-slate-200 rounded-lg overflow-x-auto">
-        <table className="w-full text-sm text-left">
-          <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-medium">
+      <div className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm">
+        <Table>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} className="px-4 py-3">
+                  <TableHead key={header.id}>
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext(),
                     )}
-                  </th>
+                  </TableHead>
                 ))}
-              </tr>
+              </TableRow>
             ))}
-          </thead>
-          <tbody>
+          </TableHeader>
+          <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <tr
+              <TableRow
                 key={row.id}
-                className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                className="hover:bg-slate-50"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="px-4 py-3">
+                  <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+                  </TableCell>
                 ))}
-              </tr>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       <div className="flex justify-end gap-2">
         <Button
-          variant="ghost"
-          className="px-4 py-2"
+          variant="outline"
+          size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           Previous
         </Button>
         <Button
-          variant="ghost"
-          className="px-4 py-2"
+          variant="outline"
+          size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
@@ -304,10 +311,10 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(editingProfile.email)}`
                   }
                   alt="Avatar"
-                  className="w-16 h-16 rounded-full bg-gray-200"
+                  className="w-16 h-16 rounded-full bg-slate-200"
                 />
                 <div>
-                  <h3 className="font-bold text-lg">
+                  <h3 className="font-bold text-lg text-slate-900">
                     {editingProfile.full_name || 'No Name'}
                   </h3>
                   <p className="text-sm text-slate-500">

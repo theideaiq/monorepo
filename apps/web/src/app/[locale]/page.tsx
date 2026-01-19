@@ -1,4 +1,4 @@
-import { Button, Card } from '@repo/ui';
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, buttonVariants } from '@repo/ui';
 import {
   Building2,
   Gamepad2,
@@ -73,17 +73,21 @@ export default async function Home({ params }: Props) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: static list
-            <Link key={i} href={service.href}>
+            <Link key={i} href={service.href} className="block h-full">
               <Card
-                className={`p-8 h-full hover:-translate-y-2 transition-transform duration-300 border-t-4 ${service.color}`}
+                className={`h-full hover:-translate-y-2 transition-transform duration-300 border-t-4 ${service.color}`}
               >
-                <div className="mb-6">{service.icon}</div>
-                <h3 className="text-xl font-bold text-brand-dark mb-3">
-                  {service.title}
-                </h3>
-                <p className="text-slate-500 text-sm leading-relaxed">
-                  {service.desc}
-                </p>
+                <CardHeader>
+                  <div className="mb-4">{service.icon}</div>
+                  <CardTitle className="text-xl font-bold text-brand-dark">
+                    {service.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-base text-slate-500 leading-relaxed">
+                    {service.desc}
+                  </CardDescription>
+                </CardContent>
               </Card>
             </Link>
           ))}
@@ -151,10 +155,14 @@ export default async function Home({ params }: Props) {
         <h2 className="text-3xl font-bold text-brand-dark mb-6">
           {t('footer_cta')}
         </h2>
-        <Link href="/register">
-          <Button className="h-14 px-10 text-lg shadow-xl shadow-brand-pink/20">
-            {t('footer_btn')}
-          </Button>
+        <Link
+          href="/register"
+          className={buttonVariants({
+            size: 'lg',
+            className: 'h-14 px-10 text-lg shadow-xl shadow-brand-pink/20',
+          })}
+        >
+          {t('footer_btn')}
         </Link>
       </section>
     </div>

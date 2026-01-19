@@ -1,6 +1,7 @@
 'use client';
 
-import { Button } from '@repo/ui';
+import { buttonVariants } from '@repo/ui';
+import { cn } from '@repo/utils';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -31,19 +32,23 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/register">
-              <Button className="h-14 px-8 text-lg w-full sm:w-auto">
-                {t('cta_primary')}{' '}
-                <ArrowRight className="ml-2 rtl:rotate-180" size={20} />
-              </Button>
+            <Link
+              href="/register"
+              className={buttonVariants({
+                className: 'h-14 px-8 text-lg w-full sm:w-auto',
+              })}
+            >
+              {t('cta_primary')}{' '}
+              <ArrowRight className="ml-2 rtl:rotate-180" size={20} />
             </Link>
-            <Link href="/about">
-              <Button
-                variant="outline"
-                className="h-14 px-8 text-lg w-full sm:w-auto"
-              >
-                {t('cta_secondary')}
-              </Button>
+            <Link
+              href="/about"
+              className={buttonVariants({
+                variant: 'outline',
+                className: 'h-14 px-8 text-lg w-full sm:w-auto',
+              })}
+            >
+              {t('cta_secondary')}
             </Link>
           </div>
         </motion.div>
