@@ -42,7 +42,8 @@ export function EquityPieChart({ holders }: { holders: EquityHolder[] }) {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+            // FIX: Added nullish coalescing (?? 0) to handle undefined percent
+            label={({ percent }) => `${((percent ?? 0) * 100).toFixed(0)}%`}
             outerRadius={100}
             fill="#8884d8"
             dataKey="value"
