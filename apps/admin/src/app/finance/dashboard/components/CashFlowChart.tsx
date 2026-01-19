@@ -26,11 +26,11 @@ export function CashFlowChart({ data }: { data: ChartData[] }) {
           <XAxis dataKey="month" />
           <YAxis />
           <Tooltip
-            formatter={(value: number) =>
+            formatter={(value: number | undefined) =>
               new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
-              }).format(value)
+              }).format(value ?? 0)
             }
           />
           <Legend />
