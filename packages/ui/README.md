@@ -53,18 +53,23 @@ For **Tailwind CSS 4**, add the `@source` directive to your application's main C
 
 ## 🧱 Components
 
-Source code is located in `src/`. Most components are flat in the `src` directory, with exceptions noted below.
+Source code is located in `src/`. Components are organized in their own directories.
 
-- **Badge**: `src/Badge.tsx`
-- **Button**: `src/Button.tsx` (Variants: `primary`, `secondary`, `dark`, `outline`, `ghost`)
-- **Card**: `src/Card.tsx`
-- **Input**: `src/Input.tsx`
-- **Modal**: `src/Modal.tsx`
-- **Select**: `src/Select.tsx`
-- **Sheet**: `src/Sheet.tsx`
-- **Skeleton**: `src/skeleton/Skeleton.tsx` (Note: Located in subdirectory)
-- **Spinner**: `src/Spinner.tsx`
-- **Textarea**: `src/Textarea.tsx`
+- **AppShell**: `src/app-shell/AppShell.tsx` (Standardized layout wrapper)
+- **Badge**: `src/badge/Badge.tsx` (Variants: `success`, `warning`, `danger`, `neutral`, `brand`)
+- **Button**: `src/button/Button.tsx` (Variants: `primary`, `secondary`, `dark`, `outline`, `ghost`, `link`, `destructive`)
+- **Card**: `src/card/Card.tsx`
+- **Footer**: `src/footer/Footer.tsx`
+- **Input**: `src/input/Input.tsx`
+- **MetricCard**: `src/metric-card/MetricCard.tsx` (Includes trend indicators)
+- **Modal**: `src/modal/Modal.tsx`
+- **Navbar**: `src/navbar/Navbar.tsx`
+- **Select**: `src/select/Select.tsx`
+- **Sheet**: `src/sheet/Sheet.tsx`
+- **Skeleton**: `src/skeleton/Skeleton.tsx`
+- **Spinner**: `src/spinner/Spinner.tsx`
+- **Table**: `src/table/Table.tsx`
+- **Textarea**: `src/textarea/Textarea.tsx`
 
 ## 📜 Scripts
 
