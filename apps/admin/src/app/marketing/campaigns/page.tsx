@@ -1,4 +1,13 @@
-import { Badge, Button } from '@repo/ui';
+import {
+  Badge,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  buttonVariants,
+} from '@repo/ui';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
@@ -19,32 +28,35 @@ export default async function CampaignsPage() {
           <h1 className="text-3xl font-bold text-slate-900">Email Campaigns</h1>
           <p className="text-slate-500">Blast updates to your user segments.</p>
         </div>
-        <Link href="/marketing/campaigns/create">
-          <Button>Create Campaign</Button>
+        <Link
+          href="/marketing/campaigns/create"
+          className={buttonVariants()}
+        >
+          Create Campaign
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 border-b border-slate-200 font-medium text-slate-500">
-            <tr>
-              <th className="px-6 py-4">Subject</th>
-              <th className="px-6 py-4">Segment</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4">Sent</th>
-              <th className="px-6 py-4">Date</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Subject</TableHead>
+              <TableHead>Segment</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Sent</TableHead>
+              <TableHead>Date</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {campaigns?.map((campaign: any) => (
-              <tr key={campaign.id} className="hover:bg-slate-50">
-                <td className="px-6 py-4 font-medium text-slate-900">
+              <TableRow key={campaign.id}>
+                <TableCell className="font-medium text-slate-900">
                   {campaign.subject}
-                </td>
-                <td className="px-6 py-4">
+                </TableCell>
+                <TableCell>
                   {campaign.segment?.name || 'Unknown'}
-                </td>
-                <td className="px-6 py-4">
+                </TableCell>
+                <TableCell>
                   <Badge
                     variant={
                       campaign.status === 'sent'
@@ -56,25 +68,25 @@ export default async function CampaignsPage() {
                   >
                     {campaign.status.toUpperCase()}
                   </Badge>
-                </td>
-                <td className="px-6 py-4">{campaign.sent_count}</td>
-                <td className="px-6 py-4 text-slate-500">
+                </TableCell>
+                <TableCell>{campaign.sent_count}</TableCell>
+                <TableCell className="text-slate-500">
                   {format(new Date(campaign.created_at), 'MMM d, yyyy h:mm a')}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
             {(!campaigns || campaigns.length === 0) && (
-              <tr>
-                <td
+              <TableRow>
+                <TableCell
                   colSpan={5}
-                  className="px-6 py-8 text-center text-slate-500"
+                  className="h-24 text-center text-slate-500"
                 >
                   No campaigns found.
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

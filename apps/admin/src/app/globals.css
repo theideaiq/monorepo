@@ -4,6 +4,12 @@
 @theme {
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
+  /* Brand Colors */
+  --color-brand-dark: #0F172A;
+  --color-brand-deep: #020617;
+  --color-brand-pink: #E91E63;
+  --color-brand-yellow: #FFD600;
+
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
