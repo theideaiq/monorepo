@@ -8,7 +8,7 @@ import { WINDOW_SIZE_MS } from '@/lib/rate-limit';
  * Global middleware for authentication and rate limiting.
  * Runs on every request except static assets.
  */
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { supabase, response } = await createMiddlewareClient(request);
   const path = request.nextUrl.pathname;
 
