@@ -37,13 +37,19 @@
   },
   "packageManager": "pnpm@10.27.0",
   "pnpm": {
+    "overrides": {
+      "tar": "^7.5.3"
+    },
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp",
       "@parcel/watcher",
       "@swc/core",
       "biome"
-    ]
+    ],
+    "patchedDependencies": {
+      "@capacitor/cli": "patches/@capacitor__cli.patch"
+    }
   },
   "engines": {
     "node": ">=24.12.0",
