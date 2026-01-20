@@ -13,6 +13,8 @@
             overflow: hidden;
             font-family: 'Inter', sans-serif;
             touch-action: none; /* Prevent zoom/scroll */
+            user-select: none;
+            -webkit-user-select: none;
         }
         #gameCanvas {
             display: block;
@@ -26,6 +28,7 @@
             width: 100%;
             text-align: center;
             pointer-events: none;
+            z-index: 5;
         }
         #score {
             font-size: 24px;
@@ -39,7 +42,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -47,8 +50,8 @@
             color: white;
             z-index: 10;
         }
-        h1 { margin: 0 0 10px 0; font-size: 32px; color: #fff; }
-        p { color: #94a3b8; margin-bottom: 30px; font-size: 16px; }
+        h1 { margin: 0 0 10px 0; font-size: 32px; color: #fff; text-align: center; }
+        p { color: #94a3b8; margin-bottom: 30px; font-size: 16px; text-align: center; max-width: 80%; }
         button {
             background: #2563eb;
             color: white;
@@ -60,6 +63,7 @@
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
             transition: transform 0.1s;
+            z-index: 20; /* Ensure button is on top */
         }
         button:active { transform: scale(0.95); }
         .hidden { display: none !important; }
@@ -132,7 +136,7 @@
         let coins = [];
         let particles = [];
 
-        // --- INPUT ---
+        // --- INPUT HANDLING (FIXED) ---
         function jump() {
             if (!gameRunning) return;
             if (player.grounded) {
@@ -141,10 +145,24 @@
                 createParticles(player.x + 20, player.y + 40, 5, '#cbd5e1'); // Dust
             }
         }
+
+        function handleInput(e) {
+            // CRITICAL FIX: If touching a button, do nothing (let the button click happen)
+            if (e.target.tagName === 'BUTTON') return;
+
+            // Otherwise, prevent default (scrolling) and Jump
+            if(e.cancelable) e.preventDefault();
+            jump();
+        }
         
-        document.addEventListener('keydown', (e) => { if (e.code === 'Space') jump(); });
-        document.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, { passive: false });
-        document.addEventListener('mousedown', jump);
+        // Keyboard
+        document.addEventListener('keydown', (e) => { 
+            if (e.code === 'Space') jump(); 
+        });
+
+        // Touch & Mouse
+        document.addEventListener('touchstart', handleInput, { passive: false });
+        document.addEventListener('mousedown', handleInput);
 
         // --- GAME LOGIC ---
         function spawnObstacle() {
@@ -261,7 +279,7 @@
             ctx.fillRect(player.x, player.y, player.width, player.height);
             ctx.shadowBlur = 0;
 
-            // Eyes (Determination)
+            // Eyes
             ctx.fillStyle = 'white';
             ctx.fillRect(player.x + 25, player.y + 10, 8, 8);
 
@@ -340,11 +358,10 @@
 
         // Button Listeners
         document.getElementById('startBtn').addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent jump on click
+            // No stopPropagation needed here because handleInput checks tagName
             startGame();
         });
         document.getElementById('restartBtn').addEventListener('click', (e) => {
-            e.stopPropagation();
             startGame();
         });
 
