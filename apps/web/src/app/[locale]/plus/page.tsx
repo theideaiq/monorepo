@@ -1,11 +1,10 @@
 'use client';
 
 // UI Kit
-import { webEnv as env } from '@repo/env/web';
 import { createClient } from '@/lib/supabase/client';
 import { Badge, Button } from '@repo/ui';
 import { motion } from 'framer-motion';
-import { BookOpen, Check, Gamepad2, Loader2, Zap } from 'lucide-react';
+import { BookOpen, Check, Gamepad2, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -180,7 +179,7 @@ export default function PlusHome() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className={`relative flex flex-col p-8 rounded-3xl ${tier.popular ? 'bg-slate-800 border-2 border-brand-yellow shadow-2xl scale-105 z-10' : 'bg-[#18191d] border border-white/5'} transition-all`}
+              className={`relative flex flex-col p-8 rounded-3xl ${tier.popular ? 'bg-slate-800 border-2 border-brand-yellow shadow-2xl scale-105 z-10' : 'bg-white/5 border border-white/5'} transition-all`}
             >
               {tier.popular && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-yellow text-brand-dark text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">
@@ -216,25 +215,17 @@ export default function PlusHome() {
                 ))}
               </ul>
 
-              <button
-                type="button"
+              <Button
+                variant={tier.popular ? 'secondary' : 'ghost'}
+                isLoading={loadingTier === tier.id}
                 onClick={() => handleSubscribe(tier)}
                 disabled={loadingTier !== null}
-                className={`w-full py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2
-                  ${
-                    tier.popular
-                      ? 'bg-brand-yellow text-brand-dark hover:bg-yellow-400'
-                      : 'bg-white/10 text-white hover:bg-white hover:text-black'
-                  }
-                  ${loadingTier !== null ? 'opacity-50 cursor-not-allowed' : ''}
+                className={`w-full py-4 h-14 rounded-xl font-bold transition-all
+                  ${!tier.popular ? 'bg-white/10 text-white hover:bg-white hover:text-black border-0' : ''}
                 `}
               >
-                {loadingTier === tier.id ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  tier.button
-                )}
-              </button>
+                {tier.button}
+              </Button>
             </motion.div>
           ))}
         </div>
