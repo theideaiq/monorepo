@@ -60,7 +60,11 @@ export async function getProfitAndLoss(
   const breakdown: Record<string, number> = {};
 
   lines.forEach((line: any) => {
-    const account = line.chart_of_accounts;
+    const rawAccount = line.chart_of_accounts;
+    const account = Array.isArray(rawAccount) ? rawAccount[0] : rawAccount;
+
+    if (!account) return;
+
     const debit = Number(line.debit) || 0;
     const credit = Number(line.credit) || 0;
     // Normal balance:
@@ -136,9 +140,16 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
     redirect('/login');
   }
 
-  return data as LedgerTransaction[];
-}
+  const transformedData = data?.map((entry: any) => ({
+    ...entry,
+    lines: entry.lines.map((line: any) => ({
+      ...line,
+      account: Array.isArray(line.account) ? line.account[0] : line.account,
+    })),
+  }));
 
+  return (transformedData || []) as LedgerTransaction[];
+}
 export async function getChartOfAccounts(): Promise<ChartOfAccount[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
