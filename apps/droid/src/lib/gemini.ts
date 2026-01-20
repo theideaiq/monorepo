@@ -1,44 +1,33 @@
-import {
-  type Content,
-  GoogleGenerativeAI,
-  SchemaType,
-  type FunctionDeclarationSchema,
-  type Tool,
-} from '@google/generative-ai';
+import { GoogleGenAI, type Content, type Tool } from '@google/genai';
 import { droidEnv as env } from '@repo/env/droid';
 import { supabase } from './supabase';
 
-const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
+const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 
-// explicitly typed to satisfy strict TypeScript checks
+// Explicitly typed to satisfy strict TypeScript checks
+// biome-ignore lint/suspicious/noExplicitAny: parametersJsonSchema is missing in types but valid in runtime
+const searchProductsTool: any = {
+  name: 'search_products',
+  description:
+    'Search for products in the catalog by name. Use this when the user asks about product availability, price, or description.',
+  parametersJsonSchema: {
+    type: 'object',
+    properties: {
+      query: {
+        type: 'string',
+        description:
+          "The product name or keyword to search for (e.g. 'PlayStation', 'Adele')",
+      },
+    },
+    required: ['query'],
+  },
+};
+
 const tools: Tool[] = [
   {
-    functionDeclarations: [
-      {
-        name: 'search_products',
-        description:
-          'Search for products in the catalog by name. Use this when the user asks about product availability, price, or description.',
-        parameters: {
-          type: SchemaType.OBJECT,
-          properties: {
-            query: {
-              type: SchemaType.STRING,
-              description:
-                "The product name or keyword to search for (e.g. 'PlayStation', 'Adele')",
-              nullable: false,
-            },
-          },
-          required: ['query'],
-        } as FunctionDeclarationSchema,
-      },
-    ],
+    functionDeclarations: [searchProductsTool],
   },
 ];
-
-const model = genAI.getGenerativeModel({
-  model: 'gemini-3-flash',
-  tools: tools,
-});
 
 async function searchProducts(query: string) {
   // biome-ignore lint/suspicious/noConsole: logging is fine
@@ -67,13 +56,16 @@ export async function generateResponse(
   message: string,
 ): Promise<string> {
   try {
-    const chat = model.startChat({
+    const chat = ai.chats.create({
+      model: 'gemini-3-flash',
       history: history,
+      config: {
+        tools: tools,
+      }
     });
 
-    const result = await chat.sendMessage(message);
-    const response = await result.response;
-    const functionCalls = response.functionCalls();
+    const result = await chat.sendMessage({ message });
+    const functionCalls = result.functionCalls;
 
     if (functionCalls && functionCalls.length > 0) {
       const call = functionCalls[0];
@@ -82,20 +74,22 @@ export async function generateResponse(
         const productData = await searchProducts(args.query);
 
         // Send the function response back to the model
-        const result2 = await chat.sendMessage([
-          {
-            functionResponse: {
-              name: 'search_products',
-              response: productData,
+        const result2 = await chat.sendMessage({
+          message: [
+            {
+              functionResponse: {
+                name: 'search_products',
+                response: productData,
+              },
             },
-          },
-        ]);
+          ],
+        });
 
-        return result2.response.text();
+        return result2.text || "";
       }
     }
 
-    return response.text();
+    return result.text || "";
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: logging is fine
     console.error('Gemini Error:', error);

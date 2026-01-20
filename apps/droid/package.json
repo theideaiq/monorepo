@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
+    "@google/genai": "^1.38.0",
     "@repo/database": "workspace:*",
     "@repo/env": "workspace:*",
     "@supabase/supabase-js": "^2.39.3",

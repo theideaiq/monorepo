@@ -1,4 +1,4 @@
-import type { Content } from '@google/generative-ai';
+import type { Content } from '@google/genai';
 import { droidEnv as env } from '@repo/env/droid';
 import { Bot, type Context, type SessionFlavor, session } from 'grammy';
 import { generateResponse } from './gemini';
