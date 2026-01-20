@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Founder's Run - The IDEA</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; /* Slate 900 */
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            touch-action: none; /* Prevent zoom/scroll */
+        }
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            pointer-events: none;
+        }
+        #score {
+            font-size: 24px;
+            font-weight: 800;
+            color: #22d3ee; /* Cyan */
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+        }
+        #startScreen, #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
+        }
+        h1 { margin: 0 0 10px 0; font-size: 32px; color: #fff; }
+        p { color: #94a3b8; margin-bottom: 30px; font-size: 16px; }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.95); }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <div id="score">$0</div>
+    </div>
+
+    <div id="startScreen">
+        <h1>FOUNDER'S RUN</h1>
+        <p>Tap to Jump. Collect Funding. Avoid Taxes.</p>
+        <button id="startBtn">START UP 🚀</button>
+    </div>
+
+    <div id="gameOverScreen" class="hidden">
+        <h1 style="color: #ef4444">AUDITED! 📉</h1>
+        <p>Final Valuation: <span id="finalScore">$0</span></p>
+        <button id="restartBtn">PIVOT (Restart)</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        // --- SETUP ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        // Telegram Setup
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            window.Telegram.WebApp.enableClosingConfirmation();
+        }
+
+        // Resize Handling
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            groundY = height - 100;
+        }
+        window.addEventListener('resize', resize);
+
+        // --- GAME STATE ---
+        let gameRunning = false;
+        let score = 0;
+        let gameSpeed = 5;
+        let frame = 0;
+        let groundY;
+
+        // Player (The Founder)
+        const player = {
+            x: 50,
+            y: 0,
+            width: 40,
+            height: 40,
+            dy: 0,
+            jumpForce: -15,
+            grounded: false,
+            color: '#22d3ee'
+        };
+
+        // Arrays
+        let obstacles = [];
+        let coins = [];
+        let particles = [];
+
+        // --- INPUT ---
+        function jump() {
+            if (!gameRunning) return;
+            if (player.grounded) {
+                player.dy = player.jumpForce;
+                player.grounded = false;
+                createParticles(player.x + 20, player.y + 40, 5, '#cbd5e1'); // Dust
+            }
+        }
+        
+        document.addEventListener('keydown', (e) => { if (e.code === 'Space') jump(); });
+        document.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); }, { passive: false });
+        document.addEventListener('mousedown', jump);
+
+        // --- GAME LOGIC ---
+        function spawnObstacle() {
+            const height = 40 + Math.random() * 40;
+            obstacles.push({
+                x: width,
+                y: groundY - height,
+                width: 30,
+                height: height,
+                type: 'tax'
+            });
+        }
+
+        function spawnCoin() {
+            coins.push({
+                x: width,
+                y: groundY - 100 - Math.random() * 100, // Floating
+                radius: 15,
+                collected: false
+            });
+        }
+
+        function createParticles(x, y, count, color) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    dx: (Math.random() - 0.5) * 5,
+                    dy: (Math.random() - 0.5) * 5,
+                    life: 1.0,
+                    color: color
+                });
+            }
+        }
+
+        function update() {
+            if (!gameRunning) return;
+
+            // Player Physics
+            player.dy += 0.8; // Gravity
+            player.y += player.dy;
+
+            if (player.y + player.height > groundY) {
+                player.y = groundY - player.height;
+                player.dy = 0;
+                player.grounded = true;
+            }
+
+            // Obstacles
+            if (frame % 100 === 0) spawnObstacle();
+            obstacles.forEach((obs, index) => {
+                obs.x -= gameSpeed;
+                // Collision
+                if (
+                    player.x < obs.x + obs.width &&
+                    player.x + player.width > obs.x &&
+                    player.y < obs.y + obs.height &&
+                    player.y + player.height > obs.y
+                ) {
+                    gameOver();
+                }
+            });
+            obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
+
+            // Coins
+            if (frame % 150 === 0) spawnCoin();
+            coins.forEach((coin, index) => {
+                coin.x -= gameSpeed;
+                // Collision
+                const dx = player.x + player.width/2 - coin.x;
+                const dy = player.y + player.height/2 - coin.y;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+
+                if (distance < player.width/2 + coin.radius && !coin.collected) {
+                    coin.collected = true;
+                    score += 1000;
+                    document.getElementById('score').innerText = `$${score.toLocaleString()}`;
+                    createParticles(coin.x, coin.y, 10, '#facc15'); // Gold particles
+                    // Speed up slightly
+                    if (score % 5000 === 0) gameSpeed += 0.5;
+                }
+            });
+            coins = coins.filter(coin => coin.x > -50 && !coin.collected);
+
+            // Particles
+            particles.forEach(p => {
+                p.x += p.dx;
+                p.y += p.dy;
+                p.life -= 0.05;
+            });
+            particles = particles.filter(p => p.life > 0);
+
+            frame++;
+            requestAnimationFrame(draw);
+        }
+
+        // --- DRAWING ---
+        function draw() {
+            // Clear
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, width, height);
+
+            // Ground
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, groundY, width, height - groundY);
+            // Neon Line
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(0, groundY, width, 2);
+
+            // Player (The Founder)
+            ctx.fillStyle = player.color;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            ctx.shadowBlur = 0;
+
+            // Eyes (Determination)
+            ctx.fillStyle = 'white';
+            ctx.fillRect(player.x + 25, player.y + 10, 8, 8);
+
+            // Obstacles (Red Tape)
+            ctx.fillStyle = '#ef4444';
+            obstacles.forEach(obs => {
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+                // Label "TAX"
+                ctx.fillStyle = 'rgba(255,255,255,0.5)';
+                ctx.font = '10px Arial';
+                ctx.fillText('TAX', obs.x + 5, obs.y + 20);
+                ctx.fillStyle = '#ef4444';
+            });
+
+            // Coins (Funding)
+            coins.forEach(coin => {
+                ctx.beginPath();
+                ctx.arc(coin.x, coin.y, coin.radius, 0, Math.PI * 2);
+                ctx.fillStyle = '#facc15';
+                ctx.fill();
+                ctx.strokeStyle = '#eab308';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                // Dollar sign
+                ctx.fillStyle = '#854d0e';
+                ctx.font = '16px Arial';
+                ctx.fillText('$', coin.x - 4, coin.y + 5);
+            });
+
+            // Particles
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.fillRect(p.x, p.y, 4, 4);
+                ctx.globalAlpha = 1;
+            });
+
+            if (gameRunning) requestAnimationFrame(update);
+        }
+
+        // --- CONTROL ---
+        function startGame() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            
+            // Reset
+            gameRunning = true;
+            score = 0;
+            gameSpeed = 5;
+            frame = 0;
+            obstacles = [];
+            coins = [];
+            particles = [];
+            player.y = groundY - player.height;
+            player.dy = 0;
+            document.getElementById('score').innerText = '$0';
+            
+            update();
+            draw();
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = `$${score.toLocaleString()}`;
+            
+            // Haptic Feedback (Telegram)
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+            }
+        }
+
+        // Init
+        resize();
+        draw(); // Initial render
+
+        // Button Listeners
+        document.getElementById('startBtn').addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent jump on click
+            startGame();
+        });
+        document.getElementById('restartBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            startGame();
+        });
+
+    </script>
+</body>
+</html>
