@@ -181,7 +181,15 @@ export async function createJournalEntry(
     .select('id, transaction_date, description')
     .single();
 
-  if (entryError) redirect('/login');
+  if (entryError) {
+    await logAdminAction('create_journal_entry_failed', 'finance', {
+      stage: 'entry_insert',
+      date,
+      description,
+      error: entryError.message ?? String(entryError),
+    });
+    redirect('/login');
+  }
 
   const linesToInsert = lines.map((line) => ({
     entry_id: entry.id,
