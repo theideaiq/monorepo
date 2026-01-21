@@ -156,7 +156,12 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
         )
       )
     `)
-    .order('transaction_date', { ascending: false });
+  if (error) {
+    // Log the underlying error before redirecting for easier debugging
+    // biome-ignore lint/suspicious/noConsole: Log critical data fetching error
+    console.error('Error fetching chart of accounts:', error);
+    redirect('/login');
+  }
 
   if (error) {
     // biome-ignore lint/suspicious/noConsole: Log critical data fetching error
