@@ -4,9 +4,22 @@ import { supabase } from './supabase';
 
 const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 
-// Explicitly typed to satisfy strict TypeScript checks
-// biome-ignore lint/suspicious/noExplicitAny: parametersJsonSchema is missing in types but valid in runtime
-const searchProductsTool: any = {
+interface SearchProductsFunctionDeclaration {
+  name: string;
+  description: string;
+  parametersJsonSchema: {
+    type: 'object';
+    properties: {
+      query: {
+        type: 'string';
+        description: string;
+      };
+    };
+    required: ['query'];
+  };
+}
+
+const searchProductsTool: SearchProductsFunctionDeclaration = {
   name: 'search_products',
   description:
     'Search for products in the catalog by name. Use this when the user asks about product availability, price, or description.',
@@ -41,7 +54,15 @@ async function searchProducts(query: string) {
   if (error) {
     // biome-ignore lint/suspicious/noConsole: logging is fine
     console.error('Supabase search error:', error);
-    return { error: 'Error searching for products.' };
+    return {
+      error: 'Error searching for products.',
+      code: 'SUPABASE_SEARCH_ERROR',
+      details: {
+        // Limit details to non-sensitive, high-level information
+        code: (error as any).code ?? null,
+        message: (error as any).message ?? String(error),
+      },
+    };
   }
 
   if (!data || data.length === 0) {
@@ -70,8 +91,19 @@ export async function generateResponse(
     if (functionCalls && functionCalls.length > 0) {
       const call = functionCalls[0];
       if (call.name === 'search_products') {
-        const args = call.args as { query: string };
-        const productData = await searchProducts(args.query);
+        const rawArgs = call.args;
+        const query =
+          rawArgs && typeof rawArgs === 'object'
+            ? (rawArgs as Record<string, unknown>).query
+            : undefined;
+
+        if (typeof query !== 'string' || query.trim().length === 0) {
+          // biome-ignore lint/suspicious/noConsole: logging is fine
+          console.error('Invalid arguments for search_products tool call:', rawArgs);
+          return "I couldn't understand the product you want to search for. Please try again with a product name.";
+        }
+
+        const productData = await searchProducts(query);
 
         // Send the function response back to the model
         const finalResult = await chat.sendMessage({
@@ -93,6 +125,6 @@ export async function generateResponse(
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: logging is fine
     console.error('Gemini Error:', error);
-    return "I'm having trouble thinking right now. Please try again later.";
+    return 'Something went wrong while generating a response. Please try again in a moment.';
   }
 }
