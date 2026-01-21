@@ -137,7 +137,7 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
   if (error) {
     // biome-ignore lint/suspicious/noConsole: Log critical data fetching error
     console.error('Error fetching ledger entries:', error);
-    redirect('/login');
+    throw error;
   }
 
   const transformedData = data?.map((entry: any) => ({
