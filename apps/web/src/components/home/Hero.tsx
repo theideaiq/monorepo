@@ -1,7 +1,6 @@
 'use client';
 
 import { buttonVariants } from '@repo/ui';
-import { cn } from '@repo/utils';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
