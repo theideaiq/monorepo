@@ -9,7 +9,6 @@ import {
   Shield,
   Zap,
 } from 'lucide-react';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const GAME_PREVIEW_BG = '/game-bg-placeholder.jpg';
