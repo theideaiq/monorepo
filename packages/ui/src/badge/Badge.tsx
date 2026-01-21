@@ -11,7 +11,7 @@ const badgeVariants = cva(
         warning: 'bg-yellow-100 text-yellow-800 border-yellow-200',
         danger: 'bg-red-100 text-red-800 border-red-200',
         neutral: 'bg-slate-100 text-slate-600 border-slate-200',
-        brand: 'bg-pink-50 text-brand-pink border-pink-100',
+        brand: 'bg-brand-pink text-brand-pink border-brand-pink',
       },
     },
     defaultVariants: {
