@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Baghdad Infinite Ascent</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Lato:wght@400;700&display=swap');
+
+        :root {
+            --sky-top: #1a0b2e;
+            --sky-btm: #431c53;
+            --gold: #ffd700;
+            --brick: #a0522d;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, var(--sky-top), var(--sky-btm));
+            font-family: 'Lato', sans-serif;
+            touch-action: none; /* Prevent mobile scrolling */
+        }
+
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--gold);
+            text-shadow: 2px 2px 0 #000;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #score-display {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 2rem;
+        }
+
+        #high-score {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        #start-screen, #game-over-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--gold);
+            background: rgba(26, 11, 46, 0.9);
+            padding: 40px;
+            border: 4px solid var(--gold);
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            font-family: 'Cinzel Decorative', cursive;
+            z-index: 20;
+        }
+
+        h1 { margin: 0 0 10px 0; font-size: 2.5rem; }
+        p { font-family: 'Lato', sans-serif; margin-bottom: 30px; }
+
+        button {
+            background: linear-gradient(to bottom, #ffeb3b, #fbc02d);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-family: 'Cinzel Decorative', cursive;
+            color: #3e2723;
+            cursor: pointer;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            transition: transform 0.1s;
+        }
+
+        button:active { transform: scale(0.95); }
+        .hidden { display: none !important; }
+
+        /* Mobile Controls Overlay */
+        #mobile-controls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: none; /* Shown via JS detection */
+            justify-content: space-between;
+            padding: 0 40px;
+            box-sizing: border-box;
+            pointer-events: none; 
+        }
+        
+        .touch-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            user-select: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div id="score-display">Height: 0m</div>
+        <div id="high-score">Best: 0m</div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="start-screen">
+        <h1>Infinite Ascent</h1>
+        <p>Climb the endless towers of knowledge.<br>Don't look down.</p>
+        <button onclick="startGame()">Start Climb</button>
+    </div>
+
+    <div id="game-over-screen" class="hidden">
+        <h1>The Fall</h1>
+        <p>You reached <span id="final-score">0</span> meters.</p>
+        <button onclick="resetGame()">Try Again</button>
+    </div>
+
+    <div id="mobile-controls">
+        <div class="touch-btn" id="btn-left">←</div>
+        <div class="touch-btn" id="btn-jump">↑</div>
+        <div class="touch-btn" id="btn-right">→</div>
+    </div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // --- RESPONSIVE SETUP ---
+    let GAME_WIDTH = window.innerWidth;
+    let GAME_HEIGHT = window.innerHeight;
+
+    function resize() {
+        GAME_WIDTH = window.innerWidth;
+        GAME_HEIGHT = window.innerHeight;
+        canvas.width = GAME_WIDTH;
+        canvas.height = GAME_HEIGHT;
+        
+        // Show mobile controls if touch device
+        if('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            document.getElementById('mobile-controls').style.display = 'flex';
+        }
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // --- GAME STATE ---
+    let gameState = 'menu'; // menu, playing, gameover
+    let score = 0;
+    let highScore = localStorage.getItem('baghdad_highscore') || 0;
+    document.getElementById('high-score').innerText = `Best: ${highScore}m`;
+
+    // Physics
+    const GRAVITY = 0.5;
+    const JUMP_FORCE = -13; // Higher jump for infinite feel
+    const MOVE_SPEED = 6;
+    
+    // Camera / Scroll
+    let cameraY = 0;
+    let maxCameraY = 0; // The highest point reached
+
+    // Entities
+    let player = { x: 0, y: 0, w: 40, h: 50, vx: 0, vy: 0 };
+    let platforms = [];
+    let particles = [];
+    
+    // Generation Logic
+    let lastPlatformY = 0;
+
+    // --- ASSETS & RENDERING ---
+    
+    // Procedural Texture: Islamic Pattern
+    function drawPattern(x, y, w, h) {
+        ctx.fillStyle = '#8d6e63'; // Base brick
+        ctx.fillRect(x, y, w, h);
+        
+        // Gold trim top
+        ctx.fillStyle = '#ffecb3';
+        ctx.fillRect(x, y, w, 6);
+
+        // Pattern details (arches underneath)
+        ctx.fillStyle = '#5d4037';
+        const archSize = 20;
+        for(let i=0; i<w; i+=archSize) {
+            if(i + archSize <= w) {
+                ctx.beginPath();
+                ctx.arc(x + i + archSize/2, y + 6, archSize/3, 0, Math.PI, false);
+                ctx.fill();
+            }
+        }
+    }
+
+    function drawPlayer(p) {
+        const x = p.x - cameraX; // No horizontal scroll, full width
+        const y = p.y - cameraY;
+
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath(); ctx.ellipse(x + p.w/2, y + p.h + 5, p.w/3, 5, 0, 0, Math.PI*2); ctx.fill();
+
+        // Tunic (Teal)
+        ctx.fillStyle = '#00897b';
+        ctx.fillRect(x, y + 15, p.w, p.h - 15);
+        
+        // Sash (Gold)
+        ctx.fillStyle = '#ffc107';
+        ctx.fillRect(x, y + 30, p.w, 6);
+
+        // Face
+        ctx.fillStyle = '#d7ccc8';
+        ctx.fillRect(x + 5, y + 5, p.w - 10, 15);
+
+        // Turban (White)
+        ctx.fillStyle = '#f5f5f5';
+        ctx.beginPath();
+        ctx.arc(x + p.w/2, y + 5, p.w/2, Math.PI, 0);
+        ctx.fill();
+        
+        // Gem
+        ctx.fillStyle = '#e91e63';
+        ctx.beginPath(); ctx.arc(x + p.w/2, y + 2, 3, 0, Math.PI*2); ctx.fill();
+    }
+
+    function drawBackground() {
+        // Gradient handled by CSS, we draw stars/clouds
+        const parallaxY = cameraY * 0.2;
+        
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        for(let i=0; i<50; i++) {
+            let starX = (i * 137) % GAME_WIDTH;
+            let starY = ((i * 313) + parallaxY) % GAME_HEIGHT;
+            if(starY < 0) starY += GAME_HEIGHT;
+            ctx.beginPath(); ctx.arc(starX, starY, Math.random()*2, 0, Math.PI*2); ctx.fill();
+        }
+
+        // Moon
+        ctx.fillStyle = '#fff9c4';
+        ctx.shadowBlur = 40;
+        ctx.shadowColor = '#fff9c4';
+        ctx.beginPath(); ctx.arc(GAME_WIDTH - 80, 100, 40, 0, Math.PI*2); ctx.fill();
+        ctx.shadowBlur = 0;
+    }
+
+    // --- GAME LOGIC ---
+
+    function resetGame() {
+        gameState = 'menu';
+        document.getElementById('start-screen').classList.remove('hidden');
+        document.getElementById('game-over-screen').classList.add('hidden');
+    }
+
+    function startGame() {
+        gameState = 'playing';
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-over-screen').classList.add('hidden');
+
+        // Reset entities
+        player = { x: GAME_WIDTH / 2 - 20, y: GAME_HEIGHT - 200, w: 40, h: 50, vx: 0, vy: 0 };
+        platforms = [];
+        cameraY = 0;
+        maxCameraY = 0;
+        score = 0;
+        lastPlatformY = GAME_HEIGHT - 50;
+
+        // Create starting floor
+        platforms.push({ x: 0, y: GAME_HEIGHT - 50, w: GAME_WIDTH, h: 50, type: 'static' });
+        
+        // Pre-generate some platforms
+        for(let i=0; i<10; i++) {
+            generatePlatform();
+        }
+        
+        gameLoop();
+    }
+
+    function generatePlatform() {
+        const gap = 120 + Math.random() * 60; // Random vertical distance
+        const y = lastPlatformY - gap;
+        const w = 100 + Math.random() * 150;
+        const x = Math.random() * (GAME_WIDTH - w);
+        
+        // 10% chance for moving platform
+        let type = 'static';
+        let vx = 0;
+        if (Math.random() < 0.15 && score > 500) {
+            type = 'moving';
+            vx = 2 + Math.random() * 2;
+        }
+
+        platforms.push({ x, y, w, h: 20, type, vx });
+        lastPlatformY = y;
+    }
+
+    let keys = { left: false, right: false, jump: false };
+    let cameraX = 0; // unused for now, full width
+
+    function update() {
+        if (gameState !== 'playing') return;
+
+        // Player Movement
+        if (keys.left) player.vx = -MOVE_SPEED;
+        else if (keys.right) player.vx = MOVE_SPEED;
+        else player.vx *= 0.8; // Friction
+
+        // Jump
+        if (keys.jump && player.grounded) {
+            player.vy = JUMP_FORCE;
+            player.grounded = false;
+        }
+
+        // Apply Physics
+        player.vy += GRAVITY;
+        player.x += player.vx;
+        player.y += player.vy;
+
+        // Screen Wrap
+        if (player.x + player.w < 0) player.x = GAME_WIDTH;
+        if (player.x > GAME_WIDTH) player.x = -player.w;
+
+        // Platform Collisions (Only when falling)
+        player.grounded = false;
+        if (player.vy > 0) {
+            platforms.forEach(p => {
+                // Moving platforms logic
+                if (p.type === 'moving') {
+                    p.x += p.vx;
+                    if (p.x < 0 || p.x + p.w > GAME_WIDTH) p.vx *= -1;
+                }
+
+                // Collision Check
+                if (player.y + player.h > p.y && 
+                    player.y + player.h < p.y + p.h + player.vy + 2 && // Tolerate high speeds
+                    player.x + player.w > p.x && 
+                    player.x < p.x + p.w) {
+                    
+                    player.y = p.y - player.h;
+                    player.vy = 0;
+                    player.grounded = true;
+                    
+                    // Add friction from moving platform
+                    if(p.type === 'moving') player.x += p.vx; 
+                }
+            });
+        }
+
+        // Camera Scroll (Vertical Only)
+        // Camera target is player y minus offset (keep player in lower middle)
+        const targetCamY = player.y - GAME_HEIGHT * 0.6;
+        
+        // Only scroll UP (player goes higher, y gets smaller)
+        // If targetCamY is less (higher up) than current cameraY, move cameraY
+        if (targetCamY < cameraY) {
+            cameraY = targetCamY;
+        }
+
+        // Calculate Score (Inverted Y, start is 0)
+        const currentHeight = Math.floor(Math.abs(player.y - (GAME_HEIGHT - 200)) / 10);
+        if (currentHeight > score) score = currentHeight;
+
+        // Generate new platforms
+        if (lastPlatformY > cameraY - 100) { // If top platform is visible/near
+            generatePlatform();
+        }
+
+        // Cleanup old platforms
+        platforms = platforms.filter(p => p.y < cameraY + GAME_HEIGHT + 100);
+
+        // Game Over Condition (Fall off bottom of screen)
+        if (player.y > cameraY + GAME_HEIGHT) {
+            die();
+        }
+    }
+
+    function die() {
+        gameState = 'gameover';
+        document.getElementById('game-over-screen').classList.remove('hidden');
+        document.getElementById('final-score').innerText = score;
+        if(score > highScore) {
+            highScore = score;
+            localStorage.setItem('baghdad_highscore', highScore);
+            document.getElementById('high-score').innerText = `Best: ${highScore}m`;
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        drawBackground();
+
+        ctx.save();
+        ctx.translate(0, -cameraY);
+
+        // Draw Platforms
+        platforms.forEach(p => {
+            drawPattern(p.x, p.y, p.w, p.h);
+        });
+
+        drawPlayer(player);
+
+        ctx.restore();
+
+        // Update UI Text
+        document.getElementById('score-display').innerText = `Height: ${score}m`;
+    }
+
+    function gameLoop() {
+        if (gameState === 'playing') {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+    }
+
+    // --- CONTROLS ---
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+        if (e.code === 'ArrowLeft') keys.left = true;
+        if (e.code === 'ArrowRight') keys.right = true;
+        if (e.code === 'ArrowUp' || e.code === 'Space') keys.jump = true;
+    });
+    document.addEventListener('keyup', e => {
+        if (e.code === 'ArrowLeft') keys.left = false;
+        if (e.code === 'ArrowRight') keys.right = false;
+        if (e.code === 'ArrowUp' || e.code === 'Space') keys.jump = false;
+    });
+
+    // Touch (Mobile)
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+    const btnJump = document.getElementById('btn-jump');
+
+    const handleTouchStart = (k) => (e) => { e.preventDefault(); keys[k] = true; };
+    const handleTouchEnd = (k) => (e) => { e.preventDefault(); keys[k] = false; };
+
+    btnLeft.addEventListener('touchstart', handleTouchStart('left'));
+    btnLeft.addEventListener('touchend', handleTouchEnd('left'));
+    
+    btnRight.addEventListener('touchstart', handleTouchStart('right'));
+    btnRight.addEventListener('touchend', handleTouchEnd('right'));
+    
+    btnJump.addEventListener('touchstart', handleTouchStart('jump'));
+    btnJump.addEventListener('touchend', handleTouchEnd('jump'));
+
+</script>
+</body>
+</html>
