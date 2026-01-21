@@ -66,11 +66,16 @@ export async function requireSuperAdmin() {
     throw new Error('Authentication required: No user session found');
   }
 
-  const { data: requester } = await supabase
+  const { data: requester, error } = await supabase
     .from('profiles')
     .select('role, banned')
     .eq('id', user.id)
     .single();
+
+  if (error) {
+    // Explicitly handle query failures instead of relying on undefined data
+    throw new Error('Database error while fetching requester profile');
+  }
 
   if (!requester || requester.banned) {
     throw new Error('Unauthorized: User invalid or banned');
