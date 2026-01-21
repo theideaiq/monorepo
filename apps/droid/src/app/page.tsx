@@ -182,7 +182,10 @@ function ChatSimulation() {
 
 function GamePreview() {
   return (
-    <div className={`h-full flex flex-col items-center justify-center bg-[url('${GAME_PREVIEW_BG}')] bg-cover bg-center relative group`}>
+    <div
+      className="h-full flex flex-col items-center justify-center bg-cover bg-center relative group"
+      style={{ backgroundImage: `url(${GAME_PREVIEW_BG})` }}
+    >
       <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center">
         <Gamepad2 className="w-16 h-16 text-[#facc15] mb-4 animate-bounce" />
         <h3 className="text-2xl font-bold mb-2">Spark Catcher ⚡</h3>
