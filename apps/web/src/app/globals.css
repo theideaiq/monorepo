@@ -7,10 +7,10 @@
   --font-arabic: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
 
   /* 2. Define Brand Colors (Critical for Tailwind v4) */
-  --color-brand-dark: #0F172A;  /* Slate 900 */
-  --color-brand-deep: #0f1014;  /* Deep dark for cinema/plus mode */
-  --color-brand-pink: #E91E63;  /* Pink 500 */
-  --color-brand-yellow: #FFD600; /* Yellow 400 */
+  --color-brand-dark: #0f172a; /* Slate 900 */
+  --color-brand-deep: #0f1014; /* Deep dark for cinema/plus mode */
+  --color-brand-pink: #e91e63; /* Pink 500 */
+  --color-brand-yellow: #ffd600; /* Yellow 400 */
 }
 
 /* 3. Global Styles */
@@ -18,7 +18,7 @@ body {
   font-family: var(--font-sans);
   /* Now 'text-brand-dark' exists and this will work */
   @apply bg-slate-50 text-brand-dark;
-  
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

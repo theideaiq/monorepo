@@ -32,17 +32,19 @@ const nextConfig: NextConfig = {
         supabaseDomain = url.hostname;
       } catch (e) {
         // biome-ignore lint/suspicious/noConsole: Critical build-time warning
-        console.warn('⚠️ Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP. API calls might be blocked.');
+        console.warn(
+          '⚠️ Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP. API calls might be blocked.',
+        );
       }
     }
 
     // specific directives
-    const connectSrc = supabaseDomain 
-      ? `connect-src 'self' ${supabaseDomain}` 
+    const connectSrc = supabaseDomain
+      ? `connect-src 'self' ${supabaseDomain}`
       : "connect-src 'self'";
-      
-    const imgSrc = supabaseDomain 
-      ? `img-src 'self' data: blob: images.unsplash.com i.ytimg.com ${supabaseDomain}` 
+
+    const imgSrc = supabaseDomain
+      ? `img-src 'self' data: blob: images.unsplash.com i.ytimg.com ${supabaseDomain}`
       : "img-src 'self' data: blob: images.unsplash.com i.ytimg.com";
 
     const csp = [

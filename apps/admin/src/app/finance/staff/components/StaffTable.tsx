@@ -70,10 +70,7 @@ export function StaffTable({ data }: { data: HRStaffPlan[] }) {
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows.map((row) => (
-            <TableRow
-              key={row.id}
-              className="hover:bg-slate-50"
-            >
+            <TableRow key={row.id} className="hover:bg-slate-50">
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

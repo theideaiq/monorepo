@@ -5,10 +5,10 @@
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
   /* Brand Colors */
-  --color-brand-dark: #0F172A;
-  --color-brand-deep: #020617;
-  --color-brand-pink: #E91E63;
-  --color-brand-yellow: #FFD600;
+  --color-brand-dark: #0f172a;
+  --color-brand-deep: #0f1014;
+  --color-brand-pink: #e91e63;
+  --color-brand-yellow: #ffd600;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));

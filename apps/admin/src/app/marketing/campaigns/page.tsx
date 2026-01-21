@@ -1,12 +1,12 @@
 import {
   Badge,
+  buttonVariants,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-  buttonVariants,
 } from '@repo/ui';
 import { format } from 'date-fns';
 import Link from 'next/link';
@@ -28,10 +28,7 @@ export default async function CampaignsPage() {
           <h1 className="text-3xl font-bold text-slate-900">Email Campaigns</h1>
           <p className="text-slate-500">Blast updates to your user segments.</p>
         </div>
-        <Link
-          href="/marketing/campaigns/create"
-          className={buttonVariants()}
-        >
+        <Link href="/marketing/campaigns/create" className={buttonVariants()}>
           Create Campaign
         </Link>
       </div>
@@ -53,9 +50,7 @@ export default async function CampaignsPage() {
                 <TableCell className="font-medium text-slate-900">
                   {campaign.subject}
                 </TableCell>
-                <TableCell>
-                  {campaign.segment?.name || 'Unknown'}
-                </TableCell>
+                <TableCell>{campaign.segment?.name || 'Unknown'}</TableCell>
                 <TableCell>
                   <Badge
                     variant={

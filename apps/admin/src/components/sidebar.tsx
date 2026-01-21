@@ -45,10 +45,7 @@ export function Sidebar({ className, onLinkClick, ...props }: SidebarProps) {
   };
 
   return (
-    <div
-      className={cn('flex h-full flex-col', className)}
-      {...props}
-    >
+    <div className={cn('flex h-full flex-col', className)} {...props}>
       <div className="flex-1 overflow-auto py-2">
         <nav className="grid gap-1 px-2">
           {adminNavigation.map((item) => {
@@ -79,7 +76,7 @@ export function Sidebar({ className, onLinkClick, ...props }: SidebarProps) {
           })}
         </nav>
       </div>
-      <div className="mt-auto p-4 border-t border-slate-800">
+      <div className="mt-auto p-4 border-t border-white/10">
         <Button
           variant="ghost"
           onClick={handleSignOut}

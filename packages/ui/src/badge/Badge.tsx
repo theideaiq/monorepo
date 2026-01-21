@@ -1,5 +1,5 @@
 import { cn } from '@repo/utils';
-import { type VariantProps, cva } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 import type React from 'react';
 
 const badgeVariants = cva(
@@ -11,7 +11,7 @@ const badgeVariants = cva(
         warning: 'bg-yellow-100 text-yellow-800 border-yellow-200',
         danger: 'bg-red-100 text-red-800 border-red-200',
         neutral: 'bg-slate-100 text-slate-600 border-slate-200',
-        brand: 'bg-brand-pink text-brand-pink border-brand-pink',
+        brand: 'bg-brand-pink/10 text-brand-pink border-brand-pink/20',
       },
     },
     defaultVariants: {

@@ -1,4 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, buttonVariants } from '@repo/ui';
+import {
+  buttonVariants,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@repo/ui';
 import {
   Building2,
   Gamepad2,
@@ -44,9 +51,9 @@ export default async function Home({ params }: Props) {
     {
       title: t('services.academy_title'),
       desc: t('services.academy_desc'),
-      icon: <GraduationCap className="w-8 h-8 text-blue-500" />,
+      icon: <GraduationCap className="w-8 h-8 text-brand-pink" />,
       href: '/academy',
-      color: 'border-blue-500',
+      color: 'border-brand-pink',
     },
     {
       title: t('services.suite_title'),
@@ -58,7 +65,7 @@ export default async function Home({ params }: Props) {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-20">
+    <div className="min-h-screen pt-20">
       {/* 1. HERO SECTION */}
       <Hero />
 
@@ -133,7 +140,7 @@ export default async function Home({ params }: Props) {
             </div>
           </div>
 
-          <div className="md:w-1/2 relative h-[300px] md:h-[400px] w-full bg-slate-800 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+          <div className="md:w-1/2 relative h-[300px] md:h-[400px] w-full bg-brand-dark rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
             {/* Placeholder for a cool lifestyle image */}
             <div className="absolute inset-0 bg-gradient-to-tr from-brand-pink/20 to-brand-yellow/20" />
             <div className="absolute inset-0 flex items-center justify-center">

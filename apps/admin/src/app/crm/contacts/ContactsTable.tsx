@@ -70,7 +70,11 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
       {
         accessorKey: 'full_name',
         header: 'Name',
-        cell: ({ row }) => <span className="font-medium text-slate-900">{row.original.full_name || 'N/A'}</span>,
+        cell: ({ row }) => (
+          <span className="font-medium text-slate-900">
+            {row.original.full_name || 'N/A'}
+          </span>
+        ),
       },
       {
         accessorKey: 'email',
@@ -263,10 +267,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                className="hover:bg-slate-50"
-              >
+              <TableRow key={row.id} className="hover:bg-slate-50">
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

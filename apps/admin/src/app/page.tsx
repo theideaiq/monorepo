@@ -45,7 +45,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard Overview</h1>
+      <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+        Dashboard Overview
+      </h1>
       <div className="grid gap-4 md:grid-cols-3">
         {stats.map((stat) => (
           <MetricCard

@@ -1,15 +1,16 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { checkRateLimit } from './rate-limit';
 
 // Hoist mocks to ensure they are available before imports/mocks
-const { mockSelect, mockEq, mockSingle, mockUpsert, mockUpdate, mockFrom } = vi.hoisted(() => ({
-  mockSelect: vi.fn(),
-  mockEq: vi.fn(),
-  mockSingle: vi.fn(),
-  mockUpsert: vi.fn(),
-  mockUpdate: vi.fn(),
-  mockFrom: vi.fn(),
-}));
+const { mockSelect, mockEq, mockSingle, mockUpsert, mockUpdate, mockFrom } =
+  vi.hoisted(() => ({
+    mockSelect: vi.fn(),
+    mockEq: vi.fn(),
+    mockSingle: vi.fn(),
+    mockUpsert: vi.fn(),
+    mockUpdate: vi.fn(),
+    mockFrom: vi.fn(),
+  }));
 
 // Mock dependencies
 vi.mock('@/lib/supabase/server', () => ({
@@ -57,10 +58,12 @@ describe('Rate Limit Utility', () => {
     // Assert
     expect(result).toBe(true);
     expect(mockFrom).toHaveBeenCalledWith('rate_limits');
-    expect(mockUpsert).toHaveBeenCalledWith(expect.objectContaining({
-      key,
-      count: 1,
-    }));
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        key,
+        count: 1,
+      }),
+    );
   });
 
   it('should allow request and increment count if within limit', async () => {
@@ -81,9 +84,11 @@ describe('Rate Limit Utility', () => {
 
     // Assert
     expect(result).toBe(true);
-    expect(mockUpdate).toHaveBeenCalledWith(expect.objectContaining({
-      count: 2,
-    }));
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        count: 2,
+      }),
+    );
   });
 
   it('should block request if limit exceeded within window', async () => {
@@ -126,8 +131,10 @@ describe('Rate Limit Utility', () => {
 
     // Assert
     expect(result).toBe(true);
-    expect(mockUpdate).toHaveBeenCalledWith(expect.objectContaining({
-      count: 1, // Reset to 1
-    }));
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        count: 1, // Reset to 1
+      }),
+    );
   });
 });

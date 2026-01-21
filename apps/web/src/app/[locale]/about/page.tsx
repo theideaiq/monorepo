@@ -13,10 +13,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: {
       absolute: 'About The IDEA - Building the Digital Future of Baghdad',
     },
-    description: 'The IDEA IQ is an ecosystem designed to bridge the gap between commerce, education, and entertainment for the modern Iraqi citizen.',
+    description:
+      'The IDEA IQ is an ecosystem designed to bridge the gap between commerce, education, and entertainment for the modern Iraqi citizen.',
     openGraph: {
       title: 'About The IDEA - Building the Digital Future of Baghdad',
-      description: 'The IDEA IQ is an ecosystem designed to bridge the gap between commerce, education, and entertainment for the modern Iraqi citizen.',
+      description:
+        'The IDEA IQ is an ecosystem designed to bridge the gap between commerce, education, and entertainment for the modern Iraqi citizen.',
       images: [
         {
           url: '/about-og.jpg', // Placeholder, but good practice

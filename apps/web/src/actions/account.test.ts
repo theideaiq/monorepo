@@ -1,6 +1,6 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { updateProfile } from './account';
 import { revalidatePath } from 'next/cache';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { updateProfile } from './account';
 
 const mocks = vi.hoisted(() => {
   return {
@@ -73,7 +73,9 @@ describe('updateProfile', () => {
     // No fullName appended
 
     // Act & Assert
-    await expect(updateProfile(formData)).rejects.toThrow('Full name is required');
+    await expect(updateProfile(formData)).rejects.toThrow(
+      'Full name is required',
+    );
     expect(mocks.from).not.toHaveBeenCalled();
   });
 
@@ -86,7 +88,9 @@ describe('updateProfile', () => {
     mocks.eq.mockResolvedValue({ error: { message: 'DB Error' } });
 
     // Act & Assert
-    await expect(updateProfile(formData)).rejects.toThrow('Failed to update profile');
+    await expect(updateProfile(formData)).rejects.toThrow(
+      'Failed to update profile',
+    );
     expect(revalidatePath).not.toHaveBeenCalled();
   });
 });

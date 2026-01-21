@@ -1,6 +1,6 @@
+import type { Database } from '@repo/database/types';
 import { webEnv } from '@repo/env/web';
 import { createBrowserClient } from '@supabase/ssr';
-import type { Database } from '@repo/database/types';
 
 export function createClient() {
   return createBrowserClient<Database>(

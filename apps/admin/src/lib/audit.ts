@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server';
 import { Logger } from '@repo/utils';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * Logs an administrative action to the audit table.

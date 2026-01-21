@@ -33,7 +33,11 @@ export default function Hero() {
               })}
             >
               {t('cta_primary')}
-              <ArrowRight className="ml-2 rtl:rotate-180" size={20} aria-hidden="true" />
+              <ArrowRight
+                className="ml-2 rtl:rotate-180"
+                size={20}
+                aria-hidden="true"
+              />
             </Link>
             <Link
               href="/about"

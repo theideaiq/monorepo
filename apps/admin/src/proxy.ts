@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { createMiddlewareClient } from '@/lib/supabase/middleware';
-import { WINDOW_SIZE_MS } from '@/lib/rate-limit';
 import { hasAdminAccess } from '@/lib/auth-checks';
+import { WINDOW_SIZE_MS } from '@/lib/rate-limit';
+import { createMiddlewareClient } from '@/lib/supabase/middleware';
 
 /**
  * Global middleware for authentication and rate limiting.

@@ -1,6 +1,5 @@
 'use client';
 
-import { createClient } from '@/lib/supabase/client';
 import { Button, Card, Input } from '@repo/ui';
 import { ArrowRight, UserPlus } from 'lucide-react';
 import Link from 'next/link';
@@ -8,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { createClient } from '@/lib/supabase/client';
 
 const supabase = createClient();
 

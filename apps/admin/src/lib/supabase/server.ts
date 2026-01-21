@@ -1,7 +1,7 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import type { Database } from '@repo/database/types';
 import { adminEnv } from '@repo/env/admin';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 
 export async function createClient() {
   const cookieStore = await cookies();
@@ -24,6 +24,6 @@ export async function createClient() {
           }
         },
       },
-    }
+    },
   );
 }

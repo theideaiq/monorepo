@@ -1,10 +1,10 @@
 'use client';
 
-import { Link, usePathname } from '@/i18n/navigation';
 import { buttonVariants } from '@repo/ui';
 import { cn } from '@repo/utils';
 import { Globe, ShoppingCart, User } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/navigation';
 
 export function DesktopActions({ locale }: { locale: string }) {
   const t = useTranslations('Nav');
@@ -108,7 +108,8 @@ export function MobileActions({ locale }: { locale: string }) {
         <Link
           href="/register"
           className={buttonVariants({
-            className: 'w-full h-12 text-lg rounded-xl shadow-lg shadow-brand-dark/10',
+            className:
+              'w-full h-12 text-lg rounded-xl shadow-lg shadow-brand-dark/10',
           })}
         >
           {t('join')}

@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
   describe('slugify', () => {

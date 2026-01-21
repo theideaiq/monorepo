@@ -53,9 +53,12 @@ export default async function AccountPage({ params }: Props) {
               {profile?.rental_tier || 'Basic'}
             </strong>
           </p>
-          <a href="#" className="text-blue-600 hover:underline block text-sm">
+          <button
+            type="button"
+            className="text-blue-600 hover:underline block text-sm"
+          >
             {t('manageSubscription')}
-          </a>
+          </button>
         </div>
       </section>
 

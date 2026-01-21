@@ -54,6 +54,7 @@ export default function DroidLanding() {
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
           <button
+            type="button"
             onClick={() =>
               document
                 .getElementById('demo')
@@ -89,18 +90,21 @@ export default function DroidLanding() {
                 Capabilities
               </div>
               <button
+                type="button"
                 onClick={() => setActiveTab('chat')}
                 className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'chat' ? 'bg-[#facc15]/10 text-[#facc15]' : 'text-gray-400 hover:bg-white/5'}`}
               >
                 <Bot className="w-4 h-4" /> Business Strategy
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('game')}
                 className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'game' ? 'bg-[#facc15]/10 text-[#facc15]' : 'text-gray-400 hover:bg-white/5'}`}
               >
                 <Gamepad2 className="w-4 h-4" /> Spark Catcher
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('finance')}
                 className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'finance' ? 'bg-[#facc15]/10 text-[#facc15]' : 'text-gray-400 hover:bg-white/5'}`}
               >
@@ -233,7 +237,10 @@ function GamePreview() {
           Play the exclusive game directly inside Telegram. Compete for high
           scores and XP.
         </p>
-        <button className="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-sm font-bold transition-all">
+        <button
+          type="button"
+          className="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-sm font-bold transition-all"
+        >
           Preview Game
         </button>
       </div>

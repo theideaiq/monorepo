@@ -1,6 +1,6 @@
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { logAdminAction } from './audit';
 import { Logger } from '@repo/utils';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { logAdminAction } from './audit';
 
 // Hoist mocks to ensure they are available for vi.mock factories
 const mocks = vi.hoisted(() => ({
@@ -32,7 +32,9 @@ describe('logAdminAction', () => {
 
     // Default happy path setup
     mocks.from.mockReturnValue({ insert: mocks.insert });
-    mocks.getUser.mockResolvedValue({ data: { user: { id: 'test-admin-id' } } });
+    mocks.getUser.mockResolvedValue({
+      data: { user: { id: 'test-admin-id' } },
+    });
     mocks.insert.mockResolvedValue({ error: null });
   });
 
@@ -71,7 +73,10 @@ describe('logAdminAction', () => {
     await logAdminAction('action', 'resource');
 
     expect(mocks.insert).toHaveBeenCalled();
-    expect(mocks.loggerError).toHaveBeenCalledWith('Failed to write audit log', error);
+    expect(mocks.loggerError).toHaveBeenCalledWith(
+      'Failed to write audit log',
+      error,
+    );
   });
 
   it('should log error when an unexpected exception occurs', async () => {
@@ -80,6 +85,9 @@ describe('logAdminAction', () => {
 
     await logAdminAction('action', 'resource');
 
-    expect(Logger.error).toHaveBeenCalledWith('Unexpected error in audit logging', exception);
+    expect(Logger.error).toHaveBeenCalledWith(
+      'Unexpected error in audit logging',
+      exception,
+    );
   });
 });

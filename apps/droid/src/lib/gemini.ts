@@ -53,7 +53,6 @@ function escapeIlikePattern(value: string): string {
 }
 
 async function searchProducts(query: string) {
-  // biome-ignore lint/suspicious/noConsole: logging is fine
   const MAX_LOG_QUERY_LENGTH = 100;
   const rawQuery = String(query);
   const sanitizedQuery = rawQuery.replace(/[\r\n\t]/g, ' ');
@@ -75,9 +74,7 @@ async function searchProducts(query: string) {
     // biome-ignore lint/suspicious/noConsole: logging is fine
     console.error('Supabase search error:', error);
     const maybeErrorObject =
-      typeof error === 'object'
-        ? (error as Record<string, unknown>)
-        : null;
+      typeof error === 'object' ? (error as Record<string, unknown>) : null;
     const errorCode =
       maybeErrorObject && typeof maybeErrorObject.code === 'string'
         ? maybeErrorObject.code
@@ -116,6 +113,15 @@ export async function generateResponse(
       history: history,
       config: {
         tools: tools,
+        systemInstruction:
+          'You are Droid, the official AI assistant for The IDEA (Innovation for Every Aspect of Life). ' +
+          'You are helpful, professional, and knowledgeable about our ecosystem: ' +
+          '1. MegaStore (Gaming & Tech Retail) ' +
+          '2. Plus (Gaming Subscription Service) ' +
+          '3. Academy (Tech Education) ' +
+          '4. Suite (Business Solutions). ' +
+          'Always maintain a polite, modern, and concise tone. ' +
+          "If a user asks about product prices, stock, or availability, you MUST use the 'search_products' tool to find real-time data.",
       },
     });
 

@@ -1,24 +1,31 @@
 import type { Metadata } from 'next';
 import { Cairo, Poppins } from 'next/font/google';
 import '../globals.css';
-import { DesktopActions, MobileActions } from '@/components/layout/NavbarActions';
+import { GoogleTagManager } from '@next/third-parties/google';
+import { webNavigation } from '@repo/config/navigation';
+import { webEnv as env } from '@repo/env/web';
+import { SocialIcon } from '@repo/ui';
+import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from 'next-intl/server';
+import {
+  DesktopActions,
+  MobileActions,
+} from '@/components/layout/NavbarActions';
 import SkipLink from '@/components/layout/SkipLink';
+import { WebFooter } from '@/components/layout/WebFooter';
+import { WebNavbar } from '@/components/layout/WebNavbar';
 import QueryProvider from '@/components/providers/QueryProvider';
 import ToastProvider from '@/components/providers/ToastProvider';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import JsonLd from '@/components/seo/JsonLd';
 import { Link, routing } from '@/i18n/navigation';
-import { GoogleTagManager } from '@next/third-parties/google';
-import { webNavigation } from '@repo/config/navigation';
-import { webEnv as env } from '@repo/env/web';
-import { SocialIcon } from '@repo/ui';
-import { WebFooter } from '@/components/layout/WebFooter';
-import { WebNavbar } from '@/components/layout/WebNavbar';
-import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
-import Image from 'next/image';
-import { notFound } from 'next/navigation';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -182,7 +189,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body
         className={`
         ${poppins.variable} ${cairo.variable} 
-        font-sans antialiased bg-slate-50
+        font-sans antialiased
       `}
       >
         <JsonLd baseUrl={baseUrl} />

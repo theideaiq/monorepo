@@ -68,7 +68,7 @@ export default function PlusBrowsePage() {
     if (error) {
       Logger.error('Rental creation failed:', error);
       toast.error(
-        'We were unable to complete your rental request. Please check your details and try again, or try again in a few minutes.'
+        'We were unable to complete your rental request. Please check your details and try again, or try again in a few minutes.',
       );
     } else {
       toast.success(`🎉 ${item.title} has been requested!`);
@@ -211,7 +211,10 @@ function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
               </h4>
               <div className="flex justify-between items-center mt-2">
                 <span className="text-xs text-brand-yellow font-bold">
-                  {item.daily_rate.toLocaleString('en-US', { maximumFractionDigits: 0 })} IQD/day
+                  {item.daily_rate.toLocaleString('en-US', {
+                    maximumFractionDigits: 0,
+                  })}{' '}
+                  IQD/day
                 </span>
                 <Badge
                   variant="neutral"

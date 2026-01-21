@@ -1,8 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const ANDROID_DEST = path.join(__dirname, '../android/app/google-services.json');
-const IOS_DEST = path.join(__dirname, '../ios/App/App/GoogleService-Info.plist');
+const ANDROID_DEST = path.join(
+  __dirname,
+  '../android/app/google-services.json',
+);
+const IOS_DEST = path.join(
+  __dirname,
+  '../ios/App/App/GoogleService-Info.plist',
+);
 
 function restoreSecret(envVar, destPath, platformName) {
   const secretBase64 = process.env[envVar];
@@ -19,9 +25,12 @@ function restoreSecret(envVar, destPath, platformName) {
       if (error && typeof error.message === 'string') {
         errorMessage = error.message;
       } else {
-        const errorType = error && error.constructor && typeof error.constructor.name === 'string'
-          ? error.constructor.name
-          : 'UnknownErrorType';
+        const errorType =
+          error &&
+          error.constructor &&
+          typeof error.constructor.name === 'string'
+            ? error.constructor.name
+            : 'UnknownErrorType';
         let errorDetails;
         try {
           errorDetails = JSON.stringify(error);
@@ -30,11 +39,15 @@ function restoreSecret(envVar, destPath, platformName) {
         }
         errorMessage = `${errorType}: ${errorDetails || 'Unknown error'}`;
       }
-      console.error(`❌ Failed to restore ${platformName} secrets: ${errorMessage}`);
+      console.error(
+        `❌ Failed to restore ${platformName} secrets: ${errorMessage}`,
+      );
       process.exit(1);
     }
   } else {
-    console.log(`⚠️ No ${platformName} secret found (${envVar} is not set), skipping.`);
+    console.log(
+      `⚠️ No ${platformName} secret found (${envVar} is not set), skipping.`,
+    );
   }
 }
 
