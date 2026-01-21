@@ -1,11 +1,15 @@
 import { type Content, GoogleGenAI, type Tool } from '@google/genai';
 import { droidEnv as env } from '@repo/env/droid';
+import { WaylClient } from '@repo/wayl';
 import { supabase } from './supabase';
 
 const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+const wayl = new WaylClient({ apiKey: env.WAYL_SECRET_KEY });
+
 const MAX_PRODUCT_SEARCH_RESULTS = 5;
 
-// Define Tool Schema for Function Calling
+// --- Tool Definitions ---
+
 interface SearchProductsFunctionDeclaration {
   name: string;
   description: string;
@@ -38,11 +42,52 @@ const searchProductsTool: SearchProductsFunctionDeclaration = {
   },
 };
 
+interface CreatePaymentLinkFunctionDeclaration {
+  name: string;
+  description: string;
+  parametersJsonSchema: {
+    type: 'object';
+    properties: {
+      amount: {
+        type: 'number';
+        description: string;
+      };
+      itemDescription: {
+        type: 'string';
+        description: string;
+      };
+    };
+    required: ['amount', 'itemDescription'];
+  };
+}
+
+const createPaymentLinkTool: CreatePaymentLinkFunctionDeclaration = {
+  name: 'create_payment_link',
+  description:
+    'Create a payment link for the user to purchase a product or subscription. Use this when the user explicitly confirms they want to buy something.',
+  parametersJsonSchema: {
+    type: 'object',
+    properties: {
+      amount: {
+        type: 'number',
+        description: 'The price of the item in IQD (e.g. 50000)',
+      },
+      itemDescription: {
+        type: 'string',
+        description: 'Short description of the item being purchased',
+      },
+    },
+    required: ['amount', 'itemDescription'],
+  },
+};
+
 const tools: Tool[] = [
   {
-    functionDeclarations: [searchProductsTool],
+    functionDeclarations: [searchProductsTool, createPaymentLinkTool],
   },
 ];
+
+// --- Helpers ---
 
 function isValidSearchQuery(query: unknown): query is string {
   return typeof query === 'string' && query.trim().length > 0;
@@ -52,6 +97,8 @@ function escapeIlikePattern(value: string): string {
   // Escape backslash first to avoid double-escaping
   return value.replace(/([\\%_])/g, '\\$1');
 }
+
+// --- Tool Implementations ---
 
 /**
  * Searches Supabase products table using a case-insensitive ILIKE query.
@@ -64,6 +111,7 @@ async function searchProducts(query: string) {
     sanitizedQuery.length > MAX_LOG_QUERY_LENGTH
       ? sanitizedQuery.slice(0, MAX_LOG_QUERY_LENGTH) + '…'
       : sanitizedQuery;
+  // biome-ignore lint/suspicious/noConsole: logging is fine for search tracking
   console.log(
     `Searching products for query (truncated if long): "${safeQueryForLog}"`,
   );
@@ -77,26 +125,9 @@ async function searchProducts(query: string) {
   if (error) {
     // biome-ignore lint/suspicious/noConsole: logging is fine
     console.error('Supabase search error:', error);
-    const maybeErrorObject =
-      typeof error === 'object' ? (error as Record<string, unknown>) : null;
-    const errorCode =
-      maybeErrorObject && typeof maybeErrorObject.code === 'string'
-        ? maybeErrorObject.code
-        : null;
-    const errorMessage =
-      maybeErrorObject && typeof maybeErrorObject.message === 'string'
-        ? maybeErrorObject.message
-        : String(error);
-
     return {
       error:
-        "We couldn't complete your product search. Please try again shortly or refine your search query.",
-      code: 'SUPABASE_SEARCH_ERROR',
-      details: {
-        // Limit details to non-sensitive, high-level information
-        code: errorCode,
-        message: errorMessage,
-      },
+        "We couldn't complete your product search. Please try again shortly.",
     };
   }
 
@@ -108,8 +139,39 @@ async function searchProducts(query: string) {
 }
 
 /**
+ * Creates a payment link via Wayl.
+ */
+async function createPaymentLink(amount: number, itemDescription: string) {
+  try {
+    const response = await wayl.links.create({
+      referenceId: `droid-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      total: amount,
+      currency: 'IQD',
+      customParameter: itemDescription,
+      redirectionUrl: `${env.WEB_APP_URL}/thanks`,
+      webhookUrl: `${env.WEB_APP_URL}/api/webhooks/wayl`,
+      webhookSecret: env.WAYL_WEBHOOK_SECRET,
+    });
+
+    return {
+      success: true,
+      url: response.data.url,
+      message: `Payment link created for ${itemDescription}. Please share this URL with the user.`,
+    };
+  } catch (error) {
+    // biome-ignore lint/suspicious/noConsole: logging is fine
+    console.error('Wayl Create Link Error:', error);
+    return {
+      error: 'Failed to generate payment link. Please try again later.',
+    };
+  }
+}
+
+// --- Main Generator ---
+
+/**
  * Generates a response from Gemini AI.
- * Handles function calling (Tool Use) for product searches.
+ * Handles function calling (Tool Use) for product searches and payments.
  *
  * @param history - Conversation history.
  * @param message - User's current message.
@@ -126,7 +188,6 @@ export async function generateResponse(
       config: {
         tools: tools,
         // System instruction defines the Persona and Business Knowledge.
-        // Critical for maintaining the correct tone and capabilities.
         systemInstruction:
           'You are Droid, the official AI assistant for The IDEA (Innovation for Every Aspect of Life). ' +
           'You are helpful, professional, and knowledgeable about our ecosystem: ' +
@@ -135,7 +196,8 @@ export async function generateResponse(
           '3. Academy (Tech Education) ' +
           '4. Suite (Business Solutions). ' +
           'Always maintain a polite, modern, and concise tone. ' +
-          "If a user asks about product prices, stock, or availability, you MUST use the 'search_products' tool to find real-time data.",
+          "If a user asks about product prices, stock, or availability, you MUST use the 'search_products' tool to find real-time data. " +
+          "If a user explicitly says they want to buy something or asks for a payment link, verify the item and price first (using search if needed), then use the 'create_payment_link' tool.",
       },
     });
 
@@ -144,25 +206,16 @@ export async function generateResponse(
 
     if (functionCalls && functionCalls.length > 0) {
       const call = functionCalls[0];
+      const rawArgs = call.args as Record<string, unknown>;
+
       if (call.name === 'search_products') {
-        const rawArgs = call.args;
-        const query =
-          rawArgs && typeof rawArgs === 'object'
-            ? (rawArgs as Record<string, unknown>).query
-            : undefined;
+        const query = rawArgs.query;
 
         if (!isValidSearchQuery(query)) {
-          // biome-ignore lint/suspicious/noConsole: logging is fine
-          console.error(
-            'Invalid arguments for search_products tool call:',
-            rawArgs,
-          );
-          return "I couldn't understand the product you want to search for. Please try again with a clear product name or short description, for example: 'wireless headphones', 'iPhone 15 case', or '4K monitor'.";
+          return "I couldn't understand the product you want to search for.";
         }
 
         const productData = await searchProducts(query);
-
-        // Send the function response back to the model
         const finalResult = await chat.sendMessage({
           message: [
             {
@@ -173,11 +226,29 @@ export async function generateResponse(
             },
           ],
         });
+        return finalResult.text || '';
+      }
 
-        return (
-          finalResult.text ||
-          "I couldn't generate a follow-up answer based on the product search. Please try again."
-        );
+      if (call.name === 'create_payment_link') {
+        const amount = Number(rawArgs.amount);
+        const description = String(rawArgs.itemDescription);
+
+        if (Number.isNaN(amount) || amount <= 0) {
+          return 'I need a valid amount to generate a payment link.';
+        }
+
+        const paymentData = await createPaymentLink(amount, description);
+        const finalResult = await chat.sendMessage({
+          message: [
+            {
+              functionResponse: {
+                name: 'create_payment_link',
+                response: paymentData,
+              },
+            },
+          ],
+        });
+        return finalResult.text || '';
       }
     }
 
@@ -202,31 +273,12 @@ export async function generateResponse(
       const message = (anyErr.message || '').toLowerCase();
       const status = anyErr.status ?? anyErr.statusCode;
 
-      // Likely configuration or authentication issue with the AI service.
-      if (
-        message.includes('api key') ||
-        message.includes('unauthorized') ||
-        message.includes('invalid authentication') ||
-        message.includes('permission') ||
-        status === 401 ||
-        status === 403
-      ) {
+      if (message.includes('api key') || status === 401 || status === 403) {
         userMessage =
           'The AI service is currently misconfigured or unavailable. Please try again later.';
-      }
-      // Transient network / rate limit / server errors from the provider.
-      else if (
-        status === 429 ||
-        (typeof status === 'number' && status >= 500 && status <= 599) ||
-        message.includes('network error') ||
-        message.includes('timeout') ||
-        message.includes('timed out') ||
-        message.includes('etimedout') ||
-        message.includes('econnrefused') ||
-        message.includes('enotfound')
-      ) {
+      } else if (status === 429) {
         userMessage =
-          'The AI service is temporarily unavailable due to a connection issue. Please wait a moment and try again.';
+          'I am receiving too many requests right now. Please try again in a minute.';
       }
     }
 

@@ -20,6 +20,12 @@ export const droidEnv = createEnv({
     UPSTASH_REDIS_REST_URL: z.string().url(),
     /** Upstash Redis Auth Token */
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+    /** Wayl Payment Gateway API Key (X-WAYL-AUTHENTICATION) */
+    WAYL_SECRET_KEY: z.string().min(1),
+    /** Wayl Webhook Secret */
+    WAYL_WEBHOOK_SECRET: z.string().min(1),
+    /** Public URL of the Web App (for redirects) */
+    WEB_APP_URL: z.string().url(),
   },
   client: {
     /** Supabase Project URL */

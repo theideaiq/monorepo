@@ -1,7 +1,13 @@
 'use client';
 
 import { cn } from '@repo/utils';
-import { BookOpen, LayoutDashboard, PieChart, Users } from 'lucide-react';
+import {
+  BookOpen,
+  CreditCard,
+  LayoutDashboard,
+  PieChart,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -10,6 +16,7 @@ export function FinanceNav() {
 
   const items = [
     { name: 'Dashboard', href: '/finance/dashboard', icon: LayoutDashboard },
+    { name: 'Transactions', href: '/finance/transactions', icon: CreditCard },
     { name: 'Ledger', href: '/finance/ledger', icon: BookOpen },
     { name: 'Staff Plan', href: '/finance/staff', icon: Users },
     { name: 'Equity', href: '/finance/equity', icon: PieChart },

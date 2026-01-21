@@ -9,6 +9,10 @@ export const webEnv = createEnv({
   server: {
     /** Node environment */
     NODE_ENV: z.enum(['development', 'test', 'production']),
+    /** Wayl Payment Gateway API Key (X-WAYL-AUTHENTICATION) */
+    WAYL_SECRET_KEY: z.string().min(1),
+    /** Wayl Webhook Secret for signature verification */
+    WAYL_WEBHOOK_SECRET: z.string().min(1),
   },
   client: {
     /** Supabase Project URL */

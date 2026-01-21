@@ -13,6 +13,10 @@ export const adminEnv = createEnv({
     RESEND_API_KEY: z.string().min(1),
     /** Supabase Service Role Key (Admin privileges) - NEVER expose to client */
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+    /** Wayl Payment Gateway API Key (X-WAYL-AUTHENTICATION) */
+    WAYL_SECRET_KEY: z.string().min(1),
+    /** Wayl Webhook Secret for signature verification */
+    WAYL_WEBHOOK_SECRET: z.string().min(1),
   },
   client: {
     /** Supabase Project URL */

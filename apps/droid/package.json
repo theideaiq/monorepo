@@ -14,6 +14,7 @@
     "@google/genai": "^1.38.0",
     "@repo/database": "workspace:*",
     "@repo/env": "workspace:*",
+    "@repo/wayl": "workspace:^",
     "@supabase/supabase-js": "^2.91.0",
     "@upstash/redis": "^1.28.4",
     "grammy": "^1.39.3",
