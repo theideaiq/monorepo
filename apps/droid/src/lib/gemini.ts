@@ -83,7 +83,8 @@ async function searchProducts(query: string) {
         : String(error);
 
     return {
-      error: 'Error searching for products.',
+      error:
+        "We couldn't complete your product search. Please try again shortly or refine your search query.",
       code: 'SUPABASE_SEARCH_ERROR',
       details: {
         // Limit details to non-sensitive, high-level information
