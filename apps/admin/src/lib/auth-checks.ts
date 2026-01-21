@@ -73,7 +73,7 @@ export async function requireSuperAdmin() {
     throw new Error('Unauthorized: User invalid or banned');
   }
 
-  if (requester.role !== ROLES.SUPERADMIN) {
+  if (!requester.role || requester.role.toLowerCase() !== ROLES.SUPERADMIN.toLowerCase()) {
     throw new Error('Unauthorized: Insufficient permissions');
   }
 
