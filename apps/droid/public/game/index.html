@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spark Catcher - The IDEA</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -32,7 +32,7 @@
     <script>
         const canvas = document.getElementById('game');
         const ctx = canvas.getContext('2d');
-        let w, h;
+        let canvasWidth, canvasHeight;
 
         // Game State
         let running = false;
@@ -44,9 +44,9 @@
         let particles = [];
 
         function resize() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-            playerX = w / 2;
+            canvasWidth = canvas.width = window.innerWidth;
+            canvasHeight = canvas.height = window.innerHeight;
+            playerX = canvasWidth / 2;
         }
         window.addEventListener('resize', resize);
         resize();
@@ -116,7 +116,8 @@
             if (Math.random() < 0.05) items.push(new Item());
 
             // Logic
-            items.forEach((item, i) => {
+            for (let i = items.length - 1; i >= 0; i--) {
+                const item = items[i];
                 item.update();
                 item.draw();
 
@@ -141,7 +142,7 @@
                     items.splice(i, 1);
                     if (item.type === 'bulb') energy -= 5; // Missed opportunity
                 }
-            });
+            }
 
             // UI Update
             document.getElementById('score').innerText = score;
@@ -158,7 +159,7 @@
         }
 
         // Auto Start
-        if(window.Telegram.WebApp) {
+        if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
         }
