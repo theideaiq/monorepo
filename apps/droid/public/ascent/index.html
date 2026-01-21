@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ascent to the Round City: A Baghdad Adventure</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Lato&display=swap');
+
+        :root {
+            --bg-sky-top: #2c003e;
+            --bg-sky-mid: #c0392b;
+            --bg-sky-bot: #f39c12;
+            --accent-gold: #ffd700;
+            --accent-teal: #00aaaa;
+            --structure-brick: #a0522d;
+            --structure-dark: #6d3316;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, var(--bg-sky-top), var(--bg-sky-mid), var(--bg-sky-bot));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Lato', sans-serif;
+            color: var(--accent-gold);
+        }
+
+        #game-container {
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            border: 8px solid var(--structure-dark);
+            border-image: repeating-linear-gradient(45deg, var(--structure-dark), var(--accent-gold) 2%, var(--structure-dark) 4%) 10;
+            background-color: #1a0a00;
+        }
+
+        canvas {
+            display: block;
+            background: transparent;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            text-shadow: 2px 2px 4px #000;
+            pointer-events: none;
+        }
+
+        .ui-box {
+            background: rgba(0,0,0,0.6);
+            padding: 10px 20px;
+            border: 2px solid var(--accent-gold);
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            font-family: 'Cinzel Decorative', cursive;
+            margin: 0;
+        }
+
+        #start-screen, #victory-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(44, 0, 62, 0.95);
+            border: 4px solid var(--accent-gold);
+            padding: 40px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 0 50px black;
+        }
+
+        button {
+            background: linear-gradient(to bottom, var(--accent-gold), #c0392b);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-family: 'Cinzel Decorative', cursive;
+            color: #2c003e;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--accent-gold);
+        }
+
+        .hidden { display: none !important; }
+
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="800"></canvas>
+        
+        <div id="ui-layer">
+            <div class="ui-box">
+                <h2 id="level-title">Tier 1: The Souk</h2>
+                <div id="objective">Objective: Collect 5 Scrolls to unlock the ladder.</div>
+            </div>
+            <div class="ui-box">
+                Score: <span id="score">0</span> | Collected: <span id="collected">0</span>/<span id="required">5</span>
+            </div>
+        </div>
+
+        <div id="start-screen">
+            <h1>The Ascent to the Round City</h1>
+            <p>A Baghdad Adventure</p>
+            <p style="font-size: 0.9em; margin: 20px 0;">
+                Journey from the bustling markets to the Caliph's Citadel.<br>
+                Explore each tier, collect knowledge items to unlock the gates,<br>and climb ever higher towards your dream.
+            </p>
+            <p>Controls: Arrow Keys to Move & Jump. Up to Climb.</p>
+            <button onclick="startGame()">Begin Journey</button>
+        </div>
+
+        <div id="victory-screen" class="hidden">
+            <h1>The Citadel Reached!</h1>
+            <p>Your dream has become reality.</p>
+            <p>Final Score: <span id="final-score"></span></p>
+            <button onclick="location.reload()">Play Again</button>
+        </div>
+    </div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const uiLevelTitle = document.getElementById('level-title');
+    const uiObjective = document.getElementById('objective');
+    const uiScore = document.getElementById('score');
+    const uiCollected = document.getElementById('collected');
+    const uiRequired = document.getElementById('required');
+
+    // --- GAME CONSTANTS & STATE ---
+    const GAME_WIDTH = 800;
+    const GAME_HEIGHT = 800;
+    const GRAVITY = 0.6;
+    const PLAYER_SPEED = 5;
+    const JUMP_STRENGTH = -11;
+
+    let gameState = 'start'; // start, playing, victory
+    let score = 0;
+    let currentTier = 1;
+    let itemsCollectedInTier = 0;
+
+    // --- ASSET RENDERING FUNCTIONS (Simulating Baghdad aesthetics directly in canvas) ---
+
+    function drawArch(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(x, y + h);
+        ctx.lineTo(x, y + h * 0.3);
+        // Cubic bezier for a pointed arch look
+        ctx.bezierCurveTo(x, y - h * 0.2, x + w, y - h * 0.2, x + w, y + h * 0.3);
+        ctx.lineTo(x + w, y + h);
+        ctx.fill();
+    }
+
+    function drawPatternedPlatform(x, y, w, h) {
+        // Main structure color
+        ctx.fillStyle = '#a0522d'; 
+        ctx.fillRect(x, y, w, h);
+        // Top trim
+        ctx.fillStyle = '#ffd700';
+        ctx.fillRect(x, y, w, 5);
+        // Geometric pattern details underneath
+        ctx.fillStyle = '#6d3316';
+        for(let i = x + 10; i < x + w; i += 30) {
+             drawArch(i, y+5, 20, h-10, '#6d3316');
+        }
+    }
+
+    function drawLadder(x, y, w, h, isLocked) {
+        ctx.fillStyle = isLocked ? '#555' : '#8B4513'; // Dark iron if locked, wood if open
+        // Side rails
+        ctx.fillRect(x, y, 5, h);
+        ctx.fillRect(x + w - 5, y, 5, h);
+        // Rungs with decorative flair
+        ctx.fillStyle = isLocked ? '#777' : '#A0522D';
+        for (let i = y + 10; i < y + h; i += 30) {
+            ctx.fillRect(x, i, w, 8);
+            // Little decorative knots
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath(); ctx.arc(x+2.5, i+4, 3, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(x+w-2.5, i+4, 3, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = isLocked ? '#777' : '#A0522D';
+        }
+
+        if (isLocked) {
+            // Draw a big lock icon in the middle
+            ctx.fillStyle = '#ffd700';
+            ctx.fillRect(x + w/2 - 15, y + h/2 - 20, 30, 25); // lock body
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 5;
+            ctx.beginPath(); ctx.arc(x+w/2, y+h/2 - 25, 10, Math.PI, 0); ctx.stroke(); // Shackle
+            
+             // Add a glowing effect/hint
+             ctx.shadowColor = '#ff0000';
+             ctx.shadowBlur = 20;
+             ctx.fillStyle = '#ff4444';
+             ctx.font = "bold 14px sans-serif";
+             ctx.fillText("LOCKED", x + w/2 - 28, y + h/2 + 20);
+             ctx.shadowBlur = 0;
+        }
+    }
+
+    function drawCollectible(item) {
+        const x = item.x; const y = item.y; const s = item.size;
+        ctx.save();
+        ctx.translate(x + s/2, y + s/2);
+        // Gentle hovering animation
+        ctx.translate(0, Math.sin(Date.now() / 300) * 3); 
+        
+        if (item.type === 'scroll') {
+            // Tier 1: Scroll
+            ctx.fillStyle = '#eee8aa'; ctx.fillRect(-s/2, -s/4, s, s/2); // Paper
+            ctx.fillStyle = '#8b4513'; ctx.fillRect(-s/2 - 5, -s/4 -2, 5, s/2+4); // ends
+            ctx.fillRect(s/2, -s/4 -2, 5, s/2+4);
+            ctx.strokeStyle = '#daa520'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-s/4, 0); ctx.lineTo(s/4, 0); ctx.stroke(); // Ribbon
+        } else if (item.type === 'astrolabe') {
+            // Tier 2: Astrolabe (Gear/Star shape)
+            ctx.fillStyle = '#daa520';
+            ctx.beginPath(); ctx.arc(0, 0, s/2, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#b8860b';
+            ctx.beginPath(); ctx.arc(0, 0, s/4, 0, Math.PI*2); ctx.fill();
+            ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(0, -s/2); ctx.lineTo(0, s/2); ctx.moveTo(-s/2, 0); ctx.lineTo(s/2, 0); ctx.stroke();
+        } else if (item.type === 'seal') {
+             // Tier 3: Royal Seal (Octagon with gem)
+             ctx.fillStyle = '#008b8b';
+             ctx.beginPath();
+             for (let i = 0; i < 8; i++) {
+                 ctx.lineTo(Math.cos(i * Math.PI / 4) * s/2, Math.sin(i * Math.PI / 4) * s/2);
+             }
+             ctx.closePath(); ctx.fill();
+             ctx.fillStyle = '#ffd700'; ctx.beginPath(); ctx.arc(0,0, s/4, 0, Math.PI*2); ctx.fill();
+        }
+        ctx.restore();
+        
+        // Glow
+        ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 15;
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+        ctx.strokeRect(item.x, item.y, item.size, item.size);
+        ctx.shadowBlur = 0;
+    }
+
+    function drawPlayer() {
+        const x = player.x; const y = player.y; const w = player.width; const h = player.height;
+        // Character - Stylized adventurer
+        // Body/Tunic
+        ctx.fillStyle = '#00aaaa'; ctx.fillRect(x + 5, y + 15, w - 10, h - 15);
+        // Sash
+        ctx.fillStyle = '#ffd700'; ctx.fillRect(x + 5, y + 25, w - 10, 5);
+        // Head
+        ctx.fillStyle = '#d2b48c'; ctx.fillRect(x + 10, y + 5, w - 20, 10);
+        // Turban shape
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(x + w/2, y + 5, 10, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = '#daa520'; ctx.beginPath(); ctx.arc(x + w/2, y + 5, 4, 0, Math.PI*2); ctx.fill(); // Gem
+    }
+
+    function drawBackground() {
+        // The CSS handles the sky gradient. We draw distant city silhouettes here.
+        ctx.fillStyle = "rgba(60, 20, 0, 0.3)";
+        // Distant domes and minarets layer
+        for(let i = 0; i < GAME_WIDTH; i+= 80) {
+             let height = 100 + Math.random() * 50;
+             drawArch(i, GAME_HEIGHT - height - 100, 60, height, "rgba(60, 20, 0, 0.3)");
+             // Minaret spire
+             ctx.fillRect(i + 70, GAME_HEIGHT - height - 150, 10, height + 50);
+             ctx.beginPath(); ctx.moveTo(i+70, GAME_HEIGHT - height - 150); ctx.lineTo(i+80, GAME_HEIGHT - height - 150); ctx.lineTo(i+75, GAME_HEIGHT - height - 170); ctx.fill();
+        }
+    }
+
+    // --- GAME OBJECTS ---
+
+    let player = {
+        x: GAME_WIDTH / 2 - 20,
+        y: GAME_HEIGHT - 60,
+        width: 40,
+        height: 50,
+        velX: 0,
+        velY: 0,
+        jumping: false,
+        onLadder: false
+    };
+
+    let keys = { right: false, left: false, up: false };
+
+    // Data structure for levels. Tiers go from bottom (1) to top (4).
+    // Y coordinates: Tier 1 (600-800), Tier 2 (400-600), Tier 3 (200-400), Citadel (0-200)
+    let tiers = [
+        { // TIER 1: THE SOUK (Bottom)
+            title: "Tier 1: The Souk & Madrasa",
+            objective: "Collect 5 Ancient Scrolls to unlock the path of knowledge.",
+            required: 5,
+            itemType: 'scroll',
+            platforms: [
+                {x: 0, y: 780, w: 800, h: 20}, // Ground
+                {x: 100, y: 700, w: 150, h: 20},
+                {x: 550, y: 700, w: 150, h: 20},
+                {x: 300, y: 620, w: 200, h: 20},
+                {x: 50, y: 540, w: 100, h: 20},
+                {x: 650, y: 540, w: 100, h: 20},
+            ],
+            collectibles: [
+                {x: 120, y: 660, size: 30, collected: false},
+                {x: 600, y: 660, size: 30, collected: false},
+                {x: 380, y: 580, size: 30, collected: false},
+                {x: 70, y: 500, size: 30, collected: false},
+                {x: 680, y: 500, size: 30, collected: false}
+            ],
+            ladder: {x: 380, y: 400, w: 40, h: 220, locked: true, targetTierY: 380} // Leads to Tier 2 floor
+        },
+        { // TIER 2: THE ARTISAN WORKSHOPS
+            title: "Tier 2: The Artisan Workshops",
+            objective: "Gather 6 Golden Astrolabes to engineer your ascent.",
+            required: 6,
+            itemType: 'astrolabe',
+            platforms: [
+                {x: 0, y: 400, w: 800, h: 25}, // Tier Floor
+                {x: 50, y: 320, w: 100, h: 20},
+                {x: 200, y: 250, w: 100, h: 20},
+                {x: 500, y: 250, w: 100, h: 20},
+                {x: 650, y: 320, w: 100, h: 20},
+                {x: 350, y: 180, w: 100, h: 20} // Hard jump
+            ],
+            collectibles: [
+                {x: 20, y: 360, size: 30, collected: false},
+                {x: 750, y: 360, size: 30, collected: false},
+                {x: 70, y: 280, size: 30, collected: false},
+                {x: 680, y: 280, size: 30, collected: false},
+                {x: 230, y: 210, size: 30, collected: false},
+                {x: 380, y: 140, size: 30, collected: false}
+            ],
+            ladder: {x: 100, y: 0, w: 40, h: 400, locked: true, targetTierY: 180} // Long ladder on left
+        },
+        { // TIER 3: ADMINISTRATIVE GARDENS
+            title: "Tier 3: The Administrative Gardens",
+            objective: "Acquire 4 Royal Seals to gain audience at the Citadel.",
+            required: 4,
+            itemType: 'seal',
+            platforms: [
+                {x: 0, y: 200, w: 200, h: 25}, // Tier Floor Left
+                {x: 600, y: 200, w: 200, h: 25}, // Tier Floor Right (Gap in middle)
+                {x: 250, y: 150, w: 80, h: 20},
+                {x: 470, y: 150, w: 80, h: 20},
+                {x: 360, y: 80, w: 80, h: 20},
+            ],
+            collectibles: [
+                {x: 10, y: 160, size: 30, collected: false},
+                {x: 760, y: 160, size: 30, collected: false},
+                {x: 270, y: 110, size: 30, collected: false},
+                {x: 490, y: 110, size: 30, collected: false}
+            ],
+            ladder: {x: 380, y: -100, w: 40, h: 180, locked: true, targetTierY: -50} // Leads to victory
+        }
+    ];
+
+    const citadelPlatform = {x: 200, y: -50, w: 400, h: 50}; // Victory platform
+
+    // --- GAME LOGIC ---
+
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        gameState = 'playing';
+        resetTier(1);
+        gameLoop();
+    }
+
+    function resetTier(tierIdx) {
+        currentTier = tierIdx;
+        itemsCollectedInTier = 0;
+        const tierData = tiers[currentTier-1];
+        uiLevelTitle.textContent = tierData.title;
+        uiObjective.textContent = tierData.objective;
+        uiRequired.textContent = tierData.required;
+        
+        // Reset collectibles for this tier
+        tierData.collectibles.forEach(c => c.collected = false);
+        tierData.ladder.locked = true;
+    }
+
+    function update() {
+        if (gameState !== 'playing') return;
+
+        // Horizontal Movement
+        if (keys.right) player.velX = PLAYER_SPEED;
+        else if (keys.left) player.velX = -PLAYER_SPEED;
+        else player.velX = 0;
+
+        player.x += player.velX;
+
+        // World Bounds constraints
+        if (player.x < 0) player.x = 0;
+        if (player.x + player.width > GAME_WIDTH) player.x = GAME_WIDTH - player.width;
+
+        const currentTierData = tiers[currentTier-1];
+
+        // Ladder Interaction & Climbing
+        let touchingLadder = false;
+        // Check current tier ladder
+        if (checkIntersection(player, currentTierData.ladder)) {
+            if (!currentTierData.ladder.locked) {
+                 touchingLadder = true;
+            }
+        }
+        // Check previous tier ladder (if falling back down)
+        if (currentTier > 1 && checkIntersection(player, tiers[currentTier-2].ladder)) {
+             touchingLadder = true;
+        }
+
+        if (touchingLadder && keys.up) {
+            player.onLadder = true;
+            player.velY = -PLAYER_SPEED; // Climb up
+            player.jumping = false;
+        } else if (touchingLadder && player.onLadder) {
+             // Stay on ladder if not pressing up, but slightly sliding down for effect
+             player.velY = 1; 
+             player.jumping = false;
+        } else {
+            player.onLadder = false;
+        }
+
+        // Physics & Gravity
+        if (!player.onLadder) {
+            player.velY += GRAVITY;
+            player.y += player.velY;
+        } else {
+            player.y += player.velY; // Just move based on climb speed
+        }
+
+        // Platform Collisions
+        player.jumping = true; // Assume jumping until collision proves otherwise
+
+        // Check all tier platforms
+        tiers.forEach(tier => {
+            tier.platforms.forEach(platform => handlePlatformCollision(platform));
+        });
+        // Check citadel platform if at top tier
+        if(currentTier === 3) handlePlatformCollision(citadelPlatform);
+
+
+        // Collectible Collision
+        currentTierData.collectibles.forEach(item => {
+            if (!item.collected && checkIntersection(player, {x: item.x, y: item.y, w: item.size, h: item.size})) {
+                item.collected = true;
+                score += 100;
+                itemsCollectedInTier++;
+                // Sound effect hook here
+            }
+        });
+
+        // Tier Progression Logic
+        if (itemsCollectedInTier >= currentTierData.required && currentTierData.ladder.locked) {
+            currentTierData.ladder.locked = false;
+            score += 500; // Bonus for unlocking
+            // Sound effect hook for unlock
+        }
+
+        // Check for reaching next tier zone
+        if (player.y < currentTierData.ladder.targetTierY && !currentTierData.ladder.locked) {
+            if (currentTier < 3) {
+                resetTier(currentTier + 1);
+            }
+        }
+
+        // Victory Condition
+        if (currentTier === 3 && !currentTierData.ladder.locked && player.y < citadelPlatform.y && player.x > citadelPlatform.x && player.x < citadelPlatform.x + citadelPlatform.w) {
+            gameState = 'victory';
+            document.getElementById('victory-screen').classList.remove('hidden');
+            document.getElementById('final-score').textContent = score;
+        }
+        
+        // Fallback mechanic (falling too far down resets to previous tier floor)
+        if (currentTier > 1 && player.y > tiers[currentTier-2].platforms[0].y + 50) {
+             currentTier--;
+             resetTier(currentTier);
+             player.y = tiers[currentTier-1].platforms[0].y - player.height;
+        }
+
+
+        // Update UI
+        uiScore.textContent = score;
+        uiCollected.textContent = itemsCollectedInTier;
+    }
+
+    function handlePlatformCollision(platform) {
+        // Only collide if falling downwards and feet are above the platform
+        if (player.velY > 0 &&
+            player.y + player.height < platform.y + player.velY + 5 && // Was above
+            player.y + player.height + player.velY > platform.y && // Will be below
+            player.x + player.width > platform.x && // Horizontal overlap
+            player.x < platform.x + platform.w) {
+            
+            player.jumping = false;
+            player.velY = 0;
+            player.y = platform.y - player.height;
+        }
+    }
+
+    function checkIntersection(r1, r2) {
+        // r2 might be a ladder or item with different prop names, normalize
+        const r2x = r2.x; const r2y = r2.y; 
+        const r2w = r2.w || r2.size; const r2h = r2.h || r2.size;
+        return !(r2x > r1.x + r1.width || 
+                 r2x + r2w < r1.x || 
+                 r2y > r1.y + r1.height ||
+                 r2y + r2h < r1.y);
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+        drawBackground();
+
+        // Camera follow (vertical only)
+        ctx.save();
+        // Try to keep player in middle third of screen vertically
+        let targetCamY = player.y - GAME_HEIGHT / 2;
+        // Clamp camera
+        targetCamY = Math.max(targetCamY, -200); // Don't go too high past citadel
+        targetCamY = Math.min(targetCamY, 0);   // Don't go below ground
+        
+        ctx.translate(0, -targetCamY);
+
+        // Draw Tiers
+        tiers.forEach(tier => {
+            tier.platforms.forEach(p => drawPatternedPlatform(p.x, p.y, p.w, p.h));
+            drawLadder(tier.ladder.x, tier.ladder.y, tier.ladder.w, tier.ladder.h, tier.ladder.locked);
+            tier.collectibles.forEach(c => { if(!c.collected) drawCollectible({...c, type: tier.itemType}); });
+        });
+
+        // Draw Citadel (Victory Zone)
+        drawPatternedPlatform(citadelPlatform.x, citadelPlatform.y, citadelPlatform.w, citadelPlatform.h);
+        // Citadel Dome background
+        ctx.fillStyle = "rgba(255, 215, 0, 0.2)";
+        ctx.beginPath(); ctx.arc(400, -50, 150, Math.PI, 0); ctx.fill();
+
+
+        drawPlayer();
+        ctx.restore();
+    }
+
+    function gameLoop() {
+        update();
+        draw();
+        if (gameState === 'playing') {
+            requestAnimationFrame(gameLoop);
+        }
+    }
+
+    // --- INPUT HANDLING ---
+    document.addEventListener('keydown', (e) => {
+        if (gameState !== 'playing') return;
+        if (e.code === 'ArrowRight') keys.right = true;
+        if (e.code === 'ArrowLeft') keys.left = true;
+        if (e.code === 'ArrowUp') {
+            keys.up = true;
+            if (!player.jumping && !player.onLadder) {
+                player.velY = JUMP_STRENGTH;
+                player.jumping = true;
+            }
+        }
+    });
+
+    document.addEventListener('keyup', (e) => {
+        if (e.code === 'ArrowRight') keys.right = false;
+        if (e.code === 'ArrowLeft') keys.left = false;
+        if (e.code === 'ArrowUp') keys.up = false;
+    });
+
+    // Initial draw call for background before game starts
+    drawBackground();
+    draw();
+
+</script>
+</body>
+</html>
