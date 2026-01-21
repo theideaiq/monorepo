@@ -11,7 +11,10 @@ import { createClient } from '@/lib/supabase/server';
 export function hasAdminAccess(role?: string | null): boolean {
   if (!role) return false;
   const normalizedRole = role.toLowerCase();
-  return normalizedRole === ROLES.ADMIN || normalizedRole === ROLES.SUPERADMIN;
+  return (
+    normalizedRole === ROLES.ADMIN.toLowerCase() ||
+    normalizedRole === ROLES.SUPERADMIN.toLowerCase()
+  );
 }
 
 /**
@@ -60,7 +63,7 @@ export async function requireSuperAdmin() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw new Error('Unauthorized');
+    throw new Error('Authentication required: No user session found');
   }
 
   const { data: requester } = await supabase
@@ -73,7 +76,7 @@ export async function requireSuperAdmin() {
     throw new Error('Unauthorized: User invalid or banned');
   }
 
-  if (requester.role !== ROLES.SUPERADMIN) {
+  if (!requester.role || requester.role.toLowerCase() !== ROLES.SUPERADMIN.toLowerCase()) {
     throw new Error('Unauthorized: Insufficient permissions');
   }
 
