@@ -42,6 +42,10 @@ const tools: Tool[] = [
   },
 ];
 
+function isValidSearchQuery(query: unknown): query is string {
+  return typeof query === 'string' && query.trim().length > 0;
+}
+
 async function searchProducts(query: string) {
   // biome-ignore lint/suspicious/noConsole: logging is fine
   console.log(`Searching products for: ${query}`);
@@ -97,7 +101,7 @@ export async function generateResponse(
             ? (rawArgs as Record<string, unknown>).query
             : undefined;
 
-        if (typeof query !== 'string' || query.trim().length === 0) {
+        if (!isValidSearchQuery(query)) {
           // biome-ignore lint/suspicious/noConsole: logging is fine
           console.error('Invalid arguments for search_products tool call:', rawArgs);
           return "I couldn't understand the product you want to search for. Please try again with a product name.";
@@ -117,7 +121,7 @@ export async function generateResponse(
           ],
         });
 
-        return finalResult.text || "";
+        return finalResult.text || "I couldn't generate a follow-up answer based on the product search. Please try again.";
       }
     }
 
