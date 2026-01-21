@@ -10,6 +10,7 @@ function restoreSecret(envVar, destPath, platformName) {
     try {
       const secretBuffer = Buffer.from(secretBase64, 'base64');
       fs.writeFileSync(destPath, secretBuffer);
+      fs.chmodSync(destPath, 0o600);
       console.log(`✅ ${platformName} secrets restored to ${destPath}`);
     } catch (error) {
       console.error(`❌ Failed to restore ${platformName} secrets:`, error);
