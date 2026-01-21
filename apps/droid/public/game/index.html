@@ -53,7 +53,9 @@
 
         // Input
         document.addEventListener('touchmove', e => {
-            playerX = e.touches[0].clientX;
+            if (e.touches && e.touches.length > 0) {
+                playerX = e.touches[0].clientX;
+            }
         }, { passive: false });
         document.addEventListener('mousemove', e => {
             playerX = e.clientX;
