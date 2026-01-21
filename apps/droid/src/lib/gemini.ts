@@ -122,7 +122,7 @@ export async function generateResponse(
         if (!isValidSearchQuery(query)) {
           // biome-ignore lint/suspicious/noConsole: logging is fine
           console.error('Invalid arguments for search_products tool call:', rawArgs);
-          return "I couldn't understand the product you want to search for. Please try again with a product name.";
+          return "I couldn't understand the product you want to search for. Please try again with a clear product name or short description, for example: 'wireless headphones', 'iPhone 15 case', or '4K monitor'.";
         }
 
         const productData = await searchProducts(query);
