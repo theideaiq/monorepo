@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Bot, Zap, Globe, Shield, Gamepad2, Send } from 'lucide-react';
+
+const GAME_PREVIEW_BG = '/game-bg-placeholder.jpg';
 
 export default function DroidLanding() {
   const [activeTab, setActiveTab] = useState('chat');
@@ -180,7 +182,7 @@ function ChatSimulation() {
 
 function GamePreview() {
   return (
-    <div className="h-full flex flex-col items-center justify-center bg-[url('/game-bg-placeholder.jpg')] bg-cover bg-center relative group">
+    <div className={`h-full flex flex-col items-center justify-center bg-[url('${GAME_PREVIEW_BG}')] bg-cover bg-center relative group`}>
       <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center">
         <Gamepad2 className="w-16 h-16 text-[#facc15] mb-4 animate-bounce" />
         <h3 className="text-2xl font-bold mb-2">Spark Catcher ⚡</h3>
@@ -205,7 +207,7 @@ function FinancePreview() {
           <div className="h-full bg-blue-500 w-[70%] animate-[width_2s_ease-out]" />
         </div>
         <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
-          <div className="h-full bg-purple-500 w-[45%] animate-[width_2s_ease-out_0.5s]" />
+          <div className="h-full bg-purple-500 w-[45%] transition-[width] duration-200 ease-out" />
         </div>
         <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
           <div className="h-full bg-[#facc15] w-[85%] animate-[width_2s_ease-out_1s]" />
