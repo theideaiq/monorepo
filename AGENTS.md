@@ -116,7 +116,7 @@ Rule: Do not leave flat component files in the root of `packages/ui/src/`. Creat
 **Action:** Do not nest `<button>` inside `<Link>`. Instead, apply button utility classes directly to the `<Link>` component or use `asChild` if using a UI library component that supports polymorphism.
 
 ### 2025-05-23 - Standardizing Overlay Styles
-**Learning:** `Sheet` and `Modal` components used different overlay styles (`bg-black/60 backdrop-blur-sm`) and consistent close button styling.
+**Learning:** `Sheet` and `Modal` components used different overlay styles and inconsistent close button styling.
 **Action:** Standardized on `bg-black/60 backdrop-blur-sm` for a more modern, consistent look across all overlay components. Also aligned close button interactions to use `hover:text-brand-pink`.
 
 ### 2026-01-20 - Ghost Button Overrides
