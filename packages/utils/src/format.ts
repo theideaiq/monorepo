@@ -29,6 +29,20 @@ export function formatCurrency(
 }
 
 /**
+ * Formats a number for IQD display (no decimals).
+ * Does not include the currency symbol/code.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted string (e.g., "50,000").
+ */
+export function formatIQD(amount: number): string {
+  return new Intl.NumberFormat('en-IQ', {
+    style: 'decimal',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+/**
  * Format a date string or object to a readable standard.
  * Uses 'en-US' locale with 'MMM D, YYYY' format.
  *
@@ -36,7 +50,8 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
