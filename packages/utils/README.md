@@ -38,3 +38,23 @@ import { Logger } from '@repo/utils';
 Logger.log('User logged in', { userId: '123' });
 // suppressed in NODE_ENV=test
 ```
+
+### String Helpers
+```ts
+import { decodeHtmlEntities, slugify } from '@repo/utils';
+
+// Decodes named, decimal, and hex entities
+decodeHtmlEntities('&#x41;'); // "A"
+
+slugify("Hello World!"); // "hello-world"
+```
+
+## Testing
+
+This package relies on the test environment configuration of `apps/web`.
+Unit tests for these utilities are located in `apps/web/src/lib/` (e.g., `string-utils.test.ts`) to leverage the existing `vitest` setup.
+
+To run tests for this package:
+```bash
+pnpm --filter web test src/lib/string-utils.test.ts
+```
