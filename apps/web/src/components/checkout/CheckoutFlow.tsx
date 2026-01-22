@@ -3,9 +3,19 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
+import { Button, Input, Card, Textarea, Select } from '@repo/ui';
 import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+
+const CITY_OPTIONS = [
+  { value: 'Baghdad', label: 'Baghdad' },
+  { value: 'Basra', label: 'Basra' },
+  { value: 'Erbil', label: 'Erbil' },
+  { value: 'Najaf', label: 'Najaf' },
+  { value: 'Karbala', label: 'Karbala' },
+  { value: 'Mosul', label: 'Mosul' },
+  { value: 'Kirkuk', label: 'Kirkuk' },
+];
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -36,6 +46,9 @@ export function CheckoutFlow() {
   };
 
   const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+
+  const formControlClasses =
+    'bg-black/40 border-white/10 text-white focus:border-brand-yellow focus:ring-brand-yellow/20 placeholder:text-slate-500';
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -84,13 +97,13 @@ export function CheckoutFlow() {
                         <label className="text-xs text-slate-400">
                           Full Name
                         </label>
-                        <input
+                        <Input
                           required
                           value={address.fullName}
                           onChange={(e) =>
                             setAddress({ ...address, fullName: e.target.value })
                           }
-                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
+                          className={formControlClasses}
                           placeholder="John Doe"
                         />
                       </div>
@@ -98,13 +111,13 @@ export function CheckoutFlow() {
                         <label className="text-xs text-slate-400">
                           Phone Number
                         </label>
-                        <input
+                        <Input
                           required
                           value={address.phone}
                           onChange={(e) =>
                             setAddress({ ...address, phone: e.target.value })
                           }
-                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
+                          className={formControlClasses}
                           placeholder="07xxxxxxxxx"
                         />
                       </div>
@@ -112,31 +125,27 @@ export function CheckoutFlow() {
 
                     <div className="space-y-1">
                       <label className="text-xs text-slate-400">City</label>
-                      <select
+                      <Select
                         value={address.city}
                         onChange={(e) =>
                           setAddress({ ...address, city: e.target.value })
                         }
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none appearance-none"
-                      >
-                        <option value="Baghdad">Baghdad</option>
-                        <option value="Basra">Basra</option>
-                        <option value="Erbil">Erbil</option>
-                        {/* ... other cities */}
-                      </select>
+                        options={CITY_OPTIONS}
+                        className={formControlClasses}
+                      />
                     </div>
 
                     <div className="space-y-1">
                       <label className="text-xs text-slate-400">
                         Address Details
                       </label>
-                      <textarea
+                      <Textarea
                         required
                         value={address.street}
                         onChange={(e) =>
                           setAddress({ ...address, street: e.target.value })
                         }
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none min-h-[100px]"
+                        className={`${formControlClasses} min-h-[100px]`}
                         placeholder="Street name, Building No., Landmark..."
                       />
                     </div>
