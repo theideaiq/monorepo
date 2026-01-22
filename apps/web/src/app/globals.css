@@ -9,8 +9,10 @@
   /* 2. Define Brand Colors (Critical for Tailwind v4) */
   --color-brand-dark: #0f172a; /* Slate 900 */
   --color-brand-deep: #0f1014; /* Deep dark for cinema/plus mode */
+  --color-brand-bg: #121212;   /* Default background */
+  --color-brand-surface: #1e1e1e; /* Cards/Surface */
   --color-brand-pink: #e91e63; /* Pink 500 */
-  --color-brand-yellow: #ffd600; /* Yellow 400 */
+  --color-brand-yellow: #facc15; /* Gold/Yellow */
 }
 
 /* 3. Global Styles */
@@ -21,8 +23,8 @@
 
 body {
   font-family: var(--font-sans);
-  /* Now 'text-brand-dark' exists and this will work */
-  @apply bg-slate-50 text-brand-dark;
+  /* Dark Mode Default */
+  @apply bg-brand-bg text-slate-200;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -32,9 +34,7 @@ body {
   -webkit-user-select: none;
 
   /* PC: Custom Cursor Preparation */
-  /* Note: User will add 'public/cursor.svg' later */
-  cursor: default; /* Fallback */
-  /* cursor: url('/cursor.svg'), auto; <-- Ready for uncommenting */
+  cursor: default;
 }
 
 /* SCROLLING: Hide scrollbars but allow scrolling */
@@ -62,6 +62,11 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 
+/* Safe Area Padding for iPhone X+ */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 /* 5. Animations */
 @keyframes fadeInUp {
   from {
@@ -76,4 +81,12 @@ body {
 
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  @apply bg-white/5 backdrop-blur-lg border border-white/10;
+}
+.glass-heavy {
+  @apply bg-black/60 backdrop-blur-xl border-b border-white/10;
 }

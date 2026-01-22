@@ -72,7 +72,7 @@ export default async function Home({ params }: Props) {
       {/* 2. SERVICES GRID */}
       <section className="py-16 lg:py-24 px-4 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-brand-dark">
+          <h2 className="text-3xl font-bold text-white">
             {t('explore_title')}
           </h2>
         </div>
@@ -82,16 +82,16 @@ export default async function Home({ params }: Props) {
             // biome-ignore lint/suspicious/noArrayIndexKey: static list
             <Link key={i} href={service.href} className="block h-full">
               <Card
-                className={`h-full hover:-translate-y-2 transition-transform duration-300 border-t-4 ${service.color}`}
+                className={`h-full hover:-translate-y-2 transition-transform duration-300 border-t-4 bg-white/5 border-white/10 ${service.color}`}
               >
                 <CardHeader>
                   <div className="mb-4">{service.icon}</div>
-                  <CardTitle className="text-xl font-bold text-brand-dark">
+                  <CardTitle className="text-xl font-bold text-white">
                     {service.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base text-slate-500 leading-relaxed">
+                  <CardDescription className="text-base text-slate-400 leading-relaxed">
                     {service.desc}
                   </CardDescription>
                 </CardContent>
@@ -159,7 +159,7 @@ export default async function Home({ params }: Props) {
 
       {/* 4. CTA */}
       <section className="py-16 lg:py-24 text-center px-4">
-        <h2 className="text-3xl font-bold text-brand-dark mb-6">
+        <h2 className="text-3xl font-bold text-white mb-6">
           {t('footer_cta')}
         </h2>
         <Link

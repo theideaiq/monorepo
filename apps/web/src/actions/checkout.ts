@@ -31,8 +31,11 @@ export async function initiateCheckout(cartId: string) {
   const lineItems: { label: string; amount: number; type: 'increase' }[] = [];
 
   for (const item of cartItems) {
-    // @ts-expect-error - using any for DB types as per project state
-    const product = item.products;
+    const productData = item.products;
+    if (!productData) continue;
+
+    // Handle potential array return from join
+    const product = Array.isArray(productData) ? productData[0] : productData;
     if (!product) continue;
 
     const price = Number(product.price);

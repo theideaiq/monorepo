@@ -14,10 +14,8 @@ import {
   getTranslations,
   setRequestLocale,
 } from 'next-intl/server';
-import {
-  DesktopActions,
-  MobileActions,
-} from '@/components/layout/NavbarActions';
+import { BottomNav } from '@/components/ui/BottomNav';
+import { CartDrawer } from '@/components/store/CartDrawer';
 import SkipLink from '@/components/layout/SkipLink';
 import { WebFooter } from '@/components/layout/WebFooter';
 import { WebNavbar } from '@/components/layout/WebNavbar';
@@ -207,33 +205,8 @@ export default async function LocaleLayout({ children, params }: Props) {
           <QueryProvider>
             <SkipLink />
             <ToastProvider />
-            <WebNavbar
-              logo={
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 p-2 rounded-lg focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2 outline-none"
-                >
-                  <div className="relative w-10 h-10">
-                    <Image
-                      src="/icon.svg"
-                      alt="IDEA Logo"
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                  <span className="text-2xl font-black tracking-tighter text-brand-dark">
-                    IDEA<span className="text-brand-yellow">.</span>
-                  </span>
-                </Link>
-              }
-              navItems={navItems}
-              desktopActions={<DesktopActions locale={locale} />}
-              mobileActions={<MobileActions locale={locale} />}
-              labels={{
-                menuOpen: t('Nav.menu_open'),
-                menuClose: t('Nav.menu_close'),
-              }}
-            />
+            <WebNavbar navItems={navItems} />
+            <CartDrawer />
             <main
               id="main-content"
               className={dir === 'rtl' ? 'font-arabic' : 'font-sans'}
@@ -249,6 +222,7 @@ export default async function LocaleLayout({ children, params }: Props) {
                 location: t('Footer.location'),
               }}
             />
+            <BottomNav />
           </QueryProvider>
         </NextIntlClientProvider>
       </body>
