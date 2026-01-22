@@ -1,10 +1,11 @@
 'use server';
 
 import { webEnv } from '@repo/env/web';
+import { Logger } from '@repo/utils';
 import { redirect } from 'next/navigation';
+import { z } from 'zod';
 import { paymentFactory } from '@/lib/payment/config';
 import { createClient } from '@/lib/supabase/server';
-import { Logger } from '@repo/utils';
 
 export async function initiateCheckout(cartId: string) {
   const supabase = await createClient();
@@ -14,6 +15,27 @@ export async function initiateCheckout(cartId: string) {
 
   if (!user) {
     throw new Error('User not authenticated');
+  }
+
+  // Validate cartId format
+  const uuidSchema = z.string().uuid();
+  if (!uuidSchema.safeParse(cartId).success) {
+    throw new Error('Invalid cart ID');
+  }
+
+  // Verify Cart Ownership
+  const { data: cart, error: cartOwnerError } = await supabase
+    .from('carts')
+    .select('user_id')
+    .eq('id', cartId)
+    .single();
+
+  if (cartOwnerError || !cart) {
+    throw new Error('Cart not found');
+  }
+
+  if (cart.user_id !== user.id) {
+    throw new Error('Unauthorized access to cart');
   }
 
   // 1. Fetch Cart Items
