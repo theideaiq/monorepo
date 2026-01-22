@@ -1,7 +1,8 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import { getProductBySlug } from '@/services/products';
 import { ProductView } from '@/components/store/ProductView';
+import ProductJsonLd from '@/components/seo/ProductJsonLd';
+import { getProductBySlug } from '@/services/products';
 
 type Props = {
   params: Promise<{ slug: string; locale: string }>;
@@ -34,8 +35,11 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://theidea.iq';
+
   return (
     <div className="container mx-auto px-4 py-8 md:py-16 pt-24">
+      <ProductJsonLd product={product} baseUrl={siteUrl} />
       <ProductView product={product} />
     </div>
   );
