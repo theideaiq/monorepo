@@ -20,7 +20,10 @@ export interface CartItem {
 /**
  * Gets the current user's active cart or creates one.
  */
-async function getOrCreateCartId(supabase: any, userId: string): Promise<string | null> {
+async function getOrCreateCartId(
+  supabase: any,
+  userId: string,
+): Promise<string | null> {
   // 1. Check for existing cart
   const { data: cart } = await supabase
     .from('carts')
@@ -46,7 +49,9 @@ async function getOrCreateCartId(supabase: any, userId: string): Promise<string 
 
 export async function fetchCartItems(): Promise<CartItem[]> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) return []; // Guest cart handled by local storage (Zustand)
 
@@ -81,9 +86,14 @@ export async function fetchCartItems(): Promise<CartItem[]> {
   }));
 }
 
-export async function addToCartDB(productId: string, quantity = 1): Promise<boolean> {
+export async function addToCartDB(
+  productId: string,
+  quantity = 1,
+): Promise<boolean> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) return false; // Indicate caller to use local store
 
@@ -106,13 +116,11 @@ export async function addToCartDB(productId: string, quantity = 1): Promise<bool
     return !error;
   }
 
-  const { error } = await supabase
-    .from('cart_items')
-    .insert({
-      cart_id: cartId,
-      product_id: productId,
-      quantity,
-    });
+  const { error } = await supabase.from('cart_items').insert({
+    cart_id: cartId,
+    product_id: productId,
+    quantity,
+  });
 
   return !error;
 }

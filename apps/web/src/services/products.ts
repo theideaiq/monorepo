@@ -43,9 +43,7 @@ export async function getProducts(limit = 20): Promise<Product[]> {
   try {
     const { data, error } = await supabase
       .from('products')
-      .select(
-        '*, reviews(rating)',
-      )
+      .select('*, reviews(rating)')
       .gt('stock_count', 0)
       .limit(limit);
 
@@ -62,39 +60,41 @@ export async function getProducts(limit = 20): Promise<Product[]> {
     // Fallback for verification/demo if DB is not connected
     return [
       {
-         id: '1',
-         title: 'Logitech G Pro X Superlight',
-         slug: 'logitech-g-pro-x-superlight',
-         price: 150000,
-         category: 'Gaming',
-         condition: 'new',
-         seller: 'The IDEA Official',
-         rating: 4.8,
-         image: 'https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600',
-         images: [],
-         isVerified: true,
-         description: 'The best gaming mouse.',
-         details: {},
-         variants: [],
-         stock: 10
+        id: '1',
+        title: 'Logitech G Pro X Superlight',
+        slug: 'logitech-g-pro-x-superlight',
+        price: 150000,
+        category: 'Gaming',
+        condition: 'new',
+        seller: 'The IDEA Official',
+        rating: 4.8,
+        image:
+          'https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600',
+        images: [],
+        isVerified: true,
+        description: 'The best gaming mouse.',
+        details: {},
+        variants: [],
+        stock: 10,
       },
       {
-         id: '2',
-         title: 'Sony PlayStation 5 Pro',
-         slug: 'ps5-pro',
-         price: 850000,
-         category: 'Gaming',
-         condition: 'new',
-         seller: 'The IDEA Official',
-         rating: 5.0,
-         image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=1600',
-         images: [],
-         isVerified: true,
-         description: 'The most powerful console ever.',
-         details: {},
-         variants: [],
-         stock: 5
-      }
+        id: '2',
+        title: 'Sony PlayStation 5 Pro',
+        slug: 'ps5-pro',
+        price: 850000,
+        category: 'Gaming',
+        condition: 'new',
+        seller: 'The IDEA Official',
+        rating: 5.0,
+        image:
+          'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=1600',
+        images: [],
+        isVerified: true,
+        description: 'The most powerful console ever.',
+        details: {},
+        variants: [],
+        stock: 5,
+      },
     ];
   }
 }
@@ -124,24 +124,39 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     Logger.error(`Unexpected error fetching product [${slug}]:`, err);
     // Fallback
     return {
-         id: '1',
-         title: 'Logitech G Pro X Superlight',
-         slug: slug,
-         price: 150000,
-         category: 'Gaming',
-         condition: 'new',
-         seller: 'The IDEA Official',
-         rating: 4.8,
-         image: 'https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600',
-         images: [],
-         isVerified: true,
-         description: 'The best gaming mouse.',
-         details: {},
-         variants: [
-           { id: 'v1', sku: 'BLK', price: 150000, stock: 5, attributes: { Color: 'Black' }, image: '' },
-           { id: 'v2', sku: 'WHT', price: 150000, stock: 5, attributes: { Color: 'White' }, image: '' }
-         ],
-         stock: 10
+      id: '1',
+      title: 'Logitech G Pro X Superlight',
+      slug: slug,
+      price: 150000,
+      category: 'Gaming',
+      condition: 'new',
+      seller: 'The IDEA Official',
+      rating: 4.8,
+      image:
+        'https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600',
+      images: [],
+      isVerified: true,
+      description: 'The best gaming mouse.',
+      details: {},
+      variants: [
+        {
+          id: 'v1',
+          sku: 'BLK',
+          price: 150000,
+          stock: 5,
+          attributes: { Color: 'Black' },
+          image: '',
+        },
+        {
+          id: 'v2',
+          sku: 'WHT',
+          price: 150000,
+          stock: 5,
+          attributes: { Color: 'White' },
+          image: '',
+        },
+      ],
+      stock: 10,
     };
   }
 }

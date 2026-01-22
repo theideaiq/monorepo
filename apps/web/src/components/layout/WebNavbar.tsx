@@ -33,8 +33,9 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
   }, []);
 
   const isActive = (href: string) => {
-     if (href === '/') return pathname === '/' || pathname?.match(/^\/[a-z]{2}$/);
-     return pathname?.includes(href);
+    if (href === '/')
+      return pathname === '/' || pathname?.match(/^\/[a-z]{2}$/);
+    return pathname?.includes(href);
   };
 
   return (
@@ -52,12 +53,17 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
         <div className="flex-shrink-0">
           {logo || (
             <Link href="/" className="flex items-center gap-2">
-               <div className="relative w-8 h-8">
-                  <Image src="/icon.svg" alt="IDEA" fill className="object-contain" />
-               </div>
-               <span className="text-xl font-black text-white tracking-tighter">
-                 IDEA<span className="text-brand-yellow">.</span>
-               </span>
+              <div className="relative w-8 h-8">
+                <Image
+                  src="/icon.svg"
+                  alt="IDEA"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-xl font-black text-white tracking-tighter">
+                IDEA<span className="text-brand-yellow">.</span>
+              </span>
             </Link>
           )}
         </div>
@@ -79,11 +85,17 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
-          <button type="button" className="text-white hover:text-brand-yellow transition-colors">
+          <button
+            type="button"
+            className="text-white hover:text-brand-yellow transition-colors"
+          >
             <Search size={20} />
           </button>
 
-          <Link href="/account" className="hidden md:block text-white hover:text-brand-yellow transition-colors">
+          <Link
+            href="/account"
+            className="hidden md:block text-white hover:text-brand-yellow transition-colors"
+          >
             <User size={20} />
           </Link>
 

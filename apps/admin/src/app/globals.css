@@ -1,15 +1,8 @@
 @import "tailwindcss";
+@import "../../../../packages/ui/src/theme.css";
 @source "../../../../packages/ui";
 
 @theme {
-  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-
-  /* Brand Colors */
-  --color-brand-dark: #0f172a;
-  --color-brand-deep: #0f1014;
-  --color-brand-pink: #e91e63;
-  --color-brand-yellow: #ffd600;
-
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));

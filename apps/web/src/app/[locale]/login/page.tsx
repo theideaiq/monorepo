@@ -79,7 +79,8 @@ export default function AuthPage() {
 
         <div className="relative z-10">
           <blockquote className="text-xl font-medium text-white max-w-lg leading-relaxed">
-            &ldquo;The future is not something we enter. The future is something we create.&rdquo;
+            &ldquo;The future is not something we enter. The future is something
+            we create.&rdquo;
           </blockquote>
         </div>
       </div>
@@ -110,7 +111,9 @@ export default function AuthPage() {
 
           <div className="relative flex items-center gap-4 py-4">
             <div className="h-px bg-white/10 flex-1" />
-            <span className="text-xs text-slate-500 uppercase tracking-widest">Or with email</span>
+            <span className="text-xs text-slate-500 uppercase tracking-widest">
+              Or with email
+            </span>
             <div className="h-px bg-white/10 flex-1" />
           </div>
 
@@ -125,51 +128,66 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                     <label className="text-sm text-slate-400 mb-1 block">Full Name</label>
-                     <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                        <input
-                          type="text"
-                          required={mode === 'register'}
-                          value={fullName}
-                          onChange={e => setFullName(e.target.value)}
-                          className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                          placeholder="John Doe"
-                        />
-                     </div>
+                    <label className="text-sm text-slate-400 mb-1 block">
+                      Full Name
+                    </label>
+                    <div className="relative">
+                      <User
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                        size={18}
+                      />
+                      <input
+                        type="text"
+                        required={mode === 'register'}
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                        placeholder="John Doe"
+                      />
+                    </div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
             <div>
-               <label className="text-sm text-slate-400 mb-1 block">Email Address</label>
-               <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                    placeholder="name@example.com"
-                  />
-               </div>
+              <label className="text-sm text-slate-400 mb-1 block">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                  size={18}
+                />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                  placeholder="name@example.com"
+                />
+              </div>
             </div>
 
             <div>
-               <label className="text-sm text-slate-400 mb-1 block">Password</label>
-               <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-                  <input
-                    type="password"
-                    required
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                    placeholder="••••••••"
-                  />
-               </div>
+              <label className="text-sm text-slate-400 mb-1 block">
+                Password
+              </label>
+              <div className="relative">
+                <Lock
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                  size={18}
+                />
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                  placeholder="••••••••"
+                />
+              </div>
             </div>
 
             <Button
@@ -177,8 +195,12 @@ export default function AuthPage() {
               className="w-full h-12 bg-brand-yellow text-brand-dark hover:bg-yellow-400 border-none font-bold text-lg mt-6"
               disabled={loading}
             >
-              {loading ? <Loader2 className="animate-spin" /> : (
-                 mode === 'login' ? 'Sign In' : 'Create Account'
+              {loading ? (
+                <Loader2 className="animate-spin" />
+              ) : mode === 'login' ? (
+                'Sign In'
+              ) : (
+                'Create Account'
               )}
             </Button>
           </form>
@@ -186,7 +208,9 @@ export default function AuthPage() {
           {/* Toggle */}
           <div className="text-center">
             <p className="text-slate-400">
-              {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
+              {mode === 'login'
+                ? "Don't have an account? "
+                : 'Already have an account? '}
               <button
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"

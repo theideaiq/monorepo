@@ -29,38 +29,47 @@ export const useCartStore = create<CartState>()(
 
       addItem: (newItem) => {
         set((state) => {
-           const existing = state.items.find((i) => i.id === newItem.id);
-           let updatedItems;
-           if (existing) {
-             updatedItems = state.items.map((i) =>
-               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i
-             );
-           } else {
-             updatedItems = [...state.items, { ...newItem, quantity: 1 }];
-           }
+          const existing = state.items.find((i) => i.id === newItem.id);
+          let updatedItems;
+          if (existing) {
+            updatedItems = state.items.map((i) =>
+              i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
+            );
+          } else {
+            updatedItems = [...state.items, { ...newItem, quantity: 1 }];
+          }
 
-           // Recalc total
-           const total = updatedItems.reduce((acc, i) => acc + (i.price * i.quantity), 0);
-           return { items: updatedItems, total };
+          // Recalc total
+          const total = updatedItems.reduce(
+            (acc, i) => acc + i.price * i.quantity,
+            0,
+          );
+          return { items: updatedItems, total };
         });
       },
 
       removeItem: (id) => {
         set((state) => {
-           const updatedItems = state.items.filter((i) => i.id !== id);
-           const total = updatedItems.reduce((acc, i) => acc + (i.price * i.quantity), 0);
-           return { items: updatedItems, total };
+          const updatedItems = state.items.filter((i) => i.id !== id);
+          const total = updatedItems.reduce(
+            (acc, i) => acc + i.price * i.quantity,
+            0,
+          );
+          return { items: updatedItems, total };
         });
       },
 
       updateQuantity: (id, quantity) => {
         set((state) => {
-           if (quantity < 1) return state; // or remove?
-           const updatedItems = state.items.map((i) =>
-             i.id === id ? { ...i, quantity } : i
-           );
-           const total = updatedItems.reduce((acc, i) => acc + (i.price * i.quantity), 0);
-           return { items: updatedItems, total };
+          if (quantity < 1) return state; // or remove?
+          const updatedItems = state.items.map((i) =>
+            i.id === id ? { ...i, quantity } : i,
+          );
+          const total = updatedItems.reduce(
+            (acc, i) => acc + i.price * i.quantity,
+            0,
+          );
+          return { items: updatedItems, total };
         });
       },
 

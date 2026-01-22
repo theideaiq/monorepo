@@ -6,6 +6,7 @@ export interface OrderData {
   currency: Currency;
   description?: string;
   webhookUrl?: string;
+  webhookSecret?: string;
   redirectionUrl?: string;
   customer?: {
     name?: string;

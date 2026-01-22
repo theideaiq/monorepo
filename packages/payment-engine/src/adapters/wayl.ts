@@ -8,7 +8,7 @@ import type {
 
 export class WaylAdapter implements PaymentProvider {
   public readonly name = 'wayl';
-  private client: WaylClient;
+  public readonly client: WaylClient;
   private webhookSecret?: string;
 
   constructor(config: {
@@ -29,6 +29,7 @@ export class WaylAdapter implements PaymentProvider {
       total: order.amount,
       currency: order.currency,
       webhookUrl: order.webhookUrl,
+      webhookSecret: order.webhookSecret || this.webhookSecret,
       redirectionUrl: order.redirectionUrl,
       // Mapping 'description' to 'customParameter' as an example, or could leave it out
       customParameter: order.description,

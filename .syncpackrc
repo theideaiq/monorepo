@@ -11,8 +11,7 @@
       "label": "Use specific versions for core framework dependencies",
       "packages": ["**"],
       "dependencies": ["react", "react-dom", "next", "typescript", "tailwindcss"],
-      "dependencyTypes": ["dev", "prod", "peer"],
-      "pinVersion": "highestSemver"
+      "dependencyTypes": ["dev", "prod", "peer"]
     }
   ]
 }

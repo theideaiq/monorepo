@@ -1,0 +1,13 @@
+@theme {
+  /* Fonts */
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand Colors */
+  --color-brand-dark: #0f172a; /* Slate 900 */
+  --color-brand-deep: #0f1014; /* Deep dark for cinema/plus mode */
+  --color-brand-bg: #121212; /* Default background */
+  --color-brand-surface: #1e1e1e; /* Cards/Surface */
+  --color-brand-pink: #e91e63; /* Pink 500 */
+  --color-brand-yellow: #facc15; /* Gold/Yellow */
+}

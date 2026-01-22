@@ -1,10 +1,9 @@
 import { type Content, GoogleGenAI, type Tool } from '@google/genai';
 import { droidEnv as env } from '@repo/env/droid';
-import { WaylClient } from '@repo/wayl';
+import { PaymentFactory } from '@repo/payment-engine';
 import { supabase } from './supabase';
 
 const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
-const wayl = new WaylClient({ apiKey: env.WAYL_SECRET_KEY });
 
 const MAX_PRODUCT_SEARCH_RESULTS = 5;
 
@@ -139,15 +138,21 @@ async function searchProducts(query: string) {
 }
 
 /**
- * Creates a payment link via Wayl.
+ * Creates a payment link via Wayl (using PaymentEngine).
  */
 async function createPaymentLink(amount: number, itemDescription: string) {
   try {
-    const response = await wayl.links.create({
+    const provider = PaymentFactory.getProviderByName('wayl', {
+      waylKey: env.WAYL_SECRET_KEY,
+      waylWebhookSecret: env.WAYL_WEBHOOK_SECRET,
+      zainKey: '', // Not used here
+    });
+
+    const session = await provider.createCheckoutSession({
       referenceId: `droid-${Date.now()}-${Math.random().toString(36).substring(7)}`,
-      total: amount,
+      amount,
       currency: 'IQD',
-      customParameter: itemDescription,
+      description: itemDescription,
       redirectionUrl: `${env.WEB_APP_URL}/thanks`,
       webhookUrl: `${env.WEB_APP_URL}/api/webhooks/wayl`,
       webhookSecret: env.WAYL_WEBHOOK_SECRET,
@@ -155,12 +160,12 @@ async function createPaymentLink(amount: number, itemDescription: string) {
 
     return {
       success: true,
-      url: response.data.url,
+      url: session.url,
       message: `Payment link created for ${itemDescription}. Please share this URL with the user.`,
     };
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: logging is fine
-    console.error('Wayl Create Link Error:', error);
+    console.error('Payment Create Link Error:', error);
     return {
       error: 'Failed to generate payment link. Please try again later.',
     };
@@ -206,6 +211,7 @@ export async function generateResponse(
 
     if (functionCalls && functionCalls.length > 0) {
       const call = functionCalls[0];
+      if (!call) return '';
       const rawArgs = call.args as Record<string, unknown>;
 
       if (call.name === 'search_products') {

@@ -31,7 +31,8 @@ export function BottomNav() {
     // Or just check if pathname contains it.
     // For '/' it's tricky with locale.
     // Let's just assume simple includes for now.
-    if (href === '/') return pathname === '/' || pathname?.match(/^\/[a-z]{2}$/);
+    if (href === '/')
+      return pathname === '/' || pathname?.match(/^\/[a-z]{2}$/);
     return pathname?.includes(href);
   };
 

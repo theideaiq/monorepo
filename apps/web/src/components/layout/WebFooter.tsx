@@ -29,12 +29,17 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-6">
-               <div className="relative w-8 h-8">
-                  <Image src="/icon.svg" alt="IDEA" fill className="object-contain" />
-               </div>
-               <span className="text-xl font-black text-white tracking-tighter">
-                 IDEA<span className="text-brand-yellow">.</span>
-               </span>
+              <div className="relative w-8 h-8">
+                <Image
+                  src="/icon.svg"
+                  alt="IDEA"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-xl font-black text-white tracking-tighter">
+                IDEA<span className="text-brand-yellow">.</span>
+              </span>
             </Link>
             <p className="mb-6 max-w-xs leading-relaxed text-slate-500">
               Innovation for Every Aspect of Life. Bringing premium technology,
@@ -72,11 +77,18 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
 
         {/* Bottom */}
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-          <p>{copyright.text} &copy; {new Date().getFullYear()} {copyright.rights}</p>
+          <p>
+            {copyright.text} &copy; {new Date().getFullYear()}{' '}
+            {copyright.rights}
+          </p>
           <div className="flex gap-6">
-             <span>{copyright.location}</span>
-             <Link href="/legal/privacy" className="hover:text-white">Privacy</Link>
-             <Link href="/legal/terms" className="hover:text-white">Terms</Link>
+            <span>{copyright.location}</span>
+            <Link href="/legal/privacy" className="hover:text-white">
+              Privacy
+            </Link>
+            <Link href="/legal/terms" className="hover:text-white">
+              Terms
+            </Link>
           </div>
         </div>
       </div>

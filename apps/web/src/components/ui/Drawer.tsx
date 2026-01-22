@@ -13,7 +13,13 @@ interface DrawerProps {
   footer?: React.ReactNode;
 }
 
-export function Drawer({ isOpen, onClose, children, title, footer }: DrawerProps) {
+export function Drawer({
+  isOpen,
+  onClose,
+  children,
+  title,
+  footer,
+}: DrawerProps) {
   // Prevent body scroll when drawer is open
   useEffect(() => {
     if (isOpen) {

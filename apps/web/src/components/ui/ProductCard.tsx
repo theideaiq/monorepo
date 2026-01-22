@@ -12,7 +12,11 @@ interface ProductCardProps {
   priority?: boolean;
 }
 
-export function ProductCard({ product, onAddToCart, priority = false }: ProductCardProps) {
+export function ProductCard({
+  product,
+  onAddToCart,
+  priority = false,
+}: ProductCardProps) {
   // Format price
   const price = new Intl.NumberFormat('en-IQ', {
     style: 'decimal',

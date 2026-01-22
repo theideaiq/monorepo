@@ -1,13 +1,8 @@
 import 'server-only';
 import { webEnv } from '@repo/env/web';
 import { Logger } from '@repo/utils';
-import { WaylClient } from '@repo/wayl';
+import { PaymentFactory } from '@repo/payment-engine';
 import { v4 as uuidv4 } from 'uuid';
-
-export const waylClient = new WaylClient({
-  apiKey: webEnv.WAYL_SECRET_KEY,
-  webhookSecret: webEnv.WAYL_WEBHOOK_SECRET,
-});
 
 export const wayl = {
   /**
@@ -34,18 +29,24 @@ export const wayl = {
     });
 
     try {
-      const response = await waylClient.links.create({
-        referenceId: refId,
-        total: amount,
-        currency,
-        customParameter: description,
-        // In a real app, these should be dynamic
-        redirectionUrl: `${webEnv.NEXT_PUBLIC_SITE_URL}/plus?success=true`,
-        webhookUrl: `${webEnv.NEXT_PUBLIC_SITE_URL}/api/webhooks/wayl`,
-        webhookSecret: webEnv.WAYL_WEBHOOK_SECRET,
+      // Use explicit 'wayl' provider as this service is named 'wayl'
+      const provider = PaymentFactory.getProviderByName('wayl', {
+        waylKey: webEnv.WAYL_SECRET_KEY,
+        waylWebhookSecret: webEnv.WAYL_WEBHOOK_SECRET,
+        zainKey: webEnv.ZAIN_SECRET_KEY,
       });
 
-      return response.data.url;
+      const session = await provider.createCheckoutSession({
+        referenceId: refId,
+        amount,
+        currency,
+        description,
+        webhookUrl: `${webEnv.NEXT_PUBLIC_SITE_URL}/api/webhooks/wayl`,
+        webhookSecret: webEnv.WAYL_WEBHOOK_SECRET,
+        redirectionUrl: `${webEnv.NEXT_PUBLIC_SITE_URL}/plus?success=true`,
+      });
+
+      return session.url;
     } catch (error) {
       Logger.error('Wayl Create Payment Failed:', error);
       throw error;

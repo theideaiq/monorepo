@@ -56,15 +56,15 @@ importers:
       '@repo/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@repo/payment-engine':
+        specifier: workspace:^
+        version: link:../../packages/payment-engine
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@repo/utils':
         specifier: workspace:*
         version: link:../../packages/utils
-      '@repo/wayl':
-        specifier: workspace:^
-        version: link:../../packages/wayl
       '@supabase/ssr':
         specifier: ^0.8.0
         version: 0.8.0(@supabase/supabase-js@2.91.0)
@@ -195,9 +195,9 @@ importers:
       '@repo/env':
         specifier: workspace:*
         version: link:../../packages/env
-      '@repo/wayl':
+      '@repo/payment-engine':
         specifier: workspace:^
-        version: link:../../packages/wayl
+        version: link:../../packages/payment-engine
       '@supabase/supabase-js':
         specifier: ^2.91.0
         version: 2.91.0
@@ -207,6 +207,9 @@ importers:
       grammy:
         specifier: ^1.39.3
         version: 1.39.3
+      lucide-react:
+        specifier: ^0.562.0
+        version: 0.562.0(react@19.2.3)
       next:
         specifier: 16.1.4
         version: 16.1.4(@babel/core@7.28.5)(@playwright/test@1.57.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -223,6 +226,12 @@ importers:
       '@biomejs/biome':
         specifier: ^2.3.11
         version: 2.3.11
+      '@repo/config':
+        specifier: workspace:^
+        version: link:../../packages/config
+      '@tailwindcss/postcss':
+        specifier: ^4.1.18
+        version: 4.1.18
       '@types/node':
         specifier: ^25.0.10
         version: 25.0.10
@@ -232,8 +241,14 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.9)
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
+      tailwindcss:
+        specifier: ^4.1.18
+        version: 4.1.18
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.9.3
         version: 5.9.3
 
   apps/web:
@@ -301,9 +316,6 @@ importers:
       '@repo/utils':
         specifier: workspace:*
         version: link:../../packages/utils
-      '@repo/wayl':
-        specifier: workspace:^
-        version: link:../../packages/wayl
       '@supabase/ssr':
         specifier: ^0.8.0
         version: 0.8.0(@supabase/supabase-js@2.91.0)
@@ -460,10 +472,10 @@ importers:
         specifier: ^17.2.3
         version: 17.2.3
       tsx:
-        specifier: ^4.7.1
+        specifier: ^4.21.0
         version: 4.21.0
       typescript:
-        specifier: ^5.3.3
+        specifier: ^5.9.3
         version: 5.9.3
 
   packages/env:
@@ -498,7 +510,7 @@ importers:
         specifier: workspace:*
         version: link:../config
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.9.3
         version: 5.9.3
 
   packages/ui:
@@ -553,7 +565,7 @@ importers:
         specifier: ^4.0.0
         version: 4.1.18(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))
       '@testing-library/jest-dom':
-        specifier: ^6.6.3
+        specifier: ^6.9.1
         version: 6.9.1
       '@testing-library/react':
         specifier: ^16.3.2
@@ -568,8 +580,8 @@ importers:
         specifier: 4.0.17
         version: 4.0.17(playwright@1.57.0)(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.17)
       '@vitest/coverage-v8':
-        specifier: 4.0.17
-        version: 4.0.17(@vitest/browser@4.0.17(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.17))(vitest@4.0.17)
+        specifier: ^4.0.17
+        version: 4.0.17(@vitest/browser@4.0.17(vite@7.3.1(@types/node@25.0.9)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.17))(vitest@4.0.17)
       jsdom:
         specifier: ^27.4.0
         version: 27.4.0
@@ -586,17 +598,17 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0(@testing-library/dom@10.4.1)(prettier@3.8.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       tailwindcss:
-        specifier: ^4.0.0
+        specifier: ^4.1.18
         version: 4.1.18
       typescript:
-        specifier: ^5.7.2
+        specifier: ^5.9.3
         version: 5.9.3
       vite:
         specifier: ^7.3.1
         version: 7.3.1(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
       vitest:
-        specifier: 4.0.17
-        version: 4.0.17(@types/node@25.0.10)(@vitest/browser-playwright@4.0.17)(jiti@2.6.1)(jsdom@27.4.0)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
+        specifier: ^4.0.17
+        version: 4.0.17(@types/node@25.0.9)(@vitest/browser-playwright@4.0.17)(jiti@2.6.1)(jsdom@27.4.0)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/utils:
     dependencies:
@@ -623,14 +635,14 @@ importers:
   packages/wayl:
     dependencies:
       react:
-        specifier: ^19.0.0
+        specifier: 19.2.3
         version: 19.2.3
     devDependencies:
       '@repo/config':
         specifier: workspace:*
         version: link:../config
       typescript:
-        specifier: ^5.7.3
+        specifier: ^5.9.3
         version: 5.9.3
       vitest:
         specifier: ^4.0.17
@@ -6403,7 +6415,7 @@ snapshots:
   '@babel/helper-module-imports@7.27.1':
     dependencies:
       '@babel/traverse': 7.28.6
-      '@babel/types': 7.28.5
+      '@babel/types': 7.28.6
     transitivePeerDependencies:
       - supports-color
 

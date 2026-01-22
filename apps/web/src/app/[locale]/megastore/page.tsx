@@ -3,14 +3,7 @@
 // UI Kit
 import { Badge, Button, Input } from '@repo/ui';
 import { motion } from 'framer-motion';
-import {
-  Book,
-  Gamepad2,
-  Laptop,
-  Search,
-  Smartphone,
-  Zap,
-} from 'lucide-react';
+import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { useProducts } from '@/hooks/queries/use-products';
@@ -50,8 +43,7 @@ export default function MegastorePage() {
 
   // Memoize filtered products
   const filteredProducts = useMemo(
-    () =>
-      products.filter((p) => filter === 'All' || p.category === filter),
+    () => products.filter((p) => filter === 'All' || p.category === filter),
     [products, filter],
   );
 
@@ -76,7 +68,10 @@ export default function MegastorePage() {
             animate={{ x: 0, opacity: 1 }}
             className="max-w-2xl"
           >
-            <Badge variant="brand" className="mb-4 bg-brand-yellow text-brand-dark border-none">
+            <Badge
+              variant="brand"
+              className="mb-4 bg-brand-yellow text-brand-dark border-none"
+            >
               MEGADEALS ARE HERE
             </Badge>
             <h1 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">
@@ -140,10 +135,10 @@ export default function MegastorePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {filteredProducts.map((product) => (
               <div key={product.id} className="h-[420px]">
-                 <ProductCard
-                   product={product}
-                   onAddToCart={(e) => handleQuickAdd(e, product)}
-                 />
+                <ProductCard
+                  product={product}
+                  onAddToCart={(e) => handleQuickAdd(e, product)}
+                />
               </div>
             ))}
           </div>
@@ -172,37 +167,39 @@ export default function MegastorePage() {
       {/* 4. FLASH DEALS */}
       <section className="max-w-7xl mx-auto px-4 mb-20">
         <div className="bg-gradient-to-br from-[#1a1a1a] to-black rounded-[2.5rem] border border-white/10 overflow-hidden relative">
-           <div className="absolute top-0 right-0 p-[20%] bg-brand-pink/20 blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 right-0 p-[20%] bg-brand-pink/20 blur-[120px] rounded-full pointer-events-none" />
 
-           <div className="grid md:grid-cols-2 gap-12 p-8 md:p-16 items-center relative z-10">
-              <div>
-                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/10 text-brand-yellow text-xs font-bold tracking-widest mb-6">
-                    <Zap size={14} className="fill-brand-yellow" /> FLASH DEAL
-                 </div>
-                 <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                    Logitech G Pro X Superlight
-                 </h2>
-                 <p className="text-slate-400 mb-8 text-lg">
-                    The world&apos;s lightest wireless gaming mouse. Used by pros.
-                    Verified refurbished condition available.
-                 </p>
-                 <div className="flex items-center gap-4 mb-8">
-                    <span className="text-4xl font-black text-white">120,000</span>
-                    <span className="text-xl text-slate-500 line-through">180,000</span>
-                 </div>
-                 <Button className="h-14 px-10 bg-brand-pink hover:bg-pink-600 text-white font-bold rounded-full text-lg border-none">
-                    Claim Deal
-                 </Button>
+          <div className="grid md:grid-cols-2 gap-12 p-8 md:p-16 items-center relative z-10">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/10 text-brand-yellow text-xs font-bold tracking-widest mb-6">
+                <Zap size={14} className="fill-brand-yellow" /> FLASH DEAL
               </div>
-              <div className="relative aspect-square md:aspect-video rounded-3xl overflow-hidden">
-                 <Image
-                    src="https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600"
-                    alt="Flash Deal"
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-700"
-                 />
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+                Logitech G Pro X Superlight
+              </h2>
+              <p className="text-slate-400 mb-8 text-lg">
+                The world&apos;s lightest wireless gaming mouse. Used by pros.
+                Verified refurbished condition available.
+              </p>
+              <div className="flex items-center gap-4 mb-8">
+                <span className="text-4xl font-black text-white">120,000</span>
+                <span className="text-xl text-slate-500 line-through">
+                  180,000
+                </span>
               </div>
-           </div>
+              <Button className="h-14 px-10 bg-brand-pink hover:bg-pink-600 text-white font-bold rounded-full text-lg border-none">
+                Claim Deal
+              </Button>
+            </div>
+            <div className="relative aspect-square md:aspect-video rounded-3xl overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600"
+                alt="Flash Deal"
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-700"
+              />
+            </div>
+          </div>
         </div>
       </section>
     </div>

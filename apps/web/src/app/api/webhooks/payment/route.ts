@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (findError || !order) {
-      Logger.error('Order not found for payment:', event.id);
+        Logger.error('Order not found for payment:', event.id);
         return NextResponse.json({ error: 'Order not found' }, { status: 404 });
       }
 
