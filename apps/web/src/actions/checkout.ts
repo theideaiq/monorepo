@@ -16,7 +16,22 @@ export async function initiateCheckout(cartId: string) {
     throw new Error('User not authenticated');
   }
 
-  // 1. Fetch Cart Items
+  // 1. Verify Cart Ownership
+  const { data: cart, error: cartFetchError } = await supabase
+    .from('carts')
+    .select('user_id')
+    .eq('id', cartId)
+    .single();
+
+  if (cartFetchError || !cart) {
+    throw new Error('Cart not found');
+  }
+
+  if (cart.user_id && cart.user_id !== user.id) {
+    throw new Error('Unauthorized access to cart');
+  }
+
+  // 2. Fetch Cart Items
   const { data: cartItems, error: cartError } = await supabase
     .from('cart_items')
     .select('quantity, products(id, name, price, description)')
@@ -26,7 +41,7 @@ export async function initiateCheckout(cartId: string) {
     throw new Error('Cart is empty or not found');
   }
 
-  // 2. Calculate Total
+  // 3. Calculate Total
   let total = 0;
   const lineItems: { label: string; amount: number; type: 'increase' }[] = [];
 
@@ -55,7 +70,7 @@ export async function initiateCheckout(cartId: string) {
     throw new Error('Invalid total amount');
   }
 
-  // 3. Create Checkout Session
+  // 4. Create Checkout Session
   const referenceId = crypto.randomUUID();
   const provider = paymentFactory.getProvider(total);
 
@@ -71,7 +86,7 @@ export async function initiateCheckout(cartId: string) {
     },
   });
 
-  // 4. Create Order
+  // 5. Create Order
   const { error: orderError } = await supabase.from('orders').insert({
     user_id: user.id,
     total_amount: total,
@@ -87,7 +102,7 @@ export async function initiateCheckout(cartId: string) {
     throw new Error('Failed to create order');
   }
 
-  // 5. Return URL (or Redirect)
+  // 6. Return URL (or Redirect)
   // The task asked to "Return the url to the client", but if we are in a server action
   // triggered by a form, we typically redirect.
   // However, to strictly follow "Return the url", I will return it.
