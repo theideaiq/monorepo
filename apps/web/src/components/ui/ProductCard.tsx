@@ -30,7 +30,7 @@ export function ProductCard({
         className="relative h-full bg-white/5 border border-white/5 rounded-2xl overflow-hidden hover:border-brand-yellow/30 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col"
       >
         {/* Image Container */}
-        <div className="relative aspect-square bg-[#1a1a1a] overflow-hidden">
+        <div className="relative aspect-square bg-brand-surface overflow-hidden">
           {product.image ? (
             <Image
               src={product.image}
@@ -78,7 +78,7 @@ export function ProductCard({
         {/* Info */}
         <div className="p-4 flex flex-col flex-1">
           <div className="flex-1">
-            <h3 className="text-white font-bold leading-tight mb-1 line-clamp-2 min-h-[2.5rem]">
+            <h3 className="text-white font-bold leading-tight mb-1 line-clamp-2 min-h-10">
               {product.title}
             </h3>
             <p className="text-xs text-slate-400 mb-3">{product.seller}</p>
