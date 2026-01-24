@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card, Textarea, Select } from '@repo/ui';
+import { Button, Input, Textarea, Select } from '@repo/ui';
 import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
 
