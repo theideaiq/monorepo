@@ -1,5 +1,7 @@
 'use client';
 
+import { safeJsonLdStringify } from '@repo/utils';
+
 /**
  * Injects JSON-LD Structured Data into the page head.
  * Critical for SEO: Helps search engines understand the Organization and Website identity.
@@ -60,7 +62,7 @@ export default function JsonLd({ baseUrl }: { baseUrl: string }) {
     <script
       type="application/ld+json"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe and required by Google
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
     />
   );
 }
