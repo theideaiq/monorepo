@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 
 interface DrawerProps {
@@ -20,17 +20,25 @@ export function Drawer({
   title,
   footer,
 }: DrawerProps) {
-  // Prevent body scroll when drawer is open
+  const titleId = useId();
+
+  // Prevent body scroll and handle escape key when drawer is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      const handleEsc = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleEsc);
+
+      return () => {
+        document.body.style.overflow = 'unset';
+        window.removeEventListener('keydown', handleEsc);
+      };
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
+
+    document.body.style.overflow = 'unset';
+  }, [isOpen, onClose]);
 
   // Render to body (Portal) to ensure it stays on top
   if (typeof document === 'undefined') return null;
@@ -46,10 +54,14 @@ export function Drawer({
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            aria-hidden="true"
           />
 
           {/* Drawer Content */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={title ? titleId : undefined}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -58,13 +70,17 @@ export function Drawer({
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-white/10">
-              <h2 className="text-xl font-bold text-white tracking-tight">
+              <h2
+                id={titleId}
+                className="text-xl font-bold text-white tracking-tight"
+              >
                 {title}
               </h2>
               <button
                 type="button"
                 onClick={onClose}
                 className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                aria-label="Close drawer"
               >
                 <X size={24} />
               </button>
