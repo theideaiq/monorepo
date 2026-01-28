@@ -66,3 +66,17 @@ export function formatCompactNumber(number: number): string {
     maximumFractionDigits: 1,
   }).format(number);
 }
+
+/**
+ * Format a number as IQD (Iraqi Dinar) value without currency symbol.
+ * Used when the currency symbol needs to be styled separately.
+ *
+ * @param amount - The numerical amount.
+ * @returns The formatted string (e.g., "50,000").
+ */
+export function formatIQD(amount: number): string {
+  return new Intl.NumberFormat('en-IQ', {
+    style: 'decimal',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
