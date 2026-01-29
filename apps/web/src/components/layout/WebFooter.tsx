@@ -23,7 +23,7 @@ interface WebFooterProps {
 
 export function WebFooter({ columns, copyright }: WebFooterProps) {
   return (
-    <footer className="bg-[#0a0a0a] border-t border-white/5 pt-20 pb-10 text-slate-400 text-sm">
+    <footer className="bg-neutral-950 border-t border-white/5 pt-20 pb-10 text-slate-400 text-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
           {/* Brand Column */}
