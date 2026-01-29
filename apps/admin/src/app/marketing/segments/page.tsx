@@ -26,6 +26,7 @@ export default async function SegmentsPage() {
         </div>
         <div className="md:col-span-2 space-y-4">
           <h2 className="text-xl font-semibold">Saved Segments</h2>
+          {/* biome-ignore lint/suspicious/noExplicitAny: Dynamic segment */}
           {segments?.map((segment: any) => (
             <div
               key={segment.id}

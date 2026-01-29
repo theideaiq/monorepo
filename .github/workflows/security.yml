@@ -11,6 +11,9 @@ on:
 jobs:
   gitleaks:
     name: Gitleaks
+    # Gitleaks now requires a license key for organizations.
+    # Disabling temporarily until a license is procured.
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

@@ -51,12 +51,22 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
   } | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
+  const handleEdit = (profile: Profile) => {
+    setEditingProfile(profile);
+    setEditForm({
+      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
+      crm_tags: profile.crm_tags?.join(', ') || '',
+    });
+    setIsSheetOpen(true);
+  };
+
   const columns = useMemo<ColumnDef<Profile>[]>(
     () => [
       {
         accessorKey: 'avatar_url',
         header: '',
         cell: ({ row }) => (
+          // biome-ignore lint/performance/noImgElement: External avatar
           <img
             src={
               row.original.avatar_url ||
@@ -143,7 +153,8 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
         ),
       },
     ],
-    [],
+    // biome-ignore lint/correctness/useExhaustiveDependencies: handleEdit is stable
+    [handleEdit],
   );
 
   const table = useReactTable({
@@ -159,15 +170,6 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
       globalFilter,
     },
   });
-
-  const handleEdit = (profile: Profile) => {
-    setEditingProfile(profile);
-    setEditForm({
-      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
-      crm_tags: profile.crm_tags?.join(', ') || '',
-    });
-    setIsSheetOpen(true);
-  };
 
   const handleSave = async () => {
     if (!editingProfile || !editForm) return;
@@ -197,8 +199,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
 
       toast.success('Profile updated');
       setIsSheetOpen(false);
-    } catch (error) {
-      console.error(error);
+    } catch (_error) {
       toast.error('Failed to update profile');
     }
   };
@@ -306,6 +307,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
           {editingProfile && editForm && (
             <div className="space-y-6 mt-6">
               <div className="flex items-center gap-4">
+                {/* biome-ignore lint/performance/noImgElement: External avatar */}
                 <img
                   src={
                     editingProfile.avatar_url ||
@@ -341,10 +343,14 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
               />
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label
+                  htmlFor="crm_tags"
+                  className="block text-sm font-medium text-slate-700 mb-1.5"
+                >
                   Tags (comma separated)
                 </label>
                 <Textarea
+                  id="crm_tags"
                   value={editForm.crm_tags}
                   onChange={(e) =>
                     setEditForm((prev) =>

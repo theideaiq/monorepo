@@ -45,6 +45,7 @@ export default async function CampaignsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {/* biome-ignore lint/suspicious/noExplicitAny: Dynamic campaigns */}
             {campaigns?.map((campaign: any) => (
               <TableRow key={campaign.id}>
                 <TableCell className="font-medium text-slate-900">

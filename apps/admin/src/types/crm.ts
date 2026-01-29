@@ -1,7 +1,6 @@
 import type { CAMPAIGN_STATUSES, CRM_STATUSES } from '@/lib/constants';
 import type { UserRole } from '@/types/auth';
 
-// biome-ignore lint/style/useImportType: This is a value import needed for typeof
 export type CRMStatus = (typeof CRM_STATUSES)[keyof typeof CRM_STATUSES];
 export type { UserRole };
 
@@ -22,12 +21,12 @@ export interface MarketingSegment {
   criteria: {
     role?: string;
     crm_status?: CRMStatus;
+    // biome-ignore lint/suspicious/noExplicitAny: Extensible metadata
     [key: string]: any;
   };
   created_at: string;
 }
 
-// biome-ignore lint/style/useImportType: This is a value import needed for typeof
 export type CampaignStatus =
   (typeof CAMPAIGN_STATUSES)[keyof typeof CAMPAIGN_STATUSES];
 

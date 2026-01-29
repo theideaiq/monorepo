@@ -3,7 +3,7 @@ import { CashFlowChart } from './CashFlowChart';
 
 export async function CashFlowChartWrapper({
   startDate,
-  endDate,
+  endDate: _endDate,
 }: {
   startDate: string;
   endDate: string;

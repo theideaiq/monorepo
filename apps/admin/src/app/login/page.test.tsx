@@ -25,22 +25,28 @@ vi.mock('react-hot-toast', () => ({
 
 // Mock UI components
 vi.mock('@repo/ui', () => ({
+  // biome-ignore lint/suspicious/noExplicitAny: Mock component props
   Button: ({ children, isLoading, ...props }: any) => (
     <button {...props} disabled={isLoading}>
       {isLoading ? 'Loading...' : children}
     </button>
   ),
+  // biome-ignore lint/suspicious/noExplicitAny: Mock component props
   Card: ({ children, className }: any) => (
     <div className={className}>{children}</div>
   ),
+  // biome-ignore lint/suspicious/noExplicitAny: Mock component props
   Input: ({ label, ...props }: any) => (
     <label>
       {label}
       <input {...props} />
     </label>
   ),
+  // biome-ignore lint/suspicious/noExplicitAny: Mock component props
   Sheet: ({ children }: any) => <div>{children}</div>,
+  // biome-ignore lint/suspicious/noExplicitAny: Mock component props
   SheetContent: ({ children }: any) => <div>{children}</div>,
+  // biome-ignore lint/suspicious/noExplicitAny: Mock component props
   SheetTrigger: ({ children }: any) => <div>{children}</div>,
 }));
 
@@ -57,17 +63,23 @@ describe('LoginPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // biome-ignore lint/suspicious/noExplicitAny: Mocking
     (useRouter as any).mockReturnValue({
       push: mockPush,
       refresh: mockRefresh,
     });
+    // biome-ignore lint/suspicious/noExplicitAny: Mocking
     (createClient as any).mockReturnValue(mockSupabase);
   });
 
   const setupSupabaseMock = (
+    // biome-ignore lint/suspicious/noExplicitAny: Mock data
     signInData: any,
+    // biome-ignore lint/suspicious/noExplicitAny: Mock data
     signInError: any,
+    // biome-ignore lint/suspicious/noExplicitAny: Mock data
     profileData: any,
+    // biome-ignore lint/suspicious/noExplicitAny: Mock data
     profileError: any,
   ) => {
     mockSupabase.auth.signInWithPassword.mockResolvedValue({

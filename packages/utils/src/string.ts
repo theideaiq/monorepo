@@ -19,6 +19,8 @@ const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
  * Decodes HTML entities in a string to their corresponding characters.
  * Handles named entities and numeric entities (decimal).
  *
+ * @note Currently only supports decimal numeric entities (e.g. &#65;), not hexadecimal (e.g. &#x41;).
+ *
  * @param text - The string containing HTML entities.
  * @returns The decoded string.
  */
@@ -41,11 +43,15 @@ export function decodeHtmlEntities(text: string): string {
 /**
  * Converts a string into a URL-friendly slug.
  *
+ * @warning Strips all non-English (non-ASCII) characters. Not suitable for non-Latin scripts (e.g., Arabic).
+ * @throws {TypeError} If text is null or undefined.
+ *
  * @param text - The text to slugify.
  * @returns The slugified string.
  *
  * @example
  * slugify("Hello World!") // -> "hello-world"
+ * slugify("مرحبا") // -> "" (Returns empty string for non-Latin)
  */
 export function slugify(text: string): string {
   return text
