@@ -1,7 +1,6 @@
+'use client';
+
 import Image from 'next/image';
-
-('use client');
-
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -10,16 +9,20 @@ export default function RentalsList({ rentals }: { rentals: any[] }) {
   const t = useTranslations('Account');
   const [selectedRental, setSelectedRental] = useState<string | null>(null);
 
-  if (!rentals || rentals.length === 0) {
-    return <p className="text-slate-500">{t('no_rentals')}</p>;
+  if (!rentals?.length) {
+    return (
+      <div className="text-center py-12 bg-white/5 rounded-xl border border-white/10">
+        <p className="text-slate-400">{t('noRentals')}</p>
+      </div>
+    );
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-4">
       {rentals.map((rental) => (
         <div
           key={rental.id}
-          className="bg-white p-4 rounded-lg shadow border border-slate-100"
+          className="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-brand-yellow/50 transition-colors"
         >
           <div className="flex items-center gap-4 mb-4">
             {rental.product?.image_url && (
@@ -32,28 +35,24 @@ export default function RentalsList({ rentals }: { rentals: any[] }) {
               />
             )}
             <div>
-              <h3 className="font-semibold">
-                {rental.product?.name || 'Unknown Item'}
-              </h3>
-              <p className="text-xs text-slate-500">
-                Due: {new Date(rental.due_date).toLocaleDateString()}
+              <h3 className="font-bold text-white">{rental.product?.name}</h3>
+              <p className="text-sm text-slate-400">
+                {new Date(rental.start_date).toLocaleDateString()} -{' '}
+                {new Date(rental.end_date).toLocaleDateString()}
               </p>
             </div>
-          </div>
-
-          {selectedRental === rental.id ? (
-            <div className="bg-blue-50 p-3 rounded text-sm text-blue-800 mb-2">
-              {t('returnText')}
+            <div className="ml-auto">
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-bold ${
+                  rental.status === 'active'
+                    ? 'bg-green-500/20 text-green-400'
+                    : 'bg-slate-500/20 text-slate-400'
+                }`}
+              >
+                {rental.status}
+              </span>
             </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setSelectedRental(rental.id)}
-              className="w-full text-center border border-blue-600 text-blue-600 rounded py-1.5 text-sm hover:bg-blue-50"
-            >
-              {t('returnInstructions')}
-            </button>
-          )}
+          </div>
         </div>
       ))}
     </div>

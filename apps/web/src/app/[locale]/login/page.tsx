@@ -1,12 +1,13 @@
 'use client';
 
-import { Button } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Button, Input } from '@repo/ui';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -45,7 +46,6 @@ export default function AuthPage() {
         toast.success('Account created! Please check your email.');
         setMode('login');
       }
-      // biome-ignore lint/suspicious/noExplicitAny: Error handling
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -128,10 +128,7 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                    <label
-                      htmlFor="full-name"
-                      className="text-sm text-slate-400 mb-1 block"
-                    >
+                    <label className="text-sm text-slate-400 mb-1 block">
                       Full Name
                     </label>
                     <div className="relative">
@@ -142,7 +139,6 @@ export default function AuthPage() {
                       <input
                         type="text"
                         required={mode === 'register'}
-                        id="full-name"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
@@ -155,10 +151,7 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
-              <label
-                htmlFor="email"
-                className="text-sm text-slate-400 mb-1 block"
-              >
+              <label className="text-sm text-slate-400 mb-1 block">
                 Email Address
               </label>
               <div className="relative">
@@ -169,7 +162,6 @@ export default function AuthPage() {
                 <input
                   type="email"
                   required
-                  id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
@@ -179,10 +171,7 @@ export default function AuthPage() {
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="text-sm text-slate-400 mb-1 block"
-              >
+              <label className="text-sm text-slate-400 mb-1 block">
                 Password
               </label>
               <div className="relative">
@@ -193,7 +182,6 @@ export default function AuthPage() {
                 <input
                   type="password"
                   required
-                  id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
@@ -224,7 +212,6 @@ export default function AuthPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <button
-                type="button"
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"
               >

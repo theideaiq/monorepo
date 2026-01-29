@@ -1,12 +1,10 @@
 'use client';
 
-import { Button } from '@repo/ui';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { updateProfile } from '@/actions/account';
 
-// biome-ignore lint/suspicious/noExplicitAny: Data fetch
 export default function ProfileForm({ profile }: { profile: any }) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
@@ -16,7 +14,6 @@ export default function ProfileForm({ profile }: { profile: any }) {
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
-      // biome-ignore lint/suspicious/noExplicitAny: Error handling
     } catch (e: any) {
       toast.error(e.message);
     } finally {
@@ -25,26 +22,32 @@ export default function ProfileForm({ profile }: { profile: any }) {
   }
 
   return (
-    <form action={handleSubmit} className="space-y-6 max-w-xl">
-      <div className="grid gap-4">
-        <div className="grid gap-2">
-          <label
-            htmlFor="full_name"
-            className="text-sm font-medium text-slate-200"
-          >
-            {t('fullName')}
-          </label>
-          <input
-            id="full_name"
-            name="full_name"
-            defaultValue={profile?.full_name}
-            className="flex h-10 w-full rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-white"
-          />
-        </div>
+    <form
+      action={handleSubmit}
+      className="bg-white p-6 rounded-lg shadow border border-slate-100 max-w-md"
+    >
+      <div className="mb-4">
+        <label
+          htmlFor="fullName"
+          className="block text-sm font-medium text-slate-700 mb-1"
+        >
+          Full Name
+        </label>
+        <input
+          type="text"
+          name="fullName"
+          id="fullName"
+          defaultValue={profile?.full_name || ''}
+          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
-      <Button type="submit" disabled={loading}>
-        {loading ? t('saving') : t('saveChanges')}
-      </Button>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-blue-600 text-white rounded-md py-2 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+      >
+        {loading ? 'Saving...' : t('save')}
+      </button>
     </form>
   );
 }

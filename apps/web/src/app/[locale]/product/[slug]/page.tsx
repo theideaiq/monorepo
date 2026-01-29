@@ -1,8 +1,7 @@
-import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import ProductJsonLd from '@/components/seo/ProductJsonLd';
-import { ProductView } from '@/components/store/ProductView';
+import { Metadata } from 'next';
 import { getProductBySlug } from '@/services/products';
+import { ProductView } from '@/components/store/ProductView';
 
 type Props = {
   params: Promise<{ slug: string; locale: string }>;
@@ -28,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { slug, locale } = await params;
+  const { slug } = await params;
   const product = await getProductBySlug(slug);
 
   if (!product) {
@@ -37,7 +36,6 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16 pt-24">
-      <ProductJsonLd product={product} locale={locale} />
       <ProductView product={product} />
     </div>
   );

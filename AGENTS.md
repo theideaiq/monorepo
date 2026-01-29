@@ -195,11 +195,6 @@ Rule: Routinely audit `.env.example` files against the strict Zod validation sch
 ### 2026-01-20 - Audit Logging Fail-Safe
 **Standard:** The `logAdminAction` function in `apps/admin/src/lib/audit.ts` handles audit logging and is implemented to fail silently (catching errors) to ensure admin workflows are not disrupted by database logging failures.
 
-### 2025-02-21 - JSON-LD XSS Vulnerability
-**Vulnerability:** Using `JSON.stringify` directly in `dangerouslySetInnerHTML` for JSON-LD allows XSS via `</script>` injection.
-**Learning:** Standard JSON serialization does not escape HTML characters.
-**Prevention:** Always sanitize JSON-LD strings by replacing `<` with `\u003c` (e.g., `.replace(/</g, '\\u003c')`) or using a dedicated utility.
-
 ## Signal (SEO)
 
 ### 2024-05-22 - Missing Structured Data for Organization
