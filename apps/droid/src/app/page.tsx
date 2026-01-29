@@ -1,4 +1,5 @@
 'use client';
+import type React from 'react';
 
 import {
   ArrowRight,
@@ -47,7 +48,7 @@ export default function DroidLanding() {
             href="https://t.me/TheIdeaDroidBot"
             target="_blank"
             className="group relative px-8 py-4 bg-[#facc15] text-black font-bold rounded-xl text-lg flex items-center justify-center gap-2 hover:bg-[#ffe066] transition-all hover:scale-105"
-            rel="noopener"
+            rel="noopener noreferrer"
           >
             <Bot className="w-5 h-5" />
             Launch Droid
@@ -278,7 +279,7 @@ function FeatureCard({
   title,
   desc,
 }: {
-  icon: any;
+  icon: React.ReactNode;
   title: string;
   desc: string;
 }) {

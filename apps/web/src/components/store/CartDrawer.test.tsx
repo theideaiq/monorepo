@@ -1,9 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { CartDrawer } from './CartDrawer';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import type React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as cartStoreModule from '@/stores/cart-store';
 import * as uiStoreModule from '@/stores/ui-store';
+import { CartDrawer } from './CartDrawer';
 
 // Mocks
 vi.mock('next/navigation', () => ({
@@ -43,24 +43,26 @@ describe('CartDrawer', () => {
     vi.clearAllMocks();
     // Default UI Store state
     (uiStoreModule.useUIStore as any).mockImplementation((selector: any) => {
-        const state = {
-            isCartOpen: true,
-            closeCart: mockCloseCart,
-        };
-        return selector ? selector(state) : state;
+      const state = {
+        isCartOpen: true,
+        closeCart: mockCloseCart,
+      };
+      return selector ? selector(state) : state;
     });
   });
 
   it('renders empty cart message when no items', () => {
-    (cartStoreModule.useCartStore as any).mockImplementation((selector: any) => {
+    (cartStoreModule.useCartStore as any).mockImplementation(
+      (selector: any) => {
         const state = {
-            items: [],
-            removeItem: mockRemoveItem,
-            updateQuantity: mockUpdateQuantity,
-            total: 0,
+          items: [],
+          removeItem: mockRemoveItem,
+          updateQuantity: mockUpdateQuantity,
+          total: 0,
         };
         return selector ? selector(state) : state;
-    });
+      },
+    );
 
     render(<CartDrawer />);
     expect(screen.getByText('Your cart is empty.')).toBeInTheDocument();
@@ -79,15 +81,17 @@ describe('CartDrawer', () => {
       },
     ];
 
-    (cartStoreModule.useCartStore as any).mockImplementation((selector: any) => {
+    (cartStoreModule.useCartStore as any).mockImplementation(
+      (selector: any) => {
         const state = {
-            items,
-            removeItem: mockRemoveItem,
-            updateQuantity: mockUpdateQuantity,
-            total: 2000,
+          items,
+          removeItem: mockRemoveItem,
+          updateQuantity: mockUpdateQuantity,
+          total: 2000,
         };
         return selector ? selector(state) : state;
-    });
+      },
+    );
 
     render(<CartDrawer />);
     expect(screen.getByText('Test Product')).toBeInTheDocument();
@@ -97,7 +101,7 @@ describe('CartDrawer', () => {
   });
 
   it('calls removeItem when trash button is clicked', () => {
-     const items = [
+    const items = [
       {
         id: '1',
         productId: 'p1',
@@ -107,15 +111,17 @@ describe('CartDrawer', () => {
         quantity: 1,
       },
     ];
-    (cartStoreModule.useCartStore as any).mockImplementation((selector: any) => {
+    (cartStoreModule.useCartStore as any).mockImplementation(
+      (selector: any) => {
         const state = {
-            items,
-            removeItem: mockRemoveItem,
-            updateQuantity: mockUpdateQuantity,
-            total: 1000,
+          items,
+          removeItem: mockRemoveItem,
+          updateQuantity: mockUpdateQuantity,
+          total: 1000,
         };
         return selector ? selector(state) : state;
-    });
+      },
+    );
 
     const { container } = render(<CartDrawer />);
 
@@ -137,19 +143,23 @@ describe('CartDrawer', () => {
         quantity: 2,
       },
     ];
-    (cartStoreModule.useCartStore as any).mockImplementation((selector: any) => {
+    (cartStoreModule.useCartStore as any).mockImplementation(
+      (selector: any) => {
         const state = {
-            items,
-            removeItem: mockRemoveItem,
-            updateQuantity: mockUpdateQuantity,
-            total: 2000,
+          items,
+          removeItem: mockRemoveItem,
+          updateQuantity: mockUpdateQuantity,
+          total: 2000,
         };
         return selector ? selector(state) : state;
-    });
+      },
+    );
 
     const { container } = render(<CartDrawer />);
 
-    const quantityButtons = container.querySelectorAll('button.p-1.text-slate-400');
+    const quantityButtons = container.querySelectorAll(
+      'button.p-1.text-slate-400',
+    );
 
     const minusBtn = quantityButtons[0];
     const plusBtn = quantityButtons[1];

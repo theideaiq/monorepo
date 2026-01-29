@@ -1,87 +1,89 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
-import Image from 'next/image';
-import { Drawer } from '@/components/ui/Drawer';
-import { useCartStore, type CartItem } from '@/stores/cart-store';
-import { useUIStore } from '@/stores/ui-store';
 import { Button } from '@repo/ui';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { memo, useCallback } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import { Drawer } from '@/components/ui/Drawer';
+import { type CartItem, useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 // Optimization: Move formatter outside component to prevent recreation on every render
 const currencyFormatter = new Intl.NumberFormat('en-IQ');
 
 // Optimization: Extract and memoize list item to prevent unnecessary re-renders
-const CartItemRow = memo(({
-  item,
-  onRemove,
-  onUpdateQuantity
-}: {
-  item: CartItem;
-  onRemove: (id: string) => void;
-  onUpdateQuantity: (id: string, qty: number) => void;
-}) => {
-  return (
-    <div className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/5">
-      <div className="w-20 h-20 bg-black rounded-lg relative overflow-hidden flex-shrink-0">
-        <Image
-          src={item.image}
-          alt={item.title}
-          fill
-          className="object-cover"
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <h4 className="text-white font-bold text-sm line-clamp-2">
-          {item.title}
-        </h4>
-        {item.attributes && (
-          <p className="text-xs text-slate-500 mt-1">
-            {Object.entries(item.attributes)
-              .map(([_k, v]) => `${v}`)
-              .join(', ')}
+const CartItemRow = memo(
+  ({
+    item,
+    onRemove,
+    onUpdateQuantity,
+  }: {
+    item: CartItem;
+    onRemove: (id: string) => void;
+    onUpdateQuantity: (id: string, qty: number) => void;
+  }) => {
+    return (
+      <div className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/5">
+        <div className="w-20 h-20 bg-black rounded-lg relative overflow-hidden flex-shrink-0">
+          <Image
+            src={item.image}
+            alt={item.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h4 className="text-white font-bold text-sm line-clamp-2">
+            {item.title}
+          </h4>
+          {item.attributes && (
+            <p className="text-xs text-slate-500 mt-1">
+              {Object.entries(item.attributes)
+                .map(([_k, v]) => `${v}`)
+                .join(', ')}
+            </p>
+          )}
+          <p className="text-brand-yellow font-bold mt-2">
+            {currencyFormatter.format(item.price)} IQD
           </p>
-        )}
-        <p className="text-brand-yellow font-bold mt-2">
-          {currencyFormatter.format(item.price)} IQD
-        </p>
-      </div>
+        </div>
 
-      <div className="flex flex-col justify-between items-end">
-        <button
-          type="button"
-          onClick={() => onRemove(item.id)}
-          className="text-slate-500 hover:text-red-500 p-1"
-        >
-          <Trash2 size={16} />
-        </button>
-
-        <div className="flex items-center gap-3 bg-black/20 rounded-lg p-1">
+        <div className="flex flex-col justify-between items-end">
           <button
             type="button"
-            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-            className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
-            disabled={item.quantity <= 1}
+            onClick={() => onRemove(item.id)}
+            className="text-slate-500 hover:text-red-500 p-1"
           >
-            <Minus size={14} />
+            <Trash2 size={16} />
           </button>
-          <span className="text-sm font-bold text-white w-4 text-center">
-            {item.quantity}
-          </span>
-          <button
-            type="button"
-            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-            className="p-1 text-slate-400 hover:text-white"
-          >
-            <Plus size={14} />
-          </button>
+
+          <div className="flex items-center gap-3 bg-black/20 rounded-lg p-1">
+            <button
+              type="button"
+              onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+              className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
+              disabled={item.quantity <= 1}
+            >
+              <Minus size={14} />
+            </button>
+            <span className="text-sm font-bold text-white w-4 text-center">
+              {item.quantity}
+            </span>
+            <button
+              type="button"
+              onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+              className="p-1 text-slate-400 hover:text-white"
+            >
+              <Plus size={14} />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 CartItemRow.displayName = 'CartItemRow';
 
@@ -104,8 +106,14 @@ export function CartDrawer() {
   }, [closeCart, router]);
 
   // Optimization: Stable callbacks for memoized child component
-  const handleRemoveItem = useCallback((id: string) => removeItem(id), [removeItem]);
-  const handleUpdateQuantity = useCallback((id: string, qty: number) => updateQuantity(id, qty), [updateQuantity]);
+  const handleRemoveItem = useCallback(
+    (id: string) => removeItem(id),
+    [removeItem],
+  );
+  const handleUpdateQuantity = useCallback(
+    (id: string, qty: number) => updateQuantity(id, qty),
+    [updateQuantity],
+  );
 
   const formattedTotal = currencyFormatter.format(total);
 
