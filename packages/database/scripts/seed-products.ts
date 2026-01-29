@@ -11,7 +11,7 @@
  */
 
 import dotenv from 'dotenv';
-import path from 'path';
+import path from 'node:path';
 import { createServiceRoleClient } from '../src/service';
 
 // Load environment variables from .env.local or .env
@@ -30,7 +30,9 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Optional: better for migration
 
 if (!supabaseUrl || (!supabaseKey && !supabaseServiceKey)) {
+  // biome-ignore lint/suspicious/noConsoleLog: Script logging
   console.error('Error: Missing Supabase environment variables.');
+  // biome-ignore lint/suspicious/noConsoleLog: Script logging
   console.error(
     'Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (or SUPABASE_SERVICE_ROLE_KEY) are set.',
   );
@@ -129,6 +131,7 @@ function mapCategory(oldCategory: string): NewCategory {
 }
 
 async function migrate() {
+  // biome-ignore lint/suspicious/noConsoleLog: Script logging
   console.log('Starting migration...');
 
   for (const product of PRODUCTS) {
@@ -144,17 +147,21 @@ async function migrate() {
       // We rely on Postgres to generate the UUID id
     };
 
+    // biome-ignore lint/suspicious/noConsoleLog: Script logging
     console.log(`Migrating: ${mappedProduct.name} (${mappedProduct.category})`);
 
     const { error } = await supabase.from('products').insert(mappedProduct);
 
     if (error) {
+      // biome-ignore lint/suspicious/noConsoleLog: Script logging
       console.error(`Failed to insert ${mappedProduct.name}:`, error.message);
     } else {
+      // biome-ignore lint/suspicious/noConsoleLog: Script logging
       console.log(`Successfully inserted ${mappedProduct.name}`);
     }
   }
 
+  // biome-ignore lint/suspicious/noConsoleLog: Script logging
   console.log('Migration complete.');
 }
 

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import path from 'path';
+import path from 'node:path';
 import { createServiceRoleClient } from '../src/service';
 
 // Load environment variables
@@ -18,7 +18,9 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || (!supabaseKey && !supabaseServiceKey)) {
+  // biome-ignore lint/suspicious/noConsoleLog: Script logging
   console.error('Error: Missing Supabase environment variables.');
+  // biome-ignore lint/suspicious/noConsoleLog: Script logging
   console.error(
     'Please ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY (or SUPABASE_SERVICE_ROLE_KEY) are set.',
   );
@@ -101,6 +103,7 @@ const accounts = [
 ];
 
 async function seedAccounts() {
+  // biome-ignore lint/suspicious/noConsoleLog: Script logging
   console.log('Starting Chart of Accounts seed...');
 
   // Optional: Clean up existing entries to avoid duplicates if running multiple times?
@@ -115,6 +118,7 @@ async function seedAccounts() {
     .select('code');
 
   if (fetchError) {
+    // biome-ignore lint/suspicious/noConsoleLog: Script logging
     console.error('Error fetching existing accounts:', fetchError.message);
     // If table doesn't exist, we can't do anything.
     return;
@@ -125,6 +129,7 @@ async function seedAccounts() {
   const toInsert = accounts.filter((a) => !existingCodes.has(a.code));
 
   if (toInsert.length === 0) {
+    // biome-ignore lint/suspicious/noConsoleLog: Script logging
     console.log('All accounts already exist. Skipping.');
     return;
   }
@@ -132,8 +137,10 @@ async function seedAccounts() {
   const { error } = await supabase.from('chart_of_accounts').insert(toInsert);
 
   if (error) {
+    // biome-ignore lint/suspicious/noConsoleLog: Script logging
     console.error('Error seeding accounts:', error.message);
   } else {
+    // biome-ignore lint/suspicious/noConsoleLog: Script logging
     console.log(`Successfully seeded ${toInsert.length} accounts.`);
   }
 }

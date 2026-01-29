@@ -17,13 +17,6 @@ export function BottomNav() {
     setMounted(true);
   }, []);
 
-  const _navItems = [
-    { label: 'Home', icon: Home, href: '/' },
-    { label: 'Browse', icon: Search, href: '/megastore' },
-    // Cart is special
-    { label: 'Profile', icon: User, href: '/account' },
-  ];
-
   // Helper to check active state
   // Basic check: if href is '/' check exact match, else check startsWith
   const isActive = (href: string) => {

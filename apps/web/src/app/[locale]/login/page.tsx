@@ -1,11 +1,10 @@
 'use client';
 
-import { Button, Input } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
-import Image from 'next/image';
+import { Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
 
@@ -20,6 +19,11 @@ export default function AuthPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+
+  // Generate unique IDs for accessibility
+  const fullNameId = useId();
+  const emailId = useId();
+  const passwordId = useId();
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,6 +107,7 @@ export default function AuthPage() {
 
           {/* Social Auth */}
           <Button
+            type="button"
             onClick={handleGoogle}
             className="w-full h-12 bg-white text-black hover:bg-slate-200 border-none font-bold flex items-center justify-center gap-3"
           >
@@ -129,7 +134,10 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                    <label className="text-sm text-slate-400 mb-1 block">
+                    <label
+                      htmlFor={fullNameId}
+                      className="text-sm text-slate-400 mb-1 block"
+                    >
                       Full Name
                     </label>
                     <div className="relative">
@@ -138,6 +146,7 @@ export default function AuthPage() {
                         size={18}
                       />
                       <input
+                        id={fullNameId}
                         type="text"
                         required={mode === 'register'}
                         value={fullName}
@@ -152,7 +161,10 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label
+                htmlFor={emailId}
+                className="text-sm text-slate-400 mb-1 block"
+              >
                 Email Address
               </label>
               <div className="relative">
@@ -161,6 +173,7 @@ export default function AuthPage() {
                   size={18}
                 />
                 <input
+                  id={emailId}
                   type="email"
                   required
                   value={email}
@@ -172,7 +185,10 @@ export default function AuthPage() {
             </div>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label
+                htmlFor={passwordId}
+                className="text-sm text-slate-400 mb-1 block"
+              >
                 Password
               </label>
               <div className="relative">
@@ -181,6 +197,7 @@ export default function AuthPage() {
                   size={18}
                 />
                 <input
+                  id={passwordId}
                   type="password"
                   required
                   value={password}
