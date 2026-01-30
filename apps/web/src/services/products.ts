@@ -1,6 +1,6 @@
 import { Logger } from '@repo/utils';
+import type { Database } from '@/lib/database.types';
 import { createClient } from '@/lib/supabase/client';
-import type { Database, Json } from '@/lib/database.types';
 
 type DBProduct = Database['public']['Tables']['products']['Row'] & {
   reviews?: { rating: number }[];
@@ -32,6 +32,7 @@ export interface Product {
   details: Record<string, any>;
   variants: ProductVariant[];
   stock: number;
+  reviewCount: number;
 }
 
 /**
@@ -76,6 +77,7 @@ export async function getProducts(limit = 20): Promise<Product[]> {
         details: {},
         variants: [],
         stock: 10,
+        reviewCount: 120,
       },
       {
         id: '2',
@@ -94,6 +96,7 @@ export async function getProducts(limit = 20): Promise<Product[]> {
         details: {},
         variants: [],
         stock: 5,
+        reviewCount: 50,
       },
     ];
   }
@@ -157,6 +160,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
         },
       ],
       stock: 10,
+      reviewCount: 10,
     };
   }
 }
@@ -197,5 +201,6 @@ function mapDBProductToUI(item: DBProduct): Product {
     details: (item.details as Record<string, any>) || {},
     variants,
     stock: item.stock_count,
+    reviewCount: ratings.length,
   };
 }

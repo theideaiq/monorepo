@@ -1,21 +1,49 @@
-area: web:
-  - changed-files:
-      - any-glob-to-any-file: 'apps/web/**/*'
+# Configuration for the Labeler Action
+# https://github.com/actions/labeler
 
+# Area Labels
 area: admin:
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
+
+area: web:
+  - changed-files:
+      - any-glob-to-any-file: 'apps/web/**/*'
 
 area: droid:
   - changed-files:
       - any-glob-to-any-file: 'apps/droid/**/*'
 
-area: core:
+area: docs:
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**/*'
+
+area: ci:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**/*'
+
+area: infra:
+  - changed-files:
+      - any-glob-to-any-file: 'infrastructure/**/*'
+      - any-glob-to-any-file: 'docker-compose.yml'
+
+area: packages:
   - changed-files:
       - any-glob-to-any-file: 'packages/**/*'
 
-area: ops:
-  - changed-files:
-      - any-glob-to-any-file: '.github/**/*'
-      - any-glob-to-any-file: 'turbo.json'
-      - any-glob-to-any-file: 'package.json'
+# Type Labels
+type: feat:
+  - head-branch: ['^feat/.*', '^feature/.*']
+
+type: fix:
+  - head-branch: ['^fix/.*', '^bug/.*', '^hotfix/.*']
+
+type: chore:
+  - head-branch: ['^chore/.*']
+
+type: refactor:
+  - head-branch: ['^refactor/.*']
+
+type: test:
+  - head-branch: ['^test/.*']
