@@ -51,11 +51,6 @@ Standard: Always use the imported icon component from the design system's icon l
 
 ## Curator (File Organization)
 
-### 2025-02-28 - Domain vs Generic UI Separation
-
-Structure: `apps/web/src/components/ui` is strictly for generic, reusable design primitives (like Buttons, Modals, Loaders). Domain-specific components (like ProductCards, VariantSelectors) are moved to feature-specific folders (e.g., `src/components/store/`).
-Rule: If a component imports domain services or types (e.g., `Product`), it cannot reside in `components/ui`.
-
 ### 2025-02-18 - Co-location of Internationalization Logic
 
 Structure: Internationalization routing logic (`navigation.ts`) is now co-located with `request.ts` in `src/i18n/`.

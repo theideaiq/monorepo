@@ -1,5 +1,5 @@
 import './globals.css';
-import { NotFoundScreen } from '@/components/layout/NotFoundScreen';
+import { NotFoundScreen } from '@/components/ui/NotFoundScreen';
 
 export default function GlobalNotFound() {
   return (
