@@ -1,5 +1,6 @@
 import { WaylAdapter } from './adapters/wayl';
 import { ZainDirectAdapter } from './adapters/zain';
+import { PAYMENT_PROVIDERS, ZAIN_DIRECT_THRESHOLD } from './constants';
 import type { PaymentProvider } from './types';
 
 export interface FactoryConfig {
@@ -13,7 +14,7 @@ export interface FactoryConfig {
 export class PaymentFactory {
   static getProvider(amount: number, config: FactoryConfig): PaymentProvider {
     // Hybrid logic: Use Zain for large amounts (> 500,000 IQD)
-    if (amount > 500000) {
+    if (amount > ZAIN_DIRECT_THRESHOLD) {
       return new ZainDirectAdapter({ apiKey: config.zainKey });
     }
 
@@ -29,7 +30,7 @@ export class PaymentFactory {
     name: string,
     config: FactoryConfig,
   ): PaymentProvider {
-    if (name === 'zain-direct') {
+    if (name === PAYMENT_PROVIDERS.ZAIN_DIRECT) {
       return new ZainDirectAdapter({ apiKey: config.zainKey });
     }
     return new WaylAdapter({

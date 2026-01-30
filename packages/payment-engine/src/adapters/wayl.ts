@@ -1,4 +1,5 @@
 import { type Link, WaylClient } from '@repo/wayl';
+import { PAYMENT_PROVIDERS } from '../constants';
 import type {
   OrderData,
   PaymentProvider,
@@ -7,7 +8,7 @@ import type {
 } from '../types';
 
 export class WaylAdapter implements PaymentProvider {
-  public readonly name = 'wayl';
+  public readonly name = PAYMENT_PROVIDERS.WAYL;
   public readonly client: WaylClient;
   private webhookSecret?: string;
 

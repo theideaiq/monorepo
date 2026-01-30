@@ -1,7 +1,7 @@
 import 'server-only';
 import { webEnv } from '@repo/env/web';
 import { Logger } from '@repo/utils';
-import { PaymentFactory } from '@repo/payment-engine';
+import { PAYMENT_PROVIDERS, PaymentFactory } from '@repo/payment-engine';
 import { v4 as uuidv4 } from 'uuid';
 
 export const wayl = {
@@ -30,7 +30,7 @@ export const wayl = {
 
     try {
       // Use explicit 'wayl' provider as this service is named 'wayl'
-      const provider = PaymentFactory.getProviderByName('wayl', {
+      const provider = PaymentFactory.getProviderByName(PAYMENT_PROVIDERS.WAYL, {
         waylKey: webEnv.WAYL_SECRET_KEY,
         waylWebhookSecret: webEnv.WAYL_WEBHOOK_SECRET,
         zainKey: webEnv.ZAIN_SECRET_KEY,

@@ -1,6 +1,6 @@
 import { type Content, GoogleGenAI, type Tool } from '@google/genai';
 import { droidEnv as env } from '@repo/env/droid';
-import { PaymentFactory } from '@repo/payment-engine';
+import { PAYMENT_PROVIDERS, PaymentFactory } from '@repo/payment-engine';
 import { supabase } from './supabase';
 
 const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
@@ -142,7 +142,7 @@ async function searchProducts(query: string) {
  */
 async function createPaymentLink(amount: number, itemDescription: string) {
   try {
-    const provider = PaymentFactory.getProviderByName('wayl', {
+    const provider = PaymentFactory.getProviderByName(PAYMENT_PROVIDERS.WAYL, {
       waylKey: env.WAYL_SECRET_KEY,
       waylWebhookSecret: env.WAYL_WEBHOOK_SECRET,
       zainKey: '', // Not used here

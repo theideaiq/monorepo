@@ -1,3 +1,4 @@
+import { PAYMENT_PROVIDERS } from '../constants';
 import type {
   OrderData,
   PaymentProvider,
@@ -6,7 +7,7 @@ import type {
 } from '../types';
 
 export class ZainDirectAdapter implements PaymentProvider {
-  public readonly name = 'zain-direct';
+  public readonly name = PAYMENT_PROVIDERS.ZAIN_DIRECT;
 
   // biome-ignore lint/complexity/noUselessConstructor: Stub implementation
   constructor(_config: { apiKey: string }) {
