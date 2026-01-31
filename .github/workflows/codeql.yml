@@ -31,9 +31,9 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: manual
+            build-mode: none
           - language: swift
-            build-mode: manual
+            build-mode: none
 
     steps:
       - name: Checkout repository

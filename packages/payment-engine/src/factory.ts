@@ -11,6 +11,16 @@ export interface FactoryConfig {
 
 // biome-ignore lint/complexity/noStaticOnlyClass: Factory pattern preference
 export class PaymentFactory {
+  /**
+   * Returns a payment provider instance based on the transaction amount.
+   *
+   * Logic:
+   * - <= 500,000 IQD: Returns `WaylAdapter` (Active)
+   * - > 500,000 IQD: Returns `ZainDirectAdapter` (⚠️ Not Implemented - will throw error)
+   *
+   * @param amount - Transaction amount in IQD
+   * @param config - Factory configuration containing API keys
+   */
   static getProvider(amount: number, config: FactoryConfig): PaymentProvider {
     // Hybrid logic: Use Zain for large amounts (> 500,000 IQD)
     if (amount > 500000) {
