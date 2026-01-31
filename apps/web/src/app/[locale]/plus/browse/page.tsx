@@ -190,7 +190,7 @@ function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
                 <p className="text-xs text-slate-300 mb-2 line-clamp-3">
                   {item.description}
                 </p>
