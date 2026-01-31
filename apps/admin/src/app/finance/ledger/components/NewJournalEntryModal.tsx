@@ -59,7 +59,7 @@ export function NewJournalEntryModal({
     setIsSubmitting(true);
     try {
       // biome-ignore lint/suspicious/noExplicitAny: Fix typing issue with lines
-      await createJournalEntry(date, description || '', lines as any);
+      await createJournalEntry(date, description || '', lines as any[]);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);

@@ -1,7 +1,6 @@
 // biome-ignore lint/suspicious/noExplicitAny: Mock component
 export const Button = ({ children, isLoading, ...props }: any) => (
-  // biome-ignore lint/a11y/useButtonType: Mock component
-  <button {...props} disabled={isLoading}>
+  <button type="button" {...props} disabled={isLoading}>
     {isLoading ? 'Loading...' : children}
   </button>
 );
