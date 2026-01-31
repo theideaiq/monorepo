@@ -1,4 +1,4 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, sanitizeJsonLd, slugify } from '@repo/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
@@ -47,6 +47,25 @@ describe('String Utils (@repo/utils)', () => {
       expect(decodeHtmlEntities(null)).toBe('');
       // @ts-expect-error testing runtime safety
       expect(decodeHtmlEntities(undefined)).toBe('');
+    });
+  });
+
+  describe('sanitizeJsonLd', () => {
+    it('should serialize objects to JSON string', () => {
+      const data = { name: 'Test' };
+      expect(sanitizeJsonLd(data)).toBe('{"name":"Test"}');
+    });
+
+    it('should escape < to \\u003c to prevent XSS', () => {
+      const data = { content: '</script><script>alert(1)</script>' };
+      const result = sanitizeJsonLd(data);
+      expect(result).toContain('\\u003c/script>');
+      expect(result).not.toContain('</script>');
+    });
+
+    it('should handle null and undefined', () => {
+      expect(sanitizeJsonLd(null)).toBe('null');
+      expect(sanitizeJsonLd(undefined)).toBe('');
     });
   });
 });
