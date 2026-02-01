@@ -53,6 +53,8 @@ This monorepo is managed with [Turborepo](https://turbo.build/) and [pnpm](https
 - [`packages/utils`](./packages/utils): Shared utility functions (Date, String, Math helpers).
 - [`packages/database`](./packages/database): Type-safe Supabase client and schema definitions.
 - [`packages/env`](./packages/env): Environment variable validation and type-safety.
+- [`packages/payment-engine`](./packages/payment-engine): Unified payment processing abstraction with hybrid routing logic (Wayl + Zain Direct).
+- [`packages/wayl`](./packages/wayl): Type-safe SDK for the Wayl payment service API.
 
 ## 🚀 Getting Started
 
