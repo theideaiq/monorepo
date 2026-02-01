@@ -278,7 +278,7 @@ function FeatureCard({
   title,
   desc,
 }: {
-  icon: any;
+  icon: React.ReactNode;
   title: string;
   desc: string;
 }) {
