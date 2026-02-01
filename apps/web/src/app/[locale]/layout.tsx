@@ -14,7 +14,7 @@ import {
   getTranslations,
   setRequestLocale,
 } from 'next-intl/server';
-import { BottomNav } from '@/components/ui/BottomNav';
+import { BottomNav } from '@/components/layout/BottomNav';
 import { CartDrawer } from '@/components/store/CartDrawer';
 import SkipLink from '@/components/layout/SkipLink';
 import { WebFooter } from '@/components/layout/WebFooter';
