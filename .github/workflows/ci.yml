@@ -49,7 +49,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
-        run: pnpm turbo check typecheck test
+        run: SKIP_ENV_VALIDATION=true pnpm turbo check typecheck test
 
   build:
     name: Build
@@ -96,7 +96,7 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-        run: pnpm turbo build
+        run: SKIP_ENV_VALIDATION=true pnpm turbo build
 
   e2e:
     name: E2E Tests
