@@ -1,14 +1,12 @@
 'use client';
 
-import { Badge, Button } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { motion } from 'framer-motion';
 import {
   BookOpen,
   Check,
   Crown,
-  Film,
   Gamepad2,
-  Music,
   Zap,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -217,7 +215,7 @@ export default function PlusHome() {
               <ul className="flex-1 space-y-4 mb-8">
                 {tier.features.map((feature, f) => (
                   <li
-                    key={f}
+                    key={feature}
                     className="flex items-start gap-3 text-sm text-slate-300"
                   >
                     <div

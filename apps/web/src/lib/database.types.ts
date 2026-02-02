@@ -34,9 +34,9 @@ export interface Database {
           name: string;
           // ... (omitting insert types for brevity as we primarily read in frontend)
         };
+        // biome-ignore lint/complexity/noBannedTypes: Schema definition
         Update: {
           // ...
-          // biome-ignore lint/complexity/noBannedTypes: Schema definition
         };
       };
       product_variants: {

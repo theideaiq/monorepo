@@ -47,6 +47,9 @@ export function CheckoutFlow() {
           <div
             className="p-6 flex items-center justify-between cursor-pointer"
             onClick={() => setStep(1)}
+            onKeyDown={(e) => e.key === 'Enter' && setStep(1)}
+            role="button"
+            tabIndex={0}
           >
             <div className="flex items-center gap-4">
               <div
@@ -81,10 +84,11 @@ export function CheckoutFlow() {
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                        <label htmlFor="fullName" className="text-xs text-slate-400">
                           Full Name
                         </label>
                         <input
+                          id="fullName"
                           required
                           value={address.fullName}
                           onChange={(e) =>
@@ -95,10 +99,11 @@ export function CheckoutFlow() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                        <label htmlFor="phoneNumber" className="text-xs text-slate-400">
                           Phone Number
                         </label>
                         <input
+                          id="phoneNumber"
                           required
                           value={address.phone}
                           onChange={(e) =>
@@ -111,8 +116,9 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">City</label>
+                      <label htmlFor="city" className="text-xs text-slate-400">City</label>
                       <select
+                        id="city"
                         value={address.city}
                         onChange={(e) =>
                           setAddress({ ...address, city: e.target.value })
@@ -127,10 +133,11 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">
+                      <label htmlFor="details" className="text-xs text-slate-400">
                         Address Details
                       </label>
                       <textarea
+                        id="details"
                         required
                         value={address.street}
                         onChange={(e) =>
