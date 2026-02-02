@@ -33,7 +33,7 @@ jobs:
           - language: java-kotlin
             build-mode: none
           - language: swift
-            build-mode: autobuild
+            build-mode: none
 
     steps:
       - name: Checkout repository
