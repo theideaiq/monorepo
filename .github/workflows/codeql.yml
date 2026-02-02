@@ -68,10 +68,12 @@ jobs:
           # 1. Restore Secrets (Generates google-services.json)
           cd apps/web && npm run secrets:restore
           
-          # 2. Grant Permission
+          # 2. Grant Permission (Path relative to root)
           chmod +x apps/web/android/gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
+          # We return to root after npm command due to single-line context in previous step,
+          # but here we change dir explicitly for gradlew
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -91,6 +93,8 @@ jobs:
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
+              # The project file is located at apps/web/ios/App/App.xcodeproj
+              # Ensure we are referencing it correctly from root
               xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
