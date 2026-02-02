@@ -68,8 +68,12 @@ export default function LoginPage() {
       toast.success('Welcome back, Admin');
       router.push('/');
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to login');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message || 'Failed to login');
+      } else {
+        toast.error('Failed to login');
+      }
     } finally {
       setLoading(false);
     }

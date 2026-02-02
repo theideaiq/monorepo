@@ -198,6 +198,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
       toast.success('Profile updated');
       setIsSheetOpen(false);
     } catch (error) {
+      // biome-ignore lint/suspicious/noConsole: Debugging error
       console.error(error);
       toast.error('Failed to update profile');
     }

@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@repo/ui': path.resolve(__dirname, './src/__mocks__/repo-ui.tsx'),
+      'server-only': path.resolve(__dirname, './src/__mocks__/server-only.ts'),
     },
   },
 });

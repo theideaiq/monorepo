@@ -50,6 +50,7 @@ export function EquityPieChart({ holders }: { holders: EquityHolder[] }) {
           >
             {data.map((_entry, index) => (
               <Cell
+                // biome-ignore lint/suspicious/noArrayIndexKey: Static chart data
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
               />

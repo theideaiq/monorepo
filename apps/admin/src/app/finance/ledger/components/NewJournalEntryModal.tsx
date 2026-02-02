@@ -28,9 +28,10 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (index: number, field: string, value: unknown) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    // biome-ignore lint/suspicious/noExplicitAny: Form state handler
+    newLines[index] = { ...newLines[index], [field]: value as any };
     setLines(newLines);
   };
 
@@ -111,7 +112,7 @@ export function NewJournalEntryModal({
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">Transaction Lines</label>
+              <span className="text-sm font-medium">Transaction Lines</span>
               <Button type="button" variant="outline" onClick={handleAddLine}>
                 Add Line
               </Button>
@@ -119,10 +120,17 @@ export function NewJournalEntryModal({
 
             <div className="max-h-[300px] overflow-y-auto space-y-2">
               {lines.map((line, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: Dynamic list without IDs
                 <div key={index} className="flex gap-2 items-end">
                   <div className="flex-1 space-y-1">
-                    <label className="text-xs font-medium">Account</label>
+                    <label
+                      htmlFor={`account-${index}`}
+                      className="text-xs font-medium"
+                    >
+                      Account
+                    </label>
                     <select
+                      id={`account-${index}`}
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       value={line.accountId}
                       onChange={(e) =>
@@ -139,8 +147,14 @@ export function NewJournalEntryModal({
                     </select>
                   </div>
                   <div className="w-24 space-y-1">
-                    <label className="text-xs font-medium">Debit</label>
+                    <label
+                      htmlFor={`debit-${index}`}
+                      className="text-xs font-medium"
+                    >
+                      Debit
+                    </label>
                     <Input
+                      id={`debit-${index}`}
                       type="number"
                       min="0"
                       step="0.01"
@@ -155,8 +169,14 @@ export function NewJournalEntryModal({
                     />
                   </div>
                   <div className="w-24 space-y-1">
-                    <label className="text-xs font-medium">Credit</label>
+                    <label
+                      htmlFor={`credit-${index}`}
+                      className="text-xs font-medium"
+                    >
+                      Credit
+                    </label>
                     <Input
+                      id={`credit-${index}`}
                       type="number"
                       min="0"
                       step="0.01"
