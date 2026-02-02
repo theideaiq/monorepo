@@ -49,6 +49,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          RESEND_API_KEY: "dummy"
+          WAYL_SECRET_KEY: "dummy"
+          WAYL_WEBHOOK_SECRET: "dummy"
+          GEMINI_API_KEY: "dummy"
+          TELEGRAM_BOT_TOKEN: "dummy"
+          UPSTASH_REDIS_REST_URL: "dummy"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy"
+          NEXT_PUBLIC_SUPABASE_URL: "dummy"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy"
+          ZAIN_SECRET_KEY: "dummy"
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +106,19 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          RESEND_API_KEY: "dummy"
+          WAYL_SECRET_KEY: "dummy"
+          WAYL_WEBHOOK_SECRET: "dummy"
+          GEMINI_API_KEY: "dummy"
+          TELEGRAM_BOT_TOKEN: "dummy"
+          UPSTASH_REDIS_REST_URL: "dummy"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy"
+          ZAIN_SECRET_KEY: "dummy"
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy' }}
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy"
         run: pnpm turbo build
 
   e2e:
