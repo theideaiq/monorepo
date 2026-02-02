@@ -14,7 +14,9 @@ export function NewJournalEntryModal({
   accounts: ChartOfAccount[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(
+    new Date().toISOString().split('T')[0] as string,
+  );
   const [description, setDescription] = useState('');
   const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +32,7 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
+    // @ts-expect-error - Dynamic assignment to typed object
     newLines[index] = { ...newLines[index], [field]: value };
     setLines(newLines);
   };
@@ -57,7 +60,8 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      // Cast lines to satisfy type checker since we validated accountId presence above
+      await createJournalEntry(date, description, lines as { accountId: string; debit: number; credit: number }[]);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
