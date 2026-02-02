@@ -65,7 +65,7 @@ export function CheckoutFlow() {
             {step > 1 && (
               <span className="text-sm text-brand-yellow font-medium">Edit</span>
             )}
-          </div>
+          </button>
 
           <AnimatePresence>
             {step === 1 && (
