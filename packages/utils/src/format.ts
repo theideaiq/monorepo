@@ -66,3 +66,21 @@ export function formatCompactNumber(number: number): string {
     maximumFractionDigits: 1,
   }).format(number);
 }
+
+// Module-level formatter instance for performance (avoids recreation on every call)
+const IQD_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a price for display in IQD (without currency symbol).
+ * Used for consistent pricing display across the app.
+ * Optimized with a cached Intl.NumberFormat instance.
+ *
+ * @param amount - The price amount.
+ * @returns The formatted price string (e.g., "1,250").
+ */
+export function formatPrice(amount: number): string {
+  return IQD_FORMATTER.format(amount);
+}

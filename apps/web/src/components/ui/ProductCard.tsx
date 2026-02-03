@@ -1,9 +1,11 @@
 'use client';
 
+import { formatPrice } from '@repo/utils';
 import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { memo } from 'react';
 import type { Product } from '@/services/products';
 
 interface ProductCardProps {
@@ -12,16 +14,13 @@ interface ProductCardProps {
   priority?: boolean;
 }
 
-export function ProductCard({
+export const ProductCard = memo(function ProductCard({
   product,
   onAddToCart,
   priority = false,
 }: ProductCardProps) {
-  // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  // Format price using optimized utility
+  const price = formatPrice(product.price);
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">
@@ -107,4 +106,4 @@ export function ProductCard({
       </motion.div>
     </Link>
   );
-}
+});
