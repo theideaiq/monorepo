@@ -135,6 +135,9 @@ importers:
       '@next/bundle-analyzer':
         specifier: ^16.1.6
         version: 16.1.6
+      '@repo/wayl':
+        specifier: workspace:^
+        version: link:../../packages/wayl
       '@tailwindcss/postcss':
         specifier: ^4.1.18
         version: 4.1.18
