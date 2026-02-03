@@ -30,7 +30,25 @@ You will need a Telegram Bot Token and Google AI API Key.
 pnpm dev
 ```
 
-Since this is a webhook-based bot, you will need to expose your local server to the internet (e.g., using `ngrok`) and set the webhook URL with Telegram.
+Since this is a webhook-based bot, you will need to expose your local server to the internet and register the webhook URL with Telegram.
+
+### 🔗 Webhook Setup
+
+1.  **Expose Localhost**: Use a tool like [ngrok](https://ngrok.com/) to tunnel your local port to the internet.
+    ```bash
+    ngrok http 3000
+    ```
+
+2.  **Register Webhook**: Run the following command to tell Telegram where to send messages. Replace `<YOUR_BOT_TOKEN>` and `<YOUR_PUBLIC_URL>` (e.g., `https://abcd.ngrok-free.app`).
+
+    ```bash
+    curl -F "url=<YOUR_PUBLIC_URL>/api/webhook" https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook
+    ```
+
+3.  **Verify**: Check if the webhook was set successfully.
+    ```bash
+    curl https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getWebhookInfo
+    ```
 
 ### Build
 

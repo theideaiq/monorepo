@@ -46,10 +46,24 @@ jobs:
             ${{ runner.os }}-turbo-quality-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        # Use --config.engine-strict=false if the CI node version (from .nvmrc) < package.json engine
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Run Quality Checks
-        run: pnpm turbo check typecheck test
+        # Mock required env vars for validation and skip env validation
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          TELEGRAM_BOT_TOKEN: "dummy_token_for_ci"
+          GEMINI_API_KEY: "dummy_key_for_ci"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          NEXT_PUBLIC_SUPABASE_URL: "https://dummy.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy_anon_key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy_service_role_key"
+          RESEND_API_KEY: "re_dummy_123"
+          WAYL_SECRET_KEY: "dummy_wayl_secret"
+          WAYL_WEBHOOK_SECRET: "dummy_wayl_webhook_secret"
+        run: pnpm turbo check typecheck test --continue
 
   build:
     name: Build
@@ -90,13 +104,22 @@ jobs:
             ${{ runner.os }}-turbo-build-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-        run: pnpm turbo build
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://dummy.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy_anon_key"
+          TELEGRAM_BOT_TOKEN: "dummy_token_for_ci"
+          GEMINI_API_KEY: "dummy_key_for_ci"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy_service_role_key"
+          RESEND_API_KEY: "re_dummy_123"
+          WAYL_SECRET_KEY: "dummy_wayl_secret"
+          WAYL_WEBHOOK_SECRET: "dummy_wayl_webhook_secret"
+        run: pnpm turbo build --continue
 
   e2e:
     name: E2E Tests
