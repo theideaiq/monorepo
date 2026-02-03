@@ -32,6 +32,7 @@ export interface Product {
   details: Record<string, any>;
   variants: ProductVariant[];
   stock: number;
+  reviewCount: number;
 }
 
 /**
@@ -49,7 +50,7 @@ export async function getProducts(limit = 20): Promise<Product[]> {
 
     if (error) {
       Logger.error('Error fetching products:', error);
-      return [];
+      throw error;
     }
 
     if (!data) return [];
@@ -76,6 +77,7 @@ export async function getProducts(limit = 20): Promise<Product[]> {
         details: {},
         variants: [],
         stock: 10,
+        reviewCount: 124,
       },
       {
         id: '2',
@@ -94,6 +96,7 @@ export async function getProducts(limit = 20): Promise<Product[]> {
         details: {},
         variants: [],
         stock: 5,
+        reviewCount: 42,
       },
     ];
   }
@@ -114,7 +117,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 
     if (error) {
       Logger.error(`Error fetching product [${slug}]:`, error);
-      return null;
+      throw error;
     }
 
     if (!data) return null;
@@ -138,6 +141,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       isVerified: true,
       description: 'The best gaming mouse.',
       details: {},
+      reviewCount: 124,
       variants: [
         {
           id: 'v1',
@@ -197,5 +201,6 @@ function mapDBProductToUI(item: DBProduct): Product {
     details: (item.details as Record<string, any>) || {},
     variants,
     stock: item.stock_count,
+    reviewCount: ratings.length,
   };
 }
