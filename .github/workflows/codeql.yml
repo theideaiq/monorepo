@@ -117,6 +117,7 @@ jobs:
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
+              # Fix: Use correct path to project relative to apps/web
               xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
               BUILD_TARGET="-project ios/App/App.xcodeproj"
           fi
