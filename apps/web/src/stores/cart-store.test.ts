@@ -83,11 +83,11 @@ describe('Cart Store', () => {
   });
 
   it('should not update quantity to less than 1', () => {
-     const { addItem, updateQuantity } = useCartStore.getState();
-     addItem(mockItem);
-     updateQuantity(mockItem.id, 0);
-     const state = useCartStore.getState();
-     expect(state.items[0].quantity).toBe(1);
+    const { addItem, updateQuantity } = useCartStore.getState();
+    addItem(mockItem);
+    updateQuantity(mockItem.id, 0);
+    const state = useCartStore.getState();
+    expect(state.items[0].quantity).toBe(1);
   });
 
   it('should clear the cart', () => {
@@ -102,14 +102,14 @@ describe('Cart Store', () => {
   });
 
   it('should persist state to localStorage', () => {
-     const { addItem } = useCartStore.getState();
-     addItem(mockItem);
+    const { addItem } = useCartStore.getState();
+    addItem(mockItem);
 
-     const stored = localStorage.getItem('cart-storage-v2');
-     expect(stored).toBeDefined();
-     if (stored) {
-       const parsed = JSON.parse(stored);
-       expect(parsed.state.items[0].id).toBe(mockItem.id);
-     }
+    const stored = localStorage.getItem('cart-storage-v2');
+    expect(stored).toBeDefined();
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      expect(parsed.state.items[0].id).toBe(mockItem.id);
+    }
   });
 });
