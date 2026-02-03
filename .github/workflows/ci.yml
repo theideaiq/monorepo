@@ -63,7 +63,7 @@ jobs:
           RESEND_API_KEY: "re_dummy_123"
           WAYL_SECRET_KEY: "dummy_wayl_secret"
           WAYL_WEBHOOK_SECRET: "dummy_wayl_webhook_secret"
-        run: pnpm turbo check typecheck test
+        run: pnpm turbo check typecheck test --continue
 
   build:
     name: Build
@@ -119,7 +119,7 @@ jobs:
           RESEND_API_KEY: "re_dummy_123"
           WAYL_SECRET_KEY: "dummy_wayl_secret"
           WAYL_WEBHOOK_SECRET: "dummy_wayl_webhook_secret"
-        run: pnpm turbo build
+        run: pnpm turbo build --continue
 
   e2e:
     name: E2E Tests
