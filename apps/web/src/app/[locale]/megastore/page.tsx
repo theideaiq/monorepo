@@ -6,12 +6,12 @@ import { motion } from 'framer-motion';
 import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { useProducts } from '@/hooks/queries/use-products';
-import { useCartStore } from '@/stores/cart-store';
-import { ProductCard } from '@/components/ui/ProductCard';
-import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
+import { ProductCard } from '@/components/ui/ProductCard';
+import { useProducts } from '@/hooks/queries/use-products';
 import type { Product } from '@/services/products';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 const CATEGORIES = [
   { name: 'Gaming', icon: <Gamepad2 size={18} /> },
@@ -28,7 +28,7 @@ export default function MegastorePage() {
   const addItem = useCartStore((s) => s.addItem);
   const { openCart } = useUIStore();
 
-  const handleQuickAdd = (e: React.MouseEvent, product: any) => {
+  const handleQuickAdd = (e: React.MouseEvent, product: unknown) => {
     e.preventDefault(); // Prevent navigation
     addItem({
       id: product.id,
