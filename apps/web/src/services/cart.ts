@@ -1,6 +1,5 @@
 import { Logger } from '@repo/utils';
 import { createClient } from '@/lib/supabase/client';
-import type { Database } from '@/lib/database.types';
 
 export interface CartItem {
   id: string; // cart_item id

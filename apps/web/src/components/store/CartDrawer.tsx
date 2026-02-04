@@ -71,7 +71,7 @@ export function CartDrawer() {
                 {item.attributes && (
                   <p className="text-xs text-slate-500 mt-1">
                     {Object.entries(item.attributes)
-                      .map(([k, v]) => `${v}`)
+                      .map(([_k, v]) => `${v}`)
                       .join(', ')}
                   </p>
                 )}
