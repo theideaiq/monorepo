@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useCartStore, type CartItem } from './cart-store';
+import { type CartItem, useCartStore } from './cart-store';
 
 describe('Cart Store', () => {
   // Reset store before each test to ensure isolation
@@ -12,7 +12,10 @@ describe('Cart Store', () => {
     localStorage.clear();
   });
 
-  const createMockItem = (id: string, price = 100): Omit<CartItem, 'quantity'> => ({
+  const createMockItem = (
+    id: string,
+    price = 100,
+  ): Omit<CartItem, 'quantity'> => ({
     id,
     productId: `prod-${id}`,
     title: `Product ${id}`,

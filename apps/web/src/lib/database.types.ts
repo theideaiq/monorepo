@@ -36,6 +36,8 @@ export interface Database {
         };
         Update: {
           // ...
+          // biome-ignore lint/complexity/noBannedTypes: Placeholder for dynamic update object
+          [key: string]: unknown;
         };
       };
       product_variants: {
