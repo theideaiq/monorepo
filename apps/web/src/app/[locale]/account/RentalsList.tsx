@@ -3,7 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
-export default function RentalsList({ rentals }: { rentals: any[] }) { // biome-ignore lint/suspicious/noExplicitAny: legacy code
+// biome-ignore lint/suspicious/noExplicitAny: legacy code
+export default function RentalsList({ rentals }: { rentals: any[] }) {
   const t = useTranslations('Account');
   const [selectedRental, setSelectedRental] = useState<string | null>(null);
 
@@ -20,7 +21,8 @@ export default function RentalsList({ rentals }: { rentals: any[] }) { // biome-
         >
           <div className="flex items-center gap-4 mb-4">
             {rental.product?.image_url && (
-              <img // biome-ignore lint/performance/noImgElement: legacy component
+              // biome-ignore lint/performance/noImgElement: legacy component
+              <img
                 src={rental.product.image_url}
                 alt={rental.product.name}
                 className="w-16 h-16 object-cover rounded"

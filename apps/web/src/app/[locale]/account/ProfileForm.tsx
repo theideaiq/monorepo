@@ -5,7 +5,8 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateProfile } from '@/actions/account';
 
-export default function ProfileForm({ profile }: { profile: any }) { // biome-ignore lint/suspicious/noExplicitAny: legacy code
+// biome-ignore lint/suspicious/noExplicitAny: legacy code
+export default function ProfileForm({ profile }: { profile: any }) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
 
@@ -14,8 +15,9 @@ export default function ProfileForm({ profile }: { profile: any }) { // biome-ig
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
-    } catch (e: any) { // biome-ignore lint/suspicious/noExplicitAny: error handling
-      toast.error(e.message);
+      // biome-ignore lint/suspicious/noExplicitAny: error handling
+    } catch (e: any) {
+      toast.error(e?.message || 'An error occurred');
     } finally {
       setLoading(false);
     }

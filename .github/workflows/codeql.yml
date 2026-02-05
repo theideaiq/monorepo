@@ -81,11 +81,14 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          # Directly run node script inside package to avoid workspace issues
-          cd apps/web && node scripts/restore-mobile-secrets.js
+          # 1. Install pnpm and dependencies (Required for @capacitor/app resolution)
+          npm install -g pnpm
+          pnpm install
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 2. Restore Secrets (Generates GoogleService-Info.plist)
+          cd apps/web && node scripts/restore-mobile-secrets.js
+
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd ios/App && pod install --repo-update && cd -
@@ -93,22 +96,11 @@ jobs:
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              # Must run inside ios/App to resolve packages? Or pass full path?
-              # Assuming xcodebuild can resolve from project root if project path is correct.
-              # But let's verify if Capacitor requires 'npx cap sync ios' first?
-              # Based on memory, yes, but let's stick to fixing the immediate failure first.
-              # The immediate failure was 'npm run' failing.
-
-              # Try to sync first if Capacitor is involved?
-              # The memory says: "requires running `npx cap sync ios` inside `apps/web` (after installing dependencies)"
-              # But installing all dependencies might be slow/complex here without pnpm setup.
-              # Let's trust the existing script logic but fix the path execution.
-
               xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
               BUILD_TARGET="-project ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
