@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { ProductCard } from './ProductCard';
-import { vi, describe, it, expect } from 'vitest';
 
 // Mock next/image
 vi.mock('next/image', () => ({
