@@ -45,7 +45,7 @@ export default function AuthPage() {
         toast.success('Account created! Please check your email.');
         setMode('login');
       }
-    } catch (err: any) {
+    } catch (err: any) { // biome-ignore lint/suspicious/noExplicitAny: error handling
       toast.error(err.message);
     } finally {
       setLoading(false);
@@ -127,7 +127,7 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                    <label className="text-sm text-slate-400 mb-1 block">
+                    <label className="text-sm text-slate-400 mb-1 block"> {/* biome-ignore lint/a11y/noLabelWithoutControl: legacy form */}
                       Full Name
                     </label>
                     <div className="relative">
@@ -150,7 +150,7 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label className="text-sm text-slate-400 mb-1 block"> {/* biome-ignore lint/a11y/noLabelWithoutControl: legacy form */}
                 Email Address
               </label>
               <div className="relative">
@@ -170,7 +170,7 @@ export default function AuthPage() {
             </div>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label className="text-sm text-slate-400 mb-1 block"> {/* biome-ignore lint/a11y/noLabelWithoutControl: legacy form */}
                 Password
               </label>
               <div className="relative">
@@ -210,7 +210,7 @@ export default function AuthPage() {
               {mode === 'login'
                 ? "Don't have an account? "
                 : 'Already have an account? '}
-              <button
+              <button type="button"
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"
               >

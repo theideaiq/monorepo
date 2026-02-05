@@ -115,7 +115,7 @@ export function ProductView({ product }: ProductViewProps) {
 
           {/* Thumbnails (Scrollable on mobile) */}
           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
-            <button
+            <button type="button"
               onClick={() => setSelectedImage(product.image)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
             >
@@ -127,7 +127,7 @@ export function ProductView({ product }: ProductViewProps) {
               />
             </button>
             {product.images?.map((img, i) => (
-              <button
+              <button type="button"
                 key={i}
                 onClick={() => setSelectedImage(img)}
                 className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
@@ -150,7 +150,7 @@ export function ProductView({ product }: ProductViewProps) {
               <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
                 {product.title}
               </h1>
-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
+              <button type="button" className="text-slate-500 hover:text-brand-pink transition-colors">
                 <Heart size={28} />
               </button>
             </div>
