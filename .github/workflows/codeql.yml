@@ -43,7 +43,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version-file: '.nvmrc'
+          node-version: 20
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -51,23 +51,6 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-
-      - name: Install dependencies
-        # Dependencies are needed to identify workspaces and run scripts
-        run: |
-          # If pnpm is not available in the path yet, we might need to install it explicitly or rely on action-setup
-          # But since we use manual build scripts relying on workspace resolution, we need dependencies installed.
-          # For Java/Swift jobs, we only need the root workspace config mostly, but `npm run` works better if things are linked.
-          # However, to save time, we might just try to run the script directly if workspaces are an issue,
-          # BUT the previous failure was `npm error No workspaces found`, which implies the root package.json wasn't processed correctly or deps missing.
-          # Let's install pnpm deps.
-          npm install -g pnpm
-          pnpm install
 
       # Initialize CodeQL (Defines what languages to scan)
       - name: Initialize CodeQL
@@ -83,14 +66,13 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          # Use node directly to avoid workspace resolution issues if pnpm/npm behaves weirdly in this env
-          cd apps/web && node scripts/restore-mobile-secrets.js
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Grant Permission
-          chmod +x android/gradlew
+          chmod +x apps/web/android/gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
-          cd android && ./gradlew assembleDebug --no-daemon
+          cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -99,39 +81,21 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          # Use node directly to avoid workspace resolution issues
-          cd apps/web && node scripts/restore-mobile-secrets.js
-
-          # Ensure capacitor ios project exists/is synced if needed (often requires building web assets first)
-          # But for analysis we assume the ios folder is checked in.
-          # If 'npx cap sync' is needed, we'd need to build web first.
-          # Let's assume the project structure is there.
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "ios/App/Podfile" ]; then
+          if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace ios/App/App.xcworkspace"
+              cd apps/web/ios/App && pod install --repo-update && cd -
+              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
-              # Ensure we are in the right directory for xcodebuild
-              # The project file is at apps/web/ios/App/App.xcodeproj
-
-              # Generating the scheme if missing might be needed but usually 'App' exists in Capacitor projects
-
               echo "Resolving Dependencies..."
-              # We need to be in the folder containing the project or point to it correctly
-              cd ios/App
-              xcodebuild -resolvePackageDependencies -project App.xcodeproj -scheme App
-              cd ../../.. # Back to root
-
-              BUILD_TARGET="-project ios/App/App.xcodeproj"
+              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
+              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
           # 3. Build for Simulator (No Signing Required)
-          # Navigate to the directory so relative paths in xcodebuild work expectedly if there are any
-          cd ios/App
-
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \

@@ -1,53 +1,59 @@
-const fs = require('node:fs');
-const path = require('node:path');
+const fs = require('fs');
+const path = require('path');
 
 const ANDROID_DEST = path.join(
   __dirname,
-  '../apps/web/android/app/google-services.json',
+  '../android/app/google-services.json',
 );
 const IOS_DEST = path.join(
   __dirname,
-  '../apps/web/ios/App/App/GoogleService-Info.plist',
+  '../ios/App/App/GoogleService-Info.plist',
 );
 
-function restoreSecrets() {
-  console.log('🔄 Restoring mobile secrets...');
-
-  // 1. Android
-  if (process.env.ANDROID_GOOGLE_SERVICES_BASE64) {
+function restoreSecret(envVar, destPath, platformName) {
+  const secretBase64 = process.env[envVar];
+  if (secretBase64) {
     try {
-      const buffer = Buffer.from(
-        process.env.ANDROID_GOOGLE_SERVICES_BASE64,
-        'base64',
-      );
-      fs.writeFileSync(ANDROID_DEST, buffer);
-      console.log('✅ Android google-services.json restored');
+      const secretBuffer = Buffer.from(secretBase64, 'base64');
+      const destDir = path.dirname(destPath);
+      fs.mkdirSync(destDir, { recursive: true });
+      fs.writeFileSync(destPath, secretBuffer);
+      fs.chmodSync(destPath, 0o600);
+      console.log(`✅ ${platformName} secrets restored to ${destPath}`);
     } catch (error) {
-      console.error('❌ Failed to restore Android secrets');
-      // biome-ignore lint/complexity/useOptionalChain: Scripts run in restricted envs
-      if (error && error.constructor && error.constructor.name) {
-        console.error(error.constructor.name);
+      let errorMessage;
+      if (error && typeof error.message === 'string') {
+        errorMessage = error.message;
+      } else {
+        const errorType =
+          error &&
+          error.constructor &&
+          typeof error.constructor.name === 'string'
+            ? error.constructor.name
+            : 'UnknownErrorType';
+        let errorDetails;
+        try {
+          errorDetails = JSON.stringify(error);
+        } catch {
+          errorDetails = String(error);
+        }
+        errorMessage = `${errorType}: ${errorDetails || 'Unknown error'}`;
       }
-    }
-  } else {
-    console.warn('⚠️ ANDROID_GOOGLE_SERVICES_BASE64 not found');
-  }
-
-  // 2. iOS
-  if (process.env.IOS_GOOGLE_SERVICE_INFO_BASE64) {
-    try {
-      const buffer = Buffer.from(
-        process.env.IOS_GOOGLE_SERVICE_INFO_BASE64,
-        'base64',
+      console.error(
+        `❌ Failed to restore ${platformName} secrets: ${errorMessage}`,
       );
-      fs.writeFileSync(IOS_DEST, buffer);
-      console.log('✅ iOS GoogleService-Info.plist restored');
-    } catch (error) {
-      console.error('❌ Failed to restore iOS secrets');
+      process.exit(1);
     }
   } else {
-    console.warn('⚠️ IOS_GOOGLE_SERVICE_INFO_BASE64 not found');
+    console.log(
+      `⚠️ No ${platformName} secret found (${envVar} is not set), skipping.`,
+    );
   }
 }
 
-restoreSecrets();
+console.log('🔄 Restoring mobile secrets...');
+
+restoreSecret('ANDROID_GOOGLE_SERVICES_BASE64', ANDROID_DEST, 'Android');
+restoreSecret('IOS_GOOGLE_SERVICE_INFO_BASE64', IOS_DEST, 'iOS');
+
+console.log('🏁 Secret restoration process complete.');

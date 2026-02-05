@@ -1,34 +1,52 @@
-import { updateProfile } from '@/actions/account';
+'use client';
+
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { updateProfile } from '@/actions/account';
 
-// biome-ignore lint/suspicious/noExplicitAny: Profile structure is dynamic
 export default function ProfileForm({ profile }: { profile: any }) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  async function handleSubmit(formData: FormData) {
     setLoading(true);
-    const formData = new FormData(e.currentTarget);
-
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
     } catch (e: any) {
-      // biome-ignore lint/suspicious/noExplicitAny: Error handling
       toast.error(e.message);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      {/* Form fields */}
-      <button type="submit" disabled={loading}>
-        {loading ? t('saving') : t('save')}
+    <form
+      action={handleSubmit}
+      className="bg-white p-6 rounded-lg shadow border border-slate-100 max-w-md"
+    >
+      <div className="mb-4">
+        <label
+          htmlFor="fullName"
+          className="block text-sm font-medium text-slate-700 mb-1"
+        >
+          Full Name
+        </label>
+        <input
+          type="text"
+          name="fullName"
+          id="fullName"
+          defaultValue={profile?.full_name || ''}
+          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-blue-600 text-white rounded-md py-2 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+      >
+        {loading ? 'Saving...' : t('save')}
       </button>
     </form>
   );

@@ -6,10 +6,7 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-// biome-ignore lint/suspicious/noExplicitAny: Database type placeholder
-export type Database = any;
-
-export interface DB {
+export interface Database {
   public: {
     Tables: {
       products: {
@@ -18,31 +15,37 @@ export interface DB {
           name: string;
           description: string | null;
           price: number;
-          stock_count: number;
-          category: string;
-          condition: string;
-          seller: string;
-          is_verified: boolean;
           image_url: string | null;
-          images: string[];
-          slug: string;
-          details: Json;
+          type: 'sale' | 'rental' | 'auction'; // inferred from context
+          category: string; // inferred
+          stock_count: number;
+          rental_tier: string | null;
           created_at: string;
           updated_at: string;
+          details: Json;
+          condition: 'new' | 'used' | 'refurbished' | 'open_box'; // inferred
+          seller: string;
+          is_verified: boolean;
+          slug: string | null;
+          images: string[] | null;
         };
         Insert: {
+          id?: string;
+          name: string;
+          // ... (omitting insert types for brevity as we primarily read in frontend)
+        };
+        Update: {
           // ...
         };
-        Update: Record<string, never>; // Replaced {} with Record<string, never>
       };
       product_variants: {
         Row: {
           id: string;
           product_id: string;
-          sku: string;
+          sku: string | null;
+          stock_count: number | null;
           price_override: number | null;
-          stock_count: number;
-          attributes: Json;
+          attributes: Json; // e.g., { color: "Red", size: "L" }
           image_url: string | null;
         };
       };
@@ -52,9 +55,57 @@ export interface DB {
           cart_id: string;
           product_id: string;
           quantity: number;
-          created_at: string;
         };
       };
+      carts: {
+        Row: {
+          id: string;
+          user_id: string | null;
+        };
+      };
+      orders: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+          total_amount: number;
+          shipping_address: Json | null;
+          tracking_number: string | null;
+          created_at: string;
+          gateway_link_id: string | null;
+          gateway_provider: string | null;
+          gateway_metadata: Json | null;
+        };
+      };
+      profiles: {
+        Row: {
+          id: string;
+          email: string | null;
+          full_name: string | null;
+          avatar_url: string | null;
+          // ... other fields
+        };
+      };
+      rentals: {
+        Row: {
+          id: string;
+          user_id: string;
+          product_id: string;
+          due_date: string;
+          status: 'active' | 'returned' | 'overdue';
+          created_at: string;
+          updated_at: string;
+        };
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
     };
   };
 }

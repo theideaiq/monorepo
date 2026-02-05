@@ -1,64 +1,82 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { type CartItem, fetchCart, syncCart } from '@/services/cart';
+
+export interface CartItem {
+  id: string; // unique id for the line item (can be product_id + variant_id)
+  productId: string;
+  variantId?: string;
+  title: string;
+  price: number;
+  image: string;
+  quantity: number;
+  attributes?: Record<string, string>;
+}
 
 interface CartState {
   items: CartItem[];
-  total: number;
-  addItem: (item: CartItem) => void;
+  addItem: (item: Omit<CartItem, 'quantity'>) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
-  syncWithDB: () => Promise<void>;
+  total: number;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, _get) => ({
+    (set, get) => ({
       items: [],
       total: 0,
-      addItem: (newItem) =>
+
+      addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          // biome-ignore lint/suspicious/noImplicitAnyLet: Variable initialized conditionally
           let updatedItems;
           if (existing) {
             updatedItems = state.items.map((i) =>
-              i.id === newItem.id
-                ? { ...i, quantity: i.quantity + newItem.quantity }
-                : i,
+              i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
             );
           } else {
-            updatedItems = [...state.items, newItem];
+            updatedItems = [...state.items, { ...newItem, quantity: 1 }];
           }
-          syncCart(updatedItems);
-          return { items: updatedItems };
-        }),
-      removeItem: (id) =>
+
+          // Recalc total
+          const total = updatedItems.reduce(
+            (acc, i) => acc + i.price * i.quantity,
+            0,
+          );
+          return { items: updatedItems, total };
+        });
+      },
+
+      removeItem: (id) => {
         set((state) => {
           const updatedItems = state.items.filter((i) => i.id !== id);
-          syncCart(updatedItems);
-          return { items: updatedItems };
-        }),
-      updateQuantity: (id, quantity) =>
+          const total = updatedItems.reduce(
+            (acc, i) => acc + i.price * i.quantity,
+            0,
+          );
+          return { items: updatedItems, total };
+        });
+      },
+
+      updateQuantity: (id, quantity) => {
         set((state) => {
+          if (quantity < 1) return state; // or remove?
           const updatedItems = state.items.map((i) =>
             i.id === id ? { ...i, quantity } : i,
           );
-          syncCart(updatedItems);
-          return { items: updatedItems };
-        }),
-      clearCart: () => {
-        syncCart([]);
-        set({ items: [] });
+          const total = updatedItems.reduce(
+            (acc, i) => acc + i.price * i.quantity,
+            0,
+          );
+          return { items: updatedItems, total };
+        });
       },
-      syncWithDB: async () => {
-        const items = await fetchCart();
-        set({ items });
-      },
+
+      clearCart: () => set({ items: [], total: 0 }),
     }),
     {
-      name: 'cart-storage',
+      name: 'cart-storage-v2', // v2 to reset old string storage
     },
   ),
 );

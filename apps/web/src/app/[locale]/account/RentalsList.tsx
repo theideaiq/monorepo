@@ -6,7 +6,7 @@ import { useState } from 'react';
 // biome-ignore lint/suspicious/noExplicitAny: Profile data structure is dynamic
 export default function RentalsList({ rentals }: { rentals: any[] }) {
   const t = useTranslations('Account');
-  const [selectedRental, setSelectedRental] = useState<string | null>(null);
+  const [_selectedRental, _setSelectedRental] = useState<string | null>(null);
 
   if (!rentals.length) {
     return (

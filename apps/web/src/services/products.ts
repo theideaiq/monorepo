@@ -1,6 +1,6 @@
 import { Logger } from '@repo/utils';
 import { createClient } from '@/lib/supabase/client';
-import type { Database } from '@/lib/database.types';
+import type { Database, Json } from '@/lib/database.types';
 
 type DBProduct = Database['public']['Tables']['products']['Row'] & {
   reviews?: { rating: number }[];
@@ -29,7 +29,6 @@ export interface Product {
   images: string[];
   isVerified: boolean;
   description: string;
-  // biome-ignore lint/suspicious/noExplicitAny: Details are unstructured
   details: Record<string, any>;
   variants: ProductVariant[];
   stock: number;
@@ -49,8 +48,8 @@ export async function getProducts(limit = 20): Promise<Product[]> {
       .limit(limit);
 
     if (error) {
-      Logger.warn('Error fetching products, using fallback data:', error);
-      throw new Error('Supabase error');
+      Logger.error('Error fetching products:', error);
+      return [];
     }
 
     if (!data) return [];
@@ -195,7 +194,6 @@ function mapDBProductToUI(item: DBProduct): Product {
     images: item.images || (item.image_url ? [item.image_url] : []),
     isVerified: item.is_verified,
     description: item.description || '',
-    // biome-ignore lint/suspicious/noExplicitAny: Details are unstructured
     details: (item.details as Record<string, any>) || {},
     variants,
     stock: item.stock_count,
