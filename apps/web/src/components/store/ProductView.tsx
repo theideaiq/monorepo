@@ -92,7 +92,7 @@ export function ProductView({ product }: ProductViewProps) {
         {/* LEFT: Gallery */}
         <div className="space-y-4">
           {/* Main Image */}
-          <div className="relative aspect-square bg-[#1a1a1a] rounded-3xl overflow-hidden border border-white/5">
+          <div className="relative aspect-square bg-brand-surface rounded-3xl overflow-hidden border border-white/5">
             <Image
               src={selectedImage}
               alt={product.title}
