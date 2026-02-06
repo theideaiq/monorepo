@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { requireAdmin } from '@/lib/auth-checks';
+import { requireAdmin } from '@/lib/server-auth-checks';
 import type { CRMStatus } from '@/types/crm';
 
 export async function updateProfile(
