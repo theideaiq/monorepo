@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Star, Heart, CheckCircle2 } from 'lucide-react';
+import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
 import { Button } from '@repo/ui';
 import { VariantSelector } from '@/components/ui/VariantSelector';
-import type { Product } from '@/services/products';
+import type { Product, ProductVariant } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
@@ -17,6 +17,7 @@ interface ProductViewProps {
 
 export function ProductView({ product }: ProductViewProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
+  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const { addItem } = useCartStore();
   const { openCart } = useUIStore();
 
@@ -48,7 +49,7 @@ export function ProductView({ product }: ProductViewProps) {
     const matchingVariant = product.variants.find(
       (v) => v.attributes[key] === value,
     );
-    if (matchingVariant?.image) {
+    if (matchingVariant && matchingVariant.image) {
       setSelectedImage(matchingVariant.image);
     }
   };
@@ -84,7 +85,6 @@ export function ProductView({ product }: ProductViewProps) {
   };
 
   const price = new Intl.NumberFormat('en-IQ').format(product.price);
-  const totalImages = (product.images?.length || 0) + 1;
 
   return (
     <div className="pb-32 md:pb-12">
@@ -116,31 +116,25 @@ export function ProductView({ product }: ProductViewProps) {
           {/* Thumbnails (Scrollable on mobile) */}
           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
             <button
-              type="button"
               onClick={() => setSelectedImage(product.image)}
-              aria-label={`View image 1 of ${totalImages}`}
-              aria-current={selectedImage === product.image ? 'true' : 'false'}
-              className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
+              className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
             >
               <Image
                 src={product.image}
-                alt=""
+                alt="Main"
                 fill
                 className="object-cover"
               />
             </button>
             {product.images?.map((img, i) => (
               <button
-                key={img}
-                type="button"
+                key={i}
                 onClick={() => setSelectedImage(img)}
-                aria-label={`View image ${i + 2} of ${totalImages}`}
-                aria-current={selectedImage === img ? 'true' : 'false'}
-                className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
+                className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
               >
                 <Image
                   src={img}
-                  alt=""
+                  alt={`View ${i}`}
                   fill
                   className="object-cover"
                 />
@@ -156,11 +150,7 @@ export function ProductView({ product }: ProductViewProps) {
               <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
                 {product.title}
               </h1>
-              <button
-                type="button"
-                className="text-slate-500 hover:text-brand-pink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink rounded-full p-1"
-                aria-label="Add to wishlist"
-              >
+              <button className="text-slate-500 hover:text-brand-pink transition-colors">
                 <Heart size={28} />
               </button>
             </div>

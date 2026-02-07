@@ -1,7 +1,5 @@
 'use client';
 
-import { useId } from 'react';
-
 interface VariantSelectorProps {
   label: string;
   options: string[];
@@ -15,26 +13,18 @@ export function VariantSelector({
   selected,
   onChange,
 }: VariantSelectorProps) {
-  const id = useId();
-
   return (
-    <div className="mb-4" role="radiogroup" aria-labelledby={id}>
-      <h3
-        id={id}
-        className="text-sm font-medium text-slate-400 mb-3 uppercase tracking-wider"
-      >
+    <div className="mb-4">
+      <h3 className="text-sm font-medium text-slate-400 mb-3 uppercase tracking-wider">
         {label}
       </h3>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const isActive = selected === option;
           return (
-            // biome-ignore lint/a11y/useSemanticElements: Custom radio button implementation
             <button
               key={option}
               type="button"
-              role="radio"
-              aria-checked={isActive}
               onClick={() => onChange(option)}
               className={`
                 px-4 py-2 rounded-full text-sm font-bold border transition-all duration-200
