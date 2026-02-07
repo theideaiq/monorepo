@@ -1,4 +1,4 @@
-area: web:
+"area: web":
   - changed-files:
       - any-glob-to-any-file: 'apps/web/**/*'
 
