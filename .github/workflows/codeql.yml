@@ -65,13 +65,25 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # 1. Install Dependencies
+          pnpm install --frozen-lockfile
+
+          # 2. Restore Secrets (Generates google-services.json)
+          cd apps/web && node scripts/restore-mobile-secrets.js
+          cd ../..
+
+          # 3. Create dummy web assets for Capacitor
+          mkdir -p apps/web/out
+          touch apps/web/out/index.html
+
+          # 4. Sync Capacitor
+          cd apps/web && npx cap sync android
+          cd ../..
           
-          # 2. Grant Permission
+          # 5. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 6. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -80,10 +92,22 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # 1. Install Dependencies
+          pnpm install --frozen-lockfile
+
+          # 2. Restore Secrets (Generates GoogleService-Info.plist)
+          cd apps/web && node scripts/restore-mobile-secrets.js
+          cd ../..
+
+          # 3. Create dummy web assets for Capacitor
+          mkdir -p apps/web/out
+          touch apps/web/out/index.html
+
+          # 4. Sync Capacitor
+          cd apps/web && npx cap sync ios
+          cd ../..
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 5. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
