@@ -12,6 +12,7 @@ import { ProductCard } from '@/components/ui/ProductCard';
 import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
 import type { Product } from '@/services/products';
+import { formatPrice } from '@/lib/formatters';
 
 const CATEGORIES = [
   { name: 'Gaming', icon: <Gamepad2 size={18} /> },
@@ -182,9 +183,11 @@ export default function MegastorePage() {
                 Verified refurbished condition available.
               </p>
               <div className="flex items-center gap-4 mb-8">
-                <span className="text-4xl font-black text-white">120,000</span>
+                <span className="text-4xl font-black text-white">
+                  {formatPrice(120000)}
+                </span>
                 <span className="text-xl text-slate-500 line-through">
-                  180,000
+                  {formatPrice(180000)}
                 </span>
               </div>
               <Button className="h-14 px-10 bg-brand-pink hover:bg-pink-600 text-white font-bold rounded-full text-lg border-none">
