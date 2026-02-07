@@ -23,6 +23,8 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      # Required for pnpm to run in CI
+      PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
 
     strategy:
       fail-fast: false
@@ -43,7 +45,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
+
+      # Install pnpm to handle workspace dependencies
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        # Only install dependencies for compiled languages that need manual build steps involving native projects
+        if: matrix.language == 'java-kotlin' || matrix.language == 'swift'
+        run: pnpm install --frozen-lockfile
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -58,6 +71,7 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+          queries: security-and-quality
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
@@ -66,13 +80,17 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          cd apps/web && node scripts/restore-mobile-secrets.js
           
           # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
-          
-          # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
+          chmod +x android/gradlew
+
+          # 3. Sync Capacitor (Generates cordova.variables.gradle)
+          # We need to run this to generate the necessary Gradle files
+          npx cap sync android
+
+          # 4. Build Debug APK (Sufficient for analysis)
+          cd android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -81,21 +99,24 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          cd apps/web && node scripts/restore-mobile-secrets.js
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
+          # 2. Sync Capacitor (Ensures native pods/projects are updated)
+          npx cap sync ios
+
+          # 3. Determine Build Type (CocoaPods vs SPM)
+          if [ -f "ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
+              cd ios/App && pod install --repo-update && cd -
+              BUILD_TARGET="-workspace ios/App/App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+              xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
+              BUILD_TARGET="-project ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
