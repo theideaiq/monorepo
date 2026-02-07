@@ -1,12 +1,13 @@
 'use client';
 
+import { Button } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
+import { toast } from 'react-hot-toast';
 import { formatPrice } from '@/lib/formatters';
 import { useCartStore } from '@/stores/cart-store';
-import { toast } from 'react-hot-toast';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -45,8 +46,9 @@ export function CheckoutFlow() {
         <div
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
-          <div
-            className="p-6 flex items-center justify-between cursor-pointer"
+          <button
+            type="button"
+            className="p-6 flex items-center justify-between cursor-pointer w-full text-left"
             onClick={() => setStep(1)}
           >
             <div className="flex items-center gap-4">
@@ -62,11 +64,11 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <span className="text-sm text-brand-yellow font-medium">
                 Edit
-              </button>
+              </span>
             )}
-          </div>
+          </button>
 
           <AnimatePresence>
             {step === 1 && (
@@ -82,10 +84,14 @@ export function CheckoutFlow() {
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                        <label
+                          htmlFor="fullName"
+                          className="text-xs text-slate-400"
+                        >
                           Full Name
                         </label>
                         <input
+                          id="fullName"
                           required
                           value={address.fullName}
                           onChange={(e) =>
@@ -96,10 +102,14 @@ export function CheckoutFlow() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                        <label
+                          htmlFor="phone"
+                          className="text-xs text-slate-400"
+                        >
                           Phone Number
                         </label>
                         <input
+                          id="phone"
                           required
                           value={address.phone}
                           onChange={(e) =>
@@ -112,8 +122,11 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">City</label>
+                      <label htmlFor="city" className="text-xs text-slate-400">
+                        City
+                      </label>
                       <select
+                        id="city"
                         value={address.city}
                         onChange={(e) =>
                           setAddress({ ...address, city: e.target.value })
@@ -128,10 +141,14 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">
+                      <label
+                        htmlFor="street"
+                        className="text-xs text-slate-400"
+                      >
                         Address Details
                       </label>
                       <textarea
+                        id="street"
                         required
                         value={address.street}
                         onChange={(e) =>
@@ -247,12 +264,13 @@ export function CheckoutFlow() {
             {items.map((item) => (
               <div key={item.id} className="flex gap-3">
                 <div className="w-12 h-12 bg-black rounded flex-shrink-0 relative overflow-hidden">
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.title}
+                    fill
                     className="object-cover w-full h-full"
                   />
-                  <div className="absolute bottom-0 right-0 bg-brand-yellow text-brand-dark text-[10px] font-bold px-1 rounded-tl">
+                  <div className="absolute bottom-0 right-0 bg-brand-yellow text-brand-dark text-[10px] font-bold px-1 rounded-tl z-10">
                     {item.quantity}
                   </div>
                 </div>
@@ -261,8 +279,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {formatPrice(item.price * item.quantity)}{' '}
-                    IQD
+                    {formatPrice(item.price * item.quantity)} IQD
                   </div>
                 </div>
               </div>
