@@ -18,7 +18,7 @@ export class ZainDirectAdapter implements PaymentProvider {
   }
 
   async verifyWebhook(
-    _payload: unknown,
+    _payload: string,
     _signature?: string,
   ): Promise<WebhookEvent> {
     throw new Error('ZainDirectAdapter: Not Implemented');
