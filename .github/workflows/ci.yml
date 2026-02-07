@@ -59,6 +59,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role"
           RESEND_API_KEY: "dummy-resend-key"
           TELEGRAM_BOT_TOKEN: "123456789:DUMMY_TELEGRAM_BOT_TOKEN_FOR_CI_TESTING"
+          GEMINI_API_KEY: "dummy-gemini-key"
         run: pnpm turbo check typecheck test
 
   build:
@@ -113,6 +114,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role"
           RESEND_API_KEY: "dummy-resend-key"
           TELEGRAM_BOT_TOKEN: "123456789:DUMMY_TELEGRAM_BOT_TOKEN_FOR_CI_TESTING"
+          GEMINI_API_KEY: "dummy-gemini-key"
         run: pnpm turbo build
 
   e2e:

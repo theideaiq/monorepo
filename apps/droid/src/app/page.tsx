@@ -278,7 +278,6 @@ function FeatureCard({
   title,
   desc,
 }: {
-  // biome-ignore lint/suspicious/noExplicitAny: icon component
   icon: any;
   title: string;
   desc: string;

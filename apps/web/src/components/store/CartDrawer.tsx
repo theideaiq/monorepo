@@ -1,13 +1,12 @@
 'use client';
 
-import { Button } from '@repo/ui';
-import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
+import Image from 'next/image';
 import { Drawer } from '@/components/ui/Drawer';
-import { formatPrice } from '@/lib/formatters';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
+import { Button } from '@repo/ui';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -19,7 +18,7 @@ export function CartDrawer() {
     router.push('/checkout');
   };
 
-  const formattedTotal = formatPrice(total);
+  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
 
   return (
     <Drawer
@@ -72,18 +71,17 @@ export function CartDrawer() {
                 {item.attributes && (
                   <p className="text-xs text-slate-500 mt-1">
                     {Object.entries(item.attributes)
-                      .map(([_k, v]) => `${v}`)
+                      .map(([k, v]) => `${v}`)
                       .join(', ')}
                   </p>
                 )}
                 <p className="text-brand-yellow font-bold mt-2">
-                  {formatPrice(item.price)} IQD
+                  {new Intl.NumberFormat('en-IQ').format(item.price)} IQD
                 </p>
               </div>
 
               <div className="flex flex-col justify-between items-end">
                 <button
-                  type="button"
                   onClick={() => removeItem(item.id)}
                   className="text-slate-500 hover:text-red-500 p-1"
                 >
@@ -92,7 +90,6 @@ export function CartDrawer() {
 
                 <div className="flex items-center gap-3 bg-black/20 rounded-lg p-1">
                   <button
-                    type="button"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
                     disabled={item.quantity <= 1}
@@ -103,7 +100,6 @@ export function CartDrawer() {
                     {item.quantity}
                   </span>
                   <button
-                    type="button"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className="p-1 text-slate-400 hover:text-white"
                   >

@@ -41,7 +41,7 @@
         let playerX = 0;
         
         let items = []; // Falling objects
-        // const particles = [];
+        const particles = [];
 
         function resize() {
             canvasWidth = canvas.width = window.innerWidth;
@@ -128,12 +128,12 @@
                         score += 10;
                         energy = Math.min(100, energy + 10);
                         // Trigger Haptic
-                        if (window.Telegram?.WebApp?.HapticFeedback?.impactOccurred) {
+                        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback && typeof window.Telegram.WebApp.HapticFeedback.impactOccurred === 'function') {
                             window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
                         }
                     } else {
                         energy -= 30;
-                        if (window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred) {
+                        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback && typeof window.Telegram.WebApp.HapticFeedback.notificationOccurred === 'function') {
                             window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
                         }
                     }
@@ -159,7 +159,7 @@
         }
 
         // Auto Start
-        if (window.Telegram?.WebApp) {
+        if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
         }
