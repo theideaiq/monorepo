@@ -50,8 +50,11 @@ jobs:
 
       - name: Run Quality Checks
         env:
-          SKIP_ENV_VALIDATION: "true"
-          TELEGRAM_BOT_TOKEN: "123456789:DUMMY_TELEGRAM_BOT_TOKEN_FOR_CI_TESTING"
+          NEXT_PUBLIC_SUPABASE_URL: https://example.com
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: dummy-service-role-key
+          TELEGRAM_BOT_TOKEN: 123456789:DUMMY_TELEGRAM_BOT_TOKEN_FOR_CI_TESTING
+          SKIP_ENV_VALIDATION: true
         run: pnpm turbo check typecheck test
 
   build:
@@ -97,10 +100,11 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.com' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy' }}
-          SKIP_ENV_VALIDATION: "true"
-          TELEGRAM_BOT_TOKEN: "123456789:DUMMY_TELEGRAM_BOT_TOKEN_FOR_CI_TESTING"
+          NEXT_PUBLIC_SUPABASE_URL: https://example.com
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: dummy-service-role-key
+          TELEGRAM_BOT_TOKEN: 123456789:DUMMY_TELEGRAM_BOT_TOKEN_FOR_CI_TESTING
+          SKIP_ENV_VALIDATION: true
         run: pnpm turbo build
 
   e2e:
@@ -149,7 +153,6 @@ jobs:
 
       - name: Run E2E Tests
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.com' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy' }}
-          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm turbo e2e

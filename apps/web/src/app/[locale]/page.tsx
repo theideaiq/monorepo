@@ -165,8 +165,8 @@ export default async function Home({ params }: Props) {
         <Link
           href="/register"
           className={buttonVariants({
-            size: 'xl',
-            className: 'shadow-xl shadow-brand-pink/20',
+            size: 'lg',
+            className: 'h-14 px-10 text-lg shadow-xl shadow-brand-pink/20',
           })}
         >
           {t('footer_btn')}

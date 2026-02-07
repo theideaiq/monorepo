@@ -60,16 +60,33 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
 
       # ----------------------------------------------------------------
+      # PREPARE: Dependencies & Capacitor (All Platforms)
+      # ----------------------------------------------------------------
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Capacitor Sync
+        run: |
+          cd apps/web
+          npx cap sync android
+          npx cap sync ios
+
+      # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          cd apps/web && npm run secrets:restore
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Grant Permission
-          chmod +x android/gradlew
+          chmod +x apps/web/android/gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
@@ -81,7 +98,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          cd apps/web && npm run secrets:restore
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then

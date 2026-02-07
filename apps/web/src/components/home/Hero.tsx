@@ -29,9 +29,8 @@ export default function Hero() {
             <Link
               href="/register"
               className={buttonVariants({
-                size: 'xl',
                 className:
-                  'w-full sm:w-auto bg-brand-yellow text-brand-dark hover:bg-white border-none',
+                  'h-14 px-8 text-lg w-full sm:w-auto bg-brand-yellow text-brand-dark hover:bg-white border-none',
               })}
             >
               {t('cta_primary')}
@@ -44,10 +43,9 @@ export default function Hero() {
             <Link
               href="/about"
               className={buttonVariants({
-                variant: 'ghost',
-                size: 'xl',
+                variant: 'outline',
                 className:
-                  'w-full sm:w-auto text-white border border-white/20 hover:bg-white/10 hover:text-white',
+                  'h-14 px-8 text-lg w-full sm:w-auto text-white border-white/20 hover:bg-white/10',
               })}
             >
               {t('cta_secondary')}
