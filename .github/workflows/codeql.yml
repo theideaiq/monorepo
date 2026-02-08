@@ -45,6 +45,12 @@ jobs:
         with:
           node-version: 20
 
+      # Required for installing dependencies
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
