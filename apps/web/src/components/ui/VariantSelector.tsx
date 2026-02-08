@@ -1,5 +1,7 @@
 'use client';
 
+import { memo } from 'react';
+
 interface VariantSelectorProps {
   label: string;
   options: string[];
@@ -7,7 +9,7 @@ interface VariantSelectorProps {
   onChange: (value: string) => void;
 }
 
-export function VariantSelector({
+export const VariantSelector = memo(function VariantSelector({
   label,
   options,
   selected,
@@ -42,4 +44,4 @@ export function VariantSelector({
       </div>
     </div>
   );
-}
+});

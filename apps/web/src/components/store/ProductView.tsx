@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useCallback, memo } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
+import { Star, Heart, CheckCircle2 } from 'lucide-react';
 import { Button } from '@repo/ui';
 import { VariantSelector } from '@/components/ui/VariantSelector';
-import type { Product, ProductVariant } from '@/services/products';
+import type { Product } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
@@ -15,9 +15,37 @@ interface ProductViewProps {
   product: Product;
 }
 
+// Helper component to prevent re-renders of VariantSelector due to new arrow functions
+const VariantRow = memo(function VariantRow({
+  label,
+  options,
+  selected,
+  onChange,
+}: {
+  label: string;
+  options: string[];
+  selected: string;
+  onChange: (key: string, val: string) => void;
+}) {
+  const handleChange = useCallback(
+    (val: string) => {
+      onChange(label, val);
+    },
+    [label, onChange],
+  );
+
+  return (
+    <VariantSelector
+      label={label}
+      options={options}
+      selected={selected}
+      onChange={handleChange}
+    />
+  );
+});
+
 export function ProductView({ product }: ProductViewProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
-  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const { addItem } = useCartStore();
   const { openCart } = useUIStore();
 
@@ -30,31 +58,37 @@ export function ProductView({ product }: ProductViewProps) {
   const hasVariants = product.variants && product.variants.length > 0;
 
   // Extract unique attributes (e.g. Color, Size)
-  const attributes: Record<string, string[]> = {};
-  if (hasVariants) {
-    product.variants.forEach((v) => {
-      Object.entries(v.attributes).forEach(([key, val]) => {
-        if (!attributes[key]) attributes[key] = [];
-        if (!attributes[key].includes(val)) attributes[key].push(val);
+  const attributes: Record<string, string[]> = useMemo(() => {
+    const attrs: Record<string, string[]> = {};
+    if (hasVariants) {
+      product.variants.forEach((v) => {
+        Object.entries(v.attributes).forEach(([key, val]) => {
+          if (!attrs[key]) attrs[key] = [];
+          if (!attrs[key].includes(val)) attrs[key].push(val);
+        });
       });
-    });
-  }
+    }
+    return attrs;
+  }, [hasVariants, product.variants]);
 
   // State for selections
   const [selections, setSelections] = useState<Record<string, string>>({});
 
-  const handleAttributeChange = (key: string, value: string) => {
-    setSelections((prev) => ({ ...prev, [key]: value }));
-    // Try to find matching image
-    const matchingVariant = product.variants.find(
-      (v) => v.attributes[key] === value,
-    );
-    if (matchingVariant && matchingVariant.image) {
-      setSelectedImage(matchingVariant.image);
-    }
-  };
+  const handleAttributeChange = useCallback(
+    (key: string, value: string) => {
+      setSelections((prev) => ({ ...prev, [key]: value }));
+      // Try to find matching image
+      const matchingVariant = product.variants.find(
+        (v) => v.attributes[key] === value,
+      );
+      if (matchingVariant?.image) {
+        setSelectedImage(matchingVariant.image);
+      }
+    },
+    [product.variants],
+  );
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     // Validate selections if needed
     if (
       hasVariants &&
@@ -82,9 +116,22 @@ export function ProductView({ product }: ProductViewProps) {
 
     openCart();
     toast.success('Added to cart');
-  };
+  }, [
+    hasVariants,
+    attributes,
+    selections,
+    product.id,
+    product.title,
+    product.price,
+    selectedImage,
+    addItem,
+    openCart,
+  ]);
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const price = useMemo(
+    () => new Intl.NumberFormat('en-IQ').format(product.price),
+    [product.price],
+  );
 
   return (
     <div className="pb-32 md:pb-12">
@@ -116,6 +163,7 @@ export function ProductView({ product }: ProductViewProps) {
           {/* Thumbnails (Scrollable on mobile) */}
           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
             <button
+              type="button"
               onClick={() => setSelectedImage(product.image)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
             >
@@ -128,7 +176,8 @@ export function ProductView({ product }: ProductViewProps) {
             </button>
             {product.images?.map((img, i) => (
               <button
-                key={i}
+                key={img}
+                type="button"
                 onClick={() => setSelectedImage(img)}
                 className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
               >
@@ -150,7 +199,10 @@ export function ProductView({ product }: ProductViewProps) {
               <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
                 {product.title}
               </h1>
-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
+              <button
+                type="button"
+                className="text-slate-500 hover:text-brand-pink transition-colors"
+              >
                 <Heart size={28} />
               </button>
             </div>
@@ -176,12 +228,12 @@ export function ProductView({ product }: ProductViewProps) {
           {hasVariants && (
             <div className="space-y-6 pt-6 border-t border-white/10">
               {Object.entries(attributes).map(([key, options]) => (
-                <VariantSelector
+                <VariantRow
                   key={key}
                   label={key}
                   options={options}
                   selected={selections[key] || ''}
-                  onChange={(val) => handleAttributeChange(key, val)}
+                  onChange={handleAttributeChange}
                 />
               ))}
             </div>
