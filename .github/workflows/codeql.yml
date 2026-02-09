@@ -66,9 +66,7 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          # We run the script directly with node to avoid workspace/npm issues
-          cd apps/web && node scripts/restore-mobile-secrets.js
-          cd ../..
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -83,9 +81,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          # We run the script directly with node to avoid workspace/npm issues
-          cd apps/web && node scripts/restore-mobile-secrets.js
-          cd ../..
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
