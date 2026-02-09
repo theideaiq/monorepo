@@ -36,7 +36,8 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
@@ -65,4 +66,26 @@ export function formatCompactNumber(number: number): string {
     notation: 'compact',
     maximumFractionDigits: 1,
   }).format(number);
+}
+
+/**
+ * Formats a number as an IQD amount (e.g. "50,000").
+ * Uses 'en-IQ' locale and 0 fraction digits.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted number string.
+ *
+ * @example
+ * formatIqd(50000) // -> "50,000"
+ */
+export function formatIqd(amount: number): string {
+  // Validate input to avoid formatting NaN, Infinity, or non-numeric values
+  if (!Number.isFinite(amount)) {
+    return '0';
+  }
+
+  return new Intl.NumberFormat('en-IQ', {
+    style: 'decimal',
+    maximumFractionDigits: 0,
+  }).format(amount);
 }
