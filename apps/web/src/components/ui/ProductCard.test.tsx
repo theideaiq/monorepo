@@ -1,6 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { ProductCard } from './ProductCard';
+import { fireEvent, render, screen } from '@testing-library/react';
 import type { Product } from '@/services/products';
+import { ProductCard } from './ProductCard';
 
 const mockProduct: Product = {
   id: '1',
@@ -45,7 +45,9 @@ describe('ProductCard', () => {
 
     // Check if there is a link with the correct href
     const links = screen.getAllByRole('link');
-    const productLink = links.find(link => link.getAttribute('href') === '/product/test-product');
+    const productLink = links.find(
+      (link) => link.getAttribute('href') === '/product/test-product',
+    );
     expect(productLink).toBeInTheDocument();
   });
 });
