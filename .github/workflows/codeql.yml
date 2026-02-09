@@ -65,13 +65,24 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # 0. Install pnpm & dependencies
+          npm install -g pnpm
+          npm_config_engine_strict=false pnpm install --frozen-lockfile
+
+          # 1. Create dummy web assets (required for cap sync)
+          mkdir -p apps/web/out
+          touch apps/web/out/index.html
+
+          # 2. Sync Capacitor (generates android project files)
+          npx cap sync android
+
+          # 3. Restore Secrets (Generates google-services.json)
+          node apps/web/scripts/restore-mobile-secrets.js
           
-          # 2. Grant Permission
+          # 4. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 5. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -80,10 +91,21 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # 0. Install pnpm & dependencies
+          npm install -g pnpm
+          npm_config_engine_strict=false pnpm install --frozen-lockfile
+
+          # 1. Create dummy web assets (required for cap sync)
+          mkdir -p apps/web/out
+          touch apps/web/out/index.html
+
+          # 2. Sync Capacitor (generates ios project files & pods)
+          npx cap sync ios
+
+          # 3. Restore Secrets (Generates GoogleService-Info.plist)
+          node apps/web/scripts/restore-mobile-secrets.js
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 4. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -95,7 +117,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 5. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \

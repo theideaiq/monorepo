@@ -9,7 +9,7 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check --write .",
-    "test": "vitest",
+    "test": "SKIP_ENV_VALIDATION=true vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
