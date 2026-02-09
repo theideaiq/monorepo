@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { useProducts } from '@/hooks/queries/use-products';
 import { useCartStore } from '@/stores/cart-store';
-import { ProductCard } from '@/components/ui/ProductCard';
+import { ProductCard } from '@/components/store/ProductCard';
 import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
 import type { Product } from '@/services/products';
