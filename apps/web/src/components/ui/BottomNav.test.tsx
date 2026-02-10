@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BottomNav } from './BottomNav';
 
 // Mock dependencies
@@ -84,8 +84,8 @@ describe('BottomNav', () => {
 
     render(<BottomNav />);
 
-     // The badge contains the text "5"
-     const badge = screen.getByText('5');
-     expect(badge).toHaveAttribute('aria-hidden', 'true');
+    // The badge contains the text "5"
+    const badge = screen.getByText('5');
+    expect(badge).toHaveAttribute('aria-hidden', 'true');
   });
 });
