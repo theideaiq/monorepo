@@ -30,8 +30,11 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
-    setLines(newLines);
+    const currentLine = newLines[index];
+    if (currentLine) {
+      newLines[index] = { ...currentLine, [field]: value };
+      setLines(newLines);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,9 +58,16 @@ export function NewJournalEntryModal({
       return;
     }
 
+    // Filter out potential issues and cast to ensure types are correct before sending
+    const validLines = lines.map((l) => ({
+      accountId: l.accountId || '', // Fallback to empty string to match string type, though validation above ensures it's set
+      debit: Number(l.debit),
+      credit: Number(l.credit),
+    }));
+
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      await createJournalEntry(date || new Date().toISOString(), description || '', validLines);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);

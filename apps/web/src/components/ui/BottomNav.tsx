@@ -1,11 +1,11 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { Home, Search, ShoppingCart, User } from 'lucide-react';
-import { useUIStore } from '@/stores/ui-store';
-import { useCartStore } from '@/stores/cart-store';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -16,13 +16,6 @@ export function BottomNav() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const navItems = [
-    { label: 'Home', icon: Home, href: '/' },
-    { label: 'Browse', icon: Search, href: '/megastore' },
-    // Cart is special
-    { label: 'Profile', icon: User, href: '/account' },
-  ];
 
   // Helper to check active state
   // Basic check: if href is '/' check exact match, else check startsWith
@@ -36,12 +29,18 @@ export function BottomNav() {
     return pathname?.includes(href);
   };
 
+  const cartItemCount = items.reduce((acc, i) => acc + i.quantity, 0);
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe md:hidden">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe md:hidden"
+      aria-label="Mobile Navigation"
+    >
       <div className="flex justify-around items-center h-16">
         {/* Standard Links */}
         <Link
           href="/"
+          aria-current={isActive('/') ? 'page' : undefined}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
@@ -52,6 +51,7 @@ export function BottomNav() {
 
         <Link
           href="/megastore"
+          aria-current={isActive('/megastore') ? 'page' : undefined}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/megastore') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
@@ -64,13 +64,17 @@ export function BottomNav() {
         <button
           type="button"
           onClick={toggleCart}
+          aria-label={`Cart, ${cartItemCount} items`}
           className="flex flex-col items-center justify-center w-full h-full space-y-1 text-slate-500 relative"
         >
           <div className="relative">
             <ShoppingCart size={20} />
             {mounted && items.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {items.reduce((acc, i) => acc + i.quantity, 0)}
+              <span
+                className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full"
+                aria-hidden="true"
+              >
+                {cartItemCount}
               </span>
             )}
           </div>
@@ -79,6 +83,7 @@ export function BottomNav() {
 
         <Link
           href="/account"
+          aria-current={isActive('/account') ? 'page' : undefined}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/account') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
@@ -87,6 +92,6 @@ export function BottomNav() {
           <span className="text-[10px] font-medium">Profile</span>
         </Link>
       </div>
-    </div>
+    </nav>
   );
 }
