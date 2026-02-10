@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const ANDROID_DEST = path.join(
   __dirname,
@@ -10,50 +10,54 @@ const IOS_DEST = path.join(
   '../ios/App/App/GoogleService-Info.plist',
 );
 
-function restoreSecret(envVar, destPath, platformName) {
-  const secretBase64 = process.env[envVar];
-  if (secretBase64) {
-    try {
-      const secretBuffer = Buffer.from(secretBase64, 'base64');
-      const destDir = path.dirname(destPath);
-      fs.mkdirSync(destDir, { recursive: true });
-      fs.writeFileSync(destPath, secretBuffer);
-      fs.chmodSync(destPath, 0o600);
-      console.log(`✅ ${platformName} secrets restored to ${destPath}`);
-    } catch (error) {
-      let errorMessage;
-      if (error && typeof error.message === 'string') {
-        errorMessage = error.message;
-      } else {
-        const errorType =
-          error &&
-          error.constructor &&
-          typeof error.constructor.name === 'string'
-            ? error.constructor.name
-            : 'UnknownErrorType';
-        let errorDetails;
-        try {
-          errorDetails = JSON.stringify(error);
-        } catch {
-          errorDetails = String(error);
-        }
-        errorMessage = `${errorType}: ${errorDetails || 'Unknown error'}`;
-      }
-      console.error(
-        `❌ Failed to restore ${platformName} secrets: ${errorMessage}`,
-      );
-      process.exit(1);
+// Function to decode Base64
+function decodeBase64(data) {
+  return Buffer.from(data, 'base64').toString('utf-8');
+}
+
+// Function to write file
+function writeSecretFile(dest, content) {
+  try {
+    const dir = path.dirname(dest);
+    if (!fs.existsSync(dir)) {
+      console.warn(`⚠️ Directory does not exist: ${dir}. Skipping...`);
+      return;
     }
-  } else {
-    console.log(
-      `⚠️ No ${platformName} secret found (${envVar} is not set), skipping.`,
-    );
+    fs.writeFileSync(dest, content);
+    console.log(`✅ Restored: ${dest}`);
+  } catch (error) {
+    let errorMessage = 'Unknown error';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else {
+      const errorType =
+        error?.constructor &&
+        typeof error.constructor.name === 'string'
+          ? error.constructor.name
+          : 'UnknownErrorType';
+      errorMessage = `Non-error object thrown: ${errorType}`;
+    }
+    console.error(`❌ Failed to write ${dest}:`, errorMessage);
+    process.exit(1);
   }
 }
 
-console.log('🔄 Restoring mobile secrets...');
+// Restore Android Secret
+if (process.env.ANDROID_GOOGLE_SERVICES_BASE64) {
+  writeSecretFile(
+    ANDROID_DEST,
+    decodeBase64(process.env.ANDROID_GOOGLE_SERVICES_BASE64),
+  );
+} else {
+  console.warn('⚠️ ANDROID_GOOGLE_SERVICES_BASE64 not set. Skipping...');
+}
 
-restoreSecret('ANDROID_GOOGLE_SERVICES_BASE64', ANDROID_DEST, 'Android');
-restoreSecret('IOS_GOOGLE_SERVICE_INFO_BASE64', IOS_DEST, 'iOS');
-
-console.log('🏁 Secret restoration process complete.');
+// Restore iOS Secret
+if (process.env.IOS_GOOGLE_SERVICE_INFO_BASE64) {
+  writeSecretFile(
+    IOS_DEST,
+    decodeBase64(process.env.IOS_GOOGLE_SERVICE_INFO_BASE64),
+  );
+} else {
+  console.warn('⚠️ IOS_GOOGLE_SERVICE_INFO_BASE64 not set. Skipping...');
+}
