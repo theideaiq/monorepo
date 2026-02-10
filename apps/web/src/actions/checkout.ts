@@ -1,10 +1,10 @@
 'use server';
 
 import { webEnv } from '@repo/env/web';
-import { Logger } from '@repo/utils';
 import { redirect } from 'next/navigation';
 import { paymentFactory } from '@/lib/payment/config';
 import { createClient } from '@/lib/supabase/server';
+import { Logger } from '@repo/utils';
 
 export async function initiateCheckout(cartId: string) {
   const supabase = await createClient();
