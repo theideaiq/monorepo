@@ -1,8 +1,8 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import Image from 'next/image';
+import { Link } from '@/i18n/navigation';
 
 interface WebFooterProps {
   brand: {

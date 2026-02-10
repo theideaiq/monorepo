@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { useUIStore } from '@/stores/ui-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 interface WebNavbarProps {
   navItems: { label: string; href: string }[];
@@ -15,6 +15,7 @@ interface WebNavbarProps {
   desktopActions?: React.ReactNode;
   mobileActions?: React.ReactNode;
   // keeping props for compatibility with layout calling signature, though we might ignore some
+  // biome-ignore lint/suspicious/noExplicitAny: Compatibility props
   [key: string]: any;
 }
 
