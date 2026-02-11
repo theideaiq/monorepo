@@ -1,3 +1,5 @@
+'use server';
+
 import type { Database } from '@repo/database/types';
 import { adminEnv } from '@repo/env/admin';
 import { createServerClient } from '@supabase/ssr';

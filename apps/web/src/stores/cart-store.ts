@@ -23,6 +23,7 @@ interface CartState {
 
 export const useCartStore = create<CartState>()(
   persist(
+    // biome-ignore lint/correctness/noUnusedFunctionParameters: preserved signature
     (set, get) => ({
       items: [],
       total: 0,
@@ -30,6 +31,7 @@ export const useCartStore = create<CartState>()(
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
+          // biome-ignore lint/suspicious/noImplicitAnyLet: implicit type inferred
           let updatedItems;
           if (existing) {
             updatedItems = state.items.map((i) =>

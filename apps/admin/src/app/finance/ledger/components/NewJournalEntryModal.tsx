@@ -28,9 +28,21 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (
+    index: number,
+    field: keyof (typeof lines)[0],
+    value: string | number,
+  ) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    const updatedLine = { ...newLines[index], [field]: value };
+
+    // Explicitly enforce the type structure to satisfy TS
+    newLines[index] = {
+      accountId: updatedLine.accountId || '',
+      debit: Number(updatedLine.debit) || 0,
+      credit: Number(updatedLine.credit) || 0,
+    };
+
     setLines(newLines);
   };
 
@@ -57,6 +69,7 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
+      if (!date) throw new Error('Date is required');
       await createJournalEntry(date, description, lines);
       toast.success('Journal entry created');
       setIsOpen(false);

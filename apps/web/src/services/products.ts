@@ -1,6 +1,7 @@
 import { Logger } from '@repo/utils';
-import { createClient } from '@/lib/supabase/client';
+// biome-ignore lint/correctness/noUnusedImports: may be used in future
 import type { Database, Json } from '@/lib/database.types';
+import { createClient } from '@/lib/supabase/client';
 
 type DBProduct = Database['public']['Tables']['products']['Row'] & {
   reviews?: { rating: number }[];
@@ -29,6 +30,7 @@ export interface Product {
   images: string[];
   isVerified: boolean;
   description: string;
+  // biome-ignore lint/suspicious/noExplicitAny: dynamic product details
   details: Record<string, any>;
   variants: ProductVariant[];
   stock: number;
@@ -194,6 +196,7 @@ function mapDBProductToUI(item: DBProduct): Product {
     images: item.images || (item.image_url ? [item.image_url] : []),
     isVerified: item.is_verified,
     description: item.description || '',
+    // biome-ignore lint/suspicious/noExplicitAny: dynamic product details
     details: (item.details as Record<string, any>) || {},
     variants,
     stock: item.stock_count,

@@ -44,6 +44,12 @@ export async function getCashFlowData(year: number) {
   lines.forEach((line: any) => {
     const date = new Date(line.ledger_entries.transaction_date);
     const monthIndex = date.getMonth();
+
+    // Safety check for valid month index (0-11)
+    if (monthIndex < 0 || monthIndex >= 12 || !monthNames[monthIndex]) {
+      return;
+    }
+
     const month = monthNames[monthIndex];
 
     if (!monthlyData[month]) {
