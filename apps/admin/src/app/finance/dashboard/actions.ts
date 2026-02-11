@@ -46,18 +46,20 @@ export async function getCashFlowData(year: number) {
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
 
-    if (!monthlyData[month]) {
-      monthlyData[month] = { revenue: 0, expenses: 0 };
-    }
+    if (month) {
+      if (!monthlyData[month]) {
+        monthlyData[month] = { revenue: 0, expenses: 0 };
+      }
 
-    const debit = Number(line.debit) || 0;
-    const credit = Number(line.credit) || 0;
-    const type = line.chart_of_accounts.type;
+      const debit = Number(line.debit) || 0;
+      const credit = Number(line.credit) || 0;
+      const type = line.chart_of_accounts.type;
 
-    if (type === 'revenue') {
-      monthlyData[month].revenue += credit - debit;
-    } else if (type === 'expense') {
-      monthlyData[month].expenses += debit - credit;
+      if (type === 'revenue') {
+        monthlyData[month].revenue += credit - debit;
+      } else if (type === 'expense') {
+        monthlyData[month].expenses += debit - credit;
+      }
     }
   });
 

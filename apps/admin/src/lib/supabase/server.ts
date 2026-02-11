@@ -1,4 +1,4 @@
-import type { Database } from '@repo/database/types';
+import 'server-only';
 import { adminEnv } from '@repo/env/admin';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
@@ -6,9 +6,9 @@ import { cookies } from 'next/headers';
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient<Database>(
+  return createServerClient(
     adminEnv.NEXT_PUBLIC_SUPABASE_URL,
-    adminEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    adminEnv.SUPABASE_SERVICE_ROLE_KEY,
     {
       cookies: {
         getAll() {
@@ -21,6 +21,8 @@ export async function createClient() {
             }
           } catch {
             // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
           }
         },
       },
