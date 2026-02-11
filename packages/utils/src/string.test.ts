@@ -1,5 +1,5 @@
-import { decodeHtmlEntities, slugify } from './string';
 import { describe, expect, it } from 'vitest';
+import { decodeHtmlEntities, slugify } from './string';
 
 describe('String Utils (./string)', () => {
   describe('slugify', () => {
