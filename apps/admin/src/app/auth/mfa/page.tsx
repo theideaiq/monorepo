@@ -1,9 +1,10 @@
 'use client';
 
 import { Button, Card, Input } from '@repo/ui';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
 
@@ -16,11 +17,7 @@ export default function MFAPage() {
   const supabase = createClient();
   const router = useRouter();
 
-  useEffect(() => {
-    checkStatus();
-  }, []);
-
-  async function checkStatus() {
+  const checkStatus = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -38,7 +35,11 @@ export default function MFAPage() {
       const factor = factors.all.find((f) => f.factor_type === 'totp');
       if (factor) setFactorId(factor.id);
     }
-  }
+  }, [supabase, router]);
+
+  useEffect(() => {
+    checkStatus();
+  }, [checkStatus]);
 
   async function startEnrollment() {
     const { data, error } = await supabase.auth.mfa.enroll({
@@ -71,6 +72,7 @@ export default function MFAPage() {
       router.push('/');
       router.refresh();
     } catch (err: any) {
+      // biome-ignore lint/suspicious/noExplicitAny: error typing
       toast.error(err.message);
     } finally {
       setLoading(false);
@@ -89,7 +91,13 @@ export default function MFAPage() {
             <p className="text-sm text-slate-500 mb-2 text-center">
               Scan this QR code with your authenticator app
             </p>
-            <img src={qr} alt="QR Code" className="w-48 h-48" />
+            <Image
+              src={qr}
+              alt="QR Code"
+              width={192}
+              height={192}
+              className="w-48 h-48"
+            />
           </div>
         )}
 
