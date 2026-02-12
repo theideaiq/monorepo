@@ -96,6 +96,17 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          TELEGRAM_BOT_TOKEN: "123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+          GEMINI_API_KEY: "dummy_gemini_key"
+          RESEND_API_KEY: "re_12345678"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy_token"
+          WAYL_SECRET_KEY: "dummy_wayl_secret"
+          WAYL_WEBHOOK_SECRET: "dummy_wayl_webhook_secret"
+          ZAIN_SECRET_KEY: "dummy_zain_secret"
+          WEB_APP_URL: "http://localhost:3000"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy_service_role_key"
+          SKIP_ENV_VALIDATION: "true"
         run: pnpm turbo build
 
   e2e:

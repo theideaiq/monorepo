@@ -10,8 +10,8 @@
  * Note: Uses Service Role key to bypass RLS policies during seeding.
  */
 
+import path from 'node:path';
 import dotenv from 'dotenv';
-import path from 'path';
 import { createServiceRoleClient } from '../src/service';
 
 // Load environment variables from .env.local or .env

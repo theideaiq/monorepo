@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { useUIStore } from '@/stores/ui-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 interface WebNavbarProps {
   navItems: { label: string; href: string }[];
@@ -21,7 +21,7 @@ interface WebNavbarProps {
 export function WebNavbar({ navItems, logo }: WebNavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-  const { toggleCart } = useUIStore();
+  const toggleCart = useUIStore((s) => s.toggleCart);
   const cartItems = useCartStore((s) => s.items);
   const [mounted, setMounted] = useState(false);
 
