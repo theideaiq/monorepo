@@ -1,4 +1,4 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, slugify } from './string';
 import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
