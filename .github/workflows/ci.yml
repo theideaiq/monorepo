@@ -7,6 +7,19 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  SKIP_ENV_VALIDATION: "true"
+  TELEGRAM_BOT_TOKEN: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+  SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+  GEMINI_API_KEY: "dummy-gemini-key"
+  RESEND_API_KEY: "re_123456789"
+  WAYL_SECRET_KEY: "dummy-wayl-key"
+  WAYL_WEBHOOK_SECRET: "dummy-wayl-secret"
+  ZAIN_SECRET_KEY: "dummy-zain-key"
+  UPSTASH_REDIS_REST_URL: "https://dummy-redis.upstash.io"
+  UPSTASH_REDIS_REST_TOKEN: "dummy-redis-token"
+  WEB_APP_URL: "http://localhost:3000"
+
 jobs:
   quality:
     name: Quality Gate
