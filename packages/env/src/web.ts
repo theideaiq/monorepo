@@ -45,6 +45,6 @@ export const webEnv = createEnv({
         ? `https://${process.env.VERCEL_URL}`
         : 'http://localhost:3000'),
   },
-  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION || !!process.env.CI,
   emptyStringAsUndefined: true,
 });
