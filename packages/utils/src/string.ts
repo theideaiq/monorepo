@@ -32,7 +32,10 @@ export function decodeHtmlEntities(text: string): string {
     if (NUMERIC_ENTITY_REGEX.test(match)) {
       const codeStr = match.slice(2, -1);
       const isHex = codeStr.startsWith('x') || codeStr.startsWith('X');
-      const code = Number.parseInt(isHex ? codeStr.slice(1) : codeStr, isHex ? 16 : 10);
+      const code = Number.parseInt(
+        isHex ? codeStr.slice(1) : codeStr,
+        isHex ? 16 : 10,
+      );
 
       // Use fromCodePoint for Emoji/Astral support
       if (!Number.isNaN(code)) {
