@@ -16,13 +16,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const payload = await request.json();
-
-    // In a real scenario, we would retrieve the signature from headers
-    // const signature = request.headers.get('x-signature');
+    const rawBody = await request.text();
 
     const provider = paymentFactory.getProviderByName(providerName);
-    const event = await provider.verifyWebhook(payload);
+
+    // Retrieve signature from headers. Currently defaulting to Wayl's header.
+    // Future providers may need specific logic here.
+    const signature = request.headers.get('x-wayl-signature') || undefined;
+
+    const event = await provider.verifyWebhook(rawBody, signature);
 
     if (event.type === 'payment.success') {
       const supabase = createServiceRoleClient(
