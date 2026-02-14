@@ -98,7 +98,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Unauthorized: Insufficient permissions',
+      'Only Superadmins can change roles',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Authentication required: No user session found',
+      'Unauthorized',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();

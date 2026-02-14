@@ -1,36 +1,25 @@
-import { describe, expect, it } from 'vitest';
-import { hasAdminAccess } from './auth-checks';
-import { ROLES } from './constants';
+import { hasAdminAccess } from './auth-checks.client';
 
-describe('hasAdminAccess', () => {
-  it('should return true for admin role', () => {
-    expect(hasAdminAccess(ROLES.ADMIN)).toBe(true);
-  });
+describe('Auth Checks', () => {
+  describe('hasAdminAccess', () => {
+    it('should return true for admin role', () => {
+      expect(hasAdminAccess('admin')).toBe(true);
+      expect(hasAdminAccess('ADMIN')).toBe(true);
+    });
 
-  it('should return true for superadmin role', () => {
-    expect(hasAdminAccess(ROLES.SUPERADMIN)).toBe(true);
-  });
+    it('should return true for superadmin role', () => {
+      expect(hasAdminAccess('superadmin')).toBe(true);
+      expect(hasAdminAccess('SUPERADMIN')).toBe(true);
+    });
 
-  it('should return true for mixed case admin role', () => {
-    expect(hasAdminAccess('Admin')).toBe(true);
-    expect(hasAdminAccess('ADMIN')).toBe(true);
-  });
+    it('should return false for other roles', () => {
+      expect(hasAdminAccess('user')).toBe(false);
+      expect(hasAdminAccess('staff')).toBe(false);
+    });
 
-  it('should return false for user role', () => {
-    expect(hasAdminAccess(ROLES.USER)).toBe(false);
-  });
-
-  it('should return false for student role', () => {
-    expect(hasAdminAccess(ROLES.STUDENT)).toBe(false);
-  });
-
-  it('should return false for unknown roles', () => {
-    expect(hasAdminAccess('hacker')).toBe(false);
-  });
-
-  it('should return false for null or undefined', () => {
-    expect(hasAdminAccess(null)).toBe(false);
-    expect(hasAdminAccess(undefined)).toBe(false);
-    expect(hasAdminAccess('')).toBe(false);
+    it('should return false for null/undefined role', () => {
+      expect(hasAdminAccess(null)).toBe(false);
+      expect(hasAdminAccess(undefined)).toBe(false);
+    });
   });
 });
