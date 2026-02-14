@@ -46,9 +46,12 @@ export async function getCashFlowData(year: number) {
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
 
-    if (!monthlyData[month]) {
+    // Ensure month is valid before accessing/setting data
+    if (month && !monthlyData[month]) {
       monthlyData[month] = { revenue: 0, expenses: 0 };
     }
+
+    if (!month) return;
 
     const debit = Number(line.debit) || 0;
     const credit = Number(line.credit) || 0;
