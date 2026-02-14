@@ -1,12 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ProductCard } from './ProductCard';
 import type { Product } from '@/services/products';
+import { ProductCard } from './ProductCard';
 
 // Mock next/image
 vi.mock('next/image', () => ({
+  // biome-ignore lint/suspicious/noExplicitAny: Mock component props
   default: ({ src, alt, ...props }: any) => {
-    // eslint-disable-next-line @next/next/no-img-element
+    // biome-ignore lint/performance/noImgElement: Mock component
     return <img src={src} alt={alt} {...props} />;
   },
 }));
@@ -14,6 +15,7 @@ vi.mock('next/image', () => ({
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
+    // biome-ignore lint/suspicious/noExplicitAny: Mock component props
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
 }));
