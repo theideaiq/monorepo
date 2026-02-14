@@ -45,6 +45,14 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: npm_config_engine_strict=false pnpm install --frozen-lockfile
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -65,13 +73,19 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # 0. Setup dummy web output (required for cap sync)
+          mkdir -p apps/web/out
+
+          # 1. Sync Capacitor
+          npx cap sync android
+
+          # 2. Restore Secrets (Generates google-services.json)
+          node apps/web/scripts/restore-mobile-secrets.js
           
-          # 2. Grant Permission
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -80,10 +94,16 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # 0. Setup dummy web output (required for cap sync)
+          mkdir -p apps/web/out
+
+          # 1. Sync Capacitor
+          npx cap sync ios
+
+          # 2. Restore Secrets (Generates GoogleService-Info.plist)
+          node apps/web/scripts/restore-mobile-secrets.js
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
