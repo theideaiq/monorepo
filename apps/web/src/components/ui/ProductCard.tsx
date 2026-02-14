@@ -68,8 +68,8 @@ export function ProductCard({
               e.stopPropagation();
               onAddToCart?.(e);
             }}
-            className="absolute bottom-3 right-3 p-3 bg-brand-yellow text-brand-dark rounded-full shadow-lg translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:text-black z-10"
-            aria-label="Add to cart"
+            className="absolute bottom-3 right-3 p-3 bg-brand-yellow text-brand-dark rounded-full shadow-lg transition-all duration-300 hover:bg-white hover:text-black z-10 opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-12 lg:group-hover:opacity-100 lg:group-hover:translate-y-0"
+            aria-label={`Add ${product.title} to cart`}
           >
             <ShoppingCart size={20} />
           </button>
