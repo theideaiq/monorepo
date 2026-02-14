@@ -1,12 +1,17 @@
-import type { Database } from '@repo/database/types';
+
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { adminEnv } from '@repo/env/admin';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+
+// Separate function to get cookies dynamically to avoid "next/headers" import at module level
+const getCookies = async () => {
+    const { cookies } = await import('next/headers');
+    return cookies();
+};
 
 export async function createClient() {
-  const cookieStore = await cookies();
+  const cookieStore = await getCookies();
 
-  return createServerClient<Database>(
+  return createServerClient(
     adminEnv.NEXT_PUBLIC_SUPABASE_URL,
     adminEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
@@ -16,11 +21,13 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
-            for (const { name, value, options } of cookiesToSet) {
-              cookieStore.set(name, value, options);
-            }
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options),
+            );
           } catch {
             // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
           }
         },
       },

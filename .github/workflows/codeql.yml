@@ -75,6 +75,8 @@ jobs:
         run: |
           # 0. Setup Dummy Web Output (Required for cap sync)
           mkdir -p apps/web/out
+          # Create index.html to satisfy Capacitor check
+          touch apps/web/out/index.html
 
           # 1. Restore Secrets
           node apps/web/scripts/restore-mobile-secrets.js
@@ -94,6 +96,8 @@ jobs:
         run: |
           # 0. Setup Dummy Web Output
           mkdir -p apps/web/out
+          # Create index.html to satisfy Capacitor check
+          touch apps/web/out/index.html
 
           # 1. Restore Secrets
           node apps/web/scripts/restore-mobile-secrets.js
