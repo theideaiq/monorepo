@@ -1,6 +1,6 @@
 import { Logger } from '@repo/utils';
 import { createClient } from '@/lib/supabase/client';
-import type { Database, Json } from '@/lib/database.types';
+import type { DatabaseSchema as Database, Json } from '@repo/database/types';
 
 type DBProduct = Database['public']['Tables']['products']['Row'] & {
   reviews?: { rating: number }[];
