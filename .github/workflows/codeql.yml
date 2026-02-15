@@ -45,6 +45,12 @@ jobs:
         with:
           node-version: 20
 
+      # Install pnpm (Required for workspace commands)
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.2.1
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -65,13 +71,24 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # 0. Install dependencies (Required for scripts)
+          npm_config_engine_strict=false pnpm install
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # Use pnpm to run the script in the workspace context
+          pnpm --filter apps/web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 3. Dummy Web Build (Required for Capacitor Sync)
+          # Capacitor expects the web asset directory (dist/out) to exist before sync
+          mkdir -p apps/web/out
+
+          # 4. Sync Capacitor (Generates native project files like cordova.variables.gradle)
+          npx cap sync android
+
+          # 5. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -80,10 +97,19 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # 0. Install dependencies (Required for scripts)
+          npm_config_engine_strict=false pnpm install
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter apps/web run secrets:restore
+
+          # 2. Dummy Web Build (Required for Capacitor Sync)
+          mkdir -p apps/web/out
+
+          # 3. Sync Capacitor (Generates App.xcodeproj links)
+          npx cap sync ios
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 4. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -95,7 +121,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 5. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
