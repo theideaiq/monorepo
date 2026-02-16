@@ -1,14 +1,19 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { initiateCheckout } from './checkout';
 
-// Mock Supabase
-const mockSingle = vi.fn();
-const mockEq = vi.fn(() => ({ single: mockSingle, eq: vi.fn() })); // Chainable
-const mockSelect = vi.fn(() => ({ eq: mockEq }));
-const mockFrom = vi.fn(() => ({ select: mockSelect, insert: vi.fn() }));
-const mockAuth = {
-  getUser: vi.fn(),
-};
+// Mock Supabase using vi.hoisted for proper hoisting
+const { mockAuth, mockFrom, mockSelect, mockEq, mockSingle, mockInsert } = vi.hoisted(() => {
+  const mockSingle = vi.fn();
+  const mockInsert = vi.fn();
+  const mockEq = vi.fn(() => ({ single: mockSingle, eq: vi.fn() }));
+  const mockSelect = vi.fn(() => ({ eq: mockEq }));
+  const mockFrom = vi.fn(() => ({ select: mockSelect, insert: mockInsert }));
+  const mockAuth = {
+    getUser: vi.fn(),
+  };
+
+  return { mockAuth, mockFrom, mockSelect, mockEq, mockSingle, mockInsert };
+});
 
 vi.mock('@/lib/supabase/server', () => ({
   createClient: () => ({
@@ -59,24 +64,22 @@ describe('initiateCheckout', () => {
     });
 
     // 2. Mock Database returning cart owned by Victim
-    // This mocks the 'carts' table lookup
-    mockFrom.mockImplementation((table) => {
+    mockFrom.mockImplementation((table: string) => {
       if (table === 'carts') {
         return {
           select: () => ({
             eq: () => ({
-              single: () =>
-                Promise.resolve({ data: { user_id: victimUserId } }),
+              single: () => Promise.resolve({ data: { user_id: victimUserId } }),
             }),
           }),
         };
       }
-      return { select: mockSelect, insert: vi.fn() };
+      return { select: mockSelect, insert: mockInsert };
     });
 
     // Act & Assert
     await expect(initiateCheckout(victimCartId)).rejects.toThrow(
-      'Unauthorized: Cart does not belong to user',
+      'Unauthorized: Cart does not belong to user'
     );
   });
 });
