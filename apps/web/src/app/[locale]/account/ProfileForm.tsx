@@ -5,7 +5,12 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateProfile } from '@/actions/account';
 
-export default function ProfileForm({ profile }: { profile: any }) {
+interface Profile {
+  full_name: string;
+  email: string;
+}
+
+export default function ProfileForm({ profile }: { profile: Profile }) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
 
@@ -14,8 +19,12 @@ export default function ProfileForm({ profile }: { profile: any }) {
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      } else {
+        toast.error('An unexpected error occurred');
+      }
     } finally {
       setLoading(false);
     }

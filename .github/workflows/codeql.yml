@@ -79,7 +79,7 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates google-services.json)
           # Use --filter instead of --workspace for pnpm
-          pnpm --filter apps/web run secrets:restore
+          npm_config_engine_strict=false pnpm --filter apps/web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -94,7 +94,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --filter apps/web run secrets:restore
+          npm_config_engine_strict=false pnpm --filter apps/web run secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
