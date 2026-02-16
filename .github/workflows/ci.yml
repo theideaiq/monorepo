@@ -102,6 +102,14 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-key' }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'dummy-key' }}
+          # Droid secrets
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'dummy-key' }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL || 'https://example.upstash.io' }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN || 'dummy-token' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || 'dummy-token' }}
+          WEB_APP_URL: ${{ secrets.WEB_APP_URL || 'https://example.com' }}
+          WAYL_SECRET_KEY: ${{ secrets.WAYL_SECRET_KEY || 'dummy-key' }}
+          WAYL_WEBHOOK_SECRET: ${{ secrets.WAYL_WEBHOOK_SECRET || 'dummy-secret' }}
         run: pnpm turbo build
 
   e2e:
