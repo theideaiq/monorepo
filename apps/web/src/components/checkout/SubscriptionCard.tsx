@@ -22,9 +22,9 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: Interactive card
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Interactive card
     <div
-      // biome-ignore lint/a11y/noStaticElementInteractions: Interactive card
-      // biome-ignore lint/a11y/useKeyWithClickEvents: Interactive card
       onClick={onSelect}
       className={`
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
