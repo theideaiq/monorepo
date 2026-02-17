@@ -1,7 +1,7 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, slugify } from './string';
 import { describe, expect, it } from 'vitest';
 
-describe('String Utils (@repo/utils)', () => {
+describe('String Utils', () => {
   describe('slugify', () => {
     it('should convert text to a url-friendly slug', () => {
       expect(slugify('Hello World!')).toBe('hello-world');
@@ -12,9 +12,7 @@ describe('String Utils (@repo/utils)', () => {
 
     it('should handle empty, null or undefined input', () => {
       expect(slugify('')).toBe('');
-      // @ts-expect-error testing runtime safety
       expect(slugify(null)).toBe('');
-      // @ts-expect-error testing runtime safety
       expect(slugify(undefined)).toBe('');
     });
   });
