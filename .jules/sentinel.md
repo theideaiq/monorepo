@@ -1,0 +1,4 @@
+## 2025-05-30 - Insecure Direct Object Reference in Checkout
+**Vulnerability:** The `initiateCheckout` Server Action allowed users to initiate a checkout flow for any cart ID, regardless of ownership, by bypassing explicit authorization checks.
+**Learning:** Even with RLS enabled on the database, application logic that directly queries sub-resources (like `cart_items`) via a parent ID (`cart_id`) without verifying parent resource ownership (`carts.user_id`) is vulnerable to IDOR. Attackers can guess sequential IDs or leak IDs to perform actions on behalf of others.
+**Prevention:** Always implement an explicit ownership check (e.g., `supabase.from('carts').select('id').eq('id', cartId).eq('user_id', user.id).single()`) before performing any sensitive operation on a resource or its children. Relying solely on RLS for write operations or complex business logic flows is insufficient defense-in-depth.

@@ -16,6 +16,18 @@ export async function initiateCheckout(cartId: string) {
     throw new Error('User not authenticated');
   }
 
+  // 0. Verify Cart Ownership (IDOR Prevention)
+  const { data: cart, error: cartOwnerError } = await supabase
+    .from('carts')
+    .select('id')
+    .eq('id', cartId)
+    .eq('user_id', user.id)
+    .single();
+
+  if (cartOwnerError || !cart) {
+    throw new Error('Unauthorized access to cart');
+  }
+
   // 1. Fetch Cart Items
   const { data: cartItems, error: cartError } = await supabase
     .from('cart_items')
