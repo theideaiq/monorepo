@@ -18,9 +18,7 @@ describe('Button', () => {
 
   it('shows loader when loading', () => {
     render(<Button isLoading>Click me</Button>);
-    // Loader2 from lucide-react usually renders as an svg, we can check for "loading" state if we had aria-label or just check if button is disabled
     expect(screen.getByRole('button')).toBeDisabled();
-    // Assuming Loader2 is rendered, we might not easily select it by text, but we can check if button is disabled.
   });
 
   it('applies variant classes', () => {
@@ -28,5 +26,17 @@ describe('Button', () => {
       <Button variant="secondary">Secondary</Button>,
     );
     expect(container.firstChild).toHaveClass('bg-brand-yellow');
+  });
+
+  it('keeps accessible content when loading', () => {
+    render(<Button isLoading>Submit Order</Button>);
+
+    // Content should still be in the DOM for screen readers
+    const buttonContent = screen.getByText('Submit Order');
+    expect(buttonContent).toBeInTheDocument();
+
+    // Button should be marked as busy
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('aria-busy', 'true');
   });
 });

@@ -39,10 +39,20 @@ interface ButtonProps
     VariantProps<typeof buttonVariants> {
   /**
    * If true, displays a loading spinner.
-   * Note: The button's children (text/icons) are hidden while loading to prevent layout shifts or double icons.
+   * Note: The button's children (text/icons) are hidden visually but remain accessible while loading.
    */
   isLoading?: boolean;
 }
+
+const loaderColorMap: Record<string, string> = {
+  primary: 'text-white',
+  secondary: 'text-brand-dark',
+  dark: 'text-white',
+  outline: 'text-slate-900',
+  ghost: 'text-slate-600',
+  link: 'text-brand-pink',
+  destructive: 'text-white',
+};
 
 /**
  * Primary UI button component.
@@ -67,16 +77,34 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     { className, variant, size, isLoading, children, disabled, ...props },
     ref,
   ) => {
+    // Determine the correct loader color based on variant
+    const loaderColor = loaderColorMap[variant || 'primary'] || 'text-white';
+
     return (
       <button
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          // When loading, make text transparent and other elements opacity-0.
+          // This keeps the accessible name (text nodes) but hides them visually.
+          isLoading &&
+            'text-transparent [&>*:not(.loading-spinner)]:opacity-0 relative transition-none',
+        )}
         ref={ref}
         disabled={disabled || isLoading}
+        aria-busy={isLoading}
         {...props}
       >
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {/* Hide children when loading to avoid double-icon issues (e.g. spinner + original icon) */}
-        {!isLoading && children}
+        {isLoading && (
+          <div
+            className={cn(
+              'loading-spinner absolute inset-0 flex items-center justify-center',
+              loaderColor,
+            )}
+          >
+            <Loader2 className="h-4 w-4 animate-spin" />
+          </div>
+        )}
+        {children}
       </button>
     );
   },
