@@ -1,7 +1,7 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
 import { describe, expect, it } from 'vitest';
+import { decodeHtmlEntities, slugify } from './string';
 
-describe('String Utils (@repo/utils)', () => {
+describe('String Utils (string.ts)', () => {
   describe('slugify', () => {
     it('should convert text to a url-friendly slug', () => {
       expect(slugify('Hello World!')).toBe('hello-world');

@@ -35,7 +35,8 @@ export interface Database {
           // ... (omitting insert types for brevity as we primarily read in frontend)
         };
         Update: {
-          // ...
+          // biome-ignore lint/suspicious/noExplicitAny: Placeholder type
+          [key: string]: any;
         };
       };
       product_variants: {
