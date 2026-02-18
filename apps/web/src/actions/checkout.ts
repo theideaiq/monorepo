@@ -16,6 +16,17 @@ export async function initiateCheckout(cartId: string) {
     throw new Error('User not authenticated');
   }
 
+  // Verify cart ownership
+  const { data: cart } = await supabase
+    .from('carts')
+    .select('user_id')
+    .eq('id', cartId)
+    .single();
+
+  if (!cart || cart.user_id !== user.id) {
+    throw new Error('Unauthorized access to cart');
+  }
+
   // 1. Fetch Cart Items
   const { data: cartItems, error: cartError } = await supabase
     .from('cart_items')
