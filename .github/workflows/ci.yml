@@ -50,10 +50,23 @@ jobs:
 
       - name: Run Quality Checks
         env:
+          # Use boolean true literal for some tools, string "true" for others just in case
           SKIP_ENV_VALIDATION: "true"
-          # Provide dummy values for required env vars to prevent build failures before validation is skipped
+          # Provide dummy values for ALL required env vars to prevent build failures
+          # Client
           NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
+          # Server (Admin)
+          RESEND_API_KEY: "dummy-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-key"
+          WAYL_SECRET_KEY: "dummy-key"
+          WAYL_WEBHOOK_SECRET: "dummy-key"
+          # Server (Droid)
+          TELEGRAM_BOT_TOKEN: "dummy-token"
+          GEMINI_API_KEY: "dummy-key"
+          UPSTASH_REDIS_REST_URL: "https://example.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-token"
+          WEB_APP_URL: "https://example.com"
         run: pnpm turbo check typecheck test
 
   build:
@@ -100,8 +113,20 @@ jobs:
       - name: Build
         env:
           SKIP_ENV_VALIDATION: "true"
+          # Client
           NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
+          # Server (Admin)
+          RESEND_API_KEY: "dummy-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-key"
+          WAYL_SECRET_KEY: "dummy-key"
+          WAYL_WEBHOOK_SECRET: "dummy-key"
+          # Server (Droid)
+          TELEGRAM_BOT_TOKEN: "dummy-token"
+          GEMINI_API_KEY: "dummy-key"
+          UPSTASH_REDIS_REST_URL: "https://example.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-token"
+          WEB_APP_URL: "https://example.com"
         run: pnpm turbo build
 
   e2e:
@@ -151,6 +176,18 @@ jobs:
       - name: Run E2E Tests
         env:
           SKIP_ENV_VALIDATION: "true"
+          # Client
           NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
+          # Server (Admin)
+          RESEND_API_KEY: "dummy-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-key"
+          WAYL_SECRET_KEY: "dummy-key"
+          WAYL_WEBHOOK_SECRET: "dummy-key"
+          # Server (Droid)
+          TELEGRAM_BOT_TOKEN: "dummy-token"
+          GEMINI_API_KEY: "dummy-key"
+          UPSTASH_REDIS_REST_URL: "https://example.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-token"
+          WEB_APP_URL: "https://example.com"
         run: pnpm turbo e2e
