@@ -10,7 +10,7 @@ import { useUIStore } from '@/stores/ui-store';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
-  // @ts-ignore: updateQuantity missing in store type definition
+  // @ts-expect-error: updateQuantity missing in store type definition
   const { items, removeItem, updateQuantity, total } = useCartStore();
   const router = useRouter();
 
@@ -70,9 +70,11 @@ export function CartDrawer() {
                   {item.title}
                 </h4>
                 {/* @ts-ignore: attributes missing in CartItem type */}
+                {/* biome-ignore lint/suspicious/noExplicitAny: attributes missing in CartItem type */}
                 {(item as any).attributes && (
                   <p className="text-xs text-slate-500 mt-1">
                     {/* @ts-ignore */}
+                    {/* biome-ignore lint/suspicious/noExplicitAny: attributes missing in CartItem type */}
                     {Object.entries((item as any).attributes)
                       .map(([_k, v]) => `${v}`)
                       .join(', ')}
@@ -95,10 +97,7 @@ export function CartDrawer() {
                 <div className="flex items-center gap-3 bg-black/20 rounded-lg p-1">
                   <button
                     type="button"
-                    onClick={() =>
-                      // @ts-ignore: updateQuantity missing in store type definition
-                      updateQuantity(item.id, item.quantity - 1)
-                    }
+                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
                     disabled={item.quantity <= 1}
                   >
@@ -109,10 +108,7 @@ export function CartDrawer() {
                   </span>
                   <button
                     type="button"
-                    onClick={() =>
-                      // @ts-ignore: updateQuantity missing in store type definition
-                      updateQuantity(item.id, item.quantity + 1)
-                    }
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className="p-1 text-slate-400 hover:text-white"
                   >
                     <Plus size={14} />

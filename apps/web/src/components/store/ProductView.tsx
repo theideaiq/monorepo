@@ -76,11 +76,10 @@ export function ProductView({ product }: ProductViewProps) {
       title: product.title,
       price: product.price,
       image: selectedImage,
-      // @ts-ignore: extra props
       variantId,
-      // @ts-ignore: extra props
       attributes: selections,
-    });
+      // biome-ignore lint/suspicious/noExplicitAny: variantId and attributes are extra props
+    } as any);
 
     openCart();
     toast.success('Added to cart');

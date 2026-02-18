@@ -43,16 +43,16 @@ export function CheckoutFlow() {
     try {
       // Call Server Action
       // Explicitly ignore type error for now as we fix the action signature
-      // @ts-ignore
+      // @ts-expect-error
       const result = await initiateCheckout({
         items,
         total,
         shipping,
       });
 
-      // @ts-ignore: result type unknown
+      // @ts-expect-error: result type unknown
       if (result?.error) {
-        // @ts-ignore: result type unknown
+        // @ts-expect-error: result type unknown
         toast.error(result.error);
         return;
       }
