@@ -23,13 +23,13 @@
     "seed": "pnpm seed:accounts && pnpm seed:products"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.93.2"
+    "@supabase/supabase-js": "^2.97.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.13",
+    "@biomejs/biome": "^2.4.2",
     "@repo/config": "workspace:*",
-    "@types/node": "^25.1.0",
-    "dotenv": "^17.2.3",
+    "@types/node": "^25.3.0",
+    "dotenv": "^17.3.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
