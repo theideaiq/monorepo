@@ -1,59 +1,60 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const ANDROID_DEST = path.join(
   __dirname,
   '../android/app/google-services.json',
 );
-const IOS_DEST = path.join(
-  __dirname,
-  '../ios/App/App/GoogleService-Info.plist',
-);
+const IOS_DEST = path.join(__dirname, '../ios/App/App/GoogleService-Info.plist');
 
-function restoreSecret(envVar, destPath, platformName) {
-  const secretBase64 = process.env[envVar];
-  if (secretBase64) {
-    try {
-      const secretBuffer = Buffer.from(secretBase64, 'base64');
-      const destDir = path.dirname(destPath);
-      fs.mkdirSync(destDir, { recursive: true });
-      fs.writeFileSync(destPath, secretBuffer);
-      fs.chmodSync(destPath, 0o600);
-      console.log(`✅ ${platformName} secrets restored to ${destPath}`);
-    } catch (error) {
-      let errorMessage;
-      if (error && typeof error.message === 'string') {
-        errorMessage = error.message;
-      } else {
-        const errorType =
-          error &&
-          error.constructor &&
-          typeof error.constructor.name === 'string'
-            ? error.constructor.name
-            : 'UnknownErrorType';
-        let errorDetails;
-        try {
-          errorDetails = JSON.stringify(error);
-        } catch {
-          errorDetails = String(error);
-        }
-        errorMessage = `${errorType}: ${errorDetails || 'Unknown error'}`;
-      }
-      console.error(
-        `❌ Failed to restore ${platformName} secrets: ${errorMessage}`,
+function restoreSecrets() {
+  console.log('🔄 Restoring mobile secrets...');
+
+  try {
+    // 1. Android
+    if (process.env.ANDROID_GOOGLE_SERVICES_BASE64) {
+      const androidBuffer = Buffer.from(
+        process.env.ANDROID_GOOGLE_SERVICES_BASE64,
+        'base64',
       );
-      process.exit(1);
+      fs.writeFileSync(ANDROID_DEST, androidBuffer);
+      console.log('✅ Android secret restored.');
+    } else {
+      console.log(
+        '⚠️ No Android secret found (ANDROID_GOOGLE_SERVICES_BASE64 is not set), skipping.',
+      );
     }
-  } else {
-    console.log(
-      `⚠️ No ${platformName} secret found (${envVar} is not set), skipping.`,
-    );
+
+    // 2. iOS
+    if (process.env.IOS_GOOGLE_SERVICE_INFO_BASE64) {
+      const iosBuffer = Buffer.from(
+        process.env.IOS_GOOGLE_SERVICE_INFO_BASE64,
+        'base64',
+      );
+      fs.writeFileSync(IOS_DEST, iosBuffer);
+      console.log('✅ iOS secret restored.');
+    } else {
+      console.log(
+        '⚠️ No iOS secret found (IOS_GOOGLE_SERVICE_INFO_BASE64 is not set), skipping.',
+      );
+    }
+
+    console.log('🏁 Secret restoration process complete.');
+  } catch (error) {
+    console.error('❌ Error restoring secrets:', error);
+    if (error) {
+      const errorType =
+        error?.constructor && typeof error.constructor.name === 'string'
+          ? error.constructor.name
+          : typeof error;
+      console.error(`Error Type: ${errorType}`);
+      // @ts-ignore
+      if (error.message) console.error(`Message: ${error.message}`);
+      // @ts-ignore
+      if (error.stack) console.error(`Stack: ${error.stack}`);
+    }
+    process.exit(1);
   }
 }
 
-console.log('🔄 Restoring mobile secrets...');
-
-restoreSecret('ANDROID_GOOGLE_SERVICES_BASE64', ANDROID_DEST, 'Android');
-restoreSecret('IOS_GOOGLE_SERVICE_INFO_BASE64', IOS_DEST, 'iOS');
-
-console.log('🏁 Secret restoration process complete.');
+restoreSecrets();
