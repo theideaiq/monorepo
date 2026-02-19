@@ -44,7 +44,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
 
       # Use pnpm to run scripts correctly in a monorepo
       - name: Setup pnpm
@@ -74,7 +74,8 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates google-services.json)
           # Use pnpm filter to run script in specific workspace
-          pnpm --filter web run secrets:restore
+          # Bypass engine check for pnpm if running on older node (though we set up correct node now)
+          npm_config_engine_strict=false pnpm --filter web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -90,7 +91,7 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           # Use pnpm filter to run script in specific workspace
-          pnpm --filter web run secrets:restore
+          npm_config_engine_strict=false pnpm --filter web run secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
