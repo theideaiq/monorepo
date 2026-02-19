@@ -9,6 +9,7 @@ import { VariantSelector } from '@/components/ui/VariantSelector';
 import type { Product, ProductVariant } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
+import { formatIQD } from '@repo/utils';
 import { toast } from 'react-hot-toast';
 
 interface ProductViewProps {
@@ -84,7 +85,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const price = formatIQD(product.price);
 
   return (
     <div className="pb-32 md:pb-12">
