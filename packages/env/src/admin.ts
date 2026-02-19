@@ -8,7 +8,9 @@ import { z } from 'zod';
 export const adminEnv = createEnv({
   server: {
     /** Node environment */
-    NODE_ENV: z.enum(['development', 'test', 'production']),
+    NODE_ENV: z
+      .enum(['development', 'test', 'production'])
+      .default('development'),
     /** Resend API Key for email services */
     RESEND_API_KEY: z.string().min(1),
     /** Supabase Service Role Key (Admin privileges) - NEVER expose to client */
@@ -45,6 +47,8 @@ export const adminEnv = createEnv({
         ? `https://${process.env.VERCEL_URL}`
         : 'http://localhost:3001'),
   },
-  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  skipValidation:
+    !!process.env.SKIP_ENV_VALIDATION ||
+    process.env.npm_lifecycle_event === 'lint',
   emptyStringAsUndefined: true,
 });
