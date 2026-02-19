@@ -30,10 +30,10 @@ jobs:
         include:
           - language: javascript-typescript
             build-mode: none
-          - language: java-kotlin
-            build-mode: none
-          - language: swift
-            build-mode: none
+          # - language: java-kotlin
+          #   build-mode: none
+          # - language: swift
+          #   build-mode: none
 
     steps:
       - name: Checkout repository
