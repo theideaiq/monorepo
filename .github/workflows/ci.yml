@@ -49,6 +49,14 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "placeholder"
+          WAYL_SECRET_KEY: "placeholder"
+          WAYL_WEBHOOK_SECRET: "placeholder"
+          ZAIN_SECRET_KEY: "placeholder"
+          SUPABASE_SERVICE_ROLE_KEY: "placeholder"
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +102,13 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "placeholder"
+          WAYL_SECRET_KEY: "placeholder"
+          WAYL_WEBHOOK_SECRET: "placeholder"
+          ZAIN_SECRET_KEY: "placeholder"
+          SUPABASE_SERVICE_ROLE_KEY: "placeholder"
         run: pnpm turbo build
 
   e2e:
