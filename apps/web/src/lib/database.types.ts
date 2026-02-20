@@ -34,9 +34,7 @@ export interface Database {
           name: string;
           // ... (omitting insert types for brevity as we primarily read in frontend)
         };
-        Update: {
-          // ...
-        };
+        Update: Record<string, never>; // Fixed banned type {}
       };
       product_variants: {
         Row: {

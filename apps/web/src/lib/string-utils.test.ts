@@ -68,10 +68,10 @@ describe('String Utils (@repo/utils)', () => {
     });
 
     it('should handle line separators', () => {
-        // Line separator U+2028 and Paragraph separator U+2029 are valid in JSON
-        // but can break JavaScript strings if not escaped.
-        const data = { text: 'Line\u2028Break' };
-        expect(safeJsonLdStringify(data)).toContain('\\u2028');
+      // Line separator U+2028 and Paragraph separator U+2029 are valid in JSON
+      // but can break JavaScript strings if not escaped.
+      const data = { text: 'Line\u2028Break' };
+      expect(safeJsonLdStringify(data)).toContain('\\u2028');
     });
   });
 });
