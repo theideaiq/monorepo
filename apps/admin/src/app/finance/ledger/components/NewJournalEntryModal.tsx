@@ -28,10 +28,17 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
-    const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
-    setLines(newLines);
+  const handleLineChange = (
+    index: number,
+    field: keyof (typeof lines)[0],
+    value: any,
+  ) => {
+    setLines((prev) => {
+      const newLines = [...prev];
+      // Type assertion to ensure TS knows the object shape is correct
+      newLines[index] = { ...newLines[index], [field]: value } as (typeof lines)[0];
+      return newLines;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,6 +59,11 @@ export function NewJournalEntryModal({
 
     if (lines.some((l) => !l.accountId)) {
       toast.error('All lines must have an account selected');
+      return;
+    }
+
+    if (!date) {
+      toast.error('Date is required');
       return;
     }
 

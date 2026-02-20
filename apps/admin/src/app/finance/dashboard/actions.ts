@@ -46,6 +46,8 @@ export async function getCashFlowData(year: number) {
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
 
+    if (!month) return; // Should not happen if dates are valid, but satisfies TS
+
     if (!monthlyData[month]) {
       monthlyData[month] = { revenue: 0, expenses: 0 };
     }

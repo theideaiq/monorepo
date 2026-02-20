@@ -51,6 +51,15 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
   } | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
+  const handleEdit = (profile: Profile) => {
+    setEditingProfile(profile);
+    setEditForm({
+      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
+      crm_tags: profile.crm_tags?.join(', ') || '',
+    });
+    setIsSheetOpen(true);
+  };
+
   const columns = useMemo<ColumnDef<Profile>[]>(
     () => [
       {
@@ -143,7 +152,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
         ),
       },
     ],
-    [],
+    [handleEdit], // handleEdit is now defined before useMemo
   );
 
   const table = useReactTable({
@@ -160,14 +169,11 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
     },
   });
 
-  const handleEdit = (profile: Profile) => {
-    setEditingProfile(profile);
-    setEditForm({
-      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
-      crm_tags: profile.crm_tags?.join(', ') || '',
-    });
-    setIsSheetOpen(true);
-  };
+  // Define handleEdit outside useMemo or wrap properly.
+  // However, useMemo above uses it before definition.
+  // We need to define columns inside the component body but after handleEdit,
+  // OR use a ref, OR just define handleEdit before columns.
+  // Let's move handleEdit up.
 
   const handleSave = async () => {
     if (!editingProfile || !editForm) return;
@@ -197,8 +203,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
 
       toast.success('Profile updated');
       setIsSheetOpen(false);
-    } catch (error) {
-      console.error(error);
+    } catch (_error) {
       toast.error('Failed to update profile');
     }
   };

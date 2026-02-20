@@ -18,7 +18,7 @@ export default function MFAPage() {
 
   useEffect(() => {
     checkStatus();
-  }, []);
+  }, [checkStatus]);
 
   async function checkStatus() {
     const {
