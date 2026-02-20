@@ -1,5 +1,30 @@
 // packages/utils/src/format.ts
 
+const USD_FORMATTER = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+const IQD_FORMATTER = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'IQD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
+const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
+
+const COMPACT_NUMBER_FORMATTER = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
 /**
  * Format a number as currency.
  *
@@ -19,12 +44,19 @@ export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
+  if (currency === 'USD') {
+    return USD_FORMATTER.format(amount);
+  }
+  if (currency === 'IQD') {
+    return IQD_FORMATTER.format(amount);
+  }
+
+  // Fallback for other currencies if typed loosely or extended in future
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
 }
 
@@ -36,12 +68,13 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date instanceof Date ? date : new Date(date));
+  if (!date) return '';
+  const d = date instanceof Date ? date : new Date(date);
+
+  // Validate that the date is valid before formatting
+  if (Number.isNaN(d.getTime())) return '';
+
+  return DATE_FORMATTER.format(d);
 }
 
 /**
@@ -61,8 +94,5 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return COMPACT_NUMBER_FORMATTER.format(number);
 }

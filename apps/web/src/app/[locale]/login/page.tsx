@@ -46,6 +46,7 @@ export default function AuthPage() {
         toast.success('Account created! Please check your email.');
         setMode('login');
       }
+    // biome-ignore lint/suspicious/noExplicitAny: error handling
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -130,21 +131,21 @@ export default function AuthPage() {
                   <div className="mb-4">
                     <label className="text-sm text-slate-400 mb-1 block">
                       Full Name
+                      <div className="relative mt-1">
+                        <User
+                          className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                          size={18}
+                        />
+                        <input
+                          type="text"
+                          required={mode === 'register'}
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                          placeholder="John Doe"
+                        />
+                      </div>
                     </label>
-                    <div className="relative">
-                      <User
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                        size={18}
-                      />
-                      <input
-                        type="text"
-                        required={mode === 'register'}
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                        placeholder="John Doe"
-                      />
-                    </div>
                   </div>
                 </motion.div>
               )}
@@ -153,41 +154,41 @@ export default function AuthPage() {
             <div>
               <label className="text-sm text-slate-400 mb-1 block">
                 Email Address
+                <div className="relative mt-1">
+                  <Mail
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                    size={18}
+                  />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                    placeholder="name@example.com"
+                  />
+                </div>
               </label>
-              <div className="relative">
-                <Mail
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                  size={18}
-                />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                  placeholder="name@example.com"
-                />
-              </div>
             </div>
 
             <div>
               <label className="text-sm text-slate-400 mb-1 block">
                 Password
+                <div className="relative mt-1">
+                  <Lock
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                    size={18}
+                  />
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
               </label>
-              <div className="relative">
-                <Lock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                  size={18}
-                />
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                  placeholder="••••••••"
-                />
-              </div>
             </div>
 
             <Button

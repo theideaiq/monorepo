@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import path from 'path';
+import path from 'node:path';
 import { createServiceRoleClient } from '../src/service';
 
 // Load environment variables
@@ -28,6 +28,7 @@ if (!supabaseUrl || (!supabaseKey && !supabaseServiceKey)) {
 // Prefer Service Key for seeding to bypass potential RLS
 const supabase = createServiceRoleClient(
   supabaseUrl,
+  // biome-ignore lint/style/noNonNullAssertion: validated above
   supabaseServiceKey || supabaseKey!,
 );
 
