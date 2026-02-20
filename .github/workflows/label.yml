@@ -1,9 +1,9 @@
-name: Label
+name: Label PRs (Fixed)
 on: pull_request
 
 jobs:
   label:
-    name: Label PRs
+    name: Label PRs (Fixed)
     runs-on: ubuntu-latest
     permissions:
       contents: read
