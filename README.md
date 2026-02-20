@@ -116,14 +116,6 @@ Use `.env.local` files in the respective app directories (`apps/web`, `apps/admi
 | `pnpm sync` | Ensure dependency versions are consistent across packages (Syncpack). |
 | `pnpm changeset` | Generate a changeset for versioning. |
 
-## 🐛 Known Issues
-
-### Missing Capacitor Patch
-The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) is currently missing from the repository. The `patchedDependencies` entry has been temporarily removed from `package.json` to allow `pnpm install` to succeed.
-
-**Impact:** This may affect mobile builds if the `tar` version override causes compatibility issues with `@capacitor/cli`.
-**Workaround:** If you encounter issues with Capacitor CLI, verify that your environment meets the `tar` requirements or wait for the patch to be restored.
-
 ## 🧠 Memory (AGENTS.md)
 
 The `AGENTS.md` file contains the long-term memory and context for AI agents working on this project. It documents architectural decisions, design patterns, security protocols, and operational learnings.
