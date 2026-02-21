@@ -96,6 +96,18 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          # Dummy values for required secrets to pass build-time validation
+          RESEND_API_KEY: "dummy"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy"
+          WAYL_SECRET_KEY: "dummy"
+          WAYL_WEBHOOK_SECRET: "dummy"
+          ZAIN_SECRET_KEY: "dummy"
+          GEMINI_API_KEY: "dummy"
+          TELEGRAM_BOT_TOKEN: "dummy"
+          UPSTASH_REDIS_REST_URL: "https://example.com"
+          UPSTASH_REDIS_REST_TOKEN: "dummy"
+          WEB_APP_URL: "https://example.com"
         run: pnpm turbo build
 
   e2e:

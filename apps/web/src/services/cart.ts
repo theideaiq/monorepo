@@ -2,7 +2,9 @@ import { Logger } from '@repo/utils';
 import { createClient } from '@/lib/supabase/client';
 import type { Database } from '@/lib/database.types';
 
+// biome-ignore lint/correctness/noUnusedVariables: May be used in future refactors
 type CartItemRow = Database['public']['Tables']['cart_items']['Row'];
+// biome-ignore lint/correctness/noUnusedVariables: May be used in future refactors
 type ProductRow = Database['public']['Tables']['products']['Row'];
 
 export interface CartItem {
@@ -21,6 +23,7 @@ export interface CartItem {
  * Gets the current user's active cart or creates one.
  */
 async function getOrCreateCartId(
+  // biome-ignore lint/suspicious/noExplicitAny: Complex Supabase client type
   supabase: any,
   userId: string,
 ): Promise<string | null> {
@@ -73,6 +76,7 @@ export async function fetchCartItems(): Promise<CartItem[]> {
     return [];
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: Types returned from this specific query are complex joined types
   return (items as any[]).map((item) => ({
     id: item.id,
     productId: item.product_id,

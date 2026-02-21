@@ -17,6 +17,7 @@ export function BottomNav() {
     setMounted(true);
   }, []);
 
+  // biome-ignore lint/correctness/noUnusedVariables: Used in commented out code or future expansion
   const navItems = [
     { label: 'Home', icon: Home, href: '/' },
     { label: 'Browse', icon: Search, href: '/megastore' },

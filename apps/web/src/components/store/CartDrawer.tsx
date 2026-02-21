@@ -71,7 +71,7 @@ export function CartDrawer() {
                 {item.attributes && (
                   <p className="text-xs text-slate-500 mt-1">
                     {Object.entries(item.attributes)
-                      .map(([k, v]) => `${v}`)
+                      .map(([_k, v]) => `${v}`)
                       .join(', ')}
                   </p>
                 )}
@@ -82,6 +82,7 @@ export function CartDrawer() {
 
               <div className="flex flex-col justify-between items-end">
                 <button
+                  type="button"
                   onClick={() => removeItem(item.id)}
                   className="text-slate-500 hover:text-red-500 p-1"
                 >
@@ -90,6 +91,7 @@ export function CartDrawer() {
 
                 <div className="flex items-center gap-3 bg-black/20 rounded-lg p-1">
                   <button
+                    type="button"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
                     disabled={item.quantity <= 1}
@@ -100,6 +102,7 @@ export function CartDrawer() {
                     {item.quantity}
                   </span>
                   <button
+                    type="button"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className="p-1 text-slate-400 hover:text-white"
                   >

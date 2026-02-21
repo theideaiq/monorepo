@@ -11,7 +11,7 @@
  */
 
 import dotenv from 'dotenv';
-import path from 'path';
+import path from 'node:path';
 import { createServiceRoleClient } from '../src/service';
 
 // Load environment variables from .env.local or .env
@@ -38,6 +38,7 @@ if (!supabaseUrl || (!supabaseKey && !supabaseServiceKey)) {
 }
 
 // Use Service Key if available to bypass RLS, otherwise Anon Key (might fail if RLS blocks inserts)
+// biome-ignore lint/style/noNonNullAssertion: guaranteed by environment check
 const supabase = createServiceRoleClient(
   supabaseUrl,
   supabaseServiceKey || supabaseKey!,
