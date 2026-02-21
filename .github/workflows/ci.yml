@@ -50,6 +50,20 @@ jobs:
 
       - name: Run Quality Checks
         run: pnpm turbo check typecheck test
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          WAYL_SECRET_KEY: "dummy_wayl_secret"
+          WAYL_WEBHOOK_SECRET: "dummy_wayl_webhook_secret"
+          ZAIN_SECRET_KEY: "dummy_zain_secret"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy_supabase_service_role_key"
+          NEXT_PUBLIC_SUPABASE_URL: "https://dummy.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy_anon_key"
+          RESEND_API_KEY: "dummy_resend_api_key"
+          TELEGRAM_BOT_TOKEN: "dummy_telegram_token"
+          GEMINI_API_KEY: "dummy_gemini_key"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy_upstash_token"
+          WEB_APP_URL: "http://localhost:3000"
 
   build:
     name: Build

@@ -1,21 +1,39 @@
-area: web:
+web:
   - changed-files:
       - any-glob-to-any-file: 'apps/web/**/*'
 
-area: admin:
+admin:
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
 
-area: droid:
+payment-engine:
   - changed-files:
-      - any-glob-to-any-file: 'apps/droid/**/*'
+      - any-glob-to-any-file: 'packages/payment-engine/**/*'
 
-area: core:
+wayl:
   - changed-files:
-      - any-glob-to-any-file: 'packages/**/*'
+      - any-glob-to-any-file: 'packages/wayl/**/*'
 
-area: ops:
+ui:
+  - changed-files:
+      - any-glob-to-any-file: 'packages/ui/**/*'
+
+utils:
+  - changed-files:
+      - any-glob-to-any-file: 'packages/utils/**/*'
+
+database:
+  - changed-files:
+      - any-glob-to-any-file: 'packages/database/**/*'
+
+config:
+  - changed-files:
+      - any-glob-to-any-file: 'packages/config/**/*'
+
+env:
+  - changed-files:
+      - any-glob-to-any-file: 'packages/env/**/*'
+
+ci:
   - changed-files:
       - any-glob-to-any-file: '.github/**/*'
-      - any-glob-to-any-file: 'turbo.json'
-      - any-glob-to-any-file: 'package.json'
