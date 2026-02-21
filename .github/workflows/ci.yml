@@ -119,7 +119,7 @@ jobs:
           UPSTASH_REDIS_REST_URL: dummy
           UPSTASH_REDIS_REST_TOKEN: dummy
           WEB_APP_URL: dummy
-          NEXT_PUBLIC_SUPABASE_URL: dummy
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
           NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy
         run: pnpm turbo build
 
