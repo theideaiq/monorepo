@@ -1,0 +1,3 @@
+## 2024-05-22 - Visual Inconsistency in Ratings **Learning:** Components like `ProductCard` often implement quick text-based solutions (e.g., `★`) instead of using the design system's icon library (`lucide-react`), leading to visual inconsistency with detail views like `ProductView`. **Action:** Always cross-reference detail views to ensure consistent icon usage across the application.
+
+## 2024-05-22 - Unreliable Test Suite **Learning:** The `apps/web` test suite has pre-existing failures (`string-utils`, `cart-store`) that block clean verification of UI changes. **Action:** Rely on visual verification (Playwright screenshots) and build checks (`pnpm build`) rather than depending solely on `pnpm test` for UI polish tasks.

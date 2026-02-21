@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/services/products';
@@ -97,8 +97,15 @@ export function ProductCard({
               </div>
             </div>
             {product.rating > 0 && (
-              <div className="flex items-center gap-1 text-xs text-slate-300 bg-white/5 px-2 py-1 rounded-md">
-                <span className="text-brand-yellow">★</span>
+              <div
+                className="flex items-center gap-1 text-xs text-slate-300 bg-white/5 px-2 py-1 rounded-md"
+                aria-label={`Rating: ${product.rating}`}
+              >
+                <Star
+                  size={12}
+                  className="text-brand-yellow fill-current"
+                  aria-hidden="true"
+                />
                 {product.rating}
               </div>
             )}
