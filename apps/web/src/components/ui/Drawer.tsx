@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 interface DrawerProps {
@@ -20,17 +20,38 @@ export function Drawer({
   title,
   footer,
 }: DrawerProps) {
-  // Prevent body scroll when drawer is open
+  const titleId = useId();
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Prevent body scroll and handle focus when drawer opens
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Focus drawer for accessibility
+      drawerRef.current?.focus();
     } else {
       document.body.style.overflow = 'unset';
     }
+
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
+
+  // Handle Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen, onClose]);
 
   // Render to body (Portal) to ensure it stays on top
   if (typeof document === 'undefined') return null;
@@ -50,15 +71,23 @@ export function Drawer({
 
           {/* Drawer Content */}
           <motion.div
+            ref={drawerRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            tabIndex={-1}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-brand-deep border-l border-white/10 shadow-2xl z-50 flex flex-col"
+            className="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-brand-deep border-l border-white/10 shadow-2xl z-50 flex flex-col focus:outline-none"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-white/10">
-              <h2 className="text-xl font-bold text-white tracking-tight">
+              <h2
+                id={titleId}
+                className="text-xl font-bold text-white tracking-tight"
+              >
                 {title}
               </h2>
               <button
