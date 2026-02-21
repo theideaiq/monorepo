@@ -52,6 +52,14 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       # Initialize CodeQL (Defines what languages to scan)
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4

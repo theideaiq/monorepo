@@ -1,6 +1,6 @@
+import { hasAdminAccess } from '@/lib/auth-utils';
 import { ROLES } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/server';
-import { hasAdminAccess } from '@/lib/auth-utils';
 
 export { hasAdminAccess };
 
