@@ -45,6 +45,14 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -67,11 +75,14 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates google-services.json)
           cd apps/web && node scripts/restore-mobile-secrets.js && cd ../..
+
+          # 2. Capacitor Sync
+          cd apps/web && npx cap sync android && cd ../..
           
-          # 2. Grant Permission
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -82,8 +93,11 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           cd apps/web && node scripts/restore-mobile-secrets.js && cd ../..
+
+          # 2. Capacitor Sync
+          cd apps/web && npx cap sync ios && cd ../..
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -95,7 +109,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
