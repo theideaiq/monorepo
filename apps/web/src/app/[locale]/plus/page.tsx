@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge, Button } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { motion } from 'framer-motion';
 import {
   BookOpen,
@@ -8,8 +8,6 @@ import {
   Gamepad2,
   Zap,
   Crown,
-  Film,
-  Music,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useState } from 'react';
