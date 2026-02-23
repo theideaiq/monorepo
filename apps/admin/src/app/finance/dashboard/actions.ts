@@ -41,10 +41,11 @@ export async function getCashFlowData(year: number) {
     'Dec',
   ];
 
+  // biome-ignore lint/suspicious/noExplicitAny: legacy
   lines.forEach((line: any) => {
     const date = new Date(line.ledger_entries.transaction_date);
     const monthIndex = date.getMonth();
-    const month = monthNames[monthIndex];
+    const month = monthNames[monthIndex] ?? "Unknown";
 
     if (!monthlyData[month]) {
       monthlyData[month] = { revenue: 0, expenses: 0 };

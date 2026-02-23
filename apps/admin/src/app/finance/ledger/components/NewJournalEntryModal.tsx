@@ -30,12 +30,18 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    // biome-ignore lint/suspicious/noExplicitAny: legacy
+    newLines[index] = { ...newLines[index], [field]: value } as any;
     setLines(newLines);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!date) {
+      toast.error('Date is required');
+      return;
+    }
 
     // Validation: Debits must equal Credits
     const totalDebit = lines.reduce((sum, line) => sum + Number(line.debit), 0);
