@@ -54,6 +54,7 @@
     "react-hot-toast": "^2.6.0",
     "react-parallax-tilt": "^1.7.317",
     "react-player": "^3.4.0",
+    "resend": "^6.9.1",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.4.0",
     "three": "^0.182.0",

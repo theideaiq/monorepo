@@ -1,124 +1,113 @@
 'use client';
 
 import { Button, Input } from '@repo/ui';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 const supabase = createClient();
 
-export default function AuthPage() {
+export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Form States
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-
-  const handleAuth = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
 
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const fullName = formData.get('fullName') as string;
+
     try {
-      if (mode === 'login') {
+      if (mode === 'register') {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: fullName,
+            },
+          },
+        });
+        if (error) throw error;
+        toast.success('Check your email to confirm your account');
+      } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
-        toast.success('Welcome back to The IDEA.');
-        router.push('/account');
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { full_name: fullName },
-          },
-        });
-        if (error) throw error;
-        toast.success('Account created! Please check your email.');
-        setMode('login');
+        toast.success('Logged in successfully');
+        router.push('/');
+        router.refresh();
       }
+      // biome-ignore lint/suspicious/noExplicitAny: legacy
     } catch (err: any) {
       toast.error(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const handleGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) toast.error(error.message);
-  };
+  async function handleSocialLogin(provider: 'google') {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+      // biome-ignore lint/suspicious/noExplicitAny: legacy
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-brand-bg">
-      {/* LEFT: Brand Art */}
-      <div className="relative hidden md:flex flex-col justify-between p-12 bg-black overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop')] bg-cover bg-center opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-transparent to-transparent" />
-
-        <div className="relative z-10">
-          <h1 className="text-4xl font-black text-white tracking-tighter mb-2">
-            THE IDEA<span className="text-brand-yellow">.</span>
-          </h1>
-          <p className="text-slate-400">Innovation for Every Aspect of Life.</p>
-        </div>
-
-        <div className="relative z-10">
-          <blockquote className="text-xl font-medium text-white max-w-lg leading-relaxed">
-            &ldquo;The future is not something we enter. The future is something
-            we create.&rdquo;
-          </blockquote>
-        </div>
-      </div>
-
-      {/* RIGHT: Auth Forms */}
-      <div className="flex items-center justify-center p-6 md:p-12">
-        <div className="w-full max-w-md space-y-8">
-          {/* Header */}
-          <div className="text-center md:text-left">
-            <h2 className="text-3xl font-bold text-white mb-2">
-              {mode === 'login' ? 'Welcome back' : 'Join the revolution'}
-            </h2>
+    <div className="min-h-screen pt-24 pb-12 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="bg-slate-900 border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold mb-2">
+              {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+            </h1>
             <p className="text-slate-400">
               {mode === 'login'
-                ? 'Enter your credentials to access your account.'
-                : 'Create your account to start shopping and renting.'}
+                ? 'Enter your details to access your account'
+                : 'Join The IDEA to start your journey'}
             </p>
           </div>
 
-          {/* Social Auth */}
-          <Button
-            onClick={handleGoogle}
-            className="w-full h-12 bg-white text-black hover:bg-slate-200 border-none font-bold flex items-center justify-center gap-3"
-          >
-            <Chrome size={20} className="text-blue-600" />
-            Continue with Google
-          </Button>
-
-          <div className="relative flex items-center gap-4 py-4">
-            <div className="h-px bg-white/10 flex-1" />
-            <span className="text-xs text-slate-500 uppercase tracking-widest">
-              Or with email
-            </span>
-            <div className="h-px bg-white/10 flex-1" />
+          <div className="space-y-4 mb-8">
+            <Button
+              variant="outline"
+              className="w-full justify-center gap-2 h-12"
+              onClick={() => handleSocialLogin('google')}
+            >
+              <Chrome size={20} />
+              Continue with Google
+            </Button>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleAuth} className="space-y-4">
+          <div className="relative mb-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-slate-900 text-slate-500">
+                Or continue with email
+              </span>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
             <AnimatePresence mode="wait">
               {mode === 'register' && (
                 <motion.div
@@ -128,6 +117,7 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
+                    {/* biome-ignore lint/a11y/noLabelWithoutControl: legacy */}
                     <label className="text-sm text-slate-400 mb-1 block">
                       Full Name
                     </label>
@@ -136,13 +126,11 @@ export default function AuthPage() {
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
                         size={18}
                       />
-                      <input
-                        type="text"
-                        required={mode === 'register'}
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                      <Input
+                        name="fullName"
                         placeholder="John Doe"
+                        className="pl-10 bg-white/5 border-white/10 text-white"
+                        required
                       />
                     </div>
                   </div>
@@ -151,6 +139,7 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
+              {/* biome-ignore lint/a11y/noLabelWithoutControl: legacy */}
               <label className="text-sm text-slate-400 mb-1 block">
                 Email Address
               </label>
@@ -159,18 +148,18 @@ export default function AuthPage() {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
                   size={18}
                 />
-                <input
+                <Input
                   type="email"
+                  name="email"
+                  placeholder="john@example.com"
+                  className="pl-10 bg-white/5 border-white/10 text-white"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                  placeholder="name@example.com"
                 />
               </div>
             </div>
 
             <div>
+              {/* biome-ignore lint/a11y/noLabelWithoutControl: legacy */}
               <label className="text-sm text-slate-400 mb-1 block">
                 Password
               </label>
@@ -179,45 +168,44 @@ export default function AuthPage() {
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
                   size={18}
                 />
-                <input
+                <Input
                   type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                  name="password"
                   placeholder="••••••••"
+                  className="pl-10 bg-white/5 border-white/10 text-white"
+                  required
+                  minLength={6}
                 />
               </div>
             </div>
 
             <Button
               type="submit"
-              className="w-full h-12 bg-brand-yellow text-brand-dark hover:bg-yellow-400 border-none font-bold text-lg mt-6"
+              className="w-full h-12 bg-brand-yellow text-black hover:bg-brand-yellow/90"
               disabled={loading}
             >
               {loading ? (
                 <Loader2 className="animate-spin" />
-              ) : mode === 'login' ? (
-                'Sign In'
               ) : (
-                'Create Account'
+                <>
+                  {mode === 'login' ? 'Sign In' : 'Create Account'}
+                  <ArrowRight size={18} className="ml-2" />
+                </>
               )}
             </Button>
           </form>
 
-          {/* Toggle */}
-          <div className="text-center">
-            <p className="text-slate-400">
-              {mode === 'login'
-                ? "Don't have an account? "
-                : 'Already have an account? '}
-              <button
-                onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-                className="text-brand-yellow hover:underline font-bold"
-              >
-                {mode === 'login' ? 'Register' : 'Log in'}
-              </button>
-            </p>
+          <div className="mt-6 text-center text-sm text-slate-400">
+            {mode === 'login'
+              ? "Don't have an account? "
+              : 'Already have an account? '}
+            <button
+              type="button"
+              onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
+              className="text-brand-yellow hover:underline font-bold"
+            >
+              {mode === 'login' ? 'Register' : 'Log in'}
+            </button>
           </div>
         </div>
       </div>

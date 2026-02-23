@@ -1,229 +1,152 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
 import { Button } from '@repo/ui';
-import { VariantSelector } from '@/components/ui/VariantSelector';
-import type { Product, ProductVariant } from '@/services/products';
+import { motion } from 'framer-motion';
+import { CheckCircle2, Heart, Share2, ShoppingCart, Star } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
 import { useCartStore } from '@/stores/cart-store';
-import { useUIStore } from '@/stores/ui-store';
-import { toast } from 'react-hot-toast';
+import { type Product } from '@/services/products';
 
 interface ProductViewProps {
   product: Product;
 }
 
 export function ProductView({ product }: ProductViewProps) {
-  const [selectedImage, setSelectedImage] = useState(product.image);
-  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
-  const { addItem } = useCartStore();
-  const { openCart } = useUIStore();
-
-  // Helper to extract options from variants
-  // This assumes a simple structure where variants differentiate by 1 attribute for now
-  // or we just list all variants.
-  // For simplicity given the time, if variants exist, we just show "Option" selector
-  // In a real complex app we'd cross-reference attributes.
-
-  const hasVariants = product.variants && product.variants.length > 0;
-
-  // Extract unique attributes (e.g. Color, Size)
-  const attributes: Record<string, string[]> = {};
-  if (hasVariants) {
-    product.variants.forEach((v) => {
-      Object.entries(v.attributes).forEach(([key, val]) => {
-        if (!attributes[key]) attributes[key] = [];
-        if (!attributes[key].includes(val)) attributes[key].push(val);
-      });
-    });
-  }
-
-  // State for selections
-  const [selections, setSelections] = useState<Record<string, string>>({});
-
-  const handleAttributeChange = (key: string, value: string) => {
-    setSelections((prev) => ({ ...prev, [key]: value }));
-    // Try to find matching image
-    const matchingVariant = product.variants.find(
-      (v) => v.attributes[key] === value,
-    );
-    if (matchingVariant && matchingVariant.image) {
-      setSelectedImage(matchingVariant.image);
-    }
-  };
+  const [selectedImage, setSelectedImage] = useState(0);
+  const addItem = useCartStore((state) => state.addItem);
 
   const handleAddToCart = () => {
-    // Validate selections if needed
-    if (
-      hasVariants &&
-      Object.keys(attributes).length > Object.keys(selections).length
-    ) {
-      toast.error('Please select all options');
-      return;
-    }
-
-    // Construct Cart Item
-    // In a real app we'd map selection to variant ID. For now using a composite ID.
-    const variantId = hasVariants
-      ? `${product.id}-${Object.values(selections).join('-')}`
-      : undefined;
-
     addItem({
-      id: variantId || product.id,
+      id: product.id,
       productId: product.id,
-      variantId,
       title: product.title,
       price: product.price,
-      image: selectedImage,
-      attributes: selections,
+      image: product.image,
     });
-
-    openCart();
-    toast.success('Added to cart');
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
-
   return (
-    <div className="pb-32 md:pb-12">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* LEFT: Gallery */}
-        <div className="space-y-4">
-          {/* Main Image */}
-          <div className="relative aspect-square bg-[#1a1a1a] rounded-3xl overflow-hidden border border-white/5">
-            <Image
-              src={selectedImage}
-              alt={product.title}
-              fill
-              className="object-contain p-8 hover:scale-105 transition-transform duration-500"
-              priority
-            />
-            <div className="absolute top-4 left-4">
-              {product.condition === 'new' ? (
-                <span className="bg-brand-yellow text-brand-dark font-black px-3 py-1 rounded text-xs uppercase tracking-widest">
-                  New
-                </span>
-              ) : (
-                <span className="bg-white/10 backdrop-blur text-white font-bold px-3 py-1 rounded text-xs uppercase tracking-widest border border-white/10">
-                  {product.condition}
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Thumbnails (Scrollable on mobile) */}
-          <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+    <div className="grid lg:grid-cols-2 gap-12">
+      {/* Gallery */}
+      <div className="space-y-4">
+        <div className="aspect-square relative rounded-2xl overflow-hidden bg-white/5 border border-white/10">
+          <Image
+            src={product.images[selectedImage] || product.image}
+            alt={product.title}
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+          {product.images.map((image, idx) => (
             <button
-              onClick={() => setSelectedImage(product.image)}
-              className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
+              key={image}
+              type="button"
+              onClick={() => setSelectedImage(idx)}
+              className={`
+                aspect-square relative rounded-xl overflow-hidden border-2 transition-all
+                ${
+                  selectedImage === idx
+                    ? 'border-brand-yellow'
+                    : 'border-transparent opacity-50 hover:opacity-100'
+                }
+              `}
             >
               <Image
-                src={product.image}
-                alt="Main"
+                src={image}
+                alt={`${product.title} view ${idx + 1}`}
                 fill
                 className="object-cover"
               />
             </button>
-            {product.images?.map((img, i) => (
-              <button
-                key={i}
-                onClick={() => setSelectedImage(img)}
-                className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
-              >
-                <Image
-                  src={img}
-                  alt={`View ${i}`}
-                  fill
-                  className="object-cover"
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* RIGHT: Info */}
-        <div className="space-y-8">
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
-                {product.title}
-              </h1>
-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
-                <Heart size={28} />
-              </button>
-            </div>
-            <div className="flex items-center gap-4 text-sm text-slate-400">
-              <span className="flex items-center gap-1 text-brand-yellow">
-                <Star size={16} fill="currentColor" />
-                {product.rating}
-              </span>
-              <span>•</span>
-              <span>{product.seller}</span>
-              {product.isVerified && (
-                <CheckCircle2 size={16} className="text-blue-500" />
-              )}
-            </div>
-          </div>
-
-          <div className="text-4xl font-black text-brand-yellow">
-            {price}{' '}
-            <span className="text-lg font-medium text-slate-500">IQD</span>
-          </div>
-
-          {/* Variants */}
-          {hasVariants && (
-            <div className="space-y-6 pt-6 border-t border-white/10">
-              {Object.entries(attributes).map(([key, options]) => (
-                <VariantSelector
-                  key={key}
-                  label={key}
-                  options={options}
-                  selected={selections[key] || ''}
-                  onChange={(val) => handleAttributeChange(key, val)}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Description */}
-          <div className="prose prose-invert prose-sm max-w-none text-slate-400">
-            <p>
-              {product.description ||
-                'No description available for this premium item.'}
-            </p>
-          </div>
-
-          {/* Desktop Actions */}
-          <div className="hidden md:flex gap-4 pt-8 border-t border-white/10">
-            <Button
-              onClick={handleAddToCart}
-              className="flex-1 h-16 text-lg font-bold bg-brand-yellow text-brand-dark hover:bg-white"
-            >
-              Add to Cart
-            </Button>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Mobile Sticky Actions */}
-      <motion.div
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        className="fixed bottom-0 left-0 right-0 p-4 bg-black/80 backdrop-blur-xl border-t border-white/10 z-30 md:hidden flex gap-4 pb-8"
-      >
-        <div className="flex flex-col justify-center">
-          <span className="text-xs text-slate-400 uppercase">Total</span>
-          <span className="text-lg font-bold text-white">{price}</span>
+      {/* Details */}
+      <div className="space-y-8">
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2 text-brand-yellow">
+              <Star className="fill-current" size={20} />
+              <span className="font-bold">{product.rating}</span>
+              <span className="text-slate-500">
+                ({product.reviewCount} reviews)
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="ghost" size="icon">
+                <Heart size={20} />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Share2 size={20} />
+              </Button>
+            </div>
+          </div>
+
+          <h1 className="text-4xl font-black text-white mb-2">
+            {product.title}
+          </h1>
+          <p className="text-slate-400 text-lg">{product.description}</p>
         </div>
-        <Button
-          onClick={handleAddToCart}
-          className="flex-1 h-12 bg-brand-yellow text-brand-dark font-bold"
-        >
-          Add to Cart
-        </Button>
-      </motion.div>
+
+        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 space-y-6">
+          <div className="flex items-end justify-between">
+            <div>
+              <p className="text-sm text-slate-400 mb-1">Price</p>
+              <div className="text-3xl font-bold text-white">
+                {new Intl.NumberFormat('en-IQ', {
+                  style: 'currency',
+                  currency: 'IQD',
+                  maximumFractionDigits: 0,
+                }).format(product.price)}
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-green-400 bg-green-400/10 px-3 py-1 rounded-full text-sm font-medium">
+              <CheckCircle2 size={14} />
+              In Stock
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              size="lg"
+              className="w-full bg-brand-yellow text-black hover:bg-brand-yellow/90 font-bold"
+              onClick={handleAddToCart}
+            >
+              <ShoppingCart className="mr-2" size={20} />
+              Add to Cart
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full border-white/20 hover:bg-white/10"
+            >
+              Buy Now
+            </Button>
+          </div>
+        </div>
+
+        {/* Features / Specs */}
+        <div className="space-y-4">
+          <h3 className="text-xl font-bold text-white">Specifications</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {Object.entries(product.details).map(([key, value]) => (
+              <div
+                key={key}
+                className="p-4 rounded-xl bg-white/5 border border-white/10"
+              >
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
+                  {key}
+                </p>
+                <p className="font-medium text-white">{String(value)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
