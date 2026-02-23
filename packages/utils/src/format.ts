@@ -1,5 +1,23 @@
 // packages/utils/src/format.ts
 
+// Cached formatter instance for IQD
+const iqdFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a number as IQD currency (without currency symbol).
+ * Uses cached Intl.NumberFormat instance for performance.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted string (e.g., "50,000").
+ */
+export function formatIQDNumber(amount: number): string {
+  if (!Number.isFinite(amount)) return '';
+  return iqdFormatter.format(amount);
+}
+
 /**
  * Format a number as currency.
  *
