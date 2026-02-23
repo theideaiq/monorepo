@@ -73,7 +73,7 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates google-services.json)
           # Running directly with node to avoid workspace issues in this environment
-          node scripts/restore-mobile-secrets.js --workspace=apps/web
+          node apps/web/scripts/restore-mobile-secrets.js --workspace=apps/web
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -89,7 +89,7 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           # Running directly with node to avoid workspace issues in this environment
-          node scripts/restore-mobile-secrets.js --workspace=apps/web
+          node apps/web/scripts/restore-mobile-secrets.js --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
