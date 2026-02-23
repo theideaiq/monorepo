@@ -1,10 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/services/products';
+import { formatIQDNumber } from '@repo/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -18,10 +19,7 @@ export function ProductCard({
   priority = false,
 }: ProductCardProps) {
   // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const price = formatIQDNumber(product.price);
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">
@@ -30,7 +28,7 @@ export function ProductCard({
         className="relative h-full bg-white/5 border border-white/5 rounded-2xl overflow-hidden hover:border-brand-yellow/30 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col"
       >
         {/* Image Container */}
-        <div className="relative aspect-square bg-[#1a1a1a] overflow-hidden">
+        <div className="relative aspect-square bg-brand-surface overflow-hidden">
           {product.image ? (
             <Image
               src={product.image}
@@ -98,7 +96,9 @@ export function ProductCard({
             </div>
             {product.rating > 0 && (
               <div className="flex items-center gap-1 text-xs text-slate-300 bg-white/5 px-2 py-1 rounded-md">
-                <span className="text-brand-yellow">★</span>
+                <span className="text-brand-yellow">
+                  <Star size={12} fill="currentColor" />
+                </span>
                 {product.rating}
               </div>
             )}
