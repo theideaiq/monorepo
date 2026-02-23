@@ -51,6 +51,9 @@ jobs:
         with:
           run_install: false
 
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5

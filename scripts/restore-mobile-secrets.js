@@ -1,5 +1,7 @@
-const fs = require('node:fs');
-const path = require('node:path');
+// biome-ignore lint/style/useNodejsImportProtocol: legacy script environment
+const fs = require('fs');
+// biome-ignore lint/style/useNodejsImportProtocol: legacy script environment
+const path = require('path');
 
 const ANDROID_DEST = path.join(
   __dirname,
