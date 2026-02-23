@@ -35,6 +35,7 @@ export interface Database {
           // ... (omitting insert types for brevity as we primarily read in frontend)
         };
         Update: {
+          // biome-ignore lint/complexity/noBannedTypes: placeholder
           // ...
         };
       };

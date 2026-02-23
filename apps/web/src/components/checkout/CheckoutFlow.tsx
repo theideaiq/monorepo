@@ -64,7 +64,10 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <button
+                type="button"
+                className="text-sm text-brand-yellow font-medium"
+              >
                 Edit
               </button>
             )}
@@ -86,62 +89,67 @@ export function CheckoutFlow() {
                       <div className="space-y-1">
                         <label className="text-xs text-slate-400">
                           Full Name
+                          <input
+                            required
+                            value={address.fullName}
+                            onChange={(e) =>
+                              setAddress({
+                                ...address,
+                                fullName: e.target.value,
+                              })
+                            }
+                            className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none mt-1"
+                            placeholder="John Doe"
+                          />
                         </label>
-                        <input
-                          required
-                          value={address.fullName}
-                          onChange={(e) =>
-                            setAddress({ ...address, fullName: e.target.value })
-                          }
-                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
-                          placeholder="John Doe"
-                        />
                       </div>
                       <div className="space-y-1">
                         <label className="text-xs text-slate-400">
                           Phone Number
+                          <input
+                            required
+                            value={address.phone}
+                            onChange={(e) =>
+                              setAddress({ ...address, phone: e.target.value })
+                            }
+                            className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none mt-1"
+                            placeholder="07xxxxxxxxx"
+                          />
                         </label>
-                        <input
-                          required
-                          value={address.phone}
-                          onChange={(e) =>
-                            setAddress({ ...address, phone: e.target.value })
-                          }
-                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
-                          placeholder="07xxxxxxxxx"
-                        />
                       </div>
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">City</label>
-                      <select
-                        value={address.city}
-                        onChange={(e) =>
-                          setAddress({ ...address, city: e.target.value })
-                        }
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none appearance-none"
-                      >
-                        <option value="Baghdad">Baghdad</option>
-                        <option value="Basra">Basra</option>
-                        <option value="Erbil">Erbil</option>
-                        {/* ... other cities */}
-                      </select>
+                      <label className="text-xs text-slate-400">
+                        City
+                        <select
+                          value={address.city}
+                          onChange={(e) =>
+                            setAddress({ ...address, city: e.target.value })
+                          }
+                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none appearance-none mt-1"
+                        >
+                          <option value="Baghdad">Baghdad</option>
+                          <option value="Basra">Basra</option>
+                          <option value="Erbil">Erbil</option>
+                          {/* ... other cities */}
+                        </select>
+                      </label>
                     </div>
 
                     <div className="space-y-1">
                       <label className="text-xs text-slate-400">
                         Address Details
+                        <textarea
+                          required
+                          value={address.street}
+                          onChange={(e) =>
+                            setAddress({ ...address, street: e.target.value })
+                          }
+                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none min-h-[100px] mt-1"
+                          placeholder="Street name, Building No., Landmark..."
+                        />
                       </label>
-                      <textarea
-                        required
-                        value={address.street}
-                        onChange={(e) =>
-                          setAddress({ ...address, street: e.target.value })
-                        }
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none min-h-[100px]"
-                        placeholder="Street name, Building No., Landmark..."
-                      />
                     </div>
 
                     <div className="flex justify-end pt-4">
@@ -249,6 +257,7 @@ export function CheckoutFlow() {
             {items.map((item) => (
               <div key={item.id} className="flex gap-3">
                 <div className="w-12 h-12 bg-black rounded flex-shrink-0 relative overflow-hidden">
+                  {/* biome-ignore lint/performance/noImgElement: legacy image */}
                   <img
                     src={item.image}
                     alt={item.title}

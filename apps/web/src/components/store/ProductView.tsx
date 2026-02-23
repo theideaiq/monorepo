@@ -156,6 +156,7 @@ export function ProductView({ product }: ProductViewProps) {
               <button
                 type="button"
                 className="text-slate-500 hover:text-brand-pink transition-colors"
+                aria-label="Add to wishlist"
               >
                 <Heart size={28} />
               </button>
