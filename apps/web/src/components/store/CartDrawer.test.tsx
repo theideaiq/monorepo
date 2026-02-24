@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { CartDrawer } from './CartDrawer';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
+import { CartDrawer } from './CartDrawer';
 
 // Mock the stores
 vi.mock('@/stores/cart-store', () => ({
@@ -56,8 +56,14 @@ describe('CartDrawer', () => {
 
     // Check for accessibility labels
     expect(screen.getByLabelText('Close drawer')).toBeInTheDocument();
-    expect(screen.getByLabelText('Remove Test Product from cart')).toBeInTheDocument();
-    expect(screen.getByLabelText('Decrease quantity for Test Product')).toBeInTheDocument();
-    expect(screen.getByLabelText('Increase quantity for Test Product')).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Remove Test Product from cart'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Decrease quantity for Test Product'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Increase quantity for Test Product'),
+    ).toBeInTheDocument();
   });
 });
