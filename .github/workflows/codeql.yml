@@ -45,6 +45,14 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -66,7 +74,8 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # Running via node directly to avoid workspace resolution issues in CI without install
+          node apps/web/scripts/restore-mobile-secrets.js
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -81,10 +90,21 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # Running via node directly to avoid workspace resolution issues in CI without install
+          node apps/web/scripts/restore-mobile-secrets.js
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
+              # Installing CocoaPods dependencies requires 'pod install' which might need 'pnpm install' if it relies on node modules
+              # However, 'pod install' is ruby based. But if we use Capacitor plugins, we might need node modules.
+              # For now, attempting without full install, but this might fail if pods depend on node_modules.
+              # If this fails, we must add 'pnpm install' step.
+              # Assuming SPM for this repo based on logs saying "No Podfile found" in previous runs is safer if that was true.
+              # But let's keep the check.
+
+              # NOTE: If Podfile exists, we likely need 'pnpm install' for capacitor hooks.
+              # For this fix, we focus on the script execution error first.
+
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
               BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
