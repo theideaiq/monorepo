@@ -1,8 +1,8 @@
 import { MetricCard } from '@repo/ui';
 import { Package, ShoppingBag, Users } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth-checks';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function DashboardPage() {
   try {

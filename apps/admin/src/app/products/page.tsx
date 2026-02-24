@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth-checks';
+import { createClient } from '@/lib/supabase/server';
 import { columns, type Product } from './columns';
 import { DataTable } from './data-table';
 

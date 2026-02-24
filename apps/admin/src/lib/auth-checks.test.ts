@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { hasAdminAccess } from './auth-utils';
 import { requireAdmin } from './auth-checks';
+import { hasAdminAccess } from './auth-utils';
 import { ROLES } from './constants';
 
 const mocks = vi.hoisted(() => ({
