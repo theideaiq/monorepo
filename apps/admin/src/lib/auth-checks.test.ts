@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hasAdminAccess } from './auth-checks';
+import { hasAdminAccess } from './auth-utils';
 import { ROLES } from './constants';
 
 describe('hasAdminAccess', () => {

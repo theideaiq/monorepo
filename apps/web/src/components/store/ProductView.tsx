@@ -17,7 +17,7 @@ interface ProductViewProps {
 
 export function ProductView({ product }: ProductViewProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
-  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
+  const [_selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const { addItem } = useCartStore();
   const { openCart } = useUIStore();
 

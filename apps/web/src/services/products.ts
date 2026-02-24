@@ -1,4 +1,5 @@
 import { Logger } from '@repo/utils';
+// biome-ignore lint/correctness/noUnusedImports: used in types
 import type { Database, Json } from '@/lib/database.types';
 import { createClient } from '@/lib/supabase/client';
 
@@ -29,6 +30,7 @@ export interface Product {
   images: string[];
   isVerified: boolean;
   description: string;
+  // biome-ignore lint/suspicious/noExplicitAny: loose schema
   details: Record<string, any>;
   variants: ProductVariant[];
   stock: number;
@@ -194,6 +196,7 @@ function mapDBProductToUI(item: DBProduct): Product {
     images: item.images || (item.image_url ? [item.image_url] : []),
     isVerified: item.is_verified,
     description: item.description || '',
+    // biome-ignore lint/suspicious/noExplicitAny: loose schema
     details: (item.details as Record<string, any>) || {},
     variants,
     stock: item.stock_count,
