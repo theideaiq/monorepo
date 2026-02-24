@@ -17,6 +17,13 @@ describe('String Utils (@repo/utils)', () => {
       // @ts-expect-error testing runtime safety
       expect(slugify(undefined)).toBe('');
     });
+
+    it('should handle numeric input', () => {
+      // @ts-expect-error testing runtime safety
+      expect(slugify(123)).toBe('123');
+      // @ts-expect-error testing runtime safety
+      expect(slugify(0)).toBe('0');
+    });
   });
 
   describe('decodeHtmlEntities', () => {
@@ -34,6 +41,7 @@ describe('String Utils (@repo/utils)', () => {
       expect(decodeHtmlEntities('&#128512;')).toBe('😀'); // Emoji
       expect(decodeHtmlEntities('&#x41;')).toBe('A'); // Lowercase hex
       expect(decodeHtmlEntities('&#X41;')).toBe('A'); // Uppercase hex
+      expect(decodeHtmlEntities('&#xA9;')).toBe('©'); // Copyright symbol
     });
 
     it('should handle mixed content', () => {
