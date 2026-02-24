@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ShoppingCart, ImageOff, Star } from 'lucide-react';
+import { ImageOff, ShoppingCart, Star } from 'lucide-react';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import type { Product } from '@/services/products';
