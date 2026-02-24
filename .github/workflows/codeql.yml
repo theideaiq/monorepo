@@ -66,7 +66,7 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          node apps/web/scripts/restore-mobile-secrets.js
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -81,11 +81,16 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          node apps/web/scripts/restore-mobile-secrets.js
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
+              # Need to ensure CocoaPods dependencies are available, but might fail without full install
+              # Try to proceed or rely on cached pods if any (unlikely in fresh CI)
+              # For CodeQL, we might need to skip pod install if it fails, or assume pods are checked in?
+              # Standard practice is checking in Pods or running install.
+              # Given no `pnpm install` here, `pod` command might be missing if not on image, but macOS image has it.
               cd apps/web/ios/App && pod install --repo-update && cd -
               BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
           else
