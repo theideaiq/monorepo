@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import { Drawer } from '@/components/ui/Drawer';
+import { formatIQD } from '@repo/utils';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { Button } from '@repo/ui';
@@ -18,7 +19,7 @@ export function CartDrawer() {
     router.push('/checkout');
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = formatIQD(total);
 
   return (
     <Drawer
@@ -76,7 +77,7 @@ export function CartDrawer() {
                   </p>
                 )}
                 <p className="text-brand-yellow font-bold mt-2">
-                  {new Intl.NumberFormat('en-IQ').format(item.price)} IQD
+                  {formatIQD(item.price)} IQD
                 </p>
               </div>
 
