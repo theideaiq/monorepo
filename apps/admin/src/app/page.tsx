@@ -2,8 +2,14 @@ import { MetricCard } from '@repo/ui';
 import { Package, ShoppingBag, Users } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { requireAdmin } from '@/lib/auth-checks';
 
 export default async function DashboardPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect('/login');
+  }
   const supabase = await createClient();
 
   // Fetch counts in parallel to reduce waterfall latency
