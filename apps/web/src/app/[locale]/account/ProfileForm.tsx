@@ -16,7 +16,8 @@ export default function ProfileForm({ profile }: { profile: any }) {
       await updateProfile(formData);
       toast.success('Profile updated');
     } catch (e: any) {
-      toast.error(e.message);
+      // biome-ignore lint/suspicious/noExplicitAny: error handling
+      toast.error((e as any).message);
     } finally {
       setLoading(false);
     }

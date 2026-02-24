@@ -11,7 +11,7 @@
  */
 
 import dotenv from 'dotenv';
-import path from 'path';
+import path from 'node:path';
 import { createServiceRoleClient } from '../src/service';
 
 // Load environment variables from .env.local or .env
