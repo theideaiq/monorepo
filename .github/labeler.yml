@@ -1,21 +1,29 @@
-area: web:
+# This configuration file controls the assignment of labels to pull requests
+# based on the files that have been changed.
+#
+# Reference: https://github.com/actions/labeler
+
+'area: web':
   - changed-files:
       - any-glob-to-any-file: 'apps/web/**/*'
 
-area: admin:
+'area: admin':
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
 
-area: droid:
+'area: api':
   - changed-files:
-      - any-glob-to-any-file: 'apps/droid/**/*'
+      - any-glob-to-any-file: 'apps/api/**/*'
 
-area: core:
+'area: docs':
   - changed-files:
-      - any-glob-to-any-file: 'packages/**/*'
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**/*'
 
-area: ops:
+'area: ci':
   - changed-files:
       - any-glob-to-any-file: '.github/**/*'
-      - any-glob-to-any-file: 'turbo.json'
-      - any-glob-to-any-file: 'package.json'
+
+'area: libs':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/**/*'

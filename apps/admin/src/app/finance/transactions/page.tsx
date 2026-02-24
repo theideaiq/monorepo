@@ -1,8 +1,20 @@
 import { Badge, Button } from '@repo/ui';
 import { waylClient } from '@/lib/wayl';
 
+export const dynamic = 'force-dynamic';
+
+interface Transaction {
+  id: string;
+  referenceId: string;
+  total: number;
+  currency: string;
+  status: string;
+  createdAt: string;
+}
+
 export default async function TransactionsPage() {
-  const { data: transactions } = await waylClient.links.list({ take: 50 });
+  const { data } = await waylClient.links.list({ take: 50 });
+  const transactions = data as Transaction[];
 
   return (
     <div className="p-8">
@@ -48,7 +60,7 @@ export default async function TransactionsPage() {
                           ? 'success'
                           : tx.status === 'Pending'
                             ? 'warning'
-                            : 'secondary'
+                            : 'neutral'
                       }
                     >
                       {tx.status}
