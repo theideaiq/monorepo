@@ -76,11 +76,16 @@ jobs:
           # 1. Restore Secrets (Generates google-services.json)
           node apps/web/scripts/restore-mobile-secrets.js
           
-          # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
+          # 2. Sync Capacitor (Generate native files)
+          # Ensure 'out' dir exists to satisfy Capacitor
+          mkdir -p apps/web/out
+          cd apps/web && npx cap sync android
           
-          # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
+          # 3. Grant Permission
+          chmod +x android/gradlew
+
+          # 4. Build Debug APK (Sufficient for analysis)
+          cd android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -90,21 +95,27 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           node apps/web/scripts/restore-mobile-secrets.js
+
+          # 2. Sync Capacitor (Generate native files)
+          # Ensure 'out' dir exists to satisfy Capacitor
+          mkdir -p apps/web/out
+          cd apps/web && npx cap sync ios
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
+          # 3. Determine Build Type (CocoaPods vs SPM)
+          if [ -f "ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
+              cd ios/App && pod install --repo-update && cd -
+              BUILD_TARGET="-workspace ios/App/App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+              xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
+              BUILD_TARGET="-project ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
+          cd ios/App
           xcodebuild build \
             $BUILD_TARGET \
             -scheme App \
