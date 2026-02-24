@@ -1,12 +1,12 @@
-area: web:
+'area: web':
   - changed-files:
       - any-glob-to-any-file: 'apps/web/**/*'
 
-area: admin:
+'area: admin':
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
 
-area: droid:
+'area: droid':
   - changed-files:
       - any-glob-to-any-file: 'apps/droid/**/*'
 

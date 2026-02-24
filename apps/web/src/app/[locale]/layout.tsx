@@ -15,7 +15,6 @@ import {
   setRequestLocale,
 } from 'next-intl/server';
 import { BottomNav } from '@/components/layout/BottomNav';
-import { CartDrawer } from '@/components/store/CartDrawer';
 import SkipLink from '@/components/layout/SkipLink';
 import { WebFooter } from '@/components/layout/WebFooter';
 import { WebNavbar } from '@/components/layout/WebNavbar';
@@ -23,6 +22,7 @@ import QueryProvider from '@/components/providers/QueryProvider';
 import ToastProvider from '@/components/providers/ToastProvider';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import JsonLd from '@/components/seo/JsonLd';
+import { CartDrawer } from '@/components/store/CartDrawer';
 import { Link, routing } from '@/i18n/navigation';
 
 const poppins = Poppins({
