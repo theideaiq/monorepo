@@ -8,6 +8,8 @@ import { toast } from 'react-hot-toast';
 import type { ChartOfAccount } from '@/types/finance';
 import { createJournalEntry } from '../../actions';
 
+type JournalLine = { accountId: string; debit: number; credit: number };
+
 export function NewJournalEntryModal({
   accounts,
 }: {
@@ -16,7 +18,9 @@ export function NewJournalEntryModal({
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [description, setDescription] = useState('');
-  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
+  const [lines, setLines] = useState<JournalLine[]>([
+    { accountId: '', debit: 0, credit: 0 },
+  ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,8 +32,13 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (
+    index: number,
+    field: keyof JournalLine,
+    value: string | number,
+  ) => {
     const newLines = [...lines];
+    // @ts-ignore - Dynamic assignment with strict types is tricky here
     newLines[index] = { ...newLines[index], [field]: value };
     setLines(newLines);
   };
@@ -57,7 +66,7 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      await createJournalEntry(date || '', description, lines);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
