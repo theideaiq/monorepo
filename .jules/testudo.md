@@ -1,0 +1,3 @@
+## 2025-05-24 - Cart Store Implementation Mismatch
+Discovery: The `cart-store.test.ts` file was testing a legacy string-based array implementation, while the actual `cart-store.ts` uses a complex object structure with `CartItem` interface. This indicates a major refactor (likely v2) was merged without updating the corresponding unit tests.
+Strategy: When refactoring state management stores, tests must be updated to reflect the new state shape. Future store refactors should enforce a "Red/Green" cycle where existing tests are first updated to expect the new shape (fail) and then pass with the new implementation.
