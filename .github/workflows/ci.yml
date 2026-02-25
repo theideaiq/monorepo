@@ -101,6 +101,19 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-key' }}
           NEXT_PUBLIC_SITE_URL: 'http://localhost:3000'
           NEXT_PUBLIC_APP_ENV: 'production'
+          # Droid secrets
+          TELEGRAM_BOT_TOKEN: 'dummy-token'
+          GEMINI_API_KEY: 'dummy-key'
+          UPSTASH_REDIS_REST_URL: 'https://dummy-redis.upstash.io'
+          UPSTASH_REDIS_REST_TOKEN: 'dummy-token'
+          WEB_APP_URL: 'http://localhost:3000'
+          # Admin secrets
+          RESEND_API_KEY: 're_dummy_key'
+          # Payment secrets
+          WAYL_SECRET_KEY: 'dummy-key'
+          WAYL_WEBHOOK_SECRET: 'dummy-secret'
+          ZAIN_SECRET_KEY: 'dummy-key'
+          SUPABASE_SERVICE_ROLE_KEY: 'dummy-key'
         run: pnpm turbo build
 
   e2e:
