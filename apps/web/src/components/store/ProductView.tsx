@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
 import { Button } from '@repo/ui';
+import { formatIQDNumber } from '@repo/utils';
 import { VariantSelector } from '@/components/ui/VariantSelector';
 import type { Product, ProductVariant } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
@@ -84,7 +85,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const price = formatIQDNumber(product.price);
 
   return (
     <div className="pb-32 md:pb-12">
@@ -92,7 +93,7 @@ export function ProductView({ product }: ProductViewProps) {
         {/* LEFT: Gallery */}
         <div className="space-y-4">
           {/* Main Image */}
-          <div className="relative aspect-square bg-[#1a1a1a] rounded-3xl overflow-hidden border border-white/5">
+          <div className="relative aspect-square bg-brand-surface rounded-3xl overflow-hidden border border-white/5">
             <Image
               src={selectedImage}
               alt={product.title}

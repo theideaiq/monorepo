@@ -29,6 +29,20 @@ export function formatCurrency(
 }
 
 /**
+ * Format a number specifically for IQD display without the currency symbol.
+ * Enforces 'en-IQ' locale (or consistent grouping) and zero decimal places.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted number string (e.g., "50,000").
+ */
+export function formatIQDNumber(amount: number): string {
+  return new Intl.NumberFormat('en-IQ', {
+    style: 'decimal',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+/**
  * Format a date string or object to a readable standard.
  * Uses 'en-US' locale with 'MMM D, YYYY' format.
  *
