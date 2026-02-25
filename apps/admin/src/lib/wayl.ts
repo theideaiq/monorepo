@@ -7,4 +7,6 @@ const adapter = new WaylAdapter({
   webhookSecret: adminEnv.WAYL_WEBHOOK_SECRET,
 });
 
-export const waylClient = adapter.client;
+// biome-ignore lint/suspicious/noExplicitAny: explicit any to avoid direct dependency on @repo/wayl in admin
+// @ts-expect-error - Explicitly any to avoid direct dependency on @repo/wayl in admin
+export const waylClient: any = adapter.client;

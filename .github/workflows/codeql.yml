@@ -52,6 +52,28 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
       # Initialize CodeQL (Defines what languages to scan)
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -66,12 +88,16 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          node apps/web/scripts/restore-mobile-secrets.js
+
+          # 2. Sync Capacitor (Generate generated/ sources)
+          mkdir -p apps/web/out
+          npx cap sync android --web-dir=apps/web/out
           
-          # 2. Grant Permission
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,9 +107,13 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          node apps/web/scripts/restore-mobile-secrets.js
+
+          # 2. Sync Capacitor (Generate Pods/SPM deps)
+          mkdir -p apps/web/out
+          npx cap sync ios --web-dir=apps/web/out
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -95,7 +125,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
