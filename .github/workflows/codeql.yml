@@ -65,6 +65,10 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # 0. Install Dependencies & Sync Capacitor
+          npm_config_engine_strict=false pnpm install
+          npx cap sync android --web-dir=dist
+
           # 1. Restore Secrets (Generates google-services.json)
           node apps/web/scripts/restore-mobile-secrets.js
           
@@ -80,6 +84,10 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # 0. Install Dependencies & Sync Capacitor
+          npm_config_engine_strict=false pnpm install
+          npx cap sync ios --web-dir=dist
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           node apps/web/scripts/restore-mobile-secrets.js
           
