@@ -2,8 +2,6 @@ import { ROLES } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/server';
 import { hasAdminAccess } from '@/lib/auth-utils';
 
-export { hasAdminAccess };
-
 /**
  * Verifies that the current user is authenticated, not banned, and has Admin or Superadmin role.
  *
