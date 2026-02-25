@@ -1,3 +1,4 @@
+import { createHmac, timingSafeEqual } from 'node:crypto';
 import { type Link, WaylClient } from '@repo/wayl';
 import type {
   OrderData,
@@ -46,13 +47,52 @@ export class WaylAdapter implements PaymentProvider {
   }
 
   async verifyWebhook(
-    payload: unknown,
-    _signature?: string,
+    payload: string | unknown,
+    signature?: string,
   ): Promise<WebhookEvent> {
-    // In a real implementation, we would verify the signature using this.webhookSecret
-    // For now, we trust the payload structure and map it.
+    let data: Link;
 
-    const data = payload as Link; // Assuming the webhook payload is the Link object
+    if (this.webhookSecret) {
+      if (typeof payload !== 'string') {
+        throw new Error(
+          'Webhook payload must be a raw string for signature verification',
+        );
+      }
+
+      if (!signature) {
+        throw new Error('Missing webhook signature');
+      }
+
+      const hmac = createHmac('sha256', this.webhookSecret)
+        .update(payload)
+        .digest('hex');
+
+      const signatureBuffer = Buffer.from(signature);
+      const hmacBuffer = Buffer.from(hmac);
+
+      if (
+        signatureBuffer.length !== hmacBuffer.length ||
+        !timingSafeEqual(signatureBuffer, hmacBuffer)
+      ) {
+        throw new Error('Invalid webhook signature');
+      }
+
+      try {
+        data = JSON.parse(payload) as Link;
+      } catch {
+        throw new Error('Invalid JSON payload');
+      }
+    } else {
+      if (typeof payload === 'string') {
+        try {
+          data = JSON.parse(payload) as Link;
+        } catch {
+          throw new Error('Invalid JSON payload');
+        }
+      } else {
+        data = payload as Link;
+      }
+    }
 
     let type: WebhookEvent['type'] = 'payment.failed';
     if (data.status === 'Complete' || data.status === 'Delivered') {
