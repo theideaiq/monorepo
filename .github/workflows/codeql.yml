@@ -45,6 +45,14 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -68,7 +76,10 @@ jobs:
           # 1. Restore Secrets (Generates google-services.json)
           # Running directly with node to bypass pnpm workspace issues in this environment
           node apps/web/scripts/restore-mobile-secrets.js
-          
+
+          # Sync Capacitor (generates cordova.variables.gradle)
+          npx cap sync android --web-dir=dist
+
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
@@ -84,6 +95,9 @@ jobs:
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           # Running directly with node to bypass pnpm workspace issues in this environment
           node apps/web/scripts/restore-mobile-secrets.js
+
+          # Sync Capacitor (links native modules)
+          npx cap sync ios --web-dir=dist
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
