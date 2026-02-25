@@ -3,13 +3,16 @@ import type { Product } from '@/services/products';
 export default function ProductJsonLd({
   product,
   baseUrl,
-}: { product: Product; baseUrl: string }) {
+}: {
+  product: Product;
+  baseUrl: string;
+}) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.title,
     image: Array.from(
-      new Set([product.image, ...product.images].filter(Boolean))
+      new Set([product.image, ...product.images].filter(Boolean)),
     ),
     description: product.description,
     brand: {
