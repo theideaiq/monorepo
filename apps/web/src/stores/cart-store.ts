@@ -23,15 +23,14 @@ interface CartState {
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, _get) => ({
+    (set, get) => ({
       items: [],
       total: 0,
 
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          // biome-ignore lint/suspicious/noExplicitAny: complex state update
-          let updatedItems: any;
+          let updatedItems;
           if (existing) {
             updatedItems = state.items.map((i) =>
               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
@@ -42,7 +41,7 @@ export const useCartStore = create<CartState>()(
 
           // Recalc total
           const total = updatedItems.reduce(
-            (acc: number, i: any) => acc + i.price * i.quantity,
+            (acc, i) => acc + i.price * i.quantity,
             0,
           );
           return { items: updatedItems, total };
