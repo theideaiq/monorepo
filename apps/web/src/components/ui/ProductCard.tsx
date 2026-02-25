@@ -24,11 +24,20 @@ export function ProductCard({
   }).format(product.price);
 
   return (
-    <Link href={`/product/${product.slug}`} className="group block h-full">
+    <div className="group block h-full relative">
       <motion.div
         whileHover={{ y: -5 }}
         className="relative h-full bg-white/5 border border-white/5 rounded-2xl overflow-hidden hover:border-brand-yellow/30 hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col"
       >
+        {/* Main Link Overlay - Stretched Link Pattern */}
+        <Link
+          href={`/product/${product.slug}`}
+          className="absolute inset-0 z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-2xl"
+          aria-label={`View ${product.title}`}
+        >
+          <span className="sr-only">View {product.title}</span>
+        </Link>
+
         {/* Image Container */}
         <div className="relative aspect-square bg-[#1a1a1a] overflow-hidden">
           {product.image ? (
@@ -47,7 +56,7 @@ export function ProductCard({
           )}
 
           {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
+          <div className="absolute top-3 left-3 flex flex-col gap-2 z-20 pointer-events-none">
             {product.condition === 'new' && (
               <span className="px-2 py-1 bg-brand-yellow text-brand-dark text-[10px] font-black tracking-widest uppercase rounded-sm">
                 NEW
@@ -68,7 +77,7 @@ export function ProductCard({
               e.stopPropagation();
               onAddToCart?.(e);
             }}
-            className="absolute bottom-3 right-3 p-3 bg-brand-yellow text-brand-dark rounded-full shadow-lg translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:text-black z-10"
+            className="absolute bottom-3 right-3 p-3 bg-brand-yellow text-brand-dark rounded-full shadow-lg translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100 transition-all duration-300 hover:bg-white hover:text-black z-20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             aria-label="Add to cart"
           >
             <ShoppingCart size={20} />
@@ -76,9 +85,9 @@ export function ProductCard({
         </div>
 
         {/* Info */}
-        <div className="p-4 flex flex-col flex-1">
+        <div className="p-4 flex flex-col flex-1 relative z-20 pointer-events-none">
           <div className="flex-1">
-            <h3 className="text-white font-bold leading-tight mb-1 line-clamp-2 min-h-[2.5rem]">
+            <h3 className="text-white font-bold leading-tight mb-1 line-clamp-2 min-h-[2.5rem] group-hover:text-brand-yellow transition-colors duration-200">
               {product.title}
             </h3>
             <p className="text-xs text-slate-400 mb-3">{product.seller}</p>
@@ -97,14 +106,20 @@ export function ProductCard({
               </div>
             </div>
             {product.rating > 0 && (
-              <div className="flex items-center gap-1 text-xs text-slate-300 bg-white/5 px-2 py-1 rounded-md">
-                <span className="text-brand-yellow">★</span>
-                {product.rating}
+              <div
+                className="flex items-center gap-1 text-xs text-slate-300 bg-white/5 px-2 py-1 rounded-md"
+                role="img"
+                aria-label={`Rating: ${product.rating} out of 5`}
+              >
+                <span className="text-brand-yellow" aria-hidden="true">
+                  ★
+                </span>
+                <span aria-hidden="true">{product.rating}</span>
               </div>
             )}
           </div>
         </div>
       </motion.div>
-    </Link>
+    </div>
   );
 }
