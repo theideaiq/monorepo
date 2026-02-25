@@ -1,56 +1,60 @@
-'use client';
-
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
+// biome-ignore lint/suspicious/noExplicitAny: legacy code
 export default function RentalsList({ rentals }: { rentals: any[] }) {
   const t = useTranslations('Account');
-  const [selectedRental, setSelectedRental] = useState<string | null>(null);
-
-  if (!rentals || rentals.length === 0) {
-    return <p className="text-slate-500">{t('no_rentals')}</p>;
-  }
+  const [_selectedRental, _setSelectedRental] = useState<string | null>(null);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {rentals.map((rental) => (
-        <div
-          key={rental.id}
-          className="bg-white p-4 rounded-lg shadow border border-slate-100"
-        >
-          <div className="flex items-center gap-4 mb-4">
-            {rental.product?.image_url && (
-              <img
-                src={rental.product.image_url}
-                alt={rental.product.name}
-                className="w-16 h-16 object-cover rounded"
-              />
-            )}
-            <div>
-              <h3 className="font-semibold">
-                {rental.product?.name || 'Unknown Item'}
-              </h3>
-              <p className="text-xs text-slate-500">
-                Due: {new Date(rental.due_date).toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-
-          {selectedRental === rental.id ? (
-            <div className="bg-blue-50 p-3 rounded text-sm text-blue-800 mb-2">
-              {t('returnText')}
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setSelectedRental(rental.id)}
-              className="w-full text-center border border-blue-600 text-blue-600 rounded py-1.5 text-sm hover:bg-blue-50"
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold mb-4">{t('rentals')}</h2>
+      {rentals.length === 0 ? (
+        <p className="text-slate-400">{t('noRentals')}</p>
+      ) : (
+        <div className="grid gap-4">
+          {rentals.map((rental) => (
+            <div
+              key={rental.id}
+              className="bg-white/5 border border-white/10 rounded-xl p-4"
             >
-              {t('returnInstructions')}
-            </button>
-          )}
+              <div className="flex items-center gap-4 mb-4">
+                {rental.product?.image_url && (
+                  // biome-ignore lint/performance/noImgElement: Legacy image handling
+                  <img
+                    src={rental.product.image_url}
+                    alt={rental.product.name}
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                )}
+                <div>
+                  <h3 className="font-semibold">
+                    {rental.product?.name || 'Unknown Product'}
+                  </h3>
+                  <p className="text-sm text-slate-400">
+                    {new Date(rental.start_date).toLocaleDateString()} -{' '}
+                    {new Date(rental.end_date).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              <div className="flex justify-between items-center text-sm">
+                <span
+                  className={`px-2 py-1 rounded-full ${
+                    rental.status === 'active'
+                      ? 'bg-green-500/20 text-green-400'
+                      : 'bg-slate-500/20 text-slate-400'
+                  }`}
+                >
+                  {rental.status}
+                </span>
+                <span className="font-bold">
+                  {rental.total_price?.toLocaleString()} IQD
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }
