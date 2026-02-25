@@ -17,7 +17,7 @@
     "@repo/config": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/env": "workspace:*",
-    "@repo/payment-engine": "workspace:^",
+    "@repo/payment-engine": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/utils": "workspace:*",
     "@supabase/ssr": "^0.8.0",

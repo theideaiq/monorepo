@@ -69,18 +69,22 @@ This monorepo is managed with [Turborepo](https://turbo.build/) and [pnpm](https
     cd <project-directory>
     ```
 
-2.  **Install dependencies:**
-    ```bash
-    pnpm install
-    ```
+2.  **Environment Setup:**
+    Create a local environment file in `apps/web`, `apps/admin`, and `apps/droid`.
 
-3.  **Environment Setup:**
-    Create a local environment file in `apps/web`, `apps/admin`, and `apps/droid`:
+    > **Note:** The `setup` script will fail if these files are missing or incomplete because the build step verifies environment variables.
 
     ```bash
     cp apps/web/.env.example apps/web/.env.local
     cp apps/admin/.env.example apps/admin/.env.local
     cp apps/droid/.env.example apps/droid/.env.local
+    ```
+
+3.  **Install & Setup:**
+    Run the setup script to install dependencies, sync versions, build packages, and generate database types.
+
+    ```bash
+    pnpm run setup
     ```
 
 4.  **Run Development Server:**
@@ -116,13 +120,26 @@ Use `.env.local` files in the respective app directories (`apps/web`, `apps/admi
 | `pnpm sync` | Ensure dependency versions are consistent across packages (Syncpack). |
 | `pnpm changeset` | Generate a changeset for versioning. |
 
+## 🔧 Troubleshooting
+
+### Installation Failures on Node.js < v24.12.0
+If you encounter `ERR_PNPM_UNSUPPORTED_ENGINE` while running `pnpm install` or other commands, it means your Node.js version is lower than the project's requirement.
+
+**Solution:**
+Either upgrade Node.js to `v24.12.0`+ or use the engine strict flag to bypass the check:
+
+```bash
+npm_config_engine_strict=false pnpm install
+npm_config_engine_strict=false pnpm run setup
+```
+
 ## 🐛 Known Issues
 
-### Missing Capacitor Patch
-The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) is currently missing from the repository. The `patchedDependencies` entry has been temporarily removed from `package.json` to allow `pnpm install` to succeed.
+### Unconfigured Capacitor Patch
+The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) is present in the repository but is currently disabled in `package.json`.
 
 **Impact:** This may affect mobile builds if the `tar` version override causes compatibility issues with `@capacitor/cli`.
-**Workaround:** If you encounter issues with Capacitor CLI, verify that your environment meets the `tar` requirements or wait for the patch to be restored.
+**Workaround:** If you encounter issues with Capacitor CLI, verify that your environment meets the `tar` requirements.
 
 ## 🧠 Memory (AGENTS.md)
 
