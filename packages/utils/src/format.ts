@@ -28,6 +28,25 @@ export function formatCurrency(
   }).format(amount);
 }
 
+// Cached formatter instance to avoid re-instantiation overhead
+const iqdFormatter = new Intl.NumberFormat('en-IQ', {
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a number specifically for IQD display without currency symbol.
+ * Optimized for performance by using a cached formatter instance.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted string (e.g., "1,234").
+ */
+export function formatIQDNumber(amount: number): string {
+  if (typeof amount !== 'number' || Number.isNaN(amount)) {
+    return '0';
+  }
+  return iqdFormatter.format(amount);
+}
+
 /**
  * Format a date string or object to a readable standard.
  * Uses 'en-US' locale with 'MMM D, YYYY' format.
