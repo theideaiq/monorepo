@@ -5,8 +5,9 @@ import { ProductCard } from './ProductCard';
 
 // Mock next/image
 vi.mock('next/image', () => ({
+  // biome-ignore lint/suspicious/noExplicitAny: mock
   default: ({ src, alt, fill, priority, ...props }: any) => {
-    // eslint-disable-next-line @next/next/no-img-element
+    // biome-ignore lint/performance/noImgElement: mock
     return <img src={src} alt={alt} {...props} />;
   },
 }));
@@ -14,6 +15,7 @@ vi.mock('next/image', () => ({
 // Mock framer-motion to render children directly
 vi.mock('framer-motion', () => ({
   motion: {
+    // biome-ignore lint/suspicious/noExplicitAny: mock
     div: ({ children, whileHover, ...props }: any) => (
       <div {...props}>{children}</div>
     ),
