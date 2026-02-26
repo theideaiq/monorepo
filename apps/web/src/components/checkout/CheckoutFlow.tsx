@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
 
@@ -44,10 +44,12 @@ export function CheckoutFlow() {
         <div
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
-          <div
-            className="p-6 flex items-center justify-between cursor-pointer"
-            onClick={() => setStep(1)}
-          >
+          <div className="p-6 flex items-center justify-between">
+            <button
+              type="button"
+              className="flex-1 flex items-center justify-between text-left"
+              onClick={() => setStep(1)}
+            >
             <div className="flex items-center gap-4">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-colors ${step === 1 ? 'bg-brand-yellow text-brand-dark' : 'bg-white/10 text-slate-400'}`}
@@ -61,10 +63,14 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <button
+                type="button"
+                className="text-sm text-brand-yellow font-medium"
+              >
                 Edit
               </button>
             )}
+            </button>
           </div>
 
           <AnimatePresence>
@@ -83,62 +89,64 @@ export function CheckoutFlow() {
                       <div className="space-y-1">
                         <label className="text-xs text-slate-400">
                           Full Name
+                          <input
+                            required
+                            value={address.fullName}
+                            onChange={(e) =>
+                              setAddress({ ...address, fullName: e.target.value })
+                            }
+                            className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none mt-1"
+                            placeholder="John Doe"
+                          />
                         </label>
-                        <input
-                          required
-                          value={address.fullName}
-                          onChange={(e) =>
-                            setAddress({ ...address, fullName: e.target.value })
-                          }
-                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
-                          placeholder="John Doe"
-                        />
                       </div>
                       <div className="space-y-1">
                         <label className="text-xs text-slate-400">
                           Phone Number
+                          <input
+                            required
+                            value={address.phone}
+                            onChange={(e) =>
+                              setAddress({ ...address, phone: e.target.value })
+                            }
+                            className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none mt-1"
+                            placeholder="07xxxxxxxxx"
+                          />
                         </label>
-                        <input
-                          required
-                          value={address.phone}
-                          onChange={(e) =>
-                            setAddress({ ...address, phone: e.target.value })
-                          }
-                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
-                          placeholder="07xxxxxxxxx"
-                        />
                       </div>
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">City</label>
-                      <select
-                        value={address.city}
-                        onChange={(e) =>
-                          setAddress({ ...address, city: e.target.value })
-                        }
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none appearance-none"
-                      >
-                        <option value="Baghdad">Baghdad</option>
-                        <option value="Basra">Basra</option>
-                        <option value="Erbil">Erbil</option>
-                        {/* ... other cities */}
-                      </select>
+                      <label className="text-xs text-slate-400">
+                        City
+                        <select
+                          value={address.city}
+                          onChange={(e) =>
+                            setAddress({ ...address, city: e.target.value })
+                          }
+                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none appearance-none mt-1"
+                        >
+                          <option value="Baghdad">Baghdad</option>
+                          <option value="Basra">Basra</option>
+                          <option value="Erbil">Erbil</option>
+                          {/* ... other cities */}
+                        </select>
+                      </label>
                     </div>
 
                     <div className="space-y-1">
                       <label className="text-xs text-slate-400">
                         Address Details
+                        <textarea
+                          required
+                          value={address.street}
+                          onChange={(e) =>
+                            setAddress({ ...address, street: e.target.value })
+                          }
+                          className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none min-h-[100px] mt-1"
+                          placeholder="Street name, Building No., Landmark..."
+                        />
                       </label>
-                      <textarea
-                        required
-                        value={address.street}
-                        onChange={(e) =>
-                          setAddress({ ...address, street: e.target.value })
-                        }
-                        className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none min-h-[100px]"
-                        placeholder="Street name, Building No., Landmark..."
-                      />
                     </div>
 
                     <div className="flex justify-end pt-4">
@@ -246,6 +254,7 @@ export function CheckoutFlow() {
             {items.map((item) => (
               <div key={item.id} className="flex gap-3">
                 <div className="w-12 h-12 bg-black rounded flex-shrink-0 relative overflow-hidden">
+                  {/* biome-ignore lint/performance/noImgElement: Cart items need simple image */}
                   <img
                     src={item.image}
                     alt={item.title}

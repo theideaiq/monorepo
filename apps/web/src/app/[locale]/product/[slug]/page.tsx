@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { getProductBySlug } from '@/services/products';
 import ProductJsonLd from '@/components/seo/ProductJsonLd';
 import { ProductView } from '@/components/store/ProductView';
