@@ -1,4 +1,4 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, slugify } from './string';
 import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
@@ -34,6 +34,7 @@ describe('String Utils (@repo/utils)', () => {
       expect(decodeHtmlEntities('&#128512;')).toBe('😀'); // Emoji
       expect(decodeHtmlEntities('&#x41;')).toBe('A'); // Lowercase hex
       expect(decodeHtmlEntities('&#X41;')).toBe('A'); // Uppercase hex
+      expect(decodeHtmlEntities('&#abc;')).toBe('&#abc;'); // Invalid hex (missing x)
     });
 
     it('should handle mixed content', () => {
