@@ -49,22 +49,26 @@ export class WaylAdapter implements PaymentProvider {
     payload: unknown,
     _signature?: string,
   ): Promise<WebhookEvent> {
-    // In a real implementation, we would verify the signature using this.webhookSecret
-    // For now, we trust the payload structure and map it.
+    const data = payload as Link;
 
-    const data = payload as Link; // Assuming the webhook payload is the Link object
+    // Verify the payment status by fetching it directly from Wayl API.
+    // This prevents attackers from spoofing webhooks with fake success statuses.
+    const { data: verifiedLink } = await this.client.links.get(data.id);
 
     let type: WebhookEvent['type'] = 'payment.failed';
-    if (data.status === 'Complete' || data.status === 'Delivered') {
+    if (
+      verifiedLink.status === 'Complete' ||
+      verifiedLink.status === 'Delivered'
+    ) {
       type = 'payment.success';
     }
 
     return {
-      id: data.id,
+      id: verifiedLink.id,
       provider: this.name,
       type,
-      referenceId: data.referenceId,
-      payload: data,
+      referenceId: verifiedLink.referenceId,
+      payload: verifiedLink,
     };
   }
 }
