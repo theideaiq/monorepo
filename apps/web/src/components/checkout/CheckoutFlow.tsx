@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
+import { Button } from '@repo/ui';
+import { formatIQDNumber } from '@repo/utils';
 import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
 
@@ -35,7 +36,7 @@ export function CheckoutFlow() {
     // Redirect or clear cart
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = formatIQDNumber(total);
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -45,8 +46,15 @@ export function CheckoutFlow() {
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
           <div
-            className="p-6 flex items-center justify-between cursor-pointer"
+            role="button"
+            tabIndex={0}
+            className="p-6 flex items-center justify-between cursor-pointer outline-none focus:ring-1 focus:ring-brand-yellow/50"
             onClick={() => setStep(1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                setStep(1);
+              }
+            }}
           >
             <div className="flex items-center gap-4">
               <div
@@ -61,7 +69,10 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <button
+                type="button"
+                className="text-sm text-brand-yellow font-medium"
+              >
                 Edit
               </button>
             )}
@@ -260,9 +271,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {new Intl.NumberFormat('en-IQ').format(
-                      item.price * item.quantity,
-                    )}{' '}
+                    {formatIQDNumber(item.price * item.quantity)}{' '}
                     IQD
                   </div>
                 </div>
