@@ -1,13 +1,12 @@
 'use client';
 
-import { Button, Input } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Chrome, Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -128,11 +127,24 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                    <label className="text-sm text-slate-400 mb-1 block">
-                      Full Name
+                    <label className="block">
+                      <span className="text-sm text-slate-400 mb-1 block">Full Name</span>
+                      <div className="relative">
+                        <User
+                          className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                          size={18}
+                        />
+                        <input
+                          type="text"
+                          required={mode === 'register'}
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                          placeholder="John Doe"
+                        />
+                      </div>
                     </label>
-                    <div className="relative">
-                      <User
+                  </div>
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
                         size={18}
                       />
@@ -151,43 +163,43 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
-                Email Address
+              <label className="block">
+                <span className="text-sm text-slate-400 mb-1 block">Email Address</span>
+                <div className="relative">
+                  <Mail
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                    size={18}
+                  />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                    placeholder="name@example.com"
+                  />
+                </div>
               </label>
-              <div className="relative">
-                <Mail
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                  size={18}
-                />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                  placeholder="name@example.com"
-                />
-              </div>
             </div>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
-                Password
+              <label className="block">
+                <span className="text-sm text-slate-400 mb-1 block">Password</span>
+                <div className="relative">
+                  <Lock
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                    size={18}
+                  />
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
               </label>
-              <div className="relative">
-                <Lock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                  size={18}
-                />
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                  placeholder="••••••••"
-                />
-              </div>
             </div>
 
             <Button
@@ -212,6 +224,7 @@ export default function AuthPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <button
+                type="button"
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"
               >
