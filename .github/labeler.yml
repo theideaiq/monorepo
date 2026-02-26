@@ -1,36 +1,36 @@
-'area: web':
+web:
   - changed-files:
       - any-glob-to-any-file: 'apps/web/**/*'
 
-'area: admin':
+admin:
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
 
-'area: droid':
+droid:
   - changed-files:
       - any-glob-to-any-file: 'apps/droid/**/*'
 
-'area: ui':
+ui:
   - changed-files:
       - any-glob-to-any-file: 'packages/ui/**/*'
 
-'area: database':
+database:
   - changed-files:
       - any-glob-to-any-file: 'packages/database/**/*'
 
-'area: config':
+config:
   - changed-files:
       - any-glob-to-any-file: 'packages/config/**/*'
 
-'area: utils':
+utils:
   - changed-files:
       - any-glob-to-any-file: 'packages/utils/**/*'
 
-'area: docs':
+docs:
   - changed-files:
       - any-glob-to-any-file: '**/*.md'
       - any-glob-to-any-file: 'docs/**/*'
 
-'area: ci':
+ci:
   - changed-files:
       - any-glob-to-any-file: '.github/**/*'
