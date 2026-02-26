@@ -22,8 +22,11 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Interactive div for layout
     <div
       onClick={onSelect}
+      role="button"
+      tabIndex={0}
       className={`
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
         ${
@@ -57,8 +60,8 @@ export function SubscriptionCard({
       </div>
 
       <div className="space-y-3">
-        {plan.features.map((feature, idx) => (
-          <div key={idx} className="flex items-center gap-3">
+        {plan.features.map((feature) => (
+          <div key={feature} className="flex items-center gap-3">
             <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
               <Check size={12} strokeWidth={3} />
             </div>
