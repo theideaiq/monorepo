@@ -47,7 +47,8 @@ export default function AuthPage() {
         setMode('login');
       }
     } catch (err: any) {
-      toast.error(err.message);
+      // biome-ignore lint/suspicious/noExplicitAny: Error handling
+      toast.error((err as any).message);
     } finally {
       setLoading(false);
     }
