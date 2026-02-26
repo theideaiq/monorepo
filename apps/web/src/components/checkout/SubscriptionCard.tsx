@@ -23,6 +23,7 @@ export function SubscriptionCard({
 }: SubscriptionCardProps) {
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: Interactive div for layout
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Interactive div for layout
     <div
       onClick={onSelect}
       role="button"
