@@ -1,17 +1,20 @@
 import { render, screen } from '@testing-library/react';
-import { ProductCard } from './ProductCard';
 import { vi } from 'vitest';
+import { ProductCard } from './ProductCard';
 
 // Mock Next.js Image
 vi.mock('next/image', () => ({
+  // biome-ignore lint/suspicious/noExplicitAny: mock props
   default: ({ src, alt, fill, priority, ...props }: any) => {
     // eslint-disable-next-line @next/next/no-img-element
+    // biome-ignore lint/performance/noImgElement: mock
     return <img src={src} alt={alt} {...props} />;
   },
 }));
 
 // Mock Next.js Link
 vi.mock('next/link', () => ({
+  // biome-ignore lint/suspicious/noExplicitAny: mock props
   default: ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
       {children}
@@ -22,6 +25,7 @@ vi.mock('next/link', () => ({
 // Mock Framer Motion
 vi.mock('framer-motion', () => ({
   motion: {
+    // biome-ignore lint/suspicious/noExplicitAny: mock props
     div: ({ children, whileHover, ...props }: any) => (
       <div {...props}>{children}</div>
     ),
@@ -57,7 +61,9 @@ describe('ProductCard', () => {
     expect(screen.getByText('1,000')).toBeInTheDocument();
 
     // Check for the Add to Cart button with improved aria-label
-    const button = screen.getByRole('button', { name: /add test product to cart/i });
+    const button = screen.getByRole('button', {
+      name: /add test product to cart/i,
+    });
     expect(button).toBeInTheDocument();
 
     // Check initial classes for hidden state
