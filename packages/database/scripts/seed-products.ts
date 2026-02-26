@@ -10,8 +10,8 @@
  * Note: Uses Service Role key to bypass RLS policies during seeding.
  */
 
+import path from 'node:path';
 import dotenv from 'dotenv';
-import path from 'path';
 import { createServiceRoleClient } from '../src/service';
 
 // Load environment variables from .env.local or .env
@@ -40,6 +40,7 @@ if (!supabaseUrl || (!supabaseKey && !supabaseServiceKey)) {
 // Use Service Key if available to bypass RLS, otherwise Anon Key (might fail if RLS blocks inserts)
 const supabase = createServiceRoleClient(
   supabaseUrl,
+  // biome-ignore lint/style/noNonNullAssertion: Env var check assumed
   supabaseServiceKey || supabaseKey!,
 );
 

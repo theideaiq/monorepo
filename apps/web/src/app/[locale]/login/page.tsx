@@ -1,13 +1,12 @@
 'use client';
 
-import { Button, Input } from '@repo/ui';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Button } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -46,6 +45,7 @@ export default function AuthPage() {
         toast.success('Account created! Please check your email.');
         setMode('login');
       }
+    // biome-ignore lint/suspicious/noExplicitAny: Error type varies
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -128,11 +128,26 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                    <label className="text-sm text-slate-400 mb-1 block">
+                    <label htmlFor="fullname" className="text-sm text-slate-400 mb-1 block">
                       Full Name
                     </label>
                     <div className="relative">
-                      <User
+                      {/* biome-ignore lint/a11y/noSvgWithoutTitle: Decorative icon */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"
+                      >
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
                         size={18}
                       />
@@ -151,11 +166,26 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label htmlFor="email" className="text-sm text-slate-400 mb-1 block">
                 Email Address
               </label>
               <div className="relative">
-                <Mail
+                {/* biome-ignore lint/a11y/noSvgWithoutTitle: Decorative icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-mail absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"
+                >
+                  <rect width="20" height="16" x="2" y="4" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
                   size={18}
                 />
@@ -171,11 +201,26 @@ export default function AuthPage() {
             </div>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label htmlFor="password" className="text-sm text-slate-400 mb-1 block">
                 Password
               </label>
               <div className="relative">
-                <Lock
+                {/* biome-ignore lint/a11y/noSvgWithoutTitle: Decorative icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-lock absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5"
+                >
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
                   size={18}
                 />
@@ -212,6 +257,7 @@ export default function AuthPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <button
+                type="button"
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"
               >
