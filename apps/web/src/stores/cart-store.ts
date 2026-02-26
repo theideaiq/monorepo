@@ -23,14 +23,13 @@ interface CartState {
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, _get) => ({
+    (set, get) => ({
       items: [],
       total: 0,
 
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          // biome-ignore lint/suspicious/noImplicitAnyLet: Type inference handles this
           let updatedItems;
           if (existing) {
             updatedItems = state.items.map((i) =>

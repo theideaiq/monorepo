@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@repo/ui';
+import { Badge, Button } from '@repo/ui';
 import { motion } from 'framer-motion';
 import {
   BookOpen,
@@ -8,6 +8,8 @@ import {
   Gamepad2,
   Zap,
   Crown,
+  Film,
+  Music,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useState } from 'react';
@@ -213,9 +215,9 @@ export default function PlusHome() {
               </div>
 
               <ul className="flex-1 space-y-4 mb-8">
-                {tier.features.map((feature, _f) => (
+                {tier.features.map((feature, f) => (
                   <li
-                    key={`${tier.name}-${feature}`}
+                    key={f}
                     className="flex items-start gap-3 text-sm text-slate-300"
                   >
                     <div

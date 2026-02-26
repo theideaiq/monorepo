@@ -1,12 +1,13 @@
 'use client';
 
-import { Button } from '@repo/ui';
+import { Button, Input } from '@repo/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Chrome, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -45,7 +46,6 @@ export default function AuthPage() {
         toast.success('Account created! Please check your email.');
         setMode('login');
       }
-    // biome-ignore lint/suspicious/noExplicitAny: Error handling
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -128,7 +128,7 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                    <label className="text-sm text-slate-400 mb-1 block" htmlFor="full-name">
+                    <label className="text-sm text-slate-400 mb-1 block">
                       Full Name
                     </label>
                     <div className="relative">
@@ -212,7 +212,6 @@ export default function AuthPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <button
-                type="button"
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"
               >

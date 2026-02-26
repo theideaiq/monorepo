@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 import { getProductBySlug } from '@/services/products';
-import ProductJsonLd from '@/components/seo/ProductJsonLd';
 import { ProductView } from '@/components/store/ProductView';
 
 type Props = {
@@ -37,7 +36,6 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16 pt-24">
-      <ProductJsonLd product={product} />
       <ProductView product={product} />
     </div>
   );

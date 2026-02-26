@@ -1,9 +1,9 @@
 'use client';
 
 // UI Kit
-import { Badge, Button } from '@repo/ui';
+import { Badge, Button, Input } from '@repo/ui';
 import { motion } from 'framer-motion';
-import { Book, Gamepad2, Laptop, Smartphone, Zap } from 'lucide-react';
+import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { useProducts } from '@/hooks/queries/use-products';
@@ -28,7 +28,6 @@ export default function MegastorePage() {
   const addItem = useCartStore((s) => s.addItem);
   const { openCart } = useUIStore();
 
-  // biome-ignore lint/suspicious/noExplicitAny: Product type is loose here for quick add
   const handleQuickAdd = (e: React.MouseEvent, product: any) => {
     e.preventDefault(); // Prevent navigation
     addItem({
