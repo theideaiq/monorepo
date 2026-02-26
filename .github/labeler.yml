@@ -1,21 +1,42 @@
-area: web:
+# This workflow will ensure that all pull requests are labeled based on the
+# files that are modified in the pull request.
+#
+# For more information, see:
+# https://github.com/actions/labeler
+
+'area: web':
   - changed-files:
       - any-glob-to-any-file: 'apps/web/**/*'
 
-area: admin:
+'area: admin':
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
 
-area: droid:
+'area: droid':
   - changed-files:
       - any-glob-to-any-file: 'apps/droid/**/*'
 
-area: core:
+'area: ui':
   - changed-files:
-      - any-glob-to-any-file: 'packages/**/*'
+      - any-glob-to-any-file: 'packages/ui/**/*'
 
-area: ops:
+'area: database':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/database/**/*'
+
+'area: config':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/config/**/*'
+
+'area: utils':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/utils/**/*'
+
+'area: docs':
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**/*'
+
+'area: ci':
   - changed-files:
       - any-glob-to-any-file: '.github/**/*'
-      - any-glob-to-any-file: 'turbo.json'
-      - any-glob-to-any-file: 'package.json'
