@@ -94,20 +94,8 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key' }}
-          SKIP_ENV_VALIDATION: 'true'
-          # Inject dummy values for required server-side secrets to pass build validation
-          SUPABASE_SERVICE_ROLE_KEY: 'dummy-service-role-key'
-          TELEGRAM_BOT_TOKEN: 'dummy-bot-token'
-          GEMINI_API_KEY: 'dummy-gemini-key'
-          UPSTASH_REDIS_REST_URL: 'https://dummy-redis-url.upstash.io'
-          UPSTASH_REDIS_REST_TOKEN: 'dummy-redis-token'
-          WAYL_SECRET_KEY: 'dummy-wayl-secret'
-          WAYL_WEBHOOK_SECRET: 'dummy-wayl-webhook-secret'
-          WEB_APP_URL: 'http://localhost:3000'
-          RESEND_API_KEY: 'dummy-resend-key'
-          ZAIN_SECRET_KEY: 'dummy-zain-key'
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm turbo build
 
   e2e:
