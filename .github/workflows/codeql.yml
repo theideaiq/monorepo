@@ -77,7 +77,7 @@ jobs:
           mkdir -p apps/web/out
 
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm run secrets:restore --filter=web
+          pnpm --filter=web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -95,7 +95,7 @@ jobs:
           mkdir -p apps/web/out
 
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm run secrets:restore --filter=web
+          pnpm --filter=web run secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
