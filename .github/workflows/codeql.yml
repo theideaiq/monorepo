@@ -64,8 +64,20 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
+        env:
+          # Dummy values for required secrets to pass validation in 'scripts/restore-mobile-secrets.js'
+          # if it happens to import anything that triggers validation
+          SUPABASE_SERVICE_ROLE_KEY: 'ci-dummy-service-role-key'
+          WAYL_SECRET_KEY: 'ci-dummy-wayl-key'
+          WAYL_WEBHOOK_SECRET: 'ci-dummy-wayl-webhook-secret'
+          ZAIN_SECRET_KEY: 'ci-dummy-zain-key'
         run: |
+          # Ensure apps/web/out exists if needed by sync scripts
+          mkdir -p apps/web/out
+
           # 1. Restore Secrets (Generates google-services.json)
+          # Note: We must install dependencies first because the script might require them
+          pnpm install
           npm run secrets:restore --workspace=apps/web
           
           # 2. Grant Permission
@@ -79,8 +91,19 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
+        env:
+          # Dummy values for required secrets
+          SUPABASE_SERVICE_ROLE_KEY: 'ci-dummy-service-role-key'
+          WAYL_SECRET_KEY: 'ci-dummy-wayl-key'
+          WAYL_WEBHOOK_SECRET: 'ci-dummy-wayl-webhook-secret'
+          ZAIN_SECRET_KEY: 'ci-dummy-zain-key'
         run: |
+          # Ensure apps/web/out exists if needed by sync scripts
+          mkdir -p apps/web/out
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
+          # Note: We must install dependencies first because the script might require them
+          pnpm install
           npm run secrets:restore --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
