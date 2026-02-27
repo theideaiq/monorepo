@@ -1,7 +1,7 @@
 import { Logger } from '@repo/utils';
-import { createClient } from '@/lib/supabase/client';
 // biome-ignore lint/correctness/noUnusedImports: Types might be used in future or by implicit logic
 import type { Database } from '@/lib/database.types';
+import { createClient } from '@/lib/supabase/client';
 
 export interface CartItem {
   id: string; // cart_item id
