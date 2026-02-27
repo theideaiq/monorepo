@@ -75,10 +75,13 @@ jobs:
           # 1. Restore Secrets (Generates google-services.json)
           pnpm --filter=web run secrets:restore
           
-          # 2. Grant Permission
+          # 2. Sync Capacitor (Ensures native project paths are correct)
+          pnpm --filter=web exec cap sync android
+
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
