@@ -30,7 +30,13 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    // Explicitly cast to any to allow dynamic property update, then to Line type
+    const updatedLine = { ...newLines[index], [field]: value } as {
+      accountId: string;
+      debit: number;
+      credit: number;
+    };
+    newLines[index] = updatedLine;
     setLines(newLines);
   };
 
@@ -45,13 +51,18 @@ export function NewJournalEntryModal({
     );
 
     if (Math.abs(totalDebit - totalCredit) > 0.01) {
-      // Floating point tolerance
       toast.error(`Debits (${totalDebit}) must equal Credits (${totalCredit})`);
       return;
     }
 
     if (lines.some((l) => !l.accountId)) {
       toast.error('All lines must have an account selected');
+      return;
+    }
+
+    // Explicit check for undefined date
+    if (!date) {
+      toast.error('Please select a date');
       return;
     }
 
@@ -62,7 +73,7 @@ export function NewJournalEntryModal({
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
       setDescription('');
-      router.refresh(); // Refresh server data
+      router.refresh();
     } catch (_error) {
       toast.error('Failed to create entry');
     } finally {
