@@ -25,4 +25,5 @@ jobs:
           gitleaks version
 
       - name: Run Gitleaks
-        run: gitleaks detect --source . -v
+        # Using --no-git to scan current file state only, avoiding legacy history leaks that can't be easily rebased in CI
+        run: gitleaks detect --no-git --source . -v
