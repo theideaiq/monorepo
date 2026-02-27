@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
+import { MAX_REQUESTS, WINDOW_SIZE_MS } from './constants';
 
-export const WINDOW_SIZE_MS = 60 * 1000; // 1 minute
-export const MAX_REQUESTS = 5; // 5 requests per minute
+export { MAX_REQUESTS, WINDOW_SIZE_MS };
 
 /**
  * Checks if a specific key has exceeded the rate limit.

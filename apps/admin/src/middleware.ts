@@ -1,13 +1,13 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { hasAdminAccess } from '@/lib/auth-checks';
-import { WINDOW_SIZE_MS } from '@/lib/rate-limit';
+import { hasAdminAccess } from '@/lib/auth-utils';
+import { WINDOW_SIZE_MS } from '@/lib/rate-limit/constants';
 import { createMiddlewareClient } from '@/lib/supabase/middleware';
 
 /**
  * Global middleware for authentication and rate limiting.
  * Runs on every request except static assets.
  */
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { supabase, response } = await createMiddlewareClient(request);
   const path = request.nextUrl.pathname;
 
