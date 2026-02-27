@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
+// biome-ignore lint/suspicious/noExplicitAny: Rentals type definition
 export default function RentalsList({ rentals }: { rentals: any[] }) {
   const t = useTranslations('Account');
   const [selectedRental, setSelectedRental] = useState<string | null>(null);

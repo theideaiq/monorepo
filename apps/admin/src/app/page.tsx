@@ -54,7 +54,8 @@ export default async function DashboardPage() {
             key={stat.title}
             title={stat.title}
             value={stat.value}
-            icon={stat.icon}
+            // biome-ignore lint/suspicious/noExplicitAny: Icon component type
+            icon={stat.icon as any}
             description={stat.description}
           />
         ))}
