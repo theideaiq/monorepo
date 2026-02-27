@@ -92,8 +92,11 @@ jobs:
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           mkdir -p apps/web/out # Ensure out dir exists for any pre-build checks
           pnpm --filter=web run secrets:restore
+
+          # 2. Sync Capacitor (Ensures native project paths are correct)
+          pnpm --filter=web exec cap sync ios
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -105,7 +108,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
