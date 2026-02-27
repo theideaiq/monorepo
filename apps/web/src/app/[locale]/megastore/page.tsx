@@ -1,17 +1,17 @@
 'use client';
 
 // UI Kit
-import { Badge, Button, Input } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { motion } from 'framer-motion';
 import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { useProducts } from '@/hooks/queries/use-products';
-import { useCartStore } from '@/stores/cart-store';
-import { ProductCard } from '@/components/ui/ProductCard';
-import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
+import { ProductCard } from '@/components/ui/ProductCard';
+import { useProducts } from '@/hooks/queries/use-products';
 import type { Product } from '@/services/products';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 const CATEGORIES = [
   { name: 'Gaming', icon: <Gamepad2 size={18} /> },
@@ -28,6 +28,7 @@ export default function MegastorePage() {
   const addItem = useCartStore((s) => s.addItem);
   const { openCart } = useUIStore();
 
+  // biome-ignore lint/suspicious/noExplicitAny: Quick fix for product type
   const handleQuickAdd = (e: React.MouseEvent, product: any) => {
     e.preventDefault(); // Prevent navigation
     addItem({
@@ -68,12 +69,9 @@ export default function MegastorePage() {
             animate={{ x: 0, opacity: 1 }}
             className="max-w-2xl"
           >
-            <Badge
-              variant="brand"
-              className="mb-4 bg-brand-yellow text-brand-dark border-none"
-            >
+            <div className="mb-4 inline-block px-3 py-1 rounded-full bg-brand-yellow text-brand-dark text-xs font-bold uppercase tracking-widest">
               MEGADEALS ARE HERE
-            </Badge>
+            </div>
             <h1 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">
               NEXT GEN <br />
               <span className="text-brand-yellow">HAS ARRIVED.</span>

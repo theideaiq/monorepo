@@ -39,28 +39,32 @@ export default async function Home({ params }: Props) {
       desc: t('services.store_desc'),
       icon: <ShoppingBag className="w-8 h-8 text-brand-pink" />,
       href: '/megastore',
-      color: 'border-brand-pink',
+      borderColor: 'border-brand-pink',
+      shadowColor: 'hover:shadow-brand-pink/20',
     },
     {
       title: t('services.plus_title'),
       desc: t('services.plus_desc'),
       icon: <Gamepad2 className="w-8 h-8 text-brand-yellow" />,
       href: '/plus',
-      color: 'border-brand-yellow',
+      borderColor: 'border-brand-yellow',
+      shadowColor: 'hover:shadow-brand-yellow/20',
     },
     {
       title: t('services.academy_title'),
       desc: t('services.academy_desc'),
       icon: <GraduationCap className="w-8 h-8 text-brand-pink" />,
       href: '/academy',
-      color: 'border-brand-pink',
+      borderColor: 'border-brand-pink',
+      shadowColor: 'hover:shadow-brand-pink/20',
     },
     {
       title: t('services.suite_title'),
       desc: t('services.suite_desc'),
       icon: <Building2 className="w-8 h-8 text-brand-dark" />,
       href: '/suite',
-      color: 'border-brand-dark',
+      borderColor: 'border-brand-dark',
+      shadowColor: 'hover:shadow-brand-dark/20',
     },
   ];
 
@@ -82,7 +86,7 @@ export default async function Home({ params }: Props) {
             // biome-ignore lint/suspicious/noArrayIndexKey: static list
             <Link key={i} href={service.href} className="block h-full">
               <Card
-                className={`h-full hover:-translate-y-2 transition-transform duration-300 border-t-4 bg-white/5 border-white/10 ${service.color}`}
+                className={`h-full hover:-translate-y-2 hover:shadow-lg transition-all duration-300 border-t-4 bg-brand-surface border-white/10 ${service.borderColor} ${service.shadowColor}`}
               >
                 <CardHeader>
                   <div className="mb-4">{service.icon}</div>

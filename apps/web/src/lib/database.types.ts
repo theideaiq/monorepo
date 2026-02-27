@@ -22,7 +22,8 @@ export interface Database {
           rental_tier: string | null;
           created_at: string;
           updated_at: string;
-          details: Json;
+          // biome-ignore lint/complexity/noBannedTypes: JSON structure can be complex
+          details: object;
           condition: 'new' | 'used' | 'refurbished' | 'open_box'; // inferred
           seller: string;
           is_verified: boolean;

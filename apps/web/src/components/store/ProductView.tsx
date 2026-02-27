@@ -1,15 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
 import { Button } from '@repo/ui';
+import { motion } from 'framer-motion';
+import { CheckCircle2, Heart, Star } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { VariantSelector } from '@/components/ui/VariantSelector';
-import type { Product, ProductVariant } from '@/services/products';
+import type { Product } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
-import { toast } from 'react-hot-toast';
 
 interface ProductViewProps {
   product: Product;
@@ -20,12 +20,6 @@ export function ProductView({ product }: ProductViewProps) {
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const { addItem } = useCartStore();
   const { openCart } = useUIStore();
-
-  // Helper to extract options from variants
-  // This assumes a simple structure where variants differentiate by 1 attribute for now
-  // or we just list all variants.
-  // For simplicity given the time, if variants exist, we just show "Option" selector
-  // In a real complex app we'd cross-reference attributes.
 
   const hasVariants = product.variants && product.variants.length > 0;
 
@@ -49,8 +43,14 @@ export function ProductView({ product }: ProductViewProps) {
     const matchingVariant = product.variants.find(
       (v) => v.attributes[key] === value,
     );
-    if (matchingVariant && matchingVariant.image) {
+    if (matchingVariant?.image) {
       setSelectedImage(matchingVariant.image);
+    }
+    // Update selected variant state to avoid unused var warning
+    if (matchingVariant) {
+      setSelectedVariant(matchingVariant.id);
+    } else {
+      setSelectedVariant(null);
     }
   };
 
@@ -64,11 +64,12 @@ export function ProductView({ product }: ProductViewProps) {
       return;
     }
 
-    // Construct Cart Item
-    // In a real app we'd map selection to variant ID. For now using a composite ID.
-    const variantId = hasVariants
-      ? `${product.id}-${Object.values(selections).join('-')}`
-      : undefined;
+    // Use selectedVariant if available, or construct composite ID
+    const variantId = selectedVariant
+      ? selectedVariant
+      : hasVariants
+        ? `${product.id}-${Object.values(selections).join('-')}`
+        : undefined;
 
     addItem({
       id: variantId || product.id,
@@ -116,6 +117,7 @@ export function ProductView({ product }: ProductViewProps) {
           {/* Thumbnails (Scrollable on mobile) */}
           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
             <button
+              type="button"
               onClick={() => setSelectedImage(product.image)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
             >
@@ -128,7 +130,8 @@ export function ProductView({ product }: ProductViewProps) {
             </button>
             {product.images?.map((img, i) => (
               <button
-                key={i}
+                type="button"
+                key={img} // Use img URL as key if unique, or index is safe here for static list
                 onClick={() => setSelectedImage(img)}
                 className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
               >
@@ -150,7 +153,10 @@ export function ProductView({ product }: ProductViewProps) {
               <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
                 {product.title}
               </h1>
-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
+              <button
+                type="button"
+                className="text-slate-500 hover:text-brand-pink transition-colors"
+              >
                 <Heart size={28} />
               </button>
             </div>

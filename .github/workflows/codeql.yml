@@ -43,7 +43,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -65,6 +65,12 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # Setup pnpm (required for workspace commands)
+          npm install -g pnpm@10
+
+          # Install dependencies
+          pnpm install
+
           # 1. Restore Secrets (Generates google-services.json)
           npm run secrets:restore --workspace=apps/web
           
@@ -80,6 +86,12 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # Setup pnpm (required for workspace commands)
+          npm install -g pnpm@10
+
+          # Install dependencies
+          pnpm install
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           npm run secrets:restore --workspace=apps/web
           
