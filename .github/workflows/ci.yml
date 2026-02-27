@@ -54,11 +54,11 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co'
           NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJh'
           SUPABASE_SERVICE_ROLE_KEY: 'eyJh'
-          RESEND_API_KEY: 're_123'
-          WAYL_SECRET_KEY: 'sk_123'
-          WAYL_WEBHOOK_SECRET: 'whsec_123'
-          ZAIN_SECRET_KEY: 'sk_123'
-          TELEGRAM_BOT_TOKEN: '123:abc'
+          RESEND_API_KEY: 're_123' # gitleaks:allow
+          WAYL_SECRET_KEY: 'sk_123' # gitleaks:allow
+          WAYL_WEBHOOK_SECRET: 'whsec_123' # gitleaks:allow
+          ZAIN_SECRET_KEY: 'sk_123' # gitleaks:allow
+          TELEGRAM_BOT_TOKEN: '123:abc' # gitleaks:allow
           GEMINI_API_KEY: 'AIza'
           UPSTASH_REDIS_REST_URL: 'https://example.upstash.io'
           UPSTASH_REDIS_REST_TOKEN: 'eyJh'
@@ -112,11 +112,11 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co'
           NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJh'
           SUPABASE_SERVICE_ROLE_KEY: 'eyJh'
-          RESEND_API_KEY: 're_123'
-          WAYL_SECRET_KEY: 'sk_123'
-          WAYL_WEBHOOK_SECRET: 'whsec_123'
-          ZAIN_SECRET_KEY: 'sk_123'
-          TELEGRAM_BOT_TOKEN: '123:abc'
+          RESEND_API_KEY: 're_123' # gitleaks:allow
+          WAYL_SECRET_KEY: 'sk_123' # gitleaks:allow
+          WAYL_WEBHOOK_SECRET: 'whsec_123' # gitleaks:allow
+          ZAIN_SECRET_KEY: 'sk_123' # gitleaks:allow
+          TELEGRAM_BOT_TOKEN: '123:abc' # gitleaks:allow
           GEMINI_API_KEY: 'AIza'
           UPSTASH_REDIS_REST_URL: 'https://example.upstash.io'
           UPSTASH_REDIS_REST_TOKEN: 'eyJh'
