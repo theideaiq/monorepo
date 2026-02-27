@@ -7,6 +7,22 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  SKIP_ENV_VALIDATION: 'true'
+  # Dummy values for required variables to satisfy presence checks if skipValidation doesn't catch everything
+  # or if some tools read them directly.
+  SUPABASE_SERVICE_ROLE_KEY: 'dummy-service-role-key'
+  RESEND_API_KEY: 'dummy-resend-api-key'
+  WAYL_SECRET_KEY: 'dummy-wayl-secret-key'
+  WAYL_WEBHOOK_SECRET: 'dummy-wayl-webhook-secret'
+  ZAIN_SECRET_KEY: 'dummy-zain-secret-key'
+  TELEGRAM_BOT_TOKEN: 'dummy-telegram-token'
+  GEMINI_API_KEY: 'dummy-gemini-key'
+  UPSTASH_REDIS_REST_URL: 'https://dummy-redis-url.upstash.io'
+  UPSTASH_REDIS_REST_TOKEN: 'dummy-redis-token'
+  NEXT_PUBLIC_SUPABASE_URL: 'https://dummy-project.supabase.co'
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: 'dummy-anon-key'
+
 jobs:
   quality:
     name: Quality Gate
