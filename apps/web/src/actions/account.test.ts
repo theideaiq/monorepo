@@ -79,6 +79,32 @@ describe('updateProfile', () => {
     expect(mocks.from).not.toHaveBeenCalled();
   });
 
+  it('should throw error when fullName is too short', async () => {
+    // Arrange
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-123' } } });
+    const formData = new FormData();
+    formData.append('fullName', 'A');
+
+    // Act & Assert
+    await expect(updateProfile(formData)).rejects.toThrow(
+      'Full name must be at least 2 characters',
+    );
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
+  it('should throw error when fullName is too long', async () => {
+    // Arrange
+    mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-123' } } });
+    const formData = new FormData();
+    formData.append('fullName', 'A'.repeat(51));
+
+    // Act & Assert
+    await expect(updateProfile(formData)).rejects.toThrow(
+      'Full name must be at most 50 characters',
+    );
+    expect(mocks.from).not.toHaveBeenCalled();
+  });
+
   it('should throw error when database update fails', async () => {
     // Arrange
     mocks.getUser.mockResolvedValue({ data: { user: { id: 'user-123' } } });
