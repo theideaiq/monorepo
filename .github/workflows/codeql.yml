@@ -43,7 +43,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,7 +66,7 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # Setup pnpm (required for workspace commands)
-          npm install -g pnpm@9
+          npm install -g pnpm@10
 
           # Install dependencies
           pnpm install
@@ -87,7 +87,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # Setup pnpm (required for workspace commands)
-          npm install -g pnpm@9
+          npm install -g pnpm@10
 
           # Install dependencies
           pnpm install
