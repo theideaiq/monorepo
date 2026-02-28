@@ -69,7 +69,7 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # Install dependencies to ensure scripts are available
-          pnpm install
+          npm_config_engine_strict=false pnpm install
 
           # Ensure out dir exists
           mkdir -p apps/web/out
@@ -90,7 +90,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # Install dependencies to ensure scripts are available
-          pnpm install
+          npm_config_engine_strict=false pnpm install
 
           # Ensure out dir exists
           mkdir -p apps/web/out
