@@ -42,6 +42,9 @@
     "test:coverage": {
        "outputs": ["coverage/**"]
     },
+    "e2e": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    },
     "format": {
       "inputs": ["$TURBO_DEFAULT$"]
     },
