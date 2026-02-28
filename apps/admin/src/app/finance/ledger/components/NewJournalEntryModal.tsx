@@ -16,7 +16,9 @@ export function NewJournalEntryModal({
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [description, setDescription] = useState('');
-  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
+  type JournalLine = { accountId: string; debit: number; credit: number; [key: string]: any };
+
+  const [lines, setLines] = useState<JournalLine[]>([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -30,7 +32,7 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    newLines[index] = { ...newLines[index], [field]: value } as JournalLine;
     setLines(newLines);
   };
 
@@ -57,7 +59,15 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      await createJournalEntry(
+        date || '',
+        description || '',
+        lines.map((line) => ({
+          accountId: line.accountId,
+          debit: Number(line.debit) || 0,
+          credit: Number(line.credit) || 0,
+        })),
+      );
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);

@@ -33,7 +33,7 @@ export default function ProductJsonLd({ product, baseUrl }: ProductJsonLdProps) 
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: product.rating,
-        reviewCount: product.reviewCount || 1, // Add dummy fallback if reviewCount is not mapped in Product yet
+        reviewCount: 'reviewCount' in product ? (product as any).reviewCount : 1, // Safe fallback
       },
     }),
   };

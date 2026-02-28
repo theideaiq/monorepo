@@ -39,11 +39,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      # Required for 'npm run secrets:restore'
+      # Required for 'pnpm run secrets:restore'
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Dependencies
+        run: npm_config_engine_strict=false pnpm install
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,12 +72,15 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 3. Ensure out exists
+          mkdir -p apps/web/out
+
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,7 +90,10 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
+
+          # Ensure out exists
+          mkdir -p apps/web/out
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
