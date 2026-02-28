@@ -1,4 +1,5 @@
 import { Card } from '@repo/ui';
+import { usdFormatter } from '@repo/utils';
 import { getEquityData } from '../actions';
 import { EquityPieChart, EquityTable } from './components/EquityComponents';
 
@@ -26,11 +27,7 @@ export default async function EquityPage() {
                 <div>
                   <div className="font-medium">{round.name}</div>
                   <div className="text-sm text-muted-foreground">
-                    {new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                    }).format(round.price_per_share)}{' '}
-                    / share
+                    {usdFormatter.format(round.price_per_share)} / share
                   </div>
                 </div>
                 <div className="text-right">
