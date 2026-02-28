@@ -39,11 +39,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      # Required for 'npm run secrets:restore'
+      # Required for 'pnpm run secrets:restore'
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Dependencies
+        run: npm_config_engine_strict=false pnpm install
+
+      - name: Build Global Envs for CodeQL
+        run: echo "SKIP_ENV_VALIDATION=true" >> $GITHUB_ENV && echo "NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co" >> $GITHUB_ENV && echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=dummy" >> $GITHUB_ENV && echo "SUPABASE_SERVICE_ROLE_KEY=dummy" >> $GITHUB_ENV && echo "RESEND_API_KEY=dummy" >> $GITHUB_ENV && echo "WAYL_SECRET_KEY=dummy" >> $GITHUB_ENV && echo "ZAIN_SECRET_KEY=dummy" >> $GITHUB_ENV && echo "GEMINI_API_KEY=dummy" >> $GITHUB_ENV && echo "TELEGRAM_BOT_TOKEN=dummy" >> $GITHUB_ENV && echo "UPSTASH_REDIS_REST_URL=https://example.com" >> $GITHUB_ENV && echo "UPSTASH_REDIS_REST_TOKEN=dummy" >> $GITHUB_ENV && echo "WAYL_WEBHOOK_SECRET=dummy" >> $GITHUB_ENV && echo "WEB_APP_URL=https://example.com" >> $GITHUB_ENV
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,12 +75,16 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
           
-          # 2. Grant Permission
+          # 2. Sync Capacitor
+          pnpm --filter web run build
+          pnpm --filter web exec cap sync android
+
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,7 +94,11 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
+
+          # Sync Capacitor
+          pnpm --filter web run build
+          pnpm --filter web exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
