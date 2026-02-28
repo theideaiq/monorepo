@@ -16,9 +16,16 @@ export function NewJournalEntryModal({
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [description, setDescription] = useState('');
-  type JournalLine = { accountId: string; debit: number; credit: number; [key: string]: any };
+  type JournalLine = {
+    accountId: string;
+    debit: number;
+    credit: number;
+    [key: string]: any;
+  };
 
-  const [lines, setLines] = useState<JournalLine[]>([{ accountId: '', debit: 0, credit: 0 }]);
+  const [lines, setLines] = useState<JournalLine[]>([
+    { accountId: '', debit: 0, credit: 0 },
+  ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 

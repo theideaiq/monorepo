@@ -51,6 +51,9 @@ jobs:
       - name: Install Dependencies
         run: npm_config_engine_strict=false pnpm install
 
+      - name: Build Global Envs for CodeQL
+        run: echo "SKIP_ENV_VALIDATION=true" >> $GITHUB_ENV && echo "NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co" >> $GITHUB_ENV && echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=dummy" >> $GITHUB_ENV && echo "SUPABASE_SERVICE_ROLE_KEY=dummy" >> $GITHUB_ENV && echo "RESEND_API_KEY=dummy" >> $GITHUB_ENV && echo "WAYL_SECRET_KEY=dummy" >> $GITHUB_ENV && echo "ZAIN_SECRET_KEY=dummy" >> $GITHUB_ENV && echo "GEMINI_API_KEY=dummy" >> $GITHUB_ENV && echo "TELEGRAM_BOT_TOKEN=dummy" >> $GITHUB_ENV && echo "UPSTASH_REDIS_REST_URL=https://example.com" >> $GITHUB_ENV && echo "UPSTASH_REDIS_REST_TOKEN=dummy" >> $GITHUB_ENV && echo "WAYL_WEBHOOK_SECRET=dummy" >> $GITHUB_ENV && echo "WEB_APP_URL=https://example.com" >> $GITHUB_ENV
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -74,12 +77,13 @@ jobs:
           # 1. Restore Secrets (Generates google-services.json)
           pnpm --filter web run secrets:restore
           
-          # 2. Grant Permission
+          # 2. Sync Capacitor
+          pnpm --filter web run build
+          pnpm --filter web exec cap sync android
+
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Ensure out exists
-          mkdir -p apps/web/out
-
           # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
@@ -92,8 +96,9 @@ jobs:
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --filter web run secrets:restore
 
-          # Ensure out exists
-          mkdir -p apps/web/out
+          # Sync Capacitor
+          pnpm --filter web run build
+          pnpm --filter web exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then

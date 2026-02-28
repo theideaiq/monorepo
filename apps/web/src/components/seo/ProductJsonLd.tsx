@@ -7,7 +7,10 @@ interface ProductJsonLdProps {
   baseUrl: string;
 }
 
-export default function ProductJsonLd({ product, baseUrl }: ProductJsonLdProps) {
+export default function ProductJsonLd({
+  product,
+  baseUrl,
+}: ProductJsonLdProps) {
   const url = `${baseUrl}/product/${product.slug}`;
 
   const jsonLd = {
@@ -22,8 +25,14 @@ export default function ProductJsonLd({ product, baseUrl }: ProductJsonLdProps) 
       url: url,
       priceCurrency: 'IQD',
       price: product.price,
-      itemCondition: product.condition === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
-      availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      itemCondition:
+        product.condition === 'new'
+          ? 'https://schema.org/NewCondition'
+          : 'https://schema.org/UsedCondition',
+      availability:
+        product.stock > 0
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
       seller: {
         '@type': 'Organization',
         name: product.seller,
@@ -33,7 +42,8 @@ export default function ProductJsonLd({ product, baseUrl }: ProductJsonLdProps) 
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: product.rating,
-        reviewCount: 'reviewCount' in product ? (product as any).reviewCount : 1, // Safe fallback
+        reviewCount:
+          'reviewCount' in product ? (product as any).reviewCount : 1, // Safe fallback
       },
     }),
   };
