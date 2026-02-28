@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { usdFormatter } from '@repo/utils';
 
 interface ChartData {
   month: string;
@@ -27,10 +28,7 @@ export function CashFlowChart({ data }: { data: ChartData[] }) {
           <YAxis />
           <Tooltip
             formatter={(value: number | undefined) =>
-              new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              }).format(value ?? 0)
+              usdFormatter.format(value ?? 0)
             }
           />
           <Legend />

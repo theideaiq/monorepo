@@ -20,6 +20,7 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import type { HRStaffPlan } from '@/types/finance';
+import { usdFormatter } from '@repo/utils';
 
 const columnHelper = createColumnHelper<HRStaffPlan>();
 
@@ -29,11 +30,7 @@ export function StaffTable({ data }: { data: HRStaffPlan[] }) {
     columnHelper.accessor('department', { header: 'Department' }),
     columnHelper.accessor('monthly_salary', {
       header: 'Monthly Salary',
-      cell: (info) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(info.getValue()),
+      cell: (info) => usdFormatter.format(info.getValue()),
     }),
     columnHelper.accessor('annual_increase_pct', {
       header: 'Annual Increase',
@@ -125,10 +122,7 @@ export function StaffProjection({ data }: { data: HRStaffPlan[] }) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-slate-900">
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(currentAnnual)}
+                {usdFormatter.format(currentAnnual)}
               </div>
             </CardContent>
           </Card>
@@ -141,18 +135,11 @@ export function StaffProjection({ data }: { data: HRStaffPlan[] }) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brand-pink">
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(projectedAnnual)}
+                {usdFormatter.format(projectedAnnual)}
               </div>
               <p className="text-xs text-brand-pink/80 mt-1">
                 (+
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(projectedAnnual - currentAnnual)}
-                )
+                {usdFormatter.format(projectedAnnual - currentAnnual)})
               </p>
             </CardContent>
           </Card>
