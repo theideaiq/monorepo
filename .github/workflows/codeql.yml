@@ -74,8 +74,11 @@ jobs:
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
+          # 3. Setup Capacitor
+          cd apps/web && pnpm dlx cap sync android
+
+          # 4. Build Debug APK (Sufficient for analysis)
+          cd android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
