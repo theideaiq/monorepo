@@ -49,6 +49,14 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://mock.supabase.co'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: 'mock-anon-key'
+          SUPABASE_SERVICE_ROLE_KEY: 'mock-service-role-key'
+          WAYL_SECRET_KEY: 'mock-wayl-secret'
+          WAYL_WEBHOOK_SECRET: 'mock-wayl-webhook'
+          ZAIN_SECRET_KEY: 'mock-zain-secret'
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +102,13 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-anon-key' }}
+          SUPABASE_SERVICE_ROLE_KEY: 'mock-service-role-key'
+          WAYL_SECRET_KEY: 'mock-wayl-secret'
+          WAYL_WEBHOOK_SECRET: 'mock-wayl-webhook'
+          ZAIN_SECRET_KEY: 'mock-zain-secret'
         run: pnpm turbo build
 
   e2e:
@@ -144,6 +157,11 @@ jobs:
 
       - name: Run E2E Tests
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-anon-key' }}
+          SUPABASE_SERVICE_ROLE_KEY: 'mock-service-role-key'
+          WAYL_SECRET_KEY: 'mock-wayl-secret'
+          WAYL_WEBHOOK_SECRET: 'mock-wayl-webhook'
+          ZAIN_SECRET_KEY: 'mock-zain-secret'
         run: pnpm turbo e2e
