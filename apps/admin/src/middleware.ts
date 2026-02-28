@@ -7,7 +7,7 @@ import { createMiddlewareClient } from '@/lib/supabase/middleware';
  * Global middleware for authentication and rate limiting.
  * Runs on every request except static assets.
  */
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const { supabase, response } = await createMiddlewareClient(request);
   const path = request.nextUrl.pathname;
 
