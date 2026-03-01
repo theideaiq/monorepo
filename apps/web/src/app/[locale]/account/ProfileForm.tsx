@@ -5,6 +5,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateProfile } from '@/actions/account';
 
+// biome-ignore lint/suspicious/noExplicitAny: profile structure from Supabase
 export default function ProfileForm({ profile }: { profile: any }) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
@@ -14,6 +15,7 @@ export default function ProfileForm({ profile }: { profile: any }) {
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
+      // biome-ignore lint/suspicious/noExplicitAny: error thrown is of unknown type
     } catch (e: any) {
       toast.error(e.message);
     } finally {
