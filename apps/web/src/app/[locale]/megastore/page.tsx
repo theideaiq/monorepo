@@ -3,7 +3,7 @@
 // UI Kit
 import { Badge, Button } from '@repo/ui';
 import { motion } from 'framer-motion';
-import { Search, Zap } from 'lucide-react';
+import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';

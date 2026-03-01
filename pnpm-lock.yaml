@@ -65,6 +65,9 @@ importers:
       '@repo/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@repo/wayl':
+        specifier: workspace:^
+        version: link:../../packages/wayl
       '@supabase/ssr':
         specifier: ^0.8.0
         version: 0.8.0(@supabase/supabase-js@2.93.2)

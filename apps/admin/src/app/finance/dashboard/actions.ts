@@ -39,14 +39,15 @@ export async function getCashFlowData(year: number) {
     'Oct',
     'Nov',
     'Dec',
-  ] as const;
+  ];
 
   lines.forEach((line: any) => {
     const date = new Date(line.ledger_entries.transaction_date);
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
+    if (!month) return;
 
-    if (month && !monthlyData[month]) {
+    if (!monthlyData[month]) {
       monthlyData[month] = { revenue: 0, expenses: 0 };
     }
 
@@ -54,13 +55,10 @@ export async function getCashFlowData(year: number) {
     const credit = Number(line.credit) || 0;
     const type = line.chart_of_accounts.type;
 
-    const monthData = month ? monthlyData[month] : undefined;
-    if (monthData) {
-      if (type === 'revenue') {
-        monthData.revenue += credit - debit;
-      } else if (type === 'expense') {
-        monthData.expenses += debit - credit;
-      }
+    if (type === 'revenue') {
+      monthlyData[month].revenue += credit - debit;
+    } else if (type === 'expense') {
+      monthlyData[month].expenses += debit - credit;
     }
   });
 

@@ -188,7 +188,11 @@ export async function getChartOfAccounts(): Promise<ChartOfAccount[]> {
 export async function createJournalEntry(
   date: string,
   description: string,
-  lines: { accountId: string; debit: number; credit: number }[],
+  lines: {
+    accountId: string | undefined;
+    debit: number | undefined;
+    credit: number | undefined;
+  }[],
 ) {
   const supabase = await createClient();
 
