@@ -20,8 +20,22 @@ describe('Cart Store', () => {
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
-    const itemA: any = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: 'a.png', quantity: 1 };
-    const itemB: any = { id: 'banana', productId: 'p2', title: 'Banana', price: 5, image: 'b.png', quantity: 1 };
+    const itemA = {
+      id: 'apple',
+      productId: 'p1',
+      title: 'Apple',
+      price: 10,
+      image: 'a.png',
+      quantity: 1,
+    } as unknown as import('@/services/cart').CartItem;
+    const itemB = {
+      id: 'banana',
+      productId: 'p2',
+      title: 'Banana',
+      price: 5,
+      image: 'b.png',
+      quantity: 1,
+    } as unknown as import('@/services/cart').CartItem;
 
     addItem(itemA);
     expect(useCartStore.getState().items).toEqual([itemA]);
@@ -33,8 +47,22 @@ describe('Cart Store', () => {
   it('should remove items from the cart', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    const itemA: any = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: 'a.png', quantity: 1 };
-    const itemB: any = { id: 'banana', productId: 'p2', title: 'Banana', price: 5, image: 'b.png', quantity: 1 };
+    const itemA = {
+      id: 'apple',
+      productId: 'p1',
+      title: 'Apple',
+      price: 10,
+      image: 'a.png',
+      quantity: 1,
+    } as unknown as import('@/services/cart').CartItem;
+    const itemB = {
+      id: 'banana',
+      productId: 'p2',
+      title: 'Banana',
+      price: 5,
+      image: 'b.png',
+      quantity: 1,
+    } as unknown as import('@/services/cart').CartItem;
 
     addItem(itemA);
     addItem(itemB);
@@ -46,8 +74,22 @@ describe('Cart Store', () => {
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    const itemA: any = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: 'a.png', quantity: 1 };
-    const itemB: any = { id: 'banana', productId: 'p2', title: 'Banana', price: 5, image: 'b.png', quantity: 1 };
+    const itemA = {
+      id: 'apple',
+      productId: 'p1',
+      title: 'Apple',
+      price: 10,
+      image: 'a.png',
+      quantity: 1,
+    } as unknown as import('@/services/cart').CartItem;
+    const itemB = {
+      id: 'banana',
+      productId: 'p2',
+      title: 'Banana',
+      price: 5,
+      image: 'b.png',
+      quantity: 1,
+    } as unknown as import('@/services/cart').CartItem;
 
     addItem(itemA);
     addItem(itemB);
@@ -60,8 +102,22 @@ describe('Cart Store', () => {
     // Current behavior documentation: removing an item removes ALL instances of that value
     const { addItem, removeItem } = useCartStore.getState();
 
-    const itemA: any = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: 'a.png', quantity: 1 };
-    const itemA2: any = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: 'a.png', quantity: 2 };
+    const itemA = {
+      id: 'apple',
+      productId: 'p1',
+      title: 'Apple',
+      price: 10,
+      image: 'a.png',
+      quantity: 1,
+    } as unknown as import('@/services/cart').CartItem;
+    const itemA2 = {
+      id: 'apple',
+      productId: 'p1',
+      title: 'Apple',
+      price: 10,
+      image: 'a.png',
+      quantity: 2,
+    } as unknown as import('@/services/cart').CartItem;
 
     addItem(itemA);
     addItem(itemA);
@@ -73,7 +129,14 @@ describe('Cart Store', () => {
 
   it('should persist state to localStorage', () => {
     const { addItem } = useCartStore.getState();
-    const itemP: any = { id: 'persistent-item', productId: 'p3', title: 'Persistent', price: 15, image: 'p.png', quantity: 1 };
+    const itemP = {
+      id: 'persistent-item',
+      productId: 'p3',
+      title: 'Persistent',
+      price: 15,
+      image: 'p.png',
+      quantity: 1,
+    } as unknown as import('@/services/cart').CartItem;
     addItem(itemP);
 
     const stored = localStorage.getItem('cart-storage');

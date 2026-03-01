@@ -1,7 +1,7 @@
 'use client';
 
-import type { Product } from '@/services/products';
 import { webEnv } from '@repo/env/web';
+import type { Product } from '@/services/products';
 
 /**
  * Injects Product JSON-LD Structured Data into the page head.
@@ -11,30 +11,45 @@ export default function ProductJsonLd({ product }: { product: Product }) {
   const baseUrl = webEnv.NEXT_PUBLIC_SITE_URL;
 
   // Create offers array if product has variants, otherwise single offer
-  const offers = product.variants && product.variants.length > 0
-    ? product.variants.map((variant) => ({
-        '@type': 'Offer',
-        priceCurrency: 'IQD',
-        price: variant.price,
-        itemCondition: product.condition === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
-        availability: variant.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-        sku: variant.sku,
-        url: `${baseUrl}/product/${product.slug}?variant=${variant.id}`,
-      }))
-    : {
-        '@type': 'Offer',
-        priceCurrency: 'IQD',
-        price: product.price,
-        itemCondition: product.condition === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
-        availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-        url: `${baseUrl}/product/${product.slug}`,
-      };
+  const offers =
+    product.variants && product.variants.length > 0
+      ? product.variants.map((variant) => ({
+          '@type': 'Offer',
+          priceCurrency: 'IQD',
+          price: variant.price,
+          itemCondition:
+            product.condition === 'new'
+              ? 'https://schema.org/NewCondition'
+              : 'https://schema.org/UsedCondition',
+          availability:
+            variant.stock > 0
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+          sku: variant.sku,
+          url: `${baseUrl}/product/${product.slug}?variant=${variant.id}`,
+        }))
+      : {
+          '@type': 'Offer',
+          priceCurrency: 'IQD',
+          price: product.price,
+          itemCondition:
+            product.condition === 'new'
+              ? 'https://schema.org/NewCondition'
+              : 'https://schema.org/UsedCondition',
+          availability:
+            product.stock > 0
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+          url: `${baseUrl}/product/${product.slug}`,
+        };
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.title,
-    image: product.image ? [product.image, ...(product.images || [])] : undefined,
+    image: product.image
+      ? [product.image, ...(product.images || [])]
+      : undefined,
     description: product.description,
     sku: product.id,
     brand: {
