@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getNumberFormatter } from '@repo/utils';
 import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
 import { Button, Input, Card } from '@repo/ui';
 import { useCartStore } from '@/stores/cart-store';
@@ -35,7 +36,7 @@ export function CheckoutFlow() {
     // Redirect or clear cart
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = getNumberFormatter('en-IQ').format(total);
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -260,7 +261,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {new Intl.NumberFormat('en-IQ').format(
+                    {getNumberFormatter('en-IQ').format(
                       item.price * item.quantity,
                     )}{' '}
                     IQD
