@@ -48,8 +48,11 @@ export function decodeHtmlEntities(text: string): string {
  * slugify("Hello World!") // -> "hello-world"
  */
 export function slugify(text: string): string {
+  if (!text) return '';
   return text
     .toString()
+    .normalize('NFD') // Decompose combined characters into base + diacritic
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
     .toLowerCase()
     .trim()
     .replace(/\s+/g, '-') // Replace spaces with -
