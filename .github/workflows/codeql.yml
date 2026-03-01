@@ -72,7 +72,7 @@ jobs:
         run: |
           npm_config_engine_strict=false pnpm install
           # 1. Restore Secrets (Generates google-services.json)
-          npm_config_engine_strict=false pnpm run secrets:restore --filter=web
+          cd apps/web && npm_config_engine_strict=false pnpm run secrets:restore && cd -
           
           # Sync capacitor and build mobile output
           mkdir -p apps/web/out
@@ -92,7 +92,7 @@ jobs:
         run: |
           npm_config_engine_strict=false pnpm install
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm_config_engine_strict=false pnpm run secrets:restore --filter=web
+          cd apps/web && npm_config_engine_strict=false pnpm run secrets:restore && cd -
 
           # Sync capacitor and build mobile output
           mkdir -p apps/web/out

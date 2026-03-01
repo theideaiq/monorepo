@@ -95,8 +95,8 @@ jobs:
       - name: Build
         env:
           SKIP_ENV_VALIDATION: 'true'
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.url' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy' }}
           SUPABASE_SERVICE_ROLE_KEY: dummy
           RESEND_API_KEY: dummy
           WAYL_SECRET_KEY: dummy
