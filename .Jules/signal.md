@@ -1,0 +1,3 @@
+## $(date +%Y-%m-%d) - Added Product Structured Data
+**Learning:** Product pages lacked JSON-LD Structured Data, missing a crucial opportunity for Rich Snippets (price, availability, reviews) in search engine results. This limits organic visibility for core business entities.
+**Action:** Implemented `ProductJsonLd` component injected into the Product detail page `apps/web/src/app/[locale]/product/[slug]/page.tsx` to explicitly map `schema.org/Product` and `schema.org/Offer` attributes. Next time, always ensure core entities (Products, Articles, Organizations) have corresponding Schema.org definitions integrated early in development.
