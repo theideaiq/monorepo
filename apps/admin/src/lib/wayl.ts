@@ -7,4 +7,5 @@ const adapter = new WaylAdapter({
   webhookSecret: adminEnv.WAYL_WEBHOOK_SECRET,
 });
 
-export const waylClient = adapter.client;
+// @ts-ignore - Next.js TS compiler complaining about monorepo package reference
+export const waylClient: any = adapter.client;

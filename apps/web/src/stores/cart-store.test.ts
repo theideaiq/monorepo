@@ -20,40 +20,54 @@ describe('Cart Store', () => {
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple']);
+    const apple = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: '' };
+    const banana = { id: 'banana', productId: 'p2', title: 'Banana', price: 20, image: '' };
 
-    addItem('banana');
-    expect(useCartStore.getState().items).toEqual(['apple', 'banana']);
+    // @ts-ignore - bypassing strict type for test
+    addItem(apple);
+    expect(useCartStore.getState().items).toEqual([{ ...apple, quantity: 1 }]);
+
+    // @ts-ignore - bypassing strict type for test
+    addItem(banana);
+    expect(useCartStore.getState().items).toEqual([{ ...apple, quantity: 1 }, { ...banana, quantity: 1 }]);
   });
 
   it('should remove items from the cart', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    const apple = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: '' };
+    const banana = { id: 'banana', productId: 'p2', title: 'Banana', price: 20, image: '' };
+
+    // @ts-ignore
+    addItem(apple);
+    // @ts-ignore
+    addItem(banana);
 
     removeItem('apple');
-    expect(useCartStore.getState().items).toEqual(['banana']);
+    expect(useCartStore.getState().items).toEqual([{ ...banana, quantity: 1 }]);
   });
 
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    const apple = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: '' };
+    // @ts-ignore
+    addItem(apple);
 
     clearCart();
     expect(useCartStore.getState().items).toEqual([]);
   });
 
-  it('should handle duplicate items correctly (removes all instances)', () => {
-    // Current behavior documentation: removing an item removes ALL instances of that value
+  it('should handle duplicate items correctly (increases quantity)', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple', 'apple']);
+    const apple = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: '' };
+
+    // @ts-ignore
+    addItem(apple);
+    // @ts-ignore
+    addItem(apple);
+    expect(useCartStore.getState().items).toEqual([{ ...apple, quantity: 2 }]);
 
     removeItem('apple');
     expect(useCartStore.getState().items).toEqual([]);
@@ -61,13 +75,15 @@ describe('Cart Store', () => {
 
   it('should persist state to localStorage', () => {
     const { addItem } = useCartStore.getState();
-    addItem('persistent-item');
+    const item = { id: 'persistent-item', productId: 'p1', title: 'Item', price: 10, image: '' };
+    // @ts-ignore
+    addItem(item);
 
-    const stored = localStorage.getItem('cart-storage');
+    const stored = localStorage.getItem('cart-storage-v2');
     expect(stored).toBeDefined();
     if (stored) {
       const parsed = JSON.parse(stored);
-      expect(parsed.state.items).toEqual(['persistent-item']);
+      expect(parsed.state.items).toEqual([{ ...item, quantity: 1 }]);
     }
   });
 });

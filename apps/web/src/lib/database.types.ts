@@ -35,7 +35,7 @@ export interface Database {
           // ... (omitting insert types for brevity as we primarily read in frontend)
         };
         Update: {
-          // ...
+          [key: string]: never;
         };
       };
       product_variants: {
