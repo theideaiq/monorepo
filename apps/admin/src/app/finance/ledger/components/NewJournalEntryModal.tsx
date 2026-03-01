@@ -28,10 +28,17 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (
+    index: number,
+    field: keyof (typeof lines)[number],
+    value: any,
+  ) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
-    setLines(newLines);
+    const current = newLines[index];
+    if (current) {
+      newLines[index] = { ...current, [field]: value };
+      setLines(newLines);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,9 +62,18 @@ export function NewJournalEntryModal({
       return;
     }
 
+    if (!date) {
+      toast.error('Date is required');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      await createJournalEntry(
+        date,
+        description,
+        lines as { accountId: string; debit: number; credit: number }[],
+      );
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
