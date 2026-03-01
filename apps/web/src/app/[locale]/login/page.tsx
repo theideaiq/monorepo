@@ -46,6 +46,7 @@ export default function AuthPage() {
         toast.success('Account created! Please check your email.');
         setMode('login');
       }
+    // biome-ignore lint/suspicious/noExplicitAny: error types vary widely based on supabase responses
     } catch (err: any) {
       toast.error(err.message);
     } finally {
