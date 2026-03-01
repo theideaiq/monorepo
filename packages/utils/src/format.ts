@@ -1,5 +1,40 @@
 // packages/utils/src/format.ts
 
+const numberFormatters = new Map<string, Intl.NumberFormat>();
+const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
+
+/**
+ * Gets a cached Intl.NumberFormat instance.
+ */
+export function getNumberFormatter(
+  locale: string,
+  options?: Intl.NumberFormatOptions,
+): Intl.NumberFormat {
+  const cacheKey = `${locale}-${JSON.stringify(options)}`;
+  let formatter = numberFormatters.get(cacheKey);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, options);
+    numberFormatters.set(cacheKey, formatter);
+  }
+  return formatter;
+}
+
+/**
+ * Gets a cached Intl.DateTimeFormat instance.
+ */
+export function getDateTimeFormatter(
+  locale: string,
+  options?: Intl.DateTimeFormatOptions,
+): Intl.DateTimeFormat {
+  const cacheKey = `${locale}-${JSON.stringify(options)}`;
+  let formatter = dateTimeFormatters.get(cacheKey);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, options);
+    dateTimeFormatters.set(cacheKey, formatter);
+  }
+  return formatter;
+}
+
 /**
  * Format a number as currency.
  *
@@ -19,7 +54,7 @@ export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
+  return getNumberFormatter('en-US', {
     style: 'currency',
     currency,
     // IQD doesn't typically use cents in this context
@@ -36,8 +71,9 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
+  return getDateTimeFormatter('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -61,7 +97,7 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
+  return getNumberFormatter('en-US', {
     notation: 'compact',
     maximumFractionDigits: 1,
   }).format(number);
