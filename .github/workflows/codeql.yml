@@ -70,12 +70,25 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          SUPABASE_SERVICE_ROLE_KEY: 'dummy'
+          RESEND_API_KEY: 'dummy'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.url'
+          WEB_APP_URL: 'https://dummy.url'
+          UPSTASH_REDIS_REST_URL: 'https://dummy.url'
+          TELEGRAM_BOT_TOKEN: 'dummy'
+          GEMINI_API_KEY: 'dummy'
+          UPSTASH_REDIS_REST_TOKEN: 'dummy'
+          WAYL_SECRET_KEY: 'dummy'
+          WAYL_WEBHOOK_SECRET: 'dummy'
+          ZAIN_SECRET_KEY: 'dummy'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm --filter web run secrets:restore
+          npm_config_engine_strict=false pnpm --filter web run secrets:restore
 
           # Capacitor sync
-          cd apps/web && pnpm exec cap sync android
+          cd apps/web && npm_config_engine_strict=false pnpm exec cap sync android
           
           # 2. Grant Permission
           chmod +x android/gradlew
@@ -88,12 +101,25 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          SUPABASE_SERVICE_ROLE_KEY: 'dummy'
+          RESEND_API_KEY: 'dummy'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.url'
+          WEB_APP_URL: 'https://dummy.url'
+          UPSTASH_REDIS_REST_URL: 'https://dummy.url'
+          TELEGRAM_BOT_TOKEN: 'dummy'
+          GEMINI_API_KEY: 'dummy'
+          UPSTASH_REDIS_REST_TOKEN: 'dummy'
+          WAYL_SECRET_KEY: 'dummy'
+          WAYL_WEBHOOK_SECRET: 'dummy'
+          ZAIN_SECRET_KEY: 'dummy'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --filter web run secrets:restore
+          npm_config_engine_strict=false pnpm --filter web run secrets:restore
 
           # Capacitor sync
-          cd apps/web && pnpm exec cap sync ios
+          cd apps/web && npm_config_engine_strict=false pnpm exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "ios/App/Podfile" ]; then
