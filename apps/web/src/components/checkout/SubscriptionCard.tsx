@@ -22,10 +22,14 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
-    <div
+    <button
+      type="button"
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onSelect?.();
+      }}
       className={`
-        relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
+        w-full text-left relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
         ${
           isSelected
             ? 'border-[#facc15] bg-[#facc15]/5'
@@ -66,6 +70,6 @@ export function SubscriptionCard({
           </div>
         ))}
       </div>
-    </div>
+    </button>
   );
 }
