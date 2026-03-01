@@ -26,7 +26,7 @@ export function SubscriptionCard({
       type="button"
       onClick={onSelect}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') onSelect();
+        if (e.key === 'Enter' || e.key === ' ') onSelect?.();
       }}
       className={`
         w-full text-left relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
