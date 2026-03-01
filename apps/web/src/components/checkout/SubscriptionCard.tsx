@@ -22,10 +22,11 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
-    <div
+    <button
+      type="button"
       onClick={onSelect}
       className={`
-        relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
+        w-full text-left relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900
         ${
           isSelected
             ? 'border-[#facc15] bg-[#facc15]/5'
@@ -66,6 +67,6 @@ export function SubscriptionCard({
           </div>
         ))}
       </div>
-    </div>
+    </button>
   );
 }
