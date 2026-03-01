@@ -1,0 +1,3 @@
+## 2024-05-24 - Quick Add buttons Hidden on Focus
+**Learning:** Buttons that are visually hidden via translate/opacity classes until a parent element is hovered (like "Quick Add" overlays on product cards) become invisible focus traps for keyboard users navigating via Tab.
+**Action:** Always pair `opacity-0` and `translate` hidden states with explicit `focus-visible:opacity-100` and `focus-visible:translate-y-0` classes, alongside a clear `focus-visible:ring-2` to ensure the button becomes fully visible and clearly outlined when focused by a keyboard user.
