@@ -1,5 +1,5 @@
-import { getNumberFormatter } from '@repo/utils';
 import { Card } from '@repo/ui';
+import { getNumberFormatter } from '@repo/utils';
 import { getEquityData } from '../actions';
 import { EquityPieChart, EquityTable } from './components/EquityComponents';
 

@@ -1,6 +1,5 @@
 'use client';
 
-import { getNumberFormatter } from '@repo/utils';
 import {
   Card,
   CardContent,
@@ -13,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@repo/ui';
+import { getNumberFormatter } from '@repo/utils';
 import {
   createColumnHelper,
   flexRender,

@@ -16,7 +16,9 @@ export function NewJournalEntryModal({
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [description, setDescription] = useState('');
-  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
+  const [lines, setLines] = useState<
+    Array<{ accountId: string; debit: number; credit: number }>
+  >([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,9 +30,13 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (
+    index: number,
+    field: 'accountId' | 'debit' | 'credit',
+    value: any,
+  ) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    newLines[index] = { ...newLines[index], [field]: value } as any;
     setLines(newLines);
   };
 
@@ -55,9 +61,19 @@ export function NewJournalEntryModal({
       return;
     }
 
+    if (!date || !description) {
+      toast.error('Date and description are required');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      // Cast lines to remove undefined possibility handled above
+      await createJournalEntry(
+        date as string,
+        description as string,
+        lines as Array<{ accountId: string; debit: number; credit: number }>,
+      );
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
