@@ -102,6 +102,7 @@ export function CartDrawer() {
                     {item.quantity}
                   </span>
                   <button
+                    type="button"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className="p-1 text-slate-400 hover:text-white"
                   >

@@ -44,16 +44,9 @@ export function CheckoutFlow() {
         <div
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
-          <div
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                setStep(1);
-              }
-            }}
-            className="p-6 flex items-center justify-between cursor-pointer"
+          <button
+            type="button"
+            className="w-full text-left p-6 flex items-center justify-between cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:ring-inset"
             onClick={() => setStep(1)}
           >
             <div className="flex items-center gap-4">
@@ -69,11 +62,11 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <span className="text-sm text-brand-yellow font-medium">
                 Edit
-              </button>
+              </span>
             )}
-          </div>
+          </button>
 
           <AnimatePresence>
             {step === 1 && (
