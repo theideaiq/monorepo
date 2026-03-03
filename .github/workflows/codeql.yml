@@ -65,13 +65,16 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
+          # 1. Install pnpm (required because github runner has no global pnpm by default in this context)
+          npm install -g pnpm@10.27.0
+
+          # 2. Restore Secrets (Generates google-services.json)
           pnpm --filter web run secrets:restore
 
-          # 2. Grant Permission
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
 
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -80,7 +83,10 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
+          # 1. Install pnpm
+          npm install -g pnpm@10.27.0
+
+          # 2. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --filter web run secrets:restore
 
           # 2. Determine Build Type (CocoaPods vs SPM)
