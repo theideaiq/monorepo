@@ -22,7 +22,15 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: layout flex container requires div
     <div
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          if (onSelect) onSelect();
+        }
+      }}
       onClick={onSelect}
       className={`
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
@@ -58,6 +66,7 @@ export function SubscriptionCard({
 
       <div className="space-y-3">
         {plan.features.map((feature, idx) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: static list
           <div key={idx} className="flex items-center gap-3">
             <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
               <Check size={12} strokeWidth={3} />
