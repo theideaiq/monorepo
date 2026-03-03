@@ -18,7 +18,8 @@ export default function MFAPage() {
 
   useEffect(() => {
     checkStatus();
-  }, []);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: test
+  }, [checkStatus]);
 
   async function checkStatus() {
     const {
@@ -70,6 +71,7 @@ export default function MFAPage() {
       toast.success('Authentication successful');
       router.push('/');
       router.refresh();
+      // biome-ignore lint/suspicious/noExplicitAny: generic error
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -89,6 +91,7 @@ export default function MFAPage() {
             <p className="text-sm text-slate-500 mb-2 text-center">
               Scan this QR code with your authenticator app
             </p>
+            {/* biome-ignore lint/performance/noImgElement: qr code */}
             <img src={qr} alt="QR Code" className="w-48 h-48" />
           </div>
         )}

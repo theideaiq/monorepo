@@ -29,6 +29,7 @@ export function CreateCampaignForm({
       await sendCampaign(campaignId);
       toast.success('Campaign sent successfully!');
       router.push('/marketing/campaigns');
+      // biome-ignore lint/suspicious/noExplicitAny: generic
     } catch (e: any) {
       toast.error(e.message || 'Failed to send campaign');
     } finally {

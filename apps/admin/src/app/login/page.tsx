@@ -5,7 +5,7 @@ import { Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { hasAdminAccess } from '@/lib/auth-checks';
+import { hasAdminAccess } from '@/lib/auth-utils';
 import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
@@ -68,6 +68,7 @@ export default function LoginPage() {
       toast.success('Welcome back, Admin');
       router.push('/');
       router.refresh();
+      // biome-ignore lint/suspicious/noExplicitAny: generic error
     } catch (error: any) {
       toast.error(error.message || 'Failed to login');
     } finally {

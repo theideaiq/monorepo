@@ -27,6 +27,7 @@ export function SegmentForm() {
       setName('');
       setRole('');
       setStatus('');
+      // biome-ignore lint/suspicious/noExplicitAny: generic
     } catch (e: any) {
       toast.error(e.message);
     }

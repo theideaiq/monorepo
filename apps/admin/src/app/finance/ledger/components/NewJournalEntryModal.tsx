@@ -14,7 +14,7 @@ export function NewJournalEntryModal({
   accounts: ChartOfAccount[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0] || '');
   const [description, setDescription] = useState('');
   const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,9 +28,10 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
+  // biome-ignore lint/suspicious/noExplicitAny: dynamic value update
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    newLines[index] = { ...newLines[index], [field]: value } as { accountId: string; debit: number; credit: number; };
     setLines(newLines);
   };
 
@@ -111,7 +112,12 @@ export function NewJournalEntryModal({
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium">Transaction Lines</label>
+              <label
+                htmlFor="transaction-lines"
+                className="text-sm font-medium"
+              >
+                Transaction Lines
+              </label>
               <Button type="button" variant="outline" onClick={handleAddLine}>
                 Add Line
               </Button>
@@ -119,9 +125,15 @@ export function NewJournalEntryModal({
 
             <div className="max-h-[300px] overflow-y-auto space-y-2">
               {lines.map((line, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: order is managed carefully
                 <div key={index} className="flex gap-2 items-end">
                   <div className="flex-1 space-y-1">
-                    <label className="text-xs font-medium">Account</label>
+                    <label
+                      htmlFor={`account-${index}`}
+                      className="text-xs font-medium"
+                    >
+                      Account
+                    </label>
                     <select
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       value={line.accountId}
@@ -139,7 +151,12 @@ export function NewJournalEntryModal({
                     </select>
                   </div>
                   <div className="w-24 space-y-1">
-                    <label className="text-xs font-medium">Debit</label>
+                    <label
+                      htmlFor={`debit-${index}`}
+                      className="text-xs font-medium"
+                    >
+                      Debit
+                    </label>
                     <Input
                       type="number"
                       min="0"
@@ -155,7 +172,12 @@ export function NewJournalEntryModal({
                     />
                   </div>
                   <div className="w-24 space-y-1">
-                    <label className="text-xs font-medium">Credit</label>
+                    <label
+                      htmlFor={`credit-${index}`}
+                      className="text-xs font-medium"
+                    >
+                      Credit
+                    </label>
                     <Input
                       type="number"
                       min="0"

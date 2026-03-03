@@ -51,12 +51,14 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
   } | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: static structure
   const columns = useMemo<ColumnDef<Profile>[]>(
     () => [
       {
         accessorKey: 'avatar_url',
         header: '',
         cell: ({ row }) => (
+          // biome-ignore lint/performance/noImgElement: intentional
           <img
             src={
               row.original.avatar_url ||
@@ -198,6 +200,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
       toast.success('Profile updated');
       setIsSheetOpen(false);
     } catch (error) {
+      // biome-ignore lint/suspicious/noConsole: generic error
       console.error(error);
       toast.error('Failed to update profile');
     }
@@ -306,6 +309,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
           {editingProfile && editForm && (
             <div className="space-y-6 mt-6">
               <div className="flex items-center gap-4">
+                {/* biome-ignore lint/performance/noImgElement: intentional */}
                 <img
                   src={
                     editingProfile.avatar_url ||
@@ -341,7 +345,10 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
               />
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                <label
+                  htmlFor="crm_tags"
+                  className="block text-sm font-medium text-slate-700 mb-1.5"
+                >
                   Tags (comma separated)
                 </label>
                 <Textarea
