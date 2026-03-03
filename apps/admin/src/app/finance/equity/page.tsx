@@ -1,7 +1,7 @@
 import { Card } from '@repo/ui';
+import { getNumberFormatter } from '@repo/utils';
 import { getEquityData } from '../actions';
 import { EquityPieChart, EquityTable } from './components/EquityComponents';
-import { getNumberFormatter } from '@repo/utils';
 
 export default async function EquityPage() {
   const { holders, rounds } = await getEquityData();

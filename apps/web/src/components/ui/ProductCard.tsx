@@ -1,11 +1,11 @@
 'use client';
 
+import { getNumberFormatter } from '@repo/utils';
 import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/services/products';
-import { getNumberFormatter } from '@repo/utils';
 
 interface ProductCardProps {
   product: Product;

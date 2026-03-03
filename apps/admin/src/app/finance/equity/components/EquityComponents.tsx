@@ -1,5 +1,6 @@
 'use client';
 
+import { getNumberFormatter } from '@repo/utils';
 import {
   Cell,
   Legend,
@@ -9,7 +10,6 @@ import {
   Tooltip,
 } from 'recharts';
 import type { EquityHolder } from '@/types/finance';
-import { getNumberFormatter } from '@repo/utils';
 
 export function EquityPieChart({ holders }: { holders: EquityHolder[] }) {
   // Group by name (or type if preferred, but prompt said "Pie Chart of ownership").
