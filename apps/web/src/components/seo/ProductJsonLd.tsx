@@ -1,7 +1,14 @@
+'use client';
+
+import { webEnv } from '@repo/env/web';
+import { usePathname } from 'next/navigation';
 import type { Product } from '@/services/products';
 
-export default function ProductJsonLd({ product, url }: { product: Product, url: string }) {
+export default function ProductJsonLd({ product }: { product: Product }) {
   const isAvailable = product.stock > 0;
+  const pathname = usePathname();
+  const baseUrl = webEnv.NEXT_PUBLIC_SITE_URL;
+  const currentUrl = `${baseUrl}${pathname}`;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -21,7 +28,7 @@ export default function ProductJsonLd({ product, url }: { product: Product, url:
       availability: isAvailable
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      url: url,
+      url: currentUrl,
     },
     ...(product.rating > 0 && {
       aggregateRating: {
