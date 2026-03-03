@@ -110,7 +110,9 @@ describe('staff actions - updateRole', () => {
     setupSupabaseMock(null);
 
     // Act & Assert
-    await expect(updateRole('target-id', 'admin')).rejects.toThrow('Authentication required: No user session found');
+    await expect(updateRole('target-id', 'admin')).rejects.toThrow(
+      'Authentication required: No user session found',
+    );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
   });

@@ -31,8 +31,11 @@ export function decodeHtmlEntities(text: string): string {
     // Handle numeric entities
     if (NUMERIC_ENTITY_REGEX.test(match)) {
       // Use fromCodePoint for Emoji/Astral support
-      const isHex = match[2].toLowerCase() === "x";
-      const num = Number.parseInt(match.slice(isHex ? 3 : 2, -1), isHex ? 16 : 10);
+      const isHex = match[2]?.toLowerCase() === 'x';
+      const num = Number.parseInt(
+        match.slice(isHex ? 3 : 2, -1),
+        isHex ? 16 : 10,
+      );
       return String.fromCodePoint(num);
     }
 
