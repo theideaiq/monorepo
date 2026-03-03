@@ -28,7 +28,7 @@ export function SubscriptionCard({
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          onSelect();
+          if (onSelect) onSelect();
         }
       }}
       onClick={onSelect}
