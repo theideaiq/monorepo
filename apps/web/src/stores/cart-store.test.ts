@@ -2,7 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type CartItem, useCartStore } from './cart-store';
 
 describe('Cart Store', () => {
-  const createMockItem = (id: string, price = 10): Omit<CartItem, 'quantity'> => ({
+  const createMockItem = (
+    id: string,
+    price = 10,
+  ): Omit<CartItem, 'quantity'> => ({
     id,
     productId: `prod-${id}`,
     title: `Product ${id}`,
