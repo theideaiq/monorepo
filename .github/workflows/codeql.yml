@@ -31,9 +31,9 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: none
+            build-mode: manual
           - language: swift
-            build-mode: none
+            build-mode: manual
 
     steps:
       - name: Checkout repository
@@ -43,12 +43,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 24.12.0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+          node-version: 20
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -71,7 +66,7 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm --filter web run secrets:restore
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -86,7 +81,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --filter web run secrets:restore
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
