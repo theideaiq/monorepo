@@ -1,5 +1,54 @@
 // packages/utils/src/format.ts
 
+const numberFormatterCache = new Map<string, Intl.NumberFormat>();
+const dateTimeFormatterCache = new Map<string, Intl.DateTimeFormat>();
+
+/**
+ * Get a cached Intl.NumberFormat instance.
+ * Recreating formatters on every render is expensive.
+ *
+ * @param locales - A string with a BCP 47 language tag, or an array of such strings.
+ * @param options - An object with some or all of the options of NumberFormat.
+ * @returns A cached Intl.NumberFormat instance.
+ */
+export function getNumberFormatter(
+  locales?: string | string[],
+  options?: Intl.NumberFormatOptions,
+): Intl.NumberFormat {
+  const cacheKey = `${locales}-${options ? JSON.stringify(options) : ''}`;
+  let formatter = numberFormatterCache.get(cacheKey);
+
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locales, options);
+    numberFormatterCache.set(cacheKey, formatter);
+  }
+
+  return formatter;
+}
+
+/**
+ * Get a cached Intl.DateTimeFormat instance.
+ * Recreating formatters on every render is expensive.
+ *
+ * @param locales - A string with a BCP 47 language tag, or an array of such strings.
+ * @param options - An object with some or all of the options of DateTimeFormat.
+ * @returns A cached Intl.DateTimeFormat instance.
+ */
+export function getDateTimeFormatter(
+  locales?: string | string[],
+  options?: Intl.DateTimeFormatOptions,
+): Intl.DateTimeFormat {
+  const cacheKey = `${locales}-${options ? JSON.stringify(options) : ''}`;
+  let formatter = dateTimeFormatterCache.get(cacheKey);
+
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locales, options);
+    dateTimeFormatterCache.set(cacheKey, formatter);
+  }
+
+  return formatter;
+}
+
 /**
  * Format a number as currency.
  *
@@ -19,7 +68,7 @@ export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
+  return getNumberFormatter('en-US', {
     style: 'currency',
     currency,
     // IQD doesn't typically use cents in this context
@@ -37,7 +86,7 @@ export function formatCurrency(
  */
 export function formatDate(date: string | Date): string {
   if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
+  return getDateTimeFormatter('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -61,7 +110,7 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
+  return getNumberFormatter('en-US', {
     notation: 'compact',
     maximumFractionDigits: 1,
   }).format(number);

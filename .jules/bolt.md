@@ -1,0 +1,3 @@
+## 2025-03-03 - Intl Formatter Caching Overlay
+**Learning:** Instantiating `Intl.NumberFormat` and `Intl.DateTimeFormat` directly within React component renders or loops incurs significant performance overhead due to high object allocation and CPU costs. In this codebase, these instantiations were scattered across frontend UI and admin dashboard files, potentially causing repeated initialization during re-renders.
+**Action:** Always wrap `Intl.NumberFormat` and `Intl.DateTimeFormat` instantiations in caching utilities (`getNumberFormatter` and `getDateTimeFormatter` from `@repo/utils`) using `Map` with stringified options as keys to reduce allocation and reuse instances.
