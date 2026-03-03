@@ -30,8 +30,11 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
-    setLines(newLines);
+    const targetLine = newLines[index];
+    if (targetLine) {
+      newLines[index] = { ...targetLine, [field]: value };
+      setLines(newLines);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,10 +57,11 @@ export function NewJournalEntryModal({
       toast.error('All lines must have an account selected');
       return;
     }
+    const safeDate = date as string;
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      await createJournalEntry(safeDate, description, lines);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
