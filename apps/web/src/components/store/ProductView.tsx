@@ -118,6 +118,7 @@ export function ProductView({ product }: ProductViewProps) {
             <button
               onClick={() => setSelectedImage(product.image)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
+              aria-label="Main image"
             >
               <Image
                 src={product.image}
@@ -131,6 +132,7 @@ export function ProductView({ product }: ProductViewProps) {
                 key={i}
                 onClick={() => setSelectedImage(img)}
                 className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
+                aria-label={`View ${i}`}
               >
                 <Image
                   src={img}
@@ -150,7 +152,10 @@ export function ProductView({ product }: ProductViewProps) {
               <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
                 {product.title}
               </h1>
-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
+              <button
+                className="text-slate-500 hover:text-brand-pink transition-colors"
+                aria-label="Add to wishlist"
+              >
                 <Heart size={28} />
               </button>
             </div>
