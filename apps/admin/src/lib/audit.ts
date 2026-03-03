@@ -16,7 +16,6 @@ import { createClient } from '@/lib/supabase/server';
 export async function logAdminAction(
   action: string,
   resource: string,
-  // biome-ignore lint/suspicious/noExplicitAny: details
   details?: Record<string, any>,
 ) {
   try {

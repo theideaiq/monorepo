@@ -31,7 +31,6 @@ export function LedgerTable({ data }: { data: LedgerTransaction[] }) {
           return (
             <div className="space-y-1 text-sm">
               {lines.map((line, idx) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: simple array render
                 <div key={idx} className="flex justify-between gap-4">
                   <span className="text-muted-foreground">
                     {line.account?.name}

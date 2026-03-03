@@ -18,7 +18,7 @@ export async function createMiddlewareClient(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => {
+          cookiesToSet.forEach(({ name, value, options }) => {
             request.cookies.set(name, value);
           });
           response = NextResponse.next({

@@ -68,7 +68,6 @@ export default function LoginPage() {
       toast.success('Welcome back, Admin');
       router.push('/');
       router.refresh();
-      // biome-ignore lint/suspicious/noExplicitAny: generic error
     } catch (error: any) {
       toast.error(error.message || 'Failed to login');
     } finally {

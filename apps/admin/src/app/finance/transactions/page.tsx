@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import { Badge, Button } from '@repo/ui';
 import { waylClient } from '@/lib/wayl';
 
@@ -34,7 +33,7 @@ export default async function TransactionsPage() {
                 </td>
               </tr>
             ) : (
-              transactions.map((tx: any) => (
+              transactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 font-mono text-white">
                     {tx.referenceId}
@@ -49,7 +48,7 @@ export default async function TransactionsPage() {
                           ? 'success'
                           : tx.status === 'Pending'
                             ? 'warning'
-                            : 'neutral'
+                            : 'secondary'
                       }
                     >
                       {tx.status}

@@ -31,7 +31,6 @@ export default function StaffManagement({
     try {
       await updateRole(userId, newRole);
       toast.success(`Role updated to ${newRole}`);
-      // biome-ignore lint/suspicious/noExplicitAny: error
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -45,7 +44,6 @@ export default function StaffManagement({
     try {
       await toggleBan(userId, !currentStatus);
       toast.success(currentStatus ? 'User unbanned' : 'User banned');
-      // biome-ignore lint/suspicious/noExplicitAny: error
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -61,7 +59,6 @@ export default function StaffManagement({
       toast.success('Staff added successfully');
       setIsAddModalOpen(false);
       setNewStaffEmail('');
-      // biome-ignore lint/suspicious/noExplicitAny: error
     } catch (error: any) {
       toast.error(error.message);
     } finally {

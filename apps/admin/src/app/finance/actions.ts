@@ -161,10 +161,8 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
     redirect('/login');
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: complex
   const transformedData = data?.map((entry: any) => ({
     ...entry,
-    // biome-ignore lint/suspicious/noExplicitAny: complex structure
     lines: entry.lines.map((line: any) => ({
       ...line,
       account: Array.isArray(line.account) ? line.account[0] : line.account,

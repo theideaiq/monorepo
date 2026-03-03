@@ -3,7 +3,6 @@ import { CashFlowChart } from './CashFlowChart';
 
 export async function CashFlowChartWrapper({
   startDate,
-  // biome-ignore lint/correctness/noUnusedFunctionParameters: unused prop
   endDate,
 }: {
   startDate: string;
