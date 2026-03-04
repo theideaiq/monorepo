@@ -17,8 +17,20 @@ describe('Cart Store', () => {
     expect(items).toEqual([]);
   });
 
-  const item1 = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: 'apple.png' };
-  const item2 = { id: 'banana', productId: 'p2', title: 'Banana', price: 15, image: 'banana.png' };
+  const item1 = {
+    id: 'apple',
+    productId: 'p1',
+    title: 'Apple',
+    price: 10,
+    image: 'apple.png',
+  };
+  const item2 = {
+    id: 'banana',
+    productId: 'p2',
+    title: 'Banana',
+    price: 15,
+    image: 'banana.png',
+  };
 
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
@@ -27,7 +39,10 @@ describe('Cart Store', () => {
     expect(useCartStore.getState().items).toEqual([{ ...item1, quantity: 1 }]);
 
     addItem(item2);
-    expect(useCartStore.getState().items).toEqual([{ ...item1, quantity: 1 }, { ...item2, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...item1, quantity: 1 },
+      { ...item2, quantity: 1 },
+    ]);
   });
 
   it('should remove items from the cart', () => {

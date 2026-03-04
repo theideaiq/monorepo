@@ -31,13 +31,13 @@ export function decodeHtmlEntities(text: string): string {
 
     // Handle numeric entities
     const numMatch = match.match(NUMERIC_ENTITY_REGEX);
-    if (numMatch) {
+    if (numMatch && numMatch[1]) {
       // Use fromCodePoint for Emoji/Astral support
       return String.fromCodePoint(Number.parseInt(numMatch[1], 10));
     }
 
     const hexMatch = match.match(HEX_ENTITY_REGEX);
-    if (hexMatch) {
+    if (hexMatch && hexMatch[1]) {
       return String.fromCodePoint(Number.parseInt(hexMatch[1], 16));
     }
 

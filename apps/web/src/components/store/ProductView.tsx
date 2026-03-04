@@ -127,7 +127,7 @@ export function ProductView({ product }: ProductViewProps) {
                 className="object-cover"
               />
             </button>
-            {product.images?.map((img) => (
+            {product.images?.map((img, i) => (
               <button
                 type="button"
                 key={img}
