@@ -1,0 +1,4 @@
+## 2025-02-14 - Prevent Open Redirect in Auth Callback
+**Vulnerability:** Open Redirect vulnerability in Next.js route handler (`apps/web/src/app/auth/callback/route.ts`). The `next` search parameter was used directly in `NextResponse.redirect()` without validation.
+**Learning:** Next.js redirect responses using unvalidated search parameters from URLs can be exploited to redirect users to malicious domains if they are tricked into clicking a crafted link (e.g., `?next=//evil.com`).
+**Prevention:** Always validate user-supplied redirect parameters to ensure they are safe relative paths before using them in `NextResponse.redirect()`. Use checks like `!next.startsWith('/') || next.startsWith('//')` to enforce local paths.
