@@ -1,4 +1,5 @@
 import { Card } from '@repo/ui';
+import { getNumberFormatter } from '@repo/utils';
 
 export function KPICard({
   title,
@@ -12,14 +13,14 @@ export function KPICard({
   const locale = 'en-US';
   let formattedValue: string;
   if (type === 'currency') {
-    formattedValue = new Intl.NumberFormat(locale, {
+    formattedValue = getNumberFormatter(locale, {
       style: 'currency',
       currency: 'USD',
     }).format(value);
   } else if (type === 'percent') {
     formattedValue = `${value.toFixed(1)}%`;
   } else {
-    formattedValue = new Intl.NumberFormat(locale).format(value);
+    formattedValue = getNumberFormatter(locale).format(value);
   }
 
   return (

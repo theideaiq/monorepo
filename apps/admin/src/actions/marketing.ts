@@ -6,7 +6,7 @@ import { requireAdmin } from '@/lib/auth-checks';
 
 export async function createSegment(
   name: string,
-  criteria: Record<string, any>,
+  criteria: Record<string, unknown>,
 ) {
   const { supabase } = await requireAdmin();
 
