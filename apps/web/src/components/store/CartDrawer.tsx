@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
+import { Button } from '@repo/ui';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Drawer } from '@/components/ui/Drawer';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
-import { Button } from '@repo/ui';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -71,7 +71,7 @@ export function CartDrawer() {
                 {item.attributes && (
                   <p className="text-xs text-slate-500 mt-1">
                     {Object.entries(item.attributes)
-                      .map(([k, v]) => `${v}`)
+                      .map(([_k, v]) => `${v}`)
                       .join(', ')}
                   </p>
                 )}
@@ -98,7 +98,10 @@ export function CartDrawer() {
                   >
                     <Minus size={14} />
                   </button>
-                  <span className="text-sm font-bold text-white w-4 text-center" aria-live="polite">
+                  <span
+                    className="text-sm font-bold text-white w-4 text-center"
+                    aria-live="polite"
+                  >
                     {item.quantity}
                   </span>
                   <button
