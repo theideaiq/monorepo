@@ -207,9 +207,9 @@ export default function PlusHome() {
               </div>
 
               <ul className="flex-1 space-y-4 mb-8">
-                {tier.features.map((feature, f) => (
+                {tier.features.map((feature) => (
                   <li
-                    key={f}
+                    key={feature}
                     className="flex items-start gap-3 text-sm text-slate-300"
                   >
                     <div
