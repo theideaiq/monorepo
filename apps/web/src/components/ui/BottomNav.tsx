@@ -1,11 +1,11 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { Home, Search, ShoppingCart, User } from 'lucide-react';
-import { useUIStore } from '@/stores/ui-store';
-import { useCartStore } from '@/stores/cart-store';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -37,7 +37,10 @@ export function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe md:hidden">
+    <nav
+      aria-label="Mobile Bottom Navigation"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe md:hidden"
+    >
       <div className="flex justify-around items-center h-16">
         {/* Standard Links */}
         <Link
@@ -87,6 +90,6 @@ export function BottomNav() {
           <span className="text-[10px] font-medium">Profile</span>
         </Link>
       </div>
-    </div>
+    </nav>
   );
 }
