@@ -82,7 +82,7 @@ export function LedgerTable({ data }: { data: LedgerTransaction[] }) {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows?.length ? (
+          {(table.getRowModel().rows?.length ?? 0) > 0 ? (
             table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
