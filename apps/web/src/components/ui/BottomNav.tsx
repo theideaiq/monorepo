@@ -37,7 +37,7 @@ export function BottomNav() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-t border-white/10 pb-safe md:hidden">
       <div className="flex justify-around items-center h-16">
         {/* Standard Links */}
         <Link
@@ -87,6 +87,6 @@ export function BottomNav() {
           <span className="text-[10px] font-medium">Profile</span>
         </Link>
       </div>
-    </div>
+    </nav>
   );
 }
