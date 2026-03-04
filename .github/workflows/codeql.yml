@@ -48,6 +48,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
+      - name: Install dependencies
+        if: matrix.build-mode == 'manual'
+        run: pnpm install --frozen-lockfile
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -67,10 +71,18 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.url'
+          WEB_APP_URL: 'https://dummy.url'
+          UPSTASH_REDIS_REST_URL: 'https://dummy.url'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
           pnpm --filter web run secrets:restore
           
+          # Build web to ensure Capacitor dependencies are generated
+          pnpm --filter web run build
+
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
@@ -82,9 +94,17 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.url'
+          WEB_APP_URL: 'https://dummy.url'
+          UPSTASH_REDIS_REST_URL: 'https://dummy.url'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --filter web run secrets:restore
+
+          # Build web to ensure Capacitor dependencies are generated
+          pnpm --filter web run build
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
