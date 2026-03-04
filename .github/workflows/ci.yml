@@ -54,6 +54,11 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.url'
           WEB_APP_URL: 'https://dummy.url'
           UPSTASH_REDIS_REST_URL: 'https://dummy.url'
+          TELEGRAM_BOT_TOKEN: 'dummy'
+          GEMINI_API_KEY: 'dummy'
+          SUPABASE_SERVICE_ROLE_KEY: 'dummy'
+          WAYL_SECRET_KEY: 'dummy'
+          WAYL_WEBHOOK_SECRET: 'dummy'
         run: pnpm turbo check typecheck test
 
   build:
@@ -103,6 +108,12 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.url'
           WEB_APP_URL: 'https://dummy.url'
           UPSTASH_REDIS_REST_URL: 'https://dummy.url'
+          TELEGRAM_BOT_TOKEN: 'dummy'
+          GEMINI_API_KEY: 'dummy'
+          SUPABASE_SERVICE_ROLE_KEY: 'dummy'
+          WAYL_SECRET_KEY: 'dummy'
+          WAYL_WEBHOOK_SECRET: 'dummy'
+          ZAIN_SECRET_KEY: 'dummy'
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm turbo build
 
