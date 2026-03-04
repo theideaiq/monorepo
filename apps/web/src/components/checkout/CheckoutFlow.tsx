@@ -45,9 +45,18 @@ export function CheckoutFlow() {
         <div
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
+          {/* biome-ignore lint/a11y/useSemanticElements: Semantic structure requires a div here for layout purposes */}
           <div
+            role="button"
+            tabIndex={0}
             className="p-6 flex items-center justify-between cursor-pointer"
             onClick={() => setStep(1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setStep(1);
+              }
+            }}
           >
             <div className="flex items-center gap-4">
               <div
@@ -62,7 +71,10 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <button
+                type="button"
+                className="text-sm text-brand-yellow font-medium"
+              >
                 Edit
               </button>
             )}
@@ -82,10 +94,14 @@ export function CheckoutFlow() {
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                        <label
+                          htmlFor="fullName"
+                          className="text-xs text-slate-400"
+                        >
                           Full Name
                         </label>
                         <input
+                          id="fullName"
                           required
                           value={address.fullName}
                           onChange={(e) =>
@@ -96,10 +112,14 @@ export function CheckoutFlow() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                        <label
+                          htmlFor="phone"
+                          className="text-xs text-slate-400"
+                        >
                           Phone Number
                         </label>
                         <input
+                          id="phone"
                           required
                           value={address.phone}
                           onChange={(e) =>
@@ -112,8 +132,11 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">City</label>
+                      <label htmlFor="city" className="text-xs text-slate-400">
+                        City
+                      </label>
                       <select
+                        id="city"
                         value={address.city}
                         onChange={(e) =>
                           setAddress({ ...address, city: e.target.value })
@@ -128,10 +151,14 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">
+                      <label
+                        htmlFor="street"
+                        className="text-xs text-slate-400"
+                      >
                         Address Details
                       </label>
                       <textarea
+                        id="street"
                         required
                         value={address.street}
                         onChange={(e) =>
