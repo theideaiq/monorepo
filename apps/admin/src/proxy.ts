@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { hasAdminAccess } from '@/lib/auth-checks';
-import { WINDOW_SIZE_MS } from '@/lib/rate-limit';
+import { hasAdminAccess } from '@/lib/auth-utils';
+import { WINDOW_SIZE_MS } from '@/lib/rate-limit-constants';
 import { createMiddlewareClient } from '@/lib/supabase/middleware';
 
 /**
