@@ -1,0 +1,3 @@
+## 2024-03-05 - Missing Structured Data for Products
+**Learning:** Next.js Server Components represent a missing Structured Data opportunity for core business entities like Products. If not added via Server Components, client-side rendering of large data objects can cause bundle bloat and hydration mismatches during SSR, rendering them effectively invisible to crawlers initially.
+**Action:** Implemented `ProductJsonLd` as a pure Server Component injected into the `ProductPage`, passing the server-fetched product data directly to generate Schema.org `Product` JSON-LD schema without adding it to the client bundle. Always construct canonical URLs server-side (e.g. via `webEnv.NEXT_PUBLIC_SITE_URL`) to prevent React hydration mismatches.
