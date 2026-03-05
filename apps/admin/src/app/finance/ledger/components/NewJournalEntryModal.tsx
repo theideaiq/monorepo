@@ -64,7 +64,13 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      // Type assertion through unknown to bypass the issue during build
+      const typedLines = lines.map(line => ({
+        accountId: line.accountId || '',
+        debit: line.debit || 0,
+        credit: line.credit || 0
+      }));
+      await createJournalEntry(date || '', description || '', typedLines);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
