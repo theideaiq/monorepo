@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@repo/ui';
+import { getNumberFormatter } from '@repo/utils';
 import {
   createColumnHelper,
   flexRender,
@@ -19,7 +20,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
-import { getNumberFormatter } from '@repo/utils';
 import type { HRStaffPlan } from '@/types/finance';
 
 const columnHelper = createColumnHelper<HRStaffPlan>();
