@@ -43,7 +43,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24.12.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        if: matrix.language == 'java-kotlin' || matrix.language == 'swift'
+        run: npm_config_engine_strict=false pnpm install --frozen-lockfile
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -64,14 +73,34 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          SUPABASE_SERVICE_ROLE_KEY: 'dummy'
+          RESEND_API_KEY: 'dummy'
+          GEMINI_API_KEY: 'dummy'
+          TELEGRAM_BOT_TOKEN: 'dummy'
+          WAYL_SECRET_KEY: 'dummy'
+          WAYL_WEBHOOK_SECRET: 'dummy'
+          ZAIN_SECRET_KEY: 'dummy'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.url'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: 'dummy'
+          WEB_APP_URL: 'https://dummy.url'
+          UPSTASH_REDIS_REST_URL: 'https://dummy.url'
+          UPSTASH_REDIS_REST_TOKEN: 'dummy'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 3. Create dummy output dir for cap sync
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+
+          # 4. Sync Capacitor
+          pnpm --filter web run build:mobile
+
+          # 5. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -79,9 +108,29 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          SUPABASE_SERVICE_ROLE_KEY: 'dummy'
+          RESEND_API_KEY: 'dummy'
+          GEMINI_API_KEY: 'dummy'
+          TELEGRAM_BOT_TOKEN: 'dummy'
+          WAYL_SECRET_KEY: 'dummy'
+          WAYL_WEBHOOK_SECRET: 'dummy'
+          ZAIN_SECRET_KEY: 'dummy'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.url'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: 'dummy'
+          WEB_APP_URL: 'https://dummy.url'
+          UPSTASH_REDIS_REST_URL: 'https://dummy.url'
+          UPSTASH_REDIS_REST_TOKEN: 'dummy'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
+
+          # 2. Create dummy output dir for cap sync
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+
+          # 3. Sync Capacitor
+          pnpm --filter web run build:mobile
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then

@@ -46,6 +46,8 @@ export async function getCashFlowData(year: number) {
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
 
+    if (!month) return;
+
     if (!monthlyData[month]) {
       monthlyData[month] = { revenue: 0, expenses: 0 };
     }
@@ -55,9 +57,9 @@ export async function getCashFlowData(year: number) {
     const type = line.chart_of_accounts.type;
 
     if (type === 'revenue') {
-      monthlyData[month].revenue += credit - debit;
+      monthlyData[month]!.revenue += credit - debit;
     } else if (type === 'expense') {
-      monthlyData[month].expenses += debit - credit;
+      monthlyData[month]!.expenses += debit - credit;
     }
   });
 
