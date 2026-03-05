@@ -43,7 +43,29 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24.12.0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -59,6 +81,21 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
+      - name: Set dummy environment variables for Next.js builds
+        run: |
+          echo "SKIP_ENV_VALIDATION=true" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://dummy.url" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=dummy" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=dummy" >> $GITHUB_ENV
+          echo "WAYL_SECRET_KEY=dummy" >> $GITHUB_ENV
+          echo "WAYL_WEBHOOK_SECRET=dummy" >> $GITHUB_ENV
+          echo "ZAIN_SECRET_KEY=dummy" >> $GITHUB_ENV
+          echo "RESEND_API_KEY=dummy" >> $GITHUB_ENV
+          echo "GEMINI_API_KEY=dummy" >> $GITHUB_ENV
+          echo "TELEGRAM_BOT_TOKEN=dummy" >> $GITHUB_ENV
+          echo "WEB_APP_URL=https://dummy.url" >> $GITHUB_ENV
+          echo "UPSTASH_REDIS_REST_URL=https://dummy.url" >> $GITHUB_ENV
+
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
@@ -66,7 +103,7 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -81,7 +118,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
