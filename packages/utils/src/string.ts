@@ -34,7 +34,9 @@ export function decodeHtmlEntities(text: string): string {
       const isHex = match.startsWith('&#x') || match.startsWith('&#X');
       const base = isHex ? 16 : 10;
       const sliceStart = isHex ? 3 : 2;
-      return String.fromCodePoint(Number.parseInt(match.slice(sliceStart, -1), base));
+      return String.fromCodePoint(
+        Number.parseInt(match.slice(sliceStart, -1), base),
+      );
     }
 
     return match;
