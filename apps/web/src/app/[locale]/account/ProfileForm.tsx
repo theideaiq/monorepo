@@ -5,6 +5,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateProfile } from '@/actions/account';
 
+// biome-ignore lint/suspicious/noExplicitAny: Temporary fix for rapid prototyping
 export default function ProfileForm({ profile }: { profile: any }) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
@@ -14,8 +15,9 @@ export default function ProfileForm({ profile }: { profile: any }) {
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e) {
+      const err = e as Error;
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }

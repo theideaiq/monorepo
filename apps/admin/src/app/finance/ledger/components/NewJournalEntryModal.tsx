@@ -16,7 +16,9 @@ export function NewJournalEntryModal({
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [description, setDescription] = useState('');
-  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
+  const [lines, setLines] = useState<{ accountId: string; debit: number; credit: number }[]>([
+    { accountId: '', debit: 0, credit: 0 },
+  ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,9 +30,14 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (index: number, field: 'accountId' | 'debit' | 'credit', value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    if (!newLines[index]) return;
+
+    // biome-ignore lint/suspicious/noExplicitAny: generic update handler
+    const line: any = { ...newLines[index] };
+    line[field] = value;
+    newLines[index] = line as { accountId: string; debit: number; credit: number };
     setLines(newLines);
   };
 
@@ -57,7 +64,13 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      // Type assertion through unknown to bypass the issue during build
+      const typedLines = lines.map(line => ({
+        accountId: line.accountId || '',
+        debit: line.debit || 0,
+        credit: line.credit || 0
+      }));
+      await createJournalEntry(date || '', description || '', typedLines);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
