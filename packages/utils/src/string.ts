@@ -30,7 +30,7 @@ export function decodeHtmlEntities(text: string): string {
 
     // Handle numeric entities
     const numericMatch = match.match(NUMERIC_ENTITY_REGEX);
-    if (numericMatch) {
+    if (numericMatch && numericMatch[1]) {
       // Use fromCodePoint for Emoji/Astral support
       const num = numericMatch[1].toLowerCase().startsWith('x')
         ? Number.parseInt(numericMatch[1].slice(1), 16)
