@@ -1,5 +1,42 @@
 // packages/utils/src/format.ts
 
+const numberFormatterCache = new Map<string, Intl.NumberFormat>();
+const dateTimeFormatterCache = new Map<string, Intl.DateTimeFormat>();
+
+/**
+ * Get a cached Intl.NumberFormat instance.
+ * Recreating Intl objects is expensive, so this caches them based on locale and options.
+ */
+export function getNumberFormatter(
+  locale: string = 'en-US',
+  options?: Intl.NumberFormatOptions,
+): Intl.NumberFormat {
+  const cacheKey = `${locale}-${options ? JSON.stringify(options) : ''}`;
+  let formatter = numberFormatterCache.get(cacheKey);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, options);
+    numberFormatterCache.set(cacheKey, formatter);
+  }
+  return formatter;
+}
+
+/**
+ * Get a cached Intl.DateTimeFormat instance.
+ * Recreating Intl objects is expensive, so this caches them based on locale and options.
+ */
+export function getDateTimeFormatter(
+  locale: string = 'en-US',
+  options?: Intl.DateTimeFormatOptions,
+): Intl.DateTimeFormat {
+  const cacheKey = `${locale}-${options ? JSON.stringify(options) : ''}`;
+  let formatter = dateTimeFormatterCache.get(cacheKey);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, options);
+    dateTimeFormatterCache.set(cacheKey, formatter);
+  }
+  return formatter;
+}
+
 /**
  * Format a number as currency.
  *
@@ -19,7 +56,7 @@ export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
+  return getNumberFormatter('en-US', {
     style: 'currency',
     currency,
     // IQD doesn't typically use cents in this context
@@ -37,7 +74,7 @@ export function formatCurrency(
  */
 export function formatDate(date: string | Date): string {
   if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
+  return getDateTimeFormatter('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -61,7 +98,7 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
+  return getNumberFormatter('en-US', {
     notation: 'compact',
     maximumFractionDigits: 1,
   }).format(number);

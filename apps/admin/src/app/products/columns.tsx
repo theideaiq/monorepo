@@ -1,6 +1,7 @@
 'use client';
 
 import type { ColumnDef } from '@tanstack/react-table';
+import { getNumberFormatter } from '@repo/utils';
 
 // Define the shape of our Product data.
 export type Product = {
@@ -33,7 +34,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('price'));
       // Format as currency (IQD usually doesn't use decimals much, but staying safe)
-      const formatted = new Intl.NumberFormat('en-IQ', {
+      const formatted = getNumberFormatter('en-IQ', {
         style: 'currency',
         currency: 'IQD',
         minimumFractionDigits: 0,

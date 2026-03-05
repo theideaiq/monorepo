@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
+import { getNumberFormatter } from '@repo/utils';
 import type { EquityHolder } from '@/types/finance';
 
 export function EquityPieChart({ holders }: { holders: EquityHolder[] }) {
@@ -92,7 +93,7 @@ export function EquityTable({ holders }: { holders: EquityHolder[] }) {
               <td className="p-4 align-middle font-medium">{holder.name}</td>
               <td className="p-4 align-middle capitalize">{holder.type}</td>
               <td className="p-4 align-middle text-right">
-                {new Intl.NumberFormat('en-US').format(holder.shares_owned)}
+                {getNumberFormatter('en-US').format(holder.shares_owned)}
               </td>
               <td className="p-4 align-middle">
                 {new Date(holder.vesting_start_date).toLocaleDateString()}
