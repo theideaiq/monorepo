@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { WaylAdapter } from './adapters/wayl';
 import { ZainDirectAdapter } from './adapters/zain';
-import { PaymentFactory, type FactoryConfig } from './factory';
+import { type FactoryConfig, PaymentFactory } from './factory';
 
 describe('PaymentFactory', () => {
   const mockConfig: FactoryConfig = {
