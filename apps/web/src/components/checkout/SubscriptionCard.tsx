@@ -22,8 +22,17 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: This is a complex card component that contains multiple elements
     <div
+      role="button"
+      tabIndex={0}
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
       className={`
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
         ${

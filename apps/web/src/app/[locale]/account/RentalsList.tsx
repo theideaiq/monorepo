@@ -20,6 +20,7 @@ export default function RentalsList({ rentals }: { rentals: any[] }) {
         >
           <div className="flex items-center gap-4 mb-4">
             {rental.product?.image_url && (
+              // biome-ignore lint/performance/noImgElement: user uploaded image from remote URL
               <img
                 src={rental.product.image_url}
                 alt={rental.product.name}
