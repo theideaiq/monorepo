@@ -1,0 +1,3 @@
+## 2024-03-06 - [Product JSON-LD Server Component]
+**Learning:** JSON-LD structured data components (like `ProductJsonLd`) must be implemented as pure Server Components. Using `'use client'` bloats the bundle by serializing large data objects into the RSC payload and can cause hydration mismatches when canonical URLs rely on server-side environment variables.
+**Action:** Always create JSON-LD components as pure server components and construct canonical URLs server-side (e.g., via `webEnv.NEXT_PUBLIC_SITE_URL`) when injecting schema data into pages.
