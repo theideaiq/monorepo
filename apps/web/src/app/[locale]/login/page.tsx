@@ -1,12 +1,13 @@
 'use client';
 
-import { Button } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Button, Input } from '@repo/ui';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -211,7 +212,6 @@ export default function AuthPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <button
-                type="button"
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"
               >

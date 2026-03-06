@@ -1,3 +1,3 @@
-## 2025-02-14 - .env.example matching Zod schemas
-Insight: Missing environment variables in `.env.example` files cause validation errors during local setup and builds.
-Rule: The `.env.example` files across applications (e.g., `apps/web`) must strictly mirror their corresponding Zod schemas defined in `packages/env` to ensure a smooth onboarding process and prevent validation errors during local setup/builds.
+## 2025-02-14 - Regex Documentation
+Insight: Complex regex patterns for HTML entity decoding were missing explanations, making it hard for developers to understand what they match (e.g., named vs numeric vs hex entities).
+Rule: Complex regex patterns must always be accompanied by a comment breakdown explaining each part of the pattern to prevent tribal knowledge.
