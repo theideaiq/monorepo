@@ -1,15 +1,9 @@
 import { webEnv } from '@repo/env/web';
 import type { Product } from '@/services/products';
 
-export default function ProductJsonLd({
-  product,
-  locale,
-}: {
-  product: Product;
-  locale: string;
-}) {
+export default function ProductJsonLd({ product }: { product: Product }) {
   const baseUrl = webEnv.NEXT_PUBLIC_SITE_URL;
-  const canonicalUrl = `${baseUrl}/${locale}/product/${product.slug}`;
+  const canonicalUrl = `${baseUrl}/product/${product.slug}`;
 
   const jsonLd = {
     '@context': 'https://schema.org',

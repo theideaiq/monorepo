@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const { slug, locale } = await params;
+  const { slug } = await params;
   const product = await getProductBySlug(slug);
 
   if (!product) {
@@ -37,7 +37,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <>
-      <ProductJsonLd product={product} locale={locale} />
+      <ProductJsonLd product={product} />
       <div className="container mx-auto px-4 py-8 md:py-16 pt-24">
         <ProductView product={product} />
       </div>
