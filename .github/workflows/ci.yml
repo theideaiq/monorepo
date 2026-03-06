@@ -63,6 +63,8 @@ jobs:
           WEB_APP_URL: 'https://dummy.url'
           RESEND_API_KEY: 'dummy'
           ZAIN_SECRET_KEY: 'dummy'
+          NEXT_PUBLIC_APP_ENV: 'local'
+          NODE_ENV: 'production'
         run: pnpm turbo check typecheck test
 
   build:
@@ -121,6 +123,8 @@ jobs:
           WEB_APP_URL: 'https://dummy.url'
           RESEND_API_KEY: 'dummy'
           ZAIN_SECRET_KEY: 'dummy'
+          NEXT_PUBLIC_APP_ENV: 'local'
+          NODE_ENV: 'production'
         run: pnpm turbo build
 
   e2e:
@@ -182,4 +186,6 @@ jobs:
           WEB_APP_URL: 'https://dummy.url'
           RESEND_API_KEY: 'dummy'
           ZAIN_SECRET_KEY: 'dummy'
+          NEXT_PUBLIC_APP_ENV: 'local'
+          NODE_ENV: 'production'
         run: pnpm turbo e2e
