@@ -6,6 +6,11 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
+    env: {
+      SKIP_ENV_VALIDATION: 'true',
+      NEXT_PUBLIC_SUPABASE_URL: 'https://dummy.supabase.co',
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: 'dummy-anon-key',
+    },
     globals: true,
     alias: {
       '@': path.resolve(__dirname, './src'),
