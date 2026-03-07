@@ -55,7 +55,7 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
 
           {/* Links Columns */}
           {columns.map((col) => (
-            <nav aria-label={col.title} key={col.title}>
+            <div key={col.title}>
               <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-xs">
                 {col.title}
               </h4>
@@ -71,7 +71,7 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
                   </li>
                 ))}
               </ul>
-            </nav>
+            </div>
           ))}
         </div>
 
@@ -81,7 +81,7 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
             {copyright.text} &copy; {new Date().getFullYear()}{' '}
             {copyright.rights}
           </p>
-          <nav aria-label="Legal" className="flex gap-6">
+          <div className="flex gap-6">
             <span>{copyright.location}</span>
             <Link href="/legal/privacy" className="hover:text-white">
               Privacy
@@ -89,7 +89,7 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
             <Link href="/legal/terms" className="hover:text-white">
               Terms
             </Link>
-          </nav>
+          </div>
         </div>
       </div>
     </footer>
