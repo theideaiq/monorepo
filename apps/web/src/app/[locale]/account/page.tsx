@@ -27,13 +27,20 @@ export default async function AccountPage({ params }: Props) {
     .single();
 
   // Rentals
-  const { data: rentals } = await supabase
+  const { data: rentalsData } = await supabase
     .from('rentals')
     .select('*, product:products(name, image_url)')
     .eq('user_id', user.id)
     .eq('status', 'active');
 
   const t = await getTranslations('Account');
+
+  // Note: the joined column from supabase returns as an array in TS definitions sometimes,
+  // or a single object. We cast to any so we can safely pass it to RentalsList.
+  // Actually, we can use the explicit cast.
+  const rentals = rentalsData as unknown as React.ComponentProps<
+    typeof RentalsList
+  >['rentals'];
 
   return (
     <div className="container mx-auto py-12 px-4 space-y-12">
