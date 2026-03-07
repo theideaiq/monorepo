@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessibility pattern for icon-only buttons
+**Learning:** Found a recurring pattern in the app's components (navbars, drawers, bottom navigation) where icon-only buttons lacked explicit accessible names, causing screen readers to read the icon file name or nothing at all, creating a frustrating experience.
+**Action:** Always ensure any `<button>` with no textual child element contains an explicit `aria-label` attribute (e.g., `aria-label="Toggle cart"`) so screen readers can announce its purpose. Also added `type="button"` to prevent accidental form submissions if placed inside forms.
