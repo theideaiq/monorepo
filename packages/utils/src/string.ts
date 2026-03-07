@@ -53,7 +53,7 @@ export function decodeHtmlEntities(text: string): string {
  * @example
  * slugify("Hello World!") // -> "hello-world"
  */
-export function slugify(text: string): string {
+export function slugify(text: string | undefined | null): string {
   if (!text) return '';
 
   return text

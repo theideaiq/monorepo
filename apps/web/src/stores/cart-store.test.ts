@@ -37,7 +37,9 @@ describe('Cart Store', () => {
     const { addItem } = useCartStore.getState();
 
     addItem(mockItem1);
-    expect(useCartStore.getState().items).toEqual([{ ...mockItem1, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockItem1, quantity: 1 },
+    ]);
 
     addItem(mockItem2);
     expect(useCartStore.getState().items).toEqual([
@@ -53,7 +55,9 @@ describe('Cart Store', () => {
     addItem(mockItem2);
 
     removeItem(mockItem1.id);
-    expect(useCartStore.getState().items).toEqual([{ ...mockItem2, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockItem2, quantity: 1 },
+    ]);
   });
 
   it('should clear the cart', () => {
@@ -71,7 +75,9 @@ describe('Cart Store', () => {
 
     addItem(mockItem1);
     addItem(mockItem1);
-    expect(useCartStore.getState().items).toEqual([{ ...mockItem1, quantity: 2 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockItem1, quantity: 2 },
+    ]);
 
     removeItem(mockItem1.id);
     expect(useCartStore.getState().items).toEqual([]);
