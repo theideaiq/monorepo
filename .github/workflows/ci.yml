@@ -50,6 +50,8 @@ jobs:
 
       - name: Run Quality Checks
         env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.url' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy' }}
           SKIP_ENV_VALIDATION: 'true'
         run: pnpm turbo check typecheck test
 
