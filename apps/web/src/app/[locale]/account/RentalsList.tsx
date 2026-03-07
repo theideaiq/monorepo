@@ -2,8 +2,22 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import type { Database } from '@/lib/database.types';
 
-export default function RentalsList({ rentals }: { rentals: any[] }) {
+type RentalRow = Database['public']['Tables']['rentals']['Row'];
+type ProductData = {
+  name: string;
+  image_url: string | null;
+};
+export type RentalWithProduct = RentalRow & {
+  product?: ProductData | null;
+};
+
+export default function RentalsList({
+  rentals,
+}: {
+  rentals: RentalWithProduct[];
+}) {
   const t = useTranslations('Account');
   const [selectedRental, setSelectedRental] = useState<string | null>(null);
 

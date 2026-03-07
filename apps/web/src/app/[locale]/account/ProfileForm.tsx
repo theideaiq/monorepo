@@ -4,8 +4,15 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateProfile } from '@/actions/account';
+import type { Database } from '@/lib/database.types';
 
-export default function ProfileForm({ profile }: { profile: any }) {
+type ProfileRow = Database['public']['Tables']['profiles']['Row'];
+
+export default function ProfileForm({
+  profile,
+}: {
+  profile: ProfileRow | null;
+}) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
 
@@ -14,8 +21,12 @@ export default function ProfileForm({ profile }: { profile: any }) {
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      } else {
+        toast.error('An unexpected error occurred');
+      }
     } finally {
       setLoading(false);
     }
