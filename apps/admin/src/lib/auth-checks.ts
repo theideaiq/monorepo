@@ -1,5 +1,6 @@
 import { ROLES } from '@/lib/constants';
-import { createClient } from '@/lib/supabase/server';
+import { createClient as createBrowserClient } from '@/lib/supabase/client';
+import { createClient as createServerClient } from '@/lib/supabase/server';
 
 /**
  * Checks if the provided role has administrative privileges (Admin or Superadmin).
@@ -29,7 +30,7 @@ export function hasAdminAccess(role?: string | null): boolean {
  * @throws Error if unauthorized.
  */
 export async function requireAdmin() {
-  const supabase = await createClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -63,7 +64,7 @@ export async function requireAdmin() {
  * @throws Error if unauthorized.
  */
 export async function requireSuperAdmin() {
-  const supabase = await createClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
