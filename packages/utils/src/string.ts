@@ -12,7 +12,7 @@ const ENTITIES: Record<string, string> = {
 };
 
 // Pre-compiled regex for performance (avoids recompilation in loops).
-const ENTITY_REGEX = /&[a-zA-Z0-9#]+;/g;
+const ENTITY_REGEX = /&[a-zA-Z0-9#xX]+;/g;
 const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
 
 /**
@@ -34,6 +34,12 @@ export function decodeHtmlEntities(text: string): string {
       return String.fromCodePoint(Number.parseInt(match.slice(2, -1), 10));
     }
 
+    // Handle hex entities
+    const hexMatch = /^&#[xX]([0-9a-fA-F]+);$/.exec(match);
+    if (hexMatch && hexMatch[1]) {
+        return String.fromCodePoint(Number.parseInt(hexMatch[1], 16));
+    }
+
     return match;
   });
 }
@@ -48,6 +54,7 @@ export function decodeHtmlEntities(text: string): string {
  * slugify("Hello World!") // -> "hello-world"
  */
 export function slugify(text: string): string {
+  if (!text) return '';
   return text
     .toString()
     .toLowerCase()
