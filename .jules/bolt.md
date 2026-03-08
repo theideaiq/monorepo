@@ -1,0 +1,3 @@
+## 2024-05-09 - Caching Intl.NumberFormat
+**Learning:** The frontend React components were suffering from unnecessary performance overhead due to expensive `Intl.NumberFormat` instantiations happening inline during render cycles, particularly in lists like `ProductCard`.
+**Action:** Always import and reuse cached formatter instances from `apps/web/src/lib/formatters.ts` instead of instantiating new `Intl.NumberFormat` instances inline.
