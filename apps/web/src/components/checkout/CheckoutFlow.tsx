@@ -1,12 +1,11 @@
 'use client';
 
-import { Button, Card, Input } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { iqdFormatter } from '@/lib/formatters';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
+import { Button, Input, Card } from '@repo/ui';
 import { useCartStore } from '@/stores/cart-store';
+import { toast } from 'react-hot-toast';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -36,7 +35,7 @@ export function CheckoutFlow() {
     // Redirect or clear cart
   };
 
-  const formattedTotal = iqdFormatter.format(total);
+  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -261,7 +260,10 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {iqdFormatter.format(item.price * item.quantity)} IQD
+                    {new Intl.NumberFormat('en-IQ').format(
+                      item.price * item.quantity,
+                    )}{' '}
+                    IQD
                   </div>
                 </div>
               </div>
