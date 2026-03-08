@@ -14,9 +14,9 @@ export function NewJournalEntryModal({
   accounts: ChartOfAccount[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [description, setDescription] = useState('');
-  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
+  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0] as string);
+  const [description, setDescription] = useState<string>('');
+  const [lines, setLines] = useState<{ accountId: string; debit: number; credit: number }[]>([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,9 +28,10 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (index: number, field: 'accountId' | 'debit' | 'credit', value: string | number) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    const currentLine = newLines[index] || { accountId: '', debit: 0, credit: 0 };
+    newLines[index] = { ...currentLine, [field]: value };
     setLines(newLines);
   };
 
