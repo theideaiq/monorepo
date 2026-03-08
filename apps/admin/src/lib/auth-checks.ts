@@ -1,5 +1,4 @@
 import { ROLES } from '@/lib/constants';
-import { createClient } from '@/lib/supabase/server';
 
 /**
  * Checks if the provided role has administrative privileges (Admin or Superadmin).
@@ -29,6 +28,8 @@ export function hasAdminAccess(role?: string | null): boolean {
  * @throws Error if unauthorized.
  */
 export async function requireAdmin() {
+  // Use dynamic import so `next/headers` is only imported when `requireAdmin` is called (which is always on the server)
+  const { createClient } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   const {
     data: { user },
@@ -63,6 +64,7 @@ export async function requireAdmin() {
  * @throws Error if unauthorized.
  */
 export async function requireSuperAdmin() {
+  const { createClient } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   const {
     data: { user },
