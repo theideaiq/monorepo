@@ -1,0 +1,3 @@
+## 2024-05-18 - Co-location of Domain-Specific Components
+Structure: Domain-specific components MUST be co-located within their feature's directory instead of a generic UI folder.
+Rule: If a component is highly specific to a feature domain (e.g. `ProductCard` importing `Product` type and business logic), it must be placed within its feature's directory (e.g. `apps/web/src/components/store/`) rather than the global `apps/web/src/components/ui/` folder.
