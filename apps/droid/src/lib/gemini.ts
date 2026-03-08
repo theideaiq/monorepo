@@ -4,7 +4,7 @@ import { droidEnv as env } from '@repo/env/droid';
 import { PaymentFactory } from '@repo/payment-engine';
 import { supabase } from './supabase';
 
-const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+const ai = env.GEMINI_API_KEY ? new GoogleGenAI({ apiKey: env.GEMINI_API_KEY }) : null as any;
 
 const MAX_PRODUCT_SEARCH_RESULTS = 5;
 

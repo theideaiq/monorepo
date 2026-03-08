@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, Input } from '@repo/ui';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import { useEffect, useState } from 'react';
@@ -89,7 +90,7 @@ export default function MFAPage() {
             <p className="text-sm text-slate-500 mb-2 text-center">
               Scan this QR code with your authenticator app
             </p>
-            <img src={qr} alt="QR Code" className="w-48 h-48" />
+            <Image src={qr} alt="QR Code" width={192} height={192} className="w-48 h-48" />
           </div>
         )}
 
