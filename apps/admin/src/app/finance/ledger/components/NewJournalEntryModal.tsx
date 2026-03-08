@@ -14,9 +14,9 @@ export function NewJournalEntryModal({
   accounts: ChartOfAccount[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0] as string);
-  const [description, setDescription] = useState<string>('');
-  const [lines, setLines] = useState<{ accountId: string; debit: number; credit: number }[]>([{ accountId: '', debit: 0, credit: 0 }]);
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [description, setDescription] = useState('');
+  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,9 +28,9 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: keyof typeof lines[0], value: any) => {
+  const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value } as any;
+    newLines[index] = { ...newLines[index], [field]: value };
     setLines(newLines);
   };
 
@@ -57,19 +57,7 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      // Create a new array that specifically matches the required type.
-      // This avoids the "Type 'undefined' is not assignable to type 'string'"
-      // issue from the partial lines state (which had accountId?: string)
-      // Map to ensure all expected properties are present and strictly typed
-      await createJournalEntry(
-        date || '',
-        description || '',
-        lines.map((l) => ({
-          accountId: String(l.accountId),
-          debit: Number(l.debit) || 0,
-          credit: Number(l.credit) || 0,
-        })) as { accountId: string; debit: number; credit: number }[]
-      );
+      await createJournalEntry(date, description, lines);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
