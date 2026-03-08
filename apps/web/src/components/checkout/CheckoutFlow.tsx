@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@repo/ui';
+import { Button, Card, Input } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
@@ -45,13 +45,6 @@ export function CheckoutFlow() {
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
           <div
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setStep(1);
-              }
-            }}
             className="p-6 flex items-center justify-between cursor-pointer"
             onClick={() => setStep(1)}
           >
@@ -68,10 +61,7 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button
-                type="button"
-                className="text-sm text-brand-yellow font-medium"
-              >
+              <button className="text-sm text-brand-yellow font-medium">
                 Edit
               </button>
             )}
@@ -91,14 +81,10 @@ export function CheckoutFlow() {
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label
-                          htmlFor="fullName"
-                          className="text-xs text-slate-400"
-                        >
+                        <label className="text-xs text-slate-400">
                           Full Name
                         </label>
                         <input
-                          id="fullName"
                           required
                           value={address.fullName}
                           onChange={(e) =>
@@ -109,14 +95,10 @@ export function CheckoutFlow() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <label
-                          htmlFor="phone"
-                          className="text-xs text-slate-400"
-                        >
+                        <label className="text-xs text-slate-400">
                           Phone Number
                         </label>
                         <input
-                          id="phone"
                           required
                           value={address.phone}
                           onChange={(e) =>
@@ -129,11 +111,8 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label htmlFor="city" className="text-xs text-slate-400">
-                        City
-                      </label>
+                      <label className="text-xs text-slate-400">City</label>
                       <select
-                        id="city"
                         value={address.city}
                         onChange={(e) =>
                           setAddress({ ...address, city: e.target.value })
@@ -148,14 +127,10 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label
-                        htmlFor="details"
-                        className="text-xs text-slate-400"
-                      >
+                      <label className="text-xs text-slate-400">
                         Address Details
                       </label>
                       <textarea
-                        id="details"
                         required
                         value={address.street}
                         onChange={(e) =>
@@ -271,11 +246,9 @@ export function CheckoutFlow() {
             {items.map((item) => (
               <div key={item.id} className="flex gap-3">
                 <div className="w-12 h-12 bg-black rounded flex-shrink-0 relative overflow-hidden">
-                  <Image
+                  <img
                     src={item.image}
                     alt={item.title}
-                    width={48}
-                    height={48}
                     className="object-cover w-full h-full"
                   />
                   <div className="absolute bottom-0 right-0 bg-brand-yellow text-brand-dark text-[10px] font-bold px-1 rounded-tl">

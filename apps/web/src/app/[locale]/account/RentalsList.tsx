@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -21,11 +20,9 @@ export default function RentalsList({ rentals }: { rentals: any[] }) {
         >
           <div className="flex items-center gap-4 mb-4">
             {rental.product?.image_url && (
-              <Image
+              <img
                 src={rental.product.image_url}
                 alt={rental.product.name}
-                width={64}
-                height={64}
                 className="w-16 h-16 object-cover rounded"
               />
             )}

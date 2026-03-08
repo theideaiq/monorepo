@@ -1,10 +1,9 @@
-import { randomUUID } from 'node:crypto';
 import { type Content, GoogleGenAI, type Tool } from '@google/genai';
 import { droidEnv as env } from '@repo/env/droid';
 import { PaymentFactory } from '@repo/payment-engine';
 import { supabase } from './supabase';
 
-const ai = env.GEMINI_API_KEY ? new GoogleGenAI({ apiKey: env.GEMINI_API_KEY }) : null as any;
+const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 
 const MAX_PRODUCT_SEARCH_RESULTS = 5;
 
@@ -150,7 +149,7 @@ async function createPaymentLink(amount: number, itemDescription: string) {
     });
 
     const session = await provider.createCheckoutSession({
-      referenceId: `droid-${randomUUID()}`,
+      referenceId: `droid-${Date.now()}-${Math.random().toString(36).substring(7)}`,
       amount,
       currency: 'IQD',
       description: itemDescription,
