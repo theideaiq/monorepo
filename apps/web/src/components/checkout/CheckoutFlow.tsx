@@ -1,11 +1,11 @@
 'use client';
 
+import { Button } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
-import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '@/stores/cart-store';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -44,8 +44,9 @@ export function CheckoutFlow() {
         <div
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
-          <div
-            className="p-6 flex items-center justify-between cursor-pointer"
+          <button
+            type="button"
+            className="w-full text-left p-6 flex items-center justify-between cursor-pointer"
             onClick={() => setStep(1)}
           >
             <div className="flex items-center gap-4">
@@ -61,11 +62,9 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
-                Edit
-              </button>
+              <div className="text-sm text-brand-yellow font-medium">Edit</div>
             )}
-          </div>
+          </button>
 
           <AnimatePresence>
             {step === 1 && (
@@ -80,10 +79,10 @@ export function CheckoutFlow() {
                     className="space-y-4 mt-4"
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                      <label className="space-y-1 block">
+                        <span className="text-xs text-slate-400 block">
                           Full Name
-                        </label>
+                        </span>
                         <input
                           required
                           value={address.fullName}
@@ -93,11 +92,11 @@ export function CheckoutFlow() {
                           className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
                           placeholder="John Doe"
                         />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                      </label>
+                      <label className="space-y-1 block">
+                        <span className="text-xs text-slate-400 block">
                           Phone Number
-                        </label>
+                        </span>
                         <input
                           required
                           value={address.phone}
@@ -107,11 +106,11 @@ export function CheckoutFlow() {
                           className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
                           placeholder="07xxxxxxxxx"
                         />
-                      </div>
+                      </label>
                     </div>
 
-                    <div className="space-y-1">
-                      <label className="text-xs text-slate-400">City</label>
+                    <label className="space-y-1 block">
+                      <span className="text-xs text-slate-400 block">City</span>
                       <select
                         value={address.city}
                         onChange={(e) =>
@@ -124,12 +123,12 @@ export function CheckoutFlow() {
                         <option value="Erbil">Erbil</option>
                         {/* ... other cities */}
                       </select>
-                    </div>
+                    </label>
 
-                    <div className="space-y-1">
-                      <label className="text-xs text-slate-400">
+                    <label className="space-y-1 block">
+                      <span className="text-xs text-slate-400 block">
                         Address Details
-                      </label>
+                      </span>
                       <textarea
                         required
                         value={address.street}
@@ -139,7 +138,7 @@ export function CheckoutFlow() {
                         className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none min-h-[100px]"
                         placeholder="Street name, Building No., Landmark..."
                       />
-                    </div>
+                    </label>
 
                     <div className="flex justify-end pt-4">
                       <Button

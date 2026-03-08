@@ -1,13 +1,12 @@
 'use client';
 
-import { Button, Input } from '@repo/ui';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Button } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -127,10 +126,10 @@ export default function AuthPage() {
                   exit={{ opacity: 0, height: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="mb-4">
-                    <label className="text-sm text-slate-400 mb-1 block">
+                  <label className="mb-4 block">
+                    <span className="text-sm text-slate-400 mb-1 block">
                       Full Name
-                    </label>
+                    </span>
                     <div className="relative">
                       <User
                         className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
@@ -145,15 +144,15 @@ export default function AuthPage() {
                         placeholder="John Doe"
                       />
                     </div>
-                  </div>
+                  </label>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+            <label className="block">
+              <span className="text-sm text-slate-400 mb-1 block">
                 Email Address
-              </label>
+              </span>
               <div className="relative">
                 <Mail
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
@@ -168,12 +167,12 @@ export default function AuthPage() {
                   placeholder="name@example.com"
                 />
               </div>
-            </div>
+            </label>
 
-            <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+            <label className="block">
+              <span className="text-sm text-slate-400 mb-1 block">
                 Password
-              </label>
+              </span>
               <div className="relative">
                 <Lock
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
@@ -188,7 +187,7 @@ export default function AuthPage() {
                   placeholder="••••••••"
                 />
               </div>
-            </div>
+            </label>
 
             <Button
               type="submit"
@@ -212,6 +211,7 @@ export default function AuthPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <button
+                type="button"
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"
               >
