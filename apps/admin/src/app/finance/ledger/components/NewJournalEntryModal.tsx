@@ -30,8 +30,7 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    const updatedLine = { ...newLines[index], [field]: value };
-    newLines[index] = updatedLine as { accountId: string; debit: number; credit: number };
+    newLines[index] = { ...newLines[index], [field]: value };
     setLines(newLines);
   };
 
@@ -58,9 +57,7 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      const entryDate = date || new Date().toISOString().split('T')[0];
-      if (!entryDate) throw new Error("Missing date");
-      await createJournalEntry(entryDate, description || '', lines as any);
+      await createJournalEntry(date, description, lines);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);

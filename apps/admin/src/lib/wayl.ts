@@ -7,4 +7,4 @@ const adapter = new WaylAdapter({
   webhookSecret: adminEnv.WAYL_WEBHOOK_SECRET,
 });
 
-export const waylClient = adapter.client as any;
+export const waylClient = adapter.client;
