@@ -6,12 +6,12 @@ import { motion } from 'framer-motion';
 import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { ProductCard } from '@/components/ui/ProductCard';
 import { useProducts } from '@/hooks/queries/use-products';
-import type { Product } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
+import { ProductCard } from '@/components/ui/ProductCard';
 import { useUIStore } from '@/stores/ui-store';
+import { toast } from 'react-hot-toast';
+import type { Product } from '@/services/products';
 
 const CATEGORIES = [
   { name: 'Gaming', icon: <Gamepad2 size={18} /> },
