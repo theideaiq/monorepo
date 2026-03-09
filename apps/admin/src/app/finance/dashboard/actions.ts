@@ -54,10 +54,13 @@ export async function getCashFlowData(year: number) {
     const credit = Number(line.credit) || 0;
     const type = line.chart_of_accounts.type;
 
-    if (type === 'revenue') {
-      monthlyData[month].revenue += credit - debit;
-    } else if (type === 'expense') {
-      monthlyData[month].expenses += debit - credit;
+    const data = monthlyData[month];
+    if (data) {
+      if (type === 'revenue') {
+        data.revenue += credit - debit;
+      } else if (type === 'expense') {
+        data.expenses += debit - credit;
+      }
     }
   });
 

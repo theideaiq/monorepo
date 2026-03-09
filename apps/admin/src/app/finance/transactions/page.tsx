@@ -1,6 +1,8 @@
 import { Badge, Button } from '@repo/ui';
 import { waylClient } from '@/lib/wayl';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TransactionsPage() {
   let transactions: any[] = [];
   try {
