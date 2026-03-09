@@ -1,0 +1,3 @@
+## 2024-05-18 - Strict Persona Scope over Global Test Health
+**Learning:** When making micro-UX improvements (e.g., in `apps/web`), running the global test suite (`pnpm test`) might reveal pre-existing test failures in other packages. Fixing these unrelated tests violates the strict `< 50 lines` and `ONE micro-UX improvement` boundary of the Palette persona and will cause the PR to be rejected for scope creep.
+**Action:** Ignore global test failures that are outside the scope of the modified files. Run tests specifically for the modified workspace (e.g., `pnpm --filter web test`) rather than the entire monorepo to avoid the temptation of fixing out-of-scope issues.
