@@ -76,10 +76,14 @@ jobs:
           # 1. Restore Secrets (Generates google-services.json)
           pnpm --filter web run secrets:restore
           
-          # 2. Grant Permission
+          # 2. Sync Capacitor
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter web exec cap sync
+
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -91,7 +95,11 @@ jobs:
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --filter web run secrets:restore
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 2. Sync Capacitor
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter web exec cap sync
+
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
