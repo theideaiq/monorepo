@@ -1,8 +1,8 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import Image from 'next/image';
+import { Link } from '@/i18n/navigation';
 
 interface WebFooterProps {
   brand: {
@@ -46,10 +46,26 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
               entertainment, and services to Baghdad and beyond.
             </p>
             <div className="flex gap-4">
-              <SocialLink href="#" icon={<Instagram size={18} />} />
-              <SocialLink href="#" icon={<Twitter size={18} />} />
-              <SocialLink href="#" icon={<Linkedin size={18} />} />
-              <SocialLink href="#" icon={<Facebook size={18} />} />
+              <SocialLink
+                href="#"
+                icon={<Instagram size={18} />}
+                ariaLabel="Instagram"
+              />
+              <SocialLink
+                href="#"
+                icon={<Twitter size={18} />}
+                ariaLabel="Twitter"
+              />
+              <SocialLink
+                href="#"
+                icon={<Linkedin size={18} />}
+                ariaLabel="LinkedIn"
+              />
+              <SocialLink
+                href="#"
+                icon={<Facebook size={18} />}
+                ariaLabel="Facebook"
+              />
             </div>
           </div>
 
@@ -96,10 +112,19 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
   );
 }
 
-function SocialLink({ href, icon }: { href: string; icon: React.ReactNode }) {
+function SocialLink({
+  href,
+  icon,
+  ariaLabel,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  ariaLabel: string;
+}) {
   return (
     <a
       href={href}
+      aria-label={ariaLabel}
       className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-yellow hover:text-black transition-all"
     >
       {icon}
