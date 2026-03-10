@@ -1,5 +1,5 @@
 import { Logger } from '@repo/utils';
-import type { Database } from '@/lib/database.types';
+import type { Database, Json } from '@/lib/database.types';
 import { createClient } from '@/lib/supabase/client';
 
 type DBProduct = Database['public']['Tables']['products']['Row'] & {

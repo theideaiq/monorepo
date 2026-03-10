@@ -48,6 +48,13 @@ export function CheckoutFlow() {
           <div
             className="p-6 flex items-center justify-between cursor-pointer"
             onClick={() => setStep(1)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                setStep(1);
+              }
+            }}
+            role="button"
+            tabIndex={0}
           >
             <div className="flex items-center gap-4">
               <div
@@ -62,7 +69,10 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <button
+                type="button"
+                className="text-sm text-brand-yellow font-medium"
+              >
                 Edit
               </button>
             )}

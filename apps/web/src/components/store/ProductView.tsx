@@ -117,6 +117,7 @@ export function ProductView({ product }: ProductViewProps) {
           {/* Thumbnails (Scrollable on mobile) */}
           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
             <button
+              type="button"
               onClick={() => setSelectedImage(product.image)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
             >

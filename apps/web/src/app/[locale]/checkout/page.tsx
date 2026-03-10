@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
 import { createClient } from '@/lib/supabase/server';
 
