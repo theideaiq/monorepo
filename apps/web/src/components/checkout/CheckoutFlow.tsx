@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, Input } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
