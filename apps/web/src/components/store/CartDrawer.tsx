@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@repo/ui';
-import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
+import Image from 'next/image';
 import { Drawer } from '@/components/ui/Drawer';
-import { formatIQD } from '@/lib/formatters';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
+import { Button } from '@repo/ui';
+import { formatIQD } from '@/lib/formatters';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -72,7 +72,7 @@ export function CartDrawer() {
                 {item.attributes && (
                   <p className="text-xs text-slate-500 mt-1">
                     {Object.entries(item.attributes)
-                      .map(([_k, v]) => `${v}`)
+                      .map(([k, v]) => `${v}`)
                       .join(', ')}
                   </p>
                 )}
