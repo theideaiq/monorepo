@@ -48,3 +48,11 @@ export const adminEnv = createEnv({
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
 });
+
+if (process.env.SKIP_ENV_VALIDATION === 'true') {
+  process.env.RESEND_API_KEY = process.env.RESEND_API_KEY || 'dummy';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'dummy';
+  process.env.WAYL_SECRET_KEY = process.env.WAYL_SECRET_KEY || 'dummy';
+  process.env.WAYL_WEBHOOK_SECRET = process.env.WAYL_WEBHOOK_SECRET || 'dummy';
+  process.env.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
+}

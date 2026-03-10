@@ -86,4 +86,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withAnalyzer(withNextIntl(nextConfig));
+const config = withAnalyzer(withNextIntl(nextConfig));
+
+export default config;
