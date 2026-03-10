@@ -1,7 +1,7 @@
-import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
-import { getTranslations } from 'next-intl/server';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
+import { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
+import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 
 export const metadata: Metadata = {
