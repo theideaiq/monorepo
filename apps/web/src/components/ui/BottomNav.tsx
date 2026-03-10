@@ -17,7 +17,7 @@ export function BottomNav() {
     setMounted(true);
   }, []);
 
-  const navItems = [
+  const _navItems = [
     { label: 'Home', icon: Home, href: '/' },
     { label: 'Browse', icon: Search, href: '/megastore' },
     // Cart is special
