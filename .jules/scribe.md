@@ -1,0 +1,3 @@
+## 2026-03-11 - Strict Parity for Environment Validation Schemas
+Insight: Environment validation schemas (e.g., Zod configurations in `packages/env`) and their corresponding `.env.example` files frequently fall out of sync, leading to missing keys and developer setup friction.
+Rule: Always ensure strict parity between the required fields in Zod environment validation schemas and the corresponding `.env.example` files across all applications to prevent setup and build failures.
