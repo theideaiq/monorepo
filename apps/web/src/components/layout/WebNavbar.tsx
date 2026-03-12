@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { useUIStore } from '@/stores/ui-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 interface WebNavbarProps {
   navItems: { label: string; href: string }[];
@@ -87,14 +87,16 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
         <div className="flex items-center gap-4">
           <button
             type="button"
-            className="text-white hover:text-brand-yellow transition-colors"
+            aria-label="Search"
+            className="text-white hover:text-brand-yellow transition-colors focus-visible:ring-2 focus-visible:ring-brand-yellow rounded-full outline-none p-1"
           >
             <Search size={20} />
           </button>
 
           <Link
             href="/account"
-            className="hidden md:block text-white hover:text-brand-yellow transition-colors"
+            aria-label="Account"
+            className="hidden md:block text-white hover:text-brand-yellow transition-colors focus-visible:ring-2 focus-visible:ring-brand-yellow rounded-full outline-none p-1"
           >
             <User size={20} />
           </Link>
@@ -102,7 +104,8 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
           <button
             type="button"
             onClick={toggleCart}
-            className="relative text-white hover:text-brand-yellow transition-colors"
+            aria-label="Open cart"
+            className="relative text-white hover:text-brand-yellow transition-colors focus-visible:ring-2 focus-visible:ring-brand-yellow rounded-full outline-none p-1"
           >
             <ShoppingCart size={20} />
             {mounted && cartItems.length > 0 && (
