@@ -37,9 +37,8 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
-      # Required for 'npm run secrets:restore'
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -74,7 +73,7 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm --filter web run secrets:restore
+          pnpm --filter web exec npm run secrets:restore
           
           # 2. Sync Capacitor
           mkdir -p apps/web/out && touch apps/web/out/index.html
@@ -93,7 +92,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --filter web run secrets:restore
+          pnpm --filter web exec npm run secrets:restore
           
           # 2. Sync Capacitor
           mkdir -p apps/web/out && touch apps/web/out/index.html
