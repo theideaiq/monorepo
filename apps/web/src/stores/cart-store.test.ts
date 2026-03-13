@@ -17,7 +17,7 @@ describe('Cart Store', () => {
     productId: 'prod_apple',
     title: 'Apple',
     price: 1.5,
-    image: '/apple.jpg'
+    image: '/apple.jpg',
   };
 
   const banana = {
@@ -25,7 +25,7 @@ describe('Cart Store', () => {
     productId: 'prod_banana',
     title: 'Banana',
     price: 0.8,
-    image: '/banana.jpg'
+    image: '/banana.jpg',
   };
 
   it('should start with an empty cart', () => {
@@ -43,7 +43,7 @@ describe('Cart Store', () => {
     addItem(banana);
     expect(useCartStore.getState().items).toEqual([
       { ...apple, quantity: 1 },
-      { ...banana, quantity: 1 }
+      { ...banana, quantity: 1 },
     ]);
   });
 
