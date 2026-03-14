@@ -84,6 +84,8 @@ export function CartDrawer() {
                 <button
                   onClick={() => removeItem(item.id)}
                   className="text-slate-500 hover:text-red-500 p-1"
+                  aria-label="Remove item"
+                  title="Remove item"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -91,8 +93,10 @@ export function CartDrawer() {
                 <div className="flex items-center gap-3 bg-black/20 rounded-lg p-1">
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
+                    className="p-1 text-slate-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={item.quantity <= 1}
+                    aria-label="Decrease quantity"
+                    title={item.quantity <= 1 ? "Minimum quantity reached" : "Decrease quantity"}
                   >
                     <Minus size={14} />
                   </button>
@@ -102,6 +106,8 @@ export function CartDrawer() {
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className="p-1 text-slate-400 hover:text-white"
+                    aria-label="Increase quantity"
+                    title="Increase quantity"
                   >
                     <Plus size={14} />
                   </button>
