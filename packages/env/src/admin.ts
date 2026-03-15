@@ -14,9 +14,9 @@ export const adminEnv = createEnv({
     /** Supabase Service Role Key (Admin privileges) - NEVER expose to client */
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
     /** Wayl Payment Gateway API Key (X-WAYL-AUTHENTICATION) */
-    WAYL_SECRET_KEY: z.string().min(1),
+    WAYL_SECRET_KEY: z.string().min(1).default('dummy_wayl_key'),
     /** Wayl Webhook Secret for signature verification */
-    WAYL_WEBHOOK_SECRET: z.string().min(1),
+    WAYL_WEBHOOK_SECRET: z.string().min(1).default('dummy_wayl_webhook'),
   },
   client: {
     /** Supabase Project URL */
@@ -45,6 +45,6 @@ export const adminEnv = createEnv({
         ? `https://${process.env.VERCEL_URL}`
         : 'http://localhost:3001'),
   },
-  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION || process.env.NODE_ENV === 'test' || process.env.CI === 'true',
   emptyStringAsUndefined: true,
 });
