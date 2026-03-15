@@ -149,7 +149,7 @@ async function createPaymentLink(amount: number, itemDescription: string) {
     });
 
     const session = await provider.createCheckoutSession({
-      referenceId: `droid-${Date.now()}-${crypto.randomUUID()}`,
+      referenceId: `droid-${Date.now()}-${globalThis.crypto.randomUUID().replace(/-/g, '').substring(0, 16)}`,
       amount,
       currency: 'IQD',
       description: itemDescription,
