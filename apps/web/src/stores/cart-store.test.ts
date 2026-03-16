@@ -2,8 +2,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCartStore } from './cart-store';
 
 describe('Cart Store', () => {
-  const appleItem = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: 'apple.png' };
-  const bananaItem = { id: 'banana', productId: 'p2', title: 'Banana', price: 20, image: 'banana.png' };
+  const appleItem = {
+    id: 'apple',
+    productId: 'p1',
+    title: 'Apple',
+    price: 10,
+    image: 'apple.png',
+  };
+  const bananaItem = {
+    id: 'banana',
+    productId: 'p2',
+    title: 'Banana',
+    price: 20,
+    image: 'banana.png',
+  };
 
   beforeEach(() => {
     useCartStore.setState({ items: [], total: 0 });
@@ -24,7 +36,9 @@ describe('Cart Store', () => {
     const { addItem } = useCartStore.getState();
 
     addItem(appleItem);
-    expect(useCartStore.getState().items).toEqual([{ ...appleItem, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...appleItem, quantity: 1 },
+    ]);
     expect(useCartStore.getState().total).toBe(10);
 
     addItem(bananaItem);
@@ -42,7 +56,9 @@ describe('Cart Store', () => {
     addItem(bananaItem);
 
     removeItem('apple');
-    expect(useCartStore.getState().items).toEqual([{ ...bananaItem, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...bananaItem, quantity: 1 },
+    ]);
     expect(useCartStore.getState().total).toBe(20);
   });
 
@@ -62,7 +78,9 @@ describe('Cart Store', () => {
 
     addItem(appleItem);
     addItem(appleItem);
-    expect(useCartStore.getState().items).toEqual([{ ...appleItem, quantity: 2 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...appleItem, quantity: 2 },
+    ]);
     expect(useCartStore.getState().total).toBe(20);
 
     removeItem('apple');
@@ -88,7 +106,9 @@ describe('Cart Store', () => {
     expect(stored).toBeDefined();
     if (stored) {
       const parsed = JSON.parse(stored);
-      expect(parsed.state.items).toEqual([{ ...appleItem, id: 'persistent-item', quantity: 1 }]);
+      expect(parsed.state.items).toEqual([
+        { ...appleItem, id: 'persistent-item', quantity: 1 },
+      ]);
     }
   });
 });
