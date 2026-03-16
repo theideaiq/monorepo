@@ -1,0 +1,3 @@
+## 2024-03-16 - Prevent repeated Intl.NumberFormat instantiation in React components
+**Learning:** Re-instantiating `Intl.NumberFormat` repeatedly in render loops (or lists) is a known performance bottleneck. Browsers spend unnecessary CPU time setting up locale-specific formatting rules.
+**Action:** Extract `Intl.NumberFormat` to a reusable module or cache it outside of render cycles. If part of a central library (e.g. `packages/utils/src/format.ts`), we should avoid creating a `new Intl.NumberFormat` inside the helper function on every invocation, and instead create a cached formatter instances for supported currencies/locales.

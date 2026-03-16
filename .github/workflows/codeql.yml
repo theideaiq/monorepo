@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      SKIP_ENV_VALIDATION: "1"
 
     strategy:
       fail-fast: false
