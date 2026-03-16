@@ -27,8 +27,8 @@ export function SegmentForm() {
       setName('');
       setRole('');
       setStatus('');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      toast.error((e as Error).message);
     }
   };
 
