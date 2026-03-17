@@ -1,5 +1,26 @@
 // packages/utils/src/format.ts
 
+// Cached formatters for performance
+const FORMATTERS: Record<string, Intl.NumberFormat> = {
+  USD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }),
+  IQD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'IQD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }),
+  IQD_NO_SYMBOL: new Intl.NumberFormat('en-IQ', {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }),
+};
+
 /**
  * Format a number as currency.
  *
@@ -8,7 +29,7 @@
  * - USD defaults to standard 2 decimal places.
  *
  * @param amount - The numerical amount to format.
- * @param currency - The currency code (default: 'USD'). Supported: 'USD', 'IQD'.
+ * @param currency - The currency code (default: 'USD'). Supported: 'USD', 'IQD', 'IQD_NO_SYMBOL'.
  * @returns The formatted currency string.
  *
  * @example
@@ -17,15 +38,9 @@
  */
 export function formatCurrency(
   amount: number,
-  currency: 'USD' | 'IQD' = 'USD',
+  currency: 'USD' | 'IQD' | 'IQD_NO_SYMBOL' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  return FORMATTERS[currency].format(amount);
 }
 
 /**
