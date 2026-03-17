@@ -40,7 +40,7 @@ export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' | 'IQD_NO_SYMBOL' = 'USD',
 ): string {
-  return FORMATTERS[currency].format(amount);
+  return FORMATTERS[currency]?.format(amount) ?? `${amount}`;
 }
 
 /**
