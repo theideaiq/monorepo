@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { logAdminAction } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { requireAdmin } from '@/lib/auth-checks';
 import type {
   ChartOfAccount,
   EquityHolder,
@@ -52,7 +52,7 @@ export async function getProfitAndLoss(
   startDate: string,
   endDate: string,
 ): Promise<PnLResult> {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
 
   // Fetch all ledger lines within the date range, joined with accounts
   const { data: lines, error } = await supabase
@@ -131,7 +131,7 @@ export async function getProfitAndLoss(
 // --- LEDGER ---
 
 export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
 
   // Optimized selection to avoid fetching unused fields (e.g. metadata blobs)
   const { data, error } = await supabase.from('ledger_entries').select(`
@@ -172,7 +172,7 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
   return (transformedData || []) as LedgerTransaction[];
 }
 export async function getChartOfAccounts(): Promise<ChartOfAccount[]> {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
   const { data, error } = await supabase
     .from('chart_of_accounts')
     .select('id, code, name, type, category')
@@ -190,7 +190,7 @@ export async function createJournalEntry(
   description: string,
   lines: { accountId: string; debit: number; credit: number }[],
 ) {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
 
   // Start a transaction implicitly by doing sequential inserts?
   // Supabase/PostgREST doesn't support complex transactions in one call easily without RPC.
@@ -244,7 +244,7 @@ export async function createJournalEntry(
 // --- STAFF ---
 
 export async function getStaff(): Promise<HRStaffPlan[]> {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
   const { data, error } = await supabase
     .from('hr_staff_plan')
     .select(
@@ -256,7 +256,7 @@ export async function getStaff(): Promise<HRStaffPlan[]> {
 }
 
 export async function updateStaff(id: string, updates: Partial<HRStaffPlan>) {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
   const { error } = await supabase
     .from('hr_staff_plan')
     .update(updates)
@@ -269,13 +269,13 @@ export async function updateStaff(id: string, updates: Partial<HRStaffPlan>) {
 }
 
 export async function createStaff(staff: Omit<HRStaffPlan, 'id'>) {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
   const { error } = await supabase.from('hr_staff_plan').insert(staff);
   if (error) redirect('/login');
   await logAdminAction('create_staff_plan', 'finance', { staff });
 }
 export async function deleteStaff(id: string) {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
   const { error } = await supabase.from('hr_staff_plan').delete().eq('id', id);
   if (error) redirect('/login');
   await logAdminAction('delete_staff_plan', 'finance', { staff_id: id });
@@ -289,7 +289,7 @@ interface EquityData {
 }
 
 export async function getEquityData(): Promise<EquityData> {
-  const supabase = await createClient();
+  const { supabase } = await requireAdmin();
 
   const [holdersResult, roundsResult] = await Promise.all([
     supabase
