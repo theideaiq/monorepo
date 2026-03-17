@@ -65,6 +65,8 @@ export function BottomNav() {
           type="button"
           onClick={toggleCart}
           className="flex flex-col items-center justify-center w-full h-full space-y-1 text-slate-500 relative"
+          aria-label="Cart"
+          title="Cart"
         >
           <div className="relative">
             <ShoppingCart size={20} />
