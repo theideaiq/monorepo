@@ -1,11 +1,12 @@
 'use client';
 
+import { Button, Card, Input } from '@repo/ui';
+import { formatCurrency } from '@repo/utils';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
-import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '@/stores/cart-store';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -35,7 +36,7 @@ export function CheckoutFlow() {
     // Redirect or clear cart
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = formatCurrency(total, 'IQD');
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -225,7 +226,7 @@ export function CheckoutFlow() {
                       className="w-full h-14 bg-brand-yellow text-brand-dark font-black text-lg flex items-center justify-center gap-2"
                     >
                       {loading && <Loader2 className="animate-spin" />}
-                      PAY {formattedTotal} IQD
+                      PAY {formattedTotal}
                     </Button>
                     <p className="text-center text-xs text-slate-500 mt-4 flex items-center justify-center gap-1">
                       <Lock size={12} /> Secure 256-bit SSL Encrypted Payment
@@ -260,10 +261,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {new Intl.NumberFormat('en-IQ').format(
-                      item.price * item.quantity,
-                    )}{' '}
-                    IQD
+                    {formatCurrency(item.price * item.quantity, 'IQD')}
                   </div>
                 </div>
               </div>
@@ -273,7 +271,7 @@ export function CheckoutFlow() {
           <div className="space-y-2 border-t border-white/10 pt-4 text-sm">
             <div className="flex justify-between text-slate-400">
               <span>Subtotal</span>
-              <span>{formattedTotal} IQD</span>
+              <span>{formattedTotal}</span>
             </div>
             <div className="flex justify-between text-slate-400">
               <span>Delivery</span>
@@ -283,7 +281,7 @@ export function CheckoutFlow() {
 
           <div className="flex justify-between text-white font-bold text-lg pt-4 border-t border-white/10 mt-4">
             <span>Total</span>
-            <span>{formattedTotal} IQD</span>
+            <span>{formattedTotal}</span>
           </div>
         </div>
       </div>
