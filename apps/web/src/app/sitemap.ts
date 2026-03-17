@@ -10,12 +10,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Updated to match navigation constants and actual pages
   const routes = [
     '',
-    '/plus',
-    '/academy',
-    '/suite',
-    '/megastore',
-    '/contact',
     '/about',
+    '/academy',
+    '/careers',
+    '/club',
+    '/contact',
+    '/faq',
+    '/megastore',
+    '/plus',
   ];
 
   return routes.map((route) => ({
