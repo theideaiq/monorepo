@@ -46,10 +46,10 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
               entertainment, and services to Baghdad and beyond.
             </p>
             <div className="flex gap-4">
-              <SocialLink href="#" icon={<Instagram size={18} />} />
-              <SocialLink href="#" icon={<Twitter size={18} />} />
-              <SocialLink href="#" icon={<Linkedin size={18} />} />
-              <SocialLink href="#" icon={<Facebook size={18} />} />
+              <SocialLink href="#" icon={<Instagram size={18} />} label="Instagram" />
+              <SocialLink href="#" icon={<Twitter size={18} />} label="Twitter" />
+              <SocialLink href="#" icon={<Linkedin size={18} />} label="LinkedIn" />
+              <SocialLink href="#" icon={<Facebook size={18} />} label="Facebook" />
             </div>
           </div>
 
@@ -96,11 +96,13 @@ export function WebFooter({ columns, copyright }: WebFooterProps) {
   );
 }
 
-function SocialLink({ href, icon }: { href: string; icon: React.ReactNode }) {
+function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
     <a
       href={href}
       className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-yellow hover:text-black transition-all"
+      aria-label={label}
+      title={label}
     >
       {icon}
     </a>

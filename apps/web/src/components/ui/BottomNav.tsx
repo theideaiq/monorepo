@@ -45,6 +45,7 @@ export function BottomNav() {
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
+          title="Home"
         >
           <Home size={20} />
           <span className="text-[10px] font-medium">Home</span>
@@ -55,6 +56,7 @@ export function BottomNav() {
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/megastore') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
+          title="Browse"
         >
           <Search size={20} />
           <span className="text-[10px] font-medium">Browse</span>
@@ -65,6 +67,7 @@ export function BottomNav() {
           type="button"
           onClick={toggleCart}
           className="flex flex-col items-center justify-center w-full h-full space-y-1 text-slate-500 relative"
+          title="Cart"
         >
           <div className="relative">
             <ShoppingCart size={20} />
@@ -82,6 +85,7 @@ export function BottomNav() {
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/account') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
+          title="Profile"
         >
           <User size={20} />
           <span className="text-[10px] font-medium">Profile</span>
