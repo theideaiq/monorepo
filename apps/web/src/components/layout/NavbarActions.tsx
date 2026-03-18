@@ -48,7 +48,7 @@ export function DesktopActions({ locale }: { locale: string }) {
         aria-label={t('cart')}
       >
         <ShoppingCart size={22} />
-        <span className="absolute top-2 right-2 bg-brand-pink text-white text-[0.625rem] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+        <span className="absolute top-2 right-2 bg-brand-pink text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
           0
         </span>
       </Link>
