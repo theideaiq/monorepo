@@ -75,7 +75,13 @@ describe('Cart Store', () => {
     const { addItem, updateQuantity } = useCartStore.getState();
     // Use `as any` because the existing tests pass string values incorrectly,
     // and we want to prevent scope creep by only testing this specific logic.
-    addItem({ id: 'test-item', productId: 'p1', title: 'Test', price: 10, image: '' } as any);
+    addItem({
+      id: 'test-item',
+      productId: 'p1',
+      title: 'Test',
+      price: 10,
+      image: '',
+    } as any);
 
     updateQuantity('test-item', 0);
     expect(useCartStore.getState().items[0].quantity).toBe(1);
