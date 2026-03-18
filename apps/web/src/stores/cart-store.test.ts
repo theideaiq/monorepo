@@ -70,4 +70,20 @@ describe('Cart Store', () => {
       expect(parsed.state.items).toEqual(['persistent-item']);
     }
   });
+
+  it('should not update quantity below 1', () => {
+    const { addItem, updateQuantity } = useCartStore.getState();
+    // Use `as any` because the existing tests pass string values incorrectly,
+    // and we want to prevent scope creep by only testing this specific logic.
+    addItem({ id: 'test-item', productId: 'p1', title: 'Test', price: 10, image: '' } as any);
+
+    updateQuantity('test-item', 0);
+    expect(useCartStore.getState().items[0].quantity).toBe(1);
+
+    updateQuantity('test-item', -5);
+    expect(useCartStore.getState().items[0].quantity).toBe(1);
+
+    updateQuantity('test-item', 5);
+    expect(useCartStore.getState().items[0].quantity).toBe(5);
+  });
 });
