@@ -10,6 +10,7 @@ import type { Product, ProductVariant } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
+import { formatCurrency } from '@repo/utils';
 
 interface ProductViewProps {
   product: Product;
@@ -84,7 +85,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const price = formatCurrency(product.price, 'IQD');
 
   return (
     <div className="pb-32 md:pb-12">
@@ -168,8 +169,7 @@ export function ProductView({ product }: ProductViewProps) {
           </div>
 
           <div className="text-4xl font-black text-brand-yellow">
-            {price}{' '}
-            <span className="text-lg font-medium text-slate-500">IQD</span>
+            {price}
           </div>
 
           {/* Variants */}

@@ -15,18 +15,38 @@
  * formatCurrency(50000, 'IQD') // -> "IQD 50,000"
  * formatCurrency(10.5, 'USD') // -> "$10.50"
  */
+// ⚡ Bolt: Cache Intl.NumberFormat instances globally to prevent expensive
+// recalculations and object allocation during component render loops.
+const currencyFormatters: Record<string, Intl.NumberFormat> = {
+  USD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }),
+  IQD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'IQD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }),
+};
+
 export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  const formatter = currencyFormatters[currency] || currencyFormatters.USD;
+  return formatter.format(amount);
 }
+
+// ⚡ Bolt: Cache Intl.DateTimeFormat instance globally to avoid performance
+// overhead from re-instantiation in date formatting utility calls.
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
 
 /**
  * Format a date string or object to a readable standard.
@@ -36,13 +56,17 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date instanceof Date ? date : new Date(date));
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
+  return dateFormatter.format(date instanceof Date ? date : new Date(date));
 }
+
+// ⚡ Bolt: Cache compact number formatter globally to improve performance
+// when rendering large lists of items with metrics.
+const compactNumberFormatter = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
 
 /**
  * Format a number with compact notation.
@@ -61,8 +85,5 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return compactNumberFormatter.format(number);
 }
