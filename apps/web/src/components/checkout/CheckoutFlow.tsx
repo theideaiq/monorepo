@@ -1,11 +1,12 @@
 'use client';
 
+import { Button } from '@repo/ui';
+import { formatCurrency } from '@repo/utils';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
-import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '@/stores/cart-store';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -35,7 +36,7 @@ export function CheckoutFlow() {
     // Redirect or clear cart
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = formatCurrency(total, 'IQD');
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -44,7 +45,13 @@ export function CheckoutFlow() {
         <div
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
+          /* biome-ignore lint/a11y/useSemanticElements: Need div for layout */
           <div
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') setStep(1);
+            }}
             className="p-6 flex items-center justify-between cursor-pointer"
             onClick={() => setStep(1)}
           >
@@ -61,7 +68,7 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <button type="button" className="text-sm text-brand-yellow font-medium">
                 Edit
               </button>
             )}
@@ -81,7 +88,10 @@ export function CheckoutFlow() {
                   >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                        <label
+                          htmlFor="fullName"
+                          className="text-xs text-slate-400"
+                        >
                           Full Name
                         </label>
                         <input
@@ -95,7 +105,10 @@ export function CheckoutFlow() {
                         />
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs text-slate-400">
+                        <label
+                          htmlFor="phone"
+                          className="text-xs text-slate-400"
+                        >
                           Phone Number
                         </label>
                         <input
@@ -111,7 +124,9 @@ export function CheckoutFlow() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs text-slate-400">City</label>
+                      <label htmlFor="city" className="text-xs text-slate-400">
+                        City
+                      </label>
                       <select
                         value={address.city}
                         onChange={(e) =>
@@ -225,7 +240,7 @@ export function CheckoutFlow() {
                       className="w-full h-14 bg-brand-yellow text-brand-dark font-black text-lg flex items-center justify-center gap-2"
                     >
                       {loading && <Loader2 className="animate-spin" />}
-                      PAY {formattedTotal} IQD
+                      PAY {formattedTotal}
                     </Button>
                     <p className="text-center text-xs text-slate-500 mt-4 flex items-center justify-center gap-1">
                       <Lock size={12} /> Secure 256-bit SSL Encrypted Payment
@@ -260,10 +275,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {new Intl.NumberFormat('en-IQ').format(
-                      item.price * item.quantity,
-                    )}{' '}
-                    IQD
+                    {formatCurrency(item.price * item.quantity, 'IQD')}
                   </div>
                 </div>
               </div>
@@ -273,7 +285,7 @@ export function CheckoutFlow() {
           <div className="space-y-2 border-t border-white/10 pt-4 text-sm">
             <div className="flex justify-between text-slate-400">
               <span>Subtotal</span>
-              <span>{formattedTotal} IQD</span>
+              <span>{formattedTotal}</span>
             </div>
             <div className="flex justify-between text-slate-400">
               <span>Delivery</span>
@@ -283,7 +295,7 @@ export function CheckoutFlow() {
 
           <div className="flex justify-between text-white font-bold text-lg pt-4 border-t border-white/10 mt-4">
             <span>Total</span>
-            <span>{formattedTotal} IQD</span>
+            <span>{formattedTotal}</span>
           </div>
         </div>
       </div>
