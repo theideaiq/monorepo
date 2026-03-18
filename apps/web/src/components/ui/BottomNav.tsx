@@ -69,7 +69,7 @@ export function BottomNav() {
           <div className="relative">
             <ShoppingCart size={20} />
             {mounted && items.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
+              <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
                 {items.reduce((acc, i) => acc + i.quantity, 0)}
               </span>
             )}
