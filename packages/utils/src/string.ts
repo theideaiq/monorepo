@@ -22,32 +22,51 @@ const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
  * @param text - The string containing HTML entities.
  * @returns The decoded string.
  */
-export function decodeHtmlEntities(text: string): string {
-  if (!text) return '';
+export function decodeHtmlEntities(text: string | null | undefined): string {
+  if (!text) return text || '';
 
-  return text.replace(ENTITY_REGEX, (match) => {
-    if (ENTITIES[match]) return ENTITIES[match];
+  const entities: Record<string, string> = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&#x27;': "'",
+    '&#x2F;': '/',
+    '&#x60;': '`',
+    '&#x3D;': '=',
+    '&apos;': "'",
+    '&nbsp;': ' ',
+    '&cent;': '¢',
+    '&pound;': '£',
+    '&yen;': '¥',
+    '&euro;': '€',
+    '&copy;': '©',
+    '&reg;': '®',
+  };
 
-    // Handle numeric entities
-    if (NUMERIC_ENTITY_REGEX.test(match)) {
-      // Use fromCodePoint for Emoji/Astral support
-      return String.fromCodePoint(Number.parseInt(match.slice(2, -1), 10));
+  return text.replace(/&[#a-zA-Z0-9]+;/g, (match) => {
+    if (entities[match]) return entities[match];
+
+    // Numeric decimal (e.g. &#128512;)
+    const numMatch = match.match(/^&#([0-9]+);$/);
+    if (numMatch) {
+      // Use fromCodePoint instead of fromCharCode to support surrogate pairs (emoji)
+      return String.fromCodePoint(parseInt(numMatch[1], 10));
+    }
+
+    // Numeric hex (e.g. &#x41;, &#x1f600;)
+    const hexMatch = match.match(/^&#x([a-fA-F0-9]+);$/i);
+    if (hexMatch) {
+      return String.fromCodePoint(parseInt(hexMatch[1], 16));
     }
 
     return match;
   });
 }
 
-/**
- * Converts a string into a URL-friendly slug.
- *
- * @param text - The text to slugify.
- * @returns The slugified string.
- *
- * @example
- * slugify("Hello World!") // -> "hello-world"
- */
-export function slugify(text: string): string {
+export function slugify(text: string | null | undefined): string {
+  if (!text) return '';
   return text
     .toString()
     .toLowerCase()
