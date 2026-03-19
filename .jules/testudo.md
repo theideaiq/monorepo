@@ -1,0 +1,3 @@
+## 2026-03-19 - String Utilities and Cart Store Test Breakages
+Discovery: Discovered failing unit tests in `apps/web/src/lib/string-utils.test.ts` and `apps/web/src/stores/cart-store.test.ts`. The string utilities tests failed because `slugify` does not handle null/undefined inputs, and `decodeHtmlEntities` doesn't handle hexadecimal numeric entities (`&#x41;`). The cart store tests failed because `addItem` was expecting strings based on legacy code but the store has evolved to expect `CartItem` objects.
+Strategy: Fix the implementation to ensure it correctly handles inputs in line with test assertions. Maintain unit tests robustness.
