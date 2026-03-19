@@ -15,17 +15,25 @@
  * formatCurrency(50000, 'IQD') // -> "IQD 50,000"
  * formatCurrency(10.5, 'USD') // -> "$10.50"
  */
+// Cache for Intl formatters to avoid expensive instantiation on every call
+const currencyFormatters = new Map<string, Intl.NumberFormat>();
+
 export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  let formatter = currencyFormatters.get(currency);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency,
+      // IQD doesn't typically use cents in this context
+      minimumFractionDigits: currency === 'IQD' ? 0 : 2,
+      maximumFractionDigits: currency === 'IQD' ? 0 : 2,
+    });
+    currencyFormatters.set(currency, formatter);
+  }
+  return formatter.format(amount);
 }
 
 /**
@@ -35,13 +43,19 @@ export function formatCurrency(
  * @param date - The date to format (string or Date object).
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
+let dateFormatter: Intl.DateTimeFormat | null = null;
+
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date instanceof Date ? date : new Date(date));
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
+  if (!dateFormatter) {
+    dateFormatter = new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+  return dateFormatter.format(date instanceof Date ? date : new Date(date));
 }
 
 /**
@@ -55,14 +69,19 @@ export function formatDate(date: string | Date): string {
  * formatCompactNumber(1500000) // -> "1.5M"
  * formatCompactNumber(1200) // -> "1.2K"
  */
+let compactNumberFormatter: Intl.NumberFormat | null = null;
+
 export function formatCompactNumber(number: number): string {
   // Validate input to avoid formatting NaN, Infinity, or non-numeric values
   if (!Number.isFinite(number)) {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  if (!compactNumberFormatter) {
+    compactNumberFormatter = new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    });
+  }
+  return compactNumberFormatter.format(number);
 }
