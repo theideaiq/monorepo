@@ -1,0 +1,4 @@
+## 2024-03-19 - XSS Vulnerability in Email Templates via dangerouslySetInnerHTML
+**Vulnerability:** The admin application used `dangerouslySetInnerHTML` in `BrandedTemplate.tsx` to render raw HTML (`bodyHtml`) for marketing campaigns without prior sanitization.
+**Learning:** This occurs when developers assume internal admin tools inherently provide trusted data. However, marketing content is a prime target for stored XSS, which can be sent out to external users or break internal layout tracking pixels.
+**Prevention:** Always sanitize any user-provided or database-stored HTML before rendering it, even in server-side generated emails. We added a `sanitizeHtml` utility using `sanitize-html` configured specifically for emails (allowing inline styles and basic layout tags) to neutralize malicious scripts before injection.
