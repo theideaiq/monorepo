@@ -1,6 +1,12 @@
 import type { Product } from '@/services/products';
 
-export default function ProductJsonLd({ product, url }: { product: Product, url: string }) {
+export default function ProductJsonLd({
+  product,
+  url,
+}: {
+  product: Product;
+  url: string;
+}) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -17,12 +23,14 @@ export default function ProductJsonLd({ product, url }: { product: Product, url:
       url: url,
       priceCurrency: 'IQD',
       price: product.price,
-      itemCondition: product.condition === 'new'
-        ? 'https://schema.org/NewCondition'
-        : 'https://schema.org/UsedCondition',
-      availability: product.stock > 0
-        ? 'https://schema.org/InStock'
-        : 'https://schema.org/OutOfStock',
+      itemCondition:
+        product.condition === 'new'
+          ? 'https://schema.org/NewCondition'
+          : 'https://schema.org/UsedCondition',
+      availability:
+        product.stock > 0
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
     },
     ...(product.rating > 0 && {
       aggregateRating: {
@@ -37,7 +45,9 @@ export default function ProductJsonLd({ product, url }: { product: Product, url:
     <script
       type="application/ld+json"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+      }}
     />
   );
 }
