@@ -1,7 +1,7 @@
 'use client';
 
-import type { ColumnDef } from '@tanstack/react-table';
 import { formatIQDNumber } from '@repo/utils';
+import type { ColumnDef } from '@tanstack/react-table';
 
 // Define the shape of our Product data.
 export type Product = {
