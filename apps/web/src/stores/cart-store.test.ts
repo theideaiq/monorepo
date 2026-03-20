@@ -73,7 +73,14 @@ describe('Cart Store', () => {
 
   it('should update the quantity of an existing item', () => {
     const { addItem, updateQuantity } = useCartStore.getState();
-    const testItem = { id: 'apple', productId: 'p1', title: 'Apple', price: 1.0, image: 'apple.png' } as any;
+    const testItem = {
+      id: 'apple',
+      productId: 'p1',
+      title: 'Apple',
+      price: 1.0,
+      image: 'apple.png',
+      // biome-ignore lint/suspicious/noExplicitAny: boundary
+    } as unknown as any;
 
     // Arrange: Add a valid item object so its quantity is 1
     addItem(testItem);
