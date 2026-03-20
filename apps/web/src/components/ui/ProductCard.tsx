@@ -1,5 +1,6 @@
 'use client';
 
+import { formatCurrency } from '@repo/utils';
 import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -18,10 +19,7 @@ export function ProductCard({
   priority = false,
 }: ProductCardProps) {
   // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const price = formatCurrency(product.price, 'IQD').replace('IQD\xa0', '');
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">
