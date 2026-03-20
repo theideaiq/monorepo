@@ -70,4 +70,20 @@ describe('Cart Store', () => {
       expect(parsed.state.items).toEqual(['persistent-item']);
     }
   });
+
+  it('should update the quantity of an existing item', () => {
+    const { addItem, updateQuantity } = useCartStore.getState();
+    const testItem = { id: 'apple', productId: 'p1', title: 'Apple', price: 1.0, image: 'apple.png' } as any;
+
+    // Arrange: Add a valid item object so its quantity is 1
+    addItem(testItem);
+
+    // Act: Update quantity to 5
+    updateQuantity('apple', 5);
+
+    // Assert: The quantity of the specific item should be updated to 5
+    const updatedItems = useCartStore.getState().items;
+    expect(updatedItems).toHaveLength(1);
+    expect(updatedItems[0].quantity).toBe(5);
+  });
 });
