@@ -1,0 +1,4 @@
+## 2024-05-24 - Missing HTML Sanitization in Email Templates
+**Vulnerability:** XSS/Injection vulnerability via `dangerouslySetInnerHTML` in React Email templates (specifically `BrandedTemplate.tsx`).
+**Learning:** The application was passing raw HTML (`bodyHtml`) directly into `dangerouslySetInnerHTML` for email templates without any sanitization. This is a common pattern when rendering HTML content (like emails) but is highly unsafe if the `bodyHtml` originates from user input or a compromised database record.
+**Prevention:** Always use a sanitization library like `sanitize-html` when rendering raw HTML in React, even in email templates. Create a centralized wrapper utility (e.g., in `@repo/utils`) with specific allowed tags/attributes for emails (like `style`) to ensure consistent, secure rendering.
