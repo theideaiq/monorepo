@@ -1,16 +1,16 @@
 'use client';
 
-import { Button } from '@repo/ui';
-import { formatCurrency } from '@repo/utils';
-import { motion } from 'framer-motion';
-import { CheckCircle2, Heart, Share2, ShoppingCart, Star } from 'lucide-react';
-import Image from 'next/image';
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
+import { Button } from '@repo/ui';
 import { VariantSelector } from '@/components/ui/VariantSelector';
 import type { Product, ProductVariant } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
+import { toast } from 'react-hot-toast';
+import { formatIQDNumber } from '@repo/utils';
 
 interface ProductViewProps {
   product: Product;
@@ -85,7 +85,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = formatCurrency(product.price, 'IQD').replace('IQD\xa0', '');
+  const price = formatIQDNumber(product.price);
 
   return (
     <div className="pb-32 md:pb-12">

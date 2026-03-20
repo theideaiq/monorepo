@@ -30,8 +30,20 @@ export function formatCurrency(
       maximumFractionDigits: currency === 'IQD' ? 0 : 2,
     });
   }
-
   return currencyFormatters[currency].format(amount);
+}
+
+const iqdDecimalFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a number as a localized decimal string for IQD (e.g., 50,000).
+ * This avoids prepending the currency symbol and does not use decimals.
+ */
+export function formatIQDNumber(amount: number): string {
+  return iqdDecimalFormatter.format(amount);
 }
 
 /**
@@ -42,8 +54,7 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
-    return '';
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',

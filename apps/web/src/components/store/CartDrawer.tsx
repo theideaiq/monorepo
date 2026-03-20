@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@repo/ui';
-import { formatCurrency } from '@repo/utils';
-import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
+import Image from 'next/image';
 import { Drawer } from '@/components/ui/Drawer';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
+import { Button } from '@repo/ui';
+import { formatIQDNumber } from '@repo/utils';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -19,7 +19,7 @@ export function CartDrawer() {
     router.push('/checkout');
   };
 
-  const formattedTotal = formatCurrency(total, 'IQD').replace('IQD\xa0', '');
+  const formattedTotal = formatIQDNumber(total);
 
   return (
     <Drawer
@@ -77,7 +77,7 @@ export function CartDrawer() {
                   </p>
                 )}
                 <p className="text-brand-yellow font-bold mt-2">
-                  {formatCurrency(item.price, 'IQD').replace('IQD\xa0', '')} IQD
+                  {formatIQDNumber(item.price)} IQD
                 </p>
               </div>
 
