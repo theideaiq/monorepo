@@ -1,3 +1,4 @@
+import { sanitizeHtml } from '@repo/utils';
 import {
   Body,
   Container,
@@ -36,8 +37,8 @@ export const BrandedTemplate = ({
             />
           </Section>
           <Section style={content}>
-            {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Email content needs HTML */}
-            <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+            {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Email content needs HTML, but we sanitize it */}
+            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(bodyHtml) }} />
           </Section>
           <Hr style={hr} />
           <Section style={footer}>
