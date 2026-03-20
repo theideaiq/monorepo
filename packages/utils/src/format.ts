@@ -15,17 +15,35 @@
  * formatCurrency(50000, 'IQD') // -> "IQD 50,000"
  * formatCurrency(10.5, 'USD') // -> "$10.50"
  */
+const currencyFormatters: Record<string, Intl.NumberFormat> = {};
+
 export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  if (!currencyFormatters[currency]) {
+    currencyFormatters[currency] = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency,
+      // IQD doesn't typically use cents in this context
+      minimumFractionDigits: currency === 'IQD' ? 0 : 2,
+      maximumFractionDigits: currency === 'IQD' ? 0 : 2,
+    });
+  }
+  return currencyFormatters[currency].format(amount);
+}
+
+const iqdDecimalFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a number as a localized decimal string for IQD (e.g., 50,000).
+ * This avoids prepending the currency symbol and does not use decimals.
+ */
+export function formatIQDNumber(amount: number): string {
+  return iqdDecimalFormatter.format(amount);
 }
 
 /**
@@ -36,7 +54,8 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
