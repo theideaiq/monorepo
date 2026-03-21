@@ -6,7 +6,7 @@ export default function ProductJsonLd({ product }: { product: Product }) {
   const url = `${baseUrl}/product/${product.slug}`;
 
   // Use the first image or a fallback from URL if it exists
-  const image = product.image ? [product.image, ...product.images] : [];
+  const image = product.image ? [product.image, ...(product.images || [])] : [];
 
   const jsonLd = {
     '@context': 'https://schema.org',
