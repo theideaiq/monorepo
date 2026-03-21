@@ -14,7 +14,10 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -24,6 +27,8 @@
     "@biomejs/biome": "^2.3.13",
     "@repo/config": "workspace:*",
     "@types/node": "^25.1.0",
-    "typescript": "^5.9.3"
+    "@vitest/coverage-v8": "^4.0.18",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }
