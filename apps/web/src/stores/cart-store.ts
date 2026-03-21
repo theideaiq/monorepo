@@ -23,21 +23,18 @@ interface CartState {
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       items: [],
       total: 0,
 
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          let updatedItems;
-          if (existing) {
-            updatedItems = state.items.map((i) =>
-              i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
-            );
-          } else {
-            updatedItems = [...state.items, { ...newItem, quantity: 1 }];
-          }
+          const updatedItems: CartItem[] = existing
+            ? state.items.map((i) =>
+                i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
+              )
+            : [...state.items, { ...newItem, quantity: 1 }];
 
           // Recalc total
           const total = updatedItems.reduce(
