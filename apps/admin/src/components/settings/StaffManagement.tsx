@@ -32,7 +32,9 @@ export default function StaffManagement({
       await updateRole(userId, newRole);
       toast.success(`Role updated to ${newRole}`);
     } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : 'An unknown error occurred');
+      toast.error(
+        error instanceof Error ? error.message : 'An unknown error occurred',
+      );
     } finally {
       setLoading(null);
     }
@@ -45,7 +47,9 @@ export default function StaffManagement({
       await toggleBan(userId, !currentStatus);
       toast.success(currentStatus ? 'User unbanned' : 'User banned');
     } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : 'An unknown error occurred');
+      toast.error(
+        error instanceof Error ? error.message : 'An unknown error occurred',
+      );
     } finally {
       setLoading(null);
     }
@@ -60,7 +64,9 @@ export default function StaffManagement({
       setIsAddModalOpen(false);
       setNewStaffEmail('');
     } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : 'An unknown error occurred');
+      toast.error(
+        error instanceof Error ? error.message : 'An unknown error occurred',
+      );
     } finally {
       setLoading(null);
     }
