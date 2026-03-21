@@ -3,7 +3,7 @@ import { droidEnv as env } from '@repo/env/droid';
 import { PaymentFactory } from '@repo/payment-engine';
 import { supabase } from './supabase';
 
-const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY || 'dummy_key' });
 
 const MAX_PRODUCT_SEARCH_RESULTS = 5;
 
@@ -108,7 +108,7 @@ async function searchProducts(query: string) {
   const sanitizedQuery = rawQuery.replace(/[\r\n\t]/g, ' ');
   const safeQueryForLog =
     sanitizedQuery.length > MAX_LOG_QUERY_LENGTH
-      ? sanitizedQuery.slice(0, MAX_LOG_QUERY_LENGTH) + '…'
+      ? `${sanitizedQuery.slice(0, MAX_LOG_QUERY_LENGTH)}…`
       : sanitizedQuery;
   // biome-ignore lint/suspicious/noConsole: logging is fine for search tracking
   console.log(
@@ -143,8 +143,8 @@ async function searchProducts(query: string) {
 async function createPaymentLink(amount: number, itemDescription: string) {
   try {
     const provider = PaymentFactory.getProviderByName('wayl', {
-      waylKey: env.WAYL_SECRET_KEY,
-      waylWebhookSecret: env.WAYL_WEBHOOK_SECRET,
+      waylKey: env.WAYL_SECRET_KEY || 'dummy_key',
+      waylWebhookSecret: env.WAYL_WEBHOOK_SECRET || 'dummy_secret',
       zainKey: '', // Not used here
     });
 
@@ -153,9 +153,9 @@ async function createPaymentLink(amount: number, itemDescription: string) {
       amount,
       currency: 'IQD',
       description: itemDescription,
-      redirectionUrl: `${env.WEB_APP_URL}/thanks`,
-      webhookUrl: `${env.WEB_APP_URL}/api/webhooks/wayl`,
-      webhookSecret: env.WAYL_WEBHOOK_SECRET,
+      redirectionUrl: `${env.WEB_APP_URL || 'http://localhost'}/thanks`,
+      webhookUrl: `${env.WEB_APP_URL || 'http://localhost'}/api/webhooks/wayl`,
+      webhookSecret: env.WAYL_WEBHOOK_SECRET || 'dummy_secret',
     });
 
     return {
