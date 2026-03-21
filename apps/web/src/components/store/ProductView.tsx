@@ -17,7 +17,7 @@ interface ProductViewProps {
 
 export function ProductView({ product }: ProductViewProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
-  const [_selectedVariant, _setSelectedVariant] = useState<string | null>(null);
+    const [_selectedVariant, _setSelectedVariant] = useState<string | null>(null);
   const { addItem } = useCartStore();
   const { openCart } = useUIStore();
 
@@ -49,7 +49,7 @@ export function ProductView({ product }: ProductViewProps) {
     const matchingVariant = product.variants.find(
       (v) => v.attributes[key] === value,
     );
-    if (matchingVariant?.image) {
+      if (matchingVariant?.image) {
       setSelectedImage(matchingVariant.image);
     }
   };
@@ -116,6 +116,7 @@ export function ProductView({ product }: ProductViewProps) {
           {/* Thumbnails (Scrollable on mobile) */}
           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
             <button
+              type="button"
               onClick={() => setSelectedImage(product.image)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
             >
@@ -126,9 +127,10 @@ export function ProductView({ product }: ProductViewProps) {
                 className="object-cover"
               />
             </button>
-            {product.images?.map((img, i) => (
+            {product.images?.map((img) => (
               <button
-                key={i}
+                type="button"
+                key={img}
                 onClick={() => setSelectedImage(img)}
                 className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
               >
@@ -150,7 +152,7 @@ export function ProductView({ product }: ProductViewProps) {
               <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
                 {product.title}
               </h1>
-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
+              <button type="button" className="text-slate-500 hover:text-brand-pink transition-colors">
                 <Heart size={28} />
               </button>
             </div>
