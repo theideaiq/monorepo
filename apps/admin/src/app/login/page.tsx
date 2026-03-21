@@ -11,10 +11,7 @@ import { createClient } from '@/lib/supabase/client';
 function hasAdminAccess(role?: string | null): boolean {
   if (!role) return false;
   const normalizedRole = role.toLowerCase();
-  return (
-    normalizedRole === 'admin' ||
-    normalizedRole === 'superadmin'
-  );
+  return normalizedRole === 'admin' || normalizedRole === 'superadmin';
 }
 
 export default function LoginPage() {
