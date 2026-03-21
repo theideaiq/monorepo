@@ -5,7 +5,6 @@ import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Drawer } from '@/components/ui/Drawer';
-import { iqdFormatter } from '@/lib/formatters';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 
@@ -19,7 +18,7 @@ export function CartDrawer() {
     router.push('/checkout');
   };
 
-  const formattedTotal = iqdFormatter.format(total);
+  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
 
   return (
     <Drawer
@@ -72,12 +71,12 @@ export function CartDrawer() {
                 {item.attributes && (
                   <p className="text-xs text-slate-500 mt-1">
                     {Object.entries(item.attributes)
-                      .map(([k, v]) => `${v}`)
+                      .map(([_k, v]) => `${v}`)
                       .join(', ')}
                   </p>
                 )}
                 <p className="text-brand-yellow font-bold mt-2">
-                  {iqdFormatter.format(item.price)} IQD
+                  {new Intl.NumberFormat('en-IQ').format(item.price)} IQD
                 </p>
               </div>
 

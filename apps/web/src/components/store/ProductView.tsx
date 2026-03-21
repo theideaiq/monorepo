@@ -2,13 +2,12 @@
 
 import { Button } from '@repo/ui';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Heart, Share2, ShoppingCart, Star } from 'lucide-react';
+import { CheckCircle2, Heart, Star } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { VariantSelector } from '@/components/ui/VariantSelector';
-import { iqdFormatter } from '@/lib/formatters';
-import type { Product, ProductVariant } from '@/services/products';
+import type { Product } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 
@@ -18,7 +17,7 @@ interface ProductViewProps {
 
 export function ProductView({ product }: ProductViewProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
-  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
+  const [_selectedVariant, _setSelectedVariant] = useState<string | null>(null);
   const { addItem } = useCartStore();
   const { openCart } = useUIStore();
 
@@ -50,7 +49,7 @@ export function ProductView({ product }: ProductViewProps) {
     const matchingVariant = product.variants.find(
       (v) => v.attributes[key] === value,
     );
-    if (matchingVariant && matchingVariant.image) {
+    if (matchingVariant?.image) {
       setSelectedImage(matchingVariant.image);
     }
   };
@@ -85,7 +84,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = iqdFormatter.format(product.price);
+  const price = new Intl.NumberFormat('en-IQ').format(product.price);
 
   return (
     <div className="pb-32 md:pb-12">
