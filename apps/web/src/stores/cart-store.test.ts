@@ -6,7 +6,7 @@ const mockItemA = {
   productId: 'prod-a',
   title: 'Apple',
   price: 1500,
-  image: '/apple.jpg'
+  image: '/apple.jpg',
 };
 
 const mockItemB = {
@@ -14,7 +14,7 @@ const mockItemB = {
   productId: 'prod-b',
   title: 'Banana',
   price: 500,
-  image: '/banana.jpg'
+  image: '/banana.jpg',
 };
 
 describe('Cart Store', () => {
@@ -37,13 +37,15 @@ describe('Cart Store', () => {
     const { addItem } = useCartStore.getState();
 
     addItem(mockItemA);
-    expect(useCartStore.getState().items).toEqual([{ ...mockItemA, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockItemA, quantity: 1 },
+    ]);
     expect(useCartStore.getState().total).toBe(1500);
 
     addItem(mockItemB);
     expect(useCartStore.getState().items).toEqual([
       { ...mockItemA, quantity: 1 },
-      { ...mockItemB, quantity: 1 }
+      { ...mockItemB, quantity: 1 },
     ]);
     expect(useCartStore.getState().total).toBe(2000);
   });
@@ -54,7 +56,9 @@ describe('Cart Store', () => {
     addItem(mockItemA);
     addItem(mockItemA);
 
-    expect(useCartStore.getState().items).toEqual([{ ...mockItemA, quantity: 2 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockItemA, quantity: 2 },
+    ]);
     expect(useCartStore.getState().total).toBe(3000);
   });
 
@@ -65,7 +69,9 @@ describe('Cart Store', () => {
     addItem(mockItemB);
     removeItem(mockItemA.id);
 
-    expect(useCartStore.getState().items).toEqual([{ ...mockItemB, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockItemB, quantity: 1 },
+    ]);
     expect(useCartStore.getState().total).toBe(500);
   });
 
