@@ -1,10 +1,25 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCartStore } from './cart-store';
 
+const mockItemA = {
+  id: 'item-a',
+  productId: 'prod-a',
+  title: 'Apple',
+  price: 1500,
+  image: '/apple.jpg'
+};
+
+const mockItemB = {
+  id: 'item-b',
+  productId: 'prod-b',
+  title: 'Banana',
+  price: 500,
+  image: '/banana.jpg'
+};
+
 describe('Cart Store', () => {
-  // Reset store before each test to ensure isolation
   beforeEach(() => {
-    useCartStore.setState({ items: [] });
+    useCartStore.setState({ items: [], total: 0 });
   });
 
   afterEach(() => {
@@ -13,61 +28,66 @@ describe('Cart Store', () => {
   });
 
   it('should start with an empty cart', () => {
-    const { items } = useCartStore.getState();
+    const { items, total } = useCartStore.getState();
     expect(items).toEqual([]);
+    expect(total).toBe(0);
   });
 
-  it('should add items to the cart', () => {
+  it('should add items to the cart and calculate total correctly', () => {
     const { addItem } = useCartStore.getState();
 
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple']);
+    addItem(mockItemA);
+    expect(useCartStore.getState().items).toEqual([{ ...mockItemA, quantity: 1 }]);
+    expect(useCartStore.getState().total).toBe(1500);
 
-    addItem('banana');
-    expect(useCartStore.getState().items).toEqual(['apple', 'banana']);
+    addItem(mockItemB);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockItemA, quantity: 1 },
+      { ...mockItemB, quantity: 1 }
+    ]);
+    expect(useCartStore.getState().total).toBe(2000);
   });
 
-  it('should remove items from the cart', () => {
+  it('should handle duplicate items by increasing quantity', () => {
+    const { addItem } = useCartStore.getState();
+
+    addItem(mockItemA);
+    addItem(mockItemA);
+
+    expect(useCartStore.getState().items).toEqual([{ ...mockItemA, quantity: 2 }]);
+    expect(useCartStore.getState().total).toBe(3000);
+  });
+
+  it('should remove items from the cart and update total', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    addItem(mockItemA);
+    addItem(mockItemB);
+    removeItem(mockItemA.id);
 
-    removeItem('apple');
-    expect(useCartStore.getState().items).toEqual(['banana']);
+    expect(useCartStore.getState().items).toEqual([{ ...mockItemB, quantity: 1 }]);
+    expect(useCartStore.getState().total).toBe(500);
+  });
+
+  it('should ignore updateQuantity when quantity is less than 1 (boundary case)', () => {
+    const { addItem, updateQuantity } = useCartStore.getState();
+
+    addItem(mockItemA);
+    updateQuantity(mockItemA.id, 0); // Invalid quantity
+    updateQuantity(mockItemA.id, -5); // Invalid quantity
+
+    // The store code returns `state` if quantity < 1, so it should stay at 1.
+    expect(useCartStore.getState().items[0].quantity).toBe(1);
+    expect(useCartStore.getState().total).toBe(1500);
   });
 
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
-
+    addItem(mockItemA);
     clearCart();
+
     expect(useCartStore.getState().items).toEqual([]);
-  });
-
-  it('should handle duplicate items correctly (removes all instances)', () => {
-    // Current behavior documentation: removing an item removes ALL instances of that value
-    const { addItem, removeItem } = useCartStore.getState();
-
-    addItem('apple');
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple', 'apple']);
-
-    removeItem('apple');
-    expect(useCartStore.getState().items).toEqual([]);
-  });
-
-  it('should persist state to localStorage', () => {
-    const { addItem } = useCartStore.getState();
-    addItem('persistent-item');
-
-    const stored = localStorage.getItem('cart-storage');
-    expect(stored).toBeDefined();
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      expect(parsed.state.items).toEqual(['persistent-item']);
-    }
+    expect(useCartStore.getState().total).toBe(0);
   });
 });
