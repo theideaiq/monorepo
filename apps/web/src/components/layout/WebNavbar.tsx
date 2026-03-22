@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { useUIStore } from '@/stores/ui-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 interface WebNavbarProps {
   navItems: { label: string; href: string }[];
@@ -22,7 +22,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const { toggleCart } = useUIStore();
-  const cartItems = useCartStore((s) => s.items);
+  const totalQuantity = useCartStore((s) => s.totalQuantity);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -105,9 +105,9 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
             className="relative text-white hover:text-brand-yellow transition-colors"
           >
             <ShoppingCart size={20} />
-            {mounted && cartItems.length > 0 && (
+            {mounted && totalQuantity > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+                {totalQuantity}
               </span>
             )}
           </button>
