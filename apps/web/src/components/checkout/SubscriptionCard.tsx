@@ -28,7 +28,7 @@ export function SubscriptionCard({
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
         ${
           isSelected
-            ? 'border-[#facc15] bg-[#facc15]/5'
+            ? 'border-yellow-400 bg-yellow-400/5'
             : 'border-slate-200 bg-white hover:border-slate-300'
         }
       `}
@@ -41,7 +41,7 @@ export function SubscriptionCard({
           )}
         </div>
         {isSelected && (
-          <div className="h-6 w-6 bg-[#facc15] rounded-full flex items-center justify-center text-black">
+          <div className="h-6 w-6 bg-yellow-400 rounded-full flex items-center justify-center text-black">
             <Check size={14} strokeWidth={3} />
           </div>
         )}
