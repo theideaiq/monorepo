@@ -41,7 +41,7 @@ export const useCartStore = create<CartState>()(
             updatedItems = [...state.items, { ...newItem, quantity: 1 }];
           }
 
-          // Recalc total and totalQuantity
+          // Recalc total
           const total = updatedItems.reduce(
             (acc, i) => acc + i.price * i.quantity,
             0,
