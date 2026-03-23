@@ -11,6 +11,7 @@ export function BottomNav() {
   const pathname = usePathname();
   const { toggleCart } = useUIStore();
   const items = useCartStore((s) => s.items);
+  const totalQuantity = useCartStore((s) => s.totalQuantity);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -68,9 +69,9 @@ export function BottomNav() {
         >
           <div className="relative">
             <ShoppingCart size={20} />
-            {mounted && items.length > 0 && (
+            {mounted && totalQuantity > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {items.reduce((acc, i) => acc + i.quantity, 0)}
+                {totalQuantity}
               </span>
             )}
           </div>
