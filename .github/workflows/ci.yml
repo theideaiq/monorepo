@@ -49,7 +49,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
-        run: pnpm turbo check typecheck test
+        run: pnpm turbo check typecheck test --continue
 
   build:
     name: Build

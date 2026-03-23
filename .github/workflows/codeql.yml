@@ -49,12 +49,24 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'temurin'
+
+      - name: Install dependencies
+        if: matrix.language != 'javascript-typescript'
+        run: pnpm install --frozen-lockfile
 
       # Initialize CodeQL (Defines what languages to scan)
       - name: Initialize CodeQL
@@ -69,7 +81,6 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          pnpm install
           # 1. Restore Secrets (Generates google-services.json)
           pnpm --prefix apps/web run secrets:restore
 
@@ -88,7 +99,6 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          pnpm install
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --prefix apps/web run secrets:restore
 
