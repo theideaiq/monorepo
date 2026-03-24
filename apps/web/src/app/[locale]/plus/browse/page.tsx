@@ -171,13 +171,7 @@ interface CategoryRowProps {
 }
 
 // Sub-component for Horizontal Scrolling Rows
-function CategoryRow({
-  title,
-  items,
-  onRent,
-  rentingId,
-  icon,
-}: CategoryRowProps) {
+function CategoryRow({ title, items, onRent, rentingId, icon }: CategoryRowProps) {
   if (items.length === 0) return null;
 
   return (
@@ -196,12 +190,14 @@ function CategoryRow({
           >
             {/* Image */}
             <div className="relative h-[300px] w-full">
-              <Image
-                src={item.image_url}
-                alt={item.title}
-                fill
-                className="object-cover"
-              />
+              {item.image_url && (
+                <Image
+                  src={item.image_url}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-4 text-center">
                 <p className="text-xs text-slate-300 mb-2 line-clamp-3">
                   {item.description}
