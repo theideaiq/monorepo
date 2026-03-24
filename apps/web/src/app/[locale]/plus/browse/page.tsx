@@ -162,9 +162,16 @@ export default function PlusBrowsePage() {
   );
 }
 
+interface CategoryRowProps {
+  title: string;
+  items: RentalCatalogItem[];
+  onRent: (item: RentalCatalogItem) => void;
+  rentingId: number | null;
+  icon: React.ReactNode;
+}
+
 // Sub-component for Horizontal Scrolling Rows
-// biome-ignore lint/suspicious/noExplicitAny: migration
-function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
+function CategoryRow({ title, items, onRent, rentingId, icon }: CategoryRowProps) {
   if (items.length === 0) return null;
 
   return (
@@ -175,8 +182,7 @@ function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
 
       {/* Horizontal Scroll Container */}
       <div className="flex gap-4 overflow-x-auto pb-8 pr-12 no-scrollbar snap-x">
-        {/* biome-ignore lint/suspicious/noExplicitAny: migration */}
-        {items.map((item: any) => (
+        {items.map((item) => (
           <motion.div
             key={item.id}
             whileHover={{ scale: 1.05, y: -5 }}
