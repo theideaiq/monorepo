@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -31,9 +32,9 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: manual
+            build-mode: none
           - language: swift
-            build-mode: manual
+            build-mode: none
 
     steps:
       - name: Checkout repository
