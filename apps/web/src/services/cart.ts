@@ -1,9 +1,5 @@
 import { Logger } from '@repo/utils';
 import { createClient } from '@/lib/supabase/client';
-import type { Database } from '@/lib/database.types';
-
-type CartItemRow = Database['public']['Tables']['cart_items']['Row'];
-type ProductRow = Database['public']['Tables']['products']['Row'];
 
 export interface CartItem {
   id: string; // cart_item id
@@ -21,7 +17,7 @@ export interface CartItem {
  * Gets the current user's active cart or creates one.
  */
 async function getOrCreateCartId(
-  supabase: any,
+  supabase: ReturnType<typeof createClient>,
   userId: string,
 ): Promise<string | null> {
   // 1. Check for existing cart
@@ -73,15 +69,15 @@ export async function fetchCartItems(): Promise<CartItem[]> {
     return [];
   }
 
-  return (items as any[]).map((item) => ({
-    id: item.id,
-    productId: item.product_id,
-    quantity: item.quantity,
+  return (items as Record<string, unknown>[]).map((item) => ({
+    id: item.id as string,
+    productId: item.product_id as string,
+    quantity: item.quantity as number,
     product: {
-      name: item.product.name,
-      price: item.product.price,
-      image: item.product.image_url,
-      slug: item.product.slug,
+      name: (item.product as Record<string, unknown>).name as string,
+      price: (item.product as Record<string, unknown>).price as number,
+      image: (item.product as Record<string, unknown>).image_url as string,
+      slug: (item.product as Record<string, unknown>).slug as string,
     },
   }));
 }

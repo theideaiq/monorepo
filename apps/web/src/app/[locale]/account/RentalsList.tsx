@@ -3,7 +3,11 @@
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
-export default function RentalsList({ rentals }: { rentals: any[] }) {
+export default function RentalsList({
+  rentals,
+}: {
+  rentals: Record<string, unknown>[];
+}) {
   const t = useTranslations('Account');
   const [selectedRental, setSelectedRental] = useState<string | null>(null);
 
@@ -19,10 +23,10 @@ export default function RentalsList({ rentals }: { rentals: any[] }) {
           className="bg-white p-4 rounded-lg shadow border border-slate-100"
         >
           <div className="flex items-center gap-4 mb-4">
-            {rental.product?.image_url && (
+            {(rental.product as any)?.image_url && (
               <img
-                src={rental.product.image_url}
-                alt={rental.product.name}
+                src={(rental.product as any).image_url}
+                alt={(rental.product as any).name}
                 className="w-16 h-16 object-cover rounded"
               />
             )}
