@@ -1,21 +1,8 @@
+import { hasAdminAccessClient } from '@/lib/auth-checks-client';
 import { ROLES } from '@/lib/constants';
-import { createClient } from '@/lib/supabase/server';
+import { createClient as createServerClient } from '@/lib/supabase/server';
 
-/**
- * Checks if the provided role has administrative privileges (Admin or Superadmin).
- * Is case-insensitive.
- *
- * @param role - The user role string to check.
- * @returns True if the role is Admin or Superadmin, false otherwise.
- */
-export function hasAdminAccess(role?: string | null): boolean {
-  if (!role) return false;
-  const normalizedRole = role.toLowerCase();
-  return (
-    normalizedRole === ROLES.ADMIN.toLowerCase() ||
-    normalizedRole === ROLES.SUPERADMIN.toLowerCase()
-  );
-}
+export const hasAdminAccess = hasAdminAccessClient;
 
 /**
  * Verifies that the current user is authenticated, not banned, and has Admin or Superadmin role.
@@ -29,7 +16,7 @@ export function hasAdminAccess(role?: string | null): boolean {
  * @throws Error if unauthorized.
  */
 export async function requireAdmin() {
-  const supabase = await createClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -63,7 +50,7 @@ export async function requireAdmin() {
  * @throws Error if unauthorized.
  */
 export async function requireSuperAdmin() {
-  const supabase = await createClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
