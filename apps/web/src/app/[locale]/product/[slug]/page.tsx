@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { webEnv } from '@repo/env/web';
+import ProductJsonLd from '@/components/seo/ProductJsonLd';
 import { getProductBySlug } from '@/services/products';
 import { ProductView } from '@/components/store/ProductView';
 
@@ -36,6 +38,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16 pt-24">
+      <ProductJsonLd product={product} baseUrl={webEnv.NEXT_PUBLIC_SITE_URL} />
       <ProductView product={product} />
     </div>
   );
