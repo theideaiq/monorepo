@@ -41,7 +41,7 @@ export default function ProfileForm({
           type="text"
           name="fullName"
           id="fullName"
-          defaultValue={profile?.full_name || ''}
+          defaultValue={(profile?.full_name as string) || ''}
           className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
