@@ -31,9 +31,9 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: manual
+            build-mode: none
           - language: swift
-            build-mode: manual
+            build-mode: none
 
     steps:
       - name: Checkout repository
@@ -52,6 +52,37 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+      - name: Setup pnpm
+        if: matrix.language == 'java-kotlin' || matrix.language == 'swift'
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        if: matrix.language == 'java-kotlin' || matrix.language == 'swift'
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        if: matrix.language == 'java-kotlin' || matrix.language == 'swift'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        if: matrix.language == 'java-kotlin' || matrix.language == 'swift'
+        run: pnpm install --frozen-lockfile
+
+      - name: Run cap sync (Web)
+        if: matrix.language == 'java-kotlin' || matrix.language == 'swift'
+        run: |
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter web exec cap sync
+
       # Initialize CodeQL (Defines what languages to scan)
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -60,54 +91,11 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
 
       # ----------------------------------------------------------------
-      # MANUAL BUILD: Java (Android)
-      # ----------------------------------------------------------------
-      - name: Manual Build (Android)
-        if: matrix.language == 'java-kotlin'
-        run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
-          
-          # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
-          
-          # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
-
-      # ----------------------------------------------------------------
-      # MANUAL BUILD: Swift (iOS)
-      # ----------------------------------------------------------------
-      - name: Manual Build (Swift)
-        if: matrix.language == 'swift'
-        run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
-          
-          # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
-              echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
-          else
-              echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
-              echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
-          fi
-          
-          # 3. Build for Simulator (No Signing Required)
-          echo "Building Project..."
-          xcodebuild build \
-            $BUILD_TARGET \
-            -scheme App \
-            -destination 'generic/platform=iOS Simulator,name=iPhone 15' \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
-
-      # ----------------------------------------------------------------
       # ANALYZE
       # ----------------------------------------------------------------
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
+        env:
+          CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
         with:
           category: "/language:${{matrix.language}}"
