@@ -171,7 +171,13 @@ interface CategoryRowProps {
 }
 
 // Sub-component for Horizontal Scrolling Rows
-function CategoryRow({ title, items, onRent, rentingId, icon }: CategoryRowProps) {
+function CategoryRow({
+  title,
+  items,
+  onRent,
+  rentingId,
+  icon,
+}: CategoryRowProps) {
   if (items.length === 0) return null;
 
   return (

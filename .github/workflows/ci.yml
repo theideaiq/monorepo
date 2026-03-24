@@ -51,6 +51,13 @@ jobs:
       - name: Run Quality Checks
         env:
           SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          GEMINI_API_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
         run: pnpm turbo check typecheck test
 
   build:
@@ -100,6 +107,10 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
           SUPABASE_SERVICE_ROLE_KEY: "mock"
+          GEMINI_API_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
         run: pnpm turbo build
 
   e2e:
@@ -152,4 +163,8 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
           SUPABASE_SERVICE_ROLE_KEY: "mock"
+          GEMINI_API_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
         run: pnpm turbo e2e
