@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
+import { Button, Card, Input } from '@repo/ui';
 import { formatPrice } from '@repo/utils';
-import { useCartStore } from '@/stores/cart-store';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '@/stores/cart-store';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -261,10 +261,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {formatPrice(
-                      item.price * item.quantity,
-                    )}{' '}
-                    IQD
+                    {formatPrice(item.price * item.quantity)} IQD
                   </div>
                 </div>
               </div>
