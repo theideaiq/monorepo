@@ -1,5 +1,3 @@
-import { createClient } from '@/lib/supabase/server';
-
 export const WINDOW_SIZE_MS = 60 * 1000; // 1 minute
 export const MAX_REQUESTS = 5; // 5 requests per minute
 
@@ -14,6 +12,7 @@ export const MAX_REQUESTS = 5; // 5 requests per minute
  * @returns A promise resolving to `true` if allowed, `false` if blocked.
  */
 export async function checkRateLimit(key: string): Promise<boolean> {
+  const { createClient } = await import('@/lib/supabase/server');
   const supabase = await createClient();
 
   // 1. Get current limit
