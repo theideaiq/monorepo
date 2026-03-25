@@ -1,0 +1,3 @@
+## 2024-03-25 - WebFooter Semantic Navigation and Heading Hierarchy
+**Learning:** Found skipped heading levels (jumping from H1 on the page directly to H4 in the footer) and div navigation in the footer which hurts crawler understanding.
+**Action:** Always ensure footer link columns are wrapped in a semantic `<nav aria-label="...">` and heading hierarchy is strictly maintained without skipping levels.
