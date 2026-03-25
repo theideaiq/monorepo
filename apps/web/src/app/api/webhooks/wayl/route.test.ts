@@ -1,6 +1,6 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { POST } from './route';
 import { Logger } from '@repo/utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { POST } from './route';
 
 vi.mock('@repo/utils', () => ({
   Logger: {
@@ -38,8 +38,13 @@ describe('Wayl Webhook Route', () => {
 
     expect(res.status).toBe(200);
     expect(json).toEqual({ received: true });
-    expect(Logger.log).toHaveBeenCalledWith('Wayl Webhook Received:', expect.any(Object));
-    expect(Logger.log).toHaveBeenCalledWith('Payment Complete for Order order-123 via credit_card');
+    expect(Logger.log).toHaveBeenCalledWith(
+      'Wayl Webhook Received:',
+      expect.any(Object),
+    );
+    expect(Logger.log).toHaveBeenCalledWith(
+      'Payment Complete for Order order-123 via credit_card',
+    );
   });
 
   it('should process Cancelled status and log a warning', async () => {
@@ -57,7 +62,9 @@ describe('Wayl Webhook Route', () => {
 
     expect(res.status).toBe(200);
     expect(json).toEqual({ received: true });
-    expect(Logger.warn).toHaveBeenCalledWith('Payment Failed/Cancelled for Order order-123');
+    expect(Logger.warn).toHaveBeenCalledWith(
+      'Payment Failed/Cancelled for Order order-123',
+    );
   });
 
   it('should handle invalid JSON and return 500', async () => {
@@ -72,7 +79,10 @@ describe('Wayl Webhook Route', () => {
 
     expect(res.status).toBe(500);
     expect(json).toEqual({ error: 'Webhook processing failed' });
-    expect(Logger.error).toHaveBeenCalledWith('Wayl Webhook Error:', expect.any(Error));
+    expect(Logger.error).toHaveBeenCalledWith(
+      'Wayl Webhook Error:',
+      expect.any(Error),
+    );
   });
 
   it('should log a warning if signature is missing in production', async () => {
