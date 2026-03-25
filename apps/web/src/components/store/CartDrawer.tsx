@@ -7,6 +7,7 @@ import { Drawer } from '@/components/ui/Drawer';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { Button } from '@repo/ui';
+import { formatPrice } from '@repo/utils';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -18,7 +19,7 @@ export function CartDrawer() {
     router.push('/checkout');
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = formatPrice(total);
 
   return (
     <Drawer
@@ -76,7 +77,7 @@ export function CartDrawer() {
                   </p>
                 )}
                 <p className="text-brand-yellow font-bold mt-2">
-                  {new Intl.NumberFormat('en-IQ').format(item.price)} IQD
+                  {formatPrice(item.price)} IQD
                 </p>
               </div>
 
