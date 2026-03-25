@@ -14,8 +14,6 @@ interface WebNavbarProps {
   logo?: React.ReactNode;
   desktopActions?: React.ReactNode;
   mobileActions?: React.ReactNode;
-  // keeping props for compatibility with layout calling signature, though we might ignore some
-  [key: string]: any;
 }
 
 export function WebNavbar({ navItems, logo }: WebNavbarProps) {
