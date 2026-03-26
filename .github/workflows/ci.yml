@@ -59,9 +59,9 @@ jobs:
           RESEND_API_KEY: mock
           TELEGRAM_BOT_TOKEN: mock
           GEMINI_API_KEY: mock
-          UPSTASH_REDIS_REST_URL: mock
+          UPSTASH_REDIS_REST_URL: https://mock.upstash.io
           UPSTASH_REDIS_REST_TOKEN: mock
-          WEB_APP_URL: mock
+          WEB_APP_URL: https://mock.app
         run: pnpm turbo check typecheck test
 
   build:
@@ -116,9 +116,9 @@ jobs:
           RESEND_API_KEY: mock
           TELEGRAM_BOT_TOKEN: mock
           GEMINI_API_KEY: mock
-          UPSTASH_REDIS_REST_URL: mock
+          UPSTASH_REDIS_REST_URL: https://mock.upstash.io
           UPSTASH_REDIS_REST_TOKEN: mock
-          WEB_APP_URL: mock
+          WEB_APP_URL: https://mock.app
         run: pnpm turbo build
 
   e2e:
