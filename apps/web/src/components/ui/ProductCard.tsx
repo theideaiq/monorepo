@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -12,7 +13,8 @@ interface ProductCardProps {
   priority?: boolean;
 }
 
-export function ProductCard({
+// ⚡ Bolt: Added React.memo to prevent unnecessary re-renders of ProductCard in lists
+export const ProductCard = memo(function ProductCard({
   product,
   onAddToCart,
   priority = false,
@@ -107,4 +109,4 @@ export function ProductCard({
       </motion.div>
     </Link>
   );
-}
+});
