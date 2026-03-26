@@ -191,7 +191,7 @@ function CategoryRow({ title, items, onRent, rentingId, icon }: CategoryRowProps
             {/* Image */}
             <div className="relative h-[300px] w-full">
               <Image
-                src={item.image_url}
+                src={item.image_url as string}
                 alt={item.title}
                 fill
                 className="object-cover"
