@@ -33,5 +33,9 @@ export type WebhookEvent = {
 export interface PaymentProvider {
   name: string;
   createCheckoutSession(order: OrderData): Promise<PaymentSession>;
-  verifyWebhook(payload: unknown, signature?: string): Promise<WebhookEvent>;
+  verifyWebhook(
+    payload: unknown,
+    signature?: string,
+    rawBody?: string,
+  ): Promise<WebhookEvent>;
 }

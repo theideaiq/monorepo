@@ -1,0 +1,4 @@
+## 2026-03-26 - Missing Webhook Signature Validation
+**Vulnerability:** The Wayl payment provider webhook adapter (packages/payment-engine/src/adapters/wayl.ts) had missing signature verification logic, trusting any payload sent to the endpoint. The original API handler also read the payload using `request.json()` which destroyed the raw body necessary for HMAC verification.
+**Learning:** API route endpoints for webhooks must retrieve the raw body (e.g., `request.text()`) before parsing it, and signature validation MUST fail closed instead of fail open (e.g. failing if the secret is undefined).
+**Prevention:** In the future, always implement HMAC SHA-256 signature verification for webhooks, ensure `crypto.timingSafeEqual` is used with buffers of identical byte-length, and strictly throw errors if validation fails or configuration is missing in production environments.
