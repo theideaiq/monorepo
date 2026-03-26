@@ -9,7 +9,12 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/labeler@v6
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true
