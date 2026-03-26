@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -43,7 +44,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,7 +70,7 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -81,7 +85,7 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
