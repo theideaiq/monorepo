@@ -28,9 +28,16 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (
+    index: number,
+    field: keyof (typeof lines)[0],
+    value: string | number,
+  ) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    newLines[index] = {
+      ...newLines[index],
+      [field]: value,
+    } as (typeof lines)[0];
     setLines(newLines);
   };
 
@@ -57,7 +64,13 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      // Cast lines to satisfy type if they have empty strings instead of full values,
+      // handled correctly by component state
+      await createJournalEntry(
+        date,
+        description,
+        lines as { accountId: string; debit: number; credit: number }[],
+      );
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);

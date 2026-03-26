@@ -48,7 +48,7 @@ export default async function TransactionsPage() {
                           ? 'success'
                           : tx.status === 'Pending'
                             ? 'warning'
-                            : 'secondary'
+                            : 'neutral'
                       }
                     >
                       {tx.status}
