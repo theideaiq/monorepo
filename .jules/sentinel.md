@@ -1,0 +1,4 @@
+## 2026-03-27 - [Insecure Random Number Generation for Payment Reference IDs]
+**Vulnerability:** Found `Math.random()` being used to generate `referenceId` strings in the Wayl payment link creation logic within `apps/droid/src/lib/gemini.ts`.
+**Learning:** Math.random() is a PRNG (Pseudo-Random Number Generator) and is not cryptographically secure. Relying on it for transaction or payment identifiers can lead to predictable IDs, which increases the risk of brute-force attacks, collisions, or unauthorized session tracking/manipulation by malicious actors.
+**Prevention:** Always use cryptographically secure random number generators (CSPRNG), such as Node's built-in `crypto.randomBytes()` or `crypto.randomUUID()`, when generating identifiers related to payments, sessions, tokens, or any security-sensitive operations.

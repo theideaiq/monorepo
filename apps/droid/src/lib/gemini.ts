@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { type Content, GoogleGenAI, type Tool } from '@google/genai';
 import { droidEnv as env } from '@repo/env/droid';
 import { PaymentFactory } from '@repo/payment-engine';
@@ -149,7 +150,7 @@ async function createPaymentLink(amount: number, itemDescription: string) {
     });
 
     const session = await provider.createCheckoutSession({
-      referenceId: `droid-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+      referenceId: `droid-${Date.now()}-${randomUUID()}`,
       amount,
       currency: 'IQD',
       description: itemDescription,
