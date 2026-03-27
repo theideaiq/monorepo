@@ -58,13 +58,14 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: mock
           NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: mock
+          NEXT_PUBLIC_SITE_URL: "https://mock.app"
           TELEGRAM_BOT_TOKEN: mock
           GEMINI_API_KEY: mock
           UPSTASH_REDIS_REST_URL: "https://mock.upstash.io"
           UPSTASH_REDIS_REST_TOKEN: mock
           WEB_APP_URL: "https://mock.app"
           RESEND_API_KEY: mock
-        run: pnpm turbo check typecheck test
+        run: pnpm turbo check typecheck test --continue
 
   build:
     name: Build
@@ -113,6 +114,7 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
+          NEXT_PUBLIC_SITE_URL: "https://mock.app"
           WAYL_SECRET_KEY: mock
           WAYL_WEBHOOK_SECRET: mock
           ZAIN_SECRET_KEY: mock
