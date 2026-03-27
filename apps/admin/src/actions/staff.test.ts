@@ -1,7 +1,7 @@
 import * as nextCache from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as audit from '@/lib/audit';
-import { updateRole } from './staff';
+import { addStaff, updateRole } from './staff';
 
 // Mock dependencies using vi.hoisted to avoid ReferenceError
 const mocks = vi.hoisted(() => ({
@@ -98,7 +98,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Only Superadmins can change roles',
+      'Unauthorized: Insufficient permissions',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Unauthorized',
+      'Authentication required: No user session found',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -128,5 +128,119 @@ describe('staff actions - updateRole', () => {
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
       'Database error',
     );
+  });
+});
+
+describe('staff actions - addStaff', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const setupSupabaseMock = (
+    user: { id: string } | null,
+    requesterRole: string | null = null,
+    targetUser: { id: string } | null = null,
+    searchError: { message: string } | null = null,
+    updateError: { message: string } | null = null,
+  ) => {
+    // Mock getUser
+    mocks.supabase.auth.getUser.mockResolvedValue({
+      data: { user },
+      error: null,
+    });
+
+    // Mock query builder chain
+    const mockUpdate = vi.fn().mockReturnValue({
+      eq: vi.fn().mockResolvedValue({ error: updateError }),
+    });
+
+    const mockSelect = vi.fn().mockImplementation(() => {
+      // Mocking different select chains based on the context (requester role vs search target)
+      let currentEqKey = '';
+      return {
+        eq: vi.fn().mockImplementation((key, val) => {
+          currentEqKey = key;
+          return {
+            single: vi.fn().mockImplementation(() => {
+              if (currentEqKey === 'id') {
+                return Promise.resolve({
+                  data: requesterRole ? { role: requesterRole } : null,
+                  error: null,
+                });
+              }
+              if (currentEqKey === 'email') {
+                return Promise.resolve({
+                  data: targetUser,
+                  error: searchError,
+                });
+              }
+              return Promise.resolve({ data: null, error: null });
+            }),
+          };
+        }),
+      };
+    });
+
+    mocks.supabase.from.mockImplementation((table: string) => {
+      if (table === 'profiles') {
+        return {
+          select: mockSelect,
+          update: mockUpdate,
+        };
+      }
+      return {
+        select: vi.fn(),
+        update: vi.fn(),
+      };
+    });
+
+    return { mockSelect, mockUpdate };
+  };
+
+  it('should promote an existing user to admin using their email', async () => {
+    // Arrange
+    const superAdminId = 'super-admin-id';
+    const targetUserId = 'new-admin-id';
+    const targetEmail = 'newadmin@example.com';
+
+    setupSupabaseMock(
+      { id: superAdminId },
+      'superadmin',
+      { id: targetUserId },
+      null,
+      null
+    );
+
+    // Act
+    await addStaff(targetEmail);
+
+    // Assert
+    expect(audit.logAdminAction).toHaveBeenCalledWith('promote_staff', 'staff', {
+      target_user_id: targetUserId,
+      email: targetEmail,
+    });
+    expect(nextCache.revalidatePath).toHaveBeenCalledWith('/settings/staff');
+  });
+
+  it('should throw an error if the user is not found by email', async () => {
+    // Arrange
+    const superAdminId = 'super-admin-id';
+    const targetEmail = 'notfound@example.com';
+
+    setupSupabaseMock(
+      { id: superAdminId },
+      'superadmin',
+      null, // No target user returned
+      null,
+      null
+    );
+
+    // Act & Assert
+    await expect(addStaff(targetEmail)).rejects.toThrow(
+      'User not found. Ensure they have signed up and their profile has an email set.'
+    );
+
+    expect(audit.logAdminAction).not.toHaveBeenCalled();
+    expect(nextCache.revalidatePath).not.toHaveBeenCalled();
   });
 });
