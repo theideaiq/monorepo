@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     strategy:
       fail-fast: false
@@ -43,7 +44,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -65,13 +66,19 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # 0. Install pnpm explicitly with run_install: false in CodeQL context
+          npm install -g pnpm && pnpm install --frozen-lockfile
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
+
+          # 2. Sync Capacitor
+          pnpm --filter web exec cap sync android
           
-          # 2. Grant Permission
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -80,8 +87,14 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # 0. Install pnpm explicitly with run_install: false in CodeQL context
+          npm install -g pnpm && pnpm install --frozen-lockfile
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
+
+          # 1b. Sync Capacitor
+          pnpm --filter web exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
