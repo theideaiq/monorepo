@@ -29,6 +29,7 @@ export interface Product {
   images: string[];
   isVerified: boolean;
   description: string;
+  // biome-ignore lint/suspicious/noExplicitAny: Product details are unstructured
   details: Record<string, any>;
   variants: ProductVariant[];
   stock: number;
@@ -194,6 +195,7 @@ function mapDBProductToUI(item: DBProduct): Product {
     images: item.images || (item.image_url ? [item.image_url] : []),
     isVerified: item.is_verified,
     description: item.description || '',
+    // biome-ignore lint/suspicious/noExplicitAny: Details cast
     details: (item.details as Record<string, any>) || {},
     variants,
     stock: item.stock_count,
