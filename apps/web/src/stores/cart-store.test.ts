@@ -4,7 +4,7 @@ import { useCartStore } from './cart-store';
 describe('Cart Store', () => {
   // Reset store before each test to ensure isolation
   beforeEach(() => {
-    useCartStore.setState({ items: [] });
+    useCartStore.setState({ items: [], totalItems: 0 });
   });
 
   afterEach(() => {
@@ -17,57 +17,69 @@ describe('Cart Store', () => {
     expect(items).toEqual([]);
   });
 
+  const mockApple = { id: 'apple', productId: 'p1', title: 'Apple', price: 100, image: 'apple.png' };
+  const mockBanana = { id: 'banana', productId: 'p2', title: 'Banana', price: 200, image: 'banana.png' };
+
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple']);
+    addItem(mockApple);
+    expect(useCartStore.getState().items).toEqual([{ ...mockApple, quantity: 1 }]);
+    expect(useCartStore.getState().totalItems).toBe(1);
 
-    addItem('banana');
-    expect(useCartStore.getState().items).toEqual(['apple', 'banana']);
+    addItem(mockBanana);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockApple, quantity: 1 },
+      { ...mockBanana, quantity: 1 },
+    ]);
+    expect(useCartStore.getState().totalItems).toBe(2);
   });
 
   it('should remove items from the cart', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    addItem(mockApple);
+    addItem(mockBanana);
 
     removeItem('apple');
-    expect(useCartStore.getState().items).toEqual(['banana']);
+    expect(useCartStore.getState().items).toEqual([{ ...mockBanana, quantity: 1 }]);
+    expect(useCartStore.getState().totalItems).toBe(1);
   });
 
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    addItem(mockApple);
+    addItem(mockBanana);
 
     clearCart();
     expect(useCartStore.getState().items).toEqual([]);
+    expect(useCartStore.getState().totalItems).toBe(0);
   });
 
-  it('should handle duplicate items correctly (removes all instances)', () => {
-    // Current behavior documentation: removing an item removes ALL instances of that value
+  it('should handle duplicate items correctly (increments quantity)', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple', 'apple']);
+    addItem(mockApple);
+    addItem(mockApple);
+    expect(useCartStore.getState().items).toEqual([{ ...mockApple, quantity: 2 }]);
+    expect(useCartStore.getState().totalItems).toBe(2);
 
     removeItem('apple');
     expect(useCartStore.getState().items).toEqual([]);
+    expect(useCartStore.getState().totalItems).toBe(0);
   });
 
   it('should persist state to localStorage', () => {
     const { addItem } = useCartStore.getState();
-    addItem('persistent-item');
+    addItem(mockApple);
 
-    const stored = localStorage.getItem('cart-storage');
+    const stored = localStorage.getItem('cart-storage-v3');
     expect(stored).toBeDefined();
     if (stored) {
       const parsed = JSON.parse(stored);
-      expect(parsed.state.items).toEqual(['persistent-item']);
+      expect(parsed.state.items).toEqual([{ ...mockApple, quantity: 1 }]);
+      expect(parsed.state.totalItems).toBe(1);
     }
   });
 });
