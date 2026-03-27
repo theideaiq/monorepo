@@ -24,7 +24,7 @@ interface CartState {
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       items: [],
       total: 0,
       totalItems: 0,
@@ -32,7 +32,7 @@ export const useCartStore = create<CartState>()(
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          let updatedItems;
+          let updatedItems: CartItem[];
           if (existing) {
             updatedItems = state.items.map((i) =>
               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
@@ -47,7 +47,11 @@ export const useCartStore = create<CartState>()(
             0,
           );
           // ⚡ Bolt: O(1) state update for total items instead of O(n) reduce on render
-          return { items: updatedItems, total, totalItems: state.totalItems + 1 };
+          return {
+            items: updatedItems,
+            total,
+            totalItems: state.totalItems + 1,
+          };
         });
       },
 
@@ -62,7 +66,11 @@ export const useCartStore = create<CartState>()(
             0,
           );
           // ⚡ Bolt: O(1) state update for total items instead of O(n) reduce on render
-          return { items: updatedItems, total, totalItems: state.totalItems - existing.quantity };
+          return {
+            items: updatedItems,
+            total,
+            totalItems: state.totalItems - existing.quantity,
+          };
         });
       },
 
@@ -80,7 +88,11 @@ export const useCartStore = create<CartState>()(
             0,
           );
           // ⚡ Bolt: O(1) state update for total items instead of O(n) reduce on render
-          return { items: updatedItems, total, totalItems: state.totalItems + (quantity - existing.quantity) };
+          return {
+            items: updatedItems,
+            total,
+            totalItems: state.totalItems + (quantity - existing.quantity),
+          };
         });
       },
 
