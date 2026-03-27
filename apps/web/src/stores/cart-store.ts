@@ -19,18 +19,20 @@ interface CartState {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   total: number;
+  totalItems: number;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       items: [],
       total: 0,
+      totalItems: 0,
 
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          let updatedItems;
+          let updatedItems: CartItem[];
           if (existing) {
             updatedItems = state.items.map((i) =>
               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
@@ -44,24 +46,40 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          // ⚡ Bolt: O(1) state update for total items instead of O(n) reduce on render
+          return {
+            items: updatedItems,
+            total,
+            totalItems: state.totalItems + 1,
+          };
         });
       },
 
       removeItem: (id) => {
         set((state) => {
+          const existing = state.items.find((i) => i.id === id);
+          if (!existing) return state;
+
           const updatedItems = state.items.filter((i) => i.id !== id);
           const total = updatedItems.reduce(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          // ⚡ Bolt: O(1) state update for total items instead of O(n) reduce on render
+          return {
+            items: updatedItems,
+            total,
+            totalItems: state.totalItems - existing.quantity,
+          };
         });
       },
 
       updateQuantity: (id, quantity) => {
         set((state) => {
           if (quantity < 1) return state; // or remove?
+          const existing = state.items.find((i) => i.id === id);
+          if (!existing) return state;
+
           const updatedItems = state.items.map((i) =>
             i.id === id ? { ...i, quantity } : i,
           );
@@ -69,14 +87,19 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          // ⚡ Bolt: O(1) state update for total items instead of O(n) reduce on render
+          return {
+            items: updatedItems,
+            total,
+            totalItems: state.totalItems + (quantity - existing.quantity),
+          };
         });
       },
 
-      clearCart: () => set({ items: [], total: 0 }),
+      clearCart: () => set({ items: [], total: 0, totalItems: 0 }),
     }),
     {
-      name: 'cart-storage-v2', // v2 to reset old string storage
+      name: 'cart-storage-v3', // v3 to reset old string storage and ensure totalItems gets initialized correctly
     },
   ),
 );
