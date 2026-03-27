@@ -1,3 +1,0 @@
-## 2024-05-16 - Tailwind V4 Theme Configuration
-**Learning:** The project uses Tailwind CSS v4 and configures custom design tokens directly via the `@theme` directive in CSS files (e.g., `packages/ui/src/theme.css`), not a traditional `tailwind.config.ts`. Custom colors defined as `--color-<name>` are accessible as `<name>` in utility classes.
-**Action:** When searching for available design tokens or adding new ones, check `theme.css` instead of looking for a Tailwind configuration file. Use semantic names defined there instead of hardcoding arbitrary values like `[#hex]`.
