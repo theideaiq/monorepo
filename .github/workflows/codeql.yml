@@ -72,7 +72,8 @@ jobs:
           # 1. Restore Secrets (Generates google-services.json)
           pnpm --filter web run secrets:restore
 
-          # 2. Sync Capacitor
+          # 2. Sync Capacitor (Requires dummy webDir)
+          mkdir -p apps/web/out && touch apps/web/out/index.html
           pnpm --filter web exec cap sync android
           
           # 3. Grant Permission
@@ -93,7 +94,8 @@ jobs:
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --filter web run secrets:restore
 
-          # 1b. Sync Capacitor
+          # 1b. Sync Capacitor (Requires dummy webDir)
+          mkdir -p apps/web/out && touch apps/web/out/index.html
           pnpm --filter web exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
