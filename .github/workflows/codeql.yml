@@ -78,6 +78,8 @@ jobs:
           
           # 2. Sync Capacitor
           mkdir -p apps/web/out && touch apps/web/out/index.html
+          # Build Web so the output is generated properly for cap sync if needed
+          pnpm --filter web run build || true
           pnpm --filter web exec cap sync
 
           # 3. Grant Permission
@@ -97,6 +99,8 @@ jobs:
 
           # 2. Sync Capacitor
           mkdir -p apps/web/out && touch apps/web/out/index.html
+          # Build Web so the output is generated properly for cap sync if needed
+          pnpm --filter web run build || true
           pnpm --filter web exec cap sync
           
           # 3. Determine Build Type (CocoaPods vs SPM)
