@@ -150,6 +150,7 @@ async function createPaymentLink(amount: number, itemDescription: string) {
     });
 
     const session = await provider.createCheckoutSession({
+      // Security: use randomUUID instead of Math.random to prevent predictable transaction identifiers
       referenceId: `droid-${Date.now()}-${randomUUID()}`,
       amount,
       currency: 'IQD',
