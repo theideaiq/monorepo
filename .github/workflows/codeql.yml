@@ -93,8 +93,15 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --filter web run secrets:restore
+
+          # 2. Build dependencies
+          pnpm turbo build --filter=web
+
+          # 3. Cap sync to ensure the App directory is fully generated and ready
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          cd apps/web && npx cap sync ios && cd -
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 4. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -106,7 +113,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 5. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
