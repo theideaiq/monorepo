@@ -99,7 +99,7 @@ jobs:
 
           # 3. Cap sync to ensure the App directory is fully generated and ready
           mkdir -p apps/web/out && touch apps/web/out/index.html
-          cd apps/web && npx cap sync ios && cd -
+          cd apps/web && pnpm dlx @capacitor/cli sync ios && cd -
           
           # 4. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
