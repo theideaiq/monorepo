@@ -1,13 +1,13 @@
 'use client';
 
 import { Button, Input } from '@repo/ui';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const supabase = createClient();
 
@@ -128,10 +128,7 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                    <label
-                      htmlFor="fullName"
-                      className="text-sm text-slate-400 mb-1 block"
-                    >
+                    <label htmlFor="fullName" className="text-sm text-slate-400 mb-1 block">
                       Full Name
                     </label>
                     <div className="relative">
@@ -155,10 +152,7 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
-              <label
-                htmlFor="email"
-                className="text-sm text-slate-400 mb-1 block"
-              >
+              <label htmlFor="email" className="text-sm text-slate-400 mb-1 block">
                 Email Address
               </label>
               <div className="relative">
@@ -179,10 +173,7 @@ export default function AuthPage() {
             </div>
 
             <div>
-              <label
-                htmlFor="password"
-                className="text-sm text-slate-400 mb-1 block"
-              >
+              <label htmlFor="password" className="text-sm text-slate-400 mb-1 block">
                 Password
               </label>
               <div className="relative">
