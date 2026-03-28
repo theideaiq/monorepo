@@ -1,6 +1,6 @@
 'use client';
 
-import { Product } from '@/services/products';
+import type { Product } from '@/services/products';
 
 /**
  * Injects JSON-LD Structured Data for Products into the page head.
