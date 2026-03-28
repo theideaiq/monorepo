@@ -1,3 +1,6 @@
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 name: CI
 permissions:
   contents: read
@@ -12,10 +15,10 @@ jobs:
     name: Quality Gate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
 
@@ -49,18 +52,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
-        env:
-          WAYL_SECRET_KEY: "mock_wayl_secret"
-          WAYL_WEBHOOK_SECRET: "mock_wayl_webhook"
-          ZAIN_SECRET_KEY: "mock_zain_secret"
-          SUPABASE_SERVICE_ROLE_KEY: "mock_supabase_role"
-          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
-          TELEGRAM_BOT_TOKEN: "mock_telegram"
-          GEMINI_API_KEY: "mock_gemini"
-          UPSTASH_REDIS_REST_URL: "https://mock.upstash.io"
-          UPSTASH_REDIS_REST_TOKEN: "mock_upstash_token"
-          WEB_APP_URL: "https://mock.webapp.com"
-          RESEND_API_KEY: "mock_resend"
         run: pnpm turbo check typecheck test
 
   build:
@@ -68,10 +59,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: []
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
 
@@ -106,18 +97,8 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock_anon_key' }}
-          WAYL_SECRET_KEY: "mock_wayl_secret"
-          WAYL_WEBHOOK_SECRET: "mock_wayl_webhook"
-          ZAIN_SECRET_KEY: "mock_zain_secret"
-          SUPABASE_SERVICE_ROLE_KEY: "mock_supabase_role"
-          TELEGRAM_BOT_TOKEN: "mock_telegram"
-          GEMINI_API_KEY: "mock_gemini"
-          UPSTASH_REDIS_REST_URL: "https://mock.upstash.io"
-          UPSTASH_REDIS_REST_TOKEN: "mock_upstash_token"
-          WEB_APP_URL: "https://mock.webapp.com"
-          RESEND_API_KEY: "mock_resend"
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm turbo build
 
   e2e:
@@ -125,10 +106,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
 
@@ -166,16 +147,6 @@ jobs:
 
       - name: Run E2E Tests
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock_anon_key' }}
-          WAYL_SECRET_KEY: "mock_wayl_secret"
-          WAYL_WEBHOOK_SECRET: "mock_wayl_webhook"
-          ZAIN_SECRET_KEY: "mock_zain_secret"
-          SUPABASE_SERVICE_ROLE_KEY: "mock_supabase_role"
-          TELEGRAM_BOT_TOKEN: "mock_telegram"
-          GEMINI_API_KEY: "mock_gemini"
-          UPSTASH_REDIS_REST_URL: "https://mock.upstash.io"
-          UPSTASH_REDIS_REST_TOKEN: "mock_upstash_token"
-          WEB_APP_URL: "https://mock.webapp.com"
-          RESEND_API_KEY: "mock_resend"
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm turbo e2e

@@ -1,3 +1,6 @@
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 name: "CodeQL Advanced"
 
 on:
@@ -37,21 +40,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      # Required for 'pnpm run secrets:restore'
+      # Required for 'npm run secrets:restore'
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 24
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+          node-version: 20
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -74,16 +69,12 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm --filter web run secrets:restore
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Create dummy build output so cap sync doesn't fail
-          mkdir -p apps/web/out && touch apps/web/out/index.html
-          pnpm --filter web exec cap sync
-
-          # 4. Build Debug APK (Sufficient for analysis)
+          # 3. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -93,13 +84,9 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --filter web run secrets:restore
-
-          # 2. Create dummy build output so cap sync doesn't fail
-          mkdir -p apps/web/out && touch apps/web/out/index.html
-          pnpm --filter web exec cap sync
+          npm run secrets:restore --workspace=apps/web
           
-          # 3. Determine Build Type (CocoaPods vs SPM)
+          # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -111,7 +98,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 4. Build for Simulator (No Signing Required)
+          # 3. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
