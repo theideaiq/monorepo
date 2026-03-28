@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, Input, Select } from '@repo/ui';
+import { getErrorMessage } from '@repo/utils';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { createSegment } from '@/actions/marketing';
@@ -27,8 +28,8 @@ export function SegmentForm() {
       setName('');
       setRole('');
       setStatus('');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e) {
+      toast.error(getErrorMessage(e));
     }
   };
 

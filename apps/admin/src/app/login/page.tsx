@@ -1,11 +1,11 @@
 'use client';
 
 import { Button, Card, Input } from '@repo/ui';
+import { getErrorMessage } from '@repo/utils';
 import { Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { hasAdminAccess } from '@/lib/auth-checks';
 import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
@@ -58,7 +58,8 @@ export default function LoginPage() {
         throw new Error('Profile not found for this user.');
       }
 
-      if (!hasAdminAccess(profile.role)) {
+      const role = profile.role?.toLowerCase() || '';
+      if (role !== 'admin' && role !== 'superadmin') {
         await supabase.auth.signOut();
         throw new Error(
           `Access Denied: Admin privileges required. Found role: ${profile.role}`,
@@ -68,8 +69,8 @@ export default function LoginPage() {
       toast.success('Welcome back, Admin');
       router.push('/');
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to login');
+    } catch (error) {
+      toast.error(getErrorMessage(error) || 'Failed to login');
     } finally {
       setLoading(false);
     }

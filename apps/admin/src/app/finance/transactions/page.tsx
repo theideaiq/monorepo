@@ -2,7 +2,13 @@ import { Badge, Button } from '@repo/ui';
 import { waylClient } from '@/lib/wayl';
 
 export default async function TransactionsPage() {
-  const { data: transactions } = await waylClient.links.list({ take: 50 });
+  let transactions: any[] = [];
+  try {
+    const res = await waylClient.links.list({ take: 50 });
+    transactions = res.data;
+  } catch (error) {
+    console.error("Failed to fetch transactions from Wayl", error);
+  }
 
   return (
     <div className="p-8">
@@ -48,7 +54,7 @@ export default async function TransactionsPage() {
                           ? 'success'
                           : tx.status === 'Pending'
                             ? 'warning'
-                            : 'secondary'
+                              : 'neutral'
                       }
                     >
                       {tx.status}

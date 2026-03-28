@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Input } from '@repo/ui';
+import { getErrorMessage } from '@repo/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useState } from 'react';
@@ -46,8 +47,8 @@ export default function AuthPage() {
         toast.success('Account created! Please check your email.');
         setMode('login');
       }
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err) {
+      toast.error(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
