@@ -10,6 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
     steps:
       - name: Checkout code
@@ -41,7 +42,9 @@ jobs:
         run: cd apps/web && pnpm secrets:restore
 
       - name: Sync Capacitor
-        run: cd apps/web && npx cap sync android
+        run: |
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          cd apps/web && pnpm dlx @capacitor/cli sync android
 
       - name: Build APK
         run: cd apps/web/android && ./gradlew assembleDebug
