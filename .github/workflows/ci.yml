@@ -49,6 +49,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock_key"
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +98,19 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock_key' }}
+          SKIP_ENV_VALIDATION: "true"
+          WAYL_SECRET_KEY: "mock_key"
+          WAYL_WEBHOOK_SECRET: "mock_key"
+          ZAIN_SECRET_KEY: "mock_key"
+          SUPABASE_SERVICE_ROLE_KEY: "mock_key"
+          RESEND_API_KEY: "mock_key"
+          TELEGRAM_BOT_TOKEN: "mock_key"
+          GEMINI_API_KEY: "mock_key"
+          UPSTASH_REDIS_REST_URL: "https://mock.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "mock_key"
+          WEB_APP_URL: "https://mock.web.app"
         run: pnpm turbo build
 
   e2e:
@@ -144,6 +159,17 @@ jobs:
 
       - name: Run E2E Tests
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock_key' }}
+          SKIP_ENV_VALIDATION: "true"
+          WAYL_SECRET_KEY: "mock_key"
+          WAYL_WEBHOOK_SECRET: "mock_key"
+          ZAIN_SECRET_KEY: "mock_key"
+          SUPABASE_SERVICE_ROLE_KEY: "mock_key"
+          RESEND_API_KEY: "mock_key"
+          TELEGRAM_BOT_TOKEN: "mock_key"
+          GEMINI_API_KEY: "mock_key"
+          UPSTASH_REDIS_REST_URL: "https://mock.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "mock_key"
+          WEB_APP_URL: "https://mock.web.app"
         run: pnpm turbo e2e
