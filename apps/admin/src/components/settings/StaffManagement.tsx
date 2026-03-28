@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, Input, Modal } from '@repo/ui';
+import { getErrorMessage } from '@repo/utils';
 import { Shield, ShieldAlert, UserCheck, UserX } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -31,8 +32,8 @@ export default function StaffManagement({
     try {
       await updateRole(userId, newRole);
       toast.success(`Role updated to ${newRole}`);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(null);
     }
@@ -44,8 +45,8 @@ export default function StaffManagement({
     try {
       await toggleBan(userId, !currentStatus);
       toast.success(currentStatus ? 'User unbanned' : 'User banned');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(null);
     }
@@ -59,8 +60,8 @@ export default function StaffManagement({
       toast.success('Staff added successfully');
       setIsAddModalOpen(false);
       setNewStaffEmail('');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(null);
     }

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, Input, Select, Textarea } from '@repo/ui';
+import { getErrorMessage } from '@repo/utils';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -29,8 +30,8 @@ export function CreateCampaignForm({
       await sendCampaign(campaignId);
       toast.success('Campaign sent successfully!');
       router.push('/marketing/campaigns');
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to send campaign');
+    } catch (e) {
+      toast.error(getErrorMessage(e) || 'Failed to send campaign');
     } finally {
       setIsSending(false);
     }

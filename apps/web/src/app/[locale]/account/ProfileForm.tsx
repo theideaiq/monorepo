@@ -1,5 +1,6 @@
 'use client';
 
+import { getErrorMessage } from '@repo/utils';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -14,8 +15,8 @@ export default function ProfileForm({ profile }: { profile: any }) {
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e) {
+      toast.error(getErrorMessage(e));
     } finally {
       setLoading(false);
     }

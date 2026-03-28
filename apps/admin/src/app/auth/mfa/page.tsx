@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, Input } from '@repo/ui';
+import { getErrorMessage } from '@repo/utils';
 import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import { useEffect, useState } from 'react';
@@ -70,8 +71,8 @@ export default function MFAPage() {
       toast.success('Authentication successful');
       router.push('/');
       router.refresh();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err) {
+      toast.error(getErrorMessage(err));
     } finally {
       setLoading(false);
     }

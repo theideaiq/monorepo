@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, Input } from '@repo/ui';
+import { getErrorMessage } from '@repo/utils';
 import { Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -68,8 +69,8 @@ export default function LoginPage() {
       toast.success('Welcome back, Admin');
       router.push('/');
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to login');
+    } catch (error) {
+      toast.error(getErrorMessage(error) || 'Failed to login');
     } finally {
       setLoading(false);
     }
