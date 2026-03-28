@@ -70,6 +70,7 @@ jobs:
           npm i -g pnpm && pnpm install --frozen-lockfile
 
           # Generate build artifacts via sync
+          mkdir -p apps/web/out && touch apps/web/out/index.html
           pnpm --filter web exec cap sync
 
           # 1. Restore Secrets (Generates google-services.json)
@@ -91,6 +92,7 @@ jobs:
           npm i -g pnpm && pnpm install --frozen-lockfile
 
           # Generate build artifacts via sync
+          mkdir -p apps/web/out && touch apps/web/out/index.html
           pnpm --filter web exec cap sync
 
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
