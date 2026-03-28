@@ -19,7 +19,6 @@ interface CartState {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   total: number;
-  totalItems: number;
 }
 
 export const useCartStore = create<CartState>()(
@@ -41,16 +40,12 @@ export const useCartStore = create<CartState>()(
             updatedItems = [...state.items, { ...newItem, quantity: 1 }];
           }
 
-          // Recalc total and totalItems
+          // Recalc total
           const total = updatedItems.reduce(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          const totalItems = updatedItems.reduce(
-            (acc, i) => acc + i.quantity,
-            0,
-          );
-          return { items: updatedItems, total, totalItems };
+          return { items: updatedItems, total };
         });
       },
 
@@ -61,11 +56,7 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          const totalItems = updatedItems.reduce(
-            (acc, i) => acc + i.quantity,
-            0,
-          );
-          return { items: updatedItems, total, totalItems };
+          return { items: updatedItems, total };
         });
       },
 
@@ -79,15 +70,11 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          const totalItems = updatedItems.reduce(
-            (acc, i) => acc + i.quantity,
-            0,
-          );
-          return { items: updatedItems, total, totalItems };
+          return { items: updatedItems, total };
         });
       },
 
-      clearCart: () => set({ items: [], total: 0, totalItems: 0 }),
+      clearCart: () => set({ items: [], total: 0 }),
     }),
     {
       name: 'cart-storage-v2', // v2 to reset old string storage

@@ -22,11 +22,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const { toggleCart } = useUIStore();
-
-  // ⚡ Bolt: Subscribe only to primitive totalItems instead of the full items array.
-  // This prevents WebNavbar from unnecessarily re-rendering whenever the items array identity changes,
-  // and avoids O(N) recalculations on every render.
-  const totalItems = useCartStore((s) => s.totalItems);
+  const cartItems = useCartStore((s) => s.items);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -109,9 +105,9 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
             className="relative text-white hover:text-brand-yellow transition-colors"
           >
             <ShoppingCart size={20} />
-            {mounted && totalItems > 0 && (
+            {mounted && cartItems.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {totalItems}
+                {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
               </span>
             )}
           </button>

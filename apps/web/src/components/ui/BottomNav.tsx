@@ -10,11 +10,7 @@ import { useUIStore } from '@/stores/ui-store';
 export function BottomNav() {
   const pathname = usePathname();
   const { toggleCart } = useUIStore();
-
-  // ⚡ Bolt: Subscribe only to primitive totalItems instead of the full items array.
-  // This prevents BottomNav from unnecessarily re-rendering whenever the items array identity changes,
-  // and avoids O(N) recalculations on every render.
-  const totalItems = useCartStore((s) => s.totalItems);
+  const items = useCartStore((s) => s.items);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -72,9 +68,9 @@ export function BottomNav() {
         >
           <div className="relative">
             <ShoppingCart size={20} />
-            {mounted && totalItems > 0 && (
+            {mounted && items.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {totalItems}
+                {items.reduce((acc, i) => acc + i.quantity, 0)}
               </span>
             )}
           </div>
