@@ -8,15 +8,17 @@ import { toast } from 'react-hot-toast';
 import type { ChartOfAccount } from '@/types/finance';
 import { createJournalEntry } from '../../actions';
 
+type LineItem = { accountId: string; debit: number; credit: number };
+
 export function NewJournalEntryModal({
   accounts,
 }: {
   accounts: ChartOfAccount[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [description, setDescription] = useState('');
-  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
+  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0] || '');
+  const [description, setDescription] = useState<string>('');
+  const [lines, setLines] = useState<LineItem[]>([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,9 +30,9 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = <K extends keyof LineItem>(index: number, field: K, value: LineItem[K]) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    newLines[index] = { ...newLines[index] as LineItem, [field]: value };
     setLines(newLines);
   };
 
