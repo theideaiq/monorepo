@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useCartStore, type CartItem } from './cart-store';
+import { type CartItem, useCartStore } from './cart-store';
 
 describe('Cart Store', () => {
   // Mock data
