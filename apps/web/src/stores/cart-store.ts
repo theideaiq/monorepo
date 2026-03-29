@@ -19,18 +19,20 @@ interface CartState {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   total: number;
+  totalItems: number;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       items: [],
       total: 0,
+      totalItems: 0,
 
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          let updatedItems;
+          let updatedItems: CartItem[];
           if (existing) {
             updatedItems = state.items.map((i) =>
               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
@@ -44,7 +46,11 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          const totalItems = updatedItems.reduce(
+            (acc, i) => acc + i.quantity,
+            0,
+          );
+          return { items: updatedItems, total, totalItems };
         });
       },
 
@@ -55,7 +61,11 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          const totalItems = updatedItems.reduce(
+            (acc, i) => acc + i.quantity,
+            0,
+          );
+          return { items: updatedItems, total, totalItems };
         });
       },
 
@@ -69,14 +79,18 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          const totalItems = updatedItems.reduce(
+            (acc, i) => acc + i.quantity,
+            0,
+          );
+          return { items: updatedItems, total, totalItems };
         });
       },
 
-      clearCart: () => set({ items: [], total: 0 }),
+      clearCart: () => set({ items: [], total: 0, totalItems: 0 }),
     }),
     {
-      name: 'cart-storage-v2', // v2 to reset old string storage
+      name: 'cart-storage-v3', // v3 to compute totalItems for existing carts
     },
   ),
 );
