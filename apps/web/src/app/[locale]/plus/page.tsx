@@ -8,8 +8,6 @@ import {
   Gamepad2,
   Zap,
   Crown,
-  Film,
-  Music,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useState } from 'react';
@@ -186,7 +184,7 @@ export default function PlusHome() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               className={`relative flex flex-col p-8 rounded-[2rem] border transition-all duration-300 hover:-translate-y-2
-                ${tier.popular ? `bg-[#1a1a1a] ${tier.accent} z-10 md:scale-105` : 'bg-white/5 border-white/5 hover:border-white/20'}
+                ${tier.popular ? `bg-brand-surface ${tier.accent} z-10 md:scale-105` : 'bg-white/5 border-white/5 hover:border-white/20'}
               `}
             >
               {tier.popular && (
