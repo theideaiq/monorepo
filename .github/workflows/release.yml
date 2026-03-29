@@ -7,19 +7,6 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  TELEGRAM_BOT_TOKEN: "mock"
-  GEMINI_API_KEY: "mock"
-  SUPABASE_SERVICE_ROLE_KEY: "mock"
-  UPSTASH_REDIS_REST_URL: "https://mock.app"
-  UPSTASH_REDIS_REST_TOKEN: "mock"
-  WAYL_SECRET_KEY: "mock"
-  WAYL_WEBHOOK_SECRET: "mock"
-  WEB_APP_URL: "https://mock.app"
-  NEXT_PUBLIC_SUPABASE_URL: "https://mock.app"
-  RESEND_API_KEY: "mock"
-  ZAIN_SECRET_KEY: "mock"
 jobs:
   release:
     name: Release

@@ -21,6 +21,7 @@ env:
   NEXT_PUBLIC_SUPABASE_URL: "https://mock.app"
   RESEND_API_KEY: "mock"
   ZAIN_SECRET_KEY: "mock"
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
