@@ -25,9 +25,9 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: none
+            build-mode: manual
           - language: swift
-            build-mode: none
+            build-mode: manual
 
     steps:
       - name: Checkout repository
@@ -40,6 +40,8 @@ jobs:
 
       - name: Setup Java
         uses: actions/setup-java@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         if: ${{ matrix.language == 'java-kotlin' || matrix.language == 'java' }}
         with:
           distribution: 'temurin'
@@ -47,14 +49,19 @@ jobs:
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           run_install: false
+          version: "10"
 
       - name: Build JavaScript dependencies
         run: pnpm install --frozen-lockfile
@@ -100,5 +107,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           category: "/language:${{matrix.language}}"

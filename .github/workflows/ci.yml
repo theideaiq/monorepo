@@ -21,6 +21,11 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+        with:
+          run_install: false
+          version: "10"
         with:
           run_install: false
 
@@ -77,6 +82,11 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+        with:
+          run_install: false
+          version: "10"
         with:
           run_install: false
 
@@ -134,6 +144,11 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+        with:
+          run_install: false
+          version: "10"
         with:
           run_install: false
 
