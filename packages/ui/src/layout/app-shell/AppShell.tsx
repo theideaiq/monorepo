@@ -1,8 +1,8 @@
 import { cn } from '@repo/utils';
 import { Menu } from 'lucide-react';
 import type React from 'react';
-import { Button } from '../button/Button';
-import { Sheet, SheetContent, SheetTrigger } from '../sheet/Sheet';
+import { Button } from '../../button/Button';
+import { Sheet, SheetContent, SheetTrigger } from '../../sheet/Sheet';
 
 interface AppShellProps {
   children: React.ReactNode;

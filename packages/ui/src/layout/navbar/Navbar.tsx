@@ -4,7 +4,7 @@ import { cn } from '@repo/utils';
 import { Menu, X } from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
-import { Button } from '../button/Button';
+import { Button } from '../../button/Button';
 
 export interface NavItem {
   label: string;
