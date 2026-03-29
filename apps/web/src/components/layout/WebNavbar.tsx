@@ -23,6 +23,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
   const pathname = usePathname();
   const { toggleCart } = useUIStore();
   const cartItems = useCartStore((s) => s.items);
+  const totalItems = useCartStore((s) => s.totalItems);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -107,7 +108,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
             <ShoppingCart size={20} />
             {mounted && cartItems.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+                {totalItems}
               </span>
             )}
           </button>
