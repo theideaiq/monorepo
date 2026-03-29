@@ -22,7 +22,8 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
-    <div
+    <button
+      type="button"
       onClick={onSelect}
       className={`
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
@@ -66,6 +67,6 @@ export function SubscriptionCard({
           </div>
         ))}
       </div>
-    </div>
+    </button>
   );
 }
