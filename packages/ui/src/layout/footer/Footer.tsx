@@ -1,7 +1,7 @@
 import { cn } from '@repo/utils';
 import { Globe } from 'lucide-react';
 import type React from 'react';
-import { buttonVariants } from '../button/Button';
+import { buttonVariants } from '../../button/Button';
 
 export interface FooterLink {
   label: string;
