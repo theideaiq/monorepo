@@ -8,6 +8,7 @@ on:
   pull_request:
 
 env:
+  SKIP_ENV_VALIDATION: true
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   WAYL_SECRET_KEY: mock
   WAYL_WEBHOOK_SECRET: mock
