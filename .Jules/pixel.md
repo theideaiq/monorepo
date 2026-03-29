@@ -1,0 +1,1 @@
+## 2026-01-28 - [Hardcoded Colors] **Learning:** Found widespread use of #1a1a1a hardcoded hex, bypassing the brand-surface token. **Action:** Always grep for common hardcoded hex values before declaring a UI task complete.
