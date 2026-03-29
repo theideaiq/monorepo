@@ -1,0 +1,6 @@
+--- apps/web/src/components/store/ProductView.tsx
++++ apps/web/src/components/store/ProductView.tsx
+@@ -118,2 +118,3 @@
+             <button
++              type="button"
+               onClick={() => setSelectedImage(product.image)}

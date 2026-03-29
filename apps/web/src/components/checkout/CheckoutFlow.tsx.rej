@@ -1,0 +1,9 @@
+--- apps/web/src/components/checkout/CheckoutFlow.tsx
++++ apps/web/src/components/checkout/CheckoutFlow.tsx
+@@ -46,4 +46,5 @@
+         >
+-          <div
++          <button
++            type="button"
+             className="p-6 flex items-center justify-between cursor-pointer w-full text-left"
+             onClick={() => setStep(1)}

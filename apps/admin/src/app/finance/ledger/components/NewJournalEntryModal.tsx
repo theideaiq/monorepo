@@ -30,7 +30,11 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value } as { accountId: string; debit: number; credit: number; };
+    newLines[index] = { ...newLines[index], [field]: value } as {
+      accountId: string;
+      debit: number;
+      credit: number;
+    };
     setLines(newLines);
   };
 

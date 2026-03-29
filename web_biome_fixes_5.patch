@@ -1,0 +1,61 @@
+--- apps/web/src/components/checkout/CheckoutFlow.tsx
++++ apps/web/src/components/checkout/CheckoutFlow.tsx
+@@ -46,4 +46,5 @@
+         >
+-          <div
++          <button
++            type="button"
+             className="p-6 flex items-center justify-between cursor-pointer w-full text-left"
+             onClick={() => setStep(1)}
++            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStep(1); } }}
+           >
+@@ -58,3 +59,3 @@
+             {step > 1 && (
+-              <button
+-                type="button"
++              <div
+                 className="text-sm text-slate-400 hover:text-white transition-colors ml-4"
+               >
+                 Edit
+-              </button>
++              </div>
+             )}
+-          </div>
++          </button>
+
+@@ -90,4 +91,5 @@
+         >
+-          <div
++          <button
++            type="button"
+             className="p-6 flex items-center justify-between cursor-pointer w-full text-left"
+             onClick={() => step >= 2 && setStep(2)}
++            onKeyDown={(e) => { if (step >= 2 && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setStep(2); } }}
+           >
+@@ -102,3 +104,3 @@
+             {step > 2 && (
+-              <button
+-                type="button"
++              <div
+                 className="text-sm text-slate-400 hover:text-white transition-colors ml-4"
+               >
+                 Edit
+-              </button>
++              </div>
+             )}
+-          </div>
++          </button>
+
+@@ -118,4 +120,5 @@
+         >
+-          <div
++          <button
++            type="button"
+             className="p-6 flex items-center justify-between cursor-pointer w-full text-left"
+             onClick={() => step === 3 && setStep(3)}
++            onKeyDown={(e) => { if (step === 3 && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setStep(3); } }}
+           >
+@@ -130,3 +133,3 @@
+             </div>
+-          </div>
++          </button>

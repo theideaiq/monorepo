@@ -1,0 +1,26 @@
+--- apps/web/src/components/checkout/SubscriptionCard.tsx
++++ apps/web/src/components/checkout/SubscriptionCard.tsx
+@@ -23,7 +23,13 @@
+ }: SubscriptionCardProps) {
+   return (
+-    <div
++    <button
++      type="button"
+       onClick={onSelect}
++      onKeyDown={(e) => {
++        if (e.key === 'Enter' || e.key === ' ') {
++          e.preventDefault();
++          onSelect();
++        }
++      }}
+       className={`
+         relative p-6 rounded-2xl border-2 transition-all cursor-pointer w-full text-left
+@@ -34,3 +40,3 @@
+       `}
+     >
+       <div className="flex justify-between items-start mb-4">
+@@ -52,3 +58,3 @@
+       )}
+-    </div>
++    </button>
+   );
