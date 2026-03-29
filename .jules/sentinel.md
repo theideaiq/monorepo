@@ -1,0 +1,4 @@
+## 2024-03-29 - Prevent XSS in JSON-LD Injection
+**Vulnerability:** XSS vulnerability via unescaped JSON-LD structured data injection in React components (`dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}`). An attacker could embed a `<script>` tag in user-controlled data (like segment names or search queries) which would be executed when parsed by the browser.
+**Learning:** Using `JSON.stringify` alone is not safe when injecting into HTML, because the resulting string can contain unescaped HTML characters like `<` and `>`. Browsers will execute any `<script>` tags found within the script content block.
+**Prevention:** Always escape HTML characters (specifically replacing `<` with `\u003c`) when using `dangerouslySetInnerHTML` for JSON-LD structured data in React/Next.js to prevent Cross-Site Scripting (XSS) vulnerabilities.
