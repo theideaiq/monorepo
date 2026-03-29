@@ -49,6 +49,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          ZAIN_SECRET_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          WEB_APP_URL: "https://mock.app"
+          UPSTASH_REDIS_REST_URL: "https://mock.app"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.app"
+          RESEND_API_KEY: "mock"
         run: pnpm turbo check typecheck test
 
   build:
@@ -96,6 +108,16 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          ZAIN_SECRET_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          WEB_APP_URL: "https://mock.app"
+          UPSTASH_REDIS_REST_URL: "https://mock.app"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          RESEND_API_KEY: "mock"
         run: pnpm turbo build
 
   e2e:
