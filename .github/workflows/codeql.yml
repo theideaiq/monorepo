@@ -64,9 +64,27 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
+        env:
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          ZAIN_SECRET_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.app"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
+          RESEND_API_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.app"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WEB_APP_URL: "https://mock.app"
         run: |
+          # 0. Mock environment files required for setup
+          pnpm install --frozen-lockfile
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter=web exec cap sync android
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -79,9 +97,27 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
+        env:
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          ZAIN_SECRET_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.app"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
+          RESEND_API_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.app"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WEB_APP_URL: "https://mock.app"
         run: |
+          # 0. Mock environment files required for setup
+          pnpm install --frozen-lockfile
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter=web exec cap sync ios
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
