@@ -6,7 +6,7 @@ import { Logger } from '@repo/utils';
 import { motion } from 'framer-motion';
 import { ArrowLeft, BookOpen, Camera, Info, PlayCircle } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from '@/i18n/navigation'; // Use localized router
 import { createClient } from '@/lib/supabase/client';
@@ -197,7 +197,7 @@ function CategoryRow({
             {/* Image */}
             <div className="relative h-[300px] w-full">
               <Image
-                src={item.image_url}
+                src={item.image_url || ''}
                 alt={item.title}
                 fill
                 className="object-cover"
