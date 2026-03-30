@@ -77,10 +77,14 @@ jobs:
           # 1. Restore Secrets (Generates google-services.json)
           pnpm run --filter=web secrets:restore
           
-          # 2. Grant Permission
+          # 2. Sync Capacitor (Requires dummy webDir)
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm run --filter=web cap sync android
+
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -91,8 +95,12 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm run --filter=web secrets:restore
+
+          # 2. Sync Capacitor (Requires dummy webDir)
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm run --filter=web cap sync ios
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -104,7 +112,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
