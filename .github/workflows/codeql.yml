@@ -23,6 +23,17 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      WAYL_SECRET_KEY: "mock"
+      WAYL_WEBHOOK_SECRET: "mock"
+      ZAIN_SECRET_KEY: "mock"
+      SUPABASE_SERVICE_ROLE_KEY: "mock"
+      RESEND_API_KEY: "mock"
+      TELEGRAM_BOT_TOKEN: "mock"
+      GEMINI_API_KEY: "mock"
+      UPSTASH_REDIS_REST_URL: "https://mock.app"
+      UPSTASH_REDIS_REST_TOKEN: "mock"
+      WEB_APP_URL: "https://mock.app"
 
     strategy:
       fail-fast: false
@@ -43,7 +54,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,12 +85,16 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
           
-          # 2. Grant Permission
+          # 2. Sync Capacitor
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          cd apps/web && npx cap sync android && cd ../..
+
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,9 +104,13 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 2. Sync Capacitor
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          cd apps/web && npx cap sync ios && cd ../..
+
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
