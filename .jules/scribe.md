@@ -1,0 +1,3 @@
+## 2024-05-24 - Syncing .env.example files with @t3-oss/env-nextjs validation schemas
+Insight: There is a discrepancy between `.env.example` files and the required environment variables defined in the validation schemas in `packages/env/src/*.ts`. This causes setup/build failures because new developers won't have all required keys defined when copying the examples.
+Rule: To prevent local setup and build failures due to `@t3-oss/env-nextjs` validation, always ensure that `.env.example` files are strictly synced with their corresponding Zod schemas defined in `packages/env` (e.g., `packages/env/src/web.ts`). All non-optional keys in the Zod schema must have a placeholder entry in the corresponding `.env.example` file.
