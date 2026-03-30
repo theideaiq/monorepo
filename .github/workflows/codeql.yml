@@ -65,6 +65,7 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         env:
+          SKIP_ENV_VALIDATION: "true"
           WAYL_SECRET_KEY: "mock"
           WAYL_WEBHOOK_SECRET: "mock"
           ZAIN_SECRET_KEY: "mock"
@@ -98,6 +99,7 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         env:
+          SKIP_ENV_VALIDATION: "true"
           WAYL_SECRET_KEY: "mock"
           WAYL_WEBHOOK_SECRET: "mock"
           ZAIN_SECRET_KEY: "mock"
