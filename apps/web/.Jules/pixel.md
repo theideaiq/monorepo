@@ -1,0 +1,1 @@
+## 2024-05-23 - Rogue Colors & Safe Areas **Learning:** Found hardcoded hex values (`#1a1a1a`) and magic padding (`pb-8`) in PDP that deviate from the design system (`brand-surface`, `safe-area-inset-bottom`). **Action:** Always audit new components for `bg-[#...]` usage and replace with semantic tokens (`bg-brand-*`). Use `env(safe-area-inset-bottom)` for fixed bottom elements.
