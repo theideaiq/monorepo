@@ -6,7 +6,7 @@ import { Logger } from '@repo/utils';
 import { motion } from 'framer-motion';
 import { ArrowLeft, BookOpen, Camera, Info, PlayCircle } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from '@/i18n/navigation'; // Use localized router
 import { createClient } from '@/lib/supabase/client';
@@ -162,9 +162,22 @@ export default function PlusBrowsePage() {
   );
 }
 
+interface CategoryRowProps {
+  title: string;
+  items: RentalCatalogItem[];
+  onRent: (item: RentalCatalogItem) => void;
+  rentingId: number | null;
+  icon: React.ReactNode;
+}
+
 // Sub-component for Horizontal Scrolling Rows
-// biome-ignore lint/suspicious/noExplicitAny: migration
-function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
+function CategoryRow({
+  title,
+  items,
+  onRent,
+  rentingId,
+  icon,
+}: CategoryRowProps) {
   if (items.length === 0) return null;
 
   return (
@@ -175,8 +188,7 @@ function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
 
       {/* Horizontal Scroll Container */}
       <div className="flex gap-4 overflow-x-auto pb-8 pr-12 no-scrollbar snap-x">
-        {/* biome-ignore lint/suspicious/noExplicitAny: migration */}
-        {items.map((item: any) => (
+        {items.map((item: RentalCatalogItem) => (
           <motion.div
             key={item.id}
             whileHover={{ scale: 1.05, y: -5 }}
@@ -185,7 +197,7 @@ function CategoryRow({ title, items, onRent, rentingId, icon }: any) {
             {/* Image */}
             <div className="relative h-[300px] w-full">
               <Image
-                src={item.image_url}
+                src={item.image_url || ''}
                 alt={item.title}
                 fill
                 className="object-cover"
