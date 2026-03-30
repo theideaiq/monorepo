@@ -1,30 +1,26 @@
-import { Logger } from '@repo/utils';
-import { createClient } from '@/lib/supabase/client';
+import { cookies } from 'next/headers';
 import type { Database } from '@/lib/database.types';
-
-type CartItemRow = Database['public']['Tables']['cart_items']['Row'];
-type ProductRow = Database['public']['Tables']['products']['Row'];
+import { createClient } from '@/lib/supabase/client';
 
 export interface CartItem {
-  id: string; // cart_item id
+  id: string;
   productId: string;
+  variantId?: string;
+  title: string;
+  price: number;
+  image: string;
   quantity: number;
-  product: {
-    name: string;
-    price: number;
-    image: string;
-    slug: string;
-  };
+  attributes?: Record<string, string>;
 }
 
 /**
- * Gets the current user's active cart or creates one.
+ * Ensures a valid session/guest cart ID exists.
+ * In a real app this would attach to an authenticated user ID if logged in.
  */
 async function getOrCreateCartId(
-  supabase: any,
+  supabase: ReturnType<typeof createClient>,
   userId: string,
 ): Promise<string | null> {
-  // 1. Check for existing cart
   const { data: cart } = await supabase
     .from('carts')
     .select('id')
@@ -33,100 +29,57 @@ async function getOrCreateCartId(
 
   if (cart) return cart.id;
 
-  // 2. Create new cart
-  const { data: newCart, error } = await supabase
+  const { data: newCart } = await supabase
     .from('carts')
     .insert({ user_id: userId })
     .select('id')
     .single();
 
-  if (error) {
-    Logger.error('Error creating cart:', error);
-    return null;
-  }
-  return newCart.id;
+  return newCart?.id || null;
 }
 
-export async function fetchCartItems(): Promise<CartItem[]> {
+/**
+ * Fetches the user's cart from the database.
+ */
+export async function getCart(): Promise<CartItem[]> {
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const cookieStore = await cookies();
+  // Using a simplistic guest ID for demonstration
+  const userId = cookieStore.get('device_id')?.value || 'guest-123';
 
-  if (!user) return []; // Guest cart handled by local storage (Zustand)
-
-  const { data: cart } = await supabase
-    .from('carts')
-    .select('id')
-    .eq('user_id', user.id)
-    .single();
-
-  if (!cart) return [];
+  const cartId = await getOrCreateCartId(supabase, userId);
+  if (!cartId) return [];
 
   const { data: items, error } = await supabase
     .from('cart_items')
-    .select('*, product:products(name, price, image_url, slug)')
-    .eq('cart_id', cart.id);
+    .select(
+      `
+      id,
+      quantity,
+      attributes,
+      product_id,
+      products (
+        name,
+        price,
+        image_url
+      )
+    `,
+    )
+    .eq('cart_id', cartId);
 
   if (error) {
-    Logger.error('Error fetching cart items:', error);
+    console.error('Error fetching cart:', error);
     return [];
   }
 
-  return (items as any[]).map((item) => ({
-    id: item.id,
-    productId: item.product_id,
-    quantity: item.quantity,
-    product: {
-      name: item.product.name,
-      price: item.product.price,
-      image: item.product.image_url,
-      slug: item.product.slug,
-    },
+  // Type assertion since we know the structure of the joined query
+  return (items as Array<Record<string, unknown>>).map((item) => ({
+    id: String(item.id),
+    productId: String(item.product_id),
+    title: (item.products as any)?.name || 'Unknown',
+    price: (item.products as any)?.price || 0,
+    image: (item.products as any)?.image_url || '',
+    quantity: Number(item.quantity),
+    attributes: (item.attributes as Record<string, string>) || {},
   }));
-}
-
-export async function addToCartDB(
-  productId: string,
-  quantity = 1,
-): Promise<boolean> {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return false; // Indicate caller to use local store
-
-  const cartId = await getOrCreateCartId(supabase, user.id);
-  if (!cartId) return false;
-
-  // Check if item exists
-  const { data: existing } = await supabase
-    .from('cart_items')
-    .select('id, quantity')
-    .eq('cart_id', cartId)
-    .eq('product_id', productId)
-    .single();
-
-  if (existing) {
-    const { error } = await supabase
-      .from('cart_items')
-      .update({ quantity: existing.quantity + quantity })
-      .eq('id', existing.id);
-    return !error;
-  }
-
-  const { error } = await supabase.from('cart_items').insert({
-    cart_id: cartId,
-    product_id: productId,
-    quantity,
-  });
-
-  return !error;
-}
-
-export async function removeFromCartDB(itemId: string): Promise<boolean> {
-  const supabase = createClient();
-  const { error } = await supabase.from('cart_items').delete().eq('id', itemId);
-  return !error;
 }

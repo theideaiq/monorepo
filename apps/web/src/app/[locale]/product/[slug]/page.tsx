@@ -1,7 +1,7 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import { getProductBySlug } from '@/services/products';
 import { ProductView } from '@/components/store/ProductView';
+import { getProductBySlug } from '@/services/products';
 
 type Props = {
   params: Promise<{ slug: string; locale: string }>;
@@ -25,6 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   };
 }
+
+// Ensure this dynamic route doesn't break static mobile export
+export const dynamic = 'force-dynamic';
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
@@ -63,6 +66,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16 pt-24">
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires raw injection and is sanitized */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
