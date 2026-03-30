@@ -1,0 +1,4 @@
+## 2024-05-18 - XSS Vulnerability in JSON-LD Structured Data
+**Vulnerability:** Cross-Site Scripting (XSS) via `dangerouslySetInnerHTML` when injecting JSON-LD scripts containing user-controlled or URL data.
+**Learning:** `JSON.stringify` does not escape HTML characters by default. If the JSON data contains `</script><script>alert(1)</script>`, the browser will interpret it as the end of the JSON-LD script and execute the subsequent payload, bypassing normal React protections. This was particularly dangerous in `BreadcrumbJsonLd` because it embedded decoded URL segments directly into the JSON data.
+**Prevention:** When injecting JSON data via `dangerouslySetInnerHTML` inside `<script>` tags, always escape the `<` character in the `JSON.stringify` output using `.replace(/</g, '\\u003c')` to prevent premature script termination and XSS execution.
