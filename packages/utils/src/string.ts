@@ -25,6 +25,12 @@ const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
 export function decodeHtmlEntities(text: string): string {
   if (!text) return '';
 
+  // Support hex entities
+  const HEX_ENTITY_REGEX = /^&#x([a-fA-F0-9]+);$/;
+  if (HEX_ENTITY_REGEX.test(match)) {
+    return String.fromCodePoint(parseInt(match.slice(3, -1), 16));
+  }
+
   return text.replace(ENTITY_REGEX, (match) => {
     if (ENTITIES[match]) return ENTITIES[match];
 
