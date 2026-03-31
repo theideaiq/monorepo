@@ -1,4 +1,6 @@
 name: CI
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 permissions:
   contents: read
 
@@ -49,6 +51,19 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 'mocked' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'mocked' }}
+          WAYL_SECRET_KEY: ${{ secrets.WAYL_SECRET_KEY || 'mocked' }}
+          WAYL_WEBHOOK_SECRET: ${{ secrets.WAYL_WEBHOOK_SECRET || 'mocked' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || 'mocked' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'mocked' }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL || 'mocked' }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN || 'mocked' }}
+          WEB_APP_URL: ${{ secrets.WEB_APP_URL || 'mocked' }}
+          ZAIN_SECRET_KEY: ${{ secrets.ZAIN_SECRET_KEY || 'mocked' }}
         run: pnpm turbo check typecheck test
 
   build:
@@ -96,6 +111,16 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 'mocked' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'mocked' }}
+          WAYL_SECRET_KEY: ${{ secrets.WAYL_SECRET_KEY || 'mocked' }}
+          WAYL_WEBHOOK_SECRET: ${{ secrets.WAYL_WEBHOOK_SECRET || 'mocked' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || 'mocked' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'mocked' }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL || 'mocked' }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN || 'mocked' }}
+          WEB_APP_URL: ${{ secrets.WEB_APP_URL || 'mocked' }}
+          ZAIN_SECRET_KEY: ${{ secrets.ZAIN_SECRET_KEY || 'mocked' }}
         run: pnpm turbo build
 
   e2e:
@@ -146,4 +171,14 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 'mocked' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'mocked' }}
+          WAYL_SECRET_KEY: ${{ secrets.WAYL_SECRET_KEY || 'mocked' }}
+          WAYL_WEBHOOK_SECRET: ${{ secrets.WAYL_WEBHOOK_SECRET || 'mocked' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || 'mocked' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'mocked' }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL || 'mocked' }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN || 'mocked' }}
+          WEB_APP_URL: ${{ secrets.WEB_APP_URL || 'mocked' }}
+          ZAIN_SECRET_KEY: ${{ secrets.ZAIN_SECRET_KEY || 'mocked' }}
         run: pnpm turbo e2e
