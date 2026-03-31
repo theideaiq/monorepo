@@ -12,7 +12,7 @@ const ENTITIES: Record<string, string> = {
 };
 
 // Pre-compiled regex for performance (avoids recompilation in loops).
-const ENTITY_REGEX = /&[a-zA-Z0-9#]+;/g;
+const ENTITY_REGEX = /&[a-zA-Z0-9#xX]+;/g;
 const NUMERIC_ENTITY_REGEX = /^&#[xX]?[0-9a-fA-F]+;$/;
 
 /**
