@@ -1,0 +1,3 @@
+## 2024-05-18 - Missing interactive active state on Button component
+**Learning:** React/Tailwind buttons lacking `active:` states can feel unresponsive on fast mobile devices because the visual feedback loop is broken. Relying solely on `hover:` or standard color changes isn't enough for a tactile UI experience, especially in ecommerce flows where clear action confirmation is needed.
+**Action:** Added `active:scale-95 transition-all` to the base `buttonVariants` in `@repo/ui` to ensure consistent, globally applied "press" feedback across all button types without requiring new tokens or altering layout size.
