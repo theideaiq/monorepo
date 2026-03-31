@@ -6,7 +6,7 @@ import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import Image from 'next/image';
 
 const supabase = createClient();

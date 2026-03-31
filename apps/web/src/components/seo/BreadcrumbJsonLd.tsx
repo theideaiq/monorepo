@@ -1,7 +1,7 @@
 'use client';
 
 import { webEnv } from '@repo/env/web';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation';
 
 export default function BreadcrumbJsonLd() {
   const pathname = usePathname();

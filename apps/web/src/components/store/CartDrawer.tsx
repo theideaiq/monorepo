@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import { Drawer } from '@/components/ui/Drawer';

@@ -1,11 +1,10 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { Home, Search, ShoppingCart, User } from 'lucide-react';
 import { useUIStore } from '@/stores/ui-store';
 import { useCartStore } from '@/stores/cart-store';
 import { useEffect, useState } from 'react';
+import { usePathname, Link } from '@/i18n/navigation';
 
 export function BottomNav() {
   const pathname = usePathname();

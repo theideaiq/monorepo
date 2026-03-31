@@ -1,26 +1,21 @@
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
-import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+import { redirect } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 
 export const metadata: Metadata = {
   title: 'Checkout | The IDEA',
 };
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
-
-export default async function CheckoutPage({ params }: Props) {
-  const { locale } = await params;
+export default async function CheckoutPage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/login?redirect=/checkout`);
+    redirect({ href: '/login?redirect=/checkout', locale: 'en' });
+    return null; // unreachable due to redirect, but satisfies TS
   }
 
   return (
