@@ -1,5 +1,3 @@
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 name: CI
 permissions:
   contents: read
@@ -98,13 +96,6 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          RESEND_API_KEY: 'mocked_resend'
-          SUPABASE_SERVICE_ROLE_KEY: 'mocked_service_role'
-          WAYL_SECRET_KEY: 'mocked_wayl'
-          WAYL_WEBHOOK_SECRET: 'mocked_wayl_webhook'
-          ZAIN_SECRET_KEY: 'mocked_zain'
-          TELEGRAM_BOT_TOKEN: 'mocked_telegram'
-          GEMINI_API_KEY: 'mocked_gemini'
         run: pnpm turbo build
 
   e2e:
@@ -155,11 +146,4 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          RESEND_API_KEY: 'mocked_resend'
-          SUPABASE_SERVICE_ROLE_KEY: 'mocked_service_role'
-          WAYL_SECRET_KEY: 'mocked_wayl'
-          WAYL_WEBHOOK_SECRET: 'mocked_wayl_webhook'
-          ZAIN_SECRET_KEY: 'mocked_zain'
-          TELEGRAM_BOT_TOKEN: 'mocked_telegram'
-          GEMINI_API_KEY: 'mocked_gemini'
         run: pnpm turbo e2e

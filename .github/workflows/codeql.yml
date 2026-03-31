@@ -1,5 +1,3 @@
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 name: "CodeQL Advanced"
 
 on:
@@ -67,16 +65,8 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # Install dependencies to resolve node_modules
-          npm install -g pnpm
-          pnpm install --frozen-lockfile
-
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm run --filter=web secrets:restore
-
-          # 1.5 Generate dummy web assets and sync capacitor
-          mkdir -p apps/web/out && touch apps/web/out/index.html
-          pnpm --filter=web exec cap sync android
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -90,16 +80,8 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # Install dependencies to resolve node_modules
-          npm install -g pnpm
-          pnpm install --frozen-lockfile
-
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm run --filter=web secrets:restore
-
-          # 1.5 Generate dummy web assets and sync capacitor
-          mkdir -p apps/web/out && touch apps/web/out/index.html
-          pnpm --filter=web exec cap sync ios
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
