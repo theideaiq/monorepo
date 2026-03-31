@@ -17,8 +17,22 @@ describe('Cart Store', () => {
     expect(items).toEqual([]);
   });
 
-  const itemA = { id: 'a', productId: 'p1', title: 'apple', price: 10, image: 'img1', quantity: 1 };
-  const itemB = { id: 'b', productId: 'p2', title: 'banana', price: 15, image: 'img2', quantity: 1 };
+  const itemA = {
+    id: 'a',
+    productId: 'p1',
+    title: 'apple',
+    price: 10,
+    image: 'img1',
+    quantity: 1,
+  };
+  const itemB = {
+    id: 'b',
+    productId: 'p2',
+    title: 'banana',
+    price: 15,
+    image: 'img2',
+    quantity: 1,
+  };
 
   it('should add items to the cart and calculate totals', () => {
     const { addItem } = useCartStore.getState();
