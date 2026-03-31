@@ -1,7 +1,23 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { hasAdminAccess } from '@/lib/auth-checks';
+import { ROLES } from '@/lib/constants';
 import { WINDOW_SIZE_MS } from '@/lib/rate-limit';
 import { createMiddlewareClient } from '@/lib/supabase/middleware';
+
+/**
+ * Checks if the provided role has administrative privileges (Admin or Superadmin).
+ * Is case-insensitive.
+ *
+ * @param role - The user role string to check.
+ * @returns True if the role is Admin or Superadmin, false otherwise.
+ */
+function hasAdminAccess(role?: string | null): boolean {
+  if (!role) return false;
+  const normalizedRole = role.toLowerCase();
+  return (
+    normalizedRole === ROLES.ADMIN.toLowerCase() ||
+    normalizedRole === ROLES.SUPERADMIN.toLowerCase()
+  );
+}
 
 /**
  * Global middleware for authentication and rate limiting.
