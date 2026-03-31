@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import type { Product } from '@/services/products';
 
 interface ProductCardProps {

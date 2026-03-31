@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { redirect } from '@/i18n/navigation';
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import ProfileForm from './ProfileForm';
@@ -17,7 +17,8 @@ export default async function AccountPage({ params }: Props) {
 
   if (!user) {
     // We assume auth/callback handles redirect back or we just go to login
-    redirect(`/${locale}/login`);
+    redirect({ href: '/login', locale: 'en' });
+    return null; // unreachable due to redirect, but satisfies TS
   }
 
   const { data: profile } = await supabase
