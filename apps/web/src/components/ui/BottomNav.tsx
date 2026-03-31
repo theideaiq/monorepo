@@ -63,6 +63,7 @@ export function BottomNav() {
         {/* Cart Button */}
         <button
           type="button"
+          aria-label="Open cart"
           onClick={toggleCart}
           className="flex flex-col items-center justify-center w-full h-full space-y-1 text-slate-500 relative"
         >
