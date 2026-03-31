@@ -2,11 +2,27 @@
 
 import { Button, Card, Input } from '@repo/ui';
 import { Lock } from 'lucide-react';
+import { ROLES } from '@/lib/constants';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { hasAdminAccess } from '@/lib/auth-checks';
 import { createClient } from '@/lib/supabase/client';
+
+/**
+ * Checks if the provided role has administrative privileges (Admin or Superadmin).
+ * Is case-insensitive.
+ *
+ * @param role - The user role string to check.
+ * @returns True if the role is Admin or Superadmin, false otherwise.
+ */
+function hasAdminAccess(role?: string | null): boolean {
+  if (!role) return false;
+  const normalizedRole = role.toLowerCase();
+  return (
+    normalizedRole === ROLES.ADMIN.toLowerCase() ||
+    normalizedRole === ROLES.SUPERADMIN.toLowerCase()
+  );
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
