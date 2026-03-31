@@ -1,0 +1,3 @@
+## 2024-05-14 - Pre-computing total items in Zustand Cart Store
+**Learning:** React components (`WebNavbar.tsx`, `BottomNav.tsx`) are calculating total items (`cartItems.reduce((acc, i) => acc + i.quantity, 0)`) inside their render functions. This causes unnecessary array iteration (O(N) operation) on every render for every component that needs this value.
+**Action:** Pre-compute and store derived state (like `totalItems`) during state updates inside the Zustand store (`addItem`, `removeItem`, `updateQuantity`). This ensures the calculation is done only once when the cart actually changes, and components can just read the O(1) value.
