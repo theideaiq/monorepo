@@ -101,6 +101,11 @@ jobs:
           WAYL_WEBHOOK_SECRET: "mock"
           ZAIN_SECRET_KEY: "mock"
           RESEND_API_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.com"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WEB_APP_URL: "https://mock.com"
         run: pnpm turbo build
 
   e2e:
