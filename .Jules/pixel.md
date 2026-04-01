@@ -1,0 +1,1 @@
+## 2024-05-22 - [Design Token Mappings] **Learning:** The codebase frequently uses hardcoded hex values that map directly to semantic design tokens: `#facc15` is `brand-yellow`, and `#0a0a0a` is `neutral-950`. **Action:** Always replace these specific hex codes with their corresponding Tailwind utility classes (`text-brand-yellow`, `bg-neutral-950`) to enforce the design system.
