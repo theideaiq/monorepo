@@ -1,0 +1,3 @@
+## 2026-04-01 - Prevent Local Setup Failures due to Environment Schema Mismatches
+Insight: Local development setups frequently fail because `.env.example` files become out of sync with their corresponding `@t3-oss/env-nextjs` Zod schemas defined in `packages/env`. Missing non-optional variables cause validation errors during `pnpm dev` or `build`.
+Rule: All non-optional keys in the Zod schema (e.g., in `packages/env/src/web.ts`) MUST have a corresponding placeholder entry in the respective application's `.env.example` file. Ensure `.env.example` and the validation schemas are strictly synchronized to prevent setup friction.
