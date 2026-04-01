@@ -2,10 +2,6 @@ name: CI
 permissions:
   contents: read
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  SKIP_ENV_VALIDATION: true
-
 on:
   push:
     branches: [main]
