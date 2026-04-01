@@ -12,16 +12,20 @@ interface ProductCardProps {
   priority?: boolean;
 }
 
+// Initialize formatter outside of component to avoid recreating on every render
+// This is a measurable performance optimization for list views like the Megastore
+const priceFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
 export function ProductCard({
   product,
   onAddToCart,
   priority = false,
 }: ProductCardProps) {
   // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const price = priceFormatter.format(product.price);
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">

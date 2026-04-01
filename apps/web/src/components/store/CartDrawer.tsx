@@ -8,6 +8,9 @@ import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { Button } from '@repo/ui';
 
+// Initialize formatter outside of component to avoid recreating on every render
+const priceFormatter = new Intl.NumberFormat('en-IQ');
+
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
   const { items, removeItem, updateQuantity, total } = useCartStore();
@@ -18,7 +21,7 @@ export function CartDrawer() {
     router.push('/checkout');
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = priceFormatter.format(total);
 
   return (
     <Drawer
@@ -76,7 +79,7 @@ export function CartDrawer() {
                   </p>
                 )}
                 <p className="text-brand-yellow font-bold mt-2">
-                  {new Intl.NumberFormat('en-IQ').format(item.price)} IQD
+                  {priceFormatter.format(item.price)} IQD
                 </p>
               </div>
 
