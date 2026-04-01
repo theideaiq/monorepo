@@ -91,8 +91,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   setRequestLocale(locale);
 
   // 1. Validate the locale against your config
-  // biome-ignore lint/suspicious/noExplicitAny: migration
-  if (!routing.locales.includes(locale as any)) {
+  if (!(routing.locales as readonly string[]).includes(locale)) {
     notFound();
   }
 
