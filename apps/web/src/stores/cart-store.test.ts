@@ -37,11 +37,63 @@ describe('Cart Store', () => {
     expect(useCartStore.getState().items).toEqual(['banana']);
   });
 
+  it('should update the quantity of an item', () => {
+    const { addItem, updateQuantity } = useCartStore.getState();
+
+    addItem({
+      id: 'apple',
+      productId: 'p-apple',
+      title: 'Apple',
+      price: 10,
+      image: 'apple.png',
+    });
+
+    // Update quantity to 3
+    updateQuantity('apple', 3);
+    expect(useCartStore.getState().items).toEqual([
+      {
+        id: 'apple',
+        productId: 'p-apple',
+        title: 'Apple',
+        price: 10,
+        image: 'apple.png',
+        quantity: 3,
+      },
+    ]);
+    expect(useCartStore.getState().total).toBe(30);
+
+    // Update quantity to less than 1 (should not update)
+    updateQuantity('apple', 0);
+    expect(useCartStore.getState().items).toEqual([
+      {
+        id: 'apple',
+        productId: 'p-apple',
+        title: 'Apple',
+        price: 10,
+        image: 'apple.png',
+        quantity: 3,
+      },
+    ]);
+    expect(useCartStore.getState().total).toBe(30);
+  });
+
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    addItem({
+      id: 'apple',
+      productId: 'p-apple',
+      title: 'Apple',
+      price: 10,
+      image: 'apple.png',
+    });
+    addItem({
+      id: 'banana',
+      productId: 'p-banana',
+      title: 'Banana',
+      price: 15,
+      image: 'banana.png',
+    });
 
     clearCart();
     expect(useCartStore.getState().items).toEqual([]);
