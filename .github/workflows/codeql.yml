@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -43,7 +44,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -65,8 +71,15 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # Install dependencies to resolve packages properly
+          pnpm install --frozen-lockfile
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
+
+          # 1.5 Generate dummy web assets to prevent "app folder not found" error during cap sync
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter=web exec cap sync android
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +93,15 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # Install dependencies to resolve packages properly
+          pnpm install --frozen-lockfile
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
+
+          # 1.5 Generate dummy web assets to prevent "app folder not found" error during cap sync
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter=web exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
