@@ -1,3 +1,3 @@
-## 2024-05-24 - Sitemap Synchronization
-**Learning:** Found a discrepancy between `sitemap.ts` hardcoded routes and actual application routes (e.g., `/club` vs `/plus`). This causes crawling errors (404s).
-**Action:** When creating new top-level pages or renaming routes, always check `sitemap.ts` and `robots.ts` to ensure they reflect the current site structure. Ideally, derive sitemap routes from a shared configuration like `@repo/config` if possible.
+## 2024-05-23 - Missing Product Schema
+**Learning:** The core entity "Product" lacks JSON-LD Structured Data, which prevents Rich Snippets (price, availability) from appearing in search results, significantly lowering CTR potential for an e-commerce site.
+**Action:** Always implement `Product` schema on PDPs using a dedicated component that maps internal data models to Schema.org properties.
