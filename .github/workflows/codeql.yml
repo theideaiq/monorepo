@@ -33,9 +33,9 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: none
+            build-mode: manual
           - language: swift
-            build-mode: none
+            build-mode: manual
 
     steps:
       - name: Checkout repository
@@ -81,7 +81,7 @@ jobs:
           # 2. Generate Web Assets and Sync
           mkdir -p apps/web/out && touch apps/web/out/index.html
           pnpm --filter=web exec cap sync android
-          
+
           # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
