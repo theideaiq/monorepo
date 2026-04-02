@@ -66,3 +66,20 @@ export function formatCompactNumber(number: number): string {
     maximumFractionDigits: 1,
   }).format(number);
 }
+
+/**
+ * Format a number specifically for IQD display without currency symbol.
+ * Used when the currency symbol is displayed separately in the UI.
+ * Enforces 0 decimal places.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted number string (e.g. "50,000").
+ */
+export function formatIQD(amount: number): string {
+  if (!Number.isFinite(amount)) return '0';
+  return new Intl.NumberFormat('en-IQ', {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
