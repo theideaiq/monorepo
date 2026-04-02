@@ -1,0 +1,3 @@
+## 2025-02-14 - Co-location of tests for shared workspace packages
+Structure: Co-location strategy where unit tests belong in the same module/package as the code they test.
+Rule: Do not place tests for shared workspace packages (like `@repo/utils`) inside consuming apps (like `apps/web`). Move tests directly alongside their corresponding source files inside the shared package to maintain true modularity. Ensure the shared package has `vitest` installed and a `test` script defined to run them.
