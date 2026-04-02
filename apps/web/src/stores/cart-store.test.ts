@@ -2,9 +2,27 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCartStore } from './cart-store';
 
 describe('Cart Store', () => {
-  const apple = { id: 'apple', productId: 'p1', title: 'Apple', price: 10, image: 'apple.png' };
-  const banana = { id: 'banana', productId: 'p2', title: 'Banana', price: 5, image: 'banana.png' };
-  const persistentItem = { id: 'persistent-item', productId: 'p3', title: 'Persistent', price: 20, image: 'persistent.png' };
+  const apple = {
+    id: 'apple',
+    productId: 'p1',
+    title: 'Apple',
+    price: 10,
+    image: 'apple.png',
+  };
+  const banana = {
+    id: 'banana',
+    productId: 'p2',
+    title: 'Banana',
+    price: 5,
+    image: 'banana.png',
+  };
+  const persistentItem = {
+    id: 'persistent-item',
+    productId: 'p3',
+    title: 'Persistent',
+    price: 20,
+    image: 'persistent.png',
+  };
 
   // Reset store before each test to ensure isolation
   beforeEach(() => {
@@ -32,7 +50,7 @@ describe('Cart Store', () => {
     addItem(banana);
     expect(useCartStore.getState().items).toEqual([
       { ...apple, quantity: 1 },
-      { ...banana, quantity: 1 }
+      { ...banana, quantity: 1 },
     ]);
     expect(useCartStore.getState().total).toBe(15);
   });
@@ -84,7 +102,7 @@ describe('Cart Store', () => {
     const { items, total } = useCartStore.getState();
     expect(items).toEqual([
       { ...apple, quantity: 3 },
-      { ...banana, quantity: 1 }
+      { ...banana, quantity: 1 },
     ]);
     expect(total).toBe(35); // (10 * 3) + (5 * 1)
   });
