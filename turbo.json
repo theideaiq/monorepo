@@ -17,33 +17,60 @@
   ],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "storybook-static/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "storybook-static/**"
+      ]
     },
     "lint": {
-      "inputs": ["$TURBO_DEFAULT$"]
+      "inputs": [
+        "$TURBO_DEFAULT$"
+      ]
     },
     "check": {
-      "inputs": ["$TURBO_DEFAULT$"]
+      "inputs": [
+        "$TURBO_DEFAULT$"
+      ]
     },
     "typecheck": {
-      "inputs": ["$TURBO_DEFAULT$"],
-      "outputs": ["tsconfig.tsbuildinfo"]
+      "inputs": [
+        "$TURBO_DEFAULT$"
+      ],
+      "outputs": [
+        "tsconfig.tsbuildinfo"
+      ]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "test": {
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["coverage/**"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
     },
     "test:coverage": {
-       "outputs": ["coverage/**"]
+      "outputs": [
+        "coverage/**"
+      ]
     },
     "format": {
-      "inputs": ["$TURBO_DEFAULT$"]
+      "inputs": [
+        "$TURBO_DEFAULT$"
+      ]
     },
     "clean": {
       "cache": false
@@ -53,8 +80,13 @@
       "persistent": true
     },
     "build-storybook": {
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["storybook-static/**"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        "storybook-static/**"
+      ]
     },
     "db:generate": {
       "cache": false
@@ -64,6 +96,14 @@
     },
     "db:seed": {
       "cache": false
+    },
+    "e2e": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "playwright-report/**"
+      ]
     }
   }
 }
