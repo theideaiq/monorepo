@@ -7,6 +7,10 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  SKIP_ENV_VALIDATION: true
+
 jobs:
   quality:
     name: Quality Gate
