@@ -1,9 +1,14 @@
 import * as nextCache from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as audit from '@/lib/audit';
-import { updateRole } from './staff';
 
 // Mock dependencies using vi.hoisted to avoid ReferenceError
+const mockedServerOnly = vi.hoisted(() => vi.fn());
+vi.mock('server-only', () => ({
+  default: mockedServerOnly
+}));
+
+import * as audit from '@/lib/audit';
+import { updateRole } from './staff';
 const mocks = vi.hoisted(() => ({
   supabase: {
     auth: {

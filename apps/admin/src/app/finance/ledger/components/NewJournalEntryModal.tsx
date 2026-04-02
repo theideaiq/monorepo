@@ -16,7 +16,7 @@ export function NewJournalEntryModal({
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [description, setDescription] = useState('');
-  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
+  const [lines, setLines] = useState<{ accountId: string; debit: number; credit: number }[]>([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,9 +28,15 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = <K extends keyof { accountId: string; debit: number; credit: number }>(
+    index: number,
+    field: K,
+    value: { accountId: string; debit: number; credit: number }[K]
+  ) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    const updatedLine = { ...newLines[index] } as { accountId: string; debit: number; credit: number };
+    updatedLine[field] = value as any;
+    newLines[index] = updatedLine;
     setLines(newLines);
   };
 
@@ -52,6 +58,11 @@ export function NewJournalEntryModal({
 
     if (lines.some((l) => !l.accountId)) {
       toast.error('All lines must have an account selected');
+      return;
+    }
+
+    if (!date) {
+      toast.error('Date is required');
       return;
     }
 
