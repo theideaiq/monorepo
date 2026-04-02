@@ -15,6 +15,8 @@ interface ProductViewProps {
   product: Product;
 }
 
+const iqdFormatter = new Intl.NumberFormat('en-IQ');
+
 export function ProductView({ product }: ProductViewProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
@@ -84,7 +86,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const price = iqdFormatter.format(product.price);
 
   return (
     <div className="pb-32 md:pb-12">

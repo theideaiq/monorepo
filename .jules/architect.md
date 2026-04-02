@@ -1,0 +1,3 @@
+## 2025-04-02 - Extract Intl.NumberFormat instantiation from React Components
+Smell: Instantiating `new Intl.NumberFormat()` directly inside a component's render function (or functional component body). This forces the JavaScript engine to recreate the relatively expensive formatter object on every render, which is inefficient, especially inside lists or complex components.
+Standard: When formatting numbers or currencies in React components, instantiate `Intl.NumberFormat` outside the component's function scope (at the module level) to reuse the instance across renders and improve performance.
