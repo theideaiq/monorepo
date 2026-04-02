@@ -7,4 +7,5 @@ const adapter = new WaylAdapter({
   webhookSecret: adminEnv.WAYL_WEBHOOK_SECRET,
 });
 
-export const waylClient = adapter.client;
+// Use explicit typings via typeof to avoid needing @repo/wayl in dependencies
+export const waylClient: typeof adapter.client = adapter.client;
