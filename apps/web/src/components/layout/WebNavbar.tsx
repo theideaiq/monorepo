@@ -69,7 +69,10 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
         </div>
 
         {/* Desktop Nav */}
-        <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-8">
+        <nav
+          aria-label="Main Navigation"
+          className="hidden md:flex items-center gap-8"
+        >
           <ul className="flex items-center gap-8 m-0 p-0 list-none">
             {navItems.map((item) => (
               <li key={item.href}>
