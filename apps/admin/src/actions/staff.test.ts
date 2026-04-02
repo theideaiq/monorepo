@@ -1,5 +1,8 @@
 import * as nextCache from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('server-only', () => ({})); // Mock server-only so it doesn't block the test
+
 import * as audit from '@/lib/audit';
 import { updateRole } from './staff';
 
@@ -98,7 +101,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Only Superadmins can change roles',
+      'Unauthorized: Insufficient permissions',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -111,7 +114,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Unauthorized',
+      'Authentication required: No user session found',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();

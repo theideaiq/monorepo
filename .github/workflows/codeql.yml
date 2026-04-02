@@ -66,6 +66,23 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
 
       # ----------------------------------------------------------------
+      # MANUAL BUILD (TypeScript/Next.js) fallback environment variables
+      # ----------------------------------------------------------------
+      - name: Set build fallbacks
+        if: matrix.language == 'javascript-typescript'
+        run: |
+          echo "SKIP_ENV_VALIDATION=true" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.com' }}" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'mock' }}" >> $GITHUB_ENV
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY || 'mock' }}" >> $GITHUB_ENV
+          echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN || 'mock' }}" >> $GITHUB_ENV
+          echo "WAYL_SECRET_KEY=${{ secrets.WAYL_SECRET_KEY || 'mock' }}" >> $GITHUB_ENV
+          echo "WAYL_WEBHOOK_SECRET=${{ secrets.WAYL_WEBHOOK_SECRET || 'mock' }}" >> $GITHUB_ENV
+          echo "RESEND_API_KEY=${{ secrets.RESEND_API_KEY || 'mock' }}" >> $GITHUB_ENV
+          echo "ZAIN_SECRET_KEY=${{ secrets.ZAIN_SECRET_KEY || 'mock' }}" >> $GITHUB_ENV
+
+      # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
