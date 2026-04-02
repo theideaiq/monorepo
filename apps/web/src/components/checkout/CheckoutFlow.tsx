@@ -1,11 +1,11 @@
 'use client';
 
+import { Button, Card, Input } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
-import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '@/stores/cart-store';
 
 const iqdFormatter = new Intl.NumberFormat('en-IQ');
 
@@ -262,10 +262,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {iqdFormatter.format(
-                      item.price * item.quantity,
-                    )}{' '}
-                    IQD
+                    {iqdFormatter.format(item.price * item.quantity)} IQD
                   </div>
                 </div>
               </div>
