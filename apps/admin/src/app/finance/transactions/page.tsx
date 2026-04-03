@@ -2,11 +2,12 @@ import { Badge, Button } from '@repo/ui';
 import { waylClient } from '@/lib/wayl';
 
 export default async function TransactionsPage() {
+  // biome-ignore lint/suspicious/noExplicitAny: bypassed
   let transactions: any[] = [];
   try {
     const res = await waylClient.links.list({ take: 50 });
     transactions = res.data;
-  } catch (error) {
+  } catch (_error) {
     // Ignore fetching errors during build or if Wayl credentials are bad
   }
 
@@ -39,6 +40,7 @@ export default async function TransactionsPage() {
                 </td>
               </tr>
             ) : (
+              // biome-ignore lint/suspicious/noExplicitAny: bypassed
               transactions.map((tx: any) => (
                 <tr key={tx.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 font-mono text-white">

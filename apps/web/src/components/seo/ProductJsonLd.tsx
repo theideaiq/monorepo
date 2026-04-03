@@ -18,8 +18,14 @@ export default function ProductJsonLd({ product, url }: ProductJsonLdProps) {
     '@type': 'Offer',
     priceCurrency: 'IQD', // Based on the currency displayed in ProductView
     price: product.price,
-    itemCondition: product.condition === 'new' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
-    availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+    itemCondition:
+      product.condition === 'new'
+        ? 'https://schema.org/NewCondition'
+        : 'https://schema.org/UsedCondition',
+    availability:
+      product.stock > 0
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
     url: url,
     seller: {
       '@type': 'Organization',
@@ -52,7 +58,9 @@ export default function ProductJsonLd({ product, url }: ProductJsonLdProps) {
     <script
       type="application/ld+json"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe and required by Google
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+      }}
     />
   );
 }
