@@ -100,6 +100,15 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.com' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'mock' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'mock' }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || 'mock' }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL || 'https://mock.com' }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN || 'mock' }}
+          WAYL_SECRET_KEY: ${{ secrets.WAYL_SECRET_KEY || 'mock' }}
+          WAYL_WEBHOOK_SECRET: ${{ secrets.WAYL_WEBHOOK_SECRET || 'mock' }}
+          WEB_APP_URL: ${{ secrets.WEB_APP_URL || 'https://mock.com' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 'mock' }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || 'mock' }}
           SKIP_ENV_VALIDATION: true
         run: pnpm turbo build
 
