@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { hasAdminAccess } from './auth-checks';
 import { ROLES } from './constants';
+
+vi.mock('server-only', () => ({}));
 
 describe('hasAdminAccess', () => {
   it('should return true for admin role', () => {
