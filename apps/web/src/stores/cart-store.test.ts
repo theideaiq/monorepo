@@ -19,7 +19,6 @@ describe('Cart Store', () => {
 
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
-
     const apple = { id: '1', productId: '1', title: 'apple', price: 1, image: '' };
     const banana = { id: '2', productId: '2', title: 'banana', price: 2, image: '' };
 
