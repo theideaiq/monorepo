@@ -1,6 +1,13 @@
 import { Card } from '@repo/ui';
+import { formatCurrency } from '@repo/utils';
 import { getEquityData } from '../actions';
 import { EquityPieChart, EquityTable } from './components/EquityComponents';
+
+const compactCurrencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  notation: 'compact',
+});
 
 export default async function EquityPage() {
   const { holders, rounds } = await getEquityData();
@@ -26,11 +33,7 @@ export default async function EquityPage() {
                 <div>
                   <div className="font-medium">{round.name}</div>
                   <div className="text-sm text-muted-foreground">
-                    {new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                    }).format(round.price_per_share)}{' '}
-                    / share
+                    {formatCurrency(round.price_per_share)} / share
                   </div>
                 </div>
                 <div className="text-right">
@@ -38,11 +41,7 @@ export default async function EquityPage() {
                     Valuation Cap
                   </div>
                   <div className="font-bold">
-                    {new Intl.NumberFormat('en-US', {
-                      style: 'currency',
-                      currency: 'USD',
-                      notation: 'compact',
-                    }).format(round.valuation_cap)}
+                    {compactCurrencyFormatter.format(round.valuation_cap)}
                   </div>
                 </div>
               </div>
