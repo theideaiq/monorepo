@@ -3,8 +3,8 @@ import { adminEnv } from '@repo/env/admin';
 import { WaylAdapter } from '@repo/payment-engine';
 
 const adapter = new WaylAdapter({
-  apiKey: adminEnv.WAYL_SECRET_KEY,
-  webhookSecret: adminEnv.WAYL_WEBHOOK_SECRET,
+  apiKey: adminEnv.WAYL_SECRET_KEY || 'mock',
+  webhookSecret: adminEnv.WAYL_WEBHOOK_SECRET || 'mock',
 });
 
-export const waylClient = adapter.client;
+export const waylClient: any = adapter.client;

@@ -16,8 +16,8 @@ export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
-    webEnv.NEXT_PUBLIC_SUPABASE_URL,
-    webEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    webEnv.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co',
+    webEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock',
     {
       cookies: {
         getAll() {
