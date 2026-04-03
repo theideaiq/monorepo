@@ -1,9 +1,8 @@
-import { webEnv as env } from '@repo/env/web';
-import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import ProductJsonLd from '@/components/seo/ProductJsonLd';
-import { ProductView } from '@/components/store/ProductView';
+import { Metadata } from 'next';
 import { getProductBySlug } from '@/services/products';
+import { ProductView } from '@/components/store/ProductView';
+import { ProductJsonLd } from '@/components/seo/ProductJsonLd';
 
 type Props = {
   params: Promise<{ slug: string; locale: string }>;
@@ -36,12 +35,18 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
-  const baseUrl = env.NEXT_PUBLIC_SITE_URL;
-  const url = `${baseUrl}/${locale}/product/${slug}`;
-
   return (
     <>
-      <ProductJsonLd product={product} url={url} />
+      <ProductJsonLd
+        product={{
+          id: product.id,
+          name: product.title,
+          description: product.description || '',
+          price: product.price,
+          images: product.image ? [product.image] : undefined
+        }}
+        locale={locale}
+      />
       <div className="container mx-auto px-4 py-8 md:py-16 pt-24">
         <ProductView product={product} />
       </div>

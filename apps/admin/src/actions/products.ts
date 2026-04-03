@@ -10,7 +10,6 @@ import { requireAdmin } from '@/lib/auth-checks';
  * Security: Requires Admin role.
  * Audit: Logs 'create_product'.
  */
-// biome-ignore lint/suspicious/noExplicitAny: bypassed
 export async function createProduct(data: any) {
   const { supabase } = await requireAdmin();
   const { data: product, error } = await supabase
@@ -35,7 +34,6 @@ export async function createProduct(data: any) {
  * Security: Requires Admin role.
  * Audit: Logs 'update_product'.
  */
-// biome-ignore lint/suspicious/noExplicitAny: bypassed
 export async function updateProduct(id: string, updates: any) {
   const { supabase } = await requireAdmin();
   const { error } = await supabase

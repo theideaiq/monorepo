@@ -5,7 +5,6 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateProfile } from '@/actions/account';
 
-// biome-ignore lint/suspicious/noExplicitAny: bypassed
 export default function ProfileForm({ profile }: { profile: any }) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
@@ -15,7 +14,6 @@ export default function ProfileForm({ profile }: { profile: any }) {
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
-      // biome-ignore lint/suspicious/noExplicitAny: bypassed
     } catch (e: any) {
       toast.error(e.message);
     } finally {

@@ -42,10 +42,6 @@
     "test:coverage": {
        "outputs": ["coverage/**"]
     },
-    "e2e": {
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["playwright-report/**"]
-    },
     "format": {
       "inputs": ["$TURBO_DEFAULT$"]
     },

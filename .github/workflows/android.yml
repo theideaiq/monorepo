@@ -11,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
-      SKIP_ENV_VALIDATION: "true"
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6

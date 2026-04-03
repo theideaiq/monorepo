@@ -30,12 +30,7 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    const updatedLine = { ...newLines[index], [field]: value };
-    newLines[index] = updatedLine as {
-      accountId: string;
-      debit: number;
-      credit: number;
-    };
+    newLines[index] = { ...newLines[index], [field]: value };
     setLines(newLines);
   };
 
@@ -59,8 +54,6 @@ export function NewJournalEntryModal({
       toast.error('All lines must have an account selected');
       return;
     }
-
-    if (!date) return;
 
     setIsSubmitting(true);
     try {
