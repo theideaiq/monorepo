@@ -2,6 +2,12 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 
+const iqdLocaleFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'currency',
+  currency: 'IQD',
+  minimumFractionDigits: 0,
+});
+
 // Define the shape of our Product data.
 export type Product = {
   id: string;
@@ -33,11 +39,8 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('price'));
       // Format as currency (IQD usually doesn't use decimals much, but staying safe)
-      const formatted = new Intl.NumberFormat('en-IQ', {
-        style: 'currency',
-        currency: 'IQD',
-        minimumFractionDigits: 0,
-      }).format(amount);
+      // use the 'en-IQ' locale as the original code did. We must instantiate here or use a constant.
+      const formatted = iqdLocaleFormatter.format(amount);
 
       return <div className="font-medium">{formatted}</div>;
     },

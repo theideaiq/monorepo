@@ -63,6 +63,8 @@ export function EquityPieChart({ holders }: { holders: EquityHolder[] }) {
   );
 }
 
+const numberFormatter = new Intl.NumberFormat('en-US');
+
 export function EquityTable({ holders }: { holders: EquityHolder[] }) {
   return (
     <div className="rounded-md border overflow-x-auto">
@@ -92,7 +94,7 @@ export function EquityTable({ holders }: { holders: EquityHolder[] }) {
               <td className="p-4 align-middle font-medium">{holder.name}</td>
               <td className="p-4 align-middle capitalize">{holder.type}</td>
               <td className="p-4 align-middle text-right">
-                {new Intl.NumberFormat('en-US').format(holder.shares_owned)}
+                {numberFormatter.format(holder.shares_owned)}
               </td>
               <td className="p-4 align-middle">
                 {new Date(holder.vesting_start_date).toLocaleDateString()}
