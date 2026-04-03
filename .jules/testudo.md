@@ -1,0 +1,3 @@
+## 2025-04-03 - Cart Store Test Fixtures Discrepancy
+Discovery: The `useCartStore` test fixtures used outdated string values (`'apple'`) instead of `CartItem` objects, causing the test suite to fail against the real implementation which expected objects with a `quantity` omitted property.
+Strategy: Ensure test fixtures accurately mirror the expected type definition of the state schema, especially when the implementation transitions from simple string arrays to complex object arrays.
