@@ -12,7 +12,7 @@ import { createBrowserClient } from '@supabase/ssr';
  */
 export function createClient() {
   return createBrowserClient<Database>(
-    webEnv.NEXT_PUBLIC_SUPABASE_URL,
-    webEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    webEnv.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co',
+    webEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock',
   );
 }
