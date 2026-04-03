@@ -41,7 +41,6 @@ export async function getCashFlowData(year: number) {
     'Dec',
   ];
 
-  // biome-ignore lint/suspicious/noExplicitAny: bypassed
   lines.forEach((line: any) => {
     const date = new Date(line.ledger_entries.transaction_date);
     const monthIndex = date.getMonth();

@@ -143,7 +143,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
         ),
       },
     ],
-    [handleEdit],
+    [],
   );
 
   const table = useReactTable({
@@ -197,7 +197,8 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
 
       toast.success('Profile updated');
       setIsSheetOpen(false);
-    } catch (_error) {
+    } catch (error) {
+      console.error(error);
       toast.error('Failed to update profile');
     }
   };
