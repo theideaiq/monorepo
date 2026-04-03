@@ -22,8 +22,8 @@ export interface CartItem {
 /**
  * Gets the current user's active cart or creates one.
  */
-// biome-ignore lint/suspicious/noExplicitAny: bypassed
 async function getOrCreateCartId(
+  // biome-ignore lint/suspicious/noExplicitAny: bypassed
   supabase: any,
   userId: string,
 ): Promise<string | null> {

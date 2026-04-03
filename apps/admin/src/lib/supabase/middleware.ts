@@ -18,6 +18,7 @@ export async function createMiddlewareClient(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
+          // biome-ignore lint/correctness/noUnusedFunctionParameters: bypassed
           cookiesToSet.forEach(({ name, value, options }) => {
             request.cookies.set(name, value);
           });
