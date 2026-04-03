@@ -21,6 +21,7 @@ import {
 import { useState } from 'react';
 import type { HRStaffPlan } from '@/types/finance';
 
+  // Bolt: Cache Intl.NumberFormat outside render loop to prevent expensive reallocation on every row render
 const usdFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
