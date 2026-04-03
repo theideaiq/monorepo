@@ -22,11 +22,16 @@ describe('Cart Store', () => {
 
     // @ts-expect-error testing legacy schema (string id) handling by implementation
     addItem({ id: 'apple', price: 10 });
-    expect(useCartStore.getState().items).toEqual([{ id: 'apple', price: 10, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { id: 'apple', price: 10, quantity: 1 },
+    ]);
 
     // @ts-expect-error testing legacy schema
     addItem({ id: 'banana', price: 15 });
-    expect(useCartStore.getState().items).toEqual([{ id: 'apple', price: 10, quantity: 1 }, { id: 'banana', price: 15, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { id: 'apple', price: 10, quantity: 1 },
+      { id: 'banana', price: 15, quantity: 1 },
+    ]);
   });
 
   it('should remove items from the cart', () => {
@@ -38,7 +43,9 @@ describe('Cart Store', () => {
     addItem({ id: 'banana', price: 15 });
 
     removeItem('apple');
-    expect(useCartStore.getState().items).toEqual([{ id: 'banana', price: 15, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { id: 'banana', price: 15, quantity: 1 },
+    ]);
   });
 
   it('should clear the cart', () => {
@@ -65,7 +72,7 @@ describe('Cart Store', () => {
     updateQuantity('apple', 3);
 
     const state = useCartStore.getState();
-    expect(state.items.find(i => i.id === 'apple')?.quantity).toBe(3);
+    expect(state.items.find((i) => i.id === 'apple')?.quantity).toBe(3);
     expect(state.total).toBe(10 * 3 + 15 * 1); // 30 + 15 = 45
   });
 
@@ -76,7 +83,9 @@ describe('Cart Store', () => {
     addItem({ id: 'apple', price: 10 });
     // @ts-expect-error
     addItem({ id: 'apple', price: 10 });
-    expect(useCartStore.getState().items).toEqual([{ id: 'apple', price: 10, quantity: 2 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { id: 'apple', price: 10, quantity: 2 },
+    ]);
 
     removeItem('apple');
     expect(useCartStore.getState().items).toEqual([]);
@@ -91,7 +100,9 @@ describe('Cart Store', () => {
     expect(stored).toBeDefined();
     if (stored) {
       const parsed = JSON.parse(stored);
-      expect(parsed.state.items).toEqual([{ id: 'persistent-item', price: 20, quantity: 1 }]);
+      expect(parsed.state.items).toEqual([
+        { id: 'persistent-item', price: 20, quantity: 1 },
+      ]);
     }
   });
 });
