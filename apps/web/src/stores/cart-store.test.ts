@@ -20,40 +20,72 @@ describe('Cart Store', () => {
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple']);
+    // @ts-expect-error testing legacy schema (string id) handling by implementation
+    addItem({ id: 'apple', price: 10 });
+    expect(useCartStore.getState().items).toEqual([
+      { id: 'apple', price: 10, quantity: 1 },
+    ]);
 
-    addItem('banana');
-    expect(useCartStore.getState().items).toEqual(['apple', 'banana']);
+    // @ts-expect-error testing legacy schema
+    addItem({ id: 'banana', price: 15 });
+    expect(useCartStore.getState().items).toEqual([
+      { id: 'apple', price: 10, quantity: 1 },
+      { id: 'banana', price: 15, quantity: 1 },
+    ]);
   });
 
   it('should remove items from the cart', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    // @ts-expect-error
+    addItem({ id: 'apple', price: 10 });
+    // @ts-expect-error
+    addItem({ id: 'banana', price: 15 });
 
     removeItem('apple');
-    expect(useCartStore.getState().items).toEqual(['banana']);
+    expect(useCartStore.getState().items).toEqual([
+      { id: 'banana', price: 15, quantity: 1 },
+    ]);
   });
 
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    // @ts-expect-error
+    addItem({ id: 'apple', price: 10 });
+    // @ts-expect-error
+    addItem({ id: 'banana', price: 15 });
 
     clearCart();
     expect(useCartStore.getState().items).toEqual([]);
   });
 
-  it('should handle duplicate items correctly (removes all instances)', () => {
-    // Current behavior documentation: removing an item removes ALL instances of that value
+  it('should update quantity of an existing item and recalculate total correctly', () => {
+    const { addItem, updateQuantity } = useCartStore.getState();
+
+    // @ts-expect-error testing core logic
+    addItem({ id: 'apple', price: 10 });
+    // @ts-expect-error testing core logic
+    addItem({ id: 'banana', price: 15 });
+    expect(useCartStore.getState().total).toBe(25);
+
+    updateQuantity('apple', 3);
+
+    const state = useCartStore.getState();
+    expect(state.items.find((i) => i.id === 'apple')?.quantity).toBe(3);
+    expect(state.total).toBe(10 * 3 + 15 * 1); // 30 + 15 = 45
+  });
+
+  it('should handle duplicate items correctly (increments quantity)', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple', 'apple']);
+    // @ts-expect-error
+    addItem({ id: 'apple', price: 10 });
+    // @ts-expect-error
+    addItem({ id: 'apple', price: 10 });
+    expect(useCartStore.getState().items).toEqual([
+      { id: 'apple', price: 10, quantity: 2 },
+    ]);
 
     removeItem('apple');
     expect(useCartStore.getState().items).toEqual([]);
@@ -61,13 +93,16 @@ describe('Cart Store', () => {
 
   it('should persist state to localStorage', () => {
     const { addItem } = useCartStore.getState();
-    addItem('persistent-item');
+    // @ts-expect-error
+    addItem({ id: 'persistent-item', price: 20 });
 
-    const stored = localStorage.getItem('cart-storage');
+    const stored = localStorage.getItem('cart-storage-v2');
     expect(stored).toBeDefined();
     if (stored) {
       const parsed = JSON.parse(stored);
-      expect(parsed.state.items).toEqual(['persistent-item']);
+      expect(parsed.state.items).toEqual([
+        { id: 'persistent-item', price: 20, quantity: 1 },
+      ]);
     }
   });
 });
