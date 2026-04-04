@@ -26,6 +26,18 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock_anon_key' }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'mock_service_key' }}
+      WAYL_SECRET_KEY: ${{ secrets.WAYL_SECRET_KEY || 'mock_wayl_key' }}
+      WAYL_WEBHOOK_SECRET: ${{ secrets.WAYL_WEBHOOK_SECRET || 'mock_wayl_webhook' }}
+      ZAIN_SECRET_KEY: ${{ secrets.ZAIN_SECRET_KEY || 'mock_zain_key' }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 'mock_resend_key' }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN || 'mock_telegram_token' }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'mock_gemini_key' }}
+      UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL || 'https://mock.upstash.io' }}
+      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN || 'mock_upstash_token' }}
+      WEB_APP_URL: ${{ secrets.WEB_APP_URL || 'https://mock.webapp.com' }}
 
     strategy:
       fail-fast: false
