@@ -1,7 +1,7 @@
 import * as nextCache from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as audit from '@/lib/audit';
-import { updateRole, addStaff } from './staff';
+import { addStaff, updateRole } from './staff';
 
 // Mock dependencies using vi.hoisted to avoid ReferenceError
 const mocks = vi.hoisted(() => ({
@@ -176,8 +176,9 @@ describe('staff actions - addStaff', () => {
     // and the select call for the target user (by email).
     // The easiest way is to track the mock calls or use mockImplementation.
     const mockSelect = vi.fn().mockImplementation((columns) => {
-      if (columns === 'role, banned') { // This is the auth check query
-         return mockSelectForAuthCheck();
+      if (columns === 'role, banned') {
+        // This is the auth check query
+        return mockSelectForAuthCheck();
       }
       return mockSelectForTargetUser(); // This is the target user query (e.g. select('id'))
     });
@@ -206,7 +207,7 @@ describe('staff actions - addStaff', () => {
       'superadmin',
       null, // updateError
       { message: 'Not found' }, // searchError
-      null // targetUser
+      null, // targetUser
     );
 
     // Act & Assert
