@@ -1,0 +1,3 @@
+## 2025-04-04 - Cache Intl.NumberFormat Instantiation
+**Learning:** Repeatedly instantiating `Intl.NumberFormat` inside React components (especially in lists like `CartDrawer` or grids like `ProductCard`) causes unnecessary GC pressure and CPU overhead during renders, as instantiation can take 1-2ms each time.
+**Action:** Always extract `Intl.NumberFormat` instances outside of the component body or cache them in a module-level variable to reuse the same instance across renders.
