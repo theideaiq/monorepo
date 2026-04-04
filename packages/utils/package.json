@@ -14,8 +14,7 @@
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check --write .",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "typecheck": "tsc --noEmit", "test": "vitest run"
   },
   "dependencies": {
     "clsx": "^2.1.1",
