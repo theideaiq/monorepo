@@ -1,7 +1,7 @@
 import * as nextCache from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as audit from '@/lib/audit';
-import { updateRole } from './staff';
+import { addStaff, updateRole } from './staff';
 
 // Mock dependencies using vi.hoisted to avoid ReferenceError
 const mocks = vi.hoisted(() => ({
@@ -98,7 +98,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Only Superadmins can change roles',
+      'Unauthorized: Insufficient permissions',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Unauthorized',
+      'Authentication required: No user session found',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -127,6 +127,92 @@ describe('staff actions - updateRole', () => {
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
       'Database error',
+    );
+  });
+});
+
+describe('staff actions - addStaff', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const setupSupabaseMock = (
+    user: { id: string } | null,
+    requesterRole: string | null = null,
+    updateError: { message: string } | null = null,
+    searchError: { message: string } | null = null,
+    targetUser: { id: string } | null = null,
+  ) => {
+    // Mock getUser
+    mocks.supabase.auth.getUser.mockResolvedValue({
+      data: { user },
+      error: null,
+    });
+
+    // Mock query builder chain
+    const mockUpdate = vi.fn().mockReturnValue({
+      eq: vi.fn().mockResolvedValue({ error: updateError }),
+    });
+
+    const mockSelectForAuthCheck = vi.fn().mockReturnValue({
+      eq: vi.fn().mockReturnValue({
+        single: vi.fn().mockResolvedValue({
+          data: requesterRole ? { role: requesterRole } : null,
+          error: null, // Auth check should succeed for superadmin
+        }),
+      }),
+    });
+
+    const mockSelectForTargetUser = vi.fn().mockReturnValue({
+      eq: vi.fn().mockReturnValue({
+        single: vi.fn().mockResolvedValue({
+          data: targetUser,
+          error: searchError,
+        }),
+      }),
+    });
+
+    // We need to differentiate between the select call for auth (by id)
+    // and the select call for the target user (by email).
+    // The easiest way is to track the mock calls or use mockImplementation.
+    const mockSelect = vi.fn().mockImplementation((columns) => {
+      if (columns === 'role, banned') {
+        // This is the auth check query
+        return mockSelectForAuthCheck();
+      }
+      return mockSelectForTargetUser(); // This is the target user query (e.g. select('id'))
+    });
+
+    mocks.supabase.from.mockImplementation((table: string) => {
+      if (table === 'profiles') {
+        return {
+          select: mockSelect,
+          update: mockUpdate,
+        };
+      }
+      return {
+        select: vi.fn(),
+        update: vi.fn(),
+      };
+    });
+
+    return { mockSelect, mockUpdate };
+  };
+
+  it('should throw error if user to add is not found', async () => {
+    // Arrange
+    const superAdminId = 'super-admin-id';
+    setupSupabaseMock(
+      { id: superAdminId },
+      'superadmin',
+      null, // updateError
+      { message: 'Not found' }, // searchError
+      null, // targetUser
+    );
+
+    // Act & Assert
+    await expect(addStaff('nonexistent@example.com')).rejects.toThrow(
+      'User not found. Ensure they have signed up and their profile has an email set.',
     );
   });
 });
