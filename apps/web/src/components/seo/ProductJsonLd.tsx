@@ -1,3 +1,5 @@
+'use client';
+
 import { webEnv } from '@repo/env/web';
 import type { Product } from '@/services/products';
 
@@ -41,7 +43,7 @@ export default function ProductJsonLd({ product }: ProductJsonLdProps) {
     <script
       type="application/ld+json"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
     />
   );
 }
