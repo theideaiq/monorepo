@@ -1,6 +1,7 @@
 import * as nextCache from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as audit from '@/lib/audit';
+import { ROLES } from '@/lib/constants';
 import { updateRole } from './staff';
 
 // Mock dependencies using vi.hoisted to avoid ReferenceError
@@ -75,9 +76,9 @@ describe('staff actions - updateRole', () => {
     // Arrange
     const superAdminId = 'super-admin-id';
     const targetUserId = 'target-user-id';
-    const newRole = 'admin';
+    const newRole = ROLES.ADMIN;
 
-    setupSupabaseMock({ id: superAdminId }, 'superadmin');
+    setupSupabaseMock({ id: superAdminId }, ROLES.SUPERADMIN);
 
     // Act
     await updateRole(targetUserId, newRole);
@@ -94,11 +95,11 @@ describe('staff actions - updateRole', () => {
   it('should throw error if requester is not superadmin', async () => {
     // Arrange
     const adminId = 'admin-id';
-    setupSupabaseMock({ id: adminId }, 'admin');
+    setupSupabaseMock({ id: adminId }, ROLES.ADMIN);
 
     // Act & Assert
-    await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Only Superadmins can change roles',
+    await expect(updateRole('target-id', ROLES.ADMIN)).rejects.toThrow(
+      'Unauthorized: Insufficient permissions',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -110,8 +111,8 @@ describe('staff actions - updateRole', () => {
     setupSupabaseMock(null);
 
     // Act & Assert
-    await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Unauthorized',
+    await expect(updateRole('target-id', ROLES.ADMIN)).rejects.toThrow(
+      'Authentication required: No user session found',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -120,12 +121,12 @@ describe('staff actions - updateRole', () => {
   it('should throw error if update operation fails', async () => {
     // Arrange
     const superAdminId = 'super-admin-id';
-    setupSupabaseMock({ id: superAdminId }, 'superadmin', {
+    setupSupabaseMock({ id: superAdminId }, ROLES.SUPERADMIN, {
       message: 'Database error',
     });
 
     // Act & Assert
-    await expect(updateRole('target-id', 'admin')).rejects.toThrow(
+    await expect(updateRole('target-id', ROLES.ADMIN)).rejects.toThrow(
       'Database error',
     );
   });

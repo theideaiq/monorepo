@@ -5,6 +5,7 @@ import { Shield, ShieldAlert, UserCheck, UserX } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { addStaff, toggleBan, updateRole } from '@/actions/staff';
+import { ROLES } from '@/lib/constants';
 import type { UserProfile, UserRole } from '@/types/auth';
 
 interface StaffManagementProps {
@@ -23,7 +24,7 @@ export default function StaffManagement({
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newStaffEmail, setNewStaffEmail] = useState('');
 
-  const isSuperAdmin = currentUserRole === 'superadmin';
+  const isSuperAdmin = currentUserRole === ROLES.SUPERADMIN;
 
   const handleRoleChange = async (userId: string, newRole: UserRole) => {
     if (!isSuperAdmin) return toast.error('Only Superadmins can change roles');
@@ -95,7 +96,7 @@ export default function StaffManagement({
                   <td className="p-4">
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        user.role === 'superadmin'
+                        user.role === ROLES.SUPERADMIN
                           ? 'bg-purple-100 text-purple-700'
                           : 'bg-blue-100 text-blue-700'
                       }`}
@@ -118,12 +119,12 @@ export default function StaffManagement({
                   <td className="p-4 text-right space-x-2">
                     {isSuperAdmin && user.id !== currentUserId && (
                       <>
-                        {user.role === 'admin' ? (
+                        {user.role === ROLES.ADMIN ? (
                           <Button
                             variant="outline"
                             className="px-2 py-1 h-8 w-8 p-0"
                             onClick={() =>
-                              handleRoleChange(user.id, 'superadmin')
+                              handleRoleChange(user.id, ROLES.SUPERADMIN)
                             }
                             disabled={loading === user.id}
                             title="Promote to Superadmin"
@@ -134,7 +135,7 @@ export default function StaffManagement({
                           <Button
                             variant="outline"
                             className="px-2 py-1 h-8 w-8 p-0"
-                            onClick={() => handleRoleChange(user.id, 'admin')}
+                            onClick={() => handleRoleChange(user.id, ROLES.ADMIN)}
                             disabled={loading === user.id}
                             title="Demote to Admin"
                           >
