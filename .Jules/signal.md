@@ -1,0 +1,3 @@
+## 2024-04-04 - Product Structured Data
+**Learning:** Product pages must have JSON-LD structured data to provide search engines with necessary metadata (price, availability, rating) to display Rich Snippets. The Next.js standard is to render this via a `<script type="application/ld+json">` tag dynamically populated by page props.
+**Action:** When creating or modifying dynamic product pages, ensure a corresponding JSON-LD component is present and that it receives stringified data. Crucially, always use `replace(/</g, '\\u003c')` when using `dangerouslySetInnerHTML` with `JSON.stringify` to prevent XSS vulnerabilities.
