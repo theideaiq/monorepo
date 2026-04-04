@@ -32,7 +32,7 @@ export function decodeHtmlEntities(text: string): string {
     const numericMatch = match.match(NUMERIC_ENTITY_REGEX);
     if (numericMatch) {
       const isHex = !!numericMatch[1];
-      const num = Number.parseInt(numericMatch[2], isHex ? 16 : 10);
+      const num = Number.parseInt(numericMatch[2]!, isHex ? 16 : 10);
       return String.fromCodePoint(num);
     }
 
