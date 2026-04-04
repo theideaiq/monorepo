@@ -13,7 +13,11 @@
     "TELEGRAM_BOT_TOKEN",
     "GEMINI_API_KEY",
     "UPSTASH_REDIS_REST_URL",
-    "UPSTASH_REDIS_REST_TOKEN"
+    "UPSTASH_REDIS_REST_TOKEN",
+    "WEB_APP_URL",
+    "WAYL_SECRET_KEY",
+    "WAYL_WEBHOOK_SECRET",
+    "ZAIN_SECRET_KEY"
   ],
   "tasks": {
     "build": {
