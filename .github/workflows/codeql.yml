@@ -59,6 +59,14 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
         run: pnpm run --filter=web build
 
+      - name: Sync Capacitor Android
+        if: matrix.language == 'java-kotlin'
+        run: pnpm run --filter=web exec cap sync android
+
+      - name: Sync Capacitor iOS
+        if: matrix.language == 'swift'
+        run: pnpm run --filter=web exec cap sync ios
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -81,14 +89,11 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates google-services.json)
           pnpm run --filter=web secrets:restore
-          
-          # 2. Sync Capacitor
-          pnpm run --filter=web exec cap sync android
 
-          # 3. Grant Permission
+          # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 4. Build Debug APK (Sufficient for analysis)
+          # 3. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -99,11 +104,8 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm run --filter=web secrets:restore
-          
-          # 2. Sync Capacitor
-          pnpm run --filter=web exec cap sync ios
 
-          # 3. Determine Build Type (CocoaPods vs SPM)
+          # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -115,7 +117,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 4. Build for Simulator (No Signing Required)
+          # 3. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
