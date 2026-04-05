@@ -13,7 +13,11 @@
     "TELEGRAM_BOT_TOKEN",
     "GEMINI_API_KEY",
     "UPSTASH_REDIS_REST_URL",
-    "UPSTASH_REDIS_REST_TOKEN"
+    "UPSTASH_REDIS_REST_TOKEN",
+    "WAYL_SECRET_KEY",
+    "WAYL_WEBHOOK_SECRET",
+    "WEB_APP_URL",
+    "ZAIN_SECRET_KEY"
   ],
   "tasks": {
     "build": {
@@ -41,6 +45,9 @@
     },
     "test:coverage": {
        "outputs": ["coverage/**"]
+    },
+    "e2e": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
     "format": {
       "inputs": ["$TURBO_DEFAULT$"]
