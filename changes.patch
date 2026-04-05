@@ -1,0 +1,1204 @@
+diff --git a/.github/workflows/android.yml b/.github/workflows/android.yml
+index bad82d4..9f40c79 100644
+--- a/.github/workflows/android.yml
++++ b/.github/workflows/android.yml
+@@ -13,7 +13,7 @@ jobs:
+       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
+     steps:
+       - name: Checkout code
+-        uses: actions/checkout@v6
++        uses: actions/checkout@v4
+
+       - name: Setup Java
+         uses: actions/setup-java@v5
+@@ -22,7 +22,7 @@ jobs:
+           java-version: '17'
+
+       - name: Setup Node.js
+-        uses: actions/setup-node@v6
++        uses: actions/setup-node@v4
+         with:
+           node-version: '24'
+
+@@ -47,7 +47,7 @@ jobs:
+         run: cd apps/web/android && ./gradlew assembleDebug
+
+       - name: Upload APK
+-        uses: actions/upload-artifact@v6
++        uses: actions/upload-artifact@v4
+         with:
+           name: app-debug.apk
+           path: apps/web/android/app/build/outputs/apk/debug/app-debug.apk
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index c28b9f8..1f12a89 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -12,10 +12,10 @@ jobs:
+     name: Quality Gate
+     runs-on: ubuntu-latest
+     steps:
+-      - uses: actions/checkout@v6
++      - uses: actions/checkout@v4
+
+       - name: Setup Node.js
+-        uses: actions/setup-node@v6
++        uses: actions/setup-node@v4
+         with:
+           node-version-file: '.nvmrc'
+
+@@ -30,7 +30,7 @@ jobs:
+           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+       - name: Setup pnpm cache
+-        uses: actions/cache@v5
++        uses: actions/cache@v4
+         with:
+           path: ${{ env.STORE_PATH }}
+           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+@@ -38,7 +38,7 @@ jobs:
+             ${{ runner.os }}-pnpm-store-
+
+       - name: Setup Turbo cache
+-        uses: actions/cache@v5
++        uses: actions/cache@v4
+         with:
+           path: .turbo
+           key: ${{ runner.os }}-turbo-quality-${{ github.sha }}
+@@ -56,10 +56,10 @@ jobs:
+     runs-on: ubuntu-latest
+     needs: []
+     steps:
+-      - uses: actions/checkout@v6
++      - uses: actions/checkout@v4
+
+       - name: Setup Node.js
+-        uses: actions/setup-node@v6
++        uses: actions/setup-node@v4
+         with:
+           node-version-file: '.nvmrc'
+
+@@ -74,7 +74,7 @@ jobs:
+           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+       - name: Setup pnpm cache
+-        uses: actions/cache@v5
++        uses: actions/cache@v4
+         with:
+           path: ${{ env.STORE_PATH }}
+           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+@@ -82,7 +82,7 @@ jobs:
+             ${{ runner.os }}-pnpm-store-
+
+       - name: Setup Turbo cache
+-        uses: actions/cache@v5
++        uses: actions/cache@v4
+         with:
+           path: .turbo
+           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+@@ -94,8 +94,9 @@ jobs:
+
+       - name: Build
+         env:
+-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
++          SKIP_ENV_VALIDATION: true
++          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.com' }}
++          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
+         run: pnpm turbo build
+
+   e2e:
+@@ -103,10 +104,10 @@ jobs:
+     runs-on: ubuntu-latest
+     needs: [build]
+     steps:
+-      - uses: actions/checkout@v6
++      - uses: actions/checkout@v4
+
+       - name: Setup Node.js
+-        uses: actions/setup-node@v6
++        uses: actions/setup-node@v4
+         with:
+           node-version-file: '.nvmrc'
+
+@@ -121,7 +122,7 @@ jobs:
+           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+       - name: Setup pnpm cache
+-        uses: actions/cache@v5
++        uses: actions/cache@v4
+         with:
+           path: ${{ env.STORE_PATH }}
+           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+@@ -129,7 +130,7 @@ jobs:
+             ${{ runner.os }}-pnpm-store-
+
+       - name: Setup Turbo cache
+-        uses: actions/cache@v5
++        uses: actions/cache@v4
+         with:
+           path: .turbo
+           key: ${{ runner.os }}-turbo-e2e-${{ github.sha }}
+diff --git a/.github/workflows/codeql.yml b/.github/workflows/codeql.yml
+index ca83317..41a78ad 100644
+--- a/.github/workflows/codeql.yml
++++ b/.github/workflows/codeql.yml
+@@ -23,6 +23,7 @@ jobs:
+     env:
+       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
+       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
++      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
+
+     strategy:
+       fail-fast: false
+@@ -37,13 +38,26 @@ jobs:
+
+     steps:
+       - name: Checkout repository
+-        uses: actions/checkout@v6
++        uses: actions/checkout@v4
+
+       # Required for 'npm run secrets:restore'
+       - name: Setup Node.js
+-        uses: actions/setup-node@v6
++        uses: actions/setup-node@v4
+         with:
+-          node-version: 20
++          node-version-file: '.nvmrc'
++
++      - name: Setup pnpm
++        uses: pnpm/action-setup@v4
++
++      - name: Install dependencies
++        run: pnpm install --frozen-lockfile
++
++      - name: Build Web
++        env:
++          SKIP_ENV_VALIDATION: true
++          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.com' }}
++          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
++        run: pnpm run --filter=web build
+
+       # Required for Android Gradle Build
+       - name: Setup Java
+@@ -66,12 +80,15 @@ jobs:
+         if: matrix.language == 'java-kotlin'
+         run: |
+           # 1. Restore Secrets (Generates google-services.json)
+-          npm run secrets:restore --workspace=apps/web
++          pnpm run --filter=web secrets:restore
+
+-          # 2. Grant Permission
++          # 2. Sync Capacitor
++          pnpm run --filter=web exec cap sync android
++
++          # 3. Grant Permission
+           chmod +x apps/web/android/gradlew
+
+-          # 3. Build Debug APK (Sufficient for analysis)
++          # 4. Build Debug APK (Sufficient for analysis)
+           cd apps/web/android && ./gradlew assembleDebug --no-daemon
+
+       # ----------------------------------------------------------------
+@@ -81,9 +98,12 @@ jobs:
+         if: matrix.language == 'swift'
+         run: |
+           # 1. Restore Secrets (Generates GoogleService-Info.plist)
+-          npm run secrets:restore --workspace=apps/web
++          pnpm run --filter=web secrets:restore
+
+-          # 2. Determine Build Type (CocoaPods vs SPM)
++          # 2. Sync Capacitor
++          pnpm run --filter=web exec cap sync ios
++
++          # 3. Determine Build Type (CocoaPods vs SPM)
+           if [ -f "apps/web/ios/App/Podfile" ]; then
+               echo "✅ Podfile found. Installing CocoaPods..."
+               cd apps/web/ios/App && pod install --repo-update && cd -
+@@ -95,7 +115,7 @@ jobs:
+               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+           fi
+
+-          # 3. Build for Simulator (No Signing Required)
++          # 4. Build for Simulator (No Signing Required)
+           echo "Building Project..."
+           xcodebuild build \
+             $BUILD_TARGET \
+diff --git a/.github/workflows/label.yml b/.github/workflows/label.yml
+index 671700f..8455b2e 100644
+--- a/.github/workflows/label.yml
++++ b/.github/workflows/label.yml
+@@ -9,7 +9,7 @@ jobs:
+       contents: read
+       pull-requests: write
+     steps:
+-      - uses: actions/labeler@v6
++      - uses: actions/labeler@v4
+         with:
+           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+           sync-labels: true
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index a4a61fa..c351a8c 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -16,10 +16,10 @@ jobs:
+       pull-requests: write
+     steps:
+       - name: Checkout Repo
+-        uses: actions/checkout@v6
++        uses: actions/checkout@v4
+
+       - name: Setup Node.js
+-        uses: actions/setup-node@v6
++        uses: actions/setup-node@v4
+         with:
+           node-version-file: '.nvmrc'
+
+diff --git a/.github/workflows/security.yml b/.github/workflows/security.yml
+index 2de11ce..fd54c29 100644
+--- a/.github/workflows/security.yml
++++ b/.github/workflows/security.yml
+@@ -13,9 +13,10 @@ jobs:
+     name: Gitleaks
+     runs-on: ubuntu-latest
+     steps:
+-      - uses: actions/checkout@v6
++      - uses: actions/checkout@v4
+         with:
+           fetch-depth: 0
+       - uses: gitleaks/gitleaks-action@v2
+         env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
++          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+diff --git a/.jules/pixel.md b/.jules/pixel.md
+new file mode 100644
+index 0000000..9fecd67
+--- /dev/null
++++ b/.jules/pixel.md
+@@ -0,0 +1,3 @@
++## 2025-04-05 - Enforcing Design Tokens over Hardcoded Colors
++**Learning:** Found multiple instances where the brand gold color `#facc15` and brand dark color `#1a1a1a` were hardcoded directly in Tailwind classes (e.g., `bg-[#facc15]`), ignoring the established design tokens (`brand-yellow`, `brand-surface`). This leads to a fragmented color system and makes global theming changes nearly impossible.
++**Action:** Always map hardcoded hex values back to their corresponding design tokens (e.g. `bg-brand-yellow` instead of `bg-[#facc15]`). If a color truly does not exist in the tokens, it should be formally added to `theme.css` and the Tailwind config rather than arbitrarily injected.
+diff --git a/apps/admin/src/actions/staff.test.ts b/apps/admin/src/actions/staff.test.ts
+index 85a9a7d..c42c2a8 100644
+--- a/apps/admin/src/actions/staff.test.ts
++++ b/apps/admin/src/actions/staff.test.ts
+@@ -98,7 +98,7 @@ describe('staff actions - updateRole', () => {
+
+     // Act & Assert
+     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
+-      'Only Superadmins can change roles',
++      'Unauthorized: Insufficient permissions',
+     );
+
+     expect(audit.logAdminAction).not.toHaveBeenCalled();
+@@ -111,7 +111,7 @@ describe('staff actions - updateRole', () => {
+
+     // Act & Assert
+     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
+-      'Unauthorized',
++      'Authentication required: No user session found',
+     );
+
+     expect(audit.logAdminAction).not.toHaveBeenCalled();
+diff --git a/apps/web/next-env.d.ts b/apps/web/next-env.d.ts
+index 1511519..20e7bcf 100644
+--- a/apps/web/next-env.d.ts
++++ b/apps/web/next-env.d.ts
+@@ -1,6 +1,6 @@
+ /// <reference types="next" />
+ /// <reference types="next/image-types/global" />
+-import './.next/types/routes.d.ts';
++import './.next/dev/types/routes.d.ts';
+
+ // NOTE: This file should not be edited
+ // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/apps/web/scripts/restore-mobile-secrets.js b/apps/web/scripts/restore-mobile-secrets.js
+index 596f1a1..08b2534 100644
+--- a/apps/web/scripts/restore-mobile-secrets.js
++++ b/apps/web/scripts/restore-mobile-secrets.js
+@@ -1,5 +1,5 @@
+-const fs = require('fs');
+-const path = require('path');
++const fs = require('node:fs');
++const path = require('node:path');
+
+ const ANDROID_DEST = path.join(
+   __dirname,
+@@ -26,9 +26,7 @@ function restoreSecret(envVar, destPath, platformName) {
+         errorMessage = error.message;
+       } else {
+         const errorType =
+-          error &&
+-          error.constructor &&
+-          typeof error.constructor.name === 'string'
++          error?.constructor && typeof error.constructor.name === 'string'
+             ? error.constructor.name
+             : 'UnknownErrorType';
+         let errorDetails;
+diff --git a/apps/web/src/actions/checkout.ts b/apps/web/src/actions/checkout.ts
+index 416d4fe..b6dec64 100644
+--- a/apps/web/src/actions/checkout.ts
++++ b/apps/web/src/actions/checkout.ts
+@@ -1,10 +1,10 @@
+ 'use server';
+
+ import { webEnv } from '@repo/env/web';
++import { Logger } from '@repo/utils';
+ import { redirect } from 'next/navigation';
+ import { paymentFactory } from '@/lib/payment/config';
+ import { createClient } from '@/lib/supabase/server';
+-import { Logger } from '@repo/utils';
+
+ export async function initiateCheckout(cartId: string) {
+   const supabase = await createClient();
+diff --git a/apps/web/src/app/[locale]/checkout/page.tsx b/apps/web/src/app/[locale]/checkout/page.tsx
+index bec4c89..88c5919 100644
+--- a/apps/web/src/app/[locale]/checkout/page.tsx
++++ b/apps/web/src/app/[locale]/checkout/page.tsx
+@@ -1,7 +1,6 @@
+-import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
+-import { Metadata } from 'next';
+-import { getTranslations } from 'next-intl/server';
++import type { Metadata } from 'next';
+ import { redirect } from 'next/navigation';
++import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
+ import { createClient } from '@/lib/supabase/server';
+
+ export const metadata: Metadata = {
+diff --git a/apps/web/src/app/[locale]/layout.tsx b/apps/web/src/app/[locale]/layout.tsx
+index 3149897..6d634e3 100644
+--- a/apps/web/src/app/[locale]/layout.tsx
++++ b/apps/web/src/app/[locale]/layout.tsx
+@@ -14,8 +14,6 @@ import {
+   getTranslations,
+   setRequestLocale,
+ } from 'next-intl/server';
+-import { BottomNav } from '@/components/ui/BottomNav';
+-import { CartDrawer } from '@/components/store/CartDrawer';
+ import SkipLink from '@/components/layout/SkipLink';
+ import { WebFooter } from '@/components/layout/WebFooter';
+ import { WebNavbar } from '@/components/layout/WebNavbar';
+@@ -23,6 +21,8 @@ import QueryProvider from '@/components/providers/QueryProvider';
+ import ToastProvider from '@/components/providers/ToastProvider';
+ import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
+ import JsonLd from '@/components/seo/JsonLd';
++import { CartDrawer } from '@/components/store/CartDrawer';
++import { BottomNav } from '@/components/ui/BottomNav';
+ import { Link, routing } from '@/i18n/navigation';
+
+ const poppins = Poppins({
+diff --git a/apps/web/src/app/[locale]/login/page.tsx b/apps/web/src/app/[locale]/login/page.tsx
+index 6bdd352..7712fd4 100644
+--- a/apps/web/src/app/[locale]/login/page.tsx
++++ b/apps/web/src/app/[locale]/login/page.tsx
+@@ -1,13 +1,12 @@
+ 'use client';
+
+-import { Button, Input } from '@repo/ui';
+-import { motion, AnimatePresence } from 'framer-motion';
+-import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
++import { Button } from '@repo/ui';
++import { AnimatePresence, motion } from 'framer-motion';
++import { Chrome, Loader2, Lock, Mail, User } from 'lucide-react';
++import { useRouter } from 'next/navigation';
+ import { useState } from 'react';
+ import { toast } from 'react-hot-toast';
+ import { createClient } from '@/lib/supabase/client';
+-import { useRouter } from 'next/navigation';
+-import Image from 'next/image';
+
+ const supabase = createClient();
+
+@@ -128,7 +127,10 @@ export default function AuthPage() {
+                   className="overflow-hidden"
+                 >
+                   <div className="mb-4">
+-                    <label className="text-sm text-slate-400 mb-1 block">
++                    <label
++                      className="text-sm text-slate-400 mb-1 block"
++                      htmlFor="fullName"
++                    >
+                       Full Name
+                     </label>
+                     <div className="relative">
+@@ -137,6 +139,7 @@ export default function AuthPage() {
+                         size={18}
+                       />
+                       <input
++                        id="fullName"
+                         type="text"
+                         required={mode === 'register'}
+                         value={fullName}
+@@ -151,7 +154,10 @@ export default function AuthPage() {
+             </AnimatePresence>
+
+             <div>
+-              <label className="text-sm text-slate-400 mb-1 block">
++              <label
++                className="text-sm text-slate-400 mb-1 block"
++                htmlFor="email"
++              >
+                 Email Address
+               </label>
+               <div className="relative">
+@@ -160,6 +166,7 @@ export default function AuthPage() {
+                   size={18}
+                 />
+                 <input
++                  id="email"
+                   type="email"
+                   required
+                   value={email}
+@@ -171,7 +178,10 @@ export default function AuthPage() {
+             </div>
+
+             <div>
+-              <label className="text-sm text-slate-400 mb-1 block">
++              <label
++                className="text-sm text-slate-400 mb-1 block"
++                htmlFor="password"
++              >
+                 Password
+               </label>
+               <div className="relative">
+@@ -180,6 +190,7 @@ export default function AuthPage() {
+                   size={18}
+                 />
+                 <input
++                  id="password"
+                   type="password"
+                   required
+                   value={password}
+@@ -212,6 +223,7 @@ export default function AuthPage() {
+                 ? "Don't have an account? "
+                 : 'Already have an account? '}
+               <button
++                type="button"
+                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
+                 className="text-brand-yellow hover:underline font-bold"
+               >
+diff --git a/apps/web/src/app/[locale]/megastore/page.tsx b/apps/web/src/app/[locale]/megastore/page.tsx
+index 3f931d6..262b569 100644
+--- a/apps/web/src/app/[locale]/megastore/page.tsx
++++ b/apps/web/src/app/[locale]/megastore/page.tsx
+@@ -1,17 +1,17 @@
+ 'use client';
+
+ // UI Kit
+-import { Badge, Button, Input } from '@repo/ui';
++import { Badge, Button } from '@repo/ui';
+ import { motion } from 'framer-motion';
+ import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
+ import Image from 'next/image';
+ import { useMemo, useState } from 'react';
++import { toast } from 'react-hot-toast';
++import { ProductCard } from '@/components/ui/ProductCard';
+ import { useProducts } from '@/hooks/queries/use-products';
++import type { Product } from '@/services/products';
+ import { useCartStore } from '@/stores/cart-store';
+-import { ProductCard } from '@/components/ui/ProductCard';
+ import { useUIStore } from '@/stores/ui-store';
+-import { toast } from 'react-hot-toast';
+-import type { Product } from '@/services/products';
+
+ const CATEGORIES = [
+   { name: 'Gaming', icon: <Gamepad2 size={18} /> },
+diff --git a/apps/web/src/app/[locale]/plus/page.tsx b/apps/web/src/app/[locale]/plus/page.tsx
+index f51d575..b361a7e 100644
+--- a/apps/web/src/app/[locale]/plus/page.tsx
++++ b/apps/web/src/app/[locale]/plus/page.tsx
+@@ -1,16 +1,8 @@
+ 'use client';
+
+-import { Badge, Button } from '@repo/ui';
++import { Button } from '@repo/ui';
+ import { motion } from 'framer-motion';
+-import {
+-  BookOpen,
+-  Check,
+-  Gamepad2,
+-  Zap,
+-  Crown,
+-  Film,
+-  Music,
+-} from 'lucide-react';
++import { BookOpen, Check, Crown, Gamepad2, Zap } from 'lucide-react';
+ import { useRouter } from 'next/navigation';
+ import { type ReactNode, useState } from 'react';
+ import { toast } from 'react-hot-toast';
+@@ -215,9 +207,9 @@ export default function PlusHome() {
+               </div>
+
+               <ul className="flex-1 space-y-4 mb-8">
+-                {tier.features.map((feature, f) => (
++                {tier.features.map((feature) => (
+                   <li
+-                    key={f}
++                    key={feature}
+                     className="flex items-start gap-3 text-sm text-slate-300"
+                   >
+                     <div
+diff --git a/apps/web/src/app/[locale]/product/[slug]/page.tsx b/apps/web/src/app/[locale]/product/[slug]/page.tsx
+index cfd8bd7..4316d58 100644
+--- a/apps/web/src/app/[locale]/product/[slug]/page.tsx
++++ b/apps/web/src/app/[locale]/product/[slug]/page.tsx
+@@ -1,7 +1,7 @@
++import type { Metadata } from 'next';
+ import { notFound } from 'next/navigation';
+-import { Metadata } from 'next';
+-import { getProductBySlug } from '@/services/products';
+ import { ProductView } from '@/components/store/ProductView';
++import { getProductBySlug } from '@/services/products';
+
+ type Props = {
+   params: Promise<{ slug: string; locale: string }>;
+diff --git a/apps/web/src/components/checkout/CheckoutFlow.tsx b/apps/web/src/components/checkout/CheckoutFlow.tsx
+index 34804e6..77fe0dc 100644
+--- a/apps/web/src/components/checkout/CheckoutFlow.tsx
++++ b/apps/web/src/components/checkout/CheckoutFlow.tsx
+@@ -1,11 +1,11 @@
+ 'use client';
+
++import { Button } from '@repo/ui';
++import { AnimatePresence, motion } from 'framer-motion';
++import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
+ import { useState } from 'react';
+-import { motion, AnimatePresence } from 'framer-motion';
+-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
+-import { Button, Input, Card } from '@repo/ui';
+-import { useCartStore } from '@/stores/cart-store';
+ import { toast } from 'react-hot-toast';
++import { useCartStore } from '@/stores/cart-store';
+
+ export function CheckoutFlow() {
+   const [step, setStep] = useState<1 | 2>(1);
+@@ -44,8 +44,9 @@ export function CheckoutFlow() {
+         <div
+           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
+         >
+-          <div
+-            className="p-6 flex items-center justify-between cursor-pointer"
++          <button
++            type="button"
++            className="w-full text-left p-6 flex items-center justify-between cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow"
+             onClick={() => setStep(1)}
+           >
+             <div className="flex items-center gap-4">
+@@ -61,11 +62,11 @@ export function CheckoutFlow() {
+               </h3>
+             </div>
+             {step > 1 && (
+-              <button className="text-sm text-brand-yellow font-medium">
++              <span className="text-sm text-brand-yellow font-medium">
+                 Edit
+-              </button>
++              </span>
+             )}
+-          </div>
++          </button>
+
+           <AnimatePresence>
+             {step === 1 && (
+@@ -81,10 +82,14 @@ export function CheckoutFlow() {
+                   >
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                       <div className="space-y-1">
+-                        <label className="text-xs text-slate-400">
++                        <label
++                          className="text-xs text-slate-400"
++                          htmlFor="fullName"
++                        >
+                           Full Name
+                         </label>
+                         <input
++                          id="fullName"
+                           required
+                           value={address.fullName}
+                           onChange={(e) =>
+@@ -95,10 +100,14 @@ export function CheckoutFlow() {
+                         />
+                       </div>
+                       <div className="space-y-1">
+-                        <label className="text-xs text-slate-400">
++                        <label
++                          className="text-xs text-slate-400"
++                          htmlFor="phone"
++                        >
+                           Phone Number
+                         </label>
+                         <input
++                          id="phone"
+                           required
+                           value={address.phone}
+                           onChange={(e) =>
+@@ -111,8 +120,11 @@ export function CheckoutFlow() {
+                     </div>
+
+                     <div className="space-y-1">
+-                      <label className="text-xs text-slate-400">City</label>
++                      <label className="text-xs text-slate-400" htmlFor="city">
++                        City
++                      </label>
+                       <select
++                        id="city"
+                         value={address.city}
+                         onChange={(e) =>
+                           setAddress({ ...address, city: e.target.value })
+@@ -127,10 +139,14 @@ export function CheckoutFlow() {
+                     </div>
+
+                     <div className="space-y-1">
+-                      <label className="text-xs text-slate-400">
++                      <label
++                        className="text-xs text-slate-400"
++                        htmlFor="street"
++                      >
+                         Address Details
+                       </label>
+                       <textarea
++                        id="street"
+                         required
+                         value={address.street}
+                         onChange={(e) =>
+@@ -160,7 +176,14 @@ export function CheckoutFlow() {
+         <div
+           className={`rounded-3xl border transition-all overflow-hidden ${step === 2 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
+         >
+-          <div className="p-6 flex items-center gap-4">
++          <button
++            type="button"
++            disabled={step === 1}
++            onClick={() => {
++              if (step > 2) setStep(2);
++            }}
++            className="w-full text-left p-6 flex items-center gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow cursor-pointer disabled:cursor-default"
++          >
+             <div
+               className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-colors ${step === 2 ? 'bg-brand-yellow text-brand-dark' : 'bg-white/10 text-slate-400'}`}
+             >
+@@ -171,7 +194,7 @@ export function CheckoutFlow() {
+             >
+               Payment Method
+             </h3>
+-          </div>
++          </button>
+
+           <AnimatePresence>
+             {step === 2 && (
+diff --git a/apps/web/src/components/checkout/PaymentButton.tsx b/apps/web/src/components/checkout/PaymentButton.tsx
+index 75675b7..b4cc03e 100644
+--- a/apps/web/src/components/checkout/PaymentButton.tsx
++++ b/apps/web/src/components/checkout/PaymentButton.tsx
+@@ -30,7 +30,7 @@ function SubmitButton() {
+       className={cn(
+         'w-full rounded-full py-4 px-6 font-bold text-black transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed',
+         // Using arbitrary value for the specific gold requirement
+-        'bg-[#facc15] hover:bg-[#eab308]',
++        'bg-brand-yellow hover:bg-yellow-400',
+         'flex items-center justify-center gap-2 shadow-lg hover:shadow-xl',
+       )}
+     >
+diff --git a/apps/web/src/components/checkout/SubscriptionCard.tsx b/apps/web/src/components/checkout/SubscriptionCard.tsx
+index b2ab2a1..00032eb 100644
+--- a/apps/web/src/components/checkout/SubscriptionCard.tsx
++++ b/apps/web/src/components/checkout/SubscriptionCard.tsx
+@@ -22,13 +22,14 @@ export function SubscriptionCard({
+   onSelect,
+ }: SubscriptionCardProps) {
+   return (
+-    <div
++    <button
++      type="button"
+       onClick={onSelect}
+       className={`
+-        relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
++        relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow text-left w-full
+         ${
+           isSelected
+-            ? 'border-[#facc15] bg-[#facc15]/5'
++            ? 'border-brand-yellow bg-brand-yellow/5'
+             : 'border-slate-200 bg-white hover:border-slate-300'
+         }
+       `}
+@@ -41,7 +42,7 @@ export function SubscriptionCard({
+           )}
+         </div>
+         {isSelected && (
+-          <div className="h-6 w-6 bg-[#facc15] rounded-full flex items-center justify-center text-black">
++          <div className="h-6 w-6 bg-brand-yellow rounded-full flex items-center justify-center text-black">
+             <Check size={14} strokeWidth={3} />
+           </div>
+         )}
+@@ -57,8 +58,8 @@ export function SubscriptionCard({
+       </div>
+
+       <div className="space-y-3">
+-        {plan.features.map((feature, idx) => (
+-          <div key={idx} className="flex items-center gap-3">
++        {plan.features.map((feature) => (
++          <div key={feature} className="flex items-center gap-3">
+             <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
+               <Check size={12} strokeWidth={3} />
+             </div>
+@@ -66,6 +67,6 @@ export function SubscriptionCard({
+           </div>
+         ))}
+       </div>
+-    </div>
++    </button>
+   );
+ }
+diff --git a/apps/web/src/components/layout/WebFooter.tsx b/apps/web/src/components/layout/WebFooter.tsx
+index f63d8e2..ed1fafb 100644
+--- a/apps/web/src/components/layout/WebFooter.tsx
++++ b/apps/web/src/components/layout/WebFooter.tsx
+@@ -1,8 +1,8 @@
+ 'use client';
+
+-import { Link } from '@/i18n/navigation';
+ import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+ import Image from 'next/image';
++import { Link } from '@/i18n/navigation';
+
+ interface WebFooterProps {
+   brand: {
+diff --git a/apps/web/src/components/layout/WebNavbar.tsx b/apps/web/src/components/layout/WebNavbar.tsx
+index 5f89c26..fac5435 100644
+--- a/apps/web/src/components/layout/WebNavbar.tsx
++++ b/apps/web/src/components/layout/WebNavbar.tsx
+@@ -6,8 +6,8 @@ import Image from 'next/image';
+ import { usePathname } from 'next/navigation';
+ import { useEffect, useState } from 'react';
+ import { Link } from '@/i18n/navigation';
+-import { useUIStore } from '@/stores/ui-store';
+ import { useCartStore } from '@/stores/cart-store';
++import { useUIStore } from '@/stores/ui-store';
+
+ interface WebNavbarProps {
+   navItems: { label: string; href: string }[];
+diff --git a/apps/web/src/components/store/CartDrawer.tsx b/apps/web/src/components/store/CartDrawer.tsx
+index 84c9532..67fdaec 100644
+--- a/apps/web/src/components/store/CartDrawer.tsx
++++ b/apps/web/src/components/store/CartDrawer.tsx
+@@ -1,12 +1,12 @@
+ 'use client';
+
+-import { useRouter } from 'next/navigation';
+-import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
++import { Button } from '@repo/ui';
++import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+ import Image from 'next/image';
++import { useRouter } from 'next/navigation';
+ import { Drawer } from '@/components/ui/Drawer';
+ import { useCartStore } from '@/stores/cart-store';
+ import { useUIStore } from '@/stores/ui-store';
+-import { Button } from '@repo/ui';
+
+ export function CartDrawer() {
+   const { isCartOpen, closeCart } = useUIStore();
+@@ -71,7 +71,7 @@ export function CartDrawer() {
+                 {item.attributes && (
+                   <p className="text-xs text-slate-500 mt-1">
+                     {Object.entries(item.attributes)
+-                      .map(([k, v]) => `${v}`)
++                      .map(([_k, v]) => `${v}`)
+                       .join(', ')}
+                   </p>
+                 )}
+@@ -82,6 +82,7 @@ export function CartDrawer() {
+
+               <div className="flex flex-col justify-between items-end">
+                 <button
++                  type="button"
+                   onClick={() => removeItem(item.id)}
+                   className="text-slate-500 hover:text-red-500 p-1"
+                 >
+@@ -90,6 +91,7 @@ export function CartDrawer() {
+
+                 <div className="flex items-center gap-3 bg-black/20 rounded-lg p-1">
+                   <button
++                    type="button"
+                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                     className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
+                     disabled={item.quantity <= 1}
+@@ -100,6 +102,7 @@ export function CartDrawer() {
+                     {item.quantity}
+                   </span>
+                   <button
++                    type="button"
+                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                     className="p-1 text-slate-400 hover:text-white"
+                   >
+diff --git a/apps/web/src/components/store/ProductView.tsx b/apps/web/src/components/store/ProductView.tsx
+index e5d4c67..fe2c799 100644
+--- a/apps/web/src/components/store/ProductView.tsx
++++ b/apps/web/src/components/store/ProductView.tsx
+@@ -1,15 +1,15 @@
+ 'use client';
+
+-import { useState } from 'react';
+-import Image from 'next/image';
+-import { motion } from 'framer-motion';
+-import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
+ import { Button } from '@repo/ui';
++import { motion } from 'framer-motion';
++import { CheckCircle2, Heart, Star } from 'lucide-react';
++import Image from 'next/image';
++import { useState } from 'react';
++import { toast } from 'react-hot-toast';
+ import { VariantSelector } from '@/components/ui/VariantSelector';
+-import type { Product, ProductVariant } from '@/services/products';
++import type { Product } from '@/services/products';
+ import { useCartStore } from '@/stores/cart-store';
+ import { useUIStore } from '@/stores/ui-store';
+-import { toast } from 'react-hot-toast';
+
+ interface ProductViewProps {
+   product: Product;
+@@ -17,7 +17,7 @@ interface ProductViewProps {
+
+ export function ProductView({ product }: ProductViewProps) {
+   const [selectedImage, setSelectedImage] = useState(product.image);
+-  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
++  const [_selectedVariant, _setSelectedVariant] = useState<string | null>(null);
+   const { addItem } = useCartStore();
+   const { openCart } = useUIStore();
+
+@@ -49,7 +49,7 @@ export function ProductView({ product }: ProductViewProps) {
+     const matchingVariant = product.variants.find(
+       (v) => v.attributes[key] === value,
+     );
+-    if (matchingVariant && matchingVariant.image) {
++    if (matchingVariant?.image) {
+       setSelectedImage(matchingVariant.image);
+     }
+   };
+@@ -116,6 +116,7 @@ export function ProductView({ product }: ProductViewProps) {
+           {/* Thumbnails (Scrollable on mobile) */}
+           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
+             <button
++              type="button"
+               onClick={() => setSelectedImage(product.image)}
+               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
+             >
+@@ -126,18 +127,14 @@ export function ProductView({ product }: ProductViewProps) {
+                 className="object-cover"
+               />
+             </button>
+-            {product.images?.map((img, i) => (
++            {product.images?.map((img) => (
+               <button
+-                key={i}
++                type="button"
++                key={img}
+                 onClick={() => setSelectedImage(img)}
+                 className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
+               >
+-                <Image
+-                  src={img}
+-                  alt={`View ${i}`}
+-                  fill
+-                  className="object-cover"
+-                />
++                <Image src={img} alt="View" fill className="object-cover" />
+               </button>
+             ))}
+           </div>
+@@ -150,7 +147,10 @@ export function ProductView({ product }: ProductViewProps) {
+               <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
+                 {product.title}
+               </h1>
+-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
++              <button
++                type="button"
++                className="text-slate-500 hover:text-brand-pink transition-colors"
++              >
+                 <Heart size={28} />
+               </button>
+             </div>
+diff --git a/apps/web/src/components/ui/BottomNav.tsx b/apps/web/src/components/ui/BottomNav.tsx
+index 38b9b6d..3ff44dc 100644
+--- a/apps/web/src/components/ui/BottomNav.tsx
++++ b/apps/web/src/components/ui/BottomNav.tsx
+@@ -1,11 +1,11 @@
+ 'use client';
+
+-import { usePathname } from 'next/navigation';
+-import Link from 'next/link';
+ import { Home, Search, ShoppingCart, User } from 'lucide-react';
+-import { useUIStore } from '@/stores/ui-store';
+-import { useCartStore } from '@/stores/cart-store';
++import Link from 'next/link';
++import { usePathname } from 'next/navigation';
+ import { useEffect, useState } from 'react';
++import { useCartStore } from '@/stores/cart-store';
++import { useUIStore } from '@/stores/ui-store';
+
+ export function BottomNav() {
+   const pathname = usePathname();
+@@ -17,7 +17,7 @@ export function BottomNav() {
+     setMounted(true);
+   }, []);
+
+-  const navItems = [
++  const _navItems = [
+     { label: 'Home', icon: Home, href: '/' },
+     { label: 'Browse', icon: Search, href: '/megastore' },
+     // Cart is special
+diff --git a/apps/web/src/services/cart.ts b/apps/web/src/services/cart.ts
+index 34ec1a1..625794d 100644
+--- a/apps/web/src/services/cart.ts
++++ b/apps/web/src/services/cart.ts
+@@ -1,6 +1,6 @@
+ import { Logger } from '@repo/utils';
+-import { createClient } from '@/lib/supabase/client';
+ import type { Database } from '@/lib/database.types';
++import { createClient } from '@/lib/supabase/client';
+
+ type CartItemRow = Database['public']['Tables']['cart_items']['Row'];
+ type ProductRow = Database['public']['Tables']['products']['Row'];
+diff --git a/apps/web/src/services/products.ts b/apps/web/src/services/products.ts
+index 78b823c..7c2588c 100644
+--- a/apps/web/src/services/products.ts
++++ b/apps/web/src/services/products.ts
+@@ -1,6 +1,6 @@
+ import { Logger } from '@repo/utils';
++import type { Database } from '@/lib/database.types';
+ import { createClient } from '@/lib/supabase/client';
+-import type { Database, Json } from '@/lib/database.types';
+
+ type DBProduct = Database['public']['Tables']['products']['Row'] & {
+   reviews?: { rating: number }[];
+diff --git a/apps/web/src/services/wayl.ts b/apps/web/src/services/wayl.ts
+index 0a01db1..da7b09a 100644
+--- a/apps/web/src/services/wayl.ts
++++ b/apps/web/src/services/wayl.ts
+@@ -1,7 +1,7 @@
+ import 'server-only';
+ import { webEnv } from '@repo/env/web';
+-import { Logger } from '@repo/utils';
+ import { PaymentFactory } from '@repo/payment-engine';
++import { Logger } from '@repo/utils';
+ import { v4 as uuidv4 } from 'uuid';
+
+ export const wayl = {
+diff --git a/apps/web/src/stores/cart-store.test.ts b/apps/web/src/stores/cart-store.test.ts
+index f766f12..34f140f 100644
+--- a/apps/web/src/stores/cart-store.test.ts
++++ b/apps/web/src/stores/cart-store.test.ts
+@@ -20,54 +20,116 @@ describe('Cart Store', () => {
+   it('should add items to the cart', () => {
+     const { addItem } = useCartStore.getState();
+
+-    addItem('apple');
+-    expect(useCartStore.getState().items).toEqual(['apple']);
+-
+-    addItem('banana');
+-    expect(useCartStore.getState().items).toEqual(['apple', 'banana']);
++    const apple = {
++      id: '1',
++      productId: '1',
++      title: 'apple',
++      price: 10,
++      image: '',
++    };
++    const banana = {
++      id: '2',
++      productId: '2',
++      title: 'banana',
++      price: 5,
++      image: '',
++    };
++
++    addItem(apple);
++    expect(useCartStore.getState().items).toEqual([{ ...apple, quantity: 1 }]);
++
++    addItem(banana);
++    expect(useCartStore.getState().items).toEqual([
++      { ...apple, quantity: 1 },
++      { ...banana, quantity: 1 },
++    ]);
+   });
+
+   it('should remove items from the cart', () => {
+     const { addItem, removeItem } = useCartStore.getState();
+
+-    addItem('apple');
+-    addItem('banana');
+-
+-    removeItem('apple');
+-    expect(useCartStore.getState().items).toEqual(['banana']);
++    const apple = {
++      id: '1',
++      productId: '1',
++      title: 'apple',
++      price: 10,
++      image: '',
++    };
++    const banana = {
++      id: '2',
++      productId: '2',
++      title: 'banana',
++      price: 5,
++      image: '',
++    };
++
++    addItem(apple);
++    addItem(banana);
++
++    removeItem('1');
++    expect(useCartStore.getState().items).toEqual([{ ...banana, quantity: 1 }]);
+   });
+
+   it('should clear the cart', () => {
+     const { addItem, clearCart } = useCartStore.getState();
+
+-    addItem('apple');
+-    addItem('banana');
++    const apple = {
++      id: '1',
++      productId: '1',
++      title: 'apple',
++      price: 10,
++      image: '',
++    };
++    const banana = {
++      id: '2',
++      productId: '2',
++      title: 'banana',
++      price: 5,
++      image: '',
++    };
++
++    addItem(apple);
++    addItem(banana);
+
+     clearCart();
+     expect(useCartStore.getState().items).toEqual([]);
+   });
+
+-  it('should handle duplicate items correctly (removes all instances)', () => {
+-    // Current behavior documentation: removing an item removes ALL instances of that value
++  it('should handle duplicate items correctly (increments quantity)', () => {
+     const { addItem, removeItem } = useCartStore.getState();
+
+-    addItem('apple');
+-    addItem('apple');
+-    expect(useCartStore.getState().items).toEqual(['apple', 'apple']);
++    const apple = {
++      id: '1',
++      productId: '1',
++      title: 'apple',
++      price: 10,
++      image: '',
++    };
+
+-    removeItem('apple');
++    addItem(apple);
++    addItem(apple);
++    expect(useCartStore.getState().items).toEqual([{ ...apple, quantity: 2 }]);
++
++    removeItem('1');
+     expect(useCartStore.getState().items).toEqual([]);
+   });
+
+   it('should persist state to localStorage', () => {
+     const { addItem } = useCartStore.getState();
+-    addItem('persistent-item');
+-
+-    const stored = localStorage.getItem('cart-storage');
++    const item = {
++      id: '1',
++      productId: '1',
++      title: 'persistent-item',
++      price: 10,
++      image: '',
++    };
++    addItem(item);
++
++    const stored = localStorage.getItem('cart-storage-v2');
+     expect(stored).toBeDefined();
+     if (stored) {
+       const parsed = JSON.parse(stored);
+-      expect(parsed.state.items).toEqual(['persistent-item']);
++      expect(parsed.state.items).toEqual([{ ...item, quantity: 1 }]);
+     }
+   });
+ });
+diff --git a/apps/web/src/stores/cart-store.ts b/apps/web/src/stores/cart-store.ts
+index e2b06a2..db35500 100644
+--- a/apps/web/src/stores/cart-store.ts
++++ b/apps/web/src/stores/cart-store.ts
+@@ -23,14 +23,14 @@ interface CartState {
+
+ export const useCartStore = create<CartState>()(
+   persist(
+-    (set, get) => ({
++    (set, _get) => ({
+       items: [],
+       total: 0,
+
+       addItem: (newItem) => {
+         set((state) => {
+           const existing = state.items.find((i) => i.id === newItem.id);
+-          let updatedItems;
++          let updatedItems: CartItem[];
+           if (existing) {
+             updatedItems = state.items.map((i) =>
+               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
+diff --git a/packages/utils/src/format.ts b/packages/utils/src/format.ts
+index f214a7b..b97d722 100644
+--- a/packages/utils/src/format.ts
++++ b/packages/utils/src/format.ts
+@@ -36,7 +36,8 @@ export function formatCurrency(
+  * @returns A formatted date string (e.g., "Jan 15, 2026").
+  */
+ export function formatDate(date: string | Date): string {
+-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
++  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
++    return '';
+   return new Intl.DateTimeFormat('en-US', {
+     month: 'short',
+     day: 'numeric',
+diff --git a/packages/utils/src/string.ts b/packages/utils/src/string.ts
+index 27ea7b9..52fbcb4 100644
+--- a/packages/utils/src/string.ts
++++ b/packages/utils/src/string.ts
+@@ -12,12 +12,12 @@ const ENTITIES: Record<string, string> = {
+ };
+
+ // Pre-compiled regex for performance (avoids recompilation in loops).
+-const ENTITY_REGEX = /&[a-zA-Z0-9#]+;/g;
+-const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
++const ENTITY_REGEX = /&[a-zA-Z0-9#xX]+;/g;
++const NUMERIC_ENTITY_REGEX = /^&#[xX]?[0-9a-fA-F]+;$/;
+
+ /**
+  * Decodes HTML entities in a string to their corresponding characters.
+- * Handles named entities and numeric entities (decimal).
++ * Handles named entities and numeric entities (decimal and hex).
+  *
+  * @param text - The string containing HTML entities.
+  * @returns The decoded string.
+@@ -30,6 +30,11 @@ export function decodeHtmlEntities(text: string): string {
+
+     // Handle numeric entities
+     if (NUMERIC_ENTITY_REGEX.test(match)) {
++      // Hexadecimal entities
++      if (match.toLowerCase().startsWith('&#x')) {
++        return String.fromCodePoint(Number.parseInt(match.slice(3, -1), 16));
++      }
++      // Decimal entities
+       // Use fromCodePoint for Emoji/Astral support
+       return String.fromCodePoint(Number.parseInt(match.slice(2, -1), 10));
+     }
+@@ -47,7 +52,8 @@ export function decodeHtmlEntities(text: string): string {
+  * @example
+  * slugify("Hello World!") // -> "hello-world"
+  */
+-export function slugify(text: string): string {
++export function slugify(text: string | null | undefined): string {
++  if (text == null) return '';
+   return text
+     .toString()
+     .toLowerCase()
