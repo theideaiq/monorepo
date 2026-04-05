@@ -1,0 +1,3 @@
+## 2025-04-05 - Injecting JSON-LD for Core Entities
+**Learning:** Found that core business entities, like Products on individual product pages, were missing structured data. While `BreadcrumbJsonLd` and `JsonLd` (for Organization and Website) were present, product-specific schema was absent. This is a critical omission because it prevents search engines from surfacing Rich Snippets (e.g. price, rating, availability) in search results.
+**Action:** When working on pages that represent a core entity (Products, Articles, etc.), always create and inject specific Schema.org JSON-LD components (like `ProductJsonLd`) into the page to ensure search bots can extract essential metadata correctly.
