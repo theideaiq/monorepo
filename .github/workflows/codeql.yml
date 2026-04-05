@@ -90,6 +90,10 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # 0. Sync Capacitor to generate Xcode project files correctly
+          pnpm run --filter=web build:mobile
+          pnpm --filter=web exec cap sync ios
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm run --filter=web secrets:restore
           
