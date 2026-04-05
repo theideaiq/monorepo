@@ -1,0 +1,3 @@
+## 2024-04-05 - Interactive Custom Cards Blocking Keyboard Navigation
+**Learning:** Found a critical accessibility block in the checkout flow where subscription plan cards were built using `div` with `onClick` handlers but lacked `tabIndex` and keyboard event listeners. This makes it impossible for keyboard-only or screen reader users to select a plan and complete checkout.
+**Action:** Always verify that interactive `div` components use `tabIndex={0}`, handle `Enter` and `Space` keydowns, include appropriate ARIA roles (e.g., `role="radio"` or `role="button"`), and implement `focus-visible` styles.

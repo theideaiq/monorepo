@@ -22,10 +22,20 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: custom design system UI card
     <div
+      role="radio"
+      aria-checked={isSelected}
+      tabIndex={0}
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect?.();
+        }
+      }}
       className={`
-        relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
+        relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#facc15] focus-visible:ring-offset-2 outline-none
         ${
           isSelected
             ? 'border-[#facc15] bg-[#facc15]/5'
@@ -57,8 +67,8 @@ export function SubscriptionCard({
       </div>
 
       <div className="space-y-3">
-        {plan.features.map((feature, idx) => (
-          <div key={idx} className="flex items-center gap-3">
+        {plan.features.map((feature) => (
+          <div key={feature} className="flex items-center gap-3">
             <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
               <Check size={12} strokeWidth={3} />
             </div>
