@@ -36,14 +36,12 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date) return '';
-  const parsedDate = date instanceof Date ? date : new Date(date);
-  if (Number.isNaN(parsedDate.getTime())) return '';
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-  }).format(parsedDate);
+  }).format(date instanceof Date ? date : new Date(date));
 }
 
 /**
