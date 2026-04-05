@@ -45,7 +45,6 @@ export async function getCashFlowData(year: number) {
     const date = new Date(line.ledger_entries.transaction_date);
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
-    if (!month) return; // Ignore invalid dates
 
     if (!monthlyData[month]) {
       monthlyData[month] = { revenue: 0, expenses: 0 };
