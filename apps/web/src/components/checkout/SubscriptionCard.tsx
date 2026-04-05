@@ -23,9 +23,18 @@ export function SubscriptionCard({
 }: SubscriptionCardProps) {
   return (
     <div
+      role="radio"
+      aria-checked={isSelected}
+      tabIndex={0}
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect?.();
+        }
+      }}
       className={`
-        relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
+        relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#facc15] focus-visible:ring-offset-2 outline-none
         ${
           isSelected
             ? 'border-[#facc15] bg-[#facc15]/5'
