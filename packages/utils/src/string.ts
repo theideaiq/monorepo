@@ -56,3 +56,15 @@ export function slugify(text: string): string {
     .replace(/[^\w-]+/g, '') // Remove all non-word chars
     .replace(/--+/g, '-'); // Replace multiple - with single -
 }
+
+/**
+ * Safely stringifies a JSON object for use in a <script> tag.
+ * Prevents XSS attacks by escaping < characters.
+ *
+ * @param data - The data to stringify.
+ * @returns The safely stringified JSON string.
+ */
+// biome-ignore lint/suspicious/noExplicitAny: Generic JSON data can be any type.
+export function safeJsonLdStringify(data: any): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
+}
