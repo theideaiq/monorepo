@@ -15,17 +15,42 @@
  * formatCurrency(50000, 'IQD') // -> "IQD 50,000"
  * formatCurrency(10.5, 'USD') // -> "$10.50"
  */
+// ⚡ Bolt: Cache Intl instances at the module level to avoid expensive re-instantiation
+// during frequent calls (e.g., inside render loops or when formatting large lists/tables).
+// This reduces main thread CPU overhead and garbage collection pauses.
+const CURRENCY_FORMATTERS: Record<'USD' | 'IQD', Intl.NumberFormat> = {
+  USD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }),
+  IQD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'IQD',
+    // IQD doesn't typically use cents in this context
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }),
+};
+
+const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
+
+const COMPACT_NUMBER_FORMATTER = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
 export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  const formatter = CURRENCY_FORMATTERS[currency] || CURRENCY_FORMATTERS.USD;
+  return formatter.format(amount);
 }
 
 /**
@@ -36,12 +61,9 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date instanceof Date ? date : new Date(date));
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
+  return DATE_FORMATTER.format(date instanceof Date ? date : new Date(date));
 }
 
 /**
@@ -61,8 +83,5 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return COMPACT_NUMBER_FORMATTER.format(number);
 }
