@@ -143,8 +143,18 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
         ),
       },
     ],
-    [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [handleEdit],
   );
+
+  const handleEdit = (profile: Profile) => {
+    setEditingProfile(profile);
+    setEditForm({
+      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
+      crm_tags: profile.crm_tags?.join(', ') || '',
+    });
+    setIsSheetOpen(true);
+  };
 
   const table = useReactTable({
     data,
@@ -159,15 +169,6 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
       globalFilter,
     },
   });
-
-  const handleEdit = (profile: Profile) => {
-    setEditingProfile(profile);
-    setEditForm({
-      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
-      crm_tags: profile.crm_tags?.join(', ') || '',
-    });
-    setIsSheetOpen(true);
-  };
 
   const handleSave = async () => {
     if (!editingProfile || !editForm) return;
@@ -197,8 +198,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
 
       toast.success('Profile updated');
       setIsSheetOpen(false);
-    } catch (error) {
-      console.error(error);
+    } catch (_error) {
       toast.error('Failed to update profile');
     }
   };

@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -37,13 +38,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       # Required for 'npm run secrets:restore'
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -65,8 +66,16 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # Install dependencies to avoid npm workspace missing packages errors
+          npm install -g pnpm
+          pnpm install
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
+
+          # Ensure capacitor is linked
+          pnpm run --filter=web build
+          pnpm run --filter=web exec cap sync android
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +89,16 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # Install dependencies to avoid npm workspace missing packages errors
+          npm install -g pnpm
+          pnpm install
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
+
+          # Ensure capacitor is linked
+          pnpm run --filter=web build
+          pnpm run --filter=web exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
