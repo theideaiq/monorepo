@@ -6,4 +6,5 @@
  *
  * Currently set to `any` as a placeholder until the schema is finalized and types are generated.
  */
+// biome-ignore lint/suspicious/noExplicitAny: Required placeholder for ungenerated Supabase types
 export type Database = any;

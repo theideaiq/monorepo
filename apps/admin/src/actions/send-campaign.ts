@@ -57,7 +57,9 @@ export async function sendCampaign(campaignId: string) {
   if (!profiles || profiles.length === 0)
     throw new Error('No users found for this segment');
 
-  const emails = profiles.map((p: any) => p.email).filter(Boolean);
+  const emails = profiles
+    .map((p: { email: string | null }) => p.email)
+    .filter(Boolean);
 
   // 3. Send in Batches
   for (let i = 0; i < emails.length; i += BATCH_SIZE) {

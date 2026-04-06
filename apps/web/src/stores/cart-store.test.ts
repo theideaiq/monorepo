@@ -20,21 +20,48 @@ describe('Cart Store', () => {
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
-    const apple = { id: 'apple', productId: 'apple', title: 'Apple', price: 10, image: '' };
-    const banana = { id: 'banana', productId: 'banana', title: 'Banana', price: 20, image: '' };
+    const apple = {
+      id: 'apple',
+      productId: 'apple',
+      title: 'Apple',
+      price: 10,
+      image: '',
+    };
+    const banana = {
+      id: 'banana',
+      productId: 'banana',
+      title: 'Banana',
+      price: 20,
+      image: '',
+    };
 
     addItem(apple);
     expect(useCartStore.getState().items).toEqual([{ ...apple, quantity: 1 }]);
 
     addItem(banana);
-    expect(useCartStore.getState().items).toEqual([{ ...apple, quantity: 1 }, { ...banana, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...apple, quantity: 1 },
+      { ...banana, quantity: 1 },
+    ]);
   });
 
   it('should remove items from the cart', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    const apple = { id: 'apple', productId: 'apple', title: 'Apple', price: 10, image: '' };
-    const banana = { id: 'banana', productId: 'banana', title: 'Banana', price: 20, image: '' };
+    const apple = {
+      id: 'apple',
+      productId: 'apple',
+      title: 'Apple',
+      price: 10,
+      image: '',
+    };
+    const banana = {
+      id: 'banana',
+      productId: 'banana',
+      title: 'Banana',
+      price: 20,
+      image: '',
+    };
 
     addItem(apple);
     addItem(banana);
@@ -46,8 +73,20 @@ describe('Cart Store', () => {
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    const apple = { id: 'apple', productId: 'apple', title: 'Apple', price: 10, image: '' };
-    const banana = { id: 'banana', productId: 'banana', title: 'Banana', price: 20, image: '' };
+    const apple = {
+      id: 'apple',
+      productId: 'apple',
+      title: 'Apple',
+      price: 10,
+      image: '',
+    };
+    const banana = {
+      id: 'banana',
+      productId: 'banana',
+      title: 'Banana',
+      price: 20,
+      image: '',
+    };
 
     addItem(apple);
     addItem(banana);
@@ -59,7 +98,13 @@ describe('Cart Store', () => {
   it('should handle duplicate items correctly (increases quantity)', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    const apple = { id: 'apple', productId: 'apple', title: 'Apple', price: 10, image: '' };
+    const apple = {
+      id: 'apple',
+      productId: 'apple',
+      title: 'Apple',
+      price: 10,
+      image: '',
+    };
 
     addItem(apple);
     addItem(apple);
@@ -71,7 +116,13 @@ describe('Cart Store', () => {
 
   it('should persist state to localStorage', () => {
     const { addItem } = useCartStore.getState();
-    const item = { id: 'persistent-item', productId: 'persistent-item', title: 'Item', price: 10, image: '' };
+    const item = {
+      id: 'persistent-item',
+      productId: 'persistent-item',
+      title: 'Item',
+      price: 10,
+      image: '',
+    };
     addItem(item);
 
     const stored = localStorage.getItem('cart-storage-v2');
