@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
       try {
         const url = new URL(supabaseUrl);
         supabaseDomain = url.hostname;
-      } catch (e) {
+      } catch (_e) {
         // biome-ignore lint/suspicious/noConsole: Critical build-time warning
         console.warn(
           '⚠️ Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP. API calls might be blocked.',
