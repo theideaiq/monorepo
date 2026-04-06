@@ -1,17 +1,17 @@
 'use client';
 
 // UI Kit
-import { Badge, Button, Input } from '@repo/ui';
+import { Badge, Button } from '@repo/ui';
 import { motion } from 'framer-motion';
 import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { useProducts } from '@/hooks/queries/use-products';
-import { useCartStore } from '@/stores/cart-store';
-import { ProductCard } from '@/components/ui/ProductCard';
-import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
+import { ProductCard } from '@/components/ui/ProductCard';
+import { useProducts } from '@/hooks/queries/use-products';
 import type { Product } from '@/services/products';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 const CATEGORIES = [
   { name: 'Gaming', icon: <Gamepad2 size={18} /> },
@@ -28,14 +28,17 @@ export default function MegastorePage() {
   const addItem = useCartStore((s) => s.addItem);
   const { openCart } = useUIStore();
 
-  const handleQuickAdd = (e: React.MouseEvent, product: any) => {
+  const handleQuickAdd = (
+    e: React.MouseEvent,
+    product: Record<string, unknown>,
+  ) => {
     e.preventDefault(); // Prevent navigation
     addItem({
-      id: product.id,
-      productId: product.id,
-      title: product.title,
-      price: product.price,
-      image: product.image,
+      id: product.id as string,
+      productId: product.id as string,
+      title: product.title as string,
+      price: product.price as number,
+      image: product.image as string,
     });
     toast.success(`${product.title} added to cart`);
     openCart();
@@ -134,10 +137,15 @@ export default function MegastorePage() {
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="h-[420px]">
+              <div key={product.id as string} className="h-[420px]">
                 <ProductCard
                   product={product}
-                  onAddToCart={(e) => handleQuickAdd(e, product)}
+                  onAddToCart={(e) =>
+                    handleQuickAdd(
+                      e,
+                      product as unknown as Record<string, unknown>,
+                    )
+                  }
                 />
               </div>
             ))}

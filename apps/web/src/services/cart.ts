@@ -1,9 +1,7 @@
 import { Logger } from '@repo/utils';
-import { createClient } from '@/lib/supabase/client';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/lib/database.types';
-
-type CartItemRow = Database['public']['Tables']['cart_items']['Row'];
-type ProductRow = Database['public']['Tables']['products']['Row'];
+import { createClient } from '@/lib/supabase/client';
 
 export interface CartItem {
   id: string; // cart_item id
@@ -21,7 +19,7 @@ export interface CartItem {
  * Gets the current user's active cart or creates one.
  */
 async function getOrCreateCartId(
-  supabase: any,
+  supabase: SupabaseClient<Database>,
   userId: string,
 ): Promise<string | null> {
   // 1. Check for existing cart
@@ -73,7 +71,17 @@ export async function fetchCartItems(): Promise<CartItem[]> {
     return [];
   }
 
-  return (items as any[]).map((item) => ({
+  // Define a type for the joined query result to avoid `any`
+  type JoinedCartItem = Database['public']['Tables']['cart_items']['Row'] & {
+    product: {
+      name: string;
+      price: number;
+      image_url: string;
+      slug: string;
+    };
+  };
+
+  return (items as unknown as JoinedCartItem[]).map((item) => ({
     id: item.id,
     productId: item.product_id,
     quantity: item.quantity,
