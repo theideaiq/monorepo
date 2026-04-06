@@ -273,12 +273,14 @@ function FinancePreview() {
   );
 }
 
+import type { ReactNode } from 'react';
+
 function FeatureCard({
   icon,
   title,
   desc,
 }: {
-  icon: any;
+  icon: ReactNode;
   title: string;
   desc: string;
 }) {
