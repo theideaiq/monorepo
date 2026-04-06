@@ -29,11 +29,13 @@
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
     "@playwright/test": "^1.58.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "rimraf": "^6.0.0",
     "syncpack": "^13.0.4",
-    "turbo": "^2.8.0"
+    "turbo": "^2.8.0",
+    "vitest": "^4.0.18"
   },
   "packageManager": "pnpm@10.27.0",
   "pnpm": {
