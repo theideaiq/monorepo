@@ -75,7 +75,7 @@ jobs:
           pnpm run --filter=web secrets:restore
 
           # 2. Build the web application and sync capacitor
-          pnpm run --filter=web build
+          pnpm run --filter=web build:mobile
           cd apps/web && npx cap sync android
           
           # 3. Grant Permission
@@ -99,7 +99,7 @@ jobs:
           pnpm run --filter=web secrets:restore
 
           # 2. Build the web application and sync capacitor
-          pnpm run --filter=web build
+          pnpm run --filter=web build:mobile
           cd apps/web && npx cap sync ios
           
           # 3. Determine Build Type (CocoaPods vs SPM)
