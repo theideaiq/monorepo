@@ -21,6 +21,7 @@ jobs:
 
     # Global Env: Inject secrets so the restore script can generate the missing files
     env:
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
 
@@ -37,13 +38,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       # Required for 'npm run secrets:restore'
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -59,6 +60,12 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
@@ -66,13 +73,30 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
+
+          # 1.5 Sync Capacitor
+          pnpm run --filter=web build
+          pnpm run --filter=web exec cap sync android
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
+        env:
+          SKIP_ENV_VALIDATION: true
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.com' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
+          TELEGRAM_BOT_TOKEN: 'mock'
+          GEMINI_API_KEY: 'mock'
+          SUPABASE_SERVICE_ROLE_KEY: 'mock'
+          UPSTASH_REDIS_REST_URL: 'https://mock.com'
+          UPSTASH_REDIS_REST_TOKEN: 'mock'
+          WAYL_SECRET_KEY: 'mock'
+          WAYL_WEBHOOK_SECRET: 'mock'
+          ZAIN_SECRET_KEY: 'mock'
+          RESEND_API_KEY: 'mock'
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -81,7 +105,11 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
+
+          # 1.5 Sync Capacitor
+          pnpm run --filter=web build
+          pnpm run --filter=web exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
@@ -103,6 +131,19 @@ jobs:
             -destination 'generic/platform=iOS Simulator,name=iPhone 15' \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
+        env:
+          SKIP_ENV_VALIDATION: true
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.com' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
+          TELEGRAM_BOT_TOKEN: 'mock'
+          GEMINI_API_KEY: 'mock'
+          SUPABASE_SERVICE_ROLE_KEY: 'mock'
+          UPSTASH_REDIS_REST_URL: 'https://mock.com'
+          UPSTASH_REDIS_REST_TOKEN: 'mock'
+          WAYL_SECRET_KEY: 'mock'
+          WAYL_WEBHOOK_SECRET: 'mock'
+          ZAIN_SECRET_KEY: 'mock'
+          RESEND_API_KEY: 'mock'
 
       # ----------------------------------------------------------------
       # ANALYZE
