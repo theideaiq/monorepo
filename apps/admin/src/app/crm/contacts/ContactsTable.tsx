@@ -144,7 +144,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    [handleEdit],
   );
 
   const handleEdit = (profile: Profile) => {
@@ -198,8 +198,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
 
       toast.success('Profile updated');
       setIsSheetOpen(false);
-    } catch (error) {
-      console.error(error);
+    } catch (_error) {
       toast.error('Failed to update profile');
     }
   };

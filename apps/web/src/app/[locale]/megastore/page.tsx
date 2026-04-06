@@ -28,6 +28,7 @@ export default function MegastorePage() {
   const addItem = useCartStore((s) => s.addItem);
   const { openCart } = useUIStore();
 
+  // biome-ignore lint/suspicious/noExplicitAny: Required for internal mock compatibility
   const handleQuickAdd = (e: React.MouseEvent, product: any) => {
     e.preventDefault(); // Prevent navigation
     addItem({
