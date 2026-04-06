@@ -14,7 +14,9 @@ export function NewJournalEntryModal({
   accounts: ChartOfAccount[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0] as string);
+  const [date, setDate] = useState<string>(
+    new Date().toISOString().split('T')[0] as string,
+  );
   const [description, setDescription] = useState<string>('');
   const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,7 +68,11 @@ export function NewJournalEntryModal({
         debit: l.debit || 0,
         credit: l.credit || 0,
       }));
-      await createJournalEntry(date || (new Date().toISOString().split('T')[0] as string), description || '', sanitizedLines);
+      await createJournalEntry(
+        date || (new Date().toISOString().split('T')[0] as string),
+        description || '',
+        sanitizedLines,
+      );
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);

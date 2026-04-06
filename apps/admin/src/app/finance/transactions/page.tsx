@@ -4,7 +4,9 @@ import { waylClient } from '@/lib/wayl';
 export const dynamic = 'force-dynamic';
 
 export default async function TransactionsPage() {
-  const { data: transactions } = await waylClient.links.list({ take: 50 }).catch(() => ({ data: [] }));
+  const { data: transactions } = await waylClient.links
+    .list({ take: 50 })
+    .catch(() => ({ data: [] }));
 
   return (
     <div className="p-8">
@@ -35,7 +37,7 @@ export default async function TransactionsPage() {
                 </td>
               </tr>
             ) : (
-                transactions.map((tx: any) => (
+              transactions.map((tx: any) => (
                 <tr key={tx.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 font-mono text-white">
                     {tx.referenceId}
@@ -50,7 +52,7 @@ export default async function TransactionsPage() {
                           ? 'success'
                           : tx.status === 'Pending'
                             ? 'warning'
-                              : 'neutral'
+                            : 'neutral'
                       }
                     >
                       {tx.status}

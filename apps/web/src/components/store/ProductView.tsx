@@ -2,7 +2,7 @@
 
 import { Button } from '@repo/ui';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Heart, Share2, ShoppingCart, Star } from 'lucide-react';
+import { ShoppingCart, Star } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';

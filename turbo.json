@@ -56,6 +56,10 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["storybook-static/**"]
     },
+    "e2e": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["playwright-report/**"]
+    },
     "db:generate": {
       "cache": false
     },
