@@ -12,8 +12,8 @@ const ENTITIES: Record<string, string> = {
 };
 
 // Pre-compiled regex for performance (avoids recompilation in loops).
-const ENTITY_REGEX = /&[a-zA-Z0-9#]+;/g;
-const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
+const ENTITY_REGEX = /&[a-zA-Z0-9#xX]+;/g;
+const NUMERIC_ENTITY_REGEX = /^&#(\d+|[xX][0-9a-fA-F]+);$/;
 
 /**
  * Decodes HTML entities in a string to their corresponding characters.
@@ -25,11 +25,11 @@ const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
 export function decodeHtmlEntities(text: string): string {
   if (!text) return '';
 
-  return text.replace(/&[a-zA-Z0-9#xX]+;/g, (match) => {
+  return text.replace(ENTITY_REGEX, (match) => {
     if (ENTITIES[match]) return ENTITIES[match];
 
     // Handle numeric entities
-    const numericMatch = match.match(/^&#(\d+|[xX][0-9a-fA-F]+);$/);
+    const numericMatch = match.match(NUMERIC_ENTITY_REGEX);
     if (numericMatch) {
       let codePoint = 0;
       if (numericMatch[1].toLowerCase().startsWith('x')) {

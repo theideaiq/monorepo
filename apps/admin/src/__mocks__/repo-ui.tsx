@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const Button = ({ children, isLoading, ...props }: any) => (
   <button {...props} disabled={isLoading}>
     {isLoading ? 'Loading...' : children}
