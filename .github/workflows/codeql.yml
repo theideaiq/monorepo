@@ -21,8 +21,23 @@ jobs:
 
     # Global Env: Inject secrets so the restore script can generate the missing files
     env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      SKIP_ENV_VALIDATION: true
+      NEXT_PUBLIC_SUPABASE_URL: https://mock.com
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: mock
+      SUPABASE_SERVICE_ROLE_KEY: mock
+      TELEGRAM_BOT_TOKEN: mock
+      WAYL_SECRET_KEY: mock
+      WAYL_WEBHOOK_SECRET: mock
+      WEB_APP_URL: https://mock.com
+      UPSTASH_REDIS_REST_URL: https://mock.com
+      UPSTASH_REDIS_REST_TOKEN: mock
+      GEMINI_API_KEY: mock
+      RESEND_API_KEY: mock
+      ZAIN_SECRET_KEY: mock
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -31,7 +46,7 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: manual
+            build-mode: none
           - language: swift
             build-mode: manual
 
@@ -43,7 +58,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .nvmrc
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -51,6 +66,12 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
+
+      - name: Install pnpm and dependencies
+        if: matrix.language == 'swift' || matrix.language == 'java-kotlin'
+        run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
 
       # Initialize CodeQL (Defines what languages to scan)
       - name: Initialize CodeQL
@@ -60,30 +81,19 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
 
       # ----------------------------------------------------------------
-      # MANUAL BUILD: Java (Android)
-      # ----------------------------------------------------------------
-      - name: Manual Build (Android)
-        if: matrix.language == 'java-kotlin'
-        run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
-          
-          # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
-          
-          # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
-
-      # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
+
+          # 2. Build Web and Sync Capacitor
+          pnpm run --filter=web build
+          cd apps/web && npx cap sync ios && cd ../../
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -95,7 +105,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
