@@ -87,6 +87,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
         <div className="flex items-center gap-4">
           <button
             type="button"
+            aria-label="Search"
             className="text-white hover:text-brand-yellow transition-colors"
           >
             <Search size={20} />
@@ -94,6 +95,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
 
           <Link
             href="/account"
+            aria-label="Profile"
             className="hidden md:block text-white hover:text-brand-yellow transition-colors"
           >
             <User size={20} />
@@ -101,6 +103,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
 
           <button
             type="button"
+            aria-label="Shopping Cart"
             onClick={toggleCart}
             className="relative text-white hover:text-brand-yellow transition-colors"
           >
