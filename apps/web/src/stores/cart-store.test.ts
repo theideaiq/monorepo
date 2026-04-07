@@ -17,28 +17,14 @@ describe('Cart Store', () => {
     expect(items).toEqual([]);
   });
 
-  const mockItem1 = {
-    id: '1',
-    productId: 'p1',
-    title: 'apple',
-    price: 10,
-    image: 'apple.png',
-  };
-  const mockItem2 = {
-    id: '2',
-    productId: 'p2',
-    title: 'banana',
-    price: 5,
-    image: 'banana.png',
-  };
+  const mockItem1 = { id: '1', productId: 'p1', title: 'apple', price: 10, image: 'apple.png' };
+  const mockItem2 = { id: '2', productId: 'p2', title: 'banana', price: 5, image: 'banana.png' };
 
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
     addItem(mockItem1);
-    expect(useCartStore.getState().items).toEqual([
-      { ...mockItem1, quantity: 1 },
-    ]);
+    expect(useCartStore.getState().items).toEqual([{ ...mockItem1, quantity: 1 }]);
 
     addItem(mockItem2);
     expect(useCartStore.getState().items).toEqual([
@@ -54,9 +40,7 @@ describe('Cart Store', () => {
     addItem(mockItem2);
 
     removeItem('1');
-    expect(useCartStore.getState().items).toEqual([
-      { ...mockItem2, quantity: 1 },
-    ]);
+    expect(useCartStore.getState().items).toEqual([{ ...mockItem2, quantity: 1 }]);
   });
 
   it('should clear the cart', () => {
@@ -74,9 +58,7 @@ describe('Cart Store', () => {
 
     addItem(mockItem1);
     addItem(mockItem1);
-    expect(useCartStore.getState().items).toEqual([
-      { ...mockItem1, quantity: 2 },
-    ]);
+    expect(useCartStore.getState().items).toEqual([{ ...mockItem1, quantity: 2 }]);
   });
 
   it('should persist state to localStorage', () => {

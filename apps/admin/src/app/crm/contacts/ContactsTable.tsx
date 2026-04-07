@@ -51,31 +51,20 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
   } | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const handleEdit = useCallback((profile: Profile) => {
-    setEditingProfile(profile);
-    setEditForm({
-      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
-      crm_tags: profile.crm_tags?.join(', ') || '',
-    });
-    setIsSheetOpen(true);
-  }, []);
-
   const columns = useMemo<ColumnDef<Profile>[]>(
     () => [
       {
         accessorKey: 'avatar_url',
         header: '',
         cell: ({ row }) => (
-          <div className="relative w-8 h-8">
-            <img
-              src={
-                row.original.avatar_url ||
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(row.original.email)}`
-              }
-              alt="Avatar"
-              className="w-8 h-8 rounded-full bg-slate-200"
-            />
-          </div>
+          <img
+            src={
+              row.original.avatar_url ||
+              `https://ui-avatars.com/api/?name=${encodeURIComponent(row.original.email)}`
+            }
+            alt="Avatar"
+            className="w-8 h-8 rounded-full bg-slate-200"
+          />
         ),
       },
       {
@@ -154,7 +143,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
         ),
       },
     ],
-    [handleEdit],
+    [],
   );
 
   const table = useReactTable({
@@ -170,6 +159,15 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
       globalFilter,
     },
   });
+
+  const handleEdit = (profile: Profile) => {
+    setEditingProfile(profile);
+    setEditForm({
+      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
+      crm_tags: profile.crm_tags?.join(', ') || '',
+    });
+    setIsSheetOpen(true);
+  };
 
   const handleSave = async () => {
     if (!editingProfile || !editForm) return;
@@ -199,7 +197,8 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
 
       toast.success('Profile updated');
       setIsSheetOpen(false);
-    } catch (_error) {
+    } catch (error) {
+      console.error(error);
       toast.error('Failed to update profile');
     }
   };
@@ -307,16 +306,14 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
           {editingProfile && editForm && (
             <div className="space-y-6 mt-6">
               <div className="flex items-center gap-4">
-                <div className="relative w-16 h-16">
-                  <img
-                    src={
-                      editingProfile.avatar_url ||
-                      `https://ui-avatars.com/api/?name=${encodeURIComponent(editingProfile.email)}`
-                    }
-                    alt=""
-                    className="w-16 h-16 rounded-full bg-slate-200"
-                  />
-                </div>
+                <img
+                  src={
+                    editingProfile.avatar_url ||
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(editingProfile.email)}`
+                  }
+                  alt="Avatar"
+                  className="w-16 h-16 rounded-full bg-slate-200"
+                />
                 <div>
                   <h3 className="font-bold text-lg text-slate-900">
                     {editingProfile.full_name || 'No Name'}
@@ -344,14 +341,10 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
               />
 
               <div>
-                <label
-                  htmlFor="crm_tags"
-                  className="block text-sm font-medium text-slate-700 mb-1.5"
-                >
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
                   Tags (comma separated)
                 </label>
                 <Textarea
-                  id="crm_tags"
                   value={editForm.crm_tags}
                   onChange={(e) =>
                     setEditForm((prev) =>
