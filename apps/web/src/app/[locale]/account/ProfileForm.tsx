@@ -8,7 +8,7 @@ import { updateProfile } from '@/actions/account';
 export default function ProfileForm({
   profile,
 }: {
-  profile: Record<string, unknown>;
+  profile: Record<string, any>;
 }) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);

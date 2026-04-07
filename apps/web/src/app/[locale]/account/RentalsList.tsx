@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function RentalsList({
   rentals,
