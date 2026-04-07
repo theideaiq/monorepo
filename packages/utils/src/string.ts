@@ -34,6 +34,11 @@ export function decodeHtmlEntities(text: string): string {
       return String.fromCodePoint(Number.parseInt(match.slice(2, -1), 10));
     }
 
+    // Handle hex numeric entities
+    if (/^&#[xX][a-fA-F0-9]+;$/.test(match)) {
+      return String.fromCodePoint(Number.parseInt(match.slice(3, -1), 16));
+    }
+
     return match;
   });
 }
@@ -48,6 +53,7 @@ export function decodeHtmlEntities(text: string): string {
  * slugify("Hello World!") // -> "hello-world"
  */
 export function slugify(text: string): string {
+  if (!text) return '';
   return text
     .toString()
     .toLowerCase()
