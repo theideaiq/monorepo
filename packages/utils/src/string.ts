@@ -30,7 +30,7 @@ export function decodeHtmlEntities(text: string): string {
 
     // Handle numeric entities
     const numericMatch = match.match(NUMERIC_ENTITY_REGEX);
-    if (numericMatch) {
+    if (numericMatch?.[1]) {
       let codePoint = 0;
       if (numericMatch[1].toLowerCase().startsWith('x')) {
         codePoint = Number.parseInt(numericMatch[1].slice(1), 16);
