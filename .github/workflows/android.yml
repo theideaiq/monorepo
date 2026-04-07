@@ -6,6 +6,9 @@ on:
 permissions:
   contents: read
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,7 +16,7 @@ jobs:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -22,7 +25,7 @@ jobs:
           java-version: '17'
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: '24'
 
@@ -35,6 +38,20 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build Mobile Web
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
+          SUPABASE_SERVICE_ROLE_KEY: mock
+          TELEGRAM_BOT_TOKEN: mock
+          RESEND_API_KEY: mock
+          WAYL_SECRET_KEY: mock
+          WAYL_WEBHOOK_SECRET: mock
+          ZAIN_SECRET_KEY: mock
+          GEMINI_API_KEY: mock
+          UPSTASH_REDIS_REST_URL: https://mock.upstash.io
+          UPSTASH_REDIS_REST_TOKEN: mock
+          WEB_APP_URL: http://localhost:3000
+          SKIP_ENV_VALIDATION: true
         run: cd apps/web && pnpm build:mobile
 
       - name: Restore Secrets
@@ -47,7 +64,7 @@ jobs:
         run: cd apps/web/android && ./gradlew assembleDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
           path: apps/web/android/app/build/outputs/apk/debug/app-debug.apk

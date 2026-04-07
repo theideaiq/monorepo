@@ -8,6 +8,9 @@ on:
   schedule:
     - cron: '30 1 * * 0'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
@@ -23,6 +26,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -31,17 +35,17 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: manual
+            build-mode: ${{ github.event_name == 'pull_request' && 'none' || 'manual' }}
           - language: swift
             build-mode: manual
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       # Required for 'npm run secrets:restore'
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -63,7 +67,7 @@ jobs:
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
-        if: matrix.language == 'java-kotlin'
+        if: matrix.language == 'java-kotlin' && matrix.build-mode == 'manual'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
           npm run secrets:restore --workspace=apps/web
