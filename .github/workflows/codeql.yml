@@ -21,8 +21,23 @@ jobs:
 
     # Global Env: Inject secrets so the restore script can generate the missing files
     env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      SKIP_ENV_VALIDATION: true
+      NEXT_PUBLIC_SUPABASE_URL: https://mock.com
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: mock
+      SUPABASE_SERVICE_ROLE_KEY: mock
+      TELEGRAM_BOT_TOKEN: mock
+      WAYL_SECRET_KEY: mock
+      WAYL_WEBHOOK_SECRET: mock
+      WEB_APP_URL: https://mock.com
+      UPSTASH_REDIS_REST_URL: https://mock.com
+      UPSTASH_REDIS_REST_TOKEN: mock
+      GEMINI_API_KEY: mock
+      RESEND_API_KEY: mock
+      ZAIN_SECRET_KEY: mock
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false

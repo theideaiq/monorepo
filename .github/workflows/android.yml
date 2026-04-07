@@ -10,7 +10,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
+      SKIP_ENV_VALIDATION: true
+      NEXT_PUBLIC_SUPABASE_URL: https://mock.com
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: mock
+      SUPABASE_SERVICE_ROLE_KEY: mock
+      TELEGRAM_BOT_TOKEN: mock
+      WAYL_SECRET_KEY: mock
+      WAYL_WEBHOOK_SECRET: mock
+      WEB_APP_URL: https://mock.com
+      UPSTASH_REDIS_REST_URL: https://mock.com
+      UPSTASH_REDIS_REST_TOKEN: mock
+      GEMINI_API_KEY: mock
+      RESEND_API_KEY: mock
+      ZAIN_SECRET_KEY: mock
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
