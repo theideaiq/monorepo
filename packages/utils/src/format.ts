@@ -15,17 +15,39 @@
  * formatCurrency(50000, 'IQD') // -> "IQD 50,000"
  * formatCurrency(10.5, 'USD') // -> "$10.50"
  */
+// Cache formatters to prevent repetitive CPU overhead and reduce garbage collection
+const currencyFormatters: Record<string, Intl.NumberFormat> = {};
+
 export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  if (!currencyFormatters[currency]) {
+    currencyFormatters[currency] = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency,
+      // IQD doesn't typically use cents in this context
+      minimumFractionDigits: currency === 'IQD' ? 0 : 2,
+      maximumFractionDigits: currency === 'IQD' ? 0 : 2,
+    });
+  }
+  return currencyFormatters[currency].format(amount);
+}
+
+const iqdDecimalFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a number as an Iraqi Dinar decimal string (without the currency symbol).
+ * Used extensively in the UI where " IQD" is appended manually.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted string (e.g., "50,000").
+ */
+export function formatIQD(amount: number): string {
+  return iqdDecimalFormatter.format(amount);
 }
 
 /**
@@ -55,14 +77,16 @@ export function formatDate(date: string | Date): string {
  * formatCompactNumber(1500000) // -> "1.5M"
  * formatCompactNumber(1200) // -> "1.2K"
  */
+const compactNumberFormatter = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
 export function formatCompactNumber(number: number): string {
   // Validate input to avoid formatting NaN, Infinity, or non-numeric values
   if (!Number.isFinite(number)) {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return compactNumberFormatter.format(number);
 }
