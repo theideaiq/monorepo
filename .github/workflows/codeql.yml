@@ -38,13 +38,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       # Required for 'pnpm run secrets:restore' and other pnpm scripts
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
 
       - name: Install pnpm
         run: npm install -g pnpm
@@ -71,7 +71,7 @@ jobs:
         run: |
           # 0. Setup pnpm environment and build web app
           pnpm config set store-dir ~/.pnpm-store
-          pnpm install --frozen-lockfile
+          pnpm install --frozen-lockfile --config.engine-strict=false
 
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --filter=web run secrets:restore
