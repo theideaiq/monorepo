@@ -1,4 +1,4 @@
-import { Product } from '@/services/products';
+import type { Product } from '@/services/products';
 
 export default function ProductJsonLd({ product }: { product: Product }) {
   const jsonLd = {
@@ -6,14 +6,14 @@ export default function ProductJsonLd({ product }: { product: Product }) {
     '@type': 'Product',
     name: product.title,
     description: product.description || `Buy ${product.title} at The IDEA.`,
-    image: product.images.length > 0 ? product.images : [product.image],
+    image: (product.images && product.images.length > 0) ? product.images : (product.image ? [product.image] : []),
     sku: product.id,
     offers: {
       '@type': 'Offer',
       priceCurrency: 'IQD',
-      price: product.price,
+      price: product.price || 0,
       availability:
-        product.stock > 0
+        (product.stock ?? 0) > 0
           ? 'https://schema.org/InStock'
           : 'https://schema.org/OutOfStock',
       itemCondition:
@@ -24,13 +24,15 @@ export default function ProductJsonLd({ product }: { product: Product }) {
   };
 
   // Add aggregate rating if available
-  if (product.rating > 0) {
-    (jsonLd as any).aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: product.rating,
-      // Default to 1 review if rating exists but review count isn't in model
-      reviewCount: 1,
-    };
+  if (typeof product.rating === 'number' && product.rating > 0) {
+    Object.assign(jsonLd, {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: product.rating,
+        // Default to 1 review if rating exists but review count isn't in model
+        reviewCount: 1,
+      },
+    });
   }
 
   const jsonString = JSON.stringify(jsonLd).replace(/</g, '\\u003c');

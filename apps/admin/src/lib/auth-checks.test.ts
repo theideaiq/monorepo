@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { hasAdminAccess, ROLES } from '@/lib/constants';
+import { hasAdminAccess } from './auth-checks';
+import { ROLES } from './constants';
 
 describe('hasAdminAccess', () => {
   it('should return true for admin role', () => {
