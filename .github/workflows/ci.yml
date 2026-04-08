@@ -97,6 +97,16 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.com' }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock' }}
           SKIP_ENV_VALIDATION: 'true'
+          TELEGRAM_BOT_TOKEN: 'mock'
+          GEMINI_API_KEY: 'mock'
+          SUPABASE_SERVICE_ROLE_KEY: 'mock'
+          UPSTASH_REDIS_REST_URL: 'https://mock.com'
+          UPSTASH_REDIS_REST_TOKEN: 'mock'
+          WAYL_SECRET_KEY: 'mock'
+          WAYL_WEBHOOK_SECRET: 'mock'
+          WEB_APP_URL: 'https://mock.com'
+          ZAIN_SECRET_KEY: 'mock'
+          RESEND_API_KEY: 'mock'
         run: pnpm turbo build
 
   e2e:
