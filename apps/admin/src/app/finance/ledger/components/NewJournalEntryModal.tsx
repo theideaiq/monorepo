@@ -28,9 +28,16 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (index: number, field: 'accountId' | 'debit' | 'credit', value: string | number) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    const currentLine = newLines[index]!;
+    if (field === 'accountId') {
+      newLines[index] = { ...currentLine, accountId: value as string };
+    } else if (field === 'debit') {
+      newLines[index] = { ...currentLine, debit: value as number };
+    } else if (field === 'credit') {
+      newLines[index] = { ...currentLine, credit: value as number };
+    }
     setLines(newLines);
   };
 
@@ -57,7 +64,7 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      await createJournalEntry(date || '', description || '', lines);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
