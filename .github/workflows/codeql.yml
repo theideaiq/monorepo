@@ -66,6 +66,8 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          npm install -g pnpm@10.27.0
+
           # 1. Restore Secrets (Generates google-services.json)
           pnpm --filter=web run secrets:restore
           
@@ -81,6 +83,8 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          npm install -g pnpm@10.27.0
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
           pnpm --filter=web run secrets:restore
           

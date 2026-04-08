@@ -20,9 +20,9 @@ describe('Cart Store', () => {
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
-    // @ts-ignore - bypassing strict type for test
+    // @ts-expect-error - bypassing strict type for test
     const apple = { id: 'apple', title: 'Apple', price: 10, quantity: 1 };
-    // @ts-ignore
+    // @ts-expect-error
     const banana = { id: 'banana', title: 'Banana', price: 5, quantity: 1 };
 
     addItem(apple as any);
@@ -35,9 +35,9 @@ describe('Cart Store', () => {
   it('should remove items from the cart', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    // @ts-ignore
+    // @ts-expect-error
     const apple = { id: 'apple', title: 'Apple', price: 10, quantity: 1 };
-    // @ts-ignore
+    // @ts-expect-error
     const banana = { id: 'banana', title: 'Banana', price: 5, quantity: 1 };
 
     addItem(apple as any);
@@ -50,9 +50,9 @@ describe('Cart Store', () => {
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    // @ts-ignore
+    // @ts-expect-error
     const apple = { id: 'apple', title: 'Apple', price: 10, quantity: 1 };
-    // @ts-ignore
+    // @ts-expect-error
     const banana = { id: 'banana', title: 'Banana', price: 5, quantity: 1 };
 
     addItem(apple as any);
@@ -66,9 +66,9 @@ describe('Cart Store', () => {
     // Current behavior documentation: removing an item removes ALL instances of that value
     const { addItem, removeItem } = useCartStore.getState();
 
-    // @ts-ignore
+    // @ts-expect-error
     const apple = { id: 'apple', title: 'Apple', price: 10, quantity: 1 };
-    // @ts-ignore
+    // @ts-expect-error
     const apple2 = { id: 'apple', title: 'Apple', price: 10, quantity: 2 };
 
     addItem(apple as any);
@@ -81,8 +81,13 @@ describe('Cart Store', () => {
 
   it('should persist state to localStorage', () => {
     const { addItem } = useCartStore.getState();
-    // @ts-ignore
-    const item = { id: 'persistent-item', title: 'Item', price: 10, quantity: 1 };
+    // @ts-expect-error
+    const item = {
+      id: 'persistent-item',
+      title: 'Item',
+      price: 10,
+      quantity: 1,
+    };
     addItem(item as any);
 
     const stored = localStorage.getItem('cart-storage');

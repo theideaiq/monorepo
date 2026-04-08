@@ -30,10 +30,10 @@ export function decodeHtmlEntities(text: string): string {
 
     // Handle numeric entities
     const numericMatch = match.match(NUMERIC_ENTITY_REGEX);
-    if (numericMatch) {
+    if (numericMatch?.[1]) {
       // Use fromCodePoint for Emoji/Astral support
       const isHex = match.startsWith('&#x') || match.startsWith('&#X');
-      const numStr = numericMatch[1]!;
+      const numStr = numericMatch[1];
       const radix = isHex ? 16 : 10;
       return String.fromCodePoint(Number.parseInt(numStr, radix));
     }
