@@ -21,6 +21,7 @@ jobs:
 
     # Global Env: Inject secrets so the restore script can generate the missing files
     env:
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
 
@@ -31,23 +32,23 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: java-kotlin
-            build-mode: manual
+            build-mode: none
           - language: swift
             build-mode: manual
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       # Required for 'npm run secrets:restore'
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
       # Required for Android Gradle Build
       - name: Setup Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'temurin'
@@ -65,14 +66,24 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          npm install -g pnpm
+          pnpm config set store-dir ~/.pnpm-store
+          pnpm install --frozen-lockfile
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # Build web first to avoid cap sync issues
+          SKIP_ENV_VALIDATION=true NEXT_PUBLIC_SUPABASE_URL=https://mock.com NEXT_PUBLIC_SUPABASE_ANON_KEY=mock SUPABASE_SERVICE_ROLE_KEY=mock pnpm --config.engine-strict=false run --filter=web build
+
+          cd apps/web
+          pnpm cap sync android
           
           # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
+          chmod +x android/gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
+          cd android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -80,8 +91,19 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          npm install -g pnpm
+          pnpm config set store-dir ~/.pnpm-store
+          pnpm install --frozen-lockfile
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # Build web first to avoid cap sync issues
+          SKIP_ENV_VALIDATION=true NEXT_PUBLIC_SUPABASE_URL=https://mock.com NEXT_PUBLIC_SUPABASE_ANON_KEY=mock SUPABASE_SERVICE_ROLE_KEY=mock pnpm --config.engine-strict=false run --filter=web build
+
+          cd apps/web
+          pnpm cap sync ios
+          cd ../..
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
