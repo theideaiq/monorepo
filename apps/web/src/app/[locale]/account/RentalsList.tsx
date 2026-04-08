@@ -1,9 +1,18 @@
 'use client';
 
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
-export default function RentalsList({ rentals }: { rentals: any[] }) {
+export default function RentalsList({
+  rentals,
+}: {
+  rentals: Array<{
+    id: string;
+    due_date: string;
+    product: { name: string; image_url: string | null };
+  }>;
+}) {
   const t = useTranslations('Account');
   const [selectedRental, setSelectedRental] = useState<string | null>(null);
 
@@ -20,9 +29,11 @@ export default function RentalsList({ rentals }: { rentals: any[] }) {
         >
           <div className="flex items-center gap-4 mb-4">
             {rental.product?.image_url && (
-              <img
+              <Image
                 src={rental.product.image_url}
                 alt={rental.product.name}
+                width={64}
+                height={64}
                 className="w-16 h-16 object-cover rounded"
               />
             )}
