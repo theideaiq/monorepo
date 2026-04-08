@@ -65,7 +65,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm --config.engine-strict=false install --frozen-lockfile
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -88,14 +88,14 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm --filter=web run secrets:restore
+          pnpm --config.engine-strict=false --filter=web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
           # 3. Build web app & Sync Capacitor before native build
-          pnpm --filter=web run build
-          cd apps/web && pnpm exec cap sync android
+          pnpm --config.engine-strict=false --filter=web run build
+          cd apps/web && pnpm --config.engine-strict=false exec cap sync android
 
           # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
@@ -109,11 +109,11 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --filter=web run secrets:restore
+          pnpm --config.engine-strict=false --filter=web run secrets:restore
 
           # Build web app & Sync Capacitor before native build
-          pnpm --filter=web run build
-          cd apps/web && pnpm exec cap sync ios && cd -
+          pnpm --config.engine-strict=false --filter=web run build
+          cd apps/web && pnpm --config.engine-strict=false exec cap sync ios && cd -
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
