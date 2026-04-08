@@ -74,13 +74,13 @@ jobs:
           pnpm config set store-dir ~/.pnpm-store
           pnpm install --frozen-lockfile --engine-strict=false
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm --filter=web run secrets:restore
+          pnpm --config.engine-strict=false --filter=web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
-          pnpm --filter=web run build
+          pnpm --config.engine-strict=false --filter=web run build
           npx cap sync android --dir apps/web
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
@@ -98,10 +98,10 @@ jobs:
           pnpm config set store-dir ~/.pnpm-store
           pnpm install --frozen-lockfile --engine-strict=false
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --filter=web run secrets:restore
+          pnpm --config.engine-strict=false --filter=web run secrets:restore
           
           # 2. Build Next.js and Sync Capacitor
-          pnpm --filter=web run build
+          pnpm --config.engine-strict=false --filter=web run build
           npx cap sync ios --dir apps/web
 
           # 3. Determine Build Type (CocoaPods vs SPM)
