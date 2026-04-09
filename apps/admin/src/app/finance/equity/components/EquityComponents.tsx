@@ -1,5 +1,6 @@
 'use client';
 
+import { formatNumber } from '@repo/utils';
 import {
   Cell,
   Legend,
@@ -92,7 +93,7 @@ export function EquityTable({ holders }: { holders: EquityHolder[] }) {
               <td className="p-4 align-middle font-medium">{holder.name}</td>
               <td className="p-4 align-middle capitalize">{holder.type}</td>
               <td className="p-4 align-middle text-right">
-                {new Intl.NumberFormat('en-US').format(holder.shares_owned)}
+                {formatNumber(holder.shares_owned)}
               </td>
               <td className="p-4 align-middle">
                 {new Date(holder.vesting_start_date).toLocaleDateString()}

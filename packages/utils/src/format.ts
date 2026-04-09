@@ -1,5 +1,35 @@
 // packages/utils/src/format.ts
 
+const USD_FORMATTER = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+const IQD_CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'IQD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
+const IQD_DECIMAL_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
+
+const COMPACT_FORMATTER = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
 /**
  * Format a number as currency.
  *
@@ -19,13 +49,21 @@ export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  if (currency === 'IQD') {
+    return IQD_CURRENCY_FORMATTER.format(amount);
+  }
+  return USD_FORMATTER.format(amount);
+}
+
+/**
+ * Format a number as IQD (decimal style, no currency symbol).
+ * Frequently used in the storefront where 'IQD' is added as a suffix.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted decimal string (e.g., "50,000").
+ */
+export function formatIQD(amount: number): string {
+  return IQD_DECIMAL_FORMATTER.format(amount);
 }
 
 /**
@@ -36,12 +74,9 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date instanceof Date ? date : new Date(date));
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
+  return DATE_FORMATTER.format(date instanceof Date ? date : new Date(date));
 }
 
 /**
@@ -61,8 +96,38 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return COMPACT_FORMATTER.format(number);
+}
+
+const NUMBER_FORMATTER = new Intl.NumberFormat('en-US');
+
+/**
+ * Format a number using standard en-US decimal formatting.
+ *
+ * @param number - The number to format.
+ * @returns The formatted string.
+ */
+export function formatNumber(number: number): string {
+  if (!Number.isFinite(number)) {
+    return '';
+  }
+  return NUMBER_FORMATTER.format(number);
+}
+
+const COMPACT_CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
+/**
+ * Format a number as compact currency (e.g., "$1.5M").
+ *
+ * @param amount - The amount to format.
+ * @returns The formatted string.
+ */
+export function formatCompactCurrency(amount: number): string {
+  if (!Number.isFinite(amount)) return '';
+  return COMPACT_CURRENCY_FORMATTER.format(amount);
 }
