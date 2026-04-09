@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -65,8 +66,13 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile --config.engine-strict=false
+          NEXT_PUBLIC_SUPABASE_URL="https://mock.com" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SKIP_ENV_VALIDATION="true" pnpm --filter=web --config.engine-strict=false run build
+          pnpm --filter=web --config.engine-strict=false run sync:android
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web --config.engine-strict=false run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +86,13 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile --config.engine-strict=false
+          NEXT_PUBLIC_SUPABASE_URL="https://mock.com" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SKIP_ENV_VALIDATION="true" pnpm --filter=web --config.engine-strict=false run build
+          pnpm --filter=web --config.engine-strict=false run sync:ios
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web --config.engine-strict=false run secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
