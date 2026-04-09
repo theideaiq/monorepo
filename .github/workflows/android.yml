@@ -32,7 +32,7 @@ jobs:
           version: '10'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Build Mobile Web
         run: cd apps/web && pnpm build:mobile
