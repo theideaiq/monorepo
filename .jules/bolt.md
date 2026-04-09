@@ -1,0 +1,3 @@
+## 2025-02-17 - Optimize Intl instantiation overhead
+**Learning:** V8/JavaScript instantiation of `Intl.NumberFormat` and `Intl.DateTimeFormat` objects is highly CPU intensive. Instantiating these inline within React component render paths (e.g. mapping over product lists or formatting cart items) causes significant CPU overhead and garbage collection pressure on every render.
+**Action:** Extract and cache `Intl` formatter instances at the module level (like `packages/utils/src/format.ts`) and expose utility functions (like `formatIQD`) to wrap them. Always use the pre-initialized caches instead of creating new instances in UI components or inside loops.
