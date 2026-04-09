@@ -48,8 +48,10 @@ export default function BreadcrumbJsonLd() {
   return (
     <script
       type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires dangerouslySetInnerHTML, sanitized below
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+      }}
     />
   );
 }
