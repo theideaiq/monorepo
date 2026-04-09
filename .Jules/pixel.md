@@ -1,0 +1,3 @@
+## 2025-02-12 - Theming Configuration and Global CSS Variables
+**Learning:** The project relies on CSS variables for defining custom tokens instead of a standard `tailwind.config.ts`. The custom variables are set using `@theme` inside CSS files like `packages/ui/src/theme.css` and `packages/ui/src/globals.css` (e.g. `--color-brand-yellow: #facc15`). Tailwind translates these variable declarations to their respective utility classes without needing a separate configuration file.
+**Action:** When searching for the root definition of a design system variable or color token, look for `@theme` directives within `.css` files rather than expecting a config JS/TS file.
