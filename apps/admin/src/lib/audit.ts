@@ -16,7 +16,7 @@ import { createClient } from '@/lib/supabase/server';
 export async function logAdminAction(
   action: string,
   resource: string,
-  details?: Record<string, any>,
+  details?: Record<string, unknown>,
 ) {
   try {
     const supabase = await createClient();

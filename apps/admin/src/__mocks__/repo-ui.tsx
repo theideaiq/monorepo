@@ -1,22 +1,30 @@
-import React from 'react';
-
-export const Button = ({ children, isLoading, ...props }: any) => (
-  <button {...props} disabled={isLoading}>
-    {isLoading ? 'Loading...' : children}
+export const Button = ({
+  children,
+  isLoading,
+  ...props
+}: Record<string, unknown>) => (
+  <button {...props} disabled={isLoading as boolean}>
+    {isLoading ? 'Loading...' : (children as React.ReactNode)}
   </button>
 );
 
-export const Card = ({ children, className }: any) => (
-  <div className={className}>{children}</div>
+export const Card = ({ children, className }: Record<string, unknown>) => (
+  <div className={className as string}>{children as React.ReactNode}</div>
 );
 
-export const Input = ({ label, ...props }: any) => (
+export const Input = ({ label, ...props }: Record<string, unknown>) => (
   <label>
-    {label}
+    {label as string}
     <input {...props} />
   </label>
 );
 
-export const Sheet = ({ children }: any) => <div>{children}</div>;
-export const SheetContent = ({ children }: any) => <div>{children}</div>;
-export const SheetTrigger = ({ children }: any) => <div>{children}</div>;
+export const Sheet = ({ children }: Record<string, unknown>) => (
+  <div>{children as React.ReactNode}</div>
+);
+export const SheetContent = ({ children }: Record<string, unknown>) => (
+  <div>{children as React.ReactNode}</div>
+);
+export const SheetTrigger = ({ children }: Record<string, unknown>) => (
+  <div>{children as React.ReactNode}</div>
+);

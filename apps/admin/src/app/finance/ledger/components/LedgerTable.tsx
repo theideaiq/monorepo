@@ -30,8 +30,8 @@ export function LedgerTable({ data }: { data: LedgerTransaction[] }) {
           const lines = props.row.original.lines;
           return (
             <div className="space-y-1 text-sm">
-              {lines.map((line, idx) => (
-                <div key={idx} className="flex justify-between gap-4">
+              {lines.map((line) => (
+                <div key={line.id} className="flex justify-between gap-4">
                   <span className="text-muted-foreground">
                     {line.account?.name}
                   </span>

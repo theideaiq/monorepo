@@ -10,7 +10,7 @@ import { requireAdmin } from '@/lib/auth-checks';
  * Security: Requires Admin role.
  * Audit: Logs 'create_product'.
  */
-export async function createProduct(data: any) {
+export async function createProduct(data: Record<string, unknown>) {
   const { supabase } = await requireAdmin();
   const { data: product, error } = await supabase
     .from('products')
@@ -34,7 +34,10 @@ export async function createProduct(data: any) {
  * Security: Requires Admin role.
  * Audit: Logs 'update_product'.
  */
-export async function updateProduct(id: string, updates: any) {
+export async function updateProduct(
+  id: string,
+  updates: Record<string, unknown>,
+) {
   const { supabase } = await requireAdmin();
   const { error } = await supabase
     .from('products')

@@ -41,8 +41,10 @@ export async function getCashFlowData(year: number) {
     'Dec',
   ];
 
-  lines.forEach((line: any) => {
-    const date = new Date(line.ledger_entries.transaction_date);
+  lines.forEach((line: Record<string, unknown>) => {
+    const date = new Date(
+      (line.ledger_entries as { transaction_date: string }).transaction_date,
+    );
     const monthIndex = date.getMonth();
     const month = monthNames[monthIndex];
 
@@ -52,7 +54,7 @@ export async function getCashFlowData(year: number) {
 
     const debit = Number(line.debit) || 0;
     const credit = Number(line.credit) || 0;
-    const type = line.chart_of_accounts.type;
+    const type = (line.chart_of_accounts as { type: string }).type;
 
     if (type === 'revenue') {
       monthlyData[month].revenue += credit - debit;

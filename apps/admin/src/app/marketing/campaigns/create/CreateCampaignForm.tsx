@@ -29,8 +29,12 @@ export function CreateCampaignForm({
       await sendCampaign(campaignId);
       toast.success('Campaign sent successfully!');
       router.push('/marketing/campaigns');
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to send campaign');
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        toast.error(e.message || 'Failed to send campaign');
+      } else {
+        toast.error('Failed to send campaign');
+      }
     } finally {
       setIsSending(false);
     }
