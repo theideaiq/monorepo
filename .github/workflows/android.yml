@@ -13,7 +13,7 @@ jobs:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -22,9 +22,12 @@ jobs:
           java-version: '17'
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: '24'
+
+      - name: Install pnpm globally
+        run: npm install -g pnpm
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
@@ -35,6 +38,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build Mobile Web
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SITE_URL: "https://mock.com"
         run: cd apps/web && pnpm build:mobile
 
       - name: Restore Secrets
@@ -44,10 +50,11 @@ jobs:
         run: cd apps/web && npx cap sync android
 
       - name: Build APK
-        run: cd apps/web/android && ./gradlew assembleDebug
+        run: |
+          cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
           path: apps/web/android/app/build/outputs/apk/debug/app-debug.apk
