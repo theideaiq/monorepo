@@ -65,18 +65,20 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
+        env:
+          npm_config_engine_strict: false
         run: |
           # Ensure pnpm is installed and dependencies are met
           npm install -g pnpm
-          pnpm install --frozen-lockfile --config.engine-strict=false
+          pnpm install --frozen-lockfile
 
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm --config.engine-strict=false --filter=web run secrets:restore
+          pnpm --filter=web run secrets:restore
           
           # 2. Sync Capacitor
           # We need to build the web app first, passing mock secrets to satisfy NEXT_PUBLIC_* and SKIP_ENV_VALIDATION
-          SKIP_ENV_VALIDATION="true" NEXT_PUBLIC_SUPABASE_URL="https://mock.supabase.co" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock-anon-key" GEMINI_API_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" WAYL_SECRET_KEY="mock" TELEGRAM_BOT_TOKEN="mock" RESEND_API_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.com" UPSTASH_REDIS_REST_TOKEN="mock" WAYL_WEBHOOK_SECRET="mock" WEB_APP_URL="https://mock.com" ZAIN_SECRET_KEY="mock" pnpm --config.engine-strict=false --filter=web run build
-          pnpm --config.engine-strict=false --filter=web run sync:android
+          SKIP_ENV_VALIDATION="true" NEXT_PUBLIC_SUPABASE_URL="https://mock.supabase.co" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock-anon-key" GEMINI_API_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" WAYL_SECRET_KEY="mock" TELEGRAM_BOT_TOKEN="mock" RESEND_API_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.com" UPSTASH_REDIS_REST_TOKEN="mock" WAYL_WEBHOOK_SECRET="mock" WEB_APP_URL="https://mock.com" ZAIN_SECRET_KEY="mock" pnpm --filter=web run build
+          pnpm --filter=web run sync:android
 
           # 3. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -89,18 +91,20 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
+        env:
+          npm_config_engine_strict: false
         run: |
           # Ensure pnpm is installed and dependencies are met
           npm install -g pnpm
-          pnpm install --frozen-lockfile --config.engine-strict=false
+          pnpm install --frozen-lockfile
 
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --config.engine-strict=false --filter=web run secrets:restore
+          pnpm --filter=web run secrets:restore
 
           # 2. Sync Capacitor
           # We need to build the web app first, passing mock secrets to satisfy NEXT_PUBLIC_* and SKIP_ENV_VALIDATION
-          SKIP_ENV_VALIDATION="true" NEXT_PUBLIC_SUPABASE_URL="https://mock.supabase.co" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock-anon-key" GEMINI_API_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" WAYL_SECRET_KEY="mock" TELEGRAM_BOT_TOKEN="mock" RESEND_API_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.com" UPSTASH_REDIS_REST_TOKEN="mock" WAYL_WEBHOOK_SECRET="mock" WEB_APP_URL="https://mock.com" ZAIN_SECRET_KEY="mock" pnpm --config.engine-strict=false --filter=web run build
-          pnpm --config.engine-strict=false --filter=web run sync:ios
+          SKIP_ENV_VALIDATION="true" NEXT_PUBLIC_SUPABASE_URL="https://mock.supabase.co" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock-anon-key" GEMINI_API_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" WAYL_SECRET_KEY="mock" TELEGRAM_BOT_TOKEN="mock" RESEND_API_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.com" UPSTASH_REDIS_REST_TOKEN="mock" WAYL_WEBHOOK_SECRET="mock" WEB_APP_URL="https://mock.com" ZAIN_SECRET_KEY="mock" pnpm --filter=web run build
+          pnpm --filter=web run sync:ios
           
           # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then

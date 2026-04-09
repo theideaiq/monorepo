@@ -35,7 +35,7 @@ jobs:
         run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Build Mobile Web
-        run: cd apps/web && pnpm --config.engine-strict=false build:mobile
+        run: cd apps/web && pnpm build:mobile
         env:
           SKIP_ENV_VALIDATION: "true"
           NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
@@ -50,12 +50,17 @@ jobs:
           WAYL_WEBHOOK_SECRET: "mock"
           WEB_APP_URL: "https://mock.com"
           ZAIN_SECRET_KEY: "mock"
+          npm_config_engine_strict: false
 
       - name: Restore Secrets
-        run: cd apps/web && pnpm --config.engine-strict=false secrets:restore
+        run: cd apps/web && pnpm secrets:restore
+        env:
+          npm_config_engine_strict: false
 
       - name: Sync Capacitor
-        run: cd apps/web && pnpm --config.engine-strict=false sync:android
+        run: cd apps/web && pnpm sync:android
+        env:
+          npm_config_engine_strict: false
 
       - name: Build APK
         run: cd apps/web/android && ./gradlew assembleDebug
