@@ -49,7 +49,7 @@ jobs:
         run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Run Quality Checks
-        run: pnpm turbo check typecheck test -- --config.engine-strict=false
+        run: pnpm --config.engine-strict=false turbo check typecheck test
 
   build:
     name: Build
@@ -107,7 +107,7 @@ jobs:
           WAYL_WEBHOOK_SECRET: "mock"
           WEB_APP_URL: "https://mock.com"
           ZAIN_SECRET_KEY: "mock"
-        run: pnpm turbo build -- --config.engine-strict=false
+        run: pnpm --config.engine-strict=false turbo build
 
   e2e:
     name: E2E Tests
@@ -168,4 +168,4 @@ jobs:
           WAYL_WEBHOOK_SECRET: "mock"
           WEB_APP_URL: "https://mock.com"
           ZAIN_SECRET_KEY: "mock"
-        run: pnpm turbo e2e -- --config.engine-strict=false
+        run: pnpm --config.engine-strict=false turbo e2e

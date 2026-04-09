@@ -35,7 +35,7 @@ jobs:
         run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Build Mobile Web
-        run: cd apps/web && pnpm build:mobile -- --config.engine-strict=false
+        run: cd apps/web && pnpm --config.engine-strict=false build:mobile
         env:
           SKIP_ENV_VALIDATION: "true"
           NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
@@ -52,10 +52,10 @@ jobs:
           ZAIN_SECRET_KEY: "mock"
 
       - name: Restore Secrets
-        run: cd apps/web && pnpm secrets:restore --config.engine-strict=false
+        run: cd apps/web && pnpm --config.engine-strict=false secrets:restore
 
       - name: Sync Capacitor
-        run: cd apps/web && pnpm sync:android --config.engine-strict=false
+        run: cd apps/web && pnpm --config.engine-strict=false sync:android
 
       - name: Build APK
         run: cd apps/web/android && ./gradlew assembleDebug
