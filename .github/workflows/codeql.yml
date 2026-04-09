@@ -68,7 +68,7 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm install --frozen-lockfile --config.engine-strict=false
-          SKIP_ENV_VALIDATION="true" pnpm --filter=web --config.engine-strict=false run build
+          NEXT_PUBLIC_SUPABASE_URL="https://mock.com" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SKIP_ENV_VALIDATION="true" pnpm --filter=web --config.engine-strict=false run build
           pnpm --filter=web --config.engine-strict=false run sync:android
 
           # 1. Restore Secrets (Generates google-services.json)
@@ -88,7 +88,7 @@ jobs:
         run: |
           npm install -g pnpm
           pnpm install --frozen-lockfile --config.engine-strict=false
-          SKIP_ENV_VALIDATION="true" pnpm --filter=web --config.engine-strict=false run build
+          NEXT_PUBLIC_SUPABASE_URL="https://mock.com" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SKIP_ENV_VALIDATION="true" pnpm --filter=web --config.engine-strict=false run build
           pnpm --filter=web --config.engine-strict=false run sync:ios
 
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
