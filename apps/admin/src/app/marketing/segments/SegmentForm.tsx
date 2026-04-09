@@ -27,8 +27,12 @@ export function SegmentForm() {
       setName('');
       setRole('');
       setStatus('');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        toast.error(e.message);
+      } else {
+        toast.error('Failed to create segment');
+      }
     }
   };
 

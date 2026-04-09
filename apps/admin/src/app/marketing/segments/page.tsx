@@ -26,7 +26,7 @@ export default async function SegmentsPage() {
         </div>
         <div className="md:col-span-2 space-y-4">
           <h2 className="text-xl font-semibold">Saved Segments</h2>
-          {segments?.map((segment: any) => (
+          {segments?.map((segment) => (
             <div
               key={segment.id}
               className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm"

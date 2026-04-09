@@ -161,12 +161,14 @@ export async function getLedgerEntries(): Promise<LedgerTransaction[]> {
     redirect('/login');
   }
 
-  const transformedData = data?.map((entry: any) => ({
+  const transformedData = data?.map((entry: Record<string, unknown>) => ({
     ...entry,
-    lines: entry.lines.map((line: any) => ({
-      ...line,
-      account: Array.isArray(line.account) ? line.account[0] : line.account,
-    })),
+    lines: (entry.lines as Record<string, unknown>[]).map(
+      (line: Record<string, unknown>) => ({
+        ...line,
+        account: Array.isArray(line.account) ? line.account[0] : line.account,
+      }),
+    ),
   }));
 
   return (transformedData || []) as LedgerTransaction[];

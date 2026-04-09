@@ -51,12 +51,22 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
   } | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
+  const handleEdit = useCallback((profile: Profile) => {
+    setEditingProfile(profile);
+    setEditForm({
+      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
+      crm_tags: profile.crm_tags?.join(', ') || '',
+    });
+    setIsSheetOpen(true);
+  }, []);
+
   const columns = useMemo<ColumnDef<Profile>[]>(
     () => [
       {
         accessorKey: 'avatar_url',
         header: '',
         cell: ({ row }) => (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={
               row.original.avatar_url ||
@@ -159,15 +169,6 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
       globalFilter,
     },
   });
-
-  const handleEdit = (profile: Profile) => {
-    setEditingProfile(profile);
-    setEditForm({
-      crm_status: profile.crm_status || CRM_STATUSES.LEAD,
-      crm_tags: profile.crm_tags?.join(', ') || '',
-    });
-    setIsSheetOpen(true);
-  };
 
   const handleSave = async () => {
     if (!editingProfile || !editForm) return;
@@ -305,6 +306,7 @@ export function ContactsTable({ initialData }: ContactsTableProps) {
           {editingProfile && editForm && (
             <div className="space-y-6 mt-6">
               <div className="flex items-center gap-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={
                     editingProfile.avatar_url ||

@@ -48,9 +48,9 @@ export function EquityPieChart({ holders }: { holders: EquityHolder[] }) {
             fill="#8884d8"
             dataKey="value"
           >
-            {data.map((_entry, index) => (
+            {data.map((entry, index) => (
               <Cell
-                key={`cell-${index}`}
+                key={`cell-${entry.name}-${index}`}
                 fill={COLORS[index % COLORS.length]}
               />
             ))}

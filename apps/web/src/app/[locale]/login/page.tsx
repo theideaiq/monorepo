@@ -127,7 +127,10 @@ export default function AuthPage() {
                   className="overflow-hidden"
                 >
                   <div className="mb-4">
-                    <label className="text-sm text-slate-400 mb-1 block">
+                    <label
+                      htmlFor="fullName"
+                      className="text-sm text-slate-400 mb-1 block"
+                    >
                       Full Name
                     </label>
                     <div className="relative">
@@ -136,6 +139,7 @@ export default function AuthPage() {
                         size={18}
                       />
                       <input
+                        id="fullName"
                         type="text"
                         required={mode === 'register'}
                         value={fullName}
@@ -150,7 +154,10 @@ export default function AuthPage() {
             </AnimatePresence>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label
+                htmlFor="email"
+                className="text-sm text-slate-400 mb-1 block"
+              >
                 Email Address
               </label>
               <div className="relative">
@@ -159,6 +166,7 @@ export default function AuthPage() {
                   size={18}
                 />
                 <input
+                  id="email"
                   type="email"
                   required
                   value={email}
@@ -170,7 +178,10 @@ export default function AuthPage() {
             </div>
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label
+                htmlFor="password"
+                className="text-sm text-slate-400 mb-1 block"
+              >
                 Password
               </label>
               <div className="relative">
@@ -179,6 +190,7 @@ export default function AuthPage() {
                   size={18}
                 />
                 <input
+                  id="password"
                   type="password"
                   required
                   value={password}
@@ -211,6 +223,7 @@ export default function AuthPage() {
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <button
+                type="button"
                 onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
                 className="text-brand-yellow hover:underline font-bold"
               >

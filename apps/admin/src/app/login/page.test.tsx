@@ -25,23 +25,29 @@ vi.mock('react-hot-toast', () => ({
 
 // Mock UI components
 vi.mock('@repo/ui', () => ({
-  Button: ({ children, isLoading, ...props }: any) => (
-    <button {...props} disabled={isLoading}>
-      {isLoading ? 'Loading...' : children}
+  Button: ({ children, isLoading, ...props }: Record<string, unknown>) => (
+    <button {...props} disabled={isLoading as boolean}>
+      {isLoading ? 'Loading...' : (children as React.ReactNode)}
     </button>
   ),
-  Card: ({ children, className }: any) => (
-    <div className={className}>{children}</div>
+  Card: ({ children, className }: Record<string, unknown>) => (
+    <div className={className as string}>{children as React.ReactNode}</div>
   ),
-  Input: ({ label, ...props }: any) => (
+  Input: ({ label, ...props }: Record<string, unknown>) => (
     <label>
-      {label}
+      {label as string}
       <input {...props} />
     </label>
   ),
-  Sheet: ({ children }: any) => <div>{children}</div>,
-  SheetContent: ({ children }: any) => <div>{children}</div>,
-  SheetTrigger: ({ children }: any) => <div>{children}</div>,
+  Sheet: ({ children }: Record<string, unknown>) => (
+    <div>{children as React.ReactNode}</div>
+  ),
+  SheetContent: ({ children }: Record<string, unknown>) => (
+    <div>{children as React.ReactNode}</div>
+  ),
+  SheetTrigger: ({ children }: Record<string, unknown>) => (
+    <div>{children as React.ReactNode}</div>
+  ),
 }));
 
 describe('LoginPage', () => {
@@ -57,18 +63,20 @@ describe('LoginPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useRouter as any).mockReturnValue({
+    (useRouter as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
       push: mockPush,
       refresh: mockRefresh,
     });
-    (createClient as any).mockReturnValue(mockSupabase);
+    (createClient as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
+      mockSupabase,
+    );
   });
 
   const setupSupabaseMock = (
-    signInData: any,
-    signInError: any,
-    profileData: any,
-    profileError: any,
+    signInData: Record<string, unknown> | null,
+    signInError: Error | null,
+    profileData: Record<string, unknown> | null,
+    profileError: Error | null,
   ) => {
     mockSupabase.auth.signInWithPassword.mockResolvedValue({
       data: signInData,

@@ -45,7 +45,7 @@ export default async function CampaignsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {campaigns?.map((campaign: any) => (
+            {campaigns?.map((campaign) => (
               <TableRow key={campaign.id}>
                 <TableCell className="font-medium text-slate-900">
                   {campaign.subject}

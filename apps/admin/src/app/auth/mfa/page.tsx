@@ -1,9 +1,10 @@
 'use client';
 
 import { Button, Card, Input } from '@repo/ui';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { createClient } from '@/lib/supabase/client';
 
@@ -16,11 +17,22 @@ export default function MFAPage() {
   const supabase = createClient();
   const router = useRouter();
 
-  useEffect(() => {
-    checkStatus();
-  }, [checkStatus]);
+  const startEnrollment = useCallback(async () => {
+    const { data, error } = await supabase.auth.mfa.enroll({
+      factorType: 'totp',
+    });
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
 
-  async function checkStatus() {
+    setFactorId(data.id);
+    QRCode.toDataURL(data.totp.uri, (err, url) => {
+      if (!err) setQr(url);
+    });
+  }, [supabase.auth.mfa]);
+
+  const checkStatus = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -38,22 +50,11 @@ export default function MFAPage() {
       const factor = factors.all.find((f) => f.factor_type === 'totp');
       if (factor) setFactorId(factor.id);
     }
-  }
+  }, [router, supabase.auth, startEnrollment]);
 
-  async function startEnrollment() {
-    const { data, error } = await supabase.auth.mfa.enroll({
-      factorType: 'totp',
-    });
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-
-    setFactorId(data.id);
-    QRCode.toDataURL(data.totp.uri, (err, url) => {
-      if (!err) setQr(url);
-    });
-  }
+  useEffect(() => {
+    checkStatus();
+  }, [checkStatus]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -70,8 +71,12 @@ export default function MFAPage() {
       toast.success('Authentication successful');
       router.push('/');
       router.refresh();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -89,7 +94,13 @@ export default function MFAPage() {
             <p className="text-sm text-slate-500 mb-2 text-center">
               Scan this QR code with your authenticator app
             </p>
-            <img src={qr} alt="QR Code" className="w-48 h-48" />
+            <Image
+              src={qr}
+              alt="QR Code"
+              width={192}
+              height={192}
+              className="w-48 h-48"
+            />
           </div>
         )}
 
