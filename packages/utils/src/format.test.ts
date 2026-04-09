@@ -1,5 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import { formatCurrency, formatIQD, formatDate, formatCompactNumber, formatNumber, formatCompactCurrency } from './format';
+import { describe, expect, it } from 'vitest';
+import {
+  formatCompactCurrency,
+  formatCompactNumber,
+  formatCurrency,
+  formatDate,
+  formatIQD,
+  formatNumber,
+} from './format';
 
 describe('formatCurrency', () => {
   it('formats USD correctly', () => {

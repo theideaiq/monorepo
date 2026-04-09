@@ -1,5 +1,6 @@
 'use client';
 
+import { formatNumber } from '@repo/utils';
 import {
   Cell,
   Legend,
@@ -8,7 +9,6 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import { formatNumber } from '@repo/utils';
 import type { EquityHolder } from '@/types/finance';
 
 export function EquityPieChart({ holders }: { holders: EquityHolder[] }) {

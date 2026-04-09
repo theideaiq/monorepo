@@ -1,5 +1,5 @@
 import { Card } from '@repo/ui';
-import { formatCurrency, formatCompactCurrency } from '@repo/utils';
+import { formatCompactCurrency, formatCurrency } from '@repo/utils';
 import { getEquityData } from '../actions';
 import { EquityPieChart, EquityTable } from './components/EquityComponents';
 
@@ -27,8 +27,7 @@ export default async function EquityPage() {
                 <div>
                   <div className="font-medium">{round.name}</div>
                   <div className="text-sm text-muted-foreground">
-                    {formatCurrency(round.price_per_share, 'USD')}{' '}
-                    / share
+                    {formatCurrency(round.price_per_share, 'USD')} / share
                   </div>
                 </div>
                 <div className="text-right">

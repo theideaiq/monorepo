@@ -1,5 +1,6 @@
 'use client';
 
+import { formatCurrency } from '@repo/utils';
 import {
   Bar,
   BarChart,
@@ -10,7 +11,6 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { formatCurrency } from '@repo/utils';
 
 interface ChartData {
   month: string;

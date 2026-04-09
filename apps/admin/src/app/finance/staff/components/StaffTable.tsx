@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@repo/ui';
+import { formatCurrency } from '@repo/utils';
 import {
   createColumnHelper,
   flexRender,
@@ -19,7 +20,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
-import { formatCurrency } from '@repo/utils';
 import type { HRStaffPlan } from '@/types/finance';
 
 const columnHelper = createColumnHelper<HRStaffPlan>();
@@ -139,8 +139,7 @@ export function StaffProjection({ data }: { data: HRStaffPlan[] }) {
               </div>
               <p className="text-xs text-brand-pink/80 mt-1">
                 (+
-                {formatCurrency(projectedAnnual - currentAnnual, 'USD')}
-                )
+                {formatCurrency(projectedAnnual - currentAnnual, 'USD')})
               </p>
             </CardContent>
           </Card>

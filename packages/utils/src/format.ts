@@ -74,7 +74,8 @@ export function formatIQD(amount: number): string {
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
   return DATE_FORMATTER.format(date instanceof Date ? date : new Date(date));
 }
 
