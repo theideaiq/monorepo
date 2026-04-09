@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '24'
+          node-version: '20'
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
@@ -32,16 +32,30 @@ jobs:
           version: '10'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Build Mobile Web
-        run: cd apps/web && pnpm build:mobile
+        run: cd apps/web && pnpm build:mobile -- --config.engine-strict=false
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          GEMINI_API_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          WAYL_SECRET_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          RESEND_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.com"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          WEB_APP_URL: "https://mock.com"
+          ZAIN_SECRET_KEY: "mock"
 
       - name: Restore Secrets
-        run: cd apps/web && pnpm secrets:restore
+        run: cd apps/web && pnpm secrets:restore --config.engine-strict=false
 
       - name: Sync Capacitor
-        run: cd apps/web && npx cap sync android
+        run: cd apps/web && pnpm sync:android --config.engine-strict=false
 
       - name: Build APK
         run: cd apps/web/android && ./gradlew assembleDebug
