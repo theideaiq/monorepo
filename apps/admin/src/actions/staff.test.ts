@@ -98,7 +98,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Only Superadmins can change roles',
+      'Unauthorized: Insufficient permissions',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -111,7 +111,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Unauthorized',
+      'Authentication required: No user session found',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -128,5 +128,66 @@ describe('staff actions - updateRole', () => {
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
       'Database error',
     );
+  });
+});
+
+describe('staff actions - toggleBan', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const setupSupabaseMock = (
+    user: { id: string } | null,
+    requesterRole: string | null = null,
+    updateError: { message: string } | null = null,
+  ) => {
+    mocks.supabase.auth.getUser.mockResolvedValue({
+      data: { user },
+      error: null,
+    });
+
+    const mockUpdate = vi.fn().mockReturnValue({
+      eq: vi.fn().mockResolvedValue({ error: updateError }),
+    });
+
+    const mockSelect = vi.fn().mockReturnValue({
+      eq: vi.fn().mockReturnValue({
+        single: vi.fn().mockResolvedValue({
+          data: requesterRole ? { role: requesterRole } : null,
+          error: null,
+        }),
+      }),
+    });
+
+    mocks.supabase.from.mockImplementation((table: string) => {
+      if (table === 'profiles') {
+        return {
+          select: mockSelect,
+          update: mockUpdate,
+        };
+      }
+      return {
+        select: vi.fn(),
+        update: vi.fn(),
+      };
+    });
+
+    return { mockSelect, mockUpdate };
+  };
+
+  it('should prevent non-superadmins from toggling user ban status', async () => {
+    // Arrange
+    const adminId = 'admin-id';
+    setupSupabaseMock({ id: adminId }, 'admin');
+
+    const { toggleBan } = await import('./staff');
+
+    // Act & Assert
+    await expect(toggleBan('target-id', true)).rejects.toThrow(
+      'Unauthorized: Insufficient permissions',
+    );
+
+    expect(audit.logAdminAction).not.toHaveBeenCalled();
+    expect(nextCache.revalidatePath).not.toHaveBeenCalled();
   });
 });
