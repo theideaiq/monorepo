@@ -2,7 +2,14 @@ import { Badge, Button } from '@repo/ui';
 import { waylClient } from '@/lib/wayl';
 
 export default async function TransactionsPage() {
-  const { data: transactions } = await waylClient.links.list({ take: 50 });
+  let transactions: any[] = [];
+  try {
+    const res = await waylClient.links.list({ take: 50 });
+    transactions = res.data;
+  } catch (error) {
+    // biome-ignore lint/suspicious/noConsole: Expected error logging during build or runtime
+    console.error('Failed to fetch transactions', error);
+  }
 
   return (
     <div className="p-8">
@@ -33,7 +40,7 @@ export default async function TransactionsPage() {
                 </td>
               </tr>
             ) : (
-              transactions.map((tx) => (
+              transactions.map((tx: any) => (
                 <tr key={tx.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 font-mono text-white">
                     {tx.referenceId}
@@ -48,7 +55,7 @@ export default async function TransactionsPage() {
                           ? 'success'
                           : tx.status === 'Pending'
                             ? 'warning'
-                            : 'secondary'
+                            : 'neutral'
                       }
                     >
                       {tx.status}

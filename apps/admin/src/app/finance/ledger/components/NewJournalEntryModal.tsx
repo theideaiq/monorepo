@@ -30,7 +30,8 @@ export function NewJournalEntryModal({
 
   const handleLineChange = (index: number, field: string, value: any) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
+    const prev = newLines[index] ?? { accountId: '', debit: 0, credit: 0 };
+    newLines[index] = { ...prev, [field]: value } as typeof prev;
     setLines(newLines);
   };
 
@@ -57,7 +58,7 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      await createJournalEntry(date as string, description, lines as { accountId: string; debit: number; credit: number }[]);
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);
