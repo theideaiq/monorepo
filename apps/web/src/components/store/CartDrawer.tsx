@@ -84,7 +84,7 @@ export function CartDrawer() {
                 <button
                   type="button"
                   onClick={() => removeItem(item.id)}
-                  className="text-slate-500 hover:text-red-500 p-1 rounded outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
+                  className="text-slate-500 hover:text-red-500 p-1 rounded outline-none focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2"
                   aria-label={`Remove ${item.title} from cart`}
                 >
                   <Trash2 size={16} />
@@ -94,7 +94,7 @@ export function CartDrawer() {
                   <button
                     type="button"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="p-1 text-slate-400 hover:text-white disabled:opacity-50 rounded outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
+                    className="p-1 text-slate-400 hover:text-white disabled:opacity-50 rounded outline-none focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2"
                     disabled={item.quantity <= 1}
                     aria-label={`Decrease quantity of ${item.title}`}
                   >
@@ -106,7 +106,7 @@ export function CartDrawer() {
                   <button
                     type="button"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="p-1 text-slate-400 hover:text-white rounded outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
+                    className="p-1 text-slate-400 hover:text-white rounded outline-none focus-visible:ring-2 focus-visible:ring-brand-pink focus-visible:ring-offset-2"
                     aria-label={`Increase quantity of ${item.title}`}
                   >
                     <Plus size={14} />
