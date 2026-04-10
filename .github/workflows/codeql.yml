@@ -37,17 +37,23 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       # Required for 'npm run secrets:restore'
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
+
       # Required for Android Gradle Build
       - name: Setup Java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'temurin'
@@ -64,14 +70,34 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          RESEND_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.com"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          ZAIN_SECRET_KEY: "mock"
+          WEB_APP_URL: "https://mock.com"
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # 2. Explicitly build the web application
+          pnpm turbo build --filter=web
           
-          # 2. Grant Permission
+          # 3. Sync Capacitor
+          pnpm --filter=web run sync:android
+
+          # 4. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 5. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -79,9 +105,29 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          RESEND_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.com"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          ZAIN_SECRET_KEY: "mock"
+          WEB_APP_URL: "https://mock.com"
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # 1b. Explicitly build the web application
+          pnpm turbo build --filter=web
+
+          # 1c. Sync Capacitor
+          pnpm --filter=web run sync:ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then

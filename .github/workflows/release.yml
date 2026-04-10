@@ -16,10 +16,10 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
 
@@ -40,3 +40,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          RESEND_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.com"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          ZAIN_SECRET_KEY: "mock"
+          WEB_APP_URL: "https://mock.com"

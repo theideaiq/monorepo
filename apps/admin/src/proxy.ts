@@ -1,7 +1,13 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { hasAdminAccess } from '@/lib/auth-checks';
 import { WINDOW_SIZE_MS } from '@/lib/rate-limit';
 import { createMiddlewareClient } from '@/lib/supabase/middleware';
+
+// Hardcode role check here because importing from auth-checks brings in server component utilities
+function hasAdminAccess(role?: string | null): boolean {
+  if (!role) return false;
+  const normalizedRole = role.toLowerCase();
+  return normalizedRole === 'admin' || normalizedRole === 'superadmin';
+}
 
 /**
  * Global middleware for authentication and rate limiting.
