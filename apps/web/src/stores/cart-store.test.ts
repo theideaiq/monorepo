@@ -17,14 +17,28 @@ describe('Cart Store', () => {
     expect(items).toEqual([]);
   });
 
-  const mockApple = { id: 'apple-id', productId: 'p1', title: 'Apple', price: 10, image: 'apple.png' };
-  const mockBanana = { id: 'banana-id', productId: 'p2', title: 'Banana', price: 20, image: 'banana.png' };
+  const mockApple = {
+    id: 'apple-id',
+    productId: 'p1',
+    title: 'Apple',
+    price: 10,
+    image: 'apple.png',
+  };
+  const mockBanana = {
+    id: 'banana-id',
+    productId: 'p2',
+    title: 'Banana',
+    price: 20,
+    image: 'banana.png',
+  };
 
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
     addItem(mockApple);
-    expect(useCartStore.getState().items).toEqual([{ ...mockApple, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockApple, quantity: 1 },
+    ]);
 
     addItem(mockBanana);
     expect(useCartStore.getState().items).toEqual([
@@ -40,7 +54,9 @@ describe('Cart Store', () => {
     addItem(mockBanana);
 
     removeItem('apple-id');
-    expect(useCartStore.getState().items).toEqual([{ ...mockBanana, quantity: 1 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockBanana, quantity: 1 },
+    ]);
   });
 
   it('should clear the cart', () => {
@@ -59,7 +75,9 @@ describe('Cart Store', () => {
 
     addItem(mockApple);
     addItem(mockApple);
-    expect(useCartStore.getState().items).toEqual([{ ...mockApple, quantity: 2 }]);
+    expect(useCartStore.getState().items).toEqual([
+      { ...mockApple, quantity: 2 },
+    ]);
 
     removeItem('apple-id');
     expect(useCartStore.getState().items).toEqual([]);
@@ -67,7 +85,13 @@ describe('Cart Store', () => {
 
   it('should persist state to localStorage', () => {
     const { addItem } = useCartStore.getState();
-    const mockPersistent = { id: 'persistent-id', productId: 'p3', title: 'Persistent', price: 5, image: 'p.png' };
+    const mockPersistent = {
+      id: 'persistent-id',
+      productId: 'p3',
+      title: 'Persistent',
+      price: 5,
+      image: 'p.png',
+    };
     addItem(mockPersistent);
 
     const stored = localStorage.getItem('cart-storage-v2');
