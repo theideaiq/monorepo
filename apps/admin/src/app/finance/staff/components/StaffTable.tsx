@@ -20,6 +20,7 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import type { HRStaffPlan } from '@/types/finance';
+import { formatCurrency } from '@repo/utils';
 
 const columnHelper = createColumnHelper<HRStaffPlan>();
 
@@ -29,11 +30,7 @@ export function StaffTable({ data }: { data: HRStaffPlan[] }) {
     columnHelper.accessor('department', { header: 'Department' }),
     columnHelper.accessor('monthly_salary', {
       header: 'Monthly Salary',
-      cell: (info) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(info.getValue()),
+      cell: (info) => formatCurrency(info.getValue(), 'USD'),
     }),
     columnHelper.accessor('annual_increase_pct', {
       header: 'Annual Increase',
@@ -125,10 +122,7 @@ export function StaffProjection({ data }: { data: HRStaffPlan[] }) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-slate-900">
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(currentAnnual)}
+                {formatCurrency(currentAnnual, 'USD')}
               </div>
             </CardContent>
           </Card>
@@ -141,17 +135,11 @@ export function StaffProjection({ data }: { data: HRStaffPlan[] }) {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brand-pink">
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(projectedAnnual)}
+                {formatCurrency(projectedAnnual, 'USD')}
               </div>
               <p className="text-xs text-brand-pink/80 mt-1">
                 (+
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(projectedAnnual - currentAnnual)}
+                {formatCurrency(projectedAnnual - currentAnnual, 'USD')}
                 )
               </p>
             </CardContent>

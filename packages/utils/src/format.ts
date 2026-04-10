@@ -15,17 +15,37 @@
  * formatCurrency(50000, 'IQD') // -> "IQD 50,000"
  * formatCurrency(10.5, 'USD') // -> "$10.50"
  */
+
+// Cache Intl formatters to prevent repetitive CPU overhead and garbage collection
+const formatters = {
+  USD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }),
+  IQD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'IQD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }),
+  date: new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }),
+  compact: new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }),
+};
+
 export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  return formatters[currency].format(amount);
 }
 
 /**
@@ -37,11 +57,7 @@ export function formatCurrency(
  */
 export function formatDate(date: string | Date): string {
   if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date instanceof Date ? date : new Date(date));
+  return formatters.date.format(date instanceof Date ? date : new Date(date));
 }
 
 /**
@@ -61,8 +77,5 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return formatters.compact.format(number);
 }
