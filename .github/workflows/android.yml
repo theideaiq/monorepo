@@ -13,7 +13,7 @@ jobs:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -22,9 +22,9 @@ jobs:
           java-version: '17'
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version-file: '.nvmrc'
 
       - name: Setup PNPM
         uses: pnpm/action-setup@v4
@@ -32,22 +32,36 @@ jobs:
           version: '10'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Build Mobile Web
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.com"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          GEMINI_API_KEY: "mock"
+          RESEND_API_KEY: "mock"
+          ZAIN_SECRET_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.com"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WEB_APP_URL: "https://mock.com"
         run: cd apps/web && pnpm build:mobile
 
       - name: Restore Secrets
-        run: cd apps/web && pnpm secrets:restore
+        run: pnpm --filter=web run secrets:restore
 
       - name: Sync Capacitor
-        run: cd apps/web && npx cap sync android
+        run: pnpm --filter=web run sync:android
 
       - name: Build APK
         run: cd apps/web/android && ./gradlew assembleDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
           path: apps/web/android/app/build/outputs/apk/debug/app-debug.apk

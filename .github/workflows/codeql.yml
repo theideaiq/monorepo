@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -37,13 +38,30 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
-      # Required for 'npm run secrets:restore'
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: 20
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -65,8 +83,11 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          npm install -g pnpm
+          pnpm install --frozen-lockfile --config.engine-strict=false
+          SKIP_ENV_VALIDATION=true NEXT_PUBLIC_SUPABASE_URL="https://mock.com" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" WAYL_SECRET_KEY="mock" WAYL_WEBHOOK_SECRET="mock" TELEGRAM_BOT_TOKEN="mock" GEMINI_API_KEY="mock" RESEND_API_KEY="mock" ZAIN_SECRET_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.com" UPSTASH_REDIS_REST_TOKEN="mock" WEB_APP_URL="https://mock.com" pnpm turbo build --filter=web
+          pnpm run --filter=web sync:android
+          pnpm run --filter=web secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +101,11 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          npm install -g pnpm
+          pnpm install --frozen-lockfile --config.engine-strict=false
+          SKIP_ENV_VALIDATION=true NEXT_PUBLIC_SUPABASE_URL="https://mock.com" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" WAYL_SECRET_KEY="mock" WAYL_WEBHOOK_SECRET="mock" TELEGRAM_BOT_TOKEN="mock" GEMINI_API_KEY="mock" RESEND_API_KEY="mock" ZAIN_SECRET_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.com" UPSTASH_REDIS_REST_TOKEN="mock" WEB_APP_URL="https://mock.com" pnpm turbo build --filter=web
+          pnpm run --filter=web sync:ios
+          pnpm run --filter=web secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
