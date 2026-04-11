@@ -65,23 +65,13 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # Install pnpm and dependencies
-          npm install -g pnpm
-          pnpm install --frozen-lockfile --config.engine-strict=false
-
           # 1. Restore Secrets (Generates google-services.json)
-          pnpm --filter=web run secrets:restore
-
-          # 2. Build the web app so Capacitor can sync
-          SKIP_ENV_VALIDATION="true" NEXT_PUBLIC_SUPABASE_URL="https://mock.supabase.co" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" GEMINI_API_KEY="mock" WAYL_SECRET_KEY="mock" TELEGRAM_BOT_TOKEN="mock" RESEND_API_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.upstash.io" UPSTASH_REDIS_REST_TOKEN="mock" WAYL_WEBHOOK_SECRET="mock" ZAIN_SECRET_KEY="mock" WEB_APP_URL="https://mock.com" pnpm --filter=web run build
-
-          # 3. Sync Capacitor
-          pnpm --filter=web run sync:android
+          npm run secrets:restore --workspace=apps/web
           
-          # 4. Grant Permission
+          # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 5. Build Debug APK (Sufficient for analysis)
+          # 3. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -90,18 +80,8 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # Install pnpm and dependencies
-          npm install -g pnpm
-          pnpm install --frozen-lockfile --config.engine-strict=false
-
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          pnpm --filter=web run secrets:restore
-
-          # 1.5 Build the web app so Capacitor can sync
-          SKIP_ENV_VALIDATION="true" NEXT_PUBLIC_SUPABASE_URL="https://mock.supabase.co" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" GEMINI_API_KEY="mock" WAYL_SECRET_KEY="mock" TELEGRAM_BOT_TOKEN="mock" RESEND_API_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.upstash.io" UPSTASH_REDIS_REST_TOKEN="mock" WAYL_WEBHOOK_SECRET="mock" ZAIN_SECRET_KEY="mock" WEB_APP_URL="https://mock.com" pnpm --filter=web run build
-
-          # 1.6 Sync Capacitor
-          pnpm --filter=web run sync:ios
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
