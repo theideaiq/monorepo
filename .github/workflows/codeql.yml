@@ -37,13 +37,35 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       # Required for 'npm run secrets:restore'
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      # Set mock values for the Next.js builds explicitly in the environment
+      - name: Set Mock Environment Variables
+        run: |
+          echo "SKIP_ENV_VALIDATION=true" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://mock.com" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=mock-key" >> $GITHUB_ENV
+          echo "GEMINI_API_KEY=mock-key" >> $GITHUB_ENV
+          echo "TELEGRAM_BOT_TOKEN=mock-token" >> $GITHUB_ENV
+          echo "RESEND_API_KEY=mock-key" >> $GITHUB_ENV
+          echo "UPSTASH_REDIS_REST_URL=https://mock.com" >> $GITHUB_ENV
+          echo "UPSTASH_REDIS_REST_TOKEN=mock-token" >> $GITHUB_ENV
+          echo "WAYL_SECRET_KEY=mock-key" >> $GITHUB_ENV
+          echo "WAYL_WEBHOOK_SECRET=mock-secret" >> $GITHUB_ENV
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,12 +88,18 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 3. Build Web App (required by Capacitor)
+          SKIP_ENV_VALIDATION="true" NEXT_PUBLIC_SUPABASE_URL="https://mock.com" pnpm --config.engine-strict=false --filter=web run build
+
+          # 4. Sync Capacitor
+          pnpm --config.engine-strict=false --filter=web run sync:android
+
+          # 5. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,7 +109,13 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # 2. Build Web App (required by Capacitor)
+          SKIP_ENV_VALIDATION="true" NEXT_PUBLIC_SUPABASE_URL="https://mock.com" pnpm --config.engine-strict=false --filter=web run build
+
+          # 3. Sync Capacitor
+          pnpm --config.engine-strict=false --filter=web run sync:ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
