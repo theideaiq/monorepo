@@ -64,25 +64,9 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
-        env:
-          SKIP_ENV_VALIDATION: "true"
-          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key"
-          SUPABASE_SERVICE_ROLE_KEY: "mock-service-role"
-          WAYL_SECRET_KEY: "mock-wayl"
-          WAYL_WEBHOOK_SECRET: "mock-webhook"
-          ZAIN_SECRET_KEY: "mock-zain"
-          RESEND_API_KEY: "mock-resend"
-          TELEGRAM_BOT_TOKEN: "mock-telegram"
-          GEMINI_API_KEY: "mock-gemini"
-          UPSTASH_REDIS_REST_URL: "https://mock.upstash.com"
-          UPSTASH_REDIS_REST_TOKEN: "mock-upstash-token"
-          WEB_APP_URL: "https://mock.app"
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm install -g pnpm
-          pnpm install --frozen-lockfile
-          pnpm --filter=web run secrets:restore
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -95,25 +79,9 @@ jobs:
       # ----------------------------------------------------------------
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
-        env:
-          SKIP_ENV_VALIDATION: "true"
-          NEXT_PUBLIC_SUPABASE_URL: "https://mock.supabase.co"
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key"
-          SUPABASE_SERVICE_ROLE_KEY: "mock-service-role"
-          WAYL_SECRET_KEY: "mock-wayl"
-          WAYL_WEBHOOK_SECRET: "mock-webhook"
-          ZAIN_SECRET_KEY: "mock-zain"
-          RESEND_API_KEY: "mock-resend"
-          TELEGRAM_BOT_TOKEN: "mock-telegram"
-          GEMINI_API_KEY: "mock-gemini"
-          UPSTASH_REDIS_REST_URL: "https://mock.upstash.com"
-          UPSTASH_REDIS_REST_TOKEN: "mock-upstash-token"
-          WEB_APP_URL: "https://mock.app"
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm install -g pnpm
-          pnpm install --frozen-lockfile
-          pnpm --filter=web run secrets:restore
+          npm run secrets:restore --workspace=apps/web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
