@@ -1,0 +1,3 @@
+## 2025-02-12 - Missing environment variables in example files
+Insight: Environment variables that are required by the zod schemas in `packages/env/src/*.ts` were sometimes missing from the corresponding app's `.env.example` file (e.g., `ZAIN_SECRET_KEY` and `SUPABASE_SERVICE_ROLE_KEY` in `apps/web/.env.example`), leading to confusion on what keys need to be defined to run the apps.
+Rule: The zod definitions in `packages/env/src/*.ts` are the single source of truth for required environment variables. Always audit app-level `.env.example` files against these schemas to prevent setup failures due to missing requirements.
