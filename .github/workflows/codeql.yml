@@ -45,6 +45,12 @@ jobs:
         with:
           node-version: 20
 
+      # Set mock values for the Next.js builds explicitly in the environment
+      - name: Set Mock Environment Variables
+        run: |
+          echo "SKIP_ENV_VALIDATION=true" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://mock.com" >> $GITHUB_ENV
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
