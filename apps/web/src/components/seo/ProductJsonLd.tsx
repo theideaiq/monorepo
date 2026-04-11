@@ -9,12 +9,18 @@ interface ProductJsonLdProps {
  * Injects JSON-LD Structured Data for a Product.
  * Critical for SEO: Helps search engines understand the Product and show Rich Snippets.
  */
-export default function ProductJsonLd({ product, baseUrl }: ProductJsonLdProps) {
+export default function ProductJsonLd({
+  product,
+  baseUrl,
+}: ProductJsonLdProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.title,
-    image: product.images && product.images.length > 0 ? product.images : [product.image],
+    image:
+      product.images && product.images.length > 0
+        ? product.images
+        : [product.image],
     description: product.description,
     sku: product.id,
     brand: {
