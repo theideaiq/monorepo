@@ -1,28 +1,28 @@
-area-web:
+"area: web":
   - all:
     - changed-files:
       - any-glob-to-any-file:
         - "apps/web/**/*"
 
-area-admin:
+"area: admin":
   - all:
     - changed-files:
       - any-glob-to-any-file:
         - "apps/admin/**/*"
 
-area-droid:
+"area: droid":
   - all:
     - changed-files:
       - any-glob-to-any-file:
         - "apps/droid/**/*"
 
-area-core:
+"area: core":
   - all:
     - changed-files:
       - any-glob-to-any-file:
         - "packages/**/*"
 
-area-ops:
+"area: ops":
   - all:
     - changed-files:
       - any-glob-to-any-file:
