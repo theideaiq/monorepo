@@ -1,0 +1,12 @@
+## 2024-05-18 - [Invalid Object Shape in Zustand Cart Store Test]
+Discovery: The `addItem` method in the `useCartStore` of `apps/web/src/stores/cart-store.ts` requires an object matching `Omit<CartItem, 'quantity'>` (including `id`, `productId`, `title`, `price`, `image`). However, the test at `apps/web/src/stores/cart-store.test.ts` passes a primitive string `'apple'` or `'banana'`, leading to test failure.
+Strategy: Ensure test payloads for Zustand store actions mirror the actual typing. Update the test assertions to mock realistic `CartItem` objects.
+## 2024-05-18 - [String Exact Matching in Admin Staff Tests]
+Discovery: Tests for admin authorization checks (like `updateRole` in `apps/admin/src/actions/staff.test.ts`) assert exact error string messages like `Only Superadmins can change roles` or `Unauthorized`. However, the implementation inside `requireSuperAdmin` returns strings like `Unauthorized: Insufficient permissions` and `Authentication required: No user session found`. The tests must use the correct, current string error texts as they are defined in the auth logic.
+Strategy: Assert the actual strings used by the system for authorization failures (e.g. `'Unauthorized: Insufficient permissions'`, `'Authentication required: No user session found'`) rather than generic expected errors.
+## 2024-05-18 - [String Coercion in Utils slugify]
+Discovery: The `slugify` utility string method in `packages/utils/src/string.ts` doesn't handle `null` or `undefined` gracefully; calling `toString()` on them causes `TypeError: Cannot read properties of null (reading 'toString')`.
+Strategy: For generic formatting string utilities, enforce a boundary analysis to return a safe UI fallback value (like an empty string) on invalid or missing input to prevent unhandled exceptions from crashing the frontend.
+## 2024-05-18 - [Regex Fallback in decodeHtmlEntities]
+Discovery: The `decodeHtmlEntities` utility uses `fromCodePoint(Number.parseInt(match.slice(2, -1), 10))` for matching HTML numeric entities. Hex-encoded entities like `&#x41;` are parsed as integers without base specification resulting in `NaN` leading to incorrect decoding or runtime problems (the current test fails by expecting 'A' but receiving '&#x41;' because the match wasn't replaced properly).
+Strategy: Review test boundary coverage for decimal vs hex entity variants to prevent incorrect encoding UI rendering bugs.
