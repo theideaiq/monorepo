@@ -43,7 +43,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
+
+      - name: Setup pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,12 +72,18 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run secrets:restore --filter=web
           
-          # 2. Grant Permission
+          # 2. Build Web app (Capacitor requirement)
+          SKIP_ENV_VALIDATION=true NEXT_PUBLIC_SUPABASE_URL=https://mock.com NEXT_PUBLIC_SUPABASE_ANON_KEY=mock NEXT_PUBLIC_SITE_URL=https://mock.com pnpm run build --filter=web
+
+          # 3. Sync Capacitor
+          pnpm run sync:android --filter=web
+
+          # 4. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 5. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,7 +93,13 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run secrets:restore --filter=web
+
+          # 2. Build Web app (Capacitor requirement)
+          SKIP_ENV_VALIDATION=true NEXT_PUBLIC_SUPABASE_URL=https://mock.com NEXT_PUBLIC_SUPABASE_ANON_KEY=mock NEXT_PUBLIC_SITE_URL=https://mock.com pnpm run build --filter=web
+
+          # 3. Sync Capacitor
+          pnpm run sync:ios --filter=web
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
