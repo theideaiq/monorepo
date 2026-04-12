@@ -15,17 +15,28 @@
  * formatCurrency(50000, 'IQD') // -> "IQD 50,000"
  * formatCurrency(10.5, 'USD') // -> "$10.50"
  */
+// Cache Intl formatters to avoid expensive instantiation in render loops
+const formatters: Record<string, Intl.NumberFormat | Intl.DateTimeFormat> = {};
+
+function getNumberFormatter(currency: 'USD' | 'IQD'): Intl.NumberFormat {
+  const cacheKey = `currency-${currency}`;
+  if (!formatters[cacheKey]) {
+    formatters[cacheKey] = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: currency === 'IQD' ? 0 : 2,
+      maximumFractionDigits: currency === 'IQD' ? 0 : 2,
+    });
+  }
+  return formatters[cacheKey] as Intl.NumberFormat;
+}
+
 export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  if (!Number.isFinite(amount)) return '';
+  return getNumberFormatter(currency).format(amount);
 }
 
 /**
@@ -35,13 +46,20 @@ export function formatCurrency(
  * @param date - The date to format (string or Date object).
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
+function getDateFormatter(): Intl.DateTimeFormat {
+  if (!formatters.date) {
+    formatters.date = new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+  return formatters.date as Intl.DateTimeFormat;
+}
+
 export function formatDate(date: string | Date): string {
   if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date instanceof Date ? date : new Date(date));
+  return getDateFormatter().format(date instanceof Date ? date : new Date(date));
 }
 
 /**
@@ -55,14 +73,21 @@ export function formatDate(date: string | Date): string {
  * formatCompactNumber(1500000) // -> "1.5M"
  * formatCompactNumber(1200) // -> "1.2K"
  */
+function getCompactNumberFormatter(): Intl.NumberFormat {
+  if (!formatters.compact) {
+    formatters.compact = new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    });
+  }
+  return formatters.compact as Intl.NumberFormat;
+}
+
 export function formatCompactNumber(number: number): string {
   // Validate input to avoid formatting NaN, Infinity, or non-numeric values
   if (!Number.isFinite(number)) {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return getCompactNumberFormatter().format(number);
 }
