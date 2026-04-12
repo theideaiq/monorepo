@@ -1,0 +1,3 @@
+## 2024-04-12 - Missing Structured Data for Products
+**Learning:** The core business entity (Products) on the dynamic `product/[slug]/page.tsx` was missing JSON-LD structured data. This means Google and other search engines couldn't confidently parse critical shopping details like price, stock availability, and ratings to display them in Rich Snippets (e.g., in Google Shopping or search results).
+**Action:** Created `ProductJsonLd.tsx` as a Server Component and injected it directly onto the Product page. Ensure future dynamic entity pages (like Articles or specific Store profiles) also generate matching Schema.org definitions. Implemented `replace(/</g, '\\u003c')` in `JSON.stringify` to mitigate XSS risks when rendering dynamic JSON-LD in Next.js.
