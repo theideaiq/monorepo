@@ -1,0 +1,3 @@
+## 2025-04-12 - Missing Access Control Tests for Sensitive Actions
+Discovery: While reviewing `apps/admin/src/actions/staff.test.ts`, I found that access controls were only verified for `updateRole`, leaving `toggleBan` completely untested despite it using `requireSuperAdmin`. This indicates a risk that sensitive Server Actions might be introduced without their authorization decorators being explicitly covered by the test suite.
+Strategy: Always write boundary tests verifying unhappy paths (e.g., non-superadmin access denial) for any new Server Action that modifies staff or user state. Ensure test coverage validates the exact error string thrown by the auth wrapper.
