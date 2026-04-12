@@ -23,6 +23,19 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      SKIP_ENV_VALIDATION: "true"
+      NEXT_PUBLIC_SUPABASE_URL: "https://mock.com"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
+      SUPABASE_SERVICE_ROLE_KEY: "mock"
+      WAYL_SECRET_KEY: "mock"
+      WAYL_WEBHOOK_SECRET: "mock"
+      ZAIN_SECRET_KEY: "mock"
+      TELEGRAM_BOT_TOKEN: "mock"
+      GEMINI_API_KEY: "mock"
+      RESEND_API_KEY: "mock"
+      UPSTASH_REDIS_REST_URL: "https://mock.com"
+      UPSTASH_REDIS_REST_TOKEN: "mock"
+      WEB_APP_URL: "https://mock.com"
 
     strategy:
       fail-fast: false
@@ -65,8 +78,17 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # Explicitly build web app required by capacitor
+          pnpm turbo build --filter=web
+
+          # Sync capacitor
+          pnpm --filter=web run sync:android
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +102,17 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # Explicitly build web app required by capacitor
+          pnpm turbo build --filter=web
+
+          # Sync capacitor
+          pnpm --filter=web run sync:ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
