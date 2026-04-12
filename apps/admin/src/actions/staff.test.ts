@@ -1,7 +1,7 @@
 import * as nextCache from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as audit from '@/lib/audit';
-import { updateRole } from './staff';
+import { updateRole, toggleBan } from './staff';
 
 // Mock dependencies using vi.hoisted to avoid ReferenceError
 const mocks = vi.hoisted(() => ({
@@ -128,5 +128,18 @@ describe('staff actions - updateRole', () => {
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
       'Database error',
     );
+  });
+
+  describe('toggleBan', () => {
+    it('should throw error if requester is not superadmin', async () => {
+      // Arrange: user is an admin, not a superadmin
+      const adminId = 'admin-id';
+      setupSupabaseMock({ id: adminId }, 'admin');
+
+      // Act & Assert
+      await expect(toggleBan('target-id', true)).rejects.toThrow(
+        'Unauthorized: Insufficient permissions',
+      );
+    });
   });
 });
