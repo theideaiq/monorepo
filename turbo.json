@@ -4,46 +4,54 @@
   "globalEnv": [
     "NODE_ENV",
     "CI",
-    "NEXT_PUBLIC_*",
-    "VERCEL_URL",
-    "SKIP_ENV_VALIDATION",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "RESEND_API_KEY",
-    "STRIPE_SECRET_KEY",
-    "TELEGRAM_BOT_TOKEN",
-    "GEMINI_API_KEY",
-    "UPSTASH_REDIS_REST_URL",
-    "UPSTASH_REDIS_REST_TOKEN"
+    "SKIP_ENV_VALIDATION"
   ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "storybook-static/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "storybook-static/**"],
+      "env": [
+        "NEXT_PUBLIC_*",
+        "VERCEL_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "RESEND_API_KEY",
+        "STRIPE_SECRET_KEY",
+        "TELEGRAM_BOT_TOKEN",
+        "GEMINI_API_KEY",
+        "UPSTASH_REDIS_REST_URL",
+        "UPSTASH_REDIS_REST_TOKEN"
+      ]
     },
     "lint": {
+      "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$"]
     },
     "check": {
+      "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$"]
     },
     "typecheck": {
+      "dependsOn": ["^typecheck", "^build"],
       "inputs": ["$TURBO_DEFAULT$"],
-      "outputs": ["tsconfig.tsbuildinfo"]
+      "outputs": ["*.tsbuildinfo"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "test": {
+      "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["coverage/**"]
     },
     "test:coverage": {
-       "outputs": ["coverage/**"]
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["coverage/**"]
     },
     "format": {
-      "inputs": ["$TURBO_DEFAULT$"]
+      "cache": false
     },
     "clean": {
       "cache": false
@@ -53,6 +61,7 @@
       "persistent": true
     },
     "build-storybook": {
+      "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["storybook-static/**"]
     },
