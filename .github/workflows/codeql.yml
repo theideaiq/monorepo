@@ -45,6 +45,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Setup pnpm
+        run: npm install -g pnpm@10.27.0
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -65,8 +68,18 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # Install dependencies to ensure sync scripts can resolve workspace imports if needed
+          pnpm install --frozen-lockfile --config.engine-strict=false
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # explicitly build the web application (with necessary mock secrets and SKIP_ENV_VALIDATION=true)
+          SKIP_ENV_VALIDATION=true NEXT_PUBLIC_SUPABASE_URL="https://mock.com" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" WAYL_SECRET_KEY="mock" WAYL_WEBHOOK_SECRET="mock" ZAIN_SECRET_KEY="mock" TELEGRAM_BOT_TOKEN="mock" GEMINI_API_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.com" UPSTASH_REDIS_REST_TOKEN="mock" WEB_APP_URL="https://mock.com" RESEND_API_KEY="mock" pnpm --filter=web run build
+
+          # sync Capacitor
+          pnpm --filter=web run build:mobile
+          pnpm --filter=web exec cap sync android
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +93,18 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # Install dependencies to ensure sync scripts can resolve workspace imports if needed
+          pnpm install --frozen-lockfile --config.engine-strict=false
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter=web run secrets:restore
+
+          # explicitly build the web application (with necessary mock secrets and SKIP_ENV_VALIDATION=true)
+          SKIP_ENV_VALIDATION=true NEXT_PUBLIC_SUPABASE_URL="https://mock.com" NEXT_PUBLIC_SUPABASE_ANON_KEY="mock" SUPABASE_SERVICE_ROLE_KEY="mock" WAYL_SECRET_KEY="mock" WAYL_WEBHOOK_SECRET="mock" ZAIN_SECRET_KEY="mock" TELEGRAM_BOT_TOKEN="mock" GEMINI_API_KEY="mock" UPSTASH_REDIS_REST_URL="https://mock.com" UPSTASH_REDIS_REST_TOKEN="mock" WEB_APP_URL="https://mock.com" RESEND_API_KEY="mock" pnpm --filter=web run build
+
+          # sync Capacitor
+          pnpm --filter=web run build:mobile
+          pnpm --filter=web exec cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
