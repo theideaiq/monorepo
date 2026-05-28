@@ -10,6 +10,7 @@ import {
   Section,
   Text,
 } from '@react-email/components';
+import xss from 'xss';
 
 interface BrandedTemplateProps {
   subject: string;
@@ -37,7 +38,7 @@ export const BrandedTemplate = ({
           </Section>
           <Section style={content}>
             {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Email content needs HTML */}
-            <div dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+            <div dangerouslySetInnerHTML={{ __html: xss(bodyHtml) }} />
           </Section>
           <Hr style={hr} />
           <Section style={footer}>

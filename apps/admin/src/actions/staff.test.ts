@@ -1,9 +1,14 @@
 import * as nextCache from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as audit from '@/lib/audit';
-import { updateRole } from './staff';
 
 // Mock dependencies using vi.hoisted to avoid ReferenceError
+const mockedServerOnly = vi.hoisted(() => vi.fn());
+vi.mock('server-only', () => ({
+  default: mockedServerOnly
+}));
+
+import * as audit from '@/lib/audit';
+import { updateRole } from './staff';
 const mocks = vi.hoisted(() => ({
   supabase: {
     auth: {
@@ -98,7 +103,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Only Superadmins can change roles',
+      'Unauthorized: Insufficient permissions',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
@@ -111,7 +116,7 @@ describe('staff actions - updateRole', () => {
 
     // Act & Assert
     await expect(updateRole('target-id', 'admin')).rejects.toThrow(
-      'Unauthorized',
+      'Authentication required: No user session found',
     );
 
     expect(audit.logAdminAction).not.toHaveBeenCalled();
