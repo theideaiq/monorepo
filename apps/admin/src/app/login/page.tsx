@@ -5,8 +5,14 @@ import { Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { hasAdminAccess } from '@/lib/auth-checks';
 import { createClient } from '@/lib/supabase/client';
+
+// Local copy of hasAdminAccess for client side since lib/auth-checks.ts imports server-only things
+function hasAdminAccess(role?: string | null): boolean {
+  if (!role) return false;
+  const normalizedRole = role.toLowerCase();
+  return normalizedRole === 'admin' || normalizedRole === 'superadmin';
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');

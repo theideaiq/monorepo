@@ -16,7 +16,9 @@ export function NewJournalEntryModal({
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [description, setDescription] = useState('');
-  const [lines, setLines] = useState([{ accountId: '', debit: 0, credit: 0 }]);
+  const [lines, setLines] = useState<
+    { accountId: string; debit: number; credit: number }[]
+  >([{ accountId: '', debit: 0, credit: 0 }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -28,10 +30,24 @@ export function NewJournalEntryModal({
     setLines(lines.filter((_, i) => i !== index));
   };
 
-  const handleLineChange = (index: number, field: string, value: any) => {
+  const handleLineChange = (
+    index: number,
+    field: 'accountId' | 'debit' | 'credit',
+    value: any,
+  ) => {
     const newLines = [...lines];
-    newLines[index] = { ...newLines[index], [field]: value };
-    setLines(newLines);
+    const updatedLine: { accountId: string; debit: number; credit: number } = {
+      accountId: newLines[index]?.accountId || '',
+      debit: newLines[index]?.debit || 0,
+      credit: newLines[index]?.credit || 0,
+    };
+    if (field === 'accountId') updatedLine.accountId = value as string;
+    if (field === 'debit') updatedLine.debit = value as number;
+    if (field === 'credit') updatedLine.credit = value as number;
+    newLines[index] = updatedLine;
+    setLines(
+      newLines as { accountId: string; debit: number; credit: number }[],
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,7 +73,16 @@ export function NewJournalEntryModal({
 
     setIsSubmitting(true);
     try {
-      await createJournalEntry(date, description, lines);
+      // Cast to enforce the type expected by createJournalEntry, as we've checked accountId isn't empty
+      await createJournalEntry(
+        date || '',
+        description || '',
+        lines.map((l) => ({
+          accountId: l.accountId || '',
+          debit: l.debit || 0,
+          credit: l.credit || 0,
+        })),
+      );
       toast.success('Journal entry created');
       setIsOpen(false);
       setLines([{ accountId: '', debit: 0, credit: 0 }]);

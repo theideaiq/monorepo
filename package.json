@@ -10,6 +10,7 @@
     "check": "turbo check",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
+    "e2e": "turbo e2e",
     "storybook": "turbo storybook",
     "build-storybook": "turbo build-storybook",
     "prepare": "husky",

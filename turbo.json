@@ -50,6 +50,10 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["coverage/**"]
     },
+    "e2e": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["playwright-report/**", "test-results/**"]
+    },
     "format": {
       "cache": false
     },
