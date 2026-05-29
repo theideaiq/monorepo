@@ -5,8 +5,17 @@ import { Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { hasAdminAccess } from '@/lib/auth-checks';
+import { ROLES } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/client';
+
+function hasAdminAccess(role?: string | null): boolean {
+  if (!role) return false;
+  const normalizedRole = role.toLowerCase();
+  return (
+    normalizedRole === ROLES.ADMIN.toLowerCase() ||
+    normalizedRole === ROLES.SUPERADMIN.toLowerCase()
+  );
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
