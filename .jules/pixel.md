@@ -1,0 +1,3 @@
+## 2025-04-05 - Enforcing Design Tokens over Hardcoded Colors
+**Learning:** Found multiple instances where the brand gold color `#facc15` and brand dark color `#1a1a1a` were hardcoded directly in Tailwind classes (e.g., `bg-[#facc15]`), ignoring the established design tokens (`brand-yellow`, `brand-surface`). This leads to a fragmented color system and makes global theming changes nearly impossible.
+**Action:** Always map hardcoded hex values back to their corresponding design tokens (e.g. `bg-brand-yellow` instead of `bg-[#facc15]`). If a color truly does not exist in the tokens, it should be formally added to `theme.css` and the Tailwind config rather than arbitrarily injected.

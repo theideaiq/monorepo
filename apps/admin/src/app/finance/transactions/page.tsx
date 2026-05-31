@@ -33,7 +33,7 @@ export default async function TransactionsPage() {
                 </td>
               </tr>
             ) : (
-              transactions.map((tx) => (
+              transactions.map((tx: any) => (
                 <tr key={tx.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 font-mono text-white">
                     {tx.referenceId}
@@ -48,7 +48,7 @@ export default async function TransactionsPage() {
                           ? 'success'
                           : tx.status === 'Pending'
                             ? 'warning'
-                            : 'secondary'
+                            : 'neutral'
                       }
                     >
                       {tx.status}
