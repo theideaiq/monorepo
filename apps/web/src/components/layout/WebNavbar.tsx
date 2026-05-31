@@ -69,18 +69,24 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`text-sm font-medium transition-colors hover:text-brand-yellow ${
-                isActive(item.href) ? 'text-brand-yellow' : 'text-slate-300'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav
+          aria-label="Main Navigation"
+          className="hidden md:flex items-center gap-8"
+        >
+          <ul className="flex items-center gap-8 m-0 p-0 list-none">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`text-sm font-medium transition-colors hover:text-brand-yellow ${
+                    isActive(item.href) ? 'text-brand-yellow' : 'text-slate-300'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </nav>
 
         {/* Actions */}
