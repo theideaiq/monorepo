@@ -28,7 +28,7 @@ export default function MegastorePage() {
   const addItem = useCartStore((s) => s.addItem);
   const { openCart } = useUIStore();
 
-  const handleQuickAdd = (e: React.MouseEvent, product: any) => {
+  const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
     e.preventDefault(); // Prevent navigation
     addItem({
       id: product.id,
