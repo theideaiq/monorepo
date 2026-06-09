@@ -1,0 +1,26 @@
+{
+  "name": "@theideaiq/payments",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./types": "./src/types.ts",
+    "./gateway": "./src/gateway.ts",
+    "./wayl/links": "./src/providers/wayl/links.ts",
+    "./wayl/refunds": "./src/providers/wayl/refunds.ts",
+    "./wayl/webhooks": "./src/providers/wayl/webhooks.ts"
+  },
+  "scripts": {
+    "lint": "biome check . --no-errors-on-unmatched",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo node_modules"
+  },
+  "devDependencies": {
+    "@auibsal/config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@auibsal/env": "workspace:*"
+  }
+}
