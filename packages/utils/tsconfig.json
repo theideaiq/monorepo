@@ -1,20 +1,18 @@
 {
-  "extends": "@repo/config/tsconfig.json",
+  "extends": "@theideaiq/config/tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "module": "ESNext",
-    "target": "ESNext"
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "sourceMap": false
   },
-  "include": ["src"],
-  "exclude": [
-    "node_modules",
-    "vitest.config.mts",
-    "vitest.config.ts",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "**/*.test.js",
-    "**/*.spec.js"
+  "include": [
+    "src/**/*"
   ]
 }
