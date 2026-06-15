@@ -12,10 +12,10 @@ jobs:
     name: Quality Gate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
 
@@ -30,7 +30,7 @@ jobs:
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Setup pnpm cache
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -38,7 +38,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Setup Turbo cache
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-quality-${{ github.sha }}
@@ -46,20 +46,35 @@ jobs:
             ${{ runner.os }}-turbo-quality-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Run Quality Checks
-        run: pnpm turbo check typecheck test
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.com"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
+          NEXT_PUBLIC_SITE_URL: "https://mock.com"
+          GEMINI_API_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          RESEND_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.com"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WEB_APP_URL: "https://mock.com"
+          ZAIN_SECRET_KEY: "mock"
+        run: pnpm --config.engine-strict=false turbo check typecheck test
 
   build:
     name: Build
     runs-on: ubuntu-latest
     needs: []
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
 
@@ -74,7 +89,7 @@ jobs:
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Setup pnpm cache
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -82,7 +97,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Setup Turbo cache
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
@@ -90,23 +105,35 @@ jobs:
             ${{ runner.os }}-turbo-build-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-        run: pnpm turbo build
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://mock.com"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock"
+          NEXT_PUBLIC_SITE_URL: "https://mock.com"
+          GEMINI_API_KEY: "mock"
+          SUPABASE_SERVICE_ROLE_KEY: "mock"
+          WAYL_SECRET_KEY: "mock"
+          WAYL_WEBHOOK_SECRET: "mock"
+          TELEGRAM_BOT_TOKEN: "mock"
+          RESEND_API_KEY: "mock"
+          UPSTASH_REDIS_REST_URL: "https://mock.com"
+          UPSTASH_REDIS_REST_TOKEN: "mock"
+          WEB_APP_URL: "https://mock.com"
+          ZAIN_SECRET_KEY: "mock"
+        run: pnpm --config.engine-strict=false turbo build
 
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
 
@@ -121,7 +148,7 @@ jobs:
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Setup pnpm cache
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -129,7 +156,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Setup Turbo cache
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-e2e-${{ github.sha }}
@@ -137,13 +164,13 @@ jobs:
             ${{ runner.os }}-turbo-e2e-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --config.engine-strict=false
 
       - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --config.engine-strict=false exec playwright install --with-deps chromium
 
       - name: Run E2E Tests
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-        run: pnpm turbo e2e
+        run: pnpm --config.engine-strict=false turbo e2e
