@@ -1,5 +1,6 @@
 import { ROLES } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/server';
+import 'server-only';
 
 /**
  * Checks if the provided role has administrative privileges (Admin or Superadmin).

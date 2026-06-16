@@ -10,6 +10,8 @@
  *
  * @param baseUrl - The canonical base URL of the site (e.g., https://theidea.iq)
  */
+import { sanitizeJsonLd } from '@repo/utils';
+
 export default function JsonLd({ baseUrl }: { baseUrl: string }) {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -59,8 +61,8 @@ export default function JsonLd({ baseUrl }: { baseUrl: string }) {
   return (
     <script
       type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe and required by Google
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is sanitized against XSS
+      dangerouslySetInnerHTML={{ __html: sanitizeJsonLd(jsonLd) }}
     />
   );
 }

@@ -1,7 +1,38 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, sanitizeJsonLd, slugify } from '@repo/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
+  describe('sanitizeJsonLd', () => {
+    it('should sanitize JSON string for script tags', () => {
+      const unsafe = {
+        name: '<script>alert(1)</script>',
+        description: 'Safe text',
+      };
+      // Should replace < with \u003c
+      expect(sanitizeJsonLd(unsafe)).toBe(
+        '{"name":"\\u003cscript>alert(1)\\u003c/script>","description":"Safe text"}'
+      );
+    });
+
+    it('should handle complex objects', () => {
+      const complex = {
+        html: '<div>content</div>',
+        nested: {
+          script: '<script>evil()</script>',
+        },
+        array: ['<tag>', 123],
+      };
+      const sanitized = sanitizeJsonLd(complex);
+      expect(sanitized).not.toContain('<');
+      expect(sanitized).toContain('\\u003c');
+      expect(JSON.parse(sanitized)).toEqual(complex); // JSON structure should be preserved
+    });
+
+    it('should handle null and undefined', () => {
+      expect(sanitizeJsonLd(null)).toBe('null');
+      expect(sanitizeJsonLd(undefined)).toBe('');
+    });
+  });
   describe('slugify', () => {
     it('should convert text to a url-friendly slug', () => {
       expect(slugify('Hello World!')).toBe('hello-world');
