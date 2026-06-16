@@ -49,6 +49,21 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          # Ensure validation doesn't fail on missing secrets during quality checks
+          SKIP_ENV_VALIDATION: "true"
+          TELEGRAM_BOT_TOKEN: "123456:dummytoken"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+          GEMINI_API_KEY: "dummy-gemini-key"
+          RESEND_API_KEY: "re_12345678"
+          WAYL_SECRET_KEY: "dummy-wayl-key"
+          WAYL_WEBHOOK_SECRET: "dummy-webhook-secret"
+          ZAIN_SECRET_KEY: "dummy-zain-key"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-redis-token"
+          WEB_APP_URL: "http://localhost:3000"
+          NEXT_PUBLIC_SUPABASE_URL: "https://dummy.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy.anon.key"
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +109,20 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy.anon.key' }}
+          # Skip validation for missing secrets in CI
+          SKIP_ENV_VALIDATION: "true"
+          TELEGRAM_BOT_TOKEN: "123456:dummytoken"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+          GEMINI_API_KEY: "dummy-gemini-key"
+          RESEND_API_KEY: "re_12345678"
+          WAYL_SECRET_KEY: "dummy-wayl-key"
+          WAYL_WEBHOOK_SECRET: "dummy-webhook-secret"
+          ZAIN_SECRET_KEY: "dummy-zain-key"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-redis-token"
+          WEB_APP_URL: "http://localhost:3000"
         run: pnpm turbo build
 
   e2e:
@@ -146,4 +173,15 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          TELEGRAM_BOT_TOKEN: "123456:dummytoken"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+          GEMINI_API_KEY: "dummy-gemini-key"
+          RESEND_API_KEY: "re_12345678"
+          WAYL_SECRET_KEY: "dummy-wayl-key"
+          WAYL_WEBHOOK_SECRET: "dummy-webhook-secret"
+          ZAIN_SECRET_KEY: "dummy-zain-key"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-redis-token"
+          WEB_APP_URL: "http://localhost:3000"
         run: pnpm turbo e2e

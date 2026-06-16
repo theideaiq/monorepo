@@ -1,3 +1,4 @@
+import 'server-only';
 import { ROLES } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/server';
 

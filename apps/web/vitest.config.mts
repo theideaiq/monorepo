@@ -6,11 +6,8 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
-    globals: true,
-    setupFiles: './vitest.setup.ts',
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-    exclude: ['e2e/**', 'node_modules/**'],
   },
 });

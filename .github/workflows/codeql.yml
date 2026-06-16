@@ -45,6 +45,12 @@ jobs:
         with:
           node-version: 20
 
+      # Required for installation
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -59,6 +65,10 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
+      - name: Install dependencies
+        if: matrix.build-mode == 'manual'
+        run: npm_config_engine_strict=false pnpm install
+
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
@@ -66,12 +76,16 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          cd apps/web && node scripts/restore-mobile-secrets.js
           
-          # 2. Grant Permission
+          # 2. Sync Capacitor (Generates cordova plugins)
+          npm_config_engine_strict=false npx cap sync android
+
+          # 3. Grant Permission
+          cd ../.. # return to root
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,9 +95,13 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          cd apps/web && node scripts/restore-mobile-secrets.js
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 2. Sync Capacitor (Updates native project deps)
+          npm_config_engine_strict=false npx cap sync ios
+          cd ../..
+
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -91,11 +109,12 @@ jobs:
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
+              # Capacitor sync should have handled most linking, but ensuring resolution
               xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
