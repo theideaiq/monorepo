@@ -2,6 +2,7 @@
 
 import { webEnv } from '@repo/env/web';
 import { usePathname } from 'next/navigation';
+import { safeJsonLdStringify } from '@/lib/json-ld';
 
 export default function BreadcrumbJsonLd() {
   const pathname = usePathname();
@@ -49,7 +50,7 @@ export default function BreadcrumbJsonLd() {
     <script
       type="application/ld+json"
       // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
     />
   );
 }
