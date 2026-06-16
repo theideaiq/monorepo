@@ -91,6 +91,16 @@ This monorepo is managed with [Turborepo](https://turbo.build/) and [pnpm](https
     - Admin: [http://localhost:3001](http://localhost:3001)
     - Droid: Local process (Port varies)
 
+### Troubleshooting
+
+**Issue: Unsupported Engine (Node.js version mismatch)**
+
+If `pnpm install` fails with `ERR_PNPM_UNSUPPORTED_ENGINE`, you can bypass the check:
+
+```bash
+npm_config_engine_strict=false pnpm install
+```
+
 ## 🔐 Environment Variables
 
 Proper management of environment variables is crucial for security and deployment.
@@ -118,11 +128,11 @@ Use `.env.local` files in the respective app directories (`apps/web`, `apps/admi
 
 ## 🐛 Known Issues
 
-### Missing Capacitor Patch
-The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) is currently missing from the repository. The `patchedDependencies` entry has been temporarily removed from `package.json` to allow `pnpm install` to succeed.
+### Disabled Capacitor Patch
+The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) exists but is currently disabled in `package.json` because it fails to apply correctly.
 
 **Impact:** This may affect mobile builds if the `tar` version override causes compatibility issues with `@capacitor/cli`.
-**Workaround:** If you encounter issues with Capacitor CLI, verify that your environment meets the `tar` requirements or wait for the patch to be restored.
+**Workaround:** If you encounter issues with Capacitor CLI, verify that your environment meets the `tar` requirements or wait for the patch to be fixed.
 
 ## 🧠 Memory (AGENTS.md)
 
