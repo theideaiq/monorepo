@@ -12,7 +12,16 @@ const ENTITIES: Record<string, string> = {
 };
 
 // Pre-compiled regex for performance (avoids recompilation in loops).
+// ENTITY_REGEX: Matches named and hex entities like &amp;, &#x41;, &lt;
+// - & matches the literal '&'
+// - [a-zA-Z0-9#]+ matches one or more alphanumeric characters or '#'
+// - ; matches the literal ';'
 const ENTITY_REGEX = /&[a-zA-Z0-9#]+;/g;
+
+// NUMERIC_ENTITY_REGEX: Matches decimal numeric entities like &#65;, &#128512;
+// - ^&# matches the literal start '&#'
+// - \d+ matches one or more digits
+// - ;$ matches the literal ';' at the end
 const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
 
 /**

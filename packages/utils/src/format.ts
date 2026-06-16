@@ -34,9 +34,15 @@ export function formatCurrency(
  *
  * @param date - The date to format (string or Date object).
  * @returns A formatted date string (e.g., "Jan 15, 2026").
+ *
+ * @example
+ * formatDate(new Date('2026-01-15T12:00:00Z')) // -> "Jan 15, 2026"
+ * formatDate('2026-12-25') // -> "Dec 25, 2026"
+ * formatDate('') // -> ""
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',

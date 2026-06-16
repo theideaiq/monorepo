@@ -12,6 +12,12 @@ export const MAX_REQUESTS = 5; // 5 requests per minute
  *
  * @param key - The unique key to rate limit (e.g., user ID or IP).
  * @returns A promise resolving to `true` if allowed, `false` if blocked.
+ *
+ * @example
+ * const isAllowed = await checkRateLimit(user.id);
+ * if (!isAllowed) {
+ *   throw new Error("Too many requests");
+ * }
  */
 export async function checkRateLimit(key: string): Promise<boolean> {
   const supabase = await createClient();
