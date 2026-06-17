@@ -5,6 +5,7 @@ import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/services/products';
+import { formatCurrency } from '@repo/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -18,10 +19,7 @@ export function ProductCard({
   priority = false,
 }: ProductCardProps) {
   // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const price = formatCurrency(product.price, 'IQD');
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">
@@ -93,7 +91,6 @@ export function ProductCard({
                 <span className="text-lg font-black text-brand-yellow">
                   {price}
                 </span>
-                <span className="text-xs text-slate-500">IQD</span>
               </div>
             </div>
             {product.rating > 0 && (
