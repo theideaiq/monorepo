@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import { useUIStore } from '@/stores/ui-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 interface WebNavbarProps {
   navItems: { label: string; href: string }[];
@@ -87,6 +87,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
         <div className="flex items-center gap-4">
           <button
             type="button"
+            aria-label="Search"
             className="text-white hover:text-brand-yellow transition-colors"
           >
             <Search size={20} />
@@ -101,6 +102,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
 
           <button
             type="button"
+            aria-label="Toggle Cart"
             onClick={toggleCart}
             className="relative text-white hover:text-brand-yellow transition-colors"
           >
