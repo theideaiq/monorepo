@@ -92,7 +92,7 @@ export function ProductView({ product }: ProductViewProps) {
         {/* LEFT: Gallery */}
         <div className="space-y-4">
           {/* Main Image */}
-          <div className="relative aspect-square bg-[#1a1a1a] rounded-3xl overflow-hidden border border-white/5">
+          <div className="relative aspect-square bg-brand-surface rounded-3xl overflow-hidden border border-white/5">
             <Image
               src={selectedImage}
               alt={product.title}
@@ -211,7 +211,7 @@ export function ProductView({ product }: ProductViewProps) {
       <motion.div
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="fixed bottom-0 left-0 right-0 p-4 bg-black/80 backdrop-blur-xl border-t border-white/10 z-30 md:hidden flex gap-4 pb-8"
+        className="fixed bottom-0 left-0 right-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-brand-deep/80 backdrop-blur-xl border-t border-white/10 z-30 md:hidden flex gap-4"
       >
         <div className="flex flex-col justify-center">
           <span className="text-xs text-slate-400 uppercase">Total</span>
