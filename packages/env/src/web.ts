@@ -48,3 +48,10 @@ export const webEnv = createEnv({
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
 });
+
+if (process.env.SKIP_ENV_VALIDATION === 'true') {
+  process.env.WAYL_SECRET_KEY = process.env.WAYL_SECRET_KEY || 'dummy';
+  process.env.WAYL_WEBHOOK_SECRET = process.env.WAYL_WEBHOOK_SECRET || 'dummy';
+  process.env.ZAIN_SECRET_KEY = process.env.ZAIN_SECRET_KEY || 'dummy';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'dummy';
+}
