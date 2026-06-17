@@ -30,8 +30,21 @@ jobs:
         include:
           - language: javascript-typescript
             build-mode: none
+          # Using 'none' for java-kotlin allows CodeQL to analyze without a full build trace,
+          # but we retain manual build steps to ensure secrets are restored and debug artifacts are generated.
           - language: java-kotlin
-            build-mode: manual
+            build-mode: none
+          # Swift does not support 'none', so we use 'autobuild' but override it with manual steps if needed,
+          # or simply rely on autobuild if the project structure is standard.
+          # However, given the failure log "Cannot build an overlay database because build-mode is set to 'manual' instead of 'none'",
+          # and the need for secrets restoration, we will stick to 'autobuild' and ensure secrets are restored before init or via a pre-step.
+          # Actually, 'autobuild' attempts to build automatically. 'manual' expects us to provide build commands.
+          # The error in the logs suggests a conflict or misconfiguration.
+          # Let's try 'autobuild' for Swift which is standard for compiled languages if we don't need custom logic,
+          # BUT we DO need custom logic for secrets.
+          # The error was: "Cannot build an overlay database because build-mode is set to 'manual' instead of 'none'. Falling back to creating a normal full database instead."
+          # This implies 'manual' is fine, but maybe the overlay part was the issue?
+          # Let's keep manual but fix the secret restoration path.
           - language: swift
             build-mode: manual
 
@@ -52,7 +65,16 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      # Initialize CodeQL (Defines what languages to scan)
+      # ----------------------------------------------------------------
+      # PRE-BUILD: Restore Secrets (Before Init)
+      # ----------------------------------------------------------------
+      - name: Restore Secrets (Mobile)
+        if: matrix.language == 'java-kotlin' || matrix.language == 'swift'
+        run: |
+          # Ensure we are in the correct directory context
+          cd apps/web && npm run secrets:restore
+
+      # Initialize CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
@@ -62,39 +84,44 @@ jobs:
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
-      - name: Manual Build (Android)
+      # Only run this if we are in manual mode, OR if we want to ensure a build happens even in 'none' mode for other checks?
+      # Since we switched java-kotlin to 'none', we don't strictly need this for CodeQL to function (it scans source),
+      # but if we want to verify the build passes, we should keep it.
+      # However, for 'none' mode, CodeQL doesn't trace the build.
+      # Let's run it to ensure validity but not as part of CodeQL tracing if mode is none.
+      - name: Build Android (Debug)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
-          
-          # 2. Grant Permission
           chmod +x apps/web/android/gradlew
-          
-          # 3. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
-      # MANUAL BUILD: Swift (iOS)
+      # BUILD: Swift (iOS)
       # ----------------------------------------------------------------
-      - name: Manual Build (Swift)
+      # If build-mode is autobuild, CodeQL handles it. We just need to make sure secrets were present (done above).
+      # If autobuild fails, we might need to revert to manual and fix the specific xcodebuild command.
+      # Given the logs showed a failure in manual mode finding workspaces, fixing the cd/context above might be enough.
+      # But let's try letting autobuild handle it now that secrets are there.
+      - name: Build Manual (Swift)
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
-          
+          # Ensure we are in the correct directory context for the script
+          cd apps/web && npm run secrets:restore
+
           # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
+          if [ -f "ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
+              cd ios/App && pod install --repo-update && cd -
+              BUILD_TARGET="-workspace ios/App/App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+              # Fix: Use correct path to project relative to apps/web
+              xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
+              BUILD_TARGET="-project ios/App/App.xcodeproj"
           fi
-          
+
           # 3. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
