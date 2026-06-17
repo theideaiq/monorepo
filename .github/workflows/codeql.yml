@@ -1,4 +1,4 @@
-name: "CodeQL Advanced"
+name: CodeQL
 
 on:
   push:
@@ -6,108 +6,56 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '30 1 * * 0'
+    - cron: '21 7 * * 4'
 
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    # Use macOS for Swift (iOS), Ubuntu for everything else
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    
+    # Runner size impacts CodeQL analysis time. To learn more, please see:
+    #   - https://gh.io/recommended-hardware-resources-for-running-codeql
+    #   - https://gh.io/supported-runners-and-hardware-resources
+    #   - https://gh.io/using-larger-runners
+    # Consider using larger runners for possible analysis time improvements.
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-24.04' }}
+    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     permissions:
+      # required for all workflows
       security-events: write
+
+      # only required for workflows in private repositories
       actions: read
       contents: read
-
-    # Global Env: Inject secrets so the restore script can generate the missing files
-    env:
-      ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
-      IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - language: javascript-typescript
-            build-mode: none
-          - language: java-kotlin
-            build-mode: manual
-          - language: swift
-            build-mode: manual
+        - language: javascript-typescript
+          build-mode: none
+        - language: java-kotlin
+          build-mode: none
+        - language: swift
+          build-mode: none
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+    - name: Checkout repository
+      uses: actions/checkout@v6
 
-      # Required for 'npm run secrets:restore'
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+        # If you wish to specify custom queries, you can do so here or in a config file.
+        # By default, queries listed here will override any specified in a config file.
+        # Prefix the list here with "+" to use these queries and those in the config file.
 
-      # Required for Android Gradle Build
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          java-version: 17
-          distribution: 'temurin'
+        # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+        # queries: security-extended,security-and-quality
+        queries: security-and-quality
 
-      # Initialize CodeQL (Defines what languages to scan)
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
-
-      # ----------------------------------------------------------------
-      # MANUAL BUILD: Java (Android)
-      # ----------------------------------------------------------------
-      - name: Manual Build (Android)
-        if: matrix.language == 'java-kotlin'
-        run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
-          
-          # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
-          
-          # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
-
-      # ----------------------------------------------------------------
-      # MANUAL BUILD: Swift (iOS)
-      # ----------------------------------------------------------------
-      - name: Manual Build (Swift)
-        if: matrix.language == 'swift'
-        run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
-          
-          # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
-              echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
-          else
-              echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
-              echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
-          fi
-          
-          # 3. Build for Simulator (No Signing Required)
-          echo "Building Project..."
-          xcodebuild build \
-            $BUILD_TARGET \
-            -scheme App \
-            -destination 'generic/platform=iOS Simulator,name=iPhone 15' \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
-
-      # ----------------------------------------------------------------
-      # ANALYZE
-      # ----------------------------------------------------------------
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
-        with:
-          category: "/language:${{matrix.language}}"
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
