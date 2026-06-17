@@ -49,6 +49,24 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          # Skip T3 Env validation for CI
+          SKIP_ENV_VALIDATION: true
+          # Public variables (client-side)
+          NEXT_PUBLIC_SUPABASE_URL: http://localhost:54321
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          # Secrets (server-side) - dummy values for build/check
+          SUPABASE_SERVICE_ROLE_KEY: dummy-service-role-key
+          WAYL_SECRET_KEY: dummy-wayl-key
+          WAYL_WEBHOOK_SECRET: dummy-wayl-webhook
+          ZAIN_SECRET_KEY: dummy-zain-key
+          RESEND_API_KEY: dummy-resend-key
+          UPSTASH_REDIS_REST_URL: http://localhost:8079
+          UPSTASH_REDIS_REST_TOKEN: dummy-redis-token
+          TELEGRAM_BOT_TOKEN: dummy-bot-token
+          GEMINI_API_KEY: dummy-gemini-key
+          WEB_APP_URL: http://localhost:3000
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +112,23 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Skip T3 Env validation for CI
+          SKIP_ENV_VALIDATION: true
+          # Public variables (client-side)
+          NEXT_PUBLIC_SUPABASE_URL: http://localhost:54321
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          # Secrets (server-side) - dummy values for build
+          SUPABASE_SERVICE_ROLE_KEY: dummy-service-role-key
+          WAYL_SECRET_KEY: dummy-wayl-key
+          WAYL_WEBHOOK_SECRET: dummy-wayl-webhook
+          ZAIN_SECRET_KEY: dummy-zain-key
+          RESEND_API_KEY: dummy-resend-key
+          UPSTASH_REDIS_REST_URL: http://localhost:8079
+          UPSTASH_REDIS_REST_TOKEN: dummy-redis-token
+          TELEGRAM_BOT_TOKEN: dummy-bot-token
+          GEMINI_API_KEY: dummy-gemini-key
+          WEB_APP_URL: http://localhost:3000
         run: pnpm turbo build
 
   e2e:
