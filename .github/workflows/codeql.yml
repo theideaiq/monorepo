@@ -52,6 +52,23 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Dependencies (Manual Build Only)
+        if: matrix.build-mode == 'manual'
+        run: |
+          pnpm install --frozen-lockfile
+          # Sync Capacitor plugins
+          cd apps/web
+          if [ "${{ matrix.language }}" == "java-kotlin" ]; then
+            npx cap sync android
+          elif [ "${{ matrix.language }}" == "swift" ]; then
+            npx cap sync ios
+          fi
+
       # Initialize CodeQL (Defines what languages to scan)
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -66,13 +83,13 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          cd apps/web && npm run secrets:restore
           
           # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
+          cd android && chmod +x gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -81,18 +98,20 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          cd apps/web && npm run secrets:restore
+
+          # 2. Prepare iOS Build
+          cd ios/App
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
+          if [ -f "Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
+              pod install --repo-update
+              BUILD_TARGET="-workspace App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+              xcodebuild -resolvePackageDependencies -project App.xcodeproj -scheme App
+              BUILD_TARGET="-project App.xcodeproj"
           fi
           
           # 3. Build for Simulator (No Signing Required)

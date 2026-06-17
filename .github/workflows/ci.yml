@@ -49,6 +49,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://example.com"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+          # Telegram Bot Token required by grammY in droid even if skipping
+          TELEGRAM_BOT_TOKEN: "dummy-token"
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +101,12 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://example.com"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+          # Telegram Bot Token required by grammY in droid even if skipping
+          TELEGRAM_BOT_TOKEN: "dummy-token"
         run: pnpm turbo build
 
   e2e:
