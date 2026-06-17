@@ -66,3 +66,19 @@ export function formatCompactNumber(number: number): string {
     maximumFractionDigits: 1,
   }).format(number);
 }
+
+const iqdFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a price in IQD.
+ * Uses 'en-IQ' locale and decimal style with 0 fraction digits.
+ *
+ * @param amount - The amount to format.
+ * @returns The formatted string (e.g., "1,250").
+ */
+export function formatPrice(amount: number): string {
+  return iqdFormatter.format(amount);
+}
