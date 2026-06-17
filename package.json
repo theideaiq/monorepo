@@ -56,5 +56,9 @@
     "*.{js,jsx,ts,tsx,mjs,json,css}": [
       "biome check --write --no-errors-on-unmatched"
     ]
+  },
+  "dependencies": {
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "^8.0.2"
   }
 }

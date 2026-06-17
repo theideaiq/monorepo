@@ -1,0 +1,3 @@
+## 2024-05-24 - Dynamic Cart Item Accessibility
+**Learning:** For dynamically generated lists or carts, use descriptive, item-specific `aria-label`s (e.g., `Remove ${item.title}`) on icon-only buttons instead of generic labels. Add `aria-live="polite"` to text nodes that update dynamically (like quantity numbers) to ensure screen readers announce updates.
+**Action:** Always verify dynamically generated lists for missing item-specific context on actions, and add `aria-live` regions for live-updating numbers like quantities or totals.
