@@ -1,5 +1,7 @@
 name: Label
-on: pull_request_target
+on:
+  pull_request_target:
+    branches: [main]
 
 jobs:
   label:
@@ -9,7 +11,11 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/labeler@v6
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true
+          configuration-path: .github/labeler.yml
