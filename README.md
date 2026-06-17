@@ -53,6 +53,8 @@ This monorepo is managed with [Turborepo](https://turbo.build/) and [pnpm](https
 - [`packages/utils`](./packages/utils): Shared utility functions (Date, String, Math helpers).
 - [`packages/database`](./packages/database): Type-safe Supabase client and schema definitions.
 - [`packages/env`](./packages/env): Environment variable validation and type-safety.
+- [`packages/payment-engine`](./packages/payment-engine): Payment processing abstraction layer (Wayl, ZainCash).
+- [`packages/wayl`](./packages/wayl): Type-safe client SDK for the Wayl payment gateway.
 
 ## 🚀 Getting Started
 
@@ -118,8 +120,8 @@ Use `.env.local` files in the respective app directories (`apps/web`, `apps/admi
 
 ## 🐛 Known Issues
 
-### Missing Capacitor Patch
-The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) is currently missing from the repository. The `patchedDependencies` entry has been temporarily removed from `package.json` to allow `pnpm install` to succeed.
+### Disabled Capacitor Patch
+The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) exists but is currently disabled (not applied). The `patchedDependencies` entry has been temporarily removed from `package.json` to allow `pnpm install` to succeed in environments with strict dependency resolution.
 
 **Impact:** This may affect mobile builds if the `tar` version override causes compatibility issues with `@capacitor/cli`.
 **Workaround:** If you encounter issues with Capacitor CLI, verify that your environment meets the `tar` requirements or wait for the patch to be restored.
