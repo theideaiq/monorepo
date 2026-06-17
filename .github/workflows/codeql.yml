@@ -43,7 +43,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -62,16 +62,26 @@ jobs:
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
+      - name: Install dependencies
+        if: matrix.build-mode == 'manual'
+        run: npm install -g pnpm && pnpm install --config.engine-strict=false
+
+      # ----------------------------------------------------------------
+      # MANUAL BUILD: Java (Android)
+      # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
+          # 1. Sync Capacitor
+          cd apps/web && npx cap sync android
+
+          # 2. Restore Secrets (Generates google-services.json)
           npm run secrets:restore --workspace=apps/web
           
-          # 2. Grant Permission
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -80,23 +90,33 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # 1. Sync Capacitor
+          cd apps/web && npx cap sync ios
+
+          # 2. Restore Secrets (Generates GoogleService-Info.plist)
+          cd apps/web && npm run secrets:restore
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
+              cd apps/web/ios/App && pod install --repo-update
+              BUILD_TARGET="-workspace App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+              cd apps/web/ios/App
+              xcodebuild -resolvePackageDependencies -project App.xcodeproj -scheme App
+              BUILD_TARGET="-project App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 4. Build for Simulator (No Signing Required)
+          # Note: We are already in apps/web/ios/App if using SPM, or if we cd'd for pod install
+          # But for safety, let's ensure we are in the right place relative to the workspace/project path passed
+
           echo "Building Project..."
+          # Ensure we are in the directory containing the project/workspace
+          cd "$GITHUB_WORKSPACE/apps/web/ios/App"
+
           xcodebuild build \
             $BUILD_TARGET \
             -scheme App \

@@ -14,7 +14,7 @@ export type MyContext = Context & SessionFlavor<SessionData>;
 
 /**
  * The main Bot instance.
- * Uses Long Polling for development and Webhooks for production (configured in API route).
+ * Uses Webhooks for both development (via ngrok) and production (configured in API route).
  */
 export const bot = new Bot<MyContext>(env.TELEGRAM_BOT_TOKEN);
 
