@@ -15,17 +15,28 @@
  * formatCurrency(50000, 'IQD') // -> "IQD 50,000"
  * formatCurrency(10.5, 'USD') // -> "$10.50"
  */
+// Cache Intl.NumberFormat instances for performance
+const currencyFormatters = new Map<string, Intl.NumberFormat>();
+
 export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  const cacheKey = currency;
+  if (!currencyFormatters.has(cacheKey)) {
+    currencyFormatters.set(
+      cacheKey,
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency,
+        // IQD doesn't typically use cents in this context
+        minimumFractionDigits: currency === 'IQD' ? 0 : 2,
+        maximumFractionDigits: currency === 'IQD' ? 0 : 2,
+      })
+    );
+  }
+
+  return currencyFormatters.get(cacheKey)!.format(amount);
 }
 
 /**
@@ -55,14 +66,16 @@ export function formatDate(date: string | Date): string {
  * formatCompactNumber(1500000) // -> "1.5M"
  * formatCompactNumber(1200) // -> "1.2K"
  */
+const compactNumberFormatter = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
 export function formatCompactNumber(number: number): string {
   // Validate input to avoid formatting NaN, Infinity, or non-numeric values
   if (!Number.isFinite(number)) {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return compactNumberFormatter.format(number);
 }

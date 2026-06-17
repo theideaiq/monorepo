@@ -6,6 +6,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/services/products';
 
+// Cache formatter outside component to prevent recreation on every render,
+// which is a significant performance bottleneck when rendering lists.
+const priceFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
 interface ProductCardProps {
   product: Product;
   onAddToCart?: (e: React.MouseEvent) => void;
@@ -18,10 +25,7 @@ export function ProductCard({
   priority = false,
 }: ProductCardProps) {
   // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const price = priceFormatter.format(product.price);
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">
