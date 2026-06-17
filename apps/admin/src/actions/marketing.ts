@@ -6,6 +6,7 @@ import { requireAdmin } from '@/lib/auth-checks';
 
 export async function createSegment(
   name: string,
+  // biome-ignore lint/suspicious/noExplicitAny: criteria is a flexible JSON object
   criteria: Record<string, any>,
 ) {
   const { supabase } = await requireAdmin();
