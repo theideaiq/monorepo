@@ -3,7 +3,7 @@ import { droidEnv as env } from '@repo/env/droid';
 import { PaymentFactory } from '@repo/payment-engine';
 import { supabase } from './supabase';
 
-const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY || 'placeholder' });
 
 const MAX_PRODUCT_SEARCH_RESULTS = 5;
 
@@ -108,7 +108,7 @@ async function searchProducts(query: string) {
   const sanitizedQuery = rawQuery.replace(/[\r\n\t]/g, ' ');
   const safeQueryForLog =
     sanitizedQuery.length > MAX_LOG_QUERY_LENGTH
-      ? sanitizedQuery.slice(0, MAX_LOG_QUERY_LENGTH) + '…'
+      ? `${sanitizedQuery.slice(0, MAX_LOG_QUERY_LENGTH)}…`
       : sanitizedQuery;
   // biome-ignore lint/suspicious/noConsole: logging is fine for search tracking
   console.log(
