@@ -9,7 +9,9 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - uses: actions/checkout@v6 # Needed to read .github/labeler.yml
       - uses: actions/labeler@v6
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true
+          configuration-path: .github/labeler.yml

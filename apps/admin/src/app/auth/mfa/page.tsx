@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, Input } from '@repo/ui';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import { useEffect, useState } from 'react';
@@ -70,8 +71,9 @@ export default function MFAPage() {
       toast.success('Authentication successful');
       router.push('/');
       router.refresh();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      // biome-ignore lint/suspicious/noExplicitAny: error handling
+      toast.error((err as any).message);
     } finally {
       setLoading(false);
     }
@@ -89,7 +91,14 @@ export default function MFAPage() {
             <p className="text-sm text-slate-500 mb-2 text-center">
               Scan this QR code with your authenticator app
             </p>
-            <img src={qr} alt="QR Code" className="w-48 h-48" />
+            <Image
+              src={qr}
+              alt="QR Code"
+              width={192}
+              height={192}
+              className="w-48 h-48 object-contain"
+              unoptimized // Data URLs might need unoptimized
+            />
           </div>
         )}
 

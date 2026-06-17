@@ -1,6 +1,7 @@
 'use client';
 
 import { webEnv } from '@repo/env/web';
+import { safeJsonLdStringify } from '@repo/utils';
 import { usePathname } from 'next/navigation';
 
 export default function BreadcrumbJsonLd() {
@@ -48,8 +49,8 @@ export default function BreadcrumbJsonLd() {
   return (
     <script
       type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safely escaped
+      dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(jsonLd) }}
     />
   );
 }

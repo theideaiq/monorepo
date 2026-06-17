@@ -1,4 +1,4 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, safeJsonLdStringify, slugify } from '@repo/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
@@ -47,6 +47,31 @@ describe('String Utils (@repo/utils)', () => {
       expect(decodeHtmlEntities(null)).toBe('');
       // @ts-expect-error testing runtime safety
       expect(decodeHtmlEntities(undefined)).toBe('');
+    });
+  });
+
+  describe('safeJsonLdStringify', () => {
+    it('should escape HTML characters in JSON', () => {
+      const data = {
+        name: '<script>alert("xss")</script>',
+        description: 'Me & You',
+      };
+      const result = safeJsonLdStringify(data);
+      expect(result).not.toContain('<script>');
+      expect(result).toContain('\\u003cscript\\u003e');
+      expect(result).toContain('\\u0026');
+    });
+
+    it('should handle simple objects', () => {
+      const data = { name: 'Test' };
+      expect(safeJsonLdStringify(data)).toBe('{"name":"Test"}');
+    });
+
+    it('should handle line separators', () => {
+      // Line separator U+2028 and Paragraph separator U+2029 are valid in JSON
+      // but can break JavaScript strings if not escaped.
+      const data = { text: 'Line\u2028Break' };
+      expect(safeJsonLdStringify(data)).toContain('\\u2028');
     });
   });
 });

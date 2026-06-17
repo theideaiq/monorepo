@@ -57,6 +57,7 @@ export async function sendCampaign(campaignId: string) {
   if (!profiles || profiles.length === 0)
     throw new Error('No users found for this segment');
 
+  // biome-ignore lint/suspicious/noExplicitAny: Profile type is inferred loosely
   const emails = profiles.map((p: any) => p.email).filter(Boolean);
 
   // 3. Send in Batches
