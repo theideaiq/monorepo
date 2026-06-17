@@ -1,0 +1,3 @@
+## 2025-02-23 - Cart Store Implementation Mismatch
+Discovery: The existing `cart-store.test.ts` was asserting behavior based on a string-array implementation, while the actual `cart-store.ts` used a complex object array. This complete disconnect meant the critical cart logic was effectively untested despite having a passing test suite (or broken one).
+Strategy: When testing stores or state management, strictly type the expected state in tests to match the implementation. Avoid generic `any` or loose assertions that mask structural mismatches. Verify test data structures against source of truth interfaces (`CartItem`).

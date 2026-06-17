@@ -164,7 +164,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 /**
  * Maps Database Product Row to UI Product Object
  */
-function mapDBProductToUI(item: DBProduct): Product {
+export function mapDBProductToUI(item: DBProduct): Product {
   const ratings = item.reviews?.map((r) => r.rating) || [];
   const avgRating =
     ratings.length > 0
