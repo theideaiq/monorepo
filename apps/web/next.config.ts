@@ -35,9 +35,9 @@ const nextConfig: NextConfig = {
       try {
         const url = new URL(supabaseUrl);
         supabaseDomain = url.hostname;
-      } catch (e) {
+      } catch (_e) {
         // biome-ignore lint/suspicious/noConsole: Critical build-time error logging
-        console.error('Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP', e);
+        console.error('Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP', _e);
       }
     }
 
