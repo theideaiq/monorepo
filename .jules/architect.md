@@ -1,0 +1,3 @@
+## 2026-03-01 - [Standardize Currency Formatting]
+Smell: Inconsistent and duplicate `Intl.NumberFormat` instances across React components for currency formatting. Recreating `Intl.NumberFormat` instances on every React render is an expensive anti-pattern. Some components are missing the common format properties, leading to inconsistency (e.g. `en-IQ` missing the style, minimumFractionDigits, maximumFractionDigits config compared to the standard helper).
+Standard: Use the centralized `formatCurrency` helper from `@repo/utils/src/format.ts` for all currency formatting instead of directly instantiating `Intl.NumberFormat`. This enforces consistency and avoids redundant object creation.
