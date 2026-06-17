@@ -1,4 +1,4 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, sanitizeJsonLd, slugify } from '@repo/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
@@ -47,6 +47,35 @@ describe('String Utils (@repo/utils)', () => {
       expect(decodeHtmlEntities(null)).toBe('');
       // @ts-expect-error testing runtime safety
       expect(decodeHtmlEntities(undefined)).toBe('');
+    });
+  });
+
+  describe('sanitizeJsonLd', () => {
+    it('should escape < characters to prevent XSS', () => {
+      const data = {
+        name: '<script>alert(1)</script>',
+        description: 'Safe text',
+      };
+      const sanitized = sanitizeJsonLd(data);
+      // It should replace < with \u003c
+      expect(sanitized).toContain('\\u003cscript>');
+      expect(sanitized).not.toContain('<script>');
+    });
+
+    it('should handle complex objects', () => {
+      const data = {
+        nested: {
+          key: '<div>content</div>',
+        },
+      };
+      const sanitized = sanitizeJsonLd(data);
+      expect(sanitized).toContain('\\u003cdiv>');
+    });
+
+    it('should handle arrays', () => {
+      const data = ['<b>bold</b>', 'normal'];
+      const sanitized = sanitizeJsonLd(data);
+      expect(sanitized).toContain('\\u003cb>');
     });
   });
 });
