@@ -88,6 +88,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
           <button
             type="button"
             className="text-white hover:text-brand-yellow transition-colors"
+            aria-label="Search"
           >
             <Search size={20} />
           </button>
@@ -103,6 +104,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
             type="button"
             onClick={toggleCart}
             className="relative text-white hover:text-brand-yellow transition-colors"
+            aria-label="Toggle cart"
           >
             <ShoppingCart size={20} />
             {mounted && cartItems.length > 0 && (
