@@ -6,6 +6,7 @@ import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
 import { Button, Input, Card } from '@repo/ui';
 import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+import { formatCurrency } from '@repo/utils';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -35,7 +36,7 @@ export function CheckoutFlow() {
     // Redirect or clear cart
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = formatCurrency(total, 'IQD_NO_SYMBOL');
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -260,8 +261,9 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {new Intl.NumberFormat('en-IQ').format(
+                    {formatCurrency(
                       item.price * item.quantity,
+                      'IQD_NO_SYMBOL'
                     )}{' '}
                     IQD
                   </div>
