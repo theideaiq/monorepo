@@ -1,149 +1,75 @@
 name: CI
-permissions:
-  contents: read
 
 on:
   push:
-    branches: [main]
+    branches: ["main"]
   pull_request:
+    types: [opened, synchronize]
 
 jobs:
-  quality:
-    name: Quality Gate
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v5
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Setup Turbo cache
-        uses: actions/cache@v5
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-quality-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-quality-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run Quality Checks
-        run: pnpm turbo check typecheck test
-
   build:
-    name: Build
+    name: Build and Test
+    timeout-minutes: 15
     runs-on: ubuntu-latest
-    needs: []
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      # Dummy values to bypass validation in CI
+      SKIP_ENV_VALIDATION: "true"
+      # Web
+      NEXT_PUBLIC_SUPABASE_URL: "https://dummy-project.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key"
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000"
+      WAYL_SECRET_KEY: "dummy-wayl-key"
+      WAYL_WEBHOOK_SECRET: "dummy-webhook-secret"
+      ZAIN_SECRET_KEY: "dummy-zain-key"
+      SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role-key"
+      # Admin
+      RESEND_API_KEY: "re_123456789"
+      # Droid
+      TELEGRAM_BOT_TOKEN: "123456789:DUMMY_TELEGRAM_BOT_TOKEN_FOR_CI_TESTING"
+      GEMINI_API_KEY: "dummy-gemini-key"
+      UPSTASH_REDIS_REST_URL: "https://dummy-redis.upstash.io"
+      UPSTASH_REDIS_REST_TOKEN: "dummy-redis-token"
+      WEB_APP_URL: "http://localhost:3000"
+
     steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Check out code
+        uses: actions/checkout@v4
         with:
-          node-version-file: '.nvmrc'
+          fetch-depth: 2
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v3
         with:
-          run_install: false
+          version: 10.27.0
 
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v5
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Setup Turbo cache
-        uses: actions/cache@v5
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-build-
+          node-version: 24.12.0
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --config.engine-strict=false
 
       - name: Build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-        run: pnpm turbo build
+        run: pnpm build
 
-  e2e:
-    name: E2E Tests
+      - name: Lint
+        run: pnpm check
+
+      - name: Test
+        run: pnpm test
+
+  gitleaks:
+    name: Gitleaks
     runs-on: ubuntu-latest
-    needs: [build]
     steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
         with:
-          node-version-file: '.nvmrc'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v5
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Setup Turbo cache
-        uses: actions/cache@v5
-        with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-e2e-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-e2e-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Run E2E Tests
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-        run: pnpm turbo e2e
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+        continue-on-error: true

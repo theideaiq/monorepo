@@ -10,12 +10,22 @@ area: droid:
   - changed-files:
       - any-glob-to-any-file: 'apps/droid/**/*'
 
-area: core:
+area: ui:
   - changed-files:
-      - any-glob-to-any-file: 'packages/**/*'
+      - any-glob-to-any-file: 'packages/ui/**/*'
 
-area: ops:
+area: config:
   - changed-files:
-      - any-glob-to-any-file: '.github/**/*'
-      - any-glob-to-any-file: 'turbo.json'
-      - any-glob-to-any-file: 'package.json'
+      - any-glob-to-any-file: 'packages/config/**/*'
+
+area: utils:
+  - changed-files:
+      - any-glob-to-any-file: 'packages/utils/**/*'
+
+area: database:
+  - changed-files:
+      - any-glob-to-any-file: 'packages/database/**/*'
+
+area: env:
+  - changed-files:
+      - any-glob-to-any-file: 'packages/env/**/*'
