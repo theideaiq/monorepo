@@ -116,13 +116,19 @@ Use `.env.local` files in the respective app directories (`apps/web`, `apps/admi
 | `pnpm sync` | Ensure dependency versions are consistent across packages (Syncpack). |
 | `pnpm changeset` | Generate a changeset for versioning. |
 
-## 🐛 Known Issues
+## ❓ Troubleshooting
 
-### Missing Capacitor Patch
-The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) is currently missing from the repository. The `patchedDependencies` entry has been temporarily removed from `package.json` to allow `pnpm install` to succeed.
+### Node.js Version Errors
+If you are using a Node.js version older than the required `v24.12.0` (e.g., v22) and cannot upgrade, you may encounter `ERR_PNPM_UNSUPPORTED_ENGINE` during installation.
 
-**Impact:** This may affect mobile builds if the `tar` version override causes compatibility issues with `@capacitor/cli`.
-**Workaround:** If you encounter issues with Capacitor CLI, verify that your environment meets the `tar` requirements or wait for the patch to be restored.
+**Solution:** Bypass the engine check by setting the environment variable or using the config flag:
+```bash
+# Option 1: One-time environment variable
+npm_config_engine_strict=false pnpm install
+
+# Option 2: pnpm config flag
+pnpm install --config.engine-strict=false
+```
 
 ## 🧠 Memory (AGENTS.md)
 
