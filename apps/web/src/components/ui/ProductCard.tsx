@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ShoppingCart } from 'lucide-react';
+import { ImageOff, ShoppingCart, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/services/products';
@@ -12,16 +12,18 @@ interface ProductCardProps {
   priority?: boolean;
 }
 
+const IQD_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
 export function ProductCard({
   product,
   onAddToCart,
   priority = false,
 }: ProductCardProps) {
   // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const price = IQD_FORMATTER.format(product.price);
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">
@@ -41,8 +43,11 @@ export function ProductCard({
               priority={priority}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-700">
-              No Image
+            <div className="w-full h-full flex flex-col items-center justify-center bg-white/5 text-slate-500">
+              <ImageOff size={24} className="mb-2 opacity-50" />
+              <span className="text-[10px] uppercase font-bold tracking-widest">
+                No Image
+              </span>
             </div>
           )}
 
@@ -98,7 +103,11 @@ export function ProductCard({
             </div>
             {product.rating > 0 && (
               <div className="flex items-center gap-1 text-xs text-slate-300 bg-white/5 px-2 py-1 rounded-md">
-                <span className="text-brand-yellow">★</span>
+                <Star
+                  size={12}
+                  className="text-brand-yellow"
+                  fill="currentColor"
+                />
                 {product.rating}
               </div>
             )}
