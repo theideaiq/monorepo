@@ -65,6 +65,7 @@ export function Drawer({
                 type="button"
                 onClick={onClose}
                 className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                aria-label="Close drawer"
               >
                 <X size={24} />
               </button>

@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
+import { Button } from '@repo/ui';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Drawer } from '@/components/ui/Drawer';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
-import { Button } from '@repo/ui';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -84,6 +84,8 @@ export function CartDrawer() {
                 <button
                   onClick={() => removeItem(item.id)}
                   className="text-slate-500 hover:text-red-500 p-1"
+                  aria-label={`Remove ${item.title} from cart`}
+                  title="Remove item"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -93,6 +95,8 @@ export function CartDrawer() {
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
                     disabled={item.quantity <= 1}
+                    aria-label={`Decrease quantity for ${item.title}`}
+                    title="Decrease quantity"
                   >
                     <Minus size={14} />
                   </button>
@@ -102,6 +106,8 @@ export function CartDrawer() {
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                     className="p-1 text-slate-400 hover:text-white"
+                    aria-label={`Increase quantity for ${item.title}`}
+                    title="Increase quantity"
                   >
                     <Plus size={14} />
                   </button>
