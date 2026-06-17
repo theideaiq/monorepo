@@ -23,6 +23,13 @@ export function SubscriptionCard({
 }: SubscriptionCardProps) {
   return (
     <div
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onSelect();
+        }
+      }}
       onClick={onSelect}
       className={`
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer

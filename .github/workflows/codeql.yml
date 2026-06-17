@@ -39,11 +39,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      # Required for 'npm run secrets:restore'
+      # Required for 'pnpm run secrets:restore'
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Dependencies (Minimal)
+        if: matrix.build-mode == 'manual'
+        run: |
+          # We need to install dependencies to run the restore script and mobile builds
+          # Using engine-strict=false because we're on Node 20 (CodeQL requirement) but repo might want newer
+          npm_config_engine_strict=false pnpm install
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,12 +78,16 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          npm_config_engine_strict=false pnpm --filter apps/web run secrets:restore
+
+          # 2. Capacitor Sync (Required for plugins)
+          mkdir -p apps/web/out
+          npx cap sync android
           
-          # 2. Grant Permission
+          # 3. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 4. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,9 +97,13 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          npm_config_engine_strict=false pnpm --filter apps/web run secrets:restore
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 2. Capacitor Sync (Required for plugins)
+          mkdir -p apps/web/out
+          npx cap sync ios
+
+          # 3. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -

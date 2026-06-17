@@ -1,9 +1,6 @@
 import { Logger } from '@repo/utils';
-import { createClient } from '@/lib/supabase/client';
 import type { Database } from '@/lib/database.types';
-
-type CartItemRow = Database['public']['Tables']['cart_items']['Row'];
-type ProductRow = Database['public']['Tables']['products']['Row'];
+import { createClient } from '@/lib/supabase/client';
 
 export interface CartItem {
   id: string; // cart_item id
@@ -20,6 +17,7 @@ export interface CartItem {
 /**
  * Gets the current user's active cart or creates one.
  */
+// biome-ignore lint/suspicious/noExplicitAny: Supabase client type is complex
 async function getOrCreateCartId(
   supabase: any,
   userId: string,
@@ -73,6 +71,7 @@ export async function fetchCartItems(): Promise<CartItem[]> {
     return [];
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: Joined data structure
   return (items as any[]).map((item) => ({
     id: item.id,
     productId: item.product_id,
