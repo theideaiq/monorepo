@@ -1,0 +1,3 @@
+## 2026-03-23 - Keep .env.example files in sync with Zod environment schemas
+Insight: A discrepancy between the `.env.example` templates and the environment schemas defined in `packages/env` causes local build failures and setup friction for new onboarders since variables are expected but missing from the template.
+Rule: Any `.env.example` file must strictly mirror the variables required by its respective Zod schema in `packages/env` to prevent environment validation errors.
