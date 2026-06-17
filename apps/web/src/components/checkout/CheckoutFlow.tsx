@@ -1,11 +1,11 @@
 'use client';
 
+import { Button } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
-import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '@/stores/cart-store';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -44,11 +44,12 @@ export function CheckoutFlow() {
         <div
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
-          <div
-            className="p-6 flex items-center justify-between cursor-pointer"
+          <button
+            type="button"
+            className="p-6 flex w-full items-center justify-between cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-yellow focus:ring-inset"
             onClick={() => setStep(1)}
           >
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 text-left">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-colors ${step === 1 ? 'bg-brand-yellow text-brand-dark' : 'bg-white/10 text-slate-400'}`}
               >
@@ -61,11 +62,11 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <span className="text-sm text-brand-yellow font-medium">
                 Edit
-              </button>
+              </span>
             )}
-          </div>
+          </button>
 
           <AnimatePresence>
             {step === 1 && (
