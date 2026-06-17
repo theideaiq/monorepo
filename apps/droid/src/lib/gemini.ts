@@ -108,7 +108,7 @@ async function searchProducts(query: string) {
   const sanitizedQuery = rawQuery.replace(/[\r\n\t]/g, ' ');
   const safeQueryForLog =
     sanitizedQuery.length > MAX_LOG_QUERY_LENGTH
-      ? sanitizedQuery.slice(0, MAX_LOG_QUERY_LENGTH) + '…'
+      ? `${sanitizedQuery.slice(0, MAX_LOG_QUERY_LENGTH)}…`
       : sanitizedQuery;
   // biome-ignore lint/suspicious/noConsole: logging is fine for search tracking
   console.log(

@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
+import { Button } from '@repo/ui';
+import { formatPrice } from '@repo/utils';
 import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
 
@@ -35,7 +36,7 @@ export function CheckoutFlow() {
     // Redirect or clear cart
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = formatPrice(total);
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -44,6 +45,8 @@ export function CheckoutFlow() {
         <div
           className={`rounded-3xl border transition-all overflow-hidden ${step === 1 ? 'bg-white/5 border-brand-yellow/50 shadow-[0_0_20px_rgba(250,204,21,0.1)]' : 'bg-black/40 border-white/5'}`}
         >
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: Interactive step header */}
+          {/* biome-ignore lint/a11y/noStaticElementInteractions: Interactive step header */}
           <div
             className="p-6 flex items-center justify-between cursor-pointer"
             onClick={() => setStep(1)}
@@ -61,7 +64,7 @@ export function CheckoutFlow() {
               </h3>
             </div>
             {step > 1 && (
-              <button className="text-sm text-brand-yellow font-medium">
+              <button type="button" className="text-sm text-brand-yellow font-medium">
                 Edit
               </button>
             )}
@@ -246,6 +249,7 @@ export function CheckoutFlow() {
             {items.map((item) => (
               <div key={item.id} className="flex gap-3">
                 <div className="w-12 h-12 bg-black rounded flex-shrink-0 relative overflow-hidden">
+                  {/* biome-ignore lint/performance/noImgElement: dynamic image */}
                   <img
                     src={item.image}
                     alt={item.title}
@@ -260,9 +264,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {new Intl.NumberFormat('en-IQ').format(
-                      item.price * item.quantity,
-                    )}{' '}
+                    {formatPrice(item.price * item.quantity)}{' '}
                     IQD
                   </div>
                 </div>

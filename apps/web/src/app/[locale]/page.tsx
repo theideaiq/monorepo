@@ -78,9 +78,8 @@ export default async function Home({ params }: Props) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: static list
-            <Link key={i} href={service.href} className="block h-full">
+          {services.map((service) => (
+            <Link key={service.href} href={service.href} className="block h-full">
               <Card
                 className={`h-full hover:-translate-y-2 transition-transform duration-300 border-t-4 bg-white/5 border-white/10 ${service.color}`}
               >

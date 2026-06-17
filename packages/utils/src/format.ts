@@ -1,5 +1,28 @@
 // packages/utils/src/format.ts
 
+// Static formatters to avoid re-instantiation overhead
+const CURRENCY_FORMATTERS = {
+  USD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }),
+  IQD: new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'IQD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }),
+};
+
+// Formatter for raw price display (decimal, no currency symbol, no fractions)
+// Used extensively in product views where currency symbol is styled separately
+const IQD_PRICE_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
 /**
  * Format a number as currency.
  *
@@ -19,13 +42,20 @@ export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  const formatter = CURRENCY_FORMATTERS[currency] || CURRENCY_FORMATTERS.USD;
+  return formatter.format(amount);
+}
+
+/**
+ * Format a price for display (typically IQD).
+ * Formats as decimal with thousands separators and no decimal places.
+ * Optimized for performance by using a static formatter instance.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted price string (e.g. "15,000").
+ */
+export function formatPrice(amount: number): string {
+  return IQD_PRICE_FORMATTER.format(amount);
 }
 
 /**
@@ -33,7 +63,7 @@ export function formatCurrency(
  * Uses 'en-US' locale with 'MMM D, YYYY' format.
  *
  * @param date - The date to format (string or Date object).
- * @returns A formatted date string (e.g., "Jan 15, 2026").
+ * @returns A formatted date string (e.g. "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
   if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
@@ -49,7 +79,7 @@ export function formatDate(date: string | Date): string {
  * Useful for displaying large metrics (views, likes) in a concise way.
  *
  * @param number - The number to format.
- * @returns The compact string representation (e.g., "1.5M").
+ * @returns The compact string representation (e.g. "1.5M").
  *
  * @example
  * formatCompactNumber(1500000) // -> "1.5M"
