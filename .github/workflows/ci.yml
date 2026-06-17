@@ -96,6 +96,18 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          # Dummy values for required env vars to satisfy Zod validation during build
+          RESEND_API_KEY: "re_123456789"
+          WAYL_SECRET_KEY: "wayl_live_secret_123"
+          ZAIN_SECRET_KEY: "zain_live_secret_123"
+          WAYL_WEBHOOK_SECRET: "whsec_12345"
+          UPSTASH_REDIS_REST_URL: "https://example.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "example_token"
+          GEMINI_API_KEY: "AIzaSyDummyKey"
+          SUPABASE_SERVICE_ROLE_KEY: "eyJDummyServiceRoleKey"
+          TELEGRAM_BOT_TOKEN: "123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789" # Format validation
+          WEB_APP_URL: "http://localhost:3000"
         run: pnpm turbo build
 
   e2e:

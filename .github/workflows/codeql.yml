@@ -65,8 +65,13 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # 0. Install pnpm (required for workspace scripts if any)
+          npm install -g pnpm && pnpm install
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # Direct node execution avoids workspace resolution issues
+          cd apps/web && node scripts/restore-mobile-secrets.js
+          cd ../..
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,9 +85,16 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # 0. Install pnpm
+          npm install -g pnpm && pnpm install
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          cd apps/web && node scripts/restore-mobile-secrets.js
           
+          # 1.5 Sync Capacitor (Generates iOS project if missing)
+          npx cap sync ios
+          cd ../..
+
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
