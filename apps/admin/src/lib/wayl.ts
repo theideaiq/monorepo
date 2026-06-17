@@ -7,4 +7,5 @@ const adapter = new WaylAdapter({
   webhookSecret: adminEnv.WAYL_WEBHOOK_SECRET,
 });
 
-export const waylClient = adapter.client;
+import type { WaylClient } from '@repo/wayl';
+export const waylClient: WaylClient = adapter.client;
