@@ -45,6 +45,8 @@ jobs:
         with:
           node-version: 20
 
+      - uses: pnpm/action-setup@v4
+
       # Required for Android Gradle Build
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -65,8 +67,11 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # 0. Install dependencies (Required for secrets:restore)
+          pnpm install
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +85,11 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # 0. Install dependencies (Required for secrets:restore)
+          pnpm install
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
