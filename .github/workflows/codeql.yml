@@ -43,7 +43,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -65,14 +65,24 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # Install dependencies to ensure scripts can run
+          pnpm install --frozen-lockfile || npm install
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # Navigate to the package directory to run the script directly if workspace flag fails
+          cd apps/web && node scripts/restore-mobile-secrets.js
+
+          # Create dummy web assets directory if missing (Capacitor requirement)
+          mkdir -p out && touch out/index.html
+
+          # Sync Capacitor (generates Android project)
+          npx cap sync android
           
           # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
+          chmod +x android/gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
+          cd android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -80,23 +90,36 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # Install dependencies to ensure scripts can run
+          pnpm install --frozen-lockfile || npm install
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # Navigate to the package directory to run the script directly if workspace flag fails
+          cd apps/web && node scripts/restore-mobile-secrets.js
+
+          # Create dummy web assets directory if missing (Capacitor requirement)
+          mkdir -p out && touch out/index.html
+
+          # Sync Capacitor (generates iOS project)
+          npx cap sync ios
           
           # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
+          if [ -f "ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
+              cd ios/App && pod install --repo-update && cd -
+              BUILD_TARGET="-workspace ios/App/App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+              xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
+              BUILD_TARGET="-project ios/App/App.xcodeproj"
           fi
           
           # 3. Build for Simulator (No Signing Required)
           echo "Building Project..."
+          # Must be in apps/web directory for paths to align if we are running xcodebuild relative to it?
+          # Wait, the previous script assumed we were in root. Let's stay in apps/web.
+
           xcodebuild build \
             $BUILD_TARGET \
             -scheme App \
