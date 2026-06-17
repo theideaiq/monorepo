@@ -44,7 +44,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 border-b ${
         isScrolled
-          ? 'bg-black/70 backdrop-blur-xl border-white/10 py-3'
+          ? 'bg-black/80 backdrop-blur-xl border-white/10 py-3'
           : 'bg-transparent border-transparent py-5'
       }`}
     >
@@ -75,7 +75,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
               key={item.href}
               href={item.href}
               className={`text-sm font-medium transition-colors hover:text-brand-yellow ${
-                isActive(item.href) ? 'text-brand-yellow' : 'text-slate-300'
+                isActive(item.href) ? 'text-brand-yellow' : 'text-slate-400'
               }`}
             >
               {item.label}
@@ -87,14 +87,14 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
         <div className="flex items-center gap-4">
           <button
             type="button"
-            className="text-white hover:text-brand-yellow transition-colors"
+            className="text-slate-200 hover:text-brand-yellow transition-colors"
           >
             <Search size={20} />
           </button>
 
           <Link
             href="/account"
-            className="hidden md:block text-white hover:text-brand-yellow transition-colors"
+            className="hidden md:block text-slate-200 hover:text-brand-yellow transition-colors"
           >
             <User size={20} />
           </Link>
@@ -102,7 +102,7 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
           <button
             type="button"
             onClick={toggleCart}
-            className="relative text-white hover:text-brand-yellow transition-colors"
+            className="relative text-slate-200 hover:text-brand-yellow transition-colors"
           >
             <ShoppingCart size={20} />
             {mounted && cartItems.length > 0 && (
