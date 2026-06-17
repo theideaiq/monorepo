@@ -6,12 +6,12 @@ import { motion } from 'framer-motion';
 import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { useProducts } from '@/hooks/queries/use-products';
-import { useCartStore } from '@/stores/cart-store';
-import { ProductCard } from '@/components/ui/ProductCard';
-import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
+import { ProductCard } from '@/components/ui/ProductCard';
+import { useProducts } from '@/hooks/queries/use-products';
 import type { Product } from '@/services/products';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 const CATEGORIES = [
   { name: 'Gaming', icon: <Gamepad2 size={18} /> },
@@ -28,7 +28,7 @@ export default function MegastorePage() {
   const addItem = useCartStore((s) => s.addItem);
   const { openCart } = useUIStore();
 
-  const handleQuickAdd = (e: React.MouseEvent, product: any) => {
+  const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
     e.preventDefault(); // Prevent navigation
     addItem({
       id: product.id,
@@ -83,7 +83,10 @@ export default function MegastorePage() {
               collectibles. Same-day delivery in Baghdad.
             </p>
             <div className="flex gap-4">
-              <Button className="h-14 px-8 bg-white text-black hover:bg-slate-200 font-bold rounded-full">
+              <Button
+                size="xl"
+                className="bg-white text-black hover:bg-slate-200 font-bold rounded-full"
+              >
                 Shop Deals
               </Button>
             </div>
@@ -187,7 +190,10 @@ export default function MegastorePage() {
                   180,000
                 </span>
               </div>
-              <Button className="h-14 px-10 bg-brand-pink hover:bg-pink-600 text-white font-bold rounded-full text-lg border-none">
+              <Button
+                size="xl"
+                className="bg-brand-pink hover:bg-pink-600 text-white font-bold rounded-full border-none"
+              >
                 Claim Deal
               </Button>
             </div>

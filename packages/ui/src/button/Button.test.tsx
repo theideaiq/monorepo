@@ -29,4 +29,9 @@ describe('Button', () => {
     );
     expect(container.firstChild).toHaveClass('bg-brand-yellow');
   });
+
+  it('applies xl size classes', () => {
+    const { container } = render(<Button size="xl">Extra Large</Button>);
+    expect(container.firstChild).toHaveClass('h-14');
+  });
 });

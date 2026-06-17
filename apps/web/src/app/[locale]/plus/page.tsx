@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 import {
   BookOpen,
   Check,
-  Gamepad2,
-  Zap,
   Crown,
   Film,
+  Gamepad2,
   Music,
+  Zap,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useState } from 'react';
@@ -155,7 +155,8 @@ export default function PlusHome() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
-                className="bg-brand-yellow text-brand-dark hover:bg-white h-14 px-10 text-lg rounded-full font-bold"
+                size="xl"
+                className="bg-brand-yellow text-brand-dark hover:bg-white rounded-full font-bold"
                 onClick={() =>
                   document
                     .getElementById('tiers')
@@ -166,7 +167,8 @@ export default function PlusHome() {
               </Button>
               <Button
                 variant="outline"
-                className="h-14 px-10 rounded-full text-white border-white/20 hover:bg-white/10"
+                size="xl"
+                className="rounded-full text-white border-white/20 hover:bg-white/10"
               >
                 Learn More
               </Button>
@@ -231,10 +233,11 @@ export default function PlusHome() {
               </ul>
 
               <Button
+                size="xl"
                 isLoading={loadingTier === tier.id}
                 onClick={() => handleSubscribe(tier)}
                 disabled={loadingTier !== null}
-                className={`w-full py-4 h-14 rounded-xl font-bold text-lg transition-all border-none
+                className={`w-full rounded-xl font-bold transition-all border-none
                   ${
                     tier.popular
                       ? 'bg-brand-yellow text-brand-dark hover:bg-white'

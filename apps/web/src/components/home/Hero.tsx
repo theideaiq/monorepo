@@ -1,6 +1,7 @@
 'use client';
 
 import { buttonVariants } from '@repo/ui';
+import { cn } from '@repo/utils';
 import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -28,10 +29,12 @@ export default function Hero() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               href="/register"
-              className={buttonVariants({
-                className:
-                  'h-14 px-8 text-lg w-full sm:w-auto bg-brand-yellow text-brand-dark hover:bg-white border-none',
-              })}
+              className={cn(
+                buttonVariants({
+                  size: 'xl',
+                }),
+                'w-full sm:w-auto bg-brand-yellow text-brand-dark hover:bg-white border-none',
+              )}
             >
               {t('cta_primary')}
               <ArrowRight
@@ -42,11 +45,13 @@ export default function Hero() {
             </Link>
             <Link
               href="/about"
-              className={buttonVariants({
-                variant: 'outline',
-                className:
-                  'h-14 px-8 text-lg w-full sm:w-auto text-white border-white/20 hover:bg-white/10',
-              })}
+              className={cn(
+                buttonVariants({
+                  variant: 'outline',
+                  size: 'xl',
+                }),
+                'w-full sm:w-auto bg-transparent text-white border-white/20 hover:bg-white/10',
+              )}
             >
               {t('cta_secondary')}
             </Link>

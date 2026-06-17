@@ -1,11 +1,11 @@
 'use client';
 
+import { Button, Card, Input } from '@repo/ui';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
-import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '@/stores/cart-store';
 
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
@@ -222,7 +222,8 @@ export function CheckoutFlow() {
                     <Button
                       onClick={handlePayment}
                       disabled={loading}
-                      className="w-full h-14 bg-brand-yellow text-brand-dark font-black text-lg flex items-center justify-center gap-2"
+                      size="xl"
+                      className="w-full bg-brand-yellow text-brand-dark font-black flex items-center justify-center gap-2"
                     >
                       {loading && <Loader2 className="animate-spin" />}
                       PAY {formattedTotal} IQD

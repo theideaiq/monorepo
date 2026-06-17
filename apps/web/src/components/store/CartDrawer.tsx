@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
+import { Button } from '@repo/ui';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Drawer } from '@/components/ui/Drawer';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
-import { Button } from '@repo/ui';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -32,7 +32,8 @@ export function CartDrawer() {
             <span>{formattedTotal} IQD</span>
           </div>
           <Button
-            className="w-full h-14 bg-brand-yellow text-brand-dark font-bold text-lg hover:bg-white"
+            size="xl"
+            className="w-full bg-brand-yellow text-brand-dark font-bold hover:bg-white"
             onClick={handleCheckout}
             disabled={items.length === 0}
           >
