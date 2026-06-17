@@ -24,6 +24,15 @@ export function SubscriptionCard({
   return (
     <div
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      // biome-ignore lint/a11y/useSemanticElements: Needs to be a div for layout
+      role="button"
+      tabIndex={0}
       className={`
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
         ${
