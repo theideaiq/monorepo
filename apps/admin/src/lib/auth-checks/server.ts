@@ -1,21 +1,8 @@
 import { ROLES } from '@/lib/constants';
 import { createClient } from '@/lib/supabase/server';
+import { hasAdminAccess } from './client';
 
-/**
- * Checks if the provided role has administrative privileges (Admin or Superadmin).
- * Is case-insensitive.
- *
- * @param role - The user role string to check.
- * @returns True if the role is Admin or Superadmin, false otherwise.
- */
-export function hasAdminAccess(role?: string | null): boolean {
-  if (!role) return false;
-  const normalizedRole = role.toLowerCase();
-  return (
-    normalizedRole === ROLES.ADMIN.toLowerCase() ||
-    normalizedRole === ROLES.SUPERADMIN.toLowerCase()
-  );
-}
+export { hasAdminAccess };
 
 /**
  * Verifies that the current user is authenticated, not banned, and has Admin or Superadmin role.

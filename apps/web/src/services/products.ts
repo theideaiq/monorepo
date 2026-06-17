@@ -1,6 +1,6 @@
 import { Logger } from '@repo/utils';
+import type { Database } from '@/lib/database.types';
 import { createClient } from '@/lib/supabase/client';
-import type { Database, Json } from '@/lib/database.types';
 
 type DBProduct = Database['public']['Tables']['products']['Row'] & {
   reviews?: { rating: number }[];
@@ -25,10 +25,12 @@ export interface Product {
   condition: string;
   seller: string;
   rating: number;
+  reviewCount: number;
   image: string;
   images: string[];
   isVerified: boolean;
   description: string;
+  // biome-ignore lint/suspicious/noExplicitAny: Dynamic JSON data from DB
   details: Record<string, any>;
   variants: ProductVariant[];
   stock: number;
@@ -68,6 +70,7 @@ export async function getProducts(limit = 20): Promise<Product[]> {
         condition: 'new',
         seller: 'The IDEA Official',
         rating: 4.8,
+        reviewCount: 124,
         image:
           'https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600',
         images: [],
@@ -86,6 +89,7 @@ export async function getProducts(limit = 20): Promise<Product[]> {
         condition: 'new',
         seller: 'The IDEA Official',
         rating: 5.0,
+        reviewCount: 42,
         image:
           'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=1600',
         images: [],
@@ -132,6 +136,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
       condition: 'new',
       seller: 'The IDEA Official',
       rating: 4.8,
+      reviewCount: 124,
       image:
         'https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600',
       images: [],
@@ -164,7 +169,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 /**
  * Maps Database Product Row to UI Product Object
  */
-function mapDBProductToUI(item: DBProduct): Product {
+export function mapDBProductToUI(item: DBProduct): Product {
   const ratings = item.reviews?.map((r) => r.rating) || [];
   const avgRating =
     ratings.length > 0
@@ -190,10 +195,12 @@ function mapDBProductToUI(item: DBProduct): Product {
     condition: item.condition,
     seller: item.seller,
     rating: Number(avgRating.toFixed(1)),
+    reviewCount: ratings.length,
     image: item.image_url || '',
     images: item.images || (item.image_url ? [item.image_url] : []),
     isVerified: item.is_verified,
     description: item.description || '',
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic JSON data from DB
     details: (item.details as Record<string, any>) || {},
     variants,
     stock: item.stock_count,

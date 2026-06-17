@@ -58,6 +58,8 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
+        # Workaround for Kotlin/Swift manual build mode issues
+        queries: security-and-quality
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
