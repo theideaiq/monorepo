@@ -34,9 +34,8 @@ export interface Database {
           name: string;
           // ... (omitting insert types for brevity as we primarily read in frontend)
         };
-        Update: {
-          // ...
-        };
+        // biome-ignore lint/complexity/noBannedTypes: placeholder
+        Update: {};
       };
       product_variants: {
         Row: {
