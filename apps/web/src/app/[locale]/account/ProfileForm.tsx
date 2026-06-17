@@ -1,53 +1,58 @@
-'use client';
-
+import { Button } from '@repo/ui';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { updateProfile } from '@/actions/account';
 
-export default function ProfileForm({ profile }: { profile: any }) {
+export default function ProfileForm({
+  profile,
+}: {
+  profile: { full_name?: string; phone?: string; [key: string]: unknown };
+}) {
   const t = useTranslations('Account');
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(formData: FormData) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
+    const formData = new FormData(e.currentTarget);
     try {
       await updateProfile(formData);
       toast.success('Profile updated');
-    } catch (e: any) {
-      toast.error(e.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <form
-      action={handleSubmit}
-      className="bg-white p-6 rounded-lg shadow border border-slate-100 max-w-md"
-    >
-      <div className="mb-4">
-        <label
-          htmlFor="fullName"
-          className="block text-sm font-medium text-slate-700 mb-1"
-        >
-          Full Name
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label htmlFor="full_name" className="block text-sm font-medium mb-1">
+          {t('fullName')}
         </label>
         <input
-          type="text"
-          name="fullName"
-          id="fullName"
+          id="full_name"
+          name="full_name"
           defaultValue={profile?.full_name || ''}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3"
         />
       </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white rounded-md py-2 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
-      >
-        {loading ? 'Saving...' : t('save')}
-      </button>
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium mb-1">
+          {t('phone')}
+        </label>
+        <input
+          id="phone"
+          name="phone"
+          defaultValue={profile?.phone || ''}
+          className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3"
+        />
+      </div>
+      <Button type="submit" isLoading={loading}>
+        {t('save')}
+      </Button>
     </form>
   );
 }

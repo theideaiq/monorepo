@@ -1,223 +1,182 @@
 'use client';
 
-import { Button, Input } from '@repo/ui';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Chrome, ArrowRight, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Button } from '@repo/ui';
+import { Lock, Mail, User } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import {
+  resetPassword,
+  signInWithEmail,
+  signUpWithEmail,
+} from '@/actions/auth';
 
-const supabase = createClient();
-
-export default function AuthPage() {
-  const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [loading, setLoading] = useState(false);
+export default function LoginPage() {
+  const t = useTranslations('Auth');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get('next') || '/';
 
-  // Form States
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login');
+  const [loading, setLoading] = useState(false);
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    const formData = new FormData(e.currentTarget);
 
     try {
       if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        toast.success('Welcome back to The IDEA.');
-        router.push('/account');
+        await signInWithEmail(formData);
+        toast.success(t('loginSuccess'));
+        router.push(next);
+        router.refresh();
+      } else if (mode === 'register') {
+        await signUpWithEmail(formData);
+        toast.success(t('checkEmail'));
+        setMode('login');
       } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { full_name: fullName },
-          },
-        });
-        if (error) throw error;
-        toast.success('Account created! Please check your email.');
+        await resetPassword(formData);
+        toast.success(t('resetSent'));
         setMode('login');
       }
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) toast.error(error.message);
-  };
-
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-brand-bg">
-      {/* LEFT: Brand Art */}
-      <div className="relative hidden md:flex flex-col justify-between p-12 bg-black overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop')] bg-cover bg-center opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-transparent to-transparent" />
-
-        <div className="relative z-10">
-          <h1 className="text-4xl font-black text-white tracking-tighter mb-2">
-            THE IDEA<span className="text-brand-yellow">.</span>
+    <div className="min-h-screen flex items-center justify-center py-20 px-4 bg-black">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-black text-white mb-2">
+            {mode === 'login' && t('loginTitle')}
+            {mode === 'register' && t('registerTitle')}
+            {mode === 'forgot' && t('forgotTitle')}
           </h1>
-          <p className="text-slate-400">Innovation for Every Aspect of Life.</p>
+          <p className="text-slate-400">
+            {mode === 'login' && t('loginSubtitle')}
+            {mode === 'register' && t('registerSubtitle')}
+            {mode === 'forgot' && t('forgotSubtitle')}
+          </p>
         </div>
 
-        <div className="relative z-10">
-          <blockquote className="text-xl font-medium text-white max-w-lg leading-relaxed">
-            &ldquo;The future is not something we enter. The future is something
-            we create.&rdquo;
-          </blockquote>
-        </div>
-      </div>
-
-      {/* RIGHT: Auth Forms */}
-      <div className="flex items-center justify-center p-6 md:p-12">
-        <div className="w-full max-w-md space-y-8">
-          {/* Header */}
-          <div className="text-center md:text-left">
-            <h2 className="text-3xl font-bold text-white mb-2">
-              {mode === 'login' ? 'Welcome back' : 'Join the revolution'}
-            </h2>
-            <p className="text-slate-400">
-              {mode === 'login'
-                ? 'Enter your credentials to access your account.'
-                : 'Create your account to start shopping and renting.'}
-            </p>
-          </div>
-
-          {/* Social Auth */}
-          <Button
-            onClick={handleGoogle}
-            className="w-full h-12 bg-white text-black hover:bg-slate-200 border-none font-bold flex items-center justify-center gap-3"
-          >
-            <Chrome size={20} className="text-blue-600" />
-            Continue with Google
-          </Button>
-
-          <div className="relative flex items-center gap-4 py-4">
-            <div className="h-px bg-white/10 flex-1" />
-            <span className="text-xs text-slate-500 uppercase tracking-widest">
-              Or with email
-            </span>
-            <div className="h-px bg-white/10 flex-1" />
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleAuth} className="space-y-4">
-            <AnimatePresence mode="wait">
-              {mode === 'register' && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden"
+        <div className="bg-[#1a1a1a] border border-white/10 rounded-3xl p-6 md:p-8">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {mode === 'register' && (
+              <div>
+                <label
+                  htmlFor="full_name"
+                  className="text-sm text-slate-400 mb-1 block"
                 >
-                  <div className="mb-4">
-                    <label className="text-sm text-slate-400 mb-1 block">
-                      Full Name
-                    </label>
-                    <div className="relative">
-                      <User
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                        size={18}
-                      />
-                      <input
-                        type="text"
-                        required={mode === 'register'}
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                        placeholder="John Doe"
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  Full Name
+                </label>
+                <div className="relative">
+                  <User
+                    size={20}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
+                  />
+                  <input
+                    id="full_name"
+                    name="full_name"
+                    type="text"
+                    required
+                    className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 pl-12 text-white placeholder-slate-600 focus:outline-none focus:border-brand-pink focus:ring-1 focus:ring-brand-pink transition-all"
+                    placeholder="John Doe"
+                  />
+                </div>
+              </div>
+            )}
 
             <div>
-              <label className="text-sm text-slate-400 mb-1 block">
+              <label
+                htmlFor="email"
+                className="text-sm text-slate-400 mb-1 block"
+              >
                 Email Address
               </label>
               <div className="relative">
                 <Mail
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                  size={18}
+                  size={20}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
                 />
                 <input
+                  id="email"
+                  name="email"
                   type="email"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                  placeholder="name@example.com"
+                  className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 pl-12 text-white placeholder-slate-600 focus:outline-none focus:border-brand-pink focus:ring-1 focus:ring-brand-pink transition-all"
+                  placeholder="you@example.com"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="text-sm text-slate-400 mb-1 block">
-                Password
-              </label>
-              <div className="relative">
-                <Lock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
-                  size={18}
-                />
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-12 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-white placeholder-slate-600 focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all"
-                  placeholder="••••••••"
-                />
+            {mode !== 'forgot' && (
+              <div>
+                <label
+                  htmlFor="password"
+                  className="text-sm text-slate-400 mb-1 block"
+                >
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock
+                    size={20}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
+                  />
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 pl-12 text-white placeholder-slate-600 focus:outline-none focus:border-brand-pink focus:ring-1 focus:ring-brand-pink transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <Button
               type="submit"
-              className="w-full h-12 bg-brand-yellow text-brand-dark hover:bg-yellow-400 border-none font-bold text-lg mt-6"
-              disabled={loading}
+              isLoading={loading}
+              className="w-full h-12 bg-white text-black font-bold mt-4 hover:bg-brand-pink hover:text-white transition-colors"
             >
-              {loading ? (
-                <Loader2 className="animate-spin" />
-              ) : mode === 'login' ? (
-                'Sign In'
-              ) : (
-                'Create Account'
-              )}
+              {mode === 'login' && t('signIn')}
+              {mode === 'register' && t('createAccount')}
+              {mode === 'forgot' && t('sendResetLink')}
             </Button>
           </form>
 
-          {/* Toggle */}
-          <div className="text-center">
-            <p className="text-slate-400">
-              {mode === 'login'
-                ? "Don't have an account? "
-                : 'Already have an account? '}
+          <div className="mt-6 pt-6 border-t border-white/10 flex flex-col gap-3 text-sm text-center">
+            {mode === 'login' ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setMode('forgot')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Forgot your password?
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('register')}
+                  className="text-brand-yellow hover:text-white transition-colors"
+                >
+                  Don't have an account? Sign up
+                </button>
+              </>
+            ) : (
               <button
-                onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-                className="text-brand-yellow hover:underline font-bold"
+                type="button"
+                onClick={() => setMode('login')}
+                className="text-brand-yellow hover:text-white transition-colors"
               >
-                {mode === 'login' ? 'Register' : 'Log in'}
+                Back to Sign In
               </button>
-            </p>
+            )}
           </div>
         </div>
       </div>
