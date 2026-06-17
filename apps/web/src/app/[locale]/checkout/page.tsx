@@ -1,34 +1,22 @@
+import type { Metadata } from 'next';
 import { CheckoutFlow } from '@/components/checkout/CheckoutFlow';
-import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-import { redirect } from 'next/navigation';
+import { redirect } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 
 export const metadata: Metadata = {
-  title: 'Checkout | The IDEA',
+  title: 'Checkout',
+  description: 'Secure checkout for your order',
 };
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
-
-export default async function CheckoutPage({ params }: Props) {
-  const { locale } = await params;
+export default async function CheckoutPage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/login?redirect=/checkout`);
+    redirect('/login?redirect=/checkout');
   }
 
-  return (
-    <div className="container mx-auto px-4 py-12 pt-24 min-h-screen">
-      <h1 className="text-3xl font-black text-white mb-8 tracking-tight">
-        Checkout
-      </h1>
-      <CheckoutFlow />
-    </div>
-  );
+  return <CheckoutFlow user={user} />;
 }

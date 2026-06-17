@@ -71,7 +71,8 @@ export default function MFAPage() {
       router.push('/');
       router.refresh();
     } catch (err: any) {
-      toast.error(err.message);
+      // biome-ignore lint/suspicious/noExplicitAny: Error handling for unknown types
+      toast.error((err as any).message);
     } finally {
       setLoading(false);
     }

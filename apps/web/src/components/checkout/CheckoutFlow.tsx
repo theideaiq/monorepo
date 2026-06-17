@@ -1,13 +1,18 @@
 'use client';
 
+import { Button, Card, Input } from '@repo/ui';
+import type { User } from '@supabase/supabase-js';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, CreditCard, Loader2, Lock } from 'lucide-react';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Lock, CreditCard, Loader2 } from 'lucide-react';
-import { Button, Input, Card } from '@repo/ui';
-import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
+import { useCartStore } from '@/stores/cart-store';
 
-export function CheckoutFlow() {
+interface CheckoutFlowProps {
+  user: User;
+}
+
+export function CheckoutFlow({ user }: CheckoutFlowProps) {
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
   const { total, items } = useCartStore();
@@ -92,6 +97,7 @@ export function CheckoutFlow() {
                           }
                           className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-brand-yellow outline-none"
                           placeholder="John Doe"
+                          defaultValue={user?.user_metadata?.full_name || ''}
                         />
                       </div>
                       <div className="space-y-1">
