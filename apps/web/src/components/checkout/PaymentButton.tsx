@@ -30,7 +30,7 @@ function SubmitButton() {
       className={cn(
         'w-full rounded-full py-4 px-6 font-bold text-black transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed',
         // Using arbitrary value for the specific gold requirement
-        'bg-[#facc15] hover:bg-[#eab308]',
+        'bg-brand-yellow hover:bg-yellow-500',
         'flex items-center justify-center gap-2 shadow-lg hover:shadow-xl',
       )}
     >
