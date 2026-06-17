@@ -58,6 +58,7 @@ export function SubscriptionCard({
 
       <div className="space-y-3">
         {plan.features.map((feature, idx) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: Static list from config
           <div key={idx} className="flex items-center gap-3">
             <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
               <Check size={12} strokeWidth={3} />

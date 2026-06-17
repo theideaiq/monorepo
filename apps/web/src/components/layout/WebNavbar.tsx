@@ -15,6 +15,7 @@ interface WebNavbarProps {
   desktopActions?: React.ReactNode;
   mobileActions?: React.ReactNode;
   // keeping props for compatibility with layout calling signature, though we might ignore some
+  // biome-ignore lint/suspicious/noExplicitAny: Legacy props support
   [key: string]: any;
 }
 

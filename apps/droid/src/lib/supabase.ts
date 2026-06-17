@@ -6,8 +6,8 @@ import { createClient } from '@supabase/supabase-js';
 // The bot acts as an admin/system user to search products and read data
 // that might be restricted or to perform actions on behalf of the system.
 export const supabase = createClient<Database>(
-  env.NEXT_PUBLIC_SUPABASE_URL,
-  env.SUPABASE_SERVICE_ROLE_KEY,
+  env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+  env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder_key',
   {
     auth: {
       autoRefreshToken: false,
