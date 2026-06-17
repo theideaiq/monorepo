@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { formatIQD } from '@/lib/formatters';
 import type { Product } from '@/services/products';
 
 interface ProductCardProps {
@@ -17,11 +18,8 @@ export function ProductCard({
   onAddToCart,
   priority = false,
 }: ProductCardProps) {
-  // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  // Format price using cached formatter
+  const price = formatIQD(product.price);
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">
