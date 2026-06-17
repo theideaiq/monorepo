@@ -1,4 +1,4 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, slugify, safeJsonLdStringify } from '@repo/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
@@ -47,6 +47,23 @@ describe('String Utils (@repo/utils)', () => {
       expect(decodeHtmlEntities(null)).toBe('');
       // @ts-expect-error testing runtime safety
       expect(decodeHtmlEntities(undefined)).toBe('');
+    });
+  });
+
+  describe('safeJsonLdStringify', () => {
+    it('should escape < characters', () => {
+      const input = {
+        name: '<script>alert(1)</script>',
+        description: 'Plain text',
+      };
+      const output = safeJsonLdStringify(input);
+      expect(output).toContain('\\u003cscript>');
+      expect(output).not.toContain('<script>');
+    });
+
+    it('should stringify normal objects correctly', () => {
+      const input = { key: 'value' };
+      expect(safeJsonLdStringify(input)).toBe('{"key":"value"}');
     });
   });
 });

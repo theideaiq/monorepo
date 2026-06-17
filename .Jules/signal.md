@@ -1,0 +1,1 @@
+## 2024-05-22 - [Product Schema Gap] **Learning:** Product pages lacked JSON-LD Structured Data, preventing Rich Snippets (stars, price) in SERP. **Action:** Implemented `ProductJsonLd` component and updated `Product` model to include `reviewCount`.
