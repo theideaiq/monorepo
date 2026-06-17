@@ -1,10 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useCartStore } from './cart-store';
+import { type CartItem, useCartStore } from './cart-store';
+
+// Helper to create mock items
+const createMockItem = (overrides?: Partial<CartItem>): Omit<CartItem, 'quantity'> => ({
+  id: 'item-1',
+  productId: 'prod-1',
+  title: 'Test Product',
+  price: 100,
+  image: 'test.jpg',
+  ...overrides,
+});
 
 describe('Cart Store', () => {
-  // Reset store before each test to ensure isolation
   beforeEach(() => {
-    useCartStore.setState({ items: [] });
+    useCartStore.setState({ items: [], total: 0 });
+    localStorage.clear();
   });
 
   afterEach(() => {
@@ -13,61 +23,92 @@ describe('Cart Store', () => {
   });
 
   it('should start with an empty cart', () => {
-    const { items } = useCartStore.getState();
+    const { items, total } = useCartStore.getState();
     expect(items).toEqual([]);
+    expect(total).toBe(0);
   });
 
-  it('should add items to the cart', () => {
+  it('should add a new item to the cart', () => {
     const { addItem } = useCartStore.getState();
+    const newItem = createMockItem({ id: '1', title: 'Apple', price: 50 });
 
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple']);
+    addItem(newItem);
 
-    addItem('banana');
-    expect(useCartStore.getState().items).toEqual(['apple', 'banana']);
+    const state = useCartStore.getState();
+    expect(state.items).toHaveLength(1);
+    expect(state.items[0]).toEqual({ ...newItem, quantity: 1 });
+    expect(state.total).toBe(50);
   });
 
-  it('should remove items from the cart', () => {
+  it('should increment quantity if adding existing item', () => {
+    const { addItem } = useCartStore.getState();
+    const item = createMockItem({ id: '1', price: 50 });
+
+    addItem(item);
+    addItem(item);
+
+    const state = useCartStore.getState();
+    expect(state.items).toHaveLength(1);
+    expect(state.items[0].quantity).toBe(2);
+    expect(state.total).toBe(100);
+  });
+
+  it('should remove an item by id', () => {
     const { addItem, removeItem } = useCartStore.getState();
+    const item1 = createMockItem({ id: '1', price: 10 });
+    const item2 = createMockItem({ id: '2', price: 20 });
 
-    addItem('apple');
-    addItem('banana');
+    addItem(item1);
+    addItem(item2);
 
-    removeItem('apple');
-    expect(useCartStore.getState().items).toEqual(['banana']);
+    expect(useCartStore.getState().items).toHaveLength(2);
+
+    removeItem('1');
+
+    const state = useCartStore.getState();
+    expect(state.items).toHaveLength(1);
+    expect(state.items[0].id).toBe('2');
+    expect(state.total).toBe(20);
+  });
+
+  it('should update item quantity', () => {
+    const { addItem, updateQuantity } = useCartStore.getState();
+    const item = createMockItem({ id: '1', price: 10 });
+
+    addItem(item);
+    updateQuantity('1', 5);
+
+    const state = useCartStore.getState();
+    expect(state.items[0].quantity).toBe(5);
+    expect(state.total).toBe(50);
   });
 
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
-
-    addItem('apple');
-    addItem('banana');
+    addItem(createMockItem());
 
     clearCart();
-    expect(useCartStore.getState().items).toEqual([]);
-  });
 
-  it('should handle duplicate items correctly (removes all instances)', () => {
-    // Current behavior documentation: removing an item removes ALL instances of that value
-    const { addItem, removeItem } = useCartStore.getState();
-
-    addItem('apple');
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple', 'apple']);
-
-    removeItem('apple');
-    expect(useCartStore.getState().items).toEqual([]);
+    const state = useCartStore.getState();
+    expect(state.items).toEqual([]);
+    expect(state.total).toBe(0);
   });
 
   it('should persist state to localStorage', () => {
     const { addItem } = useCartStore.getState();
-    addItem('persistent-item');
+    const item = createMockItem({ id: 'persisted', price: 99 });
 
-    const stored = localStorage.getItem('cart-storage');
+    addItem(item);
+
+    const stored = localStorage.getItem('cart-storage-v2');
     expect(stored).toBeDefined();
+
     if (stored) {
       const parsed = JSON.parse(stored);
-      expect(parsed.state.items).toEqual(['persistent-item']);
+      // zustand persist structure: { state: { ... }, version: ... }
+      expect(parsed.state.items).toHaveLength(1);
+      expect(parsed.state.items[0].id).toBe('persisted');
+      expect(parsed.state.total).toBe(99);
     }
   });
 });
