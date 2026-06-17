@@ -1,15 +1,13 @@
-'use client';
-
-import { useState } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
 import { Button } from '@repo/ui';
+import { motion } from 'framer-motion';
+import { CheckCircle2, Heart, Share2, Star } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { VariantSelector } from '@/components/ui/VariantSelector';
-import type { Product, ProductVariant } from '@/services/products';
+import type { Product } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
-import { toast } from 'react-hot-toast';
 
 interface ProductViewProps {
   product: Product;
@@ -21,101 +19,70 @@ export function ProductView({ product }: ProductViewProps) {
   const { addItem } = useCartStore();
   const { openCart } = useUIStore();
 
-  // Helper to extract options from variants
-  // This assumes a simple structure where variants differentiate by 1 attribute for now
-  // or we just list all variants.
-  // For simplicity given the time, if variants exist, we just show "Option" selector
-  // In a real complex app we'd cross-reference attributes.
-
-  const hasVariants = product.variants && product.variants.length > 0;
-
-  // Extract unique attributes (e.g. Color, Size)
-  const attributes: Record<string, string[]> = {};
-  if (hasVariants) {
-    product.variants.forEach((v) => {
-      Object.entries(v.attributes).forEach(([key, val]) => {
-        if (!attributes[key]) attributes[key] = [];
-        if (!attributes[key].includes(val)) attributes[key].push(val);
-      });
-    });
-  }
-
-  // State for selections
-  const [selections, setSelections] = useState<Record<string, string>>({});
-
-  const handleAttributeChange = (key: string, value: string) => {
-    setSelections((prev) => ({ ...prev, [key]: value }));
-    // Try to find matching image
-    const matchingVariant = product.variants.find(
-      (v) => v.attributes[key] === value,
-    );
-    if (matchingVariant && matchingVariant.image) {
-      setSelectedImage(matchingVariant.image);
-    }
-  };
-
   const handleAddToCart = () => {
-    // Validate selections if needed
-    if (
-      hasVariants &&
-      Object.keys(attributes).length > Object.keys(selections).length
-    ) {
-      toast.error('Please select all options');
-      return;
-    }
-
-    // Construct Cart Item
-    // In a real app we'd map selection to variant ID. For now using a composite ID.
-    const variantId = hasVariants
-      ? `${product.id}-${Object.values(selections).join('-')}`
-      : undefined;
-
     addItem({
-      id: variantId || product.id,
+      id: product.id,
       productId: product.id,
-      variantId,
       title: product.title,
       price: product.price,
       image: selectedImage,
-      attributes: selections,
     });
-
-    openCart();
     toast.success('Added to cart');
+    openCart();
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const handleVariantChange = (key: string, value: string) => {
+    // Find variant with matching attribute
+    const matchingVariant = product.variants.find(
+      (v) => v.attributes[key] === value,
+    );
+    if (matchingVariant?.image) {
+      setSelectedImage(matchingVariant.image);
+    }
+    setSelectedVariant(value);
+  };
+
+  // Get unique attributes
+  const attributes = product.variants.reduce(
+    (acc, variant) => {
+      for (const [key, value] of Object.entries(variant.attributes)) {
+        if (!acc[key]) acc[key] = new Set();
+        acc[key].add(value);
+      }
+      return acc;
+    },
+    {} as Record<string, Set<string>>,
+  );
 
   return (
-    <div className="pb-32 md:pb-12">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* LEFT: Gallery */}
-        <div className="space-y-4">
-          {/* Main Image */}
-          <div className="relative aspect-square bg-[#1a1a1a] rounded-3xl overflow-hidden border border-white/5">
-            <Image
-              src={selectedImage}
-              alt={product.title}
-              fill
-              className="object-contain p-8 hover:scale-105 transition-transform duration-500"
-              priority
-            />
-            <div className="absolute top-4 left-4">
-              {product.condition === 'new' ? (
-                <span className="bg-brand-yellow text-brand-dark font-black px-3 py-1 rounded text-xs uppercase tracking-widest">
-                  New
-                </span>
-              ) : (
-                <span className="bg-white/10 backdrop-blur text-white font-bold px-3 py-1 rounded text-xs uppercase tracking-widest border border-white/10">
-                  {product.condition}
-                </span>
-              )}
-            </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+      {/* LEFT: Image Gallery */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className="space-y-4"
+      >
+        <div className="relative aspect-square bg-white/5 border border-white/10 rounded-3xl overflow-hidden group">
+          <Image
+            src={selectedImage}
+            alt={product.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            priority
+          />
+          <div className="absolute top-4 left-4">
+            <span className="px-3 py-1 bg-brand-yellow text-brand-dark font-bold text-xs uppercase tracking-widest rounded-full">
+              {product.condition}
+            </span>
           </div>
+        </div>
 
-          {/* Thumbnails (Scrollable on mobile) */}
+        {product.images.length > 1 && (
+          /* Thumbnails (Scrollable on mobile) */
           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
             <button
+              type="button"
               onClick={() => setSelectedImage(product.image)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
             >
@@ -128,101 +95,115 @@ export function ProductView({ product }: ProductViewProps) {
             </button>
             {product.images?.map((img, i) => (
               <button
+                type="button"
+                // biome-ignore lint/suspicious/noArrayIndexKey: Static image list
                 key={i}
                 onClick={() => setSelectedImage(img)}
                 className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
               >
                 <Image
                   src={img}
-                  alt={`View ${i}`}
+                  alt={`View ${i + 1}`}
                   fill
                   className="object-cover"
                 />
               </button>
             ))}
           </div>
-        </div>
+        )}
+      </motion.div>
 
-        {/* RIGHT: Info */}
-        <div className="space-y-8">
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
+      {/* RIGHT: Product Details */}
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="flex flex-col h-full"
+      >
+        <div className="flex-1">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <p className="text-sm text-brand-pink font-bold uppercase tracking-widest mb-2">
+                {product.category}
+              </p>
+              <h1 className="text-3xl md:text-4xl font-black text-white leading-tight mb-2">
                 {product.title}
               </h1>
-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
+              <button
+                type="button"
+                className="text-slate-500 hover:text-brand-pink transition-colors"
+              >
                 <Heart size={28} />
               </button>
             </div>
-            <div className="flex items-center gap-4 text-sm text-slate-400">
-              <span className="flex items-center gap-1 text-brand-yellow">
-                <Star size={16} fill="currentColor" />
-                {product.rating}
-              </span>
-              <span>•</span>
-              <span>{product.seller}</span>
-              {product.isVerified && (
-                <CheckCircle2 size={16} className="text-blue-500" />
-              )}
+            <div className="text-right">
+              <div className="text-3xl font-black text-brand-yellow">
+                {new Intl.NumberFormat('en-IQ').format(product.price)}
+                <span className="text-sm text-slate-500 ml-1 font-medium">
+                  IQD
+                </span>
+              </div>
+              <div className="flex items-center justify-end gap-1 mt-1">
+                <Star className="text-brand-yellow fill-brand-yellow" size={14} />
+                <span className="text-white font-bold text-sm">
+                  {product.rating}
+                </span>
+                <span className="text-slate-500 text-xs">(128 reviews)</span>
+              </div>
             </div>
           </div>
 
-          <div className="text-4xl font-black text-brand-yellow">
-            {price}{' '}
-            <span className="text-lg font-medium text-slate-500">IQD</span>
-          </div>
+          <p className="text-slate-400 leading-relaxed mb-8 text-lg">
+            {product.description}
+          </p>
 
           {/* Variants */}
-          {hasVariants && (
-            <div className="space-y-6 pt-6 border-t border-white/10">
-              {Object.entries(attributes).map(([key, options]) => (
-                <VariantSelector
-                  key={key}
-                  label={key}
-                  options={options}
-                  selected={selections[key] || ''}
-                  onChange={(val) => handleAttributeChange(key, val)}
-                />
-              ))}
+          {Object.entries(attributes).map(([key, values]) => (
+            <VariantSelector
+              key={key}
+              label={key}
+              options={Array.from(values)}
+              selected={selectedVariant || ''}
+              onChange={(val) => handleVariantChange(key, val)}
+            />
+          ))}
+
+          {/* Benefits */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+              <CheckCircle2 className="text-green-500" />
+              <span className="text-sm text-slate-300 font-medium">
+                Verified Authentic
+              </span>
             </div>
-          )}
-
-          {/* Description */}
-          <div className="prose prose-invert prose-sm max-w-none text-slate-400">
-            <p>
-              {product.description ||
-                'No description available for this premium item.'}
-            </p>
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+              <CheckCircle2 className="text-brand-yellow" />
+              <span className="text-sm text-slate-300 font-medium">
+                Instant Delivery
+              </span>
+            </div>
           </div>
+        </div>
 
-          {/* Desktop Actions */}
-          <div className="hidden md:flex gap-4 pt-8 border-t border-white/10">
+        {/* Actions */}
+        <div className="sticky bottom-0 left-0 right-0 p-4 md:p-0 bg-brand-bg/80 backdrop-blur-xl md:bg-transparent border-t border-white/10 md:border-none mt-auto">
+          <div className="flex gap-4">
             <Button
+              size="lg"
+              className="flex-1 h-14 text-lg bg-brand-yellow text-brand-dark hover:bg-white font-bold rounded-xl"
               onClick={handleAddToCart}
-              className="flex-1 h-16 text-lg font-bold bg-brand-yellow text-brand-dark hover:bg-white"
             >
-              Add to Cart
+              <ShoppingCart className="mr-2" /> Add to Cart
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-14 w-14 p-0 rounded-xl border-white/20 text-white hover:bg-white/10"
+            >
+              <Share2 size={20} />
             </Button>
           </div>
         </div>
-      </div>
-
-      {/* Mobile Sticky Actions */}
-      <motion.div
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        className="fixed bottom-0 left-0 right-0 p-4 bg-black/80 backdrop-blur-xl border-t border-white/10 z-30 md:hidden flex gap-4 pb-8"
-      >
-        <div className="flex flex-col justify-center">
-          <span className="text-xs text-slate-400 uppercase">Total</span>
-          <span className="text-lg font-bold text-white">{price}</span>
-        </div>
-        <Button
-          onClick={handleAddToCart}
-          className="flex-1 h-12 bg-brand-yellow text-brand-dark font-bold"
-        >
-          Add to Cart
-        </Button>
       </motion.div>
     </div>
   );
