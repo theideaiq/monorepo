@@ -7,4 +7,6 @@ const adapter = new WaylAdapter({
   webhookSecret: adminEnv.WAYL_WEBHOOK_SECRET,
 });
 
-export const waylClient = adapter.client;
+// Since WaylClient is an internal class of @repo/payment-engine's wayl adapter (or @repo/wayl), we can export it via type inference or cast it.
+// We avoid importing directly from @repo/wayl to avoid dependency issues if it's not in package.json.
+export const waylClient = adapter.client as any;
