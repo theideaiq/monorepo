@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { iqdFormatter } from '@/lib/formatters';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
 import { Button } from '@repo/ui';
@@ -84,7 +85,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const price = iqdFormatter.format(product.price);
 
   return (
     <div className="pb-32 md:pb-12">
