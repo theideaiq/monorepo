@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 // that might be restricted or to perform actions on behalf of the system.
 export const supabase = createClient<Database>(
   env.NEXT_PUBLIC_SUPABASE_URL,
-  env.SUPABASE_SERVICE_ROLE_KEY,
+  env.SUPABASE_SERVICE_ROLE_KEY || 'dummy_key',
   {
     auth: {
       autoRefreshToken: false,
