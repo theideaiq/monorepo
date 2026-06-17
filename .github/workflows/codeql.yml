@@ -67,10 +67,10 @@ jobs:
         run: |
           # 1. Restore Secrets (Generates google-services.json)
           npm run secrets:restore --workspace=apps/web
-          
+
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
-          
+
           # 3. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 

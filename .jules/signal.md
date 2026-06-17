@@ -1,0 +1,3 @@
+## 2024-04-07 - Missing Product Structured Data
+**Learning:** Core business entities (like Products on `/product/[slug]`) were missing specific JSON-LD Schema.org Structured Data components. Without it, search engines cannot extract Rich Snippet metadata (price, rating, availability), missing out on enhanced SERP visibility.
+**Action:** When adding or maintaining pages for core business entities, ensure specific Schema.org JSON-LD components (e.g., `ProductJsonLd`) are injected directly into their Next.js page views, properly sanitized to avoid XSS vulnerabilities.
