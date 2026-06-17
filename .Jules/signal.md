@@ -1,0 +1,3 @@
+## 2025-03-26 - Missing Structured Data for Core Business Entities
+**Learning:** Next.js dynamic product pages are highly critical for e-commerce SEO but lacked automated structured data injection. Relying solely on standard meta tags misses the opportunity to provide deep semantic context (like stock availability, currency, price) to search engine crawlers.
+**Action:** Always inject `application/ld+json` (JSON-LD) for the primary entity of a dynamic page (e.g., `Product` schema on `/product/[slug]`). Use the Next.js `generateMetadata` function for standard tags, but mount a discrete React component for JSON-LD within the server component payload.
