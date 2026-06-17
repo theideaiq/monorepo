@@ -17,7 +17,7 @@ export default function DroidLanding() {
   const [activeTab, setActiveTab] = useState('chat');
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-[#facc15] selection:text-black overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-brand-yellow selection:text-black overflow-x-hidden">
       {/* 1. HERO SECTION */}
       <section className="relative pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center text-center z-10">
         {/* Background Glow */}
@@ -25,8 +25,8 @@ export default function DroidLanding() {
 
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in-up">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#facc15] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#facc15]"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
           </span>
           <span className="text-sm font-medium text-gray-300">
             v3.0 Now Live on Telegram
@@ -46,7 +46,7 @@ export default function DroidLanding() {
           <a
             href="https://t.me/TheIdeaDroidBot"
             target="_blank"
-            className="group relative px-8 py-4 bg-[#facc15] text-black font-bold rounded-xl text-lg flex items-center justify-center gap-2 hover:bg-[#ffe066] transition-all hover:scale-105"
+            className="group relative px-8 py-4 bg-brand-yellow text-black font-bold rounded-xl text-lg flex items-center justify-center gap-2 hover:bg-[#ffe066] transition-all hover:scale-105"
             rel="noopener"
           >
             <Bot className="w-5 h-5" />
@@ -92,21 +92,21 @@ export default function DroidLanding() {
               <button
                 type="button"
                 onClick={() => setActiveTab('chat')}
-                className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'chat' ? 'bg-[#facc15]/10 text-[#facc15]' : 'text-gray-400 hover:bg-white/5'}`}
+                className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'chat' ? 'bg-brand-yellow/10 text-brand-yellow' : 'text-gray-400 hover:bg-white/5'}`}
               >
                 <Bot className="w-4 h-4" /> Business Strategy
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('game')}
-                className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'game' ? 'bg-[#facc15]/10 text-[#facc15]' : 'text-gray-400 hover:bg-white/5'}`}
+                className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'game' ? 'bg-brand-yellow/10 text-brand-yellow' : 'text-gray-400 hover:bg-white/5'}`}
               >
                 <Gamepad2 className="w-4 h-4" /> Spark Catcher
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('finance')}
-                className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'finance' ? 'bg-[#facc15]/10 text-[#facc15]' : 'text-gray-400 hover:bg-white/5'}`}
+                className={`w-full text-left px-3 py-2 rounded text-sm mb-2 flex items-center gap-2 transition-colors ${activeTab === 'finance' ? 'bg-brand-yellow/10 text-brand-yellow' : 'text-gray-400 hover:bg-white/5'}`}
               >
                 <Zap className="w-4 h-4" /> Finance Ops
               </button>
@@ -136,7 +136,7 @@ export default function DroidLanding() {
             desc="Your business secrets stay safe. Enterprise-grade encryption powered by Telegram and Supabase RLS."
           />
           <FeatureCard
-            icon={<Zap className="w-8 h-8 text-[#facc15]" />}
+            icon={<Zap className="w-8 h-8 text-brand-yellow" />}
             title="Instant Execution"
             desc="Don't just chat. The Droid can check stock, calculate VAT, and search The Academy courses in milliseconds."
           />
@@ -191,12 +191,12 @@ function ChatSimulation() {
       <div
         className={`flex gap-3 flex-row-reverse ${step >= 2 ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}
       >
-        <div className="w-8 h-8 rounded-full bg-[#facc15] flex items-center justify-center text-black font-bold shrink-0">
+        <div className="w-8 h-8 rounded-full bg-brand-yellow flex items-center justify-center text-black font-bold shrink-0">
           AI
         </div>
-        <div className="bg-[#facc15]/10 border border-[#facc15]/20 p-3 rounded-2xl rounded-tr-none text-sm text-gray-200 max-w-[80%]">
+        <div className="bg-brand-yellow/10 border border-brand-yellow/20 p-3 rounded-2xl rounded-tr-none text-sm text-gray-200 max-w-[80%]">
           <p className="mb-2">
-            <strong className="text-[#facc15]">Strategy Generated:</strong>
+            <strong className="text-brand-yellow">Strategy Generated:</strong>
           </p>
           <ul className="list-disc list-inside space-y-1 text-gray-300">
             <li>
@@ -231,7 +231,7 @@ function GamePreview() {
       style={{ backgroundImage: `url(${GAME_PREVIEW_BG})` }}
     >
       <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center">
-        <Gamepad2 className="w-16 h-16 text-[#facc15] mb-4 animate-bounce" />
+        <Gamepad2 className="w-16 h-16 text-brand-yellow mb-4 animate-bounce" />
         <h3 className="text-2xl font-bold mb-2">Spark Catcher ⚡</h3>
         <p className="text-gray-400 mb-6 text-center max-w-xs">
           Play the exclusive game directly inside Telegram. Compete for high
@@ -263,7 +263,7 @@ function FinancePreview() {
           <div className="h-full bg-purple-500 w-[45%] transition-[width] duration-200 ease-out" />
         </div>
         <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
-          <div className="h-full bg-[#facc15] w-[85%] transition-[width] duration-200 ease-out" />
+          <div className="h-full bg-brand-yellow w-[85%] transition-[width] duration-200 ease-out" />
         </div>
         <p className="text-xs text-center text-gray-500 mt-8">
           Real-time financial modeling via /finance command.
