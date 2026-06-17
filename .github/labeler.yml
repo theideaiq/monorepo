@@ -1,21 +1,35 @@
-area: web:
+# Add 'area: web' label to any changes within apps/web
+'area: web':
   - changed-files:
       - any-glob-to-any-file: 'apps/web/**/*'
 
-area: admin:
+# Add 'area: admin' label to any changes within apps/admin
+'area: admin':
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
 
-area: droid:
+# Add 'area: docs' label to any changes to documentation
+'area: docs':
   - changed-files:
-      - any-glob-to-any-file: 'apps/droid/**/*'
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**/*'
 
-area: core:
+# Add 'area: ui' label to any changes within packages/ui
+'area: ui':
   - changed-files:
-      - any-glob-to-any-file: 'packages/**/*'
+      - any-glob-to-any-file: 'packages/ui/**/*'
 
-area: ops:
+# Add 'area: database' label to any changes within packages/database
+'area: database':
   - changed-files:
-      - any-glob-to-any-file: '.github/**/*'
-      - any-glob-to-any-file: 'turbo.json'
-      - any-glob-to-any-file: 'package.json'
+      - any-glob-to-any-file: 'packages/database/**/*'
+
+# Add 'area: config' label to any changes within packages/config
+'area: config':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/config/**/*'
+
+# Add 'area: env' label to any changes within packages/env
+'area: env':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/env/**/*'
