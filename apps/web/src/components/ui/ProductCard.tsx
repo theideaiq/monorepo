@@ -1,5 +1,6 @@
 'use client';
 
+import { getNumberFormatter } from '@repo/utils';
 import { motion } from 'framer-motion';
 import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -18,7 +19,7 @@ export function ProductCard({
   priority = false,
 }: ProductCardProps) {
   // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
+  const price = getNumberFormatter('en-IQ', {
     style: 'decimal',
     maximumFractionDigits: 0,
   }).format(product.price);

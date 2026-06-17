@@ -1,5 +1,6 @@
 'use client';
 
+import { getNumberFormatter } from '@repo/utils';
 import {
   Bar,
   BarChart,
@@ -27,7 +28,7 @@ export function CashFlowChart({ data }: { data: ChartData[] }) {
           <YAxis />
           <Tooltip
             formatter={(value: number | undefined) =>
-              new Intl.NumberFormat('en-US', {
+              getNumberFormatter('en-US', {
                 style: 'currency',
                 currency: 'USD',
               }).format(value ?? 0)
