@@ -19,18 +19,20 @@ interface CartState {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   total: number;
+  totalQuantity: number;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       items: [],
       total: 0,
+      totalQuantity: 0,
 
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          let updatedItems;
+          let updatedItems: CartItem[];
           if (existing) {
             updatedItems = state.items.map((i) =>
               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
@@ -44,7 +46,11 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          const totalQuantity = updatedItems.reduce(
+            (acc, i) => acc + i.quantity,
+            0,
+          );
+          return { items: updatedItems, total, totalQuantity };
         });
       },
 
@@ -55,7 +61,11 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          const totalQuantity = updatedItems.reduce(
+            (acc, i) => acc + i.quantity,
+            0,
+          );
+          return { items: updatedItems, total, totalQuantity };
         });
       },
 
@@ -69,11 +79,15 @@ export const useCartStore = create<CartState>()(
             (acc, i) => acc + i.price * i.quantity,
             0,
           );
-          return { items: updatedItems, total };
+          const totalQuantity = updatedItems.reduce(
+            (acc, i) => acc + i.quantity,
+            0,
+          );
+          return { items: updatedItems, total, totalQuantity };
         });
       },
 
-      clearCart: () => set({ items: [], total: 0 }),
+      clearCart: () => set({ items: [], total: 0, totalQuantity: 0 }),
     }),
     {
       name: 'cart-storage-v2', // v2 to reset old string storage
