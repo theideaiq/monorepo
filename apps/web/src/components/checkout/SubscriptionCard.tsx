@@ -22,6 +22,8 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: Interactive div for subscription selection
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Interactive div for subscription selection
     <div
       onClick={onSelect}
       className={`
