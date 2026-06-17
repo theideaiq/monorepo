@@ -70,8 +70,8 @@ export default function MFAPage() {
       toast.success('Authentication successful');
       router.push('/');
       router.refresh();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
