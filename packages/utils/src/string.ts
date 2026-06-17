@@ -13,7 +13,7 @@ const ENTITIES: Record<string, string> = {
 
 // Pre-compiled regex for performance (avoids recompilation in loops).
 const ENTITY_REGEX = /&[a-zA-Z0-9#]+;/g;
-const NUMERIC_ENTITY_REGEX = /^&#\d+;$/;
+const NUMERIC_ENTITY_REGEX = /^&#(\d+|[xX][\da-fA-F]+);$/;
 
 /**
  * Decodes HTML entities in a string to their corresponding characters.
@@ -30,8 +30,11 @@ export function decodeHtmlEntities(text: string): string {
 
     // Handle numeric entities
     if (NUMERIC_ENTITY_REGEX.test(match)) {
+      const isHex = match[2] === 'x' || match[2] === 'X';
+      const content = isHex ? match.slice(3, -1) : match.slice(2, -1);
+      const base = isHex ? 16 : 10;
       // Use fromCodePoint for Emoji/Astral support
-      return String.fromCodePoint(Number.parseInt(match.slice(2, -1), 10));
+      return String.fromCodePoint(Number.parseInt(content, base));
     }
 
     return match;
@@ -48,6 +51,8 @@ export function decodeHtmlEntities(text: string): string {
  * slugify("Hello World!") // -> "hello-world"
  */
 export function slugify(text: string): string {
+  if (!text) return '';
+
   return text
     .toString()
     .toLowerCase()
@@ -55,4 +60,16 @@ export function slugify(text: string): string {
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/[^\w-]+/g, '') // Remove all non-word chars
     .replace(/--+/g, '-'); // Replace multiple - with single -
+}
+
+/**
+ * Safely stringifies a JSON object for use in a <script type="application/ld+json"> tag.
+ * Escapes < characters to \u003c to prevent Script Injection (XSS).
+ *
+ * @param data - The JSON object to stringify.
+ * @returns The safely stringified JSON string.
+ */
+// biome-ignore lint/suspicious/noExplicitAny: generic json data
+export function safeJsonLdStringify(data: any): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
 }

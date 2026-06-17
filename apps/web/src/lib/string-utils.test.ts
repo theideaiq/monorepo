@@ -1,7 +1,26 @@
-import { decodeHtmlEntities, slugify } from '@repo/utils';
+import { decodeHtmlEntities, safeJsonLdStringify, slugify } from '@repo/utils';
 import { describe, expect, it } from 'vitest';
 
 describe('String Utils (@repo/utils)', () => {
+  describe('safeJsonLdStringify', () => {
+    it('should stringify object and escape < characters', () => {
+      const data = {
+        name: 'Normal String',
+        script: '<script>alert(1)</script>',
+        nested: {
+          key: '<div>HTML</div>',
+        },
+      };
+      const result = safeJsonLdStringify(data);
+      expect(result).not.toContain('<script');
+      expect(result).toContain('\\u003cscript');
+      expect(result).toContain('\\u003cdiv');
+
+      // Ensure it allows parsing back to original object
+      const parsed = JSON.parse(result);
+      expect(parsed).toEqual(data);
+    });
+  });
   describe('slugify', () => {
     it('should convert text to a url-friendly slug', () => {
       expect(slugify('Hello World!')).toBe('hello-world');
