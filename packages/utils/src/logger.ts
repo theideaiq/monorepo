@@ -1,8 +1,8 @@
-// biome-ignore lint/complexity/noStaticOnlyClass: Logger grouping
 /**
  * Centralized logging utility to ensure consistent log formatting and handling.
  * Suppresses logs in test environments.
  */
+// biome-ignore lint/complexity/noStaticOnlyClass: Logger grouping
 export class Logger {
   /**
    * Logs a message with optional metadata.
