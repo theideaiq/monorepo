@@ -43,7 +43,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: npm_config_engine_strict=false pnpm install --frozen-lockfile
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -65,14 +73,20 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # 0. Setup Dummy Web Output (Required for cap sync)
+          mkdir -p apps/web/out
+          # Create index.html to satisfy Capacitor check
+          touch apps/web/out/index.html
+
+          # 1. Restore Secrets
+          node apps/web/scripts/restore-mobile-secrets.js
           
-          # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
+          # 2. Sync Native Projects
+          cd apps/web && npx cap sync android
           
-          # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
+          # 3. Grant Permission & Build
+          chmod +x android/gradlew
+          cd android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -80,22 +94,29 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # 0. Setup Dummy Web Output
+          mkdir -p apps/web/out
+          # Create index.html to satisfy Capacitor check
+          touch apps/web/out/index.html
+
+          # 1. Restore Secrets
+          node apps/web/scripts/restore-mobile-secrets.js
+
+          # 2. Sync Native Projects
+          cd apps/web && npx cap sync ios
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
+          # 3. Build (Paths relative to apps/web)
+          if [ -f "ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
+              cd ios/App && pod install --repo-update && cd ../..
+              BUILD_TARGET="-workspace ios/App/App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+              xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
+              BUILD_TARGET="-project ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \

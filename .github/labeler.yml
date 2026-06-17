@@ -1,21 +1,34 @@
-area: web:
+# This file dictates which parts of the repo belong to which teams
+# It is used by the "Labeler" GitHub Action to automatically tag PRs
+
+"area: web":
   - changed-files:
       - any-glob-to-any-file: 'apps/web/**/*'
 
-area: admin:
+"area: admin":
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
 
-area: droid:
+"area: droid":
   - changed-files:
       - any-glob-to-any-file: 'apps/droid/**/*'
 
-area: core:
+"area: ui":
   - changed-files:
-      - any-glob-to-any-file: 'packages/**/*'
+      - any-glob-to-any-file: 'packages/ui/**/*'
 
-area: ops:
+"area: core":
+  - changed-files:
+      - any-glob-to-any-file: 'packages/config/**/*'
+      - any-glob-to-any-file: 'packages/database/**/*'
+      - any-glob-to-any-file: 'packages/utils/**/*'
+      - any-glob-to-any-file: 'packages/payment-engine/**/*'
+
+"area: docs":
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**/*'
+
+"area: ci":
   - changed-files:
       - any-glob-to-any-file: '.github/**/*'
-      - any-glob-to-any-file: 'turbo.json'
-      - any-glob-to-any-file: 'package.json'
