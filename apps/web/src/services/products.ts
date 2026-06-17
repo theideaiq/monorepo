@@ -1,6 +1,6 @@
 import { Logger } from '@repo/utils';
 import { createClient } from '@/lib/supabase/client';
-import type { Database, Json } from '@/lib/database.types';
+import type { Database } from '@/lib/database.types';
 
 type DBProduct = Database['public']['Tables']['products']['Row'] & {
   reviews?: { rating: number }[];
@@ -25,6 +25,7 @@ export interface Product {
   condition: string;
   seller: string;
   rating: number;
+  reviewCount?: number;
   image: string;
   images: string[];
   isVerified: boolean;
@@ -190,6 +191,7 @@ function mapDBProductToUI(item: DBProduct): Product {
     condition: item.condition,
     seller: item.seller,
     rating: Number(avgRating.toFixed(1)),
+    reviewCount: ratings.length,
     image: item.image_url || '',
     images: item.images || (item.image_url ? [item.image_url] : []),
     isVerified: item.is_verified,
