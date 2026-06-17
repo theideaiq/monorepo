@@ -22,7 +22,10 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const { toggleCart } = useUIStore();
-  const cartItems = useCartStore((s) => s.items);
+  // Selector optimization: calculate count in the selector to avoid re-renders when other item properties change
+  const cartCount = useCartStore((s) =>
+    s.items.reduce((acc, i) => acc + i.quantity, 0),
+  );
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -105,9 +108,9 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
             className="relative text-white hover:text-brand-yellow transition-colors"
           >
             <ShoppingCart size={20} />
-            {mounted && cartItems.length > 0 && (
+            {mounted && cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+                {cartCount}
               </span>
             )}
           </button>
