@@ -6,6 +6,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/services/products';
 
+// ⚡ Bolt: Cache Intl.NumberFormat instance outside component
+// Prevents expensive instantiation (1-2ms) per card when rendering product grids.
+const IQD_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
 interface ProductCardProps {
   product: Product;
   onAddToCart?: (e: React.MouseEvent) => void;
@@ -18,10 +25,7 @@ export function ProductCard({
   priority = false,
 }: ProductCardProps) {
   // Format price
-  const price = new Intl.NumberFormat('en-IQ', {
-    style: 'decimal',
-    maximumFractionDigits: 0,
-  }).format(product.price);
+  const price = IQD_FORMATTER.format(product.price);
 
   return (
     <Link href={`/product/${product.slug}`} className="group block h-full">

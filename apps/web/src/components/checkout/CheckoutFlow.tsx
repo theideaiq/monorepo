@@ -7,6 +7,13 @@ import { Button, Input, Card } from '@repo/ui';
 import { useCartStore } from '@/stores/cart-store';
 import { toast } from 'react-hot-toast';
 
+// ⚡ Bolt: Cache Intl.NumberFormat instance outside component
+// Instantiating this is expensive (1-2ms). Moving it out of the render loop
+// prevents unnecessary CPU overhead and GC, especially when formatting multiple items.
+const IQD_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  maximumFractionDigits: 0,
+});
+
 export function CheckoutFlow() {
   const [step, setStep] = useState<1 | 2>(1);
   const [loading, setLoading] = useState(false);
@@ -35,7 +42,7 @@ export function CheckoutFlow() {
     // Redirect or clear cart
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = IQD_FORMATTER.format(total);
 
   return (
     <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
@@ -260,10 +267,7 @@ export function CheckoutFlow() {
                     {item.title}
                   </div>
                   <div className="text-xs text-brand-yellow font-bold">
-                    {new Intl.NumberFormat('en-IQ').format(
-                      item.price * item.quantity,
-                    )}{' '}
-                    IQD
+                    {IQD_FORMATTER.format(item.price * item.quantity)} IQD
                   </div>
                 </div>
               </div>

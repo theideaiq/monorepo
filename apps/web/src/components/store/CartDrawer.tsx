@@ -8,6 +8,13 @@ import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { Button } from '@repo/ui';
 
+// ⚡ Bolt: Cache Intl.NumberFormat instance outside component
+// Instantiating this is expensive (1-2ms). Moving it out of the render loop
+// prevents unnecessary CPU overhead and GC, especially when formatting multiple items.
+const IQD_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  maximumFractionDigits: 0,
+});
+
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
   const { items, removeItem, updateQuantity, total } = useCartStore();
@@ -18,7 +25,7 @@ export function CartDrawer() {
     router.push('/checkout');
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = IQD_FORMATTER.format(total);
 
   return (
     <Drawer
@@ -76,7 +83,7 @@ export function CartDrawer() {
                   </p>
                 )}
                 <p className="text-brand-yellow font-bold mt-2">
-                  {new Intl.NumberFormat('en-IQ').format(item.price)} IQD
+                  {IQD_FORMATTER.format(item.price)} IQD
                 </p>
               </div>
 

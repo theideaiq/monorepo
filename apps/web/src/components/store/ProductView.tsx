@@ -11,6 +11,12 @@ import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
 
+// ⚡ Bolt: Cache Intl.NumberFormat instance outside component
+// Prevents expensive instantiation (1-2ms) on every render cycle.
+const IQD_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  maximumFractionDigits: 0,
+});
+
 interface ProductViewProps {
   product: Product;
 }
@@ -84,7 +90,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const price = IQD_FORMATTER.format(product.price);
 
   return (
     <div className="pb-32 md:pb-12">
