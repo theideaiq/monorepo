@@ -56,3 +56,14 @@ export function slugify(text: string): string {
     .replace(/[^\w-]+/g, '') // Remove all non-word chars
     .replace(/--+/g, '-'); // Replace multiple - with single -
 }
+
+/**
+ * Safely serializes data to a JSON string for use in JSON-LD script tags.
+ * Escapes HTML entities and angle brackets to prevent XSS.
+ *
+ * @param data - The data to serialize.
+ * @returns The safely serialized JSON string.
+ */
+export function safeJsonLdStringify(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
+}
