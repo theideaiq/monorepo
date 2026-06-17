@@ -130,3 +130,65 @@ describe('staff actions - updateRole', () => {
     );
   });
 });
+
+describe('staff actions - addStaff', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const setupSupabaseMock = (
+    user: { id: string } | null,
+    requesterRole: string | null = null,
+    searchResult: { data: any; error: any } = { data: null, error: null }
+  ) => {
+    mocks.supabase.auth.getUser.mockResolvedValue({
+      data: { user },
+      error: null,
+    });
+
+    const mockSelect = vi.fn().mockImplementation(() => {
+      // Mock for user's own profile check
+      if (vi.mocked(mocks.supabase.from).mock.calls.length === 1) {
+        return {
+          eq: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({
+              data: requesterRole ? { role: requesterRole } : null,
+              error: null,
+            }),
+          }),
+        };
+      }
+      // Mock for addStaff search
+      return {
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue(searchResult),
+        }),
+      };
+    });
+
+    mocks.supabase.from.mockImplementation(() => {
+      return {
+        select: mockSelect,
+        update: vi.fn(),
+      };
+    });
+  };
+
+  it('should throw error when adding staff if user email is not found', async () => {
+    // Arrange
+    const superAdminId = 'super-admin-id';
+    setupSupabaseMock(
+      { id: superAdminId },
+      'superadmin',
+      { data: null, error: { message: 'Not found' } } // Mock not found
+    );
+    const { addStaff } = await import('./staff');
+
+    // Act & Assert
+    await expect(addStaff('nonexistent@example.com')).rejects.toThrow(
+      'User not found. Ensure they have signed up and their profile has an email set.'
+    );
+    expect(audit.logAdminAction).not.toHaveBeenCalled();
+    expect(nextCache.revalidatePath).not.toHaveBeenCalled();
+  });
+});
