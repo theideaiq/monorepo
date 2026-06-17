@@ -1,205 +1,209 @@
 'use client';
 
-// UI Kit
-import { Badge, Button, Input } from '@repo/ui';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
+import { Badge, Button } from '@repo/ui';
 import { motion } from 'framer-motion';
 import { Book, Gamepad2, Laptop, Search, Smartphone, Zap } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
-import { useProducts } from '@/hooks/queries/use-products';
-import { useCartStore } from '@/stores/cart-store';
-import { ProductCard } from '@/components/ui/ProductCard';
-import { useUIStore } from '@/stores/ui-store';
-import { toast } from 'react-hot-toast';
-import type { Product } from '@/services/products';
+import Link from 'next/link';
 
-const CATEGORIES = [
-  { name: 'Gaming', icon: <Gamepad2 size={18} /> },
-  { name: 'Laptops', icon: <Laptop size={18} /> },
-  { name: 'Phones', icon: <Smartphone size={18} /> },
-  { name: 'Books', icon: <Book size={18} /> },
-];
-
-export default function MegastorePage() {
-  const [filter, setFilter] = useState('All');
-  const { data, isLoading } = useProducts();
-  // Force cast to fix build error
-  const products = (data as unknown as Product[]) || [];
-  const addItem = useCartStore((s) => s.addItem);
+export default function MegaStorePage() {
+  const t = useTranslations('MegaStore');
+  const { addItem } = useCartStore();
   const { openCart } = useUIStore();
 
+  // biome-ignore lint/suspicious/noExplicitAny: Product type definition to be consolidated
   const handleQuickAdd = (e: React.MouseEvent, product: any) => {
     e.preventDefault(); // Prevent navigation
     addItem({
       id: product.id,
       productId: product.id,
-      title: product.title,
-      price: product.price,
-      image: product.image,
+      quantity: 1,
+      product: {
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        slug: product.slug,
+      },
     });
-    toast.success(`${product.title} added to cart`);
     openCart();
   };
 
-  // Memoize filtered products
-  const filteredProducts = useMemo(
-    () => products.filter((p) => filter === 'All' || p.category === filter),
-    [products, filter],
-  );
+  const categories = [
+    { name: 'Phones', icon: Smartphone, color: 'bg-blue-500' },
+    { name: 'Laptops', icon: Laptop, color: 'bg-purple-500' },
+    { name: 'Gaming', icon: Gamepad2, color: 'bg-red-500' },
+    { name: 'Books', icon: Book, color: 'bg-yellow-500' },
+    { name: 'Electronics', icon: Zap, color: 'bg-green-500' },
+  ];
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-brand-bg pt-20 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-yellow" />
-      </div>
-    );
-  }
+  const flashDeals = [
+    {
+      id: '1',
+      name: 'iPhone 15 Pro Max',
+      price: 1199,
+      image:
+        'https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=800',
+      discount: '-15%',
+      slug: 'iphone-15-pro-max',
+    },
+    {
+      id: '2',
+      name: 'MacBook Pro M3',
+      price: 1899,
+      image:
+        'https://images.unsplash.com/photo-1517336714731-489689fd1ca4?auto=format&fit=crop&q=80&w=800',
+      discount: '-10%',
+      slug: 'macbook-pro-m3',
+    },
+    {
+      id: '3',
+      name: 'Sony WH-1000XM5',
+      price: 349,
+      image:
+        'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=800',
+      discount: '-20%',
+      slug: 'sony-wh-1000xm5',
+    },
+    {
+      id: '4',
+      name: 'PlayStation 5 Slim',
+      price: 449,
+      image:
+        'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=800',
+      discount: '-10%',
+      slug: 'ps5-slim',
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-brand-bg pt-20 pb-24">
-      {/* 1. HERO */}
-      <section className="relative h-[50vh] md:h-[60vh] overflow-hidden flex items-center mx-4 rounded-3xl mt-4">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2070')] bg-cover bg-center opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent" />
+    <div className="min-h-screen bg-slate-50 pb-20">
+      {/* Hero Section */}
+      <section className="relative h-[500px] w-full bg-slate-900 overflow-hidden">
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2070"
+            alt="Megastore Hero"
+            fill
+            className="object-cover opacity-40"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-8 w-full">
+        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
           <motion.div
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            className="max-w-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <Badge
-              variant="brand"
-              className="mb-4 bg-brand-yellow text-brand-dark border-none"
-            >
-              MEGADEALS ARE HERE
+            <Badge variant="secondary" className="mb-4">
+              New Arrivals
             </Badge>
-            <h1 className="text-5xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">
-              NEXT GEN <br />
-              <span className="text-brand-yellow">HAS ARRIVED.</span>
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+              The Future of <span className="text-yellow-400">Shopping</span>
             </h1>
-            <p className="text-slate-300 text-lg mb-8 max-w-lg">
-              Shop the latest tech, verified pre-owned gear, and rare
-              collectibles. Same-day delivery in Baghdad.
+            <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+              Discover millions of products with the best deals, fastest
+              delivery, and verified sellers.
             </p>
-            <div className="flex gap-4">
-              <Button className="h-14 px-8 bg-white text-black hover:bg-slate-200 font-bold rounded-full">
-                Shop Deals
+
+            <div className="flex w-full max-w-md mx-auto relative">
+              <input
+                type="text"
+                placeholder="Search for anything..."
+                className="w-full h-14 pl-12 pr-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+              />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" />
+              <Button className="absolute right-2 top-2 rounded-full h-10 px-6 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold">
+                Search
               </Button>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* 2. CONTROLS */}
-      <section className="sticky top-[72px] z-30 bg-black/80 backdrop-blur-xl border-b border-white/10 px-4 py-4 mt-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between">
-          {/* Categories */}
-          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto no-scrollbar">
-            <button
-              type="button"
-              onClick={() => setFilter('All')}
-              className={`px-6 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all border ${filter === 'All' ? 'bg-brand-yellow text-brand-dark border-brand-yellow' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:bg-white/10'}`}
+      {/* Categories Grid */}
+      <section className="container mx-auto px-4 -mt-10 relative z-20">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {categories.map((cat, idx) => (
+            <motion.div
+              key={cat.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
+              className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer group"
             >
-              All Items
-            </button>
-            {CATEGORIES.map((cat) => (
-              <button
-                type="button"
-                key={cat.name}
-                onClick={() => setFilter(cat.name)}
-                className={`flex items-center gap-2 px-6 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all border ${filter === cat.name ? 'bg-brand-yellow text-brand-dark border-brand-yellow' : 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:bg-white/10'}`}
+              <div
+                className={`w-12 h-12 rounded-full ${cat.color} bg-opacity-10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
               >
-                {cat.icon} {cat.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Search */}
-          <div className="relative w-full md:w-80">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
-              size={18}
-            />
-            <input
-              placeholder="Search..."
-              className="w-full bg-white/5 border border-white/10 rounded-full py-2.5 pl-12 pr-4 text-white placeholder-slate-500 focus:border-brand-yellow outline-none transition-colors"
-            />
-          </div>
+                <cat.icon className={`w-6 h-6 ${cat.color.replace('bg-', 'text-')}`} />
+              </div>
+              <h3 className="font-semibold text-slate-800">{cat.name}</h3>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* 3. GRID */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="h-[420px]">
-                <ProductCard
-                  product={product}
-                  onAddToCart={(e) => handleQuickAdd(e, product)}
-                />
-              </div>
-            ))}
+      {/* Flash Deals */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="flex justify-between items-end mb-8">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">
+              Flash Deals ⚡
+            </h2>
+            <p className="text-slate-500">Limited time offers ending soon</p>
           </div>
-        ) : (
-          <div className="text-center py-20">
-            <div className="bg-white/5 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-500">
-              <Search size={32} />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-2">
-              No products found
-            </h3>
-            <p className="text-slate-400 mb-8">
-              We couldn&apos;t find any items in this category.
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => setFilter('All')}
-              className="text-white border-white/20 hover:bg-white/10"
-            >
-              Clear Filters
-            </Button>
-          </div>
-        )}
-      </section>
+          <Link
+            href="/megastore/deals"
+            className="text-yellow-600 font-semibold hover:underline"
+          >
+            View All
+          </Link>
+        </div>
 
-      {/* 4. FLASH DEALS */}
-      <section className="max-w-7xl mx-auto px-4 mb-20">
-        <div className="bg-gradient-to-br from-[#1a1a1a] to-black rounded-[2.5rem] border border-white/10 overflow-hidden relative">
-          <div className="absolute top-0 right-0 p-[20%] bg-brand-pink/20 blur-[120px] rounded-full pointer-events-none" />
-
-          <div className="grid md:grid-cols-2 gap-12 p-8 md:p-16 items-center relative z-10">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-yellow/10 text-brand-yellow text-xs font-bold tracking-widest mb-6">
-                <Zap size={14} className="fill-brand-yellow" /> FLASH DEAL
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                Logitech G Pro X Superlight
-              </h2>
-              <p className="text-slate-400 mb-8 text-lg">
-                The world&apos;s lightest wireless gaming mouse. Used by pros.
-                Verified refurbished condition available.
-              </p>
-              <div className="flex items-center gap-4 mb-8">
-                <span className="text-4xl font-black text-white">120,000</span>
-                <span className="text-xl text-slate-500 line-through">
-                  180,000
-                </span>
-              </div>
-              <Button className="h-14 px-10 bg-brand-pink hover:bg-pink-600 text-white font-bold rounded-full text-lg border-none">
-                Claim Deal
-              </Button>
-            </div>
-            <div className="relative aspect-square md:aspect-video rounded-3xl overflow-hidden">
-              <Image
-                src="https://images.unsplash.com/photo-1615663245857-acda5b2b15d5?auto=format&fit=crop&q=80&w=1600"
-                alt="Flash Deal"
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
-              />
-            </div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {flashDeals.map((product) => (
+            <Link href={`/product/${product.slug}`} key={product.id}>
+              <motion.div
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-slate-100 group h-full flex flex-col"
+              >
+                <div className="relative aspect-square">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                    {product.discount}
+                  </div>
+                </div>
+                <div className="p-4 flex flex-col flex-grow">
+                  <h3 className="font-semibold text-slate-900 mb-1 line-clamp-2">
+                    {product.name}
+                  </h3>
+                  <div className="flex items-center gap-2 mt-auto">
+                    <span className="text-lg font-bold text-slate-900">
+                      ${product.price}
+                    </span>
+                    <span className="text-sm text-slate-400 line-through">
+                      ${Math.round(product.price * 1.2)}
+                    </span>
+                  </div>
+                  <Button
+                    className="w-full mt-4 bg-slate-900 text-white hover:bg-slate-800"
+                    onClick={(e) => handleQuickAdd(e, product)}
+                  >
+                    Add to Cart
+                  </Button>
+                </div>
+              </motion.div>
+            </Link>
+          ))}
         </div>
       </section>
     </div>
