@@ -27,7 +27,7 @@ jobs:
           node-version: '24'
 
       - name: Setup PNPM
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
         with:
           version: '10'
 
@@ -47,7 +47,7 @@ jobs:
         run: cd apps/web/android && ./gradlew assembleDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: app-debug.apk
           path: apps/web/android/app/build/outputs/apk/debug/app-debug.apk
