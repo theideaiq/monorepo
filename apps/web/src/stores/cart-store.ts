@@ -19,18 +19,32 @@ interface CartState {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   total: number;
+  totalQuantity: number;
 }
+
+// ⚡ Bolt: Compute derived totals once in a single O(N) pass during state updates
+// instead of recalculating on every render via reduce() in multiple UI components.
+const calculateTotals = (items: CartItem[]) => {
+  let total = 0;
+  let totalQuantity = 0;
+  for (let i = 0; i < items.length; i++) {
+    total += items[i].price * items[i].quantity;
+    totalQuantity += items[i].quantity;
+  }
+  return { total, totalQuantity };
+};
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       items: [],
       total: 0,
+      totalQuantity: 0,
 
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          let updatedItems;
+          let updatedItems: CartItem[];
           if (existing) {
             updatedItems = state.items.map((i) =>
               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
@@ -40,22 +54,16 @@ export const useCartStore = create<CartState>()(
           }
 
           // Recalc total
-          const total = updatedItems.reduce(
-            (acc, i) => acc + i.price * i.quantity,
-            0,
-          );
-          return { items: updatedItems, total };
+          const totals = calculateTotals(updatedItems);
+          return { items: updatedItems, ...totals };
         });
       },
 
       removeItem: (id) => {
         set((state) => {
           const updatedItems = state.items.filter((i) => i.id !== id);
-          const total = updatedItems.reduce(
-            (acc, i) => acc + i.price * i.quantity,
-            0,
-          );
-          return { items: updatedItems, total };
+          const totals = calculateTotals(updatedItems);
+          return { items: updatedItems, ...totals };
         });
       },
 
@@ -65,15 +73,12 @@ export const useCartStore = create<CartState>()(
           const updatedItems = state.items.map((i) =>
             i.id === id ? { ...i, quantity } : i,
           );
-          const total = updatedItems.reduce(
-            (acc, i) => acc + i.price * i.quantity,
-            0,
-          );
-          return { items: updatedItems, total };
+          const totals = calculateTotals(updatedItems);
+          return { items: updatedItems, ...totals };
         });
       },
 
-      clearCart: () => set({ items: [], total: 0 }),
+      clearCart: () => set({ items: [], total: 0, totalQuantity: 0 }),
     }),
     {
       name: 'cart-storage-v2', // v2 to reset old string storage

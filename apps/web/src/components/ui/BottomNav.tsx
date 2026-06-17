@@ -1,23 +1,23 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import { Home, Search, ShoppingCart, User } from 'lucide-react';
-import { useUIStore } from '@/stores/ui-store';
-import { useCartStore } from '@/stores/cart-store';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
 
 export function BottomNav() {
   const pathname = usePathname();
   const { toggleCart } = useUIStore();
-  const items = useCartStore((s) => s.items);
+  const totalQuantity = useCartStore((s) => s.totalQuantity);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const navItems = [
+  const _navItems = [
     { label: 'Home', icon: Home, href: '/' },
     { label: 'Browse', icon: Search, href: '/megastore' },
     // Cart is special
@@ -68,9 +68,9 @@ export function BottomNav() {
         >
           <div className="relative">
             <ShoppingCart size={20} />
-            {mounted && items.length > 0 && (
+            {mounted && totalQuantity > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {items.reduce((acc, i) => acc + i.quantity, 0)}
+                {totalQuantity}
               </span>
             )}
           </div>
