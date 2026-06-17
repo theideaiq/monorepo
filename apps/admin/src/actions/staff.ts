@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { logAdminAction } from '@/lib/audit';
 import { requireAdmin, requireSuperAdmin } from '@/lib/auth-checks';
+import { ROLES } from '@/lib/constants';
 import type { UserRole } from '@/types/auth';
 
 export async function getStaff() {
@@ -10,7 +11,7 @@ export async function getStaff() {
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
-    .neq('role', 'user')
+    .neq('role', ROLES.USER)
     .order('full_name');
 
   if (error) throw new Error(error.message);
@@ -69,7 +70,7 @@ export async function addStaff(email: string) {
 
   const { error } = await supabase
     .from('profiles')
-    .update({ role: 'admin' })
+    .update({ role: ROLES.ADMIN })
     .eq('id', target.id);
 
   if (error) throw new Error(error.message);
