@@ -1,0 +1,4 @@
+## 2024-05-14 - JSON-LD XSS Vulnerability in React `dangerouslySetInnerHTML`
+**Vulnerability:** Found unescaped `JSON.stringify` usage within `dangerouslySetInnerHTML` in React components when injecting JSON-LD structured data (e.g. `JsonLd.tsx`, `BreadcrumbJsonLd.tsx`). This allows attackers to potentially inject malicious scripts (like `</script><script>alert(1)</script>`) if the data source contains unsanitized user inputs.
+**Learning:** `JSON.stringify` alone does not escape HTML control characters like `<`. When rendering `<script type="application/ld+json">` with `dangerouslySetInnerHTML`, the browser interprets `<` literally, meaning unescaped input could break out of the JSON script tag.
+**Prevention:** Always escape HTML control characters in stringified JSON when using `dangerouslySetInnerHTML`. The standard practice is to replace all `<` with `\u003c` via `.replace(/</g, '\\u003c')`.
