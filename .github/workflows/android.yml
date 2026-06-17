@@ -32,13 +32,13 @@ jobs:
           version: '10'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm_config_engine_strict=false pnpm install --frozen-lockfile
 
       - name: Build Mobile Web
         run: cd apps/web && pnpm build:mobile
 
       - name: Restore Secrets
-        run: cd apps/web && pnpm secrets:restore
+        run: cd apps/web && npm_config_engine_strict=false pnpm secrets:restore
 
       - name: Sync Capacitor
         run: cd apps/web && npx cap sync android
