@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { hasAdminAccess } from '@/lib/auth-checks';
+import { hasAdminAccess } from '@/lib/roles';
 import { WINDOW_SIZE_MS } from '@/lib/rate-limit';
 import { createMiddlewareClient } from '@/lib/supabase/middleware';
 

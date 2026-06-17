@@ -66,11 +66,11 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
-          
+          (cd apps/web && npm run secrets:restore)
+
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
-          
+
           # 3. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
@@ -81,8 +81,8 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
-          
+          (cd apps/web && npm run secrets:restore)
+
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
@@ -94,7 +94,7 @@ jobs:
               xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
-          
+
           # 3. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \

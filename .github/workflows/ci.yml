@@ -49,6 +49,20 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "example-key"
+          RESEND_API_KEY: "dummy_resend_key"
+          WAYL_SECRET_KEY: "wayl_secret"
+          WAYL_WEBHOOK_SECRET: "wayl_webhook"
+          SUPABASE_SERVICE_ROLE_KEY: "service_role"
+          UPSTASH_REDIS_REST_URL: "https://example.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "example_token"
+          TELEGRAM_BOT_TOKEN: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+          GEMINI_API_KEY: "gemini_api_key"
+          WEB_APP_URL: "http://localhost:3000"
+          ZAIN_SECRET_KEY: "zain_secret"
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +108,19 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'example-key' }}
+          RESEND_API_KEY: "dummy_resend_key"
+          WAYL_SECRET_KEY: "wayl_secret"
+          WAYL_WEBHOOK_SECRET: "wayl_webhook"
+          SUPABASE_SERVICE_ROLE_KEY: "service_role"
+          UPSTASH_REDIS_REST_URL: "https://example.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "example_token"
+          TELEGRAM_BOT_TOKEN: "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+          GEMINI_API_KEY: "gemini_api_key"
+          WEB_APP_URL: "http://localhost:3000"
+          ZAIN_SECRET_KEY: "zain_secret"
         run: pnpm turbo build
 
   e2e:
