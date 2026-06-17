@@ -30,6 +30,11 @@ export function decodeHtmlEntities(text: string): string {
 
     // Handle numeric entities
     if (NUMERIC_ENTITY_REGEX.test(match)) {
+      return String.fromCodePoint(Number.parseInt(match.slice(2, -1), 10));
+    }
+    if (/^&#x[0-9a-fA-F]+;$/i.test(match)) {
+      return String.fromCodePoint(Number.parseInt(match.slice(3, -1), 16));
+    }
       // Use fromCodePoint for Emoji/Astral support
       return String.fromCodePoint(Number.parseInt(match.slice(2, -1), 10));
     }
@@ -47,7 +52,8 @@ export function decodeHtmlEntities(text: string): string {
  * @example
  * slugify("Hello World!") // -> "hello-world"
  */
-export function slugify(text: string): string {
+export function slugify(text: string | null | undefined): string {
+  if (!text) return '';
   return text
     .toString()
     .toLowerCase()
