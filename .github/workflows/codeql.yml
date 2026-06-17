@@ -66,13 +66,14 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # Directly invoke script to bypass npm workspace issues
+          cd apps/web && node ../../scripts/restore-mobile-secrets.js
           
           # 2. Grant Permission
-          chmod +x apps/web/android/gradlew
+          chmod +x android/gradlew
           
           # 3. Build Debug APK (Sufficient for analysis)
-          cd apps/web/android && ./gradlew assembleDebug --no-daemon
+          cd android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
       # MANUAL BUILD: Swift (iOS)
@@ -80,19 +81,28 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # 0. Install pnpm (needed for npx cap sync)
+          npm install -g pnpm && pnpm install
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # Directly invoke script to bypass npm workspace issues
+          cd apps/web && node ../../scripts/restore-mobile-secrets.js
           
+          # 1.5 Sync Capacitor (Generates iOS project files if missing)
+          # CodeQL environment starts fresh, so node_modules/Capacitor might not be ready
+          npx cap sync ios
+
           # 2. Determine Build Type (CocoaPods vs SPM)
-          if [ -f "apps/web/ios/App/Podfile" ]; then
+          if [ -f "ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
-              cd apps/web/ios/App && pod install --repo-update && cd -
-              BUILD_TARGET="-workspace apps/web/ios/App/App.xcworkspace"
+              cd ios/App && pod install --repo-update && cd -
+              BUILD_TARGET="-workspace ios/App/App.xcworkspace"
           else
               echo "⚠️ No Podfile found. Assuming Swift Package Manager (SPM)."
               echo "Resolving Dependencies..."
-              xcodebuild -resolvePackageDependencies -project apps/web/ios/App/App.xcodeproj -scheme App
-              BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
+              # Fix path: we are already in apps/web from step 1
+              xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
+              BUILD_TARGET="-project ios/App/App.xcodeproj"
           fi
           
           # 3. Build for Simulator (No Signing Required)
