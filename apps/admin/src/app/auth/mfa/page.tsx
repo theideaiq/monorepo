@@ -71,7 +71,8 @@ export default function MFAPage() {
       router.push('/');
       router.refresh();
     } catch (err: any) {
-      toast.error(err.message);
+      // biome-ignore lint/suspicious/noExplicitAny: Error handling
+      toast.error((err as any).message);
     } finally {
       setLoading(false);
     }
@@ -89,6 +90,7 @@ export default function MFAPage() {
             <p className="text-sm text-slate-500 mb-2 text-center">
               Scan this QR code with your authenticator app
             </p>
+            {/* biome-ignore lint/performance/noImgElement: QR code is a data URL */}
             <img src={qr} alt="QR Code" className="w-48 h-48" />
           </div>
         )}

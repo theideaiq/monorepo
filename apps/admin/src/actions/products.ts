@@ -10,6 +10,7 @@ import { requireAdmin } from '@/lib/auth-checks';
  * Security: Requires Admin role.
  * Audit: Logs 'create_product'.
  */
+// biome-ignore lint/suspicious/noExplicitAny: Product data is complex
 export async function createProduct(data: any) {
   const { supabase } = await requireAdmin();
   const { data: product, error } = await supabase
@@ -34,6 +35,7 @@ export async function createProduct(data: any) {
  * Security: Requires Admin role.
  * Audit: Logs 'update_product'.
  */
+// biome-ignore lint/suspicious/noExplicitAny: Product updates are partial and complex
 export async function updateProduct(id: string, updates: any) {
   const { supabase } = await requireAdmin();
   const { error } = await supabase
