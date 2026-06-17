@@ -1,0 +1,3 @@
+## 2025-02-15 - Strict Parity Between Environment Variables and .env.example
+Insight: Environment variable validation logic in `packages/env` enforces required variables, but missing entries in `.env.example` cause local setup failure and developer friction.
+Rule: Always ensure strict parity between the Zod validation schemas in `packages/env` and their respective `.env.example` files in each app directory. When adding a new required environment variable to `packages/env`, simultaneously document it in the corresponding `.env.example`.
