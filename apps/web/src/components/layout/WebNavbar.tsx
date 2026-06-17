@@ -88,6 +88,8 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
           <button
             type="button"
             className="text-white hover:text-brand-yellow transition-colors"
+            aria-label="Search"
+            title="Search"
           >
             <Search size={20} />
           </button>
@@ -95,6 +97,8 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
           <Link
             href="/account"
             className="hidden md:block text-white hover:text-brand-yellow transition-colors"
+            aria-label="Account"
+            title="Account"
           >
             <User size={20} />
           </Link>
@@ -103,6 +107,8 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
             type="button"
             onClick={toggleCart}
             className="relative text-white hover:text-brand-yellow transition-colors"
+            aria-label="Cart"
+            title="Cart"
           >
             <ShoppingCart size={20} />
             {mounted && cartItems.length > 0 && (
