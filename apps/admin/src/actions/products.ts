@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { logAdminAction } from '@/lib/audit';
-import { requireAdmin } from '@/lib/auth-checks';
+import { requireAdmin } from '@/lib/server-auth';
 
 /**
  * Creates a new product.

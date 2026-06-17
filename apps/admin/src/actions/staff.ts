@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { logAdminAction } from '@/lib/audit';
-import { requireAdmin, requireSuperAdmin } from '@/lib/auth-checks';
+import { requireAdmin, requireSuperAdmin } from '@/lib/server-auth';
 import type { UserRole } from '@/types/auth';
 
 export async function getStaff() {

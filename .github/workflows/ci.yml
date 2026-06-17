@@ -49,6 +49,20 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://dummy.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key"
+          RESEND_API_KEY: "dummy-resend-key"
+          WAYL_SECRET_KEY: "dummy-wayl-key"
+          WAYL_WEBHOOK_SECRET: "dummy-wayl-webhook"
+          ZAIN_SECRET_KEY: "dummy-zain-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role"
+          TELEGRAM_BOT_TOKEN: "dummy-bot-token"
+          GEMINI_API_KEY: "dummy-gemini-key"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-redis-token"
+          WEB_APP_URL: "https://dummy.app.com"
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +108,19 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://dummy.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key"
+          RESEND_API_KEY: "dummy-resend-key"
+          WAYL_SECRET_KEY: "dummy-wayl-key"
+          WAYL_WEBHOOK_SECRET: "dummy-wayl-webhook"
+          ZAIN_SECRET_KEY: "dummy-zain-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-role"
+          TELEGRAM_BOT_TOKEN: "dummy-bot-token"
+          GEMINI_API_KEY: "dummy-gemini-key"
+          UPSTASH_REDIS_REST_URL: "https://dummy.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy-redis-token"
+          WEB_APP_URL: "https://dummy.app.com"
         run: pnpm turbo build
 
   e2e:
