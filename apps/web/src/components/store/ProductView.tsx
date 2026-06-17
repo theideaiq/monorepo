@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Share2, Heart, CheckCircle2 } from 'lucide-react';
+import { Star, Heart, CheckCircle2 } from 'lucide-react';
 import { Button } from '@repo/ui';
 import { VariantSelector } from '@/components/ui/VariantSelector';
-import type { Product, ProductVariant } from '@/services/products';
+import type { Product } from '@/services/products';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { toast } from 'react-hot-toast';
@@ -17,7 +17,8 @@ interface ProductViewProps {
 
 export function ProductView({ product }: ProductViewProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
-  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_selectedVariant, _setSelectedVariant] = useState<string | null>(null);
   const { addItem } = useCartStore();
   const { openCart } = useUIStore();
 
@@ -92,7 +93,7 @@ export function ProductView({ product }: ProductViewProps) {
         {/* LEFT: Gallery */}
         <div className="space-y-4">
           {/* Main Image */}
-          <div className="relative aspect-square bg-[#1a1a1a] rounded-3xl overflow-hidden border border-white/5">
+          <div className="relative aspect-square bg-brand-surface rounded-3xl overflow-hidden border border-white/5">
             <Image
               src={selectedImage}
               alt={product.title}
@@ -116,6 +117,7 @@ export function ProductView({ product }: ProductViewProps) {
           {/* Thumbnails (Scrollable on mobile) */}
           <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
             <button
+              type="button"
               onClick={() => setSelectedImage(product.image)}
               className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === product.image ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
             >
@@ -128,6 +130,7 @@ export function ProductView({ product }: ProductViewProps) {
             </button>
             {product.images?.map((img, i) => (
               <button
+                type="button"
                 key={i}
                 onClick={() => setSelectedImage(img)}
                 className={`relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden border-2 transition-all ${selectedImage === img ? 'border-brand-yellow' : 'border-transparent opacity-50 hover:opacity-100'}`}
@@ -150,7 +153,10 @@ export function ProductView({ product }: ProductViewProps) {
               <h1 className="text-3xl md:text-5xl font-black text-white leading-tight">
                 {product.title}
               </h1>
-              <button className="text-slate-500 hover:text-brand-pink transition-colors">
+              <button
+                type="button"
+                className="text-slate-500 hover:text-brand-pink transition-colors"
+              >
                 <Heart size={28} />
               </button>
             </div>
