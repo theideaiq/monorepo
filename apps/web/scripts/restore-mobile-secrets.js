@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const ANDROID_DEST = path.join(
   __dirname,
@@ -25,12 +25,7 @@ function restoreSecret(envVar, destPath, platformName) {
       if (error && typeof error.message === 'string') {
         errorMessage = error.message;
       } else {
-        const errorType =
-          error &&
-          error.constructor &&
-          typeof error.constructor.name === 'string'
-            ? error.constructor.name
-            : 'UnknownErrorType';
+        const errorType = error?.constructor?.name || 'UnknownErrorType';
         let errorDetails;
         try {
           errorDetails = JSON.stringify(error);
