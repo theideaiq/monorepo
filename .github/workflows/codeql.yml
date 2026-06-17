@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     strategy:
       fail-fast: false
@@ -62,11 +63,23 @@ jobs:
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # Generate dummy web assets to prevent Capacitor sync from failing
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter=web exec cap sync android
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +93,12 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # Generate dummy web assets to prevent Capacitor sync from failing
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+          pnpm --filter=web exec cap sync ios
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm run --filter=web secrets:restore
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
