@@ -1,5 +1,6 @@
 import { ROLES } from '@/lib/constants';
-import { createClient } from '@/lib/supabase/server';
+// We use a conditional import or dynamically require createClient where needed
+// to avoid using next/headers in a client component that imports this file.
 
 /**
  * Checks if the provided role has administrative privileges (Admin or Superadmin).
@@ -29,6 +30,7 @@ export function hasAdminAccess(role?: string | null): boolean {
  * @throws Error if unauthorized.
  */
 export async function requireAdmin() {
+  const { createClient } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   const {
     data: { user },
@@ -63,6 +65,7 @@ export async function requireAdmin() {
  * @throws Error if unauthorized.
  */
 export async function requireSuperAdmin() {
+  const { createClient } = await import('@/lib/supabase/server');
   const supabase = await createClient();
   const {
     data: { user },

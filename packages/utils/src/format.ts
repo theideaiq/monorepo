@@ -28,6 +28,23 @@ export function formatCurrency(
   }).format(amount);
 }
 
+// Cached formatter for performance
+const iqdFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a number as a decimal price specifically for IQD,
+ * without appending the currency symbol. Uses a cached formatter for performance.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted string (e.g., "50,000").
+ */
+export function formatPrice(amount: number): string {
+  return iqdFormatter.format(amount);
+}
+
 /**
  * Format a date string or object to a readable standard.
  * Uses 'en-US' locale with 'MMM D, YYYY' format.
@@ -36,7 +53,8 @@ export function formatCurrency(
  * @returns A formatted date string (e.g., "Jan 15, 2026").
  */
 export function formatDate(date: string | Date): string {
-  if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
+  if (!date || (date instanceof Date && Number.isNaN(date.getTime())))
+    return '';
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
