@@ -1,4 +1,6 @@
 import { ROLES } from '@/lib/constants';
+// Note: `requireAdmin` and `requireSuperAdmin` are server-only.
+// `hasAdminAccess` can be used on client.
 import { createClient } from '@/lib/supabase/server';
 
 /**
