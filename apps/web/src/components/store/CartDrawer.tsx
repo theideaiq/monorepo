@@ -1,12 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { ShoppingBag, Trash2, Minus, Plus } from 'lucide-react';
+import { Button } from '@repo/ui';
+import { formatCurrency } from '@repo/utils';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Drawer } from '@/components/ui/Drawer';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
-import { Button } from '@repo/ui';
 
 export function CartDrawer() {
   const { isCartOpen, closeCart } = useUIStore();
@@ -18,7 +19,7 @@ export function CartDrawer() {
     router.push('/checkout');
   };
 
-  const formattedTotal = new Intl.NumberFormat('en-IQ').format(total);
+  const formattedTotal = formatCurrency(total, 'IQD');
 
   return (
     <Drawer
@@ -29,7 +30,7 @@ export function CartDrawer() {
         <div className="space-y-4">
           <div className="flex justify-between text-white font-bold text-lg">
             <span>Total</span>
-            <span>{formattedTotal} IQD</span>
+            <span>{formattedTotal}</span>
           </div>
           <Button
             className="w-full h-14 bg-brand-yellow text-brand-dark font-bold text-lg hover:bg-white"
@@ -76,7 +77,7 @@ export function CartDrawer() {
                   </p>
                 )}
                 <p className="text-brand-yellow font-bold mt-2">
-                  {new Intl.NumberFormat('en-IQ').format(item.price)} IQD
+                  {formatCurrency(item.price, 'IQD')}
                 </p>
               </div>
 
