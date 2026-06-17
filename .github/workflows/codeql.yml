@@ -43,7 +43,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -65,8 +70,12 @@ jobs:
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
+          # 0. Install Dependencies (Required for Capacitor plugins)
+          pnpm install
+
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # Use direct node execution to avoid workspace resolution issues in CI
+          node apps/web/scripts/restore-mobile-secrets.js
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
@@ -80,8 +89,12 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
+          # 0. Install Dependencies (Required for Capacitor plugins)
+          pnpm install
+
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # Use direct node execution to avoid workspace resolution issues in CI
+          node apps/web/scripts/restore-mobile-secrets.js
           
           # 2. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
