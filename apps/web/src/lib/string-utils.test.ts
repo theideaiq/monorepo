@@ -36,6 +36,11 @@ describe('String Utils (@repo/utils)', () => {
       expect(decodeHtmlEntities('&#X41;')).toBe('A'); // Uppercase hex
     });
 
+    it('should not decode invalid entities', () => {
+      expect(decodeHtmlEntities('&#xZZ;')).toBe('&#xZZ;'); // Invalid hex
+      expect(decodeHtmlEntities('&#;')).toBe('&#;'); // Empty
+    });
+
     it('should handle mixed content', () => {
       expect(decodeHtmlEntities('Tom &amp; Jerry')).toBe('Tom & Jerry');
       expect(decodeHtmlEntities('1 &lt; 2')).toBe('1 < 2');

@@ -1,0 +1,3 @@
+## 2025-02-19 - Missing Package Test Infrastructure
+Discovery: Shared packages like `@repo/utils` lack dedicated test infrastructure (no `vitest` config or `test` script) and rely on consuming apps (`apps/web`) for testing. This coupled architecture hid bugs in `slugify` (null handling) and `decodeHtmlEntities` (hex support) because tests were not effectively running or maintained alongside the code.
+Strategy: Tests for shared packages *should* be co-located within the package directory and run via the package's own test script to ensure isolation and proper coverage. However, due to current infrastructure constraints, we verified fixes by running the existing `apps/web/src/lib/string-utils.test.ts`. Future work should prioritize moving these tests to `packages/utils`.
