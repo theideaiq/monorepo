@@ -1,0 +1,4 @@
+## 2024-05-24 - Cryptographically Secure Reference IDs
+**Vulnerability:** Insecure generation of reference IDs for Checkout Sessions using `Math.random()`.
+**Learning:** `Math.random()` is predictable and not cryptographically secure, which could lead to ID collisions or predictability attacks in payment workflows. It's particularly dangerous as webhook handlers heavily rely on these prefixes and IDs for routing events.
+**Prevention:** Always use a cryptographically secure generator like `randomUUID` from `node:crypto` (in Node.js/Next.js server environments) to generate reference IDs, and ensure app-specific prefixes (e.g., `droid-`) are prepended correctly.
