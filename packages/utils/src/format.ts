@@ -66,3 +66,21 @@ export function formatCompactNumber(number: number): string {
     maximumFractionDigits: 1,
   }).format(number);
 }
+
+// Cached formatter instance for IQD
+const iqdFormatter = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+/**
+ * Format a number as IQD (Iraqi Dinar).
+ * Uses 'en-IQ' locale and zero decimal places.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted string (e.g., "50,000").
+ */
+export function formatIQDNumber(amount: number): string {
+  if (!Number.isFinite(amount)) return '0';
+  return iqdFormatter.format(amount);
+}
