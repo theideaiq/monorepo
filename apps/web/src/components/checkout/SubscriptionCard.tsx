@@ -22,6 +22,7 @@ export function SubscriptionCard({
   onSelect,
 }: SubscriptionCardProps) {
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Interactive card for selection
     <div
       onClick={onSelect}
       className={`

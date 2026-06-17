@@ -1,7 +1,3 @@
-area: web:
-  - changed-files:
-      - any-glob-to-any-file: 'apps/web/**/*'
-
 area: admin:
   - changed-files:
       - any-glob-to-any-file: 'apps/admin/**/*'
@@ -10,12 +6,31 @@ area: droid:
   - changed-files:
       - any-glob-to-any-file: 'apps/droid/**/*'
 
-area: core:
+'area: web':
   - changed-files:
-      - any-glob-to-any-file: 'packages/**/*'
+      - any-glob-to-any-file: 'apps/web/**/*'
 
-area: ops:
+'area: api':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/api/**/*'
+
+'area: database':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/database/**/*'
+
+'area: ui':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/ui/**/*'
+
+'area: utils':
+  - changed-files:
+      - any-glob-to-any-file: 'packages/utils/**/*'
+
+'area: docs':
+  - changed-files:
+      - any-glob-to-any-file: 'docs/**/*'
+      - any-glob-to-any-file: '**/*.md'
+
+'area: ci':
   - changed-files:
       - any-glob-to-any-file: '.github/**/*'
-      - any-glob-to-any-file: 'turbo.json'
-      - any-glob-to-any-file: 'package.json'
