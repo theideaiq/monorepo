@@ -82,17 +82,21 @@ export function CartDrawer() {
 
               <div className="flex flex-col justify-between items-end">
                 <button
+                  type="button"
                   onClick={() => removeItem(item.id)}
-                  className="text-slate-500 hover:text-red-500 p-1"
+                  className="text-slate-500 hover:text-red-500 p-1 transition-colors"
+                  aria-label={`Remove ${item.title}`}
                 >
                   <Trash2 size={16} />
                 </button>
 
                 <div className="flex items-center gap-3 bg-black/20 rounded-lg p-1">
                   <button
+                    type="button"
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="p-1 text-slate-400 hover:text-white disabled:opacity-50"
+                    className="p-1 text-slate-400 hover:text-white disabled:opacity-50 transition-colors"
                     disabled={item.quantity <= 1}
+                    aria-label={`Decrease quantity of ${item.title}`}
                   >
                     <Minus size={14} />
                   </button>
@@ -100,8 +104,10 @@ export function CartDrawer() {
                     {item.quantity}
                   </span>
                   <button
+                    type="button"
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="p-1 text-slate-400 hover:text-white"
+                    className="p-1 text-slate-400 hover:text-white transition-colors"
+                    aria-label={`Increase quantity of ${item.title}`}
                   >
                     <Plus size={14} />
                   </button>
