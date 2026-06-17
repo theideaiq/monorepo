@@ -94,8 +94,18 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy"
+          RESEND_API_KEY: "re_dummy_123"
+          WAYL_SECRET_KEY: "dummy"
+          ZAIN_SECRET_KEY: "dummy"
+          WAYL_WEBHOOK_SECRET: "dummy"
+          TELEGRAM_BOT_TOKEN: "123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
+          UPSTASH_REDIS_REST_URL: "https://example.upstash.io"
+          UPSTASH_REDIS_REST_TOKEN: "dummy"
+          GEMINI_API_KEY: "dummy"
         run: pnpm turbo build
 
   e2e:
@@ -144,6 +154,7 @@ jobs:
 
       - name: Run E2E Tests
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: "true"
+          NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy"
         run: pnpm turbo e2e

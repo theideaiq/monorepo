@@ -21,16 +21,19 @@ interface CartState {
   total: number;
 }
 
+const calculateTotal = (items: CartItem[]) =>
+  items.reduce((acc, i) => acc + i.price * i.quantity, 0);
+
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       items: [],
       total: 0,
 
       addItem: (newItem) => {
         set((state) => {
           const existing = state.items.find((i) => i.id === newItem.id);
-          let updatedItems;
+          let updatedItems: CartItem[];
           if (existing) {
             updatedItems = state.items.map((i) =>
               i.id === newItem.id ? { ...i, quantity: i.quantity + 1 } : i,
@@ -39,23 +42,14 @@ export const useCartStore = create<CartState>()(
             updatedItems = [...state.items, { ...newItem, quantity: 1 }];
           }
 
-          // Recalc total
-          const total = updatedItems.reduce(
-            (acc, i) => acc + i.price * i.quantity,
-            0,
-          );
-          return { items: updatedItems, total };
+          return { items: updatedItems, total: calculateTotal(updatedItems) };
         });
       },
 
       removeItem: (id) => {
         set((state) => {
           const updatedItems = state.items.filter((i) => i.id !== id);
-          const total = updatedItems.reduce(
-            (acc, i) => acc + i.price * i.quantity,
-            0,
-          );
-          return { items: updatedItems, total };
+          return { items: updatedItems, total: calculateTotal(updatedItems) };
         });
       },
 
@@ -65,11 +59,7 @@ export const useCartStore = create<CartState>()(
           const updatedItems = state.items.map((i) =>
             i.id === id ? { ...i, quantity } : i,
           );
-          const total = updatedItems.reduce(
-            (acc, i) => acc + i.price * i.quantity,
-            0,
-          );
-          return { items: updatedItems, total };
+          return { items: updatedItems, total: calculateTotal(updatedItems) };
         });
       },
 
