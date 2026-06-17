@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react';
+import { formatCurrency } from '@repo/utils';
 
 interface PaymentPlan {
   id: string;
@@ -49,7 +50,7 @@ export function SubscriptionCard({
 
       <div className="mb-6">
         <span className="text-3xl font-extrabold text-slate-900">
-          {plan.price.toLocaleString()} {plan.currency}
+          {formatCurrency(plan.price, plan.currency as 'USD' | 'IQD')}
         </span>
         <span className="text-slate-500 font-medium ml-1">
           /{plan.interval}

@@ -1,5 +1,6 @@
 import { Badge, Button } from '@repo/ui';
 import { waylClient } from '@/lib/wayl';
+import { formatCurrency } from '@repo/utils';
 
 export default async function TransactionsPage() {
   const { data: transactions } = await waylClient.links.list({ take: 50 });
@@ -39,7 +40,7 @@ export default async function TransactionsPage() {
                     {tx.referenceId}
                   </td>
                   <td className="px-6 py-4 font-medium text-white">
-                    {Number(tx.total).toLocaleString()} {tx.currency}
+                    {formatCurrency(Number(tx.total), tx.currency as 'USD' | 'IQD')}
                   </td>
                   <td className="px-6 py-4">
                     <Badge
