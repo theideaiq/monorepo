@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/server';
  * @param role - The user role string to check.
  * @returns True if the role is Admin or Superadmin, false otherwise.
  */
-export function hasAdminAccess(role?: string | null): boolean {
+function hasAdminAccess_moved(role?: string | null): boolean {
   if (!role) return false;
   const normalizedRole = role.toLowerCase();
   return (
@@ -48,7 +48,7 @@ export async function requireAdmin() {
     throw new Error('Unauthorized: User invalid or banned');
   }
 
-  if (!hasAdminAccess(requester.role)) {
+  if (!hasAdminAccess_moved(requester.role)) {
     throw new Error('Unauthorized: Insufficient permissions');
   }
 
