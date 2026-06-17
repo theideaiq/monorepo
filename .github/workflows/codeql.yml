@@ -23,6 +23,7 @@ jobs:
     env:
       ANDROID_GOOGLE_SERVICES_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_BASE64 }}
       IOS_GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.IOS_GOOGLE_SERVICE_INFO_BASE64 }}
+      CODEQL_ACTION_FILE_COVERAGE_ON_PRS: true
 
     strategy:
       fail-fast: false
@@ -51,6 +52,23 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
+
+      - name: Create fallback environment variables for Web
+        run: |
+          mkdir -p apps/web
+          echo "WAYL_SECRET_KEY=mock_key" > apps/web/.env
+          echo "WAYL_WEBHOOK_SECRET=mock_key" >> apps/web/.env
+          echo "ZAIN_SECRET_KEY=mock_key" >> apps/web/.env
+          echo "SUPABASE_SERVICE_ROLE_KEY=mock_key" >> apps/web/.env
+
+      - name: Create fallback environment variables for Admin
+        run: |
+          mkdir -p apps/admin
+          echo "WAYL_SECRET_KEY=mock_key" > apps/admin/.env
+          echo "WAYL_WEBHOOK_SECRET=mock_key" >> apps/admin/.env
+          echo "ZAIN_SECRET_KEY=mock_key" >> apps/admin/.env
+          echo "SUPABASE_SERVICE_ROLE_KEY=mock_key" >> apps/admin/.env
+          echo "RESEND_API_KEY=mock_key" >> apps/admin/.env
 
       # Initialize CodeQL (Defines what languages to scan)
       - name: Initialize CodeQL
