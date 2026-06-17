@@ -1,5 +1,36 @@
 // packages/utils/src/format.ts
 
+// Instantiate expensive formatters once at module scope
+const IQD_DECIMAL_FORMATTER = new Intl.NumberFormat('en-IQ', {
+  style: 'decimal',
+  maximumFractionDigits: 0,
+});
+
+const IQD_CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'IQD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
+const USD_CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+const COMPACT_FORMATTER = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
+const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+});
+
 /**
  * Format a number as currency.
  *
@@ -19,13 +50,21 @@ export function formatCurrency(
   amount: number,
   currency: 'USD' | 'IQD' = 'USD',
 ): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-    // IQD doesn't typically use cents in this context
-    minimumFractionDigits: currency === 'IQD' ? 0 : 2,
-    maximumFractionDigits: currency === 'IQD' ? 0 : 2,
-  }).format(amount);
+  if (currency === 'IQD') {
+    return IQD_CURRENCY_FORMATTER.format(amount);
+  }
+  return USD_CURRENCY_FORMATTER.format(amount);
+}
+
+/**
+ * Format a number as Iraqi Dinar (decimal only, no currency symbol).
+ * Uses 'en-IQ' locale and 0 decimal places.
+ *
+ * @param amount - The numerical amount to format.
+ * @returns The formatted number string (e.g. "50,000").
+ */
+export function formatIqd(amount: number): string {
+  return IQD_DECIMAL_FORMATTER.format(amount);
 }
 
 /**
@@ -37,11 +76,8 @@ export function formatCurrency(
  */
 export function formatDate(date: string | Date): string {
   if (!date || (date instanceof Date && Number.isNaN(date.getTime()))) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(date instanceof Date ? date : new Date(date));
+  const d = date instanceof Date ? date : new Date(date);
+  return DATE_FORMATTER.format(d);
 }
 
 /**
@@ -61,8 +97,5 @@ export function formatCompactNumber(number: number): string {
     return '';
   }
 
-  return Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
+  return COMPACT_FORMATTER.format(number);
 }

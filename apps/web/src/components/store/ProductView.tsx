@@ -1,5 +1,6 @@
 'use client';
 
+import { formatIqd } from '@repo/utils';
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -84,7 +85,7 @@ export function ProductView({ product }: ProductViewProps) {
     toast.success('Added to cart');
   };
 
-  const price = new Intl.NumberFormat('en-IQ').format(product.price);
+  const price = formatIqd(product.price);
 
   return (
     <div className="pb-32 md:pb-12">
