@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCartStore } from './cart-store';
 
@@ -20,28 +23,28 @@ describe('Cart Store', () => {
   it('should add items to the cart', () => {
     const { addItem } = useCartStore.getState();
 
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple']);
+    addItem({ id: 'apple' } as any);
+    expect(useCartStore.getState().items).toEqual([{ id: 'apple', quantity: 1 }]);
 
-    addItem('banana');
-    expect(useCartStore.getState().items).toEqual(['apple', 'banana']);
+    addItem({ id: 'banana' } as any);
+    expect(useCartStore.getState().items).toEqual([{ id: 'apple', quantity: 1 }, { id: 'banana', quantity: 1 }]);
   });
 
   it('should remove items from the cart', () => {
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    addItem({ id: 'apple' } as any);
+    addItem({ id: 'banana' } as any);
 
     removeItem('apple');
-    expect(useCartStore.getState().items).toEqual(['banana']);
+    expect(useCartStore.getState().items).toEqual([{ id: 'banana', quantity: 1 }]);
   });
 
   it('should clear the cart', () => {
     const { addItem, clearCart } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('banana');
+    addItem({ id: 'apple' } as any);
+    addItem({ id: 'banana' } as any);
 
     clearCart();
     expect(useCartStore.getState().items).toEqual([]);
@@ -51,9 +54,9 @@ describe('Cart Store', () => {
     // Current behavior documentation: removing an item removes ALL instances of that value
     const { addItem, removeItem } = useCartStore.getState();
 
-    addItem('apple');
-    addItem('apple');
-    expect(useCartStore.getState().items).toEqual(['apple', 'apple']);
+    addItem({ id: 'apple' } as any);
+    addItem({ id: 'apple' } as any);
+    expect(useCartStore.getState().items).toEqual([{ id: 'apple', quantity: 2 }]);
 
     removeItem('apple');
     expect(useCartStore.getState().items).toEqual([]);

@@ -24,6 +24,12 @@ export function SubscriptionCard({
   return (
     <div
       onClick={onSelect}
+      /* biome-ignore lint/a11y/useSemanticElements: Needs to be a div for layout */
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onSelect();
+      }}
       className={`
         relative overflow-hidden rounded-2xl border-2 p-6 transition-all cursor-pointer
         ${
