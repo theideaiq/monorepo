@@ -44,12 +44,15 @@ export default function Page() {
 
 Ensure your application's Tailwind configuration includes the UI package content to generate styles correctly.
 
-For **Tailwind CSS 4**, add the `@source` directive to your application's main CSS file:
+For **Tailwind CSS 4**, add the `@source` directive and import the theme variables in your application's main CSS file (e.g., `apps/web/src/app/globals.css`):
 
 ```css
 @import "tailwindcss";
-@source "../../../packages/ui"; /* Adjust path relative to your CSS file */
+@import "../../../../packages/ui/src/theme.css"; /* Adjust path relative to your CSS file */
+@source "../../../../packages/ui";
 ```
+
+**Note:** The paths must be relative to the CSS file location. For a standard Next.js app structure (`apps/<app-name>/src/app/globals.css`), the path is `../../../../packages/ui`.
 
 ### 🔗 Link Injection Pattern
 
