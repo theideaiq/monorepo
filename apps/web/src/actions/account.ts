@@ -2,6 +2,15 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { z } from 'zod';
+
+const updateProfileSchema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, 'Full name must be at least 2 characters')
+    .max(50, 'Full name must be at most 50 characters'),
+});
 
 export async function updateProfile(formData: FormData) {
   const supabase = await createClient();
@@ -13,11 +22,21 @@ export async function updateProfile(formData: FormData) {
     throw new Error('Not authenticated');
   }
 
-  const fullName = formData.get('fullName') as string;
+  const rawFullName = formData.get('fullName');
 
-  if (!fullName) {
+  if (!rawFullName || typeof rawFullName !== 'string') {
     throw new Error('Full name is required');
   }
+
+  const result = updateProfileSchema.safeParse({ fullName: rawFullName });
+
+  if (!result.success) {
+    const errorList = result.error.flatten().fieldErrors.fullName;
+    const errorMessage = errorList?.[0] || 'Invalid input';
+    throw new Error(errorMessage);
+  }
+
+  const { fullName } = result.data;
 
   const { error } = await supabase
     .from('profiles')

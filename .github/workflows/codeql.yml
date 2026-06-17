@@ -39,11 +39,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      # Required for 'npm run secrets:restore'
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: true
 
       # Required for Android Gradle Build
       - name: Setup Java
@@ -66,12 +70,21 @@ jobs:
         if: matrix.language == 'java-kotlin'
         run: |
           # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
           
           # 2. Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # 3. Ensure 'out' dir exists (Capacitor/Next.js requirement often checked)
+          mkdir -p apps/web/out
+
+          # 4. Sync Capacitor (Ensure android platform is ready)
+          # Note: We might need to run a build or sync if the native project depends on web assets,
+          # but for CodeQL analysis of Java/Kotlin, we mainly need the Android project to compile.
+          # We'll try running sync.
+          npx cap sync android
+
+          # 5. Build Debug APK (Sufficient for analysis)
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -81,9 +94,15 @@ jobs:
         if: matrix.language == 'swift'
         run: |
           # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          pnpm --filter web run secrets:restore
+
+          # 2. Ensure 'out' dir exists
+          mkdir -p apps/web/out
+
+          # 3. Sync Capacitor
+          npx cap sync ios
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # 4. Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -95,7 +114,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # 5. Build for Simulator (No Signing Required)
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
