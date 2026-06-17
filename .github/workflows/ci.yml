@@ -49,6 +49,20 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Quality Checks
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: 'https://test.supabase.co'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test_anon_key'
+          SUPABASE_SERVICE_ROLE_KEY: 'test_service_role_key'
+          WAYL_SECRET_KEY: 'test_wayl_key'
+          WAYL_WEBHOOK_SECRET: 'test_wayl_webhook'
+          ZAIN_SECRET_KEY: 'test_zain_key'
+          RESEND_API_KEY: 'test_resend_key'
+          TELEGRAM_BOT_TOKEN: 'test_bot_token'
+          GEMINI_API_KEY: 'test_gemini_key'
+          UPSTASH_REDIS_REST_URL: 'https://test.upstash.io'
+          UPSTASH_REDIS_REST_TOKEN: 'test_redis_token'
+          WEB_APP_URL: 'https://test.example.com'
         run: pnpm turbo check typecheck test
 
   build:
@@ -94,8 +108,19 @@ jobs:
 
       - name: Build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SKIP_ENV_VALIDATION: 'true'
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://test.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'test_anon_key' }}
+          SUPABASE_SERVICE_ROLE_KEY: 'test_service_role_key'
+          WAYL_SECRET_KEY: 'test_wayl_key'
+          WAYL_WEBHOOK_SECRET: 'test_wayl_webhook'
+          ZAIN_SECRET_KEY: 'test_zain_key'
+          RESEND_API_KEY: 'test_resend_key'
+          TELEGRAM_BOT_TOKEN: 'test_bot_token'
+          GEMINI_API_KEY: 'test_gemini_key'
+          UPSTASH_REDIS_REST_URL: 'https://test.upstash.io'
+          UPSTASH_REDIS_REST_TOKEN: 'test_redis_token'
+          WEB_APP_URL: 'https://test.example.com'
         run: pnpm turbo build
 
   e2e:
