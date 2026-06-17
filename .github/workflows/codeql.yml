@@ -62,16 +62,28 @@ jobs:
       # ----------------------------------------------------------------
       # MANUAL BUILD: Java (Android)
       # ----------------------------------------------------------------
+      # ----------------------------------------------------------------
+      # MANUAL BUILD: Java (Android)
+      # ----------------------------------------------------------------
       - name: Manual Build (Android)
         if: matrix.language == 'java-kotlin'
         run: |
-          # 1. Restore Secrets (Generates google-services.json)
-          npm run secrets:restore --workspace=apps/web
+          # Install dependencies to ensure Capacitor and plugins are available
+          pnpm install --frozen-lockfile
+
+          # Create dummy web assets for Capacitor
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+
+          # Sync Capacitor to update Android project
+          cd apps/web && npx cap sync android && cd ../..
           
-          # 2. Grant Permission
+          # Restore Secrets
+          cd apps/web && node scripts/restore-mobile-secrets.js && cd ../..
+
+          # Grant Permission
           chmod +x apps/web/android/gradlew
           
-          # 3. Build Debug APK (Sufficient for analysis)
+          # Build Debug APK
           cd apps/web/android && ./gradlew assembleDebug --no-daemon
 
       # ----------------------------------------------------------------
@@ -80,10 +92,19 @@ jobs:
       - name: Manual Build (Swift)
         if: matrix.language == 'swift'
         run: |
-          # 1. Restore Secrets (Generates GoogleService-Info.plist)
-          npm run secrets:restore --workspace=apps/web
+          # Install dependencies
+          pnpm install --frozen-lockfile
+
+          # Create dummy web assets
+          mkdir -p apps/web/out && touch apps/web/out/index.html
+
+          # Sync Capacitor to update iOS project
+          cd apps/web && npx cap sync ios && cd ../..
+
+          # Restore Secrets
+          cd apps/web && node scripts/restore-mobile-secrets.js && cd ../..
           
-          # 2. Determine Build Type (CocoaPods vs SPM)
+          # Determine Build Type (CocoaPods vs SPM)
           if [ -f "apps/web/ios/App/Podfile" ]; then
               echo "✅ Podfile found. Installing CocoaPods..."
               cd apps/web/ios/App && pod install --repo-update && cd -
@@ -95,7 +116,7 @@ jobs:
               BUILD_TARGET="-project apps/web/ios/App/App.xcodeproj"
           fi
           
-          # 3. Build for Simulator (No Signing Required)
+          # Build for Simulator
           echo "Building Project..."
           xcodebuild build \
             $BUILD_TARGET \
