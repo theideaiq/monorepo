@@ -87,14 +87,16 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
         <div className="flex items-center gap-4">
           <button
             type="button"
-            className="text-white hover:text-brand-yellow transition-colors"
+            aria-label="Search"
+            className="text-white hover:text-brand-yellow transition-colors focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:outline-none rounded-md p-1"
           >
             <Search size={20} />
           </button>
 
           <Link
             href="/account"
-            className="hidden md:block text-white hover:text-brand-yellow transition-colors"
+            aria-label="Account"
+            className="hidden md:block text-white hover:text-brand-yellow transition-colors focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:outline-none rounded-md p-1"
           >
             <User size={20} />
           </Link>
@@ -102,7 +104,8 @@ export function WebNavbar({ navItems, logo }: WebNavbarProps) {
           <button
             type="button"
             onClick={toggleCart}
-            className="relative text-white hover:text-brand-yellow transition-colors"
+            aria-label="Shopping Cart"
+            className="relative text-white hover:text-brand-yellow transition-colors focus-visible:ring-2 focus-visible:ring-brand-yellow focus-visible:outline-none rounded-md p-1"
           >
             <ShoppingCart size={20} />
             {mounted && cartItems.length > 0 && (
