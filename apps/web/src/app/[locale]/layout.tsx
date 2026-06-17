@@ -14,8 +14,6 @@ import {
   getTranslations,
   setRequestLocale,
 } from 'next-intl/server';
-import { BottomNav } from '@/components/ui/BottomNav';
-import { CartDrawer } from '@/components/store/CartDrawer';
 import SkipLink from '@/components/layout/SkipLink';
 import { WebFooter } from '@/components/layout/WebFooter';
 import { WebNavbar } from '@/components/layout/WebNavbar';
@@ -23,6 +21,8 @@ import QueryProvider from '@/components/providers/QueryProvider';
 import ToastProvider from '@/components/providers/ToastProvider';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import JsonLd from '@/components/seo/JsonLd';
+import { CartDrawer } from '@/components/store/CartDrawer';
+import { BottomNav } from '@/components/ui/BottomNav';
 import { Link, routing } from '@/i18n/navigation';
 
 const poppins = Poppins({
@@ -54,7 +54,7 @@ export async function generateMetadata({
   params,
 }: Omit<Props, 'children'>): Promise<Metadata> {
   const { locale } = await params;
-  const baseUrl = env.NEXT_PUBLIC_SITE_URL;
+  const baseUrl = env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
   return {
     metadataBase: new URL(baseUrl),
@@ -101,7 +101,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const t = await getTranslations();
 
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
-  const baseUrl = env.NEXT_PUBLIC_SITE_URL;
+  const baseUrl = env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
   // Navigation Data
   const navItems = webNavigation.map((item) => ({
