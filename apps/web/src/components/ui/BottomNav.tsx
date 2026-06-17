@@ -13,6 +13,8 @@ export function BottomNav() {
   const items = useCartStore((s) => s.items);
   const [mounted, setMounted] = useState(false);
 
+  const totalItems = items.reduce((acc, i) => acc + i.quantity, 0);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -42,6 +44,7 @@ export function BottomNav() {
         {/* Standard Links */}
         <Link
           href="/"
+          aria-current={isActive('/') ? 'page' : undefined}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
@@ -52,6 +55,7 @@ export function BottomNav() {
 
         <Link
           href="/megastore"
+          aria-current={isActive('/megastore') ? 'page' : undefined}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/megastore') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
@@ -64,13 +68,16 @@ export function BottomNav() {
         <button
           type="button"
           onClick={toggleCart}
+          aria-label={
+            mounted && totalItems > 0 ? `Cart, ${totalItems} items` : 'Cart'
+          }
           className="flex flex-col items-center justify-center w-full h-full space-y-1 text-slate-500 relative"
         >
           <div className="relative">
             <ShoppingCart size={20} />
             {mounted && items.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
-                {items.reduce((acc, i) => acc + i.quantity, 0)}
+                {totalItems}
               </span>
             )}
           </div>
@@ -79,6 +86,7 @@ export function BottomNav() {
 
         <Link
           href="/account"
+          aria-current={isActive('/account') ? 'page' : undefined}
           className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${
             isActive('/account') ? 'text-brand-yellow' : 'text-slate-500'
           }`}
