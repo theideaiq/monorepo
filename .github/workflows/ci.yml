@@ -7,6 +7,21 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  SKIP_ENV_VALIDATION: "true"
+  WEB_APP_URL: "http://localhost:3000"
+  RESEND_API_KEY: "re_123456789"
+  WAYL_SECRET_KEY: "wayl_secret"
+  ZAIN_SECRET_KEY: "zain_secret"
+  WAYL_WEBHOOK_SECRET: "wayl_webhook"
+  UPSTASH_REDIS_REST_URL: "https://example.upstash.io"
+  UPSTASH_REDIS_REST_TOKEN: "upstash_token"
+  GEMINI_API_KEY: "gemini_key"
+  TELEGRAM_BOT_TOKEN: "123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
+  NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+  SUPABASE_SERVICE_ROLE_KEY: "supabase_service_role_key"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: "supabase_anon_key"
+
 jobs:
   quality:
     name: Quality Gate
@@ -93,9 +108,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm turbo build
 
   e2e:
@@ -143,7 +155,4 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run E2E Tests
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm turbo e2e
