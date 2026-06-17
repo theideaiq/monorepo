@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { requireAdmin } from '@/lib/auth-checks';
 import { createClient } from '@/lib/supabase/server';
 import { columns, type Product } from './columns';
 import { DataTable } from './data-table';
@@ -23,6 +24,11 @@ async function getProducts(): Promise<Product[]> {
 }
 
 export default async function ProductsPage() {
+  try {
+    await requireAdmin();
+  } catch {
+    redirect('/login');
+  }
   const data = await getProducts();
 
   return (

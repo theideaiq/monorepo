@@ -38,6 +38,7 @@ export interface Database {
           // ...
         };
       };
+      // biome-ignore lint/complexity/noBannedTypes: empty update type for future extensibility
       product_variants: {
         Row: {
           id: string;

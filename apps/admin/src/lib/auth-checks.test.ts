@@ -1,6 +1,21 @@
-import { describe, expect, it } from 'vitest';
-import { hasAdminAccess } from './auth-checks';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { requireAdmin } from './auth-checks';
+import { hasAdminAccess } from './auth-utils';
 import { ROLES } from './constants';
+
+const mocks = vi.hoisted(() => ({
+  from: vi.fn(),
+  getUser: vi.fn(),
+}));
+
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn().mockResolvedValue({
+    auth: {
+      getUser: mocks.getUser,
+    },
+    from: mocks.from,
+  }),
+}));
 
 describe('hasAdminAccess', () => {
   it('should return true for admin role', () => {
@@ -32,5 +47,73 @@ describe('hasAdminAccess', () => {
     expect(hasAdminAccess(null)).toBe(false);
     expect(hasAdminAccess(undefined)).toBe(false);
     expect(hasAdminAccess('')).toBe(false);
+  });
+});
+
+describe('requireAdmin', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should return user and requester for valid admin', async () => {
+    const mockUser = { id: 'user-123' };
+    const mockProfile = { id: 'user-123', role: ROLES.ADMIN, banned: false };
+
+    mocks.getUser.mockResolvedValue({ data: { user: mockUser } });
+    mocks.from.mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: mockProfile }),
+        }),
+      }),
+    });
+
+    const result = await requireAdmin();
+    expect(result.user).toEqual(mockUser);
+    expect(result.requester).toEqual(mockProfile);
+  });
+
+  it('should throw if no user session', async () => {
+    mocks.getUser.mockResolvedValue({ data: { user: null } });
+
+    await expect(requireAdmin()).rejects.toThrow(
+      'Authentication required: No user session found',
+    );
+  });
+
+  it('should throw if user is banned', async () => {
+    const mockUser = { id: 'user-123' };
+    const mockProfile = { id: 'user-123', role: ROLES.ADMIN, banned: true };
+
+    mocks.getUser.mockResolvedValue({ data: { user: mockUser } });
+    mocks.from.mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: mockProfile }),
+        }),
+      }),
+    });
+
+    await expect(requireAdmin()).rejects.toThrow(
+      'Unauthorized: User invalid or banned',
+    );
+  });
+
+  it('should throw if user is not admin', async () => {
+    const mockUser = { id: 'user-123' };
+    const mockProfile = { id: 'user-123', role: ROLES.USER, banned: false };
+
+    mocks.getUser.mockResolvedValue({ data: { user: mockUser } });
+    mocks.from.mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: mockProfile }),
+        }),
+      }),
+    });
+
+    await expect(requireAdmin()).rejects.toThrow(
+      'Unauthorized: Insufficient permissions',
+    );
   });
 });
