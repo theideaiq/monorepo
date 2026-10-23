@@ -52,7 +52,7 @@ flowchart LR
 
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
-| `apps/web` | 3001 | Marketing site: home, pricing, blog, legal, contact. Server-rendered Next.js with `next-intl` locale routing (`/ar/…`, `/en/…`). | Vercel |
+| `apps/web` | 3001 | The IDEA's public site: home, Megastore catalog and product pages, IDEA Plus, Academy, Suite, Club, Droid, news, events, journal, legal (Markdown in `apps/web/content/legal`), contact. Next.js Server Components with `next-intl` locale routing (`/ar/…`, `/en/…`) and ISR; reads public data with an anonymous Supabase client. | Vercel |
 | `apps/app` | 3000 | The product. **Client-first**: every screen renders in the browser and talks to Supabase directly. The same code is built twice: a normal Next.js build for the web, and a static export for the native apps. | Vercel (web) and the App Store / Google Play (native) |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, the Liveblocks and Svix token endpoints. Route handlers only. | Vercel |
 | `apps/email` | 3003 | React Email templates (`@repo/email`). | Not deployed (dev preview) |
@@ -203,7 +203,6 @@ In order:
 
 | Id | Module | Removes |
 | --- | --- | --- |
-| `cms` | Blog and legal pages edited in BaseHub | `packages/cms`, the blog and legal routes, the footer's legal column |
 | `collaboration` | Live cursors and presence (Liveblocks) | `packages/collaboration`, `apps/app/components/collaboration`, `apps/api/app/collaboration` |
 | `notifications` | In-app notification feed (Knock) | `packages/notifications`, the app's notifications provider |
 | `webhooks` | Outbound webhooks and a customer portal (Svix) | `packages/webhooks`, the webhooks screen, `apps/api/app/webhooks/portal` |
@@ -1052,7 +1051,7 @@ For each project:
 
 - **Framework Preset:** Next.js.
 - **Build Command:** `turbo run build`, so the packages an app depends on
-  (such as the BaseHub client) are built first.
+  are built first.
 - **Install Command:** `bun install`. Vercel detects Bun from `bun.lock`.
 - **Node.js Version:** 22.x.
 - Keep **Automatically expose System Environment Variables** on (`VERCEL`,
@@ -1092,7 +1091,7 @@ deployment succeeds, but the named feature is off or broken without it.
 | `NEXT_PUBLIC_API_URL` | Optional | API URL |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
 | `RESEND_TOKEN`, `RESEND_FROM` | Feature | Contact form email. Without them the form shows "unavailable". |
-| `BASEHUB_TOKEN` | Build, if the `cms` module is kept | `bshb_pk_…`. The BaseHub client is generated at build time. |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, news, events and journal (read anonymously, under Row Level Security). Without them those sections show empty states. |
 | `NEXT_PUBLIC_GTM_ID` **or** `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | Product analytics |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional | Error reporting |
