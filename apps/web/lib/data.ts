@@ -32,9 +32,9 @@ const check = <T>({
   data,
   error,
 }: {
-  data: T | null;
+  data: T;
   error: { message: string } | null;
-}): T | null => {
+}): T => {
   if (error) {
     throw new Error(error.message);
   }

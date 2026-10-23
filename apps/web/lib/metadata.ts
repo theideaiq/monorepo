@@ -3,6 +3,7 @@ import type { Locale } from "@repo/internationalization";
 import { locales } from "@repo/internationalization";
 import { createMetadata } from "@repo/seo/metadata";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { env } from "@/env";
 
 interface PageMetadata {
@@ -48,3 +49,27 @@ export const localizedMetadata = (
     openGraph: { type, url: `/${locale}${suffix}` },
   });
 };
+
+type StaticPage =
+  | "about"
+  | "academy"
+  | "careers"
+  | "club"
+  | "droid"
+  | "events"
+  | "faq"
+  | "journal"
+  | "news"
+  | "suite";
+
+/** `generateMetadata` for a page whose title and description are in `web.<page>.meta`. */
+export const staticPageMetadata =
+  (page: StaticPage, path: string) =>
+  async ({ params }: { params: Promise<{ locale: Locale }> }) => {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "web" });
+    return localizedMetadata(locale, path, {
+      description: t(`${page}.meta.description`),
+      title: t(`${page}.meta.title`),
+    });
+  };
