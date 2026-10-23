@@ -1,89 +1,31 @@
-import '@repo/env/web';
-import withBundleAnalyzer from '@next/bundle-analyzer';
-import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
+import { config, withAnalyzer } from "@repo/next-config";
+import { withLogging, withSentry } from "@repo/observability/next-config";
+import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+import { env } from "@/env";
 
-const withNextIntl = createNextIntlPlugin();
-const withAnalyzer = withBundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
-const isMobile = process.env.NEXT_PUBLIC_APP_ENV === 'mobile';
+let nextConfig: NextConfig = withLogging(config);
 
-const nextConfig: NextConfig = {
-  reactCompiler: true,
-  transpilePackages: ['@repo/ui', '@repo/utils', '@repo/env'],
-  output: isMobile ? 'export' : undefined,
-  images: {
-    unoptimized: isMobile,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.ytimg.com',
-      },
-    ],
-  },
-  async headers() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    let supabaseDomain = '';
+if (process.env.NODE_ENV === "production") {
+  const redirects: NextConfig["redirects"] = async () => [
+    {
+      destination: "/:locale/legal/privacy",
+      source: "/:locale/legal",
+      statusCode: 301,
+    },
+  ];
 
-    if (supabaseUrl) {
-      try {
-        const url = new URL(supabaseUrl);
-        supabaseDomain = url.hostname;
-      } catch (e) {
-        // biome-ignore lint/suspicious/noConsole: Critical build-time error logging
-        console.error('Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP', e);
-      }
-    }
+  nextConfig.redirects = redirects;
+}
 
-    const csp = [
-      "default-src 'self'",
-      `img-src 'self' data: blob: images.unsplash.com i.ytimg.com ${supabaseDomain}`,
-      "style-src 'self' 'unsafe-inline'",
-      `connect-src 'self' ${supabaseDomain}`,
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // unsafe-eval needed for Next.js in dev, unsafe-inline for scripts
-      "font-src 'self' data:",
-    ]
-      .filter(Boolean)
-      .join('; ');
+if (env.VERCEL) {
+  nextConfig = withSentry(nextConfig);
+}
 
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: csp.replace(/\s{2,}/g, ' ').trim(),
-          },
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on',
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-        ],
-      },
-    ];
-  },
-};
+if (env.ANALYZE === "true") {
+  nextConfig = withAnalyzer(nextConfig);
+}
 
-export default withAnalyzer(withNextIntl(nextConfig));
+export default withNextIntl(nextConfig);

@@ -1,13 +1,13 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./apps/admin" },
-    { "path": "./apps/droid" },
-    { "path": "./apps/web" },
-    { "path": "./packages/config" },
-    { "path": "./packages/database" },
-    { "path": "./packages/env" },
-    { "path": "./packages/ui" },
-    { "path": "./packages/utils" }
-  ]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./packages/typescript-config/base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": ["node"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
+  },
+  "include": ["scripts/**/*.ts", "turbo/**/*.ts"],
+  "exclude": ["node_modules"]
 }

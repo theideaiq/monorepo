@@ -1,0 +1,24 @@
+{
+  "orgName": "The IDEA IQ Inc.",
+  "orgSlug": "theideaiq",
+  "name": "The IDEA",
+  "slug": "theideaiq",
+  "url": "https://theideaiq.com",
+  "supportEmail": "hi@theideaiq.com",
+  "repoUrl": "https://github.com/theideaiq/monorepo",
+  "bundleId": "com.theideaiq.app",
+  "locale": {
+    "default": "ar",
+    "enabled": ["ar", "en"]
+  },
+  "region": {
+    "country": "IQ",
+    "timeZone": "Asia/Baghdad",
+    "currency": "IQD",
+    "numberingSystem": "latn",
+    "weekStartsOn": 6
+  },
+  "commerce": {
+    "allowNativeCheckout": true
+  }
+}

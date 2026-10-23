@@ -1,6 +1,11 @@
-# Security Policy
+# Security policy
 
-## Reporting a Vulnerability
+## Supported versions
 
-Please do NOT open public issues for security vulnerabilities.
-Contact the security team directly at: security@theideaiq.com
+Only the latest release on the default branch receives security updates.
+
+## Reporting a vulnerability
+
+Please **do not** open a public issue for security problems. Email
+hi@theideaiq.com with a description, reproduction steps and the affected
+component. We aim to acknowledge reports within three business days.

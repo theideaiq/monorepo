@@ -1,5 +1,1 @@
-out/
-
-# Mobile Secrets
-android/app/google-services.json
-ios/App/App/GoogleService-Info.plist
+.vercel

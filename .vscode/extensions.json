@@ -1,9 +1,10 @@
 {
   "recommendations": [
-    "biomejs.biome"
-  ],
-  "unwantedRecommendations": [
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint"
+    "biomejs.biome",
+    "bradlc.vscode-tailwindcss",
+    "unifiedjs.vscode-mdx",
+    "mikestead.dotenv",
+    "christian-kohler.npm-intellisense",
+    "supabase.vscode-supabase-extension"
   ]
 }
