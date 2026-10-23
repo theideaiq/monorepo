@@ -30,7 +30,10 @@ export const trimHistory = (turns: ChatTurn[]): ChatTurn[] => {
   let characters = 0;
   for (const turn of [...turns].reverse()) {
     characters += turn.content.length;
-    if (kept.length >= HISTORY_MAX_TURNS || characters > HISTORY_MAX_CHARACTERS) {
+    if (
+      kept.length >= HISTORY_MAX_TURNS ||
+      characters > HISTORY_MAX_CHARACTERS
+    ) {
       break;
     }
     kept.unshift(turn);
@@ -94,7 +97,10 @@ export const askAssistant = async ({
 }: AssistantRequest): Promise<string> => {
   const key = historyKey(userId);
   const history = (await store.get<ChatTurn[]>(key)) ?? [];
-  const conversation = trimHistory([...history, { content: text, role: "user" }]);
+  const conversation = trimHistory([
+    ...history,
+    { content: text, role: "user" },
+  ]);
 
   const result = await generateText({
     maxOutputTokens: 800,

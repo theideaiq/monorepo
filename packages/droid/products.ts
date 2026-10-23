@@ -31,10 +31,10 @@ export const summarizeProduct = (
 });
 
 const HTML_ESCAPES: Record<string, string> = {
+  '"': "&quot;",
   "&": "&amp;",
   "<": "&lt;",
   ">": "&gt;",
-  '"': "&quot;",
 };
 
 /** Escapes text for Telegram's HTML parse mode. */

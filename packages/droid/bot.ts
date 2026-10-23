@@ -14,7 +14,7 @@
  * - Channels: new posts are sent to newsletter subscribers.
  */
 import type { LanguageModel } from "ai";
-import { Bot, GrammyError, InlineKeyboard, type Context } from "grammy";
+import { Bot, type Context, GrammyError, InlineKeyboard } from "grammy";
 import type { ChatMember, User, UserFromGetMe } from "grammy/types";
 import { askAssistant } from "./assistant";
 import type {
@@ -43,6 +43,13 @@ const SEARCH_LIMIT = 5;
 const NEWSLETTER_PAGE = 100;
 const FAQ_TOPICS: FaqTopic[] = ["general", "store", "plus", "academy", "suite"];
 const FAQ_BUTTON_LENGTH = 60;
+const POST_DEDUPE_SECONDS = 24 * 60 * 60;
+const MENU_CALLBACK = /^m:(\w+)$/;
+const FAQ_TOPIC_CALLBACK = /^faq:t:(\w+)$/;
+const FAQ_QUESTION_CALLBACK = /^faq:q:([\w-]+)$/;
+const NUMERIC_ID = /^\d+$/;
+const AT_SIGN = /^@/;
+const WHITESPACE = /\s+/;
 
 /** Updates the webhook subscribes to (`chat_member` must be asked for). */
 export const ALLOWED_UPDATES = [
@@ -149,7 +156,9 @@ const displayName = (user: Pick<User, "first_name" | "username">) =>
   user.username ? `@${user.username}` : user.first_name;
 
 const memberName = (member: MemberProfile) =>
-  member.username ? `@${member.username}` : (member.first_name ?? String(member.id));
+  member.username
+    ? `@${member.username}`
+    : (member.first_name ?? String(member.id));
 
 const isMember = (member: ChatMember) =>
   member.status === "member" ||
@@ -309,7 +318,8 @@ const showFaqQuestions = async (ctx: DroidContext, topic: FaqTopic) => {
   const entries = await ctx.droid.data.listFaq(topic);
   const keyboard = new InlineKeyboard();
   for (const entry of entries) {
-    const question = ctx.locale === "en" ? entry.question_en : entry.question_ar;
+    const question =
+      ctx.locale === "en" ? entry.question_en : entry.question_ar;
     const label =
       question.length > FAQ_BUTTON_LENGTH
         ? `${question.slice(0, FAQ_BUTTON_LENGTH - 1)}…`
@@ -534,7 +544,7 @@ const banEverywhere = async (
     try {
       // biome-ignore lint/performance/noAwaitInLoops: a few groups, in order, to stay under Telegram's rate limits
       await ctx.api.banChatMember(chatId, target.id);
-      banned++;
+      banned += 1;
     } catch (error) {
       ctx.droid.logger.error("Droid could not ban a member", {
         chatId,
@@ -545,6 +555,123 @@ const banEverywhere = async (
   }
   await ctx.droid.data.setMemberStatus(target, "kicked", true);
   return banned;
+};
+
+const sendNewsletterPost = async (
+  ctx: DroidContext,
+  member: { id: number; language_code: string | null },
+  channel: string,
+  url: string
+) => {
+  const locale = localeOf(member.language_code ?? undefined);
+  try {
+    await ctx.api.sendMessage(member.id, t(locale, "newPost", { channel }), {
+      reply_markup: new InlineKeyboard().url(t(locale, "newPostOpen"), url),
+    });
+  } catch (error) {
+    // Blocked the bot or deleted the account: stop sending to them.
+    if (error instanceof GrammyError && error.error_code === 403) {
+      await ctx.droid.data.setNewsletter(member.id, false);
+      return;
+    }
+    ctx.droid.logger.error("Droid newsletter message failed", {
+      error: describeError(error),
+      memberId: member.id,
+    });
+  }
+};
+
+/** Sends a new post of a registered public channel to subscribers, once. */
+const broadcastPost = async (ctx: DroidContext) => {
+  const post = ctx.channelPost;
+  if (!post?.chat.username) {
+    return;
+  }
+  const { data, store } = ctx.droid;
+  const sentKey = `post:${post.chat.id}:${post.message_id}`;
+  if (!(await getChat(ctx.droid, post.chat.id)) || (await store.get(sentKey))) {
+    return;
+  }
+  await store.set(sentKey, true, POST_DEDUPE_SECONDS);
+
+  const url = `https://t.me/${post.chat.username}/${post.message_id}`;
+  const channel = post.chat.title;
+  for (let offset = 0; ; offset += NEWSLETTER_PAGE) {
+    // biome-ignore lint/performance/noAwaitInLoops: pages are read one after another
+    const members = await data.listNewsletterMembers(offset, NEWSLETTER_PAGE);
+    for (const member of members) {
+      // biome-ignore lint/performance/noAwaitInLoops: one message at a time stays under Telegram's rate limits
+      await sendNewsletterPost(ctx, member, channel, url);
+    }
+    if (members.length < NEWSLETTER_PAGE) {
+      return;
+    }
+  }
+};
+
+const replyTo = (ctx: DroidContext, key: MessageKey) =>
+  ctx.reply(t(ctx.locale, key), {
+    reply_parameters: { message_id: ctx.msg?.message_id ?? 0 },
+  });
+
+const statusIn = (ctx: DroidContext, userId: number) =>
+  ctx
+    .getChatMember(userId)
+    .then((member) => member.status as string)
+    .catch(() => "left");
+
+/** The person a /ban is about: the replied-to sender, @username or id. */
+const banTarget = async (
+  ctx: DroidContext,
+  argument: string
+): Promise<MemberProfile | null> => {
+  const replied = ctx.msg?.reply_to_message;
+  if (replied?.from && !replied.from.is_bot && !replied.sender_chat) {
+    return profileOf(replied.from);
+  }
+  if (NUMERIC_ID.test(argument)) {
+    return await ctx.droid.data.getMember(Number(argument));
+  }
+  return argument
+    ? await ctx.droid.data.findMemberByUsername(argument.replace(AT_SIGN, ""))
+    : null;
+};
+
+/** /ban: chat admins ban someone from every moderated chat. */
+const banCommand = async (ctx: DroidContext & { match: string }) => {
+  const { chat, msg: message } = ctx;
+  if (!(message && chat)) {
+    return;
+  }
+  const anonymousAdmin = message.sender_chat?.id === chat.id;
+  if (
+    !(
+      anonymousAdmin ||
+      (ctx.from && ADMIN_STATUSES.has(await statusIn(ctx, ctx.from.id)))
+    )
+  ) {
+    await replyTo(ctx, "banNotAdmin");
+    return;
+  }
+
+  const [argument = ""] = ctx.match.trim().split(WHITESPACE);
+  const target = await banTarget(ctx, argument);
+  if (!target) {
+    await replyTo(ctx, argument ? "banNotFound" : "banUsage");
+    return;
+  }
+  if (ADMIN_STATUSES.has(await statusIn(ctx, target.id))) {
+    await replyTo(ctx, "banProtected");
+    return;
+  }
+
+  const count = await banEverywhere(ctx, target, chat.id);
+  if (message.reply_to_message) {
+    await deleteMessages(ctx, chat.id, [message.reply_to_message.message_id]);
+  }
+  await ctx.reply(
+    t(ctx.locale, "banDone", { count, name: memberName(target) })
+  );
 };
 
 // ── The bot ─────────────────────────────────────────────────────────────────
@@ -674,56 +801,7 @@ export const createBot = (options: DroidOptions) => {
   });
 
   // New channel posts go to newsletter subscribers.
-  bot.on("channel_post", async (ctx) => {
-    const post = ctx.channelPost;
-    const { chat } = post;
-    if (!chat.username) {
-      return;
-    }
-    const registered = await getChat(runtime, chat.id);
-    const sentKey = `post:${chat.id}:${post.message_id}`;
-    if (!registered || (await runtime.store.get(sentKey))) {
-      return;
-    }
-    await runtime.store.set(sentKey, true, 24 * 60 * 60);
-
-    const url = `https://t.me/${chat.username}/${post.message_id}`;
-    for (let offset = 0; ; offset += NEWSLETTER_PAGE) {
-      // biome-ignore lint/performance/noAwaitInLoops: pages are sent one after another to respect Telegram's rate limits
-      const members = await runtime.data.listNewsletterMembers(
-        offset,
-        NEWSLETTER_PAGE
-      );
-      for (const member of members) {
-        const locale = localeOf(member.language_code ?? undefined);
-        try {
-          await ctx.api.sendMessage(
-            member.id,
-            t(locale, "newPost", { channel: chat.title }),
-            {
-              reply_markup: new InlineKeyboard().url(
-                t(locale, "newPostOpen"),
-                url
-              ),
-            }
-          );
-        } catch (error) {
-          // Blocked the bot or deleted the account: stop sending.
-          if (error instanceof GrammyError && error.error_code === 403) {
-            await runtime.data.setNewsletter(member.id, false);
-          } else {
-            runtime.logger.error("Droid newsletter message failed", {
-              error: describeError(error),
-              memberId: member.id,
-            });
-          }
-        }
-      }
-      if (members.length < NEWSLETTER_PAGE) {
-        break;
-      }
-    }
-  });
+  bot.on("channel_post", (ctx) => broadcastPost(ctx));
 
   const groups = bot.chatType(["group", "supergroup"]);
 
@@ -782,62 +860,7 @@ export const createBot = (options: DroidOptions) => {
     await next();
   });
 
-  groups.command("ban", async (ctx) => {
-    const message = ctx.msg;
-    const issuer = ctx.from;
-    const anonymousAdmin = message.sender_chat?.id === ctx.chat.id;
-    if (!(anonymousAdmin || issuer)) {
-      return;
-    }
-    if (!anonymousAdmin && issuer) {
-      const status = (await ctx.getChatMember(issuer.id)).status;
-      if (!ADMIN_STATUSES.has(status)) {
-        await ctx.reply(t(ctx.locale, "banNotAdmin"), {
-          reply_parameters: { message_id: message.message_id },
-        });
-        return;
-      }
-    }
-
-    const replied = message.reply_to_message;
-    const argument = ctx.match.trim().split(/\s+/)[0] ?? "";
-    let target: MemberProfile | null = null;
-    if (replied?.from && !replied.from.is_bot && !replied.sender_chat) {
-      target = profileOf(replied.from);
-    } else if (/^\d+$/.test(argument)) {
-      target = await runtime.data.getMember(Number(argument));
-    } else if (argument) {
-      target = await runtime.data.findMemberByUsername(
-        argument.replace(/^@/, "")
-      );
-    }
-
-    if (!target) {
-      await ctx.reply(t(ctx.locale, argument ? "banNotFound" : "banUsage"), {
-        reply_parameters: { message_id: message.message_id },
-      });
-      return;
-    }
-
-    const targetStatus = await ctx
-      .getChatMember(target.id)
-      .then((member) => member.status)
-      .catch(() => "left");
-    if (ADMIN_STATUSES.has(targetStatus)) {
-      await ctx.reply(t(ctx.locale, "banProtected"), {
-        reply_parameters: { message_id: message.message_id },
-      });
-      return;
-    }
-
-    const count = await banEverywhere(ctx, target, ctx.chat.id);
-    if (replied) {
-      await deleteMessages(ctx, ctx.chat.id, [replied.message_id]);
-    }
-    await ctx.reply(
-      t(ctx.locale, "banDone", { count, name: memberName(target) })
-    );
-  });
+  groups.command("ban", (ctx) => banCommand(ctx));
 
   bot.command("search", async (ctx) => {
     if (!ctx.match.trim() && ctx.chat.type === "private" && ctx.from) {
@@ -877,8 +900,8 @@ export const createBot = (options: DroidOptions) => {
     await answerWithAssistant(ctx, text);
   });
 
-  bot.callbackQuery(/^m:(\w+)$/, async (ctx) => {
-    const action = ctx.match[1];
+  bot.callbackQuery(MENU_CALLBACK, async (ctx) => {
+    const [, action] = ctx.match;
     switch (action) {
       case "faq":
         await showFaqTopics(ctx);
@@ -909,7 +932,7 @@ export const createBot = (options: DroidOptions) => {
     await ctx.answerCallbackQuery();
   });
 
-  bot.callbackQuery(/^faq:t:(\w+)$/, async (ctx) => {
+  bot.callbackQuery(FAQ_TOPIC_CALLBACK, async (ctx) => {
     const topic = ctx.match[1] as FaqTopic;
     await (FAQ_TOPICS.includes(topic)
       ? showFaqQuestions(ctx, topic)
@@ -917,7 +940,7 @@ export const createBot = (options: DroidOptions) => {
     await ctx.answerCallbackQuery();
   });
 
-  bot.callbackQuery(/^faq:q:([\w-]+)$/, async (ctx) => {
+  bot.callbackQuery(FAQ_QUESTION_CALLBACK, async (ctx) => {
     await showFaqAnswer(ctx, ctx.match[1] ?? "");
     await ctx.answerCallbackQuery();
   });

@@ -13,7 +13,16 @@ const MIN_STEM = 2;
 /** Single-letter prefixes need a longer remainder ("فكس" isn't "ف" + "كس"). */
 const MIN_STEM_AFTER_LETTER_PREFIX = 3;
 
-const ARTICLE_PREFIXES = ["وبال", "وكال", "وال", "فال", "بال", "كال", "لل", "ال"];
+const ARTICLE_PREFIXES = [
+  "وبال",
+  "وكال",
+  "وال",
+  "فال",
+  "بال",
+  "كال",
+  "لل",
+  "ال",
+];
 const LETTER_PREFIXES = ["و", "ف", "ب", "ل"];
 const SUFFIXES = [
   "كما",

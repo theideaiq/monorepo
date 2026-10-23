@@ -3,6 +3,7 @@
  * a row in a group gets those messages deleted and a short mute. Any other
  * message in between starts the count again.
  */
+import { createHash } from "node:crypto";
 import type { KeyValueStore } from "./store";
 
 export const FLOOD_LIMIT = 3;
@@ -15,15 +16,9 @@ interface FloodState {
   messageIds: number[];
 }
 
-/** FNV-1a: keeps the stored state small whatever the message length. */
-const fingerprint = (text: string) => {
-  let hash = 0x81_1c_9d_c5;
-  for (let i = 0; i < text.length; i++) {
-    hash ^= text.charCodeAt(i);
-    hash = Math.imul(hash, 0x01_00_01_93);
-  }
-  return `${(hash >>> 0).toString(36)}:${text.length}`;
-};
+/** Keeps the stored state small whatever the message length. */
+const fingerprint = (text: string) =>
+  createHash("sha256").update(text).digest("base64url").slice(0, 22);
 
 /**
  * Records a message. Returns the ids of the identical run when it crossed the
@@ -50,9 +45,7 @@ export const trackFlood = async (
   const previous = await store.get<FloodState>(key);
 
   const messageIds =
-    previous?.hash === hash
-      ? [...previous.messageIds, messageId]
-      : [messageId];
+    previous?.hash === hash ? [...previous.messageIds, messageId] : [messageId];
 
   if (messageIds.length > limit) {
     await store.delete(key);

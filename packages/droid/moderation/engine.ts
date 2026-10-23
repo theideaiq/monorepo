@@ -14,6 +14,7 @@
  * - as substrings for Chinese.
  *
  * Every rule matches whole tokens, never substrings of ordinary words.
+ * Emoji and symbols are separators: they never end the scan early.
  */
 
 import {
@@ -37,6 +38,8 @@ export type MatchReason =
   | "stretched"
   | "substring";
 
+type Language = "arabic" | "english";
+
 export interface BannedWordMatch {
   language: "arabic" | "chinese" | "english";
   reason: MatchReason;
@@ -47,6 +50,8 @@ export interface BannedWordMatch {
 const MASK_CHARACTERS = /[*#]/;
 const NOT_WORD_CHARACTER = /[^\p{L}*#]+/u;
 const NON_LETTERS = /[^\p{L}]+/gu;
+const HAS_LETTER = /\p{L}/u;
+const WHITESPACE = /\s+/u;
 const URL_PREFIX = /\b(?:https?:\/\/|www\.)/gi;
 const LATIN_LIKE = /[\p{Script=Latin}\p{Script=Cyrillic}\p{Script=Greek}]/u;
 const HAN_RUN = /\p{Script=Han}+/gu;
@@ -59,12 +64,14 @@ const FUZZY = {
 const MAX_MASKS = 2;
 
 interface WordIndex {
-  /** Collapsed form → entry, for stretched letters. */
-  collapsed: Map<string, string>;
   /** Entries by length, for masked and fuzzy matching. */
   byLength: Map<number, string[]>;
+  /** Collapsed form → entry, for stretched letters. */
+  collapsed: Map<string, string>;
   words: Set<string>;
 }
+
+const lengthOf = (text: string) => Array.from(text).length;
 
 const indexWords = (words: Iterable<string>): WordIndex => {
   const index: WordIndex = {
@@ -75,13 +82,101 @@ const indexWords = (words: Iterable<string>): WordIndex => {
   for (const word of words) {
     index.words.add(word);
     index.collapsed.set(collapseRepeats(word), word);
-    const length = Array.from(word).length;
+    const length = lengthOf(word);
     index.byLength.set(length, [...(index.byLength.get(length) ?? []), word]);
   }
   return index;
 };
 
-const lengthOf = (text: string) => Array.from(text).length;
+const match = (
+  language: BannedWordMatch["language"],
+  reason: MatchReason,
+  word: string
+): BannedWordMatch => ({ language, reason, word });
+
+/** "p*ssy" → an entry of the same length with letters in the masked spots. */
+const matchMasked = (
+  token: string,
+  index: WordIndex,
+  language: Language
+): BannedWordMatch | null => {
+  const letters = Array.from(token);
+  const masks = letters.filter((c) => MASK_CHARACTERS.test(c)).length;
+  if (masks > MAX_MASKS || letters.length - masks < 2) {
+    return null;
+  }
+  const pattern = new RegExp(
+    `^${letters.map((c) => (MASK_CHARACTERS.test(c) ? "\\p{L}" : c)).join("")}$`,
+    "u"
+  );
+  const word = (index.byLength.get(letters.length) ?? []).find((candidate) =>
+    pattern.test(candidate)
+  );
+  return word ? match(language, "masked", word) : null;
+};
+
+/** Small misspellings of longer entries, same first letter. */
+const matchFuzzy = (
+  token: string,
+  index: WordIndex,
+  language: Language
+): BannedWordMatch | null => {
+  const { minLength, threshold } = FUZZY[language];
+  const length = lengthOf(token);
+  if (length < minLength) {
+    return null;
+  }
+  const candidates = [length - 1, length, length + 1]
+    .filter((candidateLength) => candidateLength >= minLength)
+    .flatMap((candidateLength) => index.byLength.get(candidateLength) ?? []);
+  const word = candidates.find(
+    (candidate) =>
+      candidate[0] === token[0] && jaroWinkler(token, candidate) >= threshold
+  );
+  return word ? match(language, "fuzzy", word) : null;
+};
+
+const matchWord = (
+  token: string,
+  index: WordIndex,
+  language: Language
+): BannedWordMatch | null => {
+  if (index.words.has(token)) {
+    return match(language, "exact", token);
+  }
+  if (MASK_CHARACTERS.test(token)) {
+    return matchMasked(token, index, language);
+  }
+  // Stretched letters: only when the token is longer than the entry, so
+  // "con" never matches an entry like "coon".
+  const stretched = index.collapsed.get(collapseRepeats(token));
+  if (stretched && lengthOf(token) > lengthOf(stretched)) {
+    return match(language, "stretched", stretched);
+  }
+  return matchFuzzy(token, index, language);
+};
+
+/** Word tokens of one whitespace-separated chunk (Chinese excluded). */
+const chunkParts = (rawChunk: string) => {
+  const chunk = LATIN_LIKE.test(rawChunk) ? normalizeLatin(rawChunk) : rawChunk;
+  return chunk
+    .split(NOT_WORD_CHARACTER)
+    .filter((part) => part.length > 0 && HAS_LETTER.test(part))
+    .filter((part) => detectScript(part) !== "han");
+};
+
+/** The run of single letters starting at `start` ("c u n t", "ك س"). */
+const singleLetterRun = (tokens: string[], start: number) => {
+  let end = start;
+  while (
+    end < tokens.length &&
+    lengthOf(tokens[end] ?? "") === 1 &&
+    tokens[end] !== CONJUNCTION
+  ) {
+    end += 1;
+  }
+  return tokens.slice(start, end);
+};
 
 export interface Moderator {
   /** The first banned word in the text, or null. */
@@ -111,72 +206,20 @@ export const createModerator = (
     }
   }
 
-  const matchWord = (
-    token: string,
-    index: WordIndex,
-    language: "arabic" | "english"
-  ): BannedWordMatch | null => {
-    if (index.words.has(token)) {
-      return { language, reason: "exact", word: token };
-    }
-
-    const length = lengthOf(token);
-
-    if (MASK_CHARACTERS.test(token)) {
-      const masks = Array.from(token).filter((c) => MASK_CHARACTERS.test(c));
-      if (masks.length > MAX_MASKS || length - masks.length < 2) {
-        return null;
-      }
-      const pattern = new RegExp(
-        `^${Array.from(token, (c) => (MASK_CHARACTERS.test(c) ? "\\p{L}" : c)).join("")}$`,
-        "u"
-      );
-      const word = (index.byLength.get(length) ?? []).find((candidate) =>
-        pattern.test(candidate)
-      );
-      return word ? { language, reason: "masked", word } : null;
-    }
-
-    // Stretched letters: only when the token is longer than the entry, so
-    // "con" never matches an entry like "coon".
-    const stretched = index.collapsed.get(collapseRepeats(token));
-    if (stretched && length > lengthOf(stretched)) {
-      return { language, reason: "stretched", word: stretched };
-    }
-
-    const { minLength, threshold } = FUZZY[language];
-    if (length >= minLength) {
-      for (const candidateLength of [length - 1, length, length + 1]) {
-        for (const word of index.byLength.get(candidateLength) ?? []) {
-          if (
-            candidateLength >= minLength &&
-            word[0] === token[0] &&
-            jaroWinkler(token, word) >= threshold
-          ) {
-            return { language, reason: "fuzzy", word };
-          }
-        }
-      }
-    }
-
-    return null;
-  };
-
   const matchArabic = (token: string): BannedWordMatch | null => {
     const direct = matchWord(token, arabic, "arabic");
     if (direct) {
       return direct;
     }
     const unprefixed = stripArabicPrefix(token);
-    if (unprefixed !== token) {
-      const match = matchWord(unprefixed, arabic, "arabic");
-      if (match) {
-        return { ...match, reason: "stem" };
-      }
+    const prefixed =
+      unprefixed === token ? null : matchWord(unprefixed, arabic, "arabic");
+    if (prefixed) {
+      return { ...prefixed, reason: "stem" };
     }
     const stem = stemArabic(token);
     const word = lengthOf(stem) >= 3 ? arabicStems.get(stem) : undefined;
-    return word ? { language: "arabic", reason: "stem", word } : null;
+    return word ? match("arabic", "stem", word) : null;
   };
 
   const matchToken = (token: string) =>
@@ -187,97 +230,84 @@ export const createModerator = (
   const matchJoined = (joined: string): BannedWordMatch | null => {
     if (detectScript(joined) === "arabic") {
       return arabic.words.has(joined)
-        ? { language: "arabic", reason: "joined", word: joined }
+        ? match("arabic", "joined", joined)
         : null;
     }
     if (english.words.has(joined)) {
-      return { language: "english", reason: "joined", word: joined };
+      return match("english", "joined", joined);
     }
     const phrase = joinedPhrases.get(joined);
-    return phrase ? { language: "english", reason: "phrase", word: phrase } : null;
+    return phrase ? match("english", "phrase", phrase) : null;
+  };
+
+  const matchChinese = (text: string): BannedWordMatch | null => {
+    for (const run of text.match(HAN_RUN) ?? []) {
+      const word = list.chinese.find((entry) => run.includes(entry));
+      if (word) {
+        return match("chinese", "substring", word);
+      }
+    }
+    return null;
+  };
+
+  /** Each chunk's tokens, then the chunk without separators ("f.u.c.k"). */
+  const matchChunk = (parts: string[]) => {
+    for (const part of parts) {
+      const found = matchToken(part);
+      if (found) {
+        return found;
+      }
+    }
+    return parts.length > 1 ? matchJoined(parts.join("")) : null;
+  };
+
+  /** Phrases and words split by spaces, starting at token `i`. */
+  const matchAcrossTokens = (tokens: string[], i: number) => {
+    const pair = tokens.slice(i, i + 2);
+    if (pair.length === 2 && phrases.has(pair.join(" "))) {
+      return match("english", "phrase", pair.join(" "));
+    }
+    // "blow job", "kill your self".
+    for (const size of [2, 3]) {
+      const group = tokens.slice(i, i + size);
+      const found =
+        group.length === size &&
+        group.every((token) => detectScript(token) === "latin")
+          ? matchJoined(group.join(""))
+          : null;
+      if (found) {
+        return found;
+      }
+    }
+    // Letters typed one by one: "c u n t", "ك س".
+    const letters = singleLetterRun(tokens, i);
+    const minimum = detectScript(letters[0] ?? "") === "arabic" ? 2 : 3;
+    return letters.length >= minimum ? matchJoined(letters.join("")) : null;
   };
 
   const find = (input: string): BannedWordMatch | null => {
     const text = normalizeText(input).replace(URL_PREFIX, " ");
-
-    for (const run of text.match(HAN_RUN) ?? []) {
-      const word = list.chinese.find((entry) => run.includes(entry));
-      if (word) {
-        return { language: "chinese", reason: "substring", word };
-      }
+    const chinese = matchChinese(text);
+    if (chinese) {
+      return chinese;
     }
 
     const tokens: string[] = [];
-
-    for (const rawChunk of text.split(/\s+/u)) {
-      const chunk = LATIN_LIKE.test(rawChunk)
-        ? normalizeLatin(rawChunk)
-        : rawChunk;
-      const parts = chunk
-        .split(NOT_WORD_CHARACTER)
-        .filter((part) => part.length > 0 && /\p{L}/u.test(part))
-        .filter((part) => detectScript(part) !== "han");
-
-      for (const part of parts) {
-        const match = matchToken(part);
-        if (match) {
-          return match;
-        }
+    for (const chunk of text.split(WHITESPACE)) {
+      const parts = chunkParts(chunk);
+      const found = matchChunk(parts);
+      if (found) {
+        return found;
       }
-
-      // "f.u.c.k", "porn.hub", "ass-rape": the chunk without separators.
-      if (parts.length > 1) {
-        const match = matchJoined(parts.join(""));
-        if (match) {
-          return match;
-        }
-      }
-
       tokens.push(...parts);
     }
 
-    for (let i = 0; i < tokens.length; i++) {
-      const pair = tokens.slice(i, i + 2);
-      if (pair.length === 2) {
-        const phrase = pair.join(" ");
-        if (phrases.has(phrase)) {
-          return { language: "english", reason: "phrase", word: phrase };
-        }
-      }
-
-      // Words split by spaces: "blow job", "kill your self".
-      for (const size of [2, 3]) {
-        const group = tokens.slice(i, i + size);
-        if (
-          group.length === size &&
-          group.every((token) => detectScript(token) === "latin")
-        ) {
-          const match = matchJoined(group.join(""));
-          if (match) {
-            return match;
-          }
-        }
-      }
-
-      // Letters typed one by one: "c u n t", "ك س".
-      let end = i;
-      while (
-        end < tokens.length &&
-        lengthOf(tokens[end] ?? "") === 1 &&
-        tokens[end] !== CONJUNCTION
-      ) {
-        end++;
-      }
-      const letters = tokens.slice(i, end);
-      const minimum = detectScript(letters[0] ?? "") === "arabic" ? 2 : 3;
-      if (letters.length >= minimum) {
-        const match = matchJoined(letters.join(""));
-        if (match) {
-          return match;
-        }
+    for (let i = 0; i < tokens.length; i += 1) {
+      const found = matchAcrossTokens(tokens, i);
+      if (found) {
+        return found;
       }
     }
-
     return null;
   };
 

@@ -21,16 +21,16 @@ const INVISIBLE = /[­؜᠎​-‏‪-‮⁠-⁩﻿]/g;
 const ARABIC_LETTER_MAP: Record<string, string> = {
   آ: "ا",
   أ: "ا",
+  ؤ: "و",
   إ: "ا",
   ئ: "ي",
-  ؤ: "و",
-  ى: "ي",
   ة: "ه",
+  ى: "ي",
   ٱ: "ا",
   پ: "ب",
   چ: "ج",
-  ژ: "ز",
   ڕ: "ر",
+  ژ: "ز",
   ڤ: "ف",
   ک: "ك",
   گ: "ك",
@@ -44,6 +44,7 @@ const ARABIC_LETTER_MAP: Record<string, string> = {
 
 /** Digits and symbols used as letters ("b1tch", "@ss", "$lut"). */
 const LEET_MAP: Record<string, string> = {
+  "@": "a",
   $: "s",
   "0": "o",
   "1": "i",
@@ -51,11 +52,14 @@ const LEET_MAP: Record<string, string> = {
   "4": "a",
   "5": "s",
   "7": "t",
-  "@": "a",
 };
 
 /** Cyrillic and Greek look-alikes of Latin letters. */
 const HOMOGLYPH_MAP: Record<string, string> = {
+  α: "a",
+  ν: "v",
+  ο: "o",
+  ρ: "p",
   а: "a",
   в: "b",
   е: "e",
@@ -68,13 +72,9 @@ const HOMOGLYPH_MAP: Record<string, string> = {
   т: "t",
   у: "y",
   х: "x",
+  ѕ: "s",
   і: "i",
   ј: "j",
-  ѕ: "s",
-  α: "a",
-  ο: "o",
-  ρ: "p",
-  ν: "v",
 };
 
 const mapCharacters = (text: string, map: Record<string, string>) =>
@@ -104,9 +104,13 @@ export const detectScript = (token: string): Script => {
 export const stripArabicMarks = (text: string) =>
   text.replace(ARABIC_DIACRITICS, "").replace(TATWEEL, "");
 
+// Sorani writes the short vowel "e" as ە inside words (شەرموطە); Arabic
+// leaves it out. At the end of a word it stands for ة/ه.
+const KURDISH_MEDIAL_E = /ە(?=\p{Script=Arabic})/gu;
+
 /** Maps Kurdish/Persian letters and hamza/alef variants to base Arabic. */
 export const normalizeArabicLetters = (text: string) =>
-  mapCharacters(text, ARABIC_LETTER_MAP);
+  mapCharacters(text.replace(KURDISH_MEDIAL_E, ""), ARABIC_LETTER_MAP);
 
 /** Lower-cases and folds accents, look-alike letters and leetspeak. */
 export const normalizeLatin = (token: string) =>

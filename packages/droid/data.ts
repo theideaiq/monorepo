@@ -4,7 +4,7 @@
  * `createSupabaseData` with the admin client: the bot is trusted server code
  * and the Telegram tables have no customer policies.
  */
-import { type ProductCard, listProducts } from "@repo/commerce/catalog";
+import { listProducts, type ProductCard } from "@repo/commerce/catalog";
 import type { Database, Tables } from "@repo/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -38,13 +38,21 @@ export type FaqEntry = Pick<
 export type FaqTopic = "academy" | "general" | "plus" | "store" | "suite";
 
 export interface DroidData {
+  createRequest: (
+    memberId: number,
+    type: "support" | "unban",
+    message: string
+  ) => Promise<void>;
+  /** Latest-first lookup by @username (case-insensitive, without "@"). */
+  findMemberByUsername: (username: string) => Promise<TelegramMember | null>;
   /** The chat, or null when the bot never registered it. */
   getChat: (chatId: number) => Promise<TelegramChat | null>;
   getFaq: (id: string) => Promise<FaqEntry | null>;
   getMember: (id: number) => Promise<TelegramMember | null>;
-  /** Latest-first lookup by @username (case-insensitive, without "@"). */
-  findMemberByUsername: (username: string) => Promise<TelegramMember | null>;
-  hasOpenRequest: (memberId: number, type: "support" | "unban") => Promise<boolean>;
+  hasOpenRequest: (
+    memberId: number,
+    type: "support" | "unban"
+  ) => Promise<boolean>;
   listFaq: (topic?: FaqTopic) => Promise<FaqEntry[]>;
   listModeratedChats: () => Promise<TelegramChat[]>;
   /** Members who opted into the newsletter and aren't banned. */
@@ -52,21 +60,16 @@ export interface DroidData {
     offset: number,
     limit: number
   ) => Promise<Pick<TelegramMember, "id" | "language_code">[]>;
-  createRequest: (
-    memberId: number,
-    type: "support" | "unban",
-    message: string
-  ) => Promise<void>;
   /** Registers a chat (new chats are moderated) or refreshes its title. */
   saveChat: (chat: Omit<TelegramChat, "moderated">) => Promise<void>;
   searchProducts: (query: string, limit: number) => Promise<ProductCard[]>;
-  setNewsletter: (memberId: number, optIn: boolean) => Promise<void>;
   /** Records a member's status in a moderated group. */
   setMemberStatus: (
     member: MemberProfile,
     status: string,
     banned: boolean | undefined
   ) => Promise<void>;
+  setNewsletter: (memberId: number, optIn: boolean) => Promise<void>;
   upsertMember: (member: MemberProfile) => Promise<void>;
 }
 
