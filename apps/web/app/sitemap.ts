@@ -1,33 +1,46 @@
 import { locales } from "@repo/internationalization";
 import type { MetadataRoute } from "next";
-import { env } from "@/env";
+import { getEvents, getIssues, getPosts, getProductSlugs } from "@/lib/data";
+import { legalDocuments } from "@/lib/legal";
+import { siteUrl } from "@/lib/metadata";
+import { buildSitemap, type SitemapPage, staticPaths } from "@/lib/sitemap";
 
-const protocol = env.VERCEL_PROJECT_PRODUCTION_URL?.startsWith("https")
-  ? "https"
-  : "http";
-const url = new URL(`${protocol}://${env.VERCEL_PROJECT_PRODUCTION_URL}`);
-
-/** Pages without dynamic segments; add new ones here. */
-const staticPaths = ["", "/pricing", "/contact"];
-
-/** One entry per language, each listing its translations (hreflang). */
-const localized = (path: string): MetadataRoute.Sitemap => {
-  const languages = Object.fromEntries(
-    locales.map((locale) => [locale, new URL(`/${locale}${path}`, url).href])
-  );
-
-  return locales.map((locale) => ({
-    alternates: { languages },
-    lastModified: new Date(),
-    url: languages[locale] ?? url.href,
-  }));
-};
+export const revalidate = 3600;
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-  // Pages that come from other sources, e.g. the CMS.
-  const dynamicPaths: string[][] = await Promise.all([]);
+  const [products, posts, upcoming, past, issues] = await Promise.all([
+    getProductSlugs(),
+    getPosts(1000),
+    getEvents({ limit: 1000 }),
+    getEvents({ limit: 1000, past: true }),
+    getIssues(),
+  ]);
 
-  return [...staticPaths, ...dynamicPaths.flat()].flatMap(localized);
+  const pages: SitemapPage[] = [
+    ...staticPaths.map((path) => ({ path })),
+    ...legalDocuments.map(({ slug, updated }) => ({
+      lastModified: updated,
+      path: `/legal/${slug}`,
+    })),
+    ...products.map(({ slug, updated_at }) => ({
+      lastModified: updated_at,
+      path: `/store/${slug}`,
+    })),
+    ...posts.map(({ slug, updated_at }) => ({
+      lastModified: updated_at,
+      path: `/news/${slug}`,
+    })),
+    ...[...upcoming, ...past].map(({ slug, updated_at }) => ({
+      lastModified: updated_at,
+      path: `/events/${slug}`,
+    })),
+    ...issues.map(({ id, updated_at }) => ({
+      lastModified: updated_at,
+      path: `/journal/${id}`,
+    })),
+  ];
+
+  return buildSitemap(siteUrl(), locales, pages);
 };
 
 export default sitemap;
