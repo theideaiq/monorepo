@@ -1,0 +1,120 @@
+"use client";
+
+import { getAttribution, track } from "@repo/analytics/client";
+import { useAuth } from "@repo/auth/provider";
+import { localized } from "@repo/commerce";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
+import { callApi } from "./api";
+import { rememberCheckout } from "./checkout-tracking";
+import { checkoutReturnUrl, openCheckout } from "./hosted-checkout";
+import { queryKeys, unwrap } from "./queries";
+
+/** The parts of an order the checkout needs. */
+export interface PayableOrder {
+  currency: string;
+  id: string;
+  order_items: {
+    id: string;
+    name_ar: string;
+    name_en: string;
+    product_id: string | null;
+    quantity: number;
+    unit_price: number;
+  }[];
+  total: number;
+}
+
+/** Where the payment page returns to: the order itself. */
+export const orderPath = (orderId: string) =>
+  `/orders/view?id=${encodeURIComponent(orderId)}`;
+
+const analyticsItems = (order: PayableOrder, locale: string) =>
+  order.order_items.map((item) => ({
+    id: item.product_id ?? item.id,
+    name: localized(item, "name", locale),
+    price: item.unit_price,
+    quantity: item.quantity,
+  }));
+
+/**
+ * Opens the hosted checkout for a pending order (POST /orders/checkout),
+ * remembering it so the purchase is reported once the order is paid.
+ */
+export const usePayOrder = () => {
+  const { supabase } = useAuth();
+  const locale = useLocale();
+
+  return useMutation({
+    mutationFn: async (order: PayableOrder) => {
+      const { referenceId, url } = await callApi<{
+        referenceId: string;
+        url: string | null;
+      }>(supabase, "/orders/checkout", {
+        attribution: getAttribution(),
+        orderId: order.id,
+        redirectUrl: checkoutReturnUrl(locale, orderPath(order.id)),
+      });
+      if (url) {
+        rememberCheckout({
+          currency: order.currency,
+          items: analyticsItems(order, locale),
+          referenceId,
+          value: order.total,
+        });
+        await openCheckout(url);
+      }
+      return { referenceId, url };
+    },
+  });
+};
+
+/**
+ * Checkout from the cart: `create_order(shipping)` prices the cart into a
+ * pending order (and empties the cart), then the payment page opens.
+ * Resolves with the order; `paymentError` is set when the order exists but
+ * the payment page couldn't be opened (the customer can pay from the order).
+ */
+export const usePlaceOrder = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  const pay = usePayOrder();
+  const locale = useLocale();
+
+  return useMutation({
+    mutationFn: async (shipping: object) => {
+      const created = unwrap(
+        await supabase.rpc("create_order", { shipping: { ...shipping } })
+      );
+      const order = unwrap(
+        await supabase
+          .from("orders")
+          .select(
+            "id, currency, total, order_items (id, product_id, name_ar, name_en, unit_price, quantity)"
+          )
+          .eq("id", created.id)
+          .single()
+      ) as PayableOrder;
+
+      track("begin_checkout", {
+        currency: order.currency,
+        items: analyticsItems(order, locale),
+        value: order.total,
+      });
+
+      try {
+        await pay.mutateAsync(order);
+        return { order, paymentError: null };
+      } catch (paymentError) {
+        return { order, paymentError };
+      }
+    },
+    onSettled: () =>
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.cart(user?.id ?? ""),
+        }),
+        queryClient.invalidateQueries({ queryKey: ["orders"] }),
+      ]),
+  });
+};

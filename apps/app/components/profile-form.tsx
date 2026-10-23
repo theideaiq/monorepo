@@ -2,6 +2,7 @@
 
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
+import { Checkbox } from "@repo/design-system/components/ui/checkbox";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import {
@@ -22,13 +23,19 @@ import { queryKeys } from "@/lib/queries";
 
 interface ProfileFormProps {
   readonly initialName: string;
+  /** Shows the marketing-emails consent (onboarding) with this value. */
+  readonly initialMarketingOptIn?: boolean;
   /** Called after saving with the chosen language. */
   readonly onSaved: (locale: Locale) => void;
   readonly submitLabel: string;
 }
 
-/** Display name and preferred language (profiles.full_name, .locale). */
+/**
+ * Display name and preferred language (profiles.full_name, .locale), and in
+ * onboarding the marketing consent (profiles.marketing_opt_in).
+ */
 export const ProfileForm = ({
+  initialMarketingOptIn,
   initialName,
   onSaved,
   submitLabel,
@@ -40,13 +47,19 @@ export const ProfileForm = ({
   const queryClient = useQueryClient();
   const [name, setName] = useState(initialName);
   const [locale, setLocale] = useState<Locale>(current);
+  const [marketing, setMarketing] = useState(initialMarketingOptIn ?? false);
   const [error, setError] = useState(false);
+  const askMarketing = initialMarketingOptIn !== undefined;
 
   const save = useMutation({
     mutationFn: async () => {
       const { error: updateError } = await supabase
         .from("profiles")
-        .update({ full_name: name.trim(), locale })
+        .update({
+          full_name: name.trim(),
+          locale,
+          ...(askMarketing ? { marketing_opt_in: marketing } : {}),
+        })
         .eq("id", user?.id ?? "");
       if (updateError) {
         throw updateError;
@@ -111,6 +124,27 @@ export const ProfileForm = ({
           {t("app.onboarding.profile.languageHint")}
         </p>
       </fieldset>
+      {askMarketing ? (
+        <div className="flex items-start gap-3 rounded-md border p-3">
+          <Checkbox
+            aria-describedby={`${id}-marketing-hint`}
+            checked={marketing}
+            id={`${id}-marketing`}
+            onCheckedChange={(checked) => setMarketing(checked === true)}
+          />
+          <div className="grid gap-1">
+            <Label htmlFor={`${id}-marketing`}>
+              {t("app.onboarding.profile.marketing")}
+            </Label>
+            <p
+              className="text-muted-foreground text-xs"
+              id={`${id}-marketing-hint`}
+            >
+              {t("app.onboarding.profile.marketingHint")}
+            </p>
+          </div>
+        </div>
+      ) : null}
       {error ? (
         <p className="text-destructive text-sm" role="alert">
           {t("app.errors.unknown")}
