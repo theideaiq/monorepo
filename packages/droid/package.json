@@ -1,0 +1,31 @@
+{
+  "name": "@repo/droid",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts",
+    "./moderation": "./moderation/index.ts",
+    "./store": "./store.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@repo/ai": "workspace:*",
+    "@repo/commerce": "workspace:*",
+    "@repo/config": "workspace:*",
+    "@repo/database": "workspace:*",
+    "@supabase/supabase-js": "^2.115.0",
+    "@upstash/redis": "^1.36.3",
+    "grammy": "^1.46.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "25.3.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}
