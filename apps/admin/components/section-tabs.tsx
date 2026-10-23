@@ -4,6 +4,8 @@ import { cn } from "@repo/design-system/lib/utils";
 import { Link, usePathname } from "@repo/internationalization/navigation";
 
 export interface SectionTab {
+  /** Set by the page when the tab depends on the query string. */
+  active?: boolean;
   /** Exact match only (for a section's index page). */
   exact?: boolean;
   href: string;
@@ -21,12 +23,13 @@ export const SectionTabs = ({ tabs }: { readonly tabs: SectionTab[] }) => {
       {tabs.map((tab) => {
         const prefixes = tab.match ?? [];
         const active =
-          (tab.exact
+          tab.active ??
+          ((tab.exact
             ? pathname === tab.href
             : pathname === tab.href || pathname.startsWith(`${tab.href}/`)) ||
           prefixes.some(
             (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
-          );
+          ));
         return (
           <Link
             aria-current={active ? "page" : undefined}
