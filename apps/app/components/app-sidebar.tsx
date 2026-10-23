@@ -1,7 +1,6 @@
 "use client";
 
 import { resetIdentity } from "@repo/analytics/client";
-import { OrganizationSwitcher } from "@repo/auth/components/organization-switcher";
 import { UserMenu } from "@repo/auth/components/user-menu";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import {
@@ -13,50 +12,36 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@repo/design-system/components/ui/sidebar";
+import { formatNumber } from "@repo/internationalization/format";
 import {
   Link,
   usePathname,
   useRouter,
 } from "@repo/internationalization/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  CreditCardIcon,
-  FolderIcon,
-  type LucideIcon,
-  Settings2Icon,
-} from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
 import { useProfile } from "@/lib/queries";
+import { useCartCount } from "@/lib/store-queries";
 import { LanguageSwitcher } from "./language-switcher";
-import { useOrganization } from "./organization-provider";
+import { isActivePath, navItems } from "./nav-items";
 import { ThemeToggle } from "./theme-toggle";
-
-interface NavItem {
-  href: string;
-  icon: LucideIcon;
-  title: string;
-}
 
 export const AppSidebar = () => {
   const t = useTranslations("app.nav");
+  const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
   const authMessages = useAuthMessages();
-  const { active, organizations, select } = useOrganization();
   const { isMobile, setOpenMobile } = useSidebar();
   const profile = useProfile();
-
-  const items: NavItem[] = [
-    { href: "/", icon: FolderIcon, title: t("dashboard") },
-    { href: "/billing", icon: CreditCardIcon, title: t("billing") },
-    { href: "/settings", icon: Settings2Icon, title: t("settings") },
-  ];
+  const cartCount = useCartCount();
 
   const closeOnMobile = () => {
     if (isMobile) {
@@ -67,39 +52,41 @@ export const AppSidebar = () => {
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
-        <div className="px-2 py-1.5">
+        <Link className="px-2 py-1.5" href="/" onClick={closeOnMobile}>
           <BrandLogo />
-        </div>
-        <OrganizationSwitcher
-          activeId={active.id}
-          messages={authMessages}
-          onCreate={() => {
-            closeOnMobile();
-            router.push("/organizations/new");
-          }}
-          onSelect={select}
-          organizations={organizations}
-        />
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>{t("label")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href}
-                    tooltip={item.title}
-                  >
-                    <Link href={item.href} onClick={closeOnMobile}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {navItems.map((item) => {
+                const title = t(item.key);
+                return (
+                  <SidebarMenuItem key={item.key}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActivePath(pathname, item.href)}
+                      tooltip={title}
+                    >
+                      <Link href={item.href} onClick={closeOnMobile}>
+                        <item.icon />
+                        <span>{title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                    {item.key === "cart" && cartCount > 0 ? (
+                      <SidebarMenuBadge
+                        aria-label={t("cartCount", {
+                          count: formatNumber(cartCount, locale),
+                        })}
+                      >
+                        {formatNumber(cartCount, locale)}
+                      </SidebarMenuBadge>
+                    ) : null}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

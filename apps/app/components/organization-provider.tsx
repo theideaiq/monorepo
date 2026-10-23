@@ -4,15 +4,7 @@ import {
   type OrganizationMembership,
   pickActiveOrganization,
 } from "@repo/auth/organizations";
-import { useRouter } from "@repo/internationalization/navigation";
-import {
-  createContext,
-  type ReactNode,
-  use,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, type ReactNode, use, useMemo, useState } from "react";
 import {
   readActiveOrganization,
   rememberActiveOrganization,
@@ -21,8 +13,9 @@ import { useMemberships } from "@/lib/queries";
 import { ErrorState, FullPageSpinner } from "./states";
 
 interface OrganizationContextValue {
-  active: OrganizationMembership;
-  /** True for owners and admins. */
+  /** The organization the user works in, or null without any. */
+  active: OrganizationMembership | null;
+  /** True for owners and admins of the active organization. */
   canManage: boolean;
   organizations: OrganizationMembership[];
   select: (organizationId: string) => void;
@@ -33,9 +26,10 @@ const OrganizationContext = createContext<OrganizationContextValue | null>(
 );
 
 /**
- * Loads the user's organizations and picks the active one (the last one
- * used, if the user is still a member). Users without an organization are
- * sent to onboarding.
+ * Loads the user's organizations (business accounts, IDEA Suite) and picks
+ * the active one: the last one used, if the user is still a member.
+ * Organizations are optional: customers without one use the rest of the
+ * app normally, and the Business section offers to create or join one.
  */
 export const OrganizationProvider = ({
   children,
@@ -43,32 +37,23 @@ export const OrganizationProvider = ({
   readonly children: ReactNode;
 }) => {
   const memberships = useMemberships();
-  const router = useRouter();
   const [preferredId, setPreferredId] = useState(readActiveOrganization);
   const organizations = memberships.data;
 
-  useEffect(() => {
-    if (organizations?.length === 0) {
-      router.replace("/onboarding");
-    }
-  }, [organizations, router]);
-
   const value = useMemo(() => {
-    const active = organizations
-      ? pickActiveOrganization(organizations, preferredId)
-      : null;
-
-    return active && organizations
-      ? {
-          active,
-          canManage: active.role === "owner" || active.role === "admin",
-          organizations,
-          select: (organizationId: string) => {
-            rememberActiveOrganization(organizationId);
-            setPreferredId(organizationId);
-          },
-        }
-      : null;
+    if (!organizations) {
+      return null;
+    }
+    const active = pickActiveOrganization(organizations, preferredId);
+    return {
+      active,
+      canManage: active?.role === "owner" || active?.role === "admin",
+      organizations,
+      select: (organizationId: string) => {
+        rememberActiveOrganization(organizationId);
+        setPreferredId(organizationId);
+      },
+    };
   }, [organizations, preferredId]);
 
   if (memberships.isError) {
@@ -92,4 +77,19 @@ export const useOrganization = () => {
   }
 
   return context;
+};
+
+/**
+ * The active organization, inside <RequireOrganization> (Business screens).
+ */
+export const useActiveOrganization = () => {
+  const context = useOrganization();
+
+  if (!context.active) {
+    throw new Error(
+      "useActiveOrganization must be used inside <RequireOrganization>."
+    );
+  }
+
+  return { ...context, active: context.active };
 };

@@ -1,9 +1,14 @@
 import { cleanup } from "@testing-library/react";
 import { afterEach, type Mock, vi } from "vitest";
 
+/** The URL's query string as useSearchParams() sees it; tests set it. */
+export const searchParams = { current: new URLSearchParams() };
+
 afterEach(() => {
   cleanup();
   localStorage.clear();
+  sessionStorage.clear();
+  searchParams.current = new URLSearchParams();
 });
 
 vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "http://127.0.0.1:54321");
@@ -26,5 +31,5 @@ vi.mock("next/navigation", () => ({
   useParams: () => ({}),
   usePathname: () => "/ar",
   useRouter: () => router,
-  useSearchParams: () => new URLSearchParams(),
+  useSearchParams: () => searchParams.current,
 }));

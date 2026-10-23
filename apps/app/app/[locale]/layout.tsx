@@ -28,12 +28,12 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProperties) => {
 
   setRequestLocale(locale);
   const dir = getDirection(locale);
-  const { app, auth, billing, common } = await getMessages();
+  const { app, auth, billing, common, store } = await getMessages();
 
   return (
     <>
       <DocumentLanguage dir={dir} locale={locale} />
-      <NextIntlClientProvider messages={{ app, auth, billing, common }}>
+      <NextIntlClientProvider messages={{ app, auth, billing, common, store }}>
         <DesignSystemProvider dir={dir} labels={common.ui}>
           <AppProviders>{children}</AppProviders>
         </DesignSystemProvider>

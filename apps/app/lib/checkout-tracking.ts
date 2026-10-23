@@ -1,11 +1,11 @@
-import { track } from "@repo/analytics/client";
+import { type AnalyticsItem, track } from "@repo/analytics/client";
 
 const STORAGE_KEY = "billing:pending-checkout";
 
+/** A hosted checkout the visitor left for: a plan or a store order. */
 export interface PendingCheckout {
   currency: string;
-  planId: string;
-  planName: string;
+  items: AnalyticsItem[];
   referenceId: string;
   value: number;
 }
@@ -41,6 +41,9 @@ export const rememberCheckout = (checkout: PendingCheckout) => {
   }
 };
 
+/** True while a remembered checkout waits to be confirmed (poll meanwhile). */
+export const hasPendingCheckout = () => read() !== undefined;
+
 /**
  * Reports `purchase` once the remembered checkout shows up as paid. The event
  * id is derived from the payment's reference, the same id apps/api sends to
@@ -67,14 +70,7 @@ export const reportCompletedCheckout = (payments: readonly PaymentState[]) => {
 
   track("purchase", {
     currency: pending.currency,
-    items: [
-      {
-        id: pending.planId,
-        name: pending.planName,
-        price: pending.value,
-        quantity: 1,
-      },
-    ],
+    items: pending.items,
     transactionId: pending.referenceId,
     value: pending.value,
   });

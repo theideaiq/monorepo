@@ -2,7 +2,6 @@
 
 import { formatPhone } from "@repo/auth/phone";
 import { useAuth } from "@repo/auth/provider";
-import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,119 +9,56 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/design-system/components/ui/card";
-import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@repo/design-system/components/ui/radio-group";
 import { usePathname, useRouter } from "@repo/internationalization/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { type FormEvent, useId, useState } from "react";
+import { useTheme } from "next-themes";
+import { useId } from "react";
 import { DeleteAccountCard } from "@/components/account/delete-account";
-import { useOrganization } from "@/components/organization-provider";
 import { PageHeader } from "@/components/page-header";
 import { ProfileForm } from "@/components/profile-form";
 import { SectionSpinner } from "@/components/states";
-import { type OrganizationError, toOrganizationError } from "@/lib/errors";
 import { useProfile } from "@/lib/queries";
-import { isValidSlug } from "@/lib/slug";
 
-const OrganizationSettings = () => {
+const THEMES = ["light", "dark", "system"] as const;
+
+const Appearance = () => {
   const t = useTranslations();
   const id = useId();
-  const { supabase } = useAuth();
-  const { active, canManage } = useOrganization();
-  const queryClient = useQueryClient();
-  const [name, setName] = useState(active.name);
-  const [slug, setSlug] = useState(active.slug);
-  const [error, setError] = useState<OrganizationError | null>(null);
-  const [saved, setSaved] = useState(false);
-
-  const save = useMutation({
-    mutationFn: async () => {
-      const { error: updateError } = await supabase
-        .from("organizations")
-        .update({ name: name.trim(), slug })
-        .eq("id", active.id);
-      if (updateError) {
-        throw updateError;
-      }
-    },
-    onError: (mutationError) => setError(toOrganizationError(mutationError)),
-    onSuccess: async () => {
-      setSaved(true);
-      await queryClient.invalidateQueries({ queryKey: ["memberships"] });
-    },
-  });
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSaved(false);
-    if (!isValidSlug(slug)) {
-      setError("slugInvalid");
-      return;
-    }
-    setError(null);
-    save.mutate();
-  };
+  const { setTheme, theme } = useTheme();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("app.settings.organization.title")}</CardTitle>
+        <CardTitle>{t("app.settings.appearance.title")}</CardTitle>
         <CardDescription>
-          {t("app.settings.organization.description")}
+          {t("app.settings.appearance.description")}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="grid gap-4" onSubmit={submit}>
-          <fieldset className="grid gap-4" disabled={!canManage}>
-            <div className="grid gap-2">
-              <Label htmlFor={`${id}-name`}>
-                {t("app.settings.organization.name")}
-              </Label>
-              <Input
-                id={`${id}-name`}
-                maxLength={120}
-                onChange={(event) => setName(event.target.value)}
-                required
-                value={name}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor={`${id}-slug`}>
-                {t("app.settings.organization.slug")}
-              </Label>
-              <Input
-                autoCapitalize="none"
-                className="text-start"
-                dir="ltr"
-                id={`${id}-slug`}
-                maxLength={64}
-                onChange={(event) => setSlug(event.target.value.toLowerCase())}
-                spellCheck={false}
-                value={slug}
-              />
-            </div>
-          </fieldset>
-          {error ? (
-            <p className="text-destructive text-sm" role="alert">
-              {t(`app.onboarding.errors.${error}`)}
-            </p>
-          ) : null}
-          {saved ? (
-            <p className="text-muted-foreground text-sm" role="status">
-              {t("common.saved")}
-            </p>
-          ) : null}
-          {canManage ? (
-            <Button
-              className="justify-self-start"
-              disabled={save.isPending || !name.trim()}
-              type="submit"
-            >
-              {save.isPending ? t("common.saving") : t("common.save")}
-            </Button>
-          ) : null}
-        </form>
+        <fieldset className="grid gap-2">
+          <legend className="mb-2 font-medium text-sm">
+            {t("app.settings.appearance.theme")}
+          </legend>
+          <RadioGroup
+            className="flex flex-wrap gap-6"
+            onValueChange={setTheme}
+            value={theme ?? "system"}
+          >
+            {THEMES.map((option) => (
+              <div className="flex items-center gap-2" key={option}>
+                <RadioGroupItem id={`${id}-${option}`} value={option} />
+                <Label htmlFor={`${id}-${option}`}>
+                  {t(`common.theme.${option}`)}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        </fieldset>
       </CardContent>
     </Card>
   );
@@ -160,12 +96,14 @@ export const Settings = () => {
             ) : null}
             {profile.data ? (
               <ProfileForm
+                initialMarketingOptIn={profile.data.marketing_opt_in}
                 initialName={profile.data.full_name ?? ""}
                 onSaved={(language) => {
                   if (language !== locale) {
                     router.replace(pathname, { locale: language });
                   }
                 }}
+                showSaved
                 submitLabel={t("common.save")}
               />
             ) : (
@@ -173,7 +111,7 @@ export const Settings = () => {
             )}
           </CardContent>
         </Card>
-        <OrganizationSettings />
+        <Appearance />
         <DeleteAccountCard />
       </div>
     </>

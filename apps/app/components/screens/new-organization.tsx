@@ -6,6 +6,7 @@ import { CreateOrganizationForm } from "@/components/organization-form";
 import { useOrganization } from "@/components/organization-provider";
 import { PageHeader } from "@/components/page-header";
 
+/** /business/new: a business account (organization) for IDEA Suite. */
 export const NewOrganization = () => {
   const t = useTranslations("app.organizations.new");
   const router = useRouter();
@@ -19,7 +20,7 @@ export const NewOrganization = () => {
         <CreateOrganizationForm
           onCreated={(organizationId) => {
             select(organizationId);
-            router.push("/");
+            router.push("/business");
           }}
         />
       </div>

@@ -17,19 +17,19 @@ export const SearchForm = () => {
     const query = String(new FormData(event.currentTarget).get("q") ?? "");
     if (query.trim()) {
       track("search", { query: query.trim() });
-      router.push({ pathname: "/search", query: { q: query.trim() } });
+      router.push({ pathname: "/store", query: { q: query.trim() } });
     }
   };
 
   return (
-    <search>
+    <search className="hidden sm:block">
       <form className="relative" onSubmit={submit}>
         <div className="absolute start-px top-px bottom-px flex h-8 w-8 items-center justify-center">
           <SearchIcon className="text-muted-foreground" size={16} />
         </div>
         <Input
           aria-label={t("placeholder")}
-          className="h-auto w-40 bg-background py-1.5 ps-8 pe-9 text-xs sm:w-56"
+          className="h-auto w-36 bg-background py-1.5 ps-8 pe-9 text-xs sm:w-56"
           name="q"
           placeholder={t("placeholder")}
           type="search"
