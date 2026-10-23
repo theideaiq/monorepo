@@ -63,8 +63,7 @@ export const Status = async ({ labels = defaultLabels }: StatusProps) => {
       statusLabel = labels.operational;
     }
   } catch {
-    statusColor = "bg-muted-foreground";
-    statusLabel = labels.unknown;
+    // Unreachable or misconfigured: keep the "unknown" status.
   }
 
   return (
