@@ -40,6 +40,10 @@ end;
 $$;
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
+-- Start from an empty store so the local seed doesn't change the counts (the
+-- transaction is rolled back at the end).
+truncate public.products, public.posts, public.events, public.chart_of_accounts cascade;
+
 -- U is a customer, V another customer, S a superadmin, E an editor,
 -- P a support agent, F finance.
 
