@@ -11,6 +11,8 @@ import { checkFile, fileNameOf, objectPath, StorageError } from "./files";
 
 type Client = SupabaseClient<Database>;
 
+const TRAILING_SLASH = /\/$/;
+
 export interface StoredFile {
   /** Original file name, which may contain any characters. */
   name: string;
@@ -145,6 +147,76 @@ export const listOrganizationFiles = async (
       },
     ];
   });
+};
+
+/** Public URL of a catalog image or editorial file (cover, journal PDF). */
+export const getPublicFileUrl = (
+  supabase: Client,
+  bucket: typeof buckets.catalog.id | typeof buckets.editorial.id,
+  path: string
+) => supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+
+/**
+ * Public URL without a client, for server components and emails:
+ * `<supabase url>/storage/v1/object/public/<bucket>/<path>`.
+ */
+export const publicFileUrl = (
+  supabaseUrl: string,
+  bucket: typeof buckets.catalog.id | typeof buckets.editorial.id,
+  path: string
+) =>
+  `${supabaseUrl.replace(TRAILING_SLASH, "")}/storage/v1/object/public/${bucket}/${path
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/")}`;
+
+/** Uploads a public catalog image or editorial file (staff only). */
+export const uploadPublicFile = (
+  supabase: Client,
+  bucket: "catalog" | "editorial",
+  folder: string,
+  file: File
+) => {
+  assertAllowed(bucket, file);
+  return upload(
+    supabase,
+    buckets[bucket].id,
+    objectPath(folder, file.name),
+    file
+  );
+};
+
+/** Uploads a file for one of the signed-in user's submissions. */
+export const uploadSubmissionFile = (
+  supabase: Client,
+  userId: string,
+  file: File
+) => {
+  assertAllowed("submissions", file);
+  return upload(
+    supabase,
+    buckets.submissions.id,
+    objectPath(userId, file.name),
+    file
+  );
+};
+
+/** A time-limited link to a submission file (its author or an editor). */
+export const getSubmissionFileUrl = async (
+  supabase: Client,
+  path: string,
+  expiresIn = 60 * 60
+) => {
+  const { data, error } = await supabase.storage
+    .from(buckets.submissions.id)
+    .createSignedUrl(path, expiresIn);
+  if (error || !data) {
+    throw new StorageError(
+      "not_found",
+      `No signed URL for ${path}: ${error?.message ?? "no data"}`
+    );
+  }
+  return data.signedUrl;
 };
 
 /** Deletes files the user is allowed to delete. */

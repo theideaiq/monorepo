@@ -500,5 +500,66 @@
       "loadFailed": "تعذّر تحميل هذه الصفحة.",
       "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
     }
+  },
+  "store": {
+    "price": {
+      "free": "مجاني",
+      "from": "ابتداءً من {price}",
+      "save": "وفّر {percent}٪"
+    },
+    "condition": {
+      "new": "جديد",
+      "used": "مستعمل",
+      "refurbished": "مجدّد",
+      "open_box": "علبة مفتوحة"
+    },
+    "stock": {
+      "inStock": "متوفر",
+      "lowStock": "بقي {count} فقط",
+      "outOfStock": "نفدت الكمية"
+    },
+    "orderStatus": {
+      "pending": "بانتظار الدفع",
+      "paid": "مدفوع",
+      "processing": "قيد التجهيز",
+      "shipped": "في الطريق",
+      "delivered": "تم التوصيل",
+      "cancelled": "ملغى",
+      "refunded": "مسترد"
+    },
+    "rentalStatus": {
+      "requested": "مطلوب",
+      "active": "لديك",
+      "returned": "مُعاد",
+      "overdue": "متأخر",
+      "cancelled": "ملغى"
+    },
+    "submissionStatus": {
+      "pending": "مستلم",
+      "under_review": "قيد المراجعة",
+      "revisions_requested": "مطلوب تعديلات",
+      "accepted": "مقبول",
+      "rejected": "غير مقبول",
+      "withdrawn": "مسحوب"
+    },
+    "submissionType": {
+      "essay": "مقالة",
+      "poetry": "شعر",
+      "fiction": "قصة",
+      "theatre": "مسرح",
+      "visual_art": "فن بصري",
+      "other": "أخرى"
+    },
+    "kind": {
+      "sale": "الميغاستور",
+      "rental": "IDEA Plus"
+    },
+    "lines": {
+      "megastore": "الميغاستور",
+      "plus": "IDEA Plus",
+      "academy": "الأكاديمية",
+      "suite": "IDEA Suite",
+      "club": "النادي"
+    }
   }
 }

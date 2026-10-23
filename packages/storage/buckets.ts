@@ -11,11 +11,32 @@ export const buckets = {
     mimeTypes: ["image/png", "image/jpeg", "image/webp"],
     public: true,
   },
+  /** Product images (public); admins write. */
+  catalog: {
+    id: "catalog",
+    maxBytes: 5 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp"],
+    public: true,
+  },
+  /** Post and event covers and journal PDFs (public); editors write. */
+  editorial: {
+    id: "editorial",
+    maxBytes: 50 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp", "application/pdf"],
+    public: true,
+  },
   /** Private files under "<organization id>/…"; members read and write. */
   orgFiles: {
     id: "org-files",
     maxBytes: 50 * 1024 * 1024,
     mimeTypes: undefined,
+    public: false,
+  },
+  /** Submitted work under "<author id>/…"; the author and editors read it. */
+  submissions: {
+    id: "submissions",
+    maxBytes: 20 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "application/pdf"],
     public: false,
   },
 } as const;

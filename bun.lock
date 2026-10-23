@@ -265,6 +265,22 @@
         "vitest": "^5.0.3",
       },
     },
+    "packages/commerce": {
+      "name": "@repo/commerce",
+      "version": "0.0.0",
+      "dependencies": {
+        "@repo/database": "workspace:*",
+        "@repo/internationalization": "workspace:*",
+        "@repo/storage": "workspace:*",
+        "@supabase/supabase-js": "^2.115.0",
+      },
+      "devDependencies": {
+        "@repo/typescript-config": "workspace:*",
+        "@types/node": "25.3.5",
+        "typescript": "^7.0.2",
+        "vitest": "^5.0.3",
+      },
+    },
     "packages/config": {
       "name": "@repo/config",
       "version": "0.0.0",
@@ -1395,6 +1411,8 @@
     "@repo/analytics": ["@repo/analytics@workspace:packages/analytics"],
 
     "@repo/auth": ["@repo/auth@workspace:packages/auth"],
+
+    "@repo/commerce": ["@repo/commerce@workspace:packages/commerce"],
 
     "@repo/config": ["@repo/config@workspace:packages/config"],
 

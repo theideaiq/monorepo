@@ -1,11 +1,18 @@
 import { cn } from '@repo/design-system/lib/utils';
 import { GeistMono } from 'geist/font/mono';
-import { GeistSans } from 'geist/font/sans';
-import { IBM_Plex_Sans_Arabic } from 'next/font/google';
+import { Cairo, Poppins } from 'next/font/google';
 
-// Geist has no Arabic glyphs; Arabic text falls through to IBM Plex Sans
-// Arabic via the --font-sans stack in styles/globals.css.
-const arabic = IBM_Plex_Sans_Arabic({
+// The IDEA's brand fonts: Poppins for Latin text, Cairo for Arabic (Poppins
+// has no Arabic glyphs, so Arabic falls through to Cairo via --font-sans in
+// styles/globals.css).
+const latin = Poppins({
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-latin',
+  weight: ['400', '500', '600', '700'],
+});
+
+const arabic = Cairo({
   display: 'swap',
   subsets: ['arabic'],
   variable: '--font-arabic',
@@ -13,7 +20,7 @@ const arabic = IBM_Plex_Sans_Arabic({
 });
 
 export const fonts = cn(
-  GeistSans.variable,
+  latin.variable,
   GeistMono.variable,
   arabic.variable,
   'touch-manipulation font-sans antialiased'

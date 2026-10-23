@@ -500,5 +500,66 @@
       "loadFailed": "We couldn't load this page.",
       "unknown": "Something went wrong. Please try again."
     }
+  },
+  "store": {
+    "price": {
+      "free": "Free",
+      "from": "From {price}",
+      "save": "Save {percent}%"
+    },
+    "condition": {
+      "new": "New",
+      "used": "Used",
+      "refurbished": "Refurbished",
+      "open_box": "Open box"
+    },
+    "stock": {
+      "inStock": "In stock",
+      "lowStock": "Only {count} left",
+      "outOfStock": "Out of stock"
+    },
+    "orderStatus": {
+      "pending": "Awaiting payment",
+      "paid": "Paid",
+      "processing": "Preparing",
+      "shipped": "On the way",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded"
+    },
+    "rentalStatus": {
+      "requested": "Requested",
+      "active": "With you",
+      "returned": "Returned",
+      "overdue": "Overdue",
+      "cancelled": "Cancelled"
+    },
+    "submissionStatus": {
+      "pending": "Received",
+      "under_review": "Under review",
+      "revisions_requested": "Revisions requested",
+      "accepted": "Accepted",
+      "rejected": "Not accepted",
+      "withdrawn": "Withdrawn"
+    },
+    "submissionType": {
+      "essay": "Essay",
+      "poetry": "Poetry",
+      "fiction": "Fiction",
+      "theatre": "Theatre",
+      "visual_art": "Visual art",
+      "other": "Other"
+    },
+    "kind": {
+      "sale": "Megastore",
+      "rental": "IDEA Plus"
+    },
+    "lines": {
+      "megastore": "Megastore",
+      "plus": "IDEA Plus",
+      "academy": "Academy",
+      "suite": "IDEA Suite",
+      "club": "The Club"
+    }
   }
 }
