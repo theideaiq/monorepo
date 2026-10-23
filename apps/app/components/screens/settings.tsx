@@ -15,8 +15,8 @@ import {
   RadioGroupItem,
 } from "@repo/design-system/components/ui/radio-group";
 import { usePathname, useRouter } from "@repo/internationalization/navigation";
-import { useTheme } from "next-themes";
 import { useLocale, useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 import { useId } from "react";
 import { DeleteAccountCard } from "@/components/account/delete-account";
 import { PageHeader } from "@/components/page-header";
@@ -35,7 +35,9 @@ const Appearance = () => {
     <Card>
       <CardHeader>
         <CardTitle>{t("app.settings.appearance.title")}</CardTitle>
-        <CardDescription>{t("app.settings.appearance.description")}</CardDescription>
+        <CardDescription>
+          {t("app.settings.appearance.description")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <fieldset className="grid gap-2">

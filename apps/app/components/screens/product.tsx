@@ -61,8 +61,7 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
   const name = localized(product, "name", locale);
   const description = localized(product, "description", locale);
   const selection = pickVariant(product, variantId);
-  const image =
-    selection.variant?.image ?? product.images[0] ?? null;
+  const image = selection.variant?.image ?? product.images[0] ?? null;
   const canAdd =
     product.kind === "sale" &&
     product.status === "active" &&
@@ -89,6 +88,7 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
 
   // From the website ("Buy" → /store/product?slug=…&add=1): add one copy
   // once, when no choice is needed, then drop the flag from the URL.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per deep link
   useEffect(() => {
     if (!deepLinkAdd || autoAdded.current) {
       return;
@@ -97,14 +97,21 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
     if (canAdd) {
       addToCart(1);
     }
-    router.replace({ pathname: "/store/product", query: { slug: product.slug } });
-    // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per deep link
+    router.replace({
+      pathname: "/store/product",
+      query: { slug: product.slug },
+    });
   }, [deepLinkAdd]);
 
   return (
     <div className="grid gap-8 md:grid-cols-2">
       <div className="grid content-start gap-3">
-        <ProductImage alt={name} path={image} priority sizes="(min-width: 768px) 50vw, 100vw" />
+        <ProductImage
+          alt={name}
+          path={image}
+          priority
+          sizes="(min-width: 768px) 50vw, 100vw"
+        />
         {product.images.length > 1 ? (
           <ul className="grid grid-cols-5 gap-2">
             {product.images.slice(1, 6).map((path) => (
@@ -121,7 +128,10 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
           {product.category ? (
             <Link
               className="text-muted-foreground text-sm hover:underline"
-              href={{ pathname: "/store", query: { category: product.category.slug } }}
+              href={{
+                pathname: "/store",
+                query: { category: product.category.slug },
+              }}
             >
               {localized(product.category, "name", locale)}
             </Link>
@@ -129,14 +139,20 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
           <h2 className="font-semibold text-2xl tracking-tight">{name}</h2>
           <Price
             className="text-xl"
-            compareAtPrice={selection.variant?.price_override ? null : product.compare_at_price}
+            compareAtPrice={
+              selection.variant?.price_override
+                ? null
+                : product.compare_at_price
+            }
             price={selection.price}
           />
           <div className="flex flex-wrap items-center gap-3 text-sm">
             <span className="text-muted-foreground">
               {t("condition")}: {tStore(`condition.${product.condition}`)}
             </span>
-            {product.kind === "sale" ? <StockBadge count={selection.stock} /> : null}
+            {product.kind === "sale" ? (
+              <StockBadge count={selection.stock} />
+            ) : null}
           </div>
         </div>
 
@@ -151,7 +167,9 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
           <>
             {variants.length > 0 ? (
               <fieldset className="grid gap-2">
-                <legend className="mb-2 font-medium text-sm">{t("options")}</legend>
+                <legend className="mb-2 font-medium text-sm">
+                  {t("options")}
+                </legend>
                 <div className="flex flex-wrap gap-2">
                   {variants.map((variant) => (
                     <button
@@ -175,7 +193,9 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
                   ))}
                 </div>
                 {selection.ready ? null : (
-                  <p className="text-muted-foreground text-xs">{t("chooseOption")}</p>
+                  <p className="text-muted-foreground text-xs">
+                    {t("chooseOption")}
+                  </p>
                 )}
               </fieldset>
             ) : null}
@@ -200,10 +220,16 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
               </Button>
             </div>
             {added ? (
-              <p className="flex flex-wrap items-center gap-2 text-sm" role="status">
+              <p
+                className="flex flex-wrap items-center gap-2 text-sm"
+                role="status"
+              >
                 <CheckIcon className="size-4 text-emerald-600" />
                 {t("added")}
-                <Link className="font-medium text-primary hover:underline" href="/cart">
+                <Link
+                  className="font-medium text-primary hover:underline"
+                  href="/cart"
+                >
                   {t("viewCart")}
                 </Link>
               </p>
@@ -248,7 +274,9 @@ export const Product = () => {
           {t("product.back")}
         </Link>
         {product.isPending && slug ? <SectionSpinner /> : null}
-        {product.isError ? <ErrorState onRetry={() => product.refetch()} /> : null}
+        {product.isError ? (
+          <ErrorState onRetry={() => product.refetch()} />
+        ) : null}
         {!slug || product.data === null ? (
           <p className="text-muted-foreground">{t("product.notFound")}</p>
         ) : null}

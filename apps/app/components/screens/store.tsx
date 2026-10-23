@@ -69,7 +69,9 @@ export const Store = () => {
   };
   const products = useProducts(filters);
 
-  const navigate = (next: Partial<Record<"category" | "q" | "sort", string>>) => {
+  const navigate = (
+    next: Partial<Record<"category" | "q" | "sort", string>>
+  ) => {
     const merged = { category, q: query, sort, ...next };
     const search: Record<string, string> = {};
     for (const [key, value] of Object.entries(merged)) {

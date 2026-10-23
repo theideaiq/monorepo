@@ -22,9 +22,9 @@ import { rememberLocale } from "@/lib/locale";
 import { queryKeys } from "@/lib/queries";
 
 interface ProfileFormProps {
-  readonly initialName: string;
   /** Shows the marketing-emails consent (onboarding) with this value. */
   readonly initialMarketingOptIn?: boolean;
+  readonly initialName: string;
   /** Called after saving with the chosen language. */
   readonly onSaved: (locale: Locale) => void;
   /** Confirms the save in place (settings), instead of moving on. */

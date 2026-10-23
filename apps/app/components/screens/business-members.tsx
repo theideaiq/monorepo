@@ -28,7 +28,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
-import { SectionSpinner, ErrorState } from "@/components/states";
+import { ErrorState, SectionSpinner } from "@/components/states";
 import { env } from "@/env";
 import {
   parseInvitee,
@@ -74,7 +74,9 @@ const MemberList = () => {
   const changeRole = useChangeRole(active.id);
   const remove = useRemoveMember(active.id);
   const isOwner = active.role === "owner";
-  const roles: OrgRole[] = isOwner ? ["owner", "admin", "member"] : ["admin", "member"];
+  const roles: OrgRole[] = isOwner
+    ? ["owner", "admin", "member"]
+    : ["admin", "member"];
 
   return (
     <Card>
@@ -84,7 +86,9 @@ const MemberList = () => {
       </CardHeader>
       <CardContent>
         {members.isPending ? <SectionSpinner /> : null}
-        {members.isError ? <ErrorState onRetry={() => members.refetch()} /> : null}
+        {members.isError ? (
+          <ErrorState onRetry={() => members.refetch()} />
+        ) : null}
         <ul className="divide-y">
           {members.data?.map((member) => {
             const self = member.userId === user?.id;
@@ -100,7 +104,9 @@ const MemberList = () => {
                     {member.fullName || t("business.members.unnamed")}
                   </span>
                   {self ? (
-                    <Badge variant="secondary">{t("business.members.you")}</Badge>
+                    <Badge variant="secondary">
+                      {t("business.members.you")}
+                    </Badge>
                   ) : null}
                 </div>
                 <div className="flex items-center gap-2">
@@ -150,7 +156,9 @@ const MemberList = () => {
                       size="sm"
                       variant="ghost"
                     >
-                      {self ? t("business.members.leave") : t("business.members.remove")}
+                      {self
+                        ? t("business.members.leave")
+                        : t("business.members.remove")}
                     </Button>
                   ) : null}
                 </div>
@@ -218,7 +226,10 @@ const Invitations = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3">
-          <form className="flex flex-col gap-3 sm:flex-row sm:items-end" onSubmit={submit}>
+          <form
+            className="flex flex-col gap-3 sm:flex-row sm:items-end"
+            onSubmit={submit}
+          >
             <div className="grid flex-1 gap-2">
               <Label htmlFor={`${id}-invitee`}>
                 {t("business.members.invite.invitee")}
@@ -235,7 +246,9 @@ const Invitations = () => {
               />
             </div>
             <Select
-              onValueChange={(value) => setRole(value === "admin" ? "admin" : "member")}
+              onValueChange={(value) =>
+                setRole(value === "admin" ? "admin" : "member")
+              }
               value={role}
             >
               <SelectTrigger
@@ -249,7 +262,10 @@ const Invitations = () => {
                 <SelectItem value="admin">{t("roles.admin")}</SelectItem>
               </SelectContent>
             </Select>
-            <Button disabled={invite.isPending || !invitee.trim()} type="submit">
+            <Button
+              disabled={invite.isPending || !invitee.trim()}
+              type="submit"
+            >
               {invite.isPending
                 ? t("business.members.invite.submitting")
                 : t("business.members.invite.submit")}
@@ -266,8 +282,13 @@ const Invitations = () => {
             </p>
           ) : null}
           {sentToken ? (
-            <div className="flex flex-wrap items-center gap-2 rounded-md bg-muted p-3 text-sm" role="status">
-              <span className="flex-1">{t("business.members.invite.sent")}</span>
+            <div
+              className="flex flex-wrap items-center gap-2 rounded-md bg-muted p-3 text-sm"
+              role="status"
+            >
+              <span className="flex-1">
+                {t("business.members.invite.sent")}
+              </span>
               <CopyButton text={inviteLink(locale, sentToken)} />
             </div>
           ) : null}

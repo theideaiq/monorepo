@@ -2,11 +2,7 @@
 
 import { useAuth } from "@repo/auth/provider";
 import type { SubmissionType } from "@repo/database";
-import {
-  checkFile,
-  removeFiles,
-  uploadSubmissionFile,
-} from "@repo/storage";
+import { checkFile, removeFiles, uploadSubmissionFile } from "@repo/storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isDuplicate } from "./errors";
 import { queryKeys, requireUserId, unwrap } from "./queries";
@@ -74,7 +70,9 @@ export const useRsvpCount = (eventId: string) => {
   const { supabase } = useAuth();
   return useQuery({
     queryFn: async () =>
-      Number(unwrap(await supabase.rpc("event_rsvp_count", { event: eventId }))),
+      Number(
+        unwrap(await supabase.rpc("event_rsvp_count", { event: eventId }))
+      ),
     queryKey: queryKeys.rsvpCount(eventId),
   });
 };

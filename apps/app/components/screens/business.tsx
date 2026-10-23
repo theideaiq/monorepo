@@ -58,7 +58,9 @@ const Projects = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="grid gap-1">
-          <h2 className="font-semibold text-xl tracking-tight">{active.name}</h2>
+          <h2 className="font-semibold text-xl tracking-tight">
+            {active.name}
+          </h2>
           <p className="text-muted-foreground text-sm">{t("description")}</p>
         </div>
         <form className="flex w-full gap-2 sm:w-auto" onSubmit={submit}>
@@ -78,7 +80,9 @@ const Projects = () => {
       </div>
 
       {projects.isPending ? <SectionSpinner /> : null}
-      {projects.isError ? <ErrorState onRetry={() => projects.refetch()} /> : null}
+      {projects.isError ? (
+        <ErrorState onRetry={() => projects.refetch()} />
+      ) : null}
       {projects.data?.length === 0 ? (
         <Empty className="border border-dashed">
           <EmptyHeader>

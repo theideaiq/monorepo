@@ -45,7 +45,7 @@ export interface CartLineView extends CartLine {
 
 /** Prices a cart line like `create_order()` does (variant price first). */
 export const toCartLine = (item: CartItem): CartLineView => {
-  const product = item.product;
+  const { product } = item;
   const buyable = product?.status === "active" && product.kind === "sale";
   const available = item.variant
     ? item.variant.stock_count

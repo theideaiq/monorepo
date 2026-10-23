@@ -64,7 +64,10 @@ const OrganizationBilling = () => {
                 {subscription.data.current_period_end ? (
                   <span>
                     {t("renews", {
-                      date: formatDate(subscription.data.current_period_end, locale),
+                      date: formatDate(
+                        subscription.data.current_period_end,
+                        locale
+                      ),
                     })}
                   </span>
                 ) : null}
@@ -93,9 +96,13 @@ const OrganizationBilling = () => {
           {plans.data?.map((plan) => {
             const isCurrent = plan.id === subscription.data?.plan_id;
             const price = formatCurrency(plan.amount, locale, plan.currency);
-            const features = locale === "en" ? plan.features_en : plan.features_ar;
+            const features =
+              locale === "en" ? plan.features_en : plan.features_ar;
             return (
-              <Card className={isCurrent ? "border-primary" : undefined} key={plan.id}>
+              <Card
+                className={isCurrent ? "border-primary" : undefined}
+                key={plan.id}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between gap-2">
                     {plan.name}
@@ -105,7 +112,9 @@ const OrganizationBilling = () => {
                     <span className="font-semibold text-2xl text-foreground tabular-nums">
                       {price}
                     </span>{" "}
-                    {plan.billing_interval === "year" ? t("perYear") : t("perMonth")}
+                    {plan.billing_interval === "year"
+                      ? t("perYear")
+                      : t("perMonth")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="grid flex-1 content-between gap-4">

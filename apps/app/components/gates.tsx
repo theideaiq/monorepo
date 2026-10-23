@@ -59,7 +59,9 @@ export const RequireOnboarding = ({ children }: GateProps) => {
   }, [pathname, pending, router]);
 
   if (profile.isError) {
-    return <ErrorState className="min-h-dvh" onRetry={() => profile.refetch()} />;
+    return (
+      <ErrorState className="min-h-dvh" onRetry={() => profile.refetch()} />
+    );
   }
 
   return pending === false ? children : <FullPageSpinner />;

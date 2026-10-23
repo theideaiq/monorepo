@@ -1,12 +1,12 @@
 "use client";
 
+import { useAuth } from "@repo/auth/provider";
 import {
   describeAttributes,
   formatPrice,
   governorates,
   localized,
 } from "@repo/commerce";
-import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
@@ -56,7 +56,14 @@ interface FieldProps {
   readonly optional?: boolean;
 }
 
-const Field = ({ children, error, hint, htmlFor, label, optional }: FieldProps) => {
+const Field = ({
+  children,
+  error,
+  hint,
+  htmlFor,
+  label,
+  optional,
+}: FieldProps) => {
   const t = useTranslations("common");
   return (
     <div className="grid gap-2">
@@ -257,7 +264,10 @@ export const Checkout = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {governorates.map((governorate) => (
-                          <SelectItem key={governorate.id} value={governorate.id}>
+                          <SelectItem
+                            key={governorate.id}
+                            value={governorate.id}
+                          >
                             {locale === "en" ? governorate.en : governorate.ar}
                           </SelectItem>
                         ))}
@@ -355,7 +365,11 @@ export const Checkout = () => {
                     {t(`errors.${error}`)}
                   </p>
                 ) : null}
-                <Button disabled={busy || !summary.canCheckout} size="lg" type="submit">
+                <Button
+                  disabled={busy || !summary.canCheckout}
+                  size="lg"
+                  type="submit"
+                >
                   {busy
                     ? t("placing")
                     : t("placeOrder", {

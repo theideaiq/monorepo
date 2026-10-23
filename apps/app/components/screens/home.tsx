@@ -6,7 +6,6 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@repo/design-system/components/ui/card";
@@ -86,7 +85,9 @@ const ActiveOrders = () => {
       {orders.isError ? <ErrorState onRetry={() => orders.refetch()} /> : null}
       {active?.length === 0 ? (
         <div className="grid justify-items-start gap-3">
-          <p className="text-muted-foreground text-sm">{t("home.orders.empty")}</p>
+          <p className="text-muted-foreground text-sm">
+            {t("home.orders.empty")}
+          </p>
           <Button asChild size="sm" variant="outline">
             <Link href="/store">{t("home.orders.browse")}</Link>
           </Button>
@@ -131,7 +132,9 @@ const PlusPanel = () => {
   const allowance = useRentalAllowance();
   const rentals = useRentals();
   const member = isLiveMembership(subscription.data?.status);
-  const plan = plans.data?.find((item) => item.id === subscription.data?.plan_id);
+  const plan = plans.data?.find(
+    (item) => item.id === subscription.data?.plan_id
+  );
   const open = rentals.data?.filter((rental) =>
     ["requested", "active", "overdue"].includes(rental.status)
   );
@@ -155,12 +158,17 @@ const PlusPanel = () => {
         <div className="grid gap-4">
           <div className="grid gap-1 text-sm">
             {plan ? (
-              <span className="font-medium">{t("member", { plan: plan.name })}</span>
+              <span className="font-medium">
+                {t("member", { plan: plan.name })}
+              </span>
             ) : null}
             {subscription.data?.current_period_end ? (
               <span className="text-muted-foreground text-xs">
                 {t("renews", {
-                  date: formatDate(subscription.data.current_period_end, locale),
+                  date: formatDate(
+                    subscription.data.current_period_end,
+                    locale
+                  ),
                 })}
               </span>
             ) : null}
@@ -225,7 +233,9 @@ const NextEvents = () => {
         <ul className="grid gap-3">
           {next.map(({ event }) => (
             <li className="grid gap-0.5 text-sm" key={event.id}>
-              <span className="font-medium">{localized(event, "title", locale)}</span>
+              <span className="font-medium">
+                {localized(event, "title", locale)}
+              </span>
               <span className="text-muted-foreground text-xs">
                 {formatDateTime(event.starts_at, locale)} · {event.location}
               </span>
@@ -277,7 +287,9 @@ export const Home = () => {
       <div className="flex flex-1 flex-col gap-8 p-4 pt-0">
         <div className="grid gap-1">
           <h2 className="font-semibold text-2xl tracking-tight">
-            {firstName ? t("greeting", { name: firstName }) : t("greetingNoName")}
+            {firstName
+              ? t("greeting", { name: firstName })
+              : t("greetingNoName")}
           </h2>
           <p className="text-muted-foreground">{t("description")}</p>
         </div>

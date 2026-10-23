@@ -43,7 +43,9 @@ import { toRsvpError } from "@/lib/errors";
 import { seatsLeft } from "@/lib/events";
 import { editorialImage } from "@/lib/images";
 
-type EventRow = NonNullable<ReturnType<typeof useUpcomingEvents>["data"]>[number];
+type EventRow = NonNullable<
+  ReturnType<typeof useUpcomingEvents>["data"]
+>[number];
 
 const EventCard = ({
   event,
@@ -61,6 +63,10 @@ const EventCard = ({
   const title = localized(event, "title", locale);
   const description = localized(event, "description", locale);
   const cover = editorialImage(event.cover_image);
+  let rsvpLabel = going ? t("cancelRsvp") : t("rsvp");
+  if (rsvp.isPending) {
+    rsvpLabel = t("rsvping");
+  }
 
   return (
     <li>
@@ -125,8 +131,7 @@ const EventCard = ({
               onClick={() => rsvp.mutate({ eventId: event.id, going: !going })}
               variant={going ? "outline" : "default"}
             >
-              {rsvp.isPending && t("rsvping")}
-              {!rsvp.isPending && (going ? t("cancelRsvp") : t("rsvp"))}
+              {rsvpLabel}
             </Button>
             {rsvp.isError ? (
               <p className="text-destructive text-xs" role="alert">
@@ -147,7 +152,8 @@ const CalendarLink = () => {
   const rotate = useRotateCalendarToken();
   const [copied, setCopied] = useState(false);
   const apiUrl = env.NEXT_PUBLIC_API_URL;
-  const feed = apiUrl && token.data ? calendarFeedUrl(apiUrl, token.data) : null;
+  const feed =
+    apiUrl && token.data ? calendarFeedUrl(apiUrl, token.data) : null;
 
   const copy = async () => {
     if (!feed) {
@@ -262,7 +268,9 @@ export const Events = () => {
               </CardHeader>
               <CardContent>
                 {mine.length === 0 ? (
-                  <p className="text-muted-foreground text-sm">{t("mineEmpty")}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {t("mineEmpty")}
+                  </p>
                 ) : (
                   <ul className="grid gap-3">
                     {mine.map(({ event }) => (

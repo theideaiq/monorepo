@@ -12,11 +12,11 @@ import { queryKeys, requireUserId, unwrap } from "./queries";
 /** IDEA Plus: rental allowance, rentals and requests. */
 
 export interface RentalAllowance {
+  free: number;
   /** Slots of the live Plus plan (0 without a membership). */
   slots: number;
   /** Rentals requested, with the member or overdue. */
   used: number;
-  free: number;
 }
 
 /** my_rental_allowance() as numbers the UI can use directly. */
@@ -106,7 +106,10 @@ export interface CheckoutPlan {
  * `organizationId`, an IDEA Suite plan with it. Remembers the checkout so
  * the purchase is reported once paid, then opens the payment page.
  */
-export const usePlanCheckout = (returnPath: string, organizationId?: string) => {
+export const usePlanCheckout = (
+  returnPath: string,
+  organizationId?: string
+) => {
   const { supabase } = useAuth();
   const locale = useLocale();
 

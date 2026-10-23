@@ -62,7 +62,9 @@ const OrganizationSettings = () => {
     <Card className="max-w-2xl">
       <CardHeader>
         <CardTitle>{t("app.business.settings.title")}</CardTitle>
-        <CardDescription>{t("app.business.settings.description")}</CardDescription>
+        <CardDescription>
+          {t("app.business.settings.description")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form className="grid gap-4" onSubmit={submit}>

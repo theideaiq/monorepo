@@ -44,7 +44,10 @@ export const useMembers = (organizationId: string) => {
       const ids = memberships.map((membership) => membership.user_id);
       const profiles = ids.length
         ? (unwrap(
-            await supabase.from("profiles").select("id, full_name").in("id", ids)
+            await supabase
+              .from("profiles")
+              .select("id, full_name")
+              .in("id", ids)
           ) ?? [])
         : [];
       const names = new Map(
@@ -117,7 +120,9 @@ export const useRevokeInvitation = (organizationId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (invitationId: string) => {
-      unwrap(await supabase.from("invitations").delete().eq("id", invitationId));
+      unwrap(
+        await supabase.from("invitations").delete().eq("id", invitationId)
+      );
     },
     onSettled: () =>
       queryClient.invalidateQueries({

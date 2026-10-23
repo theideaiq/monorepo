@@ -103,7 +103,7 @@ const Address = ({ address }: { readonly address: ShippingAddress }) => {
       <span>
         {[governorateName(address.governorate, locale), address.city]
           .filter(Boolean)
-          .join("، ")}
+          .join(locale === "ar" ? "، " : ", ")}
       </span>
       <span className="whitespace-pre-line">{address.address}</span>
       {address.notes ? (
@@ -149,6 +149,47 @@ const CancelOrder = ({ orderId }: { readonly orderId: string }) => {
   );
 };
 
+/** What is happening with the order: payment, cancellation, refund. */
+const OrderNotices = ({
+  justPaid,
+  order,
+  watching,
+}: {
+  readonly justPaid: boolean;
+  readonly order: Order;
+  readonly watching: boolean;
+}) => {
+  const t = useTranslations("app.orders.detail");
+  const muted = "rounded-md bg-muted p-4 text-sm";
+
+  if (justPaid || (watching && order.paid_at)) {
+    return (
+      <p
+        className="rounded-md bg-emerald-500/10 p-4 text-emerald-700 text-sm dark:text-emerald-300"
+        role="status"
+      >
+        {t("thanks")}
+      </p>
+    );
+  }
+  switch (order.status) {
+    case "pending":
+      return watching ? (
+        <p className={muted} role="status">
+          {t("confirming")}
+        </p>
+      ) : (
+        <p className={muted}>{t("pendingNotice")}</p>
+      );
+    case "cancelled":
+      return <p className={muted}>{t("cancelledNotice")}</p>;
+    case "refunded":
+      return <p className={muted}>{t("refundedNotice")}</p>;
+    default:
+      return null;
+  }
+};
+
 const OrderView = ({
   order,
   watching,
@@ -171,28 +212,7 @@ const OrderView = ({
 
   return (
     <div className="grid gap-6">
-      {justPaid || (watching && !pending && order.paid_at) ? (
-        <p
-          className="rounded-md bg-emerald-500/10 p-4 text-emerald-700 text-sm dark:text-emerald-300"
-          role="status"
-        >
-          {t("thanks")}
-        </p>
-      ) : null}
-      {pending && watching ? (
-        <p className="rounded-md bg-muted p-4 text-sm" role="status">
-          {t("confirming")}
-        </p>
-      ) : null}
-      {pending && !watching ? (
-        <p className="rounded-md bg-muted p-4 text-sm">{t("pendingNotice")}</p>
-      ) : null}
-      {order.status === "cancelled" ? (
-        <p className="rounded-md bg-muted p-4 text-sm">{t("cancelledNotice")}</p>
-      ) : null}
-      {order.status === "refunded" ? (
-        <p className="rounded-md bg-muted p-4 text-sm">{t("refundedNotice")}</p>
-      ) : null}
+      <OrderNotices justPaid={justPaid} order={order} watching={watching} />
 
       {pending ? (
         <div className="flex flex-wrap gap-3">
@@ -240,7 +260,10 @@ const OrderView = ({
           <CardContent>
             <ul className="divide-y">
               {order.order_items.map((item) => (
-                <li className="flex justify-between gap-4 py-3 text-sm" key={item.id}>
+                <li
+                  className="flex justify-between gap-4 py-3 text-sm"
+                  key={item.id}
+                >
                   <span className="grid min-w-0 gap-0.5">
                     <span>{localized(item, "name", locale)}</span>
                     {describeAttributes(item.attributes) ? (
@@ -330,7 +353,7 @@ export const OrderDetail = () => {
     }
   }, [payments.data]);
 
-  const data = order.data;
+  const { data } = order;
 
   return (
     <>

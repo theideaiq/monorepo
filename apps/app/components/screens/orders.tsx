@@ -33,7 +33,9 @@ export const Orders = () => {
       <div className="flex max-w-3xl flex-1 flex-col gap-6 p-4 pt-0">
         <p className="text-muted-foreground">{t("description")}</p>
         {orders.isPending ? <SectionSpinner /> : null}
-        {orders.isError ? <ErrorState onRetry={() => orders.refetch()} /> : null}
+        {orders.isError ? (
+          <ErrorState onRetry={() => orders.refetch()} />
+        ) : null}
         {orders.data?.length === 0 ? (
           <Empty className="border border-dashed">
             <EmptyHeader>
@@ -61,15 +63,22 @@ export const Orders = () => {
                   <div className="grid min-w-0 flex-1 gap-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-medium">
-                        {tCommon("orderNumber", { number: String(order.number) })}
+                        {tCommon("orderNumber", {
+                          number: String(order.number),
+                        })}
                       </span>
                       <OrderStatusBadge status={order.status} />
                     </div>
                     <span className="text-muted-foreground text-xs">
-                      {t("placed", { date: formatDate(order.created_at, locale) })}
+                      {t("placed", {
+                        date: formatDate(order.created_at, locale),
+                      })}
                       {" · "}
                       {t("itemsCount", {
-                        count: formatNumber(itemCount(order.order_items), locale),
+                        count: formatNumber(
+                          itemCount(order.order_items),
+                          locale
+                        ),
                       })}
                     </span>
                   </div>

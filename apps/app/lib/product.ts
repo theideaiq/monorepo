@@ -23,11 +23,16 @@ export const pickVariant = <Variant extends VariantLike>(
     product.product_variants.find((candidate) => candidate.id === variantId) ??
     null;
   const hasVariants = product.product_variants.length > 0;
+  // Products with variants keep their stock per variant.
+  let stock = hasVariants ? 0 : product.stock_count;
+  if (variant) {
+    stock = variant.stock_count;
+  }
 
   return {
     price: variant?.price_override ?? product.price,
     ready: !hasVariants || variant !== null,
-    stock: variant ? variant.stock_count : hasVariants ? 0 : product.stock_count,
+    stock,
     variant,
   };
 };

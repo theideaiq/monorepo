@@ -54,7 +54,11 @@ const BusinessIntro = () => {
  * around a screen that needs an active organization. Without one, it shows
  * the introduction instead.
  */
-export const BusinessShell = ({ children }: { readonly children: ReactNode }) => {
+export const BusinessShell = ({
+  children,
+}: {
+  readonly children: ReactNode;
+}) => {
   const t = useTranslations("app.business");
   const router = useRouter();
   const pathname = usePathname();

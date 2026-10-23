@@ -41,14 +41,17 @@ export const MobileTabBar = () => {
             <span className="relative">
               <item.icon className="size-5" />
               {item.key === "cart" && cartCount > 0 ? (
-                <span
-                  aria-label={t("cartCount", {
-                    count: formatNumber(cartCount, locale),
-                  })}
-                  className="absolute -end-2.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 font-semibold text-[0.625rem] text-primary-foreground tabular-nums"
-                >
-                  {formatNumber(cartCount, locale)}
-                </span>
+                <>
+                  <span
+                    aria-hidden="true"
+                    className="absolute -end-2.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 font-semibold text-[0.625rem] text-primary-foreground tabular-nums"
+                  >
+                    {formatNumber(cartCount, locale)}
+                  </span>
+                  <span className="sr-only">
+                    {t("cartCount", { count: formatNumber(cartCount, locale) })}
+                  </span>
+                </>
               ) : null}
             </span>
             <span className="truncate">{t(item.key)}</span>

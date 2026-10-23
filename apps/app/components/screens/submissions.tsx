@@ -6,7 +6,6 @@ import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@repo/design-system/components/ui/card";
@@ -26,7 +25,7 @@ import {
 import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { formatDate } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
-import { type FormEvent, useId, useRef, useState } from "react";
+import { type FormEvent, useId, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -66,7 +65,7 @@ const SubmitForm = () => {
   const t = useTranslations("app.submissions");
   const tType = useTranslations("store.submissionType");
   const id = useId();
-  const fileInput = useRef<HTMLInputElement>(null);
+  const [fileKey, setFileKey] = useState(0);
   const submit = useSubmitWork();
   const [draft, setDraft] = useState<SubmissionDraft>(emptyDraft);
   const [problem, setProblem] = useState<SubmissionProblem | null>(null);
@@ -90,9 +89,8 @@ const SubmitForm = () => {
       onSuccess: () => {
         setDraft(emptyDraft());
         setSubmitted(true);
-        if (fileInput.current) {
-          fileInput.current.value = "";
-        }
+        // A new file input: browsers don't let scripts clear the old one.
+        setFileKey((current) => current + 1);
       },
     });
   };
@@ -117,7 +115,9 @@ const SubmitForm = () => {
             <div className="grid gap-2">
               <Label htmlFor={`${id}-type`}>{t("form.type")}</Label>
               <Select
-                onValueChange={(value) => update({ type: value as SubmissionType })}
+                onValueChange={(value) =>
+                  update({ type: value as SubmissionType })
+                }
                 value={draft.type}
               >
                 <SelectTrigger className="w-full" id={`${id}-type`}>
@@ -161,10 +161,10 @@ const SubmitForm = () => {
                 <Input
                   accept={(visualArt ? IMAGE_TYPES : FILE_TYPES).join(",")}
                   id={`${id}-upload`}
+                  key={fileKey}
                   onChange={(event) =>
                     update({ file: event.target.files?.[0] ?? null })
                   }
-                  ref={fileInput}
                   type="file"
                 />
                 <p className="text-muted-foreground text-xs">
@@ -198,7 +198,10 @@ const SubmitForm = () => {
             </p>
           ) : null}
           {submitted ? (
-            <p className="text-emerald-700 text-sm dark:text-emerald-300" role="status">
+            <p
+              className="text-emerald-700 text-sm dark:text-emerald-300"
+              role="status"
+            >
               {t("form.submitted")}
             </p>
           ) : null}
@@ -253,7 +256,9 @@ const MySubmissions = () => {
               {submission.decision_note ? (
                 <div className="rounded-md bg-muted p-3 text-sm">
                   <p className="mb-1 font-medium text-xs">{t("note")}</p>
-                  <p className="whitespace-pre-line">{submission.decision_note}</p>
+                  <p className="whitespace-pre-line">
+                    {submission.decision_note}
+                  </p>
                 </div>
               ) : null}
               {canWithdraw(submission.status) ? (

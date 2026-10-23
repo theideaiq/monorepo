@@ -45,7 +45,10 @@ export const QuantityStepper = ({
       >
         <MinusIcon />
       </Button>
-      <output aria-live="polite" className="w-8 text-center text-sm tabular-nums">
+      <output
+        aria-live="polite"
+        className="w-8 text-center text-sm tabular-nums"
+      >
         {formatNumber(value, locale)}
       </output>
       <Button

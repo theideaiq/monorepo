@@ -50,13 +50,7 @@ export const requireUserId = (userId: string | undefined) => {
 };
 
 /** Throws the Supabase error, else returns the data. */
-export const unwrap = <T>({
-  data,
-  error,
-}: {
-  data: T;
-  error: unknown;
-}): T => {
+export const unwrap = <T>({ data, error }: { data: T; error: unknown }): T => {
   if (error) {
     throw error;
   }

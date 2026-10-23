@@ -46,7 +46,10 @@ import { useProducts } from "@/lib/store-queries";
 
 const POLL_MS = 3000;
 
-const RENTAL_BADGE: Record<RentalStatus, "default" | "destructive" | "outline" | "secondary"> = {
+const RENTAL_BADGE: Record<
+  RentalStatus,
+  "default" | "destructive" | "outline" | "secondary"
+> = {
   active: "default",
   cancelled: "outline",
   overdue: "destructive",
@@ -66,7 +69,9 @@ const Membership = ({
   const locale = useLocale();
   const plans = usePlans("plus");
   const subscription = usePlusSubscription(confirming ? POLL_MS : false);
-  const plan = plans.data?.find((item) => item.id === subscription.data?.plan_id);
+  const plan = plans.data?.find(
+    (item) => item.id === subscription.data?.plan_id
+  );
   const live = subscription.data;
 
   return (
@@ -86,7 +91,9 @@ const Membership = ({
               {live.current_period_end ? (
                 <span>
                   {live.cancel_at_period_end
-                    ? t("ends", { date: formatDate(live.current_period_end, locale) })
+                    ? t("ends", {
+                        date: formatDate(live.current_period_end, locale),
+                      })
                     : t("renews", {
                         date: formatDate(live.current_period_end, locale),
                       })}
@@ -107,12 +114,11 @@ const Membership = ({
       ) : null}
       {allowance && allowance.slots > 0 ? (
         <CardContent className="grid gap-2">
-          <span className="text-muted-foreground text-sm">{t("allowance")}</span>
+          <span className="text-muted-foreground text-sm">
+            {t("allowance")}
+          </span>
           <div className="flex items-center gap-3">
-            <div
-              aria-hidden="true"
-              className="flex flex-1 gap-1"
-            >
+            <div aria-hidden="true" className="flex flex-1 gap-1">
               {Array.from({ length: allowance.slots }, (_, index) => (
                 <span
                   className={
@@ -163,9 +169,13 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
         {plans.data?.map((plan) => {
           const current = plan.id === subscription.data?.plan_id && member;
           const price = formatCurrency(plan.amount, locale, plan.currency);
-          const features = locale === "en" ? plan.features_en : plan.features_ar;
+          const features =
+            locale === "en" ? plan.features_en : plan.features_ar;
           return (
-            <Card className={current ? "border-primary" : undefined} key={plan.id}>
+            <Card
+              className={current ? "border-primary" : undefined}
+              key={plan.id}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2">
                   {plan.name}
@@ -183,7 +193,9 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
               <CardContent className="grid flex-1 content-start gap-2 text-sm">
                 {plan.rental_slots ? (
                   <p className="font-medium">
-                    {t("slots", { count: formatNumber(plan.rental_slots, locale) })}
+                    {t("slots", {
+                      count: formatNumber(plan.rental_slots, locale),
+                    })}
                   </p>
                 ) : null}
                 {features.length ? (
@@ -260,7 +272,10 @@ const RentalItem = ({
           : t("catalog.unavailable")}
       </span>
       {request.isSuccess ? (
-        <p className="text-emerald-700 text-xs dark:text-emerald-300" role="status">
+        <p
+          className="text-emerald-700 text-xs dark:text-emerald-300"
+          role="status"
+        >
           {t("catalog.requested")}
         </p>
       ) : (
@@ -318,7 +333,9 @@ const RentalCatalog = ({
         />
       </search>
       {products.isPending ? <SectionSpinner /> : null}
-      {products.isError ? <ErrorState onRetry={() => products.refetch()} /> : null}
+      {products.isError ? (
+        <ErrorState onRetry={() => products.refetch()} />
+      ) : null}
       {products.data?.length === 0 ? (
         <p className="text-muted-foreground text-sm">{t("empty")}</p>
       ) : null}
@@ -349,7 +366,9 @@ const MyRentals = () => {
     <section className="grid gap-4">
       <h2 className="font-semibold text-lg">{t("rentals.title")}</h2>
       {rentals.isPending ? <SectionSpinner /> : null}
-      {rentals.isError ? <ErrorState onRetry={() => rentals.refetch()} /> : null}
+      {rentals.isError ? (
+        <ErrorState onRetry={() => rentals.refetch()} />
+      ) : null}
       {rentals.data?.length === 0 ? (
         <p className="text-muted-foreground text-sm">{t("rentals.empty")}</p>
       ) : null}
@@ -376,7 +395,9 @@ const MyRentals = () => {
                       })
                     : null}
                   {!rental.returned_at && rental.due_at
-                    ? t("rentals.due", { date: formatDate(rental.due_at, locale) })
+                    ? t("rentals.due", {
+                        date: formatDate(rental.due_at, locale),
+                      })
                     : null}
                   {rental.returned_at || rental.due_at
                     ? null
