@@ -1,9 +1,13 @@
+import { createAdminClient } from "@repo/database/admin";
+import { sendEmail } from "@repo/email";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { WebhookVerificationError } from "@repo/payments";
 import { getBilling } from "@repo/payments/server";
 import { after, NextResponse } from "next/server";
+import { env } from "@/env";
 import { reportPayment } from "@/lib/conversions";
+import { sendOrderEmails } from "@/lib/order-emails";
 
 /**
  * Payment provider webhooks. The billing service verifies the signature over
@@ -27,6 +31,20 @@ export const POST = async (request: Request): Promise<Response> => {
           log.error(`Payment reporting failed: ${parseError(error)}`)
         )
       );
+
+      const { orderId } = payment;
+      if (orderId) {
+        after(() =>
+          sendOrderEmails(orderId, {
+            admin: createAdminClient(),
+            logger: log,
+            notifyTo: env.STORE_NOTIFICATIONS_EMAIL,
+            send: sendEmail,
+          }).catch((error: unknown) =>
+            log.error(`Order confirmation email failed: ${parseError(error)}`)
+          )
+        );
+      }
     }
 
     return NextResponse.json({ ok: true, status: outcome.status });
