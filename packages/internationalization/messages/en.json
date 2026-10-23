@@ -126,245 +126,626 @@
     }
   },
   "web": {
-    "global": {
-      "primaryCta": "Book a call",
-      "secondaryCta": "Sign up"
-    },
-    "header": {
+    "nav": {
       "home": "Home",
-      "product": {
-        "title": "Product",
-        "description": "Managing a small business today is already tough.",
-        "pricing": "Pricing"
-      },
-      "blog": "Blog",
-      "docs": "Docs",
+      "store": "Megastore",
+      "plus": "IDEA Plus",
+      "academy": "Academy",
+      "suite": "IDEA Suite",
+      "club": "The Club",
+      "news": "News",
+      "events": "Events",
+      "journal": "Journal",
+      "droid": "Droid bot",
+      "about": "Our story",
+      "careers": "Careers",
+      "faq": "FAQ",
       "contact": "Contact",
       "signIn": "Sign in",
-      "signUp": "Get started"
+      "openApp": "Open the app",
+      "groups": {
+        "ecosystem": "Ecosystem",
+        "community": "Community",
+        "company": "Company"
+      },
+      "descriptions": {
+        "store": "Gaming, tech, books and lifestyle, delivered across Iraq.",
+        "plus": "A monthly membership to rent games, books and movies.",
+        "academy": "Courses and cultural-exchange programs.",
+        "suite": "Procurement and recruitment for companies.",
+        "club": "Our community rooms on Telegram.",
+        "news": "Announcements and stories from The IDEA.",
+        "events": "Meetups, launches and community nights.",
+        "journal": "Our journal of members' writing and art.",
+        "droid": "Our Telegram bot and the Spark Catcher game."
+      }
+    },
+    "footer": {
+      "tagline": "Baghdad's digital ecosystem: shopping, rentals, learning, community and services for companies, in one account.",
+      "legal": "Legal",
+      "email": "Email",
+      "telegram": "Telegram",
+      "copyright": "© {year} The IDEA IQ Inc. All rights reserved.",
+      "trademarks": "Game titles, trade names, trademarks and artwork shown on this site belong to their respective owners."
+    },
+    "ui": {
+      "viewAll": "View all",
+      "readMore": "Read more",
+      "learnMore": "Learn more",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page}",
+      "pagination": "Pagination",
+      "comingSoon": "In preparation"
+    },
+    "appCta": {
+      "title": "One account for the whole ecosystem",
+      "description": "Shop the Megastore, manage your IDEA Plus rentals, RSVP to events and submit your work, all from The IDEA app.",
+      "button": "Open the app",
+      "signIn": "Sign in"
     },
     "home": {
       "meta": {
-        "title": "A better way to run your business",
-        "description": "Replace this description with a short summary of what your product does and who it is for."
+        "title": "The IDEA — Iraq's digital ecosystem",
+        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, IDEA Plus rentals, the Academy, IDEA Suite for companies and The Club. Based in Baghdad, serving all of Iraq."
       },
       "hero": {
-        "announcement": "Read our latest article",
-        "contact": "Get in touch",
-        "signUp": "Sign up"
+        "badge": "The digital ecosystem for Iraq",
+        "title": "Innovation for",
+        "highlight": "every aspect of life.",
+        "subtitle": "Shop, learn, play and grow with The IDEA. One account, endless possibilities. Based in Baghdad and serving all of Iraq.",
+        "primary": "Get started",
+        "secondary": "Our story"
       },
-      "cases": {
-        "title": "Empowering Success Stories Across the Globe",
-        "logo": "Logo {number}"
+      "lines": {
+        "title": "Explore our universe",
+        "description": "Five product lines, one account.",
+        "megastore": "Iraq's destination for gaming, tech, books and lifestyle, delivered to all 19 governorates.",
+        "plus": "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done.",
+        "academy": "Courses and cultural-exchange programs that connect Iraq with the world.",
+        "suite": "Procurement and recruitment for companies, with a business plan and monthly invoicing.",
+        "club": "Community rooms on Telegram for gamers, readers, artists and thinkers."
       },
-      "features": {
-        "title": "Powerful Tools for Modern Business",
-        "description": "Discover how our cutting-edge features can revolutionize your daily operations.",
+      "featured": {
+        "title": "Featured in the Megastore",
+        "description": "A few picks from the catalog.",
+        "empty": "New products are on their way. Check back soon."
+      },
+      "news": {
+        "title": "Latest news",
+        "empty": "No news yet."
+      },
+      "events": {
+        "title": "Next events",
+        "empty": "No upcoming events right now. Follow The Club on Telegram to hear about the next one."
+      },
+      "values": {
+        "title": "Built for the",
+        "highlight": "modern Iraqi.",
+        "description": "We know the local challenges, so we built a platform around trust, clear prices and quality.",
         "items": [
           {
-            "title": "Streamlined Operations",
-            "description": "Our platform streamlines operations, reduces complexity, and helps small businesses thrive in the modern economy."
+            "title": "Delivery across Iraq",
+            "description": "Orders and rentals are delivered to all 19 governorates."
           },
           {
-            "title": "Real-Time Analytics",
-            "description": "Get instant insights into your business performance with comprehensive analytics and reporting tools."
+            "title": "Local payments",
+            "description": "Pay securely through Wayl with the methods you already use."
           },
           {
-            "title": "Automated Workflows",
-            "description": "Save time and reduce errors with intelligent automation that handles repetitive tasks for you."
+            "title": "Genuine products",
+            "description": "Every item is listed with its condition: new, open box, refurbished or used."
           },
           {
-            "title": "Secure Transactions",
-            "description": "Rest easy knowing your business operations are protected by enterprise-grade security and encryption."
+            "title": "Support in Arabic and English",
+            "description": "Reach us by email or on Telegram."
+          }
+        ]
+      }
+    },
+    "store": {
+      "meta": {
+        "title": "Megastore",
+        "description": "Gaming, tech, books and lifestyle products with delivery across Iraq. Browse the catalog of The IDEA Megastore."
+      },
+      "title": "The Megastore",
+      "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order in The IDEA app and pay through Wayl.",
+      "searchLabel": "Search the store",
+      "searchPlaceholder": "Search products…",
+      "search": "Search",
+      "categories": "Categories",
+      "allCategories": "All",
+      "sortLabel": "Sort by",
+      "sort": {
+        "newest": "Newest",
+        "price-asc": "Price: low to high",
+        "price-desc": "Price: high to low"
+      },
+      "apply": "Apply",
+      "results": "Results for “{query}”",
+      "empty": "No products match your search.",
+      "clear": "Clear filters",
+      "product": {
+        "buy": "Buy in the app",
+        "rent": "Rent with IDEA Plus",
+        "buyNote": "Orders are placed and paid in The IDEA app.",
+        "rentNote": "Rentals are included in IDEA Plus memberships. Request this item in the app.",
+        "specs": "Specifications",
+        "variants": "Options",
+        "description": "Description",
+        "category": "Category",
+        "condition": "Condition",
+        "sku": "SKU",
+        "back": "Back to the store",
+        "plusBack": "Back to IDEA Plus",
+        "image": "{name}, image {number}",
+        "delivery": "Delivery to all 19 governorates of Iraq."
+      }
+    },
+    "plus": {
+      "meta": {
+        "title": "IDEA Plus — rent games, books and movies",
+        "description": "IDEA Plus is a monthly membership to rent PS5 games, books and movies in Iraq. Choose a plan, request items in the app, and return them when you're done."
+      },
+      "badge": "The ultimate membership",
+      "title": "One membership.",
+      "highlight": "Endless entertainment.",
+      "subtitle": "Books, games and movies, delivered to your door. Keep them as long as you like, then swap them for something new.",
+      "cta": "Join in the app",
+      "seePlans": "See the plans",
+      "how": {
+        "title": "How it works",
+        "steps": [
+          {
+            "title": "Choose a plan",
+            "description": "Each plan lets you keep a set number of items at a time."
+          },
+          {
+            "title": "Request what you want",
+            "description": "Browse the rental catalog in the app and request a game, book or movie."
+          },
+          {
+            "title": "We deliver it",
+            "description": "Your item is delivered to your address in Iraq."
+          },
+          {
+            "title": "Return and swap",
+            "description": "Done with it? Return it and request the next one."
           }
         ]
       },
-      "stats": {
-        "title": "Real Results, Real Impact",
-        "description": "Replace these numbers with your own metrics.",
-        "items": [
-          {
-            "title": "Monthly active users",
-            "metric": "100000",
-            "delta": "10",
-            "type": "unit"
-          },
-          {
-            "title": "Daily active users",
-            "metric": "10000",
-            "delta": "-5",
-            "type": "unit"
-          },
-          {
-            "title": "Monthly recurring revenue",
-            "metric": "100000",
-            "delta": "20",
-            "type": "currency"
-          },
-          {
-            "title": "Cost per acquisition",
-            "metric": "100",
-            "delta": "-10",
-            "type": "currency"
-          }
-        ]
+      "plans": {
+        "title": "Plans",
+        "description": "Billed monthly through Wayl. Cancel any time from your account.",
+        "perMonth": "per month",
+        "perYear": "per year",
+        "slots": "{count, plural, one {{slots} item at a time} other {{slots} items at a time}}",
+        "choose": "Choose {plan}",
+        "empty": "Plans will be announced soon."
       },
-      "testimonials": {
-        "title": "Hear from Our Thriving Community",
-        "items": [
-          {
-            "title": "Placeholder testimonial 1",
-            "description": "Replace this quote with real feedback from a customer, with their permission.",
-            "author": {
-              "name": "Customer name",
-              "image": ""
-            }
-          },
-          {
-            "title": "Placeholder testimonial 2",
-            "description": "Replace this quote with real feedback from a customer, with their permission.",
-            "author": {
-              "name": "Customer name",
-              "image": ""
-            }
-          },
-          {
-            "title": "Placeholder testimonial 3",
-            "description": "Replace this quote with real feedback from a customer, with their permission.",
-            "author": {
-              "name": "Customer name",
-              "image": ""
-            }
-          }
-        ],
-        "by": "By"
+      "catalog": {
+        "title": "From the rental catalog",
+        "description": "A preview of what you can rent. The full catalog is in the app.",
+        "browse": "Browse the full catalog",
+        "empty": "The rental catalog is being stocked."
+      }
+    },
+    "academy": {
+      "meta": {
+        "title": "The Academy",
+        "description": "The IDEA Academy: courses and cultural-exchange programs that connect Iraq with the world. Register your interest."
       },
-      "faq": {
-        "title": "Common Questions, Expert Answers",
-        "description": "Answers to the questions customers ask most often. Replace these with your own.",
-        "cta": "Any questions? Reach out",
+      "badge": "The Academy",
+      "title": "Expand your",
+      "highlight": "horizon.",
+      "subtitle": "Whether you want to master a new skill or take part in a cultural exchange, your journey starts here.",
+      "status": "The Academy is preparing its first programs. Tell us what you'd like to learn and we'll let you know when enrolment opens.",
+      "tracks": {
+        "title": "Two tracks",
+        "learn": {
+          "title": "Learning",
+          "description": "Practical courses in technology, business, languages and the arts, taught in Arabic and English."
+        },
+        "exchange": {
+          "title": "Cultural exchange",
+          "description": "Programs that build understanding and lasting connections between Iraq and the global community."
+        }
+      },
+      "programs": {
+        "title": "Programs we're building",
         "items": [
           {
-            "question": "What does the product do?",
-            "answer": "Replace this answer with a one-paragraph description of your product."
+            "title": "Student exchange",
+            "description": "Study periods abroad with partner universities and institutions."
           },
           {
-            "question": "How do I pay?",
-            "answer": "We accept ZainCash, FIB, Qi Card and other local payment methods through our secure checkout."
+            "title": "Heritage Reborn",
+            "description": "A collaborative residency for artists, historians and developers to bring Iraq's ancient history to life with digital tools."
           },
           {
-            "question": "Is my data secure?",
-            "answer": "Data is encrypted in transit and at rest, and every account can only access its own organization's data."
-          },
-          {
-            "question": "How do I get support?",
-            "answer": "Contact our support team and we will get back to you as soon as possible."
+            "title": "The Majlis Dialogue",
+            "description": "Open conversations that connect Iraqi entrepreneurs and students with mentors and thinkers from around the world."
           }
         ]
       },
       "cta": {
-        "title": "Start Your Business Transformation",
-        "description": "Join thousands of forward-thinking businesses who have already modernized their operations. Our platform offers the tools, support, and efficiency you need to succeed in today's competitive market. Get started in minutes."
-      },
-      "beta": "Beta feature now available"
+        "title": "Interested?",
+        "description": "Send us a message with the program or subject you're interested in.",
+        "button": "Register your interest"
+      }
     },
-    "blog": {
+    "suite": {
       "meta": {
-        "title": "Blog",
-        "description": "Thoughts, ideas, and opinions."
+        "title": "IDEA Suite — procurement and recruitment for companies",
+        "description": "IDEA Suite gives companies in Iraq one place for procurement and recruitment, with a business plan, purchase orders and monthly invoicing."
       },
-      "back": "Back to blog",
-      "published": "Published",
-      "readingTime": "{count, plural, one {{minutes} min read} other {{minutes} min read}}",
-      "sections": "Sections",
-      "tags": "Tags"
+      "badge": "For companies",
+      "title": "The IDEA Suite",
+      "subtitle": "Corporate solutions for procurement and recruitment. Equip your team and find talent, with one business account.",
+      "services": {
+        "title": "What we do for companies",
+        "items": [
+          {
+            "title": "Procurement",
+            "description": "Source tech, equipment and supplies for your company from the Megastore and our partners, with purchase orders."
+          },
+          {
+            "title": "Recruitment",
+            "description": "Tell us who you're looking for and we help you find and screen candidates."
+          },
+          {
+            "title": "Team accounts",
+            "description": "Your company is an organization in The IDEA app: invite colleagues and give each one the right role."
+          },
+          {
+            "title": "Monthly invoicing",
+            "description": "Business plans are billed monthly through Wayl, with invoices for your records."
+          }
+        ]
+      },
+      "how": {
+        "title": "Getting started",
+        "steps": [
+          "Create your company's organization in The IDEA app.",
+          "Choose a business plan and invite your team.",
+          "Contact us with your first procurement or hiring request."
+        ]
+      },
+      "plans": {
+        "title": "Business plans",
+        "empty": "Contact us for a business plan tailored to your company."
+      },
+      "cta": {
+        "title": "Talk to our team",
+        "description": "Tell us about your company and what you need.",
+        "contact": "Contact sales",
+        "app": "Set up your organization"
+      }
+    },
+    "club": {
+      "meta": {
+        "title": "The Club — The IDEA's community on Telegram",
+        "description": "The IDEA Club is a digital clubhouse on Telegram for innovators, artists, gamers and thinkers. Pick your rooms and join the conversation."
+      },
+      "title": "Welcome to",
+      "highlight": "The IDEA Club.",
+      "subtitle": "More than a group chat: a digital clubhouse for innovators, artists, gamers and thinkers. Pick your rooms and join the conversation.",
+      "join": "Join on Telegram",
+      "roomsTitle": "The rooms",
+      "rooms": [
+        {
+          "title": "The Stage",
+          "description": "Announcements and big news"
+        },
+        {
+          "title": "Vibe Check",
+          "description": "Music sharing and playlists"
+        },
+        {
+          "title": "The Library",
+          "description": "What are you reading?"
+        },
+        {
+          "title": "Screening Room",
+          "description": "Cinema and TV discussions"
+        },
+        {
+          "title": "The Arcade",
+          "description": "Gaming and esports"
+        },
+        {
+          "title": "The Arena",
+          "description": "Sports talk and debates"
+        },
+        {
+          "title": "Creative Studio",
+          "description": "Arts and design showcase"
+        },
+        {
+          "title": "The Office",
+          "description": "Work and networking"
+        }
+      ],
+      "guidelines": "Before you join, read our community guidelines.",
+      "guidelinesLink": "Community guidelines",
+      "cta": {
+        "title": "Ready to jump in?",
+        "description": "Don't miss the next big idea or late-night gaming session.",
+        "button": "Open Telegram"
+      }
+    },
+    "droid": {
+      "meta": {
+        "title": "Droid — The IDEA's Telegram bot",
+        "description": "Droid (@TheIdeaDroidBot) is The IDEA's Telegram bot: it keeps our community rooms safe, answers common questions, finds products and helps as an AI assistant."
+      },
+      "badge": "@TheIdeaDroidBot",
+      "title": "Meet Droid",
+      "subtitle": "Our Telegram bot keeps The Club's rooms friendly, answers your questions and helps you find what you're looking for.",
+      "open": "Open in Telegram",
+      "features": {
+        "title": "What Droid does",
+        "items": [
+          {
+            "title": "Community moderation",
+            "description": "Helps keep The Club's rooms safe and on topic, following our community guidelines."
+          },
+          {
+            "title": "Answers to common questions",
+            "description": "Ask about the store, IDEA Plus, the Academy or IDEA Suite in a private chat."
+          },
+          {
+            "title": "Product search",
+            "description": "Search the Megastore from Telegram and open products in the app."
+          },
+          {
+            "title": "AI assistant",
+            "description": "Ask in Arabic or English. Answers are generated automatically, so double-check anything important with our team."
+          },
+          {
+            "title": "Talk to the team",
+            "description": "Send a support message or an unban request, and our staff will review it."
+          }
+        ]
+      },
+      "game": {
+        "title": "Spark Catcher",
+        "description": "Our mini-game: catch the falling light bulbs, dodge the bugs and keep your energy up. Best played inside Telegram, but it works in your browser too.",
+        "play": "Play Spark Catcher"
+      },
+      "privacy": "Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
+      "privacyLink": "Privacy policy"
+    },
+    "about": {
+      "meta": {
+        "title": "Our story",
+        "description": "The IDEA IQ is an ecosystem built in Baghdad to bridge commerce, education and entertainment for the modern Iraqi."
+      },
+      "badge": "Our story",
+      "title": "Building the digital future of",
+      "highlight": "Baghdad.",
+      "subtitle": "The IDEA is not just a company. It is an ecosystem designed to bridge the gap between commerce, education and entertainment for the modern Iraqi.",
+      "mission": {
+        "title": "Our mission",
+        "description": "To give every Iraqi one digital account with seamless access to quality products, learning and entertainment."
+      },
+      "vision": {
+        "title": "Our vision",
+        "description": "A future where The IDEA is the standard for trust, quality and innovation in the region."
+      },
+      "linesTitle": "What we're building",
+      "company": {
+        "title": "The company",
+        "description": "The IDEA is operated by The IDEA IQ Inc., based in Baghdad, Iraq."
+      }
+    },
+    "careers": {
+      "meta": {
+        "title": "Careers",
+        "description": "Want to help build Iraq's digital ecosystem? Here's how to apply to work at The IDEA."
+      },
+      "title": "Join the team",
+      "subtitle": "We're building the future of Iraq's digital economy, and we're always glad to meet dreamers, doers and creators.",
+      "openings": {
+        "title": "Open positions",
+        "description": "We don't have advertised openings right now. We still read every application and keep promising profiles on file for future roles."
+      },
+      "apply": {
+        "title": "How to apply",
+        "steps": [
+          "Write to us at {email} with the subject “Application: your field”.",
+          "Attach your CV (PDF) and links to your work: a portfolio, GitHub, writing or anything you're proud of.",
+          "Tell us in a few lines which part of The IDEA you'd like to work on and why.",
+          "We'll get back to you if there's a fit."
+        ],
+        "button": "Email your application"
+      },
+      "areas": {
+        "title": "Areas we work in",
+        "items": [
+          "Engineering and product",
+          "Content and editorial (Arabic and English)",
+          "Operations, delivery and customer support",
+          "Marketing and community"
+        ]
+      }
+    },
+    "faq": {
+      "meta": {
+        "title": "Frequently asked questions",
+        "description": "Answers about ordering from the Megastore, IDEA Plus rentals, payments, delivery and your IDEA account."
+      },
+      "title": "Frequently asked questions",
+      "description": "Can't find your answer? Contact us or ask Droid on Telegram.",
+      "contact": "Contact us",
+      "groups": [
+        {
+          "title": "Megastore",
+          "items": [
+            {
+              "question": "How do I place an order?",
+              "answer": "Browse the store here or in The IDEA app, then add items to your cart and check out in the app. You need an IDEA account to order."
+            },
+            {
+              "question": "How do I pay?",
+              "answer": "Payments are processed securely by Wayl, which supports local payment methods. Your order is confirmed once the payment succeeds."
+            },
+            {
+              "question": "Where do you deliver?",
+              "answer": "We deliver to all 19 governorates of Iraq. The delivery fee, if any, is shown at checkout before you pay."
+            },
+            {
+              "question": "Can I return an item?",
+              "answer": "Yes, under the conditions in our refund and returns policy. Contact us from your order in the app or by email."
+            }
+          ]
+        },
+        {
+          "title": "IDEA Plus",
+          "items": [
+            {
+              "question": "How does IDEA Plus work?",
+              "answer": "You subscribe to a monthly plan. Each plan lets you keep a number of items at a time. Request a game, book or movie in the app, we deliver it, and when you're done you return it and request the next one."
+            },
+            {
+              "question": "Can I buy from the Megastore without a membership?",
+              "answer": "Absolutely. The Megastore is open to everyone; IDEA Plus is only needed for rentals."
+            },
+            {
+              "question": "How do I cancel?",
+              "answer": "You can cancel your membership from your account in the app. It stays active until the end of the period you paid for. Please return any rented items."
+            }
+          ]
+        },
+        {
+          "title": "Your account",
+          "items": [
+            {
+              "question": "Do I need a separate account for each service?",
+              "answer": "No. One IDEA account works across the store, IDEA Plus, events, the journal and IDEA Suite."
+            },
+            {
+              "question": "How do I delete my account?",
+              "answer": "You can delete your account from the app's settings. Some records, such as invoices, are kept as the law requires."
+            }
+          ]
+        }
+      ]
     },
     "contact": {
       "meta": {
-        "title": "Let's Talk About Your Business",
-        "description": "Schedule a consultation with our team to discuss how we can help streamline your operations and drive growth for your business."
+        "title": "Contact us",
+        "description": "Questions about an order, IDEA Plus, the Academy or IDEA Suite? Write to The IDEA team."
       },
-      "hero": {
-        "benefits": [
-          {
-            "title": "Personalized Consultation",
-            "description": "Get tailored solutions and expert advice specific to your business needs."
-          },
-          {
-            "title": "Seamless Integration",
-            "description": "We seamlessly integrate with your existing systems to ensure a smooth transition and minimal disruption."
-          },
-          {
-            "title": "Expert Guidance",
-            "description": "Our team of experts will guide you through the process, ensuring you get the most out of our platform."
-          }
-        ],
-        "form": {
-          "title": "Book a meeting",
-          "date": "Preferred date",
-          "pickDate": "Pick a date",
-          "name": "Full name",
-          "email": "Email",
-          "message": "How can we help?",
-          "cta": "Book the meeting",
-          "sending": "Sending…",
-          "success": "Thanks! We'll be in touch shortly.",
-          "errors": {
-            "invalid": "Please enter your name, a valid email and a message.",
-            "rate_limited": "You've already sent a message today. Please try again tomorrow.",
-            "unavailable": "The contact form isn't available right now. Please email us instead.",
-            "unknown": "Something went wrong. Please try again."
-          }
+      "title": "Get in touch",
+      "description": "We're here to help. Send us a message, email us or reach us on Telegram.",
+      "details": {
+        "email": "Email",
+        "emailNote": "For any question; we reply in Arabic or English.",
+        "telegram": "Telegram",
+        "telegramNote": "Chat with Droid, our bot, or join The Club.",
+        "location": "Location",
+        "address": "Baghdad, Iraq"
+      },
+      "form": {
+        "title": "Send us a message",
+        "topic": "Topic",
+        "topics": {
+          "general": "General question",
+          "store": "Megastore order",
+          "plus": "IDEA Plus",
+          "academy": "Academy",
+          "suite": "IDEA Suite (companies)",
+          "careers": "Careers",
+          "press": "Press and partnerships"
+        },
+        "name": "Full name",
+        "email": "Email",
+        "message": "How can we help?",
+        "cta": "Send the message",
+        "sending": "Sending…",
+        "success": "Thanks! We'll be in touch shortly.",
+        "errors": {
+          "invalid": "Please enter your name, a valid email and a message.",
+          "rate_limited": "You've already sent a message today. Please try again tomorrow.",
+          "unavailable": "The contact form isn't available right now. Please email us instead.",
+          "unknown": "Something went wrong. Please try again."
         }
       }
-    },
-    "pricing": {
-      "meta": {
-        "title": "Pricing",
-        "description": "Simple plans that grow with your business."
-      },
-      "title": "Prices that make sense",
-      "description": "Pay monthly in Iraqi dinars with ZainCash, FIB, Qi Card or other local payment methods.",
-      "perMonth": "/ month",
-      "custom": "Custom",
-      "tryIt": "Try it",
-      "contactUs": "Contact us",
-      "featuresTitle": "Features",
-      "included": "Included",
-      "notIncluded": "Not included",
-      "members": "{count, plural, one {{members} member} other {{members} members}}",
-      "plans": {
-        "starter": {
-          "name": "Starter",
-          "description": "Everything a small team needs to get going."
-        },
-        "growth": {
-          "name": "Growth",
-          "description": "For growing businesses with more people and more work."
-        },
-        "enterprise": {
-          "name": "Enterprise",
-          "description": "Custom terms, onboarding and support for larger organizations."
-        }
-      },
-      "features": {
-        "sso": "Single sign-on",
-        "ai": "AI assistant",
-        "history": "Version history",
-        "members": "Team members",
-        "collaboration": "Real-time collaboration",
-        "automation": "Workflow automation"
-      }
-    },
-    "footer": {
-      "home": "Home",
-      "pages": "Pages",
-      "blog": "Blog",
-      "docs": "Docs",
-      "legal": "Legal"
     },
     "legal": {
-      "back": "Back to home"
+      "label": "Legal",
+      "lastUpdated": "Last updated: {date}",
+      "documents": {
+        "terms": {
+          "title": "Terms of service",
+          "description": "The terms that apply when you use The IDEA's websites, apps and services."
+        },
+        "privacy": {
+          "title": "Privacy policy",
+          "description": "What personal data The IDEA collects, why, and the choices you have."
+        },
+        "refund": {
+          "title": "Refund and returns policy",
+          "description": "How returns, refunds, cancellations and IDEA Plus rental returns work."
+        },
+        "conduct": {
+          "title": "Code of conduct",
+          "description": "How we expect everyone to behave at The IDEA's events, programs and spaces."
+        },
+        "community": {
+          "title": "Community guidelines",
+          "description": "The rules for The Club's rooms on Telegram, comments and member submissions."
+        }
+      }
+    },
+    "news": {
+      "meta": {
+        "title": "News",
+        "description": "Announcements, launches and stories from The IDEA."
+      },
+      "title": "News",
+      "description": "Announcements, launches and stories from across The IDEA.",
+      "empty": "No news yet. Check back soon.",
+      "back": "All news"
+    },
+    "events": {
+      "meta": {
+        "title": "Events",
+        "description": "Launches, meetups and community nights from The IDEA. RSVP in the app."
+      },
+      "title": "Events",
+      "description": "Launches, meetups and community nights. RSVP in The IDEA app.",
+      "upcoming": "Upcoming",
+      "past": "Past events",
+      "empty": "No upcoming events right now.",
+      "back": "All events",
+      "when": "When",
+      "where": "Where",
+      "capacity": "Places",
+      "rsvps": "{count, plural, one {{number} person is going} other {{number} people are going}}",
+      "noRsvps": "Be the first to RSVP.",
+      "rsvp": "RSVP in the app",
+      "ended": "This event has ended."
+    },
+    "journal": {
+      "meta": {
+        "title": "The Journal",
+        "description": "The IDEA's journal: writing and visual art by our members, published in issues you can read as PDF."
+      },
+      "title": "The Journal",
+      "description": "Writing and visual art by our members, chosen through blind review and published in issues.",
+      "issue": "Volume {volume} · Issue {issue}",
+      "empty": "The first issue is in the works.",
+      "read": "Read the PDF",
+      "noPdf": "The PDF of this issue isn't available yet.",
+      "back": "All issues",
+      "published": "Published {date}",
+      "submit": {
+        "title": "Submit your work",
+        "description": "Members can submit essays, poetry, fiction, theatre or visual art in The IDEA app. Editors review every submission without seeing the author's name.",
+        "button": "Submit in the app"
+      }
     }
   },
   "app": {

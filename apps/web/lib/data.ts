@@ -32,14 +32,20 @@ const check = <T>({
   data,
   error,
 }: {
-  data: T;
+  data: T | null;
   error: { message: string } | null;
-}) => {
+}): T | null => {
   if (error) {
     throw new Error(error.message);
   }
   return data;
 };
+
+/** Rows of a list query (never null). */
+const rows = <T>(result: {
+  data: T[] | null;
+  error: { message: string } | null;
+}): T[] => check(result) ?? [];
 
 // ── Catalog ─────────────────────────────────────────────────────────────────
 
@@ -51,15 +57,15 @@ export const getProducts = (filters: ProductFilters) =>
     return supabase ? await listProducts(supabase, filters) : [];
   });
 
+export type Category = NonNullable<
+  Awaited<ReturnType<typeof listCategories>>
+>[number];
+
 export const getCategories = (kind: "sale" | "rental" = "sale") =>
-  fallback(
-    "listCategories",
-    [] as Awaited<ReturnType<typeof listCategories>>,
-    async () => {
-      const supabase = createPublicClient();
-      return supabase ? await listCategories(supabase, kind) : [];
-    }
-  );
+  fallback("listCategories", [] as Category[], async () => {
+    const supabase = createPublicClient();
+    return supabase ? ((await listCategories(supabase, kind)) ?? []) : [];
+  });
 
 export const getProduct = async (slug: string) => {
   const supabase = createPublicClient();
@@ -76,7 +82,7 @@ export const getProductSlugs = () =>
       if (!supabase) {
         return [];
       }
-      return check(
+      return rows(
         await supabase
           .from("products")
           .select("slug, updated_at")
@@ -112,7 +118,7 @@ export const getPlans = (audience: "business" | "plus") =>
     if (!supabase) {
       return [];
     }
-    return check(
+    return rows(
       await supabase
         .from("plans")
         .select(
@@ -159,7 +165,7 @@ export const getPosts = (limit = 24) =>
     if (!supabase) {
       return [];
     }
-    return check(
+    return rows(
       await supabase
         .from("posts")
         .select(POST_SUMMARY)
@@ -224,7 +230,7 @@ export const getEvents = ({
       .from("events")
       .select(EVENT_COLUMNS)
       .eq("published", true);
-    return check(
+    return rows(
       await (past
         ? query.lt("starts_at", now).order("starts_at", { ascending: false })
         : query.gte("starts_at", now).order("starts_at", { ascending: true })
@@ -283,7 +289,7 @@ export const getIssues = () =>
     if (!supabase) {
       return [];
     }
-    return check(
+    return rows(
       await supabase
         .from("journal_issues")
         .select(ISSUE_COLUMNS)

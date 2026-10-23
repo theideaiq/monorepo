@@ -1,5 +1,6 @@
 "use server";
 
+import { project } from "@repo/config";
 import { resend } from "@repo/email";
 import { ContactTemplate } from "@repo/email/templates/contact";
 import { parseError } from "@repo/observability/error";
@@ -8,14 +9,13 @@ import { createRateLimiter, slidingWindow } from "@repo/rate-limit";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { env } from "@/env";
+import { contactTopics } from "../topics";
 
 const contactSchema = z.object({
-  /** Preferred day as yyyy-MM-dd, already formatted for display in `dateLabel`. */
-  date: z.iso.date().optional(),
-  dateLabel: z.string().max(100).optional(),
   email: z.email().max(254),
   message: z.string().trim().min(1).max(5000),
   name: z.string().trim().min(1).max(120),
+  topic: z.enum(contactTopics).default("general"),
 });
 
 export type ContactInput = z.input<typeof contactSchema>;
@@ -53,20 +53,14 @@ export const contact = async (input: ContactInput): Promise<ContactResult> => {
       }
     }
 
-    const { dateLabel, email, message, name } = parsed.data;
+    const { email, message, name, topic } = parsed.data;
     await resend.emails.send({
       from: env.RESEND_FROM,
-      react: (
-        <ContactTemplate
-          date={dateLabel}
-          email={email}
-          message={message}
-          name={name}
-        />
-      ),
+      react: <ContactTemplate email={email} message={message} name={name} />,
       replyTo: email,
-      subject: "Contact form submission",
-      to: env.RESEND_FROM,
+      subject: `Contact form (${topic}): ${name}`,
+      // The team's shared inbox (packages/config/project.json).
+      to: project.supportEmail ?? env.RESEND_FROM,
     });
 
     return { ok: true };
