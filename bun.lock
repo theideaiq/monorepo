@@ -201,7 +201,7 @@
       "name": "@repo/ai",
       "version": "0.0.0",
       "dependencies": {
-        "@ai-sdk/google": "4.0.87",
+        "@ai-sdk/google": "^4.0.87",
         "@ai-sdk/openai": "^4.0.52",
         "@ai-sdk/react": "^4.0.130",
         "@t3-oss/env-nextjs": "^0.13.10",
@@ -357,12 +357,12 @@
       "name": "@repo/droid",
       "version": "0.0.0",
       "dependencies": {
-        "@repo/ai": "workspace:*",
         "@repo/commerce": "workspace:*",
-        "@repo/config": "workspace:*",
         "@repo/database": "workspace:*",
         "@supabase/supabase-js": "^2.115.0",
+        "@t3-oss/env-nextjs": "^0.13.10",
         "@upstash/redis": "^1.36.3",
+        "ai": "^7.0.91",
         "grammy": "^1.46.0",
         "zod": "^4.3.6",
       },

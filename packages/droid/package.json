@@ -4,8 +4,8 @@
   "private": true,
   "exports": {
     ".": "./index.ts",
-    "./moderation": "./moderation/index.ts",
-    "./store": "./store.ts"
+    "./keys": "./keys.ts",
+    "./moderation": "./moderation/index.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
@@ -13,12 +13,12 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@repo/ai": "workspace:*",
     "@repo/commerce": "workspace:*",
-    "@repo/config": "workspace:*",
     "@repo/database": "workspace:*",
     "@supabase/supabase-js": "^2.115.0",
+    "@t3-oss/env-nextjs": "^0.13.10",
     "@upstash/redis": "^1.36.3",
+    "ai": "^7.0.91",
     "grammy": "^1.46.0",
     "zod": "^4.3.6"
   },
