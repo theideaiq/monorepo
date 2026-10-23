@@ -10,6 +10,10 @@
     {
       "path": "/cron/subscriptions",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/cron/rentals",
+      "schedule": "0 5 * * *"
     }
   ]
 }
