@@ -1,7 +1,12 @@
 "use client";
 
+import { getAttribution, track } from "@repo/analytics/client";
 import { useAuth } from "@repo/auth/provider";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useLocale } from "next-intl";
+import { callApi } from "./api";
+import { rememberCheckout } from "./checkout-tracking";
+import { checkoutReturnUrl, openCheckout } from "./hosted-checkout";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /** IDEA Plus: rental allowance, rentals and requests. */
@@ -88,3 +93,56 @@ export const useCancelRental = () => {
     onSettled: refresh,
   });
 };
+
+export interface CheckoutPlan {
+  amount: number;
+  currency: string;
+  id: string;
+  name: string;
+}
+
+/**
+ * Starts a hosted checkout for a plan: IDEA Plus (owned by the user) without
+ * `organizationId`, an IDEA Suite plan with it. Remembers the checkout so
+ * the purchase is reported once paid, then opens the payment page.
+ */
+export const usePlanCheckout = (returnPath: string, organizationId?: string) => {
+  const { supabase } = useAuth();
+  const locale = useLocale();
+
+  return useMutation({
+    mutationFn: async (plan: CheckoutPlan) => {
+      const items = [
+        { id: plan.id, name: plan.name, price: plan.amount, quantity: 1 },
+      ];
+      track("begin_checkout", {
+        currency: plan.currency,
+        items,
+        value: plan.amount,
+      });
+      const { referenceId, url } = await callApi<{
+        referenceId: string;
+        url: string | null;
+      }>(supabase, "/checkout", {
+        attribution: getAttribution(),
+        ...(organizationId ? { organizationId } : {}),
+        planId: plan.id,
+        redirectUrl: checkoutReturnUrl(locale, returnPath),
+      });
+      if (url) {
+        rememberCheckout({
+          currency: plan.currency,
+          items,
+          referenceId,
+          value: plan.amount,
+        });
+        await openCheckout(url);
+      }
+      return { referenceId, url };
+    },
+  });
+};
+
+/** A membership the member can use now (not merely awaiting payment). */
+export const isLiveMembership = (status: string | null | undefined) =>
+  status === "active" || status === "past_due";

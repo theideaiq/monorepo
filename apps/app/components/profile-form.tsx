@@ -27,6 +27,8 @@ interface ProfileFormProps {
   readonly initialMarketingOptIn?: boolean;
   /** Called after saving with the chosen language. */
   readonly onSaved: (locale: Locale) => void;
+  /** Confirms the save in place (settings), instead of moving on. */
+  readonly showSaved?: boolean;
   readonly submitLabel: string;
 }
 
@@ -38,6 +40,7 @@ export const ProfileForm = ({
   initialMarketingOptIn,
   initialName,
   onSaved,
+  showSaved = false,
   submitLabel,
 }: ProfileFormProps) => {
   const t = useTranslations();
@@ -49,6 +52,7 @@ export const ProfileForm = ({
   const [locale, setLocale] = useState<Locale>(current);
   const [marketing, setMarketing] = useState(initialMarketingOptIn ?? false);
   const [error, setError] = useState(false);
+  const [saved, setSaved] = useState(false);
   const askMarketing = initialMarketingOptIn !== undefined;
 
   const save = useMutation({
@@ -67,6 +71,7 @@ export const ProfileForm = ({
     },
     onError: () => setError(true),
     onSuccess: async () => {
+      setSaved(true);
       rememberLocale(locale);
       await queryClient.invalidateQueries({
         queryKey: queryKeys.profile(user?.id ?? ""),
@@ -78,6 +83,7 @@ export const ProfileForm = ({
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(false);
+    setSaved(false);
     save.mutate();
   };
 
@@ -148,6 +154,11 @@ export const ProfileForm = ({
       {error ? (
         <p className="text-destructive text-sm" role="alert">
           {t("app.errors.unknown")}
+        </p>
+      ) : null}
+      {showSaved && saved ? (
+        <p className="text-muted-foreground text-sm" role="status">
+          {t("common.saved")}
         </p>
       ) : null}
       <Button disabled={save.isPending || !name.trim()} type="submit">

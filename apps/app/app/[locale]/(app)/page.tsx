@@ -1,8 +1,8 @@
-import { Dashboard } from "@/components/screens/dashboard";
+import { Home } from "@/components/screens/home";
 import { titleFrom } from "@/lib/metadata";
 
-export const generateMetadata = titleFrom((t) => t("app.dashboard.title"));
+export const generateMetadata = titleFrom((t) => t("app.home.title"));
 
-const DashboardPage = () => <Dashboard />;
+const HomePage = () => <Home />;
 
-export default DashboardPage;
+export default HomePage;

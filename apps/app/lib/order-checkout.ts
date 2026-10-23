@@ -86,6 +86,9 @@ export const usePlaceOrder = () => {
       const created = unwrap(
         await supabase.rpc("create_order", { shipping: { ...shipping } })
       );
+      if (!created) {
+        throw new Error("create_order returned no order");
+      }
       const order = unwrap(
         await supabase
           .from("orders")
@@ -103,10 +106,10 @@ export const usePlaceOrder = () => {
       });
 
       try {
-        await pay.mutateAsync(order);
-        return { order, paymentError: null };
+        const { url } = await pay.mutateAsync(order);
+        return { order, paymentError: null, url };
       } catch (paymentError) {
-        return { order, paymentError };
+        return { order, paymentError, url: null };
       }
     },
     onSettled: () =>

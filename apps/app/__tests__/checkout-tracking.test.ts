@@ -9,8 +9,7 @@ const { rememberCheckout, reportCompletedCheckout } = await import(
 
 const checkout = {
   currency: "IQD",
-  planId: "pro-monthly",
-  planName: "Pro",
+  items: [{ id: "pro-monthly", name: "Pro", price: 75_000, quantity: 1 }],
   referenceId: "pay_1",
   value: 75_000,
 };

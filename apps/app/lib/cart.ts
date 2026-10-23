@@ -90,3 +90,28 @@ export const cartCount = (items: readonly Pick<CartItem, "quantity">[]) =>
 /** Clamps a requested quantity to what the line allows. */
 export const clampQuantity = (quantity: number, available: number) =>
   Math.max(1, Math.min(quantity, MAX_QUANTITY, Math.max(available, 1)));
+
+export type CartLineProblem = "notEnoughStock" | "outOfStock" | "unavailable";
+
+/** Why a line can't be ordered as it is, if it can't. */
+export const lineProblem = (line: CartLineView): CartLineProblem | null => {
+  if (!line.buyable) {
+    return "unavailable";
+  }
+  if (line.available <= 0) {
+    return "outOfStock";
+  }
+  if (line.quantity > line.available) {
+    return "notEnoughStock";
+  }
+  return null;
+};
+
+/** How much more to spend for free delivery (0 when free or not offered). */
+export const freeShippingRemaining = (
+  subtotal: number,
+  settings: StoreSettings
+) =>
+  settings.freeShippingThreshold === null || subtotal === 0
+    ? 0
+    : Math.max(settings.freeShippingThreshold - subtotal, 0);

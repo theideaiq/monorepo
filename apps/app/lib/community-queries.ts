@@ -288,7 +288,7 @@ export const useWithdrawSubmission = () => {
           .eq("id", submissionId)
           .select("id")
       );
-      if (rows.length === 0) {
+      if (!rows?.length) {
         throw new Error("Submission can no longer be withdrawn");
       }
     },

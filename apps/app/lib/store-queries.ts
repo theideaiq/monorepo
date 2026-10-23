@@ -9,7 +9,12 @@ import {
   listProducts,
   type ProductFilters,
 } from "@repo/commerce/catalog";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { type CartItem, cartCount, MAX_QUANTITY } from "./cart";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
@@ -27,6 +32,8 @@ export const useCategories = (kind: "rental" | "sale" = "sale") => {
 export const useProducts = (filters: ProductFilters) => {
   const { supabase } = useAuth();
   return useQuery({
+    // Keeps the grid on screen while the next page or filter loads.
+    placeholderData: keepPreviousData,
     queryFn: () => listProducts(supabase, filters),
     queryKey: queryKeys.products(filters),
   });
@@ -218,5 +225,17 @@ export const useOrderPayments = (
       ),
     queryKey: queryKeys.orderPayments(orderId),
     refetchInterval,
+  });
+};
+
+/** cancel_order(): customers cancel their own orders before paying. */
+export const useCancelOrder = () => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderId: string) => {
+      unwrap(await supabase.rpc("cancel_order", { order_id: orderId }));
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["orders"] }),
   });
 };

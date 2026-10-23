@@ -9,7 +9,7 @@ interface ProjectListProps {
 }
 
 export const ProjectList = ({ projects }: ProjectListProps) => {
-  const t = useTranslations("app.dashboard");
+  const t = useTranslations("app.business.projects");
   const locale = useLocale();
 
   return (

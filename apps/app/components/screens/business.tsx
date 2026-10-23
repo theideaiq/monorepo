@@ -1,0 +1,103 @@
+"use client";
+
+import { useAuth } from "@repo/auth/provider";
+import { Button } from "@repo/design-system/components/ui/button";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@repo/design-system/components/ui/empty";
+import { Input } from "@repo/design-system/components/ui/input";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { FolderIcon, PlusIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { type FormEvent, useState } from "react";
+import { BusinessShell } from "@/components/business/business-shell";
+import { ProjectList } from "@/components/business/project-list";
+import { useActiveOrganization } from "@/components/organization-provider";
+import { ErrorState, SectionSpinner } from "@/components/states";
+import { queryKeys, useProjects } from "@/lib/queries";
+
+const Projects = () => {
+  const t = useTranslations("app.business.projects");
+  const { supabase, user } = useAuth();
+  const { active } = useActiveOrganization();
+  const queryClient = useQueryClient();
+  const projects = useProjects(active.id);
+  const [name, setName] = useState("");
+
+  const create = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("projects").insert({
+        created_by: user?.id ?? "",
+        name: name.trim(),
+        organization_id: active.id,
+      });
+      if (error) {
+        throw error;
+      }
+    },
+    onSuccess: async () => {
+      setName("");
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.projects(active.id),
+      });
+    },
+  });
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (name.trim()) {
+      create.mutate();
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="grid gap-1">
+          <h2 className="font-semibold text-xl tracking-tight">{active.name}</h2>
+          <p className="text-muted-foreground text-sm">{t("description")}</p>
+        </div>
+        <form className="flex w-full gap-2 sm:w-auto" onSubmit={submit}>
+          <Input
+            aria-label={t("projectName")}
+            className="flex-1 sm:w-48"
+            maxLength={120}
+            onChange={(event) => setName(event.target.value)}
+            placeholder={t("projectName")}
+            value={name}
+          />
+          <Button disabled={create.isPending || !name.trim()} type="submit">
+            <PlusIcon />
+            {create.isPending ? t("creating") : t("newProject")}
+          </Button>
+        </form>
+      </div>
+
+      {projects.isPending ? <SectionSpinner /> : null}
+      {projects.isError ? <ErrorState onRetry={() => projects.refetch()} /> : null}
+      {projects.data?.length === 0 ? (
+        <Empty className="border border-dashed">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FolderIcon />
+            </EmptyMedia>
+            <EmptyTitle>{t("empty.title")}</EmptyTitle>
+            <EmptyDescription>{t("empty.description")}</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      ) : null}
+      {projects.data?.length ? <ProjectList projects={projects.data} /> : null}
+    </div>
+  );
+};
+
+/** /business: the active organization's projects, or the introduction. */
+export const Business = () => (
+  <BusinessShell>
+    <Projects />
+  </BusinessShell>
+);
