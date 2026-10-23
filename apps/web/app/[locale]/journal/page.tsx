@@ -34,7 +34,10 @@ const Journal = async ({ params }: JournalProps) => {
               const title = localized(issue, "title", locale);
               return (
                 <li key={issue.id}>
-                  <Link className="group flex flex-col gap-3" href={`/journal/${issue.id}`}>
+                  <Link
+                    className="group flex flex-col gap-3"
+                    href={`/journal/${issue.id}`}
+                  >
                     <CoverImage
                       alt={title}
                       className="aspect-[3/4]"
@@ -46,7 +49,9 @@ const Journal = async ({ params }: JournalProps) => {
                         volume: formatNumber(issue.volume, locale),
                       })}
                     </p>
-                    <h2 className="font-semibold group-hover:text-primary">{title}</h2>
+                    <h2 className="font-semibold group-hover:text-primary">
+                      {title}
+                    </h2>
                   </Link>
                 </li>
               );

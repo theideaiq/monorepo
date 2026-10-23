@@ -1,7 +1,7 @@
+import { cn } from "@repo/design-system/lib/utils";
 import type { Locale } from "@repo/internationalization";
 import { formatDate } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { cn } from "@repo/design-system/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -45,7 +45,10 @@ const Legal = async ({ params }: LegalProps) => {
 
   return (
     <div className="container mx-auto grid gap-10 px-4 py-12 lg:grid-cols-[14rem_1fr]">
-      <nav aria-label={t("label")} className="flex flex-col gap-1 lg:sticky lg:top-24 lg:h-fit">
+      <nav
+        aria-label={t("label")}
+        className="flex flex-col gap-1 lg:sticky lg:top-24 lg:h-fit"
+      >
         <p className="mb-2 font-medium text-muted-foreground text-xs uppercase tracking-wide">
           {t("label")}
         </p>
@@ -78,6 +81,7 @@ const Legal = async ({ params }: LegalProps) => {
         </header>
         <Markdown
           className="prose prose-neutral dark:prose-invert max-w-none"
+          locale={locale}
           source={source}
         />
       </article>

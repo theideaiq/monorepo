@@ -88,7 +88,9 @@ const Suite = async ({ params }: SuiteProps) => {
       <Section>
         <div className="flex flex-col items-center gap-4 rounded-2xl border bg-muted/40 p-10 text-center">
           <h2 className="font-bold text-2xl">{t("cta.title")}</h2>
-          <p className="max-w-xl text-muted-foreground">{t("cta.description")}</p>
+          <p className="max-w-xl text-muted-foreground">
+            {t("cta.description")}
+          </p>
           <Button asChild>
             <Link href="/contact?topic=suite">{t("cta.contact")}</Link>
           </Button>

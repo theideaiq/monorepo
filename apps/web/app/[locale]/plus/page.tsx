@@ -64,12 +64,17 @@ const Plus = async ({ params }: PlusProps) => {
       <Section title={t("how.title")}>
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, index) => (
-            <li className="flex flex-col gap-2 rounded-xl border p-5" key={step.title}>
+            <li
+              className="flex flex-col gap-2 rounded-xl border p-5"
+              key={step.title}
+            >
               <span className="flex size-9 items-center justify-center rounded-full bg-brand font-bold text-brand-foreground">
                 {formatNumber(index + 1, locale)}
               </span>
               <h3 className="font-semibold">{step.title}</h3>
-              <p className="text-muted-foreground text-sm">{step.description}</p>
+              <p className="text-muted-foreground text-sm">
+                {step.description}
+              </p>
             </li>
           ))}
         </ol>
@@ -106,7 +111,11 @@ const Plus = async ({ params }: PlusProps) => {
           <>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {rentals.map((product) => (
-                <ProductCard key={product.id} locale={locale} product={product} />
+                <ProductCard
+                  key={product.id}
+                  locale={locale}
+                  product={product}
+                />
               ))}
             </div>
             <div className="mt-8 flex justify-center">

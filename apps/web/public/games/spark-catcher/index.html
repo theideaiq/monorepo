@@ -1,27 +1,33 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <meta
-      name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-    />
-    <meta name="robots" content="noindex" />
-    <meta name="theme-color" content="#0f1014" />
+      name="viewport"
+    >
+    <meta content="noindex" name="robots">
+    <meta content="#0f1014" name="theme-color">
     <title>Spark Catcher · The IDEA</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="./style.css" />
+    <script defer src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="./style.css" rel="stylesheet">
   </head>
   <body>
-    <div id="ui" aria-live="polite">
+    <div aria-live="polite" id="ui">
       <div id="score">0</div>
-      <div id="energy-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+      <div
+        aria-valuemax="100"
+        aria-valuemin="0"
+        aria-valuenow="100"
+        id="energy-bar"
+        role="progressbar"
+      >
         <div id="energy-fill"></div>
       </div>
       <div id="best"></div>
     </div>
 
-    <div id="overlay" class="visible">
+    <div class="visible" id="overlay">
       <h1 id="title">Spark Catcher</h1>
       <p id="message"></p>
       <p id="final"></p>
@@ -30,6 +36,6 @@
 
     <canvas id="game"></canvas>
 
-    <script src="./game.js"></script>
+    <script defer src="./game.js"></script>
   </body>
 </html>

@@ -21,7 +21,9 @@ export const siteUrl = () => {
   if (env.VERCEL_PROJECT_PRODUCTION_URL) {
     return new URL(`https://${env.VERCEL_PROJECT_PRODUCTION_URL}`);
   }
-  return new URL(env.NEXT_PUBLIC_WEB_URL || project.url || "https://theideaiq.com");
+  return new URL(
+    env.NEXT_PUBLIC_WEB_URL || project.url || "https://theideaiq.com"
+  );
 };
 
 /**

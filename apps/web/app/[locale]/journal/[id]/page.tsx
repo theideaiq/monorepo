@@ -73,12 +73,17 @@ const Issue = async ({ params }: IssueProps) => {
               volume: formatNumber(issue.volume, locale),
             })}
             {" · "}
-            {t("published", { date: formatDate(issue.published_at, locale, "long") })}
+            {t("published", {
+              date: formatDate(issue.published_at, locale, "long"),
+            })}
           </p>
-          <h1 className="text-balance font-bold text-4xl tracking-tight">{title}</h1>
+          <h1 className="text-balance font-bold text-4xl tracking-tight">
+            {title}
+          </h1>
           {description ? (
             <Markdown
               className="prose prose-neutral dark:prose-invert max-w-none"
+              locale={locale}
               source={description}
             />
           ) : null}

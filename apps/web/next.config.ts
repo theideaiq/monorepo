@@ -35,7 +35,6 @@ nextConfig.images = {
   ],
 };
 
-// biome-ignore lint/suspicious/useAwait: redirects is async
 nextConfig.redirects = async () => [
   {
     destination: "/:locale/legal/terms",
@@ -65,7 +64,6 @@ nextConfig.redirects = async () => [
  * outside the proxy (which skips .html files). It loads Telegram's Web App
  * script and is shown inside Telegram's clients, so it gets its own policy.
  */
-// biome-ignore lint/suspicious/useAwait: headers is async
 nextConfig.headers = async () => [
   {
     headers: [

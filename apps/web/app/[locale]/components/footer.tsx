@@ -73,7 +73,9 @@ export const Footer = async () => {
       <div className="border-t">
         <div className="container mx-auto flex flex-col gap-2 px-4 py-6 text-muted-foreground text-xs">
           <p>
-            {t("web.footer.copyright", { year: String(new Date().getFullYear()) })}
+            {t("web.footer.copyright", {
+              year: String(new Date().getFullYear()),
+            })}
           </p>
           <p>{t("web.footer.trademarks")}</p>
         </div>

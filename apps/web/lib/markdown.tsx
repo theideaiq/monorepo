@@ -31,7 +31,10 @@ const SAFE_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"]);
 // anything with a scheme.
 const RELATIVE = /^(?:[/#?](?!\/)|[\w.-]+(?:[/?#]|$))/;
 // Control characters and whitespace browsers ignore inside a scheme.
+// biome-ignore lint/suspicious/noControlCharactersInRegex: that's what it matches
 const IGNORED_IN_SCHEME = /[\u0000- \u007f]/g;
+const SCHEME = /^([a-z][a-z\d+.-]*):/i;
+const EXTERNAL = /^https?:\/\//i;
 
 /** The URL if it is safe to link to, otherwise null. */
 export const safeUrl = (url: string | null | undefined): string | null => {
@@ -40,7 +43,7 @@ export const safeUrl = (url: string | null | undefined): string | null => {
   }
   const trimmed = url.trim();
   const compact = trimmed.replace(IGNORED_IN_SCHEME, "");
-  const scheme = /^([a-z][a-z\d+.-]*):/i.exec(compact);
+  const scheme = SCHEME.exec(compact);
   if (scheme) {
     return SAFE_PROTOCOLS.has(`${scheme[1]?.toLowerCase()}:`) ? trimmed : null;
   }
@@ -53,7 +56,7 @@ export const safeImageUrl = (url: string | null | undefined) => {
   return safe?.toLowerCase().startsWith("https://") ? safe : null;
 };
 
-const isExternal = (url: string) => /^https?:\/\//i.test(url);
+const isExternal = (url: string) => EXTERNAL.test(url);
 
 /** Plain text of a Markdown document, e.g. for meta descriptions. */
 export const markdownToText = (source: string, maxLength = 200) => {
@@ -85,6 +88,12 @@ const renderChildren = (parent: Parent, depth: number): ReactNode[] =>
     renderNode(child, keyOf(child, index), depth)
   );
 
+const ALIGNMENT: Record<string, string> = {
+  center: "text-center",
+  left: "text-start",
+  right: "text-end",
+};
+
 const headingTags = ["h2", "h3", "h4", "h5", "h6", "h6"] as const;
 
 const renderRow = (
@@ -100,13 +109,7 @@ const renderRow = (
       const alignment = align[index];
       return (
         <Cell
-          className={
-            alignment === "center"
-              ? "text-center"
-              : alignment === "right"
-                ? "text-end"
-                : "text-start"
-          }
+          className={ALIGNMENT[alignment ?? "left"] ?? "text-start"}
           key={keyOf(cell, index)}
         >
           {renderChildren(cell, depth)}
@@ -146,9 +149,7 @@ const renderNode = (
         </pre>
       );
     case "blockquote":
-      return (
-        <blockquote key={key}>{renderChildren(node, depth)}</blockquote>
-      );
+      return <blockquote key={key}>{renderChildren(node, depth)}</blockquote>;
     case "list": {
       const Tag = node.ordered ? "ol" : "ul";
       return (
@@ -231,12 +232,43 @@ const renderNode = (
   }
 };
 
+const LOCALE_PREFIX = /^\/[a-z]{2,3}(?:\/|$)/;
+
+/**
+ * Site-relative links ("/legal/terms") get the reader's language prefix
+ * ("/ar/legal/terms"), so they don't bounce through a locale redirect.
+ */
+export const localizeHref = (href: string, locale?: string) =>
+  locale &&
+  href.startsWith("/") &&
+  !href.startsWith("//") &&
+  !LOCALE_PREFIX.test(href)
+    ? `/${locale}${href}`
+    : href;
+
+const localizeLinks = (node: Nodes, locale: string) => {
+  if (node.type === "link") {
+    node.url = localizeHref(node.url, locale);
+  }
+  if ("children" in node) {
+    for (const child of node.children) {
+      localizeLinks(child, locale);
+    }
+  }
+};
+
 interface MarkdownProps {
   readonly className?: string;
+  /** Prefixes site-relative links with this language. */
+  readonly locale?: string;
   readonly source: string;
 }
 
 /** Renders Markdown as React elements; raw HTML is never rendered. */
-export const Markdown = ({ className, source }: MarkdownProps) => (
-  <div className={className}>{renderChildren(parseMarkdown(source), 0)}</div>
-);
+export const Markdown = ({ className, locale, source }: MarkdownProps) => {
+  const tree = parseMarkdown(source);
+  if (locale) {
+    localizeLinks(tree, locale);
+  }
+  return <div className={className}>{renderChildren(tree, 0)}</div>;
+};

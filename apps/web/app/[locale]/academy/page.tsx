@@ -65,7 +65,9 @@ const Academy = async ({ params }: AcademyProps) => {
             icon: programIcons[index],
           }))}
         />
-        <p className="mt-4 text-muted-foreground text-sm">{t("ui.comingSoon")}</p>
+        <p className="mt-4 text-muted-foreground text-sm">
+          {t("ui.comingSoon")}
+        </p>
       </Section>
 
       <Section>

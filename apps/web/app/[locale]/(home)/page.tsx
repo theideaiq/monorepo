@@ -1,7 +1,6 @@
 import { Button } from "@repo/design-system/components/ui/button";
-import type { Locale } from "@repo/internationalization";
+import type { Locale, Messages } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
-import type { Messages } from "@repo/internationalization";
 import {
   Headphones,
   MoveRight,

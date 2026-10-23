@@ -43,7 +43,10 @@ export const PlanCard = async ({ href, locale, plan }: PlanCardProps) => {
       <ul className="flex flex-1 flex-col gap-2 text-sm">
         {list.map((feature) => (
           <li className="flex gap-2" key={feature}>
-            <Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-primary" />
+            <Check
+              aria-hidden="true"
+              className="mt-0.5 size-4 shrink-0 text-primary"
+            />
             {feature}
           </li>
         ))}

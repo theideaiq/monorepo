@@ -3,7 +3,7 @@ import type { Locale } from "@repo/internationalization";
 import { formatDate, formatDateTime } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { CalendarDays, MapPin } from "lucide-react";
-import { editorialUrl, type EventRow, type PostSummary } from "@/lib/data";
+import { type EventRow, editorialUrl, type PostSummary } from "@/lib/data";
 import { CoverImage } from "./cover-image";
 
 const cardClass =
@@ -35,7 +35,9 @@ export const PostCard = ({
           {title}
         </h3>
         {excerpt ? (
-          <p className="line-clamp-3 text-muted-foreground text-sm">{excerpt}</p>
+          <p className="line-clamp-3 text-muted-foreground text-sm">
+            {excerpt}
+          </p>
         ) : null}
       </div>
     </Link>

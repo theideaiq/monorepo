@@ -71,10 +71,15 @@ const Post = async ({ params }: PostProps) => {
         {t("back")}
       </Link>
       <header className="mb-8 flex flex-col gap-3">
-        <time className="text-muted-foreground text-sm" dateTime={post.published_at}>
+        <time
+          className="text-muted-foreground text-sm"
+          dateTime={post.published_at}
+        >
           {formatDate(post.published_at, locale, "long")}
         </time>
-        <h1 className="text-balance font-bold text-4xl tracking-tight">{title}</h1>
+        <h1 className="text-balance font-bold text-4xl tracking-tight">
+          {title}
+        </h1>
         {localized(post, "excerpt", locale) ? (
           <p className="text-lg text-muted-foreground">
             {localized(post, "excerpt", locale)}
@@ -92,6 +97,7 @@ const Post = async ({ params }: PostProps) => {
       ) : null}
       <Markdown
         className="prose prose-neutral dark:prose-invert max-w-none"
+        locale={locale}
         source={localized(post, "body", locale)}
       />
     </article>

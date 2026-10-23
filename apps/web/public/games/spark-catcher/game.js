@@ -37,8 +37,8 @@ const telegram = window.Telegram?.WebApp;
 const languageCode =
   telegram?.initDataUnsafe?.user?.language_code ?? navigator.language ?? "ar";
 const language = languageCode.toLowerCase().startsWith("ar") ? "ar" : "en";
-const t = (key, score) =>
-  texts[language][key].replace("{score}", String(score ?? ""));
+const t = (key, value) =>
+  texts[language][key].replace("{score}", String(value ?? ""));
 
 document.documentElement.lang = language;
 document.documentElement.dir = language === "ar" ? "rtl" : "ltr";

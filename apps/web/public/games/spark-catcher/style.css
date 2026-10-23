@@ -1,14 +1,14 @@
 html,
 body {
-  margin: 0;
   height: 100%;
-  background: #0f1014;
+  margin: 0;
   overflow: hidden;
   font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
   color: #fff;
   touch-action: none;
-  user-select: none;
   -webkit-user-select: none;
+  user-select: none;
+  background: #0f1014;
 }
 
 canvas {
@@ -19,27 +19,27 @@ canvas {
 
 #ui {
   position: absolute;
-  top: max(16px, env(safe-area-inset-top));
   inset-inline: 0;
+  top: max(16px, env(safe-area-inset-top));
+  z-index: 10;
   text-align: center;
   pointer-events: none;
-  z-index: 10;
 }
 
 #score {
   font-size: 40px;
   font-weight: 700;
-  text-shadow: 0 0 10px #f4cf08;
   font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 10px #f4cf08;
 }
 
 #energy-bar {
   width: 200px;
   height: 10px;
-  background: #333;
   margin: 10px auto;
-  border-radius: 5px;
   overflow: hidden;
+  background: #333;
+  border-radius: 5px;
 }
 
 #energy-fill {
@@ -55,17 +55,17 @@ canvas {
 }
 
 #overlay {
-  display: none;
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.88);
+  z-index: 20;
+  display: none;
   flex-direction: column;
+  gap: 8px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   padding: 24px;
   text-align: center;
-  z-index: 20;
+  background: rgba(0, 0, 0, 0.88);
 }
 
 #overlay.visible {
@@ -78,21 +78,21 @@ canvas {
 }
 
 #overlay p {
-  margin: 0;
   max-width: 320px;
+  margin: 0;
   line-height: 1.6;
   opacity: 0.85;
 }
 
 button {
-  margin-top: 16px;
-  background: #f4cf08;
-  border: none;
   padding: 15px 30px;
+  margin-top: 16px;
+  font-family: inherit;
   font-size: 20px;
   font-weight: 700;
-  border-radius: 30px;
-  cursor: pointer;
   color: #0f1014;
-  font-family: inherit;
+  cursor: pointer;
+  background: #f4cf08;
+  border: none;
+  border-radius: 30px;
 }

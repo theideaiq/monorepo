@@ -64,7 +64,10 @@ const Careers = async ({ params }: CareersProps) => {
           <ul className="flex flex-col gap-2">
             {areas.map((area) => (
               <li className="flex gap-2" key={area}>
-                <Check aria-hidden="true" className="mt-1 size-4 shrink-0 text-primary" />
+                <Check
+                  aria-hidden="true"
+                  className="mt-1 size-4 shrink-0 text-primary"
+                />
                 {area}
               </li>
             ))}

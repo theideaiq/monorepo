@@ -17,12 +17,7 @@ type Described =
 export interface NavigationItem {
   described?: Described;
   href: string;
-  id:
-    | "about"
-    | "careers"
-    | "contact"
-    | "faq"
-    | Described;
+  id: "about" | "careers" | "contact" | "faq" | Described;
 }
 
 export interface NavigationGroup {

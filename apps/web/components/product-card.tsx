@@ -1,5 +1,5 @@
-import { Badge } from "@repo/design-system/components/ui/badge";
 import { discountPercent, formatPrice, localized } from "@repo/commerce";
+import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
@@ -35,7 +35,9 @@ export const ProductCard = async ({ locale, product }: ProductCardProps) => {
             </Badge>
           ) : null}
           {product.condition === "new" ? null : (
-            <Badge variant="secondary">{t(`condition.${product.condition}`)}</Badge>
+            <Badge variant="secondary">
+              {t(`condition.${product.condition}`)}
+            </Badge>
           )}
         </div>
       </div>

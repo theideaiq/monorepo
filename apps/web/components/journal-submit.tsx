@@ -6,7 +6,11 @@ import { env } from "@/env";
 import { appLink } from "@/lib/links";
 
 /** Invites members to submit their work in the app. */
-export const JournalSubmit = async ({ locale }: { readonly locale: Locale }) => {
+export const JournalSubmit = async ({
+  locale,
+}: {
+  readonly locale: Locale;
+}) => {
   const t = await getTranslations({ locale, namespace: "web.journal.submit" });
   return (
     <div className="flex flex-col items-start gap-3 rounded-2xl border bg-muted/40 p-8">

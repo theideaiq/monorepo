@@ -3,7 +3,6 @@ import {
   listCategories,
   listProducts,
   type ProductCard,
-  type ProductDetail,
   type ProductFilters,
   productImageUrl,
 } from "@repo/commerce/catalog";
@@ -49,7 +48,7 @@ const rows = <T>(result: {
 
 // ── Catalog ─────────────────────────────────────────────────────────────────
 
-export type { ProductCard, ProductDetail };
+export type { ProductCard, ProductDetail } from "@repo/commerce/catalog";
 
 export const getProducts = (filters: ProductFilters) =>
   fallback("listProducts", [] as ProductCard[], async () => {

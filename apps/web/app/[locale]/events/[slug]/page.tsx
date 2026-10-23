@@ -79,13 +79,23 @@ const EventPage = async ({ params }: EventProps) => {
         code={{
           "@context": "https://schema.org",
           "@type": "Event",
-          ...(description ? { description: markdownToText(description, 300) } : {}),
+          ...(description
+            ? { description: markdownToText(description, 300) }
+            : {}),
           ...(event.ends_at ? { endDate: event.ends_at } : {}),
           eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
           ...(cover ? { image: [cover] } : {}),
-          location: { "@type": "Place", address: event.location, name: event.location },
+          location: {
+            "@type": "Place",
+            address: event.location,
+            name: event.location,
+          },
           name: title,
-          organizer: { "@type": "Organization", name: project.name, url: siteUrl().href },
+          organizer: {
+            "@type": "Organization",
+            name: project.name,
+            url: siteUrl().href,
+          },
           startDate: event.starts_at,
           url: new URL(`/${locale}/events/${slug}`, siteUrl()).href,
         }}
@@ -114,13 +124,17 @@ const EventPage = async ({ params }: EventProps) => {
           {description ? (
             <Markdown
               className="prose prose-neutral dark:prose-invert max-w-none"
+              locale={locale}
               source={description}
             />
           ) : null}
         </div>
         <aside className="flex h-fit flex-col gap-4 rounded-xl border p-5">
           <div className="flex gap-3">
-            <CalendarDays aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary" />
+            <CalendarDays
+              aria-hidden="true"
+              className="mt-0.5 size-5 shrink-0 text-primary"
+            />
             <div>
               <p className="font-medium text-sm">{t("when")}</p>
               <p className="text-muted-foreground text-sm">
@@ -129,7 +143,10 @@ const EventPage = async ({ params }: EventProps) => {
             </div>
           </div>
           <div className="flex gap-3">
-            <MapPin aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary" />
+            <MapPin
+              aria-hidden="true"
+              className="mt-0.5 size-5 shrink-0 text-primary"
+            />
             <div>
               <p className="font-medium text-sm">{t("where")}</p>
               <p className="text-muted-foreground text-sm">{event.location}</p>
@@ -137,7 +154,10 @@ const EventPage = async ({ params }: EventProps) => {
           </div>
           {event.capacity ? (
             <div className="flex gap-3">
-              <Users aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary" />
+              <Users
+                aria-hidden="true"
+                className="mt-0.5 size-5 shrink-0 text-primary"
+              />
               <div>
                 <p className="font-medium text-sm">{t("capacity")}</p>
                 <p className="text-muted-foreground text-sm">
@@ -153,7 +173,10 @@ const EventPage = async ({ params }: EventProps) => {
               {rsvps === null ? null : (
                 <p className="text-sm">
                   {rsvps > 0
-                    ? t("rsvps", { count: rsvps, number: formatNumber(rsvps, locale) })
+                    ? t("rsvps", {
+                        count: rsvps,
+                        number: formatNumber(rsvps, locale),
+                      })
                     : t("noRsvps")}
                 </p>
               )}

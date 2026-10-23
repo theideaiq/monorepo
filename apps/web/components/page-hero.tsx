@@ -28,7 +28,7 @@ export const PageHero = ({
   >
     <div
       aria-hidden="true"
-      className="-top-24 pointer-events-none absolute inset-x-0 mx-auto size-[32rem] rounded-full bg-primary/10 blur-3xl"
+      className="pointer-events-none absolute inset-x-0 -top-24 mx-auto size-[32rem] rounded-full bg-primary/10 blur-3xl"
     />
     <div className="container relative mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 py-16 text-center md:py-24">
       {badge ? (

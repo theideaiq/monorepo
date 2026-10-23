@@ -22,7 +22,13 @@ interface DroidProps {
 }
 
 type Features = Messages["web"]["droid"]["features"]["items"];
-const featureIcons = [ShieldCheck, MessageCircleQuestion, Search, Bot, LifeBuoy];
+const featureIcons = [
+  ShieldCheck,
+  MessageCircleQuestion,
+  Search,
+  Bot,
+  LifeBuoy,
+];
 
 export const generateMetadata = staticPageMetadata("droid", "/droid");
 
@@ -61,7 +67,10 @@ const Droid = async ({ params }: DroidProps) => {
           <div className="flex flex-col items-start gap-3">
             <h2 className="font-bold text-3xl text-brand">{t("game.title")}</h2>
             <p className="max-w-2xl text-white/75">{t("game.description")}</p>
-            <Button asChild className="bg-brand text-brand-foreground hover:bg-brand/90">
+            <Button
+              asChild
+              className="bg-brand text-brand-foreground hover:bg-brand/90"
+            >
               <a href={SPARK_CATCHER_PATH}>{t("game.play")}</a>
             </Button>
           </div>
