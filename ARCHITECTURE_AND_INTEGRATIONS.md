@@ -57,6 +57,7 @@ flowchart LR
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, the Liveblocks and Svix token endpoints. Route handlers only. | Vercel |
 | `apps/email` | 3003 | React Email templates (`@repo/email`). | Not deployed (dev preview) |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
+| `apps/admin` | 3005 | The back office for staff (catalog, orders, rentals, CRM, marketing, finance, editorial, Telegram, staff, audit log). **Server-rendered** with the staff member's cookie session (`@repo/auth/server`), Server Actions, phone OTP plus an authenticator app (AAL2); every query runs as the staff member so RLS applies. Not indexed. | Vercel |
 | `apps/storybook` | 6006 | Design-system workbench. | Optional |
 
 ### Principles that shape the code

@@ -53,7 +53,7 @@ jobs:
           node-version-file: .nvmrc
       - run: bun install --frozen-lockfile
       # apps/web also needs BASEHUB_TOKEN while the CMS module is installed.
-      - run: bunx turbo build --filter=api --filter=app
+      - run: bunx turbo build --filter=api --filter=app --filter=admin
       # The static export bundled into the iOS/Android apps (Capacitor).
       - run: bunx turbo build:native --filter=app
 
