@@ -64,8 +64,8 @@ export const optionalDecimal = (min = 0) =>
     .string()
     .trim()
     .optional()
-    .transform((value) => (value ? value.replaceAll(",", "") : null))
-    .pipe(z.union([z.null(), z.coerce.number().min(min)]));
+    .transform((value) => (value ? Number(value.replaceAll(",", "")) : null))
+    .pipe(z.union([z.null(), z.number().min(min)]));
 
 /** A checkbox: present ("on") means true. */
 export const checkbox = z

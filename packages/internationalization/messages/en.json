@@ -561,5 +561,161 @@
       "suite": "IDEA Suite",
       "club": "The Club"
     }
+  },
+  "admin": {
+    "meta": {
+      "title": "The IDEA back office",
+      "description": "Staff console for The IDEA.",
+      "badge": "Staff"
+    },
+    "signIn": {
+      "title": "Back office sign-in",
+      "description": "Staff only. Sign in with your mobile number, then confirm with your authenticator app."
+    },
+    "mfa": {
+      "title": "Authenticator app",
+      "enrollTitle": "Set up your authenticator app",
+      "enrollDescription": "Staff accounts are protected with a second step. Link an authenticator app once; you'll enter its code each time you sign in.",
+      "challengeTitle": "Enter your authenticator code",
+      "challengeDescription": "Open your authenticator app and enter the 6-digit code for The IDEA.",
+      "stepInstall": "Install an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…).",
+      "stepScan": "Scan this QR code with it, or enter the setup key below.",
+      "stepCode": "Enter the 6-digit code the app shows.",
+      "qrAlt": "QR code for your authenticator app",
+      "secretLabel": "Setup key",
+      "codeLabel": "6-digit code",
+      "verify": "Confirm",
+      "verifying": "Checking…",
+      "errors": {
+        "invalidCode": "That code didn't work. Check the time on your phone and try the newest code.",
+        "unavailable": "Authenticator apps aren't enabled for this project yet. Ask an administrator to turn on TOTP multi-factor authentication in Supabase."
+      }
+    },
+    "noAccess": {
+      "title": "No access",
+      "description": "This account doesn't have a staff role. If you work at The IDEA, ask a superadmin to grant you access, then sign in again."
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "catalog": "Catalog",
+      "orders": "Orders",
+      "rentals": "Rentals",
+      "customers": "Customers",
+      "marketing": "Marketing",
+      "finance": "Finance",
+      "editorial": "Editorial",
+      "telegram": "Telegram",
+      "staff": "Staff",
+      "audit": "Audit log"
+    },
+    "roles": {
+      "superadmin": "Superadmin",
+      "admin": "Administrator",
+      "editor": "Editor",
+      "finance": "Finance",
+      "marketing": "Marketing",
+      "support": "Support"
+    },
+    "errors": {
+      "unauthorized": "Your session has ended. Sign in again.",
+      "forbidden": "Your role can't do this.",
+      "invalid": "Some fields are missing or invalid. Check the highlighted fields.",
+      "duplicate": "Something with the same name, slug or number already exists.",
+      "notFound": "It no longer exists.",
+      "unbalanced": "Debits and credits must be equal.",
+      "transition": "This status change isn't allowed.",
+      "inUse": "It's still in use, so it can't be deleted.",
+      "lastSuperadmin": "There must always be at least one superadmin.",
+      "apiUnavailable": "The server couldn't be reached. Try again shortly.",
+      "emailNotConfigured": "Email sending isn't configured on the server.",
+      "unknown": "Something went wrong. Try again."
+    },
+    "notices": {
+      "saved": "Saved",
+      "deleted": "Deleted",
+      "sent": "Sent",
+      "posted": "Posted"
+    },
+    "common": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "save": "Save",
+      "create": "Create",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "back": "Back",
+      "yes": "Yes",
+      "no": "No",
+      "any": "Any",
+      "none": "None",
+      "all": "All",
+      "arabic": "Arabic",
+      "english": "English",
+      "deleteConfirm": "Delete this permanently?",
+      "deleteDescription": "This can't be undone.",
+      "deletedAccount": "Deleted account",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "status": "Status",
+      "actions": "Actions",
+      "notes": "Notes",
+      "position": "Order",
+      "positionHint": "Lower numbers come first."
+    },
+    "list": {
+      "apply": "Filter",
+      "search": "Search",
+      "page": "Page {page} of {pages}",
+      "previous": "Previous",
+      "next": "Next",
+      "empty": "Nothing here yet.",
+      "noResults": "No results match these filters.",
+      "total": "{count} in total"
+    },
+    "markdown": {
+      "write": "Write",
+      "preview": "Preview",
+      "empty": "Nothing to preview yet.",
+      "hint": "Markdown: **bold**, *italic*, # headings, - lists, [links](https://…)."
+    },
+    "upload": {
+      "choose": "Upload",
+      "replace": "Replace",
+      "uploading": "Uploading…",
+      "remove": "Remove",
+      "makeCover": "Use as cover",
+      "cover": "Cover",
+      "imageHint": "PNG, JPEG or WebP, up to {size} MB.",
+      "pdfHint": "PDF, up to {size} MB.",
+      "problems": {
+        "empty": "{name} is empty.",
+        "too_large": "{name} is too large.",
+        "type_not_allowed": "{name} isn't an allowed file type.",
+        "failed": "The upload failed. Try again."
+      }
+    },
+    "keyValue": {
+      "key": "Name",
+      "value": "Value",
+      "add": "Add row",
+      "remove": "Remove row"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "greeting": "Welcome back, {name}.",
+      "fulfilment": "Orders to fulfil",
+      "fulfilmentHint": "Paid or being prepared",
+      "revenue": "Revenue this month",
+      "revenueHint": "Paid orders · {received} received in payments",
+      "members": "Active Plus members",
+      "rentals": "Open rentals",
+      "overdue": "{count} overdue",
+      "submissions": "Submissions to review",
+      "drafts": "Campaign drafts",
+      "optedIn": "Customers opted in to email",
+      "telegramRequests": "Open Telegram requests"
+    }
   }
 }

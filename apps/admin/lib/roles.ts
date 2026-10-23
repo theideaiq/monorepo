@@ -21,6 +21,21 @@ export const sections = [
 ] as const;
 
 export type Section = (typeof sections)[number];
+
+/** Where each section lives in the console (paths without the locale). */
+export const sectionHref: Record<Section, string> = {
+  audit: "/audit",
+  catalog: "/catalog",
+  customers: "/customers",
+  dashboard: "/",
+  editorial: "/editorial",
+  finance: "/finance",
+  marketing: "/marketing",
+  orders: "/orders",
+  rentals: "/rentals",
+  staff: "/staff",
+  telegram: "/telegram",
+};
 export type AccessLevel = "read" | "write";
 
 export const staffRoles = [
