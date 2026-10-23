@@ -1,9 +1,101 @@
 -- Local development seed (runs after migrations on `supabase db reset`).
--- Prices are in IQD (whole dinars). Adjust to the project's real plans.
+-- Prices are in IQD (whole dinars). Production plans and the catalog are
+-- managed in the back office (apps/admin).
 
-insert into public.plans (id, name, description, amount, currency, billing_interval)
+insert into public.plans
+  (id, name, description, amount, currency, billing_interval, audience, rental_slots, features_ar, features_en, position)
 values
-  ('starter-monthly', 'Starter', 'For individuals and small teams', 25000, 'IQD', 'month'),
-  ('pro-monthly', 'Pro', 'For growing businesses', 75000, 'IQD', 'month'),
-  ('pro-yearly', 'Pro (yearly)', 'Two months free', 750000, 'IQD', 'year')
+  ('plus-essential', 'Plus Essential', 'One item at a time', 15000, 'IQD', 'month', 'plus', 1,
+    '{"غرض واحد في كل مرة","توصيل داخل بغداد"}', '{"One item at a time","Delivery in Baghdad"}', 1),
+  ('plus-extra', 'Plus Extra', 'Two items at a time', 25000, 'IQD', 'month', 'plus', 2,
+    '{"غرضان في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة"}', '{"Two items at a time","Free delivery","Early access to new releases"}', 2),
+  ('plus-premium', 'Plus Premium', 'Four items at a time', 40000, 'IQD', 'month', 'plus', 4,
+    '{"أربعة أغراض في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة","دعوات لفعاليات النادي"}',
+    '{"Four items at a time","Free delivery","Early access to new releases","Invitations to Club events"}', 3),
+  ('suite-business-monthly', 'IDEA Suite', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null,
+    '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
+
+insert into public.product_categories (id, slug, name_ar, name_en, kind, position) values
+  ('50000000-0000-0000-0000-000000000001', 'gaming', 'الألعاب', 'Gaming', 'sale', 1),
+  ('50000000-0000-0000-0000-000000000002', 'laptops', 'الحواسيب', 'Laptops', 'sale', 2),
+  ('50000000-0000-0000-0000-000000000003', 'phones', 'الهواتف', 'Phones', 'sale', 3),
+  ('50000000-0000-0000-0000-000000000004', 'books', 'الكتب', 'Books', 'sale', 4),
+  ('50000000-0000-0000-0000-000000000005', 'rent-games', 'ألعاب للإيجار', 'Games to rent', 'rental', 5),
+  ('50000000-0000-0000-0000-000000000006', 'rent-books', 'كتب للإيجار', 'Books to rent', 'rental', 6)
+on conflict (id) do nothing;
+
+insert into public.products
+  (slug, kind, status, category_id, name_ar, name_en, description_ar, description_en, price, compare_at_price, stock_count, featured, details)
+values
+  ('playstation-5-slim', 'sale', 'active', '50000000-0000-0000-0000-000000000001',
+    'بلايستيشن ٥ سليم', 'PlayStation 5 Slim',
+    'جهاز بلايستيشن ٥ بإصدار سليم مع يد تحكم DualSense.', 'PlayStation 5 Slim console with a DualSense controller.',
+    720000, 780000, 8, true, '{"Storage": "1 TB", "Warranty": "1 year"}'),
+  ('logitech-g502', 'sale', 'active', '50000000-0000-0000-0000-000000000001',
+    'فأرة لوجيتك G502', 'Logitech G502 Mouse',
+    'فأرة ألعاب سلكية بمستشعر HERO.', 'Wired gaming mouse with the HERO sensor.',
+    120000, 180000, 25, true, '{"DPI": "25,600"}'),
+  ('macbook-air-m3', 'sale', 'active', '50000000-0000-0000-0000-000000000002',
+    'ماك بوك إير M3', 'MacBook Air M3',
+    'حاسوب محمول خفيف بشريحة M3.', 'Lightweight laptop with the M3 chip.',
+    1650000, null, 4, false, '{"Memory": "16 GB", "Storage": "512 GB"}'),
+  ('the-alchemist', 'sale', 'active', '50000000-0000-0000-0000-000000000004',
+    'الخيميائي', 'The Alchemist',
+    'رواية باولو كويلو.', 'The novel by Paulo Coelho.',
+    15000, null, 40, false, '{"Language": "Arabic"}'),
+  ('elden-ring-ps5', 'rental', 'active', '50000000-0000-0000-0000-000000000005',
+    'إلدن رينغ (PS5)', 'Elden Ring (PS5)',
+    'لعبة إلدن رينغ لجهاز بلايستيشن ٥.', 'Elden Ring for PlayStation 5.',
+    60000, null, 3, true, '{"Platform": "PS5"}'),
+  ('ea-fc-26-ps5', 'rental', 'active', '50000000-0000-0000-0000-000000000005',
+    'EA FC 26 (PS5)', 'EA FC 26 (PS5)',
+    'أحدث إصدار من سلسلة كرة القدم.', 'The latest edition of the football series.',
+    70000, null, 5, false, '{"Platform": "PS5"}'),
+  ('one-hundred-years-of-solitude', 'rental', 'active', '50000000-0000-0000-0000-000000000006',
+    'مئة عام من العزلة', 'One Hundred Years of Solitude',
+    'رواية غابرييل غارسيا ماركيز.', 'The novel by Gabriel García Márquez.',
+    20000, null, 2, false, '{"Language": "Arabic"}')
+on conflict (slug) do nothing;
+
+insert into public.product_variants (product_id, sku, attributes, price_override, stock_count, position)
+select id, 'PS5-SLIM-DISC', '{"Edition": "Disc"}'::jsonb, null::bigint, 5, 1 from public.products where slug = 'playstation-5-slim'
+union all
+select id, 'PS5-SLIM-DIGITAL', '{"Edition": "Digital"}'::jsonb, 650000, 3, 2 from public.products where slug = 'playstation-5-slim'
+on conflict (sku) do nothing;
+
+insert into public.posts (slug, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, published_at) values
+  ('welcome-to-the-idea', 'مرحباً بكم في The IDEA', 'Welcome to The IDEA',
+    'متجر وتأجير وأكاديمية وحلول للشركات في حساب واحد.', 'A store, rentals, an academy and business solutions in one account.',
+    'نطلق اليوم منصة The IDEA الجديدة.', 'Today we are launching the new The IDEA platform.', now())
+on conflict (slug) do nothing;
+
+insert into public.events (slug, title_ar, title_en, description_ar, description_en, location, starts_at, ends_at, capacity, published) values
+  ('launch-night', 'ليلة الإطلاق', 'Launch night',
+    'أمسية للاحتفال بإطلاق المنصة.', 'An evening to celebrate the launch.',
+    'Baghdad', now() + interval '14 days', now() + interval '14 days 3 hours', 80, true)
+on conflict (slug) do nothing;
+
+insert into public.chart_of_accounts (code, name, type, category) values
+  ('1000', 'Cash', 'asset', null),
+  ('1100', 'Wayl balance', 'asset', null),
+  ('1200', 'Inventory', 'asset', null),
+  ('2000', 'Accounts payable', 'liability', null),
+  ('3000', 'Owner''s equity', 'equity', null),
+  ('4000', 'Store sales', 'revenue', null),
+  ('4100', 'Plus memberships', 'revenue', null),
+  ('4200', 'Suite services', 'revenue', null),
+  ('5000', 'Cost of goods sold', 'expense', 'cogs'),
+  ('6000', 'Salaries', 'expense', null),
+  ('6100', 'Rent', 'expense', null),
+  ('6200', 'Marketing', 'expense', null)
+on conflict (code) do nothing;
+
+insert into public.telegram_faq (topic, question_ar, question_en, answer_ar, answer_en, position) values
+  ('store', 'كم تستغرق عملية التوصيل؟', 'How long does delivery take?',
+    'نوصل داخل بغداد في نفس اليوم أو اليوم التالي، وإلى المحافظات خلال ٢–٤ أيام.',
+    'Same or next day in Baghdad, and 2–4 days to other governorates.', 1),
+  ('plus', 'كيف يعمل اشتراك Plus؟', 'How does Plus work?',
+    'اختر خطة، ثم اطلب الألعاب أو الكتب من التطبيق وسنوصلها إليك. أعدها متى شئت واطلب غيرها.',
+    'Pick a plan, then request games or books in the app and we deliver them. Return them whenever you like and request more.', 1)
+on conflict do nothing;

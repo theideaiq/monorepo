@@ -1,7 +1,13 @@
 import { randomUUID } from "node:crypto";
 import type { PaymentStatus } from "@repo/database";
-import type { Checkout, CheckoutStatus, PaymentProvider } from "../types";
 import type {
+  Checkout,
+  CheckoutStatus,
+  LineItem,
+  PaymentProvider,
+} from "../types";
+import type {
+  BillingOwner,
   BillingRepository,
   PaymentRecord,
   PlanRecord,
@@ -76,10 +82,19 @@ export type WebhookOutcome =
 export interface RenewalInvoice {
   amount: number;
   currency: string;
-  organizationId: string;
+  organizationId: string | null;
   referenceId: string;
   subscriptionId: string;
   url: string | null;
+  userId: string | null;
+}
+
+/** Thrown when an order can't be paid (not found, not the caller's, paid). */
+export class OrderNotPayableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "OrderNotPayableError";
+  }
 }
 
 interface BillingServiceOptions {
@@ -103,30 +118,37 @@ export const createBillingService = ({
   webhookUrl,
 }: BillingServiceOptions) => {
   const createInvoice = async ({
+    amount,
+    currency,
     description,
     expiresInMinutes,
+    lineItems,
     metadata,
+    orderId = null,
     organizationId,
-    plan,
     redirectUrl,
     subscriptionId,
     userId,
   }: {
+    amount: number;
+    currency: string;
     description: string;
     expiresInMinutes?: number;
+    lineItems: LineItem[];
     metadata?: Record<string, unknown>;
-    organizationId: string;
-    plan: PlanRecord;
+    orderId?: string | null;
+    organizationId: string | null;
     redirectUrl?: string;
     subscriptionId: string | null;
     userId: string | null;
   }) => {
     const referenceId = `pay_${randomUUID()}`;
     await repository.createPayment({
-      amount: plan.amount,
-      currency: plan.currency,
+      amount,
+      currency,
       description,
       metadata,
+      orderId,
       organizationId,
       provider: provider.id,
       referenceId,
@@ -136,9 +158,9 @@ export const createBillingService = ({
 
     try {
       const checkout = await provider.createCheckout({
-        amount: { amount: plan.amount, currency: plan.currency },
+        amount: { amount, currency },
         expiresInMinutes,
-        lineItems: [{ amount: plan.amount, label: description }],
+        lineItems,
         redirectUrl,
         referenceId,
         webhookUrl,
@@ -154,6 +176,25 @@ export const createBillingService = ({
       throw error;
     }
   };
+
+  const invoicePlan = (
+    plan: PlanRecord,
+    options: {
+      expiresInMinutes?: number;
+      metadata?: Record<string, unknown>;
+      organizationId: string | null;
+      redirectUrl?: string;
+      subscriptionId: string;
+      userId: string | null;
+    }
+  ) =>
+    createInvoice({
+      ...options,
+      amount: plan.amount,
+      currency: plan.currency,
+      description: plan.name,
+      lineItems: [{ amount: plan.amount, label: plan.name }],
+    });
 
   const activateSubscription = async (subscription: SubscriptionRecord) => {
     const plan = await repository.getPlan(subscription.planId);
@@ -186,7 +227,15 @@ export const createBillingService = ({
       status: next,
     });
 
-    if (next !== "paid" || !payment.subscriptionId) {
+    if (next !== "paid") {
+      return;
+    }
+
+    if (payment.orderId) {
+      await repository.completeOrderPayment(payment.orderId);
+    }
+
+    if (!payment.subscriptionId) {
       return;
     }
 
@@ -236,16 +285,14 @@ export const createBillingService = ({
       return { kind: "skipped", pastDue };
     }
 
-    const { referenceId, url } = await createInvoice({
-      description: plan.name,
+    const { referenceId, url } = await invoicePlan(plan, {
       expiresInMinutes: Math.min(
         MAX_LINK_MINUTES,
         (leadDays + graceDays) * 24 * 60
       ),
       organizationId: subscription.organizationId,
-      plan,
       subscriptionId: subscription.id,
-      userId: null,
+      userId: subscription.userId,
     });
 
     return {
@@ -256,6 +303,7 @@ export const createBillingService = ({
         referenceId,
         subscriptionId: subscription.id,
         url,
+        userId: subscription.userId,
       },
       kind: "invoiced",
       pastDue,
@@ -347,19 +395,23 @@ export const createBillingService = ({
 
       return { expired, invoices, pastDue };
     },
-    /** Starts paying for a plan; returns the hosted checkout URL. */
+    /**
+     * Starts paying for a plan; returns the hosted checkout URL. Business
+     * plans belong to an organization, IDEA Plus to the user (`owner`).
+     */
     async startCheckout({
       metadata,
-      organizationId,
+      owner,
       planId,
       redirectUrl,
       userId,
     }: {
       /** Stored with the payment (e.g. attribution for ad conversions). */
       metadata?: Record<string, unknown>;
-      organizationId: string;
+      owner: BillingOwner;
       planId: string;
       redirectUrl?: string;
+      /** The signed-in user starting the checkout. */
       userId: string;
     }) {
       const plan = await repository.getPlan(planId);
@@ -367,10 +419,10 @@ export const createBillingService = ({
         throw new Error(`Plan ${planId} is not available`);
       }
 
-      let subscription = await repository.getLiveSubscription(organizationId);
+      let subscription = await repository.getLiveSubscription(owner);
       if (!subscription) {
         subscription = await repository.createSubscription({
-          organizationId,
+          owner,
           planId,
           provider: provider.id,
         });
@@ -378,13 +430,54 @@ export const createBillingService = ({
         await repository.updateSubscription(subscription.id, { planId });
       }
 
-      return createInvoice({
-        description: plan.name,
+      return invoicePlan(plan, {
         metadata,
-        organizationId,
-        plan,
+        organizationId: subscription.organizationId,
         redirectUrl,
         subscriptionId: subscription.id,
+        userId,
+      });
+    },
+
+    /**
+     * Opens (or reopens) the hosted checkout for one of the user's pending
+     * store orders. The amount always comes from the stored order.
+     */
+    async startOrderCheckout({
+      metadata,
+      orderId,
+      redirectUrl,
+      userId,
+    }: {
+      metadata?: Record<string, unknown>;
+      orderId: string;
+      redirectUrl?: string;
+      userId: string;
+    }) {
+      const order = await repository.getOrder(orderId);
+      if (!order || order.userId !== userId) {
+        throw new OrderNotPayableError("Order not found");
+      }
+      if (order.status !== "pending") {
+        throw new OrderNotPayableError(`Order is ${order.status}`);
+      }
+
+      // One open checkout per order, so it can't be paid twice.
+      const pending = await repository.getPendingOrderPayment(order.id);
+      if (pending) {
+        return { referenceId: pending.referenceId, url: pending.checkoutUrl };
+      }
+
+      return createInvoice({
+        amount: order.total,
+        currency: order.currency,
+        description: `Order #${order.number}`,
+        lineItems: order.lines,
+        metadata,
+        orderId: order.id,
+        organizationId: null,
+        redirectUrl,
+        subscriptionId: null,
         userId,
       });
     },

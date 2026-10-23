@@ -1,14 +1,25 @@
 import { randomUUID } from "node:crypto";
 import type {
+  BillingOwner,
   BillingRepository,
+  OrderRecord,
   PaymentRecord,
   PlanRecord,
   SubscriptionRecord,
 } from "./repository";
 
+const ownedBy = (subscription: SubscriptionRecord, owner: BillingOwner) =>
+  owner.userId
+    ? subscription.userId === owner.userId
+    : subscription.organizationId === owner.organizationId;
+
 /** In-memory BillingRepository for tests. */
-export const createMemoryBillingRepository = (plans: PlanRecord[] = []) => {
+export const createMemoryBillingRepository = (
+  plans: PlanRecord[] = [],
+  orders: OrderRecord[] = []
+) => {
   const state = {
+    orders: new Map(orders.map((order) => [order.id, { ...order }])),
     payments: new Map<
       string,
       PaymentRecord & { checkoutUrl?: string | null }
@@ -19,12 +30,20 @@ export const createMemoryBillingRepository = (plans: PlanRecord[] = []) => {
   };
 
   const repository: BillingRepository = {
+    completeOrderPayment(orderId) {
+      const order = state.orders.get(orderId);
+      if (order?.status === "pending") {
+        order.status = "paid";
+      }
+      return Promise.resolve();
+    },
     createPayment(payment) {
       const record: PaymentRecord = {
         amount: payment.amount,
         currency: payment.currency,
         id: randomUUID(),
         metadata: payment.metadata ?? {},
+        orderId: payment.orderId ?? null,
         organizationId: payment.organizationId,
         provider: payment.provider,
         referenceId: payment.referenceId,
@@ -35,15 +54,16 @@ export const createMemoryBillingRepository = (plans: PlanRecord[] = []) => {
       state.payments.set(record.referenceId, record);
       return Promise.resolve(record);
     },
-    createSubscription({ organizationId, planId }) {
+    createSubscription({ owner, planId }) {
       const record: SubscriptionRecord = {
         cancelAtPeriodEnd: false,
         currentPeriodEnd: null,
         currentPeriodStart: null,
         id: randomUUID(),
-        organizationId,
+        organizationId: owner.organizationId ?? null,
         planId,
         status: "incomplete",
+        userId: owner.userId ?? null,
       };
       state.subscriptions.set(record.id, record);
       return Promise.resolve(record);
@@ -58,17 +78,36 @@ export const createMemoryBillingRepository = (plans: PlanRecord[] = []) => {
         )
       );
     },
-    getLiveSubscription(organizationId) {
+    getLiveSubscription(owner) {
       return Promise.resolve(
         [...state.subscriptions.values()].find(
           (subscription) =>
-            subscription.organizationId === organizationId &&
+            ownedBy(subscription, owner) &&
             ["incomplete", "active", "past_due"].includes(subscription.status)
         ) ?? null
       );
     },
+    getOrder(orderId) {
+      return Promise.resolve(state.orders.get(orderId) ?? null);
+    },
     getPaymentByReference(referenceId) {
       return Promise.resolve(state.payments.get(referenceId) ?? null);
+    },
+    getPendingOrderPayment(orderId) {
+      const payment = [...state.payments.values()].find(
+        (candidate) =>
+          candidate.orderId === orderId &&
+          candidate.status === "pending" &&
+          candidate.checkoutUrl
+      );
+      return Promise.resolve(
+        payment?.checkoutUrl
+          ? {
+              checkoutUrl: payment.checkoutUrl,
+              referenceId: payment.referenceId,
+            }
+          : null
+      );
     },
     getPlan(planId) {
       return Promise.resolve(state.plans.get(planId) ?? null);

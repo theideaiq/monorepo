@@ -60,9 +60,10 @@ export const getBilling = () =>
       : undefined,
   });
 
-export type { PaymentRecord } from "./billing/repository";
+export type { BillingOwner, PaymentRecord } from "./billing/repository";
 export type {
   BillingService,
   RenewalInvoice,
   WebhookOutcome,
 } from "./billing/service";
+export { OrderNotPayableError } from "./billing/service";

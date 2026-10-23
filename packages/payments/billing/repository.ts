@@ -1,4 +1,16 @@
-import type { PaymentStatus, SubscriptionStatus } from "@repo/database";
+import type {
+  OrderStatus,
+  PaymentStatus,
+  SubscriptionStatus,
+} from "@repo/database";
+
+/**
+ * Who pays: a customer organization (business plans) or a single user (IDEA
+ * Plus memberships and store orders).
+ */
+export type BillingOwner =
+  | { organizationId: string; userId?: undefined }
+  | { organizationId?: undefined; userId: string };
 
 export interface PlanRecord {
   active: boolean;
@@ -14,9 +26,10 @@ export interface SubscriptionRecord {
   currentPeriodEnd: Date | null;
   currentPeriodStart: Date | null;
   id: string;
-  organizationId: string;
+  organizationId: string | null;
   planId: string;
   status: SubscriptionStatus;
+  userId: string | null;
 }
 
 export interface PaymentRecord {
@@ -25,6 +38,8 @@ export interface PaymentRecord {
   id: string;
   /** Free-form data kept with the payment, e.g. ad attribution. */
   metadata: Record<string, unknown>;
+  /** The store order this payment is for, if any. */
+  orderId: string | null;
   organizationId: string | null;
   provider: string;
   referenceId: string;
@@ -38,10 +53,23 @@ export interface NewPayment {
   currency: string;
   description: string;
   metadata?: Record<string, unknown>;
-  organizationId: string;
+  orderId?: string | null;
+  organizationId: string | null;
   provider: string;
   referenceId: string;
   subscriptionId: string | null;
+  userId: string | null;
+}
+
+export interface OrderRecord {
+  currency: string;
+  id: string;
+  /** One receipt line per order item (unit price × quantity), then delivery. */
+  lines: { amount: number; label: string }[];
+  /** Human-friendly order number shown on receipts. */
+  number: number;
+  status: OrderStatus;
+  total: number;
   userId: string | null;
 }
 
@@ -65,18 +93,25 @@ export interface SubscriptionUpdate {
  * with the secret key; tests use an in-memory one.
  */
 export interface BillingRepository {
+  /** Marks a store order paid and takes its items out of stock (idempotent). */
+  completeOrderPayment: (orderId: string) => Promise<void>;
   createPayment: (payment: NewPayment) => Promise<PaymentRecord>;
   createSubscription: (input: {
-    organizationId: string;
+    owner: BillingOwner;
     planId: string;
     provider: string;
   }) => Promise<SubscriptionRecord>;
   /** Active or past-due subscriptions whose period ends before `date`. */
   findSubscriptionsDueBefore: (date: Date) => Promise<SubscriptionRecord[]>;
   getLiveSubscription: (
-    organizationId: string
+    owner: BillingOwner
   ) => Promise<SubscriptionRecord | null>;
+  getOrder: (orderId: string) => Promise<OrderRecord | null>;
   getPaymentByReference: (referenceId: string) => Promise<PaymentRecord | null>;
+  /** An unpaid checkout already opened for the order, to reuse. */
+  getPendingOrderPayment: (
+    orderId: string
+  ) => Promise<{ checkoutUrl: string; referenceId: string } | null>;
   getPlan: (planId: string) => Promise<PlanRecord | null>;
   getSubscription: (id: string) => Promise<SubscriptionRecord | null>;
   /** True when the subscription already has an unpaid invoice. */

@@ -10,8 +10,21 @@ const formatAmount = (amount: number, currency: string) =>
     amount
   );
 
+const recipientsOf = async (invoice: RenewalInvoice) => {
+  if (invoice.userId) {
+    return [invoice.userId];
+  }
+  const { data: managers } = await createAdminClient()
+    .from("memberships")
+    .select("user_id")
+    .eq("organization_id", invoice.organizationId ?? "")
+    .in("role", ["owner", "admin"]);
+  return (managers ?? []).map(({ user_id }) => user_id);
+};
+
 /**
- * Emails each renewal invoice to the organization's owners and admins.
+ * Emails each renewal invoice to its subscriber: the member for IDEA Plus,
+ * the organization's owners and admins for business plans.
  * Members without an email (phone-only accounts) are skipped and logged;
  * hook an SMS/WhatsApp notification in here if that matters for the product.
  */
@@ -24,16 +37,9 @@ export const notifyRenewalInvoices = async (invoices: RenewalInvoice[]) => {
     }
 
     // biome-ignore lint/performance/noAwaitInLoops: invoices are few and sent in order
-    const { data: managers } = await admin
-      .from("memberships")
-      .select("user_id")
-      .eq("organization_id", invoice.organizationId)
-      .in("role", ["owner", "admin"]);
-
+    const recipients = await recipientsOf(invoice);
     const users = await Promise.all(
-      (managers ?? []).map(({ user_id }) =>
-        admin.auth.admin.getUserById(user_id)
-      )
+      recipients.map((userId) => admin.auth.admin.getUserById(userId))
     );
 
     for (const { data } of users) {

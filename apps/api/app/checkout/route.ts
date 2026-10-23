@@ -18,7 +18,8 @@ import { isManager, membershipRole } from "@/lib/membership";
 const body = z.object({
   /** Ad identifiers from `getAttribution()` in @repo/analytics/client. */
   attribution: attributionSchema.optional(),
-  organizationId: z.uuid(),
+  /** Business plans are paid by an organization; IDEA Plus by the user. */
+  organizationId: z.uuid().optional(),
   planId: z.string().min(1),
   redirectUrl: z.url().optional(),
 });
@@ -37,7 +38,8 @@ const safeRedirect = (redirectUrl: string | undefined) => {
 export const OPTIONS = preflight;
 
 /**
- * Starts a checkout for a plan. Called by the web app and the native apps
+ * Starts a checkout for a plan: a business plan for an organization the
+ * caller manages, or IDEA Plus for the caller. Called by the web app and the native apps
  * with `Authorization: Bearer <Supabase access token>`.
  */
 export const POST = async (request: Request) => {
@@ -70,7 +72,20 @@ export const POST = async (request: Request) => {
     return json({ error: "invalid_redirect" }, 400);
   }
 
-  if (!isManager(await membershipRole(session, organizationId))) {
+  const { data: plan } = await session.supabase
+    .from("plans")
+    .select("audience")
+    .eq("id", planId)
+    .eq("active", true)
+    .maybeSingle();
+  if (!plan || (plan.audience === "plus") !== (organizationId === undefined)) {
+    return json({ error: "invalid_plan" }, 400);
+  }
+
+  if (
+    organizationId &&
+    !isManager(await membershipRole(session, organizationId))
+  ) {
     return json({ error: "forbidden" }, 403);
   }
 
@@ -84,7 +99,7 @@ export const POST = async (request: Request) => {
   try {
     const checkout = await getBilling().startCheckout({
       metadata,
-      organizationId,
+      owner: organizationId ? { organizationId } : { userId: session.userId },
       planId,
       redirectUrl,
       userId: session.userId,

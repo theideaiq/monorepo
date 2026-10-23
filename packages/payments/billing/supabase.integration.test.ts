@@ -49,8 +49,8 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && secretKey))(
       });
 
       const { referenceId } = await billing.startCheckout({
-        organizationId: organization?.id ?? "",
-        planId: "starter-monthly",
+        owner: { organizationId: organization?.id ?? "" },
+        planId: "suite-business-monthly",
         userId: user.user?.id ?? "",
       });
 

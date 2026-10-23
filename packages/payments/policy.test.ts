@@ -32,9 +32,7 @@ describe("in-app purchase policy", () => {
   });
 
   test("uses the project setting by default", () => {
-    expect(canPurchaseInApp("ios")).toBe(
-      project.commerce.allowNativeCheckout
-    );
+    expect(canPurchaseInApp("ios")).toBe(project.commerce.allowNativeCheckout);
   });
 
   test("detects the Capacitor native shell", () => {

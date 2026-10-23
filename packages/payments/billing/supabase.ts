@@ -1,6 +1,7 @@
 import type { Json, Tables } from "@repo/database";
 import type { AdminClient } from "@repo/database/admin";
 import type {
+  BillingOwner,
   BillingRepository,
   PaymentRecord,
   SubscriptionRecord,
@@ -22,13 +23,20 @@ const toSubscription = (row: Tables<"subscriptions">): SubscriptionRecord => ({
   organizationId: row.organization_id,
   planId: row.plan_id,
   status: row.status,
+  userId: row.user_id,
 });
+
+const ownerColumn = (owner: BillingOwner) =>
+  owner.userId === undefined
+    ? ({ column: "organization_id", value: owner.organizationId } as const)
+    : ({ column: "user_id", value: owner.userId } as const);
 
 const toPayment = (row: Tables<"payments">): PaymentRecord => ({
   amount: row.amount,
   currency: row.currency,
   id: row.id,
   metadata: isRecord(row.metadata) ? row.metadata : {},
+  orderId: row.order_id,
   organizationId: row.organization_id,
   provider: row.provider,
   referenceId: row.reference_id,
@@ -67,6 +75,12 @@ const unwrapOptional = <R extends Result>({ data, error }: R) => {
 export const createSupabaseBillingRepository = (
   supabase: AdminClient
 ): BillingRepository => ({
+  async completeOrderPayment(orderId) {
+    const { error } = await supabase.rpc("complete_order_payment", {
+      order_id: orderId,
+    });
+    check(error);
+  },
   async createPayment(payment) {
     const row = unwrap(
       await supabase
@@ -76,6 +90,7 @@ export const createSupabaseBillingRepository = (
           currency: payment.currency,
           description: payment.description,
           metadata: (payment.metadata ?? {}) as NonNullable<Json>,
+          order_id: payment.orderId ?? null,
           organization_id: payment.organizationId,
           provider: payment.provider,
           reference_id: payment.referenceId,
@@ -88,11 +103,16 @@ export const createSupabaseBillingRepository = (
     return toPayment(row);
   },
 
-  async createSubscription({ organizationId, planId, provider }) {
+  async createSubscription({ owner, planId, provider }) {
     const row = unwrap(
       await supabase
         .from("subscriptions")
-        .insert({ organization_id: organizationId, plan_id: planId, provider })
+        .insert({
+          organization_id: owner.organizationId ?? null,
+          plan_id: planId,
+          provider,
+          user_id: owner.userId ?? null,
+        })
         .select()
         .single()
     );
@@ -110,16 +130,49 @@ export const createSupabaseBillingRepository = (
     return rows.map(toSubscription);
   },
 
-  async getLiveSubscription(organizationId) {
+  async getLiveSubscription(owner) {
+    const { column, value } = ownerColumn(owner);
     const row = unwrapOptional(
       await supabase
         .from("subscriptions")
         .select()
-        .eq("organization_id", organizationId)
+        .eq(column, value)
         .in("status", ["incomplete", "active", "past_due"])
         .maybeSingle()
     );
     return row ? toSubscription(row) : null;
+  },
+
+  async getOrder(orderId) {
+    const row = unwrapOptional(
+      await supabase
+        .from("orders")
+        .select(
+          "id, number, user_id, status, total, currency, shipping_fee, order_items (name_en, unit_price, quantity)"
+        )
+        .eq("id", orderId)
+        .maybeSingle()
+    );
+    if (!row) {
+      return null;
+    }
+    const lines = row.order_items.map((item) => ({
+      amount: item.unit_price * item.quantity,
+      label:
+        item.quantity > 1 ? `${item.name_en} × ${item.quantity}` : item.name_en,
+    }));
+    if (row.shipping_fee > 0) {
+      lines.push({ amount: row.shipping_fee, label: "Delivery" });
+    }
+    return {
+      currency: row.currency,
+      id: row.id,
+      lines,
+      number: row.number,
+      status: row.status,
+      total: row.total,
+      userId: row.user_id,
+    };
   },
 
   async getPaymentByReference(referenceId) {
@@ -131,6 +184,23 @@ export const createSupabaseBillingRepository = (
         .maybeSingle()
     );
     return row ? toPayment(row) : null;
+  },
+
+  async getPendingOrderPayment(orderId) {
+    const row = unwrapOptional(
+      await supabase
+        .from("payments")
+        .select("reference_id, checkout_url")
+        .eq("order_id", orderId)
+        .eq("status", "pending")
+        .not("checkout_url", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+    );
+    return row?.checkout_url
+      ? { checkoutUrl: row.checkout_url, referenceId: row.reference_id }
+      : null;
   },
 
   async getPlan(planId) {
