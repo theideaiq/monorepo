@@ -8,6 +8,8 @@ export interface SectionTab {
   exact?: boolean;
   href: string;
   label: string;
+  /** Other path prefixes that belong to this tab. */
+  match?: string[];
 }
 
 /** Sub-navigation of a section (e.g. Products · Categories · Plans). */
@@ -17,9 +19,14 @@ export const SectionTabs = ({ tabs }: { readonly tabs: SectionTab[] }) => {
   return (
     <nav className="flex gap-1 overflow-x-auto border-b px-4">
       {tabs.map((tab) => {
-        const active = tab.exact
-          ? pathname === tab.href
-          : pathname === tab.href || pathname.startsWith(`${tab.href}/`);
+        const prefixes = tab.match ?? [];
+        const active =
+          (tab.exact
+            ? pathname === tab.href
+            : pathname === tab.href || pathname.startsWith(`${tab.href}/`)) ||
+          prefixes.some(
+            (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+          );
         return (
           <Link
             aria-current={active ? "page" : undefined}

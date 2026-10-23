@@ -156,3 +156,28 @@ export const keyValues = (keys: string[] = [], values: string[] = []) => {
   });
   return Object.fromEntries(entries);
 };
+
+const STORAGE_PATH = /^(?!.*\.\.)[\w!.()+, /-]{1,700}$/;
+
+/** A storage object path made by `objectPath` (no "..", sane characters). */
+export const storagePath = z.string().trim().regex(STORAGE_PATH);
+
+export const optionalStoragePath = z
+  .string()
+  .trim()
+  .optional()
+  .transform((value) => value || null)
+  .pipe(z.union([z.null(), storagePath]));
+
+/** Uploaded file paths (`name[]`), empty entries dropped. */
+export const storagePaths = (max: number) =>
+  z
+    .array(z.string())
+    .optional()
+    .transform((values) => (values ?? []).map((v) => v.trim()).filter(Boolean))
+    .pipe(z.array(storagePath).max(max));
+
+/** One of a list of values. */
+export const choice = <const T extends readonly [string, ...string[]]>(
+  values: T
+) => z.enum(values);

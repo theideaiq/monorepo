@@ -40,6 +40,25 @@ export const check = <T extends { error: { code?: string; message?: string } | n
 };
 
 /**
+ * Like `check`, for updates and deletes run with `.select()`: RLS hides rows
+ * the role may not change, so "no rows" means not found (or not allowed).
+ */
+export const affected = <
+  T extends {
+    data: unknown[] | null;
+    error: { code?: string; message?: string } | null;
+  },
+>(
+  result: T
+): T => {
+  check(result);
+  if (!result.data || result.data.length === 0) {
+    throw new ActionFailure("notFound");
+  }
+  return result;
+};
+
+/**
  * Wraps a Server Action used with `useActionState`. Every call re-checks the
  * session (signed in, staff, AAL2) and the role's access to the section,
  * validates the form with zod, and runs the handler with the session-bound

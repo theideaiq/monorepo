@@ -716,6 +716,108 @@
       "drafts": "Campaign drafts",
       "optedIn": "Customers opted in to email",
       "telegramRequests": "Open Telegram requests"
+    },
+    "catalog": {
+      "title": "Catalog",
+      "tabs": {
+        "products": "Products",
+        "categories": "Categories",
+        "plans": "Plans",
+        "settings": "Delivery"
+      },
+      "filters": {
+        "anyKind": "All lines",
+        "anyStatus": "All statuses",
+        "anyCategory": "All categories"
+      },
+      "productStatus": {
+        "draft": "Draft",
+        "active": "Live",
+        "archived": "Archived"
+      },
+      "products": {
+        "new": "New product",
+        "search": "Search by name or slug",
+        "empty": "No products match.",
+        "basics": "Basics",
+        "pricing": "Price and stock",
+        "content": "Description, images and details",
+        "deleteDescription": "Past orders keep their copy of the product. Archiving hides it from the store instead and keeps it here."
+      },
+      "fields": {
+        "name": "Product",
+        "nameAr": "Name (Arabic)",
+        "nameEn": "Name (English)",
+        "slug": "Slug",
+        "slugHint": "The web address: lower-case letters, numbers and dashes, e.g. ps5-slim.",
+        "kind": "Line",
+        "kindHint": "Megastore items are sold; IDEA Plus items are rented to members.",
+        "status": "Status",
+        "statusHint": "Only live products appear in the store.",
+        "category": "Category",
+        "featured": "Featured",
+        "featuredHint": "Shown on the home page and at the top of listings.",
+        "price": "Price (IQD)",
+        "priceHint": "For rentals: the item's replacement value.",
+        "compareAt": "Compare-at price",
+        "compareAtHint": "The old price, shown crossed out. Must be higher than the price.",
+        "stock": "Stock",
+        "stockHint": "Units on hand (copies, for rentals).",
+        "condition": "Condition",
+        "descriptionAr": "Description (Arabic)",
+        "descriptionEn": "Description (English)",
+        "images": "Images",
+        "details": "Specifications"
+      },
+      "variants": {
+        "title": "Variants",
+        "description": "Options such as colour or storage, each with its own stock and an optional price.",
+        "attributes": "Options",
+        "sku": "SKU",
+        "price": "Price (IQD)",
+        "priceHint": "Empty: the product price.",
+        "add": "Add variant"
+      },
+      "categories": {
+        "description": "Categories group products in the store. Deleting one leaves its products without a category.",
+        "new": "New category",
+        "deleteDescription": "Its products stay, without a category."
+      },
+      "settings": {
+        "description": "Applied to every new order.",
+        "shippingFee": "Delivery fee (IQD)",
+        "shippingFeeHint": "Charged on each order.",
+        "threshold": "Free delivery from (IQD)",
+        "thresholdHint": "Orders with at least this subtotal ship free. Empty: never free."
+      },
+      "plans": {
+        "new": "New plan",
+        "empty": "No plans yet.",
+        "id": "Plan ID",
+        "idHint": "Permanent, e.g. plus-monthly. Lower-case letters, numbers and dashes.",
+        "name": "Name",
+        "description": "Description",
+        "audience": "Product line",
+        "audiences": {
+          "plus": "IDEA Plus (members)",
+          "business": "IDEA Suite (businesses)"
+        },
+        "amount": "Price (IQD)",
+        "amountHint": "Charged each billing period.",
+        "interval": "Billing period",
+        "intervals": {
+          "month": "Monthly",
+          "year": "Yearly"
+        },
+        "slots": "Rental slots",
+        "slotsHint": "Items a member can rent at once.",
+        "featuresAr": "Features (Arabic)",
+        "featuresEn": "Features (English)",
+        "featuresHint": "One per line.",
+        "active": "Available",
+        "inactive": "Hidden",
+        "activeHint": "Unavailable plans are hidden from new customers; current subscribers keep them."
+      }
     }
   }
 }
