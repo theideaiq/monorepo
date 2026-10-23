@@ -22,7 +22,7 @@ describe("create organization", () => {
     }));
     const { onCreated } = setup(rpc);
 
-    fireEvent.change(screen.getByLabelText("Organization name"), {
+    fireEvent.change(screen.getByLabelText("Company name"), {
       target: { value: "Acme Trading" },
     });
     expect((screen.getByLabelText("Address") as HTMLInputElement).value).toBe(
@@ -30,7 +30,7 @@ describe("create organization", () => {
     );
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Create organization" })
+      screen.getByRole("button", { name: "Create business account" })
     );
 
     await waitFor(() => expect(onCreated).toHaveBeenCalledWith("org-1"));
@@ -44,12 +44,12 @@ describe("create organization", () => {
   test("gives Arabic names an editable Latin address", () => {
     setup(vi.fn(), "ar");
 
-    fireEvent.change(screen.getByLabelText("اسم المؤسسة"), {
+    fireEvent.change(screen.getByLabelText("اسم الشركة"), {
       target: { value: "شركة الرافدين" },
     });
-    expect((screen.getByLabelText("المعرّف") as HTMLInputElement).value).toMatch(
-      GENERATED_SLUG
-    );
+    expect(
+      (screen.getByLabelText("العنوان") as HTMLInputElement).value
+    ).toMatch(GENERATED_SLUG);
   });
 
   test("explains a taken address", async () => {
@@ -59,11 +59,11 @@ describe("create organization", () => {
     }));
     setup(rpc);
 
-    fireEvent.change(screen.getByLabelText("Organization name"), {
+    fireEvent.change(screen.getByLabelText("Company name"), {
       target: { value: "Acme" },
     });
     fireEvent.click(
-      screen.getByRole("button", { name: "Create organization" })
+      screen.getByRole("button", { name: "Create business account" })
     );
 
     expect(
@@ -76,7 +76,7 @@ describe("create organization", () => {
     setup(rpc);
 
     fireEvent.click(
-      screen.getByRole("button", { name: "Create organization" })
+      screen.getByRole("button", { name: "Create business account" })
     );
 
     expect(screen.getByRole("alert").textContent).toBe("Enter a name.");

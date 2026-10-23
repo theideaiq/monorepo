@@ -106,7 +106,7 @@ describe("delete account", () => {
     });
 
     expect(
-      await screen.findByText("First, resolve your organizations")
+      await screen.findByText("First, resolve your business accounts")
     ).toBeTruthy();
     const makeOwner = screen.getByRole("button", { name: "Make owner" });
     expect(makeOwner).toHaveProperty("disabled", true);
@@ -146,11 +146,11 @@ describe("delete account", () => {
 
     expect(
       await screen.findByText(
-        "You're the only member, so this organization can only be deleted."
+        "You're the only member, so this business account can only be deleted."
       )
     ).toBeTruthy();
     fireEvent.click(
-      screen.getByRole("button", { name: "Delete organization" })
+      screen.getByRole("button", { name: "Delete business account" })
     );
 
     const confirm = screen.getByRole("button", { name: "Delete Solo Org" });
@@ -221,7 +221,7 @@ describe("delete account", () => {
     );
 
     expect(
-      await screen.findByText("First, resolve your organizations")
+      await screen.findByText("First, resolve your business accounts")
     ).toBeTruthy();
     expect(rpc).toHaveBeenCalledTimes(2);
     expect(signOut).not.toHaveBeenCalled();
