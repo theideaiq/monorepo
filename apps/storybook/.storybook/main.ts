@@ -23,7 +23,7 @@ const config: StorybookConfig = {
     options: {},
   },
   // public/ is the build output (served by the Next.js shell and its gate).
-  staticDirs: ["../static"],
+  staticDirs: ["../assets"],
   stories: [
     "../stories/**/*.mdx",
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",

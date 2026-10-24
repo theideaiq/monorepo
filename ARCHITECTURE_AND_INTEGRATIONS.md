@@ -55,10 +55,40 @@ flowchart LR
 | `apps/web` | 3001 | The IDEA's public site: home, Megastore catalog and product pages, IDEA Plus, Academy, Suite, Club, Droid, news, events, journal, legal (Markdown in `apps/web/content/legal`), contact. Next.js Server Components with `next-intl` locale routing (`/ar/…`, `/en/…`) and ISR; reads public data with an anonymous Supabase client. | Vercel |
 | `apps/app` | 3000 | The product. **Client-first**: every screen renders in the browser and talks to Supabase directly. The same code is built twice: a normal Next.js build for the web, and a static export for the native apps. | Vercel (web) and the App Store / Google Play (native) |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, the Liveblocks and Svix token endpoints. Route handlers only. | Vercel |
-| `apps/email` | 3003 | React Email templates (`@repo/email`). | Not deployed (dev preview) |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
 | `apps/admin` | 3005 | The back office for staff (catalog, orders, rentals, CRM, marketing, finance, editorial, Telegram, staff, audit log). **Server-rendered** with the staff member's cookie session (`@repo/auth/server`), Server Actions, phone OTP plus an authenticator app (AAL2: enable **Authentication → Multi-Factor → TOTP** in Supabase; it is on in the local stack. The database itself only grants staff rights to AAL2 sessions); every query runs as the staff member so RLS applies, and privileged steps (campaign email, staff lookup) go through `apps/api/app/admin/*`. Grant the first superadmin with SQL (`insert into staff (user_id, role) values ('<user id>', 'superadmin')`). Not indexed. | Vercel |
-| `apps/storybook` | 6006 | Design-system workbench. | Optional |
+| `apps/storybook` | 6006 | **The IDEA Design**: the staff-only design site with every UI component and email template (see [The IDEA Design](#the-idea-design)). | Vercel (`design.theideaiq.com`) |
+
+### The IDEA Design
+
+`apps/storybook` is the one place to review UI and email. `bun run dev`
+there is plain Storybook on port 6006 (no gate). `bun run build` runs
+`storybook build -o public` and then `next build`: the Next.js shell has
+no pages of its own and serves the static build, with `proxy.ts` in front
+of every path (the manager, the iframe and every asset):
+
+1. It reads the Supabase session cookie that The IDEA Pass writes
+   (`sb-<project ref>-auth-token`, whole or chunked, `base64-` or plain),
+   shared across subdomains when `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` is set.
+2. No cookie, an expired token or one Supabase rejects (`getClaims`, with
+   the publishable key): redirect to
+   `${NEXT_PUBLIC_PASS_URL}/{locale}/sign-in?return_to=<this URL>`. The gate
+   never refreshes a session (that would spend the browser's refresh token);
+   Pass refreshes it and sends the visitor back.
+3. It reads the visitor's own `staff` row as that user (RLS lets everyone
+   read their own row). No row: a plain bilingual 403 page. A row but an
+   `aal1` token: redirect to Pass `/{locale}/mfa`, since staff rights need an
+   authenticator app. Tokens issued to third-party apps (`client_id`) are
+   refused.
+
+The locale comes from `NEXT_LOCALE`, then `Accept-Language`, then Arabic.
+Responses are `Cache-Control: private, no-store` and `noindex`. Environment:
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (unset =
+503, fail closed) and `NEXT_PUBLIC_PASS_URL` (defaults to
+`http://localhost:3006` in development). Other apps link to it with
+`NEXT_PUBLIC_DESIGN_URL` (`@repo/next-config/keys`). Emails are reviewed
+under **The IDEA Design → Emails**, rendered with `@react-email/components`
+exactly as Resend sends them; add a story there with every new template.
 
 ### Principles that shape the code
 
@@ -964,6 +994,7 @@ Create three Vercel projects from the same repository:
 | web | `apps/web` | `example.iq` | Marketing site |
 | app | `apps/app` | `app.example.iq` | Product, web build |
 | api | `apps/api` | `api.example.iq` | Cron jobs are defined in `apps/api/vercel.json` |
+| storybook | `apps/storybook` | `design.theideaiq.com` | The IDEA Design; `vercel.json` sets `bun run build` (Storybook, then Next.js). Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_PASS_URL`. No Vercel Authentication: the proxy is the gate. |
 
 For each project:
 

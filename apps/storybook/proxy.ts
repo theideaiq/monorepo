@@ -12,14 +12,14 @@ import { checkAccess, type GateEnv, localeFrom, passUrl } from "./lib/gate";
 export const config = { matcher: "/:path*" };
 
 const ESCAPES: Record<string, string> = {
+  "'": "&#39;",
   '"': "&quot;",
   "&": "&amp;",
-  "'": "&#39;",
   "<": "&lt;",
   ">": "&gt;",
 };
 const UNSAFE = /[&<>"']/g;
-const escape = (value: string) =>
+const escapeHtml = (value: string) =>
   value.replace(UNSAFE, (character) => ESCAPES[character] ?? character);
 
 /** A plain bilingual 403 page: Arabic first, then English. */
@@ -28,9 +28,9 @@ const forbiddenPage = (switchUrl: string) => {
     lang: "ar" | "en",
     copy: typeof en.design.forbidden
   ) => `<section lang="${lang}" dir="${lang === "ar" ? "rtl" : "ltr"}">
-<h1>${escape(copy.title)}</h1>
-<p>${escape(copy.body)}</p>
-<p><a href="${escape(switchUrl)}">${escape(copy.switch)}</a></p>
+<h1>${escapeHtml(copy.title)}</h1>
+<p>${escapeHtml(copy.body)}</p>
+<p><a href="${escapeHtml(switchUrl)}">${escapeHtml(copy.switch)}</a></p>
 </section>`;
   return `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>The IDEA Design</title></head><body style="font-family:Cairo,Poppins,system-ui,sans-serif;max-width:34rem;margin:4rem auto;padding:0 1rem;line-height:1.7;color:#0f1014;background:#ffffff">${section("ar", ar.design.forbidden)}<hr style="border:0;border-top:1px solid #e4e4e7;margin:2rem 0">${section("en", en.design.forbidden)}</body></html>`;
 };
