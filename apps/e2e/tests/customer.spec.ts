@@ -9,11 +9,17 @@ import {
   watchConsole,
 } from "./helpers";
 
-test("sign up with a mobile number and a code", async ({ page }) => {
+test("sign up on The IDEA Pass with a mobile number and a code", async ({
+  page,
+}) => {
   const fresh = await resetPhoneUser();
+  // The app's sign-up page hands over to The IDEA Pass, which comes back.
   await page.goto(`${urls.app}/en/sign-up`);
+  await expect(page).toHaveURL(
+    `${urls.pass}/en/sign-up?return_to=${encodeURIComponent(`${urls.app}/en`)}`
+  );
   await expect(
-    page.getByRole("heading", { name: "Create an account" })
+    page.getByRole("heading", { name: "Get The IDEA Pass" })
   ).toBeVisible();
   await expectAccessible(page);
   await page.getByLabel("Full name").fill(phoneUser.name);
@@ -42,14 +48,25 @@ test("sign up with a mobile number and a code", async ({ page }) => {
 
 test("the sign-in page is accessible in Arabic", async ({ page }) => {
   await page.goto(`${urls.app}/ar/sign-in`);
+  await expect(page).toHaveURL(new RegExp(`^${urls.pass}/ar/sign-in\\?`));
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+  await expect(
+    page.getByRole("heading", { name: "تسجيل الدخول إلى The IDEA Pass" })
+  ).toBeVisible();
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expectAccessible(page);
 });
 
-test("signed out, the app sends you to sign in and back", async ({ page }) => {
+test("signed out, the app sends you to The IDEA Pass and back", async ({
+  page,
+}) => {
   await page.goto(`${urls.app}/en/cart`);
-  await expect(page).toHaveURL(/\/en\/sign-in\?next=%2Fcart/);
+  await expect(page).toHaveURL(
+    `${urls.pass}/en/sign-in?return_to=${encodeURIComponent(`${urls.app}/en/cart`)}`
+  );
+  await expect(
+    page.getByText(`You'll continue to ${new URL(urls.app).host}.`)
+  ).toBeVisible();
 });
 
 test.describe("a signed-in customer", () => {
@@ -139,8 +156,8 @@ test.describe("a signed-in customer", () => {
 
     await page.getByRole("button", { name: customer.name }).click();
     await page.getByRole("menuitem", { name: "Sign out" }).click();
-    await expect(page).toHaveURL(/\/en\/sign-in/);
+    await expect(page).toHaveURL(new RegExp(`^${urls.pass}/en/sign-in`));
     await page.goto(`${urls.app}/en/wishlist`);
-    await expect(page).toHaveURL(/\/en\/sign-in/);
+    await expect(page).toHaveURL(new RegExp(`^${urls.pass}/en/sign-in`));
   });
 });
