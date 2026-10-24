@@ -310,7 +310,7 @@ The database is the final guard: `private.protect_last_owner` refuses to
 remove the last owner's membership, so even a request that skips the checks
 cannot orphan an organization. The app then clears the local session,
 analytics identity and stored organization, and the sign-in page confirms the
-deletion. The pgTAP suite (`rls.test.sql`) and `apps/api/__tests__/deletion.test.ts`
+deletion. The pgTAP suite (`10_rls.test.sql`) and `apps/api/__tests__/deletion.test.ts`
 cover these rules.
 
 ---
@@ -463,7 +463,7 @@ grant all on public.bookings to service_role;
 ### 2.4 Test the policies
 
 RLS tests are pgTAP files run inside a transaction that is rolled back.
-`rls.test.sql` shows the pattern: insert fixtures as the superuser, then switch
+`10_rls.test.sql` shows the pattern: insert fixtures as the superuser, then switch
 identity with the helpers and assert what each user can see or do.
 
 ```sql
