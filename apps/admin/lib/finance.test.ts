@@ -14,9 +14,7 @@ describe("scenarios", () => {
   test("the actual books unless another scenario is chosen", () => {
     expect(scenarioFrom({})).toBe("actual");
     expect(scenarioFrom({ scenario: "budget" })).toBe("budget");
-    expect(scenarioFrom({ scenario: ["forecast", "budget"] })).toBe(
-      "forecast"
-    );
+    expect(scenarioFrom({ scenario: ["forecast", "budget"] })).toBe("forecast");
     expect(scenarioFrom({ scenario: "dream" })).toBe("actual");
   });
 });
@@ -113,12 +111,14 @@ describe("fiscal year", () => {
       vatRate: 0,
     });
     expect(
-      financialSettingsSchema.safeParse({
-        baseCurrency: "IQD",
-        corporateTaxRate: "101",
-        fiscalYearStartMonth: "13",
-        vatRate: "",
-      }).error?.issues.map((issue) => issue.path[0])
+      financialSettingsSchema
+        .safeParse({
+          baseCurrency: "IQD",
+          corporateTaxRate: "101",
+          fiscalYearStartMonth: "13",
+          vatRate: "",
+        })
+        .error?.issues.map((issue) => issue.path[0])
     ).toEqual(["corporateTaxRate", "fiscalYearStartMonth", "vatRate"]);
   });
 });
