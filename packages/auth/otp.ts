@@ -2,12 +2,22 @@ import type { Database } from "@repo/database";
 import type { AuthError, SupabaseClient } from "@supabase/supabase-js";
 import { normalizePhone } from "./phone";
 
+/**
+ * One-time codes for The IDEA Pass. People sign in with a 6-digit code sent
+ * by email (`sendEmailOtp` / `verifyEmailOtp`). The phone code path
+ * (`sendPhoneOtp` / `verifyPhoneOtp`) is kept for when phone sign-in comes
+ * back, but the phone provider is switched off (supabase/config.toml).
+ */
+
 export type OtpChannel = "sms" | "whatsapp";
 
 export type OtpErrorCode =
+  | "invalid_email"
   | "invalid_phone"
   | "rate_limited"
   | "invalid_code"
+  | "expired_code"
+  | "no_account"
   | "captcha_failed"
   | "signups_disabled"
   | "delivery_failed"
@@ -15,13 +25,33 @@ export type OtpErrorCode =
 
 export type OtpResult<T = undefined> =
   | { ok: true; phone: string; value: T }
-  | { code: OtpErrorCode; message: string; ok: false };
+  | OtpFailure;
+
+export interface OtpFailure {
+  code: OtpErrorCode;
+  message: string;
+  ok: false;
+}
+
+export type EmailOtpResult<T = undefined> =
+  | { email: string; ok: true; value: T }
+  | OtpFailure;
+
+/** Digits in an email code (`otp_length` in supabase/config.toml). */
+export const EMAIL_CODE_LENGTH = 6;
+/** How long an email code is valid, in seconds (`otp_expiry`). */
+export const EMAIL_CODE_EXPIRY_SECONDS = 600;
 
 // https://supabase.com/docs/guides/auth/debugging/error-codes
 const errorCodes: Record<string, OtpErrorCode> = {
   captcha_failed: "captcha_failed",
+  email_address_invalid: "invalid_email",
+  email_address_not_authorized: "delivery_failed",
+  email_provider_disabled: "delivery_failed",
   otp_disabled: "signups_disabled",
+  // Supabase answers a wrong code and an expired one alike.
   otp_expired: "invalid_code",
+  over_email_send_rate_limit: "rate_limited",
   over_request_rate_limit: "rate_limited",
   over_sms_send_rate_limit: "rate_limited",
   phone_provider_disabled: "delivery_failed",
@@ -59,7 +89,10 @@ interface SendOtpOptions {
   shouldCreateUser?: boolean;
 }
 
-/** Sends a one-time code to the phone number (SMS by default). */
+/**
+ * Sends a one-time code to the phone number (SMS by default). Switched off
+ * for now: needs the phone provider (or the Send SMS hook) enabled.
+ */
 export const sendPhoneOtp = async (
   supabase: SupabaseClient<Database>,
   rawPhone: string,
@@ -111,4 +144,121 @@ export const verifyPhoneOtp = async (
   }
 
   return { ok: true, phone, value: { userId: data.user.id } };
+};
+
+// Deliberately loose: the server has the final say (validation_failed).
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_EMAIL_LENGTH = 320;
+
+/** Trims and lowercases an address; null when it can't be one. */
+export const normalizeEmail = (input: string): string | null => {
+  const email = input.trim().toLowerCase();
+  return email.length <= MAX_EMAIL_LENGTH && EMAIL.test(email) ? email : null;
+};
+
+const invalidEmail: OtpFailure = {
+  code: "invalid_email",
+  message: "Enter a valid email address.",
+  ok: false,
+};
+
+const emailFailure = (
+  error: AuthError,
+  shouldCreateUser = true
+): OtpFailure => {
+  let code = toOtpErrorCode(error);
+  if (error.code === "validation_failed") {
+    code = "invalid_email";
+  }
+  // With shouldCreateUser: false, "signups not allowed" means there is no
+  // account with this address yet.
+  if (!shouldCreateUser && code === "signups_disabled") {
+    code = "no_account";
+  }
+  return { code, message: error.message, ok: false };
+};
+
+interface SendEmailOtpOptions {
+  captchaToken?: string;
+  /** Stored on new accounts only; becomes the profile's display name. */
+  fullName?: string;
+  locale?: string;
+  /** false: existing accounts only (an unknown address is `no_account`). */
+  shouldCreateUser?: boolean;
+}
+
+/**
+ * Emails a 6-digit code. Supabase sends its confirmation email to a new
+ * address and its "magic link" email to an existing one; both templates
+ * (supabase/templates) show only the code.
+ */
+export const sendEmailOtp = async (
+  supabase: SupabaseClient<Database>,
+  rawEmail: string,
+  {
+    captchaToken,
+    fullName,
+    locale,
+    shouldCreateUser = true,
+  }: SendEmailOtpOptions = {}
+): Promise<EmailOtpResult> => {
+  const email = normalizeEmail(rawEmail);
+
+  if (!email) {
+    return invalidEmail;
+  }
+
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      captchaToken,
+      data: { full_name: fullName?.trim() || undefined, locale },
+      shouldCreateUser,
+    },
+  });
+
+  return error
+    ? emailFailure(error, shouldCreateUser)
+    : { email, ok: true, value: undefined };
+};
+
+interface VerifyEmailOtpOptions {
+  /** The code's lifetime in seconds, to tell an expired code from a wrong one. */
+  expiresInSeconds?: number;
+  now?: number;
+  /** When the code was sent (ms since the epoch). */
+  sentAt?: number;
+}
+
+/** Verifies an email code; on success the client holds a signed-in session. */
+export const verifyEmailOtp = async (
+  supabase: SupabaseClient<Database>,
+  email: string,
+  token: string,
+  {
+    expiresInSeconds = EMAIL_CODE_EXPIRY_SECONDS,
+    now = Date.now(),
+    sentAt,
+  }: VerifyEmailOtpOptions = {}
+): Promise<EmailOtpResult<{ userId: string }>> => {
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "email",
+  });
+
+  if (error) {
+    const result = emailFailure(error);
+    const expired =
+      sentAt !== undefined && now - sentAt >= expiresInSeconds * 1000;
+    return expired && result.code === "invalid_code"
+      ? { ...result, code: "expired_code" }
+      : result;
+  }
+
+  if (!data.user) {
+    return { code: "unknown", message: "Verification failed.", ok: false };
+  }
+
+  return { email, ok: true, value: { userId: data.user.id } };
 };

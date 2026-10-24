@@ -84,6 +84,16 @@ export const Settings = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-6">
+            {user?.email ? (
+              <div className="grid gap-1 text-sm">
+                <span className="text-muted-foreground">
+                  {t("app.settings.profile.email")}
+                </span>
+                <span className="text-start" dir="ltr">
+                  {user.email}
+                </span>
+              </div>
+            ) : null}
             {user?.phone ? (
               <div className="grid gap-1 text-sm">
                 <span className="text-muted-foreground">

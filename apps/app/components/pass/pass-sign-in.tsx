@@ -1,7 +1,7 @@
 "use client";
 
 import { identify, track } from "@repo/analytics/client";
-import { PhoneOtpForm } from "@repo/auth/components/phone-otp-form";
+import { EmailOtpForm } from "@repo/auth/components/email-otp-form";
 import { useAuth } from "@repo/auth/provider";
 import { Link } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -13,10 +13,15 @@ interface PassSignInProps {
   readonly returnTo: string | null;
 }
 
+const LINK_CLASS =
+  "font-medium text-foreground underline underline-offset-4 hover:no-underline";
+
 /**
- * Phone sign-in or sign-up (one-time code by SMS). The session lands in the
- * shared cookie, then the browser goes on to `returnTo` on another site of
- * The IDEA (a full navigation, so that site reads the new cookie).
+ * Email sign-in or sign-up (a 6-digit code by email). Sign-in only signs in
+ * existing accounts and offers sign-up for an unknown address. The session
+ * lands in the shared cookie, then the browser goes on to `returnTo` on
+ * another site of The IDEA (a full navigation, so that site reads the new
+ * cookie).
  */
 export const PassSignIn = ({ mode, returnTo }: PassSignInProps) => {
   const t = useTranslations("pass");
@@ -28,16 +33,22 @@ export const PassSignIn = ({ mode, returnTo }: PassSignInProps) => {
 
   return (
     <div className="grid gap-6">
-      <PhoneOtpForm
+      <EmailOtpForm
         collectName={isSignUp}
         locale={locale}
         messages={messages}
+        noAccount={() => (
+          <Link className={LINK_CLASS} href={{ pathname: "/sign-up", query }}>
+            {t("signIn.noAccountSignUp")}
+          </Link>
+        )}
         onSignedIn={(userId) => {
           identify(userId);
-          track(isSignUp ? "sign_up" : "login", { method: "phone" });
+          track(isSignUp ? "sign_up" : "login", { method: "email" });
           // A full navigation, so the next page (or site) reads the cookie.
           window.location.assign(returnTo ?? `/${locale}`);
         }}
+        shouldCreateUser={isSignUp}
         supabase={supabase}
       />
       <p className="text-center text-muted-foreground text-sm">

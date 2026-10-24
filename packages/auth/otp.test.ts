@@ -1,10 +1,163 @@
 import { describe, expect, test, vi } from "vitest";
-import { sendPhoneOtp, toOtpErrorCode, verifyPhoneOtp } from "./otp";
+import {
+  normalizeEmail,
+  sendEmailOtp,
+  sendPhoneOtp,
+  toOtpErrorCode,
+  verifyEmailOtp,
+  verifyPhoneOtp,
+} from "./otp";
 
 const clientWith = (auth: Record<string, unknown>) =>
   ({ auth }) as unknown as Parameters<typeof sendPhoneOtp>[0];
 
-describe("phone OTP", () => {
+const authError = (code: string, status: number) =>
+  ({ code, message: code, name: "AuthApiError", status }) as never;
+
+describe("email OTP", () => {
+  test("normalizes addresses", () => {
+    expect(normalizeEmail("  Sara@Example.COM ")).toBe("sara@example.com");
+    expect(normalizeEmail("sara@example")).toBeNull();
+    expect(normalizeEmail("sara example.com")).toBeNull();
+    expect(normalizeEmail(`${"a".repeat(320)}@example.com`)).toBeNull();
+  });
+
+  test("rejects invalid addresses without calling Supabase", async () => {
+    const signInWithOtp = vi.fn();
+    const result = await sendEmailOtp(clientWith({ signInWithOtp }), "sara@");
+
+    expect(result).toMatchObject({ code: "invalid_email", ok: false });
+    expect(signInWithOtp).not.toHaveBeenCalled();
+  });
+
+  test("sends the code to the normalized address", async () => {
+    const signInWithOtp = vi.fn().mockResolvedValue({ error: null });
+    const result = await sendEmailOtp(
+      clientWith({ signInWithOtp }),
+      " Sara@Example.com",
+      { fullName: " Sara ", locale: "ar" }
+    );
+
+    expect(result).toEqual({
+      email: "sara@example.com",
+      ok: true,
+      value: undefined,
+    });
+    expect(signInWithOtp).toHaveBeenCalledWith({
+      email: "sara@example.com",
+      options: {
+        captchaToken: undefined,
+        data: { full_name: "Sara", locale: "ar" },
+        shouldCreateUser: true,
+      },
+    });
+  });
+
+  test("sign-in only: an unknown address has no account", async () => {
+    const signInWithOtp = vi
+      .fn()
+      .mockResolvedValue({ error: authError("otp_disabled", 422) });
+    const signIn = await sendEmailOtp(
+      clientWith({ signInWithOtp }),
+      "new@example.com",
+      { shouldCreateUser: false }
+    );
+    expect(signIn).toMatchObject({ code: "no_account", ok: false });
+    expect(signInWithOtp.mock.calls[0]?.[0].options.shouldCreateUser).toBe(
+      false
+    );
+
+    // With sign-up allowed, the same answer means sign-ups are closed.
+    const signUp = await sendEmailOtp(
+      clientWith({ signInWithOtp }),
+      "new@example.com"
+    );
+    expect(signUp).toMatchObject({ code: "signups_disabled", ok: false });
+  });
+
+  test("maps send errors", async () => {
+    const send = async (code: string, status: number) =>
+      await sendEmailOtp(
+        clientWith({
+          signInWithOtp: vi
+            .fn()
+            .mockResolvedValue({ error: authError(code, status) }),
+        }),
+        "sara@example.com"
+      );
+
+    expect(await send("over_email_send_rate_limit", 429)).toMatchObject({
+      code: "rate_limited",
+    });
+    expect(await send("validation_failed", 400)).toMatchObject({
+      code: "invalid_email",
+    });
+    expect(await send("email_address_invalid", 400)).toMatchObject({
+      code: "invalid_email",
+    });
+    expect(await send("email_provider_disabled", 400)).toMatchObject({
+      code: "delivery_failed",
+    });
+  });
+
+  test("verifies the code", async () => {
+    const verifyOtp = vi
+      .fn()
+      .mockResolvedValue({ data: { user: { id: "user-1" } }, error: null });
+    const result = await verifyEmailOtp(
+      clientWith({ verifyOtp }),
+      "sara@example.com",
+      "123456"
+    );
+
+    expect(result).toEqual({
+      email: "sara@example.com",
+      ok: true,
+      value: { userId: "user-1" },
+    });
+    expect(verifyOtp).toHaveBeenCalledWith({
+      email: "sara@example.com",
+      token: "123456",
+      type: "email",
+    });
+  });
+
+  test("tells a wrong code from an expired one", async () => {
+    const verifyOtp = vi.fn().mockResolvedValue({
+      data: { user: null },
+      error: authError("otp_expired", 403),
+    });
+    const client = clientWith({ verifyOtp });
+    const sentAt = Date.UTC(2026, 9, 24, 12);
+
+    expect(
+      await verifyEmailOtp(client, "sara@example.com", "000000", {
+        now: sentAt + 60_000,
+        sentAt,
+      })
+    ).toMatchObject({ code: "invalid_code", ok: false });
+    expect(
+      await verifyEmailOtp(client, "sara@example.com", "000000", {
+        now: sentAt + 600_000,
+        sentAt,
+      })
+    ).toMatchObject({ code: "expired_code", ok: false });
+    expect(
+      await verifyEmailOtp(client, "sara@example.com", "000000")
+    ).toMatchObject({ code: "invalid_code", ok: false });
+  });
+
+  test("a verification without a user fails", async () => {
+    const verifyOtp = vi
+      .fn()
+      .mockResolvedValue({ data: { user: null }, error: null });
+    expect(
+      await verifyEmailOtp(clientWith({ verifyOtp }), "a@b.co", "123456")
+    ).toMatchObject({ code: "unknown", ok: false });
+  });
+});
+
+describe("phone OTP (switched off, kept for later)", () => {
   test("maps Supabase error codes", () => {
     expect(
       toOtpErrorCode({ code: "over_sms_send_rate_limit", status: 429 })

@@ -202,8 +202,10 @@ password_requirements = ""
 # rp_origins = ["http://127.0.0.1:3000"]
 
 [auth.rate_limit]
-# Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-email_sent = 2
+# Number of emails that can be sent per hour. Locally the journeys and
+# integration tests send many codes; production (Resend SMTP) sets its own
+# limit under Authentication → Rate Limits.
+email_sent = 1000
 # Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
@@ -218,43 +220,64 @@ token_verifications = 30
 web3 = 30
 
 # Configure one of the supported captcha providers: `hcaptcha`, `turnstile`.
-# Enable Cloudflare Turnstile in production to stop SMS-pumping fraud.
+# Enable Cloudflare Turnstile in production to stop sign-up abuse.
 # [auth.captcha]
 # enabled = true
 # provider = "turnstile"
 # secret = "env(SUPABASE_AUTH_CAPTCHA_SECRET)"
 
 [auth.email]
-# Allow/disallow new user signups via email to your project.
+# The IDEA Pass signs people in with a 6-digit code sent by email
+# (signInWithOtp + verifyOtp type "email"); no passwords and no magic links
+# (links break inside the iOS/Android shell). The templates below show the
+# code only. Production: the same settings and templates in the dashboard
+# (ARCHITECTURE_AND_INTEGRATIONS.md, 2.7).
 enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+# New accounts confirm their address with the code from the confirmation
+# email (verifyOtp type "email" accepts it), as in production.
+enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
-# Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
+# Minimum time between two emails to the same address. Production keeps the
+# default 60s, which matches the form's resend cooldown; locally the journeys
+# and integration tests send codes back to back.
 max_frequency = "1s"
 # Number of characters used in the email OTP.
 otp_length = 6
-# Number of seconds before the email OTP expires (defaults to 1 hour).
-otp_expiry = 3600
+# Number of seconds before the email OTP expires (10 minutes).
+otp_expiry = 600
 
-# Use a production-ready SMTP server
+# Local emails go to the mail catcher ([local_smtp], Mailpit on port 54324).
+# Production: custom SMTP through Resend (smtp.resend.com:465, user "resend",
+# a Resend API key as the password, sender hi@theideaiq.com), set in the
+# dashboard. Never commit the key.
 # [auth.email.smtp]
 # enabled = true
-# host = "smtp.sendgrid.net"
-# port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# host = "smtp.resend.com"
+# port = 465
+# user = "resend"
+# pass = "env(RESEND_SMTP_PASSWORD)"
+# admin_email = "hi@theideaiq.com"
+# sender_name = "The IDEA Pass"
 
-# Uncomment to customize email template
-# [auth.email.template.invite]
-# subject = "You have been invited"
-# content_path = "./supabase/templates/invite.html"
+# Sign-up: sent to a new address. Shows the code; verifyOtp type "email".
+[auth.email.template.confirmation]
+subject = "رمز The IDEA Pass · Your The IDEA Pass code: {{ .Token }}"
+content_path = "./supabase/templates/confirmation.html"
+
+# Sign-in: sent to an existing address (Supabase calls it the magic link
+# email). Shows the code only, no link.
+[auth.email.template.magic_link]
+subject = "رمز The IDEA Pass · Your The IDEA Pass code: {{ .Token }}"
+content_path = "./supabase/templates/magic_link.html"
+
+# Changing the account's email: the code confirms the new address.
+[auth.email.template.email_change]
+subject = "تأكيد البريد الإلكتروني · Confirm your email for The IDEA Pass"
+content_path = "./supabase/templates/email_change.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
@@ -263,8 +286,11 @@ otp_expiry = 3600
 # content_path = "./supabase/templates/password_changed_notification.html"
 
 [auth.sms]
-# Phone OTP is the primary sign-in method (common for Iraqi users).
-enable_signup = true
+# Phone sign-in is switched off (decision 2026-10-24: email codes, no SMS
+# plan). The phone code path (@repo/auth/otp sendPhoneOtp/verifyPhoneOtp,
+# functions/send-sms) is kept so it can return: set enable_signup = true,
+# enable the provider below (or the Send SMS hook) and add test numbers.
+enable_signup = false
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = true
 # Template for sending OTP to users. The Send SMS hook (functions/send-sms)
@@ -272,16 +298,6 @@ enable_confirmations = true
 template = "رمز التحقق: {{ .Code }} — Your code: {{ .Code }}"
 # Controls the minimum amount of time that must pass before sending another sms otp.
 max_frequency = "5s"
-
-# Local development: sign in with +964 770 000 0000 and code 123456 without
-# sending a real SMS. Never configure test OTPs in production.
-[auth.sms.test_otp]
-# One number per integration suite: they run in parallel and OTP requests for
-# the same number are throttled (max_frequency above).
-9647700000000 = "123456"
-9647700000901 = "123456"
-# apps/e2e: the phone sign-up journey (deleted and re-created each run).
-9647700000902 = "123456"
 
 # Configure logged in session timeouts.
 # [auth.sessions]
@@ -309,12 +325,11 @@ max_frequency = "5s"
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
 
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
-# Local development: phone login needs an enabled provider, so this uses
-# placeholder Twilio credentials together with [auth.sms.test_otp] above (test
-# numbers never reach the provider). Production uses the Send SMS hook or real
-# provider credentials configured in the dashboard — never commit real ones.
+# Disabled with phone sign-in. To bring it back locally, enable it with these
+# placeholder credentials and add [auth.sms.test_otp] numbers (they never
+# reach the provider). Never commit real credentials.
 [auth.sms.twilio]
-enabled = true
+enabled = false
 account_sid = "AC00000000000000000000000000000000"
 message_service_sid = "MG00000000000000000000000000000000"
 auth_token = "local-development-placeholder"
