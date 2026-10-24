@@ -37,6 +37,13 @@ decisions with a date.
       Node 24, its environment variables (section 5 of
       `ARCHITECTURE_AND_INTEGRATIONS.md`) and "skip unaffected projects"
       on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the remote cache.
+- [ ] **The IDEA Pass:** a Vercel project for `apps/pass` on
+      `pass.theideaiq.com` (DNS); on every project set
+      `NEXT_PUBLIC_PASS_URL=https://pass.theideaiq.com`, and
+      `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on pass, app, admin
+      and the design site (production only), `NEXT_PUBLIC_ADMIN_URL` on
+      pass and admin; add `https://pass.theideaiq.com/**` to Supabase's
+      redirect URLs (`ARCHITECTURE_AND_INTEGRATIONS.md`, "The IDEA Pass").
 - [ ] **Wayl:** production keys and the webhook URL
       (`/webhooks/payments` on the API host).
 - [ ] **Telegram:** bot token and webhook (`apps/api/scripts/telegram-setup.ts`).

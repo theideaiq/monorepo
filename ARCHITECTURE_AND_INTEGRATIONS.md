@@ -59,6 +59,58 @@ flowchart LR
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
 | `apps/admin` | 3005 | The back office for staff (catalog, orders, rentals, CRM, marketing, finance, editorial, Telegram, staff, audit log). **Server-rendered** with the staff member's cookie session (`@repo/auth/server`), Server Actions, phone OTP plus an authenticator app (AAL2: enable **Authentication → Multi-Factor → TOTP** in Supabase; it is on in the local stack. The database itself only grants staff rights to AAL2 sessions); every query runs as the staff member so RLS applies, and privileged steps (campaign email, staff lookup) go through `apps/api/app/admin/*`. Grant the first superadmin with SQL (`insert into staff (user_id, role) values ('<user id>', 'superadmin')`). Not indexed. | Vercel |
 | `apps/storybook` | 6006 | Design-system workbench. | Optional |
+| `apps/pass` | 3006 | **The IDEA Pass**: the only sign-in, sign-up and authenticator-app UI on the web (see below). Server-rendered, publishable key only. | Vercel (`pass.theideaiq.com`) |
+
+### The IDEA Pass
+
+`apps/pass` (port 3006, `pass.theideaiq.com`) is the only sign-in and sign-up
+UI on the web, for customers and staff alike. It is server-rendered (ar/en,
+RTL), loads no analytics, and holds no secrets: it signs people in with the
+publishable key and leaves the session in the shared cookie.
+
+- **Routes.** `/{locale}/sign-in?return_to=<absolute url>`,
+  `/{locale}/sign-up?return_to=…` (phone OTP, `@repo/auth/components/phone-otp-form`),
+  `/{locale}/mfa?return_to=…` (link or enter the authenticator app, which
+  raises the session to AAL2), `/{locale}/sign-out?return_to=…` and
+  `/{locale}` ("Your Pass": name, phone, authenticator status, links to the
+  app, sign-out). Link to them with `passUrl(path, returnTo, locale)` from
+  `@repo/auth/pass`.
+- **Shared session cookie.** `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com`
+  makes the browser client, the server client and the proxy session refresh
+  (`authCookieOptions()` in `packages/auth/cookies.ts`) write the
+  `@supabase/ssr` cookie (`sb-<project ref>-auth-token`, chunked `.0`, `.1`,
+  possibly `base64-` prefixed) for the whole domain, so `theideaiq.com`,
+  `app.`, `admin.`, `design.` and `pass.` read the same session. Set the
+  same value on every project; leave it unset locally and on previews
+  (host-only cookie; on localhost cookies are shared across ports anyway).
+- **return_to.** `isAllowedReturnTo(url)` accepts only http(s) URLs whose
+  host is that of `NEXT_PUBLIC_WEB_URL`, `_APP_URL`, `_ADMIN_URL`,
+  `_DESIGN_URL`, `_API_URL` or `_PASS_URL` (plus localhost in development);
+  anything else falls back to the app (`safeReturnTo`). Without a return_to
+  the Pass stays on "Your Pass". After signing in the browser does a full
+  navigation to return_to, so the next site reads the new cookie.
+- **Sign-out.** The "Your Pass" button is a Server Action. The `/sign-out`
+  route signs out only on navigations from The IDEA's own sites
+  (`Sec-Fetch-Site: same-site` or `same-origin`); a link from anywhere else
+  lands on "Your Pass" instead, so other sites can't sign people out.
+- **The back office** has no sign-in of its own: signed-out visitors go to
+  the Pass sign-in, staff on AAL1 to the Pass `/mfa` (both coming back to
+  `NEXT_PUBLIC_ADMIN_URL`); the no-access page signs out through the Pass.
+  Staff rights still need AAL2 in the database.
+- **The app, web build:** `/sign-in`, `/sign-up` and `RequireAuth` send the
+  visitor to the Pass with return_to back to the page they wanted
+  (`apps/app/lib/pass.ts`); the website's "Sign in" links go there too.
+- **Native exception.** The Capacitor apps (`BUILD_TARGET=native`) have no
+  cookies to share: they keep the in-app phone sign-in (the same form, with
+  the native client and the session in the Keychain/Keystore), decided at
+  runtime by `usesPass()`.
+- **Later: OAuth consent.** Signing in to third-party apps with The IDEA
+  Pass can use Supabase Auth's OAuth 2.1 server (Authentication → OAuth
+  Server): Supabase sends people to an authorization page on the Pass
+  (for example `/{locale}/oauth/consent?authorization_id=…`), which shows the
+  client and scopes and calls `supabase.auth.oauth.approveAuthorization` or
+  `denyAuthorization`. Add it as another page under `apps/pass/app/[locale]`;
+  the sign-in redirect with return_to already brings people back to it.
 
 ### Principles that shape the code
 
@@ -445,6 +497,7 @@ In the Supabase dashboard:
    - `capacitor://localhost/**` (iOS app)
    - `https://localhost/**` (Android app)
    - `<bundle id>://**`, for example `iq.example.app://**` (native deep links)
+   - `https://pass.theideaiq.com/**` (The IDEA Pass)
 2. **Authentication → Sign In / Providers → Phone:** enable it.
 3. **SMS delivery.** Either configure a provider in the dashboard, or deploy
    the bundled Send SMS hook. It tries providers in order (a local SMS
@@ -1085,3 +1138,14 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 - [ ] Cron jobs listed in Vercel and `CRON_SECRET` set.
 - [ ] Native apps built with production values, deep links registered,
       account deletion tested, submitted (3.8).
+
+### 5.8 `pass` (apps/pass) and the shared session
+
+| Variable | Need | Notes |
+| --- | --- | --- |
+| `NEXT_PUBLIC_PASS_URL` | Feature, on every project | `https://pass.theideaiq.com`; every "Sign in" links there (defaults to `http://localhost:3006`) |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature, on every project that reads the session (pass, app, admin, storybook) | `.theideaiq.com`; unset on previews |
+| `NEXT_PUBLIC_ADMIN_URL`, `NEXT_PUBLIC_DESIGN_URL` | Feature (pass, admin) | Allowed return_to hosts; admin also uses its own as the way back |
+| `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_API_URL` | Build (pass) | Allowed return_to hosts and the "Your Pass" links |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Publishable key only |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_*`, `BETTERSTACK_*` | Optional | |
