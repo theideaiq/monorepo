@@ -144,6 +144,48 @@ export type Database = {
         };
         Relationships: [];
       };
+      delivery_zones: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          fee: number;
+          governorate: string | null;
+          id: string;
+          max_days: number;
+          min_days: number;
+          name_ar: string;
+          name_en: string;
+          position: number;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          fee: number;
+          governorate?: string | null;
+          id?: string;
+          max_days?: number;
+          min_days?: number;
+          name_ar: string;
+          name_en: string;
+          position?: number;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          fee?: number;
+          governorate?: string | null;
+          id?: string;
+          max_days?: number;
+          min_days?: number;
+          name_ar?: string;
+          name_en?: string;
+          position?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       event_rsvps: {
         Row: {
           created_at: string;
@@ -546,11 +588,16 @@ export type Database = {
       };
       orders: {
         Row: {
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
           created_at: string;
           currency: string;
+          delivery_zone_id: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
           number: number;
           paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -562,11 +609,16 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
+          cash_collected_by?: string | null;
+          confirmation_emailed_at?: string | null;
           created_at?: string;
           currency?: string;
+          delivery_zone_id?: string | null;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           id?: string;
           number?: never;
           paid_at?: string | null;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
           shipping_address: NonNullable<Json>;
           shipping_fee?: number;
           staff_note?: string | null;
@@ -578,11 +630,16 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
+          cash_collected_by?: string | null;
+          confirmation_emailed_at?: string | null;
           created_at?: string;
           currency?: string;
+          delivery_zone_id?: string | null;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           id?: string;
           number?: never;
           paid_at?: string | null;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
           shipping_address?: NonNullable<Json>;
           shipping_fee?: number;
           staff_note?: string | null;
@@ -593,7 +650,15 @@ export type Database = {
           updated_at?: string;
           user_id?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "orders_delivery_zone_id_fkey";
+            columns: ["delivery_zone_id"];
+            isOneToOne: false;
+            referencedRelation: "delivery_zones";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       organizations: {
         Row: {
@@ -1190,20 +1255,38 @@ export type Database = {
       };
       store_settings: {
         Row: {
+          cash_on_delivery_enabled: boolean;
           free_shipping_threshold: number | null;
           id: boolean;
+          pickup_address_ar: string | null;
+          pickup_address_en: string | null;
+          pickup_enabled: boolean;
+          pickup_hours_ar: string | null;
+          pickup_hours_en: string | null;
           shipping_fee: number;
           updated_at: string;
         };
         Insert: {
+          cash_on_delivery_enabled?: boolean;
           free_shipping_threshold?: number | null;
           id?: boolean;
+          pickup_address_ar?: string | null;
+          pickup_address_en?: string | null;
+          pickup_enabled?: boolean;
+          pickup_hours_ar?: string | null;
+          pickup_hours_en?: string | null;
           shipping_fee?: number;
           updated_at?: string;
         };
         Update: {
+          cash_on_delivery_enabled?: boolean;
           free_shipping_threshold?: number | null;
           id?: boolean;
+          pickup_address_ar?: string | null;
+          pickup_address_en?: string | null;
+          pickup_enabled?: boolean;
+          pickup_hours_ar?: string | null;
+          pickup_hours_en?: string | null;
           shipping_fee?: number;
           updated_at?: string;
         };
@@ -1696,13 +1779,23 @@ export type Database = {
         Returns: undefined;
       };
       create_order: {
-        Args: { shipping: Json };
+        Args: {
+          delivery_zone?: string;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          shipping: Json;
+        };
         Returns: {
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
           created_at: string;
           currency: string;
+          delivery_zone_id: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
           number: number;
           paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -1779,6 +1872,36 @@ export type Database = {
           month: string;
           revenue: number;
         }[];
+      };
+      mark_cash_collected: {
+        Args: { order_id: string };
+        Returns: {
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          id: string;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       mark_newsletter_synced: {
         Args: { user_ids: string[] };
@@ -1948,8 +2071,11 @@ export type Database = {
         | "plus"
         | "promo"
         | "system";
+      order_fulfilment: "delivery" | "pickup";
+      order_payment_method: "online" | "cash_on_delivery";
       order_status:
         | "pending"
+        | "confirmed"
         | "paid"
         | "processing"
         | "shipped"
@@ -2148,8 +2274,11 @@ export const Constants = {
         "promo",
         "system",
       ],
+      order_fulfilment: ["delivery", "pickup"],
+      order_payment_method: ["online", "cash_on_delivery"],
       order_status: [
         "pending",
+        "confirmed",
         "paid",
         "processing",
         "shipped",

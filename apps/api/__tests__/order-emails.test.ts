@@ -1,10 +1,11 @@
 import type { Database } from "@repo/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { describe, expect, test, vi } from "vitest";
-import { sendOrderEmails } from "../lib/order-emails";
+import { orderEmailContent, sendOrderEmails } from "../lib/order-emails";
 
 const ORDER = {
   currency: "IQD",
+  fulfilment: "delivery" as const,
   id: "order-1",
   number: 10_042,
   order_items: [
@@ -23,6 +24,7 @@ const ORDER = {
       unit_price: 95_000,
     },
   ],
+  payment_method: "online" as const,
   shipping_address: {
     address: "Street 52",
     city: "Karrada",
@@ -119,5 +121,28 @@ describe("sendOrderEmails", () => {
     expect(send).toHaveBeenCalledWith(
       expect.objectContaining({ to: "orders@theideaiq.com" })
     );
+  });
+});
+
+describe("orderEmailContent", () => {
+  test("a cash pickup order shows the store's address and pays in cash", () => {
+    const content = orderEmailContent(
+      {
+        ...ORDER,
+        fulfilment: "pickup",
+        payment_method: "cash_on_delivery",
+        shipping_fee: 0,
+      },
+      "en",
+      { address_ar: "بغداد، الكرادة", address_en: "Karrada, Baghdad" }
+    );
+    expect(content).toMatchObject({ cash: true, pickup: true });
+    expect(content.address.address).toBe("Karrada, Baghdad");
+  });
+
+  test("a delivery order keeps the customer's address", () => {
+    const content = orderEmailContent(ORDER, "ar");
+    expect(content).toMatchObject({ cash: false, pickup: false });
+    expect(content.address.address).toBe("Street 52");
   });
 });

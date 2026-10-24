@@ -1110,6 +1110,27 @@ outside this template.
 
 ### 4.2 Wayl payments
 
+#### Delivery, pickup and cash orders
+
+Store orders are placed with `create_order(shipping, fulfilment,
+payment_method, delivery_zone)` (migration `20261120000160_delivery.sql`).
+The database prices the delivery fee from `delivery_zones` (one per
+governorate, edited in Back office → Catalog → Settings); pickup is free and
+offered once **Store pickup** is on and has an address; the free-delivery
+threshold applies to every zone.
+
+- **Pay online** (`online`): the order is `pending` and the customer pays
+  on Wayl as below.
+- **Cash on delivery / pay at pickup** (`cash_on_delivery`, switched by
+  **Offer cash payment**): the order starts `confirmed` with its stock
+  taken. Spark asks `POST /orders/confirmation` (Bearer token) to email the
+  confirmation once (`confirmation_emailed_at`). Staff move it through
+  preparing and shipped (pickup: "Ready for pickup"), and **Mark cash
+  collected** (`mark_cash_collected`, support or finance) marks it paid and
+  delivered and records a `cash` payment for the ledger. Until then it can
+  still be cancelled, which returns the stock. Cash is not third-party
+  checkout, so it is offered in the iOS/Android apps too.
+
 #### How a payment flows
 
 ```mermaid

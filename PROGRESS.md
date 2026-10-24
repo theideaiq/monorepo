@@ -189,3 +189,9 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   (everything else); staff confirm each one. Store search everywhere goes
   through `search_products` (Arabic folded: tashkeel, alef forms, ya and
   ta marbuta; pg_trgm), migration `20261120000200_catalog_tools.sql`.
+- 2026-10-24: Megastore delivery: a delivery zone (fee and days) per
+  governorate, seeded for all 18 (Baghdad 5,000 IQD; edit them in Catalog →
+  Settings), store pickup (off until an address is set) and cash on
+  delivery or at pickup (on). Cash orders are confirmed at once and paid
+  when staff press **Mark cash collected**. Owner step: set the pickup
+  address and hours, and check the zone fees.

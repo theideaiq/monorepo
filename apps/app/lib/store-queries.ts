@@ -6,6 +6,7 @@ import {
   getProductBySlug,
   getStoreSettings,
   listCategories,
+  listDeliveryZones,
   listProducts,
   type ProductFilters,
 } from "@repo/commerce/catalog";
@@ -53,6 +54,16 @@ export const useStoreSettings = () => {
   return useQuery({
     queryFn: () => getStoreSettings(supabase),
     queryKey: queryKeys.storeSettings,
+    staleTime: 5 * 60_000,
+  });
+};
+
+/** The delivery zones offered at checkout, with their fees. */
+export const useDeliveryZones = () => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: () => listDeliveryZones(supabase),
+    queryKey: queryKeys.deliveryZones,
     staleTime: 5 * 60_000,
   });
 };
@@ -171,7 +182,7 @@ export const useUpdateCartLine = () => {
 };
 
 const ORDER_COLUMNS =
-  "id, number, status, subtotal, shipping_fee, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, name_ar, name_en, attributes, unit_price, quantity)" as const;
+  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, name_ar, name_en, attributes, unit_price, quantity)" as const;
 
 export const useOrders = () => {
   const { supabase, user } = useAuth();

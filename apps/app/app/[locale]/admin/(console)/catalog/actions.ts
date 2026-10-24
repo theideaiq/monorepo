@@ -11,6 +11,7 @@ import {
 import { success } from "@/lib/admin/action-state";
 import { planSchema, productSchema } from "@/lib/admin/catalog";
 import {
+  checkbox,
   int,
   keyValues,
   optionalInt,
@@ -170,7 +171,13 @@ export const deleteCategory = staffAction(
 export const saveStoreSettings = staffAction(
   "catalog",
   z.object({
+    cashOnDelivery: checkbox,
     freeShippingThreshold: optionalInt(0),
+    pickupAddressAr: optionalText(500),
+    pickupAddressEn: optionalText(500),
+    pickupEnabled: checkbox,
+    pickupHoursAr: optionalText(200),
+    pickupHoursEn: optionalText(200),
     shippingFee: int(0),
   }),
   async ({ input, supabase }) => {
@@ -178,7 +185,13 @@ export const saveStoreSettings = staffAction(
       await supabase
         .from("store_settings")
         .update({
+          cash_on_delivery_enabled: input.cashOnDelivery,
           free_shipping_threshold: input.freeShippingThreshold,
+          pickup_address_ar: input.pickupAddressAr,
+          pickup_address_en: input.pickupAddressEn,
+          pickup_enabled: input.pickupEnabled,
+          pickup_hours_ar: input.pickupHoursAr,
+          pickup_hours_en: input.pickupHoursEn,
           shipping_fee: input.shippingFee,
         })
         .eq("id", true)
@@ -215,5 +228,53 @@ export const savePlan = staffAction(
       await supabase.from("plans").update(row).eq("id", input.id).select("id")
     );
     return success();
+  }
+);
+
+const GOVERNORATE_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
+export const saveDeliveryZone = staffAction(
+  "catalog",
+  z
+    .object({
+      active: checkbox,
+      fee: int(0),
+      governorate: optionalText(64).refine(
+        (value) => value === null || GOVERNORATE_ID.test(value)
+      ),
+      id: optionalUuid,
+      maxDays: int(0, 60),
+      minDays: int(0, 60),
+      nameAr: text(120),
+      nameEn: text(120),
+      position: int(0),
+    })
+    .refine((zone) => zone.maxDays >= zone.minDays, { path: ["maxDays"] }),
+  async ({ input, supabase }) => {
+    const row = {
+      active: input.active,
+      fee: input.fee,
+      governorate: input.governorate,
+      max_days: input.maxDays,
+      min_days: input.minDays,
+      name_ar: input.nameAr,
+      name_en: input.nameEn,
+      position: input.position,
+    };
+    check(
+      input.id
+        ? await supabase.from("delivery_zones").update(row).eq("id", input.id)
+        : await supabase.from("delivery_zones").insert(row)
+    );
+    return success();
+  }
+);
+
+export const deleteDeliveryZone = staffAction(
+  "catalog",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.from("delivery_zones").delete().eq("id", input.id));
+    return success("deleted");
   }
 );

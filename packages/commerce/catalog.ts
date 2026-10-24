@@ -160,21 +160,77 @@ export const getProductBySlug = async (
   return row as ProductDetail | null;
 };
 
+/** The store's counter, when customers may collect orders there. */
+export interface PickupLocation {
+  address_ar: string;
+  address_en: string;
+  hours_ar: string;
+  hours_en: string;
+}
+
+type StoreSettingsRow = Pick<
+  Tables<"store_settings">,
+  | "cash_on_delivery_enabled"
+  | "free_shipping_threshold"
+  | "pickup_address_ar"
+  | "pickup_address_en"
+  | "pickup_enabled"
+  | "pickup_hours_ar"
+  | "pickup_hours_en"
+  | "shipping_fee"
+>;
+
+/**
+ * Delivery fees, the pickup location (null when pickup is off or has no
+ * address) and whether cash payment is offered.
+ */
 export const getStoreSettings = async (supabase: Client) => {
   const row = unwrap(
     await supabase
       .from("store_settings")
-      .select("shipping_fee, free_shipping_threshold")
+      .select(
+        "shipping_fee, free_shipping_threshold, pickup_enabled, pickup_address_ar, pickup_address_en, pickup_hours_ar, pickup_hours_en, cash_on_delivery_enabled"
+      )
       .single()
-  ) as Pick<
-    Tables<"store_settings">,
-    "free_shipping_threshold" | "shipping_fee"
-  >;
+  ) as Partial<StoreSettingsRow> &
+    Pick<StoreSettingsRow, "free_shipping_threshold" | "shipping_fee">;
+  const hasAddress = Boolean(
+    row.pickup_address_ar?.trim() || row.pickup_address_en?.trim()
+  );
+  const pickup: PickupLocation | null =
+    row.pickup_enabled && hasAddress
+      ? {
+          address_ar: row.pickup_address_ar ?? "",
+          address_en: row.pickup_address_en ?? "",
+          hours_ar: row.pickup_hours_ar ?? "",
+          hours_en: row.pickup_hours_en ?? "",
+        }
+      : null;
   return {
+    cashOnDelivery: row.cash_on_delivery_enabled ?? false,
     freeShippingThreshold: row.free_shipping_threshold,
+    pickup,
     shippingFee: row.shipping_fee,
   };
 };
+
+export type DeliveryZone = Pick<
+  Tables<"delivery_zones">,
+  "fee" | "governorate" | "id" | "max_days" | "min_days" | "name_ar" | "name_en"
+>;
+
+/** The zones customers can choose at checkout, in the store's order. */
+export const listDeliveryZones = async (
+  supabase: Client
+): Promise<DeliveryZone[]> =>
+  unwrap(
+    await supabase
+      .from("delivery_zones")
+      .select("id, governorate, name_ar, name_en, fee, min_days, max_days")
+      .eq("active", true)
+      .order("position")
+      .order("name_en")
+  ) ?? [];
 
 /** Public URL of a product image stored in the `catalog` bucket. */
 export const productImageUrl = (supabaseUrl: string, path: string) =>

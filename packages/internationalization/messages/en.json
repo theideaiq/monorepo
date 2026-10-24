@@ -943,7 +943,9 @@
         "address": "Address",
         "addressPlaceholder": "Neighbourhood, street, building, nearest landmark",
         "notes": "Delivery notes",
-        "notesPlaceholder": "Anything the courier should know"
+        "notesPlaceholder": "Anything the courier should know",
+        "governorateHint": "Delivery: {fee}. Usually arrives in {min}–{max} days.",
+        "zoneOption": "{name} — {fee}"
       },
       "fieldErrors": {
         "fullName": "Enter the recipient's name.",
@@ -967,8 +969,38 @@
         "payment": "We couldn't open the payment page. Please try again.",
         "suspended": "Your account is suspended. Contact support.",
         "unavailable": "A product in your cart is no longer available. Check your cart.",
-        "unknown": "Something went wrong. Please try again."
-      }
+        "unknown": "Something went wrong. Please try again.",
+        "cashUnavailable": "Cash payment isn't available right now. Choose to pay online.",
+        "pickupUnavailable": "Pickup from the store isn't available right now. Choose delivery.",
+        "zoneUnavailable": "We can't deliver to this governorate right now. Choose another, or pick up from the store."
+      },
+      "fulfilment": {
+        "title": "Delivery or pickup",
+        "delivery": "Delivery",
+        "deliveryHint": "To your door, anywhere in Iraq.",
+        "pickup": "Pickup",
+        "pickupHint": "Collect it from our store, free."
+      },
+      "pickup": {
+        "title": "Pickup from the store",
+        "description": "We'll call you when your order is ready to collect.",
+        "address": "Store address",
+        "hours": "Opening hours",
+        "notes": "Notes for the store",
+        "notesPlaceholder": "Anything we should know"
+      },
+      "payment": {
+        "title": "Payment",
+        "online": "Pay online",
+        "onlineHint": "Card, Qi Card, ZainCash, FIB and more on Wayl's secure page.",
+        "cash": "Cash on delivery",
+        "cashHint": "Pay the courier in cash when your order arrives.",
+        "pickupCash": "Pay at pickup",
+        "pickupCashHint": "Pay in cash at the store when you collect your order."
+      },
+      "placeOrderCash": "Place order · {amount}",
+      "cashNote": "You'll pay {amount} in cash when your order arrives.",
+      "pickupCashNote": "You'll pay {amount} at the store when you collect your order."
     },
     "orders": {
       "title": "Orders",
@@ -1007,7 +1039,15 @@
         "cancelFailed": "This order can no longer be cancelled.",
         "cancelledNotice": "This order was cancelled.",
         "refundedNotice": "This order was refunded.",
-        "help": "Get help with this order"
+        "help": "Get help with this order",
+        "method": "Delivery and payment",
+        "pickupAt": "Pickup from",
+        "pickupHours": "Opening hours",
+        "contact": "Contact",
+        "confirmedNotice": "Your order is confirmed. Have {amount} ready in cash for the courier.",
+        "confirmedPickupNotice": "Your order is confirmed. We'll call you when it's ready; pay {amount} at the store.",
+        "readyNotice": "Your order is ready. Collect it from the store during opening hours.",
+        "cancelCashDescription": "The order is cancelled. This can't be undone."
       }
     },
     "plus": {
@@ -1457,7 +1497,8 @@
       "shipped": "On the way",
       "delivered": "Delivered",
       "cancelled": "Cancelled",
-      "refunded": "Refunded"
+      "refunded": "Refunded",
+      "confirmed": "Confirmed"
     },
     "rentalStatus": {
       "requested": "Requested",
@@ -1561,6 +1602,14 @@
         "support_reply": {
           "title": "New reply from support",
           "body": "We replied to ticket #{number}: {subject}"
+        },
+        "order_confirmed": {
+          "title": "Order confirmed",
+          "body": "Order #{number} is confirmed. You'll pay in cash when you receive it."
+        },
+        "order_ready_for_pickup": {
+          "title": "Ready for pickup",
+          "body": "Order #{number} is ready to collect from the store."
         }
       },
       "kinds": {
@@ -1586,6 +1635,19 @@
       "currency": "IQD",
       "market": "In the market",
       "withUs": "With us"
+    },
+    "orderStatusPickup": {
+      "shipped": "Ready for pickup",
+      "delivered": "Picked up"
+    },
+    "fulfilment": {
+      "delivery": "Delivery",
+      "pickup": "Pickup from the store"
+    },
+    "paymentMethod": {
+      "online": "Paid online",
+      "cash_on_delivery": "Cash on delivery",
+      "cash_at_pickup": "Pay at pickup"
     }
   },
   "admin": {
@@ -1799,9 +1861,32 @@
       "settings": {
         "description": "Applied to every new order.",
         "shippingFee": "Delivery fee (IQD)",
-        "shippingFeeHint": "Charged on each order.",
+        "shippingFeeHint": "Shown in the cart before the customer chooses a governorate. Orders use the zone's fee.",
         "threshold": "Free delivery from (IQD)",
-        "thresholdHint": "Orders with at least this subtotal ship free. Empty: never free."
+        "thresholdHint": "Orders with at least this subtotal ship free. Empty: never free.",
+        "cashOnDelivery": "Offer cash payment",
+        "cashOnDeliveryHint": "Cash on delivery, and pay at pickup. Not third-party checkout, so it is offered in the iOS and Android apps too.",
+        "pickup": {
+          "title": "Store pickup",
+          "description": "Customers collect orders at the store, with no delivery fee. Offered at checkout once it is on and has an address.",
+          "enabled": "Offer pickup",
+          "addressAr": "Address (Arabic)",
+          "addressEn": "Address (English)",
+          "hoursAr": "Opening hours (Arabic)",
+          "hoursEn": "Opening hours (English)"
+        },
+        "zones": {
+          "title": "Delivery zones",
+          "description": "Each zone has its own fee. The free-delivery threshold applies to all of them; inactive zones aren't offered at checkout.",
+          "new": "New zone",
+          "fee": "Fee (IQD)",
+          "minDays": "From (days)",
+          "maxDays": "To (days)",
+          "governorate": "Governorate id",
+          "governorateHint": "For example baghdad. Empty for an area that isn't a whole governorate.",
+          "active": "Offered",
+          "deleteDescription": "Past orders keep their fee. To stop offering a zone for now, untick Offered instead."
+        }
       },
       "plans": {
         "new": "New plan",
@@ -1980,7 +2065,7 @@
       "search": "Order number, name or phone",
       "status": "Status",
       "anyStatus": "All statuses",
-      "awaiting": "To fulfil (paid or preparing)",
+      "awaiting": "To fulfil (paid, confirmed or preparing)",
       "from": "From",
       "to": "To",
       "empty": "No orders match.",
@@ -2006,7 +2091,7 @@
       "paidAt": "Paid",
       "amount": "Amount",
       "fulfilment": "Fulfilment",
-      "fulfilmentHint": "Move the order forward as it's prepared and delivered. Payments and refunds are recorded by the payment provider.",
+      "fulfilmentHint": "Move the order forward as it's prepared and delivered. Online payments and refunds are recorded by the payment provider; cash orders are paid when you record the cash.",
       "cancelConfirm": "Cancel this unpaid order?",
       "moves": {
         "pending": "Back to awaiting payment",
@@ -2015,13 +2100,30 @@
         "shipped": "Mark shipped",
         "delivered": "Mark delivered",
         "cancelled": "Cancel order",
-        "refunded": "Refund"
+        "refunded": "Refund",
+        "confirmed": "Confirm"
       },
       "delivery": "Delivery",
       "notes": "Tracking and notes",
       "tracking": "Tracking number",
       "staffNote": "Staff note",
-      "staffNoteHint": "Only staff see this."
+      "staffNoteHint": "Only staff see this.",
+      "cashDue": "Cash to collect",
+      "payment": "Payment",
+      "method": "Delivery",
+      "zone": "Delivery zone",
+      "movesPickup": {
+        "shipped": "Ready for pickup",
+        "delivered": "Mark picked up"
+      },
+      "cash": {
+        "title": "Cash payment",
+        "due": "Collect {amount} in cash on delivery or at pickup, then record it here.",
+        "collected": "Cash collected {date}.",
+        "action": "Mark cash collected",
+        "confirm": "Record {amount} collected in cash?",
+        "confirmDescription": "The order is marked paid and delivered, and a cash payment is recorded for finance."
+      }
     },
     "rentals": {
       "title": "Rentals",

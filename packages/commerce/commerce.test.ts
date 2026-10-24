@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   cartTotals,
   customerCondition,
+  deliveryFee,
   describeAttributes,
   discountPercent,
   governorates,
@@ -33,6 +34,30 @@ describe("commerce helpers", () => {
     expect(
       cartTotals([{ quantity: 1, unitPrice: 100_000 }], settings)
     ).toMatchObject({ shippingFee: 0, total: 100_000 });
+  });
+
+  test("prices delivery by zone and makes pickup free", () => {
+    const settings = { freeShippingThreshold: 100_000, shippingFee: 5000 };
+    const lines = [{ quantity: 1, unitPrice: 40_000 }];
+    expect(
+      cartTotals(lines, settings, { fulfilment: "delivery", zoneFee: 9000 })
+    ).toMatchObject({ shippingFee: 9000, total: 49_000 });
+    expect(
+      cartTotals(lines, settings, { fulfilment: "delivery", zoneFee: null })
+    ).toMatchObject({ shippingFee: 5000 });
+    expect(
+      cartTotals(lines, settings, { fulfilment: "pickup", zoneFee: 9000 })
+    ).toMatchObject({ shippingFee: 0, total: 40_000 });
+    expect(
+      deliveryFee(100_000, settings, { fulfilment: "delivery", zoneFee: 9000 })
+    ).toBe(0);
+    expect(
+      deliveryFee(
+        100_000,
+        { freeShippingThreshold: null, shippingFee: 5000 },
+        { fulfilment: "delivery", zoneFee: 9000 }
+      )
+    ).toBe(9000);
   });
 
   test("computes discounts and attribute labels", () => {

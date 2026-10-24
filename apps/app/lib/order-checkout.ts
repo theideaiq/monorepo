@@ -2,7 +2,7 @@
 
 import { getAttribution, track } from "@repo/analytics/client";
 import { useAuth } from "@repo/auth/provider";
-import { localized } from "@repo/commerce";
+import { type Fulfilment, localized, type PaymentMethod } from "@repo/commerce";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import { callApi } from "./api";
@@ -69,11 +69,37 @@ export const usePayOrder = () => {
   });
 };
 
+/** What the checkout sends to `create_order()`; the fee is priced there. */
+export interface PlaceOrder {
+  /** The chosen delivery zone; null for pickup. */
+  deliveryZone: string | null;
+  fulfilment: Fulfilment;
+  paymentMethod: PaymentMethod;
+  shipping: object;
+}
+
 /**
- * Checkout from the cart: `create_order(shipping)` prices the cart into a
- * pending order (and empties the cart), then the payment page opens.
- * Resolves with the order; `paymentError` is set when the order exists but
- * the payment page couldn't be opened (the customer can pay from the order).
+ * Asks apps/api to email the confirmation of a cash order (online orders
+ * are confirmed by the payment webhook). Best effort: the order is placed
+ * either way, and the API sends it once.
+ */
+const requestCashConfirmation = async (
+  supabase: Parameters<typeof callApi>[0],
+  orderId: string
+) => {
+  try {
+    await callApi(supabase, "/orders/confirmation", { orderId });
+  } catch {
+    // The order page and the in-app notification still confirm it.
+  }
+};
+
+/**
+ * Checkout from the cart: `create_order()` prices the cart and the delivery
+ * fee into an order (and empties the cart). Online orders are pending and
+ * the payment page opens; cash orders are confirmed at once. Resolves with
+ * the order; `paymentError` is set when the order exists but the payment
+ * page couldn't be opened (the customer can pay from the order).
  */
 export const usePlaceOrder = () => {
   const { supabase, user } = useAuth();
@@ -82,9 +108,19 @@ export const usePlaceOrder = () => {
   const locale = useLocale();
 
   return useMutation({
-    mutationFn: async (shipping: object) => {
+    mutationFn: async ({
+      deliveryZone,
+      fulfilment,
+      paymentMethod,
+      shipping,
+    }: PlaceOrder) => {
       const created = unwrap(
-        await supabase.rpc("create_order", { shipping: { ...shipping } })
+        await supabase.rpc("create_order", {
+          fulfilment,
+          payment_method: paymentMethod,
+          shipping: { ...shipping },
+          ...(deliveryZone ? { delivery_zone: deliveryZone } : {}),
+        })
       );
       if (!created) {
         throw new Error("create_order returned no order");
@@ -104,6 +140,11 @@ export const usePlaceOrder = () => {
         items: analyticsItems(order, locale),
         value: order.total,
       });
+
+      if (paymentMethod === "cash_on_delivery") {
+        await requestCashConfirmation(supabase, order.id);
+        return { order, paymentError: null, url: null };
+      }
 
       try {
         const { url } = await pay.mutateAsync(order);

@@ -1,7 +1,13 @@
 "use client";
 
 import { formatPhone } from "@repo/auth/phone";
-import { describeAttributes, formatPrice, localized } from "@repo/commerce";
+import {
+  describeAttributes,
+  type Fulfilment,
+  formatPrice,
+  localized,
+  type PaymentMethod,
+} from "@repo/commerce";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,11 +43,17 @@ import {
 } from "@/lib/checkout-tracking";
 import { toCheckoutError } from "@/lib/errors";
 import { usePayOrder } from "@/lib/order-checkout";
-import { orderProgress, progressSteps } from "@/lib/orders";
+import {
+  orderProgress,
+  paymentMessageKey,
+  statusMessageKey,
+  stepsFor,
+} from "@/lib/orders";
 import {
   useCancelOrder,
   useOrder,
   useOrderPayments,
+  useStoreSettings,
 } from "@/lib/store-queries";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 
@@ -51,13 +63,19 @@ const POLL_FOR_MS = 10 * 60_000;
 
 type Order = NonNullable<ReturnType<typeof useOrder>["data"]>;
 
-const Steps = ({ status }: { readonly status: Order["status"] }) => {
-  const t = useTranslations("store.orderStatus");
-  const reached = orderProgress(status);
+const Steps = ({ order }: { readonly order: Order }) => {
+  const t = useTranslations("store");
+  const steps = stepsFor(order.payment_method);
+  const reached = orderProgress(order.status, order.payment_method);
 
   return (
-    <ol className="grid gap-3 sm:grid-cols-5 sm:gap-2">
-      {progressSteps.map((step, index) => {
+    <ol
+      className={cn(
+        "grid gap-3 sm:gap-2",
+        steps.length === 4 ? "sm:grid-cols-4" : "sm:grid-cols-5"
+      )}
+    >
+      {steps.map((step, index) => {
         const done = index <= reached;
         return (
           <li
@@ -81,7 +99,7 @@ const Steps = ({ status }: { readonly status: Order["status"] }) => {
                 done ? "font-medium" : "text-muted-foreground"
               )}
             >
-              {t(step)}
+              {t(statusMessageKey(step, order.fulfilment))}
             </span>
           </li>
         );
@@ -111,7 +129,13 @@ const Address = ({ address }: { readonly address: ShippingAddress }) => {
   );
 };
 
-const CancelOrder = ({ orderId }: { readonly orderId: string }) => {
+const CancelOrder = ({
+  cash,
+  orderId,
+}: {
+  readonly cash: boolean;
+  readonly orderId: string;
+}) => {
   const t = useTranslations("app.orders.detail");
   const cancel = useCancelOrder();
 
@@ -127,7 +151,7 @@ const CancelOrder = ({ orderId }: { readonly orderId: string }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>{t("cancelTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t("cancelDescription")}
+              {t(cash ? "cancelCashDescription" : "cancelDescription")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -158,7 +182,10 @@ const OrderNotices = ({
   readonly watching: boolean;
 }) => {
   const t = useTranslations("app.orders.detail");
+  const locale = useLocale();
   const muted = "rounded-md bg-muted p-4 text-sm";
+  const amount = formatPrice(order.total, locale);
+  const pickup = order.fulfilment === "pickup";
 
   if (justPaid || (watching && order.paid_at)) {
     return (
@@ -179,6 +206,14 @@ const OrderNotices = ({
       ) : (
         <p className={muted}>{t("pendingNotice")}</p>
       );
+    case "confirmed":
+      return (
+        <p className={muted}>
+          {t(pickup ? "confirmedPickupNotice" : "confirmedNotice", { amount })}
+        </p>
+      );
+    case "shipped":
+      return pickup ? <p className={muted}>{t("readyNotice")}</p> : null;
     case "cancelled":
       return <p className={muted}>{t("cancelledNotice")}</p>;
     case "refunded":
@@ -186,6 +221,55 @@ const OrderNotices = ({
     default:
       return null;
   }
+};
+
+/** Delivery or pickup (with the store's address), and how it's paid. */
+const MethodCard = ({
+  fulfilment,
+  paymentMethod,
+}: {
+  readonly fulfilment: Fulfilment;
+  readonly paymentMethod: PaymentMethod;
+}) => {
+  const t = useTranslations("app.orders.detail");
+  const tStore = useTranslations("store");
+  const locale = useLocale();
+  const settings = useStoreSettings();
+  const pickup = fulfilment === "pickup" ? settings.data?.pickup : null;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("method")}</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-2 text-sm">
+        <p className="font-medium">{tStore(`fulfilment.${fulfilment}`)}</p>
+        <p>
+          {tStore(
+            `paymentMethod.${paymentMessageKey(paymentMethod, fulfilment)}`
+          )}
+        </p>
+        {pickup ? (
+          <dl className="grid gap-2 pt-2">
+            <div className="grid gap-0.5">
+              <dt className="text-muted-foreground">{t("pickupAt")}</dt>
+              <dd className="whitespace-pre-line">
+                {localized(pickup, "address", locale)}
+              </dd>
+            </div>
+            {localized(pickup, "hours", locale) ? (
+              <div className="grid gap-0.5">
+                <dt className="text-muted-foreground">{t("pickupHours")}</dt>
+                <dd className="whitespace-pre-line">
+                  {localized(pickup, "hours", locale)}
+                </dd>
+              </div>
+            ) : null}
+          </dl>
+        ) : null}
+      </CardContent>
+    </Card>
+  );
 };
 
 const OrderView = ({
@@ -205,6 +289,8 @@ const OrderView = ({
   const pay = usePayOrder();
   const canSell = useCanSellDigitalGoods();
   const pending = order.status === "pending";
+  const cash = order.payment_method === "cash_on_delivery";
+  const cancellable = pending || (cash && order.status === "confirmed");
   const address = order.shipping_address as unknown as ShippingAddress;
   const total = formatPrice(order.total, locale);
 
@@ -212,9 +298,9 @@ const OrderView = ({
     <div className="grid gap-6">
       <OrderNotices justPaid={justPaid} order={order} watching={watching} />
 
-      {pending ? (
+      {cancellable ? (
         <div className="flex flex-wrap gap-3">
-          {canSell === true ? (
+          {pending && canSell === true ? (
             <Button
               disabled={pay.isPending}
               onClick={() => pay.mutate(order, { onSuccess: onPay })}
@@ -222,7 +308,7 @@ const OrderView = ({
               {pay.isPending ? t("paying") : t("payNow", { amount: total })}
             </Button>
           ) : null}
-          <CancelOrder orderId={order.id} />
+          <CancelOrder cash={cash} orderId={order.id} />
           {pay.isError ? (
             <p className="basis-full text-destructive text-sm" role="alert">
               {tCheckout(toCheckoutError(pay.error))}
@@ -231,13 +317,13 @@ const OrderView = ({
         </div>
       ) : null}
 
-      {orderProgress(order.status) >= 0 ? (
+      {orderProgress(order.status, order.payment_method) >= 0 ? (
         <Card>
           <CardHeader>
             <CardTitle>{t("progress")}</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <Steps status={order.status} />
+            <Steps order={order} />
             {order.tracking_number ? (
               <p className="text-sm">
                 <span className="text-muted-foreground">{t("tracking")}: </span>
@@ -300,9 +386,15 @@ const OrderView = ({
               ) : null}
             </CardContent>
           </Card>
+          <MethodCard
+            fulfilment={order.fulfilment}
+            paymentMethod={order.payment_method}
+          />
           <Card>
             <CardHeader>
-              <CardTitle>{t("address")}</CardTitle>
+              <CardTitle>
+                {order.fulfilment === "pickup" ? t("contact") : t("address")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <Address address={address} />
