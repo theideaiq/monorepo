@@ -23,7 +23,7 @@ export const Stars = ({
         className={cn(
           "size-3.5",
           star <= Math.round(value)
-            ? "fill-brand text-brand"
+            ? "fill-bulb-yellow text-warning"
             : "text-muted-foreground/40",
           className
         )}
@@ -98,8 +98,8 @@ export const StarInput = ({
               className={cn(
                 "size-7 transition-colors",
                 star <= value
-                  ? "fill-brand text-brand"
-                  : "text-muted-foreground/50 hover:text-brand"
+                  ? "fill-bulb-yellow text-warning"
+                  : "text-muted-foreground/50 hover:text-warning"
               )}
             />
           </label>

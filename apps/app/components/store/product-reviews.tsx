@@ -39,7 +39,7 @@ const VerifiedBadge = () => {
   const t = useTranslations("app.reviews");
   return (
     <Badge className="gap-1" variant="secondary">
-      <BadgeCheckIcon className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+      <BadgeCheckIcon className="size-3.5 text-success" />
       {t("verifiedPurchase")}
     </Badge>
   );
@@ -190,7 +190,7 @@ const MyReviewPanel = ({ productId }: { readonly productId: string }) => {
         {review.verified_purchase ? <VerifiedBadge /> : null}
       </div>
       {review.status === "hidden" ? (
-        <p className="flex items-center gap-2 text-amber-700 text-sm dark:text-amber-300">
+        <p className="flex items-center gap-2 text-sm text-warning">
           <EyeOffIcon className="size-4 shrink-0" />
           {t("hidden")}
         </p>

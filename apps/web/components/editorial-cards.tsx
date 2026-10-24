@@ -31,7 +31,7 @@ export const PostCard = ({
             {formatDate(post.published_at, locale, "long")}
           </time>
         ) : null}
-        <h3 className="font-semibold text-lg leading-snug group-hover:text-primary">
+        <h3 className="font-semibold text-lg leading-snug group-hover:text-pink-text">
           {title}
         </h3>
         {excerpt ? (
@@ -57,7 +57,7 @@ export const EventCard = ({
     <Link className={cardClass} href={`/events/${event.slug}`}>
       <CoverImage alt={title} src={editorialUrl(event.cover_image)} />
       <div className="flex flex-col gap-2 px-1 pb-1">
-        <h3 className="font-semibold text-lg leading-snug group-hover:text-primary">
+        <h3 className="font-semibold text-lg leading-snug group-hover:text-pink-text">
           {title}
         </h3>
         <p className="flex items-center gap-2 text-muted-foreground text-sm">

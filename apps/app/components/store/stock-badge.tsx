@@ -27,20 +27,13 @@ export const StockBadge = ({
   }
   if (count <= LOW_STOCK) {
     return (
-      <span
-        className={cn("text-amber-600 text-xs dark:text-amber-400", className)}
-      >
+      <span className={cn("text-warning text-xs", className)}>
         {t("lowStock", { count: formatNumber(count, locale) })}
       </span>
     );
   }
   return (
-    <span
-      className={cn(
-        "text-emerald-700 text-xs dark:text-emerald-400",
-        className
-      )}
-    >
+    <span className={cn("text-success text-xs", className)}>
       {t("inStock")}
     </span>
   );

@@ -1,3 +1,5 @@
+import { Highlight } from "@repo/design-system/components/brand/highlight";
+import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale, Messages } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
@@ -59,28 +61,23 @@ const Droid = async ({ params }: DroidProps) => {
         />
       </Section>
 
-      <Section>
-        <div className="grid items-center gap-8 rounded-lg bg-[#0f1014] p-8 text-white md:grid-cols-[auto_1fr] md:p-12">
-          <span className="flex size-20 items-center justify-center rounded-lg bg-brand text-brand-foreground">
-            <Gamepad2 aria-hidden="true" className="size-10" />
-          </span>
-          <div className="flex flex-col items-start gap-3">
-            <h2 className="font-bold text-3xl text-brand">{t("game.title")}</h2>
-            <p className="max-w-2xl text-white/75">{t("game.description")}</p>
-            <Button
-              asChild
-              className="bg-brand text-brand-foreground hover:bg-brand/90"
-            >
-              <a href={SPARK_CATCHER_PATH}>{t("game.play")}</a>
-            </Button>
-          </div>
-        </div>
-      </Section>
+      <PinkBand
+        action={
+          <Button asChild className="gap-2" size="lg" variant="brand">
+            <a href={SPARK_CATCHER_PATH}>
+              <Gamepad2 aria-hidden="true" />
+              {t("game.play")}
+            </a>
+          </Button>
+        }
+        description={t("game.description")}
+        title={<Highlight>{t("game.title")}</Highlight>}
+      />
 
       <Section>
         <p className="text-muted-foreground text-sm">
           {t("privacy")}{" "}
-          <Link className="text-primary underline" href="/legal/privacy">
+          <Link className="text-pink-text underline" href="/legal/privacy">
             {t("privacyLink")}
           </Link>
         </p>

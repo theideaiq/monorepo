@@ -1,4 +1,5 @@
 import { cn } from "@repo/design-system/lib/utils";
+import { CircleAlert, CircleCheck, TriangleAlert } from "lucide-react";
 import type { ReactNode } from "react";
 
 export type Tone =
@@ -10,14 +11,19 @@ export type Tone =
   | "brand";
 
 const tones: Record<Tone, string> = {
-  brand: "bg-brand/20 text-foreground border-brand/50",
-  danger: "bg-destructive/10 text-destructive border-destructive/30",
-  info: "bg-sky-500/10 text-sky-700 border-sky-500/30 dark:text-sky-300",
+  brand: "bg-bulb-yellow/20 text-foreground border-bulb-yellow/60",
+  danger: "bg-danger/10 text-danger border-danger/40",
+  info: "bg-suite/10 text-suite border-suite/30",
   neutral: "bg-muted text-muted-foreground border-border",
-  success:
-    "bg-emerald-500/10 text-emerald-700 border-emerald-500/30 dark:text-emerald-300",
-  warning:
-    "bg-amber-500/10 text-amber-700 border-amber-500/30 dark:text-amber-300",
+  success: "bg-success/10 text-success border-success/30",
+  warning: "bg-warning/10 text-warning border-warning/40",
+};
+
+// Status colours always come with an icon and the word.
+const toneIcons: Partial<Record<Tone, typeof CircleCheck>> = {
+  danger: CircleAlert,
+  success: CircleCheck,
+  warning: TriangleAlert,
 };
 
 const statusTones: Record<string, Tone> = {
@@ -59,7 +65,10 @@ const statusTones: Record<string, Tone> = {
   withdrawn: "neutral",
 };
 
-/** A coloured pill for a status; the label is already translated. */
+/**
+ * A coloured pill for a status; the label is already translated. Success,
+ * warning and danger also show their icon.
+ */
 export const StatusBadge = ({
   children,
   className,
@@ -70,14 +79,20 @@ export const StatusBadge = ({
   readonly className?: string;
   readonly status?: string;
   readonly tone?: Tone;
-}) => (
-  <span
-    className={cn(
-      "inline-flex w-fit shrink-0 items-center whitespace-nowrap rounded-full border px-2 py-0.5 font-medium text-xs",
-      tones[tone ?? statusTones[status ?? ""] ?? "neutral"],
-      className
-    )}
-  >
-    {children}
-  </span>
-);
+}) => {
+  const resolved = tone ?? statusTones[status ?? ""] ?? "neutral";
+  const Icon = toneIcons[resolved];
+
+  return (
+    <span
+      className={cn(
+        "inline-flex w-fit shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-2 py-0.5 font-medium text-xs",
+        tones[resolved],
+        className
+      )}
+    >
+      {Icon ? <Icon aria-hidden="true" className="size-3 shrink-0" /> : null}
+      {children}
+    </span>
+  );
+};

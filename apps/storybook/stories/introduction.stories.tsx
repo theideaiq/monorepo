@@ -3,9 +3,10 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
 /**
- * The brand basics every screen and email builds on: the color tokens and
- * fonts in packages/design-system (styles/globals.css, lib/fonts.ts) and the
- * Arabic/English rules in AGENTS.md.
+ * The brand basics every screen and email builds on: The IDEA brand v1.0
+ * (docs/brand), its tokens and fonts in packages/design-system
+ * (styles/globals.css, lib/fonts.ts) and the Arabic/English rules in
+ * AGENTS.md.
  */
 const meta = {
   parameters: { layout: "fullscreen" },
@@ -24,20 +25,37 @@ interface Swatch {
 
 const BRAND: Swatch[] = [
   {
-    label: "Brand yellow",
-    token: "--brand",
-    usage: "The logo mark and highlights (#f4cf08). Text on it is ink.",
+    label: "The IDEA Pink",
+    token: "--idea-pink",
+    usage:
+      "Primary buttons, the Pink Band, avatars, the app icon (#D81B60); Pink Deep (#B5134E) on hover. Text on it is white.",
+  },
+  {
+    label: "Bulb Yellow",
+    token: "--bulb-yellow",
+    usage:
+      "The bulb, Highlights and buttons on pink (#F4CF08). Text on it is ink; never text on Paper.",
+  },
+  {
+    label: "Paper",
+    token: "--surface",
+    usage: "The page ground (#FBF8EF; #121318 in dark mode).",
+  },
+  {
+    label: "Pink text",
+    token: "--pink-text",
+    usage:
+      "Pink as text: links, the wordmark on Paper, prices (#F06292 in dark).",
   },
   {
     label: "Ink",
-    token: "--brand-foreground",
-    usage: "Text on yellow, and the dark theme's background (#0f1014).",
+    token: "--ink",
+    usage: "Body and heading text only; never in logos, tiles or brand blocks.",
   },
   {
-    label: "Primary pink",
-    token: "--primary",
-    usage:
-      "Actions, links and focus rings (#e91e63; #ec407a in the dark theme).",
+    label: "Plus Violet",
+    token: "--plus",
+    usage: "The IDEA Plus accent; only Plus pages and Rent with The IDEA Plus.",
   },
 ];
 
@@ -102,7 +120,7 @@ const Introduction = () => (
   <main className="mx-auto grid max-w-5xl gap-10 p-6 md:p-10">
     <header className="grid gap-3">
       <div className="flex items-center gap-3">
-        <span className="inline-block size-6 rounded-md bg-brand" />
+        <span className="inline-block size-6 rounded-[22%] bg-idea-pink" />
         <h1 className="font-bold text-3xl tracking-tight">The IDEA Design</h1>
       </div>
       <p className="max-w-3xl text-muted-foreground">

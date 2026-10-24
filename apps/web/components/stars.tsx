@@ -33,7 +33,7 @@ export const Stars = ({ className, label, value }: StarsProps) => (
             className="absolute inset-y-0 start-0 overflow-hidden"
             style={{ width: `${fill * 100}%` }}
           >
-            <Star className="size-[1em] max-w-none fill-brand text-brand" />
+            <Star className="size-[1em] max-w-none fill-bulb-yellow text-warning" />
           </span>
         ) : null}
       </span>

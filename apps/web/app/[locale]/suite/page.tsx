@@ -1,3 +1,5 @@
+import { Highlight } from "@repo/design-system/components/brand/highlight";
+import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale, Messages } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
@@ -89,17 +91,19 @@ const Suite = async ({ params }: SuiteProps) => {
         )}
       </Section>
 
-      <Section>
-        <div className="flex flex-col items-center gap-4 rounded-lg border bg-muted/40 p-10 text-center">
-          <h2 className="font-bold text-2xl">{t("cta.title")}</h2>
-          <p className="max-w-xl text-muted-foreground">
-            {t("cta.description")}
-          </p>
-          <Button asChild>
+      <PinkBand
+        action={
+          <Button asChild size="lg" variant="brand">
             <Link href="/contact?topic=suite">{t("cta.contact")}</Link>
           </Button>
-        </div>
-      </Section>
+        }
+        description={t("cta.description")}
+        title={
+          <>
+            {t("cta.title")} <Highlight>{t("cta.highlight")}</Highlight>
+          </>
+        }
+      />
     </>
   );
 };

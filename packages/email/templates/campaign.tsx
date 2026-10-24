@@ -10,6 +10,7 @@ import {
   Section,
   Text,
 } from "@react-email/components";
+import { brand, emailFont } from "../brand";
 
 interface CampaignTemplateProps {
   /** Markdown, written by the marketing team in the back office. */
@@ -39,15 +40,6 @@ const footer = {
   },
 } as const;
 
-// Brand colours (packages/design-system/styles/globals.css).
-const BRAND_YELLOW = "#f4cf08";
-const BRAND_INK = "#0f1014";
-const PINK = "#e91e63";
-const ARABIC_FONT =
-  "Cairo, 'Segoe UI', Tahoma, 'Noto Sans Arabic', Arial, sans-serif";
-const LATIN_FONT =
-  "Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif";
-
 /**
  * A marketing campaign in The IDEA's branding: a yellow logo bar, the
  * Markdown body and a footer with the one-click unsubscribe link.
@@ -64,7 +56,6 @@ export const CampaignTemplate = ({
 }: CampaignTemplateProps) => {
   const dir = locale === "ar" ? "rtl" : "ltr";
   const align = locale === "ar" ? "right" : "left";
-  const fontFamily = locale === "ar" ? ARABIC_FONT : LATIN_FONT;
   const text = footer[locale];
 
   return (
@@ -75,15 +66,15 @@ export const CampaignTemplate = ({
       <Preview>{preview ?? subject}</Preview>
       <Body
         style={{
-          backgroundColor: "#f4f4f5",
-          fontFamily,
+          backgroundColor: brand.surface,
+          fontFamily: emailFont,
           margin: 0,
           padding: "24px 0",
         }}
       >
         <Container
           style={{
-            backgroundColor: "#ffffff",
+            backgroundColor: brand.surfaceRaised,
             borderRadius: 12,
             margin: "0 auto",
             maxWidth: 600,
@@ -91,12 +82,12 @@ export const CampaignTemplate = ({
           }}
         >
           <Section
-            style={{ backgroundColor: BRAND_YELLOW, padding: "20px 32px" }}
+            style={{ backgroundColor: brand.bulbYellow, padding: "20px 32px" }}
           >
             <Link
               href={siteUrl}
               style={{
-                color: BRAND_INK,
+                color: brand.ideaPink,
                 fontSize: 22,
                 fontWeight: 700,
                 letterSpacing: "-0.01em",
@@ -115,31 +106,35 @@ export const CampaignTemplate = ({
           >
             <Markdown
               markdownContainerStyles={{
-                color: "#27272a",
+                color: brand.ink,
                 fontSize: 16,
                 lineHeight: "1.7",
               }}
               markdownCustomStyles={{
-                h1: { color: BRAND_INK, fontSize: 26, lineHeight: "1.3" },
-                h2: { color: BRAND_INK, fontSize: 20, lineHeight: "1.35" },
-                link: { color: PINK },
+                h1: { color: brand.ink, fontSize: 26, lineHeight: "1.3" },
+                h2: { color: brand.ink, fontSize: 20, lineHeight: "1.35" },
+                link: { color: brand.pinkText },
               }}
             >
               {body}
             </Markdown>
           </Section>
-          <Hr style={{ borderColor: "#e4e4e7", margin: 0 }} />
+          <Hr style={{ borderColor: brand.border, margin: 0 }} />
           <Section
             style={{ direction: dir, padding: "20px 32px", textAlign: align }}
           >
-            <Text style={{ color: "#71717a", fontSize: 12, margin: "0 0 8px" }}>
+            <Text
+              style={{ color: brand.inkMuted, fontSize: 12, margin: "0 0 8px" }}
+            >
               {text.reason}
             </Text>
-            <Text style={{ color: "#71717a", fontSize: 12, margin: "0 0 8px" }}>
+            <Text
+              style={{ color: brand.inkMuted, fontSize: 12, margin: "0 0 8px" }}
+            >
               {text.help}{" "}
               <Link
                 href={`mailto:${supportEmail}`}
-                style={{ color: "#71717a" }}
+                style={{ color: brand.inkMuted }}
               >
                 {supportEmail}
               </Link>
@@ -147,7 +142,7 @@ export const CampaignTemplate = ({
             <Link
               href={unsubscribeUrl}
               style={{
-                color: "#71717a",
+                color: brand.inkMuted,
                 fontSize: 12,
                 textDecoration: "underline",
               }}

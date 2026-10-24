@@ -205,7 +205,7 @@ export const ContactForm = ({
         <p
           className={cn(
             "text-sm",
-            result?.ok ? "text-primary" : "text-destructive"
+            result?.ok ? "text-pink-text" : "text-destructive"
           )}
           role={result?.ok ? "status" : "alert"}
         >

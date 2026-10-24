@@ -16,6 +16,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CoverImage } from "@/components/cover-image";
 import { stockLabel } from "@/components/product-card";
+import { ProductConditionBulb } from "@/components/product-condition-bulb";
 import {
   ProductReviews,
   RatingLink,
@@ -73,6 +74,37 @@ const rentalPlan = async ({
   kind === "rental" && tier !== null
     ? requiredPlan(await getPlans("plus"), tier)
     : null;
+
+/** Buy (pink) or rent with The IDEA Plus (violet), in the app. */
+const BuyAction = async ({
+  href,
+  locale,
+  rental,
+}: {
+  readonly href: string;
+  readonly locale: Locale;
+  readonly rental: boolean;
+}) => {
+  const t = await getTranslations({ locale, namespace: "web.store.product" });
+  return (
+    <>
+      <Button
+        asChild
+        className="w-full gap-2 sm:w-fit"
+        size="lg"
+        variant={rental ? "plus" : "default"}
+      >
+        <a href={href}>
+          <ShoppingBag className="size-4" />
+          {rental ? t("rent") : t("buy")}
+        </a>
+      </Button>
+      <p className="text-muted-foreground text-sm">
+        {rental ? t("rentNote") : t("buyNote")}
+      </p>
+    </>
+  );
+};
 
 const ProductPage = async ({ params }: ProductProps) => {
   const { locale, slug } = await params;
@@ -159,10 +191,8 @@ const ProductPage = async ({ params }: ProductProps) => {
                   {localized(product.category, "name", locale)}
                 </Badge>
               ) : null}
-              <Badge variant="outline">
-                {store(`condition.${product.condition}`)}
-              </Badge>
             </div>
+            <ProductConditionBulb locale={locale} product={product} />
             <h1 className="font-bold text-3xl tracking-tight md:text-4xl">
               {name}
             </h1>
@@ -203,15 +233,7 @@ const ProductPage = async ({ params }: ProductProps) => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button asChild className="w-full gap-2 sm:w-fit" size="lg">
-              <a href={buyUrl}>
-                <ShoppingBag className="size-4" />
-                {rental ? t("rent") : t("buy")}
-              </a>
-            </Button>
-            <p className="text-muted-foreground text-sm">
-              {rental ? t("rentNote") : t("buyNote")}
-            </p>
+            <BuyAction href={buyUrl} locale={locale} rental={rental} />
             {plan ? (
               <div className="flex flex-col gap-1 rounded-md border border-brand/60 bg-brand/10 p-3 text-sm">
                 <p className="font-medium">

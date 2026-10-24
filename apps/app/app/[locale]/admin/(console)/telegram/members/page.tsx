@@ -141,7 +141,7 @@ const MembersPage = async ({
                     <TableCell>
                       {member.user_id && linkCustomers ? (
                         <Link
-                          className="text-primary hover:underline"
+                          className="text-pink-text hover:underline"
                           href={`/customers/${member.user_id}`}
                         >
                           {t("members.linked")}

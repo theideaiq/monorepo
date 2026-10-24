@@ -1,11 +1,4 @@
-import {
-  customerCondition,
-  discountPercent,
-  formatPrice,
-  localized,
-  showsConditionBulb,
-} from "@repo/commerce";
-import { ConditionBulb } from "@repo/design-system/components/brand/condition-bulb";
+import { discountPercent, formatPrice, localized } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { buttonVariants } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
@@ -16,6 +9,7 @@ import { getTranslations } from "next-intl/server";
 import { imageUrl, type ProductCard as Product } from "@/lib/data";
 import { formatRating, type Rating } from "@/lib/reviews";
 import { CoverImage } from "./cover-image";
+import { ProductConditionBulb } from "./product-condition-bulb";
 import { Stars } from "./stars";
 
 const LOW_STOCK = 5;
@@ -115,12 +109,7 @@ export const ProductCard = async ({
         >
           {stockLabel(t, product.stock_count, locale)}
         </p>
-        {showsConditionBulb(product) ? (
-          <ConditionBulb
-            condition={customerCondition(product.condition)}
-            label={t(`conditionBulb.${customerCondition(product.condition)}`)}
-          />
-        ) : null}
+        <ProductConditionBulb locale={locale} product={product} />
       </div>
       <span
         className={cn(

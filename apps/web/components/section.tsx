@@ -34,7 +34,7 @@ export const Section = ({
         </div>
         {action ? (
           <Link
-            className="inline-flex items-center gap-2 font-medium text-primary text-sm hover:underline"
+            className="inline-flex items-center gap-2 font-medium text-pink-text text-sm hover:underline"
             href={action.href}
           >
             {action.label}

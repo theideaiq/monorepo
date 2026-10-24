@@ -198,10 +198,7 @@ const SubmitForm = () => {
             </p>
           ) : null}
           {submitted ? (
-            <p
-              className="text-emerald-700 text-sm dark:text-emerald-300"
-              role="status"
-            >
+            <p className="text-sm text-success" role="status">
               {t("form.submitted")}
             </p>
           ) : null}

@@ -207,7 +207,7 @@ export const Ticket = ({ ticketId }: TicketProps) => {
                 </span>
                 {data.order ? (
                   <Link
-                    className="text-primary text-sm hover:underline"
+                    className="text-pink-text text-sm hover:underline"
                     href={orderPath(data.order.id)}
                   >
                     {tCommon("orderNumber", {

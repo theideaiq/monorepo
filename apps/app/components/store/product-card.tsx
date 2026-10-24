@@ -1,18 +1,14 @@
 "use client";
 
-import {
-  customerCondition,
-  localized,
-  showsConditionBulb,
-} from "@repo/commerce";
+import { localized } from "@repo/commerce";
 import type { ProductCard as ProductCardData } from "@repo/commerce/catalog";
-import { ConditionBulb } from "@repo/design-system/components/brand/condition-bulb";
 import { buttonVariants } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
 import { Link } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { Rating } from "@/lib/review-queries";
 import { Price } from "./price";
+import { ProductConditionBulb } from "./product-condition-bulb";
 import { ProductImage } from "./product-image";
 import { RatingSummary } from "./stars";
 import { StockBadge } from "./stock-badge";
@@ -37,7 +33,6 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
   const t = useTranslations("store");
   const name = localized(product, "name", locale);
   const rental = product.kind === "rental";
-  const condition = customerCondition(product.condition);
 
   return (
     <li className="relative">
@@ -59,12 +54,7 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
           />
           {rating ? <RatingSummary rating={rating} /> : null}
           <StockBadge count={product.stock_count} />
-          {showsConditionBulb(product) ? (
-            <ConditionBulb
-              condition={condition}
-              label={t(`conditionBulb.${condition}`)}
-            />
-          ) : null}
+          <ProductConditionBulb product={product} />
         </div>
         <span
           className={cn(

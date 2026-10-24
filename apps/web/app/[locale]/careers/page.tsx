@@ -66,7 +66,7 @@ const Careers = async ({ params }: CareersProps) => {
               <li className="flex gap-2" key={area}>
                 <Check
                   aria-hidden="true"
-                  className="mt-1 size-4 shrink-0 text-primary"
+                  className="mt-1 size-4 shrink-0 text-pink-text"
                 />
                 {area}
               </li>

@@ -22,7 +22,7 @@ export const FeatureGrid = ({
         key={title}
       >
         {Icon ? (
-          <span className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-primary">
+          <span className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-pink-text">
             <Icon aria-hidden="true" className="size-5" />
           </span>
         ) : null}

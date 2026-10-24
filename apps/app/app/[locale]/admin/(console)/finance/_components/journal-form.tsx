@@ -372,9 +372,7 @@ export const JournalForm = ({
           <span
             className={cn(
               "font-medium",
-              totals.balanced
-                ? "text-emerald-600 dark:text-emerald-400"
-                : "text-destructive"
+              totals.balanced ? "text-success" : "text-destructive"
             )}
           >
             {totals.balanced

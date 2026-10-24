@@ -34,7 +34,7 @@ export const MobileTabBar = () => {
         return (
           <Link
             aria-current={active ? "page" : undefined}
-            className={cn(tabClass, active && "font-medium text-primary")}
+            className={cn(tabClass, active && "font-medium text-pink-text")}
             href={item.href}
             key={item.key}
           >

@@ -30,12 +30,12 @@ export const ProductLines = async ({ locale }: { readonly locale: Locale }) => {
           href={href}
           key={id}
         >
-          <Icon aria-hidden="true" className="size-8 text-primary" />
+          <Icon aria-hidden="true" className="size-8 text-pink-text" />
           <h3 className="font-semibold text-lg">{t(`store.lines.${id}`)}</h3>
           <p className="flex-1 text-muted-foreground text-sm leading-relaxed">
             {t(`web.home.lines.${id}`)}
           </p>
-          <span className="inline-flex items-center gap-1 font-medium text-primary text-sm">
+          <span className="inline-flex items-center gap-1 font-medium text-pink-text text-sm">
             {t("web.ui.learnMore")}
             <MoveRight className="size-4 rtl:rotate-180" />
           </span>

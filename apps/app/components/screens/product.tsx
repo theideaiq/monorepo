@@ -18,6 +18,7 @@ import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { Price } from "@/components/store/price";
 import { productHref } from "@/components/store/product-card";
+import { ProductConditionBulb } from "@/components/store/product-condition-bulb";
 import { ProductImage } from "@/components/store/product-image";
 import { ProductReviews } from "@/components/store/product-reviews";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
@@ -72,7 +73,7 @@ const Seller = ({ product }: { readonly product: ProductDetail }) => {
         {t("soldBy", { seller: product.seller })}
       </span>
       {product.verified ? (
-        <span className="inline-flex items-center gap-1 font-medium text-emerald-700 text-xs dark:text-emerald-300">
+        <span className="inline-flex items-center gap-1 font-medium text-success text-xs">
           <BadgeCheckIcon className="size-4" />
           {t("verifiedSeller")}
         </span>
@@ -83,7 +84,6 @@ const Seller = ({ product }: { readonly product: ProductDetail }) => {
 
 const ProductView = ({ product }: { readonly product: ProductDetail }) => {
   const t = useTranslations("app.store.product");
-  const tStore = useTranslations("store");
   const locale = useLocale();
   const router = useRouter();
   const deepLinkAdd = useSearchParams().get("add") === "1";
@@ -184,9 +184,7 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
             price={selection.price}
           />
           <div className="flex flex-wrap items-center gap-3 text-sm">
-            <span className="text-muted-foreground">
-              {t("condition")}: {tStore(`condition.${product.condition}`)}
-            </span>
+            <ProductConditionBulb product={product} />
             {product.kind === "sale" ? (
               <StockBadge count={selection.stock} />
             ) : null}
@@ -197,7 +195,7 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
           <div className="grid gap-3 rounded-md border p-4">
             <p className="text-sm">{t("rentalOnly")}</p>
             <div className="flex flex-wrap gap-3">
-              <Button asChild>
+              <Button asChild variant="plus">
                 <Link href="/plus">{t("goToPlus")}</Link>
               </Button>
               <WishlistButton productId={product.id} withLabel />
@@ -265,10 +263,10 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
                 className="flex flex-wrap items-center gap-2 text-sm"
                 role="status"
               >
-                <CheckIcon className="size-4 text-emerald-600" />
+                <CheckIcon className="size-4 text-success" />
                 {t("added")}
                 <Link
-                  className="font-medium text-primary hover:underline"
+                  className="font-medium text-pink-text hover:underline"
                   href="/cart"
                 >
                   {t("viewCart")}

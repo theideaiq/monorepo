@@ -185,7 +185,8 @@
       "comingSoon": "In preparation"
     },
     "appCta": {
-      "title": "One account for the whole ecosystem",
+      "title": "One account for",
+      "highlight": "the whole ecosystem",
       "description": "Shop the Megastore, manage your rentals with The IDEA Plus, RSVP to events and submit your work, all from The IDEA app.",
       "button": "Open the app",
       "signIn": "Sign in"
@@ -450,7 +451,8 @@
         "empty": "Contact us for a business plan tailored to your company."
       },
       "cta": {
-        "title": "Talk to our team",
+        "title": "Talk to",
+        "highlight": "our team",
         "description": "Tell us about your company and what you need.",
         "contact": "Contact sales",
         "app": "Set up your organization"
@@ -503,7 +505,8 @@
       "guidelines": "Before you join, read our community guidelines.",
       "guidelinesLink": "Community guidelines",
       "cta": {
-        "title": "Ready to jump in?",
+        "title": "Ready to",
+        "highlight": "jump in?",
         "description": "Don't miss the next big idea or late-night gaming session.",
         "button": "Open Telegram"
       }

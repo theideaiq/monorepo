@@ -1,3 +1,4 @@
+import { Highlight } from "@repo/design-system/components/brand/highlight";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale, Messages } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
@@ -108,7 +109,7 @@ const Home = async ({ params }: HomeProps) => {
           <div className="flex flex-col gap-4">
             <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
               {t("home.values.title")}{" "}
-              <span className="text-primary">{t("home.values.highlight")}</span>
+              <Highlight>{t("home.values.highlight")}</Highlight>
             </h2>
             <p className="text-lg text-muted-foreground">
               {t("home.values.description")}

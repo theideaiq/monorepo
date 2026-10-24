@@ -35,7 +35,7 @@ export const ReplyForm = ({
         <Textarea
           className={cn(
             internal &&
-              "border-amber-500/50 bg-amber-500/5 focus-visible:border-amber-500"
+              "border-warning/50 bg-warning/5 focus-visible:border-warning"
           )}
           id={`${id}-body`}
           maxLength={5000}

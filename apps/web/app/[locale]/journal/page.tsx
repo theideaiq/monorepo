@@ -49,7 +49,7 @@ const Journal = async ({ params }: JournalProps) => {
                         volume: formatNumber(issue.volume, locale),
                       })}
                     </p>
-                    <h2 className="font-semibold group-hover:text-primary">
+                    <h2 className="font-semibold group-hover:text-pink-text">
                       {title}
                     </h2>
                   </Link>

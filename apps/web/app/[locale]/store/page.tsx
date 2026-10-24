@@ -171,7 +171,7 @@ const Store = async ({ params, searchParams }: StoreProps) => {
           <EmptyState>
             {t("store.empty")}{" "}
             {filtered ? (
-              <Link className="text-primary underline" href="/store">
+              <Link className="text-pink-text underline" href="/store">
                 {t("store.clear")}
               </Link>
             ) : null}

@@ -109,7 +109,7 @@ const TicketPage = async ({
                         !(fromCustomer || message.internal) &&
                           "border-primary/30 bg-primary/5",
                         message.internal &&
-                          "border-amber-500/50 border-dashed bg-amber-500/10"
+                          "border-warning/50 border-dashed bg-warning/10"
                       )}
                       key={message.id}
                     >

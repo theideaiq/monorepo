@@ -31,7 +31,7 @@ export const StatCard = ({
           <Icon
             className={cn(
               "size-4",
-              tone === "attention" ? "text-primary" : "text-muted-foreground"
+              tone === "attention" ? "text-pink-text" : "text-muted-foreground"
             )}
           />
         ) : null}

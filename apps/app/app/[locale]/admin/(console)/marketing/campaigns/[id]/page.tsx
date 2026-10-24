@@ -124,7 +124,7 @@ const CampaignPage = async ({
             <div className="bg-brand px-5 py-3 text-brand-foreground">
               <BrandLogo variant="on-yellow" />
             </div>
-            <div className="bg-white p-5 text-zinc-900" dir="auto">
+            <div className="bg-white p-5 text-on-yellow" dir="auto">
               <MarkdownPreview invert={false} source={campaign.body} />
             </div>
           </div>

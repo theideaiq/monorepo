@@ -79,7 +79,7 @@ const Contact = async ({ params }: ContactProps) => {
         <ul className="flex flex-col gap-4">
           {details.map(({ href, icon: Icon, label, ltr, note, value }) => (
             <li className="flex gap-4 rounded-lg border p-5" key={label}>
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-pink-text">
                 <Icon aria-hidden="true" className="size-5" />
               </span>
               <div className="flex flex-col gap-1">
@@ -89,7 +89,7 @@ const Contact = async ({ params }: ContactProps) => {
                 ) : null}
                 {href ? (
                   <a
-                    className="font-medium text-primary hover:underline"
+                    className="font-medium text-pink-text hover:underline"
                     dir={ltr ? "ltr" : undefined}
                     href={href}
                     {...(href.startsWith("https://t.me")

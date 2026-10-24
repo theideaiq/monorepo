@@ -22,7 +22,7 @@ export const SellerLine = async ({
     <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground text-sm">
       <span>{t("seller", { seller })}</span>
       {verified ? (
-        <span className="inline-flex items-center gap-1 font-medium text-primary">
+        <span className="inline-flex items-center gap-1 font-medium text-pink-text">
           <BadgeCheck aria-hidden="true" className="size-4" />
           {t("verifiedSeller")}
         </span>

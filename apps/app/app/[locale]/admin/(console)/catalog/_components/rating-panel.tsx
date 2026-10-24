@@ -42,7 +42,7 @@ export const RatingPanel = async ({
           <div className="grid justify-items-center gap-1 px-4">
             <span className="flex items-center gap-2 font-semibold text-3xl tabular-nums">
               {format.number(summary.average)}
-              <StarIcon className="size-6 fill-amber-400 text-amber-400" />
+              <StarIcon className="size-6 fill-bulb-yellow text-warning" />
             </span>
             <span className="text-muted-foreground text-sm">
               {t("count", { count: format.number(summary.published) })}
@@ -59,7 +59,7 @@ export const RatingPanel = async ({
                 </span>
                 <span className="h-2 overflow-hidden rounded-full bg-muted">
                   <span
-                    className="block h-full rounded-full bg-amber-400"
+                    className="block h-full rounded-full bg-bulb-yellow"
                     style={{ width: `${Math.round(row.share * 100)}%` }}
                   />
                 </span>

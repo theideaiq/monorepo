@@ -113,7 +113,7 @@ export const ReviewRow = async ({
       <TableCell>
         <span
           aria-label={t("stars", { count: format.number(review.rating) })}
-          className="whitespace-nowrap text-amber-500"
+          className="whitespace-nowrap text-warning"
           role="img"
         >
           {stars(review.rating)}

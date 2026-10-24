@@ -1,3 +1,6 @@
+import { Highlight } from "@repo/design-system/components/brand/highlight";
+import { PinkBand } from "@repo/design-system/components/brand/pink-band";
+import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale, Messages } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
@@ -112,9 +115,9 @@ const Plus = async ({ params }: PlusProps) => {
                 className="flex flex-col gap-3 rounded-lg border p-5"
                 key={plan.id}
               >
-                <span className="w-fit rounded-full bg-brand px-3 py-1 font-semibold text-brand-foreground text-sm">
+                <Badge className="px-3 py-1 text-sm" variant="plus">
                   {plan.name}
-                </span>
+                </Badge>
                 <p className="text-muted-foreground text-sm">
                   {index === 0
                     ? t("tiers.entry")
@@ -158,6 +161,22 @@ const Plus = async ({ params }: PlusProps) => {
           <EmptyState>{t("catalog.empty")}</EmptyState>
         )}
       </Section>
+
+      <PinkBand
+        action={
+          <Button asChild className="gap-2" size="lg" variant="brand">
+            <a href={plusUrl}>
+              {t("cta")} <MoveRight className="size-4 rtl:rotate-180" />
+            </a>
+          </Button>
+        }
+        description={t("subtitle")}
+        title={
+          <>
+            {t("title")} <Highlight>{t("highlight")}</Highlight>
+          </>
+        }
+      />
     </>
   );
 };
