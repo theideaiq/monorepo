@@ -57,7 +57,7 @@ scripts/      Repository checks
 
 ## Getting started
 
-Prerequisites: Node.js 22+, [Bun](https://bun.sh), and Docker if you want to run
+Prerequisites: Node.js 24 (`.nvmrc`), [Bun](https://bun.sh), and Docker if you want to run
 Supabase locally.
 
 ```sh

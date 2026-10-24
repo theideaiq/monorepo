@@ -2,6 +2,10 @@
 
 Conventions for anyone — human or AI agent — changing this repository.
 
+Start every session by reading `PROGRESS.md` (launch checklist, open items
+and decisions). How production is operated (releases, migrations, backups,
+incidents) is in `docs/platform`.
+
 ## Repository map
 
 - `apps/web` — The IDEA's public website (Next.js, i18n routes under
@@ -25,8 +29,10 @@ Conventions for anyone — human or AI agent — changing this repository.
   internal scope; never rename it per project.
 - `packages/config/project.json` — the single source of truth for organization,
   project, locales, region and commerce settings. Read it through `@repo/config`.
+- `apps/e2e` — Playwright journeys with axe accessibility checks.
 - `scripts/` — `check-placeholders.ts`, `check-rtl.ts` and `check-i18n.ts`
-  are repo checks.
+  are repo checks; `vercel-ignore.mjs` is every Vercel project's ignored
+  build step.
 - `ARCHITECTURE_AND_INTEGRATIONS.md` — how the pieces fit together and how to
   set up each integration (Supabase, Capacitor, tracking, Wayl, Vercel).
 
@@ -37,16 +43,25 @@ bun install
 bun run dev                 # all apps
 bun run check | fix         # Biome (Ultracite rules)
 bun run typecheck           # every workspace
-bun run test                # Vitest in every workspace
-bun run check:placeholders
+bun run test                # Vitest in every workspace (cached per package)
+bun run test:coverage       # every workspace in one Vitest run, with coverage
+bun run check:placeholders  # no unfilled template tokens
 bun run check:rtl           # physical Tailwind utilities (--fix rewrites them)
 bun run check:i18n          # UI text that isn't in the messages files
+bun run check:unused        # unused files and dependencies (Knip)
+bun run boundaries          # packages import only what they declare
+bun run db:start | db:reset | db:test | db:types
+bun run --cwd packages/database db:test:sync   # copy the pgTAP preamble
 bun run build:native        # static export of apps/app for Capacitor
 bun run cap:sync            # build:native + copy into the iOS/Android projects
 bun run gen:package         # scaffold packages/<name>
 ```
 
-Run `check`, `typecheck` and `test` before every commit.
+Run `check`, `typecheck` and `test` before every commit, and `db:test` for
+any schema change. CI (`.github/workflows/ci.yml`) also runs `bun audit`,
+the boundaries and unused-code checks, every build, a scan of the client
+bundles for secret names, the pgTAP suites, integration tests against a
+local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 
 ## Rules
 
@@ -64,7 +79,17 @@ Run `check`, `typecheck` and `test` before every commit.
 - **Database:** schema changes are migrations with RLS policies and tests;
   see Database standards below.
 - **Secrets:** never in client code, logs or commits. New env vars go in the
-  package's `keys.ts` and every affected `.env.example`.
+  package's `keys.ts` and every affected `.env.example`, and in `globalEnv`
+  in `turbo.json` (strict env mode passes nothing else to tasks). A client
+  component never imports `env.ts` or a `keys.ts` with server variables:
+  pass the public value down from a server component instead. CI fails when
+  a server variable name reaches a client bundle.
+- **Migrations ship through CI.** After merge, `.github/workflows/migrate.yml`
+  runs `supabase db push` against production once CI passes on `main`.
+  Never paste SQL into the production database.
+- **Commit messages** never contain a workflow skip marker (the bracketed
+  `skip ci` family), not even to describe one: a squash merge would carry
+  it into `main` and skip CI, the migration and the deployments.
 - **Files:** use `@repo/storage`. Organization files live under
   `<organization id>/` and avatars under `<user id>/`; the bucket policies
   depend on that layout.
@@ -88,12 +113,11 @@ Run `check`, `typecheck` and `test` before every commit.
   ones (`ml-*`, `pr-*`, `left-*`, `text-left`); `bun run check:rtl` enforces
   this. Icons that point along the reading direction (arrows, chevrons) get
   `rtl:rotate-180`. Dates default to `Asia/Baghdad`.
-- **Optional modules:** code that belongs to an optional module (see
-  `scripts/template/modules.ts`) is wrapped in `// <module:id>` …
-  `// </module:id>` markers (`{/* … */}` in JSX, `#` in env files). Keep markers
-  balanced; `bun run check:placeholders` verifies them.
-- **Placeholders:** project-specific values use double-brace tokens such as the
-  project name token in `README.md`. Only `bun run init` should replace them.
+- **Template:** this project was created from `shaheenfarjo/monorepo`; the
+  template's optional modules that The IDEA doesn't use (CMS, collaboration,
+  feature flags, in-app notifications service, outbound webhooks) were
+  removed, and `bun run check:placeholders` fails on any leftover template
+  token. Port useful template fixes by hand.
 - **shadcn/ui:** files in `packages/design-system/components/ui` are generated;
   update them with the shadcn CLI rather than hand-editing where possible.
 

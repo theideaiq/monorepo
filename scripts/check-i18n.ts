@@ -21,7 +21,13 @@ const ROOTS = [
   "apps/web/app",
   "apps/web/components",
 ];
-const IGNORED_DIRECTORIES = new Set([".next", "node_modules", "out"]);
+const IGNORED_DIRECTORIES = new Set([
+  ".claude",
+  ".next",
+  ".react-email",
+  "node_modules",
+  "out",
+]);
 // Latin or Arabic-script letters.
 const LETTERS = /[A-Za-z؀-ۿ]{2,}/;
 // Text between a closing ">" and the next "<" on the same line.
