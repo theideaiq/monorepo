@@ -60,6 +60,7 @@ const PlansPage = async () => {
                   </TableHead>
                   <TableHead>{t("plans.interval")}</TableHead>
                   <TableHead className="text-end">{t("plans.slots")}</TableHead>
+                  <TableHead className="text-end">{t("plans.tier")}</TableHead>
                   <TableHead>{t("fields.status")}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -93,6 +94,9 @@ const PlansPage = async () => {
                     </TableCell>
                     <TableCell className="text-end tabular-nums">
                       {format.number(plan.rental_slots)}
+                    </TableCell>
+                    <TableCell className="text-end tabular-nums">
+                      {format.number(plan.tier)}
                     </TableCell>
                     <TableCell>
                       <StatusBadge status={plan.active ? "active" : "archived"}>

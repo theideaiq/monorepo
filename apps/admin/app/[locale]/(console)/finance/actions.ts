@@ -4,9 +4,16 @@ import { Constants } from "@repo/database";
 import { z } from "zod";
 import { ActionFailure, affected, check, staffAction } from "@/lib/action";
 import { success } from "@/lib/action-state";
+import { holderSchema } from "@/lib/equity";
+import {
+  deleteByIdSchema,
+  financialSettingsSchema,
+  fixedAssetSchema,
+  journalEntrySchema,
+  parseDimensions,
+} from "@/lib/finance";
 import {
   checkbox,
-  date,
   int,
   optionalDate,
   optionalDecimal,
@@ -30,25 +37,22 @@ const amount = (value: string | undefined) => {
   return AMOUNT.test(clean) ? Number(clean) : Number.NaN;
 };
 
-const journalSchema = z.object({
-  accountId: z.array(z.string()).default([]),
-  credit: z.array(z.string()).default([]),
-  debit: z.array(z.string()).default([]),
-  description: text(500),
-  entryDate: date,
-  memo: z.array(z.string().max(300)).default([]),
-  reference: optionalText(255),
-});
-
 /** Posts a balanced journal entry (`post_journal_entry` checks it again). */
 export const postJournalEntry = staffAction(
   "finance",
-  journalSchema,
+  journalEntrySchema,
   async ({ input, supabase }) => {
+    const dimensions = input.accountId.map((_, index) =>
+      parseDimensions(input.dimensions[index])
+    );
+    if (dimensions.some((value) => value === null)) {
+      throw new ActionFailure("invalid");
+    }
     const lines = input.accountId.map((accountId, index) => ({
       accountId: accountId.trim(),
       credit: amount(input.credit[index]),
       debit: amount(input.debit[index]),
+      dimensions: dimensions[index] ?? {},
       memo: input.memo[index] ?? null,
     }));
     const result = validateJournalLines(lines);
@@ -61,13 +65,21 @@ export const postJournalEntry = staffAction(
     }
     check(
       await supabase.rpc("post_journal_entry", {
+        currency: input.currency,
         description: input.description,
         entry_date: input.entryDate,
+        exchange_rate: input.exchangeRate,
         lines: toRpcLines(result.lines),
         reference: input.reference ?? undefined,
+        scenario: input.scenario,
       })
     );
-    return success("posted", { redirectTo: "/finance/journal" });
+    return success("posted", {
+      redirectTo:
+        input.scenario === "actual"
+          ? "/finance/journal"
+          : `/finance/journal?scenario=${input.scenario}`,
+    });
   }
 );
 
@@ -203,20 +215,15 @@ export const deleteRound = staffAction(
   }
 );
 
-const holderSchema = z.object({
-  id: optionalUuid,
-  name: text(200),
-  roundId: optionalUuid,
-  shares: int(0),
-  type: z.enum(Enums.equity_holder_type),
-  vestingStart: optionalDate,
-});
-
 export const saveHolder = staffAction(
   "finance",
   holderSchema,
   async ({ input, supabase }) => {
     const row = {
+      conversion_cap: input.conversionCap,
+      discount_rate: input.discountRate,
+      instrument: input.instrument,
+      invested_amount: input.investedAmount,
       name: input.name,
       round_id: input.roundId,
       shares: input.shares,
@@ -243,6 +250,70 @@ export const deleteHolder = staffAction(
   z.object({ id: uuid }),
   async ({ input, supabase }) => {
     check(await supabase.from("equity_holders").delete().eq("id", input.id));
+    return success("deleted");
+  }
+);
+
+export const saveFinancialSettings = staffAction(
+  "finance",
+  financialSettingsSchema,
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("financial_settings")
+        .update({
+          base_currency: input.baseCurrency,
+          corporate_tax_rate: input.corporateTaxRate,
+          fiscal_year_start_month: input.fiscalYearStartMonth,
+          vat_rate: input.vatRate,
+        })
+        .eq("id", true)
+        .select("id")
+    );
+    return success();
+  }
+);
+
+export const saveFixedAsset = staffAction(
+  "finance",
+  fixedAssetSchema,
+  async ({ input, supabase }) => {
+    const row = {
+      category: input.category,
+      cost: input.cost,
+      disposed_on: input.disposedOn,
+      name: input.name,
+      notes: input.notes,
+      purchase_date: input.purchaseDate,
+      salvage_value: input.salvageValue,
+      useful_life_months: input.usefulLifeMonths,
+    };
+    if (input.id) {
+      affected(
+        await supabase
+          .from("fixed_assets")
+          .update(row)
+          .eq("id", input.id)
+          .select("id")
+      );
+    } else {
+      check(await supabase.from("fixed_assets").insert(row));
+    }
+    return success();
+  }
+);
+
+export const deleteFixedAsset = staffAction(
+  "finance",
+  deleteByIdSchema,
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("fixed_assets")
+        .delete()
+        .eq("id", input.id)
+        .select("id")
+    );
     return success("deleted");
   }
 );

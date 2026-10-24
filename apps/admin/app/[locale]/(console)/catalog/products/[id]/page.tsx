@@ -4,9 +4,13 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/action-button";
 import { PageBody, PageHeader, Panel } from "@/components/page";
 import { env } from "@/env";
+import { tierOptions } from "@/lib/catalog";
 import { isUuid } from "@/lib/list";
+import { ratingSummary } from "@/lib/reviews";
+import { canRead } from "@/lib/roles";
 import { requireSection } from "@/lib/session";
 import { ProductForm } from "../../_components/product-form";
+import { RatingPanel } from "../../_components/rating-panel";
 import { VariantForm } from "../../_components/variant-form";
 import { deleteProduct } from "../../actions";
 
@@ -19,24 +23,39 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   if (!isUuid(id)) {
     notFound();
   }
-  const { canWrite, supabase } = await requireSection("catalog");
+  const { canWrite, staff, supabase } = await requireSection("catalog");
   const locale = await getLocale();
   const t = await getTranslations("admin.catalog");
   const tCommon = await getTranslations("admin.common");
 
-  const [{ data: product }, { data: variants }, { data: categories }] =
-    await Promise.all([
-      supabase.from("products").select("*").eq("id", id).maybeSingle(),
-      supabase
-        .from("product_variants")
-        .select("*")
-        .eq("product_id", id)
-        .order("position"),
-      supabase
-        .from("product_categories")
-        .select("id, name_ar, name_en")
-        .order("position"),
-    ]);
+  const [
+    { data: product },
+    { data: variants },
+    { data: categories },
+    { data: plans },
+    { data: reviews },
+  ] = await Promise.all([
+    supabase.from("products").select("*").eq("id", id).maybeSingle(),
+    supabase
+      .from("product_variants")
+      .select("*")
+      .eq("product_id", id)
+      .order("position"),
+    supabase
+      .from("product_categories")
+      .select("id, name_ar, name_en")
+      .order("position"),
+    supabase
+      .from("plans")
+      .select("name, audience, tier")
+      .eq("audience", "plus")
+      .order("position"),
+    supabase
+      .from("product_reviews")
+      .select("rating, status")
+      .eq("product_id", id)
+      .limit(10_000),
+  ]);
 
   if (!product) {
     notFound();
@@ -72,6 +91,12 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           disabled={!canWrite}
           product={product}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
+          tiers={tierOptions(plans ?? [])}
+        />
+        <RatingPanel
+          productId={product.id}
+          showReviews={canRead(staff.role, "reviews")}
+          summary={ratingSummary(reviews ?? [])}
         />
         <Panel
           description={t("variants.description")}

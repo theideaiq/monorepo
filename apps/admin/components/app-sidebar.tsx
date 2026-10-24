@@ -20,6 +20,7 @@ import {
   BookOpenIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
+  LifeBuoyIcon,
   LogOutIcon,
   type LucideIcon,
   MegaphoneIcon,
@@ -29,6 +30,7 @@ import {
   SendIcon,
   ShieldCheckIcon,
   ShoppingCartIcon,
+  StarIcon,
   UsersIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -47,7 +49,9 @@ const icons: Record<Section, LucideIcon> = {
   marketing: MegaphoneIcon,
   orders: ShoppingCartIcon,
   rentals: RepeatIcon,
+  reviews: StarIcon,
   staff: ShieldCheckIcon,
+  support: LifeBuoyIcon,
   telegram: SendIcon,
 };
 

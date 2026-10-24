@@ -15,10 +15,19 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { FilterBar } from "@/components/filter-bar";
 import { EmptyState, PageBody, PageHeader } from "@/components/page";
 import { Pagination } from "@/components/pagination";
+import { scenarioFrom } from "@/lib/finance";
 import { formatters } from "@/lib/format";
-import { pageRange, param, type SearchParams, searchTerm } from "@/lib/list";
+import {
+  pageRange,
+  param,
+  type SearchParams,
+  searchTerm,
+  withParams,
+} from "@/lib/list";
 import { requireSection } from "@/lib/session";
+import { DimensionBadges } from "../_components/dimension-badges";
 import { FinanceTabs } from "../_components/finance-tabs";
+import { ScenarioSwitcher } from "../_components/scenario-switcher";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.finance.tabs");
@@ -43,16 +52,18 @@ const JournalPage = async ({
   const since = param(params, "from");
   const until = param(params, "to");
   const q = searchTerm(param(params, "q"));
+  const scenario = scenarioFrom(params);
 
   let query = supabase
     .from("ledger_entries")
     .select(
-      "id, entry_date, description, reference, created_at, ledger_lines(id, debit, credit, memo, chart_of_accounts(code, name))",
+      "id, entry_date, description, reference, scenario, currency, exchange_rate, created_at, ledger_lines(id, debit, credit, memo, dimensions, chart_of_accounts(code, name))",
       { count: "exact" }
     )
     .order("entry_date", { ascending: false })
     .order("created_at", { ascending: false })
     .range(from, to);
+  query = query.eq("scenario", scenario);
   if (DATE.test(since)) {
     query = query.gte("entry_date", since);
   }
@@ -69,7 +80,9 @@ const JournalPage = async ({
       <PageHeader title={tFinance("title")}>
         {canWrite ? (
           <Button asChild>
-            <Link href="/finance/journal/new">
+            <Link
+              href={`/finance/journal/new${withParams({}, { scenario: scenario === "actual" ? null : scenario })}`}
+            >
               <PlusIcon />
               {t("new")}
             </Link>
@@ -78,7 +91,15 @@ const JournalPage = async ({
       </PageHeader>
       <FinanceTabs />
       <PageBody>
+        <ScenarioSwitcher
+          current={scenario}
+          params={params}
+          pathname="/finance/journal"
+        />
         <FilterBar>
+          {scenario === "actual" ? null : (
+            <input name="scenario" type="hidden" value={scenario} />
+          )}
           <Input
             aria-label={t("search")}
             className="w-56"
@@ -120,6 +141,14 @@ const JournalPage = async ({
                       {format.date(`${entry.entry_date}T12:00:00Z`)}
                       {entry.reference ? ` · ${entry.reference}` : ""}
                     </span>
+                    {entry.currency === "IQD" ? null : (
+                      <span className="text-muted-foreground text-xs">
+                        {t("bookedIn", {
+                          currency: entry.currency,
+                          rate: format.number(Number(entry.exchange_rate)),
+                        })}
+                      </span>
+                    )}
                   </div>
                   <span className="font-semibold tabular-nums">
                     {format.money(total)}
@@ -144,7 +173,10 @@ const JournalPage = async ({
                           {line.chart_of_accounts?.name}
                         </TableCell>
                         <TableCell className="text-muted-foreground">
-                          {line.memo ?? ""}
+                          <span className="grid gap-1">
+                            {line.memo ?? ""}
+                            <DimensionBadges value={line.dimensions} />
+                          </span>
                         </TableCell>
                         <TableCell className="text-end tabular-nums">
                           {line.debit ? format.money(line.debit) : ""}

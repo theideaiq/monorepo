@@ -12,6 +12,8 @@ export const sections = [
   "orders",
   "rentals",
   "customers",
+  "support",
+  "reviews",
   "marketing",
   "finance",
   "editorial",
@@ -33,7 +35,9 @@ export const sectionHref: Record<Section, string> = {
   marketing: "/marketing",
   orders: "/orders",
   rentals: "/rentals",
+  reviews: "/reviews",
   staff: "/staff",
+  support: "/support",
   telegram: "/telegram",
 };
 export type AccessLevel = "read" | "write";
@@ -67,6 +71,8 @@ const roleAccess: Record<StaffRole, AccessMap> = {
     dashboard: "read",
     orders: "write",
     rentals: "write",
+    reviews: "write",
+    support: "write",
     telegram: "write",
   },
 };

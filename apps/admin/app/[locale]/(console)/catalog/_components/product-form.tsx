@@ -3,6 +3,7 @@
 import type { Tables } from "@repo/database";
 import { Constants } from "@repo/database";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import {
   CheckboxField,
@@ -14,6 +15,7 @@ import {
 import { FileUpload } from "@/components/file-upload";
 import { KeyValueEditor } from "@/components/key-value-editor";
 import { Panel } from "@/components/page";
+import { withCurrentTier } from "@/lib/catalog";
 import { saveProduct } from "../actions";
 
 const { Enums } = Constants.public;
@@ -23,6 +25,8 @@ interface ProductFormProps {
   readonly disabled?: boolean;
   readonly product?: Tables<"products">;
   readonly supabaseUrl: string;
+  /** IDEA Plus tiers, with the plan names at each (see `tierOptions`). */
+  readonly tiers: { names: string; tier: number }[];
 }
 
 export const ProductForm = ({
@@ -30,10 +34,18 @@ export const ProductForm = ({
   disabled = false,
   product,
   supabaseUrl,
+  tiers,
 }: ProductFormProps) => {
   const t = useTranslations("admin.catalog");
   const tStore = useTranslations("store");
   const tCommon = useTranslations("admin.common");
+  const [kind, setKind] = useState<string>(product?.kind ?? "sale");
+  const currentTier = product?.rental_tier ?? null;
+  const tierChoices = withCurrentTier(
+    tiers,
+    currentTier,
+    t("fields.unknownTier")
+  );
 
   return (
     <ActionForm action={saveProduct}>
@@ -79,14 +91,15 @@ export const ProductForm = ({
               ]}
             />
             <SelectField
-              defaultValue={product?.kind ?? "sale"}
               hint={t("fields.kindHint")}
               label={t("fields.kind")}
               name="kind"
+              onChange={(event) => setKind(event.target.value)}
               options={Enums.product_kind.map((value) => ({
                 label: tStore(`kind.${value}`),
                 value,
               }))}
+              value={kind}
             />
             <SelectField
               defaultValue={product?.status ?? "draft"}
@@ -98,12 +111,44 @@ export const ProductForm = ({
                 value,
               }))}
             />
+            <TextField
+              defaultValue={product?.seller ?? "The IDEA"}
+              hint={t("fields.sellerHint")}
+              label={t("fields.seller")}
+              maxLength={120}
+              name="seller"
+              required
+            />
+            {kind === "rental" ? (
+              <SelectField
+                defaultValue={String(currentTier ?? "")}
+                hint={t("fields.rentalTierHint")}
+                label={t("fields.rentalTier")}
+                name="rentalTier"
+                options={[
+                  { label: t("fields.anyPlan"), value: "" },
+                  ...tierChoices.map((item) => ({
+                    label: t("fields.tierOption", {
+                      names: item.names,
+                      tier: String(item.tier),
+                    }),
+                    value: String(item.tier),
+                  })),
+                ]}
+              />
+            ) : null}
           </FieldGrid>
           <CheckboxField
             defaultChecked={product?.featured ?? false}
             hint={t("fields.featuredHint")}
             label={t("fields.featured")}
             name="featured"
+          />
+          <CheckboxField
+            defaultChecked={product?.verified ?? true}
+            hint={t("fields.verifiedHint")}
+            label={t("fields.verified")}
+            name="verified"
           />
         </Panel>
 
