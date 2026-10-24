@@ -1,7 +1,14 @@
 import { expect, test } from "@playwright/test";
-import { customer, phoneUser, product } from "../fixtures";
+import {
+  clearInbox,
+  customer,
+  emailedCode,
+  product,
+  signUpUser,
+  unknownEmail,
+} from "../fixtures";
 import { urls } from "../playwright.config";
-import { resetCustomer, resetPhoneUser } from "../seed";
+import { accountExists, resetCustomer, resetSignUpUser } from "../seed";
 import {
   expectAccessible,
   expectSignedInHome,
@@ -9,10 +16,12 @@ import {
   watchConsole,
 } from "./helpers";
 
-test("sign up on The IDEA Pass with a mobile number and a code", async ({
-  page,
-}) => {
-  const fresh = await resetPhoneUser();
+const WELCOME = /^Welcome to/;
+const NOTIFICATIONS = /^Notifications/;
+const cartReturnTo = `?return_to=${encodeURIComponent("/en/cart")}`;
+
+test("sign up on The IDEA Pass with an emailed code", async ({ page }) => {
+  await resetSignUpUser();
   // The IDEA Pass sign-up is a page of The IDEA Spark.
   await page.goto(`${urls.app}/en/sign-up`);
   await expect(page).toHaveURL(`${urls.app}/en/sign-up`);
@@ -20,28 +29,76 @@ test("sign up on The IDEA Pass with a mobile number and a code", async ({
     page.getByRole("heading", { name: "Get The IDEA Pass" })
   ).toBeVisible();
   await expectAccessible(page);
-  await page.getByLabel("Full name").fill(phoneUser.name);
-  await page.getByLabel("Mobile number").fill(phoneUser.local);
+  await page.getByLabel("Full name").fill(signUpUser.name);
+  await page.getByLabel("Email").fill(signUpUser.email);
+  await clearInbox(signUpUser.email);
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page.getByText("We sent a 6-digit code")).toBeVisible();
+  await expect(
+    page.getByText(`We emailed a 6-digit code to ${signUpUser.email}.`)
+  ).toBeVisible();
+  await expectAccessible(page);
   // Filling the last slot submits the code.
-  await page.getByLabel("Verification code").fill(phoneUser.code);
+  await page
+    .getByLabel("Verification code")
+    .fill(await emailedCode(signUpUser.email));
 
   // New accounts may be asked to confirm their name and language first.
-  const onboarding = page.getByRole("heading", { name: /^Welcome to/ });
-  const bell = page.getByRole("button", { name: /^Notifications/ });
+  const onboarding = page.getByRole("heading", { name: WELCOME });
+  const bell = page.getByRole("button", { name: NOTIFICATIONS });
   await expect(onboarding.or(bell)).toBeVisible({ timeout: 15_000 });
   if (await onboarding.isVisible()) {
-    await expect(page.getByLabel("Full name")).toHaveValue(phoneUser.name);
+    await expect(page.getByLabel("Full name")).toHaveValue(signUpUser.name);
     await expectAccessible(page);
     await page.getByRole("button", { name: "Continue" }).click();
   }
   await expectSignedInHome(page);
-  if (fresh) {
-    await expect(
-      page.getByRole("button", { name: phoneUser.name })
-    ).toBeVisible();
-  }
+  await expect(
+    page.getByRole("button", { name: signUpUser.name })
+  ).toBeVisible();
+
+  // "Your Pass" shows the account's email.
+  await page.goto(`${urls.app}/en/pass`);
+  await expect(page.getByText(signUpUser.email)).toBeVisible();
+});
+
+test("sign in on The IDEA Pass with an emailed code and go back", async ({
+  page,
+}) => {
+  await resetCustomer();
+  await page.goto(`${urls.app}/en/sign-in${cartReturnTo}`);
+  await page.getByLabel("Email").fill(customer.email);
+  await clearInbox(customer.email);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(
+    page.getByText(`We emailed a 6-digit code to ${customer.email}.`)
+  ).toBeVisible();
+
+  // A wrong code is refused and can be retried.
+  await page.getByLabel("Verification code").fill("000000");
+  await expect(
+    page.getByText("That code is incorrect or has expired.")
+  ).toBeVisible();
+  await page
+    .getByLabel("Verification code")
+    .fill(await emailedCode(customer.email));
+  await expect(page).toHaveURL(`${urls.app}/en/cart`, { timeout: 15_000 });
+});
+
+test("sign-in with an unknown email offers sign-up", async ({ page }) => {
+  await resetSignUpUser();
+  await page.goto(`${urls.app}/en/sign-in${cartReturnTo}`);
+  await page.getByLabel("Email").fill(unknownEmail);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(
+    page.getByText("There's no account with this email yet.")
+  ).toBeVisible();
+  await expectAccessible(page);
+  await page
+    .getByRole("link", { name: "Get The IDEA Pass with this email" })
+    .click();
+  await expect(page).toHaveURL(`${urls.app}/en/sign-up${cartReturnTo}`);
+  // Signing in never creates an account.
+  expect(await accountExists(unknownEmail)).toBe(false);
 });
 
 test("the sign-in page is accessible in Arabic", async ({ page }) => {

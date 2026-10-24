@@ -32,6 +32,8 @@ const loadLocalStack = () => {
     process.env.SUPABASE_URL ??= values.API_URL;
     process.env.SUPABASE_SECRET_KEY ??= values.SECRET_KEY;
     process.env.SUPABASE_PUBLISHABLE_KEY ??= values.PUBLISHABLE_KEY;
+    // The mail catcher the email codes land in (fixtures.ts, emailedCode).
+    process.env.MAILPIT_URL ??= values.MAILPIT_URL ?? values.INBUCKET_URL;
   } catch {
     // Not running: global setup reports the missing keys.
   }
