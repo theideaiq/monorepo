@@ -52,6 +52,7 @@ bun run check:unused        # unused files and dependencies (Knip)
 bun run boundaries          # packages import only what they declare
 bun run db:start | db:reset | db:test | db:types
 bun run --cwd packages/database db:test:sync   # copy the pgTAP preamble
+bun run --cwd apps/e2e e2e  # Playwright journeys + axe (local stack running)
 bun run build:native        # static export of apps/app for Capacitor
 bun run cap:sync            # build:native + copy into the iOS/Android projects
 bun run gen:package         # scaffold packages/<name>

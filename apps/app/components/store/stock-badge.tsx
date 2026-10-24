@@ -37,7 +37,7 @@ export const StockBadge = ({
   return (
     <span
       className={cn(
-        "text-emerald-600 text-xs dark:text-emerald-400",
+        "text-emerald-700 text-xs dark:text-emerald-400",
         className
       )}
     >

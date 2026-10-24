@@ -7,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@repo/design-system/components/ui/popover";
-import { cn } from "@repo/design-system/lib/utils";
 import type { Locale } from "@repo/internationalization";
 import {
   formatNumber,
@@ -45,10 +44,9 @@ const NotificationItem = ({
   return (
     <li>
       <button
-        className={cn(
-          "grid w-full gap-0.5 px-4 py-3 text-start transition-colors hover:bg-accent",
-          unread && "bg-primary/5"
-        )}
+        // Unread rows are marked by the dot; a tinted row would drop the
+        // grey lines below AA contrast.
+        className="grid w-full gap-0.5 px-4 py-3 text-start transition-colors hover:bg-accent"
         onClick={() => onOpen(notification)}
         type="button"
       >
