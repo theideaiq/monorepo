@@ -802,8 +802,7 @@
   "app": {
     "meta": {
       "title": "The IDEA Spark",
-      "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place.",
-      "badge": "Spark"
+      "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place."
     },
     "nav": {
       "label": "Navigation",
@@ -1579,8 +1578,7 @@
   "admin": {
     "meta": {
       "title": "The IDEA back office",
-      "description": "Staff console for The IDEA.",
-      "badge": "Staff"
+      "description": "Staff console for The IDEA."
     },
     "noAccess": {
       "title": "No access",
@@ -2618,7 +2616,6 @@
       "title": "The IDEA Pass",
       "description": "One account for everything at The IDEA: the app, the store, The IDEA Plus and more."
     },
-    "badge": "Pass",
     "continueTo": "You'll continue to {host}.",
     "signIn": {
       "title": "Sign in to The IDEA Pass",

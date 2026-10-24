@@ -122,7 +122,7 @@ const CampaignPage = async ({
         >
           <div className="overflow-hidden rounded-md border">
             <div className="bg-brand px-5 py-3 text-brand-foreground">
-              <BrandLogo className="[&_svg]:text-brand-foreground" />
+              <BrandLogo variant="on-yellow" />
             </div>
             <div className="bg-white p-5 text-zinc-900" dir="auto">
               <MarkdownPreview invert={false} source={campaign.body} />

@@ -802,8 +802,7 @@
   "app": {
     "meta": {
       "title": "The IDEA Spark",
-      "description": "تطبيق The IDEA: طلباتك و The IDEA Plus والفعاليات والدعم في مكان واحد.",
-      "badge": "Spark"
+      "description": "تطبيق The IDEA: طلباتك و The IDEA Plus والفعاليات والدعم في مكان واحد."
     },
     "nav": {
       "label": "التنقل",
@@ -1579,8 +1578,7 @@
   "admin": {
     "meta": {
       "title": "لوحة إدارة The IDEA",
-      "description": "لوحة تحكّم فريق عمل The IDEA.",
-      "badge": "الفريق"
+      "description": "لوحة تحكّم فريق عمل The IDEA."
     },
     "noAccess": {
       "title": "لا تملك صلاحية الدخول",
@@ -2618,7 +2616,6 @@
       "title": "The IDEA Pass",
       "description": "حساب واحد لكل خدمات The IDEA: التطبيق والمتجر و The IDEA Plus وغيرها."
     },
-    "badge": "Pass",
     "continueTo": "ستنتقل بعدها إلى {host}.",
     "signIn": {
       "title": "تسجيل الدخول إلى The IDEA Pass",

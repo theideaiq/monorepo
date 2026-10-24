@@ -62,10 +62,7 @@ export const AppSidebar = () => {
           href="/"
           onClick={closeOnMobile}
         >
-          <BrandLogo />
-          <span className="rounded-full bg-brand px-2 py-0.5 font-medium text-brand-foreground text-xs">
-            {tMeta("badge")}
-          </span>
+          <BrandLogo line="Spark" />
         </Link>
       </SidebarHeader>
       <SidebarContent>
