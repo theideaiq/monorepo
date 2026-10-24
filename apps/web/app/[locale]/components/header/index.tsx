@@ -22,9 +22,11 @@ import { LanguageSwitcher } from "./language-switcher";
 interface HeaderProperties {
   // Passed in by the server layout so the client bundle never imports env.ts.
   readonly appUrl: string;
+  /** The IDEA Pass sign-in, coming back to the app. */
+  readonly signInUrl: string;
 }
 
-export const Header = ({ appUrl }: HeaderProperties) => {
+export const Header = ({ appUrl, signInUrl }: HeaderProperties) => {
   const t = useTranslations("web.nav");
   const common = useTranslations("common");
   const locale = useLocale();
@@ -85,7 +87,7 @@ export const Header = ({ appUrl }: HeaderProperties) => {
             <ModeToggle labels={themeLabels} />
           </div>
           <Button asChild className="hidden md:inline-flex" variant="ghost">
-            <a href={appLink(appUrl, locale, "/sign-in")}>{t("signIn")}</a>
+            <a href={signInUrl}>{t("signIn")}</a>
           </Button>
           <Button asChild className="hidden sm:inline-flex">
             <a href={appLink(appUrl, locale)}>{t("openApp")}</a>
@@ -127,7 +129,7 @@ export const Header = ({ appUrl }: HeaderProperties) => {
               <LanguageSwitcher />
               <ModeToggle labels={themeLabels} />
               <Button asChild className="ms-auto" variant="outline">
-                <a href={appLink(appUrl, locale, "/sign-in")}>{t("signIn")}</a>
+                <a href={signInUrl}>{t("signIn")}</a>
               </Button>
               <Button asChild>
                 <a href={appLink(appUrl, locale)}>{t("openApp")}</a>

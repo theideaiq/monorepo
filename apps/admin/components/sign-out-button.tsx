@@ -1,22 +1,26 @@
 import { Button } from "@repo/design-system/components/ui/button";
 import { LogOutIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { ComponentProps } from "react";
-import { signOut } from "@/lib/auth-actions";
+import { passLink } from "@/lib/pass";
 
-/** A sign-out button (a form posting to the sign-out Server Action). */
-export const SignOutButton = ({
+/**
+ * Signs out through The IDEA Pass (`/sign-out`), which then comes back to
+ * the back office, where signed-out visitors are sent to the Pass sign-in.
+ */
+export const SignOutButton = async ({
   className,
   variant = "outline",
 }: Pick<ComponentProps<typeof Button>, "className" | "variant">) => {
-  const t = useTranslations("auth");
+  const locale = await getLocale();
+  const t = await getTranslations("auth");
 
   return (
-    <form action={signOut}>
-      <Button className={className} type="submit" variant={variant}>
+    <Button asChild className={className} variant={variant}>
+      <a href={await passLink("/sign-out", locale)}>
         <LogOutIcon className="rtl:rotate-180" />
         {t("signOut")}
-      </Button>
-    </form>
+      </a>
+    </Button>
   );
 };

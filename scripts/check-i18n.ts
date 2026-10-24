@@ -18,6 +18,8 @@ const ROOTS = [
   "apps/admin/components",
   "apps/app/app",
   "apps/app/components",
+  "apps/pass/app",
+  "apps/pass/components",
   "apps/web/app",
   "apps/web/components",
 ];

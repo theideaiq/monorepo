@@ -2,9 +2,11 @@
 
 import { useAuth } from "@repo/auth/provider";
 import { usePathname, useRouter } from "@repo/internationalization/navigation";
+import { useLocale } from "next-intl";
 import { type ReactNode, useEffect } from "react";
 import { safeNextPath } from "@/lib/navigation";
 import { needsOnboarding } from "@/lib/onboarding";
+import { goToPass, usesPass } from "@/lib/pass";
 import { useProfile } from "@/lib/queries";
 import { useOrganization } from "./organization-provider";
 import { ErrorState, FullPageSpinner } from "./states";
@@ -14,23 +16,28 @@ interface GateProps {
 }
 
 /**
- * Shows its children only to signed-in users and sends everyone else to the
- * sign-in page (coming back afterwards). This is a convenience: the data is
+ * Shows its children only to signed-in users and sends everyone else to
+ * sign in (The IDEA Pass on the web, the in-app page in the iOS/Android
+ * apps), coming back afterwards. This is a convenience: the data is
  * protected by Row Level Security, not by this check.
  */
 export const RequireAuth = ({ children }: GateProps) => {
   const { loading, user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const locale = useLocale();
 
   useEffect(() => {
-    if (!(loading || user)) {
-      router.replace({
-        pathname: "/sign-in",
-        query: { next: `${pathname}${window.location.search}` },
-      });
+    if (loading || user) {
+      return;
     }
-  }, [loading, pathname, router, user]);
+    const next = `${pathname}${window.location.search}`;
+    if (usesPass()) {
+      goToPass("/sign-in", locale, next);
+    } else {
+      router.replace({ pathname: "/sign-in", query: { next } });
+    }
+  }, [loading, locale, pathname, router, user]);
 
   return loading || !user ? <FullPageSpinner /> : children;
 };

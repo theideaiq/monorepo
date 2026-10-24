@@ -1553,29 +1553,6 @@
       "description": "لوحة تحكّم فريق عمل The IDEA.",
       "badge": "الفريق"
     },
-    "signIn": {
-      "title": "الدخول إلى لوحة الإدارة",
-      "description": "لفريق العمل فقط. سجّل الدخول برقم هاتفك، ثم أكّد بتطبيق المصادقة."
-    },
-    "mfa": {
-      "title": "تطبيق المصادقة",
-      "enrollTitle": "إعداد تطبيق المصادقة",
-      "enrollDescription": "حسابات فريق العمل محمية بخطوة تحقّق ثانية. اربط تطبيق مصادقة مرة واحدة، وستُدخل رمزه في كل مرة تسجّل فيها الدخول.",
-      "challengeTitle": "أدخل رمز تطبيق المصادقة",
-      "challengeDescription": "افتح تطبيق المصادقة وأدخل الرمز المكوّن من 6 أرقام الخاص بـ The IDEA.",
-      "stepInstall": "ثبّت تطبيق مصادقة (Google Authenticator أو Microsoft Authenticator أو 1Password…).",
-      "stepScan": "امسح رمز QR هذا بالتطبيق، أو أدخل مفتاح الإعداد أدناه.",
-      "stepCode": "أدخل الرمز المكوّن من 6 أرقام الذي يظهر في التطبيق.",
-      "qrAlt": "رمز QR لتطبيق المصادقة",
-      "secretLabel": "مفتاح الإعداد",
-      "codeLabel": "الرمز المكوّن من 6 أرقام",
-      "verify": "تأكيد",
-      "verifying": "جارٍ التحقّق…",
-      "errors": {
-        "invalidCode": "الرمز غير صحيح. تأكّد من ضبط الوقت في هاتفك وجرّب أحدث رمز.",
-        "unavailable": "تطبيقات المصادقة غير مفعّلة في هذا المشروع بعد. اطلب من أحد المسؤولين تفعيل المصادقة متعددة العوامل (TOTP) في Supabase."
-      }
-    },
     "noAccess": {
       "title": "لا تملك صلاحية الدخول",
       "description": "لا يملك هذا الحساب دورًا في فريق العمل. إن كنت من موظفي The IDEA فاطلب من أحد المشرفين العامّين منحك الصلاحية، ثم سجّل الدخول من جديد."
@@ -2598,6 +2575,62 @@
       "hide": "إخفاء",
       "unhide": "نشر",
       "deleteDescription": "سيُحذف التقييم نهائيًا. لإزالته من المتجر مع الاحتفاظ به، أخفِه بدلًا من ذلك."
+    }
+  },
+  "pass": {
+    "meta": {
+      "title": "The IDEA Pass",
+      "description": "حساب واحد لكل خدمات The IDEA: التطبيق والمتجر و The IDEA Plus وغيرها."
+    },
+    "badge": "Pass",
+    "continueTo": "ستنتقل بعدها إلى {host}.",
+    "signIn": {
+      "title": "تسجيل الدخول إلى The IDEA Pass",
+      "description": "استخدم رقم هاتفك المحمول. حساب واحد للتطبيق والمتجر و The IDEA Plus.",
+      "noAccount": "جديد على The IDEA؟",
+      "signUpLink": "احصل على The IDEA Pass",
+      "deleted": "تم حذف حسابك."
+    },
+    "signUp": {
+      "title": "احصل على The IDEA Pass",
+      "description": "سجّل برقم هاتفك المحمول. حساب واحد لكل خدمات The IDEA.",
+      "haveAccount": "لديك The IDEA Pass بالفعل؟",
+      "signInLink": "سجّل الدخول"
+    },
+    "home": {
+      "title": "حسابك في The IDEA Pass",
+      "description": "أنت مسجّل الدخول إلى The IDEA Pass، ويعمل حسابك في التطبيق والموقع و The IDEA Plus.",
+      "nameLabel": "الاسم",
+      "noName": "لم يُحدَّد بعد",
+      "phoneLabel": "رقم الهاتف المحمول",
+      "openApp": "افتح تطبيق The IDEA",
+      "website": "زيارة الموقع",
+      "authenticator": "تطبيق المصادقة",
+      "authenticatorOn": "مفعّل",
+      "authenticatorOff": "غير مُعَدّ",
+      "setUpAuthenticator": "إعداد"
+    },
+    "signOut": {
+      "title": "تسجيل الخروج"
+    },
+    "mfa": {
+      "title": "تطبيق المصادقة",
+      "enrollTitle": "إعداد تطبيق المصادقة",
+      "enrollDescription": "احمِ حسابك بخطوة تحقّق ثانية. اربط تطبيق مصادقة مرة واحدة، وستُدخل رمزه عندما يطلبه أحد المواقع. حسابات فريق العمل تحتاجه لدخول لوحة الإدارة.",
+      "challengeTitle": "أدخل رمز تطبيق المصادقة",
+      "challengeDescription": "افتح تطبيق المصادقة وأدخل الرمز المكوّن من 6 أرقام الخاص بـ The IDEA.",
+      "stepInstall": "ثبّت تطبيق مصادقة (Google Authenticator أو Microsoft Authenticator أو 1Password…).",
+      "stepScan": "امسح رمز QR هذا بالتطبيق، أو أدخل مفتاح الإعداد أدناه.",
+      "stepCode": "أدخل الرمز المكوّن من 6 أرقام الذي يظهر في التطبيق.",
+      "qrAlt": "رمز QR لتطبيق المصادقة",
+      "secretLabel": "مفتاح الإعداد",
+      "codeLabel": "الرمز المكوّن من 6 أرقام",
+      "verify": "تأكيد",
+      "verifying": "جارٍ التحقّق…",
+      "errors": {
+        "invalidCode": "الرمز غير صحيح. تأكّد من ضبط الوقت في هاتفك وجرّب أحدث رمز.",
+        "unavailable": "تطبيقات المصادقة غير مفعّلة في هذا المشروع بعد. اطلب من أحد المسؤولين تفعيل المصادقة متعددة العوامل (TOTP) في Supabase."
+      }
     }
   }
 }

@@ -3,7 +3,7 @@ import { ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SignOutButton } from "@/components/sign-out-button";
-import { getSession } from "@/lib/session";
+import { getSession, redirectToPass } from "@/lib/session";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.noAccess");
@@ -16,7 +16,7 @@ const NoAccessPage = async () => {
   const session = await getSession();
 
   if (session.status === "signed-out") {
-    redirect({ href: "/sign-in", locale });
+    await redirectToPass("/sign-in");
   }
   if (session.status !== "not-staff") {
     redirect({ href: "/", locale });

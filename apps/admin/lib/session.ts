@@ -3,9 +3,10 @@ import "server-only";
 import { createClient } from "@repo/auth/server";
 import type { StaffRole } from "@repo/database";
 import { redirect } from "@repo/internationalization/navigation";
-import { notFound } from "next/navigation";
+import { notFound, redirect as redirectToUrl } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { cache } from "react";
+import { passLink } from "./pass";
 import { type AccessLevel, accessTo, type Section } from "./roles";
 
 export type ServerClient = Awaited<ReturnType<typeof createClient>>;
@@ -20,12 +21,7 @@ export interface StaffMember {
 export type SessionState =
   | { status: "signed-out" }
   | { status: "not-staff"; supabase: ServerClient; userId: string }
-  | {
-      factors: { id: string; verified: boolean }[];
-      status: "needs-mfa";
-      staff: StaffMember;
-      supabase: ServerClient;
-    }
+  | { status: "needs-mfa"; staff: StaffMember; supabase: ServerClient }
   | { status: "ready"; staff: StaffMember; supabase: ServerClient };
 
 /**
@@ -68,18 +64,7 @@ export const getSession = cache(async (): Promise<SessionState> => {
     await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
 
   if (aal?.currentLevel !== "aal2") {
-    const totp = (user.factors ?? []).filter(
-      (factor) => factor.factor_type === "totp"
-    );
-    return {
-      factors: totp.map((factor) => ({
-        id: factor.id,
-        verified: factor.status === "verified",
-      })),
-      staff,
-      status: "needs-mfa",
-      supabase,
-    };
+    return { staff, status: "needs-mfa", supabase };
   }
 
   return { staff, status: "ready", supabase };
@@ -88,17 +73,27 @@ export const getSession = cache(async (): Promise<SessionState> => {
 const redirectTo = async (href: string): Promise<never> =>
   redirect({ href, locale: await getLocale() });
 
-/** For pages: sends visitors to sign-in, MFA or the no-access page. */
+/**
+ * Sign-in and the authenticator app live on The IDEA Pass, which comes back
+ * to the back office afterwards.
+ */
+export const redirectToPass = async (path: "/mfa" | "/sign-in") =>
+  redirectToUrl(await passLink(path, await getLocale()));
+
+/**
+ * For pages: sends visitors to The IDEA Pass (sign-in, or the authenticator
+ * app for staff on AAL1) or to the no-access page.
+ */
 export const requireStaff = async () => {
   const session = await getSession();
 
   switch (session.status) {
     case "signed-out":
-      return redirectTo("/sign-in");
+      return redirectToPass("/sign-in");
     case "not-staff":
       return redirectTo("/no-access");
     case "needs-mfa":
-      return redirectTo("/mfa");
+      return redirectToPass("/mfa");
     default:
       return session;
   }
