@@ -9,12 +9,6 @@ export type StaffCaller = NonNullable<
 > & { role: StaffRole };
 
 /**
- * MFA can be skipped only under `next dev`, where the local Supabase stack
- * has TOTP disabled. The back office itself enforces the same rule.
- */
-const requiresAal2 = () => process.env.NODE_ENV !== "development";
-
-/**
  * Back-office endpoints: the caller sends their access token (Bearer), must
  * have signed in with their authenticator app (AAL2) and hold one of
  * `roles`. Returns the caller, or the error response to send.
@@ -28,7 +22,7 @@ export const requireStaffCaller = async (
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  if (requiresAal2() && session.claims.aal !== "aal2") {
+  if (session.claims.aal !== "aal2") {
     return NextResponse.json({ error: "mfa_required" }, { status: 403 });
   }
 

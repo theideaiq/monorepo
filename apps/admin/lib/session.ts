@@ -6,7 +6,6 @@ import { redirect } from "@repo/internationalization/navigation";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { cache } from "react";
-import { env } from "@/env";
 import { type AccessLevel, accessTo, type Section } from "./roles";
 
 export type ServerClient = Awaited<ReturnType<typeof createClient>>;
@@ -28,10 +27,6 @@ export type SessionState =
       supabase: ServerClient;
     }
   | { status: "ready"; staff: StaffMember; supabase: ServerClient };
-
-/** MFA can only be skipped under `next dev` with ADMIN_SKIP_MFA=true. */
-export const mfaSkipped = () =>
-  process.env.NODE_ENV === "development" && env.ADMIN_SKIP_MFA === "true";
 
 /**
  * Who is signed in and whether they may use the back office: a verified user
@@ -69,24 +64,22 @@ export const getSession = cache(async (): Promise<SessionState> => {
     userId: user.id,
   };
 
-  if (!mfaSkipped()) {
-    const { data: aal } =
-      await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  const { data: aal } =
+    await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
 
-    if (aal?.currentLevel !== "aal2") {
-      const totp = (user.factors ?? []).filter(
-        (factor) => factor.factor_type === "totp"
-      );
-      return {
-        factors: totp.map((factor) => ({
-          id: factor.id,
-          verified: factor.status === "verified",
-        })),
-        staff,
-        status: "needs-mfa",
-        supabase,
-      };
-    }
+  if (aal?.currentLevel !== "aal2") {
+    const totp = (user.factors ?? []).filter(
+      (factor) => factor.factor_type === "totp"
+    );
+    return {
+      factors: totp.map((factor) => ({
+        id: factor.id,
+        verified: factor.status === "verified",
+      })),
+      staff,
+      status: "needs-mfa",
+      supabase,
+    };
   }
 
   return { staff, status: "ready", supabase };

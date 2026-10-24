@@ -3,16 +3,17 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = public, extensions;
 
-select plan(48);
+select plan(49);
 
-create function pg_temp.login_as(user_id uuid)
+-- Staff sign in with an authenticator app (aal2); customers with SMS (aal1).
+create function pg_temp.login_as(user_id uuid, aal text default 'aal1')
 returns void
 language plpgsql
 as $$
 begin
   perform set_config(
     'request.jwt.claims',
-    jsonb_build_object('sub', user_id, 'role', 'authenticated')::text,
+    jsonb_build_object('sub', user_id, 'role', 'authenticated', 'aal', aal)::text,
     true
   );
   perform set_config('role', 'authenticated', true);
@@ -92,12 +93,19 @@ update public.products set price = 1 where slug = 'ps5';
 select pg_temp.reset_role();
 select is((select price from public.products where slug = 'ps5'), 700000::bigint, 'customer price change had no effect');
 
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000a3');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a3', 'aal2');
 select lives_ok(
   $$ update public.products set featured = true where slug = 'ps5' $$,
   'superadmins edit products'
 );
 select is((select count(*)::int from public.products), 3, 'staff see drafts');
+
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a3', 'aal1');
+select is(
+  (select count(*)::int from public.products), 2,
+  'staff rights need an authenticator-app session'
+);
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a3', 'aal2');
 select ok(
   exists (select 1 from public.audit_logs where entity_type = 'products' and action = 'update'),
   'product edits are audited'
@@ -145,7 +153,7 @@ select is(
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000a2');
 select is((select count(*)::int from public.orders), 0, 'customers only see their own orders');
 
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000a5');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a5', 'aal2');
 select is((select count(*)::int from public.orders), 1, 'support sees every order');
 select throws_ok(
   $$ update public.orders set status = 'paid' $$,
@@ -176,7 +184,7 @@ select is(
   'variant stock is taken'
 );
 
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000a5');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a5', 'aal2');
 select lives_ok(
   $$ update public.orders set status = 'shipped', tracking_number = 'TRK1' $$,
   'support ships paid orders'
@@ -266,7 +274,7 @@ select throws_ok(
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000a1');
 select is((select count(*)::int from public.submissions), 0, 'authors only see their own submissions');
 
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000a4');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a4', 'aal2');
 select is(
   (select author_name from public.review_queue() limit 1), null,
   'reviews are blind until a decision'
@@ -285,7 +293,7 @@ insert into public.chart_of_accounts (id, code, name, type) values
   ('40000000-0000-0000-0000-000000000001', '1000', 'Cash', 'asset'),
   ('40000000-0000-0000-0000-000000000002', '4000', 'Sales', 'revenue');
 
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000a6');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a6', 'aal2');
 select throws_ok(
   $$ select public.post_journal_entry(current_date, 'Unbalanced',
        '[{"account_id":"40000000-0000-0000-0000-000000000001","debit":100},
@@ -299,17 +307,17 @@ select lives_ok(
   'finance posts balanced entries'
 );
 
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000a4');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a4', 'aal2');
 select is((select count(*)::int from public.ledger_entries), 0, 'editors cannot read the ledger');
 
 -- ── Staff management ────────────────────────────────────────────────────────
 
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000a4');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a4', 'aal2');
 select throws_ok(
   $$ select public.set_staff_role('00000000-0000-0000-0000-0000000000a4', 'superadmin') $$,
   '42501', null, 'staff cannot promote themselves'
 );
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000a3');
+select pg_temp.login_as('00000000-0000-0000-0000-0000000000a3', 'aal2');
 select throws_ok(
   $$ select public.set_staff_role('00000000-0000-0000-0000-0000000000a3', null) $$,
   '23514', 'There must be at least one superadmin', 'the last superadmin stays'
