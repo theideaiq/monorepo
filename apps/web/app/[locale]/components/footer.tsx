@@ -15,7 +15,7 @@ export const Footer = async () => {
   const t = await getTranslations();
 
   return (
-    <footer className="border-t bg-muted/40">
+    <footer className="border-t bg-surface-raised">
       <div className="container mx-auto grid gap-10 px-4 py-14 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
         <div className="flex flex-col items-start gap-4">
           <Link aria-label={t("web.nav.home")} href="/">

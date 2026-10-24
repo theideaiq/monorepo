@@ -86,6 +86,14 @@ decisions with a date.
       `insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '<their email>';`
       they then link an authenticator app on The IDEA Pass and open
       `https://spark.theideaiq.com/ar/admin`.
+- [ ] **Brand v1.0 (after the brand pull request ships):** paste the
+      three Supabase auth templates again
+      (`packages/database/supabase/templates`, now with the pink header;
+      the logo loads from `https://theideaiq.com/brand/lockup-on-pink.png`,
+      so the website must be deployed first); run `cap:assets` for the new
+      icons and splash; switch every social avatar and the Telegram
+      channels (The IDEA Club, The IDEA Post, The IDEA Droid, The IDEA
+      Staff) to the new tiles (`docs/brand/BRAND_GUIDELINES.md`, 13).
 - [ ] Delete the old branches on `theideaiq/monorepo` (the session's token
       is not allowed to).
 
@@ -126,6 +134,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       badge tiered rentals.
 - [ ] `product_review_list.author_name` should be typed nullable.
 
+- [ ] Brand v1.0 follow-ups: rename The Club / Droid in the legal
+      Markdown documents (legal review); store checked market prices
+      (price, date, evidence) so SouqPrice can show; remove Poppins from
+      `lib/fonts.ts` in the next release.
+
 ## Decisions
 
 - 2026-10-24: Four deployments only (web, app, api, design). The app is The
@@ -141,3 +154,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   with AAL2); auibsal's permission system was not adopted.
 - 2026-10-24: On Arabic pages the site's name (logo, page titles) is ايديا;
   product names (The IDEA Pass, The IDEA Plus, …) keep Latin letters.
+- 2026-10-24: The IDEA brand v1.0 (`docs/brand`): Paper ground, Readex
+  Pro, pink primary with the yellow bulb, never black in brand blocks.
+  Condition bulbs map stored conditions as new → new, open box and
+  refurbished → like new, used → used.

@@ -69,7 +69,7 @@ const Faq = async ({ params }: FaqProps) => {
               </Accordion>
             </section>
           ))}
-          <aside className="flex flex-col gap-4 rounded-lg border bg-muted/40 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <aside className="flex flex-col gap-4 rounded-lg border bg-surface-raised p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex gap-4">
               <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-pink-text">
                 <LifeBuoy aria-hidden="true" className="size-5" />

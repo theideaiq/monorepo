@@ -105,7 +105,7 @@ const Home = async ({ params }: HomeProps) => {
       </Section>
 
       <section className="container mx-auto px-4 py-14">
-        <div className="grid gap-10 rounded-lg border bg-muted/40 p-8 md:grid-cols-2 md:p-12">
+        <div className="grid gap-10 rounded-lg border bg-surface-raised p-8 shadow-1 md:grid-cols-2 md:p-12">
           <div className="flex flex-col gap-4">
             <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
               {t("home.values.title")}{" "}

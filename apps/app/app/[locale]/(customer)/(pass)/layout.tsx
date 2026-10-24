@@ -25,7 +25,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
  * app and "Your Pass", in one centred card.
  */
 const PassLayout = ({ children }: PassLayoutProperties) => (
-  <div className="flex min-h-dvh flex-col bg-muted/40">
+  <div className="flex min-h-dvh flex-col bg-surface">
     <header className="flex items-center justify-between gap-2 p-4">
       <Link className="flex items-center gap-2" href="/">
         <BrandLogo line="Pass" />
