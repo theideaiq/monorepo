@@ -105,11 +105,8 @@ create policy "Visitors see active plans"
   using (active);
 create policy "Users see active plans, staff see every plan"
   on public.plans for select to authenticated
-  using (
-    active
-    or (select private.is_staff())
-    or (select private.has_staff_role('{admin}'))
-  );
+  -- (admins are staff, so is_staff() covers the old admin read)
+  using (active or (select private.is_staff()));
 create policy "Admins add plans"
   on public.plans for insert to authenticated
   with check ((select private.has_staff_role('{admin}')));
@@ -156,6 +153,82 @@ create policy "Subscribers, their organization and staff see subscriptions"
     or private.is_org_member(organization_id)
     or (select private.has_staff_role('{support,finance}'))
   );
+
+-- Catalog and editorial tables: the public read policy already lets staff
+-- see drafts (has_staff_role implies is_staff), so each "manage" policy
+-- for all actions becomes insert, update and delete policies.
+
+drop policy "Editors manage events" on public.events;
+create policy "Editors add events"
+  on public.events for insert to authenticated
+  with check ((select private.has_staff_role('{editor}')));
+create policy "Editors edit events"
+  on public.events for update to authenticated
+  using ((select private.has_staff_role('{editor}')))
+  with check ((select private.has_staff_role('{editor}')));
+create policy "Editors remove events"
+  on public.events for delete to authenticated
+  using ((select private.has_staff_role('{editor}')));
+
+drop policy "Editors manage issues" on public.journal_issues;
+create policy "Editors add issues"
+  on public.journal_issues for insert to authenticated
+  with check ((select private.has_staff_role('{editor}')));
+create policy "Editors edit issues"
+  on public.journal_issues for update to authenticated
+  using ((select private.has_staff_role('{editor}')))
+  with check ((select private.has_staff_role('{editor}')));
+create policy "Editors remove issues"
+  on public.journal_issues for delete to authenticated
+  using ((select private.has_staff_role('{editor}')));
+
+drop policy "Editors manage posts" on public.posts;
+create policy "Editors add posts"
+  on public.posts for insert to authenticated
+  with check ((select private.has_staff_role('{editor}')));
+create policy "Editors edit posts"
+  on public.posts for update to authenticated
+  using ((select private.has_staff_role('{editor}')))
+  with check ((select private.has_staff_role('{editor}')));
+create policy "Editors remove posts"
+  on public.posts for delete to authenticated
+  using ((select private.has_staff_role('{editor}')));
+
+drop policy "Admins manage categories" on public.product_categories;
+create policy "Admins add categories"
+  on public.product_categories for insert to authenticated
+  with check ((select private.has_staff_role('{admin}')));
+create policy "Admins edit categories"
+  on public.product_categories for update to authenticated
+  using ((select private.has_staff_role('{admin}')))
+  with check ((select private.has_staff_role('{admin}')));
+create policy "Admins remove categories"
+  on public.product_categories for delete to authenticated
+  using ((select private.has_staff_role('{admin}')));
+
+drop policy "Admins manage variants" on public.product_variants;
+create policy "Admins add variants"
+  on public.product_variants for insert to authenticated
+  with check ((select private.has_staff_role('{admin}')));
+create policy "Admins edit variants"
+  on public.product_variants for update to authenticated
+  using ((select private.has_staff_role('{admin}')))
+  with check ((select private.has_staff_role('{admin}')));
+create policy "Admins remove variants"
+  on public.product_variants for delete to authenticated
+  using ((select private.has_staff_role('{admin}')));
+
+drop policy "Admins manage products" on public.products;
+create policy "Admins add products"
+  on public.products for insert to authenticated
+  with check ((select private.has_staff_role('{admin}')));
+create policy "Admins edit products"
+  on public.products for update to authenticated
+  using ((select private.has_staff_role('{admin}')))
+  with check ((select private.has_staff_role('{admin}')));
+create policy "Admins remove products"
+  on public.products for delete to authenticated
+  using ((select private.has_staff_role('{admin}')));
 
 -- ── 3. RPC bodies in private, SECURITY INVOKER wrappers in public ─────────
 -- (advisors 0028, 0029). complete_order_payment and mark_overdue_rentals stay
@@ -404,4 +477,3 @@ as $$ select private.set_staff_role($1, $2, $3) $$;
 revoke all on function public.set_staff_role(target uuid, new_role public.staff_role, staff_title text) from public, anon, authenticated, service_role;
 grant execute on function public.set_staff_role(target uuid, new_role public.staff_role, staff_title text) to authenticated;
 grant execute on function public.set_staff_role(target uuid, new_role public.staff_role, staff_title text) to service_role;
-

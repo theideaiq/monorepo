@@ -72,9 +72,9 @@ jobs:
       - name: Lint schema
         working-directory: packages/database
         run: bunx supabase db lint --level warning --fail-on warning
-      - name: Row Level Security tests (pgTAP)
+      - name: Row Level Security, structure and advisor tests (pgTAP)
         working-directory: packages/database
-        run: bunx supabase test db
+        run: bun run db:test
       - name: Generated types are up to date
         run: |
           (cd packages/database && bunx supabase gen types typescript --local --schema public) \
