@@ -160,6 +160,43 @@ const memberName = (member: MemberProfile) =>
     ? `@${member.username}`
     : (member.first_name ?? String(member.id));
 
+/**
+ * Someone banned across the network who joins (another) moderated group is
+ * banned there too. Unbanning stays a deliberate admin action: lifting the
+ * ban in Telegram (kicked → left) clears it (see `banChange`).
+ */
+const rebanIfBanned = async (
+  runtime: Runtime,
+  api: Context["api"],
+  chatId: number,
+  user: User
+) => {
+  const known = await runtime.data.getMember(user.id);
+  if (!known?.banned_at) {
+    return false;
+  }
+  try {
+    await api.banChatMember(chatId, user.id);
+  } catch (error) {
+    runtime.logger.error("Droid could not re-ban a member", {
+      chatId,
+      error: describeError(error),
+      memberId: user.id,
+    });
+  }
+  // Still banned; keep the original ban time.
+  await runtime.data.setMemberStatus(profileOf(user), "kicked", undefined);
+  return true;
+};
+
+/** Banned when kicked, unbanned when an admin lifts the ban, else unchanged. */
+const banChange = (previous: string, next: string) => {
+  if (next === "kicked") {
+    return true;
+  }
+  return previous === "kicked" ? false : undefined;
+};
+
 const isMember = (member: ChatMember) =>
   member.status === "member" ||
   member.status === "administrator" ||
@@ -776,20 +813,23 @@ export const createBot = (options: DroidOptions) => {
     }
 
     const profile = profileOf(next.user);
-    if (next.status === "kicked") {
-      await runtime.data.setMemberStatus(profile, "kicked", true);
-    } else if (next.status === "member") {
-      await runtime.data.setMemberStatus(profile, "member", false);
-    } else {
-      await runtime.data.setMemberStatus(profile, next.status, undefined);
-    }
+    const joined = isMember(next) && !isMember(previous);
 
     if (
+      joined &&
       registered.moderated &&
-      chat.type !== "channel" &&
-      isMember(next) &&
-      !isMember(previous)
+      (await rebanIfBanned(runtime, ctx.api, chat.id, next.user))
     ) {
+      return;
+    }
+
+    await runtime.data.setMemberStatus(
+      profile,
+      next.status,
+      banChange(previous.status, next.status)
+    );
+
+    if (registered.moderated && chat.type !== "channel" && joined) {
       await ctx.api.sendMessage(
         chat.id,
         t(localeOf(next.user.language_code), "welcome", {

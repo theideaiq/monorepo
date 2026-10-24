@@ -456,8 +456,20 @@ describe("group moderation", () => {
       } as never,
     });
 
+    // Banned elsewhere in the network: joining gets them banned here too.
     await send(change("left", "member"));
+    expect(state.members.get(7)?.banned_at).toBe("2026-01-01T00:00:00Z");
+    expect(state.members.get(7)?.chat_status).toBe("kicked");
+    expect(sent("banChatMember")[0]?.payload).toMatchObject({
+      chat_id: GROUP,
+      user_id: 7,
+    });
+    expect(sent()).toHaveLength(0);
+
+    // An admin lifts the ban in Telegram, then they can join.
+    await send(change("kicked", "left"));
     expect(state.members.get(7)?.banned_at).toBeNull();
+    await send(change("left", "member"));
     expect(state.members.get(7)?.chat_status).toBe("member");
     expect(textOf(sent()[0])).toBe(
       "Welcome to The Club, User7! Please be respectful and follow the group rules."
