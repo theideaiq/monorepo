@@ -3,41 +3,40 @@
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Link, useRouter } from "@repo/internationalization/navigation";
-import type { AuthError } from "@supabase/supabase-js";
-import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FullPageSpinner } from "@/components/states";
 
 /**
- * Web landing page for OAuth and magic links (PKCE): exchanges the code for
- * a session. The native apps handle the same link in the native bridge.
+ * Web landing page for OAuth and magic links (PKCE). The browser client
+ * exchanges `?code` for a session by itself as it starts (a code works only
+ * once, so exchanging it here too would fail); this page waits for that and
+ * goes home once there is a session. The native apps handle the same link in
+ * the native bridge.
  */
 export const AuthCallback = () => {
   const t = useTranslations("auth.callback");
   const { supabase } = useAuth();
   const router = useRouter();
-  const code = useSearchParams().get("code");
   const [failed, setFailed] = useState(false);
-  // A code can be exchanged once; keep the promise so a second effect run
-  // (React strict mode) waits for the same exchange.
-  const exchange = useRef<Promise<{ error: AuthError | null }> | null>(null);
 
   useEffect(() => {
-    if (!code) {
-      setFailed(true);
-      return;
-    }
-
-    exchange.current ??= supabase.auth.exchangeCodeForSession(code);
-    exchange.current.then(({ error }) => {
-      if (error) {
-        setFailed(true);
-      } else {
+    let active = true;
+    // Resolves after the client has handled the code in the URL.
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) {
+        return;
+      }
+      if (data.session) {
         router.replace("/");
+      } else {
+        setFailed(true);
       }
     });
-  }, [code, router, supabase]);
+    return () => {
+      active = false;
+    };
+  }, [router, supabase]);
 
   if (!failed) {
     return <FullPageSpinner />;

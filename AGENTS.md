@@ -139,7 +139,10 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 - **Brand name:** always "The IDEA", never a bare "IDEA": The IDEA Pass,
   The IDEA Plus, The IDEA Suite, The IDEA Design, in English and Arabic copy
   alike (Latin letters in Arabic text). A user's account is The IDEA Pass.
-  Reword rather than writing "your The IDEA …".
+  Reword rather than writing "your The IDEA …". The one exception is the
+  site's own name on Arabic pages (the logo and the page-title suffix),
+  which is ايديا (`localizedName` in `project.json`; `projectName(locale)`
+  from `@repo/config`); product names stay "The IDEA …".
 - **Translations:** every UI string comes from
   `packages/internationalization/messages/{ar,en}.json` (`useTranslations` /
   `getTranslations`), checked by `bun run check:i18n`. Pass numbers and dates

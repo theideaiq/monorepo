@@ -139,3 +139,5 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   phone numbers stay as an optional delivery field.
 - 2026-10-24: The IDEA keeps its staff-role model (`private.has_staff_role`
   with AAL2); auibsal's permission system was not adopted.
+- 2026-10-24: On Arabic pages the site's name (logo, page titles) is ايديا;
+  product names (The IDEA Pass, The IDEA Plus, …) keep Latin letters.

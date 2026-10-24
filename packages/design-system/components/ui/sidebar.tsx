@@ -171,10 +171,9 @@ function Sidebar({
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
   const labels = useUiLabels()
   // `side` is logical: "left" is the start edge (the right edge in RTL),
-  // matching the start/end positioning of the desktop container below.
+  // matching the start/end positioning of the desktop container below. The
+  // mobile sheet takes the same logical side, so it isn't swapped here.
   const dir = useDirection(dirProp as "ltr" | "rtl" | undefined)
-  const mobileSide =
-    dir === "rtl" ? (side === "left" ? "right" : "left") : side
 
   if (collapsible === "none") {
     return (
@@ -196,7 +195,7 @@ function Sidebar({
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
           dir={dir}
-          side={mobileSide}
+          side={side}
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"

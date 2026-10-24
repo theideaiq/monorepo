@@ -47,6 +47,10 @@ const projectSchema = z
       .refine((locale) => locale.enabled.includes(locale.default), {
         message: "locale.default must be one of locale.enabled",
       }),
+    /** The name in other scripts, e.g. Arabic; `name` is the fallback. */
+    localizedName: z
+      .partialRecord(z.enum(supportedLocales), z.string().min(1))
+      .optional(),
     name: z.string().min(1),
     orgName: z.string().min(1),
     orgSlug: z.string().min(1),
@@ -67,3 +71,7 @@ const projectSchema = z
 export type Project = z.infer<typeof projectSchema>;
 
 export const project: Project = projectSchema.parse(raw);
+
+/** The project's name as shown to people using `locale`. */
+export const projectName = (locale?: string) =>
+  project.localizedName?.[locale as SupportedLocale] ?? project.name;

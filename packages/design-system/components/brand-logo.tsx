@@ -6,7 +6,14 @@ interface BrandLogoProps {
   readonly showName?: boolean;
 }
 
-/** The IDEA's light-bulb mark (brand yellow) and name. Every app renders the brand through this component. */
+const arabicName = project.localizedName?.ar;
+
+/**
+ * The IDEA's light-bulb mark (brand yellow) and name. Every app renders the
+ * brand through this component. On Arabic pages (`lang="ar"`) the name is
+ * the Arabic one from `project.json`, chosen in CSS so this stays usable in
+ * server and client components alike.
+ */
 export const BrandLogo = ({ className, showName = true }: BrandLogoProps) => (
   <span className={cn("inline-flex items-center gap-2", className)}>
     <svg
@@ -23,7 +30,14 @@ export const BrandLogo = ({ className, showName = true }: BrandLogoProps) => (
     </svg>
     {showName ? (
       <span className="whitespace-nowrap font-bold tracking-tight">
-        {project.name}
+        {arabicName ? (
+          <>
+            <span className="[&:lang(ar)]:hidden">{project.name}</span>
+            <span className="hidden [&:lang(ar)]:inline">{arabicName}</span>
+          </>
+        ) : (
+          project.name
+        )}
       </span>
     ) : null}
   </span>

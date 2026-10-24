@@ -1,4 +1,4 @@
-import { project, type SupportedLocale } from "@repo/config";
+import { project, projectName, type SupportedLocale } from "@repo/config";
 import merge from "lodash.merge";
 import type { Metadata } from "next";
 
@@ -15,7 +15,6 @@ const openGraphLocales: Record<SupportedLocale, string> = {
   en: "en_US",
 };
 
-const applicationName = project.name;
 const author: Metadata["authors"] = {
   name: project.orgName,
   url: project.url,
@@ -39,6 +38,7 @@ export const createMetadata = ({
   locale = project.locale.default,
   ...properties
 }: MetadataGenerator): Metadata => {
+  const applicationName = projectName(locale);
   const parsedTitle = `${title} | ${applicationName}`;
   const defaultMetadata: Metadata = {
     appleWebApp: {
