@@ -24,6 +24,7 @@ export default defineConfig({
       "packages/next-config",
       "packages/payments",
       "packages/storage",
+      "scripts",
     ],
   },
 });

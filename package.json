@@ -18,6 +18,7 @@
     "check:i18n": "bun scripts/check-i18n.ts",
     "check:placeholders": "bun scripts/check-placeholders.ts",
     "check:rtl": "bun scripts/check-rtl.ts",
+    "check:secrets": "bun scripts/check-secrets.ts",
     "check:unused": "knip",
     "clean": "git clean -xdf node_modules",
     "db:reset": "bun run --cwd packages/database db:reset",
