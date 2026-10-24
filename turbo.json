@@ -59,6 +59,8 @@
     "ARCJET_KEY",
     "BETTERSTACK_*",
     "CRON_SECRET",
+    "FCM_SERVICE_ACCOUNT",
+    "PUSH_WEBHOOK_SECRET",
     "META_*",
     "TIKTOK_*",
     "PAYMENTS_PROVIDER",

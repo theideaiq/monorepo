@@ -12,6 +12,10 @@
       "schedule": "0 6 * * *"
     },
     {
+      "path": "/cron/push",
+      "schedule": "30 6 * * *"
+    },
+    {
       "path": "/cron/rentals",
       "schedule": "0 5 * * *"
     }
