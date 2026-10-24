@@ -32,7 +32,7 @@ flowchart LR
     API["apps/api<br/>checkout · webhooks · cron"]
   end
   subgraph Supabase
-    AUTH["Auth (phone OTP)"]
+    AUTH["Auth (email code)"]
     DB[("Postgres + RLS")]
     ST["Storage"]
   end
@@ -131,13 +131,44 @@ Spark (ar/en, RTL) and hold no secrets: they sign people in with the
 publishable key and leave the session in the shared cookie.
 
 - **Routes.** `/{locale}/sign-in?return_to=…`, `/{locale}/sign-up?return_to=…`
-  (phone OTP, `@repo/auth/components/phone-otp-form`), `/{locale}/mfa?return_to=…`
-  (link or enter the authenticator app, which raises the session to AAL2),
-  `/{locale}/sign-out?return_to=…` and `/{locale}/pass` ("Your Pass": name,
-  phone, authenticator status, links to The IDEA Spark, the back office for
-  staff and the website, sign-out). Other apps link to them with
+  (a 6-digit code by email, `@repo/auth/components/email-otp-form`),
+  `/{locale}/mfa?return_to=…` (link or enter the authenticator app, which
+  raises the session to AAL2), `/{locale}/sign-out?return_to=…` and
+  `/{locale}/pass` ("Your Pass": name, email, the phone number of accounts
+  from the phone sign-in days, authenticator status, links to The IDEA
+  Spark, the back office for staff and the website, sign-out). Other apps link to them with
   `passUrl(path, returnTo, locale)` from `@repo/auth/pass`, which builds
   URLs on `NEXT_PUBLIC_APP_URL` (`"/"` is "Your Pass").
+- **Sign-in method: an email code** (decision 2026-10-24; no SMS plan). No
+  passwords and no magic links: links open outside the iOS/Android shell,
+  so the session would land in the wrong browser. `EmailOtpForm` asks for
+  the email (and the name on sign-up), calls
+  `signInWithOtp({ email, options: { shouldCreateUser, data: { full_name, locale } } })`,
+  then takes the 6-digit code and calls
+  `verifyOtp({ email, token, type: "email" })` (`sendEmailOtp` and
+  `verifyEmailOtp` in `@repo/auth/otp`). Sign-up passes
+  `shouldCreateUser: true`; Supabase then sends its **Confirm signup**
+  email, and the code both confirms the address and signs in. Sign-in
+  passes `shouldCreateUser: false`, so an unknown address never creates an
+  account: the form says there is no account with this email and links to
+  sign-up (keeping `return_to`). Existing accounts get the **Magic Link**
+  email, whose template shows only the code. Codes have 6 digits and last
+  10 minutes; the form allows a resend after 60 s and changing the
+  address, and translates the errors (invalid email, wrong code, expired
+  code, too many attempts, no account). The templates are in
+  `packages/database/supabase/templates/` (one email in Arabic and English,
+  branded The IDEA Pass, the code in large type); production uses the same
+  files (2.7).
+- **Staff** sign in the same way; the back office and the database still
+  require the authenticator-app step (AAL2) afterwards.
+- **Phone sign-in is switched off, not removed.** The phone provider is
+  disabled (`[auth.sms]` in `config.toml`, and in production). The phone
+  helpers stay: `@repo/auth/phone` (normalizing and formatting Iraqi
+  numbers, used for delivery addresses, invitations and the staff lookup),
+  `sendPhoneOtp`/`verifyPhoneOtp` in `@repo/auth/otp` and the Send SMS hook
+  (`functions/send-sms`). To bring phone sign-in back: enable the provider
+  (or the hook) and a phone form next to `EmailOtpForm` (the earlier
+  `PhoneOtpForm` is in git history, `packages/auth/components/phone-otp-form.tsx`).
 - **Shared session cookie.** `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com`
   makes the browser client, the server client and the proxy session refresh
   (`authCookieOptions()` in `packages/auth/cookies.ts`) write the
@@ -190,8 +221,8 @@ audit log.
   No secret lives in Spark (`bun run check:secrets`).
 - **Links** use `@/lib/admin/navigation`, whose `Link`, `redirect`,
   `useRouter` and `usePathname` take paths relative to `/admin`.
-- Grant the first superadmin with SQL
-  (`insert into staff (user_id, role) values ('<user id>', 'superadmin')`).
+- Grant the first superadmin with SQL, finding the account by its email
+  (`insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '…'`).
 
 ### Principles that shape the code
 
@@ -227,7 +258,7 @@ audit log.
 
 | Flow | Path |
 | --- | --- |
-| Sign in | The IDEA Pass in Spark: phone number → `supabase.auth.signInWithOtp` → SMS (Send SMS hook) → code → `verifyOtp` → session in the shared cookie (the browser's, or the WebView's in the apps). |
+| Sign in | The IDEA Pass in Spark: email → `supabase.auth.signInWithOtp` → email with a 6-digit code (Resend SMTP) → code → `verifyOtp` (`type: "email"`) → session in the shared cookie (the browser's, or the WebView's in the apps). |
 | Read or write data | Screen → TanStack Query hook (`apps/app/lib/queries.ts`) → `supabase.from(…)` with the user's JWT → RLS policies. |
 | Create an organization | Onboarding form → `rpc("create_organization")`, which inserts the organization and the caller's `owner` membership in one transaction. |
 | Privileged action | Screen → `callApi(supabase, "/checkout", …)` → `apps/api` verifies the token and role → admin client or third-party API. |
@@ -275,7 +306,7 @@ New users go through a two-step onboarding (`/[locale]/onboarding`):
    which creates the organization and makes the caller its `owner` in one
    transaction. A taken slug shows "already in use" (Postgres error `23505`).
 
-If someone has invited the user's phone number or email, onboarding lists the
+If someone has invited the user's email (or phone number), onboarding lists the
 pending invitations first (`pending_invitations()` RPC). Accepting one joins
 that organization instead (`accept_invitation`). Invitation links
 (`/[locale]/invite?token=…`) work too.
@@ -343,11 +374,12 @@ cover these rules.
 ```
 packages/database/
   supabase/
-    config.toml            local stack settings (auth, SMS test numbers, redirect URLs)
+    config.toml            local stack settings (auth, email codes, redirect URLs)
+    templates/             Auth emails with the code (Arabic and English; paste into production)
     migrations/            ordered SQL migrations: the schema's history
     tests/database/        pgTAP tests (RLS and RPC behaviour)
     seed.sql               local seed data (plans)
-    functions/send-sms/    Send SMS auth hook (Edge Function)
+    functions/send-sms/    Send SMS auth hook (Edge Function; phone sign-in is off)
   types.ts                 generated TypeScript types (do not edit)
   admin.ts                 service-role client; bypasses RLS (server only)
 ```
@@ -386,9 +418,11 @@ keys. Put `API_URL` and `PUBLISHABLE_KEY` into `NEXT_PUBLIC_SUPABASE_URL` and
 `SUPABASE_SECRET_KEY` (API only). The publishable key starts with
 `sb_publishable_`; the older JWT "anon" key is rejected by env validation.
 
-Local phone sign-in uses test numbers from `config.toml`
-(`[auth.sms.test_otp]`). `+964 770 000 0000` and `+964 770 000 0901` accept
-the code `123456`, and no SMS is sent.
+Local sign-in emails its codes to Mailpit, the stack's mail catcher
+(`[local_smtp]`, `MAILPIT_URL` in `supabase status -o env`, by default
+<http://127.0.0.1:54324>): open it to read the code. The e2e journeys and
+the auth integration tests read the codes through Mailpit's API, so start
+the stack with it (CI does: `supabase start -x …` without `mailpit`).
 
 ### 2.3 Change the schema
 
@@ -571,26 +605,36 @@ In the Supabase dashboard:
    - `capacitor://localhost/**` (iOS app)
    - `https://localhost/**` (Android app)
    - `<bundle id>://**`, for example `iq.example.app://**` (native deep links)
-2. **Authentication → Sign In / Providers → Phone:** enable it.
-3. **SMS delivery.** Either configure a provider in the dashboard, or deploy
-   the bundled Send SMS hook. It tries providers in order (a local SMS
-   gateway, Twilio SMS, Twilio WhatsApp), which is often cheaper and more
-   reliable in Iraq:
-
-   ```sh
-   cd packages/database
-   bunx supabase functions deploy send-sms --no-verify-jwt
-   bunx supabase secrets set SMS_PROVIDERS=http,twilio \
-     SMS_GATEWAY_URL=… SMS_GATEWAY_TOKEN=… SMS_SENDER_ID=… \
-     TWILIO_ACCOUNT_SID=… TWILIO_AUTH_TOKEN=… TWILIO_FROM=…
-   ```
-
-   Then go to **Authentication → Hooks → Send SMS hook**, choose HTTPS, enter
-   the function URL and copy the generated secret into
-   `supabase secrets set SEND_SMS_HOOK_SECRET="v1,whsec_…"`.
-4. **Rate limits.** Review the SMS rate limits under
-   **Authentication → Rate Limits** before launch.
-5. Make sure no test phone numbers are configured in production.
+2. **Authentication → Sign In / Providers → Email:** enabled, with
+   **Confirm email** on (new accounts confirm their address with the code),
+   **Email OTP length** `6` and **Email OTP expiration** `600` seconds
+   (10 minutes). Leave "Secure email change" on.
+3. **Authentication → Sign In / Providers → Phone:** disabled (no SMS plan;
+   see "Phone sign-in is switched off" in [The IDEA Pass](#the-idea-pass)).
+   Remove any test phone numbers.
+4. **Authentication → Emails → SMTP Settings:** enable custom SMTP with
+   Resend (the built-in sender is for testing only and allows a few emails
+   an hour):
+   - Sender email `hi@theideaiq.com`, sender name `The IDEA Pass`
+     (theideaiq.com verified in Resend, with its SPF and DKIM records);
+   - Host `smtp.resend.com`, port `465`, username `resend`;
+   - Password: a Resend API key (Resend → API Keys, "Sending access" for
+     theideaiq.com). It lives only in Supabase; never commit it.
+5. **Authentication → Emails → Templates:** paste the files from
+   `packages/database/supabase/templates/` (open each, copy all of it) into
+   the template of the same name, with these subjects (the same as
+   `config.toml`):
+   - **Confirm signup** ← `confirmation.html`, subject
+     `رمز التسجيل في The IDEA Pass · Sign-up code for The IDEA Pass: {{ .Token }}`;
+   - **Magic Link** ← `magic_link.html`, subject
+     `رمز الدخول إلى The IDEA Pass · Sign-in code for The IDEA Pass: {{ .Token }}`;
+   - **Change Email Address** ← `email_change.html`, subject
+     `تأكيد البريد الإلكتروني · Confirm your email for The IDEA Pass`.
+   Each shows `{{ .Token }}` and no link. Send yourself a code from
+   `/en/sign-up` to check it arrives from hi@theideaiq.com.
+6. **Rate limits.** Under **Authentication → Rate Limits**, set the emails
+   per hour to what Resend's plan allows (for example 100) and keep the
+   per-address interval at 60 s (the form's resend cooldown).
 
 ### 2.8 Which client to use where
 
@@ -868,8 +912,8 @@ intent filter with `android:scheme="com.theideaiq.app"`) is optional now;
 
 ### 3.7 Sign-in and payments inside the apps
 
-**Sign-in** happens in the WebView with The IDEA Pass's phone code, which
-needs no redirect; the session cookie is first-party for Spark and
+**Sign-in** happens in the WebView with The IDEA Pass's email code, which
+needs no redirect (a magic link would open in the system browser instead); the session cookie is first-party for Spark and
 persists like Safari's or Chrome's. Google and Apple block their OAuth
 pages inside embedded WebViews, so OAuth sign-in (if ever added) must go
 through the system browser and an app link back.
@@ -932,12 +976,14 @@ it and its passwords in the password manager; enable Play App Signing) →
 - [ ] App links verified (3.6), placeholders filled in the
       `.well-known` files.
 - [ ] Privacy policy URL; App Privacy (Apple) and Data safety (Google)
-      forms: phone number, push token, analytics if enabled.
+      forms: email address, phone number (delivery), push token,
+      analytics if enabled.
 - [ ] Account deletion works against production; its location is in the
       review notes.
-- [ ] Review notes: a test phone number and code (Supabase Auth test
-      number, for the review period only), the native features listed in
-      3.8, and the commerce mode.
+- [ ] Review notes: a review account's email address and how its code
+      reaches the reviewer (an inbox you watch during review and reply
+      from, or a mailbox shared with the reviewer), the native features
+      listed in 3.8, and the commerce mode.
 - [ ] `project.commerce.allowNativeCheckout` matches what the app sells.
 - [ ] Android: `allowBackup="false"`, target SDK as Play requires.
 
@@ -1324,7 +1370,8 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 ### 5.7 Go-live checklist
 
 - [ ] Supabase production project linked and migrations pushed (2.6); Auth
-      URLs, phone provider and SMS hook configured (2.7).
+      URLs, email codes (OTP length 6), templates and Resend SMTP
+      configured, phone provider off (2.7).
 - [ ] Four Vercel projects (web, app, api, storybook) with domains and the variables above;
       `WAYL_ENV=live`; no test event codes in Production.
 - [ ] Wayl webhook verified end to end (4.2).
