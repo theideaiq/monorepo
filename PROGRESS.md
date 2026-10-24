@@ -12,7 +12,8 @@ decisions with a date.
 - [x] The old apps' features rebuilt on the new schema: store, Plus rentals
       with tiers, wishlists, reviews, support tickets, notifications,
       editorial, CRM, marketing, ledger with scenarios, fixed assets, cap
-      table (PR #951).
+      table (PR #951). Payroll plan, cap table, fixed assets and the own
+      email campaigns were retired again on 2026-10-24 (see Decisions).
 - [x] v1.0 hardening: advisors at zero, RPC bodies in `private`, structure
       and advisor pgTAP suites; patched Next.js/Storybook/Zod/sharp with
       `bun audit` in CI; strict Turborepo env; Knip; coverage; end-to-end
@@ -76,6 +77,12 @@ decisions with a date.
       set them on `api`, which serves the contact form (`POST /contact`)
       and the status badge (`GET /status`). Turn on Vercel Firewall bot
       protection for `web` (Arcjet no longer runs there).
+- [ ] **Resend newsletters (`ARCHITECTURE_AND_INTEGRATIONS.md` 4.3):**
+      create a segment in Resend (Audience → Segments, e.g. "The IDEA
+      customers"), set its id as `RESEND_SEGMENT_ID` on the Vercel `api`
+      project (with a full-access `RESEND_TOKEN`), then run
+      `/cron/newsletter-contacts` once by hand and check the contacts.
+      Send newsletters from Resend Broadcasts to that segment only.
 - [ ] **Wayl:** production keys and the webhook URL
       (`/webhooks/payments` on the API host).
 - [ ] **Telegram:** bot token and webhook (`apps/api/scripts/telegram-setup.ts`).
@@ -158,3 +165,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Pro, pink primary with the yellow bulb, never black in brand blocks.
   Condition bulbs map stored conditions as new → new, open box and
   refurbished → like new, used → used.
+- 2026-10-24: Retired from the back office: the payroll plan
+  (`staff_plan`), the cap table (`equity_rounds`, `equity_holders`), fixed
+  assets (`fixed_assets`, `fixed_asset_schedule()`) and the own email
+  campaigns and segments (`marketing_campaigns`, `marketing_segments`,
+  `apps/api` `admin/campaigns`, `admin/segments`, `admin/unsubscribe`).
+  No data was dropped: the tables moved to the `archive` schema
+  (migration `20261120000000_retire_back_office_extras.sql`), which no
+  client role can reach. The double-entry ledger, scenarios, payments and
+  `financial_settings` stay (the finance dashboard uses its fiscal year).
+  The CRM and the customers' marketing opt-in stay. Newsletters are sent
+  from Resend Broadcasts; `/cron/newsletter-contacts` syncs every account's
+  email, name and opt-in to the `RESEND_SEGMENT_ID` segment and pulls
+  Resend unsubscribes back. The back office has no Marketing section any
+  more; the marketing role keeps the dashboard and customers (read).
