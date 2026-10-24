@@ -41,9 +41,12 @@ end;
 $$;
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
--- Start from an empty store so the local seed doesn't change the counts (the
--- transaction is rolled back at the end).
-truncate public.products, public.posts, public.events, public.chart_of_accounts cascade;
+-- Start from an empty store and no staff so existing data (the local seed,
+-- or data imported into a real project) doesn't change the counts. The
+-- transaction is rolled back at the end.
+truncate public.products, public.orders, public.rentals, public.posts, public.events,
+  public.chart_of_accounts cascade;
+delete from public.staff;
 
 -- U is a customer, V another customer, S a superadmin, E an editor,
 -- P a support agent, F finance.
