@@ -8,6 +8,8 @@ vi.mock("@repo/analytics/client", () => ({ identify, track }));
 
 const { PassSignIn } = await import("@/components/pass/pass-sign-in");
 
+// The email link lands on the app's sign-in callback page.
+const CALLBACK = /\/en\/auth\/callback$/;
 const CONTINUE = /^Continue$/;
 const RESEND_IN = /^Resend code in/;
 const assign = vi.fn();
@@ -100,6 +102,7 @@ describe("The IDEA Pass email sign-in", () => {
       options: {
         captchaToken: undefined,
         data: { full_name: undefined, locale: "en" },
+        emailRedirectTo: expect.stringMatching(CALLBACK),
         shouldCreateUser: false,
       },
     });
@@ -138,6 +141,7 @@ describe("The IDEA Pass email sign-in", () => {
       options: {
         captchaToken: undefined,
         data: { full_name: "Sara Ali", locale: "en" },
+        emailRedirectTo: expect.stringMatching(CALLBACK),
         shouldCreateUser: true,
       },
     });

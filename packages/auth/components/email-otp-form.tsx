@@ -30,6 +30,15 @@ import {
 } from "../otp";
 
 const RESEND_AFTER_SECONDS = 60;
+
+/** The app's sign-in link landing page, for emails that carry a link. */
+const callbackUrl = (locale: string | undefined) =>
+  typeof window === "undefined"
+    ? undefined
+    : new URL(
+        locale ? `/${locale}/auth/callback` : "/auth/callback",
+        window.location.origin
+      ).toString();
 const CODE_SLOTS = Array.from(
   { length: EMAIL_CODE_LENGTH },
   (_, index) => index
@@ -126,6 +135,7 @@ export const EmailOtpForm = ({
 
     const result = await sendEmailOtp(supabase, emailInput, {
       captchaToken: await getCaptchaToken?.(),
+      emailRedirectTo: callbackUrl(locale),
       fullName: collectName ? fullName : undefined,
       locale,
       shouldCreateUser,
