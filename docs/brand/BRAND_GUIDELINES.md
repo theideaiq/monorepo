@@ -191,7 +191,7 @@ Captions: Arabic first, English after a line break when needed; end with the act
 
 ## 11. Product UI
 
-- Two themes: Paper (light) is the default; Dark is an option people switch on themselves.
+- Two themes: Paper (light) and Dark, following the system setting.
 - The primary button is pink with white text; on pink panels it is yellow with dark text.
 - Icons: Lucide, 1.75px stroke, rounded joins, `currentColor`; directional icons flip in RTL.
 - Motion: things "switch on" — a fade with scale 0.96 → 1 in 120–240ms, no bounce; reduced motion means opacity only.
