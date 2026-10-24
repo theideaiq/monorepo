@@ -6,7 +6,7 @@ The live, browsable version with tokens and component previews is **The IDEA Des
 
 ---
 
-The IDEA is Iraq's everyday-life brand for the curious: one account, The IDEA Pass, that opens shopping, renting, learning, community and opportunity. It behaves like a clever, warm Baghdadi friend who knows where to get everything. It owns one colour pair (**The IDEA Pink** with the **yellow bulb**), one mark (the bulb), one line (**اعلگ الونسة! / Switch on.**) and one promise: the price, the date and the condition you were told, every time.
+The IDEA is Iraq's everyday-life brand for the curious: one account, The IDEA Pass, that opens shopping, renting, learning, community and opportunity. It behaves like a clever, warm Baghdadi friend who knows where to get everything. It owns one colour pair (**The IDEA Pink** with the **yellow bulb**), one mark (the bulb), one line (**اعلگها / Switch on.**) and one promise: the price, the date and the condition you were told, every time.
 
 Use these rules for everything that carries the name: The IDEA Spark (app), theideaiq.com, social, Telegram, packaging, the Plus mailer, signage, decks and documents.
 
@@ -17,7 +17,7 @@ Use these rules for everything that carries the name: The IDEA Spark (app), thei
 | Purpose | Switch on the curious Iraqi. |
 | Positioning | For young Iraqis who want the world's best games, books, tech and learning without the hassle, The IDEA is the one account that brings it to your door, on your side, at a fair price. Unlike marketplaces and resellers, we show the souq price beside ours and keep our promises on price, date and condition. |
 | Personality | Bright, warm, quick, on your side, proudly Iraqi. Never loud for its own sake, smug, corporate, political or sectarian. |
-| Brand line | **اعلگ الونسة!** (Iraqi Arabic, already on Instagram) · English **Switch on.** |
+| Brand line | **اعلگها** (Iraqi Arabic: “switch it on”) · English **Switch on.** |
 | Formal descriptor | Innovation for every aspect of life. |
 | Proof | The five customer promises: the price you see is the price you pay · we tell you when · condition guaranteed · leave any time · a human answers. |
 | Inspirations | Virgin: one colour owned outright, a challenger voice, every venture under one name. Virgin Megastore: big, joyful retail. The Netflix DVD envelope: one object everyone recognises (ours is the **Pink Mailer**). GameFly: pick, play, swap. |
@@ -28,7 +28,7 @@ A branded house: always **The IDEA** + one plain word, for products and communit
 
 | Name | What it is | Accent | Line it speaks |
 | --- | --- | --- | --- |
-| The IDEA | Masterbrand, The IDEA Pass (account), The IDEA Spark (app) | The IDEA Pink + Bulb Yellow | اعلگ الونسة! / Switch on. |
+| The IDEA | Masterbrand, The IDEA Pass (account), The IDEA Spark (app) | The IDEA Pink + Bulb Yellow | اعلگها / Switch on. |
 | The IDEA Megastore | Gaming, tech, books and lifestyle, delivered across Iraq | The IDEA Pink | Everything worth having, at your door. |
 | The IDEA Plus | Monthly membership to rent games, books and films | Plus Violet | Play it. Read it. Swap it. |
 | The IDEA Academy | Courses and cultural exchange | Academy Teal | Learn the world. Bring it home. |
@@ -50,10 +50,10 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 **Principles**
 
 1. **Plain first.** Say what it is, what it costs and when it arrives. "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done."
-2. **Bright, not loud.** One idea per line. No exclamation marks in the product UI; at most one in a campaign (the brand line keeps its own).
+2. **Bright, not loud.** One idea per line. No exclamation marks in the product UI; at most one in a campaign.
 3. **On your side.** Talk about what the customer gets, not what we are.
 4. **Promise and prove.** Every claim names a number, a date or a place: "delivered to all 19 governorates".
-5. **Arabic first.** Social, The IDEA Club and campaigns speak Iraqi Arabic ("اعلگ الونسة!", "يمنا بـ", "بالسوگ", "اخو الجديد"). Product screens, receipts and legal pages use clear Modern Standard Arabic with Iraqi warmth. English is written as English, not translated.
+5. **Arabic first.** Social, The IDEA Club and campaigns speak Iraqi Arabic ("اعلگها", "يمنا بـ", "بالسوگ", "اخو الجديد"). Product screens, receipts and legal pages use clear Modern Standard Arabic with Iraqi warmth. English is written as English, not translated.
 
 **Mechanics**
 
@@ -191,7 +191,7 @@ Captions: Arabic first, English after a line break when needed; end with the act
 
 ## 11. Product UI
 
-- Two themes: Paper (light) and Dark, following the system setting.
+- Two themes: Paper (light) is the default; Dark is an option people switch on themselves.
 - The primary button is pink with white text; on pink panels it is yellow with dark text.
 - Icons: Lucide, 1.75px stroke, rounded joins, `currentColor`; directional icons flip in RTL.
 - Motion: things "switch on" — a fade with scale 0.96 → 1 in 120–240ms, no bounce; reduced motion means opacity only.
@@ -202,7 +202,7 @@ Captions: Arabic first, English after a line break when needed; end with the act
 - **Store fascia and pop-ups:** the Pink Band with the yellow bulb and white wordmark.
 - **Shelf price strips:** yellow, with the souq price above ours.
 - **Packaging:** pink boxes with a yellow bulb for Megastore; the Pink Mailer for Plus; kraft with a pink bulb for books.
-- **Riders and staff:** pink tee or jacket, yellow bulb on the chest, "اعلگ الونسة!" across the back.
+- **Riders and staff:** pink tee or jacket, yellow bulb on the chest, "اعلگها" across the back.
 - **Events:** yellow rays on pink backdrops; one product accent per event.
 
 ## 13. Before launch

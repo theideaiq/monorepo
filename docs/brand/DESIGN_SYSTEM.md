@@ -5,7 +5,7 @@ The engineering companion to `BRAND_GUIDELINES.md`: tokens, how they map onto `t
 ## 1. Principles
 
 1. **Pink means "do it".** The primary action is The IDEA Pink with white text on every line; on pink panels it is yellow with dark text.
-2. **Paper or Dark first.** Screens are mostly `surface`; pink and yellow stay special.
+2. **Paper first.** Paper (light) is the default theme and Dark is opt-in; screens are mostly `surface`; pink and yellow stay special.
 3. **No black in the brand.** Logos, tiles, bands and brand blocks use pink, yellow and white only. Ink (`ink`) is for text.
 4. **One accent per surface.** Each product adds one secondary accent for tags, plan cards and bands.
 5. **Arabic first.** RTL is the default; Readex Pro for both scripts; Latin digits.
@@ -122,7 +122,7 @@ Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/fo
 - Email templates (`packages/email`, Supabase auth templates): pink header with `lockup-on-pink.svg`, paper body, pink button.
 - Open Graph template: pink ground, yellow bulb kicker, white title with one yellow word.
 - Community names in copy and messages files: The IDEA Club, The IDEA Post, The IDEA Droid, The IDEA Staff.
-- Brand line in messages: "اعلگ الونسة!" (ar) / "Switch on." (en).
+- Brand line in messages: "اعلگها" (ar) / "Switch on." (en).
 
 ## 6. Quality gates
 
