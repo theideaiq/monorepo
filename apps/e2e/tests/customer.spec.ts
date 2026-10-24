@@ -91,9 +91,7 @@ test.describe("a signed-in customer", () => {
     await page.goto(`${urls.app}/en/store`);
     await expect(page.getByRole("heading", { name: "Store" })).toBeVisible();
     await page.getByRole("link", { name: product.name }).first().click();
-    await expect(page).toHaveURL(
-      new RegExp(`/en/store/${product.slug}$`)
-    );
+    await expect(page).toHaveURL(new RegExp(`/en/store/${product.slug}$`));
     await expect(
       page.getByRole("heading", { name: product.name })
     ).toBeVisible();

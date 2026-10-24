@@ -47,18 +47,6 @@ export const noseconeOptions: Options =
     : baseOptions;
 
 /**
- * The same headers as static `headers()` entries for next.config, for apps
- * without a proxy (apps/app is client-first and also builds as a static
- * export, where headers come from the host instead).
- */
-export const securityHeaders = (options: Options = noseconeOptions) => [
-  {
-    headers: [...nosecone(options)].map(([key, value]) => ({ key, value })),
-    source: "/:path*",
-  },
-];
-
-/**
  * Adds Nosecone's security headers to an existing proxy response (for example
  * one that carries refreshed auth cookies or an i18n rewrite) instead of
  * replacing it.

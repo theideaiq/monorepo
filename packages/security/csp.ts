@@ -80,9 +80,8 @@ const merge = (sources: CspSources[], key: keyof CspSources): Source[] =>
 /**
  * Builds a Content Security Policy for Nosecone.
  *
- * Default (`strict: false`) is compatible with statically rendered pages and
- * with the Capacitor static export: scripts are limited to this origin and the
- * listed hosts, with `'unsafe-inline'` for Next.js' inline bootstrap scripts.
+ * Default (`strict: false`) is compatible with statically rendered pages:
+ * scripts are limited to this origin and the listed hosts, with `'unsafe-inline'` for Next.js' inline bootstrap scripts.
  *
  * `strict: true` switches to nonce + `'strict-dynamic'`, which is stronger but
  * requires every page to be dynamically rendered (Next.js can only attach a

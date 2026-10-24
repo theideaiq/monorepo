@@ -22,7 +22,7 @@ const BATCH_SIZE = 100;
 
 /**
  * Sends a draft marketing campaign to its segment. Called by the back office
- * (apps/admin) with the staff member's token: the caller must be marketing,
+ * (/admin in The IDEA Spark) with the staff member's token: the caller must be marketing,
  * admin or superadmin staff at AAL2. Recipients are customers who opted in
  * to marketing email (`profiles.marketing_opt_in`), aren't suspended, match
  * the segment and have an email address. Each email carries a signed
