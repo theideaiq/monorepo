@@ -121,8 +121,8 @@ const CampaignPage = async ({
           title={t("campaigns.preview")}
         >
           <div className="overflow-hidden rounded-md border">
-            <div className="bg-brand px-5 py-3 text-brand-foreground">
-              <BrandLogo variant="on-yellow" />
+            <div className="bg-idea-pink px-5 py-3 text-center text-on-pink">
+              <BrandLogo variant="on-pink" />
             </div>
             <div className="bg-white p-5 text-on-yellow" dir="auto">
               <MarkdownPreview invert={false} source={campaign.body} />

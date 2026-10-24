@@ -11,6 +11,7 @@ import {
   Text,
 } from "@react-email/components";
 import { brand, emailFont } from "../brand";
+import { EmailHeader } from "../components";
 
 interface CampaignTemplateProps {
   /** Markdown, written by the marketing team in the back office. */
@@ -41,7 +42,7 @@ const footer = {
 } as const;
 
 /**
- * A marketing campaign in The IDEA's branding: a yellow logo bar, the
+ * A marketing campaign in The IDEA's branding: the pink header, the
  * Markdown body and a footer with the one-click unsubscribe link.
  */
 export const CampaignTemplate = ({
@@ -81,22 +82,7 @@ export const CampaignTemplate = ({
             overflow: "hidden",
           }}
         >
-          <Section
-            style={{ backgroundColor: brand.bulbYellow, padding: "20px 32px" }}
-          >
-            <Link
-              href={siteUrl}
-              style={{
-                color: brand.ideaPink,
-                fontSize: 22,
-                fontWeight: 700,
-                letterSpacing: "-0.01em",
-                textDecoration: "none",
-              }}
-            >
-              {brandName}
-            </Link>
-          </Section>
+          <EmailHeader alt={brandName} href={siteUrl} />
           <Section
             style={{
               direction: dir,

@@ -53,13 +53,14 @@ const page = (lang: Lang, message: string, form?: string, status = 200) => {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#d81b60">
 <title>${escapeHtml(t.title)} · ${escapeHtml(project.name)}</title>
 <style>
-body{margin:0;font-family:'Readex Pro',${lang === "ar" ? "Cairo,Tahoma" : "system-ui"},sans-serif;background:#f4f4f5;color:#18181b}
-main{max-width:28rem;margin:10vh auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-header{background:#f4cf08;color:#0f1014;padding:16px 24px;font-weight:700;font-size:20px}
+body{margin:0;font-family:'Readex Pro',${lang === "ar" ? "Cairo,Tahoma" : "system-ui"},sans-serif;background:#fbf8ef;color:#0f1014}
+main{max-width:28rem;margin:10vh auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+header{background:#d81b60;color:#fff;padding:16px 24px;font-weight:700;font-size:20px;letter-spacing:-0.01em}
 section{padding:24px;line-height:1.6}
-button{background:#e91e63;color:#fff;border:0;border-radius:8px;padding:10px 18px;font:inherit;cursor:pointer}
+button{background:#d81b60;color:#fff;border:0;border-radius:10px;padding:10px 18px;font:inherit;cursor:pointer}
 </style>
 </head>
 <body><main><header>${escapeHtml(project.name)}</header><section>

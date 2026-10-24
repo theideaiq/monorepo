@@ -12,6 +12,7 @@ import {
   Text,
 } from "@react-email/components";
 import { emailTailwindConfig } from "../brand";
+import { EmailButton, EmailHeader } from "../components";
 
 export type OrderEmailLocale = "ar" | "en";
 
@@ -50,6 +51,7 @@ export interface OrderConfirmationProps {
 const copy = {
   ar: {
     address: "عنوان التوصيل",
+    contact: "راسلنا",
     greeting: (name: string) => `شكراً لك يا ${name}!`,
     heading: (number: string) => `تم تأكيد طلبك ${number}`,
     intro: "استلمنا دفعتك وبدأنا تجهيز طلبك. سنتواصل معك عند خروجه للتوصيل.",
@@ -64,6 +66,7 @@ const copy = {
   },
   en: {
     address: "Delivery address",
+    contact: "Email us",
     greeting: (name: string) => `Thank you, ${name}!`,
     heading: (number: string) => `Your order ${number} is confirmed`,
     intro:
@@ -109,8 +112,9 @@ export const OrderConfirmationTemplate = ({
             className="mx-auto max-w-[560px] py-12"
             style={{ direction: dir }}
           >
+            <EmailHeader />
             <Section
-              className="rounded-md bg-surface-raised p-8"
+              className="bg-surface-raised p-8"
               style={{ textAlign: align }}
             >
               <Text className="mt-0 mb-2 font-semibold text-2xl text-ink">
@@ -202,9 +206,12 @@ export const OrderConfirmationTemplate = ({
 
               <Hr className="my-6" />
 
-              <Text className="m-0 text-ink-muted text-sm">
+              <Text className="mt-0 mb-4 text-ink-muted text-sm">
                 {text.support(supportEmail)}
               </Text>
+              <EmailButton href={`mailto:${supportEmail}`}>
+                {text.contact}
+              </EmailButton>
             </Section>
           </Container>
         </Body>
