@@ -16,6 +16,48 @@
         "vitest": "^5.0.3",
       },
     },
+    "apps/admin": {
+      "name": "admin",
+      "dependencies": {
+        "@date-fns/tz": "^1.5.0",
+        "@repo/auth": "workspace:*",
+        "@repo/commerce": "workspace:*",
+        "@repo/config": "workspace:*",
+        "@repo/database": "workspace:*",
+        "@repo/design-system": "workspace:*",
+        "@repo/internationalization": "workspace:*",
+        "@repo/next-config": "workspace:*",
+        "@repo/observability": "workspace:*",
+        "@repo/security": "workspace:*",
+        "@repo/storage": "workspace:*",
+        "@sentry/nextjs": "^10.42.0",
+        "@supabase/ssr": "^0.12.6",
+        "@supabase/supabase-js": "^2.115.0",
+        "@t3-oss/env-nextjs": "^0.13.10",
+        "import-in-the-middle": "^3.0.0",
+        "lucide-react": "^1.41.0",
+        "marked": "^18.0.14",
+        "next": "16.3.8",
+        "next-intl": "^4.14.9",
+        "react": "19.3.0",
+        "react-dom": "19.3.0",
+        "recharts": "^3.8.0",
+        "require-in-the-middle": "8.0.1",
+        "server-only": "^0.0.1",
+        "sonner": "^2.0.7",
+        "zod": "^4.3.6",
+      },
+      "devDependencies": {
+        "@repo/typescript-config": "workspace:*",
+        "@tailwindcss/postcss": "^4.2.1",
+        "@types/node": "25.3.5",
+        "@types/react": "19.3.0",
+        "@types/react-dom": "19.3.0",
+        "tailwindcss": "^4.2.1",
+        "typescript": "^7.0.2",
+        "vitest": "^5.0.3",
+      },
+    },
     "apps/api": {
       "name": "api",
       "dependencies": {
@@ -1988,6 +2030,8 @@
     "acorn-walk": ["acorn-walk@8.3.5", "", { "dependencies": { "acorn": "^8.11.0" } }, "sha512-HEHNfbars9v4pgpW6SO1KSPkfoS0xVOM/9UzkJltjlsHZmJasxg8aXkuZa7SMf8vKGIBhpUsPluQSqhJFCqebw=="],
 
     "adjust-sourcemap-loader": ["adjust-sourcemap-loader@4.0.0", "", { "dependencies": { "loader-utils": "^2.0.0", "regex-parser": "^2.2.11" } }, "sha512-OXwN5b9pCUXNQHJpwwD2qP40byEmSgzj8B4ydSN0uMNYWiFmJ6x6KwUllMmfk8Rwu/HJDFR7U8ubsWBoN0Xp0A=="],
+
+    "admin": ["admin@workspace:apps/admin"],
 
     "agent-base": ["agent-base@7.1.4", "", {}, "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ=="],
 

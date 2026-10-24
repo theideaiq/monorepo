@@ -31,6 +31,7 @@ apps/
   api/        Webhooks, cron jobs and server-only endpoints (port 3002)
   email/      React Email templates (port 3003)
   docs/       Mintlify documentation (port 3004)
+  admin/      Back office for staff: catalog, orders, CRM, finance, editorial (port 3005)
   storybook/  Design-system workbench (port 6006)
 packages/
   config/     Project identity, locales and regional settings (single source of truth)

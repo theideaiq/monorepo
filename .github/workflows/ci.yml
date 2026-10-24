@@ -52,7 +52,7 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: bun install --frozen-lockfile
-      - run: bunx turbo build --filter=api --filter=app --filter=web
+      - run: bunx turbo build --filter=api --filter=app --filter=web --filter=admin
       # The static export bundled into the iOS/Android apps (Capacitor).
       - run: bunx turbo build:native --filter=app
 
