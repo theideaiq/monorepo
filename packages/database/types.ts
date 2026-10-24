@@ -116,6 +116,7 @@ export type Database = {
       };
       crm_contacts: {
         Row: {
+          last_contacted_at: string | null;
           notes: string | null;
           status: Database["public"]["Enums"]["crm_status"];
           tags: string[];
@@ -124,6 +125,7 @@ export type Database = {
           user_id: string;
         };
         Insert: {
+          last_contacted_at?: string | null;
           notes?: string | null;
           status?: Database["public"]["Enums"]["crm_status"];
           tags?: string[];
@@ -132,6 +134,7 @@ export type Database = {
           user_id: string;
         };
         Update: {
+          last_contacted_at?: string | null;
           notes?: string | null;
           status?: Database["public"]["Enums"]["crm_status"];
           tags?: string[];
@@ -143,8 +146,12 @@ export type Database = {
       };
       equity_holders: {
         Row: {
+          conversion_cap: number | null;
           created_at: string;
+          discount_rate: number | null;
           id: string;
+          instrument: Database["public"]["Enums"]["equity_instrument"];
+          invested_amount: number | null;
           name: string;
           round_id: string | null;
           shares: number;
@@ -152,8 +159,12 @@ export type Database = {
           vesting_start: string | null;
         };
         Insert: {
+          conversion_cap?: number | null;
           created_at?: string;
+          discount_rate?: number | null;
           id?: string;
+          instrument?: Database["public"]["Enums"]["equity_instrument"];
+          invested_amount?: number | null;
           name: string;
           round_id?: string | null;
           shares: number;
@@ -161,8 +172,12 @@ export type Database = {
           vesting_start?: string | null;
         };
         Update: {
+          conversion_cap?: number | null;
           created_at?: string;
+          discount_rate?: number | null;
           id?: string;
+          instrument?: Database["public"]["Enums"]["equity_instrument"];
+          invested_amount?: number | null;
           name?: string;
           round_id?: string | null;
           shares?: number;
@@ -289,6 +304,75 @@ export type Database = {
         };
         Relationships: [];
       };
+      financial_settings: {
+        Row: {
+          base_currency: string;
+          corporate_tax_rate: number;
+          fiscal_year_start_month: number;
+          id: boolean;
+          updated_at: string;
+          vat_rate: number;
+        };
+        Insert: {
+          base_currency?: string;
+          corporate_tax_rate?: number;
+          fiscal_year_start_month?: number;
+          id?: boolean;
+          updated_at?: string;
+          vat_rate?: number;
+        };
+        Update: {
+          base_currency?: string;
+          corporate_tax_rate?: number;
+          fiscal_year_start_month?: number;
+          id?: boolean;
+          updated_at?: string;
+          vat_rate?: number;
+        };
+        Relationships: [];
+      };
+      fixed_assets: {
+        Row: {
+          category: string | null;
+          cost: number;
+          created_at: string;
+          disposed_on: string | null;
+          id: string;
+          name: string;
+          notes: string | null;
+          purchase_date: string;
+          salvage_value: number;
+          updated_at: string;
+          useful_life_months: number;
+        };
+        Insert: {
+          category?: string | null;
+          cost: number;
+          created_at?: string;
+          disposed_on?: string | null;
+          id?: string;
+          name: string;
+          notes?: string | null;
+          purchase_date: string;
+          salvage_value?: number;
+          updated_at?: string;
+          useful_life_months?: number;
+        };
+        Update: {
+          category?: string | null;
+          cost?: number;
+          created_at?: string;
+          disposed_on?: string | null;
+          id?: string;
+          name?: string;
+          notes?: string | null;
+          purchase_date?: string;
+          salvage_value?: number;
+          updated_at?: string;
+          useful_life_months?: number;
+        };
+        Relationships: [];
+      };
       invitations: {
         Row: {
           accepted_at: string | null;
@@ -382,26 +466,35 @@ export type Database = {
         Row: {
           created_at: string;
           created_by: string | null;
+          currency: string;
           description: string;
           entry_date: string;
+          exchange_rate: number;
           id: string;
           reference: string | null;
+          scenario: Database["public"]["Enums"]["ledger_scenario"];
         };
         Insert: {
           created_at?: string;
           created_by?: string | null;
+          currency?: string;
           description: string;
           entry_date: string;
+          exchange_rate?: number;
           id?: string;
           reference?: string | null;
+          scenario?: Database["public"]["Enums"]["ledger_scenario"];
         };
         Update: {
           created_at?: string;
           created_by?: string | null;
+          currency?: string;
           description?: string;
           entry_date?: string;
+          exchange_rate?: number;
           id?: string;
           reference?: string | null;
+          scenario?: Database["public"]["Enums"]["ledger_scenario"];
         };
         Relationships: [];
       };
@@ -410,6 +503,7 @@ export type Database = {
           account_id: string;
           credit: number;
           debit: number;
+          dimensions: NonNullable<Json>;
           entry_id: string;
           id: string;
           memo: string | null;
@@ -418,6 +512,7 @@ export type Database = {
           account_id: string;
           credit?: number;
           debit?: number;
+          dimensions?: NonNullable<Json>;
           entry_id: string;
           id?: string;
           memo?: string | null;
@@ -426,6 +521,7 @@ export type Database = {
           account_id?: string;
           credit?: number;
           debit?: number;
+          dimensions?: NonNullable<Json>;
           entry_id?: string;
           id?: string;
           memo?: string | null;
@@ -546,6 +642,39 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      notifications: {
+        Row: {
+          created_at: string;
+          data: NonNullable<Json>;
+          event: string;
+          id: string;
+          kind: Database["public"]["Enums"]["notification_kind"];
+          link: string | null;
+          read_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          data?: NonNullable<Json>;
+          event: string;
+          id?: string;
+          kind: Database["public"]["Enums"]["notification_kind"];
+          link?: string | null;
+          read_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          data?: NonNullable<Json>;
+          event?: string;
+          id?: string;
+          kind?: Database["public"]["Enums"]["notification_kind"];
+          link?: string | null;
+          read_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       order_items: {
         Row: {
@@ -786,6 +915,7 @@ export type Database = {
           name: string;
           position: number;
           rental_slots: number | null;
+          tier: number | null;
         };
         Insert: {
           active?: boolean;
@@ -801,6 +931,7 @@ export type Database = {
           name: string;
           position?: number;
           rental_slots?: number | null;
+          tier?: number | null;
         };
         Update: {
           active?: boolean;
@@ -816,6 +947,7 @@ export type Database = {
           name?: string;
           position?: number;
           rental_slots?: number | null;
+          tier?: number | null;
         };
         Relationships: [];
       };
@@ -897,6 +1029,50 @@ export type Database = {
         };
         Relationships: [];
       };
+      product_reviews: {
+        Row: {
+          comment: string | null;
+          created_at: string;
+          id: string;
+          product_id: string;
+          rating: number;
+          status: Database["public"]["Enums"]["review_status"];
+          updated_at: string;
+          user_id: string;
+          verified_purchase: boolean;
+        };
+        Insert: {
+          comment?: string | null;
+          created_at?: string;
+          id?: string;
+          product_id: string;
+          rating: number;
+          status?: Database["public"]["Enums"]["review_status"];
+          updated_at?: string;
+          user_id?: string;
+          verified_purchase?: boolean;
+        };
+        Update: {
+          comment?: string | null;
+          created_at?: string;
+          id?: string;
+          product_id?: string;
+          rating?: number;
+          status?: Database["public"]["Enums"]["review_status"];
+          updated_at?: string;
+          user_id?: string;
+          verified_purchase?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       product_variants: {
         Row: {
           attributes: NonNullable<Json>;
@@ -958,10 +1134,13 @@ export type Database = {
           name_ar: string;
           name_en: string;
           price: number;
+          rental_tier: number | null;
+          seller: string;
           slug: string;
           status: Database["public"]["Enums"]["product_status"];
           stock_count: number;
           updated_at: string;
+          verified: boolean;
         };
         Insert: {
           category_id?: string | null;
@@ -979,10 +1158,13 @@ export type Database = {
           name_ar: string;
           name_en: string;
           price: number;
+          rental_tier?: number | null;
+          seller?: string;
           slug: string;
           status?: Database["public"]["Enums"]["product_status"];
           stock_count?: number;
           updated_at?: string;
+          verified?: boolean;
         };
         Update: {
           category_id?: string | null;
@@ -1000,10 +1182,13 @@ export type Database = {
           name_ar?: string;
           name_en?: string;
           price?: number;
+          rental_tier?: number | null;
+          seller?: string;
           slug?: string;
           status?: Database["public"]["Enums"]["product_status"];
           stock_count?: number;
           updated_at?: string;
+          verified?: boolean;
         };
         Relationships: [
           {
@@ -1369,6 +1554,94 @@ export type Database = {
           },
         ];
       };
+      support_messages: {
+        Row: {
+          author_id: string | null;
+          body: string;
+          created_at: string;
+          id: string;
+          internal: boolean;
+          ticket_id: string;
+        };
+        Insert: {
+          author_id?: string | null;
+          body: string;
+          created_at?: string;
+          id?: string;
+          internal?: boolean;
+          ticket_id: string;
+        };
+        Update: {
+          author_id?: string | null;
+          body?: string;
+          created_at?: string;
+          id?: string;
+          internal?: boolean;
+          ticket_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_ticket_id_fkey";
+            columns: ["ticket_id"];
+            isOneToOne: false;
+            referencedRelation: "support_tickets";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      support_tickets: {
+        Row: {
+          assigned_to: string | null;
+          created_at: string;
+          id: string;
+          last_message_at: string;
+          number: number;
+          order_id: string | null;
+          priority: Database["public"]["Enums"]["ticket_priority"];
+          status: Database["public"]["Enums"]["ticket_status"];
+          subject: string;
+          topic: Database["public"]["Enums"]["ticket_topic"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        Insert: {
+          assigned_to?: string | null;
+          created_at?: string;
+          id?: string;
+          last_message_at?: string;
+          number?: never;
+          order_id?: string | null;
+          priority?: Database["public"]["Enums"]["ticket_priority"];
+          status?: Database["public"]["Enums"]["ticket_status"];
+          subject: string;
+          topic?: Database["public"]["Enums"]["ticket_topic"];
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          assigned_to?: string | null;
+          created_at?: string;
+          id?: string;
+          last_message_at?: string;
+          number?: never;
+          order_id?: string | null;
+          priority?: Database["public"]["Enums"]["ticket_priority"];
+          status?: Database["public"]["Enums"]["ticket_status"];
+          subject?: string;
+          topic?: Database["public"]["Enums"]["ticket_topic"];
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       telegram_chats: {
         Row: {
           created_at: string;
@@ -1539,9 +1812,50 @@ export type Database = {
         };
         Relationships: [];
       };
+      wishlist_items: {
+        Row: {
+          created_at: string;
+          product_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          product_id: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          product_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "wishlist_items_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
-      [_ in never]: never;
+      product_ratings: {
+        Row: {
+          average: number | null;
+          count: number | null;
+          product_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       accept_invitation: {
@@ -1559,6 +1873,7 @@ export type Database = {
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
+      close_support_ticket: { Args: { ticket: string }; Returns: undefined };
       complete_order_payment: {
         Args: { order_id: string };
         Returns: undefined;
@@ -1605,15 +1920,66 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      create_support_ticket: {
+        Args: {
+          ticket_body: string;
+          ticket_order?: string;
+          ticket_subject: string;
+          ticket_topic?: Database["public"]["Enums"]["ticket_topic"];
+        };
+        Returns: {
+          assigned_to: string | null;
+          created_at: string;
+          id: string;
+          last_message_at: string;
+          number: number;
+          order_id: string | null;
+          priority: Database["public"]["Enums"]["ticket_priority"];
+          status: Database["public"]["Enums"]["ticket_status"];
+          subject: string;
+          topic: Database["public"]["Enums"]["ticket_topic"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "support_tickets";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       event_rsvp_count: { Args: { event: string }; Returns: number };
+      fixed_asset_schedule: {
+        Args: { as_of?: string };
+        Returns: {
+          accumulated_depreciation: number;
+          book_value: number;
+          category: string;
+          cost: number;
+          disposed_on: string;
+          id: string;
+          monthly_depreciation: number;
+          months_elapsed: number;
+          name: string;
+          purchase_date: string;
+        }[];
+      };
       ledger_monthly_summary: {
-        Args: { from_date: string; to_date: string };
+        Args: {
+          from_date: string;
+          summary_scenario?: Database["public"]["Enums"]["ledger_scenario"];
+          to_date: string;
+        };
         Returns: {
           cogs: number;
           expenses: number;
           month: string;
           revenue: number;
         }[];
+      };
+      mark_notifications_read: {
+        Args: { notification_ids?: string[] };
+        Returns: number;
       };
       mark_overdue_rentals: {
         Args: Record<PropertyKey, never>;
@@ -1625,6 +1991,7 @@ export type Database = {
         Returns: {
           in_use: number;
           slots: number;
+          tier: number;
         }[];
       };
       pending_invitations: {
@@ -1639,12 +2006,26 @@ export type Database = {
       };
       post_journal_entry: {
         Args: {
+          currency?: string;
           description: string;
           entry_date: string;
+          exchange_rate?: number;
           lines: Json;
           reference?: string;
+          scenario?: Database["public"]["Enums"]["ledger_scenario"];
         };
         Returns: string;
+      };
+      product_review_list: {
+        Args: { max_rows?: number; review_product: string; skip?: number };
+        Returns: {
+          author_name: string;
+          comment: string;
+          created_at: string;
+          id: string;
+          rating: number;
+          verified_purchase: boolean;
+        }[];
       };
       request_rental: {
         Args: { rental_product: string };
@@ -1701,6 +2082,20 @@ export type Database = {
       campaign_status: "draft" | "sending" | "sent" | "failed";
       crm_status: "lead" | "customer" | "vip" | "churned";
       equity_holder_type: "founder" | "investor" | "employee" | "advisor";
+      equity_instrument:
+        | "common"
+        | "preferred"
+        | "option"
+        | "safe"
+        | "convertible_note";
+      ledger_scenario: "actual" | "forecast" | "budget";
+      notification_kind:
+        | "order"
+        | "rental"
+        | "support"
+        | "plus"
+        | "promo"
+        | "system";
       order_status:
         | "pending"
         | "paid"
@@ -1726,6 +2121,7 @@ export type Database = {
         | "returned"
         | "overdue"
         | "cancelled";
+      review_status: "published" | "hidden";
       staff_plan_status: "planned" | "hiring" | "active" | "terminated";
       staff_role:
         | "superadmin"
@@ -1756,6 +2152,9 @@ export type Database = {
         | "expired";
       telegram_request_status: "open" | "resolved" | "rejected";
       telegram_request_type: "unban" | "support";
+      ticket_priority: "low" | "normal" | "high" | "urgent";
+      ticket_status: "open" | "pending" | "resolved" | "closed";
+      ticket_topic: "order" | "rental" | "plus" | "account" | "other";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -1891,6 +2290,22 @@ export const Constants = {
       campaign_status: ["draft", "sending", "sent", "failed"],
       crm_status: ["lead", "customer", "vip", "churned"],
       equity_holder_type: ["founder", "investor", "employee", "advisor"],
+      equity_instrument: [
+        "common",
+        "preferred",
+        "option",
+        "safe",
+        "convertible_note",
+      ],
+      ledger_scenario: ["actual", "forecast", "budget"],
+      notification_kind: [
+        "order",
+        "rental",
+        "support",
+        "plus",
+        "promo",
+        "system",
+      ],
       order_status: [
         "pending",
         "paid",
@@ -1919,6 +2334,7 @@ export const Constants = {
         "overdue",
         "cancelled",
       ],
+      review_status: ["published", "hidden"],
       staff_plan_status: ["planned", "hiring", "active", "terminated"],
       staff_role: [
         "superadmin",
@@ -1953,6 +2369,9 @@ export const Constants = {
       ],
       telegram_request_status: ["open", "resolved", "rejected"],
       telegram_request_type: ["unban", "support"],
+      ticket_priority: ["low", "normal", "high", "urgent"],
+      ticket_status: ["open", "pending", "resolved", "closed"],
+      ticket_topic: ["order", "rental", "plus", "account", "other"],
     },
   },
 } as const;

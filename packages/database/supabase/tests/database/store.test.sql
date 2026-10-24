@@ -73,8 +73,8 @@ insert into public.products (id, slug, name_ar, name_en, price, stock_count, sta
 insert into public.product_variants (id, product_id, attributes, price_override, stock_count) values
   ('21000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001', '{"Edition":"Digital"}', 650000, 3);
 
-insert into public.plans (id, name, amount, billing_interval, audience, rental_slots)
-values ('plus-test', 'Plus', 25000, 'month', 'plus', 1);
+insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)
+values ('plus-test', 'Plus', 25000, 'month', 'plus', 1, 1);
 
 update public.store_settings set shipping_fee = 5000, free_shipping_threshold = 1000000;
 

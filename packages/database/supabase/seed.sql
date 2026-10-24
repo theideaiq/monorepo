@@ -3,16 +3,16 @@
 -- managed in the back office (apps/admin).
 
 insert into public.plans
-  (id, name, description, amount, currency, billing_interval, audience, rental_slots, features_ar, features_en, position)
+  (id, name, description, amount, currency, billing_interval, audience, rental_slots, tier, features_ar, features_en, position)
 values
-  ('plus-essential', 'Plus Essential', 'One item at a time', 15000, 'IQD', 'month', 'plus', 1,
+  ('plus-essential', 'Plus Essential', 'One item at a time', 15000, 'IQD', 'month', 'plus', 1, 1,
     '{"غرض واحد في كل مرة","توصيل داخل بغداد"}', '{"One item at a time","Delivery in Baghdad"}', 1),
-  ('plus-extra', 'Plus Extra', 'Two items at a time', 25000, 'IQD', 'month', 'plus', 2,
+  ('plus-extra', 'Plus Extra', 'Two items at a time', 25000, 'IQD', 'month', 'plus', 2, 2,
     '{"غرضان في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة"}', '{"Two items at a time","Free delivery","Early access to new releases"}', 2),
-  ('plus-premium', 'Plus Premium', 'Four items at a time', 40000, 'IQD', 'month', 'plus', 4,
+  ('plus-premium', 'Plus Premium', 'Four items at a time', 40000, 'IQD', 'month', 'plus', 4, 3,
     '{"أربعة أغراض في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة","دعوات لفعاليات النادي"}',
     '{"Four items at a time","Free delivery","Early access to new releases","Invitations to Club events"}', 3),
-  ('suite-business-monthly', 'IDEA Suite', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null,
+  ('suite-business-monthly', 'IDEA Suite', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
     '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
 
@@ -99,3 +99,6 @@ insert into public.telegram_faq (topic, question_ar, question_en, answer_ar, ans
     'اختر خطة، ثم اطلب الألعاب أو الكتب من التطبيق وسنوصلها إليك. أعدها متى شئت واطلب غيرها.',
     'Pick a plan, then request games or books in the app and we deliver them. Return them whenever you like and request more.', 1)
 on conflict do nothing;
+
+-- Newest releases need IDEA Plus Extra or higher.
+update public.products set rental_tier = 2 where slug = 'ea-fc-26-ps5';
