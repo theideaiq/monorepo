@@ -13,8 +13,10 @@ import {
   uploadPublicFile,
 } from "@repo/storage";
 import { FileTextIcon, StarIcon, UploadIcon, XIcon } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { type ChangeEvent, useId, useMemo, useRef, useState } from "react";
+import { isRemoteCatalogImage } from "@/lib/admin/catalog-images";
 import { useFormContext } from "./action-form";
 
 interface FileUploadProps {
@@ -60,7 +62,19 @@ const FileItem = ({
 
   return (
     <li className="relative flex items-center gap-2 overflow-hidden rounded-md border bg-muted/40">
-      {accept === "image" ? (
+      {accept === "image" && isRemoteCatalogImage(path) ? (
+        // A linked cover (Cover Art Archive, Open Library, Wikimedia),
+        // optimised by Next.js: the CSP only allows images from this origin
+        // and Supabase.
+        <Image
+          alt=""
+          className="aspect-square w-full object-cover"
+          height={160}
+          src={path}
+          width={160}
+        />
+      ) : null}
+      {accept === "image" && !isRemoteCatalogImage(path) ? (
         // biome-ignore lint/performance/noImgElement: previews of just-uploaded files
         <img
           alt=""
@@ -69,7 +83,8 @@ const FileItem = ({
           src={url}
           width={160}
         />
-      ) : (
+      ) : null}
+      {accept === "image" ? null : (
         <a
           className="flex min-w-0 flex-1 items-center gap-2 p-2 text-sm underline-offset-4 hover:underline"
           href={url}
@@ -228,7 +243,11 @@ export const FileUpload = ({
               }
               onRemove={() => remove(path)}
               path={path}
-              url={publicFileUrl(supabaseUrl, bucket, path)}
+              url={
+                isRemoteCatalogImage(path)
+                  ? path
+                  : publicFileUrl(supabaseUrl, bucket, path)
+              }
             />
           ))}
         </ul>

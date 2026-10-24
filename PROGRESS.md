@@ -179,3 +179,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   email, name and opt-in to the `RESEND_SEGMENT_ID` segment and pulls
   Resend unsubscribes back. The back office has no Marketing section any
   more; the marketing role keeps the dashboard and customers (read).
+- 2026-10-24: Catalog tools in the back office. **Catalog → Import**
+  reads a CSV of the inventory sheet in the browser, previews new, changed,
+  unchanged and invalid rows, and applies them in batches through
+  `import_products` (catalog staff, AAL2); blank cells never overwrite.
+  **Find picture** (product page) and **Find missing pictures**
+  (`/admin/catalog/covers`) look covers up on MusicBrainz and the Cover Art
+  Archive (records, CDs, cassettes), Open Library (books) and Wikipedia
+  (everything else); staff confirm each one. Store search everywhere goes
+  through `search_products` (Arabic folded: tashkeel, alef forms, ya and
+  ta marbuta; pg_trgm), migration `20261120000200_catalog_tools.sql`.

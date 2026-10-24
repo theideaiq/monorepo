@@ -9,8 +9,6 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 type Client = SupabaseClient<Database>;
 
-const LIKE_WILDCARDS = /[%_\\]/g;
-
 export const PRODUCT_CARD_COLUMNS =
   "id, slug, kind, name_ar, name_en, price, compare_at_price, currency, condition, stock_count, images, featured, category_id" as const;
 
@@ -59,7 +57,7 @@ export interface ProductFilters {
   kind?: ProductKind;
   limit?: number;
   offset?: number;
-  /** Matches the Arabic or English name. */
+  /** Arabic or English search (see `listProducts`). */
   search?: string;
   sort?: "newest" | "price-asc" | "price-desc";
 }
@@ -75,6 +73,16 @@ export const listCategories = async (supabase: Client, kind?: ProductKind) => {
   return unwrap(await query);
 };
 
+/** Longest search term sent to the database (the store's ?q= is cut there too). */
+const SEARCH_MAX_LENGTH = 100;
+
+/**
+ * Store listing. With `search`, products come from the `search_products`
+ * RPC: Arabic and English names, descriptions and specifications (artist,
+ * author, …), normalized (no tashkeel, أ/إ/آ → ا, ى → ي, ة → ه) and ranked
+ * best match first. The default sort ("newest") keeps that ranking; the
+ * price sorts reorder it.
+ */
 export const listProducts = async (
   supabase: Client,
   {
@@ -87,6 +95,26 @@ export const listProducts = async (
     sort = "newest",
   }: ProductFilters = {}
 ): Promise<ProductCard[]> => {
+  const term = search?.trim().slice(0, SEARCH_MAX_LENGTH);
+  if (term) {
+    let ranked = supabase
+      .rpc("search_products", {
+        search_category: category,
+        search_kind: kind,
+        search_term: term,
+      })
+      .select(PRODUCT_CARD_COLUMNS);
+    if (featured) {
+      ranked = ranked.eq("featured", true);
+    }
+    if (sort !== "newest") {
+      ranked = ranked.order("price", { ascending: sort === "price-asc" });
+    }
+    return unwrap(
+      await ranked.range(offset, offset + limit - 1)
+    ) as unknown as ProductCard[];
+  }
+
   let query = supabase
     .from("products")
     .select(
@@ -102,12 +130,6 @@ export const listProducts = async (
   }
   if (featured) {
     query = query.eq("featured", true);
-  }
-  if (search?.trim()) {
-    const pattern = `%${search.trim().replace(LIKE_WILDCARDS, "\\$&")}%`;
-    query = query.or(
-      `name_ar.ilike.${JSON.stringify(pattern)},name_en.ilike.${JSON.stringify(pattern)}`
-    );
   }
 
   query =

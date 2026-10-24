@@ -1766,6 +1766,7 @@ export type Database = {
         };
       };
       event_rsvp_count: { Args: { event: string }; Returns: number };
+      import_products: { Args: { items: Json }; Returns: Json };
       ledger_monthly_summary: {
         Args: {
           from_date: string;
@@ -1888,6 +1889,43 @@ export type Database = {
       rotate_calendar_token: {
         Args: Record<PropertyKey, never>;
         Returns: string;
+      };
+      search_products: {
+        Args: {
+          search_category?: string;
+          search_kind?: Database["public"]["Enums"]["product_kind"];
+          search_term: string;
+        };
+        Returns: {
+          category_id: string | null;
+          compare_at_price: number | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          currency: string;
+          description_ar: string | null;
+          description_en: string | null;
+          details: NonNullable<Json>;
+          featured: boolean;
+          id: string;
+          images: string[];
+          kind: Database["public"]["Enums"]["product_kind"];
+          name_ar: string;
+          name_en: string;
+          price: number;
+          rental_tier: number | null;
+          seller: string;
+          slug: string;
+          status: Database["public"]["Enums"]["product_status"];
+          stock_count: number;
+          updated_at: string;
+          verified: boolean;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "products";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
       };
       set_staff_role: {
         Args: {

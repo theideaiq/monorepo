@@ -1,5 +1,9 @@
 # Catalog import
 
+For new stock, prefer **Back office → Catalog → Import** (a CSV of the
+inventory sheet, with a preview before anything is saved). These files are
+the first import, kept for reference.
+
 Product data, not schema: paste each file into the Supabase SQL editor, in order.
 Each file is idempotent — re-running updates names, descriptions, prices and
 images, but never resets stock, status or featured flags set in the admin.

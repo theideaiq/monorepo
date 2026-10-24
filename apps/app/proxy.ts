@@ -1,6 +1,7 @@
 import { refreshSession } from "@repo/auth/proxy";
 import { internationalizationMiddleware } from "@repo/internationalization/proxy";
-import { withSecurityHeaders } from "@repo/security/proxy";
+import { catalogLookupCspSources } from "@repo/security/csp";
+import { noseconeOptionsWith, withSecurityHeaders } from "@repo/security/proxy";
 import type { NextRequest } from "next/server";
 
 export const config = {
@@ -11,6 +12,10 @@ export const config = {
   ],
 };
 
+// The back office also looks up product covers from the browser.
+const ADMIN_PATH = /^\/(?:ar|en)\/admin(?:\/|$)/;
+const adminOptions = noseconeOptionsWith(catalogLookupCspSources);
+
 /**
  * Adds the locale prefix (/ar, /en), keeps the shared session cookie fresh
  * (so Server Components and Server Actions read a valid token) and adds the
@@ -19,5 +24,8 @@ export const config = {
  */
 export default async function proxy(request: NextRequest) {
   const response = internationalizationMiddleware(request);
-  return withSecurityHeaders(await refreshSession(request, response));
+  return withSecurityHeaders(
+    await refreshSession(request, response),
+    ADMIN_PATH.test(request.nextUrl.pathname) ? adminOptions : undefined
+  );
 }
