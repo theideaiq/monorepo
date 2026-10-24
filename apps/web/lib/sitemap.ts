@@ -8,7 +8,6 @@ export const staticPaths = [
   "/academy",
   "/suite",
   "/club",
-  "/droid",
   "/news",
   "/events",
   "/journal",

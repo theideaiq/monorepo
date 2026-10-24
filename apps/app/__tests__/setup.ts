@@ -33,3 +33,17 @@ vi.mock("next/navigation", () => ({
   useRouter: () => router,
   useSearchParams: () => searchParams.current,
 }));
+
+// Radix measures some controls (radio groups) with ResizeObserver, which
+// jsdom doesn't implement.
+globalThis.ResizeObserver ??= class {
+  disconnect() {
+    // Nothing to stop.
+  }
+  observe() {
+    // Sizes never change in jsdom.
+  }
+  unobserve() {
+    // Nothing to stop.
+  }
+};

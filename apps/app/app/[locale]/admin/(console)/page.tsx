@@ -3,7 +3,6 @@ import {
   LifeBuoyIcon,
   type LucideIcon,
   MailIcon,
-  MegaphoneIcon,
   PackageCheckIcon,
   RepeatIcon,
   SendIcon,
@@ -27,9 +26,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 type Access = Record<
+  | "customers"
   | "editorial"
   | "finance"
-  | "marketing"
   | "members"
   | "orders"
   | "rentals"
@@ -55,7 +54,6 @@ const loadStats = async (supabase: ServerClient, can: Access) => {
     members,
     openRentals,
     overdueRentals,
-    drafts,
     optedIn,
     requests,
     paidOrders,
@@ -86,13 +84,7 @@ const loadStats = async (supabase: ServerClient, can: Access) => {
     countIf(can.rentals, () =>
       supabase.from("rentals").select("id", head).eq("status", "overdue")
     ),
-    countIf(can.marketing, () =>
-      supabase
-        .from("marketing_campaigns")
-        .select("id", head)
-        .eq("status", "draft")
-    ),
-    countIf(can.marketing, () =>
+    countIf(can.customers, () =>
       supabase
         .from("profiles")
         .select("id", head)
@@ -132,7 +124,6 @@ const loadStats = async (supabase: ServerClient, can: Access) => {
   ]);
 
   return {
-    drafts,
     fulfilment,
     members,
     openRentals: openRentals + overdueRentals,
@@ -173,9 +164,9 @@ const DashboardPage = async () => {
   const { role } = staff;
 
   const can: Access = {
+    customers: canRead(role, "customers"),
     editorial: canRead(role, "editorial"),
     finance: canRead(role, "finance"),
-    marketing: canRead(role, "marketing"),
     members: canRead(role, "rentals") || canRead(role, "finance"),
     orders: canRead(role, "orders"),
     rentals: canRead(role, "rentals"),
@@ -238,17 +229,10 @@ const DashboardPage = async () => {
       value: format.number(stats.submissions),
     },
     {
-      href: "/marketing",
-      icon: MegaphoneIcon,
-      label: t("drafts"),
-      show: can.marketing,
-      value: format.number(stats.drafts),
-    },
-    {
       href: "/customers?optIn=yes",
       icon: MailIcon,
       label: t("optedIn"),
-      show: can.marketing,
+      show: can.customers,
       value: format.number(stats.optedIn),
     },
     {

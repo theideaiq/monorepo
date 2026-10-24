@@ -18,12 +18,12 @@ import {
 } from "@repo/design-system/components/ui/sidebar";
 import {
   BookOpenIcon,
+  HandCoinsIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
   LifeBuoyIcon,
   LogOutIcon,
   type LucideIcon,
-  MegaphoneIcon,
   PackageIcon,
   RepeatIcon,
   ScrollTextIcon,
@@ -48,13 +48,13 @@ const icons: Record<Section, LucideIcon> = {
   dashboard: LayoutDashboardIcon,
   editorial: BookOpenIcon,
   finance: LandmarkIcon,
-  marketing: MegaphoneIcon,
   orders: ShoppingCartIcon,
   rentals: RepeatIcon,
   reviews: StarIcon,
   staff: ShieldCheckIcon,
   support: LifeBuoyIcon,
   telegram: SendIcon,
+  tradeIns: HandCoinsIcon,
 };
 
 interface AppSidebarProps {

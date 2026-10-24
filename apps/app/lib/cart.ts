@@ -1,4 +1,9 @@
-import { type CartLine, cartTotals, type StoreSettings } from "@repo/commerce";
+import {
+  type CartLine,
+  cartTotals,
+  type DeliveryChoice,
+  type StoreSettings,
+} from "@repo/commerce";
 
 /** The most of one line `cart_items` accepts (check constraint). */
 export const MAX_QUANTITY = 20;
@@ -67,7 +72,8 @@ export const toCartLine = (item: CartItem): CartLineView => {
  */
 export const summarizeCart = (
   items: readonly CartItem[],
-  settings: StoreSettings
+  settings: StoreSettings,
+  choice?: DeliveryChoice
 ) => {
   const lines = items.map(toCartLine);
   const orderable = lines.filter((line) => line.buyable);
@@ -79,7 +85,7 @@ export const summarizeCart = (
     canCheckout: orderable.length > 0 && problems.length === 0,
     lines,
     problems: problems.length,
-    totals: cartTotals(orderable, settings),
+    totals: cartTotals(orderable, settings, choice),
   };
 };
 

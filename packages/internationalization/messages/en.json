@@ -143,7 +143,6 @@
       "news": "News",
       "events": "Events",
       "journal": "Journal",
-      "droid": "The IDEA Droid",
       "about": "Our story",
       "careers": "Careers",
       "faq": "FAQ",
@@ -160,11 +159,10 @@
         "plus": "A monthly membership to rent games, books and movies.",
         "academy": "Courses and cultural-exchange programs.",
         "suite": "Procurement and recruitment for companies.",
-        "club": "Our community rooms on Telegram.",
+        "club": "Our Telegram rooms and The IDEA Droid.",
         "news": "Announcements and stories from The IDEA.",
         "events": "Meetups, launches and community nights.",
-        "journal": "Our journal of members' writing and art.",
-        "droid": "Our Telegram bot and the Spark Catcher game."
+        "journal": "Our journal of members' writing and art."
       }
     },
     "footer": {
@@ -308,6 +306,11 @@
         "verified": "Verified purchase",
         "anonymous": "A customer",
         "latest": "Latest reviews"
+      },
+      "sell": {
+        "title": "Sell to us",
+        "description": "Records, CDs, games, books or tech you no longer need? Send us photos and we'll make you an offer in cash or store credit.",
+        "cta": "Get an offer"
       }
     },
     "plus": {
@@ -462,7 +465,7 @@
     "club": {
       "meta": {
         "title": "The IDEA Club — our community on Telegram",
-        "description": "The IDEA Club is a digital clubhouse on Telegram for innovators, artists, gamers and thinkers. Pick your rooms and join the conversation."
+        "description": "The IDEA Club is a digital clubhouse on Telegram for innovators, artists, gamers and thinkers, looked after by The IDEA Droid, our bot. Pick your rooms and join the conversation."
       },
       "title": "Welcome to",
       "highlight": "The IDEA Club.",
@@ -510,49 +513,45 @@
         "highlight": "jump in?",
         "description": "Don't miss the next big idea or late-night gaming session.",
         "button": "Open Telegram"
+      },
+      "droid": {
+        "badge": "@TheIdeaDroidBot",
+        "title": "Meet The IDEA Droid",
+        "subtitle": "Our Telegram bot keeps The IDEA Club's rooms friendly, answers your questions and helps you find what you're looking for.",
+        "open": "Open in Telegram",
+        "features": {
+          "title": "What The IDEA Droid does",
+          "items": [
+            {
+              "title": "Community moderation",
+              "description": "Helps keep The IDEA Club's rooms safe and on topic, following our community guidelines."
+            },
+            {
+              "title": "Answers to common questions",
+              "description": "Ask about the store, The IDEA Plus, the Academy or The IDEA Suite in a private chat."
+            },
+            {
+              "title": "Product search",
+              "description": "Search the Megastore from Telegram and open products in the app."
+            },
+            {
+              "title": "AI assistant",
+              "description": "Ask in Arabic or English. Answers are generated automatically, so double-check anything important with our team."
+            },
+            {
+              "title": "Talk to the team",
+              "description": "Send a support message or an unban request, and our staff will review it."
+            }
+          ]
+        },
+        "game": {
+          "title": "Spark Catcher",
+          "description": "Our mini-game: catch the falling light bulbs, dodge the bugs and keep your energy up. Best played inside Telegram, but it works in your browser too.",
+          "play": "Play Spark Catcher"
+        },
+        "privacy": "The IDEA Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
+        "privacyLink": "Privacy policy"
       }
-    },
-    "droid": {
-      "meta": {
-        "title": "The IDEA Droid — our Telegram bot",
-        "description": "The IDEA Droid (@TheIdeaDroidBot) is our Telegram bot: it keeps our community rooms safe, answers common questions, finds products and helps as an AI assistant."
-      },
-      "badge": "@TheIdeaDroidBot",
-      "title": "Meet The IDEA Droid",
-      "subtitle": "Our Telegram bot keeps The IDEA Club's rooms friendly, answers your questions and helps you find what you're looking for.",
-      "open": "Open in Telegram",
-      "features": {
-        "title": "What The IDEA Droid does",
-        "items": [
-          {
-            "title": "Community moderation",
-            "description": "Helps keep The IDEA Club's rooms safe and on topic, following our community guidelines."
-          },
-          {
-            "title": "Answers to common questions",
-            "description": "Ask about the store, The IDEA Plus, the Academy or The IDEA Suite in a private chat."
-          },
-          {
-            "title": "Product search",
-            "description": "Search the Megastore from Telegram and open products in the app."
-          },
-          {
-            "title": "AI assistant",
-            "description": "Ask in Arabic or English. Answers are generated automatically, so double-check anything important with our team."
-          },
-          {
-            "title": "Talk to the team",
-            "description": "Send a support message or an unban request, and our staff will review it."
-          }
-        ]
-      },
-      "game": {
-        "title": "Spark Catcher",
-        "description": "Our mini-game: catch the falling light bulbs, dodge the bugs and keep your energy up. Best played inside Telegram, but it works in your browser too.",
-        "play": "Play Spark Catcher"
-      },
-      "privacy": "The IDEA Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
-      "privacyLink": "Privacy policy"
     },
     "about": {
       "meta": {
@@ -824,7 +823,8 @@
       "cartCount": "{count} in cart",
       "account": "Account",
       "wishlist": "Wishlist",
-      "support": "Support"
+      "support": "Support",
+      "sell": "Sell to us"
     },
     "roles": {
       "owner": "Owner",
@@ -949,7 +949,9 @@
         "address": "Address",
         "addressPlaceholder": "Neighbourhood, street, building, nearest landmark",
         "notes": "Delivery notes",
-        "notesPlaceholder": "Anything the courier should know"
+        "notesPlaceholder": "Anything the courier should know",
+        "governorateHint": "Delivery: {fee}. Usually arrives in {min}–{max} days.",
+        "zoneOption": "{name} — {fee}"
       },
       "fieldErrors": {
         "fullName": "Enter the recipient's name.",
@@ -973,8 +975,38 @@
         "payment": "We couldn't open the payment page. Please try again.",
         "suspended": "Your account is suspended. Contact support.",
         "unavailable": "A product in your cart is no longer available. Check your cart.",
-        "unknown": "Something went wrong. Please try again."
-      }
+        "unknown": "Something went wrong. Please try again.",
+        "cashUnavailable": "Cash payment isn't available right now. Choose to pay online.",
+        "pickupUnavailable": "Pickup from the store isn't available right now. Choose delivery.",
+        "zoneUnavailable": "We can't deliver to this governorate right now. Choose another, or pick up from the store."
+      },
+      "fulfilment": {
+        "title": "Delivery or pickup",
+        "delivery": "Delivery",
+        "deliveryHint": "To your door, anywhere in Iraq.",
+        "pickup": "Pickup",
+        "pickupHint": "Collect it from our store, free."
+      },
+      "pickup": {
+        "title": "Pickup from the store",
+        "description": "We'll call you when your order is ready to collect.",
+        "address": "Store address",
+        "hours": "Opening hours",
+        "notes": "Notes for the store",
+        "notesPlaceholder": "Anything we should know"
+      },
+      "payment": {
+        "title": "Payment",
+        "online": "Pay online",
+        "onlineHint": "Card, Qi Card, ZainCash, FIB and more on Wayl's secure page.",
+        "cash": "Cash on delivery",
+        "cashHint": "Pay the courier in cash when your order arrives.",
+        "pickupCash": "Pay at pickup",
+        "pickupCashHint": "Pay in cash at the store when you collect your order."
+      },
+      "placeOrderCash": "Place order · {amount}",
+      "cashNote": "You'll pay {amount} in cash when your order arrives.",
+      "pickupCashNote": "You'll pay {amount} at the store when you collect your order."
     },
     "orders": {
       "title": "Orders",
@@ -1013,7 +1045,15 @@
         "cancelFailed": "This order can no longer be cancelled.",
         "cancelledNotice": "This order was cancelled.",
         "refundedNotice": "This order was refunded.",
-        "help": "Get help with this order"
+        "help": "Get help with this order",
+        "method": "Delivery and payment",
+        "pickupAt": "Pickup from",
+        "pickupHours": "Opening hours",
+        "contact": "Contact",
+        "confirmedNotice": "Your order is confirmed. Have {amount} ready in cash for the courier.",
+        "confirmedPickupNotice": "Your order is confirmed. We'll call you when it's ready; pay {amount} at the store.",
+        "readyNotice": "Your order is ready. Collect it from the store during opening hours.",
+        "cancelCashDescription": "The order is cancelled. This can't be undone."
       }
     },
     "plus": {
@@ -1297,6 +1337,19 @@
           "deleteConfirm": "Delete {name}",
           "failed": "That didn't work. Please try again."
         }
+      },
+      "whatsapp": {
+        "title": "WhatsApp updates",
+        "description": "Get order, rental and trade-in updates on WhatsApp.",
+        "phone": "WhatsApp number",
+        "phonePlaceholder": "0770 123 4567",
+        "optIn": "Send me updates on WhatsApp",
+        "optInHint": "Order confirmations, shipping, rental reminders and trade-in offers. Turn it off any time.",
+        "problems": {
+          "phone": "Enter a valid mobile number.",
+          "phoneRequired": "Add your WhatsApp number to turn updates on."
+        },
+        "failed": "Your WhatsApp settings couldn't be saved."
       }
     },
     "errors": {
@@ -1437,6 +1490,55 @@
       "share": {
         "copied": "Link copied"
       }
+    },
+    "sell": {
+      "title": "Sell to us",
+      "description": "Have records, CDs, games, books or tech you no longer need? Tell us about them and we'll make you an offer in cash or store credit.",
+      "form": {
+        "title": "What are you selling?",
+        "description": "Add clear photos and an honest condition; we reply within a few days.",
+        "category": "Category",
+        "condition": "Condition",
+        "itemTitle": "Title",
+        "itemTitlePlaceholder": "Artist and album, game, book or model",
+        "itemDescription": "Details",
+        "itemDescriptionPlaceholder": "Edition, year, what's included, any marks or faults",
+        "askingPrice": "Your asking price (IQD)",
+        "askingPriceHint": "Optional. Leave it empty and we'll suggest a price.",
+        "phone": "Mobile number",
+        "phonePlaceholder": "0770 123 4567",
+        "phoneHint": "We call or message you about the offer.",
+        "payout": "Paid in",
+        "photos": "Photos",
+        "photosChosen": "{count} of {max} photos chosen.",
+        "photosHint": "Up to {max} photos (JPEG, PNG or WebP).",
+        "failed": "We couldn't send your request. Please try again.",
+        "submitted": "Thanks! We received your request and will get back to you.",
+        "submitting": "Sending…",
+        "submit": "Send for an offer"
+      },
+      "problems": {
+        "title": "Enter what you're selling.",
+        "phone": "Enter a valid mobile number.",
+        "askingPrice": "Enter the price as a whole number in IQD.",
+        "tooManyPhotos": "Choose up to {max} photos.",
+        "photoTooLarge": "Each photo must be smaller than the size limit.",
+        "photoType": "Photos must be JPEG, PNG or WebP."
+      },
+      "list": {
+        "title": "Your requests",
+        "empty": "You haven't sent anything yet.",
+        "photo": "Photo {number}",
+        "meta": "#{number} · {category} · {date}",
+        "asking": "Asking {price}",
+        "offer": "Our offer: {amount}",
+        "note": "Note from The IDEA",
+        "accept": "Accept the offer",
+        "decline": "Decline",
+        "withdraw": "Withdraw",
+        "withdrawing": "Withdrawing…",
+        "actionFailed": "That didn't work. Refresh and try again."
+      }
     }
   },
   "store": {
@@ -1463,7 +1565,8 @@
       "shipped": "On the way",
       "delivered": "Delivered",
       "cancelled": "Cancelled",
-      "refunded": "Refunded"
+      "refunded": "Refunded",
+      "confirmed": "Confirmed"
     },
     "rentalStatus": {
       "requested": "Requested",
@@ -1567,6 +1670,30 @@
         "support_reply": {
           "title": "New reply from support",
           "body": "We replied to ticket #{number}: {subject}"
+        },
+        "order_confirmed": {
+          "title": "Order confirmed",
+          "body": "Order #{number} is confirmed. You'll pay in cash when you receive it."
+        },
+        "order_ready_for_pickup": {
+          "title": "Ready for pickup",
+          "body": "Order #{number} is ready to collect from the store."
+        },
+        "trade_in_offer": {
+          "title": "We made you an offer",
+          "body": "Our offer for request #{number}, {title}: {amount}. Open it to accept or decline."
+        },
+        "trade_in_rejected": {
+          "title": "About your item",
+          "body": "We can't take {title} this time. See the note in your request."
+        },
+        "trade_in_completed": {
+          "title": "Trade-in completed",
+          "body": "Thank you! The trade-in of {title} is complete."
+        },
+        "rental_due_soon": {
+          "title": "Rental due soon",
+          "body": "{name} is due back{hasDue, select, yes { on {due}} other {}}."
         }
       },
       "kinds": {
@@ -1575,7 +1702,8 @@
         "support": "Support update",
         "plus": "The IDEA Plus update",
         "promo": "News from The IDEA",
-        "system": "Notice"
+        "system": "Notice",
+        "trade_in": "Sell to us update"
       },
       "fallbackBody": "Open to see the details."
     },
@@ -1592,6 +1720,54 @@
       "currency": "IQD",
       "market": "In the market",
       "withUs": "With us"
+    },
+    "orderStatusPickup": {
+      "shipped": "Ready for pickup",
+      "delivered": "Picked up"
+    },
+    "fulfilment": {
+      "delivery": "Delivery",
+      "pickup": "Pickup from the store"
+    },
+    "paymentMethod": {
+      "online": "Paid online",
+      "cash_on_delivery": "Cash on delivery",
+      "cash_at_pickup": "Pay at pickup"
+    },
+    "tradeIn": {
+      "category": {
+        "vinyl": "Vinyl record",
+        "cd_cassette": "CD or cassette",
+        "game": "Video game",
+        "book": "Book",
+        "console_tech": "Console or tech",
+        "other": "Something else"
+      },
+      "condition": {
+        "sealed": "Sealed",
+        "like_new": "Like new",
+        "good": "Good",
+        "fair": "Fair",
+        "poor": "Worn"
+      },
+      "payout": {
+        "cash": "Cash",
+        "store_credit": "Store credit"
+      },
+      "status": {
+        "submitted": "Received",
+        "reviewing": "Being reviewed",
+        "offer_made": "Offer made",
+        "accepted": "Offer accepted",
+        "declined": "Offer declined",
+        "completed": "Completed",
+        "rejected": "Not accepted",
+        "withdrawn": "Withdrawn"
+      }
+    },
+    "whatsapp": {
+      "customer": "there",
+      "noTracking": "we'll send it soon"
     }
   },
   "admin": {
@@ -1609,14 +1785,14 @@
       "orders": "Orders",
       "rentals": "Rentals",
       "customers": "Customers",
-      "marketing": "Marketing",
       "finance": "Finance",
       "editorial": "Editorial",
       "telegram": "Telegram",
       "staff": "Staff",
       "audit": "Audit log",
       "support": "Support",
-      "reviews": "Reviews"
+      "reviews": "Reviews",
+      "tradeIns": "Trade-ins"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -1637,7 +1813,6 @@
       "inUse": "It's still in use, so it can't be deleted.",
       "lastSuperadmin": "There must always be at least one superadmin.",
       "apiUnavailable": "The server couldn't be reached. Try again shortly.",
-      "emailNotConfigured": "Email sending isn't configured on the server.",
       "unknown": "Something went wrong. Try again."
     },
     "notices": {
@@ -1723,7 +1898,6 @@
       "rentals": "Open rentals",
       "overdue": "{count} overdue",
       "submissions": "Submissions to review",
-      "drafts": "Campaign drafts",
       "optedIn": "Customers opted in to email",
       "telegramRequests": "Open Telegram requests",
       "openTickets": "Open support tickets",
@@ -1735,7 +1909,8 @@
         "products": "Products",
         "categories": "Categories",
         "plans": "Plans",
-        "settings": "Delivery"
+        "settings": "Delivery",
+        "import": "Import"
       },
       "filters": {
         "anyKind": "All lines",
@@ -1807,9 +1982,32 @@
       "settings": {
         "description": "Applied to every new order.",
         "shippingFee": "Delivery fee (IQD)",
-        "shippingFeeHint": "Charged on each order.",
+        "shippingFeeHint": "Shown in the cart before the customer chooses a governorate. Orders use the zone's fee.",
         "threshold": "Free delivery from (IQD)",
-        "thresholdHint": "Orders with at least this subtotal ship free. Empty: never free."
+        "thresholdHint": "Orders with at least this subtotal ship free. Empty: never free.",
+        "cashOnDelivery": "Offer cash payment",
+        "cashOnDeliveryHint": "Cash on delivery, and pay at pickup. Not third-party checkout, so it is offered in the iOS and Android apps too.",
+        "pickup": {
+          "title": "Store pickup",
+          "description": "Customers collect orders at the store, with no delivery fee. Offered at checkout once it is on and has an address.",
+          "enabled": "Offer pickup",
+          "addressAr": "Address (Arabic)",
+          "addressEn": "Address (English)",
+          "hoursAr": "Opening hours (Arabic)",
+          "hoursEn": "Opening hours (English)"
+        },
+        "zones": {
+          "title": "Delivery zones",
+          "description": "Each zone has its own fee. The free-delivery threshold applies to all of them; inactive zones aren't offered at checkout.",
+          "new": "New zone",
+          "fee": "Fee (IQD)",
+          "minDays": "From (days)",
+          "maxDays": "To (days)",
+          "governorate": "Governorate id",
+          "governorateHint": "For example baghdad. Empty for an area that isn't a whole governorate.",
+          "active": "Offered",
+          "deleteDescription": "Past orders keep their fee. To stop offering a zone for now, untick Offered instead."
+        }
       },
       "plans": {
         "new": "New plan",
@@ -1848,6 +2046,136 @@
         "none": "No published reviews yet.",
         "count": "{count} published reviews",
         "stars": "{rating} ★"
+      },
+      "import": {
+        "action": "Import",
+        "title": "Import from a spreadsheet",
+        "description": "Upload the inventory sheet as a CSV file (Google Sheets or Excel: File → Download or Save as → CSV). You see every change before anything is saved.",
+        "columnsTitle": "Columns",
+        "columnsDescription": "The first row names the columns, in any order; other columns are ignored. A blank cell keeps what the catalog already has.",
+        "columns": {
+          "slug": "Optional. Matches an existing product; made from the English name when empty.",
+          "name_en": "English name. Needed for a new product.",
+          "name_ar": "Arabic name. Needed for a new product.",
+          "kind": "sale or rental. New products are sale items unless set.",
+          "category": "The category's slug, e.g. vinyl, books or rent-games.",
+          "price": "Price in IQD, whole dinars. Needed for a new product.",
+          "compare_at_price": "The old price, shown crossed out. Must be higher than the price.",
+          "condition": "new, used, refurbished or open_box.",
+          "stock": "Units on hand.",
+          "status": "draft, active or archived. New products start as drafts unless set.",
+          "barcode": "Saved in the specifications as Barcode.",
+          "sku": "Saved in the specifications as SKU.",
+          "description_en": "English description.",
+          "description_ar": "Arabic description.",
+          "image_urls": "Image links separated by |, from the Cover Art Archive, Open Library or Wikimedia, or catalog storage paths. Replaces the product's images."
+        },
+        "detailsColumns": "A column named details.Key (for example details.Artist) sets that specification.",
+        "template": "Download the template",
+        "choose": "Choose a CSV file",
+        "chooseAnother": "Choose another file",
+        "reading": "Reading the file…",
+        "file": "File: {name}",
+        "problems": {
+          "empty": "The file has no products.",
+          "noNameOrSlug": "The first row needs a slug or name_en column.",
+          "unreadable": "The file couldn't be read. Save it as CSV (UTF-8) and try again.",
+          "tooLarge": "The file is larger than 5 MB. Split it into smaller sheets.",
+          "lookupFailed": "The current catalog couldn't be loaded. Try again."
+        },
+        "unknownColumns": "Ignored columns: {columns}",
+        "status": {
+          "new": "New",
+          "changed": "Changed",
+          "unchanged": "Unchanged",
+          "error": "Error"
+        },
+        "summary": "{new} new · {changed} changed · {unchanged} unchanged · {error} with errors",
+        "show": "Show",
+        "showAll": "All rows",
+        "table": {
+          "line": "Line",
+          "product": "Product",
+          "result": "Result",
+          "details": "Changes or problems"
+        },
+        "newFields": "Sets {fields}",
+        "changedFields": "Changes {fields}",
+        "noRows": "No rows to show.",
+        "truncated": "Showing the first {shown} of {total} rows.",
+        "fieldNames": {
+          "slug": "Slug",
+          "name_en": "English name",
+          "name_ar": "Arabic name",
+          "kind": "Line",
+          "category": "Category",
+          "price": "Price",
+          "compare_at_price": "Compare-at price",
+          "condition": "Condition",
+          "stock": "Stock",
+          "stock_count": "Stock",
+          "status": "Status",
+          "barcode": "Barcode",
+          "sku": "SKU",
+          "description_en": "English description",
+          "description_ar": "Arabic description",
+          "image_urls": "Images",
+          "images": "Images",
+          "details": "Specifications"
+        },
+        "errors": {
+          "compareAtNotHigher": "the compare-at price must be higher than the price",
+          "duplicateSlug": "the same slug appears on another row",
+          "invalidCompareAt": "not a whole number of dinars",
+          "invalidCondition": "use new, used, refurbished or open_box",
+          "invalidImage": "only links to the Cover Art Archive, Open Library or Wikimedia, or storage paths",
+          "invalidKind": "use sale or rental",
+          "invalidPrice": "not a whole number of dinars",
+          "invalidSlug": "lower-case letters, numbers and dashes only",
+          "invalidStatus": "use draft, active or archived",
+          "invalidStock": "not a whole number",
+          "missingForNew": "needed for a new product",
+          "missingSlug": "add a slug or an English name",
+          "tooLong": "too long",
+          "tooManyImages": "at most 12 images",
+          "unknownCategory": "no category has this slug"
+        },
+        "errorLine": "{field}: {problem}",
+        "apply": "Apply {count} changes",
+        "applying": "Saving… {done} of {total}",
+        "applied": "Saved: {inserted} added, {updated} updated.",
+        "applyFailed": "A batch couldn't be saved ({message}). Earlier batches were saved; fix the sheet and import it again.",
+        "nothingToApply": "Nothing to change.",
+        "errorsSkipped": "Rows with errors are skipped."
+      },
+      "covers": {
+        "find": "Find picture",
+        "findMissing": "Find missing pictures",
+        "title": "Find missing pictures",
+        "description": "Products without images. Pictures come from MusicBrainz and the Cover Art Archive (records, CDs and cassettes), Open Library (books) and Wikipedia (everything else). Check each one before saving.",
+        "panelDescription": "Looks for a cover on MusicBrainz and the Cover Art Archive, Open Library or Wikipedia, depending on the category. Check it before using it.",
+        "searching": "Searching…",
+        "searchedFor": "Searched for: {query}",
+        "none": "No picture found.",
+        "failed": "The lookup failed. Try again in a minute.",
+        "use": "Use as cover",
+        "saved": "Picture saved.",
+        "saveFailed": "The picture couldn't be saved.",
+        "start": "Search all",
+        "stop": "Stop",
+        "progress": "{done} of {total} searched",
+        "saveSelected": "Save {count} pictures",
+        "skip": "None of these",
+        "waiting": "Not searched yet",
+        "savedRow": "Saved",
+        "empty": "Every product has a picture.",
+        "limited": "Showing the first {count} products without pictures.",
+        "candidate": "Picture {index} from {source}",
+        "source": {
+          "coverartarchive": "Cover Art Archive",
+          "openlibrary": "Open Library",
+          "wikipedia": "Wikipedia"
+        }
       }
     },
     "orders": {
@@ -1858,7 +2186,7 @@
       "search": "Order number, name or phone",
       "status": "Status",
       "anyStatus": "All statuses",
-      "awaiting": "To fulfil (paid or preparing)",
+      "awaiting": "To fulfil (paid, confirmed or preparing)",
       "from": "From",
       "to": "To",
       "empty": "No orders match.",
@@ -1884,7 +2212,7 @@
       "paidAt": "Paid",
       "amount": "Amount",
       "fulfilment": "Fulfilment",
-      "fulfilmentHint": "Move the order forward as it's prepared and delivered. Payments and refunds are recorded by the payment provider.",
+      "fulfilmentHint": "Move the order forward as it's prepared and delivered. Online payments and refunds are recorded by the payment provider; cash orders are paid when you record the cash.",
       "cancelConfirm": "Cancel this unpaid order?",
       "moves": {
         "pending": "Back to awaiting payment",
@@ -1893,13 +2221,30 @@
         "shipped": "Mark shipped",
         "delivered": "Mark delivered",
         "cancelled": "Cancel order",
-        "refunded": "Refund"
+        "refunded": "Refund",
+        "confirmed": "Confirm"
       },
       "delivery": "Delivery",
       "notes": "Tracking and notes",
       "tracking": "Tracking number",
       "staffNote": "Staff note",
-      "staffNoteHint": "Only staff see this."
+      "staffNoteHint": "Only staff see this.",
+      "cashDue": "Cash to collect",
+      "payment": "Payment",
+      "method": "Delivery",
+      "zone": "Delivery zone",
+      "movesPickup": {
+        "shipped": "Ready for pickup",
+        "delivered": "Mark picked up"
+      },
+      "cash": {
+        "title": "Cash payment",
+        "due": "Collect {amount} in cash on delivery or at pickup, then record it here.",
+        "collected": "Cash collected {date}.",
+        "action": "Mark cash collected",
+        "confirm": "Record {amount} collected in cash?",
+        "confirmDescription": "The order is marked paid and delivered, and a cash payment is recorded for finance."
+      }
     },
     "rentals": {
       "title": "Rentals",
@@ -2005,60 +2350,6 @@
       "contactedToday": "Contacted today",
       "lastContactedHint": "Baghdad time. Leave empty if they haven't been contacted."
     },
-    "marketing": {
-      "title": "Marketing",
-      "tabs": {
-        "campaigns": "Campaigns",
-        "segments": "Segments"
-      },
-      "campaignStatus": {
-        "draft": "Draft",
-        "sending": "Sending",
-        "sent": "Sent",
-        "failed": "Failed"
-      },
-      "campaigns": {
-        "new": "New campaign",
-        "detail": "Campaign",
-        "create": "Create draft",
-        "empty": "No campaigns yet.",
-        "subject": "Subject",
-        "segment": "Audience",
-        "segmentHint": "Only customers who opted in to marketing email receive campaigns.",
-        "everyone": "Everyone who opted in",
-        "status": "Status",
-        "sentCount": "Recipients",
-        "sentAt": "Sent",
-        "date": "Date",
-        "body": "Message",
-        "bodyHint": "Markdown. It's placed in The IDEA's email template with an unsubscribe link.",
-        "draft": "Draft",
-        "results": "Results",
-        "preview": "Preview",
-        "previewHint": "The saved version, as it will look in the email.",
-        "send": "Send now",
-        "sendConfirm": "Send this campaign now?",
-        "sendDescription": "It goes to: {audience}. Sending can't be undone.",
-        "failedHint": "Sending stopped partway. The recipient count shows how many emails went out."
-      },
-      "segments": {
-        "description": "Segments choose who receives a campaign. Every criterion you set must match; leave one on \"Any\" to ignore it.",
-        "new": "New segment",
-        "create": "Create segment",
-        "name": "Name",
-        "crmStatus": "CRM status",
-        "crmHint": "None ticked: any status.",
-        "tags": "Tags",
-        "tagsHint": "Customers with at least one of these tags.",
-        "plusMember": "The IDEA Plus",
-        "plusYes": "Members only",
-        "plusNo": "Non-members only",
-        "locale": "Language",
-        "count": "Count recipients",
-        "recipients": "{count} recipients right now",
-        "deleteDescription": "Campaigns that used it keep their history."
-      }
-    },
     "finance": {
       "title": "Finance",
       "tabs": {
@@ -2066,9 +2357,6 @@
         "journal": "Journal",
         "accounts": "Chart of accounts",
         "payments": "Payments",
-        "payroll": "Staff plan",
-        "equity": "Cap table",
-        "assets": "Fixed assets",
         "settings": "Settings"
       },
       "dashboard": {
@@ -2155,71 +2443,6 @@
         "amount": "Amount",
         "refunded": "{amount} refunded"
       },
-      "payroll": {
-        "thisMonth": "Payroll this month",
-        "headcount": "Headcount",
-        "nextYear": "Next 12 months",
-        "plan": "Positions",
-        "description": "Planned, open and filled positions. Salaries are monthly, in IQD; raises apply on each anniversary of the start date.",
-        "role": "Role",
-        "department": "Department",
-        "salary": "Monthly salary (IQD)",
-        "increase": "Raise %/yr",
-        "start": "Start date",
-        "status": "Status",
-        "statuses": {
-          "planned": "Planned",
-          "hiring": "Hiring",
-          "active": "Filled",
-          "terminated": "Ended"
-        },
-        "projection": "Projection",
-        "projectionHint": "Positions count from their start date; ended positions are left out.",
-        "month": "Month",
-        "total": "Payroll"
-      },
-      "equity": {
-        "capTable": "Cap table",
-        "tableHint": "Ownership is each holder's share of all shares. Values use the round's price per share, in the round's currency.",
-        "empty": "No shareholders yet.",
-        "holder": "Shareholder",
-        "type": "Type",
-        "types": {
-          "founder": "Founder",
-          "investor": "Investor",
-          "employee": "Employee",
-          "advisor": "Advisor"
-        },
-        "round": "Round",
-        "shares": "Shares",
-        "ownership": "Ownership",
-        "value": "Value",
-        "total": "Total",
-        "rounds": "Funding rounds",
-        "roundsHint": "Amounts are in the round's currency (e.g. USD).",
-        "closedOn": "Closed on",
-        "currency": "Currency",
-        "valuationCap": "Valuation cap",
-        "pricePerShare": "Price per share",
-        "deleteRoundDescription": "Its shareholders stay, without a round.",
-        "holders": "Shareholders",
-        "vestingStart": "Vesting start",
-        "instrument": "Instrument",
-        "instruments": {
-          "common": "Common shares",
-          "preferred": "Preferred shares",
-          "option": "Options",
-          "safe": "SAFE",
-          "convertible_note": "Convertible note"
-        },
-        "invested": "Invested",
-        "terms": "Terms",
-        "capTerm": "Cap {amount}",
-        "discountTerm": "{percent} discount",
-        "conversionCap": "Valuation cap",
-        "discount": "Discount %",
-        "sharesConvertibleHint": "0 until it converts."
-      },
       "scenario": "Scenario",
       "scenarios": {
         "actual": "Actual",
@@ -2237,35 +2460,6 @@
         "taxHint": "Rate on taxable profit, e.g. 15.",
         "vat": "VAT / sales tax (%)",
         "vatHint": "0 if no sales tax applies."
-      },
-      "assets": {
-        "schedule": "Depreciation schedule",
-        "scheduleHint": "Straight-line over each asset's useful life, counting whole months from purchase (to disposal). Amounts in IQD.",
-        "asOf": "As of",
-        "error": "The depreciation schedule couldn't be loaded.",
-        "empty": "No assets bought by this date.",
-        "name": "Asset",
-        "category": "Category",
-        "purchaseDate": "Purchased",
-        "cost": "Cost (IQD)",
-        "salvage": "Salvage value",
-        "life": "Life (months)",
-        "disposedOn": "Disposed on",
-        "monthly": "Per month",
-        "months": "Months",
-        "monthsOf": "{elapsed} of {life}",
-        "accumulated": "Accumulated",
-        "bookValue": "Book value",
-        "state": "Status",
-        "states": {
-          "depreciating": "Depreciating",
-          "fullyDepreciated": "Fully depreciated"
-        },
-        "disposedState": "Disposed {date}",
-        "total": "Total",
-        "list": "Assets",
-        "listHint": "Cost and salvage value in IQD. Set a disposal date when an asset is sold or written off; depreciation stops then.",
-        "deleteDescription": "Remove the asset from the register. To keep its history, set a disposal date instead."
       }
     },
     "editorial": {
@@ -2621,6 +2815,63 @@
       "hide": "Hide",
       "unhide": "Publish",
       "deleteDescription": "The review is removed for good. To take it off the store but keep it, hide it instead."
+    },
+    "tradeIns": {
+      "title": "Trade-ins",
+      "detail": "Trade-in",
+      "count": "Total: {count}",
+      "search": "Request number or title",
+      "status": "Status",
+      "views": {
+        "open": "Open (waiting on us or the customer)",
+        "waiting": "Waiting on us",
+        "all": "All requests"
+      },
+      "category": "Category",
+      "anyCategory": "All categories",
+      "empty": "No requests match.",
+      "request": "Request",
+      "customer": "Customer",
+      "asking": "Asking",
+      "offer": "Offer",
+      "received": "Received",
+      "number": "#{number}",
+      "photoCount": "{count} photos",
+      "unnamedCustomer": "Customer",
+      "receivedOn": "Received {date}",
+      "item": "Item",
+      "condition": "Condition",
+      "payout": "Paid in",
+      "noAskingPrice": "No price given",
+      "photos": "Photos",
+      "noPhotos": "No photos.",
+      "photoAlt": "Photo {number}",
+      "photoMissing": "This photo couldn't be loaded.",
+      "details": "Details",
+      "phone": "Phone",
+      "noOffer": "No offer yet.",
+      "offeredAt": "Offered",
+      "reviewedBy": "Reviewed by",
+      "unnamedStaff": "Staff",
+      "product": "Product",
+      "draftProduct": "Draft product created from this request",
+      "noteToCustomer": "Note to the customer",
+      "manage": "Review",
+      "settled": "This request is closed.",
+      "reviewHint": "Let the customer know you're looking at it.",
+      "markReviewing": "Start review",
+      "amountHint": "Whole dinars. The customer is notified and can accept or decline.",
+      "amount": "Offer (IQD)",
+      "offerNoteHint": "Optional: why this price, how to bring the item in.",
+      "makeOffer": "Make offer",
+      "reviseOffer": "Revise offer",
+      "completeHint": "Once you have the item and the customer is paid.",
+      "createProductHint": "Adds a draft product with the title, condition and photos, to price and publish later.",
+      "createProduct": "Create a draft product",
+      "complete": "Mark completed",
+      "rejectHint": "If you can't take the item. The customer sees the reason.",
+      "rejectReason": "Reason",
+      "reject": "Decline the item"
     }
   },
   "design": {

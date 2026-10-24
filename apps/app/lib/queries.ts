@@ -14,6 +14,7 @@ export const queryKeys = {
   calendarToken: (userId: string) => ["calendar-token", userId] as const,
   cart: (userId: string) => ["cart", userId] as const,
   categories: (kind: string) => ["categories", kind] as const,
+  deliveryZones: ["delivery-zones"] as const,
   events: ["events"] as const,
   invitations: (userId: string) => ["invitations", userId] as const,
   memberships: (userId: string) => ["memberships", userId] as const,
@@ -52,8 +53,12 @@ export const queryKeys = {
   ticketMessages: (ticketId: string) =>
     ["tickets", "messages", ticketId] as const,
   tickets: (userId: string) => ["tickets", "list", userId] as const,
+  tradeInPhotos: (paths: readonly string[]) =>
+    ["trade-in-photos", paths.join(",")] as const,
+  tradeIns: (userId: string) => ["trade-ins", userId] as const,
   unreadNotifications: (userId: string) =>
     ["notifications", userId, "unread"] as const,
+  whatsappSettings: (userId: string) => ["whatsapp-settings", userId] as const,
   wishlist: (userId: string) => ["wishlist", userId] as const,
 };
 

@@ -9,8 +9,8 @@ import {
   TextareaField,
   TextField,
 } from "@/components/admin/fields";
+import { crmStatuses } from "@/lib/admin/crm";
 import { toBaghdadInput } from "@/lib/admin/dates";
-import { crmStatuses } from "@/lib/admin/segments";
 import { markContacted, saveCrmContact } from "../actions";
 
 interface CrmFormProps {

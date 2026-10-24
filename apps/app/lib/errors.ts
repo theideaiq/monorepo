@@ -56,13 +56,16 @@ export const toInvitationError = (error: unknown): InvitationError => {
 
 export type CheckoutError =
   | "cartEmpty"
+  | "cashUnavailable"
   | "invalidAddress"
   | "notPayable"
   | "outOfStock"
   | "payment"
+  | "pickupUnavailable"
   | "suspended"
   | "unavailable"
-  | "unknown";
+  | "unknown"
+  | "zoneUnavailable";
 
 /**
  * create_order() and POST /orders/checkout failures. The RPC raises fixed
@@ -92,6 +95,15 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
   }
   if (message.includes("Account suspended")) {
     return "suspended";
+  }
+  if (message.includes("Delivery zone not available")) {
+    return "zoneUnavailable";
+  }
+  if (message.includes("Store pickup is not available")) {
+    return "pickupUnavailable";
+  }
+  if (message.includes("Cash payment is not available")) {
+    return "cashUnavailable";
   }
   return "unknown";
 };

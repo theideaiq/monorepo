@@ -1,4 +1,5 @@
 import { describeAttributes, localized } from "@repo/commerce";
+import type { OrderStatus } from "@repo/database";
 import {
   Table,
   TableBody,
@@ -21,12 +22,16 @@ import {
 import { StatusBadge } from "@/components/admin/status-badge";
 import { governorateName, parseAddress } from "@/lib/admin/address";
 import { formatters } from "@/lib/admin/format";
-import { nextOrderStatuses } from "@/lib/admin/fulfilment";
+import {
+  canCollectCash,
+  nextOrderStatuses,
+  type UnpaidCash,
+} from "@/lib/admin/fulfilment";
 import { isUuid } from "@/lib/admin/list";
 import { Link } from "@/lib/admin/navigation";
 import { canRead } from "@/lib/admin/roles";
 import { requireSection } from "@/lib/admin/session";
-import { setOrderStatus } from "../actions";
+import { markCashCollected, setOrderStatus } from "../actions";
 import { OrderNotesForm } from "./order-notes-form";
 
 interface OrderPageProps {
@@ -36,6 +41,135 @@ interface OrderPageProps {
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.orders");
   return { title: t("detail") };
+};
+
+type Translate = Awaited<ReturnType<typeof getTranslations>>;
+
+/** Delivery or pickup, the payment method and, for delivery, where to. */
+const methodDetails = ({
+  address,
+  locale,
+  order,
+  t,
+  tStore,
+}: {
+  address: ReturnType<typeof parseAddress>;
+  locale: string;
+  order: {
+    delivery_zone: { name_ar: string; name_en: string } | null;
+    fulfilment: "delivery" | "pickup";
+    payment_method: "cash_on_delivery" | "online";
+  };
+  t: Translate;
+  tStore: Translate;
+}) => {
+  const pickup = order.fulfilment === "pickup";
+  const payment =
+    order.payment_method === "cash_on_delivery" && pickup
+      ? "cash_at_pickup"
+      : order.payment_method;
+  const method = [
+    { label: t("method"), value: tStore(`fulfilment.${order.fulfilment}`) },
+    { label: t("payment"), value: tStore(`paymentMethod.${payment}`) },
+  ];
+  if (pickup) {
+    return method;
+  }
+  return [
+    ...method,
+    {
+      label: t("zone"),
+      value: order.delivery_zone
+        ? localized(order.delivery_zone, "name", locale)
+        : governorateName(address.governorate, locale),
+    },
+    { label: t("city"), value: address.city || "—" },
+    { label: t("address"), value: address.address },
+  ];
+};
+
+/** The cash of a cash order: what's due, or when it was collected. */
+const CashPanel = async ({
+  canCollect,
+  id,
+  paidAt,
+  total,
+}: {
+  readonly canCollect: boolean;
+  readonly id: string;
+  readonly paidAt: string | null;
+  readonly total: number;
+}) => {
+  const t = await getTranslations("admin.orders.cash");
+  const format = formatters(await getLocale());
+  const amount = format.money(total);
+  return (
+    <Panel title={t("title")}>
+      <p className="text-sm">
+        {paidAt
+          ? t("collected", { date: format.dateTime(paidAt) })
+          : t("due", { amount })}
+      </p>
+      {canCollect ? (
+        <ActionButton
+          action={markCashCollected}
+          confirm={{
+            description: t("confirmDescription"),
+            title: t("confirm", { amount }),
+          }}
+          fields={{ id }}
+          size="default"
+        >
+          {t("action")}
+        </ActionButton>
+      ) : null}
+    </Panel>
+  );
+};
+
+/** The status moves staff can make; pickup orders are "ready" and "picked up". */
+const MovesPanel = async ({
+  moves,
+  order,
+  pickup,
+  unpaid,
+}: {
+  readonly moves: OrderStatus[];
+  readonly order: { id: string; status: OrderStatus };
+  readonly pickup: boolean;
+  readonly unpaid: UnpaidCash;
+}) => {
+  const t = await getTranslations("admin.orders");
+  const label = (status: OrderStatus) =>
+    pickup && (status === "shipped" || status === "delivered")
+      ? t(`movesPickup.${status}`)
+      : t(`moves.${status}`);
+  return (
+    <Panel description={t("fulfilmentHint")} title={t("fulfilment")}>
+      <div className="flex flex-wrap gap-2">
+        {moves.map((status) => (
+          <ActionButton
+            action={setOrderStatus}
+            confirm={
+              status === "cancelled" ? { title: t("cancelConfirm") } : undefined
+            }
+            fields={{
+              cash: String(unpaid.cash),
+              from: order.status,
+              id: order.id,
+              paid: String(unpaid.paid),
+              status,
+            }}
+            key={status}
+            size="default"
+            variant={status === "cancelled" ? "outline" : "default"}
+          >
+            {label(status)}
+          </ActionButton>
+        ))}
+      </div>
+    </Panel>
+  );
 };
 
 const OrderPage = async ({ params }: OrderPageProps) => {
@@ -52,7 +186,11 @@ const OrderPage = async ({ params }: OrderPageProps) => {
   const showPayments = canRead(staff.role, "finance");
 
   const [{ data: order }, { data: items }, payments] = await Promise.all([
-    supabase.from("orders").select("*").eq("id", id).maybeSingle(),
+    supabase
+      .from("orders")
+      .select("*, delivery_zone:delivery_zones (name_ar, name_en)")
+      .eq("id", id)
+      .maybeSingle(),
     supabase.from("order_items").select("*").eq("order_id", id),
     showPayments
       ? supabase
@@ -70,7 +208,14 @@ const OrderPage = async ({ params }: OrderPageProps) => {
   }
 
   const address = parseAddress(order.shipping_address);
-  const moves = canWrite ? nextOrderStatuses(order.status) : [];
+  const pickup = order.fulfilment === "pickup";
+  const unpaid = {
+    cash: order.payment_method === "cash_on_delivery",
+    paid: order.paid_at !== null,
+  };
+  const moves = canWrite ? nextOrderStatuses(order.status, unpaid) : [];
+  const collectCash = canWrite && canCollectCash(order.status, unpaid);
+
   const customerHref =
     order.user_id && canRead(staff.role, "customers")
       ? `/customers/${order.user_id}`
@@ -200,26 +345,21 @@ const OrderPage = async ({ params }: OrderPageProps) => {
 
         <div className="grid content-start gap-6">
           {moves.length > 0 ? (
-            <Panel description={t("fulfilmentHint")} title={t("fulfilment")}>
-              <div className="flex flex-wrap gap-2">
-                {moves.map((status) => (
-                  <ActionButton
-                    action={setOrderStatus}
-                    confirm={
-                      status === "cancelled"
-                        ? { title: t("cancelConfirm") }
-                        : undefined
-                    }
-                    fields={{ from: order.status, id: order.id, status }}
-                    key={status}
-                    size="default"
-                    variant={status === "cancelled" ? "outline" : "default"}
-                  >
-                    {t(`moves.${status}`)}
-                  </ActionButton>
-                ))}
-              </div>
-            </Panel>
+            <MovesPanel
+              moves={moves}
+              order={order}
+              pickup={pickup}
+              unpaid={unpaid}
+            />
+          ) : null}
+
+          {unpaid.cash ? (
+            <CashPanel
+              canCollect={collectCash}
+              id={order.id}
+              paidAt={order.paid_at}
+              total={order.total}
+            />
           ) : null}
 
           <Panel title={t("delivery")}>
@@ -247,12 +387,7 @@ const OrderPage = async ({ params }: OrderPageProps) => {
                     </a>
                   ),
                 },
-                {
-                  label: t("governorate"),
-                  value: governorateName(address.governorate, locale),
-                },
-                { label: t("city"), value: address.city || "—" },
-                { label: t("address"), value: address.address },
+                ...methodDetails({ address, locale, order, t, tStore }),
                 { label: t("customerNotes"), value: address.notes || "—" },
                 { label: t("paidAt"), value: format.dateTime(order.paid_at) },
               ]}

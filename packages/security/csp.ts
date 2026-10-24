@@ -53,6 +53,19 @@ export const defaultCspSources: CspSources = {
   ],
 };
 
+/**
+ * The back office's catalog lookups ("Find picture"): MusicBrainz, Open
+ * Library and Wikipedia, queried from the staff member's browser (all three
+ * allow CORS). The covers themselves are shown through next/image.
+ */
+export const catalogLookupCspSources: CspSources = {
+  connect: [
+    "https://musicbrainz.org",
+    "https://openlibrary.org",
+    "https://en.wikipedia.org",
+  ],
+};
+
 /** Our own API (apps/api), called directly from the browser by apps/app. */
 export const apiCspSources = (url: string | undefined): CspSources =>
   url ? { connect: [new URL(url).origin] } : {};

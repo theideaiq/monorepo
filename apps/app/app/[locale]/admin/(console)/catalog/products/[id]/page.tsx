@@ -9,6 +9,7 @@ import { isUuid } from "@/lib/admin/list";
 import { ratingSummary } from "@/lib/admin/reviews";
 import { canRead } from "@/lib/admin/roles";
 import { requireSection } from "@/lib/admin/session";
+import { CoverFinder } from "../../_components/cover-finder";
 import { ProductForm } from "../../_components/product-form";
 import { RatingPanel } from "../../_components/rating-panel";
 import { VariantForm } from "../../_components/variant-form";
@@ -43,7 +44,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       .order("position"),
     supabase
       .from("product_categories")
-      .select("id, name_ar, name_en")
+      .select("id, slug, name_ar, name_en")
       .order("position"),
     supabase
       .from("plans")
@@ -83,12 +84,24 @@ const ProductPage = async ({ params }: ProductPageProps) => {
         ) : null}
       </PageHeader>
       <PageBody className="max-w-5xl">
+        {canWrite ? (
+          <CoverFinder
+            categorySlug={
+              categories?.find(
+                (category) => category.id === product.category_id
+              )?.slug ?? null
+            }
+            product={product}
+          />
+        ) : null}
+        {/* A new key after each save (e.g. a cover found above) reloads the images. */}
         <ProductForm
           categories={(categories ?? []).map((category) => ({
             id: category.id,
             label: localized(category, "name", locale),
           }))}
           disabled={!canWrite}
+          key={product.updated_at}
           product={product}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
           tiers={tierOptions(plans ?? [])}

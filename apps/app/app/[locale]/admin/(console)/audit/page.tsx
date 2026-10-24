@@ -34,17 +34,14 @@ export const generateMetadata = async (): Promise<Metadata> => {
 const ACTIONS = ["insert", "update", "delete"] as const;
 const ENTITIES = [
   "crm_contacts",
-  "equity_holders",
   "events",
   "journal_issues",
   "ledger_entries",
-  "marketing_campaigns",
   "orders",
   "posts",
   "products",
   "rentals",
   "staff",
-  "staff_plan",
   "store_settings",
   "submissions",
   "telegram_chats",

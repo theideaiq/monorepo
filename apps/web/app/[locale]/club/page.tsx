@@ -6,19 +6,25 @@ import { Link } from "@repo/internationalization/navigation";
 import {
   ArrowUpRight,
   BookOpen,
+  Bot,
   Briefcase,
   Clapperboard,
   Gamepad2,
+  LifeBuoy,
   Megaphone,
+  MessageCircleQuestion,
   Music,
   Palette,
+  Search,
   Send,
+  ShieldCheck,
   Trophy,
 } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { FeatureGrid } from "@/components/feature-grid";
 import { PageHero } from "@/components/page-hero";
 import { Section } from "@/components/section";
-import { telegram } from "@/lib/links";
+import { SPARK_CATCHER_PATH, telegram } from "@/lib/links";
 import { staticPageMetadata } from "@/lib/metadata";
 
 interface ClubProps {
@@ -26,6 +32,7 @@ interface ClubProps {
 }
 
 type Rooms = Messages["web"]["club"]["rooms"];
+type DroidFeatures = Messages["web"]["club"]["droid"]["features"]["items"];
 
 /** The eight rooms, in the order of `web.club.rooms`. */
 const roomIcons = [
@@ -38,6 +45,8 @@ const roomIcons = [
   Palette,
   Briefcase,
 ];
+/** The Droid's features, in the order of `web.club.droid.features.items`. */
+const droidIcons = [ShieldCheck, MessageCircleQuestion, Search, Bot, LifeBuoy];
 // The bento layout: wide tiles for the first and fourth rooms.
 const WIDE = new Set([0, 3]);
 
@@ -48,6 +57,7 @@ const Club = async ({ params }: ClubProps) => {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "web.club" });
   const rooms = t.raw("rooms") as Rooms;
+  const droidFeatures = t.raw("droid.features.items") as DroidFeatures;
   const external = { rel: "noopener noreferrer", target: "_blank" } as const;
 
   return (
@@ -102,6 +112,46 @@ const Club = async ({ params }: ClubProps) => {
             {t("guidelinesLink")}
           </Link>
         </p>
+      </Section>
+
+      <Section id="droid" title={t("droid.title")}>
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col items-start gap-4">
+            <p className="max-w-2xl text-lg text-muted-foreground">
+              {t("droid.subtitle")}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild className="gap-2" size="lg">
+                <a href={telegram.bot} {...external}>
+                  <Send className="size-4" />
+                  {t("droid.open")}
+                </a>
+              </Button>
+              <Button asChild className="gap-2" size="lg" variant="outline">
+                <a href={SPARK_CATCHER_PATH}>
+                  <Gamepad2 aria-hidden="true" />
+                  {t("droid.game.play")}
+                </a>
+              </Button>
+            </div>
+            <p className="text-muted-foreground text-sm">
+              {t("droid.badge")} · {t("droid.game.description")}
+            </p>
+          </div>
+          <FeatureGrid
+            className="lg:grid-cols-3"
+            items={droidFeatures.map((feature, index) => ({
+              ...feature,
+              icon: droidIcons[index],
+            }))}
+          />
+          <p className="text-muted-foreground text-sm">
+            {t("droid.privacy")}{" "}
+            <Link className="text-pink-text underline" href="/legal/privacy">
+              {t("droid.privacyLink")}
+            </Link>
+          </p>
+        </div>
       </Section>
 
       <PinkBand

@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
+import { formatPrice } from "@repo/commerce";
 import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
 import { formatDate } from "@repo/internationalization/format";
@@ -16,7 +17,10 @@ import { queryKeys, requireUserId, unwrap } from "./queries";
 
 export type NotificationKind = Enums<"notification_kind">;
 
-/** Every event the triggers emit (see the customer_features migration). */
+/**
+ * Every event the triggers emit (see the customer_features, trade_ins and
+ * whatsapp migrations).
+ */
 export const NOTIFICATION_EVENTS = [
   "order_paid",
   "order_processing",
@@ -28,7 +32,11 @@ export const NOTIFICATION_EVENTS = [
   "rental_overdue",
   "rental_returned",
   "rental_cancelled",
+  "rental_due_soon",
   "support_reply",
+  "trade_in_offer",
+  "trade_in_rejected",
+  "trade_in_completed",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -80,7 +88,11 @@ export const describeNotification = (
   }
 
   const values: Record<string, string> = {};
-  if (event.startsWith("order_") || event === "support_reply") {
+  if (
+    event.startsWith("order_") ||
+    event.startsWith("trade_in_") ||
+    event === "support_reply"
+  ) {
     values.number = text(data.number);
   }
   if (event === "order_shipped") {
@@ -89,6 +101,13 @@ export const describeNotification = (
   }
   if (event === "support_reply") {
     values.subject = text(data.subject);
+  }
+  if (event.startsWith("trade_in_")) {
+    values.title = text(data.title);
+  }
+  if (event === "trade_in_offer") {
+    const amount = Number(text(data.amount));
+    values.amount = Number.isFinite(amount) ? formatPrice(amount, locale) : "";
   }
   if (event.startsWith("rental_")) {
     const english = text(data.name_en);

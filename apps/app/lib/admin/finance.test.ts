@@ -1,13 +1,10 @@
 import { describe, expect, test } from "vitest";
 import {
-  assetState,
   financialSettingsSchema,
   fiscalYearStart,
-  fixedAssetSchema,
   journalEntrySchema,
   parseDimensions,
   scenarioFrom,
-  scheduleTotals,
 } from "./finance";
 
 describe("scenarios", () => {
@@ -120,92 +117,5 @@ describe("fiscal year", () => {
         })
         .error?.issues.map((issue) => issue.path[0])
     ).toEqual(["corporateTaxRate", "fiscalYearStartMonth", "vatRate"]);
-  });
-});
-
-describe("fixed assets", () => {
-  const asset = {
-    cost: "1,200,000",
-    name: "Laptop",
-    purchaseDate: "2026-01-10",
-    salvageValue: "0",
-    usefulLifeMonths: "24",
-  };
-
-  test("form", () => {
-    expect(fixedAssetSchema.parse(asset)).toMatchObject({
-      cost: 1_200_000,
-      disposedOn: null,
-      usefulLifeMonths: 24,
-    });
-    expect(
-      fixedAssetSchema.safeParse({ ...asset, salvageValue: "2000000" }).success
-    ).toBe(false);
-    expect(
-      fixedAssetSchema.safeParse({ ...asset, disposedOn: "2025-12-31" }).success
-    ).toBe(false);
-    expect(
-      fixedAssetSchema.safeParse({ ...asset, usefulLifeMonths: "0" }).success
-    ).toBe(false);
-  });
-
-  const rows = [
-    {
-      accumulated_depreciation: 500_000,
-      book_value: 700_000,
-      cost: 1_200_000,
-      disposed_on: null,
-      id: "laptop",
-      monthly_depreciation: 50_000,
-      months_elapsed: 10,
-    },
-    {
-      accumulated_depreciation: 300_000,
-      book_value: 0,
-      cost: 300_000,
-      disposed_on: null,
-      id: "phone",
-      monthly_depreciation: 25_000,
-      months_elapsed: 12,
-    },
-    {
-      accumulated_depreciation: 100_000,
-      book_value: 500_000,
-      cost: 600_000,
-      disposed_on: "2026-05-01",
-      id: "desk",
-      monthly_depreciation: 20_000,
-      months_elapsed: 5,
-    },
-  ];
-  const life = new Map([
-    ["laptop", 24],
-    ["phone", 12],
-    ["desk", 30],
-  ]);
-
-  test("state", () => {
-    expect(assetState(rows[0] as (typeof rows)[0], 24, "2026-11-10")).toBe(
-      "depreciating"
-    );
-    expect(assetState(rows[1] as (typeof rows)[0], 12, "2026-11-10")).toBe(
-      "fullyDepreciated"
-    );
-    expect(assetState(rows[2] as (typeof rows)[0], 30, "2026-11-10")).toBe(
-      "disposed"
-    );
-    // Disposal in the future doesn't count yet.
-    expect(assetState(rows[2] as (typeof rows)[0], 30, "2026-04-30")).toBe(
-      "depreciating"
-    );
-  });
-
-  test("totals: monthly charge for depreciating assets, no book value once disposed", () => {
-    expect(scheduleTotals(rows, life, "2026-11-10")).toEqual({
-      accumulated: 900_000,
-      bookValue: 700_000,
-      cost: 2_100_000,
-      monthly: 50_000,
-    });
   });
 });

@@ -144,83 +144,45 @@ export type Database = {
         };
         Relationships: [];
       };
-      equity_holders: {
+      delivery_zones: {
         Row: {
-          conversion_cap: number | null;
+          active: boolean;
           created_at: string;
-          discount_rate: number | null;
+          fee: number;
+          governorate: string | null;
           id: string;
-          instrument: Database["public"]["Enums"]["equity_instrument"];
-          invested_amount: number | null;
-          name: string;
-          round_id: string | null;
-          shares: number;
-          type: Database["public"]["Enums"]["equity_holder_type"];
-          vesting_start: string | null;
+          max_days: number;
+          min_days: number;
+          name_ar: string;
+          name_en: string;
+          position: number;
+          updated_at: string;
         };
         Insert: {
-          conversion_cap?: number | null;
+          active?: boolean;
           created_at?: string;
-          discount_rate?: number | null;
+          fee: number;
+          governorate?: string | null;
           id?: string;
-          instrument?: Database["public"]["Enums"]["equity_instrument"];
-          invested_amount?: number | null;
-          name: string;
-          round_id?: string | null;
-          shares: number;
-          type: Database["public"]["Enums"]["equity_holder_type"];
-          vesting_start?: string | null;
+          max_days?: number;
+          min_days?: number;
+          name_ar: string;
+          name_en: string;
+          position?: number;
+          updated_at?: string;
         };
         Update: {
-          conversion_cap?: number | null;
+          active?: boolean;
           created_at?: string;
-          discount_rate?: number | null;
+          fee?: number;
+          governorate?: string | null;
           id?: string;
-          instrument?: Database["public"]["Enums"]["equity_instrument"];
-          invested_amount?: number | null;
-          name?: string;
-          round_id?: string | null;
-          shares?: number;
-          type?: Database["public"]["Enums"]["equity_holder_type"];
-          vesting_start?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "equity_holders_round_id_fkey";
-            columns: ["round_id"];
-            isOneToOne: false;
-            referencedRelation: "equity_rounds";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      equity_rounds: {
-        Row: {
-          closed_on: string | null;
-          created_at: string;
-          currency: string;
-          id: string;
-          name: string;
-          price_per_share: number | null;
-          valuation_cap: number | null;
-        };
-        Insert: {
-          closed_on?: string | null;
-          created_at?: string;
-          currency?: string;
-          id?: string;
-          name: string;
-          price_per_share?: number | null;
-          valuation_cap?: number | null;
-        };
-        Update: {
-          closed_on?: string | null;
-          created_at?: string;
-          currency?: string;
-          id?: string;
-          name?: string;
-          price_per_share?: number | null;
-          valuation_cap?: number | null;
+          max_days?: number;
+          min_days?: number;
+          name_ar?: string;
+          name_en?: string;
+          position?: number;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -328,48 +290,6 @@ export type Database = {
           id?: boolean;
           updated_at?: string;
           vat_rate?: number;
-        };
-        Relationships: [];
-      };
-      fixed_assets: {
-        Row: {
-          category: string | null;
-          cost: number;
-          created_at: string;
-          disposed_on: string | null;
-          id: string;
-          name: string;
-          notes: string | null;
-          purchase_date: string;
-          salvage_value: number;
-          updated_at: string;
-          useful_life_months: number;
-        };
-        Insert: {
-          category?: string | null;
-          cost: number;
-          created_at?: string;
-          disposed_on?: string | null;
-          id?: string;
-          name: string;
-          notes?: string | null;
-          purchase_date: string;
-          salvage_value?: number;
-          updated_at?: string;
-          useful_life_months?: number;
-        };
-        Update: {
-          category?: string | null;
-          cost?: number;
-          created_at?: string;
-          disposed_on?: string | null;
-          id?: string;
-          name?: string;
-          notes?: string | null;
-          purchase_date?: string;
-          salvage_value?: number;
-          updated_at?: string;
-          useful_life_months?: number;
         };
         Relationships: [];
       };
@@ -543,77 +463,6 @@ export type Database = {
           },
         ];
       };
-      marketing_campaigns: {
-        Row: {
-          body: string;
-          created_at: string;
-          created_by: string | null;
-          id: string;
-          segment_id: string | null;
-          sent_at: string | null;
-          sent_count: number;
-          status: Database["public"]["Enums"]["campaign_status"];
-          subject: string;
-          updated_at: string;
-        };
-        Insert: {
-          body: string;
-          created_at?: string;
-          created_by?: string | null;
-          id?: string;
-          segment_id?: string | null;
-          sent_at?: string | null;
-          sent_count?: number;
-          status?: Database["public"]["Enums"]["campaign_status"];
-          subject: string;
-          updated_at?: string;
-        };
-        Update: {
-          body?: string;
-          created_at?: string;
-          created_by?: string | null;
-          id?: string;
-          segment_id?: string | null;
-          sent_at?: string | null;
-          sent_count?: number;
-          status?: Database["public"]["Enums"]["campaign_status"];
-          subject?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "marketing_campaigns_segment_id_fkey";
-            columns: ["segment_id"];
-            isOneToOne: false;
-            referencedRelation: "marketing_segments";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      marketing_segments: {
-        Row: {
-          created_at: string;
-          created_by: string | null;
-          criteria: NonNullable<Json>;
-          id: string;
-          name: string;
-        };
-        Insert: {
-          created_at?: string;
-          created_by?: string | null;
-          criteria?: NonNullable<Json>;
-          id?: string;
-          name: string;
-        };
-        Update: {
-          created_at?: string;
-          created_by?: string | null;
-          criteria?: NonNullable<Json>;
-          id?: string;
-          name?: string;
-        };
-        Relationships: [];
-      };
       memberships: {
         Row: {
           created_at: string;
@@ -654,6 +503,7 @@ export type Database = {
           pushed_at: string | null;
           read_at: string | null;
           user_id: string;
+          whatsapp_sent_at: string | null;
         };
         Insert: {
           created_at?: string;
@@ -665,6 +515,7 @@ export type Database = {
           pushed_at?: string | null;
           read_at?: string | null;
           user_id: string;
+          whatsapp_sent_at?: string | null;
         };
         Update: {
           created_at?: string;
@@ -676,6 +527,7 @@ export type Database = {
           pushed_at?: string | null;
           read_at?: string | null;
           user_id?: string;
+          whatsapp_sent_at?: string | null;
         };
         Relationships: [];
       };
@@ -739,11 +591,16 @@ export type Database = {
       };
       orders: {
         Row: {
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
           created_at: string;
           currency: string;
+          delivery_zone_id: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
           number: number;
           paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -755,11 +612,16 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
+          cash_collected_by?: string | null;
+          confirmation_emailed_at?: string | null;
           created_at?: string;
           currency?: string;
+          delivery_zone_id?: string | null;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           id?: string;
           number?: never;
           paid_at?: string | null;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
           shipping_address: NonNullable<Json>;
           shipping_fee?: number;
           staff_note?: string | null;
@@ -771,11 +633,16 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
+          cash_collected_by?: string | null;
+          confirmation_emailed_at?: string | null;
           created_at?: string;
           currency?: string;
+          delivery_zone_id?: string | null;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           id?: string;
           number?: never;
           paid_at?: string | null;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
           shipping_address?: NonNullable<Json>;
           shipping_fee?: number;
           staff_note?: string | null;
@@ -786,7 +653,15 @@ export type Database = {
           updated_at?: string;
           user_id?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "orders_delivery_zone_id_fkey";
+            columns: ["delivery_zone_id"];
+            isOneToOne: false;
+            referencedRelation: "delivery_zones";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       organizations: {
         Row: {
@@ -1214,6 +1089,8 @@ export type Database = {
           locale: string;
           marketing_opt_in: boolean;
           updated_at: string;
+          whatsapp_opt_in: boolean;
+          whatsapp_phone: string | null;
         };
         Insert: {
           avatar_url?: string | null;
@@ -1225,6 +1102,8 @@ export type Database = {
           locale?: string;
           marketing_opt_in?: boolean;
           updated_at?: string;
+          whatsapp_opt_in?: boolean;
+          whatsapp_phone?: string | null;
         };
         Update: {
           avatar_url?: string | null;
@@ -1236,6 +1115,8 @@ export type Database = {
           locale?: string;
           marketing_opt_in?: boolean;
           updated_at?: string;
+          whatsapp_opt_in?: boolean;
+          whatsapp_phone?: string | null;
         };
         Relationships: [];
       };
@@ -1304,6 +1185,7 @@ export type Database = {
       rentals: {
         Row: {
           due_at: string | null;
+          due_reminder_at: string | null;
           id: string;
           name_ar: string;
           name_en: string;
@@ -1318,6 +1200,7 @@ export type Database = {
         };
         Insert: {
           due_at?: string | null;
+          due_reminder_at?: string | null;
           id?: string;
           name_ar: string;
           name_en: string;
@@ -1332,6 +1215,7 @@ export type Database = {
         };
         Update: {
           due_at?: string | null;
+          due_reminder_at?: string | null;
           id?: string;
           name_ar?: string;
           name_en?: string;
@@ -1381,58 +1265,40 @@ export type Database = {
         };
         Relationships: [];
       };
-      staff_plan: {
-        Row: {
-          annual_increase_pct: number;
-          created_at: string;
-          department: string;
-          id: string;
-          monthly_salary: number;
-          role_title: string;
-          start_date: string | null;
-          status: Database["public"]["Enums"]["staff_plan_status"];
-          updated_at: string;
-        };
-        Insert: {
-          annual_increase_pct?: number;
-          created_at?: string;
-          department: string;
-          id?: string;
-          monthly_salary: number;
-          role_title: string;
-          start_date?: string | null;
-          status?: Database["public"]["Enums"]["staff_plan_status"];
-          updated_at?: string;
-        };
-        Update: {
-          annual_increase_pct?: number;
-          created_at?: string;
-          department?: string;
-          id?: string;
-          monthly_salary?: number;
-          role_title?: string;
-          start_date?: string | null;
-          status?: Database["public"]["Enums"]["staff_plan_status"];
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
       store_settings: {
         Row: {
+          cash_on_delivery_enabled: boolean;
           free_shipping_threshold: number | null;
           id: boolean;
+          pickup_address_ar: string | null;
+          pickup_address_en: string | null;
+          pickup_enabled: boolean;
+          pickup_hours_ar: string | null;
+          pickup_hours_en: string | null;
           shipping_fee: number;
           updated_at: string;
         };
         Insert: {
+          cash_on_delivery_enabled?: boolean;
           free_shipping_threshold?: number | null;
           id?: boolean;
+          pickup_address_ar?: string | null;
+          pickup_address_en?: string | null;
+          pickup_enabled?: boolean;
+          pickup_hours_ar?: string | null;
+          pickup_hours_en?: string | null;
           shipping_fee?: number;
           updated_at?: string;
         };
         Update: {
+          cash_on_delivery_enabled?: boolean;
           free_shipping_threshold?: number | null;
           id?: boolean;
+          pickup_address_ar?: string | null;
+          pickup_address_en?: string | null;
+          pickup_enabled?: boolean;
+          pickup_hours_ar?: string | null;
+          pickup_hours_en?: string | null;
           shipping_fee?: number;
           updated_at?: string;
         };
@@ -1812,6 +1678,86 @@ export type Database = {
           },
         ];
       };
+      trade_ins: {
+        Row: {
+          asking_price: number | null;
+          category: Database["public"]["Enums"]["trade_in_category"];
+          closed_at: string | null;
+          condition: Database["public"]["Enums"]["trade_in_condition"];
+          contact_phone: string;
+          created_at: string;
+          description: string | null;
+          id: string;
+          number: number;
+          offer_amount: number | null;
+          offer_note: string | null;
+          offered_at: string | null;
+          payout: Database["public"]["Enums"]["trade_in_payout"];
+          photos: string[];
+          product_id: string | null;
+          responded_at: string | null;
+          reviewed_by: string | null;
+          status: Database["public"]["Enums"]["trade_in_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          asking_price?: number | null;
+          category: Database["public"]["Enums"]["trade_in_category"];
+          closed_at?: string | null;
+          condition: Database["public"]["Enums"]["trade_in_condition"];
+          contact_phone: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          number?: never;
+          offer_amount?: number | null;
+          offer_note?: string | null;
+          offered_at?: string | null;
+          payout?: Database["public"]["Enums"]["trade_in_payout"];
+          photos?: string[];
+          product_id?: string | null;
+          responded_at?: string | null;
+          reviewed_by?: string | null;
+          status?: Database["public"]["Enums"]["trade_in_status"];
+          title: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          asking_price?: number | null;
+          category?: Database["public"]["Enums"]["trade_in_category"];
+          closed_at?: string | null;
+          condition?: Database["public"]["Enums"]["trade_in_condition"];
+          contact_phone?: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          number?: never;
+          offer_amount?: number | null;
+          offer_note?: string | null;
+          offered_at?: string | null;
+          payout?: Database["public"]["Enums"]["trade_in_payout"];
+          photos?: string[];
+          product_id?: string | null;
+          responded_at?: string | null;
+          reviewed_by?: string | null;
+          status?: Database["public"]["Enums"]["trade_in_status"];
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "trade_ins_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       webhook_events: {
         Row: {
           event_key: string;
@@ -1919,19 +1865,50 @@ export type Database = {
           user_id: string;
         }[];
       };
+      claim_whatsapp_notifications: {
+        Args: {
+          max_age?: string;
+          max_rows?: number;
+          notification_ids?: string[];
+        };
+        Returns: {
+          data: Json;
+          event: string;
+          first_name: string;
+          id: string;
+          link: string;
+          locale: string;
+          phone: string;
+          user_id: string;
+        }[];
+      };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
       complete_order_payment: {
         Args: { order_id: string };
         Returns: undefined;
       };
+      complete_trade_in: {
+        Args: { create_product?: boolean; trade_in: string };
+        Returns: string;
+      };
       create_order: {
-        Args: { shipping: Json };
+        Args: {
+          delivery_zone?: string;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          shipping: Json;
+        };
         Returns: {
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
           created_at: string;
           currency: string;
+          delivery_zone_id: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
           number: number;
           paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -1995,21 +1972,7 @@ export type Database = {
         };
       };
       event_rsvp_count: { Args: { event: string }; Returns: number };
-      fixed_asset_schedule: {
-        Args: { as_of?: string };
-        Returns: {
-          accumulated_depreciation: number;
-          book_value: number;
-          category: string;
-          cost: number;
-          disposed_on: string;
-          id: string;
-          monthly_depreciation: number;
-          months_elapsed: number;
-          name: string;
-          purchase_date: string;
-        }[];
-      };
+      import_products: { Args: { items: Json }; Returns: Json };
       ledger_monthly_summary: {
         Args: {
           from_date: string;
@@ -2022,6 +1985,40 @@ export type Database = {
           month: string;
           revenue: number;
         }[];
+      };
+      mark_cash_collected: {
+        Args: { order_id: string };
+        Returns: {
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          id: string;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      mark_newsletter_synced: {
+        Args: { user_ids: string[] };
+        Returns: undefined;
       };
       mark_notifications_read: {
         Args: { notification_ids?: string[] };
@@ -2040,6 +2037,26 @@ export type Database = {
           tier: number;
         }[];
       };
+      my_whatsapp_settings: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          opt_in: boolean;
+          phone: string;
+        }[];
+      };
+      newsletter_audience: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          email: string;
+          full_name: string;
+          marketing_opt_in: boolean;
+          opt_in_changed_at: string;
+          suspended: boolean;
+          synced_at: string;
+          user_id: string;
+        }[];
+      };
+      notify_rentals_due_soon: { Args: { within?: string }; Returns: number };
       pending_invitations: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -2081,6 +2098,7 @@ export type Database = {
         Args: { rental_product: string };
         Returns: {
           due_at: string | null;
+          due_reminder_at: string | null;
           id: string;
           name_ar: string;
           name_en: string;
@@ -2100,6 +2118,10 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      respond_to_trade_in_offer: {
+        Args: { accept: boolean; trade_in: string };
+        Returns: Database["public"]["Enums"]["trade_in_status"];
+      };
       review_queue: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -2117,6 +2139,43 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string;
       };
+      search_products: {
+        Args: {
+          search_category?: string;
+          search_kind?: Database["public"]["Enums"]["product_kind"];
+          search_term: string;
+        };
+        Returns: {
+          category_id: string | null;
+          compare_at_price: number | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          currency: string;
+          description_ar: string | null;
+          description_en: string | null;
+          details: NonNullable<Json>;
+          featured: boolean;
+          id: string;
+          images: string[];
+          kind: Database["public"]["Enums"]["product_kind"];
+          name_ar: string;
+          name_en: string;
+          price: number;
+          rental_tier: number | null;
+          seller: string;
+          slug: string;
+          status: Database["public"]["Enums"]["product_status"];
+          stock_count: number;
+          updated_at: string;
+          verified: boolean;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "products";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
       set_staff_role: {
         Args: {
           new_role: Database["public"]["Enums"]["staff_role"];
@@ -2125,19 +2184,12 @@ export type Database = {
         };
         Returns: undefined;
       };
+      withdraw_trade_in: { Args: { trade_in: string }; Returns: undefined };
     };
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
       billing_interval: "month" | "year";
-      campaign_status: "draft" | "sending" | "sent" | "failed";
       crm_status: "lead" | "customer" | "vip" | "churned";
-      equity_holder_type: "founder" | "investor" | "employee" | "advisor";
-      equity_instrument:
-        | "common"
-        | "preferred"
-        | "option"
-        | "safe"
-        | "convertible_note";
       ledger_scenario: "actual" | "forecast" | "budget";
       notification_kind:
         | "order"
@@ -2145,9 +2197,13 @@ export type Database = {
         | "support"
         | "plus"
         | "promo"
-        | "system";
+        | "system"
+        | "trade_in";
+      order_fulfilment: "delivery" | "pickup";
+      order_payment_method: "online" | "cash_on_delivery";
       order_status:
         | "pending"
+        | "confirmed"
         | "paid"
         | "processing"
         | "shipped"
@@ -2172,7 +2228,6 @@ export type Database = {
         | "overdue"
         | "cancelled";
       review_status: "published" | "hidden";
-      staff_plan_status: "planned" | "hiring" | "active" | "terminated";
       staff_role:
         | "superadmin"
         | "admin"
@@ -2205,6 +2260,24 @@ export type Database = {
       ticket_priority: "low" | "normal" | "high" | "urgent";
       ticket_status: "open" | "pending" | "resolved" | "closed";
       ticket_topic: "order" | "rental" | "plus" | "account" | "other";
+      trade_in_category:
+        | "vinyl"
+        | "cd_cassette"
+        | "game"
+        | "book"
+        | "console_tech"
+        | "other";
+      trade_in_condition: "sealed" | "like_new" | "good" | "fair" | "poor";
+      trade_in_payout: "cash" | "store_credit";
+      trade_in_status:
+        | "submitted"
+        | "reviewing"
+        | "offer_made"
+        | "accepted"
+        | "declined"
+        | "completed"
+        | "rejected"
+        | "withdrawn";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -2337,16 +2410,7 @@ export const Constants = {
     Enums: {
       account_type: ["asset", "liability", "equity", "revenue", "expense"],
       billing_interval: ["month", "year"],
-      campaign_status: ["draft", "sending", "sent", "failed"],
       crm_status: ["lead", "customer", "vip", "churned"],
-      equity_holder_type: ["founder", "investor", "employee", "advisor"],
-      equity_instrument: [
-        "common",
-        "preferred",
-        "option",
-        "safe",
-        "convertible_note",
-      ],
       ledger_scenario: ["actual", "forecast", "budget"],
       notification_kind: [
         "order",
@@ -2355,9 +2419,13 @@ export const Constants = {
         "plus",
         "promo",
         "system",
+        "trade_in",
       ],
+      order_fulfilment: ["delivery", "pickup"],
+      order_payment_method: ["online", "cash_on_delivery"],
       order_status: [
         "pending",
+        "confirmed",
         "paid",
         "processing",
         "shipped",
@@ -2385,7 +2453,6 @@ export const Constants = {
         "cancelled",
       ],
       review_status: ["published", "hidden"],
-      staff_plan_status: ["planned", "hiring", "active", "terminated"],
       staff_role: [
         "superadmin",
         "admin",
@@ -2422,6 +2489,26 @@ export const Constants = {
       ticket_priority: ["low", "normal", "high", "urgent"],
       ticket_status: ["open", "pending", "resolved", "closed"],
       ticket_topic: ["order", "rental", "plus", "account", "other"],
+      trade_in_category: [
+        "vinyl",
+        "cd_cassette",
+        "game",
+        "book",
+        "console_tech",
+        "other",
+      ],
+      trade_in_condition: ["sealed", "like_new", "good", "fair", "poor"],
+      trade_in_payout: ["cash", "store_credit"],
+      trade_in_status: [
+        "submitted",
+        "reviewing",
+        "offer_made",
+        "accepted",
+        "declined",
+        "completed",
+        "rejected",
+        "withdrawn",
+      ],
     },
   },
 } as const;

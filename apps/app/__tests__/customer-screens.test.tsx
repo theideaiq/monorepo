@@ -137,8 +137,14 @@ const order = (status = "pending") => ({
   tracking_number: null,
 });
 
+const CASH_ON_DELIVERY = /Cash on delivery/;
+const PLACE_CASH_ORDER = /Place order/;
+
 describe("checkout", () => {
-  const setup = (createOrder: { data: unknown; error: unknown }) =>
+  const setup = (
+    createOrder: { data: unknown; error: unknown },
+    settings: Record<string, unknown> = {}
+  ) =>
     fakeDb({
       results: {
         "cart_items.select": {
@@ -154,10 +160,26 @@ describe("checkout", () => {
           ],
           error: null,
         },
+        "delivery_zones.select": {
+          data: [
+            {
+              fee: 5000,
+              governorate: "baghdad",
+              id: "zone-baghdad",
+              max_days: 2,
+              min_days: 1,
+              name_ar: "بغداد",
+              name_en: "Baghdad",
+            },
+          ],
+          error: null,
+        },
         "orders.select": { data: [order()], error: null },
         "profiles.select": { data: [profile], error: null },
         "store_settings.select": {
-          data: [{ free_shipping_threshold: null, shipping_fee: 5000 }],
+          data: [
+            { free_shipping_threshold: null, shipping_fee: 5000, ...settings },
+          ],
           error: null,
         },
       },
@@ -169,7 +191,7 @@ describe("checkout", () => {
     if (!select) {
       throw new Error("No governorate select");
     }
-    fireEvent.change(select, { target: { value: "baghdad" } });
+    fireEvent.change(select, { target: { value: "zone-baghdad" } });
   };
 
   test("places the order and opens the hosted checkout", async () => {
@@ -203,6 +225,9 @@ describe("checkout", () => {
     );
     expect(db.rpcCalls[0]).toEqual({
       args: {
+        delivery_zone: "zone-baghdad",
+        fulfilment: "delivery",
+        payment_method: "online",
         shipping: {
           address: "Karrada, street 62",
           city: "",
@@ -228,6 +253,34 @@ describe("checkout", () => {
     expect(sessionStorage.getItem("billing:pending-checkout")).toContain(
       "ref-1"
     );
+  });
+
+  test("places a cash order without opening the payment page", async () => {
+    const db = setup(
+      { data: { id: "o1" }, error: null },
+      { cash_on_delivery_enabled: true }
+    );
+    const fetchMock = stubApi();
+    renderScreen(<Checkout />, db.supabase);
+
+    await screen.findByLabelText("Full name");
+    fireEvent.click(await screen.findByLabelText(CASH_ON_DELIVERY));
+    chooseBaghdad();
+    fireEvent.change(screen.getByLabelText("Address"), {
+      target: { value: "Karrada, street 62" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: PLACE_CASH_ORDER }));
+
+    await waitFor(() => expect(router.replace).toHaveBeenCalled());
+    expect(db.rpcCalls[0]?.args).toMatchObject({
+      delivery_zone: "zone-baghdad",
+      fulfilment: "delivery",
+      payment_method: "cash_on_delivery",
+    });
+    expect(requestBody(fetchMock).url).toBe(
+      "http://localhost:3002/orders/confirmation"
+    );
+    expect(openCheckout).not.toHaveBeenCalled();
   });
 
   test("explains stock problems in the reader's language", async () => {

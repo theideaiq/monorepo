@@ -22,6 +22,7 @@ interface ShippingAddress {
 
 interface OrderRow {
   currency: string;
+  fulfilment: "delivery" | "pickup";
   id: string;
   number: number;
   order_items: {
@@ -31,6 +32,7 @@ interface OrderRow {
     quantity: number;
     unit_price: number;
   }[];
+  payment_method: "cash_on_delivery" | "online";
   shipping_address: ShippingAddress;
   shipping_fee: number;
   subtotal: number;
@@ -60,7 +62,7 @@ const loadOrder = async (admin: Client, orderId: string) => {
   const { data, error } = await admin
     .from("orders")
     .select(
-      "id, number, user_id, subtotal, shipping_fee, total, currency, shipping_address, order_items (name_ar, name_en, attributes, unit_price, quantity)"
+      "id, number, user_id, fulfilment, payment_method, subtotal, shipping_fee, total, currency, shipping_address, order_items (name_ar, name_en, attributes, unit_price, quantity)"
     )
     .eq("id", orderId)
     .maybeSingle();
@@ -70,22 +72,44 @@ const loadOrder = async (admin: Client, orderId: string) => {
   return data as unknown as OrderRow | null;
 };
 
+/** The store's counter, for pickup orders. */
+export interface PickupAddress {
+  address_ar: string | null;
+  address_en: string | null;
+}
+
+const loadPickupAddress = async (admin: Client) => {
+  const { data } = await admin
+    .from("store_settings")
+    .select("pickup_address_ar, pickup_address_en")
+    .maybeSingle();
+  return data
+    ? { address_ar: data.pickup_address_ar, address_en: data.pickup_address_en }
+    : null;
+};
+
 /** The order as the email shows it, in one language. */
 export const orderEmailContent = (
   order: OrderRow,
-  locale: OrderEmailLocale
+  locale: OrderEmailLocale,
+  pickupAddress: PickupAddress | null = null
 ) => {
   const price = (amount: number) => formatPrice(amount, locale);
   const address = order.shipping_address;
+  const pickup = order.fulfilment === "pickup";
+  const storeAddress =
+    (locale === "en" ? pickupAddress?.address_en : pickupAddress?.address_ar) ??
+    "";
   return {
     address: {
-      address: address.address ?? "",
+      address: pickup ? storeAddress : (address.address ?? ""),
       city: address.city,
       fullName: address.full_name ?? "",
       governorate: governorateName(address.governorate, locale),
       notes: address.notes,
       phone: address.phone ?? "",
     },
+    cash: order.payment_method === "cash_on_delivery",
     items: order.order_items.map((item) => ({
       details: describeAttributes(item.attributes) || undefined,
       name: locale === "en" ? item.name_en : item.name_ar,
@@ -94,6 +118,7 @@ export const orderEmailContent = (
     })),
     locale,
     orderNumber: `#${order.number}`,
+    pickup,
     shipping: price(order.shipping_fee),
     subtotal: price(order.subtotal),
     supportEmail: project.supportEmail ?? "hi@theideaiq.com",
@@ -126,7 +151,7 @@ const plainText = (content: ReturnType<typeof orderEmailContent>) =>
     .trim();
 
 /**
- * After a store order is paid: a receipt to the customer (in their profile
+ * After a store order is paid, or a cash order is placed: a receipt to the customer (in their profile
  * language) and a note to the store inbox. Customers without an email
  * address (phone-only accounts) are skipped and logged.
  */
@@ -152,11 +177,13 @@ export const sendOrderEmails = async (
     : [{ data: { user: null } }, { data: null }];
   const email = userData.user?.email;
   const locale: OrderEmailLocale = profile?.locale === "en" ? "en" : "ar";
+  const pickupAddress =
+    order.fulfilment === "pickup" ? await loadPickupAddress(admin) : null;
 
   const sends: Promise<unknown>[] = [];
 
   if (email) {
-    const content = orderEmailContent(order, locale);
+    const content = orderEmailContent(order, locale, pickupAddress);
     sends.push(
       send({
         react: OrderConfirmationTemplate(content),
@@ -173,10 +200,12 @@ export const sendOrderEmails = async (
   }
 
   if (notifyTo) {
-    const content = orderEmailContent(order, "en");
+    const content = orderEmailContent(order, "en", pickupAddress);
+    const kind = content.cash ? "cash" : "paid";
+    const pickupNote = content.pickup ? ", pickup" : "";
     sends.push(
       send({
-        subject: `New paid order ${content.orderNumber} (${content.total})`,
+        subject: `New ${kind} order ${content.orderNumber} (${content.total}${pickupNote})`,
         text: `${plainText(content)}\n\nOrder id: ${order.id}\nCustomer: ${email ?? userData.user?.phone ?? order.user_id ?? "unknown"}`,
         to: notifyTo,
       })

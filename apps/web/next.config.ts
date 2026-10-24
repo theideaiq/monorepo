@@ -47,6 +47,12 @@ nextConfig.redirects = async () => [
     permanent: true,
     source: "/:locale(ar|en)/megastore",
   },
+  // The Droid's page became a section of the Club's.
+  {
+    destination: "/:locale/club#droid",
+    permanent: true,
+    source: "/:locale(ar|en)/droid",
+  },
 ];
 
 /**

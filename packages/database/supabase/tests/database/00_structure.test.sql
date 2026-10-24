@@ -53,7 +53,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(4);
+select plan(6);
 
 select is_empty(
   $$
@@ -100,6 +100,24 @@ select is_empty(
   $$,
   'Every table has a primary key (advisor 0004)'
 );
+
+-- Retired back-office tables (20261120000000_retire_back_office_extras.sql)
+-- keep their data in `archive`, which no client role can reach.
+select ok(
+  not has_schema_privilege('anon', 'archive', 'usage')
+    and not has_schema_privilege('authenticated', 'archive', 'usage')
+    and not has_schema_privilege('service_role', 'archive', 'usage'),
+  'No client role can use the archive schema'
+);
+
+select pg_temp.login_as('00000000-0000-0000-0000-000000000000', 'aal2');
+select throws_ok(
+  $$ select count(*) from archive.marketing_campaigns $$,
+  '42501',
+  null,
+  'Signed-in users cannot read archived tables'
+);
+select pg_temp.reset_role();
 
 select * from finish();
 rollback;

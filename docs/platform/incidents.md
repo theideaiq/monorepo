@@ -12,7 +12,7 @@ Where alerts come from, where to look first, and who to tell.
 | A deploy failed | Vercel and the GitHub checks on the pull request | The build log |
 | A migration failed | GitHub → Actions → Migrate production database | The failing statement; fix with a new migration |
 | A backup failed | GitHub → Actions → Back up production database (and the heartbeat alert) | The run log; usually a missing secret or an expired access token |
-| A cron job failed | Vercel → the API project → Cron Jobs | The job's logs (`/cron/rentals`, `/cron/subscriptions`, `/cron/keep-alive`) |
+| A cron job failed | Vercel → the API project → Cron Jobs | The job's logs (`/cron/rentals`, `/cron/subscriptions`, `/cron/push`, `/cron/newsletter-contacts`, `/cron/keep-alive`) |
 
 ## First steps
 

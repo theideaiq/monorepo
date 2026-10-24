@@ -1,5 +1,6 @@
 import { Constants } from "@repo/database";
 import { z } from "zod";
+import { isCatalogImage } from "./catalog-images";
 import {
   checkbox,
   int,
@@ -8,11 +9,21 @@ import {
   optionalText,
   optionalUuid,
   slug,
-  storagePaths,
   text,
 } from "./forms";
 
 const { Enums } = Constants.public;
+
+/**
+ * Product images (`images[]`): storage paths or links to the allowed
+ * cover-art hosts, empty entries dropped.
+ */
+const catalogImages = (max: number) =>
+  z
+    .array(z.string())
+    .optional()
+    .transform((values) => (values ?? []).map((v) => v.trim()).filter(Boolean))
+    .pipe(z.array(z.string().refine(isCatalogImage)).max(max));
 
 export const productSchema = z
   .object({
@@ -25,7 +36,7 @@ export const productSchema = z
     detailValue: z.array(z.string()).optional(),
     featured: checkbox,
     id: optionalUuid,
-    images: storagePaths(12),
+    images: catalogImages(12),
     kind: z.enum(Enums.product_kind),
     nameAr: text(200),
     nameEn: text(200),

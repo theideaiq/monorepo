@@ -1,15 +1,6 @@
 import { Constants, type Enums } from "@repo/database";
 import { z } from "zod";
-import {
-  date,
-  int,
-  optionalDate,
-  optionalDecimal,
-  optionalText,
-  optionalUuid,
-  text,
-  uuid,
-} from "./forms";
+import { date, int, optionalDecimal, optionalText, text } from "./forms";
 import { oneOf, type SearchParams } from "./list";
 
 export type Scenario = Enums<"ledger_scenario">;
@@ -123,82 +114,3 @@ export const financialSettingsSchema = z.object({
   fiscalYearStartMonth: int(1, 12),
   vatRate: optionalDecimal(0).pipe(z.number().max(100)),
 });
-
-export const fixedAssetSchema = z
-  .object({
-    category: optionalText(60),
-    cost: int(0),
-    disposedOn: optionalDate,
-    id: optionalUuid,
-    name: text(200),
-    notes: optionalText(2000),
-    purchaseDate: date,
-    salvageValue: int(0),
-    usefulLifeMonths: int(1, 1200),
-  })
-  .refine((asset) => asset.salvageValue <= asset.cost, {
-    path: ["salvageValue"],
-  })
-  .refine(
-    (asset) =>
-      asset.disposedOn === null || asset.disposedOn >= asset.purchaseDate,
-    { path: ["disposedOn"] }
-  );
-
-export const deleteByIdSchema = z.object({ id: uuid });
-
-export interface ScheduleRow {
-  accumulated_depreciation: number;
-  book_value: number;
-  cost: number;
-  disposed_on: string | null;
-  id: string;
-  monthly_depreciation: number;
-  months_elapsed: number;
-}
-
-export type AssetState = "depreciating" | "fullyDepreciated" | "disposed";
-
-/** Where an asset stands on `asOf` (YYYY-MM-DD), given its useful life. */
-export const assetState = (
-  row: Pick<ScheduleRow, "disposed_on" | "months_elapsed">,
-  usefulLifeMonths: number | undefined,
-  asOf: string
-): AssetState => {
-  if (row.disposed_on !== null && row.disposed_on <= asOf) {
-    return "disposed";
-  }
-  if (
-    usefulLifeMonths !== undefined &&
-    row.months_elapsed >= usefulLifeMonths
-  ) {
-    return "fullyDepreciated";
-  }
-  return "depreciating";
-};
-
-/**
- * Totals of `fixed_asset_schedule` rows. The monthly charge counts only
- * assets still depreciating on `asOf`; disposed assets keep their cost and
- * accumulated depreciation in the totals but no longer have a book value.
- */
-export const scheduleTotals = (
-  rows: ScheduleRow[],
-  usefulLife: Map<string, number>,
-  asOf: string
-) =>
-  rows.reduce(
-    (total, row) => {
-      const state = assetState(row, usefulLife.get(row.id), asOf);
-      return {
-        accumulated: total.accumulated + Number(row.accumulated_depreciation),
-        bookValue:
-          total.bookValue + (state === "disposed" ? 0 : Number(row.book_value)),
-        cost: total.cost + Number(row.cost),
-        monthly:
-          total.monthly +
-          (state === "depreciating" ? Number(row.monthly_depreciation) : 0),
-      };
-    },
-    { accumulated: 0, bookValue: 0, cost: 0, monthly: 0 }
-  );

@@ -3,7 +3,7 @@
 import { Constants } from "@repo/database";
 import { z } from "zod";
 import { ActionFailure, affected, staffAction } from "@/lib/admin/action";
-import { optionalText, uuid } from "@/lib/admin/forms";
+import { checkbox, optionalText, uuid } from "@/lib/admin/forms";
 import { nextOrderStatuses } from "@/lib/admin/fulfilment";
 
 /**
@@ -14,12 +14,15 @@ import { nextOrderStatuses } from "@/lib/admin/fulfilment";
 export const setOrderStatus = staffAction(
   "orders",
   z.object({
+    cash: checkbox,
     from: z.enum(Constants.public.Enums.order_status),
     id: uuid,
+    paid: checkbox,
     status: z.enum(Constants.public.Enums.order_status),
   }),
   async ({ input, supabase }) => {
-    if (!nextOrderStatuses(input.from).includes(input.status)) {
+    const unpaid = { cash: input.cash, paid: input.paid };
+    if (!nextOrderStatuses(input.from, unpaid).includes(input.status)) {
       throw new ActionFailure("transition");
     }
     affected(
@@ -52,5 +55,23 @@ export const saveOrderNotes = staffAction(
         .eq("id", input.id)
         .select("id")
     );
+  }
+);
+
+/**
+ * Records the cash of a cash order (on delivery or at pickup): the order is
+ * marked paid and delivered and a cash payment is recorded for finance, by
+ * `mark_cash_collected`, which checks the staff role itself.
+ */
+export const markCashCollected = staffAction(
+  "orders",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    const { error } = await supabase.rpc("mark_cash_collected", {
+      order_id: input.id,
+    });
+    if (error) {
+      throw new ActionFailure("transition");
+    }
   }
 );

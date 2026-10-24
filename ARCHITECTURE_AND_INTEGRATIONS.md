@@ -11,7 +11,7 @@ by step.
 | [1. Create a project from the template](#1-create-a-project-from-the-template) | start a new client or product |
 | [2. Supabase migrations and Row Level Security](#2-supabase-migrations-and-row-level-security) | change the database or its access rules |
 | [3. Build, sync and release the iOS and Android apps](#3-build-sync-and-release-the-ios-and-android-apps) | ship the mobile apps |
-| [4. Marketing tracking and Wayl payments](#4-marketing-tracking-and-wayl-payments) | set up ads attribution or take real payments |
+| [4. Marketing tracking and Wayl payments](#4-marketing-tracking-and-wayl-payments) | set up ads attribution, newsletters or take real payments |
 | [5. Vercel environment variables](#5-vercel-environment-variables) | deploy the web apps |
 
 `AGENTS.md` holds the short list of coding rules; this document is the long
@@ -45,7 +45,7 @@ flowchart LR
   API -- "secret key (bypasses RLS)" --> DB
   API -- "payment links" --> WAYL
   WAYL -- "signed webhook" --> API
-  W & A -- "pixels / GTM" --> ADS
+  W & A -- "pixels" --> ADS
   API -- "Conversions API / Events API" --> ADS
 ```
 
@@ -203,9 +203,11 @@ publishable key and leave the session in the shared cookie.
 ### The back office
 
 `/{locale}/admin` in The IDEA Spark, for staff: catalog, orders, rentals,
-customers and CRM, marketing, finance (ledger, scenarios, fixed assets,
-cap table, payroll), editorial, reviews, support, Telegram, staff and the
-audit log.
+customers and CRM, finance (ledger, scenarios, payments and financial
+settings), editorial, reviews, support, Telegram, staff and the audit log.
+Newsletters are not sent from here but from Resend Broadcasts (4.3); the
+payroll plan, cap table, fixed assets and the own email campaigns were
+retired on 2026-10-24 and their data kept in the `archive` schema.
 
 - **Gate** (`lib/admin/session.ts`, in the console layout and again in
   every page and Server Action): signed out → `/{locale}/sign-in?return_to=/{locale}/admin`;
@@ -216,7 +218,7 @@ audit log.
   it is on in the local stack).
 - **Server Actions** (`staffAction` in `lib/admin/action.ts`) re-check the
   session and role, validate with zod and run as the staff member, so RLS
-  applies. Privileged steps (campaign email, staff lookup) call
+  applies. Privileged steps (staff lookup) call
   `apps/api/app/admin/*` with the staff member's token (`lib/admin/api.ts`).
   No secret lives in Spark (`bun run check:secrets`).
 - **Links** use `@/lib/admin/navigation`, whose `Link`, `redirect`,
@@ -401,6 +403,7 @@ Current schema:
 | `…_content_storage.sql` | `catalog` and `editorial` (public) and `submissions` (private, `<author id>/…`) buckets |
 | `…_droid.sql` | Telegram bot tables: `telegram_chats`, `telegram_members`, `telegram_requests`, `telegram_faq` |
 | `…_staff_mfa.sql` | Staff rights require an authenticator-app session (`aal2` claim) in every policy |
+| `…_retire_back_office_extras.sql` | Moves the retired `marketing_segments`, `marketing_campaigns`, `staff_plan`, `equity_rounds`, `equity_holders` and `fixed_assets` (and their enums) to the `archive` schema, which no client role can reach, and drops `fixed_asset_schedule()`; adds the newsletter sync bookkeeping (`private.newsletter_contacts`, the service-only `newsletter_audience()` and `mark_newsletter_synced()`, see 4.3) |
 
 ### 2.2 Run the database locally
 
@@ -1008,7 +1011,7 @@ it and its passwords in the password manager; enable Play App Signing) →
 
 ```
 @repo/analytics
-  provider.tsx       <AnalyticsProvider>: loads GTM, or GA4 + Meta Pixel + TikTok Pixel directly
+  provider.tsx       <AnalyticsProvider>: loads GA4 + Meta Pixel + TikTok Pixel directly
   bootstrap.ts       inline script: consent defaults, tag loaders; does nothing inside Capacitor
   page-view.tsx      page views on every client-side navigation; remembers fbclid/ttclid
   client.ts          track(), identify(), resetIdentity(), setConsent(), getAttribution()
@@ -1026,15 +1029,13 @@ track("begin_checkout", { currency: "IQD", value: 75000, items: [{ id: "pro-mont
 
 and the package translates the event for each destination.
 
-**Two ways to manage tags. Pick one per environment:**
+**Tags:** set `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID` and
+`NEXT_PUBLIC_TIKTOK_PIXEL_ID` (any subset). The package loads each tag and
+sends every event to each one with the right name and parameters.
 
-| Mode | Set | Behaviour |
-| --- | --- | --- |
-| Direct | `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` (any subset) | The package loads each tag and sends every event to each one with the right name and parameters. Nothing to configure elsewhere. |
-| Google Tag Manager | `NEXT_PUBLIC_GTM_ID` | Only GTM loads (the direct IDs are ignored). Each event is pushed to the data layer as `{ event: <GA4 name>, event_id, ecommerce: <GA4 params>, meta: { event, params }, tiktok: { event, params } }`. In GTM, create data layer variables for `event_id`, `meta.event`, `meta.params`, `tiktok.event` and `tiktok.params`. Then add a GA4 event tag that uses the built-in Event variable, and one Meta and one TikTok tag that forward those variables, all triggered on every custom event. Use the `virtual_page_view` event for page views. |
-
-Choose GTM when a marketing team will manage tags without deployments.
-Choose direct mode for the fewest moving parts.
+Google Tag Manager is not supported (removed 2026-10-24): every tag loads
+from code, so third-party scripts such as cookie banners or chat widgets
+cannot appear on the site without a code review.
 
 #### Event catalogue
 
@@ -1102,13 +1103,33 @@ outside this template.
 
 | Destination | How |
 | --- | --- |
-| GA4 | Open the site with the Google Tag Assistant extension connected (or GTM **Preview**), then **GA4 → Admin → DebugView**. Click through sign-up, search, checkout. Realtime reports confirm production traffic. |
+| GA4 | Open the site with the Google Tag Assistant extension connected, then **GA4 → Admin → DebugView**. Click through sign-up, search, checkout. Realtime reports confirm production traffic. |
 | Meta (browser) | Meta Pixel Helper extension: each event should show once, with an event id on `Purchase`. |
 | Meta (server) | Set `META_TEST_EVENT_CODE` in `apps/api` (from **Events Manager → Test events**), make a test payment and watch the event arrive. In **Overview**, the `Purchase` row should show browser and server events *deduplicated*. Remove the test code afterwards. |
 | TikTok | TikTok Pixel Helper for the browser, `TIKTOK_TEST_EVENT_CODE` with **Events Manager → Test events** for the server. Remove the test code afterwards. |
-| GTM | **Preview** mode: each custom event should fire the GA4, Meta and TikTok tags once. |
 
 ### 4.2 Wayl payments
+
+#### Delivery, pickup and cash orders
+
+Store orders are placed with `create_order(shipping, fulfilment,
+payment_method, delivery_zone)` (migration `20261120000160_delivery.sql`).
+The database prices the delivery fee from `delivery_zones` (one per
+governorate, edited in Back office → Catalog → Settings); pickup is free and
+offered once **Store pickup** is on and has an address; the free-delivery
+threshold applies to every zone.
+
+- **Pay online** (`online`): the order is `pending` and the customer pays
+  on Wayl as below.
+- **Cash on delivery / pay at pickup** (`cash_on_delivery`, switched by
+  **Offer cash payment**): the order starts `confirmed` with its stock
+  taken. Spark asks `POST /orders/confirmation` (Bearer token) to email the
+  confirmation once (`confirmation_emailed_at`). Staff move it through
+  preparing and shipped (pickup: "Ready for pickup"), and **Mark cash
+  collected** (`mark_cash_collected`, support or finance) marks it paid and
+  delivered and records a `cash` payment for the ledger. Until then it can
+  still be cancelled, which returns the stock. Cash is not third-party
+  checkout, so it is offered in the iOS/Android apps too.
 
 #### How a payment flows
 
@@ -1233,7 +1254,74 @@ production (`WAYL_ENV=live`):
 | `/checkout` returns `403` `store-billing-required` | Expected in the iOS/Android apps when the project sells digital goods (see 1.3). |
 | Webhook returns `500` | The database or Wayl API failed while processing. Wayl retries; check the logs. |
 
+### 4.3 Newsletters (Resend Broadcasts)
+
+The IDEA doesn't send its own campaigns any more (decision of 2026-10-24):
+newsletters are written and sent in **Resend → Broadcasts**, to one Resend
+segment that `apps/api` keeps in step with the accounts.
+
+- **Consent** stays in the product: `profiles.marketing_opt_in`, set during
+  onboarding and in Settings. The back office shows it per customer
+  (Customers, "opted in" filter) and on the dashboard.
+- **Sync** (`GET /cron/newsletter-contacts`, daily at 04:00 UTC,
+  `apps/api/lib/newsletter.ts`): every account with an email becomes a
+  contact of the `RESEND_SEGMENT_ID` segment with its first and last name,
+  `unsubscribed` unless it opted in (suspended accounts are always
+  unsubscribed). Contacts that unsubscribed in Resend (the broadcast's
+  unsubscribe link) turn the account's opt-in off. When both sides changed,
+  the newer change wins: the trigger on `profiles.marketing_opt_in` stamps
+  when consent changed, and the sync records when it last pushed each
+  account (`private.newsletter_contacts`). Contacts in the segment without
+  an account (deleted accounts) are deleted from Resend, so **don't add
+  contacts to this segment by hand**; use another segment for lists from
+  elsewhere.
+- Only differences are sent, paced under Resend's rate limit (2 requests a
+  second by default). The first sync of a large account base can take
+  several daily runs (each stops after about four minutes and reports
+  `"partial": true`); run it by hand to catch up:
+  `curl -H "Authorization: Bearer $CRON_SECRET" https://api.example.iq/cron/newsletter-contacts`.
+
+Set it up once:
+
+1. Resend → **Audience → Segments** → create a segment (for example "The
+   IDEA customers") and copy its id.
+2. Vercel → `api` project → set `RESEND_SEGMENT_ID` to that id. The
+   `RESEND_TOKEN` there must be a full-access key (a sending-only key can't
+   manage contacts).
+3. Run the cron once by hand (above) and check the contacts in Resend.
+4. Write broadcasts in Resend, keep its unsubscribe link in the footer
+   (Resend's editor has a placeholder for it) and send them to that
+   segment; Resend only delivers to subscribed contacts.
+
 ---
+
+### 4.4 WhatsApp order updates
+
+Customers who turn on **WhatsApp updates** in Spark → Settings (a number
+and `profiles.whatsapp_opt_in`) get template messages from the WhatsApp
+Cloud API for four notification events. `apps/api` sends them from the
+notifications webhook and the `/cron/push` catch-up (`lib/whatsapp`); each
+notification is claimed once, so nothing is sent twice. WhatsApp is off
+until both `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
+
+**Owner setup**
+
+1. Meta Business Suite → create a WhatsApp Business account and add The
+   IDEA's number (WhatsApp Manager → Phone numbers); copy its **Phone
+   number ID** into `WHATSAPP_PHONE_NUMBER_ID`.
+2. Business settings → System users → add one with
+   `whatsapp_business_messaging`, generate a permanent token, and set it as
+   `WHATSAPP_ACCESS_TOKEN` on the `api` Vercel project.
+3. WhatsApp Manager → Message templates: create the four templates below,
+   category **Utility**, in Arabic (`ar`) and English (`en`), with exactly
+   these names and variables, and wait for approval.
+
+| Template | Variables | English body | Arabic body |
+| --- | --- | --- | --- |
+| `order_confirmed` | name, order number | `Hi {{1}}, your The IDEA order {{2}} is confirmed. We'll let you know when it's on its way.` | `مرحباً {{1}}، تم تأكيد طلبك {{2}} من The IDEA. سنخبرك عند خروجه للتوصيل.` |
+| `order_shipped` | name, order number, tracking | `Hi {{1}}, your order {{2}} is on its way. Tracking: {{3}}.` | `مرحباً {{1}}، طلبك {{2}} في الطريق إليك. رقم التتبع: {{3}}.` |
+| `rental_due_soon` | name, item, due date | `Hi {{1}}, a reminder that {{2}} from The IDEA Plus is due back on {{3}}.` | `مرحباً {{1}}، تذكير بأن موعد إرجاع {{2}} من The IDEA Plus هو {{3}}.` |
+| `trade_in_offer` | name, request number, item, offer | `Hi {{1}}, we made an offer on your request {{2}} ({{3}}): {{4}}. Open The IDEA Spark to accept or decline.` | `مرحباً {{1}}، قدّمنا عرضاً على طلبك {{2}} ({{3}}): {{4}}. افتح The IDEA Spark لقبوله أو رفضه.` |
 
 ## 5. Vercel environment variables
 
@@ -1297,7 +1385,7 @@ and Better Stack are configured on `api`, not here.
 | `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, news, events and journal (read anonymously, under Row Level Security). Without them those sections show empty states. |
-| `NEXT_PUBLIC_GTM_ID` **or** `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | Product analytics |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional | Error reporting |
 | `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | Source map upload during the Vercel build (build-time only, never read by the site) |
@@ -1320,9 +1408,9 @@ WebView). **Never add a secret to this project.**
 | `NEXT_PUBLIC_WEB_URL` | Build | Marketing site URL |
 | `NEXT_PUBLIC_SUPABASE_URL` | Feature (the app can't sign in without it) | `https://<project-ref>.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature (same) | `sb_publishable_…` |
-| `NEXT_PUBLIC_API_URL` | Feature | Checkout, push registration and the back office's campaign sending and staff lookup call it |
+| `NEXT_PUBLIC_API_URL` | Feature | Checkout, push registration and the back office's staff lookup call it |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Help links |
-| `NEXT_PUBLIC_GTM_ID` **or** the GA4, Meta and TikTok IDs | Optional | Same values as `web`, so visitors are followed across both |
+| The GA4, Meta and TikTok IDs | Optional | Same values as `web`, so visitors are followed across both |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | |
 | `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | |
 | `NEXT_PUBLIC_LIVEBLOCKS_ENABLED` | Optional (`collaboration`) | `true` shows presence and cursors; the secret lives in `api` |
@@ -1344,6 +1432,9 @@ WebView). **Never add a secret to this project.**
 | `WAYL_API_URL` | Optional | Wayl staging server |
 | `PAYMENTS_PROVIDER` | Optional | Leave unset (Wayl when the token is set). Never `mock` in production. |
 | `RESEND_TOKEN`, `RESEND_FROM` | Feature | Receipts, renewal invoices and the website's contact form (`POST /contact`, delivered to `supportEmail` in `project.json`); without them the form answers "unavailable" |
+| `RESEND_SEGMENT_ID` | Feature | The Resend segment newsletters go to; `/cron/newsletter-contacts` syncs the accounts there (4.3). The sync is off without it. Needs `RESEND_TOKEN` with full access (contacts), not a sending-only key. |
+| `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` | Optional | WhatsApp order updates (4.4); off without them. **Server only.** |
+| `WHATSAPP_TEMPLATE_LANG` | Optional | `ar` (default) or `en`: the template language for customers in another language |
 | `ARCJET_KEY` | Optional | `ajkey_…`. Guards the website's public forms (`@repo/security/form`: shield, bots, 5 per 10 minutes, undeliverable addresses) |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Feature | Droid's sessions and flood counters; the contact form's one message per visitor per day |
 | `NEXT_PUBLIC_META_PIXEL_ID`, `META_CONVERSIONS_ACCESS_TOKEN` | Optional | Server-side purchases to Meta; same pixel as the web apps |

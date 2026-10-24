@@ -9,6 +9,7 @@ const VARIANTS: Record<
   "default" | "destructive" | "outline" | "secondary"
 > = {
   cancelled: "outline",
+  confirmed: "default",
   delivered: "secondary",
   paid: "default",
   pending: "outline",

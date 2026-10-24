@@ -4,6 +4,8 @@ const SECRET = "s".repeat(64);
 const CRON = "c".repeat(64);
 const deliver = vi.fn();
 const getPushSender = vi.fn();
+const deliverWhatsApp = vi.fn();
+const getWhatsAppSender = vi.fn();
 const authenticateRequest = vi.fn();
 
 vi.mock("@/env", () => ({
@@ -17,6 +19,14 @@ vi.mock("@/env", () => ({
 vi.mock("@/lib/push", () => ({ getPushSender: () => getPushSender() }));
 vi.mock("@/lib/push/deliver", () => ({
   deliverPushNotifications: (...args: unknown[]) => deliver(...args),
+}));
+vi.mock("@/lib/whatsapp", () => ({
+  getWhatsAppSender: () => getWhatsAppSender(),
+  whatsappFallbackLanguage: () => "ar",
+}));
+vi.mock("@/lib/whatsapp/deliver", () => ({
+  deliverWhatsAppNotifications: (...args: unknown[]) =>
+    deliverWhatsApp(...args),
 }));
 vi.mock("@repo/auth/verify", () => ({
   authenticateRequest: (request: Request) => authenticateRequest(request),
@@ -34,6 +44,7 @@ const unregister = await import("../app/push/unregister/route");
 const ID = "7c9e6679-7425-40de-944b-e07fc1f90ae7";
 const TOKEN = "fcm-token-0000000000000000";
 const SUMMARY = { failed: 0, notifications: 1, removed: 0, sent: 2 };
+const WHATSAPP_SUMMARY = { failed: 0, notifications: 1, sent: 1, skipped: 0 };
 
 const post = (path: string, body: unknown, authorization?: string) =>
   new Request(`https://api.theideaiq.com${path}`, {
@@ -52,6 +63,8 @@ beforeEach(() => {
   vi.clearAllMocks();
   getPushSender.mockReturnValue({ send: vi.fn() });
   deliver.mockResolvedValue(SUMMARY);
+  getWhatsAppSender.mockReturnValue(null);
+  deliverWhatsApp.mockResolvedValue(WHATSAPP_SUMMARY);
 });
 
 describe("POST /webhooks/notifications", () => {
@@ -99,6 +112,46 @@ describe("POST /webhooks/notifications", () => {
     );
     expect(response.status).toBe(500);
   });
+
+  test("also sends WhatsApp messages when WhatsApp is configured", async () => {
+    getWhatsAppSender.mockReturnValue({ send: vi.fn() });
+    const response = await webhook.POST(
+      post("/webhooks/notifications", insert, `Bearer ${SECRET}`)
+    );
+    expect(await response.json()).toEqual({
+      ok: true,
+      ...SUMMARY,
+      whatsapp: WHATSAPP_SUMMARY,
+    });
+    expect(deliverWhatsApp).toHaveBeenCalledWith({}, expect.anything(), {
+      fallbackLanguage: "ar",
+      ids: [ID],
+    });
+  });
+
+  test("sends WhatsApp messages without push", async () => {
+    getPushSender.mockReturnValue(null);
+    getWhatsAppSender.mockReturnValue({ send: vi.fn() });
+    const response = await webhook.POST(
+      post("/webhooks/notifications", insert, `Bearer ${SECRET}`)
+    );
+    expect(await response.json()).toEqual({
+      ok: true,
+      skipped: "push_not_configured",
+      whatsapp: WHATSAPP_SUMMARY,
+    });
+    expect(deliver).not.toHaveBeenCalled();
+  });
+
+  test("a WhatsApp failure answers 500 after pushing", async () => {
+    getWhatsAppSender.mockReturnValue({ send: vi.fn() });
+    deliverWhatsApp.mockRejectedValue(new Error("graph down"));
+    const response = await webhook.POST(
+      post("/webhooks/notifications", insert, `Bearer ${SECRET}`)
+    );
+    expect(response.status).toBe(500);
+    expect(deliver).toHaveBeenCalled();
+  });
 });
 
 describe("GET /cron/push", () => {
@@ -116,6 +169,19 @@ describe("GET /cron/push", () => {
     const response = await cron.GET(get(`Bearer ${CRON}`));
     expect(await response.json()).toEqual({ ok: true, ...SUMMARY });
     expect(deliver).toHaveBeenCalledWith({}, expect.anything());
+  });
+
+  test("sweeps unsent WhatsApp messages too", async () => {
+    getWhatsAppSender.mockReturnValue({ send: vi.fn() });
+    const response = await cron.GET(get(`Bearer ${CRON}`));
+    expect(await response.json()).toEqual({
+      ok: true,
+      ...SUMMARY,
+      whatsapp: WHATSAPP_SUMMARY,
+    });
+    expect(deliverWhatsApp).toHaveBeenCalledWith({}, expect.anything(), {
+      fallbackLanguage: "ar",
+    });
   });
 });
 

@@ -13,7 +13,6 @@ export type ActionError =
   | "inUse"
   | "lastSuperadmin"
   | "apiUnavailable"
-  | "emailNotConfigured"
   | "unknown";
 
 export type ActionNotice = "saved" | "deleted" | "sent" | "posted";

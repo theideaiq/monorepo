@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { PlusIcon, StarIcon } from "lucide-react";
+import { ImageIcon, PlusIcon, StarIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { NativeSelect } from "@/components/admin/fields";
@@ -94,6 +94,14 @@ const ProductsPage = async ({
   return (
     <>
       <PageHeader title={t("title")}>
+        {canWrite ? (
+          <Button asChild variant="outline">
+            <Link href="/catalog/covers">
+              <ImageIcon />
+              {t("covers.findMissing")}
+            </Link>
+          </Button>
+        ) : null}
         {canWrite ? (
           <Button asChild>
             <Link href="/catalog/products/new">

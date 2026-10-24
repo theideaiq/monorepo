@@ -108,22 +108,60 @@ export interface CartLine {
 
 export interface StoreSettings {
   freeShippingThreshold: number | null;
+  /** The fee the cart shows before a delivery zone is chosen. */
   shippingFee: number;
 }
 
+/** How an order reaches the customer (`orders.fulfilment`). */
+export type Fulfilment = "delivery" | "pickup";
+
+/** How an order is paid (`orders.payment_method`). */
+export type PaymentMethod = "cash_on_delivery" | "online";
+
+/** Pickup or delivery, and the chosen zone's fee for delivery. */
+export interface DeliveryChoice {
+  fulfilment: Fulfilment;
+  /** The delivery zone's fee; the store's default fee when none is chosen. */
+  zoneFee?: number | null;
+}
+
+/**
+ * The delivery fee, mirroring `create_order()`: pickup is free; delivery
+ * costs the zone's fee unless the subtotal reaches the free-delivery
+ * threshold.
+ */
+export const deliveryFee = (
+  subtotal: number,
+  settings: StoreSettings,
+  choice?: DeliveryChoice
+) => {
+  if (subtotal === 0 || choice?.fulfilment === "pickup") {
+    return 0;
+  }
+  if (
+    settings.freeShippingThreshold !== null &&
+    subtotal >= settings.freeShippingThreshold
+  ) {
+    return 0;
+  }
+  return choice?.zoneFee ?? settings.shippingFee;
+};
+
 /**
  * The totals the customer will be charged, mirroring `create_order()` in the
- * database (which is authoritative: it re-prices every line from the catalog).
+ * database (which is authoritative: it re-prices every line from the catalog
+ * and takes the fee from the delivery zone).
  */
-export const cartTotals = (lines: CartLine[], settings: StoreSettings) => {
+export const cartTotals = (
+  lines: CartLine[],
+  settings: StoreSettings,
+  choice?: DeliveryChoice
+) => {
   const subtotal = lines.reduce(
     (sum, line) => sum + line.unitPrice * line.quantity,
     0
   );
-  const freeShipping =
-    settings.freeShippingThreshold !== null &&
-    subtotal >= settings.freeShippingThreshold;
-  const shippingFee = subtotal === 0 || freeShipping ? 0 : settings.shippingFee;
+  const shippingFee = deliveryFee(subtotal, settings, choice);
   return {
     count: lines.reduce((sum, line) => sum + line.quantity, 0),
     shippingFee,
@@ -135,6 +173,17 @@ export const cartTotals = (lines: CartLine[], settings: StoreSettings) => {
 /** The order statuses customers see, in fulfilment order. */
 export const orderSteps = [
   "paid",
+  "processing",
+  "shipped",
+  "delivered",
+] as const;
+
+/**
+ * The steps of an order paid in cash: confirmed when placed, paid once the
+ * cash is collected on delivery or at pickup.
+ */
+export const cashOrderSteps = [
+  "confirmed",
   "processing",
   "shipped",
   "delivered",

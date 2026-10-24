@@ -13,8 +13,8 @@ export const sections = [
   "rentals",
   "customers",
   "support",
+  "tradeIns",
   "reviews",
-  "marketing",
   "finance",
   "editorial",
   "telegram",
@@ -32,13 +32,13 @@ export const sectionHref: Record<Section, string> = {
   dashboard: "/",
   editorial: "/editorial",
   finance: "/finance",
-  marketing: "/marketing",
   orders: "/orders",
   rentals: "/rentals",
   reviews: "/reviews",
   staff: "/staff",
   support: "/support",
   telegram: "/telegram",
+  tradeIns: "/trade-ins",
 };
 export type AccessLevel = "read" | "write";
 
@@ -64,7 +64,7 @@ const roleAccess: Record<StaffRole, AccessMap> = {
   admin: everything(["staff"]),
   editor: { dashboard: "read", editorial: "write" },
   finance: { dashboard: "read", finance: "write", orders: "read" },
-  marketing: { customers: "read", dashboard: "read", marketing: "write" },
+  marketing: { customers: "read", dashboard: "read" },
   superadmin: everything(),
   support: {
     customers: "write",
@@ -74,6 +74,7 @@ const roleAccess: Record<StaffRole, AccessMap> = {
     reviews: "write",
     support: "write",
     telegram: "write",
+    tradeIns: "write",
   },
 };
 

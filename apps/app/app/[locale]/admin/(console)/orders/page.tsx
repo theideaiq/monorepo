@@ -61,7 +61,7 @@ const OrdersPage = async ({
   let query = supabase
     .from("orders")
     .select(
-      "id, number, status, total, shipping_address, created_at, paid_at, user_id",
+      "id, number, status, total, shipping_address, created_at, paid_at, user_id, fulfilment, payment_method",
       { count: "exact" }
     )
     .order("created_at", { ascending: false })
@@ -202,6 +202,13 @@ const OrdersPage = async ({
                         <StatusBadge status={order.status}>
                           {tStore(`orderStatus.${order.status}`)}
                         </StatusBadge>
+                        {order.payment_method === "cash_on_delivery" ||
+                        order.fulfilment === "pickup" ? (
+                          <span className="block pt-1 text-muted-foreground text-xs">
+                            {tStore(`fulfilment.${order.fulfilment}`)} ·{" "}
+                            {tStore(`paymentMethod.${order.payment_method}`)}
+                          </span>
+                        ) : null}
                       </TableCell>
                       <TableCell className="text-end tabular-nums">
                         {format.money(order.total)}

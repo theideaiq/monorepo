@@ -181,7 +181,33 @@ describe("delivery address", () => {
         notes: "",
         phone: "+9647701234567",
       },
+      zoneId: null,
     });
+  });
+
+  test("pickup needs only a name and a phone", () => {
+    expect(
+      validateAddress(
+        { ...filled, address: "", governorate: "" },
+        { fulfilment: "pickup" }
+      )
+    ).toMatchObject({
+      errors: [],
+      shipping: { address: "", governorate: "" },
+      zoneId: null,
+    });
+  });
+
+  test("delivery takes the zone's governorate", () => {
+    const zones = [{ governorate: "basra", id: "zone-basra" }];
+    expect(
+      validateAddress({ ...filled, zoneId: "zone-basra" }, { zones })
+    ).toMatchObject({
+      errors: [],
+      shipping: { governorate: "basra" },
+      zoneId: "zone-basra",
+    });
+    expect(validateAddress(filled, { zones }).errors).toEqual(["governorate"]);
   });
 
   test("reports every field to fix", () => {
