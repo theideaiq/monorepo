@@ -1,11 +1,12 @@
 import { project } from "@repo/config";
 import type { Locale } from "@repo/internationalization";
-import { Mail, MapPin, Send } from "lucide-react";
+import { LifeBuoy, Mail, MapPin, Send } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { PageHero } from "@/components/page-hero";
-import { telegram } from "@/lib/links";
+import { env } from "@/env";
+import { appLink, telegram } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import { ContactForm } from "./components/contact-form";
 
@@ -32,11 +33,27 @@ const Contact = async ({ params }: ContactProps) => {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "web.contact" });
 
-  const details = [
+  const details: {
+    href?: string;
+    icon: typeof Mail;
+    label: string;
+    /** Values such as addresses and handles read left to right. */
+    ltr?: boolean;
+    note?: string;
+    value?: string;
+  }[] = [
+    {
+      href: appLink(env.NEXT_PUBLIC_APP_URL, locale, "/support"),
+      icon: LifeBuoy,
+      label: t("details.support"),
+      note: t("details.supportNote"),
+      value: t("details.supportCta"),
+    },
     {
       href: `mailto:${project.supportEmail}`,
       icon: Mail,
       label: t("details.email"),
+      ltr: true,
       note: t("details.emailNote"),
       value: project.supportEmail,
     },
@@ -44,6 +61,7 @@ const Contact = async ({ params }: ContactProps) => {
       href: telegram.bot,
       icon: Send,
       label: t("details.telegram"),
+      ltr: true,
       note: t("details.telegramNote"),
       value: "@TheIdeaDroidBot",
     },
@@ -59,7 +77,7 @@ const Contact = async ({ params }: ContactProps) => {
       <PageHero subtitle={t("description")} title={t("title")} />
       <div className="container mx-auto grid max-w-6xl gap-10 px-4 py-14 lg:grid-cols-[1fr_1.4fr]">
         <ul className="flex flex-col gap-4">
-          {details.map(({ href, icon: Icon, label, note, value }) => (
+          {details.map(({ href, icon: Icon, label, ltr, note, value }) => (
             <li className="flex gap-4 rounded-xl border p-5" key={label}>
               <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Icon aria-hidden="true" className="size-5" />
@@ -72,9 +90,9 @@ const Contact = async ({ params }: ContactProps) => {
                 {href ? (
                   <a
                     className="font-medium text-primary hover:underline"
-                    dir="ltr"
+                    dir={ltr ? "ltr" : undefined}
                     href={href}
-                    {...(href.startsWith("http")
+                    {...(href.startsWith("https://t.me")
                       ? { rel: "noopener noreferrer", target: "_blank" }
                       : {})}
                   >

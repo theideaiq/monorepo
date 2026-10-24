@@ -17,7 +17,7 @@ import { ProductCard } from "@/components/product-card";
 import { ProductLines } from "@/components/product-lines";
 import { EmptyState, Section } from "@/components/section";
 import { env } from "@/env";
-import { getEvents, getPosts, getProducts } from "@/lib/data";
+import { getEvents, getPosts, getProducts, getRatings } from "@/lib/data";
 import { appLink } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
@@ -53,6 +53,7 @@ const Home = async ({ params }: HomeProps) => {
     getPosts(3),
     getEvents({ limit: 3 }),
   ]);
+  const ratings = await getRatings(featured.map((product) => product.id));
   const values = t.raw("home.values.items") as Values;
 
   return (
@@ -89,7 +90,12 @@ const Home = async ({ params }: HomeProps) => {
         {featured.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {featured.map((product) => (
-              <ProductCard key={product.id} locale={locale} product={product} />
+              <ProductCard
+                key={product.id}
+                locale={locale}
+                product={product}
+                rating={ratings[product.id]}
+              />
             ))}
           </div>
         ) : (
