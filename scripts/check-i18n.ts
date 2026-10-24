@@ -24,7 +24,6 @@ const ROOTS = [
 const IGNORED_DIRECTORIES = new Set([
   ".claude",
   ".next",
-  ".react-email",
   "node_modules",
   "out",
 ]);

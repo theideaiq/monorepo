@@ -35,7 +35,6 @@
   "overrides": {
     "dompurify": "^3.4.17",
     "launch-editor": "^2.14.2",
-    "next": "16.4.3",
     "parse5": "^7.2.1",
     "postcss": "^8.5.31",
     "sharp": "^0.35.5",

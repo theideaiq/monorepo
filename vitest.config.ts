@@ -14,6 +14,7 @@ export default defineConfig({
       "apps/admin",
       "apps/api",
       "apps/app",
+      "apps/storybook",
       "apps/web",
       "packages/analytics",
       "packages/auth",

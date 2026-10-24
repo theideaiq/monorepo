@@ -213,31 +213,3 @@ export const OrderConfirmationTemplate = ({
     </Tailwind>
   );
 };
-
-OrderConfirmationTemplate.PreviewProps = {
-  address: {
-    address: "شارع 52، قرب ساحة الحرية",
-    city: "الكرادة",
-    fullName: "سارة أحمد",
-    governorate: "بغداد",
-    phone: "+964 770 000 0000",
-  },
-  items: [
-    { name: "بلايستيشن 5", quantity: 1, total: "720,000 د.ع." },
-    {
-      details: "اللون: أسود",
-      name: "يد تحكم DualSense",
-      quantity: 2,
-      total: "190,000 د.ع.",
-    },
-  ],
-  locale: "ar",
-  orderNumber: "#10042",
-  shipping: "5,000 د.ع.",
-  subtotal: "910,000 د.ع.",
-  supportEmail: "hi@theideaiq.com",
-  total: "915,000 د.ع.",
-} satisfies OrderConfirmationProps;
-
-// biome-ignore lint/complexity/noRedundantDefaultExport: React Email's preview server loads templates through their default export.
-export default OrderConfirmationTemplate;

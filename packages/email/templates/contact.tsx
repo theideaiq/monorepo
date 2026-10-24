@@ -52,13 +52,3 @@ export const ContactTemplate = ({
     </Html>
   </Tailwind>
 );
-
-ContactTemplate.PreviewProps = {
-  date: "5 October 2026",
-  email: "jane.smith@example.com",
-  message: "I'm interested in your services.",
-  name: "Jane Smith",
-};
-
-// biome-ignore lint/complexity/noRedundantDefaultExport: React Email's preview server loads templates through their default export.
-export default ContactTemplate;

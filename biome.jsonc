@@ -28,7 +28,8 @@
       // Mintlify content and static assets.
       "!apps/docs/**/*.json",
       "!apps/docs/**/*.svg",
-      "!apps/email/.react-email"
+      // Storybook's build output, served by apps/storybook.
+      "!apps/storybook/public"
     ]
   },
   "overrides": [
