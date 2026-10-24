@@ -1,4 +1,9 @@
-import { config, withAnalyzer } from "@repo/next-config";
+import {
+  catalogImagePatterns,
+  config,
+  isLocalUrl,
+  withAnalyzer,
+} from "@repo/next-config";
 import { withLogging, withSentry } from "@repo/observability/next-config";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
@@ -8,30 +13,15 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 let nextConfig: NextConfig = withLogging(config);
 
-// Product images, covers and journal PDFs come from Supabase Storage.
-const supabase = env.NEXT_PUBLIC_SUPABASE_URL
-  ? new URL(env.NEXT_PUBLIC_SUPABASE_URL)
-  : null;
-const isLocalSupabase =
-  supabase !== null &&
-  ["127.0.0.1", "localhost", "[::1]"].includes(supabase.hostname);
-
+// Product images, covers and journal PDFs come from Supabase Storage; the
+// initial catalog also links to cover-art sources (catalogImagePatterns).
 nextConfig.images = {
   ...nextConfig.images,
   // Only the local development stack runs on a private address.
-  dangerouslyAllowLocalIP: isLocalSupabase,
+  dangerouslyAllowLocalIP: isLocalUrl(env.NEXT_PUBLIC_SUPABASE_URL),
   remotePatterns: [
     ...(nextConfig.images?.remotePatterns ?? []),
-    ...(supabase
-      ? [
-          {
-            hostname: supabase.hostname,
-            pathname: "/storage/v1/object/public/**",
-            port: supabase.port,
-            protocol: supabase.protocol.replace(":", "") as "http" | "https",
-          },
-        ]
-      : []),
+    ...catalogImagePatterns(env.NEXT_PUBLIC_SUPABASE_URL),
   ],
 };
 
