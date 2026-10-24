@@ -20,7 +20,6 @@ interface TikTok {
 }
 
 interface AnalyticsWindow {
-  __analyticsMode?: "direct" | "gtm";
   Capacitor?: { isNativePlatform?: () => boolean };
   dataLayer?: unknown[];
   fbq?: Command;
@@ -41,16 +40,7 @@ export const isNativeApp = () =>
 
 const posthogReady = () => Boolean(posthog.__loaded);
 
-/**
- * Records an event in every configured destination. With Google Tag Manager
- * the event is pushed to the data layer as:
- *
- *   { event: <GA4 name>, event_id, ecommerce: <GA4 params>,
- *     meta: { event, params }, tiktok: { event, params } }
- *
- * so one Meta tag and one TikTok tag in the container can forward every
- * event using those variables.
- */
+/** Records an event in every configured destination. */
 export const track = <E extends AnalyticsEvent>(
   event: E,
   properties: EventProperties[E],
@@ -68,20 +58,6 @@ export const track = <E extends AnalyticsEvent>(
   const ga4 = toGa4(event, properties, currency);
   const meta = toMeta(event, properties, currency);
   const tiktok = toTikTok(event, properties, currency);
-
-  if (w.__analyticsMode === "gtm") {
-    w.dataLayer?.push({ ecommerce: null, meta: null, tiktok: null });
-    w.dataLayer?.push({
-      ecommerce: ga4.params,
-      event: ga4.name,
-      event_id: eventId,
-      meta: meta ? { event: meta.name, params: meta.params } : undefined,
-      tiktok: tiktok
-        ? { event: tiktok.name, params: tiktok.params }
-        : undefined,
-    });
-    return;
-  }
 
   w.gtag?.("event", ga4.name, ga4.params);
   if (meta) {
@@ -105,10 +81,6 @@ export const track = <E extends AnalyticsEvent>(
 export const trackPageView = (url: string) => {
   const w = browser();
   if (!w) {
-    return;
-  }
-  if (w.__analyticsMode === "gtm") {
-    w.dataLayer?.push({ event: "virtual_page_view", page_location: url });
     return;
   }
   w.gtag?.("event", "page_view", { page_location: url });

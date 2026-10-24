@@ -9,7 +9,6 @@ export interface BootstrapConfig {
   /** Regions that start denied regardless of `consent`. */
   consentRequiredRegions: string[];
   gaId?: string;
-  gtmId?: string;
   /** Queue Meta and TikTok until `setConsent({ ads: true })`. */
   holdAdsConsent: boolean;
   metaPixelId?: string;
@@ -53,17 +52,6 @@ export function analyticsBootstrap(config: BootstrapConfig) {
     wait_for_update: 500,
   });
   w.gtag("consent", "default", config.consent);
-
-  if (config.gtmId) {
-    w.__analyticsMode = "gtm";
-    w.dataLayer.push({ event: "gtm.js", "gtm.start": Date.now() });
-    load(
-      `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(config.gtmId)}`
-    );
-    return;
-  }
-
-  w.__analyticsMode = "direct";
 
   if (config.gaId) {
     w.gtag("js", new Date());

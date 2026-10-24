@@ -30,8 +30,8 @@ describe("analytics bootstrap", () => {
     expect(() => run(bootstrapScript(config()))).not.toThrow();
   });
 
-  it("sets regional and default consent before loading Google Tag Manager", () => {
-    const { loaded, win } = run(bootstrapScript(config({ gtmId: "GTM-ABC" })));
+  it("sets regional and default consent before loading the tags", () => {
+    const { loaded, win } = run(bootstrapScript(config({ gaId: "G-ABC" })));
 
     const [regional, fallback] = (win.dataLayer ?? []).map((entry) =>
       Array.from(entry as ArrayLike<unknown>)
@@ -43,13 +43,11 @@ describe("analytics bootstrap", () => {
     });
     expect(fallback?.[2]).toMatchObject({ ad_storage: "granted" });
     expect(loaded).toEqual([
-      "https://www.googletagmanager.com/gtm.js?id=GTM-ABC",
+      "https://www.googletagmanager.com/gtag/js?id=G-ABC",
     ]);
-    expect(win.__analyticsMode).toBe("gtm");
-    expect(win.fbq).toBeUndefined();
   });
 
-  it("loads GA4, Meta and TikTok directly without a container", () => {
+  it("loads GA4, Meta and TikTok directly", () => {
     const { loaded, win } = run(
       bootstrapScript(
         config({
@@ -83,7 +81,7 @@ describe("analytics bootstrap", () => {
   });
 
   it("escapes markup in the embedded config", () => {
-    expect(bootstrapScript(config({ gtmId: "GTM-</script>" }))).not.toContain(
+    expect(bootstrapScript(config({ gaId: "G-</script>" }))).not.toContain(
       "</script>"
     );
   });

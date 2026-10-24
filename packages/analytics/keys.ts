@@ -11,7 +11,6 @@ export const keys = () =>
       NEXT_PUBLIC_GA_MEASUREMENT_ID: z.string().startsWith("G-").optional(),
       // When set, Google Tag Manager loads instead of the direct tags below and
       // GA4, Meta and TikTok tags are configured inside the container.
-      NEXT_PUBLIC_GTM_ID: z.string().startsWith("GTM-").optional(),
       NEXT_PUBLIC_META_PIXEL_ID: z.string().regex(DIGITS).optional(),
       NEXT_PUBLIC_POSTHOG_HOST: z.url().optional(),
       NEXT_PUBLIC_POSTHOG_KEY: z.string().startsWith("phc_").optional(),
@@ -23,7 +22,6 @@ export const keys = () =>
     emptyStringAsUndefined: true,
     runtimeEnv: {
       NEXT_PUBLIC_GA_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
-      NEXT_PUBLIC_GTM_ID: process.env.NEXT_PUBLIC_GTM_ID,
       NEXT_PUBLIC_META_PIXEL_ID: process.env.NEXT_PUBLIC_META_PIXEL_ID,
       NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
       NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,

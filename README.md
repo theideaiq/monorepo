@@ -29,7 +29,7 @@ theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
 | Payments | Provider-agnostic `@repo/payments` with Wayl (ZainCash, FIB, Qi Card, cards) |
 | Localization | Arabic + English, RTL-aware design system, `Asia/Baghdad` dates, IQD |
 | Mobile | Capacitor (iOS + Android) shells that load The IDEA Spark (`apps/app`) |
-| Analytics | GTM, GA4, Meta Pixel, TikTok Pixel, server-side conversions |
+| Analytics | GA4, Meta Pixel, TikTok Pixel, server-side conversions |
 | Hosting | Vercel (apps) + Cloudflare (DNS, Turnstile, R2) |
 | Quality | Biome via Ultracite, TypeScript strict, Vitest, GitHub Actions |
 

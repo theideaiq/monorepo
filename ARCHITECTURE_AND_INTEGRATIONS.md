@@ -45,7 +45,7 @@ flowchart LR
   API -- "secret key (bypasses RLS)" --> DB
   API -- "payment links" --> WAYL
   WAYL -- "signed webhook" --> API
-  W & A -- "pixels / GTM" --> ADS
+  W & A -- "pixels" --> ADS
   API -- "Conversions API / Events API" --> ADS
 ```
 
@@ -1008,7 +1008,7 @@ it and its passwords in the password manager; enable Play App Signing) →
 
 ```
 @repo/analytics
-  provider.tsx       <AnalyticsProvider>: loads GTM, or GA4 + Meta Pixel + TikTok Pixel directly
+  provider.tsx       <AnalyticsProvider>: loads GA4 + Meta Pixel + TikTok Pixel directly
   bootstrap.ts       inline script: consent defaults, tag loaders; does nothing inside Capacitor
   page-view.tsx      page views on every client-side navigation; remembers fbclid/ttclid
   client.ts          track(), identify(), resetIdentity(), setConsent(), getAttribution()
@@ -1026,15 +1026,13 @@ track("begin_checkout", { currency: "IQD", value: 75000, items: [{ id: "pro-mont
 
 and the package translates the event for each destination.
 
-**Two ways to manage tags. Pick one per environment:**
+**Tags:** set `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID` and
+`NEXT_PUBLIC_TIKTOK_PIXEL_ID` (any subset). The package loads each tag and
+sends every event to each one with the right name and parameters.
 
-| Mode | Set | Behaviour |
-| --- | --- | --- |
-| Direct | `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` (any subset) | The package loads each tag and sends every event to each one with the right name and parameters. Nothing to configure elsewhere. |
-| Google Tag Manager | `NEXT_PUBLIC_GTM_ID` | Only GTM loads (the direct IDs are ignored). Each event is pushed to the data layer as `{ event: <GA4 name>, event_id, ecommerce: <GA4 params>, meta: { event, params }, tiktok: { event, params } }`. In GTM, create data layer variables for `event_id`, `meta.event`, `meta.params`, `tiktok.event` and `tiktok.params`. Then add a GA4 event tag that uses the built-in Event variable, and one Meta and one TikTok tag that forward those variables, all triggered on every custom event. Use the `virtual_page_view` event for page views. |
-
-Choose GTM when a marketing team will manage tags without deployments.
-Choose direct mode for the fewest moving parts.
+Google Tag Manager is not supported (removed 2026-10-24): every tag loads
+from code, so third-party scripts such as cookie banners or chat widgets
+cannot appear on the site without a code review.
 
 #### Event catalogue
 
@@ -1102,11 +1100,10 @@ outside this template.
 
 | Destination | How |
 | --- | --- |
-| GA4 | Open the site with the Google Tag Assistant extension connected (or GTM **Preview**), then **GA4 → Admin → DebugView**. Click through sign-up, search, checkout. Realtime reports confirm production traffic. |
+| GA4 | Open the site with the Google Tag Assistant extension connected, then **GA4 → Admin → DebugView**. Click through sign-up, search, checkout. Realtime reports confirm production traffic. |
 | Meta (browser) | Meta Pixel Helper extension: each event should show once, with an event id on `Purchase`. |
 | Meta (server) | Set `META_TEST_EVENT_CODE` in `apps/api` (from **Events Manager → Test events**), make a test payment and watch the event arrive. In **Overview**, the `Purchase` row should show browser and server events *deduplicated*. Remove the test code afterwards. |
 | TikTok | TikTok Pixel Helper for the browser, `TIKTOK_TEST_EVENT_CODE` with **Events Manager → Test events** for the server. Remove the test code afterwards. |
-| GTM | **Preview** mode: each custom event should fire the GA4, Meta and TikTok tags once. |
 
 ### 4.2 Wayl payments
 
@@ -1297,7 +1294,7 @@ and Better Stack are configured on `api`, not here.
 | `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, news, events and journal (read anonymously, under Row Level Security). Without them those sections show empty states. |
-| `NEXT_PUBLIC_GTM_ID` **or** `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | Product analytics |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional | Error reporting |
 | `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | Source map upload during the Vercel build (build-time only, never read by the site) |
@@ -1322,7 +1319,7 @@ WebView). **Never add a secret to this project.**
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature (same) | `sb_publishable_…` |
 | `NEXT_PUBLIC_API_URL` | Feature | Checkout, push registration and the back office's campaign sending and staff lookup call it |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Help links |
-| `NEXT_PUBLIC_GTM_ID` **or** the GA4, Meta and TikTok IDs | Optional | Same values as `web`, so visitors are followed across both |
+| The GA4, Meta and TikTok IDs | Optional | Same values as `web`, so visitors are followed across both |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | |
 | `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | |
 | `NEXT_PUBLIC_LIVEBLOCKS_ENABLED` | Optional (`collaboration`) | `true` shows presence and cursors; the secret lives in `api` |

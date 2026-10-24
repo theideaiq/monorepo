@@ -34,7 +34,6 @@ export const AnalyticsProvider = ({
 }: AnalyticsProviderProps) => {
   const tags = {
     gaId: env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
-    gtmId: env.NEXT_PUBLIC_GTM_ID,
     metaPixelId: env.NEXT_PUBLIC_META_PIXEL_ID,
     tiktokPixelId: env.NEXT_PUBLIC_TIKTOK_PIXEL_ID,
   };
