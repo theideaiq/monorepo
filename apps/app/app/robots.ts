@@ -6,7 +6,14 @@ import type { MetadataRoute } from "next";
  * never the back office or The IDEA Pass (their pages say noindex too).
  */
 export default function robots(): MetadataRoute.Robots {
-  const privatePaths = ["admin", "mfa", "pass", "sign-in", "sign-out", "sign-up"];
+  const privatePaths = [
+    "admin",
+    "mfa",
+    "pass",
+    "sign-in",
+    "sign-out",
+    "sign-up",
+  ];
   return {
     rules: {
       disallow: locales.flatMap((locale) =>

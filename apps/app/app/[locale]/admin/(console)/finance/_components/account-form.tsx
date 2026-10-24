@@ -4,7 +4,11 @@ import type { Tables } from "@repo/database";
 import { Constants } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
-import { CheckboxField, SelectField, TextField } from "@/components/admin/fields";
+import {
+  CheckboxField,
+  SelectField,
+  TextField,
+} from "@/components/admin/fields";
 import { saveAccount } from "../actions";
 
 export const AccountForm = ({

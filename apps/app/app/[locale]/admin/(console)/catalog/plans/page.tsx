@@ -7,13 +7,13 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { Link } from "@/lib/admin/navigation";
 import { PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { EmptyState, PageBody, PageHeader } from "@/components/admin/page";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
+import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
 import { CatalogTabs } from "../_components/catalog-tabs";
 

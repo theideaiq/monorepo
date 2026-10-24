@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { Link } from "@/lib/admin/navigation";
 import { XIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -27,6 +26,7 @@ import {
   searchTerm,
   withParams,
 } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { profileNames } from "@/lib/admin/profiles";
 import { ratings, reviewStatuses } from "@/lib/admin/reviews";
 import { canRead } from "@/lib/admin/roles";

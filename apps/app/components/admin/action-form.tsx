@@ -3,7 +3,6 @@
 import { Button } from "@repo/design-system/components/ui/button";
 import { Spinner } from "@repo/design-system/components/ui/spinner";
 import { cn } from "@repo/design-system/lib/utils";
-import { useRouter } from "@/lib/admin/navigation";
 import { useTranslations } from "next-intl";
 import {
   type ComponentProps,
@@ -18,6 +17,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { type ActionState, idle } from "@/lib/admin/action-state";
+import { useRouter } from "@/lib/admin/navigation";
 
 export type FormAction = (
   previous: ActionState,

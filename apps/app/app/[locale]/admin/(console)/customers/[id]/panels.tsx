@@ -9,12 +9,12 @@ import {
   TableRow,
 } from "@repo/design-system/components/ui/table";
 import type { Locale } from "@repo/internationalization";
-import { Link } from "@/lib/admin/navigation";
 import { getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/admin/action-button";
 import { DetailList, Panel } from "@/components/admin/page";
 import { StatusBadge } from "@/components/admin/status-badge";
 import type { formatters } from "@/lib/admin/format";
+import { Link } from "@/lib/admin/navigation";
 import { setSuspended } from "../actions";
 
 type Format = ReturnType<typeof formatters>;

@@ -1,9 +1,9 @@
 import { Button } from "@repo/design-system/components/ui/button";
-import { Link } from "@/lib/admin/navigation";
 import { StarIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Panel } from "@/components/admin/page";
 import { formatters } from "@/lib/admin/format";
+import { Link } from "@/lib/admin/navigation";
 import type { RatingSummary } from "@/lib/admin/reviews";
 
 /** The product's average rating and the spread of its published reviews. */

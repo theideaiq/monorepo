@@ -1,8 +1,8 @@
-import { redirect } from "@/lib/admin/navigation";
 import { ShieldXIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { SignOutButton } from "@/components/admin/sign-out-button";
+import { redirect } from "@/lib/admin/navigation";
 import { getSession, redirectToPass } from "@/lib/admin/session";
 
 export const generateMetadata = async (): Promise<Metadata> => {

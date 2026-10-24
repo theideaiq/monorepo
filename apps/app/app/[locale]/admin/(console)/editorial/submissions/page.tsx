@@ -1,12 +1,12 @@
 import type { SubmissionStatus } from "@repo/database";
 import { cn } from "@repo/design-system/lib/utils";
-import { Link } from "@/lib/admin/navigation";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { PageBody, PageHeader } from "@/components/admin/page";
 import { SectionTabs } from "@/components/admin/section-tabs";
 import { formatters } from "@/lib/admin/format";
 import { oneOf, type SearchParams } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
 import { EditorialTabs } from "../_components/editorial-tabs";

@@ -1,7 +1,7 @@
 import { cn } from "@repo/design-system/lib/utils";
-import { Link } from "@/lib/admin/navigation";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { Link } from "@/lib/admin/navigation";
 
 interface StatCardProps {
   readonly className?: string;

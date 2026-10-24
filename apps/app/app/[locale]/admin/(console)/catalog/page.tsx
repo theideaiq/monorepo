@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { Link } from "@/lib/admin/navigation";
 import { PlusIcon, StarIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -30,6 +29,7 @@ import {
   type SearchParams,
   searchTerm,
 } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
 import { CatalogTabs } from "./_components/catalog-tabs";
 

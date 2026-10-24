@@ -14,7 +14,6 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 let nextConfig: NextConfig = {
   ...withLogging(config),
   // The back office and The IDEA Pass: never indexed.
-  // biome-ignore lint/suspicious/useAwait: headers is async
   async headers() {
     const noindex = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
     return [
@@ -28,7 +27,6 @@ let nextConfig: NextConfig = {
   },
   // Detail pages used query parameters while the app was a static export;
   // old links (the website, payment returns, notifications) keep working.
-  // biome-ignore lint/suspicious/useAwait: redirects is async
   async redirects() {
     const locale = ":locale(ar|en)";
     return [

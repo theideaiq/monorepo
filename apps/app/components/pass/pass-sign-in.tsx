@@ -9,7 +9,7 @@ import { useAuthMessages } from "@/lib/auth-messages";
 
 interface PassSignInProps {
   readonly mode: "sign-in" | "sign-up";
-  /** An allowed return_to (a Spark path or URL), or null for "Your Pass". */
+  /** An allowed return_to (a Spark path or URL), or null for the home page. */
   readonly returnTo: string | null;
 }
 
@@ -36,7 +36,7 @@ export const PassSignIn = ({ mode, returnTo }: PassSignInProps) => {
           identify(userId);
           track(isSignUp ? "sign_up" : "login", { method: "phone" });
           // A full navigation, so the next page (or site) reads the cookie.
-          window.location.assign(returnTo ?? `/${locale}/pass`);
+          window.location.assign(returnTo ?? `/${locale}`);
         }}
         supabase={supabase}
       />

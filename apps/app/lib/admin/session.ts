@@ -2,10 +2,10 @@ import "server-only";
 
 import { createClient } from "@repo/auth/server";
 import type { StaffRole } from "@repo/database";
-import { redirect } from "@/lib/admin/navigation";
 import { notFound, redirect as redirectToUrl } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { cache } from "react";
+import { redirect } from "@/lib/admin/navigation";
 import { passLink } from "./pass";
 import { type AccessLevel, accessTo, type Section } from "./roles";
 

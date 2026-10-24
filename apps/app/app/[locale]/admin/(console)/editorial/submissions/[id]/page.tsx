@@ -5,7 +5,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { MarkdownPreview } from "@/components/admin/markdown-preview";
-import { DetailList, PageBody, PageHeader, Panel } from "@/components/admin/page";
+import {
+  DetailList,
+  PageBody,
+  PageHeader,
+  Panel,
+} from "@/components/admin/page";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";

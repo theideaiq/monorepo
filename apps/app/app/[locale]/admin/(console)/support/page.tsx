@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { Link } from "@/lib/admin/navigation";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { NativeSelect } from "@/components/admin/fields";
@@ -23,6 +22,7 @@ import {
   type SearchParams,
   searchTerm,
 } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
 import {

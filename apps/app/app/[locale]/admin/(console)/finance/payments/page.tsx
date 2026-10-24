@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { Link } from "@/lib/admin/navigation";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { NativeSelect } from "@/components/admin/fields";
@@ -17,6 +16,7 @@ import { Pagination } from "@/components/admin/pagination";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { oneOf, pageRange, type SearchParams } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
 import { FinanceTabs } from "../_components/finance-tabs";

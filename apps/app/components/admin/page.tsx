@@ -1,9 +1,9 @@
 import { Separator } from "@repo/design-system/components/ui/separator";
 import { SidebarTrigger } from "@repo/design-system/components/ui/sidebar";
 import { cn } from "@repo/design-system/lib/utils";
-import { Link } from "@/lib/admin/navigation";
 import { ChevronLeftIcon, InboxIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { Link } from "@/lib/admin/navigation";
 
 interface PageHeaderProps {
   /** Link to the parent page, shown as a back arrow. */

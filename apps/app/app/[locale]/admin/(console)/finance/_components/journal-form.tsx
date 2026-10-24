@@ -7,7 +7,11 @@ import { cn } from "@repo/design-system/lib/utils";
 import { PlusIcon, TagsIcon, XIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import { ActionForm, FormError, SubmitButton } from "@/components/admin/action-form";
+import {
+  ActionForm,
+  FormError,
+  SubmitButton,
+} from "@/components/admin/action-form";
 import {
   FieldGrid,
   NativeSelect,

@@ -9,7 +9,12 @@ import {
 } from "@repo/design-system/components/ui/table";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { EmptyState, MaybeLink, PageBody, PageHeader } from "@/components/admin/page";
+import {
+  EmptyState,
+  MaybeLink,
+  PageBody,
+  PageHeader,
+} from "@/components/admin/page";
 import { Pagination } from "@/components/admin/pagination";
 import { SectionTabs } from "@/components/admin/section-tabs";
 import { StatusBadge } from "@/components/admin/status-badge";

@@ -1,9 +1,9 @@
 import { Button } from "@repo/design-system/components/ui/button";
 import { formatNumber } from "@repo/internationalization/format";
-import { Link } from "@/lib/admin/navigation";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { pageCount, type SearchParams, withParams } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 
 interface PaginationProps {
   readonly count: number | null;

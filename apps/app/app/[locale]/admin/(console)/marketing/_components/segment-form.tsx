@@ -3,7 +3,11 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ActionButton } from "@/components/admin/action-button";
-import { ActionForm, FormError, SubmitButton } from "@/components/admin/action-form";
+import {
+  ActionForm,
+  FormError,
+  SubmitButton,
+} from "@/components/admin/action-form";
 import {
   CheckboxField,
   FieldGrid,

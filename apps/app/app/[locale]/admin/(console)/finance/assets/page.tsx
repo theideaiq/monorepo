@@ -14,7 +14,11 @@ import { FilterBar } from "@/components/admin/filter-bar";
 import { PageBody, PageHeader, Panel } from "@/components/admin/page";
 import { StatusBadge, type Tone } from "@/components/admin/status-badge";
 import { todayInBaghdad } from "@/lib/admin/dates";
-import { type AssetState, assetState, scheduleTotals } from "@/lib/admin/finance";
+import {
+  type AssetState,
+  assetState,
+  scheduleTotals,
+} from "@/lib/admin/finance";
 import { formatters } from "@/lib/admin/format";
 import { param, type SearchParams } from "@/lib/admin/list";
 import { requireSection } from "@/lib/admin/session";

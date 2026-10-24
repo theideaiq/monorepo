@@ -19,7 +19,7 @@ export const AuthPage = async ({ mode, searchParams }: AuthPageProps) => {
   ]);
 
   if (session) {
-    redirect(returnTo ?? `/${locale}/pass`);
+    redirect(returnTo ?? `/${locale}`);
   }
 
   const t = await getTranslations("pass");

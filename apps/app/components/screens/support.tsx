@@ -18,8 +18,7 @@ import { ErrorState, SectionSpinner } from "@/components/states";
 import { TicketStatusBadge } from "@/components/support/ticket-status-badge";
 import { useTickets } from "@/lib/support-queries";
 
-export const ticketHref = (id: string) =>
-  `/support/${encodeURIComponent(id)}`;
+export const ticketHref = (id: string) => `/support/${encodeURIComponent(id)}`;
 
 /** /support: the customer's tickets, most recent activity first. */
 export const Support = () => {

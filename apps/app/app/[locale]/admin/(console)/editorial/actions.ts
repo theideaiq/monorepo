@@ -1,7 +1,12 @@
 "use server";
 
 import { z } from "zod";
-import { ActionFailure, affected, check, staffAction } from "@/lib/admin/action";
+import {
+  ActionFailure,
+  affected,
+  check,
+  staffAction,
+} from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
 import {
   checkbox,

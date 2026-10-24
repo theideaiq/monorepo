@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { Link } from "@/lib/admin/navigation";
 import { PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -24,6 +23,7 @@ import {
   searchTerm,
   withParams,
 } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
 import { DimensionBadges } from "../_components/dimension-badges";
 import { FinanceTabs } from "../_components/finance-tabs";

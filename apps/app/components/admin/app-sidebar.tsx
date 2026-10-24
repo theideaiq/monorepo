@@ -15,7 +15,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@repo/design-system/components/ui/sidebar";
-import { Link, usePathname } from "@/lib/admin/navigation";
 import {
   BookOpenIcon,
   LandmarkIcon,
@@ -34,10 +33,11 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { signOut } from "@/lib/admin/auth-actions";
-import { type Section, sectionHref } from "@/lib/admin/roles";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { signOut } from "@/lib/admin/auth-actions";
+import { Link, usePathname } from "@/lib/admin/navigation";
+import { type Section, sectionHref } from "@/lib/admin/roles";
 
 const icons: Record<Section, LucideIcon> = {
   audit: ScrollTextIcon,

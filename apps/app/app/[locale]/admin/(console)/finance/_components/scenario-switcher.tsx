@@ -1,8 +1,8 @@
 import { cn } from "@repo/design-system/lib/utils";
-import { Link } from "@/lib/admin/navigation";
 import { getTranslations } from "next-intl/server";
 import { type Scenario, scenarios } from "@/lib/admin/finance";
 import { type SearchParams, withParams } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 
 /**
  * Actual · Forecast · Budget. Keeps the page's other filters; the actual

@@ -1,13 +1,13 @@
 import { localized } from "@repo/commerce";
 import { TableCell, TableRow } from "@repo/design-system/components/ui/table";
 import type { Locale } from "@repo/internationalization";
-import { Link } from "@/lib/admin/navigation";
 import { BadgeCheckIcon, ExternalLinkIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/admin/action-button";
 import { MaybeLink } from "@/components/admin/page";
 import { StatusBadge } from "@/components/admin/status-badge";
 import type { Formatters } from "@/lib/admin/format";
+import { Link } from "@/lib/admin/navigation";
 import { stars } from "@/lib/admin/reviews";
 import { deleteReview, setReviewStatus } from "./actions";
 

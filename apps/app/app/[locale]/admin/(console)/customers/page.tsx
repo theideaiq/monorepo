@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { Link } from "@/lib/admin/navigation";
 import { MailCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -27,6 +26,7 @@ import {
   type SearchParams,
   searchTerm,
 } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { crmStatuses } from "@/lib/admin/segments";
 import { requireSection, type ServerClient } from "@/lib/admin/session";
 

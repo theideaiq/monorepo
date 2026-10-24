@@ -13,11 +13,9 @@ test("sign up on The IDEA Pass with a mobile number and a code", async ({
   page,
 }) => {
   const fresh = await resetPhoneUser();
-  // The app's sign-up page hands over to The IDEA Pass, which comes back.
+  // The IDEA Pass sign-up is a page of The IDEA Spark.
   await page.goto(`${urls.app}/en/sign-up`);
-  await expect(page).toHaveURL(
-    `${urls.pass}/en/sign-up?return_to=${encodeURIComponent(`${urls.app}/en`)}`
-  );
+  await expect(page).toHaveURL(`${urls.app}/en/sign-up`);
   await expect(
     page.getByRole("heading", { name: "Get The IDEA Pass" })
   ).toBeVisible();
@@ -48,7 +46,7 @@ test("sign up on The IDEA Pass with a mobile number and a code", async ({
 
 test("the sign-in page is accessible in Arabic", async ({ page }) => {
   await page.goto(`${urls.app}/ar/sign-in`);
-  await expect(page).toHaveURL(new RegExp(`^${urls.pass}/ar/sign-in\\?`));
+  await expect(page).toHaveURL(`${urls.app}/ar/sign-in`);
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   await expect(
     page.getByRole("heading", { name: "تسجيل الدخول إلى The IDEA Pass" })
@@ -62,11 +60,18 @@ test("signed out, the app sends you to The IDEA Pass and back", async ({
 }) => {
   await page.goto(`${urls.app}/en/cart`);
   await expect(page).toHaveURL(
-    `${urls.pass}/en/sign-in?return_to=${encodeURIComponent(`${urls.app}/en/cart`)}`
+    `${urls.app}/en/sign-in?return_to=${encodeURIComponent("/en/cart")}`
   );
   await expect(
-    page.getByText(`You'll continue to ${new URL(urls.app).host}.`)
+    page.getByRole("heading", { name: "Sign in to The IDEA Pass" })
   ).toBeVisible();
+});
+
+test("old detail links open the new pages", async ({ page }) => {
+  await page.goto(`${urls.app}/en/store/product?slug=${product.slug}`);
+  await expect(page).toHaveURL(
+    new RegExp(`/en/store/${product.slug}\\?slug=${product.slug}$`)
+  );
 });
 
 test.describe("a signed-in customer", () => {
@@ -87,7 +92,7 @@ test.describe("a signed-in customer", () => {
     await expect(page.getByRole("heading", { name: "Store" })).toBeVisible();
     await page.getByRole("link", { name: product.name }).first().click();
     await expect(page).toHaveURL(
-      new RegExp(`/en/store/product\\?slug=${product.slug}$`)
+      new RegExp(`/en/store/${product.slug}$`)
     );
     await expect(
       page.getByRole("heading", { name: product.name })
@@ -128,7 +133,7 @@ test.describe("a signed-in customer", () => {
       .getByLabel("Message")
       .fill("When will my order arrive in Erbil?");
     await page.getByRole("button", { name: "Send request" }).click();
-    await expect(page).toHaveURL(/\/en\/support\/view\?id=/);
+    await expect(page).toHaveURL(/\/en\/support\/(?!new$)[^/?]+$/);
     await expect(page.getByText(subject).first()).toBeVisible();
     await expect(
       page.getByText("When will my order arrive in Erbil?")
@@ -156,8 +161,8 @@ test.describe("a signed-in customer", () => {
 
     await page.getByRole("button", { name: customer.name }).click();
     await page.getByRole("menuitem", { name: "Sign out" }).click();
-    await expect(page).toHaveURL(new RegExp(`^${urls.pass}/en/sign-in`));
+    await expect(page).toHaveURL(new RegExp(`^${urls.app}/en/sign-in`));
     await page.goto(`${urls.app}/en/wishlist`);
-    await expect(page).toHaveURL(new RegExp(`^${urls.pass}/en/sign-in`));
+    await expect(page).toHaveURL(new RegExp(`^${urls.app}/en/sign-in`));
   });
 });
