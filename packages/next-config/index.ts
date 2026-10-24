@@ -31,19 +31,3 @@ export const config: NextConfig = {
 
 export const withAnalyzer = (sourceConfig: NextConfig): NextConfig =>
   withBundleAnalyzer()(sourceConfig);
-
-/**
- * A static export (`out/`) for the Capacitor apps. There is no server, so
- * rewrites, redirects, headers and image optimization are dropped.
- */
-export const withStaticExport = ({
-  headers: _headers,
-  redirects: _redirects,
-  rewrites: _rewrites,
-  skipTrailingSlashRedirect: _skip,
-  ...sourceConfig
-}: NextConfig): NextConfig => ({
-  ...sourceConfig,
-  images: { ...sourceConfig.images, unoptimized: true },
-  output: "export",
-});

@@ -25,8 +25,8 @@ form.
 flowchart LR
   subgraph Clients
     W["apps/web<br/>marketing site"]
-    A["apps/app<br/>product (browser)"]
-    N["apps/app static export<br/>inside Capacitor (iOS / Android)"]
+    A["apps/app: The IDEA Spark<br/>app · The IDEA Pass · back office"]
+    N["iOS / Android shell<br/>(WebView loads Spark)"]
   end
   subgraph Server["Vercel"]
     API["apps/api<br/>checkout · webhooks · cron"]
@@ -39,8 +39,9 @@ flowchart LR
   WAYL["Wayl<br/>hosted checkout"]
   ADS["GA4 · Meta · TikTok"]
 
-  A & N -- "supabase-js, user's JWT" --> AUTH & DB & ST
-  A & N -- "Bearer token" --> API
+  N -- "server.url" --> A
+  A -- "supabase-js / @supabase/ssr, user's JWT" --> AUTH & DB & ST
+  A -- "Bearer token" --> API
   API -- "secret key (bypasses RLS)" --> DB
   API -- "payment links" --> WAYL
   WAYL -- "signed webhook" --> API
@@ -53,12 +54,10 @@ flowchart LR
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
 | `apps/web` | 3001 | The IDEA's public site: home, Megastore catalog and product pages, The IDEA Plus, Academy, Suite, Club, Droid, news, events, journal, legal (Markdown in `apps/web/content/legal`), contact. Next.js Server Components with `next-intl` locale routing (`/ar/…`, `/en/…`) and ISR; reads public data with an anonymous Supabase client. | Vercel |
-| `apps/app` | 3000 | The product. **Client-first**: every screen renders in the browser and talks to Supabase directly. The same code is built twice: a normal Next.js build for the web, and a static export for the native apps. | Vercel (web) and the App Store / Google Play (native) |
-| `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, the Liveblocks and Svix token endpoints. Route handlers only. | Vercel |
+| `apps/app` | 3000 | **The IDEA Spark** (`spark.theideaiq.com`): the customer app, **The IDEA Pass** (sign-in, sign-up, authenticator app, "Your Pass") and the **back office** under `/{locale}/admin`, in one server-rendered Next.js app (see [The IDEA Spark](#the-idea-spark)). Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
+| `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, push notifications, the back office's privileged steps (`app/admin/*`), the website's contact form and status badge. Route handlers only. | Vercel |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
-| `apps/admin` | 3005 | The back office for staff (catalog, orders, rentals, CRM, marketing, finance, editorial, Telegram, staff, audit log). **Server-rendered** with the staff member's cookie session (`@repo/auth/server`), Server Actions, phone OTP plus an authenticator app (AAL2: enable **Authentication → Multi-Factor → TOTP** in Supabase; it is on in the local stack. The database itself only grants staff rights to AAL2 sessions); every query runs as the staff member so RLS applies, and privileged steps (campaign email, staff lookup) go through `apps/api/app/admin/*`. Grant the first superadmin with SQL (`insert into staff (user_id, role) values ('<user id>', 'superadmin')`). Not indexed. | Vercel |
 | `apps/storybook` | 6006 | **The IDEA Design**: the staff-only design site with every UI component and email template (see [The IDEA Design](#the-idea-design)). | Vercel (`design.theideaiq.com`) |
-| `apps/pass` | 3006 | **The IDEA Pass**: the only sign-in, sign-up and authenticator-app UI on the web (see below). Server-rendered, publishable key only. | Vercel (`pass.theideaiq.com`) |
 
 ### The IDEA Design
 
@@ -73,9 +72,10 @@ of every path (the manager, the iframe and every asset):
    shared across subdomains when `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` is set.
 2. No cookie, an expired token or one Supabase rejects (`getClaims`, with
    the publishable key): redirect to
-   `${NEXT_PUBLIC_PASS_URL}/{locale}/sign-in?return_to=<this URL>`. The gate
-   never refreshes a session (that would spend the browser's refresh token);
-   Pass refreshes it and sends the visitor back.
+   `${NEXT_PUBLIC_APP_URL}/{locale}/sign-in?return_to=<this URL>` (The IDEA
+   Pass, in The IDEA Spark). The gate never refreshes a session (that would
+   spend the browser's refresh token); Spark refreshes it and sends the
+   visitor back.
 3. It reads the visitor's own `staff` row as that user (RLS lets everyone
    read their own row). No row: a plain bilingual 403 page. A row but an
    `aal1` token: redirect to Pass `/{locale}/mfa`, since staff rights need an
@@ -85,62 +85,113 @@ of every path (the manager, the iframe and every asset):
 The locale comes from `NEXT_LOCALE`, then `Accept-Language`, then Arabic.
 Responses are `Cache-Control: private, no-store` and `noindex`. Environment:
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (unset =
-503, fail closed) and `NEXT_PUBLIC_PASS_URL` (defaults to
-`http://localhost:3006` in development). Other apps link to it with
+503, fail closed) and `NEXT_PUBLIC_APP_URL` (defaults to
+`http://localhost:3000` in development, `https://spark.theideaiq.com`
+otherwise). Other apps link to it with
 `NEXT_PUBLIC_DESIGN_URL` (`@repo/next-config/keys`). Emails are reviewed
 under **The IDEA Design → Emails**, rendered with `@react-email/components`
 exactly as Resend sends them; add a story there with every new template.
 
+### The IDEA Spark
+
+`apps/app` (port 3000, `spark.theideaiq.com`) is one server-rendered Next.js
+app with three areas. Messages come from the `app`, `pass` and `admin`
+namespaces; the customer area and the Pass load analytics, the back office
+none.
+
+| Area | Routes | Code |
+| --- | --- | --- |
+| Customer app | `/{locale}`, `/store`, `/store/<slug>`, `/cart`, `/checkout`, `/orders`, `/orders/<id>`, `/plus`, `/events`, `/support`, `/support/<id>`, `/business/…`, `/settings`, … | `app/[locale]/(customer)/(app)`, `components/screens` (client components with TanStack Query) |
+| The IDEA Pass | `/{locale}/sign-in`, `/sign-up`, `/mfa`, `/sign-out`, `/pass` | `app/[locale]/(customer)/(pass)`, `components/pass`, `lib/pass` |
+| Back office | `/{locale}/admin/…` (catalog, orders, rentals, customers and CRM, marketing, finance, editorial, reviews, support, Telegram, staff, audit log) | `app/[locale]/admin`, `components/admin`, `lib/admin` |
+
+- **Session.** The browser client (`@repo/auth/client`) and the server
+  client (`@repo/auth/server`) share the `@supabase/ssr` cookie;
+  `proxy.ts` refreshes it on every request (`refreshSession`), so Server
+  Components and Server Actions read a valid token. Every query runs as
+  the signed-in user with the publishable key, so RLS applies. The
+  iOS/Android shell loads the same pages, so the same cookie applies there.
+- **Detail pages** are dynamic routes. Links from the static-export days
+  (`/store/product?slug=…`, `/orders/view?id=…`, `/support/view?id=…`,
+  also in stored notifications) redirect (`next.config.ts`) or are mapped
+  (`currentAppPath`) to them.
+- **Locale.** `proxy.ts` (next-intl) adds `/ar` or `/en` to every path
+  (cookie, then `Accept-Language`, then Arabic); `<html lang dir>` are set on
+  the server. Link with `Link`/`useRouter` from
+  `@repo/internationalization/navigation`. `/.well-known` (app links) is
+  left alone.
+- **Indexing.** The Pass and the back office send `noindex` (metadata and
+  `X-Robots-Tag`) and are disallowed in `robots.txt`.
+
 ### The IDEA Pass
 
-`apps/pass` (port 3006, `pass.theideaiq.com`) is the only sign-in and sign-up
-UI on the web, for customers and staff alike. It is server-rendered (ar/en,
-RTL), loads no analytics, and holds no secrets: it signs people in with the
-publishable key and leaves the session in the shared cookie.
+The Pass is the only sign-in and sign-up UI on the web, for customers and
+staff alike, and the name of a user's account. Its pages are part of The IDEA
+Spark (ar/en, RTL) and hold no secrets: they sign people in with the
+publishable key and leave the session in the shared cookie.
 
-- **Routes.** `/{locale}/sign-in?return_to=<absolute url>`,
-  `/{locale}/sign-up?return_to=…` (phone OTP, `@repo/auth/components/phone-otp-form`),
-  `/{locale}/mfa?return_to=…` (link or enter the authenticator app, which
-  raises the session to AAL2), `/{locale}/sign-out?return_to=…` and
-  `/{locale}` ("Your Pass": name, phone, authenticator status, links to the
-  app, sign-out). Link to them with `passUrl(path, returnTo, locale)` from
-  `@repo/auth/pass`.
+- **Routes.** `/{locale}/sign-in?return_to=…`, `/{locale}/sign-up?return_to=…`
+  (phone OTP, `@repo/auth/components/phone-otp-form`), `/{locale}/mfa?return_to=…`
+  (link or enter the authenticator app, which raises the session to AAL2),
+  `/{locale}/sign-out?return_to=…` and `/{locale}/pass` ("Your Pass": name,
+  phone, authenticator status, links to The IDEA Spark, the back office for
+  staff and the website, sign-out). Other apps link to them with
+  `passUrl(path, returnTo, locale)` from `@repo/auth/pass`, which builds
+  URLs on `NEXT_PUBLIC_APP_URL` (`"/"` is "Your Pass").
 - **Shared session cookie.** `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com`
   makes the browser client, the server client and the proxy session refresh
   (`authCookieOptions()` in `packages/auth/cookies.ts`) write the
   `@supabase/ssr` cookie (`sb-<project ref>-auth-token`, chunked `.0`, `.1`,
   possibly `base64-` prefixed) for the whole domain, so `theideaiq.com`,
-  `app.`, `admin.`, `design.` and `pass.` read the same session. Set the
-  same value on every project; leave it unset locally and on previews
-  (host-only cookie; on localhost cookies are shared across ports anyway).
-- **return_to.** `isAllowedReturnTo(url)` accepts only http(s) URLs whose
-  host is that of `NEXT_PUBLIC_WEB_URL`, `_APP_URL`, `_ADMIN_URL`,
-  `_DESIGN_URL`, `_API_URL` or `_PASS_URL` (plus localhost in development);
-  anything else falls back to the app (`safeReturnTo`). Without a return_to
-  the Pass stays on "Your Pass". After signing in the browser does a full
-  navigation to return_to, so the next site reads the new cookie.
-- **Sign-out.** The "Your Pass" button is a Server Action. The `/sign-out`
-  route signs out only on navigations from The IDEA's own sites
-  (`Sec-Fetch-Site: same-site` or `same-origin`); a link from anywhere else
-  lands on "Your Pass" instead, so other sites can't sign people out.
-- **The back office** has no sign-in of its own: signed-out visitors go to
-  the Pass sign-in, staff on AAL1 to the Pass `/mfa` (both coming back to
-  `NEXT_PUBLIC_ADMIN_URL`); the no-access page signs out through the Pass.
-  Staff rights still need AAL2 in the database.
-- **The app, web build:** `/sign-in`, `/sign-up` and `RequireAuth` send the
-  visitor to the Pass with return_to back to the page they wanted
-  (`apps/app/lib/pass.ts`); the website's "Sign in" links go there too.
-- **Native exception.** The Capacitor apps (`BUILD_TARGET=native`) have no
-  cookies to share: they keep the in-app phone sign-in (the same form, with
-  the native client and the session in the Keychain/Keystore), decided at
-  runtime by `usesPass()`.
+  `spark.` and `design.` read the same session. Set the same value on web,
+  app and storybook; leave it unset locally and on previews (host-only
+  cookie; on localhost cookies are shared across ports anyway).
+- **return_to.** A path inside Spark (`/en/cart`) is kept as is. An absolute
+  URL must be http(s) on the host of `NEXT_PUBLIC_WEB_URL`, `_APP_URL`,
+  `_DESIGN_URL` or `_API_URL` (plus localhost in development,
+  `isAllowedReturnTo`); anything else falls back to Spark (`safeReturnTo`).
+  The older `?next=/cart` still works. Without a destination, sign-in goes
+  to Spark's home and the authenticator step to "Your Pass". After signing
+  in the browser does a full navigation, so the next page reads the cookie.
+- **Sign-out.** The buttons ("Your Pass", the authenticator step, the
+  back office) remove this device's push registration and then call a
+  Server Action. The `/sign-out` route signs out only on navigations from
+  The IDEA's own sites (`Sec-Fetch-Site: same-site` or `same-origin`); a
+  link from anywhere else lands on "Your Pass" instead.
+- **Customer area.** `RequireAuth` sends signed-out visitors to
+  `/{locale}/sign-in?return_to=<the page>`; the website's "Sign in" links
+  there too (`passUrl`).
 - **Later: OAuth consent.** Signing in to third-party apps with The IDEA
   Pass can use Supabase Auth's OAuth 2.1 server (Authentication → OAuth
-  Server): Supabase sends people to an authorization page on the Pass
-  (for example `/{locale}/oauth/consent?authorization_id=…`), which shows the
-  client and scopes and calls `supabase.auth.oauth.approveAuthorization` or
-  `denyAuthorization`. Add it as another page under `apps/pass/app/[locale]`;
+  Server): Supabase sends people to an authorization page (for example
+  `/{locale}/oauth/consent?authorization_id=…`), which shows the client and
+  scopes and calls `supabase.auth.oauth.approveAuthorization` or
+  `denyAuthorization`. Add it under `apps/app/app/[locale]/(customer)/(pass)`;
   the sign-in redirect with return_to already brings people back to it.
+
+### The back office
+
+`/{locale}/admin` in The IDEA Spark, for staff: catalog, orders, rentals,
+customers and CRM, marketing, finance (ledger, scenarios, fixed assets,
+cap table, payroll), editorial, reviews, support, Telegram, staff and the
+audit log.
+
+- **Gate** (`lib/admin/session.ts`, in the console layout and again in
+  every page and Server Action): signed out → `/{locale}/sign-in?return_to=/{locale}/admin`;
+  staff on AAL1 → `/{locale}/mfa?return_to=/{locale}/admin`; signed in
+  without a `staff` row → `/{locale}/admin/no-access`. Each section checks
+  the role's access (`lib/admin/roles.ts`); the database grants staff rights
+  only to AAL2 sessions (enable **Authentication → Multi-Factor → TOTP**;
+  it is on in the local stack).
+- **Server Actions** (`staffAction` in `lib/admin/action.ts`) re-check the
+  session and role, validate with zod and run as the staff member, so RLS
+  applies. Privileged steps (campaign email, staff lookup) call
+  `apps/api/app/admin/*` with the staff member's token (`lib/admin/api.ts`).
+  No secret lives in Spark (`bun run check:secrets`).
+- **Links** use `@/lib/admin/navigation`, whose `Link`, `redirect`,
+  `useRouter` and `usePathname` take paths relative to `/admin`.
+- Grant the first superadmin with SQL
+  (`insert into staff (user_id, role) values ('<user id>', 'superadmin')`).
 
 ### Principles that shape the code
 
@@ -165,8 +216,8 @@ publishable key and leaves the session in the shared cookie.
    Tailwind utilities so they mirror in RTL. `bun run check:i18n` and
    `bun run check:rtl` enforce both rules in CI.
 5. **Secrets live only in `apps/api`.** The other apps hold public values
-   only (admin works with the staff member's session and the publishable
-   key); the website's contact form and status badge call the API.
+   only (the back office works with the staff member's session and the
+   publishable key); the website's contact form and status badge call the API.
    `bun run check:secrets` fails on a server-only variable or a
    secret-reading package module anywhere else, client components never
    import `env.ts`, and CI scans every client bundle for server variable
@@ -176,7 +227,7 @@ publishable key and leaves the session in the shared cookie.
 
 | Flow | Path |
 | --- | --- |
-| Sign in | Phone number → `supabase.auth.signInWithOtp` → SMS (Send SMS hook) → code → `verifyOtp` → session. On the web the session is kept in cookies; in the apps it is kept in the Keychain or Keystore. |
+| Sign in | The IDEA Pass in Spark: phone number → `supabase.auth.signInWithOtp` → SMS (Send SMS hook) → code → `verifyOtp` → session in the shared cookie (the browser's, or the WebView's in the apps). |
 | Read or write data | Screen → TanStack Query hook (`apps/app/lib/queries.ts`) → `supabase.from(…)` with the user's JWT → RLS policies. |
 | Create an organization | Onboarding form → `rpc("create_organization")`, which inserts the organization and the caller's `owner` membership in one transaction. |
 | Privileged action | Screen → `callApi(supabase, "/checkout", …)` → `apps/api` verifies the token and role → admin client or third-party API. |
@@ -184,21 +235,10 @@ publishable key and leaves the session in the shared cookie.
 
 ### Locale routing in the product app
 
-`apps/app` must also work as a set of static files inside a native WebView,
-where there is no server to run middleware or redirects. It therefore uses:
-
-- a `[locale]` route segment with `generateStaticParams` and
-  `dynamicParams = false`, so `/ar/…` and `/en/…` are prerendered;
-- an entry page (`app/page.tsx`) that picks the saved or device language and
-  redirects with the client router;
-- a small inline bootstrap script in the root layout that sets `<html lang dir>`
-  before the first paint and remembers the original path. Capacitor serves the
-  root `index.html` for every unknown path, so a reload on `/ar/billing` still
-  lands on the right screen;
-- a root not-found page that adds the language to unprefixed paths
-  (`/billing` → `/ar/billing`) and shows a localized 404 otherwise.
-
-Inside `apps/app`, link with `Link` and `useRouter` from
+See [The IDEA Spark](#the-idea-spark): the proxy adds the locale, and
+`app/[locale]/layout.tsx` is the root layout (server-rendered `lang` and
+`dir`). Unknown paths render the localized 404 (`[...rest]`). Inside
+`apps/app`, link with `Link` and `useRouter` from
 `@repo/internationalization/navigation` so URLs keep their language prefix.
 
 ---
@@ -526,12 +566,11 @@ later migration.
 In the Supabase dashboard:
 
 1. **Authentication → URL Configuration.** Set **Site URL** to the product URL
-   (for example `https://app.example.iq`). Add these **Redirect URLs**:
-   - `https://app.example.iq/**`
+   (`https://spark.theideaiq.com`). Add these **Redirect URLs**:
+   - `https://spark.theideaiq.com/**` (The IDEA Spark, with The IDEA Pass)
    - `capacitor://localhost/**` (iOS app)
    - `https://localhost/**` (Android app)
    - `<bundle id>://**`, for example `iq.example.app://**` (native deep links)
-   - `https://pass.theideaiq.com/**` (The IDEA Pass)
 2. **Authentication → Sign In / Providers → Phone:** enable it.
 3. **SMS delivery.** Either configure a provider in the dashboard, or deploy
    the bundled Send SMS hook. It tries providers in order (a local SMS
@@ -557,7 +596,8 @@ In the Supabase dashboard:
 
 | Where | Client | RLS |
 | --- | --- | --- |
-| `apps/app` (browser and native) | `useAuth().supabase` (from `getSupabase()`) | applies |
+| `apps/app` client components (browser and the apps' WebView) | `useAuth().supabase` (from `getSupabase()`) | applies |
+| `apps/app` Server Components and Server Actions (The IDEA Pass, the back office) | `@repo/auth/server` | applies |
 | `apps/web` and other server-rendered code acting for a user | `@repo/auth/server` | applies |
 | `apps/api` endpoints called by users | verify with `authenticateRequest`, check `membershipRole`, then the admin client for the privileged step | bypassed: check access yourself |
 | Webhooks, cron jobs | `@repo/database/admin` | bypassed |
@@ -571,186 +611,298 @@ outside that layout is not accessible.
 
 ---
 
-## 3. Build, sync and release the iOS and Android apps
+## 3. The iOS and Android apps (The IDEA Spark shell)
 
 ### 3.1 How the native apps work
 
-The mobile apps are the same `apps/app` code, exported as static HTML, CSS and
-JS (`BUILD_TARGET=native next build` → `apps/app/out/`) and bundled by
-Capacitor into a native shell. There is no server inside the app, which is why
-`apps/app` may not use Server Actions, Route Handlers, `cookies()`, the proxy
-or request-time rendering.
+The iOS and Android apps are a native shell (Capacitor 8) around the live
+**The IDEA Spark** at `https://spark.theideaiq.com`. The WebView loads Spark
+from `server.url`: the same server-rendered pages, cookie session, Server
+Actions and deployments as the browser. A web deploy reaches the apps at
+once; a store release is only needed for native changes (plugins,
+permissions, icons, `capacitor.config.ts`).
 
-| | Web build (`bun run build`) | Native build (`bun run build:native`) |
+```
+┌──────────── iOS / Android app ─────────────┐
+│ native: splash, status bar, push, share,   │
+│ app links, offline screen (native/www)     │
+│ ┌─────────────── WebView ────────────────┐ │        ┌──────────────┐
+│ │ https://spark.theideaiq.com            │─┼──────▶ │ Spark (Vercel)│
+│ │ cookie session (.theideaiq.com)        │ │        └──────────────┘
+│ │ window.Capacitor → native plugins      │─┼──────▶ apps/api (push
+│ └────────────────────────────────────────┘ │        register, checkout)
+└────────────────────────────────────────────┘
+```
+
+| | Browser | iOS/Android app |
 | --- | --- | --- |
-| Output | `.next/`, served by Vercel | `out/`, copied into the iOS/Android projects |
-| Security headers | `next.config.ts` `headers()` | not applicable (no HTTP server) |
-| Supabase client | cookie-based browser client | `createNativeClient()`: plain `supabase-js`, PKCE, `detectSessionInUrl: false`, session in the Keychain or Keystore |
+| Pages | Spark on Vercel | the same Spark, in a WebView |
+| Session | Supabase cookie shared across `*.theideaiq.com` | the same cookie, kept by the WebView |
+| Detecting the shell | — | client: `isNativeApp()` (`apps/app/lib/platform.ts`); server: `isNativeShellUserAgent()` (`lib/native/user-agent.ts`, the WebView appends `TheIDEASpark/1`) |
 | Ad pixels | load when configured | never load |
-| Checkout | redirect in the same tab | system browser, only when `allowNativeCheckout` is on |
-| Origin | `https://app.example.iq` | `capacitor://localhost` (iOS), `https://localhost` (Android) |
+| Digital goods (The IDEA Plus) | Wayl checkout | only when `allowNativeCheckout` is on (`canSellDigitalGoods()`) |
+| Physical store orders | Wayl checkout | Wayl checkout in the system browser |
+| No connection | browser error page | bundled ar/en offline screen with retry |
 
-`apps/api` allows both native origins in CORS (`apps/api/lib/cors.ts`).
+**Files:**
 
-**Plugins in use:**
+- `apps/app/capacitor.config.ts`: app id (`project.bundleId`), name "The
+  IDEA Spark", `server.url`, `allowNavigation`, offline page, splash,
+  status bar, push presentation, user-agent marker.
+- `apps/app/native/www/`: the only bundled web assets: `offline.html`
+  (`server.errorPath`), `index.html` (Capacitor requires one; it forwards to
+  Spark) and `shell.js`, generated by `native/prepare.ts` on every
+  `cap:sync` with the Spark URL and the offline text from the messages
+  files (`app.native.offline`). `shell.js` is git-ignored.
+- `apps/app/native/assets/`: icon and splash sources for
+  `@capacitor/assets` (the light-bulb mark on `#0f1014`).
+- `apps/app/lib/native/`: client helpers: `push.ts` and
+  `use-native-push.ts` (push registration), `share.ts` (share sheet with
+  Web Share and clipboard fallbacks), `checkout.ts`
+  (`canSellDigitalGoods()`), `user-agent.ts`, `secure-storage.ts`.
+- `apps/app/public/.well-known/`: `apple-app-site-association` and
+  `assetlinks.json` for app links (3.6).
+- `apps/api/app/push/*`, `apps/api/app/webhooks/notifications`,
+  `apps/api/app/cron/push`, `apps/api/lib/push/*`: push delivery (3.5).
 
-- `@capacitor/app`: deep links, the Android back button, foreground and
-  background events.
-- `@capacitor/browser`: opens Wayl checkout.
-- `@aparajita/capacitor-secure-storage`: the session token in the iOS
-  Keychain and Android Keystore.
-- `SystemBars` (core): edge-to-edge layout with `--safe-area-inset-*` CSS
-  variables.
+**Navigation.** Spark's own host is always loaded in the WebView.
+`allowNavigation` adds `theideaiq.com` and `*.theideaiq.com` (the website,
+The IDEA Design, the API). Every other URL, Wayl checkout included, opens
+in the system browser, so the WebView never shows a third-party page.
+
+**Plugins in use** (keep every `@capacitor/*` package on the same major
+version as `@capacitor/core`; `bun run --cwd apps/app cap:doctor` lists
+them):
+
+- `@capacitor/app`: app links, the Android back button, foreground and
+  background events (`components/native-bridge.tsx`).
+- `@capacitor/push-notifications`: push (3.5).
+- `@capacitor/share`: the system share sheet.
+- `@capacitor/splash-screen`, `@capacitor/status-bar` and `SystemBars`
+  (core): launch screen, dark status bar, edge-to-edge layout with
+  `--safe-area-inset-*` CSS variables.
+- `@capacitor/browser`: opens Wayl checkout in the system browser.
+- `@aparajita/capacitor-secure-storage`: Keychain/Keystore storage, kept for
+  any token the shell must hold outside the cookie.
 
 ### 3.2 Prerequisites
 
 - macOS with Xcode for iOS; Android Studio with an Android SDK and JDK for
-  Android. Use the versions listed in Capacitor's environment setup guide for
-  Capacitor 8 (https://capacitorjs.com/docs/getting-started/environment-setup).
-- An Apple Developer Program membership and a Google Play Console account for
-  releases.
-- `bun run init` already done: `capacitor.config.ts` refuses to run while the
-  bundle id is still a placeholder.
+  Android, at the versions in Capacitor 8's environment setup guide
+  (https://capacitorjs.com/docs/getting-started/environment-setup).
+- An Apple Developer Program membership and a Google Play Console account.
+- A Firebase project for push (3.5).
 
 ### 3.3 Create the native projects (once)
 
 ```sh
 cd apps/app
-bun run build:native      # cap add needs a built out/ directory
-bun run cap:add           # creates apps/app/ios and apps/app/android
+bun run cap:add       # writes native/www/shell.js, then cap add ios + android
+bun run cap:assets    # icons and splash screens from native/assets
 ```
 
 Commit `apps/app/ios` and `apps/app/android`: they hold signing settings,
-icons, permissions and the deep-link setup below. The iOS project uses Swift
-Package Manager, so CocoaPods is not needed.
+icons, capabilities, permissions and the app-link setup. Never commit
+`google-services.json` or `GoogleService-Info.plist` (both are in
+`apps/app/.gitignore`); each machine or CI job copies them in (3.5).
 
-**Register the deep-link scheme.** The scheme is the bundle id. It is used to
-come back into the app from links such as `iq.example.app://ar/billing` and
-from email or OAuth sign-ins (`iq.example.app://auth/callback?code=…`).
+**Recommended hardening (Android).** Set `android:allowBackup="false"` on
+`<application>` in `AndroidManifest.xml`.
 
-- iOS: in Xcode, open **App target → Info → URL Types** and add one with
-  **URL Schemes** set to the bundle id.
-- Android: in `android/app/src/main/AndroidManifest.xml`, add this inside the
+### 3.4 Sync, run and live reload
+
+```sh
+bun run cap:sync                       # from the root (turbo), or:
+bun run --cwd apps/app cap:sync        # prepare.ts + cap sync
+bun run --cwd apps/app cap:open:ios    # Xcode
+bun run --cwd apps/app cap:open:android
+bun run --cwd apps/app cap:run:ios     # simulator or device
+bun run --cwd apps/app cap:doctor      # versions of the Capacitor packages
+```
+
+There is no web build step: `cap sync` copies `native/www` and the config
+into both projects and updates native plugin dependencies. Run it after
+changing `capacitor.config.ts`, the offline page or a plugin.
+
+**Which Spark the app loads** is decided at sync time:
+
+| Variable | Use | Example |
+| --- | --- | --- |
+| none | production | `https://spark.theideaiq.com` |
+| `NEXT_PUBLIC_APP_URL` | a preview or staging Spark | `NEXT_PUBLIC_APP_URL=https://spark-git-x.vercel.app bun run --cwd apps/app cap:sync` |
+| `CAP_SERVER_URL` | live reload against `next dev` on your LAN (allows cleartext HTTP) | `CAP_SERVER_URL=http://192.168.1.20:3000 bun run --cwd apps/app cap:sync` |
+
+A preview host outside `*.theideaiq.com` works as the start URL, but links to
+other The IDEA hosts open in the system browser. Run `cap:sync` again
+without either variable before a release build.
+
+### 3.5 Push notifications
+
+**Flow.** A database trigger writes a `notifications` row (order shipped,
+support reply, …). A Supabase Database Webhook posts the insert to
+`POST /webhooks/notifications` on apps/api, which claims the row
+(`claim_push_notifications` sets `pushed_at`, so nothing is pushed twice),
+reads the recipient's devices from `push_devices` and sends one FCM HTTP v1
+message per device. The title is the event's title in the recipient's
+language (`profiles.locale`); the body is the generic "Open to see the
+details." so order numbers and product names never show on a locked
+screen. Tapping opens the notification's `link` in the app. Devices FCM
+reports as unregistered are deleted. `GET /cron/push` (daily, Vercel Cron)
+catches anything the webhook missed in the last 24 hours; on a Vercel plan
+with frequent crons, run it every few minutes instead.
+
+**In the app.** `useNativePush` (mounted in `NativeBridge`) runs once
+someone is signed in, inside the shell only: it asks for notification
+permission (once; iOS and Android 13+ show the system prompt), registers
+with FCM and sends the token to `POST /push/register` with the user's
+access token (`register_push_device`, which moves a token to the new
+account when a phone changes hands). Call
+`unregisterPushNotifications(supabase)` just before signing out so the next
+person on the phone doesn't receive the previous account's notifications.
+
+**Setup (once):**
+
+1. **Firebase:** create a project (or use The IDEA's), add an iOS app with
+   the bundle id `com.theideaiq.app` and an Android app with the same
+   package name.
+2. **APNs key (iOS):** Apple Developer → Certificates, IDs & Profiles →
+   Keys → create a key with Apple Push Notifications service; download the
+   `.p8` once and note the Key ID and Team ID. Upload it in Firebase →
+   Project settings → Cloud Messaging → Apple app configuration.
+3. **iOS project:** in Xcode, add the **Push Notifications** and
+   **Background Modes → Remote notifications** capabilities. Add the
+   Firebase SDK (`FirebaseMessaging`) with Swift Package Manager
+   (https://github.com/firebase/firebase-ios-sdk). Copy
+   `GoogleService-Info.plist` into `ios/App/App/` (not committed). In
+   `AppDelegate.swift`, configure Firebase and hand Capacitor the FCM token
+   instead of the raw APNs token, so the server can use FCM for both
+   platforms:
+
+   ```swift
+   import FirebaseCore
+   import FirebaseMessaging
+
+   // in application(_:didFinishLaunchingWithOptions:)
+   FirebaseApp.configure()
+
+   func application(_ application: UIApplication,
+                    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+     Messaging.messaging().apnsToken = deviceToken
+     Messaging.messaging().token { token, error in
+       if let error {
+         NotificationCenter.default.post(name: .capacitorDidFailToRegisterForRemoteNotifications, object: error)
+       } else if let token {
+         NotificationCenter.default.post(name: .capacitorDidRegisterForRemoteNotifications, object: token)
+       }
+     }
+   }
+
+   func application(_ application: UIApplication,
+                    didFailToRegisterForRemoteNotificationsWithError error: Error) {
+     NotificationCenter.default.post(name: .capacitorDidFailToRegisterForRemoteNotifications, object: error)
+   }
+   ```
+
+4. **Android project:** copy `google-services.json` into `android/app/`
+   (not committed). The Capacitor template applies the Google Services
+   Gradle plugin when the file is present.
+5. **API secrets** (Vercel project `api`, and `apps/api/.env.local` for
+   development):
+   - `FCM_SERVICE_ACCOUNT`: Firebase → Project settings → Service accounts
+     → Generate new private key; the JSON file's contents on one line, or
+     base64 of it. Push is off while it is unset.
+   - `PUSH_WEBHOOK_SECRET`: `openssl rand -hex 32`.
+6. **Database webhook:** Supabase → Database → Webhooks → Create: table
+   `public.notifications`, event **Insert**, type HTTP request, `POST`
+   `https://api.theideaiq.com/webhooks/notifications`, header
+   `Authorization: Bearer <PUSH_WEBHOOK_SECRET>`.
+7. **CI builds:** store both Firebase files as secrets and write them into
+   place before `cap sync`.
+
+**Test it:** sign in on a device, accept the prompt, check that a row
+appears in `push_devices`, then change one of your orders' status in the
+back office: the push arrives and tapping it opens the order.
+
+### 3.6 App links (Universal Links and Android App Links)
+
+`https://spark.theideaiq.com/...` links (emails, messages, the website)
+open in the app when it is installed. `NativeBridge` receives them
+(`appUrlOpen`) and routes to the path, keeping the language.
+
+Spark serves both verification files from `apps/app/public/.well-known/`
+(`apple-app-site-association` with `Content-Type: application/json`, set
+in `apps/app/vercel.json`). Fill in the placeholders before the first
+release:
+
+| File | Placeholder | Where to find the value |
+| --- | --- | --- |
+| `apple-app-site-association` | `APPLE_TEAM_ID` (twice) | Apple Developer → Membership details → Team ID |
+| `assetlinks.json` | `PLAY_APP_SIGNING_SHA256_FINGERPRINT` | Play Console → Test and release → App integrity → App signing key certificate → SHA-256 (add the upload key's too if you test signed builds outside Play) |
+
+The `/.well-known/*` paths must not be redirected by Spark's locale proxy.
+Check after deploying: `curl -I https://spark.theideaiq.com/.well-known/apple-app-site-association`
+and `https://spark.theideaiq.com/.well-known/assetlinks.json` both return 200
+with JSON.
+
+- **iOS:** Xcode → App target → Signing & Capabilities → **Associated
+  Domains**: `applinks:spark.theideaiq.com` and
+  `webcredentials:spark.theideaiq.com` (password autofill).
+- **Android:** in `android/app/src/main/AndroidManifest.xml`, inside the
   main `<activity>`:
 
   ```xml
-  <intent-filter>
+  <intent-filter android:autoVerify="true">
     <action android:name="android.intent.action.VIEW" />
     <category android:name="android.intent.category.DEFAULT" />
     <category android:name="android.intent.category.BROWSABLE" />
-    <data android:scheme="iq.example.app" />
+    <data android:scheme="https" android:host="spark.theideaiq.com" />
   </intent-filter>
   ```
 
-The `NativeBridge` component handles incoming links. Links with a `code`
-parameter complete the sign-in (PKCE code exchange). Any other link is opened
-as an in-app route, with the language added when it is missing. For
-`https://` links (Universal Links and App Links), add the associated-domains
-entitlement and Android `autoVerify` intent filter. Then serve
-`apple-app-site-association` and `assetlinks.json` from the marketing domain.
+  Verify on a device with
+  `adb shell pm get-app-links com.theideaiq.app`.
 
-**Recommended hardening (Android).** Set `android:allowBackup="false"` on
-`<application>` (or add backup exclusion rules). This keeps encrypted session
-data out of device backups, which cannot be decrypted on another device anyway.
+The custom scheme `com.theideaiq.app://` (Xcode URL Types and an Android
+intent filter with `android:scheme="com.theideaiq.app"`) is optional now;
+`NativeBridge` still routes such links if you register it.
 
-**Icons and splash screens.** Put a 1024×1024 icon and a splash image in
-`apps/app/assets/`, then run `npx @capacitor/assets generate`.
+### 3.7 Sign-in and payments inside the apps
 
-### 3.4 Environment for native builds
+**Sign-in** happens in the WebView with The IDEA Pass's phone code, which
+needs no redirect; the session cookie is first-party for Spark and
+persists like Safari's or Chrome's. Google and Apple block their OAuth
+pages inside embedded WebViews, so OAuth sign-in (if ever added) must go
+through the system browser and an app link back.
 
-`NEXT_PUBLIC_*` values are compiled into the bundle at build time, and an app
-build always talks to the environment it was built for. Before a release
-build, provide the production values: export them in the shell or CI job, or
-put them in `apps/app/.env.production.local`, which is git-ignored.
+**Digital goods.** Call `canSellDigitalGoods()` (`apps/app/lib/native/checkout.ts`)
+on every screen that sells a digital good (The IDEA Plus, plans). With
+`project.commerce.allowNativeCheckout: false` it returns false in the shell:
+show the plan as managed on the website, with no purchase button and no
+link to the website checkout (App Store 3.1.1/3.1.3, Google Play payments
+policy). On the server, `isNativeShellUserAgent()` gives the same answer
+before the page reaches the client. Physical store orders are not digital
+goods and use Wayl as on the web, opened in the system browser; the
+webhook, not the redirect, marks the payment as paid.
 
-```sh
-NEXT_PUBLIC_APP_URL=https://app.example.iq
-NEXT_PUBLIC_WEB_URL=https://example.iq
-NEXT_PUBLIC_API_URL=https://api.example.iq
-NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_…
-NEXT_PUBLIC_POSTHOG_KEY=phc_…            # optional; ad pixels are ignored in the apps
-NEXT_PUBLIC_SENTRY_DSN=https://…         # optional
-```
+### 3.8 App Store review: minimum functionality (guideline 4.2)
 
-Never put a secret key in these files.
+Apple rejects apps that are "a repackaged website". The shell earns its
+place with native features; keep them working and mention them in the
+review notes:
 
-### 3.5 Build and sync
+- push notifications for orders, rentals and support replies;
+- the system share sheet, app links, the native splash and status bar and
+  an offline screen instead of a browser error;
+- no browser UI: external sites open in the system browser, the Android
+  back button navigates inside the app;
+- in-app account deletion (Settings → Delete account, guideline 5.1.1(v));
+- content and layout made for phones (safe areas, touch targets), no
+  "download our app" banners inside the app.
 
-From the repository root:
+Avoid features that only make sense on the web inside the shell (cookie
+banners for ad pixels, links to the desktop site).
 
-```sh
-bun run cap:sync
-```
-
-That runs the Turborepo task `cap:sync`, which first runs `build:native` (the
-static export) and then `cap sync`: it copies `out/` into both native projects
-and updates native plugin dependencies. Run it after every web change you
-want in the apps, and after adding or upgrading a Capacitor plugin.
-
-Step by step, from `apps/app`:
-
-```sh
-bun run build:native       # → out/
-bunx cap sync              # or: bunx cap sync ios / bunx cap sync android
-bun run cap:open:ios       # opens Xcode
-bun run cap:open:android   # opens Android Studio
-bun run cap:run:ios        # builds and runs on a simulator or device
-bun run cap:run:android
-```
-
-`build` (web) and `build:native` both use `apps/app/.next`, which
-`next build` locks while it runs. Run them one after the other, not in the
-same `turbo` invocation. CI runs them as separate steps.
-
-**Live reload on a device:** run `bun run dev` and find your computer's LAN
-IP, then:
-
-```sh
-CAP_SERVER_URL=http://192.168.1.20:3000 bun run --cwd apps/app cap:sync
-bun run --cwd apps/app cap:run:android
-```
-
-Run `cap:sync` again without `CAP_SERVER_URL` before building a release.
-Otherwise the release build will try to load your laptop.
-
-### 3.6 Auth inside the apps
-
-`apps/app/lib/supabase.ts` picks the client:
-
-```ts
-createNativeClient(secureSessionStorage) // flowType "pkce", detectSessionInUrl false,
-                                         // persistSession true, storage = Keychain/Keystore
-```
-
-- **PKCE:** any redirect-based sign-in (magic link, OAuth) returns a one-time
-  code to the deep link instead of tokens in the URL.
-- **`detectSessionInUrl: false`:** the WebView URL never carries the session;
-  `NativeBridge` exchanges the code explicitly.
-- **Secure storage:** the refresh token is kept in the iOS Keychain or Android
-  Keystore, never in `localStorage` or `@capacitor/preferences` (neither is
-  encrypted).
-- **Token refresh:** `bindAuthToAppLifecycle` stops auto-refresh in the
-  background and restarts it in the foreground, as Supabase recommends for
-  mobile apps.
-
-Phone OTP, the default sign-in, needs no redirect at all.
-
-### 3.7 Payments inside the apps
-
-The billing screen calls `getPurchasePolicy(detectPlatform())`:
-
-- `allowNativeCheckout: false` (digital): plans are listed with a note that
-  they are managed on the website, and there is no checkout button. Don't add
-  a link to the website checkout either: both stores reject apps that steer
-  users to external purchases of digital goods (outside the specific programs
-  they run).
-- `allowNativeCheckout: true` (physical goods and services): checkout opens in
-  the system browser through `@capacitor/browser`. When the customer returns,
-  the billing screen shows the updated status. The webhook, not the redirect,
-  is what marks the payment as paid.
-
-### 3.8 Release
+### 3.9 Release
 
 **Versioning:** bump both numbers for every store upload.
 
@@ -758,52 +910,48 @@ The billing screen calls `getPurchasePolicy(detectPlatform())`:
   **Build** (`CURRENT_PROJECT_VERSION`).
 - Android: `android/app/build.gradle` → `versionName` and `versionCode`.
 
-**iOS (App Store / TestFlight):**
+**iOS (App Store / TestFlight):** `bun run --cwd apps/app cap:sync` →
+`cap:open:ios` → Signing & Capabilities (team, automatic signing) → **Any
+iOS Device (arm64)** → **Product → Archive** → **Distribute App → App Store
+Connect** → TestFlight, then submit.
 
-1. `bun run cap:sync` with production env values.
-2. `bun run cap:open:ios`. Under **Signing & Capabilities**, select the team
-   and keep automatic signing on.
-3. Choose **Any iOS Device (arm64)** → **Product → Archive** →
-   **Distribute App → App Store Connect**.
-4. In App Store Connect, add the build to TestFlight, test, then submit for
-   review.
-
-**Android (Google Play):**
-
-1. `bun run cap:sync` with production env values.
-2. Create an upload keystore once, store it and its passwords in a password
-   manager (losing it blocks updates), and enable Play App Signing.
-3. `bun run cap:open:android` → **Build → Generate Signed App Bundle** →
-   upload the `.aab` to an internal testing track, then promote it.
-
-Or from the command line:
+**Android (Google Play):** `cap:sync` → create an upload keystore once (keep
+it and its passwords in the password manager; enable Play App Signing) →
+`cap:open:android` → **Build → Generate Signed App Bundle** → upload the
+`.aab` to internal testing, then promote. Or
 `bunx cap build android --keystorepath … --keystorepass … --keystorealias … --keystorealiaspass … --androidreleasetype AAB`.
 
-**Before the first submission:**
+**Store submission checklist:**
 
-- [ ] A privacy policy URL, plus the App Privacy (Apple) and Data safety
-      (Google) forms. The app collects phone numbers, and PostHog analytics
-      if enabled.
-- [ ] In-app account deletion works against the production project (Settings
-      → Delete account, see 1.6). Mention where it is in the review notes.
-- [ ] Review notes with a test phone number and code for the reviewers. Add it
-      as a test number in Supabase Auth for the review period only.
-- [ ] The commerce mode matches what the app sells (see 1.3).
-- [ ] `CAP_SERVER_URL` is not set.
+- [ ] `cap:sync` ran without `CAP_SERVER_URL` and `NEXT_PUBLIC_APP_URL`
+      (the app loads `https://spark.theideaiq.com`).
+- [ ] Icons and splash generated (`cap:assets`); app name "The IDEA Spark".
+- [ ] Push works on a real iPhone and Android phone (3.5); APNs key in
+      Firebase; `FCM_SERVICE_ACCOUNT`, `PUSH_WEBHOOK_SECRET` and the
+      database webhook set in production.
+- [ ] App links verified (3.6), placeholders filled in the
+      `.well-known` files.
+- [ ] Privacy policy URL; App Privacy (Apple) and Data safety (Google)
+      forms: phone number, push token, analytics if enabled.
+- [ ] Account deletion works against production; its location is in the
+      review notes.
+- [ ] Review notes: a test phone number and code (Supabase Auth test
+      number, for the review period only), the native features listed in
+      3.8, and the commerce mode.
+- [ ] `project.commerce.allowNativeCheckout` matches what the app sells.
+- [ ] Android: `allowBackup="false"`, target SDK as Play requires.
 
-Web changes reach the apps only through a new store release; no over-the-air
-update service is configured.
-
-### 3.9 Troubleshooting
+### 3.10 Troubleshooting
 
 | Symptom | Cause and fix |
 | --- | --- |
-| White screen on launch | `out/` was empty or stale: run `bun run cap:sync`. Inspect the WebView with Safari → Develop (iOS) or `chrome://inspect` (Android). |
+| Offline screen although online | Spark is down or the URL is wrong. `bunx cap config` shows `server.url`; inspect the WebView with Safari → Develop (iOS) or `chrome://inspect` (Android). |
+| App loads a laptop or preview URL | `cap:sync` ran with `CAP_SERVER_URL` or `NEXT_PUBLIC_APP_URL` set. Sync again without them. |
+| A The IDEA page opens in the system browser | Its host is not in `allowNavigation` (`capacitor.config.ts`). |
+| No push prompt | Not signed in, or permission was refused before (Settings → Notifications → The IDEA Spark). |
+| Token registered but no push | `FCM_SERVICE_ACCOUNT` missing or wrong project; the database webhook missing (check its logs in Supabase); on iOS the APNs key isn't in Firebase or `AppDelegate` still hands over the APNs token. |
+| Universal link opens Safari | Associated Domains missing, wrong Team ID in the AASA file, or the file is redirected. Reinstall the app after fixing (iOS caches the file). |
 | "Run `bun run init` first" | `project.json` still has the placeholder bundle id. |
-| API calls fail with a CORS error | The request didn't come from an allowed origin. Check `NEXT_PUBLIC_API_URL` and `apps/api/lib/cors.ts`. |
-| Deep link opens the browser instead of the app | The URL scheme isn't registered (see 3.3), or the Supabase redirect URL list is missing `<bundle id>://**`. |
-| Signed out after every restart | The session couldn't be saved to secure storage. Check the device logs for `SecureStorage` errors (Xcode console, `adb logcat`). |
-| "Another next build process is already running" | Web and native builds of `apps/app` ran at the same time. Run them sequentially. |
 
 ---
 
@@ -1044,14 +1192,14 @@ production (`WAYL_ENV=live`):
 
 ### 5.1 Projects
 
-Create three Vercel projects from the same repository:
+Create four Vercel projects from the same repository:
 
-| Project | Root Directory | Domain (example) | Notes |
+| Project | Root Directory | Domain | Notes |
 | --- | --- | --- | --- |
-| web | `apps/web` | `example.iq` | Marketing site |
-| app | `apps/app` | `app.example.iq` | Product, web build |
-| api | `apps/api` | `api.example.iq` | Cron jobs are defined in `apps/api/vercel.json` |
-| storybook | `apps/storybook` | `design.theideaiq.com` | The IDEA Design; `vercel.json` sets `bun run build` (Storybook, then Next.js). Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_PASS_URL`. No Vercel Authentication: the proxy is the gate. |
+| web | `apps/web` | `theideaiq.com` | The public website |
+| app | `apps/app` | `spark.theideaiq.com` | The IDEA Spark: customer app, The IDEA Pass, back office; the iOS/Android apps load it |
+| api | `apps/api` | `api.theideaiq.com` | Cron jobs are defined in `apps/api/vercel.json` |
+| storybook | `apps/storybook` | `design.theideaiq.com` | The IDEA Design; `vercel.json` sets `bun run build` (Storybook, then Next.js). Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`. No Vercel Authentication: the proxy is the gate. |
 
 For each project:
 
@@ -1098,7 +1246,7 @@ and Better Stack are configured on `api`, not here.
 | Variable | Need | Notes |
 | --- | --- | --- |
 | `NEXT_PUBLIC_WEB_URL` | Build | This site's URL, `https://theideaiq.com`; also the API's CORS origin for the contact form |
-| `NEXT_PUBLIC_APP_URL` | Build | Product URL, for "Sign in" and "Get started" links |
+| `NEXT_PUBLIC_APP_URL` | Build | The IDEA Spark, `https://spark.theideaiq.com`, for "Sign in" (The IDEA Pass) and "Get started" links |
 | `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, news, events and journal (read anonymously, under Row Level Security). Without them those sections show empty states. |
@@ -1113,16 +1261,19 @@ Vercel's Firewall (Bot Protection / Attack Challenge Mode), not Arcjet.
 
 ### 5.4 `app` (apps/app)
 
-Every variable here ends up in the browser and the mobile apps. **Never add a
-secret to this project.**
+The IDEA Spark: the customer app, The IDEA Pass and the back office. Every
+variable here is public (it may end up in the browser and the apps'
+WebView). **Never add a secret to this project.**
 
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Build | This app's URL, `https://app.example.iq` |
+| `NEXT_PUBLIC_APP_URL` | Build | This app's URL, `https://spark.theideaiq.com`; every Pass link is built on it |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so the website and the design site read the session; unset on previews |
+| `NEXT_PUBLIC_DESIGN_URL` | Optional | The IDEA Design, an allowed return_to host |
 | `NEXT_PUBLIC_WEB_URL` | Build | Marketing site URL |
 | `NEXT_PUBLIC_SUPABASE_URL` | Feature (the app can't sign in without it) | `https://<project-ref>.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature (same) | `sb_publishable_…` |
-| `NEXT_PUBLIC_API_URL` | Feature | Billing, webhook portal and collaboration call it |
+| `NEXT_PUBLIC_API_URL` | Feature | Checkout, push registration and the back office's campaign sending and staff lookup call it |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Help links |
 | `NEXT_PUBLIC_GTM_ID` **or** the GA4, Meta and TikTok IDs | Optional | Same values as `web`, so visitors are followed across both |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | |
@@ -1139,6 +1290,8 @@ secret to this project.**
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Verifying users' tokens |
 | `SUPABASE_SECRET_KEY` | Feature | `sb_secret_…`. Webhooks, cron, account and organization deletion. **Server only.** |
 | `CRON_SECRET` | Feature | At least 32 characters (`openssl rand -hex 32`). Vercel sends it to the cron routes; without it every cron call is rejected. |
+| `FCM_SERVICE_ACCOUNT` | Feature | Firebase service account JSON (or base64 of it) for push notifications to the iOS/Android apps (3.5); push is off without it. **Server only.** |
+| `PUSH_WEBHOOK_SECRET` | Feature | At least 32 characters; the Supabase database webhook on `notifications` sends it to `POST /webhooks/notifications` (3.5). |
 | `WAYL_API_TOKEN`, `WAYL_WEBHOOK_SECRET` | Feature | Payments. Checkout fails in production without them. |
 | `WAYL_ENV` | Feature | `live` in Production, `test` in Preview |
 | `WAYL_API_URL` | Optional | Wayl staging server |
@@ -1172,22 +1325,21 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 
 - [ ] Supabase production project linked and migrations pushed (2.6); Auth
       URLs, phone provider and SMS hook configured (2.7).
-- [ ] Three Vercel projects with domains and the variables above;
+- [ ] Four Vercel projects (web, app, api, storybook) with domains and the variables above;
       `WAYL_ENV=live`; no test event codes in Production.
 - [ ] Wayl webhook verified end to end (4.2).
 - [ ] Tracking verified in GA4 DebugView and in Meta and TikTok test events
       (4.1).
 - [ ] Cron jobs listed in Vercel and `CRON_SECRET` set.
-- [ ] Native apps built with production values, deep links registered,
-      account deletion tested, submitted (3.8).
+- [ ] Native apps synced against production Spark, push and app links
+      verified, account deletion tested, submitted (3.9).
 
-### 5.8 `pass` (apps/pass) and the shared session
+### 5.8 The shared session (The IDEA Pass)
 
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_PASS_URL` | Feature, on every project | `https://pass.theideaiq.com`; every "Sign in" links there (defaults to `http://localhost:3006`) |
-| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature, on every project that reads the session (pass, app, admin, storybook) | `.theideaiq.com`; unset on previews |
-| `NEXT_PUBLIC_ADMIN_URL`, `NEXT_PUBLIC_DESIGN_URL` | Feature (pass, admin) | Allowed return_to hosts; admin also uses its own as the way back |
-| `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_API_URL` | Build (pass) | Allowed return_to hosts and the "Your Pass" links |
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Publishable key only |
-| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_*`, `BETTERSTACK_*` | Optional | |
+| `NEXT_PUBLIC_APP_URL` | Build, on every project | `https://spark.theideaiq.com`; every "Sign in" links to The IDEA Pass there (`passUrl`; defaults to `http://localhost:3000`) |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature, on every project that reads the session (app, storybook, web) | `.theideaiq.com`; unset on previews |
+| `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_DESIGN_URL`, `NEXT_PUBLIC_API_URL` | Feature (app) | The other allowed return_to hosts |
+
+Supabase's redirect URLs include `https://spark.theideaiq.com/**`.

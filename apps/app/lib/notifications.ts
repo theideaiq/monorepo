@@ -5,7 +5,7 @@ import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
 import { formatDate } from "@repo/internationalization/format";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { safeNextPath } from "./navigation";
+import { currentAppPath, safeNextPath } from "./navigation";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /**
@@ -107,7 +107,10 @@ export const describeNotification = (
 };
 
 /** The app path to open, or null for a missing or unsafe link. */
-export const notificationHref = (link: string | null) => safeNextPath(link);
+export const notificationHref = (link: string | null) => {
+  const path = safeNextPath(link);
+  return path ? currentAppPath(path) : null;
+};
 
 const NOTIFICATION_COLUMNS =
   "id, kind, event, data, link, read_at, created_at" as const;

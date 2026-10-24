@@ -651,6 +651,7 @@ export type Database = {
           id: string;
           kind: Database["public"]["Enums"]["notification_kind"];
           link: string | null;
+          pushed_at: string | null;
           read_at: string | null;
           user_id: string;
         };
@@ -661,6 +662,7 @@ export type Database = {
           id?: string;
           kind: Database["public"]["Enums"]["notification_kind"];
           link?: string | null;
+          pushed_at?: string | null;
           read_at?: string | null;
           user_id: string;
         };
@@ -671,6 +673,7 @@ export type Database = {
           id?: string;
           kind?: Database["public"]["Enums"]["notification_kind"];
           link?: string | null;
+          pushed_at?: string | null;
           read_at?: string | null;
           user_id?: string;
         };
@@ -1270,6 +1273,33 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      push_devices: {
+        Row: {
+          created_at: string;
+          id: string;
+          last_seen: string;
+          platform: string;
+          token: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          last_seen?: string;
+          platform: string;
+          token: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          last_seen?: string;
+          platform?: string;
+          token?: string;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       rentals: {
         Row: {
@@ -1873,6 +1903,22 @@ export type Database = {
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
+      claim_push_notifications: {
+        Args: {
+          max_age?: string;
+          max_rows?: number;
+          notification_ids?: string[];
+        };
+        Returns: {
+          data: Json;
+          event: string;
+          id: string;
+          kind: Database["public"]["Enums"]["notification_kind"];
+          link: string;
+          locale: string;
+          user_id: string;
+        }[];
+      };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
       complete_order_payment: {
         Args: { order_id: string };
@@ -2026,6 +2072,10 @@ export type Database = {
           rating: number;
           verified_purchase: boolean;
         }[];
+      };
+      register_push_device: {
+        Args: { device_platform: string; device_token: string };
+        Returns: string;
       };
       request_rental: {
         Args: { rental_product: string };

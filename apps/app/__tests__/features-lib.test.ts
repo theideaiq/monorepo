@@ -114,7 +114,14 @@ describe("notifications", () => {
   });
 
   test("only follows app paths", () => {
-    expect(notificationHref("/orders/view?id=o1")).toBe("/orders/view?id=o1");
+    expect(notificationHref("/orders/o1")).toBe("/orders/o1");
+    // Links stored while detail pages took a query parameter.
+    expect(notificationHref("/orders/view?id=o1")).toBe("/orders/o1");
+    expect(notificationHref("/support/view?id=t%201")).toBe("/support/t%201");
+    expect(notificationHref("/store/product?slug=ps5&add=1")).toBe(
+      "/store/ps5?add=1"
+    );
+    expect(notificationHref("/orders/view")).toBe("/orders/view");
     expect(notificationHref("https://evil.example")).toBeNull();
     expect(notificationHref("//evil.example")).toBeNull();
     expect(notificationHref(null)).toBeNull();

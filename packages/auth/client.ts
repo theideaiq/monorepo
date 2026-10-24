@@ -8,7 +8,8 @@ import { keys } from "./keys";
  * components and the proxy can read them, on the shared parent domain when
  * NEXT_PUBLIC_AUTH_COOKIE_DOMAIN is set (one sign-in on The IDEA Pass for
  * every site). (`createBrowserClient` reuses one
- * instance per page.) The Capacitor apps use `createNativeClient` instead.
+ * instance per page.) The Capacitor apps use it too: their WebView loads
+ * The IDEA Spark, so the cookie works there as well.
  */
 export const createClient = () => {
   const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } =

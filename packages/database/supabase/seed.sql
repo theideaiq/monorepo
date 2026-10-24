@@ -1,6 +1,6 @@
 -- Local development seed (runs after migrations on `supabase db reset`).
 -- Prices are in IQD (whole dinars). Production plans and the catalog are
--- managed in the back office (apps/admin).
+-- managed in the back office (/admin in The IDEA Spark).
 
 insert into public.plans
   (id, name, description, amount, currency, billing_interval, audience, rental_slots, tier, features_ar, features_en, position)

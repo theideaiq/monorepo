@@ -11,7 +11,7 @@ digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
 | Academy | Courses and cultural-exchange programs | `apps/web/academy` |
 | The IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
 | The Club | Community rooms on Telegram | `apps/web/club` |
-| Editorial | News, events with RSVPs, the journal and member submissions | `apps/web`, `apps/app`, `apps/admin` |
+| Editorial | News, events with RSVPs, the journal and member submissions | `apps/web`, `apps/app` (customer area and back office) |
 | Droid | Telegram bot: moderation, FAQ, product search, AI assistant | `packages/droid`, `apps/api/app/telegram` |
 
 Built on the shaheenfarjo/monorepo template (initialized with `bun run init`:
@@ -28,7 +28,7 @@ theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
 | Auth & database | Supabase (Postgres, Row Level Security, phone OTP) |
 | Payments | Provider-agnostic `@repo/payments` with Wayl (ZainCash, FIB, Qi Card, cards) |
 | Localization | Arabic + English, RTL-aware design system, `Asia/Baghdad` dates, IQD |
-| Mobile | Capacitor (iOS + Android) from the same `apps/app` codebase |
+| Mobile | Capacitor (iOS + Android) shells that load The IDEA Spark (`apps/app`) |
 | Analytics | GTM, GA4, Meta Pixel, TikTok Pixel, server-side conversions |
 | Hosting | Vercel (apps) + Cloudflare (DNS, Turnstile, R2) |
 | Quality | Biome via Ultracite, TypeScript strict, Vitest, GitHub Actions |
@@ -38,10 +38,10 @@ theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
 ```
 apps/
   web/        Public website: store catalog, Plus, Academy, Suite, Club, news, events, journal (port 3001)
-  app/        Customer app — web + iOS/Android via Capacitor (port 3000)
+  app/        The IDEA Spark (spark.theideaiq.com): customer app, The IDEA Pass (sign-in) and the
+              back office under /admin; web + iOS/Android via Capacitor (port 3000)
   api/        Checkout, payment webhooks, cron, Telegram webhook, calendar feed, back-office endpoints (port 3002)
   docs/       Mintlify documentation (port 3004)
-  admin/      Back office for staff: catalog, orders, CRM, finance, editorial (port 3005)
   storybook/  The IDEA Design: staff-only UI and email review, design.theideaiq.com (port 6006)
 packages/
   config/     Project identity, locales and regional settings (single source of truth)
@@ -67,8 +67,8 @@ bun run dev       # starts every app
 
 Each app reads its environment from `.env.local` (copy the app's
 `.env.example`). Without credentials the apps still start; integrations whose
-keys are missing are disabled. Staff sign in to the back office with their
-phone and an authenticator app; grant the first superadmin with SQL (see
+keys are missing are disabled. Staff sign in to the back office (`/admin` in The IDEA
+Spark) with their phone and an authenticator app; grant the first superadmin with SQL (see
 `ARCHITECTURE_AND_INTEGRATIONS.md`).
 
 ## Common scripts
@@ -83,7 +83,7 @@ phone and an authenticator app; grant the first superadmin with SQL (see
 | `bun run check:placeholders` | Fail on leftover template tokens or unbalanced module markers |
 | `bun run check:rtl` / `bun run check:i18n` | Physical Tailwind utilities / UI text missing from the messages files |
 | `bun run db:start` / `db:reset` / `db:test` / `db:types` | Local Supabase, migrations, RLS tests, generated types |
-| `bun run build:native` / `bun run cap:sync` | Static export of `apps/app` / copy it into the iOS and Android projects |
+| `bun run cap:sync` | Copy the Capacitor configuration into the iOS and Android projects |
 
 ## Further reading
 

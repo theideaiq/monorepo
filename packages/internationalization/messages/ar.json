@@ -794,6 +794,11 @@
     }
   },
   "app": {
+    "meta": {
+      "title": "The IDEA Spark",
+      "description": "تطبيق The IDEA: طلباتك و The IDEA Plus والفعاليات والدعم في مكان واحد.",
+      "badge": "Spark"
+    },
     "nav": {
       "label": "التنقل",
       "home": "الرئيسية",
@@ -1410,6 +1415,17 @@
       "markAllRead": "عيّن الكل مقروءًا",
       "empty": "لا جديد لديك.",
       "loadFailed": "تعذّر تحميل إشعاراتك."
+    },
+    "native": {
+      "offline": {
+        "title": "أنت غير متصل",
+        "description": "يحتاج The IDEA Spark إلى اتصال بالإنترنت. تحقّق من شبكة Wi-Fi أو بيانات الهاتف ثم أعد المحاولة.",
+        "retry": "أعد المحاولة",
+        "stillOffline": "ما زلت غير متصل. سنعيد الاتصال حالما يعود الإنترنت."
+      },
+      "share": {
+        "copied": "نُسخ الرابط"
+      }
     }
   },
   "store": {
@@ -2612,11 +2628,12 @@
     },
     "home": {
       "title": "حسابك في The IDEA Pass",
-      "description": "أنت مسجّل الدخول إلى The IDEA Pass، ويعمل حسابك في التطبيق والموقع و The IDEA Plus.",
+      "description": "أنت مسجّل الدخول إلى The IDEA Pass، ويعمل حسابك في The IDEA Spark والموقع و The IDEA Plus.",
       "nameLabel": "الاسم",
       "noName": "لم يُحدَّد بعد",
       "phoneLabel": "رقم الهاتف المحمول",
-      "openApp": "افتح تطبيق The IDEA",
+      "openApp": "افتح The IDEA Spark",
+      "backOffice": "افتح لوحة الإدارة",
       "website": "زيارة الموقع",
       "authenticator": "تطبيق المصادقة",
       "authenticatorOn": "مفعّل",

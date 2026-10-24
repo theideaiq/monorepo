@@ -1,7 +1,7 @@
 # Releases and migrations
 
-How a change reaches the website, the app, the back office, the API and the
-database.
+How a change reaches the website, The IDEA Spark (the app, The IDEA Pass and
+the back office), the design site, the API and the database.
 
 Every change goes through a pull request to `main`. Nothing is edited on
 production by hand: not the code, not the database.
@@ -9,8 +9,7 @@ production by hand: not the code, not the database.
 1. **Open a pull request.** CI runs the dependency review and `bun audit`,
    lint, package boundaries, types, every unit test with coverage, the
    placeholder, RTL, translation and unused-code checks; builds every app
-   (and the Capacitor static export) and checks that no secret reaches a
-   browser bundle; starts a local database with every migration and runs
+   and checks that no secret reaches a browser bundle; starts a local database with every migration and runs
    the pgTAP suites (RLS, structure, advisors), the type check and the
    integration tests; and runs the Playwright journeys with axe. CodeQL
    scans the code. Vercel builds a preview of each app.

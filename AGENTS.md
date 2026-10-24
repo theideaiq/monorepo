@@ -11,25 +11,28 @@ incidents) is in `docs/platform`.
 - `apps/web` — The IDEA's public website (Next.js, i18n routes under
   `app/[locale]`): store catalog, Plus, Academy, Suite, Club, news, events,
   journal, legal pages (Markdown in `apps/web/content/legal`).
-- `apps/app` — the product, client-first: the same code runs in the browser
-  and, as a static export (`bun run build:native`), inside the Capacitor
-  iOS/Android apps. No Server Actions, Route Handlers, `cookies()`, proxy or
-  request-time server rendering here; anything that needs a secret goes in
-  `apps/api`, called with the user's token (`callApi` in `apps/app/lib/api.ts`).
+- `apps/app` — **The IDEA Spark** (port 3000, `spark.theideaiq.com`), one
+  server-rendered Next.js app with a `proxy.ts` (locale, session refresh,
+  security headers) and the cookie session (`@repo/auth/server`):
+  - the customer area (`app/[locale]/(customer)/(app)`): client components
+    that query with `useAuth().supabase`; privileged steps go to `apps/api`
+    with the user's token (`callApi` in `apps/app/lib/api.ts`);
+  - **The IDEA Pass** (`(customer)/(pass)`): `/{locale}/sign-in`, `/sign-up`,
+    `/mfa`, `/sign-out` and `/pass` ("Your Pass"), the only sign-in UI on the
+    web. The session cookie is shared with the website and the design site
+    (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`); other apps link here with `passUrl()`
+    from `@repo/auth/pass` (based on `NEXT_PUBLIC_APP_URL`), which only
+    returns to allowlisted hosts (`isAllowedReturnTo`);
+  - the **back office** under `/{locale}/admin` (`app/[locale]/admin`,
+    `components/admin`, `lib/admin`): staff only, with Server Actions; every
+    query runs as the staff member so RLS applies, and staff rights need an
+    authenticator-app (AAL2) session, enforced by the database too. Its
+    links use `@/lib/admin/navigation` (paths relative to `/admin`).
+  - The iOS/Android apps are Capacitor shells whose WebView loads the live
+    Spark URL (`server.url`), so the same cookie session applies there.
 - `apps/api` — webhooks (Wayl, Telegram), cron jobs, the calendar feed and
   privileged endpoints, including `app/admin/*` for the back office and the
   website's contact form and status badge. The only app with secrets.
-- `apps/admin` — the staff back office. Server-rendered with the staff
-  member's cookie session (`@repo/auth/server`) and Server Actions; every
-  query runs as the staff member so RLS applies. Staff rights need an
-  authenticator-app (AAL2) session, enforced by the database too. It has
-  no sign-in of its own: it sends people to The IDEA Pass.
-- `apps/pass` — **The IDEA Pass** (port 3006, `pass.theideaiq.com`): the only
-  sign-in, sign-up and authenticator-app (MFA) UI on the web. The session
-  lives in a cookie shared by every subdomain (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`);
-  link to it with `passUrl()` from `@repo/auth/pass`, which only returns to
-  allowlisted hosts (`isAllowedReturnTo`). The Capacitor apps keep their
-  in-app phone sign-in (no cookies there).
 - `apps/storybook` — **The IDEA Design** (design.theideaiq.com), the
   staff-only design site: Storybook (every `@repo/design-system` component
   and every `@repo/email` template in Arabic and English) built into
@@ -67,8 +70,7 @@ bun run boundaries          # packages import only what they declare
 bun run db:start | db:reset | db:test | db:types
 bun run --cwd packages/database db:test:sync   # copy the pgTAP preamble
 bun run --cwd apps/e2e e2e  # Playwright journeys + axe (local stack running)
-bun run build:native        # static export of apps/app for Capacitor
-bun run cap:sync            # build:native + copy into the iOS/Android projects
+bun run cap:sync            # configure the iOS/Android shell (loads live Spark)
 bun run gen:package         # scaffold packages/<name>
 ```
 
@@ -85,15 +87,17 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   installs and runs scripts; Next.js runs on Node (`next build`, not
   `bun --bun next build`).
 - **Auth:** never authorize with `user_metadata` — users can edit it. In
-  `apps/app`, query with `useAuth().supabase` (the browser or native client) so
-  Row Level Security applies; gates like `RequireAuth` are only UX. In
+  `apps/app`'s client components, query with `useAuth().supabase` (the
+  cookie-based browser client) so Row Level Security applies; gates like
+  `RequireAuth` are only UX. Its Server Components and Server Actions (The
+  IDEA Pass, the back office) use `@repo/auth/server`. In
   `apps/api`, identify callers with `authenticateRequest` (Bearer token) and
   check their membership/role. The admin client (`@repo/database/admin`)
   bypasses RLS and is only for webhooks, cron jobs and other trusted server
-  code. `@repo/auth/server` is for server-rendered apps only.
+  code. `@repo/auth/server` is for server code only (never a client component).
 - **Database:** schema changes are migrations with RLS policies and tests;
   see Database standards below.
-- **Secrets live only in `apps/api`.** Every other app (web, app, admin,
+- **Secrets live only in `apps/api`.** Every other app (web, app,
   storybook, docs, email) holds public values only: no server-only preset in
   its `env.ts` or `.env.example`, no import of a package module that reads
   one (`@repo/email`, `@repo/rate-limit`, `@repo/security/form`,
@@ -124,6 +128,11 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   `fbq` or `ttq` directly. Server-confirmed purchases go through
   `@repo/analytics/conversions` with the same event id. Ad pixels never load
   inside the Capacitor apps.
+- **Native apps:** the iOS/Android apps load the live Spark
+  (`server.url` in `apps/app/capacitor.config.ts`); only the offline screen
+  is bundled (`apps/app/native/www`). Native-only client code lives in
+  `apps/app/lib/native` and must no-op on the web (`isNativeApp()`); keep
+  every `@capacitor/*` package on the same major version.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.

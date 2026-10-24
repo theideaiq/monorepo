@@ -113,9 +113,8 @@ describe("product page", () => {
     });
 
   test("shows the seller, ratings and reviews, a page at a time", async () => {
-    searchParams.current = new URLSearchParams("slug=headset");
     const db = setup();
-    renderScreen(<Product />, db.supabase);
+    renderScreen(<Product slug="headset" />, db.supabase);
 
     expect(await screen.findByText("Sold by Baghdad Games")).toBeTruthy();
     expect(screen.getByText("Verified seller")).toBeTruthy();
@@ -141,9 +140,8 @@ describe("product page", () => {
   });
 
   test("writes a review, asking for a rating first", async () => {
-    searchParams.current = new URLSearchParams("slug=headset");
     const db = setup();
-    renderScreen(<Product />, db.supabase);
+    renderScreen(<Product slug="headset" />, db.supabase);
 
     fireEvent.click(
       await screen.findByRole("button", { name: "Publish review" })
@@ -170,7 +168,6 @@ describe("product page", () => {
   });
 
   test("shows the user's own review even when staff hid it", async () => {
-    searchParams.current = new URLSearchParams("slug=headset");
     const db = setup({
       comment: "Not great.",
       created_at: "2026-11-03T10:00:00Z",
@@ -179,7 +176,7 @@ describe("product page", () => {
       status: "hidden",
       verified_purchase: false,
     });
-    renderScreen(<Product />, db.supabase);
+    renderScreen(<Product slug="headset" />, db.supabase);
 
     expect(await screen.findByText("Your review")).toBeTruthy();
     expect(screen.getByText("Not great.")).toBeTruthy();
@@ -197,9 +194,8 @@ describe("product page", () => {
   });
 
   test("saves the product to the wishlist", async () => {
-    searchParams.current = new URLSearchParams("slug=headset");
     const db = setup();
-    renderScreen(<Product />, db.supabase);
+    renderScreen(<Product slug="headset" />, db.supabase);
 
     fireEvent.click(await screen.findByRole("button", { name: "Save" }));
     await waitFor(() =>
@@ -327,12 +323,11 @@ describe("support", () => {
       })
     );
     await waitFor(() =>
-      expect(router.replace).toHaveBeenCalledWith("/en/support/view?id=t1")
+      expect(router.replace).toHaveBeenCalledWith("/en/support/t1")
     );
   });
 
   test("shows the conversation, replies and closes the ticket", async () => {
-    searchParams.current = new URLSearchParams("id=t1");
     const db = fakeDb({
       results: {
         "support_messages.select": {
@@ -356,7 +351,7 @@ describe("support", () => {
       },
       rpcs: { close_support_ticket: { data: null, error: null } },
     });
-    renderScreen(<Ticket />, db.supabase);
+    renderScreen(<Ticket ticketId="t1" />, db.supabase);
 
     expect(await screen.findByText("It ships today.")).toBeTruthy();
     expect(screen.getByText("The IDEA support")).toBeTruthy();
@@ -388,13 +383,12 @@ describe("support", () => {
   });
 
   test("a closed ticket takes no replies", async () => {
-    searchParams.current = new URLSearchParams("id=t1");
     const db = fakeDb({
       results: {
         "support_tickets.select": { data: [ticket("closed")], error: null },
       },
     });
-    renderScreen(<Ticket />, db.supabase);
+    renderScreen(<Ticket ticketId="t1" />, db.supabase);
 
     const reply = (await screen.findByLabelText(
       "Reply"
@@ -476,7 +470,7 @@ describe("notifications", () => {
         name: "mark_notifications_read",
       })
     );
-    expect(router.push).toHaveBeenCalledWith("/en/orders/view?id=o1");
+    expect(router.push).toHaveBeenCalledWith("/en/orders/o1");
   });
 });
 

@@ -4,9 +4,8 @@ import { useAuth } from "@repo/auth/provider";
 import { usePathname, useRouter } from "@repo/internationalization/navigation";
 import { useLocale } from "next-intl";
 import { type ReactNode, useEffect } from "react";
-import { safeNextPath } from "@/lib/navigation";
+import { takeAccountDeletedNotice } from "@/lib/account-deletion";
 import { needsOnboarding } from "@/lib/onboarding";
-import { goToPass, usesPass } from "@/lib/pass";
 import { useProfile } from "@/lib/queries";
 import { useOrganization } from "./organization-provider";
 import { ErrorState, FullPageSpinner } from "./states";
@@ -17,9 +16,8 @@ interface GateProps {
 
 /**
  * Shows its children only to signed-in users and sends everyone else to
- * sign in (The IDEA Pass on the web, the in-app page in the iOS/Android
- * apps), coming back afterwards. This is a convenience: the data is
- * protected by Row Level Security, not by this check.
+ * The IDEA Pass sign-in, coming back afterwards. This is a convenience: the
+ * data is protected by Row Level Security, not by this check.
  */
 export const RequireAuth = ({ children }: GateProps) => {
   const { loading, user } = useAuth();
@@ -31,12 +29,13 @@ export const RequireAuth = ({ children }: GateProps) => {
     if (loading || user) {
       return;
     }
-    const next = `${pathname}${window.location.search}`;
-    if (usesPass()) {
-      goToPass("/sign-in", locale, next);
-    } else {
-      router.replace({ pathname: "/sign-in", query: { next } });
-    }
+    const returnTo = `/${locale}${pathname === "/" ? "" : pathname}${window.location.search}`;
+    router.replace({
+      pathname: "/sign-in",
+      query: takeAccountDeletedNotice()
+        ? { notice: "deleted", return_to: returnTo }
+        : { return_to: returnTo },
+    });
   }, [loading, locale, pathname, router, user]);
 
   return loading || !user ? <FullPageSpinner /> : children;
@@ -72,19 +71,4 @@ export const RequireOnboarding = ({ children }: GateProps) => {
   }
 
   return pending === false ? children : <FullPageSpinner />;
-};
-
-/** Sign-in and sign-up pages: signed-in users go on to the app. */
-export const GuestOnly = ({ children }: GateProps) => {
-  const { loading, user } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && user) {
-      const next = new URLSearchParams(window.location.search).get("next");
-      router.replace(safeNextPath(next) ?? "/");
-    }
-  }, [loading, router, user]);
-
-  return loading || user ? <FullPageSpinner /> : children;
 };

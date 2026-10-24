@@ -220,8 +220,8 @@ describe("orders", () => {
     expect(itemCount([{ quantity: 2 }, { quantity: 1 }])).toBe(3);
   });
 
-  test("detail pages use a query parameter (static export)", () => {
-    expect(orderPath("a b")).toBe("/orders/view?id=a%20b");
+  test("detail pages are dynamic routes", () => {
+    expect(orderPath("a b")).toBe("/orders/a%20b");
   });
 });
 

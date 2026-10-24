@@ -2,6 +2,7 @@
 
 import { resetIdentity } from "@repo/analytics/client";
 import { UserMenu } from "@repo/auth/components/user-menu";
+import { useAuth } from "@repo/auth/provider";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import {
   Sidebar,
@@ -26,6 +27,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
+import { unregisterPushNotifications } from "@/lib/native/push";
 import { useProfile } from "@/lib/queries";
 import { useCartCount } from "@/lib/store-queries";
 import { LanguageSwitcher } from "./language-switcher";
@@ -34,10 +36,12 @@ import { ThemeToggle } from "./theme-toggle";
 
 export const AppSidebar = () => {
   const t = useTranslations("app.nav");
+  const tMeta = useTranslations("app.meta");
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { supabase } = useAuth();
   const authMessages = useAuthMessages();
   const { isMobile, setOpenMobile } = useSidebar();
   const profile = useProfile();
@@ -52,8 +56,16 @@ export const AppSidebar = () => {
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
-        <Link className="px-2 py-1.5" href="/" onClick={closeOnMobile}>
+        <Link
+          aria-label={tMeta("title")}
+          className="flex items-center gap-2 px-2 py-1.5"
+          href="/"
+          onClick={closeOnMobile}
+        >
           <BrandLogo />
+          <span className="rounded-full bg-brand px-2 py-0.5 font-medium text-brand-foreground text-xs">
+            {tMeta("badge")}
+          </span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -101,6 +113,7 @@ export const AppSidebar = () => {
               resetIdentity();
               router.replace("/sign-in");
             }}
+            onSigningOut={() => unregisterPushNotifications(supabase)}
           />
           <div className="flex shrink-0 items-center">
             <LanguageSwitcher />

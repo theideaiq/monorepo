@@ -9,18 +9,12 @@
       "outputs": [
         ".next/**",
         "!.next/cache/**",
-        "out/**",
         "**/generated/**",
         "storybook-static/**"
       ]
     },
-    "build:native": {
-      "dependsOn": ["^build"],
-      "outputs": ["out/**"]
-    },
     "cap:sync": {
-      "cache": false,
-      "dependsOn": ["build:native"]
+      "cache": false
     },
     "typecheck": {},
     "test": {},
@@ -46,7 +40,6 @@
     "NEXT_PUBLIC_*",
     "SKIP_ENV_VALIDATION",
     "ANALYZE",
-    "BUILD_TARGET",
     "CAP_SERVER_URL",
     "SUPABASE_INTEGRATION",
     "SUPABASE_SECRET_KEY",
@@ -59,6 +52,8 @@
     "ARCJET_KEY",
     "BETTERSTACK_*",
     "CRON_SECRET",
+    "FCM_SERVICE_ACCOUNT",
+    "PUSH_WEBHOOK_SECRET",
     "META_*",
     "TIKTOK_*",
     "PAYMENTS_PROVIDER",

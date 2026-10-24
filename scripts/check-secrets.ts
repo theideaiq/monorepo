@@ -24,7 +24,6 @@ import { dirname, extname, join, relative, resolve } from "node:path";
 /** Server variables that are build or platform values, not secrets. */
 export const PUBLIC_SERVER_VARIABLES = new Set([
   "ANALYZE",
-  "BUILD_TARGET",
   "CAP_SERVER_URL",
   "CI",
   "NEXT_RUNTIME",

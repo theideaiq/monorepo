@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["APPLE_TEAM_ID.com.theideaiq.app"],
+        "components": [
+          { "/": "/.well-known/*", "exclude": true },
+          { "/": "/*" }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["APPLE_TEAM_ID.com.theideaiq.app"]
+  }
+}

@@ -17,45 +17,6 @@
         "vitest": "^5.0.3",
       },
     },
-    "apps/admin": {
-      "name": "admin",
-      "dependencies": {
-        "@date-fns/tz": "^1.5.0",
-        "@repo/auth": "workspace:*",
-        "@repo/commerce": "workspace:*",
-        "@repo/database": "workspace:*",
-        "@repo/design-system": "workspace:*",
-        "@repo/internationalization": "workspace:*",
-        "@repo/next-config": "workspace:*",
-        "@repo/observability": "workspace:*",
-        "@repo/security": "workspace:*",
-        "@repo/storage": "workspace:*",
-        "@sentry/nextjs": "^10.42.0",
-        "@t3-oss/env-nextjs": "^0.13.10",
-        "import-in-the-middle": "^3.0.0",
-        "lucide-react": "^1.41.0",
-        "marked": "^18.0.14",
-        "next": "16.4.3",
-        "next-intl": "^4.14.9",
-        "react": "19.3.0",
-        "react-dom": "19.3.0",
-        "recharts": "^3.8.0",
-        "require-in-the-middle": "8.0.1",
-        "server-only": "^0.0.1",
-        "sonner": "^2.0.7",
-        "zod": "^4.6.7",
-      },
-      "devDependencies": {
-        "@repo/typescript-config": "workspace:*",
-        "@tailwindcss/postcss": "^4.2.1",
-        "@types/node": "24.19.1",
-        "@types/react": "19.3.0",
-        "@types/react-dom": "19.3.0",
-        "tailwindcss": "^4.2.1",
-        "typescript": "^7.0.2",
-        "vitest": "^5.0.3",
-      },
-    },
     "apps/api": {
       "name": "api",
       "dependencies": {
@@ -68,6 +29,7 @@
         "@repo/design-system": "workspace:*",
         "@repo/droid": "workspace:*",
         "@repo/email": "workspace:*",
+        "@repo/internationalization": "workspace:*",
         "@repo/next-config": "workspace:*",
         "@repo/observability": "workspace:*",
         "@repo/payments": "workspace:*",
@@ -99,12 +61,16 @@
     "apps/app": {
       "name": "app",
       "dependencies": {
-        "@aparajita/capacitor-secure-storage": "^8.0.1",
         "@capacitor/android": "^8.5.2",
         "@capacitor/app": "^8.1.2",
         "@capacitor/browser": "^8.0.5",
         "@capacitor/core": "^8.5.2",
         "@capacitor/ios": "^8.5.2",
+        "@capacitor/push-notifications": "^8.1.3",
+        "@capacitor/share": "^8.0.3",
+        "@capacitor/splash-screen": "^8.0.2",
+        "@capacitor/status-bar": "^8.0.4",
+        "@date-fns/tz": "^1.5.0",
         "@repo/analytics": "workspace:*",
         "@repo/auth": "workspace:*",
         "@repo/commerce": "workspace:*",
@@ -123,12 +89,16 @@
         "@tanstack/react-query": "^5.104.1",
         "import-in-the-middle": "^3.0.0",
         "lucide-react": "^1.41.0",
+        "marked": "^18.0.14",
         "next": "16.4.3",
         "next-intl": "^4.14.9",
         "next-themes": "^0.4.6",
         "react": "19.3.0",
         "react-dom": "19.3.0",
+        "recharts": "^3.8.0",
         "require-in-the-middle": "8.0.1",
+        "server-only": "^0.0.1",
+        "sonner": "^2.0.7",
         "zod": "^4.6.7",
       },
       "devDependencies": {
@@ -163,37 +133,6 @@
         "@supabase/supabase-js": "^2.115.0",
         "@types/node": "24.19.1",
         "typescript": "^7.0.2",
-      },
-    },
-    "apps/pass": {
-      "name": "pass",
-      "dependencies": {
-        "@repo/auth": "workspace:*",
-        "@repo/design-system": "workspace:*",
-        "@repo/internationalization": "workspace:*",
-        "@repo/next-config": "workspace:*",
-        "@repo/observability": "workspace:*",
-        "@repo/security": "workspace:*",
-        "@sentry/nextjs": "^10.42.0",
-        "@t3-oss/env-nextjs": "^0.13.10",
-        "import-in-the-middle": "^3.0.0",
-        "lucide-react": "^1.41.0",
-        "next": "16.4.3",
-        "next-intl": "^4.14.9",
-        "react": "19.3.0",
-        "react-dom": "19.3.0",
-        "require-in-the-middle": "8.0.1",
-        "server-only": "^0.0.1",
-      },
-      "devDependencies": {
-        "@repo/typescript-config": "workspace:*",
-        "@tailwindcss/postcss": "^4.2.1",
-        "@types/node": "24.19.1",
-        "@types/react": "19.3.0",
-        "@types/react-dom": "19.3.0",
-        "tailwindcss": "^4.2.1",
-        "typescript": "^7.0.2",
-        "vitest": "^5.0.3",
       },
     },
     "apps/storybook": {
@@ -633,8 +572,6 @@
 
     "@alloc/quick-lru": ["@alloc/quick-lru@5.3.0", "", {}, "sha512-U4+70Pc5ZS9osnCBCE5Jha/ciHM+Yp+CNMNC/7HvYbNRk1Ldd+f7qO65W5qfhu/TCv+/ozljlXXe9Nj8419DMA=="],
 
-    "@aparajita/capacitor-secure-storage": ["@aparajita/capacitor-secure-storage@8.0.1", "", { "dependencies": { "@capacitor/android": "^8.0.2", "@capacitor/app": "^8.0.0", "@capacitor/core": "^8.0.2", "@capacitor/ios": "^8.0.2", "@capacitor/keyboard": "^8.0.0" } }, "sha512-NSYIQtH6TyBgL3myumQGcCE3iecq2PtGNFlGxl1fJKEU37Dv5DudzDlwg42cgbVxCm1ay72g4X7rTSAvKULsVg=="],
-
     "@arcjet/analyze": ["@arcjet/analyze@1.2.0", "", { "dependencies": { "@arcjet/analyze-wasm": "1.2.0", "@arcjet/protocol": "1.2.0" } }, "sha512-+F/YY6HObd3iZq74ZT0yjdGJ77uc1f6q+Itq3dto2d/9iaZ30YiV67sQl/TmYWbNNO4Hu+b6SRCArdMS+vmAxw=="],
 
     "@arcjet/analyze-wasm": ["@arcjet/analyze-wasm@1.2.0", "", {}, "sha512-UILv081UsPKcbn00DgPGvBUcGQQH1fmqxMbepXgwJyhF/i9YdoChiiR3k9hB/1v7HhDbC0xNQTAKUZt76VdsmA=="],
@@ -921,7 +858,13 @@
 
     "@capacitor/ios": ["@capacitor/ios@8.5.2", "", { "peerDependencies": { "@capacitor/core": "^8.5.0" } }, "sha512-eOT2S67AfTFG7KN0T3oxwAajrJz4rSye+ODfvChiwrk0F/+kWufFM1qU6cDjGJUOfwdAoeuEpZyWHSwZlu4GFg=="],
 
-    "@capacitor/keyboard": ["@capacitor/keyboard@8.0.6", "", { "peerDependencies": { "@capacitor/core": ">=8.0.0" } }, "sha512-Bbe+9V0qaT6dzEFJEK7BUWR01l2+vZE8FM5ITF/WgKtx+G6eGZ6d5+YiSMRJBAK0VGjdO59v8yiQ10Doa5KyvQ=="],
+    "@capacitor/push-notifications": ["@capacitor/push-notifications@8.1.3", "", { "peerDependencies": { "@capacitor/core": ">=8.0.0" } }, "sha512-UlOCTS3uiw8ZUJ1rkFKJgoqPADipHDNn0lq5mNRwtXALVxQXIeIoRd3iqpzC+962R2LpCRJRkCTjPX2OHK3tBA=="],
+
+    "@capacitor/share": ["@capacitor/share@8.0.3", "", { "peerDependencies": { "@capacitor/core": ">=8.0.0" } }, "sha512-gnvZBV1NPu2B8vd1UKncR56G15ueHd0aZLqgDov++t3SmTBG9Q0VrAZ1VnHn5stxlmglVaTb4RwopMgbpLzroA=="],
+
+    "@capacitor/splash-screen": ["@capacitor/splash-screen@8.0.2", "", { "peerDependencies": { "@capacitor/core": ">=8.0.0" } }, "sha512-0C6rYScr13WfAE9nPl4ScOQynmjFv9NT3Th+RZkD4ezYHmER6mcl1/lDYsv7jg3Rj3FOvLrlTlmNkUrr83kZzQ=="],
+
+    "@capacitor/status-bar": ["@capacitor/status-bar@8.0.4", "", { "peerDependencies": { "@capacitor/core": ">=8.0.0" } }, "sha512-ZMzBUyHBzwDUxcHadEhvOvmoPmMQGMZgaMRJu8ohELeI6IaxoVH9ZhdF/OHnY3/yykv3Glev8Tnbh4aZY/0B0w=="],
 
     "@chromatic-com/storybook": ["@chromatic-com/storybook@5.4.0", "", { "dependencies": { "@neoconfetti/react": "^1.0.0", "chromatic": "^18.0.1", "jsonfile": "^6.1.0", "strip-ansi": "^7.1.0" }, "peerDependencies": { "storybook": "^0.0.0-0 || ^10.1.0 || ^10.1.0-0 || ^10.2.0-0 || ^10.3.0-0 || ^10.4.0-0 || ^10.5.0-0 || ^10.6.0-0 || ^11.0.0-0" } }, "sha512-U4Rny8H6BBa8uiRMnL0CFZyqZ0MWogN/szlMugsInfSnX+PtrLCVp2kjrvaG9bv6X5xSgHpnmepOzLm8+QFseA=="],
 
@@ -2053,8 +1996,6 @@
 
     "adjust-sourcemap-loader": ["adjust-sourcemap-loader@4.0.0", "", { "dependencies": { "loader-utils": "^2.0.0", "regex-parser": "^2.2.11" } }, "sha512-OXwN5b9pCUXNQHJpwwD2qP40byEmSgzj8B4ydSN0uMNYWiFmJ6x6KwUllMmfk8Rwu/HJDFR7U8ubsWBoN0Xp0A=="],
 
-    "admin": ["admin@workspace:apps/admin"],
-
     "agent-base": ["agent-base@7.1.4", "", {}, "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ=="],
 
     "ai": ["ai@7.0.127", "", { "dependencies": { "@ai-sdk/gateway": "4.0.103", "@ai-sdk/provider": "4.0.21", "@ai-sdk/provider-utils": "5.0.53" }, "peerDependencies": { "zod": "^3.25.76 || ^4.1.8" } }, "sha512-JNsNPk4ZvRGEJuqdVo2lYFkm7uAuf3p/RwKFWn1Wh/+IK3U1RyFWw2GXoFnhzqNfxEuj7XJB4WpIUhl1sHToWg=="],
@@ -2978,8 +2919,6 @@
     "parseley": ["parseley@0.12.1", "", { "dependencies": { "leac": "^0.6.0", "peberminta": "^0.9.0" } }, "sha512-e6qHKe3a9HWr0oMRVDTRhKce+bRO8VGQR3NyVwcjwrbhMmFCX9KszEV35+rn4AdilFAq9VPxP/Fe1wC9Qjd2lw=="],
 
     "pascal-case": ["pascal-case@3.1.2", "", { "dependencies": { "no-case": "^3.0.4", "tslib": "^2.0.3" } }, "sha512-uWlGT3YSnK9x3BQJaOdcZwrnV6hPpd8jFH1/ucpiLRPh/2zCVJKS19E4GvYHvaCcACn3foXZ0cLB9Wrx1KGe5g=="],
-
-    "pass": ["pass@workspace:apps/pass"],
 
     "path-browserify": ["path-browserify@1.0.1", "", {}, "sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g=="],
 

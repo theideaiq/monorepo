@@ -1,14 +1,15 @@
 /**
- * Links to The IDEA Pass (apps/pass), the only sign-in and sign-up UI on the
- * web, and the check of where it may send people back to afterwards.
+ * Links to The IDEA Pass (the sign-in, sign-up, authenticator and "Your
+ * Pass" pages of The IDEA Spark, apps/app), the only sign-in UI on the web,
+ * and the check of where it may send people back to afterwards.
  *
  * Reads the public URLs straight from `process.env.NEXT_PUBLIC_*` (inlined
  * at build time), so these helpers work in server and client code alike and
  * in every app, whichever env presets it extends.
  */
 
-/** Where The IDEA Pass runs when NEXT_PUBLIC_PASS_URL is not set (local dev). */
-export const DEFAULT_PASS_URL = "http://localhost:3006";
+/** Where The IDEA Spark runs when NEXT_PUBLIC_APP_URL is not set (local dev). */
+export const DEFAULT_PASS_URL = "http://localhost:3000";
 
 const TRAILING_SLASH = /\/+$/;
 const LOCALHOST = new Set(["localhost", "127.0.0.1", "[::1]"]);
@@ -22,9 +23,9 @@ export interface ReturnToOptions {
   hosts?: Iterable<string>;
 }
 
-/** The Pass origin, without a trailing slash. */
+/** The Pass origin (The IDEA Spark), without a trailing slash. */
 export const passOrigin = () =>
-  (process.env.NEXT_PUBLIC_PASS_URL || DEFAULT_PASS_URL).replace(
+  (process.env.NEXT_PUBLIC_APP_URL || DEFAULT_PASS_URL).replace(
     TRAILING_SLASH,
     ""
   );
@@ -41,18 +42,16 @@ const hostOf = (value: string | undefined) => {
 };
 
 /**
- * The hostnames of The IDEA's own sites: website, app, back office, design
- * site, API and the Pass itself.
+ * The hostnames of The IDEA's own sites: the website, The IDEA Spark (with
+ * the Pass and the back office), the design site and the API.
  */
 export const allowedReturnToHosts = () =>
   new Set(
     [
       process.env.NEXT_PUBLIC_WEB_URL,
       process.env.NEXT_PUBLIC_APP_URL,
-      process.env.NEXT_PUBLIC_ADMIN_URL,
       process.env.NEXT_PUBLIC_DESIGN_URL,
       process.env.NEXT_PUBLIC_API_URL,
-      passOrigin(),
     ]
       .map(hostOf)
       .filter((host): host is string => Boolean(host))
@@ -102,9 +101,10 @@ export const safeReturnTo = (
 
 /**
  * A link to a Pass page, e.g.
- * `passUrl("/sign-in", "https://app.theideaiq.com/en/cart", "en")` →
- * `https://pass.theideaiq.com/en/sign-in?return_to=https%3A%2F%2Fapp…`.
- * Without a locale, the Pass picks one from the browser.
+ * `passUrl("/sign-in", "https://theideaiq.com/en/store", "en")` →
+ * `https://spark.theideaiq.com/en/sign-in?return_to=https%3A%2F%2Ftheideaiq…`.
+ * `"/"` is "Your Pass" (`/{locale}/pass`). Without a locale, The IDEA Spark
+ * picks one from the browser.
  */
 export const passUrl = (
   path: PassPath,
@@ -113,7 +113,7 @@ export const passUrl = (
   origin: string = passOrigin()
 ) => {
   const prefix = locale ? `/${locale}` : "";
-  const suffix = path === "/" ? "" : path;
+  const suffix = path === "/" ? "/pass" : path;
   const url = new URL(
     `${origin.replace(TRAILING_SLASH, "")}${prefix}${suffix}`
   );

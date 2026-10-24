@@ -35,6 +35,11 @@ interface UserMenuProps {
   readonly name?: string | null;
   /** Called after signing out, e.g. to navigate to the sign-in page. */
   readonly onSignedOut?: () => void;
+  /**
+   * Awaited just before signing out, while the session is still valid
+   * (e.g. to remove this device's push registration).
+   */
+  readonly onSigningOut?: () => Promise<void> | void;
 }
 
 /** Avatar button with the signed-in user's details and a sign-out action. */
@@ -42,6 +47,7 @@ export const UserMenu = ({
   messages = defaultAuthMessages,
   name: displayName,
   onSignedOut,
+  onSigningOut,
 }: UserMenuProps) => {
   const { supabase, user } = useAuth();
 
@@ -55,6 +61,7 @@ export const UserMenu = ({
   const avatarUrl: string | undefined = user.user_metadata?.avatar_url;
 
   const signOut = async () => {
+    await onSigningOut?.();
     await supabase.auth.signOut();
     onSignedOut?.();
   };

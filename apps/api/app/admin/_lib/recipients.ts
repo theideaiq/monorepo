@@ -3,7 +3,7 @@ import { z } from "zod";
 
 /**
  * A marketing segment's criteria (`marketing_segments.criteria`), the same
- * shape the back office writes (apps/admin/lib/segments.ts). A recipient
+ * shape the back office writes (apps/app/lib/admin/segments.ts). A recipient
  * must match every criterion that is set.
  */
 export const segmentCriteria = z

@@ -45,7 +45,7 @@ describe("parseStoreQuery", () => {
 describe("app links", () => {
   it("points at the app's query-parameter routes", () => {
     expect(appProductLink("https://app.theideaiq.com/", "ar", "ps5-slim")).toBe(
-      "https://app.theideaiq.com/ar/store/product?slug=ps5-slim"
+      "https://app.theideaiq.com/ar/store/ps5-slim"
     );
     expect(appLink("https://app.theideaiq.com", "en", "/events")).toBe(
       "https://app.theideaiq.com/en/events"

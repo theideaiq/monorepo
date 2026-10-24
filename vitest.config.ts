@@ -11,11 +11,9 @@ export default defineConfig({
       reportsDirectory: "./coverage",
     },
     projects: [
-      "apps/admin",
       "apps/api",
       "apps/app",
       "apps/storybook",
-      "apps/pass",
       "apps/web",
       "packages/analytics",
       "packages/auth",

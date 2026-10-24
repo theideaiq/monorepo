@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { Price } from "@/components/store/price";
+import { productHref } from "@/components/store/product-card";
 import { ProductImage } from "@/components/store/product-image";
 import { ProductReviews } from "@/components/store/product-reviews";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
@@ -123,7 +124,7 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
     );
   };
 
-  // From the website ("Buy" → /store/product?slug=…&add=1): add one copy
+  // From the website ("Buy" → /store/<slug>?add=1): add one copy
   // once, when no choice is needed, then drop the flag from the URL.
   // biome-ignore lint/correctness/useExhaustiveDependencies: runs once per deep link
   useEffect(() => {
@@ -134,10 +135,7 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
     if (canAdd) {
       addToCart(1);
     }
-    router.replace({
-      pathname: "/store/product",
-      query: { slug: product.slug },
-    });
+    router.replace(productHref(product.slug));
   }, [deepLinkAdd]);
 
   return (
@@ -299,10 +297,13 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
   );
 };
 
-/** /store/product?slug=… (query parameter: the app is a static export). */
-export const Product = () => {
+interface ProductScreenProps {
+  readonly slug: string;
+}
+
+/** /store/<slug>: a product page. */
+export const Product = ({ slug }: ProductScreenProps) => {
   const t = useTranslations("app.store");
-  const slug = useSearchParams().get("slug") ?? "";
   const product = useProduct(slug);
 
   return (
