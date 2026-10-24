@@ -107,9 +107,9 @@ export const localeFrom = (request: Request): Locale => {
 };
 
 /**
- * `${NEXT_PUBLIC_PASS_URL}/${locale}/${path}?return_to=…`. A local stand-in
- * for `passUrl` from @repo/auth (owned by The IDEA Pass), to be replaced by
- * it once that helper is merged.
+ * `${NEXT_PUBLIC_PASS_URL}/${locale}/${path}?return_to=…`, the same URL as
+ * `passUrl` from @repo/auth/pass builds, but from the injected `GateEnv` so
+ * the gate stays testable without process.env.
  */
 export const passUrl = (
   env: GateEnv,

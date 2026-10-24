@@ -2,8 +2,10 @@ import { execSync } from "node:child_process";
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * End-to-end journeys against a local Supabase stack and the four Next.js
- * apps (app, website, back office, The IDEA Pass) (CI: .github/workflows/ci.yml, job "e2e"). Locally: `bun run
+ * End-to-end journeys against a local Supabase stack and the five Next.js
+ * apps (app, website, back office, The IDEA Pass and the API, which the
+ * website's forms and status badge call) (CI: .github/workflows/ci.yml,
+ * job "e2e"). Locally: `bun run
  * db:start`, then `bun run --cwd apps/e2e e2e`; the servers are started here
  * unless already running. E2E_START=start runs the built apps (`next start`,
  * as CI does after `turbo build`) instead of the dev servers.
@@ -101,6 +103,12 @@ export default defineConfig({
       reuseExistingServer: true,
       timeout: 240_000,
       url: `${pass}/en/sign-in`,
+    },
+    {
+      command: `bun run --cwd ../api ${script}`,
+      reuseExistingServer: true,
+      timeout: 240_000,
+      url: `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3002"}/health`,
     },
   ],
   workers: 1,
