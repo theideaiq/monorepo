@@ -1,5 +1,4 @@
 import { render } from "@react-email/components";
-import { CampaignTemplate } from "@repo/email/templates/campaign";
 import { ContactTemplate } from "@repo/email/templates/contact";
 import {
   type OrderConfirmationProps,
@@ -32,9 +31,7 @@ interface Sample {
 }
 
 const LANGS: readonly Lang[] = ["ar", "en"];
-const SITE = "https://theideaiq.com";
 const SUPPORT = "hi@theideaiq.com";
-const UNSUBSCRIBE = `${SITE}/unsubscribe?token=sample`;
 
 /** Both languages side by side, each in its own frame like a mail client. */
 const email = (make: (lang: Lang) => Sample): Story => ({
@@ -64,35 +61,6 @@ const email = (make: (lang: Lang) => Sample): Story => ({
     </div>
   ),
 });
-
-const campaign = {
-  ar: {
-    body: "# وصل الجديد إلى الميغاستور\n\nأحدث **الألعاب** و**الكتب** صارت متوفرة الآن، مع توصيل إلى كل المحافظات.\n\n- بلايستيشن 5 برو\n- يد تحكم DualSense بألوان جديدة\n- روايات عربية مختارة لهذا الشهر\n\n[تسوّق الآن](https://theideaiq.com/ar/store)",
-    preview: "أحدث الألعاب والكتب صارت متوفرة في The IDEA",
-    subject: "وصل الجديد إلى The IDEA",
-  },
-  en: {
-    body: "# New arrivals in the Megastore\n\nThe latest **games** and **books** are in, with delivery to every governorate.\n\n- PlayStation 5 Pro\n- DualSense controllers in new colors\n- This month's picks of Arabic fiction\n\n[Shop now](https://theideaiq.com/en/store)",
-    preview: "The latest games and books are in at The IDEA",
-    subject: "New arrivals at The IDEA",
-  },
-} as const;
-
-export const Campaign = email((lang) => ({
-  email: (
-    <CampaignTemplate
-      body={campaign[lang].body}
-      brandName="The IDEA"
-      locale={lang}
-      preview={campaign[lang].preview}
-      siteUrl={SITE}
-      subject={campaign[lang].subject}
-      supportEmail={SUPPORT}
-      unsubscribeUrl={UNSUBSCRIBE}
-    />
-  ),
-  subject: campaign[lang].subject,
-}));
 
 /**
  * The contact form's note to the team inbox. The template's own text is

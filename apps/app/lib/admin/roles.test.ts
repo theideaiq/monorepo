@@ -38,14 +38,9 @@ describe("role → sections", () => {
     expect(canRead("finance", "reviews")).toBe(false);
   });
 
-  test("marketing reads customers and runs marketing", () => {
-    expect(visibleSections("marketing")).toEqual([
-      "dashboard",
-      "customers",
-      "marketing",
-    ]);
+  test("marketing reads customers (newsletters go out from Resend)", () => {
+    expect(visibleSections("marketing")).toEqual(["dashboard", "customers"]);
     expect(canWrite("marketing", "customers")).toBe(false);
-    expect(canWrite("marketing", "marketing")).toBe(true);
     expect(canRead("marketing", "support")).toBe(false);
   });
 

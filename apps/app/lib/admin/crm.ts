@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { optionalDateTime, optionalText, tags, uuid } from "./forms";
-import { crmStatuses } from "./segments";
+
+/** CRM statuses (`crm_status`), in the order the back office lists them. */
+export const crmStatuses = ["lead", "customer", "vip", "churned"] as const;
 
 export const crmContactSchema = z.object({
   /** A `datetime-local` value in Baghdad time; empty clears it. */

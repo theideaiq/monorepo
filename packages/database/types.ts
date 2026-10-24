@@ -144,86 +144,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      equity_holders: {
-        Row: {
-          conversion_cap: number | null;
-          created_at: string;
-          discount_rate: number | null;
-          id: string;
-          instrument: Database["public"]["Enums"]["equity_instrument"];
-          invested_amount: number | null;
-          name: string;
-          round_id: string | null;
-          shares: number;
-          type: Database["public"]["Enums"]["equity_holder_type"];
-          vesting_start: string | null;
-        };
-        Insert: {
-          conversion_cap?: number | null;
-          created_at?: string;
-          discount_rate?: number | null;
-          id?: string;
-          instrument?: Database["public"]["Enums"]["equity_instrument"];
-          invested_amount?: number | null;
-          name: string;
-          round_id?: string | null;
-          shares: number;
-          type: Database["public"]["Enums"]["equity_holder_type"];
-          vesting_start?: string | null;
-        };
-        Update: {
-          conversion_cap?: number | null;
-          created_at?: string;
-          discount_rate?: number | null;
-          id?: string;
-          instrument?: Database["public"]["Enums"]["equity_instrument"];
-          invested_amount?: number | null;
-          name?: string;
-          round_id?: string | null;
-          shares?: number;
-          type?: Database["public"]["Enums"]["equity_holder_type"];
-          vesting_start?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "equity_holders_round_id_fkey";
-            columns: ["round_id"];
-            isOneToOne: false;
-            referencedRelation: "equity_rounds";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      equity_rounds: {
-        Row: {
-          closed_on: string | null;
-          created_at: string;
-          currency: string;
-          id: string;
-          name: string;
-          price_per_share: number | null;
-          valuation_cap: number | null;
-        };
-        Insert: {
-          closed_on?: string | null;
-          created_at?: string;
-          currency?: string;
-          id?: string;
-          name: string;
-          price_per_share?: number | null;
-          valuation_cap?: number | null;
-        };
-        Update: {
-          closed_on?: string | null;
-          created_at?: string;
-          currency?: string;
-          id?: string;
-          name?: string;
-          price_per_share?: number | null;
-          valuation_cap?: number | null;
-        };
-        Relationships: [];
-      };
       event_rsvps: {
         Row: {
           created_at: string;
@@ -328,48 +248,6 @@ export type Database = {
           id?: boolean;
           updated_at?: string;
           vat_rate?: number;
-        };
-        Relationships: [];
-      };
-      fixed_assets: {
-        Row: {
-          category: string | null;
-          cost: number;
-          created_at: string;
-          disposed_on: string | null;
-          id: string;
-          name: string;
-          notes: string | null;
-          purchase_date: string;
-          salvage_value: number;
-          updated_at: string;
-          useful_life_months: number;
-        };
-        Insert: {
-          category?: string | null;
-          cost: number;
-          created_at?: string;
-          disposed_on?: string | null;
-          id?: string;
-          name: string;
-          notes?: string | null;
-          purchase_date: string;
-          salvage_value?: number;
-          updated_at?: string;
-          useful_life_months?: number;
-        };
-        Update: {
-          category?: string | null;
-          cost?: number;
-          created_at?: string;
-          disposed_on?: string | null;
-          id?: string;
-          name?: string;
-          notes?: string | null;
-          purchase_date?: string;
-          salvage_value?: number;
-          updated_at?: string;
-          useful_life_months?: number;
         };
         Relationships: [];
       };
@@ -542,77 +420,6 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
-      };
-      marketing_campaigns: {
-        Row: {
-          body: string;
-          created_at: string;
-          created_by: string | null;
-          id: string;
-          segment_id: string | null;
-          sent_at: string | null;
-          sent_count: number;
-          status: Database["public"]["Enums"]["campaign_status"];
-          subject: string;
-          updated_at: string;
-        };
-        Insert: {
-          body: string;
-          created_at?: string;
-          created_by?: string | null;
-          id?: string;
-          segment_id?: string | null;
-          sent_at?: string | null;
-          sent_count?: number;
-          status?: Database["public"]["Enums"]["campaign_status"];
-          subject: string;
-          updated_at?: string;
-        };
-        Update: {
-          body?: string;
-          created_at?: string;
-          created_by?: string | null;
-          id?: string;
-          segment_id?: string | null;
-          sent_at?: string | null;
-          sent_count?: number;
-          status?: Database["public"]["Enums"]["campaign_status"];
-          subject?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "marketing_campaigns_segment_id_fkey";
-            columns: ["segment_id"];
-            isOneToOne: false;
-            referencedRelation: "marketing_segments";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      marketing_segments: {
-        Row: {
-          created_at: string;
-          created_by: string | null;
-          criteria: NonNullable<Json>;
-          id: string;
-          name: string;
-        };
-        Insert: {
-          created_at?: string;
-          created_by?: string | null;
-          criteria?: NonNullable<Json>;
-          id?: string;
-          name: string;
-        };
-        Update: {
-          created_at?: string;
-          created_by?: string | null;
-          criteria?: NonNullable<Json>;
-          id?: string;
-          name?: string;
-        };
-        Relationships: [];
       };
       memberships: {
         Row: {
@@ -1381,42 +1188,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      staff_plan: {
-        Row: {
-          annual_increase_pct: number;
-          created_at: string;
-          department: string;
-          id: string;
-          monthly_salary: number;
-          role_title: string;
-          start_date: string | null;
-          status: Database["public"]["Enums"]["staff_plan_status"];
-          updated_at: string;
-        };
-        Insert: {
-          annual_increase_pct?: number;
-          created_at?: string;
-          department: string;
-          id?: string;
-          monthly_salary: number;
-          role_title: string;
-          start_date?: string | null;
-          status?: Database["public"]["Enums"]["staff_plan_status"];
-          updated_at?: string;
-        };
-        Update: {
-          annual_increase_pct?: number;
-          created_at?: string;
-          department?: string;
-          id?: string;
-          monthly_salary?: number;
-          role_title?: string;
-          start_date?: string | null;
-          status?: Database["public"]["Enums"]["staff_plan_status"];
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
       store_settings: {
         Row: {
           free_shipping_threshold: number | null;
@@ -1995,21 +1766,6 @@ export type Database = {
         };
       };
       event_rsvp_count: { Args: { event: string }; Returns: number };
-      fixed_asset_schedule: {
-        Args: { as_of?: string };
-        Returns: {
-          accumulated_depreciation: number;
-          book_value: number;
-          category: string;
-          cost: number;
-          disposed_on: string;
-          id: string;
-          monthly_depreciation: number;
-          months_elapsed: number;
-          name: string;
-          purchase_date: string;
-        }[];
-      };
       ledger_monthly_summary: {
         Args: {
           from_date: string;
@@ -2022,6 +1778,10 @@ export type Database = {
           month: string;
           revenue: number;
         }[];
+      };
+      mark_newsletter_synced: {
+        Args: { user_ids: string[] };
+        Returns: undefined;
       };
       mark_notifications_read: {
         Args: { notification_ids?: string[] };
@@ -2038,6 +1798,18 @@ export type Database = {
           in_use: number;
           slots: number;
           tier: number;
+        }[];
+      };
+      newsletter_audience: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          email: string;
+          full_name: string;
+          marketing_opt_in: boolean;
+          opt_in_changed_at: string;
+          suspended: boolean;
+          synced_at: string;
+          user_id: string;
         }[];
       };
       pending_invitations: {
@@ -2129,15 +1901,7 @@ export type Database = {
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
       billing_interval: "month" | "year";
-      campaign_status: "draft" | "sending" | "sent" | "failed";
       crm_status: "lead" | "customer" | "vip" | "churned";
-      equity_holder_type: "founder" | "investor" | "employee" | "advisor";
-      equity_instrument:
-        | "common"
-        | "preferred"
-        | "option"
-        | "safe"
-        | "convertible_note";
       ledger_scenario: "actual" | "forecast" | "budget";
       notification_kind:
         | "order"
@@ -2172,7 +1936,6 @@ export type Database = {
         | "overdue"
         | "cancelled";
       review_status: "published" | "hidden";
-      staff_plan_status: "planned" | "hiring" | "active" | "terminated";
       staff_role:
         | "superadmin"
         | "admin"
@@ -2337,16 +2100,7 @@ export const Constants = {
     Enums: {
       account_type: ["asset", "liability", "equity", "revenue", "expense"],
       billing_interval: ["month", "year"],
-      campaign_status: ["draft", "sending", "sent", "failed"],
       crm_status: ["lead", "customer", "vip", "churned"],
-      equity_holder_type: ["founder", "investor", "employee", "advisor"],
-      equity_instrument: [
-        "common",
-        "preferred",
-        "option",
-        "safe",
-        "convertible_note",
-      ],
       ledger_scenario: ["actual", "forecast", "budget"],
       notification_kind: [
         "order",
@@ -2385,7 +2139,6 @@ export const Constants = {
         "cancelled",
       ],
       review_status: ["published", "hidden"],
-      staff_plan_status: ["planned", "hiring", "active", "terminated"],
       staff_role: [
         "superadmin",
         "admin",

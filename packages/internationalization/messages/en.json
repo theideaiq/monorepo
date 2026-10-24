@@ -1609,7 +1609,6 @@
       "orders": "Orders",
       "rentals": "Rentals",
       "customers": "Customers",
-      "marketing": "Marketing",
       "finance": "Finance",
       "editorial": "Editorial",
       "telegram": "Telegram",
@@ -1637,7 +1636,6 @@
       "inUse": "It's still in use, so it can't be deleted.",
       "lastSuperadmin": "There must always be at least one superadmin.",
       "apiUnavailable": "The server couldn't be reached. Try again shortly.",
-      "emailNotConfigured": "Email sending isn't configured on the server.",
       "unknown": "Something went wrong. Try again."
     },
     "notices": {
@@ -1723,7 +1721,6 @@
       "rentals": "Open rentals",
       "overdue": "{count} overdue",
       "submissions": "Submissions to review",
-      "drafts": "Campaign drafts",
       "optedIn": "Customers opted in to email",
       "telegramRequests": "Open Telegram requests",
       "openTickets": "Open support tickets",
@@ -2005,60 +2002,6 @@
       "contactedToday": "Contacted today",
       "lastContactedHint": "Baghdad time. Leave empty if they haven't been contacted."
     },
-    "marketing": {
-      "title": "Marketing",
-      "tabs": {
-        "campaigns": "Campaigns",
-        "segments": "Segments"
-      },
-      "campaignStatus": {
-        "draft": "Draft",
-        "sending": "Sending",
-        "sent": "Sent",
-        "failed": "Failed"
-      },
-      "campaigns": {
-        "new": "New campaign",
-        "detail": "Campaign",
-        "create": "Create draft",
-        "empty": "No campaigns yet.",
-        "subject": "Subject",
-        "segment": "Audience",
-        "segmentHint": "Only customers who opted in to marketing email receive campaigns.",
-        "everyone": "Everyone who opted in",
-        "status": "Status",
-        "sentCount": "Recipients",
-        "sentAt": "Sent",
-        "date": "Date",
-        "body": "Message",
-        "bodyHint": "Markdown. It's placed in The IDEA's email template with an unsubscribe link.",
-        "draft": "Draft",
-        "results": "Results",
-        "preview": "Preview",
-        "previewHint": "The saved version, as it will look in the email.",
-        "send": "Send now",
-        "sendConfirm": "Send this campaign now?",
-        "sendDescription": "It goes to: {audience}. Sending can't be undone.",
-        "failedHint": "Sending stopped partway. The recipient count shows how many emails went out."
-      },
-      "segments": {
-        "description": "Segments choose who receives a campaign. Every criterion you set must match; leave one on \"Any\" to ignore it.",
-        "new": "New segment",
-        "create": "Create segment",
-        "name": "Name",
-        "crmStatus": "CRM status",
-        "crmHint": "None ticked: any status.",
-        "tags": "Tags",
-        "tagsHint": "Customers with at least one of these tags.",
-        "plusMember": "The IDEA Plus",
-        "plusYes": "Members only",
-        "plusNo": "Non-members only",
-        "locale": "Language",
-        "count": "Count recipients",
-        "recipients": "{count} recipients right now",
-        "deleteDescription": "Campaigns that used it keep their history."
-      }
-    },
     "finance": {
       "title": "Finance",
       "tabs": {
@@ -2066,9 +2009,6 @@
         "journal": "Journal",
         "accounts": "Chart of accounts",
         "payments": "Payments",
-        "payroll": "Staff plan",
-        "equity": "Cap table",
-        "assets": "Fixed assets",
         "settings": "Settings"
       },
       "dashboard": {
@@ -2155,71 +2095,6 @@
         "amount": "Amount",
         "refunded": "{amount} refunded"
       },
-      "payroll": {
-        "thisMonth": "Payroll this month",
-        "headcount": "Headcount",
-        "nextYear": "Next 12 months",
-        "plan": "Positions",
-        "description": "Planned, open and filled positions. Salaries are monthly, in IQD; raises apply on each anniversary of the start date.",
-        "role": "Role",
-        "department": "Department",
-        "salary": "Monthly salary (IQD)",
-        "increase": "Raise %/yr",
-        "start": "Start date",
-        "status": "Status",
-        "statuses": {
-          "planned": "Planned",
-          "hiring": "Hiring",
-          "active": "Filled",
-          "terminated": "Ended"
-        },
-        "projection": "Projection",
-        "projectionHint": "Positions count from their start date; ended positions are left out.",
-        "month": "Month",
-        "total": "Payroll"
-      },
-      "equity": {
-        "capTable": "Cap table",
-        "tableHint": "Ownership is each holder's share of all shares. Values use the round's price per share, in the round's currency.",
-        "empty": "No shareholders yet.",
-        "holder": "Shareholder",
-        "type": "Type",
-        "types": {
-          "founder": "Founder",
-          "investor": "Investor",
-          "employee": "Employee",
-          "advisor": "Advisor"
-        },
-        "round": "Round",
-        "shares": "Shares",
-        "ownership": "Ownership",
-        "value": "Value",
-        "total": "Total",
-        "rounds": "Funding rounds",
-        "roundsHint": "Amounts are in the round's currency (e.g. USD).",
-        "closedOn": "Closed on",
-        "currency": "Currency",
-        "valuationCap": "Valuation cap",
-        "pricePerShare": "Price per share",
-        "deleteRoundDescription": "Its shareholders stay, without a round.",
-        "holders": "Shareholders",
-        "vestingStart": "Vesting start",
-        "instrument": "Instrument",
-        "instruments": {
-          "common": "Common shares",
-          "preferred": "Preferred shares",
-          "option": "Options",
-          "safe": "SAFE",
-          "convertible_note": "Convertible note"
-        },
-        "invested": "Invested",
-        "terms": "Terms",
-        "capTerm": "Cap {amount}",
-        "discountTerm": "{percent} discount",
-        "conversionCap": "Valuation cap",
-        "discount": "Discount %",
-        "sharesConvertibleHint": "0 until it converts."
-      },
       "scenario": "Scenario",
       "scenarios": {
         "actual": "Actual",
@@ -2237,35 +2112,6 @@
         "taxHint": "Rate on taxable profit, e.g. 15.",
         "vat": "VAT / sales tax (%)",
         "vatHint": "0 if no sales tax applies."
-      },
-      "assets": {
-        "schedule": "Depreciation schedule",
-        "scheduleHint": "Straight-line over each asset's useful life, counting whole months from purchase (to disposal). Amounts in IQD.",
-        "asOf": "As of",
-        "error": "The depreciation schedule couldn't be loaded.",
-        "empty": "No assets bought by this date.",
-        "name": "Asset",
-        "category": "Category",
-        "purchaseDate": "Purchased",
-        "cost": "Cost (IQD)",
-        "salvage": "Salvage value",
-        "life": "Life (months)",
-        "disposedOn": "Disposed on",
-        "monthly": "Per month",
-        "months": "Months",
-        "monthsOf": "{elapsed} of {life}",
-        "accumulated": "Accumulated",
-        "bookValue": "Book value",
-        "state": "Status",
-        "states": {
-          "depreciating": "Depreciating",
-          "fullyDepreciated": "Fully depreciated"
-        },
-        "disposedState": "Disposed {date}",
-        "total": "Total",
-        "list": "Assets",
-        "listHint": "Cost and salvage value in IQD. Set a disposal date when an asset is sold or written off; depreciation stops then.",
-        "deleteDescription": "Remove the asset from the register. To keep its history, set a disposal date instead."
       }
     },
     "editorial": {

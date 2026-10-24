@@ -16,7 +16,7 @@ import { FilterBar } from "@/components/admin/filter-bar";
 import { EmptyState, PageBody, PageHeader } from "@/components/admin/page";
 import { Pagination } from "@/components/admin/pagination";
 import { StatusBadge } from "@/components/admin/status-badge";
-import { customerSorts, orderByContact } from "@/lib/admin/crm";
+import { crmStatuses, customerSorts, orderByContact } from "@/lib/admin/crm";
 import { formatters } from "@/lib/admin/format";
 import {
   isUuid,
@@ -27,7 +27,6 @@ import {
   searchTerm,
 } from "@/lib/admin/list";
 import { Link } from "@/lib/admin/navigation";
-import { crmStatuses } from "@/lib/admin/segments";
 import { requireSection, type ServerClient } from "@/lib/admin/session";
 
 export const generateMetadata = async (): Promise<Metadata> => {
