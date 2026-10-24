@@ -1283,6 +1283,120 @@
         "decisionNoteHint": "Shown to the author with the decision.",
         "saveDecision": "Save decision"
       }
+    },
+    "telegram": {
+      "title": "Telegram",
+      "tabs": {
+        "requests": "Requests",
+        "chats": "Groups",
+        "members": "Members",
+        "faq": "Bot FAQ"
+      },
+      "requests": {
+        "status": "Status",
+        "statuses": {
+          "open": "Open",
+          "resolved": "Resolved",
+          "rejected": "Rejected"
+        },
+        "empty": "No requests here.",
+        "member": "Member",
+        "type": "Type",
+        "types": {
+          "unban": "Unban request",
+          "support": "Support"
+        },
+        "message": "Message",
+        "date": "Received",
+        "approveUnban": "Approve unban",
+        "resolve": "Mark resolved",
+        "reject": "Reject",
+        "rejectConfirm": "Reject this request?",
+        "reopen": "Reopen"
+      },
+      "chats": {
+        "description": "Groups Droid moderates. A ban in one moderated group applies in all of them.",
+        "empty": "No groups yet. Add the bot to a group as an administrator, then add the group here.",
+        "new": "Add a group",
+        "id": "Chat ID",
+        "idHint": "e.g. -1001234567890",
+        "title": "Name",
+        "username": "Username",
+        "moderated": "Moderated"
+      },
+      "members": {
+        "search": "Username or name",
+        "banStatus": "Ban status",
+        "anyone": "Everyone",
+        "banned": "Banned",
+        "notBanned": "Not banned",
+        "empty": "No members match.",
+        "name": "Member",
+        "groupStatus": "In the groups",
+        "account": "IDEA account",
+        "linked": "Linked",
+        "lastSeen": "Last seen"
+      },
+      "faq": {
+        "description": "Droid offers these answers in private chats, in the member's language.",
+        "new": "New question",
+        "topic": "Topic",
+        "topics": {
+          "general": "General",
+          "store": "Megastore",
+          "plus": "IDEA Plus",
+          "academy": "Academy",
+          "suite": "IDEA Suite"
+        },
+        "questionAr": "Question (Arabic)",
+        "questionEn": "Question (English)",
+        "answerAr": "Answer (Arabic)",
+        "answerEn": "Answer (English)"
+      }
+    },
+    "staff": {
+      "title": "Staff",
+      "description": "Back-office roles. Only superadmins can change them.",
+      "add": "Add a staff member",
+      "addDescription": "Find their account by the mobile number or email they sign in with, then choose a role. They must have signed in to The IDEA at least once.",
+      "lookup": "Mobile number or email",
+      "lookupHint": "e.g. 0770 123 4567 or name@theideaiq.com",
+      "find": "Find",
+      "notFound": "No account uses that number or email.",
+      "unnamed": "Unnamed",
+      "currentRole": "Current role: {role}",
+      "grant": "Grant role",
+      "role": "Role",
+      "jobTitle": "Job title",
+      "members": "Team ({count})",
+      "you": "You",
+      "grantedBy": "Granted by {name} on {date}",
+      "since": "Since {date}",
+      "revoke": "Revoke",
+      "revokeConfirm": "Remove {name} from staff?",
+      "revokeDescription": "They lose access to the back office immediately. Their customer account stays."
+    },
+    "audit": {
+      "title": "Audit log",
+      "description": "Changes made by staff, recorded automatically.",
+      "entity": "Record type",
+      "anyEntity": "All records",
+      "action": "Action",
+      "anyAction": "All actions",
+      "actions": {
+        "insert": "Created",
+        "update": "Changed",
+        "delete": "Deleted"
+      },
+      "entityId": "Record ID",
+      "from": "From",
+      "to": "To",
+      "empty": "No entries match.",
+      "when": "When",
+      "who": "Who",
+      "details": "Details",
+      "system": "System",
+      "unknownActor": "Unknown"
     }
   }
 }
