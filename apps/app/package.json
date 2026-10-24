@@ -5,7 +5,7 @@
     "analyze": "ANALYZE=true npm run build",
     "build": "next build",
     "cap:add": "bun native/prepare.ts && cap add ios && cap add android",
-    "cap:assets": "bunx @capacitor/assets generate --assetPath native/assets --iconBackgroundColor '#0f1014' --splashBackgroundColor '#0f1014' --splashBackgroundColorDark '#0f1014'",
+    "cap:assets": "bunx @capacitor/assets generate --assetPath native/assets --iconBackgroundColor '#D81B60' --splashBackgroundColor '#D81B60' --splashBackgroundColorDark '#D81B60'",
     "cap:doctor": "cap doctor",
     "cap:open:android": "cap open android",
     "cap:open:ios": "cap open ios",

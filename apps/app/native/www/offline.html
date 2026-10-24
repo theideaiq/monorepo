@@ -7,6 +7,7 @@
       name="viewport"
     >
     <meta content="dark" name="color-scheme">
+    <meta content="#d81b60" name="theme-color">
     <title>The IDEA Spark</title>
     <!--
       Bundled into the iOS/Android apps (capacitor.config.ts → errorPath).
@@ -17,9 +18,10 @@
     -->
     <style>
     :root {
-      --background: #0f1014;
-      --foreground: #f5f5f5;
-      --muted: #a1a1aa;
+      /* The IDEA brand v1.0: white text and a yellow button on pink. */
+      --background: #d81b60;
+      --foreground: #ffffff;
+      --muted: #ffffff;
       --brand: #f4cf08;
       --brand-foreground: #0f1014;
     }
@@ -40,7 +42,8 @@
         max(24px, env(safe-area-inset-bottom))
         max(24px, env(safe-area-inset-left));
       font-family:
-        system-ui, -apple-system, "Segoe UI", "Noto Sans Arabic", sans-serif;
+        "Readex Pro", system-ui, -apple-system, "Segoe UI", "Noto Sans Arabic",
+        sans-serif;
       color: var(--foreground);
       text-align: center;
       background: var(--background);

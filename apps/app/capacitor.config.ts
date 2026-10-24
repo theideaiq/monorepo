@@ -54,7 +54,9 @@ export const resolveServerUrl = (env: ServerEnv) => {
  */
 const server = resolveServerUrl(process.env);
 
-const BACKGROUND = "#0f1014";
+// The IDEA Pink: the splash, the shell behind the WebView and the status
+// bar (light icons), per docs/brand/DESIGN_SYSTEM.md section 5.
+const BACKGROUND = "#D81B60";
 
 const config: CapacitorConfig = {
   // Lets Spark's server recognize the shell (lib/native/user-agent.ts), e.g.
