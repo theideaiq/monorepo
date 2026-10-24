@@ -68,7 +68,7 @@ bun run db:start | db:reset | db:test | db:types
 bun run --cwd packages/database db:test:sync   # copy the pgTAP preamble
 bun run --cwd apps/e2e e2e  # Playwright journeys + axe (local stack running)
 bun run build:native        # static export of apps/app for Capacitor
-bun run cap:sync            # build:native + copy into the iOS/Android projects
+bun run cap:sync            # configure the iOS/Android shell (loads live Spark)
 bun run gen:package         # scaffold packages/<name>
 ```
 
@@ -124,6 +124,11 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   `fbq` or `ttq` directly. Server-confirmed purchases go through
   `@repo/analytics/conversions` with the same event id. Ad pixels never load
   inside the Capacitor apps.
+- **Native apps:** the iOS/Android apps load the live Spark
+  (`server.url` in `apps/app/capacitor.config.ts`); only the offline screen
+  is bundled (`apps/app/native/www`). Native-only client code lives in
+  `apps/app/lib/native` and must no-op on the web (`isNativeApp()`); keep
+  every `@capacitor/*` package on the same major version.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.

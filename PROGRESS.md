@@ -64,7 +64,32 @@ decisions with a date.
 - [ ] Delete the old branches on `theideaiq/monorepo` (the session's token
       is not allowed to).
 
-## Open items
+## Native apps (The IDEA Spark on iOS/Android)
+
+The shell is in place (Capacitor loading `https://spark.theideaiq.com`,
+offline screen, splash/status bar, push, share, app-link files); these
+steps need Xcode, Android Studio and the store/Firebase accounts
+(`ARCHITECTURE_AND_INTEGRATIONS.md`, section 3).
+
+- [ ] `bun run --cwd apps/app cap:add` and `cap:assets`; commit
+      `apps/app/ios` and `apps/app/android`.
+- [ ] Firebase project with the iOS and Android apps; APNs key uploaded;
+      `GoogleService-Info.plist` / `google-services.json` copied in (not
+      committed); `AppDelegate` hands Capacitor the FCM token (3.5).
+- [ ] Xcode capabilities: Push Notifications, Background Modes → Remote
+      notifications, Associated Domains (`applinks:` and
+      `webcredentials:spark.theideaiq.com`); Android `autoVerify` intent
+      filter and `allowBackup="false"` (3.3, 3.6).
+- [ ] Fill `APPLE_TEAM_ID` and `PLAY_APP_SIGNING_SHA256_FINGERPRINT` in
+      `apps/app/public/.well-known/` and verify both URLs return JSON.
+- [ ] Vercel `api`: `FCM_SERVICE_ACCOUNT`, `PUSH_WEBHOOK_SECRET`; Supabase
+      database webhook on `notifications` inserts →
+      `/webhooks/notifications` (3.5).
+- [ ] Push and app links tested on a real iPhone and Android phone.
+- [ ] Store listings, privacy forms, review notes (test number, native
+      features for guideline 4.2), TestFlight and internal testing, then
+      submission (3.8, 3.9).
+
 
 - [ ] Staff cannot open a support ticket on a customer's behalf.
 - [ ] A staff reply on a closed ticket keeps it closed (by design today;
