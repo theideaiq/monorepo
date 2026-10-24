@@ -12,7 +12,7 @@
     "@repo/typescript-config": "workspace:*",
     "@supabase/ssr": "^0.12.6",
     "@supabase/supabase-js": "^2.115.0",
-    "@types/node": "25.3.5",
+    "@types/node": "24.19.1",
     "typescript": "^7.0.2"
   }
 }
