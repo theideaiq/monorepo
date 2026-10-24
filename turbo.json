@@ -1,77 +1,45 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": ["**/.env.*local"],
   "ui": "tui",
-  "globalEnv": [
-    "NODE_ENV",
-    "CI",
-    "SKIP_ENV_VALIDATION"
-  ],
+  "envMode": "loose",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "storybook-static/**"],
-      "env": [
-        "NEXT_PUBLIC_*",
-        "VERCEL_URL",
-        "SUPABASE_SERVICE_ROLE_KEY",
-        "RESEND_API_KEY",
-        "STRIPE_SECRET_KEY",
-        "TELEGRAM_BOT_TOKEN",
-        "GEMINI_API_KEY",
-        "UPSTASH_REDIS_REST_URL",
-        "UPSTASH_REDIS_REST_TOKEN"
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "out/**",
+        "**/generated/**",
+        "storybook-static/**",
+        ".react-email/**"
       ]
     },
-    "lint": {
+    "build:native": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$"]
+      "outputs": ["out/**"]
     },
-    "check": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$"]
+    "cap:sync": {
+      "cache": false,
+      "dependsOn": ["build:native"]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck", "^build"],
-      "inputs": ["$TURBO_DEFAULT$"],
-      "outputs": ["*.tsbuildinfo"]
+      "dependsOn": ["^typecheck"]
+    },
+    "test": {
+      "dependsOn": ["^test"]
+    },
+    "analyze": {
+      "dependsOn": ["^analyze"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "test": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["coverage/**"]
-    },
-    "test:coverage": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["coverage/**"]
-    },
-    "format": {
-      "cache": false
-    },
     "clean": {
       "cache": false
     },
-    "storybook": {
-      "cache": false,
-      "persistent": true
-    },
-    "build-storybook": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["storybook-static/**"]
-    },
-    "db:generate": {
-      "cache": false
-    },
-    "db:push": {
-      "cache": false
-    },
-    "db:seed": {
+    "//#clean": {
       "cache": false
     }
   }

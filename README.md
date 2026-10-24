@@ -1,139 +1,98 @@
-# The IDEA IQ Monorepo
+# The IDEA
 
-![CI Status](https://github.com/theideaiq/monorepo/actions/workflows/ci.yml/badge.svg)
-![License](https://img.shields.io/badge/license-Proprietary-red)
-![Version](https://img.shields.io/badge/version-0.0.0-blue)
+The IDEA IQ Inc.'s production monorepo: the whole of The IDEA — the
+digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
+(LTR), local payments through Wayl, and native iOS and Android apps.
 
-A modern, high-performance monorepo for **The IDEA IQ**, built with **Next.js 16**, **Tailwind CSS 4**, and **Supabase**.
+| Product line | What it is | Where |
+| --- | --- | --- |
+| Megastore | Gaming, tech, books and lifestyle, delivered across Iraq | `apps/web` (catalog), `apps/app` (cart, checkout, orders) |
+| IDEA Plus | Monthly membership to rent games, books and movies | `apps/web/plus`, `apps/app/plus` |
+| Academy | Courses and cultural-exchange programs | `apps/web/academy` |
+| IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
+| The Club | Community rooms on Telegram | `apps/web/club` |
+| Editorial | News, events with RSVPs, the journal and member submissions | `apps/web`, `apps/app`, `apps/admin` |
+| Droid | Telegram bot: moderation, FAQ, product search, AI assistant | `packages/droid`, `apps/api/app/telegram` |
 
-## 🏗 Architecture
+Built on the shaheenfarjo/monorepo template (initialized with `bun run init`:
+physical-goods commerce, rate-limit and AI modules). It replaces the earlier
+theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
+(legacy bot) repositories, whose git history is merged into this one.
 
-The system is designed as a centralized routing hub and application suite.
+## Stack
 
-```mermaid
-graph TD
-    User((User)) -->|HTTPS| Web["Web App (Next.js 16)"]
-    User -->|HTTPS| Admin["Admin Console (Next.js 16)"]
+| Concern | Choice |
+| --- | --- |
+| Monorepo | Turborepo + Bun workspaces |
+| Web apps | Next.js (App Router), React, Tailwind CSS v4, shadcn/ui |
+| Auth & database | Supabase (Postgres, Row Level Security, phone OTP) |
+| Payments | Provider-agnostic `@repo/payments` with Wayl (ZainCash, FIB, Qi Card, cards) |
+| Localization | Arabic + English, RTL-aware design system, `Asia/Baghdad` dates, IQD |
+| Mobile | Capacitor (iOS + Android) from the same `apps/app` codebase |
+| Analytics | GTM, GA4, Meta Pixel, TikTok Pixel, server-side conversions |
+| Hosting | Vercel (apps) + Cloudflare (DNS, Turnstile, R2) |
+| Quality | Biome via Ultracite, TypeScript strict, Vitest, GitHub Actions |
 
-    subgraph "Infrastructure"
-        Web -->|Data & Auth| Supabase[Supabase]
-        Admin -->|Data & Auth| Supabase
-        Web -->|Payments & State| Wayl[Wayl]
-    end
+## Structure
 
-    subgraph "Supabase Services"
-        Supabase --> Auth[Authentication]
-        Supabase --> DB[(PostgreSQL)]
-        Supabase --> Storage[Storage]
-        Supabase --> Edge[Edge Functions]
-    end
+```
+apps/
+  web/        Public website: store catalog, Plus, Academy, Suite, Club, news, events, journal (port 3001)
+  app/        Customer app — web + iOS/Android via Capacitor (port 3000)
+  api/        Checkout, payment webhooks, cron, Telegram webhook, calendar feed, back-office endpoints (port 3002)
+  email/      React Email templates (port 3003)
+  docs/       Mintlify documentation (port 3004)
+  admin/      Back office for staff: catalog, orders, CRM, finance, editorial (port 3005)
+  storybook/  Design-system workbench (port 6006)
+packages/
+  config/     Project identity, locales and regional settings (single source of truth)
+  auth/       Supabase Auth clients, phone OTP, session middleware
+  database/   Supabase schema, migrations, RLS tests and generated types
+  payments/   Payment-provider interface, Wayl provider, billing (organizations and individuals, store orders)
+  commerce/   Catalog queries, prices, governorates, cart totals
+  droid/      The Telegram bot and its moderation engine
+  design-system/, internationalization/, analytics/, security/, seo/, …
+scripts/      Repository checks
 ```
 
-## 🛠 Tech Stack
+## Getting started
 
-- **Apps**: Next.js 16 (App Router), React 19
-- **Styling**: Tailwind CSS 4, Framer Motion
-- **State**: Zustand, React Query
-- **Backend**: Supabase (PostgreSQL, Auth, Edge Functions)
-- **Monorepo**: Turborepo, pnpm
-- **Tooling**: Biome (Lint/Format), Syncpack (Dependency Sync), Changesets
+Prerequisites: Node.js 22+, [Bun](https://bun.sh), and Docker if you want to run
+Supabase locally.
 
-## 📦 Repository Structure
+```sh
+bun install
+bun run db:start  # local Supabase with migrations and seed data (Docker)
+bun run dev       # starts every app
+```
 
-This monorepo is managed with [Turborepo](https://turbo.build/) and [pnpm](https://pnpm.io/).
+Each app reads its environment from `.env.local` (copy the app's
+`.env.example`). Without credentials the apps still start; integrations whose
+keys are missing are disabled. Staff sign in to the back office with their
+phone and an authenticator app; grant the first superadmin with SQL (see
+`ARCHITECTURE_AND_INTEGRATIONS.md`).
 
-### Apps
-- [`apps/web`](./apps/web): Public-facing web application.
-- [`apps/admin`](./apps/admin): Internal administration dashboard.
-- [`apps/droid`](./apps/droid): Telegram bot powered by Google Gemini.
+## Common scripts
 
-### Packages
-- [`packages/ui`](./packages/ui): Shared UI component library (Tailwind 4 + React).
-- [`packages/config`](./packages/config): Shared configuration (TypeScript, Biome).
-- [`packages/utils`](./packages/utils): Shared utility functions (Date, String, Math helpers).
-- [`packages/database`](./packages/database): Type-safe Supabase client and schema definitions.
-- [`packages/env`](./packages/env): Environment variable validation and type-safety.
+| Script | What it does |
+| --- | --- |
+| `bun run dev` | Run all apps in development |
+| `bun run build` | Build all apps |
+| `bun run check` / `bun run fix` | Lint and format with Biome |
+| `bun run typecheck` | Type-check every workspace |
+| `bun run test` | Run all unit tests |
+| `bun run check:placeholders` | Fail on leftover template tokens or unbalanced module markers |
+| `bun run check:rtl` / `bun run check:i18n` | Physical Tailwind utilities / UI text missing from the messages files |
+| `bun run db:start` / `db:reset` / `db:test` / `db:types` | Local Supabase, migrations, RLS tests, generated types |
+| `bun run build:native` / `bun run cap:sync` | Static export of `apps/app` / copy it into the iOS and Android projects |
 
-## 🚀 Getting Started
+## Further reading
 
-### Prerequisites
+- `ARCHITECTURE_AND_INTEGRATIONS.md` — how the apps fit together, and step-by-step
+  setup for the template generator, Supabase migrations and RLS, the Capacitor apps,
+  tracking, Wayl payments and Vercel environment variables
+- `AGENTS.md` — conventions for humans and AI agents
+- `.github/CONTRIBUTING.md` — workflow and local checks
+- `THIRD_PARTY_NOTICES.md` — licenses of included open-source code
 
-- **Node.js**: v24.12.0 or higher
-- **pnpm**: v10.27.0 or higher
-
-### Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd <project-directory>
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    pnpm install
-    ```
-
-3.  **Environment Setup:**
-    Create a local environment file in `apps/web`, `apps/admin`, and `apps/droid`:
-
-    ```bash
-    cp apps/web/.env.example apps/web/.env.local
-    cp apps/admin/.env.example apps/admin/.env.local
-    cp apps/droid/.env.example apps/droid/.env.local
-    ```
-
-4.  **Run Development Server:**
-    ```bash
-    pnpm dev
-    ```
-    - Web: [http://localhost:3000](http://localhost:3000)
-    - Admin: [http://localhost:3001](http://localhost:3001)
-    - Droid: Local process (Port varies)
-
-## 🔐 Environment Variables
-
-Proper management of environment variables is crucial for security and deployment.
-
-### Development
-Use `.env.local` files in the respective app directories (`apps/web`, `apps/admin`, `apps/droid`). **Never commit these files.**
-
-### CI/CD & Production
-**Do not store secrets in the codebase.**
-
-- **Vercel**: Navigate to **Settings > Environment Variables** in your Vercel project dashboard to add secrets (e.g., `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`).
-- **GitHub Actions**: Navigate to **Settings > Secrets and variables > Actions** in your GitHub repository. Add secrets required for the CI workflow (e.g., `NEXT_PUBLIC_SUPABASE_URL`).
-
-## 📜 Scripts
-
-| Command | Description |
-| :--- | :--- |
-| `pnpm dev` | Start all apps in development mode. |
-| `pnpm build` | Build all apps and packages for production. |
-| `pnpm check` | Run Biome linting and formatting check. |
-| `pnpm format` | Fix linting and formatting issues automatically. |
-| `pnpm test` | Run unit tests across the workspace. |
-| `pnpm sync` | Ensure dependency versions are consistent across packages (Syncpack). |
-| `pnpm changeset` | Generate a changeset for versioning. |
-
-## 🐛 Known Issues
-
-### Missing Capacitor Patch
-The `@capacitor/cli` patch file (`patches/@capacitor__cli.patch`) is currently missing from the repository. The `patchedDependencies` entry has been temporarily removed from `package.json` to allow `pnpm install` to succeed.
-
-**Impact:** This may affect mobile builds if the `tar` version override causes compatibility issues with `@capacitor/cli`.
-**Workaround:** If you encounter issues with Capacitor CLI, verify that your environment meets the `tar` requirements or wait for the patch to be restored.
-
-## 🧠 Memory (AGENTS.md)
-
-The `AGENTS.md` file contains the long-term memory and context for AI agents working on this project. It documents architectural decisions, design patterns, security protocols, and operational learnings.
-
-**Please do not delete this file**, as it ensures continuity and high-quality assistance from AI tools.
-
-## 📄 License
-
-**All Rights Reserved.**
-
-Copyright © 2017-2026 The IDEA.
-
-This software is proprietary. Unauthorized copying, modification, distribution, or use of this software is strictly prohibited.
+Repository: https://github.com/theideaiq/monorepo · Support: hi@theideaiq.com

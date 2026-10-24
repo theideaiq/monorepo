@@ -1,0 +1,2134 @@
+{
+  "common": {
+    "language": "Language",
+    "switchLanguage": "Switch language",
+    "theme": {
+      "toggle": "Toggle theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "loading": "Loading…",
+    "error": "Something went wrong.",
+    "retry": "Try again",
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "optional": "Optional",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "errorDescription": "An unexpected error occurred. Please try again.",
+    "notFound": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or has moved.",
+      "home": "Go to the home page"
+    },
+    "status": {
+      "operational": "All systems normal",
+      "partial": "Partial outage",
+      "degraded": "Degraded performance",
+      "unknown": "Unable to fetch status"
+    },
+    "ui": {
+      "close": "Close",
+      "loading": "Loading",
+      "more": "More",
+      "morePages": "More pages",
+      "nextPage": "Go to next page",
+      "nextSlide": "Next slide",
+      "previousPage": "Go to previous page",
+      "previousSlide": "Previous slide",
+      "sidebar": "Sidebar",
+      "sidebarDescription": "Displays the mobile sidebar.",
+      "toggleSidebar": "Toggle sidebar"
+    }
+  },
+  "auth": {
+    "changePhone": "Use a different number",
+    "codeLabel": "Verification code",
+    "codeSentTo": "We sent a 6-digit code to {phone}.",
+    "continue": "Continue",
+    "createOrganization": "Create organization",
+    "errors": {
+      "captcha_failed": "Please complete the security check and try again.",
+      "delivery_failed": "We couldn't send the code. Please try again shortly.",
+      "invalid_code": "That code is incorrect or has expired.",
+      "invalid_phone": "Enter a valid mobile number, e.g. 0770 123 4567.",
+      "rate_limited": "Too many attempts. Please wait a moment and try again.",
+      "signups_disabled": "New sign-ups are currently closed.",
+      "unknown": "Something went wrong. Please try again."
+    },
+    "fullNameLabel": "Full name",
+    "organizations": "Organizations",
+    "phoneHint": "We'll text you a verification code.",
+    "phoneLabel": "Mobile number",
+    "resend": "Resend code",
+    "resendIn": "Resend code in {seconds}s",
+    "sending": "Sending…",
+    "signIn": {
+      "title": "Welcome back",
+      "description": "Sign in with your mobile number.",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up",
+      "deleted": "Your account has been deleted."
+    },
+    "signOut": "Sign out",
+    "signUp": {
+      "title": "Create an account",
+      "description": "Sign up with your mobile number.",
+      "haveAccount": "Already have an account?",
+      "signInLink": "Sign in"
+    },
+    "verify": "Verify",
+    "verifying": "Verifying…",
+    "callback": {
+      "title": "Signing you in…",
+      "failed": "We couldn't complete the sign-in. Please try again.",
+      "retry": "Back to sign in"
+    }
+  },
+  "billing": {
+    "pay": "Pay {amount}",
+    "webOnly": "Purchases are made on our website. Sign in there to manage your plan.",
+    "status": {
+      "active": "Active",
+      "past_due": "Payment due",
+      "incomplete": "Awaiting payment",
+      "canceled": "Canceled",
+      "expired": "Expired"
+    },
+    "title": "IDEA Suite plan",
+    "description": "Your company's plan and payments.",
+    "currentPlan": "Current plan",
+    "noPlan": "Your company doesn't have a plan yet.",
+    "renews": "Renews on {date}",
+    "choosePlan": "Choose a plan",
+    "perMonth": "/ month",
+    "perYear": "/ year",
+    "current": "Current plan",
+    "redirecting": "Opening the payment page…",
+    "payments": "Payment history",
+    "noPayments": "No payments yet.",
+    "paymentStatus": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "failed": "Failed",
+      "canceled": "Canceled",
+      "expired": "Expired",
+      "refunded": "Refunded"
+    },
+    "managersOnly": "Only owners and admins can manage the plan.",
+    "noPlans": "No plans are available yet.",
+    "errors": {
+      "checkout": "We couldn't start the payment. Please try again."
+    }
+  },
+  "web": {
+    "nav": {
+      "home": "Home",
+      "store": "Megastore",
+      "plus": "IDEA Plus",
+      "academy": "Academy",
+      "suite": "IDEA Suite",
+      "club": "The Club",
+      "news": "News",
+      "events": "Events",
+      "journal": "Journal",
+      "droid": "Droid bot",
+      "about": "Our story",
+      "careers": "Careers",
+      "faq": "FAQ",
+      "contact": "Contact",
+      "signIn": "Sign in",
+      "openApp": "Open the app",
+      "groups": {
+        "ecosystem": "Ecosystem",
+        "community": "Community",
+        "company": "Company"
+      },
+      "descriptions": {
+        "store": "Gaming, tech, books and lifestyle, delivered across Iraq.",
+        "plus": "A monthly membership to rent games, books and movies.",
+        "academy": "Courses and cultural-exchange programs.",
+        "suite": "Procurement and recruitment for companies.",
+        "club": "Our community rooms on Telegram.",
+        "news": "Announcements and stories from The IDEA.",
+        "events": "Meetups, launches and community nights.",
+        "journal": "Our journal of members' writing and art.",
+        "droid": "Our Telegram bot and the Spark Catcher game."
+      }
+    },
+    "footer": {
+      "tagline": "Baghdad's digital ecosystem: shopping, rentals, learning, community and services for companies, in one account.",
+      "legal": "Legal",
+      "email": "Email",
+      "telegram": "Telegram",
+      "copyright": "© {year} The IDEA IQ Inc. All rights reserved.",
+      "trademarks": "Game titles, trade names, trademarks and artwork shown on this site belong to their respective owners."
+    },
+    "ui": {
+      "viewAll": "View all",
+      "readMore": "Read more",
+      "learnMore": "Learn more",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page}",
+      "pagination": "Pagination",
+      "comingSoon": "In preparation"
+    },
+    "appCta": {
+      "title": "One account for the whole ecosystem",
+      "description": "Shop the Megastore, manage your IDEA Plus rentals, RSVP to events and submit your work, all from The IDEA app.",
+      "button": "Open the app",
+      "signIn": "Sign in"
+    },
+    "home": {
+      "meta": {
+        "title": "Iraq's digital ecosystem",
+        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, IDEA Plus rentals, the Academy, IDEA Suite for companies and The Club. Based in Baghdad, serving all of Iraq."
+      },
+      "hero": {
+        "badge": "The digital ecosystem for Iraq",
+        "title": "Innovation for",
+        "highlight": "every aspect of life.",
+        "subtitle": "Shop, learn, play and grow with The IDEA. One account, endless possibilities. Based in Baghdad and serving all of Iraq.",
+        "primary": "Get started",
+        "secondary": "Our story"
+      },
+      "lines": {
+        "title": "Explore our universe",
+        "description": "Five product lines, one account.",
+        "megastore": "Iraq's destination for gaming, tech, books and lifestyle, delivered to all 19 governorates.",
+        "plus": "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done.",
+        "academy": "Courses and cultural-exchange programs that connect Iraq with the world.",
+        "suite": "Procurement and recruitment for companies, with a business plan and monthly invoicing.",
+        "club": "Community rooms on Telegram for gamers, readers, artists and thinkers."
+      },
+      "featured": {
+        "title": "Featured in the Megastore",
+        "description": "A few picks from the catalog.",
+        "empty": "New products are on their way. Check back soon."
+      },
+      "news": {
+        "title": "Latest news",
+        "empty": "No news yet."
+      },
+      "events": {
+        "title": "Next events",
+        "empty": "No upcoming events right now. Follow The Club on Telegram to hear about the next one."
+      },
+      "values": {
+        "title": "Built for the",
+        "highlight": "modern Iraqi.",
+        "description": "We know the local challenges, so we built a platform around trust, clear prices and quality.",
+        "items": [
+          {
+            "title": "Delivery across Iraq",
+            "description": "Orders and rentals are delivered to all 19 governorates."
+          },
+          {
+            "title": "Local payments",
+            "description": "Pay securely through Wayl with the methods you already use."
+          },
+          {
+            "title": "Genuine products",
+            "description": "Every item is listed with its condition: new, open box, refurbished or used."
+          },
+          {
+            "title": "Support in Arabic and English",
+            "description": "Reach us by email or on Telegram."
+          }
+        ]
+      }
+    },
+    "store": {
+      "meta": {
+        "title": "Megastore",
+        "description": "Gaming, tech, books and lifestyle products with delivery across Iraq. Browse the catalog of The IDEA Megastore."
+      },
+      "title": "The Megastore",
+      "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order in The IDEA app and pay through Wayl.",
+      "searchLabel": "Search the store",
+      "searchPlaceholder": "Search products…",
+      "search": "Search",
+      "categories": "Categories",
+      "allCategories": "All",
+      "sortLabel": "Sort by",
+      "sort": {
+        "newest": "Newest",
+        "price-asc": "Price: low to high",
+        "price-desc": "Price: high to low"
+      },
+      "apply": "Apply",
+      "results": "Results for “{query}”",
+      "empty": "No products match your search.",
+      "clear": "Clear filters",
+      "product": {
+        "buy": "Buy in the app",
+        "rent": "Rent with IDEA Plus",
+        "buyNote": "Orders are placed and paid in The IDEA app.",
+        "rentNote": "Rentals are included in IDEA Plus memberships. Request this item in the app.",
+        "specs": "Specifications",
+        "variants": "Options",
+        "description": "Description",
+        "category": "Category",
+        "condition": "Condition",
+        "sku": "SKU",
+        "back": "Back to the store",
+        "plusBack": "Back to IDEA Plus",
+        "image": "{name}, image {number}",
+        "delivery": "Delivery to all 19 governorates of Iraq."
+      }
+    },
+    "plus": {
+      "meta": {
+        "title": "IDEA Plus — rent games, books and movies",
+        "description": "IDEA Plus is a monthly membership to rent PS5 games, books and movies in Iraq. Choose a plan, request items in the app, and return them when you're done."
+      },
+      "badge": "The ultimate membership",
+      "title": "One membership.",
+      "highlight": "Endless entertainment.",
+      "subtitle": "Books, games and movies, delivered to your door. Keep them as long as you like, then swap them for something new.",
+      "cta": "Join in the app",
+      "seePlans": "See the plans",
+      "how": {
+        "title": "How it works",
+        "steps": [
+          {
+            "title": "Choose a plan",
+            "description": "Each plan lets you keep a set number of items at a time."
+          },
+          {
+            "title": "Request what you want",
+            "description": "Browse the rental catalog in the app and request a game, book or movie."
+          },
+          {
+            "title": "We deliver it",
+            "description": "Your item is delivered to your address in Iraq."
+          },
+          {
+            "title": "Return and swap",
+            "description": "Done with it? Return it and request the next one."
+          }
+        ]
+      },
+      "plans": {
+        "title": "Plans",
+        "description": "Billed monthly through Wayl. Cancel any time from your account.",
+        "perMonth": "per month",
+        "perYear": "per year",
+        "slots": "{count, plural, one {{slots} item at a time} other {{slots} items at a time}}",
+        "choose": "Choose {plan}",
+        "empty": "Plans will be announced soon."
+      },
+      "catalog": {
+        "title": "From the rental catalog",
+        "description": "A preview of what you can rent. The full catalog is in the app.",
+        "browse": "Browse the full catalog",
+        "empty": "The rental catalog is being stocked."
+      }
+    },
+    "academy": {
+      "meta": {
+        "title": "The Academy",
+        "description": "The IDEA Academy: courses and cultural-exchange programs that connect Iraq with the world. Register your interest."
+      },
+      "badge": "The Academy",
+      "title": "Expand your",
+      "highlight": "horizon.",
+      "subtitle": "Whether you want to master a new skill or take part in a cultural exchange, your journey starts here.",
+      "status": "The Academy is preparing its first programs. Tell us what you'd like to learn and we'll let you know when enrolment opens.",
+      "tracks": {
+        "title": "Two tracks",
+        "learn": {
+          "title": "Learning",
+          "description": "Practical courses in technology, business, languages and the arts, taught in Arabic and English."
+        },
+        "exchange": {
+          "title": "Cultural exchange",
+          "description": "Programs that build understanding and lasting connections between Iraq and the global community."
+        }
+      },
+      "programs": {
+        "title": "Programs we're building",
+        "items": [
+          {
+            "title": "Student exchange",
+            "description": "Study periods abroad with partner universities and institutions."
+          },
+          {
+            "title": "Heritage Reborn",
+            "description": "A collaborative residency for artists, historians and developers to bring Iraq's ancient history to life with digital tools."
+          },
+          {
+            "title": "The Majlis Dialogue",
+            "description": "Open conversations that connect Iraqi entrepreneurs and students with mentors and thinkers from around the world."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Interested?",
+        "description": "Send us a message with the program or subject you're interested in.",
+        "button": "Register your interest"
+      }
+    },
+    "suite": {
+      "meta": {
+        "title": "IDEA Suite — procurement and recruitment for companies",
+        "description": "IDEA Suite gives companies in Iraq one place for procurement and recruitment, with a business plan, purchase orders and monthly invoicing."
+      },
+      "badge": "For companies",
+      "title": "The IDEA Suite",
+      "subtitle": "Corporate solutions for procurement and recruitment. Equip your team and find talent, with one business account.",
+      "services": {
+        "title": "What we do for companies",
+        "items": [
+          {
+            "title": "Procurement",
+            "description": "Source tech, equipment and supplies for your company from the Megastore and our partners, with purchase orders."
+          },
+          {
+            "title": "Recruitment",
+            "description": "Tell us who you're looking for and we help you find and screen candidates."
+          },
+          {
+            "title": "Team accounts",
+            "description": "Your company is an organization in The IDEA app: invite colleagues and give each one the right role."
+          },
+          {
+            "title": "Monthly invoicing",
+            "description": "Business plans are billed monthly through Wayl, with invoices for your records."
+          }
+        ]
+      },
+      "how": {
+        "title": "Getting started",
+        "steps": [
+          "Create your company's organization in The IDEA app.",
+          "Choose a business plan and invite your team.",
+          "Contact us with your first procurement or hiring request."
+        ]
+      },
+      "plans": {
+        "title": "Business plans",
+        "empty": "Contact us for a business plan tailored to your company."
+      },
+      "cta": {
+        "title": "Talk to our team",
+        "description": "Tell us about your company and what you need.",
+        "contact": "Contact sales",
+        "app": "Set up your organization"
+      }
+    },
+    "club": {
+      "meta": {
+        "title": "The Club — The IDEA's community on Telegram",
+        "description": "The IDEA Club is a digital clubhouse on Telegram for innovators, artists, gamers and thinkers. Pick your rooms and join the conversation."
+      },
+      "title": "Welcome to",
+      "highlight": "The IDEA Club.",
+      "subtitle": "More than a group chat: a digital clubhouse for innovators, artists, gamers and thinkers. Pick your rooms and join the conversation.",
+      "join": "Join on Telegram",
+      "roomsTitle": "The rooms",
+      "rooms": [
+        {
+          "title": "The Stage",
+          "description": "Announcements and big news"
+        },
+        {
+          "title": "Vibe Check",
+          "description": "Music sharing and playlists"
+        },
+        {
+          "title": "The Library",
+          "description": "What are you reading?"
+        },
+        {
+          "title": "Screening Room",
+          "description": "Cinema and TV discussions"
+        },
+        {
+          "title": "The Arcade",
+          "description": "Gaming and esports"
+        },
+        {
+          "title": "The Arena",
+          "description": "Sports talk and debates"
+        },
+        {
+          "title": "Creative Studio",
+          "description": "Arts and design showcase"
+        },
+        {
+          "title": "The Office",
+          "description": "Work and networking"
+        }
+      ],
+      "guidelines": "Before you join, read our community guidelines.",
+      "guidelinesLink": "Community guidelines",
+      "cta": {
+        "title": "Ready to jump in?",
+        "description": "Don't miss the next big idea or late-night gaming session.",
+        "button": "Open Telegram"
+      }
+    },
+    "droid": {
+      "meta": {
+        "title": "Droid — The IDEA's Telegram bot",
+        "description": "Droid (@TheIdeaDroidBot) is The IDEA's Telegram bot: it keeps our community rooms safe, answers common questions, finds products and helps as an AI assistant."
+      },
+      "badge": "@TheIdeaDroidBot",
+      "title": "Meet Droid",
+      "subtitle": "Our Telegram bot keeps The Club's rooms friendly, answers your questions and helps you find what you're looking for.",
+      "open": "Open in Telegram",
+      "features": {
+        "title": "What Droid does",
+        "items": [
+          {
+            "title": "Community moderation",
+            "description": "Helps keep The Club's rooms safe and on topic, following our community guidelines."
+          },
+          {
+            "title": "Answers to common questions",
+            "description": "Ask about the store, IDEA Plus, the Academy or IDEA Suite in a private chat."
+          },
+          {
+            "title": "Product search",
+            "description": "Search the Megastore from Telegram and open products in the app."
+          },
+          {
+            "title": "AI assistant",
+            "description": "Ask in Arabic or English. Answers are generated automatically, so double-check anything important with our team."
+          },
+          {
+            "title": "Talk to the team",
+            "description": "Send a support message or an unban request, and our staff will review it."
+          }
+        ]
+      },
+      "game": {
+        "title": "Spark Catcher",
+        "description": "Our mini-game: catch the falling light bulbs, dodge the bugs and keep your energy up. Best played inside Telegram, but it works in your browser too.",
+        "play": "Play Spark Catcher"
+      },
+      "privacy": "Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
+      "privacyLink": "Privacy policy"
+    },
+    "about": {
+      "meta": {
+        "title": "Our story",
+        "description": "The IDEA IQ is an ecosystem built in Baghdad to bridge commerce, education and entertainment for the modern Iraqi."
+      },
+      "badge": "Our story",
+      "title": "Building the digital future of",
+      "highlight": "Baghdad.",
+      "subtitle": "The IDEA is not just a company. It is an ecosystem designed to bridge the gap between commerce, education and entertainment for the modern Iraqi.",
+      "mission": {
+        "title": "Our mission",
+        "description": "To give every Iraqi one digital account with seamless access to quality products, learning and entertainment."
+      },
+      "vision": {
+        "title": "Our vision",
+        "description": "A future where The IDEA is the standard for trust, quality and innovation in the region."
+      },
+      "linesTitle": "What we're building",
+      "company": {
+        "title": "The company",
+        "description": "The IDEA is operated by The IDEA IQ Inc., based in Baghdad, Iraq."
+      }
+    },
+    "careers": {
+      "meta": {
+        "title": "Careers",
+        "description": "Want to help build Iraq's digital ecosystem? Here's how to apply to work at The IDEA."
+      },
+      "title": "Join the team",
+      "subtitle": "We're building the future of Iraq's digital economy, and we're always glad to meet dreamers, doers and creators.",
+      "openings": {
+        "title": "Open positions",
+        "description": "We don't have advertised openings right now. We still read every application and keep promising profiles on file for future roles."
+      },
+      "apply": {
+        "title": "How to apply",
+        "steps": [
+          "Write to us at {email} with the subject “Application: your field”.",
+          "Attach your CV (PDF) and links to your work: a portfolio, GitHub, writing or anything you're proud of.",
+          "Tell us in a few lines which part of The IDEA you'd like to work on and why.",
+          "We'll get back to you if there's a fit."
+        ],
+        "button": "Email your application"
+      },
+      "areas": {
+        "title": "Areas we work in",
+        "items": [
+          "Engineering and product",
+          "Content and editorial (Arabic and English)",
+          "Operations, delivery and customer support",
+          "Marketing and community"
+        ]
+      }
+    },
+    "faq": {
+      "meta": {
+        "title": "Frequently asked questions",
+        "description": "Answers about ordering from the Megastore, IDEA Plus rentals, payments, delivery and your IDEA account."
+      },
+      "title": "Frequently asked questions",
+      "description": "Can't find your answer? Contact us or ask Droid on Telegram.",
+      "contact": "Contact us",
+      "groups": [
+        {
+          "title": "Megastore",
+          "items": [
+            {
+              "question": "How do I place an order?",
+              "answer": "Browse the store here or in The IDEA app, then add items to your cart and check out in the app. You need an IDEA account to order."
+            },
+            {
+              "question": "How do I pay?",
+              "answer": "Payments are processed securely by Wayl, which supports local payment methods. Your order is confirmed once the payment succeeds."
+            },
+            {
+              "question": "Where do you deliver?",
+              "answer": "We deliver to all 19 governorates of Iraq. The delivery fee, if any, is shown at checkout before you pay."
+            },
+            {
+              "question": "Can I return an item?",
+              "answer": "Yes, under the conditions in our refund and returns policy. Contact us from your order in the app or by email."
+            }
+          ]
+        },
+        {
+          "title": "IDEA Plus",
+          "items": [
+            {
+              "question": "How does IDEA Plus work?",
+              "answer": "You subscribe to a monthly plan. Each plan lets you keep a number of items at a time. Request a game, book or movie in the app, we deliver it, and when you're done you return it and request the next one."
+            },
+            {
+              "question": "Can I buy from the Megastore without a membership?",
+              "answer": "Absolutely. The Megastore is open to everyone; IDEA Plus is only needed for rentals."
+            },
+            {
+              "question": "How do I cancel?",
+              "answer": "You can cancel your membership from your account in the app. It stays active until the end of the period you paid for. Please return any rented items."
+            }
+          ]
+        },
+        {
+          "title": "Your account",
+          "items": [
+            {
+              "question": "Do I need a separate account for each service?",
+              "answer": "No. One IDEA account works across the store, IDEA Plus, events, the journal and IDEA Suite."
+            },
+            {
+              "question": "How do I delete my account?",
+              "answer": "You can delete your account from the app's settings. Some records, such as invoices, are kept as the law requires."
+            }
+          ]
+        }
+      ]
+    },
+    "contact": {
+      "meta": {
+        "title": "Contact us",
+        "description": "Questions about an order, IDEA Plus, the Academy or IDEA Suite? Write to The IDEA team."
+      },
+      "title": "Get in touch",
+      "description": "We're here to help. Send us a message, email us or reach us on Telegram.",
+      "details": {
+        "email": "Email",
+        "emailNote": "For any question; we reply in Arabic or English.",
+        "telegram": "Telegram",
+        "telegramNote": "Chat with Droid, our bot, or join The Club.",
+        "location": "Location",
+        "address": "Baghdad, Iraq"
+      },
+      "form": {
+        "title": "Send us a message",
+        "topic": "Topic",
+        "topics": {
+          "general": "General question",
+          "store": "Megastore order",
+          "plus": "IDEA Plus",
+          "academy": "Academy",
+          "suite": "IDEA Suite (companies)",
+          "careers": "Careers",
+          "press": "Press and partnerships"
+        },
+        "name": "Full name",
+        "email": "Email",
+        "message": "How can we help?",
+        "cta": "Send the message",
+        "sending": "Sending…",
+        "success": "Thanks! We'll be in touch shortly.",
+        "errors": {
+          "invalid": "Please enter your name, a valid email and a message.",
+          "rate_limited": "You've already sent a message today. Please try again tomorrow.",
+          "unavailable": "The contact form isn't available right now. Please email us instead.",
+          "unknown": "Something went wrong. Please try again."
+        }
+      }
+    },
+    "legal": {
+      "label": "Legal",
+      "lastUpdated": "Last updated: {date}",
+      "documents": {
+        "terms": {
+          "title": "Terms of service",
+          "description": "The terms that apply when you use The IDEA's websites, apps and services."
+        },
+        "privacy": {
+          "title": "Privacy policy",
+          "description": "What personal data The IDEA collects, why, and the choices you have."
+        },
+        "refund": {
+          "title": "Refund and returns policy",
+          "description": "How returns, refunds, cancellations and IDEA Plus rental returns work."
+        },
+        "conduct": {
+          "title": "Code of conduct",
+          "description": "How we expect everyone to behave at The IDEA's events, programs and spaces."
+        },
+        "community": {
+          "title": "Community guidelines",
+          "description": "The rules for The Club's rooms on Telegram, comments and member submissions."
+        }
+      }
+    },
+    "news": {
+      "meta": {
+        "title": "News",
+        "description": "Announcements, launches and stories from The IDEA."
+      },
+      "title": "News",
+      "description": "Announcements, launches and stories from across The IDEA.",
+      "empty": "No news yet. Check back soon.",
+      "back": "All news"
+    },
+    "events": {
+      "meta": {
+        "title": "Events",
+        "description": "Launches, meetups and community nights from The IDEA. RSVP in the app."
+      },
+      "title": "Events",
+      "description": "Launches, meetups and community nights. RSVP in The IDEA app.",
+      "upcoming": "Upcoming",
+      "past": "Past events",
+      "empty": "No upcoming events right now.",
+      "back": "All events",
+      "when": "When",
+      "where": "Where",
+      "capacity": "Places",
+      "rsvps": "{count, plural, one {{number} person is going} other {{number} people are going}}",
+      "noRsvps": "Be the first to RSVP.",
+      "rsvp": "RSVP in the app",
+      "ended": "This event has ended."
+    },
+    "journal": {
+      "meta": {
+        "title": "The Journal",
+        "description": "The IDEA's journal: writing and visual art by our members, published in issues you can read as PDF."
+      },
+      "title": "The Journal",
+      "description": "Writing and visual art by our members, chosen through blind review and published in issues.",
+      "issue": "Volume {volume} · Issue {issue}",
+      "empty": "The first issue is in the works.",
+      "read": "Read the PDF",
+      "noPdf": "The PDF of this issue isn't available yet.",
+      "back": "All issues",
+      "published": "Published {date}",
+      "submit": {
+        "title": "Submit your work",
+        "description": "Members can submit essays, poetry, fiction, theatre or visual art in The IDEA app. Editors review every submission without seeing the author's name.",
+        "button": "Submit in the app"
+      }
+    }
+  },
+  "app": {
+    "nav": {
+      "label": "Navigation",
+      "home": "Home",
+      "store": "Store",
+      "cart": "Cart",
+      "orders": "Orders",
+      "plus": "IDEA Plus",
+      "events": "Events",
+      "submissions": "Submissions",
+      "business": "Business",
+      "settings": "Settings",
+      "more": "More",
+      "cartCount": "{count} in cart",
+      "account": "Account"
+    },
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
+    "search": {
+      "placeholder": "Search the store",
+      "submit": "Search"
+    },
+    "common": {
+      "viewAll": "View all",
+      "orderNumber": "Order #{number}",
+      "free": "Free",
+      "noImage": "No image"
+    },
+    "home": {
+      "title": "Home",
+      "greeting": "Welcome, {name}",
+      "greetingNoName": "Welcome",
+      "description": "Your orders, membership and events in one place.",
+      "orders": {
+        "title": "Active orders",
+        "empty": "You have no orders in progress.",
+        "browse": "Browse the store",
+        "placed": "Placed on {date}"
+      },
+      "plus": {
+        "title": "IDEA Plus",
+        "none": "Rent games, books and movies with a monthly membership.",
+        "join": "See the plans",
+        "member": "{plan} membership",
+        "renews": "Renews on {date}",
+        "slots": "{free} of {slots} rental slots free",
+        "rentals": "Your rentals",
+        "noRentals": "No rentals in progress.",
+        "due": "Due on {date}"
+      },
+      "events": {
+        "title": "Your next events",
+        "empty": "You haven't RSVP'd to any upcoming event.",
+        "browse": "See upcoming events"
+      },
+      "featured": {
+        "title": "Featured in the store",
+        "empty": "New products are on their way."
+      }
+    },
+    "store": {
+      "title": "Store",
+      "description": "Gaming, tech, books and lifestyle, delivered across Iraq.",
+      "search": "Search products",
+      "allCategories": "All",
+      "categories": "Categories",
+      "sort": {
+        "label": "Sort by",
+        "newest": "Newest",
+        "priceAsc": "Price: low to high",
+        "priceDesc": "Price: high to low"
+      },
+      "empty": "No products here yet.",
+      "emptySearch": "No products match “{query}”.",
+      "resultsFor": "Results for “{query}”",
+      "clearSearch": "Clear search",
+      "loadMore": "Show more",
+      "product": {
+        "back": "Back to the store",
+        "notFound": "This product isn't available.",
+        "options": "Options",
+        "quantity": "Quantity",
+        "decrease": "Decrease quantity",
+        "increase": "Increase quantity",
+        "addToCart": "Add to cart",
+        "adding": "Adding…",
+        "added": "Added to your cart.",
+        "viewCart": "View cart",
+        "chooseOption": "Choose an option.",
+        "details": "Specifications",
+        "about": "About this product",
+        "condition": "Condition",
+        "rentalOnly": "This item is rented with IDEA Plus.",
+        "goToPlus": "Go to IDEA Plus",
+        "addFailed": "We couldn't add this to your cart. Please try again."
+      }
+    },
+    "cart": {
+      "title": "Cart",
+      "empty": {
+        "title": "Your cart is empty",
+        "description": "Products you add appear here.",
+        "browse": "Browse the store"
+      },
+      "remove": "Remove",
+      "quantity": "Quantity",
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity",
+      "summary": "Summary",
+      "subtotal": "Subtotal",
+      "shipping": "Delivery",
+      "total": "Total",
+      "freeShippingHint": "Add {amount} more for free delivery.",
+      "checkout": "Checkout",
+      "unavailable": "No longer available. Remove it to continue.",
+      "notEnoughStock": "Only {count} available. Lower the quantity to continue.",
+      "outOfStock": "Out of stock. Remove it to continue.",
+      "problems": "Fix the items marked below to check out.",
+      "updateFailed": "We couldn't update your cart. Please try again."
+    },
+    "checkout": {
+      "title": "Checkout",
+      "address": {
+        "title": "Delivery address",
+        "description": "We deliver to all of Iraq's governorates and call before delivering.",
+        "fullName": "Full name",
+        "phone": "Mobile number",
+        "phoneHint": "For example 0770 123 4567.",
+        "governorate": "Governorate",
+        "governoratePlaceholder": "Choose a governorate",
+        "city": "City or district",
+        "address": "Address",
+        "addressPlaceholder": "Neighbourhood, street, building, nearest landmark",
+        "notes": "Delivery notes",
+        "notesPlaceholder": "Anything the courier should know"
+      },
+      "fieldErrors": {
+        "fullName": "Enter the recipient's name.",
+        "phone": "Enter a valid mobile number.",
+        "governorate": "Choose a governorate.",
+        "address": "Enter the delivery address."
+      },
+      "summary": "Order summary",
+      "itemsCount": "Items: {count}",
+      "placeOrder": "Place order and pay {amount}",
+      "placing": "Placing your order…",
+      "secure": "You'll pay on Wayl's secure payment page.",
+      "backToCart": "Back to the cart",
+      "orderCreatedPaymentFailed": "Your order was placed, but the payment page didn't open. You can pay from the order page.",
+      "viewOrder": "View order",
+      "errors": {
+        "cartEmpty": "Your cart is empty.",
+        "invalidAddress": "Check the delivery address and try again.",
+        "notPayable": "This order can no longer be paid.",
+        "outOfStock": "Some items don't have enough stock. Check your cart.",
+        "payment": "We couldn't open the payment page. Please try again.",
+        "suspended": "Your account is suspended. Contact support.",
+        "unavailable": "A product in your cart is no longer available. Check your cart.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "orders": {
+      "title": "Orders",
+      "description": "Track your store orders.",
+      "empty": {
+        "title": "No orders yet",
+        "description": "Orders you place in the store appear here.",
+        "browse": "Browse the store"
+      },
+      "placed": "Placed on {date}",
+      "itemsCount": "Items: {count}",
+      "view": "View order",
+      "detail": {
+        "back": "All orders",
+        "notFound": "We couldn't find this order.",
+        "progress": "Progress",
+        "items": "Items",
+        "address": "Delivery address",
+        "tracking": "Tracking number",
+        "summary": "Summary",
+        "subtotal": "Subtotal",
+        "shipping": "Delivery",
+        "total": "Total",
+        "paidOn": "Paid on {date}",
+        "payNow": "Pay now {amount}",
+        "paying": "Opening the payment page…",
+        "pendingNotice": "This order is waiting for payment.",
+        "confirming": "We're confirming your payment…",
+        "thanks": "Thank you! We received your payment and are preparing your order.",
+        "cancel": "Cancel order",
+        "cancelTitle": "Cancel this order?",
+        "cancelDescription": "The order is cancelled and nothing is charged. This can't be undone.",
+        "cancelConfirm": "Cancel order",
+        "keep": "Keep order",
+        "cancelling": "Cancelling…",
+        "cancelFailed": "This order can no longer be cancelled.",
+        "cancelledNotice": "This order was cancelled.",
+        "refundedNotice": "This order was refunded."
+      }
+    },
+    "plus": {
+      "title": "IDEA Plus",
+      "description": "Rent games, books and movies. We deliver them and pick them up when you're done.",
+      "membership": {
+        "title": "Your membership",
+        "none": "You're not a member yet. Choose a plan below.",
+        "plan": "{plan} plan",
+        "renews": "Renews on {date}",
+        "ends": "Ends on {date}",
+        "allowance": "Rental slots",
+        "slots": "{free} of {slots} free",
+        "confirming": "We're confirming your payment…"
+      },
+      "plans": {
+        "title": "Plans",
+        "empty": "No plans are available right now.",
+        "slots": "Up to {count} items at a time",
+        "current": "Your plan",
+        "subscribe": "Join for {amount}",
+        "redirecting": "Opening the payment page…",
+        "failed": "We couldn't start the payment. Please try again."
+      },
+      "catalog": {
+        "title": "Rental catalog",
+        "description": "Request an item and we'll arrange delivery.",
+        "search": "Search the rental catalog",
+        "empty": "No rental items here yet.",
+        "available": "{count} available",
+        "unavailable": "All copies are rented out",
+        "request": "Request",
+        "requesting": "Requesting…",
+        "requested": "Requested. We'll contact you to arrange delivery.",
+        "needMembership": "Join IDEA Plus to rent items.",
+        "noSlots": "All your rental slots are in use."
+      },
+      "rentals": {
+        "title": "Your rentals",
+        "empty": "You haven't rented anything yet.",
+        "requestedOn": "Requested on {date}",
+        "due": "Due on {date}",
+        "returnedOn": "Returned on {date}",
+        "cancel": "Cancel request",
+        "cancelling": "Cancelling…"
+      },
+      "errors": {
+        "noSlots": "All your rental slots are in use. Return an item first.",
+        "notCancellable": "This rental has already been delivered.",
+        "suspended": "Your account is suspended. Contact support.",
+        "unavailable": "This item isn't available right now.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "events": {
+      "title": "Events",
+      "description": "Talks, workshops and meetups from The IDEA community.",
+      "upcoming": "Upcoming events",
+      "empty": "No upcoming events right now. Check back soon.",
+      "mine": "Your events",
+      "mineEmpty": "You haven't RSVP'd to any upcoming event.",
+      "going": "You're going",
+      "rsvp": "RSVP",
+      "rsvping": "Saving…",
+      "cancelRsvp": "Cancel RSVP",
+      "seatsLeft": "Seats left: {count}",
+      "full": "Full",
+      "attending": "Going: {count}",
+      "calendar": {
+        "title": "Your calendar",
+        "description": "Subscribe to this link in your calendar app to see the events you RSVP to.",
+        "copy": "Copy link",
+        "copied": "Link copied",
+        "open": "Add to calendar",
+        "reset": "Reset link",
+        "resetting": "Resetting…",
+        "resetHint": "Resetting stops the old link from working. Use it if you shared the link by mistake.",
+        "unavailable": "The calendar link isn't available right now.",
+        "linkLabel": "Calendar link"
+      },
+      "errors": {
+        "full": "This event is full.",
+        "closed": "RSVPs for this event are closed.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "submissions": {
+      "title": "Submissions",
+      "description": "Send your writing or visual art to the journal. Editors review every submission without seeing the author's name.",
+      "form": {
+        "title": "Submit your work",
+        "workTitle": "Title",
+        "type": "Type",
+        "format": "How would you like to send it?",
+        "formatText": "Write it here",
+        "formatFile": "Upload a file",
+        "body": "Your work",
+        "bodyHint": "Markdown formatting is supported.",
+        "file": "File",
+        "fileHint": "PDF, JPEG or PNG.",
+        "imageHint": "Visual art is sent as a JPEG or PNG image.",
+        "submit": "Submit",
+        "submitting": "Submitting…",
+        "submitted": "Thank you! Your work was submitted.",
+        "failed": "We couldn't submit your work. Please try again."
+      },
+      "problems": {
+        "title": "Enter a title.",
+        "body": "Write or paste your work.",
+        "fileMissing": "Choose a file.",
+        "fileTooLarge": "That file is too large.",
+        "fileType": "Use a PDF, JPEG or PNG file.",
+        "imageRequired": "Visual art needs a JPEG or PNG image."
+      },
+      "list": {
+        "title": "Your submissions",
+        "empty": "You haven't submitted anything yet.",
+        "submittedOn": "Submitted on {date}",
+        "note": "Note from the editors",
+        "withdraw": "Withdraw",
+        "withdrawing": "Withdrawing…",
+        "withdrawFailed": "This submission can no longer be withdrawn."
+      }
+    },
+    "business": {
+      "title": "Business",
+      "description": "IDEA Suite: procurement and recruitment for companies.",
+      "intro": {
+        "title": "Bring your company to IDEA Suite",
+        "description": "Create a business account for your team, or join one you've been invited to.",
+        "create": "Create a business account"
+      },
+      "invitations": {
+        "title": "You've been invited",
+        "description": "Join a business account that invited you.",
+        "join": "Join",
+        "joining": "Joining…",
+        "as": "as {role}"
+      },
+      "tabs": {
+        "projects": "Projects",
+        "members": "Members",
+        "billing": "Plan",
+        "settings": "Settings"
+      },
+      "projects": {
+        "title": "Projects",
+        "description": "Everything your company is working on.",
+        "empty": {
+          "title": "No projects yet",
+          "description": "Create your first project to get started."
+        },
+        "newProject": "New project",
+        "projectName": "Project name",
+        "creating": "Creating…",
+        "createdAt": "Created {date}"
+      },
+      "members": {
+        "title": "Members",
+        "description": "People in this business account.",
+        "you": "You",
+        "unnamed": "Member without a name",
+        "role": "Role",
+        "remove": "Remove",
+        "leave": "Leave",
+        "failed": "That didn't work. Please try again.",
+        "invite": {
+          "title": "Invite someone",
+          "description": "They sign in with this phone number or email to join.",
+          "invitee": "Phone number or email",
+          "submit": "Send invitation",
+          "submitting": "Inviting…",
+          "sent": "Invitation created. Share the link with them.",
+          "invalid": "Enter a valid phone number or email address.",
+          "managersOnly": "Only owners and admins can invite people."
+        },
+        "pending": {
+          "title": "Pending invitations",
+          "empty": "No pending invitations.",
+          "expires": "Expires on {date}",
+          "copy": "Copy link",
+          "copied": "Copied",
+          "revoke": "Revoke"
+        }
+      },
+      "settings": {
+        "title": "Business settings",
+        "description": "Only owners and admins can change these settings.",
+        "name": "Company name",
+        "slug": "Address"
+      }
+    },
+    "onboarding": {
+      "title": "Welcome to {name}",
+      "description": "Let's set up your account. It only takes a minute.",
+      "profile": {
+        "title": "What should we call you?",
+        "description": "We use your name for orders, deliveries and events.",
+        "fullName": "Full name",
+        "language": "Preferred language",
+        "languageHint": "Used in the app and in the messages we send you.",
+        "marketing": "Send me news and offers",
+        "marketingHint": "New products, events and member offers by email or SMS. You can turn this off at any time in Settings.",
+        "submit": "Continue"
+      },
+      "organization": {
+        "title": "Create a business account",
+        "description": "A business account holds your team, projects and IDEA Suite plan.",
+        "name": "Company name",
+        "namePlaceholder": "e.g. Al-Rafidain Trading",
+        "slug": "Address",
+        "slugHint": "Lowercase English letters, numbers and dashes. Used in links.",
+        "submit": "Create business account",
+        "submitting": "Creating…"
+      },
+      "errors": {
+        "nameRequired": "Enter a name.",
+        "slugInvalid": "Use 2–64 lowercase letters, numbers and single dashes.",
+        "slugTaken": "That address is already taken. Try another one.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "organizations": {
+      "new": {
+        "title": "New business account",
+        "description": "Create a business account for your company or team."
+      }
+    },
+    "invite": {
+      "title": "Accept invitation",
+      "description": "You've been invited to join a business account.",
+      "accept": "Accept invitation",
+      "accepting": "Accepting…",
+      "missing": "This invitation link is incomplete. Ask for a new one.",
+      "signInFirst": "Sign in with the phone number or email the invitation was sent to.",
+      "errors": {
+        "expired": "This invitation has expired or was already used.",
+        "wrongAccount": "This invitation was sent to a different phone number or email.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "profile": {
+        "title": "Profile",
+        "description": "Your name, language and email preferences.",
+        "phone": "Mobile number"
+      },
+      "appearance": {
+        "title": "Appearance",
+        "description": "Choose how The IDEA looks on this device.",
+        "theme": "Theme"
+      },
+      "deleteAccount": {
+        "title": "Delete account",
+        "description": "Permanently delete your account and personal data. This can't be undone.",
+        "open": "Delete account",
+        "dialogTitle": "Delete your account?",
+        "consequences": "Your profile, cart, RSVPs, submissions and sign-in are deleted, and you leave every business account you belong to. Order and payment records are kept for accounting, without your name.",
+        "confirmLabel": "To confirm, type “{phrase}”",
+        "confirmPhrase": "delete my account",
+        "confirm": "Delete my account permanently",
+        "deleting": "Deleting…",
+        "failed": "Your account couldn't be deleted. Please try again.",
+        "checking": "Checking your business accounts…",
+        "blockers": {
+          "title": "First, resolve your business accounts",
+          "description": "You're the only owner of the business accounts below. Make another member an owner, or delete the account. Then you can delete yours.",
+          "handOver": "Make another member an owner",
+          "makeOwner": "Make owner",
+          "onlyMember": "You're the only member, so this business account can only be deleted.",
+          "unnamed": "Member without a name",
+          "deleteOrganization": "Delete business account",
+          "deleteConfirmLabel": "This deletes {name} with its projects, members and files. Type “{slug}” to confirm.",
+          "deleteConfirm": "Delete {name}",
+          "failed": "That didn't work. Please try again."
+        }
+      }
+    },
+    "errors": {
+      "loadFailed": "We couldn't load this page.",
+      "unknown": "Something went wrong. Please try again."
+    }
+  },
+  "store": {
+    "price": {
+      "free": "Free",
+      "from": "From {price}",
+      "save": "Save {percent}%"
+    },
+    "condition": {
+      "new": "New",
+      "used": "Used",
+      "refurbished": "Refurbished",
+      "open_box": "Open box"
+    },
+    "stock": {
+      "inStock": "In stock",
+      "lowStock": "Only {count} left",
+      "outOfStock": "Out of stock"
+    },
+    "orderStatus": {
+      "pending": "Awaiting payment",
+      "paid": "Paid",
+      "processing": "Preparing",
+      "shipped": "On the way",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded"
+    },
+    "rentalStatus": {
+      "requested": "Requested",
+      "active": "With you",
+      "returned": "Returned",
+      "overdue": "Overdue",
+      "cancelled": "Cancelled"
+    },
+    "submissionStatus": {
+      "pending": "Received",
+      "under_review": "Under review",
+      "revisions_requested": "Revisions requested",
+      "accepted": "Accepted",
+      "rejected": "Not accepted",
+      "withdrawn": "Withdrawn"
+    },
+    "submissionType": {
+      "essay": "Essay",
+      "poetry": "Poetry",
+      "fiction": "Fiction",
+      "theatre": "Theatre",
+      "visual_art": "Visual art",
+      "other": "Other"
+    },
+    "kind": {
+      "sale": "Megastore",
+      "rental": "IDEA Plus"
+    },
+    "lines": {
+      "megastore": "Megastore",
+      "plus": "IDEA Plus",
+      "academy": "Academy",
+      "suite": "IDEA Suite",
+      "club": "The Club"
+    }
+  },
+  "admin": {
+    "meta": {
+      "title": "The IDEA back office",
+      "description": "Staff console for The IDEA.",
+      "badge": "Staff"
+    },
+    "signIn": {
+      "title": "Back office sign-in",
+      "description": "Staff only. Sign in with your mobile number, then confirm with your authenticator app."
+    },
+    "mfa": {
+      "title": "Authenticator app",
+      "enrollTitle": "Set up your authenticator app",
+      "enrollDescription": "Staff accounts are protected with a second step. Link an authenticator app once; you'll enter its code each time you sign in.",
+      "challengeTitle": "Enter your authenticator code",
+      "challengeDescription": "Open your authenticator app and enter the 6-digit code for The IDEA.",
+      "stepInstall": "Install an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…).",
+      "stepScan": "Scan this QR code with it, or enter the setup key below.",
+      "stepCode": "Enter the 6-digit code the app shows.",
+      "qrAlt": "QR code for your authenticator app",
+      "secretLabel": "Setup key",
+      "codeLabel": "6-digit code",
+      "verify": "Confirm",
+      "verifying": "Checking…",
+      "errors": {
+        "invalidCode": "That code didn't work. Check the time on your phone and try the newest code.",
+        "unavailable": "Authenticator apps aren't enabled for this project yet. Ask an administrator to turn on TOTP multi-factor authentication in Supabase."
+      }
+    },
+    "noAccess": {
+      "title": "No access",
+      "description": "This account doesn't have a staff role. If you work at The IDEA, ask a superadmin to grant you access, then sign in again."
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "catalog": "Catalog",
+      "orders": "Orders",
+      "rentals": "Rentals",
+      "customers": "Customers",
+      "marketing": "Marketing",
+      "finance": "Finance",
+      "editorial": "Editorial",
+      "telegram": "Telegram",
+      "staff": "Staff",
+      "audit": "Audit log"
+    },
+    "roles": {
+      "superadmin": "Superadmin",
+      "admin": "Administrator",
+      "editor": "Editor",
+      "finance": "Finance",
+      "marketing": "Marketing",
+      "support": "Support"
+    },
+    "errors": {
+      "unauthorized": "Your session has ended. Sign in again.",
+      "forbidden": "Your role can't do this.",
+      "invalid": "Some fields are missing or invalid. Check the highlighted fields.",
+      "duplicate": "Something with the same name, slug or number already exists.",
+      "notFound": "It no longer exists.",
+      "unbalanced": "Debits and credits must be equal.",
+      "transition": "This status change isn't allowed.",
+      "inUse": "It's still in use, so it can't be deleted.",
+      "lastSuperadmin": "There must always be at least one superadmin.",
+      "apiUnavailable": "The server couldn't be reached. Try again shortly.",
+      "emailNotConfigured": "Email sending isn't configured on the server.",
+      "unknown": "Something went wrong. Try again."
+    },
+    "notices": {
+      "saved": "Saved",
+      "deleted": "Deleted",
+      "sent": "Sent",
+      "posted": "Posted"
+    },
+    "common": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "save": "Save",
+      "create": "Create",
+      "add": "Add",
+      "edit": "Edit",
+      "delete": "Delete",
+      "view": "View",
+      "back": "Back",
+      "yes": "Yes",
+      "no": "No",
+      "any": "Any",
+      "none": "None",
+      "all": "All",
+      "arabic": "Arabic",
+      "english": "English",
+      "deleteConfirm": "Delete this permanently?",
+      "deleteDescription": "This can't be undone.",
+      "deletedAccount": "Deleted account",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "status": "Status",
+      "actions": "Actions",
+      "notes": "Notes",
+      "position": "Order",
+      "positionHint": "Lower numbers come first."
+    },
+    "list": {
+      "apply": "Filter",
+      "search": "Search",
+      "page": "Page {page} of {pages}",
+      "previous": "Previous",
+      "next": "Next",
+      "empty": "Nothing here yet.",
+      "noResults": "No results match these filters.",
+      "total": "{count} in total"
+    },
+    "markdown": {
+      "write": "Write",
+      "preview": "Preview",
+      "empty": "Nothing to preview yet.",
+      "hint": "Markdown: **bold**, *italic*, # headings, - lists, [links](https://…)."
+    },
+    "upload": {
+      "choose": "Upload",
+      "replace": "Replace",
+      "uploading": "Uploading…",
+      "remove": "Remove",
+      "makeCover": "Use as cover",
+      "cover": "Cover",
+      "imageHint": "PNG, JPEG or WebP, up to {size} MB.",
+      "pdfHint": "PDF, up to {size} MB.",
+      "problems": {
+        "empty": "{name} is empty.",
+        "too_large": "{name} is too large.",
+        "type_not_allowed": "{name} isn't an allowed file type.",
+        "failed": "The upload failed. Try again."
+      }
+    },
+    "keyValue": {
+      "key": "Name",
+      "value": "Value",
+      "add": "Add row",
+      "remove": "Remove row"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "greeting": "Welcome back, {name}.",
+      "fulfilment": "Orders to fulfil",
+      "fulfilmentHint": "Paid or being prepared",
+      "revenue": "Revenue this month",
+      "revenueHint": "Paid orders · {received} received in payments",
+      "members": "Active Plus members",
+      "rentals": "Open rentals",
+      "overdue": "{count} overdue",
+      "submissions": "Submissions to review",
+      "drafts": "Campaign drafts",
+      "optedIn": "Customers opted in to email",
+      "telegramRequests": "Open Telegram requests"
+    },
+    "catalog": {
+      "title": "Catalog",
+      "tabs": {
+        "products": "Products",
+        "categories": "Categories",
+        "plans": "Plans",
+        "settings": "Delivery"
+      },
+      "filters": {
+        "anyKind": "All lines",
+        "anyStatus": "All statuses",
+        "anyCategory": "All categories"
+      },
+      "productStatus": {
+        "draft": "Draft",
+        "active": "Live",
+        "archived": "Archived"
+      },
+      "products": {
+        "new": "New product",
+        "search": "Search by name or slug",
+        "empty": "No products match.",
+        "basics": "Basics",
+        "pricing": "Price and stock",
+        "content": "Description, images and details",
+        "deleteDescription": "Past orders keep their copy of the product. Archiving hides it from the store instead and keeps it here."
+      },
+      "fields": {
+        "name": "Product",
+        "nameAr": "Name (Arabic)",
+        "nameEn": "Name (English)",
+        "slug": "Slug",
+        "slugHint": "The web address: lower-case letters, numbers and dashes, e.g. ps5-slim.",
+        "kind": "Line",
+        "kindHint": "Megastore items are sold; IDEA Plus items are rented to members.",
+        "status": "Status",
+        "statusHint": "Only live products appear in the store.",
+        "category": "Category",
+        "featured": "Featured",
+        "featuredHint": "Shown on the home page and at the top of listings.",
+        "price": "Price (IQD)",
+        "priceHint": "For rentals: the item's replacement value.",
+        "compareAt": "Compare-at price",
+        "compareAtHint": "The old price, shown crossed out. Must be higher than the price.",
+        "stock": "Stock",
+        "stockHint": "Units on hand (copies, for rentals).",
+        "condition": "Condition",
+        "descriptionAr": "Description (Arabic)",
+        "descriptionEn": "Description (English)",
+        "images": "Images",
+        "details": "Specifications"
+      },
+      "variants": {
+        "title": "Variants",
+        "description": "Options such as colour or storage, each with its own stock and an optional price.",
+        "attributes": "Options",
+        "sku": "SKU",
+        "price": "Price (IQD)",
+        "priceHint": "Empty: the product price.",
+        "add": "Add variant"
+      },
+      "categories": {
+        "description": "Categories group products in the store. Deleting one leaves its products without a category.",
+        "new": "New category",
+        "deleteDescription": "Its products stay, without a category."
+      },
+      "settings": {
+        "description": "Applied to every new order.",
+        "shippingFee": "Delivery fee (IQD)",
+        "shippingFeeHint": "Charged on each order.",
+        "threshold": "Free delivery from (IQD)",
+        "thresholdHint": "Orders with at least this subtotal ship free. Empty: never free."
+      },
+      "plans": {
+        "new": "New plan",
+        "empty": "No plans yet.",
+        "id": "Plan ID",
+        "idHint": "Permanent, e.g. plus-monthly. Lower-case letters, numbers and dashes.",
+        "name": "Name",
+        "description": "Description",
+        "audience": "Product line",
+        "audiences": {
+          "plus": "IDEA Plus (members)",
+          "business": "IDEA Suite (businesses)"
+        },
+        "amount": "Price (IQD)",
+        "amountHint": "Charged each billing period.",
+        "interval": "Billing period",
+        "intervals": {
+          "month": "Monthly",
+          "year": "Yearly"
+        },
+        "slots": "Rental slots",
+        "slotsHint": "Items a member can rent at once.",
+        "featuresAr": "Features (Arabic)",
+        "featuresEn": "Features (English)",
+        "featuresHint": "One per line.",
+        "active": "Available",
+        "inactive": "Hidden",
+        "activeHint": "Unavailable plans are hidden from new customers; current subscribers keep them."
+      }
+    },
+    "orders": {
+      "title": "Orders",
+      "detail": "Order",
+      "orderNumber": "Order #{number}",
+      "total": "Total: {count}",
+      "search": "Order number, name or phone",
+      "status": "Status",
+      "anyStatus": "All statuses",
+      "awaiting": "To fulfil (paid or preparing)",
+      "from": "From",
+      "to": "To",
+      "empty": "No orders match.",
+      "number": "Order",
+      "date": "Placed",
+      "customer": "Customer",
+      "phone": "Phone",
+      "governorate": "Governorate",
+      "city": "City",
+      "address": "Address",
+      "customerNotes": "Customer's notes",
+      "totalAmount": "Total",
+      "items": "Items",
+      "item": "Item",
+      "unitPrice": "Unit price",
+      "quantity": "Qty",
+      "lineTotal": "Line total",
+      "subtotal": "Subtotal",
+      "shipping": "Delivery",
+      "payments": "Payments",
+      "noPayments": "No payment attempts yet.",
+      "reference": "Reference",
+      "paidAt": "Paid",
+      "amount": "Amount",
+      "fulfilment": "Fulfilment",
+      "fulfilmentHint": "Move the order forward as it's prepared and delivered. Payments and refunds are recorded by the payment provider.",
+      "cancelConfirm": "Cancel this unpaid order?",
+      "moves": {
+        "pending": "Back to awaiting payment",
+        "paid": "Mark paid",
+        "processing": "Start preparing",
+        "shipped": "Mark shipped",
+        "delivered": "Mark delivered",
+        "cancelled": "Cancel order",
+        "refunded": "Refund"
+      },
+      "delivery": "Delivery",
+      "notes": "Tracking and notes",
+      "tracking": "Tracking number",
+      "staffNote": "Staff note",
+      "staffNoteHint": "Only staff see this."
+    },
+    "rentals": {
+      "title": "Rentals",
+      "views": {
+        "requests": "Requests",
+        "active": "Out with members",
+        "overdue": "Overdue",
+        "history": "History"
+      },
+      "empty": {
+        "requests": "No requests waiting to be delivered.",
+        "active": "Nothing is out with members.",
+        "overdue": "Nothing is overdue.",
+        "history": "No returned or cancelled rentals yet."
+      },
+      "item": "Item",
+      "member": "Member",
+      "requested": "Requested",
+      "due": "Due",
+      "status": "Status",
+      "actions": "Actions",
+      "unnamed": "Unnamed member",
+      "deleted": "Deleted account",
+      "returnedOn": "Returned {date}",
+      "dueDate": "Due date",
+      "deliver": "Delivered",
+      "cancel": "Cancel request",
+      "cancelConfirm": "Cancel this rental request?",
+      "cancelDescription": "The copy goes back into stock and the member's slot is freed.",
+      "changeDue": "Change due date",
+      "markReturned": "Mark returned"
+    },
+    "customers": {
+      "title": "Customers",
+      "detail": "Customer",
+      "count": "Total: {count}",
+      "search": "Name or user ID",
+      "crmStatus": "CRM status",
+      "anyStatus": "Any CRM status",
+      "statuses": {
+        "lead": "Lead",
+        "customer": "Customer",
+        "vip": "VIP",
+        "churned": "Churned"
+      },
+      "tag": "Tag",
+      "tags": "Tags",
+      "tagsHint": "Separate with commas, e.g. gamer, books.",
+      "optIn": "Marketing email",
+      "anyOptIn": "Any email consent",
+      "optedIn": "Opted in",
+      "notOptedIn": "Not opted in",
+      "suspendedFilter": "Account",
+      "anyAccount": "All accounts",
+      "activeAccounts": "Active",
+      "suspendedAccounts": "Suspended",
+      "empty": "No customers match.",
+      "name": "Name",
+      "language": "Language",
+      "languages": {
+        "ar": "Arabic",
+        "en": "English"
+      },
+      "joined": "Joined",
+      "joinedOn": "Joined {date}",
+      "unnamed": "Unnamed customer",
+      "suspended": "Suspended",
+      "staffMember": "Staff: {role}",
+      "suspend": "Suspend",
+      "unsuspend": "Lift suspension",
+      "suspendConfirm": "Suspend this customer?",
+      "suspendDescription": "They won't be able to order, rent, RSVP or submit work until the suspension is lifted.",
+      "unsuspendConfirm": "Lift this customer's suspension?",
+      "orders": "Orders",
+      "allOrders": "All orders",
+      "noOrders": "No orders yet.",
+      "order": "Order",
+      "date": "Date",
+      "status": "Status",
+      "total": "Total",
+      "rentals": "Rentals",
+      "noRentals": "No rentals yet.",
+      "profile": "Profile",
+      "phone": "Phone (last order)",
+      "telegram": "Telegram",
+      "userId": "User ID",
+      "subscription": "Membership",
+      "noSubscription": "No IDEA Plus membership.",
+      "renewsOn": "Renews {date}",
+      "endsOn": "Ends {date}",
+      "crm": "Relationship",
+      "crmUpdated": "Last updated {date}"
+    },
+    "marketing": {
+      "title": "Marketing",
+      "tabs": {
+        "campaigns": "Campaigns",
+        "segments": "Segments"
+      },
+      "campaignStatus": {
+        "draft": "Draft",
+        "sending": "Sending",
+        "sent": "Sent",
+        "failed": "Failed"
+      },
+      "campaigns": {
+        "new": "New campaign",
+        "detail": "Campaign",
+        "create": "Create draft",
+        "empty": "No campaigns yet.",
+        "subject": "Subject",
+        "segment": "Audience",
+        "segmentHint": "Only customers who opted in to marketing email receive campaigns.",
+        "everyone": "Everyone who opted in",
+        "status": "Status",
+        "sentCount": "Recipients",
+        "sentAt": "Sent",
+        "date": "Date",
+        "body": "Message",
+        "bodyHint": "Markdown. It's placed in The IDEA's email template with an unsubscribe link.",
+        "draft": "Draft",
+        "results": "Results",
+        "preview": "Preview",
+        "previewHint": "The saved version, as it will look in the email.",
+        "send": "Send now",
+        "sendConfirm": "Send this campaign now?",
+        "sendDescription": "It goes to: {audience}. Sending can't be undone.",
+        "failedHint": "Sending stopped partway. The recipient count shows how many emails went out."
+      },
+      "segments": {
+        "description": "Segments choose who receives a campaign. Every criterion you set must match; leave one on \"Any\" to ignore it.",
+        "new": "New segment",
+        "create": "Create segment",
+        "name": "Name",
+        "crmStatus": "CRM status",
+        "crmHint": "None ticked: any status.",
+        "tags": "Tags",
+        "tagsHint": "Customers with at least one of these tags.",
+        "plusMember": "IDEA Plus",
+        "plusYes": "Members only",
+        "plusNo": "Non-members only",
+        "locale": "Language",
+        "count": "Count recipients",
+        "recipients": "{count} recipients right now",
+        "deleteDescription": "Campaigns that used it keep their history."
+      }
+    },
+    "finance": {
+      "title": "Finance",
+      "tabs": {
+        "dashboard": "Overview",
+        "journal": "Journal",
+        "accounts": "Chart of accounts",
+        "payments": "Payments",
+        "payroll": "Staff plan",
+        "equity": "Cap table"
+      },
+      "dashboard": {
+        "error": "The ledger summary couldn't be loaded.",
+        "revenueMonth": "Revenue this month",
+        "expensesMonth": "Expenses this month",
+        "cogsMonth": "Cost of goods sold",
+        "netMonth": "Net income this month",
+        "ytd": "Year to date: {amount}",
+        "grossHint": "Gross profit: {amount}",
+        "chart": "Last 12 months",
+        "chartHint": "From posted journal entries, in IQD.",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "net": "Net income"
+      },
+      "journal": {
+        "new": "New journal entry",
+        "newHint": "Every entry needs at least two lines, and debits must equal credits.",
+        "search": "Description or reference",
+        "from": "From",
+        "to": "To",
+        "empty": "No journal entries yet.",
+        "date": "Date",
+        "description": "Description",
+        "reference": "Reference",
+        "referenceHint": "Optional: an invoice, receipt or payment reference.",
+        "lines": "Lines",
+        "account": "Account",
+        "chooseAccount": "Choose an account…",
+        "memo": "Memo",
+        "debit": "Debit",
+        "credit": "Credit",
+        "addLine": "Add line",
+        "removeLine": "Remove line",
+        "totals": "Totals",
+        "balanced": "Balanced",
+        "difference": "Off by {amount}",
+        "post": "Post entry"
+      },
+      "accounts": {
+        "description": "Posted entries keep their accounts; deactivate an account to stop using it.",
+        "empty": "No accounts yet.",
+        "new": "New account",
+        "code": "Code",
+        "name": "Name",
+        "type": "Type",
+        "types": {
+          "asset": "Asset",
+          "liability": "Liability",
+          "equity": "Equity",
+          "revenue": "Revenue",
+          "expense": "Expense"
+        },
+        "category": "Category",
+        "categoryHint": "\"cogs\" marks cost of goods sold.",
+        "active": "Active"
+      },
+      "payments": {
+        "status": "Status",
+        "anyStatus": "All statuses",
+        "empty": "No payments yet.",
+        "date": "Date",
+        "for": "For",
+        "order": "Store order",
+        "subscription": "Subscription",
+        "other": "Other",
+        "customer": "Customer",
+        "amount": "Amount",
+        "refunded": "{amount} refunded"
+      },
+      "payroll": {
+        "thisMonth": "Payroll this month",
+        "headcount": "Headcount",
+        "nextYear": "Next 12 months",
+        "plan": "Positions",
+        "description": "Planned, open and filled positions. Salaries are monthly, in IQD; raises apply on each anniversary of the start date.",
+        "role": "Role",
+        "department": "Department",
+        "salary": "Monthly salary (IQD)",
+        "increase": "Raise %/yr",
+        "start": "Start date",
+        "status": "Status",
+        "statuses": {
+          "planned": "Planned",
+          "hiring": "Hiring",
+          "active": "Filled",
+          "terminated": "Ended"
+        },
+        "projection": "Projection",
+        "projectionHint": "Positions count from their start date; ended positions are left out.",
+        "month": "Month",
+        "total": "Payroll"
+      },
+      "equity": {
+        "capTable": "Cap table",
+        "tableHint": "Ownership is each holder's share of all shares. Values use the round's price per share, in the round's currency.",
+        "empty": "No shareholders yet.",
+        "holder": "Shareholder",
+        "type": "Type",
+        "types": {
+          "founder": "Founder",
+          "investor": "Investor",
+          "employee": "Employee",
+          "advisor": "Advisor"
+        },
+        "round": "Round",
+        "shares": "Shares",
+        "ownership": "Ownership",
+        "value": "Value",
+        "total": "Total",
+        "rounds": "Funding rounds",
+        "roundsHint": "Amounts are in the round's currency (e.g. USD).",
+        "closedOn": "Closed on",
+        "currency": "Currency",
+        "valuationCap": "Valuation cap",
+        "pricePerShare": "Price per share",
+        "deleteRoundDescription": "Its shareholders stay, without a round.",
+        "holders": "Shareholders",
+        "vestingStart": "Vesting start"
+      }
+    },
+    "editorial": {
+      "title": "Editorial",
+      "tabs": {
+        "posts": "News",
+        "events": "Events",
+        "journal": "Journal",
+        "submissions": "Submissions"
+      },
+      "publish": {
+        "label": "Publishing",
+        "draft": "Draft (not visible)",
+        "now": "Published",
+        "schedule": "Scheduled",
+        "at": "Publish at",
+        "scheduleHint": "Baghdad time. It goes live automatically.",
+        "state": "Status",
+        "date": "Date",
+        "actions": "Actions",
+        "states": {
+          "draft": "Draft",
+          "scheduled": "Scheduled",
+          "published": "Published"
+        },
+        "publishNow": "Publish now",
+        "unpublish": "Unpublish"
+      },
+      "posts": {
+        "new": "New post",
+        "empty": "No posts yet.",
+        "title": "Title",
+        "titleAr": "Title (Arabic)",
+        "titleEn": "Title (English)",
+        "slug": "Slug",
+        "slugHint": "The web address, e.g. new-games-arrive.",
+        "excerptAr": "Summary (Arabic)",
+        "excerptEn": "Summary (English)",
+        "cover": "Cover image",
+        "bodyAr": "Article (Arabic)",
+        "bodyEn": "Article (English)"
+      },
+      "events": {
+        "new": "New event",
+        "empty": "No events yet.",
+        "title": "Event",
+        "titleAr": "Title (Arabic)",
+        "titleEn": "Title (English)",
+        "slug": "Slug",
+        "location": "Location",
+        "startsAt": "Starts",
+        "endsAt": "Ends",
+        "timeHint": "Baghdad time.",
+        "capacity": "Capacity",
+        "capacityHint": "Empty: unlimited seats.",
+        "descriptionAr": "Description (Arabic)",
+        "descriptionEn": "Description (English)",
+        "cover": "Cover image",
+        "published": "Published",
+        "publishedHint": "Visible on the website and open for RSVPs until it starts.",
+        "rsvps": "RSVPs",
+        "seats": "{count} of {capacity}",
+        "rsvpList": "RSVPs",
+        "noRsvps": "No RSVPs yet.",
+        "attendee": "Attendee",
+        "rsvpDate": "RSVP'd",
+        "unnamed": "Unnamed member",
+        "removeRsvp": "Remove this RSVP?",
+        "deleteDescription": "Its RSVPs are deleted too."
+      },
+      "journal": {
+        "new": "New issue",
+        "empty": "No journal issues yet.",
+        "number": "Issue",
+        "volumeIssue": "Vol. {volume}, No. {issue}",
+        "title": "Title",
+        "titleAr": "Title (Arabic)",
+        "titleEn": "Title (English)",
+        "volume": "Volume",
+        "issue": "Issue number",
+        "descriptionAr": "Description (Arabic)",
+        "descriptionEn": "Description (English)",
+        "pdf": "Issue PDF",
+        "pdfHint": "Required before publishing. Up to 50 MB.",
+        "noPdf": "No PDF yet",
+        "cover": "Cover image"
+      },
+      "submissions": {
+        "all": "All submissions",
+        "mine": "Assigned to me",
+        "error": "The review queue couldn't be loaded.",
+        "blindHint": "Blind review: authors are hidden until a submission is accepted or not accepted.",
+        "emptyColumn": "None",
+        "assignedTo": "Editor: {name}",
+        "unassigned": "Not assigned",
+        "unnamedEditor": "Unnamed editor",
+        "author": "By {name}"
+      },
+      "review": {
+        "title": "Review",
+        "work": "The work",
+        "author": "Author",
+        "hidden": "Hidden until a decision",
+        "submitted": "Submitted",
+        "decided": "Decided",
+        "fileMissing": "The file couldn't be opened.",
+        "assignment": "Assigned editor",
+        "assignee": "Editor",
+        "unassigned": "Not assigned",
+        "unnamedEditor": "Unnamed editor",
+        "rubric": "Rubric",
+        "rubricHint": "Only editors see the rubric.",
+        "criteria": {
+          "technical": "Technical skill",
+          "technicalHint": "Craft, language and structure.",
+          "originality": "Originality",
+          "originalityHint": "A fresh voice or idea.",
+          "thematic": "Thematic fit",
+          "thematicHint": "Fits the issue's theme."
+        },
+        "notScored": "—",
+        "total": "Score: {score} of 60",
+        "archiveWorthy": "Archive-worthy",
+        "formatting": "Formatting",
+        "formattingHint": "Disqualified: breaks the submission rules.",
+        "formattingOptions": {
+          "pass": "Pass",
+          "fail": "Fail",
+          "disqualified": "Disqualified"
+        },
+        "notes": "Editors' notes",
+        "notesHint": "Internal; never shown to the author.",
+        "saveRubric": "Save rubric",
+        "decision": "Decision",
+        "decisionHint": "The author sees this status.",
+        "decisionNote": "Note to the author",
+        "decisionNoteHint": "Shown to the author with the decision.",
+        "saveDecision": "Save decision"
+      }
+    },
+    "telegram": {
+      "title": "Telegram",
+      "tabs": {
+        "requests": "Requests",
+        "chats": "Groups",
+        "members": "Members",
+        "faq": "Bot FAQ"
+      },
+      "requests": {
+        "status": "Status",
+        "statuses": {
+          "open": "Open",
+          "resolved": "Resolved",
+          "rejected": "Rejected"
+        },
+        "empty": "No requests here.",
+        "member": "Member",
+        "type": "Type",
+        "types": {
+          "unban": "Unban request",
+          "support": "Support"
+        },
+        "message": "Message",
+        "date": "Received",
+        "approveUnban": "Approve unban",
+        "resolve": "Mark resolved",
+        "reject": "Reject",
+        "rejectConfirm": "Reject this request?",
+        "reopen": "Reopen"
+      },
+      "chats": {
+        "description": "Groups Droid moderates. A ban in one moderated group applies in all of them.",
+        "empty": "No groups yet. Add the bot to a group as an administrator, then add the group here.",
+        "new": "Add a group",
+        "id": "Chat ID",
+        "idHint": "e.g. -1001234567890",
+        "title": "Name",
+        "username": "Username",
+        "moderated": "Moderated"
+      },
+      "members": {
+        "search": "Username or name",
+        "banStatus": "Ban status",
+        "anyone": "Everyone",
+        "banned": "Banned",
+        "notBanned": "Not banned",
+        "empty": "No members match.",
+        "name": "Member",
+        "groupStatus": "In the groups",
+        "account": "IDEA account",
+        "linked": "Linked",
+        "lastSeen": "Last seen"
+      },
+      "faq": {
+        "description": "Droid offers these answers in private chats, in the member's language.",
+        "new": "New question",
+        "topic": "Topic",
+        "topics": {
+          "general": "General",
+          "store": "Megastore",
+          "plus": "IDEA Plus",
+          "academy": "Academy",
+          "suite": "IDEA Suite"
+        },
+        "questionAr": "Question (Arabic)",
+        "questionEn": "Question (English)",
+        "answerAr": "Answer (Arabic)",
+        "answerEn": "Answer (English)"
+      }
+    },
+    "staff": {
+      "title": "Staff",
+      "description": "Back-office roles. Only superadmins can change them.",
+      "add": "Add a staff member",
+      "addDescription": "Find their account by the mobile number or email they sign in with, then choose a role. They must have signed in to The IDEA at least once.",
+      "lookup": "Mobile number or email",
+      "lookupHint": "e.g. 0770 123 4567 or name@theideaiq.com",
+      "find": "Find",
+      "notFound": "No account uses that number or email.",
+      "unnamed": "Unnamed",
+      "currentRole": "Current role: {role}",
+      "grant": "Grant role",
+      "role": "Role",
+      "jobTitle": "Job title",
+      "members": "Team ({count})",
+      "you": "You",
+      "grantedBy": "Granted by {name} on {date}",
+      "since": "Since {date}",
+      "revoke": "Revoke",
+      "revokeConfirm": "Remove {name} from staff?",
+      "revokeDescription": "They lose access to the back office immediately. Their customer account stays."
+    },
+    "audit": {
+      "title": "Audit log",
+      "description": "Changes made by staff, recorded automatically.",
+      "entity": "Record type",
+      "anyEntity": "All records",
+      "action": "Action",
+      "anyAction": "All actions",
+      "actions": {
+        "insert": "Created",
+        "update": "Changed",
+        "delete": "Deleted"
+      },
+      "entityId": "Record ID",
+      "from": "From",
+      "to": "To",
+      "empty": "No entries match.",
+      "when": "When",
+      "who": "Who",
+      "details": "Details",
+      "system": "System",
+      "unknownActor": "Unknown"
+    }
+  }
+}

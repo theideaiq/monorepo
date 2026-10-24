@@ -1,0 +1,116 @@
+/**
+ * Store helpers shared by the website, the app, the back office and the
+ * Telegram bot: bilingual fields, prices, Iraqi governorates and the cart
+ * total preview. Safe for client and server code.
+ */
+import { formatCurrency } from "@repo/internationalization/format";
+
+export type ContentLocale = "ar" | "en";
+
+const contentLocale = (locale: string): ContentLocale =>
+  locale === "en" ? "en" : "ar";
+
+/**
+ * Picks the column for the reader's language from a bilingual row
+ * (`name_ar` / `name_en`), falling back to the other language when empty.
+ */
+export const localized = <
+  Field extends string,
+  Row extends Partial<Record<`${Field}_ar` | `${Field}_en`, string | null>>,
+>(
+  row: Row,
+  field: Field,
+  locale: string
+): string => {
+  const primary = contentLocale(locale);
+  const fallback = primary === "ar" ? "en" : "ar";
+  return (row[`${field}_${primary}` as keyof Row & string] ||
+    row[`${field}_${fallback}` as keyof Row & string] ||
+    "") as string;
+};
+
+/** A price in IQD for display ("٧٢٠٬٠٠٠ د.ع." / "IQD 720,000"). */
+export const formatPrice = (amount: number, locale: string) =>
+  formatCurrency(amount, contentLocale(locale));
+
+/** Percentage saved against the compare-at price, rounded down. */
+export const discountPercent = (
+  price: number,
+  compareAtPrice: number | null | undefined
+) =>
+  compareAtPrice && compareAtPrice > price
+    ? Math.floor(((compareAtPrice - price) / compareAtPrice) * 100)
+    : 0;
+
+/** Variant attributes as "Color: Black · Storage: 1 TB". */
+export const describeAttributes = (attributes: unknown) =>
+  attributes && typeof attributes === "object" && !Array.isArray(attributes)
+    ? Object.entries(attributes as Record<string, unknown>)
+        .map(([key, value]) => `${key}: ${String(value)}`)
+        .join(" · ")
+    : "";
+
+/** Iraq's governorates, for delivery addresses. */
+export const governorates = [
+  { ar: "بغداد", en: "Baghdad", id: "baghdad" },
+  { ar: "البصرة", en: "Basra", id: "basra" },
+  { ar: "نينوى", en: "Nineveh", id: "nineveh" },
+  { ar: "أربيل", en: "Erbil", id: "erbil" },
+  { ar: "السليمانية", en: "Sulaymaniyah", id: "sulaymaniyah" },
+  { ar: "دهوك", en: "Duhok", id: "duhok" },
+  { ar: "حلبجة", en: "Halabja", id: "halabja" },
+  { ar: "كركوك", en: "Kirkuk", id: "kirkuk" },
+  { ar: "الأنبار", en: "Anbar", id: "anbar" },
+  { ar: "بابل", en: "Babylon", id: "babylon" },
+  { ar: "كربلاء", en: "Karbala", id: "karbala" },
+  { ar: "النجف", en: "Najaf", id: "najaf" },
+  { ar: "واسط", en: "Wasit", id: "wasit" },
+  { ar: "ديالى", en: "Diyala", id: "diyala" },
+  { ar: "صلاح الدين", en: "Saladin", id: "saladin" },
+  { ar: "ذي قار", en: "Dhi Qar", id: "dhi-qar" },
+  { ar: "ميسان", en: "Maysan", id: "maysan" },
+  { ar: "المثنى", en: "Muthanna", id: "muthanna" },
+  { ar: "القادسية", en: "Al-Qadisiyah", id: "qadisiyah" },
+] as const;
+
+export type GovernorateId = (typeof governorates)[number]["id"];
+
+export interface CartLine {
+  compareAtPrice?: number | null;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface StoreSettings {
+  freeShippingThreshold: number | null;
+  shippingFee: number;
+}
+
+/**
+ * The totals the customer will be charged, mirroring `create_order()` in the
+ * database (which is authoritative: it re-prices every line from the catalog).
+ */
+export const cartTotals = (lines: CartLine[], settings: StoreSettings) => {
+  const subtotal = lines.reduce(
+    (sum, line) => sum + line.unitPrice * line.quantity,
+    0
+  );
+  const freeShipping =
+    settings.freeShippingThreshold !== null &&
+    subtotal >= settings.freeShippingThreshold;
+  const shippingFee = subtotal === 0 || freeShipping ? 0 : settings.shippingFee;
+  return {
+    count: lines.reduce((sum, line) => sum + line.quantity, 0),
+    shippingFee,
+    subtotal,
+    total: subtotal + shippingFee,
+  };
+};
+
+/** The order statuses customers see, in fulfilment order. */
+export const orderSteps = [
+  "paid",
+  "processing",
+  "shipped",
+  "delivered",
+] as const;

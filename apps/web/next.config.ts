@@ -1,89 +1,99 @@
-import '@repo/env/web';
-import withBundleAnalyzer from '@next/bundle-analyzer';
-import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
+import { config, withAnalyzer } from "@repo/next-config";
+import { withLogging, withSentry } from "@repo/observability/next-config";
+import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+import { env } from "@/env";
 
-const withNextIntl = createNextIntlPlugin();
-const withAnalyzer = withBundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
-const isMobile = process.env.NEXT_PUBLIC_APP_ENV === 'mobile';
+let nextConfig: NextConfig = withLogging(config);
 
-const nextConfig: NextConfig = {
-  reactCompiler: true,
-  transpilePackages: ['@repo/ui', '@repo/utils', '@repo/env'],
-  output: isMobile ? 'export' : undefined,
-  images: {
-    unoptimized: isMobile,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.ytimg.com',
-      },
-    ],
-  },
-  async headers() {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    let supabaseDomain = '';
+// Product images, covers and journal PDFs come from Supabase Storage.
+const supabase = env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(env.NEXT_PUBLIC_SUPABASE_URL)
+  : null;
+const isLocalSupabase =
+  supabase !== null &&
+  ["127.0.0.1", "localhost", "[::1]"].includes(supabase.hostname);
 
-    if (supabaseUrl) {
-      try {
-        const url = new URL(supabaseUrl);
-        supabaseDomain = url.hostname;
-      } catch (e) {
-        // biome-ignore lint/suspicious/noConsole: Critical build-time error logging
-        console.error('Failed to parse NEXT_PUBLIC_SUPABASE_URL for CSP', e);
-      }
-    }
-
-    const csp = [
-      "default-src 'self'",
-      `img-src 'self' data: blob: images.unsplash.com i.ytimg.com ${supabaseDomain}`,
-      "style-src 'self' 'unsafe-inline'",
-      `connect-src 'self' ${supabaseDomain}`,
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // unsafe-eval needed for Next.js in dev, unsafe-inline for scripts
-      "font-src 'self' data:",
-    ]
-      .filter(Boolean)
-      .join('; ');
-
-    return [
-      {
-        source: '/:path*',
-        headers: [
+nextConfig.images = {
+  ...nextConfig.images,
+  // Only the local development stack runs on a private address.
+  dangerouslyAllowLocalIP: isLocalSupabase,
+  remotePatterns: [
+    ...(nextConfig.images?.remotePatterns ?? []),
+    ...(supabase
+      ? [
           {
-            key: 'Content-Security-Policy',
-            value: csp.replace(/\s{2,}/g, ' ').trim(),
+            hostname: supabase.hostname,
+            pathname: "/storage/v1/object/public/**",
+            port: supabase.port,
+            protocol: supabase.protocol.replace(":", "") as "http" | "https",
           },
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on',
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-        ],
-      },
-    ];
-  },
+        ]
+      : []),
+  ],
 };
 
-export default withAnalyzer(withNextIntl(nextConfig));
+nextConfig.redirects = async () => [
+  {
+    destination: "/:locale/legal/terms",
+    permanent: true,
+    source: "/:locale(ar|en)/legal",
+  },
+  // The template's pricing page became IDEA Plus; the old site's store URL.
+  {
+    destination: "/:locale/plus",
+    permanent: true,
+    source: "/:locale(ar|en)/pricing",
+  },
+  {
+    destination: "/games/spark-catcher/index.html",
+    permanent: false,
+    source: "/games/spark-catcher",
+  },
+  {
+    destination: "/:locale/store",
+    permanent: true,
+    source: "/:locale(ar|en)/megastore",
+  },
+];
+
+/**
+ * Spark Catcher, the Telegram mini-game in public/games, is a static page
+ * outside the proxy (which skips .html files). It loads Telegram's Web App
+ * script and is shown inside Telegram's clients, so it gets its own policy.
+ */
+nextConfig.headers = async () => [
+  {
+    headers: [
+      {
+        key: "Content-Security-Policy",
+        value: [
+          "default-src 'self'",
+          "script-src 'self' https://telegram.org",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data:",
+          "connect-src 'self'",
+          "base-uri 'none'",
+          "form-action 'none'",
+          "object-src 'none'",
+          "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org",
+        ].join("; "),
+      },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+    ],
+    source: "/games/:path*",
+  },
+];
+
+if (env.VERCEL) {
+  nextConfig = withSentry(nextConfig);
+}
+
+if (env.ANALYZE === "true") {
+  nextConfig = withAnalyzer(nextConfig);
+}
+
+export default withNextIntl(nextConfig);

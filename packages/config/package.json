@@ -2,27 +2,23 @@
   "name": "@repo/config",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./navigation": "./src/navigation.ts",
-    "./tsconfig.json": "./tsconfig.json",
-    "./postcss.config.mjs": "./postcss.config.mjs"
+    ".": "./index.ts",
+    "./project.json": "./project.json"
   },
-  "files": [
-    "biome.json",
-    "tsconfig.json",
-    "postcss.config.mjs",
-    "src"
-  ],
   "scripts": {
-    "lint": "biome lint .",
-    "format": "biome format --write .",
-    "check": "biome check --write .",
-    "typecheck": "tsc --noEmit"
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.13",
-    "@types/node": "^25.1.0",
-    "typescript": "^5.9.3"
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "25.3.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
   }
 }

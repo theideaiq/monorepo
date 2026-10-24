@@ -1,39 +1,16 @@
 {
-  "extends": "@repo/config/tsconfig.json",
+  "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
-    "allowJs": true,
-    "noEmit": true,
-    "module": "esnext",
-    "resolveJsonModule": true,
-    "incremental": true,
-    "baseUrl": ".",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"],
+      "@repo/*": ["../../packages/*"]
     }
   },
   "include": [
     "next-env.d.ts",
+    "next.config.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "next.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "vitest.config.mts",
-    "vitest.config.ts",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "**/*.test.js",
-    "**/*.spec.js"
+    ".next/types/**/*.ts"
   ]
 }

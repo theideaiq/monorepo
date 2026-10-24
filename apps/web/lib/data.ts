@@ -1,0 +1,317 @@
+import {
+  getProductBySlug,
+  listCategories,
+  listProducts,
+  type ProductCard,
+  type ProductFilters,
+  productImageUrl,
+} from "@repo/commerce/catalog";
+import type { Tables } from "@repo/database";
+import { log } from "@repo/observability/log";
+import { publicFileUrl } from "@repo/storage";
+import { createPublicClient, supabaseUrl } from "./supabase";
+
+/**
+ * Public data for the website, read with the anonymous client so Row Level
+ * Security decides what is visible. List queries degrade to empty results
+ * (logged) when Supabase is unreachable, so a page can still render; detail
+ * queries return null for missing rows and throw on other failures.
+ */
+
+const fallback = async <T>(label: string, empty: T, run: () => Promise<T>) => {
+  try {
+    return await run();
+  } catch (error) {
+    log.error(`web: ${label} failed: ${String(error)}`);
+    return empty;
+  }
+};
+
+const check = <T>({
+  data,
+  error,
+}: {
+  data: T;
+  error: { message: string } | null;
+}): T => {
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+/** Rows of a list query (never null). */
+const rows = <T>(result: {
+  data: T[] | null;
+  error: { message: string } | null;
+}): T[] => check(result) ?? [];
+
+// ── Catalog ─────────────────────────────────────────────────────────────────
+
+export type { ProductCard, ProductDetail } from "@repo/commerce/catalog";
+
+export const getProducts = (filters: ProductFilters) =>
+  fallback("listProducts", [] as ProductCard[], async () => {
+    const supabase = createPublicClient();
+    return supabase ? await listProducts(supabase, filters) : [];
+  });
+
+export type Category = NonNullable<
+  Awaited<ReturnType<typeof listCategories>>
+>[number];
+
+export const getCategories = (kind: "sale" | "rental" = "sale") =>
+  fallback("listCategories", [] as Category[], async () => {
+    const supabase = createPublicClient();
+    return supabase ? ((await listCategories(supabase, kind)) ?? []) : [];
+  });
+
+export const getProduct = async (slug: string) => {
+  const supabase = createPublicClient();
+  return supabase ? await getProductBySlug(supabase, slug) : null;
+};
+
+/** Slugs of every active product, for the sitemap and static params. */
+export const getProductSlugs = () =>
+  fallback(
+    "productSlugs",
+    [] as { slug: string; updated_at: string }[],
+    async () => {
+      const supabase = createPublicClient();
+      if (!supabase) {
+        return [];
+      }
+      return rows(
+        await supabase
+          .from("products")
+          .select("slug, updated_at")
+          .eq("status", "active")
+          .order("updated_at", { ascending: false })
+          .limit(5000)
+      );
+    }
+  );
+
+/** Public URL of a product image (storage path or absolute URL). */
+export const imageUrl = (path: string | null | undefined) =>
+  path && supabaseUrl() ? productImageUrl(supabaseUrl(), path) : null;
+
+// ── Plans ───────────────────────────────────────────────────────────────────
+
+export type Plan = Pick<
+  Tables<"plans">,
+  | "amount"
+  | "billing_interval"
+  | "currency"
+  | "description"
+  | "features_ar"
+  | "features_en"
+  | "id"
+  | "name"
+  | "rental_slots"
+>;
+
+export const getPlans = (audience: "business" | "plus") =>
+  fallback("plans", [] as Plan[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    return rows(
+      await supabase
+        .from("plans")
+        .select(
+          "id, name, description, amount, currency, billing_interval, rental_slots, features_ar, features_en"
+        )
+        .eq("active", true)
+        .eq("audience", audience)
+        .order("position")
+    );
+  });
+
+// ── Editorial ───────────────────────────────────────────────────────────────
+
+/** Public URL of a cover image or journal PDF in the `editorial` bucket. */
+export const editorialUrl = (path: string | null | undefined) => {
+  if (!path) {
+    return null;
+  }
+  if (path.startsWith("https://")) {
+    return path;
+  }
+  return supabaseUrl() ? publicFileUrl(supabaseUrl(), "editorial", path) : null;
+};
+
+const POST_SUMMARY =
+  "id, slug, title_ar, title_en, excerpt_ar, excerpt_en, cover_image, published_at, updated_at" as const;
+
+export type PostSummary = Pick<
+  Tables<"posts">,
+  | "cover_image"
+  | "excerpt_ar"
+  | "excerpt_en"
+  | "id"
+  | "published_at"
+  | "slug"
+  | "title_ar"
+  | "title_en"
+  | "updated_at"
+>;
+
+export const getPosts = (limit = 24) =>
+  fallback("posts", [] as PostSummary[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    return rows(
+      await supabase
+        .from("posts")
+        .select(POST_SUMMARY)
+        .not("published_at", "is", null)
+        .lte("published_at", new Date().toISOString())
+        .order("published_at", { ascending: false })
+        .limit(limit)
+    );
+  });
+
+export const getPost = async (slug: string) => {
+  const supabase = createPublicClient();
+  if (!supabase) {
+    return null;
+  }
+  return check(
+    await supabase
+      .from("posts")
+      .select(
+        "id, slug, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, cover_image, published_at, updated_at"
+      )
+      .eq("slug", slug)
+      .not("published_at", "is", null)
+      .maybeSingle()
+  );
+};
+
+const EVENT_COLUMNS =
+  "id, slug, title_ar, title_en, description_ar, description_en, location, starts_at, ends_at, cover_image, capacity, updated_at" as const;
+
+export type EventRow = Pick<
+  Tables<"events">,
+  | "capacity"
+  | "cover_image"
+  | "description_ar"
+  | "description_en"
+  | "ends_at"
+  | "id"
+  | "location"
+  | "slug"
+  | "starts_at"
+  | "title_ar"
+  | "title_en"
+  | "updated_at"
+>;
+
+/** Published events that haven't ended (or past ones with `past`). */
+export const getEvents = ({
+  limit = 24,
+  past = false,
+}: {
+  limit?: number;
+  past?: boolean;
+} = {}) =>
+  fallback("events", [] as EventRow[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    const now = new Date().toISOString();
+    const query = supabase
+      .from("events")
+      .select(EVENT_COLUMNS)
+      .eq("published", true);
+    return rows(
+      await (past
+        ? query.lt("starts_at", now).order("starts_at", { ascending: false })
+        : query.gte("starts_at", now).order("starts_at", { ascending: true })
+      ).limit(limit)
+    );
+  });
+
+export const getEvent = async (slug: string) => {
+  const supabase = createPublicClient();
+  if (!supabase) {
+    return null;
+  }
+  return check(
+    await supabase
+      .from("events")
+      .select(EVENT_COLUMNS)
+      .eq("slug", slug)
+      .eq("published", true)
+      .maybeSingle()
+  );
+};
+
+/** How many people RSVP'd, without revealing who (`event_rsvp_count`). */
+export const getRsvpCount = (eventId: string) =>
+  fallback("event_rsvp_count", null as number | null, async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return null;
+    }
+    return Number(
+      check(await supabase.rpc("event_rsvp_count", { event: eventId }))
+    );
+  });
+
+export type JournalIssue = Pick<
+  Tables<"journal_issues">,
+  | "cover_image"
+  | "description_ar"
+  | "description_en"
+  | "id"
+  | "issue"
+  | "pdf_path"
+  | "published_at"
+  | "title_ar"
+  | "title_en"
+  | "updated_at"
+  | "volume"
+>;
+
+const ISSUE_COLUMNS =
+  "id, volume, issue, title_ar, title_en, description_ar, description_en, cover_image, pdf_path, published_at, updated_at" as const;
+
+export const getIssues = () =>
+  fallback("journal_issues", [] as JournalIssue[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    return rows(
+      await supabase
+        .from("journal_issues")
+        .select(ISSUE_COLUMNS)
+        .not("published_at", "is", null)
+        .lte("published_at", new Date().toISOString())
+        .order("volume", { ascending: false })
+        .order("issue", { ascending: false })
+    );
+  });
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export const getIssue = async (id: string) => {
+  const supabase = createPublicClient();
+  if (!(supabase && UUID.test(id))) {
+    return null;
+  }
+  return check(
+    await supabase
+      .from("journal_issues")
+      .select(ISSUE_COLUMNS)
+      .eq("id", id)
+      .not("published_at", "is", null)
+      .maybeSingle()
+  );
+};
