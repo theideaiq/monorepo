@@ -3,9 +3,11 @@
 import type { Tables } from "@repo/database";
 import { Constants } from "@repo/database";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { ActionButton } from "@/components/action-button";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import { SelectField, TextField } from "@/components/fields";
+import { instruments, isConvertible } from "@/lib/equity";
 import { deleteHolder, deleteRound, saveHolder, saveRound } from "../actions";
 
 /** A funding round; amounts are in the round's own currency. */
@@ -93,7 +95,10 @@ export const RoundForm = ({
   );
 };
 
-/** A shareholder (founder, investor, employee or advisor). */
+/**
+ * A shareholder (founder, investor, employee or advisor) and what they hold;
+ * SAFEs and convertible notes also record the investment, cap and discount.
+ */
 export const HolderForm = ({
   disabled = false,
   holder,
@@ -105,6 +110,10 @@ export const HolderForm = ({
 }) => {
   const t = useTranslations("admin.finance.equity");
   const tCommon = useTranslations("admin.common");
+  const [instrument, setInstrument] = useState<string>(
+    holder?.instrument ?? "common"
+  );
+  const convertible = isConvertible(instrument);
 
   return (
     <div className="flex flex-wrap items-end gap-3 rounded-lg border p-3">
@@ -133,6 +142,18 @@ export const HolderForm = ({
           wrapperClassName="w-32"
         />
         <SelectField
+          disabled={disabled}
+          label={t("instrument")}
+          name="instrument"
+          onChange={(event) => setInstrument(event.target.value)}
+          options={instruments.map((value) => ({
+            label: t(`instruments.${value}`),
+            value,
+          }))}
+          value={instrument}
+          wrapperClassName="w-40"
+        />
+        <SelectField
           defaultValue={holder?.round_id ?? ""}
           disabled={disabled}
           label={t("round")}
@@ -147,11 +168,44 @@ export const HolderForm = ({
           defaultValue={holder?.shares ?? ""}
           dir="ltr"
           disabled={disabled}
+          hint={convertible ? t("sharesConvertibleHint") : undefined}
           inputMode="numeric"
           label={t("shares")}
           name="shares"
           wrapperClassName="w-36"
         />
+        {convertible ? (
+          <>
+            <TextField
+              defaultValue={holder?.invested_amount ?? ""}
+              dir="ltr"
+              disabled={disabled}
+              inputMode="decimal"
+              label={t("invested")}
+              name="investedAmount"
+              required
+              wrapperClassName="w-36"
+            />
+            <TextField
+              defaultValue={holder?.conversion_cap ?? ""}
+              dir="ltr"
+              disabled={disabled}
+              inputMode="decimal"
+              label={t("conversionCap")}
+              name="conversionCap"
+              wrapperClassName="w-36"
+            />
+            <TextField
+              defaultValue={holder?.discount_rate ?? ""}
+              dir="ltr"
+              disabled={disabled}
+              inputMode="decimal"
+              label={t("discount")}
+              name="discountRate"
+              wrapperClassName="w-28"
+            />
+          </>
+        ) : null}
         <TextField
           defaultValue={holder?.vesting_start ?? ""}
           disabled={disabled}

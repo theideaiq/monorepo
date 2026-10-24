@@ -29,6 +29,7 @@ describe("journal entries", () => {
         account_id: cash,
         credit: 0,
         debit: 1100,
+        dimensions: {},
         memo: "till",
       });
     }

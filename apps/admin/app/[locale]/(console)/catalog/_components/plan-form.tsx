@@ -90,6 +90,17 @@ export const PlanForm = ({ disabled = false, plan }: PlanFormProps) => {
                 name="rentalSlots"
               />
             ) : null}
+            {audience === "plus" ? (
+              <TextField
+                defaultValue={plan?.tier ?? ""}
+                dir="ltr"
+                hint={t("tierHint")}
+                inputMode="numeric"
+                label={t("tier")}
+                name="tier"
+                required
+              />
+            ) : null}
             <TextField
               defaultValue={plan?.position ?? 0}
               dir="ltr"

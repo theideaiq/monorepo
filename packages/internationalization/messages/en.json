@@ -1338,7 +1338,9 @@
       "editorial": "Editorial",
       "telegram": "Telegram",
       "staff": "Staff",
-      "audit": "Audit log"
+      "audit": "Audit log",
+      "support": "Support",
+      "reviews": "Reviews"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -1447,7 +1449,9 @@
       "submissions": "Submissions to review",
       "drafts": "Campaign drafts",
       "optedIn": "Customers opted in to email",
-      "telegramRequests": "Open Telegram requests"
+      "telegramRequests": "Open Telegram requests",
+      "openTickets": "Open support tickets",
+      "openTicketsHint": "Waiting on staff · {unassigned} unassigned"
     },
     "catalog": {
       "title": "Catalog",
@@ -1499,7 +1503,16 @@
         "descriptionAr": "Description (Arabic)",
         "descriptionEn": "Description (English)",
         "images": "Images",
-        "details": "Specifications"
+        "details": "Specifications",
+        "seller": "Seller",
+        "sellerHint": "Shown on the product page, e.g. The IDEA or a partner store.",
+        "verified": "Verified seller",
+        "verifiedHint": "Shows the verified badge next to the seller.",
+        "rentalTier": "Plan needed to rent",
+        "rentalTierHint": "Members on a lower IDEA Plus plan can't rent this item.",
+        "anyPlan": "Any IDEA Plus plan",
+        "tierOption": "Tier {tier}: {names}",
+        "unknownTier": "No plan at this tier"
       },
       "variants": {
         "title": "Variants",
@@ -1548,7 +1561,17 @@
         "featuresHint": "One per line.",
         "active": "Available",
         "inactive": "Hidden",
-        "activeHint": "Unavailable plans are hidden from new customers; current subscribers keep them."
+        "activeHint": "Unavailable plans are hidden from new customers; current subscribers keep them.",
+        "tier": "Tier",
+        "tierHint": "1 to 10; higher plans unlock items that need a higher tier. Required for IDEA Plus."
+      },
+      "ratings": {
+        "title": "Customer rating",
+        "manage": "Moderate reviews",
+        "hidden": "{count} hidden by support, not counted.",
+        "none": "No published reviews yet.",
+        "count": "{count} published reviews",
+        "stars": "{rating} ★"
       }
     },
     "orders": {
@@ -1692,7 +1715,19 @@
       "renewsOn": "Renews {date}",
       "endsOn": "Ends {date}",
       "crm": "Relationship",
-      "crmUpdated": "Last updated {date}"
+      "crmUpdated": "Last updated {date}",
+      "sort": "Sort",
+      "sorts": {
+        "joined": "Newest customers",
+        "contactedRecent": "Recently contacted",
+        "contactedOldest": "Longest since contact"
+      },
+      "sortHint": "Sorting by contact date lists customers with a CRM record only.",
+      "lastContacted": "Last contacted",
+      "lastContactedOn": "Last contacted {date}",
+      "neverContacted": "Not contacted yet",
+      "contactedToday": "Contacted today",
+      "lastContactedHint": "Baghdad time. Leave empty if they haven't been contacted."
     },
     "marketing": {
       "title": "Marketing",
@@ -1756,7 +1791,9 @@
         "accounts": "Chart of accounts",
         "payments": "Payments",
         "payroll": "Staff plan",
-        "equity": "Cap table"
+        "equity": "Cap table",
+        "assets": "Fixed assets",
+        "settings": "Settings"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -1764,13 +1801,14 @@
         "expensesMonth": "Expenses this month",
         "cogsMonth": "Cost of goods sold",
         "netMonth": "Net income this month",
-        "ytd": "Year to date: {amount}",
+        "ytd": "Fiscal year since {since}: {amount}",
         "grossHint": "Gross profit: {amount}",
         "chart": "Last 12 months",
         "chartHint": "From posted journal entries, in IQD.",
         "revenue": "Revenue",
         "expenses": "Expenses",
-        "net": "Net income"
+        "net": "Net income",
+        "scenarioHint": "Showing {scenario} entries only. They never mix with the actual books."
       },
       "journal": {
         "new": "New journal entry",
@@ -1794,7 +1832,21 @@
         "totals": "Totals",
         "balanced": "Balanced",
         "difference": "Off by {amount}",
-        "post": "Post entry"
+        "post": "Post entry",
+        "bookedIn": "Booked in {currency} at {rate} IQD per unit",
+        "scenario": "Scenario",
+        "scenarioHint": "Forecast and budget entries are kept apart from the actual books.",
+        "currency": "Currency",
+        "exchangeRate": "Exchange rate",
+        "exchangeRateHint": "IQD per 1 {currency}.",
+        "currencyHint": "Amounts are entered in IQD. For a transaction in another currency, enter its code (e.g. USD) and the rate used.",
+        "currencyForeignHint": "Enter the line amounts already converted to IQD. The {currency} currency and rate are kept with the entry for reference.",
+        "dimensionsToggle": "Dimensions ({count})",
+        "dimensionsHint": "Optional tags for reports, e.g. product_line = plus or branch = mansour.",
+        "dimensionKey": "Dimension",
+        "dimensionValue": "Value",
+        "addDimension": "Add dimension",
+        "removeDimension": "Remove dimension"
       },
       "accounts": {
         "description": "Posted entries keep their accounts; deactivate an account to stop using it.",
@@ -1875,7 +1927,69 @@
         "pricePerShare": "Price per share",
         "deleteRoundDescription": "Its shareholders stay, without a round.",
         "holders": "Shareholders",
-        "vestingStart": "Vesting start"
+        "vestingStart": "Vesting start",
+        "instrument": "Instrument",
+        "instruments": {
+          "common": "Common shares",
+          "preferred": "Preferred shares",
+          "option": "Options",
+          "safe": "SAFE",
+          "convertible_note": "Convertible note"
+        },
+        "invested": "Invested",
+        "terms": "Terms",
+        "capTerm": "Cap {amount}",
+        "discountTerm": "{percent} discount",
+        "conversionCap": "Valuation cap",
+        "discount": "Discount %",
+        "sharesConvertibleHint": "0 until it converts."
+      },
+      "scenario": "Scenario",
+      "scenarios": {
+        "actual": "Actual",
+        "forecast": "Forecast",
+        "budget": "Budget"
+      },
+      "settings": {
+        "description": "Settings used across the finance section.",
+        "updated": "Last changed {date}",
+        "fiscalYear": "Fiscal year starts in",
+        "fiscalYearHint": "\"This year\" figures on the overview count from the start of the fiscal year.",
+        "baseCurrency": "Base currency",
+        "baseCurrencyHint": "Ledger amounts are recorded in this currency (IQD).",
+        "corporateTax": "Corporate tax (%)",
+        "taxHint": "Rate on taxable profit, e.g. 15.",
+        "vat": "VAT / sales tax (%)",
+        "vatHint": "0 if no sales tax applies."
+      },
+      "assets": {
+        "schedule": "Depreciation schedule",
+        "scheduleHint": "Straight-line over each asset's useful life, counting whole months from purchase (to disposal). Amounts in IQD.",
+        "asOf": "As of",
+        "error": "The depreciation schedule couldn't be loaded.",
+        "empty": "No assets bought by this date.",
+        "name": "Asset",
+        "category": "Category",
+        "purchaseDate": "Purchased",
+        "cost": "Cost (IQD)",
+        "salvage": "Salvage value",
+        "life": "Life (months)",
+        "disposedOn": "Disposed on",
+        "monthly": "Per month",
+        "months": "Months",
+        "monthsOf": "{elapsed} of {life}",
+        "accumulated": "Accumulated",
+        "bookValue": "Book value",
+        "state": "Status",
+        "states": {
+          "depreciating": "Depreciating",
+          "fullyDepreciated": "Fully depreciated"
+        },
+        "disposedState": "Disposed {date}",
+        "total": "Total",
+        "list": "Assets",
+        "listHint": "Cost and salvage value in IQD. Set a disposal date when an asset is sold or written off; depreciation stops then.",
+        "deleteDescription": "Remove the asset from the register. To keep its history, set a disposal date instead."
       }
     },
     "editorial": {
@@ -2129,6 +2243,108 @@
       "details": "Details",
       "system": "System",
       "unknownActor": "Unknown"
+    },
+    "support": {
+      "title": "Support",
+      "detail": "Ticket",
+      "count": "Total: {count}",
+      "search": "Ticket number or subject",
+      "status": "Status",
+      "statusHint": "Open: waiting on staff. Pending: waiting on the customer. A staff reply sets pending; a customer reply reopens the ticket.",
+      "views": {
+        "active": "Open and pending",
+        "open": "Open",
+        "pending": "Pending",
+        "resolved": "Resolved",
+        "closed": "Closed",
+        "all": "All tickets"
+      },
+      "statuses": {
+        "open": "Open",
+        "pending": "Pending",
+        "resolved": "Resolved",
+        "closed": "Closed"
+      },
+      "priority": "Priority",
+      "anyPriority": "Any priority",
+      "priorities": {
+        "low": "Low",
+        "normal": "Normal",
+        "high": "High",
+        "urgent": "Urgent"
+      },
+      "topic": "Topic",
+      "anyTopic": "Any topic",
+      "topics": {
+        "order": "Order",
+        "rental": "Rental",
+        "plus": "IDEA Plus",
+        "account": "Account",
+        "other": "Other"
+      },
+      "assignee": "Assignee",
+      "anyAssignee": "Anyone",
+      "assignedToMe": "Assigned to me",
+      "unassigned": "Unassigned",
+      "unnamedStaff": "Unnamed staff member",
+      "unnamedCustomer": "Unnamed customer",
+      "deletedCustomer": "Deleted account",
+      "deletedAuthor": "Deleted account",
+      "empty": "No tickets match.",
+      "ticket": "Ticket",
+      "customer": "Customer",
+      "lastMessage": "Last message",
+      "number": "#{number}",
+      "openedOn": "Opened {date}",
+      "thread": "Conversation",
+      "noMessages": "No messages yet.",
+      "customerBadge": "Customer",
+      "staffBadge": "Staff",
+      "internalBadge": "Internal note",
+      "details": "Details",
+      "order": "Order",
+      "noOrder": "No linked order",
+      "manage": "Handling",
+      "replyLabel": "Reply to the customer",
+      "noteLabel": "Internal note",
+      "replyPlaceholder": "Write your reply…",
+      "notePlaceholder": "A note for the team…",
+      "replyHint": "The customer sees this reply and gets a notification; the ticket moves to pending.",
+      "closedReplyHint": "This ticket is closed. The customer sees your reply but can't answer on this ticket.",
+      "noteHint": "Only staff see internal notes. The ticket's status doesn't change.",
+      "internalToggle": "Internal note",
+      "sendReply": "Send reply",
+      "addNote": "Add note"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "count": "Total: {count}",
+      "search": "Product name",
+      "status": "Status",
+      "anyStatus": "Any status",
+      "statuses": {
+        "published": "Published",
+        "hidden": "Hidden"
+      },
+      "rating": "Rating",
+      "anyRating": "Any rating",
+      "stars": "{count} ★",
+      "forProduct": "Reviews of",
+      "allProducts": "All products",
+      "empty": "No reviews match.",
+      "product": "Product",
+      "comment": "Review",
+      "noComment": "No comment",
+      "author": "Author",
+      "unnamed": "Unnamed customer",
+      "verified": "Verified purchase",
+      "date": "Date",
+      "deletedProduct": "Deleted product",
+      "productReviews": "All reviews of this product",
+      "inStore": "View in store",
+      "hide": "Hide",
+      "unhide": "Publish",
+      "deleteDescription": "The review is removed for good. To take it off the store but keep it, hide it instead."
     }
   }
 }

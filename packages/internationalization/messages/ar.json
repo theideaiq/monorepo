@@ -1338,7 +1338,9 @@
       "editorial": "التحرير",
       "telegram": "تيليجرام",
       "staff": "فريق العمل",
-      "audit": "سجلّ التدقيق"
+      "audit": "سجلّ التدقيق",
+      "support": "الدعم",
+      "reviews": "التقييمات"
     },
     "roles": {
       "superadmin": "مشرف عام",
@@ -1447,7 +1449,9 @@
       "submissions": "مشاركات بانتظار المراجعة",
       "drafts": "مسودات الحملات",
       "optedIn": "عملاء وافقوا على الرسائل البريدية",
-      "telegramRequests": "طلبات تيليجرام المفتوحة"
+      "telegramRequests": "طلبات تيليجرام المفتوحة",
+      "openTickets": "تذاكر دعم مفتوحة",
+      "openTicketsHint": "بانتظار الفريق · {unassigned} دون مسؤول"
     },
     "catalog": {
       "title": "الكتالوج",
@@ -1499,7 +1503,16 @@
         "descriptionAr": "الوصف (بالعربية)",
         "descriptionEn": "الوصف (بالإنجليزية)",
         "images": "الصور",
-        "details": "المواصفات"
+        "details": "المواصفات",
+        "seller": "البائع",
+        "sellerHint": "يظهر في صفحة المنتج، مثل The IDEA أو متجر شريك.",
+        "verified": "بائع موثّق",
+        "verifiedHint": "تظهر شارة التوثيق بجانب اسم البائع.",
+        "rentalTier": "الخطة المطلوبة للاستئجار",
+        "rentalTierHint": "لا يستطيع أعضاء خطط IDEA Plus الأدنى استئجار هذا المنتج.",
+        "anyPlan": "أي خطة من IDEA Plus",
+        "tierOption": "المستوى {tier}: {names}",
+        "unknownTier": "لا توجد خطة بهذا المستوى"
       },
       "variants": {
         "title": "الخيارات",
@@ -1548,7 +1561,17 @@
         "featuresHint": "ميزة واحدة في كل سطر.",
         "active": "متاحة",
         "inactive": "مخفية",
-        "activeHint": "الخطط غير المتاحة تُخفى عن العملاء الجدد، ويحتفظ بها المشتركون الحاليون."
+        "activeHint": "الخطط غير المتاحة تُخفى عن العملاء الجدد، ويحتفظ بها المشتركون الحاليون.",
+        "tier": "المستوى",
+        "tierHint": "من 1 إلى 10؛ الخطط الأعلى تتيح منتجات تتطلب مستوى أعلى. إلزامي لخطط IDEA Plus."
+      },
+      "ratings": {
+        "title": "تقييم العملاء",
+        "manage": "إدارة التقييمات",
+        "hidden": "{count} أخفاها فريق الدعم ولا تُحتسب.",
+        "none": "لا توجد تقييمات منشورة بعد.",
+        "count": "{count} تقييمًا منشورًا",
+        "stars": "{rating} ★"
       }
     },
     "orders": {
@@ -1692,7 +1715,19 @@
       "renewsOn": "يتجدّد في {date}",
       "endsOn": "ينتهي في {date}",
       "crm": "العلاقة مع العميل",
-      "crmUpdated": "آخر تحديث {date}"
+      "crmUpdated": "آخر تحديث {date}",
+      "sort": "الترتيب",
+      "sorts": {
+        "joined": "الأحدث تسجيلًا",
+        "contactedRecent": "الأحدث تواصلًا",
+        "contactedOldest": "الأطول دون تواصل"
+      },
+      "sortHint": "الترتيب حسب تاريخ التواصل يعرض العملاء الذين لديهم سجل في إدارة العلاقات فقط.",
+      "lastContacted": "آخر تواصل",
+      "lastContactedOn": "آخر تواصل في {date}",
+      "neverContacted": "لم يُتواصل معه بعد",
+      "contactedToday": "تم التواصل اليوم",
+      "lastContactedHint": "بتوقيت بغداد. اتركه فارغًا إن لم يُتواصل معه."
     },
     "marketing": {
       "title": "التسويق",
@@ -1756,7 +1791,9 @@
         "accounts": "دليل الحسابات",
         "payments": "المدفوعات",
         "payroll": "خطة الموظفين",
-        "equity": "جدول الملكية"
+        "equity": "جدول الملكية",
+        "assets": "الأصول الثابتة",
+        "settings": "الإعدادات"
       },
       "dashboard": {
         "error": "تعذّر تحميل ملخّص الدفتر.",
@@ -1764,13 +1801,14 @@
         "expensesMonth": "مصروفات هذا الشهر",
         "cogsMonth": "تكلفة البضاعة المباعة",
         "netMonth": "صافي الدخل لهذا الشهر",
-        "ytd": "منذ بداية السنة: {amount}",
+        "ytd": "منذ بداية السنة المالية في {since}: {amount}",
         "grossHint": "إجمالي الربح: {amount}",
         "chart": "آخر 12 شهرًا",
         "chartHint": "من القيود المرحّلة، بالدينار العراقي.",
         "revenue": "الإيرادات",
         "expenses": "المصروفات",
-        "net": "صافي الدخل"
+        "net": "صافي الدخل",
+        "scenarioHint": "تُعرض قيود {scenario} فقط، ولا تختلط أبدًا بالدفاتر الفعلية."
       },
       "journal": {
         "new": "قيد يومية جديد",
@@ -1794,7 +1832,21 @@
         "totals": "المجاميع",
         "balanced": "متوازن",
         "difference": "الفرق {amount}",
-        "post": "ترحيل القيد"
+        "post": "ترحيل القيد",
+        "bookedIn": "مسجّل بعملة {currency} بسعر {rate} دينار للوحدة",
+        "scenario": "السيناريو",
+        "scenarioHint": "قيود التوقعات والموازنة تبقى منفصلة عن الدفاتر الفعلية.",
+        "currency": "العملة",
+        "exchangeRate": "سعر الصرف",
+        "exchangeRateHint": "عدد الدنانير مقابل 1 {currency}.",
+        "currencyHint": "تُدخل المبالغ بالدينار العراقي. لمعاملة بعملة أخرى، أدخل رمزها (مثل USD) وسعر الصرف المستخدم.",
+        "currencyForeignHint": "أدخل مبالغ البنود بعد تحويلها إلى الدينار العراقي. تُحفظ عملة {currency} وسعر الصرف مع القيد للرجوع إليهما.",
+        "dimensionsToggle": "الأبعاد ({count})",
+        "dimensionsHint": "وسوم اختيارية للتقارير، مثل product_line = plus أو branch = mansour.",
+        "dimensionKey": "البُعد",
+        "dimensionValue": "القيمة",
+        "addDimension": "إضافة بُعد",
+        "removeDimension": "إزالة البُعد"
       },
       "accounts": {
         "description": "تحتفظ القيود المرحّلة بحساباتها؛ عطّل الحساب لإيقاف استخدامه.",
@@ -1875,7 +1927,69 @@
         "pricePerShare": "سعر السهم",
         "deleteRoundDescription": "يبقى مساهموها، لكن من دون جولة.",
         "holders": "المساهمون",
-        "vestingStart": "بداية الاستحقاق"
+        "vestingStart": "بداية الاستحقاق",
+        "instrument": "نوع الأداة",
+        "instruments": {
+          "common": "أسهم عادية",
+          "preferred": "أسهم ممتازة",
+          "option": "خيارات أسهم",
+          "safe": "SAFE",
+          "convertible_note": "سند قابل للتحويل"
+        },
+        "invested": "المبلغ المستثمر",
+        "terms": "الشروط",
+        "capTerm": "سقف {amount}",
+        "discountTerm": "خصم {percent}",
+        "conversionCap": "سقف التقييم",
+        "discount": "الخصم %",
+        "sharesConvertibleHint": "0 حتى يتحوّل."
+      },
+      "scenario": "السيناريو",
+      "scenarios": {
+        "actual": "الفعلي",
+        "forecast": "التوقعات",
+        "budget": "الموازنة"
+      },
+      "settings": {
+        "description": "إعدادات يستخدمها قسم المالية كله.",
+        "updated": "آخر تعديل في {date}",
+        "fiscalYear": "تبدأ السنة المالية في",
+        "fiscalYearHint": "أرقام «هذه السنة» في النظرة العامة تُحتسب من بداية السنة المالية.",
+        "baseCurrency": "العملة الأساسية",
+        "baseCurrencyHint": "تُسجّل مبالغ الدفاتر بهذه العملة (الدينار العراقي).",
+        "corporateTax": "ضريبة الشركات (%)",
+        "taxHint": "النسبة على الربح الخاضع للضريبة، مثل 15.",
+        "vat": "ضريبة القيمة المضافة / المبيعات (%)",
+        "vatHint": "0 إن لم تُطبّق ضريبة مبيعات."
+      },
+      "assets": {
+        "schedule": "جدول الإهلاك",
+        "scheduleHint": "إهلاك بالقسط الثابت على العمر الإنتاجي لكل أصل، بالأشهر الكاملة منذ الشراء (حتى الاستبعاد). المبالغ بالدينار العراقي.",
+        "asOf": "حتى تاريخ",
+        "error": "تعذّر تحميل جدول الإهلاك.",
+        "empty": "لا توجد أصول مشتراة حتى هذا التاريخ.",
+        "name": "الأصل",
+        "category": "الفئة",
+        "purchaseDate": "تاريخ الشراء",
+        "cost": "التكلفة (دينار)",
+        "salvage": "القيمة المتبقية",
+        "life": "العمر (بالأشهر)",
+        "disposedOn": "تاريخ الاستبعاد",
+        "monthly": "شهريًا",
+        "months": "الأشهر",
+        "monthsOf": "{elapsed} من {life}",
+        "accumulated": "الإهلاك المتراكم",
+        "bookValue": "القيمة الدفترية",
+        "state": "الحالة",
+        "states": {
+          "depreciating": "قيد الإهلاك",
+          "fullyDepreciated": "مُهلك بالكامل"
+        },
+        "disposedState": "مُستبعد في {date}",
+        "total": "المجموع",
+        "list": "الأصول",
+        "listHint": "التكلفة والقيمة المتبقية بالدينار العراقي. حدّد تاريخ الاستبعاد عند بيع الأصل أو شطبه، فيتوقف إهلاكه عندها.",
+        "deleteDescription": "يُحذف الأصل من السجل. للاحتفاظ بتاريخه، حدّد تاريخ استبعاد بدلًا من ذلك."
       }
     },
     "editorial": {
@@ -2129,6 +2243,108 @@
       "details": "التفاصيل",
       "system": "النظام",
       "unknownActor": "غير معروف"
+    },
+    "support": {
+      "title": "الدعم",
+      "detail": "التذكرة",
+      "count": "المجموع: {count}",
+      "search": "رقم التذكرة أو موضوعها",
+      "status": "الحالة",
+      "statusHint": "مفتوحة: بانتظار الفريق. معلّقة: بانتظار العميل. ردّ الفريق يجعلها معلّقة، وردّ العميل يعيد فتحها.",
+      "views": {
+        "active": "المفتوحة والمعلّقة",
+        "open": "مفتوحة",
+        "pending": "معلّقة",
+        "resolved": "محلولة",
+        "closed": "مغلقة",
+        "all": "كل التذاكر"
+      },
+      "statuses": {
+        "open": "مفتوحة",
+        "pending": "معلّقة",
+        "resolved": "محلولة",
+        "closed": "مغلقة"
+      },
+      "priority": "الأولوية",
+      "anyPriority": "أي أولوية",
+      "priorities": {
+        "low": "منخفضة",
+        "normal": "عادية",
+        "high": "عالية",
+        "urgent": "عاجلة"
+      },
+      "topic": "الموضوع",
+      "anyTopic": "أي موضوع",
+      "topics": {
+        "order": "طلب شراء",
+        "rental": "استئجار",
+        "plus": "IDEA Plus",
+        "account": "الحساب",
+        "other": "أخرى"
+      },
+      "assignee": "المسؤول",
+      "anyAssignee": "أي شخص",
+      "assignedToMe": "المسندة إليّ",
+      "unassigned": "دون مسؤول",
+      "unnamedStaff": "موظف بلا اسم",
+      "unnamedCustomer": "عميل بلا اسم",
+      "deletedCustomer": "حساب محذوف",
+      "deletedAuthor": "حساب محذوف",
+      "empty": "لا توجد تذاكر مطابقة.",
+      "ticket": "التذكرة",
+      "customer": "العميل",
+      "lastMessage": "آخر رسالة",
+      "number": "#{number}",
+      "openedOn": "فُتحت في {date}",
+      "thread": "المحادثة",
+      "noMessages": "لا توجد رسائل بعد.",
+      "customerBadge": "العميل",
+      "staffBadge": "الفريق",
+      "internalBadge": "ملاحظة داخلية",
+      "details": "التفاصيل",
+      "order": "الطلب",
+      "noOrder": "لا يوجد طلب مرتبط",
+      "manage": "المعالجة",
+      "replyLabel": "الرد على العميل",
+      "noteLabel": "ملاحظة داخلية",
+      "replyPlaceholder": "اكتب ردّك…",
+      "notePlaceholder": "ملاحظة للفريق…",
+      "replyHint": "يرى العميل هذا الرد ويصله إشعار، وتصبح التذكرة معلّقة.",
+      "closedReplyHint": "هذه التذكرة مغلقة. سيرى العميل ردّك لكنه لا يستطيع الرد عليها.",
+      "noteHint": "الملاحظات الداخلية لا يراها إلا الفريق، ولا تتغيّر حالة التذكرة.",
+      "internalToggle": "ملاحظة داخلية",
+      "sendReply": "إرسال الرد",
+      "addNote": "إضافة الملاحظة"
+    },
+    "reviews": {
+      "title": "التقييمات",
+      "count": "المجموع: {count}",
+      "search": "اسم المنتج",
+      "status": "الحالة",
+      "anyStatus": "أي حالة",
+      "statuses": {
+        "published": "منشور",
+        "hidden": "مخفي"
+      },
+      "rating": "التقييم",
+      "anyRating": "أي تقييم",
+      "stars": "{count} ★",
+      "forProduct": "تقييمات",
+      "allProducts": "كل المنتجات",
+      "empty": "لا توجد تقييمات مطابقة.",
+      "product": "المنتج",
+      "comment": "المراجعة",
+      "noComment": "بلا تعليق",
+      "author": "الكاتب",
+      "unnamed": "عميل بلا اسم",
+      "verified": "شراء موثّق",
+      "date": "التاريخ",
+      "deletedProduct": "منتج محذوف",
+      "productReviews": "كل تقييمات هذا المنتج",
+      "inStore": "عرض في المتجر",
+      "hide": "إخفاء",
+      "unhide": "نشر",
+      "deleteDescription": "سيُحذف التقييم نهائيًا. لإزالته من المتجر مع الاحتفاظ به، أخفِه بدلًا من ذلك."
     }
   }
 }

@@ -15,12 +15,15 @@ describe("role → sections", () => {
       sections.filter((section) => section !== "staff")
     );
     expect(canWrite("admin", "audit")).toBe(true);
+    expect(canWrite("admin", "support")).toBe(true);
+    expect(canWrite("admin", "reviews")).toBe(true);
   });
 
   test("editors only get editorial", () => {
     expect(visibleSections("editor")).toEqual(["dashboard", "editorial"]);
     expect(canWrite("editor", "editorial")).toBe(true);
     expect(canRead("editor", "orders")).toBe(false);
+    expect(canRead("editor", "support")).toBe(false);
   });
 
   test("finance reads orders and runs finance", () => {
@@ -32,6 +35,7 @@ describe("role → sections", () => {
     expect(accessTo("finance", "orders")).toBe("read");
     expect(canWrite("finance", "orders")).toBe(false);
     expect(canWrite("finance", "finance")).toBe(true);
+    expect(canRead("finance", "reviews")).toBe(false);
   });
 
   test("marketing reads customers and runs marketing", () => {
@@ -42,16 +46,21 @@ describe("role → sections", () => {
     ]);
     expect(canWrite("marketing", "customers")).toBe(false);
     expect(canWrite("marketing", "marketing")).toBe(true);
+    expect(canRead("marketing", "support")).toBe(false);
   });
 
-  test("support handles customers, orders, rentals and Telegram", () => {
+  test("support handles customers, tickets, reviews, orders, rentals and Telegram", () => {
     expect(visibleSections("support")).toEqual([
       "dashboard",
       "orders",
       "rentals",
       "customers",
+      "support",
+      "reviews",
       "telegram",
     ]);
+    expect(canWrite("support", "support")).toBe(true);
+    expect(canWrite("support", "reviews")).toBe(true);
     expect(canWrite("support", "orders")).toBe(true);
     expect(canRead("support", "finance")).toBe(false);
   });

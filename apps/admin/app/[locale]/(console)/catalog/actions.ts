@@ -4,47 +4,19 @@ import { Constants } from "@repo/database";
 import { z } from "zod";
 import { ActionFailure, affected, check, staffAction } from "@/lib/action";
 import { success } from "@/lib/action-state";
+import { planSchema, productSchema } from "@/lib/catalog";
 import {
-  checkbox,
   int,
   keyValues,
-  lines,
   optionalInt,
   optionalText,
   optionalUuid,
   slug,
-  storagePaths,
   text,
   uuid,
 } from "@/lib/forms";
 
 const { Enums } = Constants.public;
-
-const productSchema = z
-  .object({
-    categoryId: optionalUuid,
-    compareAtPrice: optionalInt(0),
-    condition: z.enum(Enums.product_condition),
-    descriptionAr: optionalText(10_000),
-    descriptionEn: optionalText(10_000),
-    detailKey: z.array(z.string()).optional(),
-    detailValue: z.array(z.string()).optional(),
-    featured: checkbox,
-    id: optionalUuid,
-    images: storagePaths(12),
-    kind: z.enum(Enums.product_kind),
-    nameAr: text(200),
-    nameEn: text(200),
-    price: int(0),
-    slug,
-    status: z.enum(Enums.product_status),
-    stock: int(0, 1_000_000),
-  })
-  .refine(
-    (product) =>
-      product.compareAtPrice === null || product.compareAtPrice > product.price,
-    { path: ["compareAtPrice"] }
-  );
 
 export const saveProduct = staffAction(
   "catalog",
@@ -63,9 +35,12 @@ export const saveProduct = staffAction(
       name_ar: input.nameAr,
       name_en: input.nameEn,
       price: input.price,
+      rental_tier: input.rentalTier,
+      seller: input.seller,
       slug: input.slug,
       status: input.status,
       stock_count: input.stock,
+      verified: input.verified,
     };
 
     if (input.id) {
@@ -208,25 +183,6 @@ export const saveStoreSettings = staffAction(
   }
 );
 
-const planSchema = z
-  .object({
-    active: checkbox,
-    amount: int(0),
-    audience: z.enum(["business", "plus"]),
-    billingInterval: z.enum(Enums.billing_interval),
-    description: optionalText(500),
-    featuresAr: lines(20, 200),
-    featuresEn: lines(20, 200),
-    id: slug.max(64),
-    isNew: checkbox,
-    name: text(120),
-    position: int(0, 10_000),
-    rentalSlots: optionalInt(1, 50),
-  })
-  .refine((plan) => plan.audience !== "plus" || plan.rentalSlots !== null, {
-    path: ["rentalSlots"],
-  });
-
 export const savePlan = staffAction(
   "catalog",
   planSchema,
@@ -241,7 +197,8 @@ export const savePlan = staffAction(
       features_en: input.featuresEn,
       name: input.name,
       position: input.position,
-      rental_slots: input.audience === "plus" ? input.rentalSlots : null,
+      rental_slots: input.rentalSlots,
+      tier: input.tier,
     };
 
     if (input.isNew) {

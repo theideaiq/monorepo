@@ -1,13 +1,20 @@
 "use client";
 
+import { CalendarCheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { ActionButton } from "@/components/action-button";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import { SelectField, TextareaField, TextField } from "@/components/fields";
+import { toBaghdadInput } from "@/lib/dates";
 import { crmStatuses } from "@/lib/segments";
-import { saveCrmContact } from "../actions";
+import { markContacted, saveCrmContact } from "../actions";
 
 interface CrmFormProps {
   readonly disabled: boolean;
+  /** ISO timestamp of the last contact, if any. */
+  readonly lastContactedAt: string | null;
+  /** The same, formatted for display. */
+  readonly lastContactedLabel: string | null;
   readonly notes: string | null;
   readonly status: string;
   readonly tags: string[];
@@ -17,6 +24,8 @@ interface CrmFormProps {
 
 export const CrmForm = ({
   disabled,
+  lastContactedAt,
+  lastContactedLabel,
   notes,
   status,
   tags,
@@ -27,40 +36,64 @@ export const CrmForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <ActionForm action={saveCrmContact}>
-      <input name="userId" type="hidden" value={userId} />
-      <fieldset className="grid gap-4" disabled={disabled}>
-        <SelectField
-          defaultValue={status}
-          label={t("crmStatus")}
-          name="status"
-          options={crmStatuses.map((value) => ({
-            label: t(`statuses.${value}`),
-            value,
-          }))}
-        />
-        <TextField
-          defaultValue={tags.join(", ")}
-          hint={t("tagsHint")}
-          label={t("tags")}
-          name="tags"
-        />
-        <TextareaField
-          defaultValue={notes ?? ""}
-          label={tCommon("notes")}
-          maxLength={10_000}
-          name="notes"
-          rows={5}
-        />
-        {updatedAt ? (
-          <p className="text-muted-foreground text-xs">
-            {t("crmUpdated", { date: updatedAt })}
-          </p>
-        ) : null}
+    <div className="grid gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/50 p-3 text-sm">
+        <span>
+          {lastContactedLabel
+            ? t("lastContactedOn", { date: lastContactedLabel })
+            : t("neverContacted")}
+        </span>
         {disabled ? null : (
-          <SubmitButton className="w-fit">{tCommon("save")}</SubmitButton>
+          <ActionButton action={markContacted} fields={{ userId }}>
+            <CalendarCheckIcon />
+            {t("contactedToday")}
+          </ActionButton>
         )}
-      </fieldset>
-    </ActionForm>
+      </div>
+      <ActionForm action={saveCrmContact}>
+        <input name="userId" type="hidden" value={userId} />
+        <fieldset className="grid gap-4" disabled={disabled}>
+          <SelectField
+            defaultValue={status}
+            label={t("crmStatus")}
+            name="status"
+            options={crmStatuses.map((value) => ({
+              label: t(`statuses.${value}`),
+              value,
+            }))}
+          />
+          <TextField
+            defaultValue={tags.join(", ")}
+            hint={t("tagsHint")}
+            label={t("tags")}
+            name="tags"
+          />
+          <TextField
+            // Re-mounts when "contacted today" changes the stored value.
+            defaultValue={toBaghdadInput(lastContactedAt)}
+            hint={t("lastContactedHint")}
+            key={lastContactedAt ?? "never"}
+            label={t("lastContacted")}
+            name="lastContactedAt"
+            type="datetime-local"
+          />
+          <TextareaField
+            defaultValue={notes ?? ""}
+            label={tCommon("notes")}
+            maxLength={10_000}
+            name="notes"
+            rows={5}
+          />
+          {updatedAt ? (
+            <p className="text-muted-foreground text-xs">
+              {t("crmUpdated", { date: updatedAt })}
+            </p>
+          ) : null}
+          {disabled ? null : (
+            <SubmitButton className="w-fit">{tCommon("save")}</SubmitButton>
+          )}
+        </fieldset>
+      </ActionForm>
+    </div>
   );
 };

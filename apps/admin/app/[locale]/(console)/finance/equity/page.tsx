@@ -44,6 +44,33 @@ const EquityPage = async () => {
       shares: Number(holder.shares),
     }))
   );
+  // Amounts are in the holder's round currency; without a round, plain.
+  const money = (amount: number | null, currency: string | undefined) => {
+    if (amount === null) {
+      return "—";
+    }
+    return currency
+      ? format.moneyIn(Number(amount), currency)
+      : format.number(Number(amount));
+  };
+  const terms = (
+    holder: (typeof table.holders)[number],
+    currency: string | undefined
+  ) => {
+    const parts = [
+      holder.conversion_cap === null
+        ? null
+        : t("equity.capTerm", {
+            amount: money(holder.conversion_cap, currency),
+          }),
+      holder.discount_rate === null
+        ? null
+        : t("equity.discountTerm", {
+            percent: format.percent(Number(holder.discount_rate)),
+          }),
+    ].filter(Boolean);
+    return parts.length > 0 ? parts.join(" · ") : "—";
+  };
   const roundOptions = (rounds ?? []).map((round) => ({
     id: round.id,
     name: round.name,
@@ -63,6 +90,7 @@ const EquityPage = async () => {
                 <TableRow>
                   <TableHead>{t("equity.holder")}</TableHead>
                   <TableHead>{t("equity.type")}</TableHead>
+                  <TableHead>{t("equity.instrument")}</TableHead>
                   <TableHead>{t("equity.round")}</TableHead>
                   <TableHead className="text-end">
                     {t("equity.shares")}
@@ -73,6 +101,10 @@ const EquityPage = async () => {
                   <TableHead className="text-end">
                     {t("equity.value")}
                   </TableHead>
+                  <TableHead className="text-end">
+                    {t("equity.invested")}
+                  </TableHead>
+                  <TableHead>{t("equity.terms")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -89,6 +121,9 @@ const EquityPage = async () => {
                         {holder.name}
                       </TableCell>
                       <TableCell>{t(`equity.types.${holder.type}`)}</TableCell>
+                      <TableCell>
+                        {t(`equity.instruments.${holder.instrument}`)}
+                      </TableCell>
                       <TableCell>{round?.name ?? "—"}</TableCell>
                       <TableCell className="text-end tabular-nums">
                         {format.number(holder.shares)}
@@ -104,13 +139,19 @@ const EquityPage = async () => {
                               round.currency
                             )}
                       </TableCell>
+                      <TableCell className="text-end tabular-nums">
+                        {money(holder.invested_amount, round?.currency)}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground text-xs">
+                        {terms(holder, round?.currency)}
+                      </TableCell>
                     </TableRow>
                   );
                 })}
               </TableBody>
               <TableFooter>
                 <TableRow>
-                  <TableCell className="font-semibold" colSpan={3}>
+                  <TableCell className="font-semibold" colSpan={4}>
                     {t("equity.total")}
                   </TableCell>
                   <TableCell className="text-end font-semibold tabular-nums">
@@ -119,6 +160,8 @@ const EquityPage = async () => {
                   <TableCell className="text-end font-semibold tabular-nums">
                     {format.percent(table.total > 0 ? 100 : 0)}
                   </TableCell>
+                  <TableCell />
+                  <TableCell />
                   <TableCell />
                 </TableRow>
               </TableFooter>

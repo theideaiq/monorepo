@@ -1,5 +1,6 @@
 import {
   BookOpenIcon,
+  LifeBuoyIcon,
   type LucideIcon,
   MailIcon,
   MegaphoneIcon,
@@ -32,6 +33,7 @@ type Access = Record<
   | "members"
   | "orders"
   | "rentals"
+  | "support"
   | "telegram",
   boolean
 >;
@@ -59,6 +61,8 @@ const loadStats = async (supabase: ServerClient, can: Access) => {
     paidOrders,
     payments,
     queue,
+    openTickets,
+    unassignedTickets,
   ] = await Promise.all([
     countIf(can.orders, () =>
       supabase
@@ -115,6 +119,16 @@ const loadStats = async (supabase: ServerClient, can: Access) => {
           .limit(10_000)
       : null,
     can.editorial ? supabase.rpc("review_queue") : null,
+    countIf(can.support, () =>
+      supabase.from("support_tickets").select("id", head).eq("status", "open")
+    ),
+    countIf(can.support, () =>
+      supabase
+        .from("support_tickets")
+        .select("id", head)
+        .eq("status", "open")
+        .is("assigned_to", null)
+    ),
   ]);
 
   return {
@@ -122,6 +136,7 @@ const loadStats = async (supabase: ServerClient, can: Access) => {
     fulfilment,
     members,
     openRentals: openRentals + overdueRentals,
+    openTickets,
     optedIn,
     overdueRentals,
     received: (payments?.data ?? []).reduce(
@@ -136,6 +151,7 @@ const loadStats = async (supabase: ServerClient, can: Access) => {
     submissions: (queue?.data ?? []).filter(
       (row) => row.status === "pending" || row.status === "under_review"
     ).length,
+    unassignedTickets,
   };
 };
 
@@ -163,11 +179,23 @@ const DashboardPage = async () => {
     members: canRead(role, "rentals") || canRead(role, "finance"),
     orders: canRead(role, "orders"),
     rentals: canRead(role, "rentals"),
+    support: canRead(role, "support"),
     telegram: canRead(role, "telegram"),
   };
   const stats = await loadStats(supabase, can);
 
   const cards: Card[] = [
+    {
+      attention: stats.openTickets > 0,
+      hint: t("openTicketsHint", {
+        unassigned: format.number(stats.unassignedTickets),
+      }),
+      href: "/support?status=open",
+      icon: LifeBuoyIcon,
+      label: t("openTickets"),
+      show: can.support,
+      value: format.number(stats.openTickets),
+    },
     {
       attention: stats.fulfilment > 0,
       hint: t("fulfilmentHint"),
