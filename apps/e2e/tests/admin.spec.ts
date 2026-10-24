@@ -1,5 +1,12 @@
 import { expect, test } from "@playwright/test";
-import { customer, sessionCookies, staff, totp } from "../fixtures";
+import {
+  clearInbox,
+  customer,
+  emailedCode,
+  sessionCookies,
+  staff,
+  totp,
+} from "../fixtures";
 import { urls } from "../playwright.config";
 import { resetStaff } from "../seed";
 import { expectAccessible } from "./helpers";
@@ -12,7 +19,7 @@ test.describe("back office", () => {
   test("visitors are sent to The IDEA Pass to sign in", async ({ page }) => {
     await page.goto(`${urls.app}/en/admin`);
     await expect(page).toHaveURL(`${urls.app}/en/sign-in${toAdmin("en")}`);
-    await expect(page.getByLabel("Mobile number")).toBeVisible();
+    await expect(page.getByLabel("Email")).toBeVisible();
     await expectAccessible(page);
 
     await page.goto(`${urls.app}/ar/admin/orders`);
@@ -40,15 +47,23 @@ test.describe("back office", () => {
   });
 
   test("staff link an authenticator app before the console opens", async ({
-    context,
     page,
   }) => {
     await resetStaff();
-    await context.addCookies(await sessionCookies(staff.email, urls.app));
-    // Signed in with a password only (AAL1): the console sends staff to The
-    // IDEA Pass for the authenticator app, which comes back afterwards.
+    // Staff sign in with an email code like everyone else…
     await page.goto(`${urls.app}/en/admin`);
-    await expect(page).toHaveURL(`${urls.app}/en/mfa${toAdmin("en")}`);
+    await expect(page).toHaveURL(`${urls.app}/en/sign-in${toAdmin("en")}`);
+    await page.getByLabel("Email").fill(staff.email);
+    await clearInbox(staff.email);
+    await page.getByRole("button", { name: "Continue" }).click();
+    await page
+      .getByLabel("Verification code")
+      .fill(await emailedCode(staff.email));
+    // …which is AAL1 only: the console sends them on to The IDEA Pass for
+    // the authenticator app, which comes back afterwards.
+    await expect(page).toHaveURL(`${urls.app}/en/mfa${toAdmin("en")}`, {
+      timeout: 15_000,
+    });
     const secret = page.locator("code");
     await expect(secret).toHaveText(/^[A-Z2-7]{16,}$/);
     await expectAccessible(page);

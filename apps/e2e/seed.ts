@@ -2,9 +2,10 @@ import {
   admin,
   customer,
   PASSWORD,
-  phoneUser,
   product,
+  signUpUser,
   staff,
+  unknownEmail,
 } from "./fixtures";
 
 /**
@@ -19,9 +20,7 @@ const check = ({ error }: { error: unknown }) => {
   }
 };
 
-const findUser = async (
-  match: (u: { email?: string; phone?: string }) => boolean
-) => {
+const findUser = async (match: (u: { email?: string }) => boolean) => {
   const db = admin();
   for (let page = 1; page < 50; page += 1) {
     const { data, error } = await db.auth.admin.listUsers({
@@ -109,19 +108,21 @@ export const resetStaff = async () => {
 };
 
 /**
- * No account yet for the phone number, so signing up creates one. Returns
- * false when the account can't be removed (e.g. E2E_PHONE points at a number
- * another suite uses, whose user owns an organization): the journey then
- * signs in to it instead.
+ * No account yet for the sign-up address (nor for the address that never
+ * has one), so signing up creates it.
  */
-export const resetPhoneUser = async () => {
-  const found = await findUser((u) => u.phone === phoneUser.phone);
-  if (!found) {
-    return true;
+export const resetSignUpUser = async () => {
+  for (const email of [signUpUser.email, unknownEmail]) {
+    const found = await findUser((u) => u.email === email);
+    if (found) {
+      check(await admin().auth.admin.deleteUser(found.id));
+    }
   }
-  const { error } = await admin().auth.admin.deleteUser(found.id);
-  return !error;
 };
+
+/** Whether an account with this email exists. */
+export const accountExists = async (email: string) =>
+  Boolean(await findUser((u) => u.email === email));
 
 /** An in-stock product of the journeys' own. */
 export const ensureProduct = async () => {

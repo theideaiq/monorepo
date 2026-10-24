@@ -11,24 +11,33 @@ import {
 import { Label } from "@repo/design-system/components/ui/label";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useEffect, useId, useMemo, useState } from "react";
+import {
+  type FormEvent,
+  type ReactNode,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from "react";
 import { createClient } from "../client";
 import { type AuthMessages, defaultAuthMessages, format } from "../messages";
 import {
-  type OtpChannel,
+  EMAIL_CODE_LENGTH,
+  normalizeEmail,
   type OtpErrorCode,
-  sendPhoneOtp,
-  verifyPhoneOtp,
+  sendEmailOtp,
+  verifyEmailOtp,
 } from "../otp";
-import { formatPhone } from "../phone";
 
-const CODE_LENGTH = 6;
 const RESEND_AFTER_SECONDS = 60;
-const CODE_SLOTS = Array.from({ length: CODE_LENGTH }, (_, index) => index);
+const CODE_SLOTS = Array.from(
+  { length: EMAIL_CODE_LENGTH },
+  (_, index) => index
+);
 
-interface PhoneOtpFormProps {
-  /** `whatsapp` requires a provider that supports it (e.g. Twilio Verify). */
-  readonly channel?: OtpChannel;
+type FormError = OtpErrorCode | "name_required";
+
+interface EmailOtpFormProps {
   /** Ask for a display name (sign-up). */
   readonly collectName?: boolean;
   /** Returns a Turnstile/hCaptcha token when CAPTCHA protection is enabled. */
@@ -36,51 +45,60 @@ interface PhoneOtpFormProps {
   /** Stored on new accounts as their preferred language. */
   readonly locale?: string;
   readonly messages?: AuthMessages;
+  /**
+   * Shown under the "no account" error when `shouldCreateUser` is false,
+   * e.g. a link to sign up with the address that was typed.
+   */
+  readonly noAccount?: (email: string) => ReactNode;
   /** Called after sign-in instead of navigating to `redirectTo`. */
   readonly onSignedIn?: (userId: string) => void;
   readonly redirectTo?: string;
-  /** Defaults to the browser client; pass the native client in Capacitor. */
+  /** false: sign in to existing accounts only (no sign-up). */
+  readonly shouldCreateUser?: boolean;
+  /** Defaults to the browser client. */
   readonly supabase?: SupabaseClient<Database>;
 }
 
 const getSubmitLabel = (
-  step: "phone" | "code",
+  step: "email" | "code",
   pending: boolean,
   messages: AuthMessages
 ) => {
-  if (step === "phone") {
+  if (step === "email") {
     return pending ? messages.sending : messages.continue;
   }
   return pending ? messages.verifying : messages.verify;
 };
 
 /**
- * Passwordless sign-in and sign-up with a one-time code sent to a mobile
- * number. Numbers may be typed in local (07…) or international format and in
- * Arabic-Indic digits.
+ * Passwordless sign-in and sign-up with a 6-digit code sent by email (no
+ * links, which break inside the iOS/Android apps): the address, then the
+ * code, with resend after a cooldown and a way back to change the address.
  */
-export const PhoneOtpForm = ({
-  channel = "sms",
+export const EmailOtpForm = ({
   collectName = false,
   getCaptchaToken,
   locale,
   messages = defaultAuthMessages,
+  noAccount,
   onSignedIn,
   redirectTo = "/",
+  shouldCreateUser = true,
   supabase: providedClient,
-}: PhoneOtpFormProps) => {
+}: EmailOtpFormProps) => {
   const id = useId();
   const router = useRouter();
   const supabase = useMemo(
     () => providedClient ?? createClient(),
     [providedClient]
   );
-  const [step, setStep] = useState<"phone" | "code">("phone");
+  const [step, setStep] = useState<"email" | "code">("email");
   const [fullName, setFullName] = useState("");
-  const [phoneInput, setPhoneInput] = useState("");
-  const [phone, setPhone] = useState("");
+  const [emailInput, setEmailInput] = useState("");
+  const [email, setEmail] = useState("");
+  const [sentAt, setSentAt] = useState(0);
   const [code, setCode] = useState("");
-  const [error, setError] = useState<OtpErrorCode | null>(null);
+  const [error, setError] = useState<FormError | null>(null);
   const [pending, setPending] = useState(false);
   const [resendIn, setResendIn] = useState(0);
 
@@ -93,14 +111,24 @@ export const PhoneOtpForm = ({
   }, [resendIn]);
 
   const sendCode = async () => {
+    if (collectName && !fullName.trim()) {
+      setError("name_required");
+      return;
+    }
+    // Checked here too, so a typo doesn't cost a request.
+    if (!normalizeEmail(emailInput)) {
+      setError("invalid_email");
+      return;
+    }
+
     setPending(true);
     setError(null);
 
-    const result = await sendPhoneOtp(supabase, phoneInput, {
+    const result = await sendEmailOtp(supabase, emailInput, {
       captchaToken: await getCaptchaToken?.(),
-      channel,
       fullName: collectName ? fullName : undefined,
       locale,
+      shouldCreateUser,
     });
 
     setPending(false);
@@ -110,7 +138,8 @@ export const PhoneOtpForm = ({
       return;
     }
 
-    setPhone(result.phone);
+    setEmail(result.email);
+    setSentAt(Date.now());
     setCode("");
     setStep("code");
     setResendIn(RESEND_AFTER_SECONDS);
@@ -120,7 +149,7 @@ export const PhoneOtpForm = ({
     setPending(true);
     setError(null);
 
-    const result = await verifyPhoneOtp(supabase, phone, token);
+    const result = await verifyEmailOtp(supabase, email, token, { sentAt });
 
     if (!result.ok) {
       setPending(false);
@@ -141,23 +170,31 @@ export const PhoneOtpForm = ({
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (step === "phone") {
+    if (step === "email") {
       await sendCode();
-    } else if (code.length === CODE_LENGTH) {
+    } else if (code.length === EMAIL_CODE_LENGTH) {
       await verifyCode(code);
     }
   };
 
-  const errorMessage = error ? messages.errors[error] : null;
+  let errorText: string | null = null;
+  if (error === "name_required") {
+    errorText = messages.nameRequired;
+  } else if (error) {
+    errorText = messages.errors[error];
+  }
+  const emailInvalid = step === "email" && error === "invalid_email";
+  const nameInvalid = error === "name_required";
 
   return (
     <form className="grid gap-4" noValidate onSubmit={handleSubmit}>
-      {step === "phone" ? (
+      {step === "email" ? (
         <>
           {collectName ? (
             <div className="grid gap-2">
               <Label htmlFor={`${id}-name`}>{messages.fullNameLabel}</Label>
               <Input
+                aria-invalid={nameInvalid || undefined}
                 autoComplete="name"
                 id={`${id}-name`}
                 onChange={(event) => setFullName(event.target.value)}
@@ -167,26 +204,29 @@ export const PhoneOtpForm = ({
             </div>
           ) : null}
           <div className="grid gap-2">
-            <Label htmlFor={`${id}-phone`}>{messages.phoneLabel}</Label>
-            {/* Phone numbers read left-to-right in Arabic too. */}
+            <Label htmlFor={`${id}-email`}>{messages.emailLabel}</Label>
+            {/* Addresses read left-to-right in Arabic too. */}
             <Input
-              aria-describedby={`${id}-phone-hint`}
-              autoComplete="tel"
+              aria-describedby={`${id}-email-hint`}
+              aria-invalid={emailInvalid || undefined}
+              autoCapitalize="none"
+              autoComplete="email"
               className="text-start"
               dir="ltr"
-              id={`${id}-phone`}
-              inputMode="tel"
-              onChange={(event) => setPhoneInput(event.target.value)}
-              placeholder="0770 123 4567"
+              id={`${id}-email`}
+              inputMode="email"
+              onChange={(event) => setEmailInput(event.target.value)}
+              placeholder={messages.emailPlaceholder}
               required
-              type="tel"
-              value={phoneInput}
+              spellCheck={false}
+              type="email"
+              value={emailInput}
             />
             <p
               className="text-muted-foreground text-sm"
-              id={`${id}-phone-hint`}
+              id={`${id}-email-hint`}
             >
-              {messages.phoneHint}
+              {messages.emailHint}
             </p>
           </div>
         </>
@@ -194,16 +234,17 @@ export const PhoneOtpForm = ({
         <div className="grid gap-2">
           <Label htmlFor={`${id}-code`}>{messages.codeLabel}</Label>
           <p className="text-muted-foreground text-sm">
-            {format(messages.codeSentTo, { phone: formatPhone(phone) })}
+            {format(messages.emailCodeSentTo, { email })}
           </p>
           <div className="flex justify-center" dir="ltr">
             <InputOTP
+              aria-describedby={`${id}-code-hint`}
               autoComplete="one-time-code"
               autoFocus
               disabled={pending}
               id={`${id}-code`}
               inputMode="numeric"
-              maxLength={CODE_LENGTH}
+              maxLength={EMAIL_CODE_LENGTH}
               onChange={setCode}
               onComplete={verifyCode}
               pattern="^[0-9]+$"
@@ -216,13 +257,22 @@ export const PhoneOtpForm = ({
               </InputOTPGroup>
             </InputOTP>
           </div>
+          <p
+            className="text-center text-muted-foreground text-xs"
+            id={`${id}-code-hint`}
+          >
+            {messages.codeHint}
+          </p>
         </div>
       )}
 
-      {errorMessage ? (
-        <p className="text-destructive text-sm" role="alert">
-          {errorMessage}
-        </p>
+      {errorText ? (
+        <div className="grid gap-1" role="alert">
+          <p className="text-destructive text-sm">{errorText}</p>
+          {error === "no_account" && noAccount
+            ? noAccount(normalizeEmail(emailInput) ?? "")
+            : null}
+        </div>
       ) : null}
 
       <Button disabled={pending} type="submit">
@@ -233,13 +283,14 @@ export const PhoneOtpForm = ({
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
           <Button
             onClick={() => {
-              setStep("phone");
+              setStep("email");
               setError(null);
+              setCode("");
             }}
             type="button"
             variant="link"
           >
-            {messages.changePhone}
+            {messages.changeEmail}
           </Button>
           <Button
             disabled={pending || resendIn > 0}

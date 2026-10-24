@@ -5,16 +5,19 @@ import type { OtpErrorCode } from "./otp";
  * translated messages (see the `auth` namespace in @repo/internationalization).
  */
 export interface AuthMessages {
-  changePhone: string;
+  changeEmail: string;
+  codeHint: string;
   codeLabel: string;
-  codeSentTo: string;
   continue: string;
   createOrganization: string;
+  emailCodeSentTo: string;
+  emailHint: string;
+  emailLabel: string;
+  emailPlaceholder: string;
   errors: Record<OtpErrorCode, string>;
   fullNameLabel: string;
+  nameRequired: string;
   organizations: string;
-  phoneHint: string;
-  phoneLabel: string;
   resend: string;
   resendIn: string;
   sending: string;
@@ -24,24 +27,30 @@ export interface AuthMessages {
 }
 
 export const defaultAuthMessages: AuthMessages = {
-  changePhone: "Use a different number",
+  changeEmail: "Use a different email",
+  codeHint: "Can't find it? Check your spam folder.",
   codeLabel: "Verification code",
-  codeSentTo: "We sent a 6-digit code to {phone}.",
   continue: "Continue",
   createOrganization: "Create organization",
+  emailCodeSentTo: "We emailed a 6-digit code to {email}.",
+  emailHint: "We'll email you a 6-digit code. No password needed.",
+  emailLabel: "Email",
+  emailPlaceholder: "name@example.com",
   errors: {
     captcha_failed: "Please complete the security check and try again.",
     delivery_failed: "We couldn't send the code. Please try again shortly.",
+    expired_code: "That code has expired. Send a new one.",
     invalid_code: "That code is incorrect or has expired.",
+    invalid_email: "Enter a valid email address, e.g. name@example.com.",
     invalid_phone: "Enter a valid mobile number, e.g. 0770 123 4567.",
+    no_account: "There's no account with this email yet.",
     rate_limited: "Too many attempts. Please wait a moment and try again.",
     signups_disabled: "New sign-ups are currently closed.",
     unknown: "Something went wrong. Please try again.",
   },
   fullNameLabel: "Full name",
+  nameRequired: "Enter your name.",
   organizations: "Organizations",
-  phoneHint: "We'll text you a verification code.",
-  phoneLabel: "Mobile number",
   resend: "Resend code",
   resendIn: "Resend code in {seconds}s",
   sending: "Sending…",

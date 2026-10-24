@@ -27,8 +27,8 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && secretKey))(
 
     test("checkout, webhook, idempotency and renewal", async () => {
       const { data: user } = await admin.auth.admin.createUser({
-        phone: `+96477${Math.floor(10_000_000 + Math.random() * 89_999_999)}`,
-        phone_confirm: true,
+        email: `billing-${randomUUID()}@theidea.test`,
+        email_confirm: true,
       });
       const { data: organization } = await admin
         .from("organizations")

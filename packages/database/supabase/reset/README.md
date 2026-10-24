@@ -47,13 +47,15 @@ push again.
 ## Afterwards
 
 1. Enable **Authentication → Multi-Factor → TOTP** (the back office requires
-   an authenticator app) and phone sign-in with your SMS provider.
+   an authenticator app) and email sign-in with 6-digit codes, the
+   templates and Resend SMTP (`ARCHITECTURE_AND_INTEGRATIONS.md`, 2.7).
+   Phone sign-in stays off.
 2. Sign up through the app, then make yourself the first superadmin in the
    SQL Editor:
 
    ```sql
    insert into public.staff (user_id, role)
-   select id, 'superadmin' from auth.users where phone = '9647XXXXXXXXX';
+   select id, 'superadmin' from auth.users where email = 'you@theideaiq.com';
    ```
 
 3. In the back office, create the IDEA Plus and business plans, the product

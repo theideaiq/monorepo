@@ -1,7 +1,7 @@
 import {
   ensureProduct,
   resetCustomer,
-  resetPhoneUser,
+  resetSignUpUser,
   resetStaff,
 } from "./seed";
 
@@ -10,5 +10,5 @@ export default async function globalSetup() {
   await ensureProduct();
   await resetCustomer();
   await resetStaff();
-  await resetPhoneUser();
+  await resetSignUpUser();
 }

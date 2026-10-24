@@ -46,30 +46,29 @@
     }
   },
   "auth": {
-    "changePhone": "استخدام رقم آخر",
     "codeLabel": "رمز التحقق",
-    "codeSentTo": "أرسلنا رمزاً مكوّناً من 6 أرقام إلى {phone}.",
     "continue": "متابعة",
     "createOrganization": "إنشاء مؤسسة",
     "errors": {
       "captcha_failed": "يرجى إكمال التحقق الأمني والمحاولة مرة أخرى.",
       "delivery_failed": "تعذّر إرسال الرمز. يرجى المحاولة بعد قليل.",
+      "expired_code": "انتهت صلاحية الرمز. اطلب رمزاً جديداً.",
       "invalid_code": "الرمز غير صحيح أو منتهي الصلاحية.",
+      "invalid_email": "أدخل بريداً إلكترونياً صحيحاً، مثل name@example.com.",
       "invalid_phone": "أدخل رقم هاتف محمول صحيحاً، مثل 0770 123 4567.",
+      "no_account": "لا يوجد حساب بهذا البريد الإلكتروني بعد.",
       "rate_limited": "محاولات كثيرة. يرجى الانتظار قليلاً ثم المحاولة مرة أخرى.",
       "signups_disabled": "التسجيل الجديد متوقف حالياً.",
       "unknown": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
     },
     "fullNameLabel": "الاسم الكامل",
     "organizations": "المؤسسات",
-    "phoneHint": "سنرسل إليك رمز تحقق في رسالة نصية.",
-    "phoneLabel": "رقم الهاتف المحمول",
     "resend": "إعادة إرسال الرمز",
     "resendIn": "إعادة الإرسال خلال {seconds} ثانية",
     "sending": "جارٍ الإرسال…",
     "signIn": {
       "title": "مرحباً بعودتك",
-      "description": "سجّل الدخول باستخدام رقم هاتفك المحمول.",
+      "description": "سجّل الدخول باستخدام بريدك الإلكتروني.",
       "noAccount": "ليس لديك حساب؟",
       "signUpLink": "أنشئ حساباً",
       "deleted": "تم حذف حسابك."
@@ -77,7 +76,7 @@
     "signOut": "تسجيل الخروج",
     "signUp": {
       "title": "إنشاء حساب",
-      "description": "أنشئ حسابك باستخدام رقم هاتفك المحمول.",
+      "description": "أنشئ حسابك باستخدام بريدك الإلكتروني.",
       "haveAccount": "لديك حساب بالفعل؟",
       "signInLink": "سجّل الدخول"
     },
@@ -87,7 +86,14 @@
       "title": "جارٍ تسجيل دخولك…",
       "failed": "تعذّر إكمال تسجيل الدخول. يرجى المحاولة مرة أخرى.",
       "retry": "العودة إلى تسجيل الدخول"
-    }
+    },
+    "changeEmail": "استخدام بريد إلكتروني آخر",
+    "codeHint": "لم تجده؟ تحقّق من مجلد الرسائل غير المرغوب فيها.",
+    "emailCodeSentTo": "أرسلنا رمزاً مكوّناً من 6 أرقام إلى {email}.",
+    "emailHint": "سنرسل إلى بريدك رمزاً مكوّناً من 6 أرقام، دون الحاجة إلى كلمة مرور.",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "name@example.com",
+    "nameRequired": "أدخل اسمك."
   },
   "billing": {
     "pay": "ادفع {amount}",
@@ -1255,7 +1261,8 @@
       "profile": {
         "title": "الملف الشخصي",
         "description": "اسمك ولغتك وتفضيلات الرسائل.",
-        "phone": "رقم الهاتف المحمول"
+        "phone": "رقم الهاتف المحمول",
+        "email": "البريد الإلكتروني"
       },
       "appearance": {
         "title": "المظهر",
@@ -2615,14 +2622,15 @@
     "continueTo": "ستنتقل بعدها إلى {host}.",
     "signIn": {
       "title": "تسجيل الدخول إلى The IDEA Pass",
-      "description": "استخدم رقم هاتفك المحمول. حساب واحد للتطبيق والمتجر و The IDEA Plus.",
+      "description": "استخدم بريدك الإلكتروني. حساب واحد للتطبيق والمتجر و The IDEA Plus.",
       "noAccount": "جديد على The IDEA؟",
       "signUpLink": "احصل على The IDEA Pass",
-      "deleted": "تم حذف حسابك."
+      "deleted": "تم حذف حسابك.",
+      "noAccountSignUp": "احصل على The IDEA Pass بهذا البريد"
     },
     "signUp": {
       "title": "احصل على The IDEA Pass",
-      "description": "سجّل برقم هاتفك المحمول. حساب واحد لكل خدمات The IDEA.",
+      "description": "سجّل ببريدك الإلكتروني. حساب واحد لكل خدمات The IDEA.",
       "haveAccount": "لديك The IDEA Pass بالفعل؟",
       "signInLink": "سجّل الدخول"
     },
@@ -2638,7 +2646,8 @@
       "authenticator": "تطبيق المصادقة",
       "authenticatorOn": "مفعّل",
       "authenticatorOff": "غير مُعَدّ",
-      "setUpAuthenticator": "إعداد"
+      "setUpAuthenticator": "إعداد",
+      "emailLabel": "البريد الإلكتروني"
     },
     "signOut": {
       "title": "تسجيل الخروج"

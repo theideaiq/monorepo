@@ -16,7 +16,7 @@ test.describe("The IDEA Pass", () => {
 
     await page.goto(`${urls.app}/ar/sign-in`);
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
-    await expect(page.getByLabel("رقم الهاتف المحمول")).toBeVisible();
+    await expect(page.getByLabel("البريد الإلكتروني")).toBeVisible();
     await expectAccessible(page);
   });
 

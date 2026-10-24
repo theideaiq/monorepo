@@ -56,6 +56,16 @@ const PassHomePage = async () => {
           <dt className="text-muted-foreground">{t("nameLabel")}</dt>
           <dd className="truncate font-medium">{name || t("noName")}</dd>
         </div>
+        {session.user.email ? (
+          <div className="flex items-center justify-between gap-4">
+            <dt className="text-muted-foreground">{t("emailLabel")}</dt>
+            {/* Addresses read left-to-right in Arabic too. */}
+            <dd className="truncate font-medium" dir="ltr">
+              {session.user.email}
+            </dd>
+          </div>
+        ) : null}
+        {/* Accounts from the phone sign-in days still show their number. */}
         {phone ? (
           <div className="flex items-center justify-between gap-4">
             <dt className="text-muted-foreground">{t("phoneLabel")}</dt>

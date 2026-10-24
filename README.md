@@ -25,7 +25,7 @@ theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
 | --- | --- |
 | Monorepo | Turborepo + Bun workspaces |
 | Web apps | Next.js (App Router), React, Tailwind CSS v4, shadcn/ui |
-| Auth & database | Supabase (Postgres, Row Level Security, phone OTP) |
+| Auth & database | Supabase (Postgres, Row Level Security, email one-time codes) |
 | Payments | Provider-agnostic `@repo/payments` with Wayl (ZainCash, FIB, Qi Card, cards) |
 | Localization | Arabic + English, RTL-aware design system, `Asia/Baghdad` dates, IQD |
 | Mobile | Capacitor (iOS + Android) shells that load The IDEA Spark (`apps/app`) |
@@ -45,7 +45,7 @@ apps/
   storybook/  The IDEA Design: staff-only UI and email review, design.theideaiq.com (port 6006)
 packages/
   config/     Project identity, locales and regional settings (single source of truth)
-  auth/       Supabase Auth clients, phone OTP, session middleware
+  auth/       Supabase Auth clients, email one-time codes, session middleware
   database/   Supabase schema, migrations, RLS tests and generated types
   payments/   Payment-provider interface, Wayl provider, billing (organizations and individuals, store orders)
   commerce/   Catalog queries, prices, governorates, cart totals
@@ -68,7 +68,7 @@ bun run dev       # starts every app
 Each app reads its environment from `.env.local` (copy the app's
 `.env.example`). Without credentials the apps still start; integrations whose
 keys are missing are disabled. Staff sign in to the back office (`/admin` in The IDEA
-Spark) with their phone and an authenticator app; grant the first superadmin with SQL (see
+Spark) with an email code and an authenticator app; grant the first superadmin with SQL (see
 `ARCHITECTURE_AND_INTEGRATIONS.md`).
 
 ## Common scripts

@@ -1,22 +1,58 @@
 /**
- * Runs against a local Supabase stack. Export the local keys printed by
- * `supabase status -o env` (API_URL, PUBLISHABLE_KEY), then:
+ * Runs against a local Supabase stack with its mail catcher (Mailpit).
+ * Export the values printed by `supabase status -o env` (API_URL,
+ * PUBLISHABLE_KEY, MAILPIT_URL), then:
  *   SUPABASE_INTEGRATION=1 bun run --cwd packages/auth test
- * Uses the test OTP from supabase/config.toml (+964 770 000 0000 / 123456).
+ * Signs up and in with email codes, read from Mailpit.
  */
 import type { Database } from "@repo/database";
 import { createClient } from "@supabase/supabase-js";
 import { beforeAll, describe, expect, test } from "vitest";
 import { listMemberships, pickActiveOrganization } from "./organizations";
-import { sendPhoneOtp, verifyPhoneOtp } from "./otp";
+import { sendEmailOtp, verifyEmailOtp } from "./otp";
 
 const url = process.env.API_URL ?? "http://127.0.0.1:54321";
 const publishableKey = process.env.PUBLISHABLE_KEY ?? "";
+const mailpit = process.env.MAILPIT_URL ?? "http://127.0.0.1:54324";
+
+const CODE = /\b(\d{6})\b/;
+
+interface MailpitSummary {
+  Created: string;
+  ID: string;
+}
+
+/** The newest code emailed to `email` after `since`, from Mailpit. */
+const readCode = async (email: string, since: number) => {
+  const query = new URLSearchParams({ query: `to:"${email}"` });
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    // biome-ignore lint/performance/noAwaitInLoops: polls until the email lands
+    const response = await fetch(`${mailpit}/api/v1/search?${query}`);
+    const { messages = [] } = (await response.json()) as {
+      messages?: MailpitSummary[];
+    };
+    const latest = messages.find(
+      (message) => Date.parse(message.Created) >= since - 1000
+    );
+    if (latest) {
+      const message = (await (
+        await fetch(`${mailpit}/api/v1/message/${latest.ID}`)
+      ).json()) as { Text: string };
+      const code = CODE.exec(message.Text)?.[1];
+      if (code) {
+        return code;
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 200));
+  }
+  throw new Error(`No code emailed to ${email}`);
+};
 
 describe.skipIf(!(process.env.SUPABASE_INTEGRATION && publishableKey))(
   "auth (local Supabase)",
   () => {
     let supabase: ReturnType<typeof createClient<Database>>;
+    const email = `auth-${Date.now()}@theidea.test`;
 
     beforeAll(() => {
       supabase = createClient<Database>(url, publishableKey, {
@@ -24,17 +60,25 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && publishableKey))(
       });
     });
 
-    test("signs in with a phone OTP and works inside an organization", async () => {
-      const sent = await sendPhoneOtp(supabase, "٠٧٧٠ ٠٠٠ ٠٠٠٠", {
+    test("sign-in only refuses an unknown address", async () => {
+      const result = await sendEmailOtp(supabase, email, {
+        shouldCreateUser: false,
+      });
+      expect(result).toMatchObject({ code: "no_account", ok: false });
+    });
+
+    test("signs up with an email code and works inside an organization", async () => {
+      const since = Date.now();
+      const sent = await sendEmailOtp(supabase, ` ${email.toUpperCase()} `, {
         fullName: "Test User",
         locale: "en",
       });
-      expect(sent).toMatchObject({ ok: true, phone: "+9647700000000" });
+      expect(sent).toMatchObject({ email, ok: true });
 
-      const verified = await verifyPhoneOtp(
+      const verified = await verifyEmailOtp(
         supabase,
-        "+9647700000000",
-        "123456"
+        email,
+        await readCode(email, since)
       );
       expect(verified.ok).toBe(true);
       const userId = verified.ok ? verified.value.userId : "";
@@ -44,7 +88,7 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && publishableKey))(
         .select("full_name, locale")
         .eq("id", userId)
         .single();
-      expect(profile?.locale).toBeDefined();
+      expect(profile?.full_name).toBe("Test User");
 
       const slug = `org-${Date.now()}`;
       const { data: organization, error } = await supabase.rpc(
@@ -80,9 +124,24 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && publishableKey))(
       await supabase.auth.signOut();
     });
 
+    test("signs in again to the same account with a new code", async () => {
+      const since = Date.now();
+      const sent = await sendEmailOtp(supabase, email, {
+        shouldCreateUser: false,
+      });
+      expect(sent.ok).toBe(true);
+      const verified = await verifyEmailOtp(
+        supabase,
+        email,
+        await readCode(email, since)
+      );
+      expect(verified.ok).toBe(true);
+      await supabase.auth.signOut();
+    });
+
     test("rejects a wrong code", async () => {
-      await sendPhoneOtp(supabase, "07700000000");
-      const result = await verifyPhoneOtp(supabase, "+9647700000000", "000000");
+      await sendEmailOtp(supabase, email);
+      const result = await verifyEmailOtp(supabase, email, "000000");
       expect(result).toMatchObject({ code: "invalid_code", ok: false });
     });
   }

@@ -27,6 +27,22 @@ decisions with a date.
       need an authenticator-app session. Set the Site URL to
       `https://spark.theideaiq.com` and add `https://spark.theideaiq.com/**`
       (and the website's URL) to the redirect URLs.
+- [ ] **Supabase, email codes (The IDEA Pass sign-in;
+      `ARCHITECTURE_AND_INTEGRATIONS.md` 2.7):**
+      - Authentication → Sign In / Providers → Email: enabled, Confirm
+        email on, Email OTP length `6`, expiration `600` s.
+      - Authentication → Sign In / Providers → Phone: **disabled**; no test
+        phone numbers.
+      - Authentication → Emails → SMTP Settings: custom SMTP, host
+        `smtp.resend.com`, port `465`, user `resend`, password = a Resend
+        API key (sending access for theideaiq.com, verified in Resend),
+        sender `hi@theideaiq.com`, name `The IDEA Pass`.
+      - Authentication → Emails → Templates: paste
+        `packages/database/supabase/templates/confirmation.html` (Confirm
+        signup), `magic_link.html` (Magic Link) and `email_change.html`
+        (Change Email Address), with the subjects from `config.toml`.
+      - Authentication → Rate Limits: emails per hour to fit the Resend
+        plan; then sign up on `/en/sign-up` and check the code arrives.
 - [ ] **GitHub → Environments → `production`:** `SUPABASE_ACCESS_TOKEN`,
       `SUPABASE_DB_PASSWORD`, `BACKUP_PASSPHRASE`, optional
       `BACKUP_HEARTBEAT_URL`; repository variable `SUPABASE_PROJECT_REF`
@@ -65,8 +81,9 @@ decisions with a date.
 - [ ] **Telegram:** bot token and webhook (`apps/api/scripts/telegram-setup.ts`).
 - [ ] **Domains:** once every subdomain serves HTTPS, submit the apex at
       hstspreload.org (the sites already send the preload header).
-- [ ] **First staff member:** in the SQL editor,
-      `insert into staff (user_id, role) values ('<user id>', 'superadmin')`;
+- [ ] **First staff member:** they get The IDEA Pass with their email
+      (`/ar/sign-up`), then in the SQL editor:
+      `insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '<their email>';`
       they then link an authenticator app on The IDEA Pass and open
       `https://spark.theideaiq.com/ar/admin`.
 - [ ] Delete the old branches on `theideaiq/monorepo` (the session's token
@@ -94,9 +111,10 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       database webhook on `notifications` inserts →
       `/webhooks/notifications` (3.5).
 - [ ] Push and app links tested on a real iPhone and Android phone.
-- [ ] Store listings, privacy forms, review notes (test number, native
-      features for guideline 4.2), TestFlight and internal testing, then
-      submission (3.8, 3.9).
+- [ ] Store listings, privacy forms, review notes (a review account's
+      email and how its code reaches the reviewer, native features for
+      guideline 4.2), TestFlight and internal testing, then submission
+      (3.8, 3.9).
 
 
 - [ ] Staff cannot open a support ticket on a customer's behalf.
@@ -114,5 +132,10 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   IDEA Spark at `spark.theideaiq.com`, server-rendered, with The IDEA Pass
   and the back office (`/admin`) inside it; `apps/pass` and `apps/admin`
   are gone, and so are `NEXT_PUBLIC_PASS_URL` and `NEXT_PUBLIC_ADMIN_URL`.
+- 2026-10-24: The IDEA Pass signs people in with a 6-digit email code
+  (Supabase email OTP, sent through Resend SMTP from hi@theideaiq.com), not
+  SMS (no SMS plan). No passwords, no magic links (they break inside the
+  iOS/Android shell). Phone sign-in is switched off but its code is kept;
+  phone numbers stay as an optional delivery field.
 - 2026-10-24: The IDEA keeps its staff-role model (`private.has_staff_role`
   with AAL2); auibsal's permission system was not adopted.
