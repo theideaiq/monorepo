@@ -160,8 +160,9 @@ const Introduction = () => (
         ))}
       </div>
       <p className="text-muted-foreground text-xs">
-        Corners: --radius is 0.625rem (rounded-md); rounded-sm, -md and -xl step
-        2–4px around it.
+        Corners: rounded-sm 6px, rounded-md 10px (controls), rounded-lg 16px
+        (cards), rounded-xl 28px (hero panels and plan cards), rounded-full for
+        chips and tiles.
       </p>
     </Section>
 
@@ -169,21 +170,21 @@ const Introduction = () => (
       <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-2 rounded-md border p-4" lang="en">
           <code className="font-mono text-muted-foreground text-xs">
-            Poppins · --font-latin
+            Readex Pro · --font-readex
           </code>
-          <p className="font-bold text-2xl">Games, books and more</p>
-          <p className="text-sm">
-            Latin text. Weights 400 (body), 600 (headings and labels), 700
-            (titles).
+          <p className="text-h2">Games, books and more</p>
+          <p className="text-small">
+            One family for Latin and Arabic. Weights 400 (body), 500 (prices),
+            600 (headings and labels), 700 (titles and the wordmark).
           </p>
         </div>
         <div className="grid gap-2 rounded-md border p-4" dir="rtl" lang="ar">
           <code className="font-mono text-muted-foreground text-xs" dir="ltr">
-            Cairo · --font-arabic
+            Readex Pro · Cairo fallback
           </code>
-          <p className="font-bold text-2xl">ألعاب وكتب والمزيد</p>
-          <p className="text-sm">
-            النص العربي. تملأ Cairo ما لا تغطيه Poppins عبر --font-sans.
+          <p className="text-h2">ألعاب وكتب والمزيد</p>
+          <p className="text-body-ar">
+            خط Readex Pro للعربية والإنجليزية معاً، وCairo احتياطي للعربية.
           </p>
         </div>
       </div>
@@ -246,8 +247,8 @@ const Introduction = () => (
       <p className="text-sm">
         Emails can't use the CSS variables, so packages/email repeats the brand
         values inline: the yellow logo bar (#f4cf08) with ink text, pink links
-        (#e91e63), Cairo for Arabic and Poppins for English, and dir="rtl" with
-        right-aligned text in Arabic. Review every template under Emails.
+        (#d81b60), Readex Pro with Cairo and system fallbacks, and dir="rtl"
+        with right-aligned text in Arabic. Review every template under Emails.
       </p>
     </Section>
   </main>

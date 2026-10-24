@@ -55,7 +55,7 @@ const page = (lang: Lang, message: string, form?: string, status = 200) => {
 <meta name="robots" content="noindex">
 <title>${escapeHtml(t.title)} · ${escapeHtml(project.name)}</title>
 <style>
-body{margin:0;font-family:${lang === "ar" ? "Cairo,Tahoma" : "Poppins,system-ui"},sans-serif;background:#f4f4f5;color:#18181b}
+body{margin:0;font-family:'Readex Pro',${lang === "ar" ? "Cairo,Tahoma" : "system-ui"},sans-serif;background:#f4f4f5;color:#18181b}
 main{max-width:28rem;margin:10vh auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 header{background:#f4cf08;color:#0f1014;padding:16px 24px;font-weight:700;font-size:20px}
 section{padding:24px;line-height:1.6}
