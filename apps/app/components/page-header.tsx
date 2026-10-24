@@ -1,6 +1,7 @@
 import { Separator } from "@repo/design-system/components/ui/separator";
 import { SidebarTrigger } from "@repo/design-system/components/ui/sidebar";
 import type { ReactNode } from "react";
+import { NotificationBell } from "./notification-bell";
 import { SearchForm } from "./search-form";
 
 interface PageHeaderProps {
@@ -16,6 +17,7 @@ export const PageHeader = ({ children, title }: PageHeaderProps) => (
     <div className="ms-auto flex items-center gap-2">
       {children}
       <SearchForm />
+      <NotificationBell />
     </div>
   </header>
 );

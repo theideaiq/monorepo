@@ -801,7 +801,9 @@
       "settings": "الإعدادات",
       "more": "المزيد",
       "cartCount": "في السلة: {count}",
-      "account": "الحساب"
+      "account": "الحساب",
+      "wishlist": "المفضّلة",
+      "support": "الدعم"
     },
     "roles": {
       "owner": "مالك",
@@ -884,7 +886,9 @@
         "condition": "الحالة",
         "rentalOnly": "يُستأجر هذا المنتج عبر IDEA Plus.",
         "goToPlus": "انتقل إلى IDEA Plus",
-        "addFailed": "تعذّرت إضافة المنتج إلى السلة. حاول مرة أخرى."
+        "addFailed": "تعذّرت إضافة المنتج إلى السلة. حاول مرة أخرى.",
+        "soldBy": "البائع: {seller}",
+        "verifiedSeller": "بائع موثّق"
       }
     },
     "cart": {
@@ -987,7 +991,8 @@
         "cancelling": "جارٍ الإلغاء…",
         "cancelFailed": "لم يعد بالإمكان إلغاء هذا الطلب.",
         "cancelledNotice": "أُلغي هذا الطلب.",
-        "refundedNotice": "استُرد مبلغ هذا الطلب."
+        "refundedNotice": "استُرد مبلغ هذا الطلب.",
+        "help": "اطلب المساعدة بشأن هذا الطلب"
       }
     },
     "plus": {
@@ -1023,7 +1028,11 @@
         "requesting": "جارٍ الطلب…",
         "requested": "تم الطلب. سنتواصل معك لترتيب التوصيل.",
         "needMembership": "اشترك في IDEA Plus لتستأجر.",
-        "noSlots": "جميع خانات الاستئجار لديك مستخدمة."
+        "noSlots": "جميع خانات الاستئجار لديك مستخدمة.",
+        "needsPlan": "يتطلّب {plan}",
+        "needsHigherPlan": "يتطلّب خطة أعلى",
+        "upgradeTo": "رقِّ اشتراكك إلى {plan} لاستئجار هذا الغرض.",
+        "upgrade": "رقِّ خطتك لاستئجار هذا الغرض."
       },
       "rentals": {
         "title": "مستأجراتك",
@@ -1039,7 +1048,8 @@
         "notCancellable": "سُلّم هذا العنصر بالفعل.",
         "suspended": "حسابك موقوف. تواصل مع الدعم.",
         "unavailable": "هذا العنصر غير متوفر حالياً.",
-        "unknown": "حدث خطأ ما. حاول مرة أخرى."
+        "unknown": "حدث خطأ ما. حاول مرة أخرى.",
+        "needsTier": "يتطلّب هذا الغرض خطة أعلى. رقِّ عضويتك لتستأجره."
       }
     },
     "events": {
@@ -1270,6 +1280,130 @@
     "errors": {
       "loadFailed": "تعذّر تحميل هذه الصفحة.",
       "unknown": "حدث خطأ ما. حاول مرة أخرى."
+    },
+    "reviews": {
+      "title": "المراجعات",
+      "none": "لا توجد مراجعات بعد.",
+      "summary": "{average} ({count})",
+      "summaryLabel": "التقييم {average} من 5. عدد المراجعات: {count}",
+      "verifiedPurchase": "شراء موثّق",
+      "anonymous": "أحد العملاء",
+      "more": "عرض مزيد من المراجعات",
+      "loading": "جارٍ التحميل…",
+      "form": {
+        "title": "اكتب مراجعة",
+        "editTitle": "عدّل مراجعتك",
+        "rating": "تقييمك",
+        "stars": "{count} من 5 نجوم",
+        "ratingRequired": "اختر تقييمًا من نجمة واحدة إلى 5 نجوم.",
+        "comment": "مراجعتك (اختياري)",
+        "commentPlaceholder": "ما الذي أعجبك؟ وما الذي يمكن تحسينه؟",
+        "submit": "انشر المراجعة",
+        "saving": "جارٍ الحفظ…",
+        "cancel": "إلغاء",
+        "errors": {
+          "duplicate": "سبق أن راجعت هذا المنتج.",
+          "suspended": "حسابك موقوف. تواصل مع الدعم.",
+          "unknown": "تعذّر حفظ مراجعتك. حاول مرة أخرى."
+        }
+      },
+      "mine": {
+        "title": "مراجعتك",
+        "rating": "التقييم {rating} من 5",
+        "hidden": "أخفى فريقنا هذه المراجعة، فلا يراها العملاء الآخرون. يمكنك تعديلها أو التواصل مع الدعم.",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "deleting": "جارٍ الحذف…",
+        "deleteTitle": "أتريد حذف مراجعتك؟",
+        "deleteDescription": "سيُزال تقييمك وتعليقك من هذا المنتج. لا يمكن التراجع عن ذلك.",
+        "deleteConfirm": "احذف المراجعة",
+        "keep": "أبقِ المراجعة",
+        "deleteFailed": "تعذّر حذف مراجعتك. حاول مرة أخرى."
+      }
+    },
+    "wishlist": {
+      "title": "المفضّلة",
+      "description": "المنتجات التي حفظتها لوقت لاحق.",
+      "add": "أضف إلى المفضّلة",
+      "remove": "أزل من المفضّلة",
+      "save": "احفظ",
+      "saved": "محفوظ",
+      "rental": "يُستأجر مع IDEA Plus",
+      "moveToCart": "انقل إلى السلة",
+      "moving": "جارٍ النقل…",
+      "moveFailed": "تعذّر نقل المنتج إلى سلتك. حاول مرة أخرى.",
+      "chooseOptions": "اختر الخيارات",
+      "rentWithPlus": "استأجره مع IDEA Plus",
+      "unavailable": "غير متوفر حاليًا",
+      "empty": {
+        "title": "قائمة المفضّلة فارغة",
+        "description": "اضغط على رمز القلب في أي منتج لحفظه هنا.",
+        "browse": "تصفّح المتجر"
+      }
+    },
+    "support": {
+      "title": "الدعم",
+      "description": "لديك سؤال عن طلب أو استئجار أو حسابك؟ نحن هنا لمساعدتك.",
+      "newTicket": "طلب جديد",
+      "number": "التذكرة رقم {number}",
+      "lastActivity": "آخر نشاط {date}",
+      "view": {
+        "back": "كل الطلبات",
+        "notFound": "لم نجد هذه التذكرة.",
+        "you": "أنت",
+        "team": "دعم The IDEA",
+        "reply": "الرد",
+        "replyPlaceholder": "اكتب ردّك…",
+        "closed": "هذه التذكرة مغلقة.",
+        "send": "أرسل الرد",
+        "sending": "جارٍ الإرسال…",
+        "close": "أغلق التذكرة",
+        "closing": "جارٍ الإغلاق…",
+        "closeTitle": "أتريد إغلاق هذه التذكرة؟",
+        "closeDescription": "أغلقها إن حُلّت مشكلتك. لن تتمكن من الرد بعد ذلك.",
+        "closeConfirm": "أغلق التذكرة",
+        "keepOpen": "أبقِها مفتوحة"
+      },
+      "empty": {
+        "title": "لا توجد طلبات دعم",
+        "description": "حين تتواصل معنا تظهر محادثاتك هنا."
+      },
+      "statusHint": {
+        "open": "استلمنا رسالتك وسنردّ عليك قريبًا.",
+        "pending": "رددنا عليك. أخبرنا إن احتجت إلى أي شيء آخر.",
+        "resolved": "عددنا هذا الطلب محلولًا. ردّ علينا إن كنت لا تزال بحاجة إلى المساعدة.",
+        "closed": "هذه التذكرة مغلقة. افتح طلبًا جديدًا إن احتجت إلى مساعدة أخرى."
+      },
+      "errors": {
+        "closed": "هذه التذكرة مغلقة. افتح طلبًا جديدًا بدلًا من ذلك.",
+        "orderNotFound": "لم نجد هذا الطلب في حسابك.",
+        "unknown": "حدث خطأ ما. حاول مرة أخرى."
+      },
+      "new": {
+        "title": "طلب دعم جديد",
+        "back": "كل الطلبات",
+        "description": "أخبرنا بما حدث وسنردّ عليك هنا.",
+        "subject": "الموضوع",
+        "subjectRequired": "أدخل الموضوع.",
+        "topic": "نوع الطلب",
+        "order": "الطلب (اختياري)",
+        "noOrder": "بلا طلب",
+        "message": "الرسالة",
+        "messagePlaceholder": "صف المشكلة أو اكتب سؤالك.",
+        "messageRequired": "اكتب رسالتك.",
+        "submit": "أرسل الطلب",
+        "sending": "جارٍ الإرسال…"
+      },
+      "openTicket": "عرض التذكرة"
+    },
+    "notifications": {
+      "title": "الإشعارات",
+      "label": "الإشعارات",
+      "labelUnread": "الإشعارات، غير المقروءة: {count}",
+      "many": "+{count}",
+      "markAllRead": "عيّن الكل مقروءًا",
+      "empty": "لا جديد لديك.",
+      "loadFailed": "تعذّر تحميل إشعاراتك."
     }
   },
   "store": {
@@ -1331,6 +1465,86 @@
       "academy": "الأكاديمية",
       "suite": "IDEA Suite",
       "club": "النادي"
+    },
+    "ticketStatus": {
+      "open": "مفتوحة",
+      "pending": "بانتظار العميل",
+      "resolved": "محلولة",
+      "closed": "مغلقة"
+    },
+    "ticketTopic": {
+      "order": "طلب شراء",
+      "rental": "استئجار",
+      "plus": "IDEA Plus",
+      "account": "الحساب",
+      "other": "أخرى"
+    },
+    "ticketPriority": {
+      "low": "منخفضة",
+      "normal": "عادية",
+      "high": "عالية",
+      "urgent": "عاجلة"
+    },
+    "reviewStatus": {
+      "published": "منشورة",
+      "hidden": "مخفية"
+    },
+    "notifications": {
+      "events": {
+        "order_paid": {
+          "title": "استلمنا الدفعة",
+          "body": "استلمنا دفعة الطلب رقم {number}."
+        },
+        "order_processing": {
+          "title": "نجهّز طلبك",
+          "body": "نعمل على تجهيز الطلب رقم {number}."
+        },
+        "order_shipped": {
+          "title": "طلبك في الطريق",
+          "body": "شُحن الطلب رقم {number}.{hasTracking, select, yes { رقم التتبع: {tracking}.} other {}}"
+        },
+        "order_delivered": {
+          "title": "سُلّم الطلب",
+          "body": "سُلّم الطلب رقم {number}. نتمنى أن ينال إعجابك!"
+        },
+        "order_cancelled": {
+          "title": "أُلغي الطلب",
+          "body": "أُلغي الطلب رقم {number}."
+        },
+        "order_refunded": {
+          "title": "أُعيد المبلغ",
+          "body": "أعدنا مبلغ الطلب رقم {number}."
+        },
+        "rental_active": {
+          "title": "وصلك الغرض المستأجر",
+          "body": "{name} بين يديك{hasDue, select, yes { حتى {due}} other {}}. استمتع به!"
+        },
+        "rental_overdue": {
+          "title": "تأخّر إرجاع المستأجر",
+          "body": "كان موعد إرجاع {name}{hasDue, select, yes { في {due}} other {}}. يُرجى إعادته."
+        },
+        "rental_returned": {
+          "title": "أُرجع الغرض المستأجر",
+          "body": "استلمنا {name}. شكرًا لك!"
+        },
+        "rental_cancelled": {
+          "title": "أُلغي الاستئجار",
+          "body": "أُلغي طلبك لاستئجار {name}."
+        },
+        "support_reply": {
+          "title": "ردّ جديد من الدعم",
+          "body": "رددنا على التذكرة رقم {number}: {subject}"
+        }
+      },
+      "kinds": {
+        "order": "تحديث على طلب",
+        "rental": "تحديث على استئجار",
+        "support": "تحديث من الدعم",
+        "plus": "تحديث على IDEA Plus",
+        "promo": "جديد The IDEA",
+        "system": "تنبيه"
+      },
+      "fallbackBody": "افتحه لمعرفة التفاصيل."
     }
   },
   "admin": {
