@@ -21,6 +21,9 @@ export const Footer = async () => {
           <Link aria-label={t("web.nav.home")} href="/">
             <BrandLogo />
           </Link>
+          <p className="font-semibold text-lg text-pink-text">
+            {t("common.brandLine")}
+          </p>
           <p className="max-w-xs text-muted-foreground text-sm leading-relaxed">
             {t("web.footer.tagline")}
           </p>
