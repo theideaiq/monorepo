@@ -19,8 +19,7 @@
       "outputs": ["out/**"]
     },
     "cap:sync": {
-      "cache": false,
-      "dependsOn": ["build:native"]
+      "cache": false
     },
     "typecheck": {},
     "test": {},

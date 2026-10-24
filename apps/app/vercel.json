@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "bunVersion": "1.x",
-  "ignoreCommand": "node ../../scripts/vercel-ignore.mjs"
+  "ignoreCommand": "node ../../scripts/vercel-ignore.mjs",
+  "headers": [
+    {
+      "source": "/.well-known/apple-app-site-association",
+      "headers": [{ "key": "Content-Type", "value": "application/json" }]
+    }
+  ]
 }

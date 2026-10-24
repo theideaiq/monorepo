@@ -5,6 +5,7 @@ import { useAuth } from "@repo/auth/provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { preferredLocale, resolveLocalizedPath } from "@/lib/locale";
+import { useNativePush } from "@/lib/native/use-native-push";
 import { isNativeApp } from "@/lib/platform";
 
 type Cleanup = () => unknown;
@@ -31,8 +32,10 @@ export const deepLinkPath = (url: string) => {
  * - Android back button: navigate back, or leave the app at the root.
  */
 export const NativeBridge = () => {
-  const { supabase } = useAuth();
+  const { supabase, user } = useAuth();
   const router = useRouter();
+  // Push notifications once signed in (lib/native/push.ts).
+  useNativePush(supabase, user?.id);
 
   useEffect(() => {
     if (!isNativeApp()) {
