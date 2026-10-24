@@ -180,6 +180,12 @@ const emailFailure = (
 
 interface SendEmailOtpOptions {
   captchaToken?: string;
+  /**
+   * Where the email's link lands (an allowed redirect URL in Supabase). The
+   * templates show the code, but a project still on Supabase's default
+   * templates sends a link; it then signs people in through this page.
+   */
+  emailRedirectTo?: string;
   /** Stored on new accounts only; becomes the profile's display name. */
   fullName?: string;
   locale?: string;
@@ -197,6 +203,7 @@ export const sendEmailOtp = async (
   rawEmail: string,
   {
     captchaToken,
+    emailRedirectTo,
     fullName,
     locale,
     shouldCreateUser = true,
@@ -213,6 +220,7 @@ export const sendEmailOtp = async (
     options: {
       captchaToken,
       data: { full_name: fullName?.trim() || undefined, locale },
+      emailRedirectTo,
       shouldCreateUser,
     },
   });
