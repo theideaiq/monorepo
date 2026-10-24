@@ -33,7 +33,11 @@ const Suite = async ({ params }: SuiteProps) => {
   const services = t.raw("services.items") as Services;
   const steps = t.raw("how.steps") as Steps;
   // Organizations are created and billed in the app.
-  const organizationUrl = appLink(env.NEXT_PUBLIC_APP_URL, locale);
+  const organizationUrl = appLink(
+    env.NEXT_PUBLIC_APP_URL,
+    locale,
+    "/business/new"
+  );
 
   return (
     <>

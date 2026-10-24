@@ -18,7 +18,9 @@ export const JournalSubmit = async ({
       <h2 className="font-bold text-2xl">{t("title")}</h2>
       <p className="max-w-2xl text-muted-foreground">{t("description")}</p>
       <Button asChild>
-        <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale)}>{t("button")}</a>
+        <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/submissions")}>
+          {t("button")}
+        </a>
       </Button>
     </div>
   );
