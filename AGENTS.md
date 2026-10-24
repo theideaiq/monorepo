@@ -22,7 +22,12 @@ incidents) is in `docs/platform`.
   member's cookie session (`@repo/auth/server`) and Server Actions; every
   query runs as the staff member so RLS applies. Staff rights need an
   authenticator-app (AAL2) session, enforced by the database too.
-- `apps/email`, `apps/docs`, `apps/storybook` — templates, docs, UI workbench.
+- `apps/storybook` — **The IDEA Design** (design.theideaiq.com), the
+  staff-only design site: Storybook (every `@repo/design-system` component
+  and every `@repo/email` template in Arabic and English) built into
+  `public/` and served by a small Next.js shell whose `proxy.ts` gate
+  (`lib/gate.ts`) lets in only aal2 staff signed in through The IDEA Pass.
+- `apps/docs` — the documentation site.
 - `packages/commerce` (catalog, prices, cart totals) and `packages/droid`
   (Telegram bot) are The IDEA's own packages; the rest come from the template.
 - `packages/*` — shared code, imported as `@repo/<name>`. `@repo` is a fixed

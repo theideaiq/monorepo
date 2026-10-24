@@ -14,14 +14,16 @@ const getAbsolutePath = (value: string) =>
 const config: StorybookConfig = {
   addons: [
     getAbsolutePath("@chromatic-com/storybook"),
-    getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@storybook/addon-themes"),
   ],
+  // No vendor notices or usage reporting in The IDEA Design.
+  core: { disableTelemetry: true, disableWhatsNewNotifications: true },
   framework: {
     name: getAbsolutePath("@storybook/nextjs"),
     options: {},
   },
-  staticDirs: ["../public"],
+  // public/ is the build output (served by the Next.js shell and its gate).
+  staticDirs: ["../assets"],
   stories: [
     "../stories/**/*.mdx",
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",

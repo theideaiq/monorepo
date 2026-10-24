@@ -2599,5 +2599,12 @@
       "unhide": "Publish",
       "deleteDescription": "The review is removed for good. To take it off the store but keep it, hide it instead."
     }
+  },
+  "design": {
+    "forbidden": {
+      "title": "The IDEA Design is for staff",
+      "body": "You're signed in, but your account isn't on the staff list. If you should have access, ask an admin to add you in the back office.",
+      "switch": "Sign in with another account"
+    }
   }
 }

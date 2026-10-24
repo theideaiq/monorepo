@@ -28,9 +28,14 @@
       // Mintlify content and static assets.
       "!apps/docs/**/*.json",
       "!apps/docs/**/*.svg",
+<<<<<<< HEAD
       "!apps/email/.react-email",
       "!apps/e2e/test-results",
       "!apps/e2e/playwright-report"
+=======
+      // Storybook's build output, served by apps/storybook.
+      "!apps/storybook/public"
+>>>>>>> worktree-agent-aac18e3c68b6621dc
     ]
   },
   "overrides": [

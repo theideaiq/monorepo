@@ -6,6 +6,8 @@ export const keys = () =>
     client: {
       NEXT_PUBLIC_API_URL: z.url().optional(),
       NEXT_PUBLIC_APP_URL: z.url(),
+      // The IDEA Design (apps/storybook), the staff-only design site.
+      NEXT_PUBLIC_DESIGN_URL: z.url().optional(),
       NEXT_PUBLIC_DOCS_URL: z.url().optional(),
       NEXT_PUBLIC_WEB_URL: z.url(),
     },
@@ -15,6 +17,7 @@ export const keys = () =>
       ANALYZE: process.env.ANALYZE,
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
       NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+      NEXT_PUBLIC_DESIGN_URL: process.env.NEXT_PUBLIC_DESIGN_URL,
       NEXT_PUBLIC_DOCS_URL: process.env.NEXT_PUBLIC_DOCS_URL,
       NEXT_PUBLIC_WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
       NEXT_RUNTIME: process.env.NEXT_RUNTIME,

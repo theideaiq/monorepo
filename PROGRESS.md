@@ -33,6 +33,10 @@ decisions with a date.
 - [ ] **GitHub → Code security:** switch CodeQL "default setup" off (it
       still lists the obsolete "Analyze (java-kotlin)"); `codeql.yml`
       replaces it.
+- [ ] **The IDEA Design:** Vercel project `storybook` on
+      `design.theideaiq.com` (DNS), with `NEXT_PUBLIC_SUPABASE_URL`,
+      `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_PASS_URL`; set
+      `NEXT_PUBLIC_DESIGN_URL` where other apps link to it.
 - [ ] **Vercel:** five projects (web, app, admin, api, storybook), each with
       Node 24, its environment variables (section 5 of
       `ARCHITECTURE_AND_INTEGRATIONS.md`) and "skip unaffected projects"
@@ -58,8 +62,6 @@ decisions with a date.
 - [ ] `PRODUCT_CARD_COLUMNS` doesn't select `rental_tier`, so cards can't
       badge tiered rentals.
 - [ ] `product_review_list.author_name` should be typed nullable.
-- [ ] `apps/email` preview build fetches Google Fonts at build time and fails
-      without network access; consider bundling the font.
 
 ## Decisions
 

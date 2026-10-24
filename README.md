@@ -40,10 +40,9 @@ apps/
   web/        Public website: store catalog, Plus, Academy, Suite, Club, news, events, journal (port 3001)
   app/        Customer app — web + iOS/Android via Capacitor (port 3000)
   api/        Checkout, payment webhooks, cron, Telegram webhook, calendar feed, back-office endpoints (port 3002)
-  email/      React Email templates (port 3003)
   docs/       Mintlify documentation (port 3004)
   admin/      Back office for staff: catalog, orders, CRM, finance, editorial (port 3005)
-  storybook/  Design-system workbench (port 6006)
+  storybook/  The IDEA Design: staff-only UI and email review, design.theideaiq.com (port 6006)
 packages/
   config/     Project identity, locales and regional settings (single source of truth)
   auth/       Supabase Auth clients, phone OTP, session middleware

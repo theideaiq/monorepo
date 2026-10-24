@@ -1,0 +1,25 @@
+<link href="/favicon.ico" rel="icon">
+<meta content="noindex, nofollow" name="robots">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link
+  href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap"
+  rel="stylesheet"
+>
+<script>
+"use strict";
+// Storybook names the tab "<story> ⋅ Storybook"; use the site's name.
+(() => {
+  const fix = () => {
+    if (document.title.includes("Storybook")) {
+      document.title = document.title.replace("Storybook", "The IDEA Design");
+    }
+  };
+  new MutationObserver(fix).observe(document.head, {
+    characterData: true,
+    childList: true,
+    subtree: true,
+  });
+  fix();
+})();
+</script>
