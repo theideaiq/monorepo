@@ -6,85 +6,121 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * The IDEA brand v1.0 (docs/brand/DESIGN_SYSTEM.md, section 3). Values come
+ * from docs/brand/tokens.json; Paper is the light theme, Dark the dark one.
+ * The shadcn/ui variables map onto the brand tokens below them.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #d81b60;
-  --primary-foreground: #ffffff;
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --success: oklch(50.8% 0.118 165.612);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: #e91e63;
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  /* Brand tokens (docs/brand/tokens.css) */
+  --idea-pink: #d81b60;
+  --idea-pink-hover: #b5134e;
+  --on-pink: #ffffff;
+  --pink-text: #d81b60;
+  --bulb-yellow: #f4cf08;
+  --bulb-yellow-hover: #e2bd00;
+  --on-yellow: #0f1014;
+  --ink: #0f1014;
+  --ink-muted: #5b5d66;
+  --surface: #fbf8ef;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f2eee2;
+  --border-strong: #8a8c95;
+  --focus-ring: #0f1014;
+  --plus: #5b3be8;
+  --academy: #0b7a6e;
+  --suite: #1f4fd6;
+  --club: #ff6a2b;
+  --launcher: #7bc43a;
+  --on-accent: #ffffff;
+  --on-accent-warm: #0f1014;
+  --bulb-empty: #d9dce6;
+  --warning: #9a6700;
+  --danger: #b3261e;
+  --on-status: #ffffff;
+  /* tokens.css calls these --shadow-1/2; renamed so they don't collide
+     with Tailwind's shadow-* theme variables of the same name. */
+  --elevation-1: 0 1px 2px rgb(15 16 20 / 0.08);
+  --elevation-2: 0 12px 32px rgb(15 16 20 / 0.14);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  /* shadcn/ui variables */
+  --background: var(--surface);
+  --foreground: var(--ink);
+  --card: var(--surface-raised);
+  --card-foreground: var(--ink);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--ink);
+  --primary: var(--idea-pink);
+  --primary-foreground: var(--on-pink);
+  --secondary: var(--surface-sunken);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-sunken);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--surface-sunken);
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--on-status);
+  --success: #127a4b;
+  --border: #e4dfd0;
+  --input: var(--border-strong);
+  --ring: var(--focus-ring);
+  --chart-1: var(--idea-pink);
+  --chart-2: var(--bulb-yellow);
+  --chart-3: var(--plus);
+  --chart-4: var(--academy);
+  --chart-5: var(--suite);
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #d81b60;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: #e91e63;
+  --sidebar: var(--surface-raised);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--idea-pink);
+  --sidebar-primary-foreground: var(--on-pink);
+  --sidebar-accent: var(--surface-sunken);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--focus-ring);
 
   --font-weight-bold: 700;
 
-  /* Brand yellow (logo), used for highlights and the logo mark. */
-  --brand: #f4cf08;
-  --brand-foreground: #0f1014;
+  /* The bulb yellow, kept under its earlier name. */
+  --brand: var(--bulb-yellow);
+  --brand-foreground: var(--on-yellow);
 }
 
 .dark {
-  --background: #0f1014;
-  --foreground: oklch(0.985 0 0);
-  --card: #17181d;
-  --card-foreground: oklch(0.985 0 0);
-  --popover: #17181d;
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: #ec407a;
-  --primary-foreground: #ffffff;
-  --secondary: #1f2027;
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: #1f2027;
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: #1f2027;
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --success: oklch(50.8% 0.118 165.612);
-  --border: #26272f;
-  --input: #26272f;
-  --ring: #ec407a;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #121318;
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: #ec407a;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1f2027;
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: #26272f;
-  --sidebar-ring: #ec407a;
-  --brand: #f4cf08;
-  --brand-foreground: #0f1014;
+  --pink-text: #f06292;
+  --bulb-yellow-hover: #ffdc33;
+  --ink: #f6f3ea;
+  --ink-muted: #a6a8b2;
+  --surface: #121318;
+  --surface-raised: #1a1b21;
+  --surface-sunken: #22232a;
+  --border-strong: #6b6d78;
+  --focus-ring: #f4cf08;
+  --plus: #a99bff;
+  --academy: #4fd1c0;
+  --suite: #7fa2ff;
+  --club: #ff7a40;
+  --launcher: #9be15d;
+  --on-accent: #0f1014;
+  --bulb-empty: #3a3c46;
+  --warning: #f5b83d;
+  --danger: #ffb4a9;
+  --on-status: #0f1014;
+  --elevation-1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --elevation-2: 0 12px 32px rgb(0 0 0 / 0.6);
+
+  --success: #4ade9a;
+  --border: #2c2d35;
+  --chart-1: var(--pink-text);
 }
 
 @theme inline {
@@ -125,10 +161,46 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
   --color-success: var(--success);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Brand colours: bg-idea-pink, text-pink-text, bg-surface-sunken, bg-plus… */
+  --color-idea-pink: var(--idea-pink);
+  --color-idea-pink-hover: var(--idea-pink-hover);
+  --color-on-pink: var(--on-pink);
+  --color-pink-text: var(--pink-text);
+  --color-bulb-yellow: var(--bulb-yellow);
+  --color-bulb-yellow-hover: var(--bulb-yellow-hover);
+  --color-on-yellow: var(--on-yellow);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-border-strong: var(--border-strong);
+  --color-focus-ring: var(--focus-ring);
+  --color-plus: var(--plus);
+  --color-academy: var(--academy);
+  --color-suite: var(--suite);
+  --color-club: var(--club);
+  --color-launcher: var(--launcher);
+  --color-on-accent: var(--on-accent);
+  --color-on-accent-warm: var(--on-accent-warm);
+  --color-bulb-empty: var(--bulb-empty);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-on-status: var(--on-status);
+
+  --shadow-1: var(--elevation-1);
+  --shadow-2: var(--elevation-2);
+  /* "Switch on" motion: ease-switch-on with 120 / 240 / 360ms. */
+  --ease-switch-on: cubic-bezier(0.2, 0, 0, 1);
+
+  /* radius-md stays 10px; cards 16px, hero panels and plan cards 28px. */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 

@@ -28,7 +28,7 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
   return (
     <li className="relative">
       <Link
-        className="group grid gap-2 rounded-xl p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="group grid gap-2 rounded-lg p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
         href={productHref(product.slug)}
       >
         <ProductImage

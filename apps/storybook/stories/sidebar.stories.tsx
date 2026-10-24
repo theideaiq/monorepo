@@ -230,7 +230,7 @@ export const Base: Story = {
                       className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                       size="lg"
                     >
-                      <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                      <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
                         <activeTeam.logo className="size-4" />
                       </div>
                       <div className="grid flex-1 text-start text-sm leading-tight">
@@ -246,7 +246,7 @@ export const Base: Story = {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="start"
-                    className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                    className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md"
                     side="bottom"
                     sideOffset={4}
                   >
@@ -339,7 +339,7 @@ export const Base: Story = {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
-                        className="w-48 rounded-lg"
+                        className="w-48 rounded-md"
                         side="bottom"
                       >
                         <DropdownMenuItem>
@@ -377,12 +377,12 @@ export const Base: Story = {
                       className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                       size="lg"
                     >
-                      <Avatar className="h-8 w-8 rounded-lg">
+                      <Avatar className="h-8 w-8 rounded-md">
                         <AvatarImage
                           alt={data.user.name}
                           src={data.user.avatar}
                         />
-                        <AvatarFallback className="rounded-lg">
+                        <AvatarFallback className="rounded-md">
                           CN
                         </AvatarFallback>
                       </Avatar>
@@ -399,18 +399,18 @@ export const Base: Story = {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                    className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md"
                     side="bottom"
                     sideOffset={4}
                   >
                     <DropdownMenuLabel className="p-0 font-normal">
                       <div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                        <Avatar className="h-8 w-8 rounded-lg">
+                        <Avatar className="h-8 w-8 rounded-md">
                           <AvatarImage
                             alt={data.user.name}
                             src={data.user.avatar}
                           />
-                          <AvatarFallback className="rounded-lg">
+                          <AvatarFallback className="rounded-md">
                             CN
                           </AvatarFallback>
                         </Avatar>
@@ -480,11 +480,11 @@ export const Base: Story = {
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
             <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-              <div className="aspect-video rounded-xl bg-muted/50" />
-              <div className="aspect-video rounded-xl bg-muted/50" />
-              <div className="aspect-video rounded-xl bg-muted/50" />
+              <div className="aspect-video rounded-lg bg-muted/50" />
+              <div className="aspect-video rounded-lg bg-muted/50" />
+              <div className="aspect-video rounded-lg bg-muted/50" />
             </div>
-            <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+            <div className="min-h-[100vh] flex-1 rounded-lg bg-muted/50 md:min-h-min" />
           </div>
         </SidebarInset>
       </SidebarProvider>

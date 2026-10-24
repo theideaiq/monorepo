@@ -112,7 +112,7 @@ export const StaffLookup = () => {
         <LookupError />
       </ActionForm>
       {user ? (
-        <div className="grid gap-3 rounded-lg border p-4">
+        <div className="grid gap-3 rounded-md border p-4">
           <div className="grid gap-0.5">
             <span className="font-medium">{user.fullName ?? t("unnamed")}</span>
             <span className="text-muted-foreground text-sm" dir="ltr">

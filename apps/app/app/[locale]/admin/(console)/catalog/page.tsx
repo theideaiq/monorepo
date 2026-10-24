@@ -158,7 +158,7 @@ const ProductsPage = async ({
         {(products ?? []).length === 0 ? (
           <EmptyState title={t("products.empty")} />
         ) : (
-          <div className="rounded-xl border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>

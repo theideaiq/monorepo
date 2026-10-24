@@ -194,7 +194,7 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
         </div>
 
         {product.kind === "rental" ? (
-          <div className="grid gap-3 rounded-lg border p-4">
+          <div className="grid gap-3 rounded-md border p-4">
             <p className="text-sm">{t("rentalOnly")}</p>
             <div className="flex flex-wrap gap-3">
               <Button asChild>

@@ -49,7 +49,7 @@ export const Section = ({
 
 /** A muted, centred note for empty lists. */
 export const EmptyState = ({ children }: { readonly children: ReactNode }) => (
-  <p className="rounded-lg border border-dashed p-8 text-center text-muted-foreground">
+  <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">
     {children}
   </p>
 );

@@ -45,7 +45,7 @@ export const StatCard = ({
     </>
   );
   const classes = cn(
-    "grid gap-1 rounded-xl border bg-card p-4 text-card-foreground",
+    "grid gap-1 rounded-lg border bg-card p-4 text-card-foreground",
     href && "transition-colors hover:border-primary/50 hover:bg-accent/40",
     className
   );

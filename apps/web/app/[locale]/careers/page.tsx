@@ -40,7 +40,7 @@ const Careers = async ({ params }: CareersProps) => {
       </PageHero>
 
       <Section title={t("openings.title")}>
-        <p className="max-w-3xl rounded-xl border border-dashed p-6 text-muted-foreground">
+        <p className="max-w-3xl rounded-lg border border-dashed p-6 text-muted-foreground">
           {t("openings.description")}
         </p>
       </Section>

@@ -16,7 +16,7 @@ export const ProjectList = ({ projects }: ProjectListProps) => {
     <ul className="grid auto-rows-min gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {projects.map((project) => (
         <li
-          className="flex flex-col gap-3 rounded-xl border bg-card p-4"
+          className="flex flex-col gap-3 rounded-lg border bg-card p-4"
           key={project.id}
         >
           <FolderIcon className="size-5 text-muted-foreground" />

@@ -74,7 +74,7 @@ const ReviewForm = ({
   };
 
   return (
-    <form className="grid gap-3 rounded-xl border p-4" onSubmit={submit}>
+    <form className="grid gap-3 rounded-lg border p-4" onSubmit={submit}>
       <h3 className="font-medium">{review ? t("editTitle") : t("title")}</h3>
       <StarInput
         onChange={(value) => {
@@ -180,7 +180,7 @@ const MyReviewPanel = ({ productId }: { readonly productId: string }) => {
   }
 
   return (
-    <article className="grid gap-2 rounded-xl border border-primary/40 bg-primary/5 p-4">
+    <article className="grid gap-2 rounded-lg border border-primary/40 bg-primary/5 p-4">
       <div className="flex flex-wrap items-center gap-2">
         <h3 className="font-medium text-sm">{t("title")}</h3>
         <Stars value={review.rating} />

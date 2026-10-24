@@ -20,7 +20,7 @@ export const PlanCard = async ({ href, locale, plan }: PlanCardProps) => {
   const list = features.length > 0 ? features : fallback;
 
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border bg-card p-6 first:border-muted even:border-primary even:shadow-lg">
+    <div className="flex flex-col gap-6 rounded-lg border bg-card p-6 first:border-muted even:border-primary even:shadow-lg">
       <div className="flex flex-col gap-2">
         <h3 className="font-semibold text-xl">{plan.name}</h3>
         <p className="flex items-baseline gap-2">

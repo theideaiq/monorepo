@@ -87,7 +87,7 @@ const Section = ({
 );
 
 const SwatchCard = ({ label, token, usage }: Swatch) => (
-  <div className="grid gap-2 rounded-lg border bg-card p-3 text-card-foreground">
+  <div className="grid gap-2 rounded-md border bg-card p-3 text-card-foreground">
     <div
       className="h-16 rounded-md border"
       style={{ background: `var(${token})` }}
@@ -160,14 +160,14 @@ const Introduction = () => (
         ))}
       </div>
       <p className="text-muted-foreground text-xs">
-        Corners: --radius is 0.625rem (rounded-lg); rounded-sm, -md and -xl step
+        Corners: --radius is 0.625rem (rounded-md); rounded-sm, -md and -xl step
         2–4px around it.
       </p>
     </Section>
 
     <Section title="Type">
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="grid gap-2 rounded-lg border p-4" lang="en">
+        <div className="grid gap-2 rounded-md border p-4" lang="en">
           <code className="font-mono text-muted-foreground text-xs">
             Poppins · --font-latin
           </code>
@@ -177,7 +177,7 @@ const Introduction = () => (
             (titles).
           </p>
         </div>
-        <div className="grid gap-2 rounded-lg border p-4" dir="rtl" lang="ar">
+        <div className="grid gap-2 rounded-md border p-4" dir="rtl" lang="ar">
           <code className="font-mono text-muted-foreground text-xs" dir="ltr">
             Cairo · --font-arabic
           </code>

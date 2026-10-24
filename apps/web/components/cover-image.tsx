@@ -20,7 +20,7 @@ export const CoverImage = ({
 }: CoverImageProps) => (
   <div
     className={cn(
-      "relative aspect-[4/3] overflow-hidden rounded-lg bg-muted",
+      "relative aspect-[4/3] overflow-hidden rounded-md bg-muted",
       className
     )}
   >

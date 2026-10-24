@@ -22,7 +22,7 @@ export const RoundForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <div className="flex flex-wrap items-end gap-3 rounded-lg border p-3">
+    <div className="flex flex-wrap items-end gap-3 rounded-md border p-3">
       <ActionForm
         action={saveRound}
         className="flex flex-1 flex-wrap items-end gap-3"
@@ -116,7 +116,7 @@ export const HolderForm = ({
   const convertible = isConvertible(instrument);
 
   return (
-    <div className="flex flex-wrap items-end gap-3 rounded-lg border p-3">
+    <div className="flex flex-wrap items-end gap-3 rounded-md border p-3">
       <ActionForm
         action={saveHolder}
         className="flex flex-1 flex-wrap items-end gap-3"

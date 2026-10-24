@@ -61,7 +61,7 @@ export const Support = () => {
           </Empty>
         ) : null}
         {tickets.data?.length ? (
-          <ul className="divide-y rounded-xl border">
+          <ul className="divide-y rounded-lg border">
             {tickets.data.map((ticket) => (
               <li key={ticket.id}>
                 <Link

@@ -104,7 +104,7 @@ const TicketPage = async ({
                   return (
                     <li
                       className={cn(
-                        "grid gap-2 rounded-lg border p-3",
+                        "grid gap-2 rounded-md border p-3",
                         fromCustomer && "bg-muted/40",
                         !(fromCustomer || message.internal) &&
                           "border-primary/30 bg-primary/5",

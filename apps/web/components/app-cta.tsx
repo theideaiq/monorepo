@@ -11,7 +11,7 @@ export const AppCta = async ({ locale }: { readonly locale: Locale }) => {
 
   return (
     <section className="container mx-auto px-4 py-14">
-      <div className="flex flex-col items-center gap-6 rounded-2xl bg-foreground px-6 py-14 text-center text-background">
+      <div className="flex flex-col items-center gap-6 rounded-lg bg-foreground px-6 py-14 text-center text-background">
         <h2 className="max-w-2xl text-balance font-bold text-3xl tracking-tight md:text-4xl">
           {t("title")}
         </h2>

@@ -98,7 +98,7 @@ const RentalsPage = async ({
         {(rentals ?? []).length === 0 ? (
           <EmptyState title={t(`empty.${view}`)} />
         ) : (
-          <div className="rounded-xl border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>

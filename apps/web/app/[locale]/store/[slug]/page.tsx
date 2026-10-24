@@ -213,7 +213,7 @@ const ProductPage = async ({ params }: ProductProps) => {
               {rental ? t("rentNote") : t("buyNote")}
             </p>
             {plan ? (
-              <div className="flex flex-col gap-1 rounded-lg border border-brand/60 bg-brand/10 p-3 text-sm">
+              <div className="flex flex-col gap-1 rounded-md border border-brand/60 bg-brand/10 p-3 text-sm">
                 <p className="font-medium">
                   {t("requiresPlan", { plan: plan.name })}
                 </p>
@@ -233,7 +233,7 @@ const ProductPage = async ({ params }: ProductProps) => {
           {product.product_variants.length > 0 ? (
             <section className="flex flex-col gap-3">
               <h2 className="font-semibold text-lg">{t("variants")}</h2>
-              <ul className="divide-y rounded-lg border">
+              <ul className="divide-y rounded-md border">
                 {product.product_variants.map((variant) => (
                   <li
                     className="flex flex-wrap items-center justify-between gap-2 p-3 text-sm"
@@ -271,7 +271,7 @@ const ProductPage = async ({ params }: ProductProps) => {
           {specs.length > 0 ? (
             <section className="flex flex-col gap-3">
               <h2 className="font-semibold text-lg">{t("specs")}</h2>
-              <dl className="divide-y rounded-lg border text-sm">
+              <dl className="divide-y rounded-md border text-sm">
                 {specs.map(([label, value]) => (
                   <div className="grid grid-cols-2 gap-4 p-3" key={label}>
                     <dt className="text-muted-foreground">{label}</dt>

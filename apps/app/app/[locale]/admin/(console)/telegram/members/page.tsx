@@ -98,7 +98,7 @@ const MembersPage = async ({
         {(members ?? []).length === 0 ? (
           <EmptyState title={t("members.empty")} />
         ) : (
-          <div className="rounded-xl border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>

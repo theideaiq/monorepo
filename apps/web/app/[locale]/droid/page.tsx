@@ -60,8 +60,8 @@ const Droid = async ({ params }: DroidProps) => {
       </Section>
 
       <Section>
-        <div className="grid items-center gap-8 rounded-2xl bg-[#0f1014] p-8 text-white md:grid-cols-[auto_1fr] md:p-12">
-          <span className="flex size-20 items-center justify-center rounded-2xl bg-brand text-brand-foreground">
+        <div className="grid items-center gap-8 rounded-lg bg-[#0f1014] p-8 text-white md:grid-cols-[auto_1fr] md:p-12">
+          <span className="flex size-20 items-center justify-center rounded-lg bg-brand text-brand-foreground">
             <Gamepad2 aria-hidden="true" className="size-10" />
           </span>
           <div className="flex flex-col items-start gap-3">

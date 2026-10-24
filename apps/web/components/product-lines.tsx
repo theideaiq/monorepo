@@ -26,7 +26,7 @@ export const ProductLines = async ({ locale }: { readonly locale: Locale }) => {
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
       {lines.map(({ href, icon: Icon, id }) => (
         <Link
-          className="group flex flex-col gap-3 rounded-xl border border-t-4 border-t-primary bg-card p-5 transition-transform even:border-t-brand hover:-translate-y-1"
+          className="group flex flex-col gap-3 rounded-lg border border-t-4 border-t-primary bg-card p-5 transition-transform even:border-t-brand hover:-translate-y-1"
           href={href}
           key={id}
         >

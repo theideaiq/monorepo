@@ -236,7 +236,7 @@ const MySubmissions = () => {
         <p className="text-muted-foreground text-sm">{t("empty")}</p>
       ) : null}
       {submissions.data?.length ? (
-        <ul className="divide-y rounded-xl border">
+        <ul className="divide-y rounded-lg border">
           {submissions.data.map((submission) => (
             <li className="grid gap-2 p-4" key={submission.id}>
               <div className="flex flex-wrap items-start justify-between gap-3">

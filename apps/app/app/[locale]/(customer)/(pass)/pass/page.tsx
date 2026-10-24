@@ -51,7 +51,7 @@ const PassHomePage = async () => {
         <h1 className="font-semibold text-2xl tracking-tight">{t("title")}</h1>
         <p className="text-muted-foreground text-sm">{t("description")}</p>
       </div>
-      <dl className="grid gap-3 rounded-lg border p-4 text-sm">
+      <dl className="grid gap-3 rounded-md border p-4 text-sm">
         <div className="flex items-center justify-between gap-4">
           <dt className="text-muted-foreground">{t("nameLabel")}</dt>
           <dd className="truncate font-medium">{name || t("noName")}</dd>

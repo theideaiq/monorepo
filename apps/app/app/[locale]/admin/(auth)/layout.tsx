@@ -27,7 +27,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
         </span>
       </header>
       <main className="flex flex-1 items-center justify-center p-4">
-        <div className="w-full max-w-sm rounded-xl border bg-card p-6 text-card-foreground shadow-sm">
+        <div className="w-full max-w-sm rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
           {children}
         </div>
       </main>

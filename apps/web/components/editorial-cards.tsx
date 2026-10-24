@@ -7,7 +7,7 @@ import { type EventRow, editorialUrl, type PostSummary } from "@/lib/data";
 import { CoverImage } from "./cover-image";
 
 const cardClass =
-  "group flex flex-col gap-3 rounded-xl border bg-card p-3 transition-shadow hover:shadow-md";
+  "group flex flex-col gap-3 rounded-lg border bg-card p-3 transition-shadow hover:shadow-md";
 
 export const PostCard = ({
   locale,

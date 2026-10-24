@@ -425,7 +425,7 @@ const MyRentals = () => {
         <p className="text-muted-foreground text-sm">{t("rentals.empty")}</p>
       ) : null}
       {rentals.data?.length ? (
-        <ul className="divide-y rounded-xl border">
+        <ul className="divide-y rounded-lg border">
           {rentals.data.map((rental) => (
             <li
               className="flex flex-wrap items-center justify-between gap-3 p-4"

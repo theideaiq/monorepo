@@ -104,7 +104,7 @@ const Home = async ({ params }: HomeProps) => {
       </Section>
 
       <section className="container mx-auto px-4 py-14">
-        <div className="grid gap-10 rounded-2xl border bg-muted/40 p-8 md:grid-cols-2 md:p-12">
+        <div className="grid gap-10 rounded-lg border bg-muted/40 p-8 md:grid-cols-2 md:p-12">
           <div className="flex flex-col gap-4">
             <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
               {t("home.values.title")}{" "}
@@ -119,7 +119,7 @@ const Home = async ({ params }: HomeProps) => {
               const Icon = valueIcons[index] ?? ShieldCheck;
               return (
                 <li className="flex gap-3" key={value.title}>
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand text-brand-foreground">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-brand text-brand-foreground">
                     <Icon aria-hidden="true" className="size-5" />
                   </span>
                   <div className="flex flex-col gap-1">

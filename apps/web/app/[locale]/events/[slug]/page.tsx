@@ -129,7 +129,7 @@ const EventPage = async ({ params }: EventProps) => {
             />
           ) : null}
         </div>
-        <aside className="flex h-fit flex-col gap-4 rounded-xl border p-5">
+        <aside className="flex h-fit flex-col gap-4 rounded-lg border p-5">
           <div className="flex gap-3">
             <CalendarDays
               aria-hidden="true"

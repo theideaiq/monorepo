@@ -199,7 +199,7 @@ export const JournalForm = ({
         </div>
         {lines.map((line) => (
           <div
-            className="grid gap-2 rounded-lg border p-2 md:grid-cols-[2fr_2fr_1fr_1fr_auto] md:border-0 md:p-0"
+            className="grid gap-2 rounded-md border p-2 md:grid-cols-[2fr_2fr_1fr_1fr_auto] md:border-0 md:p-0"
             key={line.id}
           >
             <NativeSelect
@@ -361,7 +361,7 @@ export const JournalForm = ({
           {t("addLine")}
         </Button>
 
-        <div className="grid gap-1 rounded-lg bg-muted/50 p-3 text-sm md:grid-cols-[4fr_1fr_1fr_auto] md:items-center">
+        <div className="grid gap-1 rounded-md bg-muted/50 p-3 text-sm md:grid-cols-[4fr_1fr_1fr_auto] md:items-center">
           <span className="font-medium">{t("totals")}</span>
           <span className="tabular-nums">
             {formatPrice(totals.debit, locale)}

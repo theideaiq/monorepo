@@ -76,7 +76,7 @@ const SubmissionsPage = async ({
               const items = rows.filter((row) => row.status === status);
               return (
                 <section
-                  className="flex flex-col gap-2 rounded-xl bg-muted/50 p-2"
+                  className="flex flex-col gap-2 rounded-lg bg-muted/50 p-2"
                   key={status}
                 >
                   <h2 className="flex items-center justify-between px-1 font-medium text-sm">
@@ -93,7 +93,7 @@ const SubmissionsPage = async ({
                   {items.map((row) => (
                     <Link
                       className={cn(
-                        "grid gap-1 rounded-lg border bg-card p-3 text-card-foreground text-sm shadow-xs transition-colors hover:border-primary/50",
+                        "grid gap-1 rounded-md border bg-card p-3 text-card-foreground text-sm shadow-xs transition-colors hover:border-primary/50",
                         row.assigned_to === staff.userId && "border-primary/40"
                       )}
                       href={`/editorial/submissions/${row.id}`}

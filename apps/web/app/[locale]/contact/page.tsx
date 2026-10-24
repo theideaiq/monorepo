@@ -78,8 +78,8 @@ const Contact = async ({ params }: ContactProps) => {
       <div className="container mx-auto grid max-w-6xl gap-10 px-4 py-14 lg:grid-cols-[1fr_1.4fr]">
         <ul className="flex flex-col gap-4">
           {details.map(({ href, icon: Icon, label, ltr, note, value }) => (
-            <li className="flex gap-4 rounded-xl border p-5" key={label}>
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <li className="flex gap-4 rounded-lg border p-5" key={label}>
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <Icon aria-hidden="true" className="size-5" />
               </span>
               <div className="flex flex-col gap-1">

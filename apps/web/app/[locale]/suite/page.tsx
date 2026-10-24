@@ -62,7 +62,7 @@ const Suite = async ({ params }: SuiteProps) => {
       <Section title={t("how.title")}>
         <ol className="grid gap-4 md:grid-cols-3">
           {steps.map((step, index) => (
-            <li className="flex gap-3 rounded-xl border p-5" key={step}>
+            <li className="flex gap-3 rounded-lg border p-5" key={step}>
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand font-bold text-brand-foreground text-sm">
                 {formatNumber(index + 1, locale)}
               </span>
@@ -90,7 +90,7 @@ const Suite = async ({ params }: SuiteProps) => {
       </Section>
 
       <Section>
-        <div className="flex flex-col items-center gap-4 rounded-2xl border bg-muted/40 p-10 text-center">
+        <div className="flex flex-col items-center gap-4 rounded-lg border bg-muted/40 p-10 text-center">
           <h2 className="font-bold text-2xl">{t("cta.title")}</h2>
           <p className="max-w-xl text-muted-foreground">
             {t("cta.description")}

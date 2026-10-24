@@ -53,7 +53,7 @@ export const Orders = () => {
           </Empty>
         ) : null}
         {orders.data?.length ? (
-          <ul className="divide-y rounded-xl border">
+          <ul className="divide-y rounded-lg border">
             {orders.data.map((order) => (
               <li key={order.id}>
                 <Link

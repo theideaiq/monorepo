@@ -14,7 +14,7 @@ import { CommandSeparator } from "cmdk";
  */
 const meta = {
   args: {
-    className: "rounded-lg w-96 border shadow-md",
+    className: "rounded-md w-96 border shadow-md",
   },
   argTypes: {},
   component: Command,

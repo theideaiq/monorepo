@@ -133,7 +133,7 @@ const JournalPage = async ({
               0
             );
             return (
-              <article className="rounded-xl border" key={entry.id}>
+              <article className="rounded-lg border" key={entry.id}>
                 <header className="flex flex-wrap items-baseline justify-between gap-2 border-b px-4 py-3">
                   <div className="grid gap-0.5">
                     <span className="font-medium">{entry.description}</span>

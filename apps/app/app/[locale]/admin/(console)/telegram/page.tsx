@@ -70,7 +70,7 @@ const RequestsPage = async ({
         {(requests ?? []).length === 0 ? (
           <EmptyState title={t("requests.empty")} />
         ) : (
-          <div className="rounded-xl border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>

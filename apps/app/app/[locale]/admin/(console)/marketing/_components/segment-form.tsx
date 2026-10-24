@@ -37,7 +37,7 @@ export const SegmentForm = ({
   }
 
   return (
-    <div className="grid gap-3 rounded-lg border p-4">
+    <div className="grid gap-3 rounded-md border p-4">
       <ActionForm action={saveSegment}>
         {segment ? <input name="id" type="hidden" value={segment.id} /> : null}
         <fieldset className="grid gap-4" disabled={disabled}>

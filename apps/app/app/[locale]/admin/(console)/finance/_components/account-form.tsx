@@ -24,7 +24,7 @@ export const AccountForm = ({
   return (
     <ActionForm
       action={saveAccount}
-      className="flex flex-wrap items-end gap-3 rounded-lg border p-3"
+      className="flex flex-wrap items-end gap-3 rounded-md border p-3"
     >
       {account ? <input name="id" type="hidden" value={account.id} /> : null}
       <TextField

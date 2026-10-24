@@ -37,7 +37,7 @@ const Academy = async ({ params }: AcademyProps) => {
       </PageHero>
 
       <Section title={t("academy.tracks.title")}>
-        <p className="mb-6 rounded-lg border border-brand/40 bg-brand/10 p-4 text-sm">
+        <p className="mb-6 rounded-md border border-brand/40 bg-brand/10 p-4 text-sm">
           {t("academy.status")}
         </p>
         <FeatureGrid
@@ -71,7 +71,7 @@ const Academy = async ({ params }: AcademyProps) => {
       </Section>
 
       <Section>
-        <div className="flex flex-col items-center gap-4 rounded-2xl border bg-muted/40 p-10 text-center">
+        <div className="flex flex-col items-center gap-4 rounded-lg border bg-muted/40 p-10 text-center">
           <h2 className="font-bold text-2xl">{t("academy.cta.title")}</h2>
           <p className="max-w-xl text-muted-foreground">
             {t("academy.cta.description")}

@@ -73,12 +73,12 @@ const Club = async ({ params }: ClubProps) => {
                 key={room.title}
               >
                 <a
-                  className="group flex h-full flex-col gap-4 rounded-2xl border bg-card p-6 transition-colors hover:border-primary"
+                  className="group flex h-full flex-col gap-4 rounded-lg border bg-card p-6 transition-colors hover:border-primary"
                   href={telegram.club}
                   {...external}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-brand text-white">
+                    <span className="flex size-11 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-brand text-white">
                       <Icon aria-hidden="true" className="size-5" />
                     </span>
                     <ArrowUpRight className="size-5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 rtl:-scale-x-100" />
@@ -103,7 +103,7 @@ const Club = async ({ params }: ClubProps) => {
       </Section>
 
       <Section>
-        <div className="flex flex-col items-center gap-4 rounded-2xl bg-foreground p-10 text-center text-background">
+        <div className="flex flex-col items-center gap-4 rounded-lg bg-foreground p-10 text-center text-background">
           <h2 className="font-bold text-3xl">{t("cta.title")}</h2>
           <p className="max-w-xl text-background/75">{t("cta.description")}</p>
           <Button asChild size="lg">

@@ -29,7 +29,7 @@ const BusinessIntro = () => {
 
   return (
     <div className="flex max-w-2xl flex-col gap-6">
-      <section className="grid gap-4 rounded-xl border bg-gradient-to-br from-primary/10 to-brand/10 p-6">
+      <section className="grid gap-4 rounded-lg border bg-gradient-to-br from-primary/10 to-brand/10 p-6">
         <BriefcaseBusinessIcon className="size-8 text-primary" />
         <div className="grid gap-2">
           <h2 className="font-semibold text-xl tracking-tight">

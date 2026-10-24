@@ -120,7 +120,7 @@ const CampaignPage = async ({
           description={t("campaigns.previewHint")}
           title={t("campaigns.preview")}
         >
-          <div className="overflow-hidden rounded-lg border">
+          <div className="overflow-hidden rounded-md border">
             <div className="bg-brand px-5 py-3 text-brand-foreground">
               <BrandLogo className="[&_svg]:text-brand-foreground" />
             </div>

@@ -185,7 +185,7 @@ const AuditPage = async ({
         {(logs ?? []).length === 0 ? (
           <EmptyState title={t("empty")} />
         ) : (
-          <div className="rounded-xl border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>
