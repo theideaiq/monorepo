@@ -11,6 +11,10 @@ import {
   unregisterPushNotifications,
 } from "../lib/native/push";
 import { shareLink } from "../lib/native/share";
+import {
+  isNativeShellUserAgent,
+  SHELL_USER_AGENT,
+} from "../lib/native/user-agent";
 import { shellScript } from "../native/prepare";
 
 type Listener = (event: unknown) => void;
@@ -78,6 +82,15 @@ describe("capacitor.config", () => {
     expect(capacitorConfig.server?.errorPath).toBe("offline.html");
     expect(capacitorConfig.server?.allowNavigation).toEqual(ALLOWED_NAVIGATION);
     expect(capacitorConfig.appName).toBe("The IDEA Spark");
+    expect(capacitorConfig.appendUserAgent).toBe(SHELL_USER_AGENT);
+  });
+
+  test("the server recognizes the shell by its user agent", () => {
+    const safari =
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148";
+    expect(isNativeShellUserAgent(`${safari} ${SHELL_USER_AGENT}`)).toBe(true);
+    expect(isNativeShellUserAgent(safari)).toBe(false);
+    expect(isNativeShellUserAgent(null)).toBe(false);
   });
 
   test("prefers CAP_SERVER_URL, then NEXT_PUBLIC_APP_URL, then production", () => {

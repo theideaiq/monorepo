@@ -57,6 +57,10 @@ const server = resolveServerUrl(process.env);
 const BACKGROUND = "#0f1014";
 
 const config: CapacitorConfig = {
+  // Lets Spark's server recognize the shell (lib/native/user-agent.ts), e.g.
+  // to hide digital-goods checkout and ad pixels before any JavaScript runs.
+  // Keep in sync with SHELL_USER_AGENT there (a test checks it).
+  appendUserAgent: "TheIDEASpark/1",
   appId: project.bundleId,
   appName: "The IDEA Spark",
   backgroundColor: BACKGROUND,
