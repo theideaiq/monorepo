@@ -112,4 +112,94 @@ describe("product helpers", () => {
     });
     expect("offers" in data).toBe(false);
   });
+
+  const review = (id: string, author: string | null, rating = 5) => ({
+    author_name: author,
+    comment: ` Great ${id} `,
+    created_at: "2026-10-20T09:30:00Z",
+    id,
+    rating,
+    verified_purchase: true,
+  });
+
+  it("has no rating markup without reviews", () => {
+    const base = {
+      images: [],
+      locale: "en",
+      name: "PlayStation 5",
+      pageUrl: "https://theideaiq.com/en/store/playstation-5-slim",
+      product,
+    };
+    for (const extra of [
+      {},
+      { rating: null },
+      { rating: { average: 0, count: 0 }, reviews: [] },
+    ]) {
+      const data = productJsonLd({ ...base, ...extra });
+      expect("aggregateRating" in data).toBe(false);
+      expect("review" in data).toBe(false);
+    }
+  });
+
+  it("marks up the rating and up to five named reviews", () => {
+    const data = productJsonLd({
+      images: [],
+      locale: "en",
+      name: "PlayStation 5",
+      pageUrl: "https://theideaiq.com/en/store/playstation-5-slim",
+      product,
+      rating: { average: 4.6, count: 12 },
+      reviews: [
+        review("1", "Sara"),
+        review("2", null),
+        review("3", "  "),
+        review("4", "Ali", 4),
+        review("5", "Noor"),
+        review("6", "Zaid"),
+        review("7", "Huda"),
+        review("8", "Omar"),
+      ],
+    }) as unknown as Record<string, unknown>;
+    expect(data.aggregateRating).toEqual({
+      "@type": "AggregateRating",
+      bestRating: 5,
+      ratingValue: 4.6,
+      reviewCount: 12,
+      worstRating: 1,
+    });
+    const reviews = data.review as Record<string, unknown>[];
+    expect(reviews.map((r) => (r.author as { name: string }).name)).toEqual([
+      "Sara",
+      "Ali",
+      "Noor",
+      "Zaid",
+      "Huda",
+    ]);
+    expect(reviews[1]).toEqual({
+      "@type": "Review",
+      author: { "@type": "Person", name: "Ali" },
+      datePublished: "2026-10-20",
+      reviewBody: "Great 4",
+      reviewRating: {
+        "@type": "Rating",
+        bestRating: 5,
+        ratingValue: 4,
+        worstRating: 1,
+      },
+    });
+  });
+
+  it("keeps the aggregate when no review has an author name", () => {
+    const data = productJsonLd({
+      images: [],
+      locale: "ar",
+      name: "x",
+      pageUrl: "https://theideaiq.com/ar/store/x",
+      product: { ...product, kind: "rental" },
+      rating: { average: 3, count: 1 },
+      reviews: [{ ...review("1", null), comment: null }],
+    });
+    expect("aggregateRating" in data).toBe(true);
+    expect("review" in data).toBe(false);
+  });
 });

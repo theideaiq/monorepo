@@ -2,6 +2,7 @@ import {
   getProductBySlug,
   listCategories,
   listProducts,
+  PRODUCT_CARD_COLUMNS,
   type ProductCard,
   type ProductFilters,
   productImageUrl,
@@ -9,6 +10,7 @@ import {
 import type { Tables } from "@repo/database";
 import { log } from "@repo/observability/log";
 import { publicFileUrl } from "@repo/storage";
+import { type Rating, type Review, ratingsById } from "./reviews";
 import { createPublicClient, supabaseUrl } from "./supabase";
 
 /**
@@ -92,6 +94,64 @@ export const getProductSlugs = () =>
     }
   );
 
+export type RentalCard = ProductCard & Pick<Tables<"products">, "rental_tier">;
+
+/** Newest active rental items, with the plan tier each one needs. */
+export const getRentals = (limit = 8) =>
+  fallback("rentals", [] as RentalCard[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    return rows(
+      await supabase
+        .from("products")
+        .select(`${PRODUCT_CARD_COLUMNS}, rental_tier`)
+        .eq("status", "active")
+        .eq("kind", "rental")
+        .order("created_at", { ascending: false })
+        .limit(limit)
+    );
+  });
+
+// ── Reviews ─────────────────────────────────────────────────────────────────
+
+/**
+ * Ratings of the given products in one query (`product_ratings`), keyed by
+ * product id. Products without published reviews are missing from the map.
+ */
+export const getRatings = (productIds: string[]) =>
+  fallback("product_ratings", {} as Record<string, Rating>, async () => {
+    const ids = [...new Set(productIds)];
+    const supabase = ids.length > 0 ? createPublicClient() : null;
+    if (!supabase) {
+      return {};
+    }
+    return ratingsById(
+      rows(
+        await supabase
+          .from("product_ratings")
+          .select("product_id, average, count")
+          .in("product_id", ids)
+      )
+    );
+  });
+
+/** The latest published reviews of a product, newest first. */
+export const getReviews = (productId: string, limit = 10) =>
+  fallback("product_review_list", [] as Review[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    return rows(
+      await supabase.rpc("product_review_list", {
+        max_rows: limit,
+        review_product: productId,
+      })
+    ) as Review[];
+  });
+
 /** Public URL of a product image (storage path or absolute URL). */
 export const imageUrl = (path: string | null | undefined) =>
   path && supabaseUrl() ? productImageUrl(supabaseUrl(), path) : null;
@@ -109,6 +169,7 @@ export type Plan = Pick<
   | "id"
   | "name"
   | "rental_slots"
+  | "tier"
 >;
 
 export const getPlans = (audience: "business" | "plus") =>
@@ -121,7 +182,7 @@ export const getPlans = (audience: "business" | "plus") =>
       await supabase
         .from("plans")
         .select(
-          "id, name, description, amount, currency, billing_interval, rental_slots, features_ar, features_en"
+          "id, name, description, amount, currency, billing_interval, rental_slots, tier, features_ar, features_en"
         )
         .eq("active", true)
         .eq("audience", audience)

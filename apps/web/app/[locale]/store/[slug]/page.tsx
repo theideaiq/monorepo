@@ -16,14 +16,31 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CoverImage } from "@/components/cover-image";
 import { stockLabel } from "@/components/product-card";
+import {
+  ProductReviews,
+  RatingLink,
+  SellerLine,
+} from "@/components/product-reviews";
 import { env } from "@/env";
-import { getProduct, getProductSlugs, imageUrl } from "@/lib/data";
+import {
+  getPlans,
+  getProduct,
+  getProductSlugs,
+  getRatings,
+  getReviews,
+  imageUrl,
+  type ProductDetail,
+} from "@/lib/data";
 import { appProductLink } from "@/lib/links";
 import { markdownToText } from "@/lib/markdown";
 import { localizedMetadata, siteUrl } from "@/lib/metadata";
+import { requiredPlan } from "@/lib/plus";
 import { productJsonLd, productSpecs } from "@/lib/product";
 
 export const revalidate = 300;
+
+/** Latest published reviews listed on a product page. */
+const REVIEWS_SHOWN = 10;
 
 interface ProductProps {
   params: Promise<{ locale: Locale; slug: string }>;
@@ -48,6 +65,15 @@ export const generateMetadata = async ({
   });
 };
 
+/** The Plus plan a rental item needs, when it needs more than the entry plan. */
+const rentalPlan = async ({
+  kind,
+  rental_tier: tier,
+}: Pick<ProductDetail, "kind" | "rental_tier">) =>
+  kind === "rental" && tier !== null
+    ? requiredPlan(await getPlans("plus"), tier)
+    : null;
+
 const ProductPage = async ({ params }: ProductProps) => {
   const { locale, slug } = await params;
   setRequestLocale(locale);
@@ -56,10 +82,14 @@ const ProductPage = async ({ params }: ProductProps) => {
     notFound();
   }
 
-  const [t, store] = await Promise.all([
+  const [t, store, ratings, reviews, plan] = await Promise.all([
     getTranslations({ locale, namespace: "web.store.product" }),
     getTranslations({ locale, namespace: "store" }),
+    getRatings([product.id]),
+    getReviews(product.id, REVIEWS_SHOWN),
+    rentalPlan(product),
   ]);
+  const rating = ratings[product.id] ?? null;
   const name = localized(product, "name", locale);
   const description = localized(product, "description", locale);
   const images = product.images
@@ -74,7 +104,15 @@ const ProductPage = async ({ params }: ProductProps) => {
   return (
     <div className="container mx-auto px-4 py-10">
       <JsonLd
-        code={productJsonLd({ images, locale, name, pageUrl, product })}
+        code={productJsonLd({
+          images,
+          locale,
+          name,
+          pageUrl,
+          product,
+          rating,
+          reviews,
+        })}
       />
       <Link
         className="mb-6 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
@@ -128,6 +166,12 @@ const ProductPage = async ({ params }: ProductProps) => {
             <h1 className="font-bold text-3xl tracking-tight md:text-4xl">
               {name}
             </h1>
+            <SellerLine
+              locale={locale}
+              seller={product.seller}
+              verified={product.verified}
+            />
+            {rating ? <RatingLink locale={locale} rating={rating} /> : null}
             {rental ? null : (
               <p className="flex flex-wrap items-baseline gap-3">
                 <span className="font-bold text-2xl">
@@ -168,6 +212,16 @@ const ProductPage = async ({ params }: ProductProps) => {
             <p className="text-muted-foreground text-sm">
               {rental ? t("rentNote") : t("buyNote")}
             </p>
+            {plan ? (
+              <div className="flex flex-col gap-1 rounded-lg border border-brand/60 bg-brand/10 p-3 text-sm">
+                <p className="font-medium">
+                  {t("requiresPlan", { plan: plan.name })}
+                </p>
+                <p className="text-muted-foreground">
+                  {t("requiresPlanNote", { plan: plan.name })}
+                </p>
+              </div>
+            ) : null}
             {rental ? null : (
               <p className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Truck aria-hidden="true" className="size-4" />
@@ -229,6 +283,13 @@ const ProductPage = async ({ params }: ProductProps) => {
           ) : null}
         </div>
       </div>
+
+      <ProductReviews
+        locale={locale}
+        rating={rating}
+        reviews={reviews}
+        writeUrl={buyUrl}
+      />
     </div>
   );
 };

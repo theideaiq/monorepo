@@ -279,7 +279,27 @@
         "back": "Back to the store",
         "plusBack": "Back to IDEA Plus",
         "image": "{name}, image {number}",
-        "delivery": "Delivery to all 19 governorates of Iraq."
+        "delivery": "Delivery to all 19 governorates of Iraq.",
+        "seller": "Sold by {seller}",
+        "verifiedSeller": "Verified seller",
+        "requiresPlan": "Needs {plan} or a higher plan",
+        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade in the app."
+      },
+      "rating": {
+        "label": "Rated {rating} out of 5",
+        "count": "{count, plural, one {{reviews} review} other {{reviews} reviews}}",
+        "short": "{rating} ({reviews})"
+      },
+      "reviews": {
+        "title": "Customer reviews",
+        "summary": "{rating} out of 5",
+        "basedOn": "{count, plural, one {Based on {reviews} review} other {Based on {reviews} reviews}}",
+        "empty": "No reviews yet. Bought or rented this item? Be the first to review it.",
+        "write": "Write a review in the app",
+        "writeNote": "Reviews are written in The IDEA app by signed-in customers. Reviews from people who bought or rented the item are marked as verified.",
+        "verified": "Verified purchase",
+        "anonymous": "A customer",
+        "latest": "Latest reviews"
       }
     },
     "plus": {
@@ -327,7 +347,14 @@
         "title": "From the rental catalog",
         "description": "A preview of what you can rent. The full catalog is in the app.",
         "browse": "Browse the full catalog",
-        "empty": "The rental catalog is being stocked."
+        "empty": "The rental catalog is being stocked.",
+        "needsPlan": "{plan} and above"
+      },
+      "tiers": {
+        "title": "What each plan can rent",
+        "description": "Most of the catalog is open to every plan. Some items, such as new releases and collector's editions, need a higher plan; they are marked with the plan they need. Every plan includes everything the plans below it can rent.",
+        "entry": "Every item without a plan mark.",
+        "higher": "Also the items marked “{plan}”."
       }
     },
     "academy": {
@@ -627,10 +654,19 @@
             {
               "question": "How do I delete my account?",
               "answer": "You can delete your account from the app's settings. Some records, such as invoices, are kept as the law requires."
+            },
+            {
+              "question": "How do I get help with an order or a rental?",
+              "answer": "Sign in to The IDEA app and open a support ticket from the Support page. You can follow our replies there. Without an account, email hi@theideaiq.com or use the contact form."
             }
           ]
         }
-      ]
+      ],
+      "support": {
+        "title": "Need help with an order or a rental?",
+        "description": "If you have an IDEA account, sign in to the app and open a support ticket. You can follow our replies and add details there, and we'll notify you when we answer.",
+        "cta": "Open a support ticket"
+      }
     },
     "contact": {
       "meta": {
@@ -645,7 +681,10 @@
         "telegram": "Telegram",
         "telegramNote": "Chat with Droid, our bot, or join The Club.",
         "location": "Location",
-        "address": "Baghdad, Iraq"
+        "address": "Baghdad, Iraq",
+        "support": "Support tickets",
+        "supportNote": "Signed in? Open a ticket in the app to get help with an order, a rental, IDEA Plus or your account, and follow our replies there.",
+        "supportCta": "Open a support ticket"
       },
       "form": {
         "title": "Send us a message",

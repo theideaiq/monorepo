@@ -9,9 +9,10 @@ import { PlanCard } from "@/components/plan-card";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
 import { env } from "@/env";
-import { getPlans, getProducts } from "@/lib/data";
+import { getPlans, getRatings, getRentals } from "@/lib/data";
 import { appLink } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
+import { plansByTier, requiredPlan } from "@/lib/plus";
 
 export const revalidate = 300;
 
@@ -36,10 +37,9 @@ const Plus = async ({ params }: PlusProps) => {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "web.plus" });
-  const [plans, rentals] = await Promise.all([
-    getPlans("plus"),
-    getProducts({ kind: "rental", limit: 8 }),
-  ]);
+  const [plans, rentals] = await Promise.all([getPlans("plus"), getRentals(8)]);
+  const ratings = await getRatings(rentals.map((product) => product.id));
+  const tiers = plansByTier(plans);
   const steps = t.raw("how.steps") as Steps;
   const plusUrl = appLink(env.NEXT_PUBLIC_APP_URL, locale, "/plus");
 
@@ -103,6 +103,28 @@ const Plus = async ({ params }: PlusProps) => {
         )}
       </Section>
 
+      {tiers.length > 1 ? (
+        <Section description={t("tiers.description")} title={t("tiers.title")}>
+          <ol className="grid gap-4 md:grid-cols-3">
+            {tiers.map((plan, index) => (
+              <li
+                className="flex flex-col gap-3 rounded-xl border p-5"
+                key={plan.id}
+              >
+                <span className="w-fit rounded-full bg-brand px-3 py-1 font-semibold text-brand-foreground text-sm">
+                  {plan.name}
+                </span>
+                <p className="text-muted-foreground text-sm">
+                  {index === 0
+                    ? t("tiers.entry")
+                    : t("tiers.higher", { plan: plan.name })}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </Section>
+      ) : null}
+
       <Section
         description={t("catalog.description")}
         title={t("catalog.title")}
@@ -110,13 +132,20 @@ const Plus = async ({ params }: PlusProps) => {
         {rentals.length > 0 ? (
           <>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {rentals.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  locale={locale}
-                  product={product}
-                />
-              ))}
+              {rentals.map((product) => {
+                const plan = requiredPlan(plans, product.rental_tier);
+                return (
+                  <ProductCard
+                    key={product.id}
+                    locale={locale}
+                    planLabel={
+                      plan ? t("catalog.needsPlan", { plan: plan.name }) : null
+                    }
+                    product={product}
+                    rating={ratings[product.id]}
+                  />
+                );
+              })}
             </div>
             <div className="mt-8 flex justify-center">
               <Button asChild variant="outline">
