@@ -1,24 +1,3 @@
--- The IDEA catalog import (part 1 of 4, Megastore: tech, gaming and books): 51 products.
--- Paste into Supabase → SQL Editor and run. Safe to run again: products are
--- matched by slug and their content updated; stock, status and featured
--- (managed in the back office) are only set the first time.
-begin;
-
-insert into public.product_categories (slug, name_ar, name_en, kind, position) values
-  ('gaming', 'الألعاب', 'Gaming', 'sale'::public.product_kind, 1),
-  ('laptops', 'الحواسيب', 'Laptops', 'sale'::public.product_kind, 2),
-  ('phones', 'الهواتف', 'Phones', 'sale'::public.product_kind, 3),
-  ('books', 'الكتب', 'Books', 'sale'::public.product_kind, 4),
-  ('rent-games', 'ألعاب للإيجار', 'Games to rent', 'rental'::public.product_kind, 5),
-  ('rent-books', 'كتب للإيجار', 'Books to rent', 'rental'::public.product_kind, 6),
-  ('vinyl', 'أسطوانات الفينيل', 'Vinyl records', 'sale'::public.product_kind, 7),
-  ('cds-and-cassettes', 'الأقراص المدمجة والكاسيت', 'CDs and cassettes', 'sale'::public.product_kind, 8),
-  ('audio', 'الصوتيات', 'Audio', 'sale'::public.product_kind, 9),
-  ('cameras', 'الكاميرات', 'Cameras', 'sale'::public.product_kind, 10),
-  ('gadgets', 'أجهزة ذكية', 'Gadgets', 'sale'::public.product_kind, 11),
-  ('rent-films', 'أفلام للإيجار', 'Films to rent', 'rental'::public.product_kind, 12)
-on conflict (slug) do update set name_ar = excluded.name_ar, name_en = excluded.name_en;
-
 insert into public.products
   (slug, kind, status, category_id, name_ar, name_en, description_ar, description_en,
    price, condition, stock_count, images, details, featured, rental_tier)
@@ -33,7 +12,7 @@ from (values
   ('sony-cyber-shot-dsc-h70', 'sale', 'draft', 'cameras', 'Sony Cyber-shot DSC-H70 (أسود)', 'Sony Cyber-shot DSC-H70 (black)', 'كاميرا صغيرة بدقة 16 ميغابكسل وتقريب بصري 10x. علبة مفتوحة: فُتحت من قبل، وفحصناها وهي كاملة.', '16-megapixel compact camera with 10x optical zoom. Open box: opened before, checked by us and complete.', 159750, 'open_box', 0, '{}'::text[], '{"Brand": "Sony", "Color": "Black"}', false, null::smallint),
   ('playstation-classic', 'sale', 'active', 'gaming', 'PlayStation Classic', 'PlayStation Classic', 'جهاز PlayStation الأصلي بحجم صغير، مع 20 لعبة مدمجة ويدَي تحكم.', 'The original PlayStation in miniature, with 20 games built in and two controllers.', 199750, 'new', 1, array['https://upload.wikimedia.org/wikipedia/commons/a/aa/PlayStation_Classic_Konsole_%2B_Controller.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original']::text[], '{"Brand": "Sony"}', false, null::smallint),
   ('ps-one', 'sale', 'active', 'gaming', 'PS one', 'PS one', 'الإصدار المصغّر من جهاز PlayStation الأصلي. مستعمل: استُخدم من قبل وفحصناه.', 'The compact redesign of the original PlayStation. Used: played before and checked by us.', 69750, 'used', 1, array['https://upload.wikimedia.org/wikipedia/commons/2/2b/Sony-PSone-Console-FL.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original']::text[], '{"Brand": "Sony"}', false, null::smallint),
-  ('playstation-3-slim', 'sale', 'draft', 'gaming', 'PlayStation 3 Slim', 'PlayStation 3 Slim', 'جهاز PlayStation 3 Slim. علبة مفتوحة: فُتحت من قبل، وفحصناها وهي كاملة.', 'PlayStation 3 Slim console. Open box: opened before, checked by us and complete.', 199750, 'open_box', 0, array['https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/PS3_consoles_montage_HQ.png/3840px-PS3_consoles_montage_HQ.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail']::text[], '{"Brand": "Sony"}', false, null::smallint),
+  ('playstation-3-slim', 'sale', 'draft', 'gaming', 'PlayStation 3 Slim', 'PlayStation 3 Slim', 'جهاز PlayStation 3 Slim. علبة مفتوحة: فُتحت من قبل، وفحصناها وهي كاملة.', 'PlayStation 3 Slim console. Open box: opened before, checked by us and complete.', 199750, 'open_box', 0, array[]::text[], '{"Brand": "Sony"}', false, null::smallint),
   ('akai-gx-747', 'sale', 'active', 'audio', 'مسجّل بكرات Akai GX-747', 'Akai GX-747 reel-to-reel tape deck', 'مسجّل بكرات فاخر بعكس تلقائي ورؤوس GX الزجاجية من Akai، لهواة الاقتناء. مستعمل: استُخدم من قبل وفحصناه.', 'Flagship auto-reverse reel-to-reel deck with Akai''s GX glass heads, for collectors. Used: played before and checked by us.', 5874750, 'used', 1, '{}'::text[], '{"Brand": "Akai"}', false, null::smallint),
   ('jbl-l112', 'sale', 'active', 'audio', 'سماعات JBL L112', 'JBL L112 speakers', 'سماعات رفّ كلاسيكية ثلاثية القنوات من تشكيلة JBL في أواخر السبعينيات. مستعمل: استُخدم من قبل وفحصناه.', 'Classic three-way bookshelf speakers from JBL''s late-1970s line. Used: played before and checked by us.', 2939750, 'used', 1, '{}'::text[], '{"Brand": "JBL"}', false, null::smallint),
   ('national-panasonic-rq-2106', 'sale', 'active', 'audio', 'مسجّل كاسيت National Panasonic RQ-2106', 'National Panasonic RQ-2106 cassette recorder', 'مسجّل كاسيت محمول كلاسيكي. مستعمل: استُخدم من قبل وفحصناه.', 'Vintage portable cassette recorder. Used: played before and checked by us.', 69750, 'used', 1, '{}'::text[], '{"Brand": "National Panasonic"}', false, null::smallint),
@@ -61,7 +40,7 @@ from (values
   ('dualsense-wireless-controller', 'sale', 'active', 'gaming', 'يد تحكم DualSense اللاسلكية', 'DualSense wireless controller', 'يد تحكم PS5 مع اهتزاز لمسي ومحفّزات تكيّفية.', 'PS5 controller with haptic feedback and adaptive triggers.', 99750, 'new', 3, array['https://upload.wikimedia.org/wikipedia/commons/3/3c/Playstation_DualSense_Controller.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original']::text[], '{"Platform": "PS5"}', false, null::smallint),
   ('dualsense-edge', 'sale', 'active', 'gaming', 'يد تحكم DualSense Edge', 'DualSense Edge wireless controller', 'يد تحكم احترافية بعصي قابلة للتبديل وأزرار خلفية.', 'Pro controller with swappable sticks and back buttons.', 289750, 'new', 3, array['https://upload.wikimedia.org/wikipedia/commons/a/ac/DualSense_Edge_Controller.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original']::text[], '{"Platform": "PS5"}', false, null::smallint),
   ('playstation-portal', 'sale', 'active', 'gaming', 'PlayStation Portal', 'PlayStation Portal remote player', 'العب بجهاز PS5 عبر الواي فاي على شاشة 8 إنش.', 'Play your PS5 over Wi-Fi on an 8-inch screen.', 299750, 'new', 3, array['https://upload.wikimedia.org/wikipedia/commons/4/45/PlayStation_Portal.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled']::text[], '{"Platform": "PS5"}', true, null::smallint),
-  ('nintendo-switch-oled', 'sale', 'active', 'gaming', 'Nintendo Switch – طراز OLED', 'Nintendo Switch – OLED model', 'جهاز محمول ومنزلي بشاشة OLED مقاس 7 إنش.', 'Handheld and TV console with a 7-inch OLED screen.', 459750, 'new', 3, array['https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/Nintendo_Switch_logo.svg/960px-Nintendo_Switch_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail']::text[], '{"Platform": "Nintendo Switch"}', true, null::smallint),
+  ('nintendo-switch-oled', 'sale', 'active', 'gaming', 'Nintendo Switch – طراز OLED', 'Nintendo Switch – OLED model', 'جهاز محمول ومنزلي بشاشة OLED مقاس 7 إنش.', 'Handheld and TV console with a 7-inch OLED screen.', 459750, 'new', 3, array[]::text[], '{"Platform": "Nintendo Switch"}', true, null::smallint),
   ('zelda-tears-of-the-kingdom', 'sale', 'active', 'gaming', 'The Legend of Zelda: Tears of the Kingdom (Switch)', 'The Legend of Zelda: Tears of the Kingdom (Switch)', 'مغامرة لينك في سماء هايرول وأعماقها.', 'Link''s adventure across the skies and depths of Hyrule.', 89750, 'new', 3, array['https://upload.wikimedia.org/wikipedia/en/f/fb/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled']::text[], '{"Platform": "Nintendo Switch"}', false, null::smallint),
   ('mario-kart-8-deluxe', 'sale', 'active', 'gaming', 'Mario Kart 8 Deluxe (Switch)', 'Mario Kart 8 Deluxe (Switch)', 'سباقات كارت لكل العائلة.', 'Kart racing for the whole family.', 79750, 'new', 3, array['https://upload.wikimedia.org/wikipedia/en/b/b5/MarioKart8Boxart.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled']::text[], '{"Platform": "Nintendo Switch"}', false, null::smallint),
   ('animal-crossing-new-horizons', 'sale', 'active', 'gaming', 'Animal Crossing: New Horizons (Switch)', 'Animal Crossing: New Horizons (Switch)', 'ابنِ حياتك على جزيرتك على راحتك.', 'Build your island life at your own pace.', 79750, 'new', 3, array['https://upload.wikimedia.org/wikipedia/en/1/1f/Animal_Crossing_New_Horizons.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled']::text[], '{"Platform": "Nintendo Switch"}', false, null::smallint),
@@ -87,5 +66,3 @@ on conflict (slug) do update set
   description_ar = excluded.description_ar, description_en = excluded.description_en,
   price = excluded.price, condition = excluded.condition, images = excluded.images,
   details = excluded.details, rental_tier = excluded.rental_tier;
-
-commit;
