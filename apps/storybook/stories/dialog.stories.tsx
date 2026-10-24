@@ -13,8 +13,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 /**
  * A window overlaid on either the primary window or another dialog window,
  * rendering the content underneath inert.
+ *
+ * `meta` is annotated (not inferred): when the install resolves a nested copy
+ * of @radix-ui/react-dialog, its inferred type can't be named portably (TS2883).
  */
-const meta = {
+const meta: Meta<typeof Dialog> = {
   argTypes: {},
   component: Dialog,
   parameters: {
@@ -49,7 +52,7 @@ const meta = {
   ),
   tags: ["autodocs"],
   title: "ui/Dialog",
-} satisfies Meta<typeof Dialog>;
+};
 
 export default meta;
 

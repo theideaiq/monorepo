@@ -1,0 +1,41 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "include": ["files", "dependencies", "unlisted"],
+  "ignoreDependencies": [
+    "import-in-the-middle",
+    "require-in-the-middle",
+    "sharp",
+    "tailwindcss",
+    "@tailwindcss/postcss",
+    "postcss-load-config"
+  ],
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/*.ts", "scripts/*.mjs"],
+      "ignoreDependencies": ["@repo/typescript-config"]
+    },
+    "apps/api": {
+      "entry": ["scripts/*.{js,mjs,ts}"]
+    },
+    "apps/app": {
+      "ignoreDependencies": ["@capacitor/android", "@capacitor/ios"]
+    },
+    "apps/email": {
+      "ignoreDependencies": [
+        "@react-email/components",
+        "@repo/email",
+        "react",
+        "@types/react",
+        "next"
+      ]
+    },
+    "packages/email": {
+      "ignoreDependencies": ["react-dom", "@types/react-dom"]
+    }
+  },
+  "ignore": [
+    "packages/design-system/components/ui/**",
+    "apps/web/public/**",
+    "packages/database/supabase/functions/**"
+  ]
+}
