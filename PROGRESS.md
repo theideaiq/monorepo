@@ -195,3 +195,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   delivery or at pickup (on). Cash orders are confirmed at once and paid
   when staff press **Mark cash collected**. Owner step: set the pickup
   address and hours, and check the zone fees.
+- 2026-10-24: **Sell to us** (trade-ins): customers send an item with
+  photos from Spark (`/sell`), staff review it in the back office
+  (Trade-ins), make an offer the customer accepts or declines, and can turn
+  a completed request into a draft product. Migration
+  `20261120000300_trade_ins.sql` (private `trade-ins` bucket). The
+  website's store page links to it.
+- 2026-10-24: **WhatsApp order updates** through the Meta WhatsApp Cloud
+  API for customers who opt in (Spark → Settings): order confirmed, order
+  shipped, rental due soon, trade-in offer. Off until the owner creates the
+  templates and sets `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID`
+  (`ARCHITECTURE_AND_INTEGRATIONS.md` 4.4).

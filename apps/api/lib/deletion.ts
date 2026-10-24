@@ -26,7 +26,8 @@ interface Clients {
  *
  * Deleting the auth user cascades to the profile and memberships and
  * clears authorship columns (see the account deletion migration). The
- * avatar folder is removed first, as files have no foreign key to users.
+ * avatar and trade-in photo folders are removed first, as files have no
+ * foreign key to users.
  */
 export const deleteAccount = async (
   { admin, user }: Clients,
@@ -40,7 +41,13 @@ export const deleteAccount = async (
     return { organizations: blockers, status: "blocked" };
   }
 
-  const removedFiles = await removeFolder(admin, buckets.avatars.id, userId);
+  // Avatars and "Sell to us" photos; the trade-in rows go with the user.
+  const removed = await Promise.all(
+    [buckets.avatars.id, buckets.tradeIns.id].map((bucket) =>
+      removeFolder(admin, bucket, userId)
+    )
+  );
+  const removedFiles = removed.reduce((total, count) => total + count, 0);
 
   // The database still refuses if the user became a sole owner meanwhile.
   const { error: deleteError } = await admin.auth.admin.deleteUser(userId);

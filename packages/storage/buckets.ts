@@ -39,6 +39,13 @@ export const buckets = {
     mimeTypes: ["image/png", "image/jpeg", "application/pdf"],
     public: false,
   },
+  /** "Sell to us" photos under "<user id>/…"; the customer and support read them. */
+  tradeIns: {
+    id: "trade-ins",
+    maxBytes: 5 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp"],
+    public: false,
+  },
 } as const;
 
 export type BucketKey = keyof typeof buckets;

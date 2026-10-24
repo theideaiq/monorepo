@@ -503,6 +503,7 @@ export type Database = {
           pushed_at: string | null;
           read_at: string | null;
           user_id: string;
+          whatsapp_sent_at: string | null;
         };
         Insert: {
           created_at?: string;
@@ -514,6 +515,7 @@ export type Database = {
           pushed_at?: string | null;
           read_at?: string | null;
           user_id: string;
+          whatsapp_sent_at?: string | null;
         };
         Update: {
           created_at?: string;
@@ -525,6 +527,7 @@ export type Database = {
           pushed_at?: string | null;
           read_at?: string | null;
           user_id?: string;
+          whatsapp_sent_at?: string | null;
         };
         Relationships: [];
       };
@@ -1086,6 +1089,8 @@ export type Database = {
           locale: string;
           marketing_opt_in: boolean;
           updated_at: string;
+          whatsapp_opt_in: boolean;
+          whatsapp_phone: string | null;
         };
         Insert: {
           avatar_url?: string | null;
@@ -1097,6 +1102,8 @@ export type Database = {
           locale?: string;
           marketing_opt_in?: boolean;
           updated_at?: string;
+          whatsapp_opt_in?: boolean;
+          whatsapp_phone?: string | null;
         };
         Update: {
           avatar_url?: string | null;
@@ -1108,6 +1115,8 @@ export type Database = {
           locale?: string;
           marketing_opt_in?: boolean;
           updated_at?: string;
+          whatsapp_opt_in?: boolean;
+          whatsapp_phone?: string | null;
         };
         Relationships: [];
       };
@@ -1176,6 +1185,7 @@ export type Database = {
       rentals: {
         Row: {
           due_at: string | null;
+          due_reminder_at: string | null;
           id: string;
           name_ar: string;
           name_en: string;
@@ -1190,6 +1200,7 @@ export type Database = {
         };
         Insert: {
           due_at?: string | null;
+          due_reminder_at?: string | null;
           id?: string;
           name_ar: string;
           name_en: string;
@@ -1204,6 +1215,7 @@ export type Database = {
         };
         Update: {
           due_at?: string | null;
+          due_reminder_at?: string | null;
           id?: string;
           name_ar?: string;
           name_en?: string;
@@ -1666,6 +1678,86 @@ export type Database = {
           },
         ];
       };
+      trade_ins: {
+        Row: {
+          asking_price: number | null;
+          category: Database["public"]["Enums"]["trade_in_category"];
+          closed_at: string | null;
+          condition: Database["public"]["Enums"]["trade_in_condition"];
+          contact_phone: string;
+          created_at: string;
+          description: string | null;
+          id: string;
+          number: number;
+          offer_amount: number | null;
+          offer_note: string | null;
+          offered_at: string | null;
+          payout: Database["public"]["Enums"]["trade_in_payout"];
+          photos: string[];
+          product_id: string | null;
+          responded_at: string | null;
+          reviewed_by: string | null;
+          status: Database["public"]["Enums"]["trade_in_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          asking_price?: number | null;
+          category: Database["public"]["Enums"]["trade_in_category"];
+          closed_at?: string | null;
+          condition: Database["public"]["Enums"]["trade_in_condition"];
+          contact_phone: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          number?: never;
+          offer_amount?: number | null;
+          offer_note?: string | null;
+          offered_at?: string | null;
+          payout?: Database["public"]["Enums"]["trade_in_payout"];
+          photos?: string[];
+          product_id?: string | null;
+          responded_at?: string | null;
+          reviewed_by?: string | null;
+          status?: Database["public"]["Enums"]["trade_in_status"];
+          title: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          asking_price?: number | null;
+          category?: Database["public"]["Enums"]["trade_in_category"];
+          closed_at?: string | null;
+          condition?: Database["public"]["Enums"]["trade_in_condition"];
+          contact_phone?: string;
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          number?: never;
+          offer_amount?: number | null;
+          offer_note?: string | null;
+          offered_at?: string | null;
+          payout?: Database["public"]["Enums"]["trade_in_payout"];
+          photos?: string[];
+          product_id?: string | null;
+          responded_at?: string | null;
+          reviewed_by?: string | null;
+          status?: Database["public"]["Enums"]["trade_in_status"];
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "trade_ins_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       webhook_events: {
         Row: {
           event_key: string;
@@ -1773,10 +1865,31 @@ export type Database = {
           user_id: string;
         }[];
       };
+      claim_whatsapp_notifications: {
+        Args: {
+          max_age?: string;
+          max_rows?: number;
+          notification_ids?: string[];
+        };
+        Returns: {
+          data: Json;
+          event: string;
+          first_name: string;
+          id: string;
+          link: string;
+          locale: string;
+          phone: string;
+          user_id: string;
+        }[];
+      };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
       complete_order_payment: {
         Args: { order_id: string };
         Returns: undefined;
+      };
+      complete_trade_in: {
+        Args: { create_product?: boolean; trade_in: string };
+        Returns: string;
       };
       create_order: {
         Args: {
@@ -1924,6 +2037,13 @@ export type Database = {
           tier: number;
         }[];
       };
+      my_whatsapp_settings: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          opt_in: boolean;
+          phone: string;
+        }[];
+      };
       newsletter_audience: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -1936,6 +2056,7 @@ export type Database = {
           user_id: string;
         }[];
       };
+      notify_rentals_due_soon: { Args: { within?: string }; Returns: number };
       pending_invitations: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -1977,6 +2098,7 @@ export type Database = {
         Args: { rental_product: string };
         Returns: {
           due_at: string | null;
+          due_reminder_at: string | null;
           id: string;
           name_ar: string;
           name_en: string;
@@ -1995,6 +2117,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      respond_to_trade_in_offer: {
+        Args: { accept: boolean; trade_in: string };
+        Returns: Database["public"]["Enums"]["trade_in_status"];
       };
       review_queue: {
         Args: Record<PropertyKey, never>;
@@ -2058,6 +2184,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      withdraw_trade_in: { Args: { trade_in: string }; Returns: undefined };
     };
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
@@ -2070,7 +2197,8 @@ export type Database = {
         | "support"
         | "plus"
         | "promo"
-        | "system";
+        | "system"
+        | "trade_in";
       order_fulfilment: "delivery" | "pickup";
       order_payment_method: "online" | "cash_on_delivery";
       order_status:
@@ -2132,6 +2260,24 @@ export type Database = {
       ticket_priority: "low" | "normal" | "high" | "urgent";
       ticket_status: "open" | "pending" | "resolved" | "closed";
       ticket_topic: "order" | "rental" | "plus" | "account" | "other";
+      trade_in_category:
+        | "vinyl"
+        | "cd_cassette"
+        | "game"
+        | "book"
+        | "console_tech"
+        | "other";
+      trade_in_condition: "sealed" | "like_new" | "good" | "fair" | "poor";
+      trade_in_payout: "cash" | "store_credit";
+      trade_in_status:
+        | "submitted"
+        | "reviewing"
+        | "offer_made"
+        | "accepted"
+        | "declined"
+        | "completed"
+        | "rejected"
+        | "withdrawn";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -2273,6 +2419,7 @@ export const Constants = {
         "plus",
         "promo",
         "system",
+        "trade_in",
       ],
       order_fulfilment: ["delivery", "pickup"],
       order_payment_method: ["online", "cash_on_delivery"],
@@ -2342,6 +2489,26 @@ export const Constants = {
       ticket_priority: ["low", "normal", "high", "urgent"],
       ticket_status: ["open", "pending", "resolved", "closed"],
       ticket_topic: ["order", "rental", "plus", "account", "other"],
+      trade_in_category: [
+        "vinyl",
+        "cd_cassette",
+        "game",
+        "book",
+        "console_tech",
+        "other",
+      ],
+      trade_in_condition: ["sealed", "like_new", "good", "fair", "poor"],
+      trade_in_payout: ["cash", "store_credit"],
+      trade_in_status: [
+        "submitted",
+        "reviewing",
+        "offer_made",
+        "accepted",
+        "declined",
+        "completed",
+        "rejected",
+        "withdrawn",
+      ],
     },
   },
 } as const;

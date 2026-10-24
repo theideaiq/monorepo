@@ -22,6 +22,7 @@ import { DeleteAccountCard } from "@/components/account/delete-account";
 import { PageHeader } from "@/components/page-header";
 import { ProfileForm } from "@/components/profile-form";
 import { SectionSpinner } from "@/components/states";
+import { WhatsAppSettingsCard } from "@/components/whatsapp-settings";
 import { useProfile } from "@/lib/queries";
 
 const THEMES = ["light", "dark", "system"] as const;
@@ -121,6 +122,7 @@ export const Settings = () => {
             )}
           </CardContent>
         </Card>
+        <WhatsAppSettingsCard />
         <Appearance />
         <DeleteAccountCard />
       </div>

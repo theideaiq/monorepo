@@ -306,6 +306,11 @@
         "verified": "شراء موثّق",
         "anonymous": "أحد العملاء",
         "latest": "أحدث المراجعات"
+      },
+      "sell": {
+        "title": "بِع لنا",
+        "description": "أسطوانات أو أقراص أو ألعاب أو كتب أو أجهزة لم تعد تحتاجها؟ أرسل لنا صورها وسنقدّم لك عرضاً نقداً أو رصيداً في المتجر.",
+        "cta": "احصل على عرض"
       }
     },
     "plus": {
@@ -818,7 +823,8 @@
       "cartCount": "في السلة: {count}",
       "account": "الحساب",
       "wishlist": "المفضّلة",
-      "support": "الدعم"
+      "support": "الدعم",
+      "sell": "بِع لنا"
     },
     "roles": {
       "owner": "مالك",
@@ -1331,6 +1337,19 @@
           "deleteConfirm": "حذف {name}",
           "failed": "لم ينجح ذلك. حاول مرة أخرى."
         }
+      },
+      "whatsapp": {
+        "title": "تحديثات واتساب",
+        "description": "استلم تحديثات الطلبات والإعارات والبيع لنا على واتساب.",
+        "phone": "رقم واتساب",
+        "phonePlaceholder": "0770 123 4567",
+        "optIn": "أرسلوا لي التحديثات على واتساب",
+        "optInHint": "تأكيد الطلبات والشحن وتذكيرات الإعارة وعروض الشراء. يمكنك إيقافها في أي وقت.",
+        "problems": {
+          "phone": "أدخل رقم موبايل صحيحاً.",
+          "phoneRequired": "أضف رقم واتساب لتفعيل التحديثات."
+        },
+        "failed": "تعذّر حفظ إعدادات واتساب."
       }
     },
     "errors": {
@@ -1471,6 +1490,55 @@
       "share": {
         "copied": "نُسخ الرابط"
       }
+    },
+    "sell": {
+      "title": "بِع لنا",
+      "description": "عندك أسطوانات أو أقراص أو ألعاب أو كتب أو أجهزة لم تعد تحتاجها؟ أخبرنا عنها وسنقدّم لك عرضاً نقداً أو رصيداً في المتجر.",
+      "form": {
+        "title": "ماذا تريد أن تبيع؟",
+        "description": "أضف صوراً واضحة وحالة صادقة، وسنرد خلال أيام قليلة.",
+        "category": "الفئة",
+        "condition": "الحالة",
+        "itemTitle": "العنوان",
+        "itemTitlePlaceholder": "الفنان والألبوم، أو اللعبة، أو الكتاب، أو الطراز",
+        "itemDescription": "التفاصيل",
+        "itemDescriptionPlaceholder": "الإصدار، السنة، ما يتضمنه، أي علامات أو عيوب",
+        "askingPrice": "السعر الذي تطلبه (د.ع)",
+        "askingPriceHint": "اختياري. اتركه فارغاً وسنقترح سعراً.",
+        "phone": "رقم الموبايل",
+        "phonePlaceholder": "0770 123 4567",
+        "phoneHint": "سنتصل بك أو نراسلك بخصوص العرض.",
+        "payout": "طريقة الدفع لك",
+        "photos": "الصور",
+        "photosChosen": "تم اختيار {count} من {max} صور.",
+        "photosHint": "حتى {max} صور (JPEG أو PNG أو WebP).",
+        "failed": "تعذّر إرسال طلبك. حاول مرة أخرى.",
+        "submitted": "شكراً! استلمنا طلبك وسنعود إليك.",
+        "submitting": "جارٍ الإرسال…",
+        "submit": "أرسل للحصول على عرض"
+      },
+      "problems": {
+        "title": "اكتب ما تريد بيعه.",
+        "phone": "أدخل رقم موبايل صحيحاً.",
+        "askingPrice": "أدخل السعر رقماً صحيحاً بالدينار العراقي.",
+        "tooManyPhotos": "اختر {max} صور كحد أقصى.",
+        "photoTooLarge": "يجب أن تكون كل صورة أصغر من الحد المسموح.",
+        "photoType": "يجب أن تكون الصور بصيغة JPEG أو PNG أو WebP."
+      },
+      "list": {
+        "title": "طلباتك",
+        "empty": "لم ترسل أي شيء بعد.",
+        "photo": "الصورة {number}",
+        "meta": "#{number} · {category} · {date}",
+        "asking": "المطلوب {price}",
+        "offer": "عرضنا: {amount}",
+        "note": "ملاحظة من The IDEA",
+        "accept": "قبول العرض",
+        "decline": "رفض",
+        "withdraw": "سحب الطلب",
+        "withdrawing": "جارٍ السحب…",
+        "actionFailed": "لم تنجح العملية. حدّث الصفحة وحاول مجدداً."
+      }
     }
   },
   "store": {
@@ -1610,6 +1678,22 @@
         "order_ready_for_pickup": {
           "title": "جاهز للاستلام",
           "body": "الطلب رقم {number} جاهز للاستلام من المتجر."
+        },
+        "trade_in_offer": {
+          "title": "قدّمنا لك عرضاً",
+          "body": "عرضنا للطلب #{number}، {title}: {amount}. افتحه لقبوله أو رفضه."
+        },
+        "trade_in_rejected": {
+          "title": "بخصوص قطعتك",
+          "body": "لا يمكننا أخذ {title} هذه المرة. راجع الملاحظة في طلبك."
+        },
+        "trade_in_completed": {
+          "title": "اكتمل البيع",
+          "body": "شكراً لك! اكتمل بيع {title}."
+        },
+        "rental_due_soon": {
+          "title": "موعد إرجاع الإعارة قريب",
+          "body": "موعد إرجاع {name}{hasDue, select, yes { هو {due}} other { قريب}}."
         }
       },
       "kinds": {
@@ -1618,7 +1702,8 @@
         "support": "تحديث من الدعم",
         "plus": "تحديث على The IDEA Plus",
         "promo": "جديد The IDEA",
-        "system": "تنبيه"
+        "system": "تنبيه",
+        "trade_in": "تحديث «بِع لنا»"
       },
       "fallbackBody": "افتحه لمعرفة التفاصيل."
     },
@@ -1648,6 +1733,41 @@
       "online": "دفع إلكتروني",
       "cash_on_delivery": "الدفع عند الاستلام",
       "cash_at_pickup": "الدفع في المتجر"
+    },
+    "tradeIn": {
+      "category": {
+        "vinyl": "أسطوانة فينيل",
+        "cd_cassette": "قرص مدمج أو كاسيت",
+        "game": "لعبة فيديو",
+        "book": "كتاب",
+        "console_tech": "جهاز ألعاب أو تقنية",
+        "other": "شيء آخر"
+      },
+      "condition": {
+        "sealed": "مغلّف",
+        "like_new": "كالجديد",
+        "good": "جيد",
+        "fair": "مقبول",
+        "poor": "مستهلك"
+      },
+      "payout": {
+        "cash": "نقداً",
+        "store_credit": "رصيد في المتجر"
+      },
+      "status": {
+        "submitted": "تم الاستلام",
+        "reviewing": "قيد المراجعة",
+        "offer_made": "تم تقديم عرض",
+        "accepted": "تم قبول العرض",
+        "declined": "تم رفض العرض",
+        "completed": "مكتمل",
+        "rejected": "غير مقبول",
+        "withdrawn": "تم السحب"
+      }
+    },
+    "whatsapp": {
+      "customer": "بك",
+      "noTracking": "سنرسله إليك قريباً"
     }
   },
   "admin": {
@@ -1671,7 +1791,8 @@
       "staff": "فريق العمل",
       "audit": "سجلّ التدقيق",
       "support": "الدعم",
-      "reviews": "التقييمات"
+      "reviews": "التقييمات",
+      "tradeIns": "الشراء من العملاء"
     },
     "roles": {
       "superadmin": "مشرف عام",
@@ -2694,6 +2815,63 @@
       "hide": "إخفاء",
       "unhide": "نشر",
       "deleteDescription": "سيُحذف التقييم نهائيًا. لإزالته من المتجر مع الاحتفاظ به، أخفِه بدلًا من ذلك."
+    },
+    "tradeIns": {
+      "title": "الشراء من العملاء",
+      "detail": "طلب بيع",
+      "count": "المجموع: {count}",
+      "search": "رقم الطلب أو العنوان",
+      "status": "الحالة",
+      "views": {
+        "open": "المفتوحة (بانتظارنا أو بانتظار العميل)",
+        "waiting": "بانتظارنا",
+        "all": "كل الطلبات"
+      },
+      "category": "الفئة",
+      "anyCategory": "كل الفئات",
+      "empty": "لا توجد طلبات مطابقة.",
+      "request": "الطلب",
+      "customer": "العميل",
+      "asking": "المطلوب",
+      "offer": "العرض",
+      "received": "تاريخ الاستلام",
+      "number": "#{number}",
+      "photoCount": "{count} صور",
+      "unnamedCustomer": "عميل",
+      "receivedOn": "استُلم {date}",
+      "item": "القطعة",
+      "condition": "الحالة",
+      "payout": "طريقة الدفع",
+      "noAskingPrice": "لم يحدد سعراً",
+      "photos": "الصور",
+      "noPhotos": "لا توجد صور.",
+      "photoAlt": "الصورة {number}",
+      "photoMissing": "تعذّر تحميل هذه الصورة.",
+      "details": "التفاصيل",
+      "phone": "الهاتف",
+      "noOffer": "لا يوجد عرض بعد.",
+      "offeredAt": "تاريخ العرض",
+      "reviewedBy": "راجعه",
+      "unnamedStaff": "موظف",
+      "product": "المنتج",
+      "draftProduct": "منتج مسودة أُنشئ من هذا الطلب",
+      "noteToCustomer": "ملاحظة للعميل",
+      "manage": "المراجعة",
+      "settled": "هذا الطلب مغلق.",
+      "reviewHint": "أعلم العميل بأنك تراجع طلبه.",
+      "markReviewing": "بدء المراجعة",
+      "amountHint": "بالدينار. سيصل إشعار للعميل ليقبل أو يرفض.",
+      "amount": "العرض (د.ع)",
+      "offerNoteHint": "اختياري: سبب السعر وكيفية إحضار القطعة.",
+      "makeOffer": "تقديم العرض",
+      "reviseOffer": "تعديل العرض",
+      "completeHint": "بعد استلام القطعة والدفع للعميل.",
+      "createProductHint": "يضيف منتجاً مسودة بالعنوان والحالة والصور، لتسعيره ونشره لاحقاً.",
+      "createProduct": "إنشاء منتج مسودة",
+      "complete": "تحديد كمكتمل",
+      "rejectHint": "إذا لم تتمكن من أخذ القطعة. سيرى العميل السبب.",
+      "rejectReason": "السبب",
+      "reject": "رفض القطعة"
     }
   },
   "design": {

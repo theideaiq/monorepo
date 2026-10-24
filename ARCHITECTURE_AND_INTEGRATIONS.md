@@ -1295,6 +1295,34 @@ Set it up once:
 
 ---
 
+### 4.4 WhatsApp order updates
+
+Customers who turn on **WhatsApp updates** in Spark → Settings (a number
+and `profiles.whatsapp_opt_in`) get template messages from the WhatsApp
+Cloud API for four notification events. `apps/api` sends them from the
+notifications webhook and the `/cron/push` catch-up (`lib/whatsapp`); each
+notification is claimed once, so nothing is sent twice. WhatsApp is off
+until both `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
+
+**Owner setup**
+
+1. Meta Business Suite → create a WhatsApp Business account and add The
+   IDEA's number (WhatsApp Manager → Phone numbers); copy its **Phone
+   number ID** into `WHATSAPP_PHONE_NUMBER_ID`.
+2. Business settings → System users → add one with
+   `whatsapp_business_messaging`, generate a permanent token, and set it as
+   `WHATSAPP_ACCESS_TOKEN` on the `api` Vercel project.
+3. WhatsApp Manager → Message templates: create the four templates below,
+   category **Utility**, in Arabic (`ar`) and English (`en`), with exactly
+   these names and variables, and wait for approval.
+
+| Template | Variables | English body | Arabic body |
+| --- | --- | --- | --- |
+| `order_confirmed` | name, order number | `Hi {{1}}, your The IDEA order {{2}} is confirmed. We'll let you know when it's on its way.` | `مرحباً {{1}}، تم تأكيد طلبك {{2}} من The IDEA. سنخبرك عند خروجه للتوصيل.` |
+| `order_shipped` | name, order number, tracking | `Hi {{1}}, your order {{2}} is on its way. Tracking: {{3}}.` | `مرحباً {{1}}، طلبك {{2}} في الطريق إليك. رقم التتبع: {{3}}.` |
+| `rental_due_soon` | name, item, due date | `Hi {{1}}, a reminder that {{2}} from The IDEA Plus is due back on {{3}}.` | `مرحباً {{1}}، تذكير بأن موعد إرجاع {{2}} من The IDEA Plus هو {{3}}.` |
+| `trade_in_offer` | name, request number, item, offer | `Hi {{1}}, we made an offer on your request {{2}} ({{3}}): {{4}}. Open The IDEA Spark to accept or decline.` | `مرحباً {{1}}، قدّمنا عرضاً على طلبك {{2}} ({{3}}): {{4}}. افتح The IDEA Spark لقبوله أو رفضه.` |
+
 ## 5. Vercel environment variables
 
 ### 5.1 Projects
@@ -1405,6 +1433,8 @@ WebView). **Never add a secret to this project.**
 | `PAYMENTS_PROVIDER` | Optional | Leave unset (Wayl when the token is set). Never `mock` in production. |
 | `RESEND_TOKEN`, `RESEND_FROM` | Feature | Receipts, renewal invoices and the website's contact form (`POST /contact`, delivered to `supportEmail` in `project.json`); without them the form answers "unavailable" |
 | `RESEND_SEGMENT_ID` | Feature | The Resend segment newsletters go to; `/cron/newsletter-contacts` syncs the accounts there (4.3). The sync is off without it. Needs `RESEND_TOKEN` with full access (contacts), not a sending-only key. |
+| `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` | Optional | WhatsApp order updates (4.4); off without them. **Server only.** |
+| `WHATSAPP_TEMPLATE_LANG` | Optional | `ar` (default) or `en`: the template language for customers in another language |
 | `ARCJET_KEY` | Optional | `ajkey_…`. Guards the website's public forms (`@repo/security/form`: shield, bots, 5 per 10 minutes, undeliverable addresses) |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Feature | Droid's sessions and flood counters; the contact form's one message per visitor per day |
 | `NEXT_PUBLIC_META_PIXEL_ID`, `META_CONVERSIONS_ACCESS_TOKEN` | Optional | Server-side purchases to Meta; same pixel as the web apps |

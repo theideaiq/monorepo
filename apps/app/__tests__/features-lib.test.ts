@@ -46,6 +46,9 @@ const sampleData = (event: string) => {
       name_en: "Elden Ring",
     };
   }
+  if (event.startsWith("trade_in_")) {
+    return { amount: 25_000, number: 5001, title: "Kind of Blue" };
+  }
   return { number: 1001, subject: "Late delivery" };
 };
 
@@ -98,6 +101,15 @@ describe("notifications", () => {
         kind: "support",
       }).body
     ).toBe("We replied to ticket #1001: Late delivery");
+
+    const offer = render({
+      data: sampleData("trade_in_offer"),
+      event: "trade_in_offer",
+      kind: "trade_in",
+    }).body;
+    expect(offer).toContain("#5001");
+    expect(offer).toContain("Kind of Blue");
+    expect(offer).toContain("25,000");
   });
 
   test("falls back for unknown events and odd data", () => {

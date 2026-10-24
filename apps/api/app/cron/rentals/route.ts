@@ -4,22 +4,36 @@ import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 
-/** Daily: flags The IDEA Plus rentals past their due date as overdue. */
+/**
+ * Daily: flags The IDEA Plus rentals past their due date as overdue, and
+ * writes a "due soon" notification for rentals due within two days (once
+ * per due date). Notifications go out as push and, for customers who opted
+ * in, on WhatsApp (POST /webhooks/notifications, GET /cron/push).
+ */
 export const GET = async (request: Request): Promise<Response> => {
   if (!isAuthorizedCronRequest(request)) {
     return unauthorized();
   }
 
   try {
-    const { data, error } = await createAdminClient().rpc(
-      "mark_overdue_rentals"
-    );
+    const admin = createAdminClient();
+    const { data: overdue, error } = await admin.rpc("mark_overdue_rentals");
     if (error) {
       throw new Error(error.message);
     }
-    return NextResponse.json({ ok: true, overdue: data ?? 0 });
+    const { data: reminded, error: reminderError } = await admin.rpc(
+      "notify_rentals_due_soon"
+    );
+    if (reminderError) {
+      throw new Error(reminderError.message);
+    }
+    return NextResponse.json({
+      dueSoon: reminded ?? 0,
+      ok: true,
+      overdue: overdue ?? 0,
+    });
   } catch (error) {
-    log.error(`Overdue rentals job failed: ${parseError(error)}`);
+    log.error(`Rentals job failed: ${parseError(error)}`);
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 };

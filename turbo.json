@@ -64,6 +64,7 @@
     "STORE_NOTIFICATIONS_EMAIL",
     "TELEGRAM_*",
     "UPSTASH_*",
+    "WHATSAPP_*",
     "E2E_*",
     "PLAYWRIGHT_*"
   ]

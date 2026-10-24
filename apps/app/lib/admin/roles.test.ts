@@ -44,19 +44,22 @@ describe("role → sections", () => {
     expect(canRead("marketing", "support")).toBe(false);
   });
 
-  test("support handles customers, tickets, reviews, orders, rentals and Telegram", () => {
+  test("support handles customers, tickets, trade-ins, reviews, orders, rentals and Telegram", () => {
     expect(visibleSections("support")).toEqual([
       "dashboard",
       "orders",
       "rentals",
       "customers",
       "support",
+      "tradeIns",
       "reviews",
       "telegram",
     ]);
     expect(canWrite("support", "support")).toBe(true);
     expect(canWrite("support", "reviews")).toBe(true);
     expect(canWrite("support", "orders")).toBe(true);
+    expect(canWrite("support", "tradeIns")).toBe(true);
+    expect(canRead("editor", "tradeIns")).toBe(false);
     expect(canRead("support", "finance")).toBe(false);
   });
 

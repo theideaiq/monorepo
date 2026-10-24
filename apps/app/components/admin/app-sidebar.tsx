@@ -18,6 +18,7 @@ import {
 } from "@repo/design-system/components/ui/sidebar";
 import {
   BookOpenIcon,
+  HandCoinsIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
   LifeBuoyIcon,
@@ -53,6 +54,7 @@ const icons: Record<Section, LucideIcon> = {
   staff: ShieldCheckIcon,
   support: LifeBuoyIcon,
   telegram: SendIcon,
+  tradeIns: HandCoinsIcon,
 };
 
 interface AppSidebarProps {

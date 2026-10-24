@@ -219,6 +219,48 @@ export const getSubmissionFileUrl = async (
   return data.signedUrl;
 };
 
+/** Uploads a photo for one of the signed-in user's "Sell to us" requests. */
+export const uploadTradeInPhoto = (
+  supabase: Client,
+  userId: string,
+  file: File
+) => {
+  assertAllowed("tradeIns", file);
+  return upload(
+    supabase,
+    buckets.tradeIns.id,
+    objectPath(userId, file.name),
+    file
+  );
+};
+
+/**
+ * Time-limited links to trade-in photos (their owner or support), in the
+ * order given; a photo that can't be signed is null.
+ */
+export const getTradeInPhotoUrls = async (
+  supabase: Client,
+  paths: string[],
+  expiresIn = 60 * 60
+): Promise<(string | null)[]> => {
+  if (paths.length === 0) {
+    return [];
+  }
+  const { data, error } = await supabase.storage
+    .from(buckets.tradeIns.id)
+    .createSignedUrls(paths, expiresIn);
+  if (error || !data) {
+    throw new StorageError(
+      "not_found",
+      `No signed URLs: ${error?.message ?? "no data"}`
+    );
+  }
+  const byPath = new Map(
+    data.map((entry) => [entry.path, entry.error ? null : entry.signedUrl])
+  );
+  return paths.map((path) => byPath.get(path) ?? null);
+};
+
 /** Deletes files the user is allowed to delete. */
 export const removeFiles = async (
   supabase: Client,

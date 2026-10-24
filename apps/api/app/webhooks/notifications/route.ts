@@ -7,6 +7,8 @@ import { env } from "@/env";
 import { getPushSender } from "@/lib/push";
 import { deliverPushNotifications } from "@/lib/push/deliver";
 import { hasBearerSecret } from "@/lib/push/secret";
+import { getWhatsAppSender, whatsappFallbackLanguage } from "@/lib/whatsapp";
+import { deliverWhatsAppNotifications } from "@/lib/whatsapp/deliver";
 
 // Supabase Database Webhook payload (INSERT on public.notifications).
 const payloadSchema = z.object({
@@ -16,10 +18,12 @@ const payloadSchema = z.object({
 });
 
 /**
- * Pushes a new notification to the recipient's phones. Called by a
- * Supabase Database Webhook on inserts into `notifications`, with
- * `Authorization: Bearer <PUSH_WEBHOOK_SECRET>`. Only the row id is taken
- * from the payload; the row itself is read (and claimed) from the database.
+ * Pushes a new notification to the recipient's phones and, for the events
+ * with a WhatsApp template, sends it on WhatsApp to customers who opted in.
+ * Called by a Supabase Database Webhook on inserts into `notifications`,
+ * with `Authorization: Bearer <PUSH_WEBHOOK_SECRET>`. Only the row id is
+ * taken from the payload; the row itself is read (and claimed) from the
+ * database. Each channel runs only when it is configured.
  */
 export const POST = async (request: Request): Promise<Response> => {
   if (!hasBearerSecret(request, env.PUSH_WEBHOOK_SECRET)) {
@@ -33,20 +37,37 @@ export const POST = async (request: Request): Promise<Response> => {
     return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
 
-  const sender = getPushSender();
-  if (!sender) {
+  const pushSender = getPushSender();
+  const whatsappSender = getWhatsAppSender();
+  if (!(pushSender || whatsappSender)) {
     return NextResponse.json({ ok: true, skipped: "push_not_configured" });
   }
 
-  try {
-    const summary = await deliverPushNotifications(
-      createAdminClient(),
-      sender,
-      [payload.data.record.id]
-    );
-    return NextResponse.json({ ok: true, ...summary });
-  } catch (error) {
-    log.error(`Push webhook failed: ${parseError(error)}`);
+  const ids = [payload.data.record.id];
+  const admin = createAdminClient();
+  const [push, whatsapp] = await Promise.allSettled([
+    pushSender ? deliverPushNotifications(admin, pushSender, ids) : null,
+    whatsappSender
+      ? deliverWhatsAppNotifications(admin, whatsappSender, {
+          fallbackLanguage: whatsappFallbackLanguage(),
+          ids,
+        })
+      : null,
+  ]);
+
+  if (push.status === "rejected") {
+    log.error(`Push webhook failed: ${parseError(push.reason)}`);
+  }
+  if (whatsapp.status === "rejected") {
+    log.error(`WhatsApp webhook failed: ${parseError(whatsapp.reason)}`);
+  }
+  if (push.status === "rejected" || whatsapp.status === "rejected") {
     return NextResponse.json({ ok: false }, { status: 500 });
   }
+
+  return NextResponse.json({
+    ok: true,
+    ...(push.value ?? { skipped: "push_not_configured" }),
+    ...(whatsapp.value ? { whatsapp: whatsapp.value } : {}),
+  });
 };

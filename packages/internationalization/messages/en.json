@@ -306,6 +306,11 @@
         "verified": "Verified purchase",
         "anonymous": "A customer",
         "latest": "Latest reviews"
+      },
+      "sell": {
+        "title": "Sell to us",
+        "description": "Records, CDs, games, books or tech you no longer need? Send us photos and we'll make you an offer in cash or store credit.",
+        "cta": "Get an offer"
       }
     },
     "plus": {
@@ -818,7 +823,8 @@
       "cartCount": "{count} in cart",
       "account": "Account",
       "wishlist": "Wishlist",
-      "support": "Support"
+      "support": "Support",
+      "sell": "Sell to us"
     },
     "roles": {
       "owner": "Owner",
@@ -1331,6 +1337,19 @@
           "deleteConfirm": "Delete {name}",
           "failed": "That didn't work. Please try again."
         }
+      },
+      "whatsapp": {
+        "title": "WhatsApp updates",
+        "description": "Get order, rental and trade-in updates on WhatsApp.",
+        "phone": "WhatsApp number",
+        "phonePlaceholder": "0770 123 4567",
+        "optIn": "Send me updates on WhatsApp",
+        "optInHint": "Order confirmations, shipping, rental reminders and trade-in offers. Turn it off any time.",
+        "problems": {
+          "phone": "Enter a valid mobile number.",
+          "phoneRequired": "Add your WhatsApp number to turn updates on."
+        },
+        "failed": "Your WhatsApp settings couldn't be saved."
       }
     },
     "errors": {
@@ -1471,6 +1490,55 @@
       "share": {
         "copied": "Link copied"
       }
+    },
+    "sell": {
+      "title": "Sell to us",
+      "description": "Have records, CDs, games, books or tech you no longer need? Tell us about them and we'll make you an offer in cash or store credit.",
+      "form": {
+        "title": "What are you selling?",
+        "description": "Add clear photos and an honest condition; we reply within a few days.",
+        "category": "Category",
+        "condition": "Condition",
+        "itemTitle": "Title",
+        "itemTitlePlaceholder": "Artist and album, game, book or model",
+        "itemDescription": "Details",
+        "itemDescriptionPlaceholder": "Edition, year, what's included, any marks or faults",
+        "askingPrice": "Your asking price (IQD)",
+        "askingPriceHint": "Optional. Leave it empty and we'll suggest a price.",
+        "phone": "Mobile number",
+        "phonePlaceholder": "0770 123 4567",
+        "phoneHint": "We call or message you about the offer.",
+        "payout": "Paid in",
+        "photos": "Photos",
+        "photosChosen": "{count} of {max} photos chosen.",
+        "photosHint": "Up to {max} photos (JPEG, PNG or WebP).",
+        "failed": "We couldn't send your request. Please try again.",
+        "submitted": "Thanks! We received your request and will get back to you.",
+        "submitting": "Sending…",
+        "submit": "Send for an offer"
+      },
+      "problems": {
+        "title": "Enter what you're selling.",
+        "phone": "Enter a valid mobile number.",
+        "askingPrice": "Enter the price as a whole number in IQD.",
+        "tooManyPhotos": "Choose up to {max} photos.",
+        "photoTooLarge": "Each photo must be smaller than the size limit.",
+        "photoType": "Photos must be JPEG, PNG or WebP."
+      },
+      "list": {
+        "title": "Your requests",
+        "empty": "You haven't sent anything yet.",
+        "photo": "Photo {number}",
+        "meta": "#{number} · {category} · {date}",
+        "asking": "Asking {price}",
+        "offer": "Our offer: {amount}",
+        "note": "Note from The IDEA",
+        "accept": "Accept the offer",
+        "decline": "Decline",
+        "withdraw": "Withdraw",
+        "withdrawing": "Withdrawing…",
+        "actionFailed": "That didn't work. Refresh and try again."
+      }
     }
   },
   "store": {
@@ -1610,6 +1678,22 @@
         "order_ready_for_pickup": {
           "title": "Ready for pickup",
           "body": "Order #{number} is ready to collect from the store."
+        },
+        "trade_in_offer": {
+          "title": "We made you an offer",
+          "body": "Our offer for request #{number}, {title}: {amount}. Open it to accept or decline."
+        },
+        "trade_in_rejected": {
+          "title": "About your item",
+          "body": "We can't take {title} this time. See the note in your request."
+        },
+        "trade_in_completed": {
+          "title": "Trade-in completed",
+          "body": "Thank you! The trade-in of {title} is complete."
+        },
+        "rental_due_soon": {
+          "title": "Rental due soon",
+          "body": "{name} is due back{hasDue, select, yes { on {due}} other {}}."
         }
       },
       "kinds": {
@@ -1618,7 +1702,8 @@
         "support": "Support update",
         "plus": "The IDEA Plus update",
         "promo": "News from The IDEA",
-        "system": "Notice"
+        "system": "Notice",
+        "trade_in": "Sell to us update"
       },
       "fallbackBody": "Open to see the details."
     },
@@ -1648,6 +1733,41 @@
       "online": "Paid online",
       "cash_on_delivery": "Cash on delivery",
       "cash_at_pickup": "Pay at pickup"
+    },
+    "tradeIn": {
+      "category": {
+        "vinyl": "Vinyl record",
+        "cd_cassette": "CD or cassette",
+        "game": "Video game",
+        "book": "Book",
+        "console_tech": "Console or tech",
+        "other": "Something else"
+      },
+      "condition": {
+        "sealed": "Sealed",
+        "like_new": "Like new",
+        "good": "Good",
+        "fair": "Fair",
+        "poor": "Worn"
+      },
+      "payout": {
+        "cash": "Cash",
+        "store_credit": "Store credit"
+      },
+      "status": {
+        "submitted": "Received",
+        "reviewing": "Being reviewed",
+        "offer_made": "Offer made",
+        "accepted": "Offer accepted",
+        "declined": "Offer declined",
+        "completed": "Completed",
+        "rejected": "Not accepted",
+        "withdrawn": "Withdrawn"
+      }
+    },
+    "whatsapp": {
+      "customer": "there",
+      "noTracking": "we'll send it soon"
     }
   },
   "admin": {
@@ -1671,7 +1791,8 @@
       "staff": "Staff",
       "audit": "Audit log",
       "support": "Support",
-      "reviews": "Reviews"
+      "reviews": "Reviews",
+      "tradeIns": "Trade-ins"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -2694,6 +2815,63 @@
       "hide": "Hide",
       "unhide": "Publish",
       "deleteDescription": "The review is removed for good. To take it off the store but keep it, hide it instead."
+    },
+    "tradeIns": {
+      "title": "Trade-ins",
+      "detail": "Trade-in",
+      "count": "Total: {count}",
+      "search": "Request number or title",
+      "status": "Status",
+      "views": {
+        "open": "Open (waiting on us or the customer)",
+        "waiting": "Waiting on us",
+        "all": "All requests"
+      },
+      "category": "Category",
+      "anyCategory": "All categories",
+      "empty": "No requests match.",
+      "request": "Request",
+      "customer": "Customer",
+      "asking": "Asking",
+      "offer": "Offer",
+      "received": "Received",
+      "number": "#{number}",
+      "photoCount": "{count} photos",
+      "unnamedCustomer": "Customer",
+      "receivedOn": "Received {date}",
+      "item": "Item",
+      "condition": "Condition",
+      "payout": "Paid in",
+      "noAskingPrice": "No price given",
+      "photos": "Photos",
+      "noPhotos": "No photos.",
+      "photoAlt": "Photo {number}",
+      "photoMissing": "This photo couldn't be loaded.",
+      "details": "Details",
+      "phone": "Phone",
+      "noOffer": "No offer yet.",
+      "offeredAt": "Offered",
+      "reviewedBy": "Reviewed by",
+      "unnamedStaff": "Staff",
+      "product": "Product",
+      "draftProduct": "Draft product created from this request",
+      "noteToCustomer": "Note to the customer",
+      "manage": "Review",
+      "settled": "This request is closed.",
+      "reviewHint": "Let the customer know you're looking at it.",
+      "markReviewing": "Start review",
+      "amountHint": "Whole dinars. The customer is notified and can accept or decline.",
+      "amount": "Offer (IQD)",
+      "offerNoteHint": "Optional: why this price, how to bring the item in.",
+      "makeOffer": "Make offer",
+      "reviseOffer": "Revise offer",
+      "completeHint": "Once you have the item and the customer is paid.",
+      "createProductHint": "Adds a draft product with the title, condition and photos, to price and publish later.",
+      "createProduct": "Create a draft product",
+      "complete": "Mark completed",
+      "rejectHint": "If you can't take the item. The customer sees the reason.",
+      "rejectReason": "Reason",
+      "reject": "Decline the item"
     }
   },
   "design": {
