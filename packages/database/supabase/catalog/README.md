@@ -1,17 +1,15 @@
 # Catalog import
 
-For new stock, prefer **Back office → Catalog → Import** (a CSV of the
-inventory sheet, with a preview before anything is saved). These files are
-the first import, kept for reference.
+Product data, not schema. `statements/` holds the first catalog (604
+products: store, vinyl, CDs and cassettes, Plus rentals) as idempotent
+upserts, one statement per file, run in order by the **Import the catalog
+into production** workflow (`.github/workflows/import-catalog.yml`, run by
+hand from GitHub Actions). Re-running it updates names, descriptions, prices
+and pictures but never resets stock, status or featured flags set in the
+back office.
 
-Product data, not schema: paste each file into the Supabase SQL editor, in order.
-Each file is idempotent — re-running updates names, descriptions, prices and
-images, but never resets stock, status or featured flags set in the admin.
+Items with no stock, a price under 1,000 IQD or an unidentified album import
+as drafts. Prices of items not on the inventory sheet are estimates.
 
-1. `catalog-1-store.sql` — tech, cameras, audio, gadgets, games and books for sale
-2. `catalog-2-vinyl.sql` — vinyl records
-3. `catalog-3-cds.sql` — CDs and cassettes
-4. `catalog-4-plus.sql` — Plus rentals (games, books, films)
-
-Items with no stock, a price under 1,000 IQD or an unidentified album import as
-drafts. Prices of items not on the inventory sheet are estimates.
+For new stock, use **Back office → Catalog → Import** (a CSV of the
+inventory sheet, previewed before anything is saved).
