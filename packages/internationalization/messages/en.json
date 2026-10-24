@@ -1559,29 +1559,6 @@
       "description": "Staff console for The IDEA.",
       "badge": "Staff"
     },
-    "signIn": {
-      "title": "Back office sign-in",
-      "description": "Staff only. Sign in with your mobile number, then confirm with your authenticator app."
-    },
-    "mfa": {
-      "title": "Authenticator app",
-      "enrollTitle": "Set up your authenticator app",
-      "enrollDescription": "Staff accounts are protected with a second step. Link an authenticator app once; you'll enter its code each time you sign in.",
-      "challengeTitle": "Enter your authenticator code",
-      "challengeDescription": "Open your authenticator app and enter the 6-digit code for The IDEA.",
-      "stepInstall": "Install an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…).",
-      "stepScan": "Scan this QR code with it, or enter the setup key below.",
-      "stepCode": "Enter the 6-digit code the app shows.",
-      "qrAlt": "QR code for your authenticator app",
-      "secretLabel": "Setup key",
-      "codeLabel": "6-digit code",
-      "verify": "Confirm",
-      "verifying": "Checking…",
-      "errors": {
-        "invalidCode": "That code didn't work. Check the time on your phone and try the newest code.",
-        "unavailable": "Authenticator apps aren't enabled for this project yet. Ask an administrator to turn on TOTP multi-factor authentication in Supabase."
-      }
-    },
     "noAccess": {
       "title": "No access",
       "description": "This account doesn't have a staff role. If you work at The IDEA, ask a superadmin to grant you access, then sign in again."
@@ -2611,6 +2588,62 @@
       "title": "The IDEA Design is for staff",
       "body": "You're signed in, but your account isn't on the staff list. If you should have access, ask an admin to add you in the back office.",
       "switch": "Sign in with another account"
+    }
+  },
+  "pass": {
+    "meta": {
+      "title": "The IDEA Pass",
+      "description": "One account for everything at The IDEA: the app, the store, The IDEA Plus and more."
+    },
+    "badge": "Pass",
+    "continueTo": "You'll continue to {host}.",
+    "signIn": {
+      "title": "Sign in to The IDEA Pass",
+      "description": "Use your mobile number. One account for the app, the store and The IDEA Plus.",
+      "noAccount": "New to The IDEA?",
+      "signUpLink": "Get The IDEA Pass",
+      "deleted": "Your account has been deleted."
+    },
+    "signUp": {
+      "title": "Get The IDEA Pass",
+      "description": "Sign up with your mobile number. One account for everything at The IDEA.",
+      "haveAccount": "Already have The IDEA Pass?",
+      "signInLink": "Sign in"
+    },
+    "home": {
+      "title": "Your Pass",
+      "description": "You're signed in to The IDEA Pass. It works across the app, the website and The IDEA Plus.",
+      "nameLabel": "Name",
+      "noName": "Not set yet",
+      "phoneLabel": "Mobile number",
+      "openApp": "Open The IDEA app",
+      "website": "Visit the website",
+      "authenticator": "Authenticator app",
+      "authenticatorOn": "On",
+      "authenticatorOff": "Not set up",
+      "setUpAuthenticator": "Set up"
+    },
+    "signOut": {
+      "title": "Sign out"
+    },
+    "mfa": {
+      "title": "Authenticator app",
+      "enrollTitle": "Set up your authenticator app",
+      "enrollDescription": "Protect your account with a second step. Link an authenticator app once; you'll enter its code when a site asks for it. Staff accounts need it for the back office.",
+      "challengeTitle": "Enter your authenticator code",
+      "challengeDescription": "Open your authenticator app and enter the 6-digit code for The IDEA.",
+      "stepInstall": "Install an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…).",
+      "stepScan": "Scan this QR code with it, or enter the setup key below.",
+      "stepCode": "Enter the 6-digit code the app shows.",
+      "qrAlt": "QR code for your authenticator app",
+      "secretLabel": "Setup key",
+      "codeLabel": "6-digit code",
+      "verify": "Confirm",
+      "verifying": "Checking…",
+      "errors": {
+        "invalidCode": "That code didn't work. Check the time on your phone and try the newest code.",
+        "unavailable": "Authenticator apps aren't enabled for this project yet. Ask an administrator to turn on TOTP multi-factor authentication in Supabase."
+      }
     }
   }
 }

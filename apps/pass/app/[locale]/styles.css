@@ -1,0 +1,4 @@
+@import "@repo/design-system/styles/globals.css";
+
+/* The shared auth components (sign-in form, user menu). */
+@source "../../../../packages/auth/components";

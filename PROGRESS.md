@@ -46,6 +46,13 @@ decisions with a date.
       projects and set them on `api`, which now serves the contact form
       (`POST /contact`) and the status badge (`GET /status`). Turn on
       Vercel Firewall bot protection for `web` (Arcjet no longer runs there).
+- [ ] **The IDEA Pass:** a Vercel project for `apps/pass` on
+      `pass.theideaiq.com` (DNS); on every project set
+      `NEXT_PUBLIC_PASS_URL=https://pass.theideaiq.com`, and
+      `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on pass, app, admin
+      and the design site (production only), `NEXT_PUBLIC_ADMIN_URL` on
+      pass and admin; add `https://pass.theideaiq.com/**` to Supabase's
+      redirect URLs (`ARCHITECTURE_AND_INTEGRATIONS.md`, "The IDEA Pass").
 - [ ] **Wayl:** production keys and the webhook URL
       (`/webhooks/payments` on the API host).
 - [ ] **Telegram:** bot token and webhook (`apps/api/scripts/telegram-setup.ts`).

@@ -10,6 +10,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { env } from "@/env";
+import { passSignInLink } from "@/lib/links";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
 
@@ -46,7 +47,10 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
         <NextIntlClientProvider messages={{ common, web }}>
           <AnalyticsProvider>
             <DesignSystemProvider dir={dir} labels={common.ui}>
-              <Header appUrl={env.NEXT_PUBLIC_APP_URL} />
+              <Header
+                appUrl={env.NEXT_PUBLIC_APP_URL}
+                signInUrl={passSignInLink(env.NEXT_PUBLIC_APP_URL, locale)}
+              />
               {children}
               <Footer />
             </DesignSystemProvider>

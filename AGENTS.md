@@ -22,7 +22,14 @@ incidents) is in `docs/platform`.
 - `apps/admin` — the staff back office. Server-rendered with the staff
   member's cookie session (`@repo/auth/server`) and Server Actions; every
   query runs as the staff member so RLS applies. Staff rights need an
-  authenticator-app (AAL2) session, enforced by the database too.
+  authenticator-app (AAL2) session, enforced by the database too. It has
+  no sign-in of its own: it sends people to The IDEA Pass.
+- `apps/pass` — **The IDEA Pass** (port 3006, `pass.theideaiq.com`): the only
+  sign-in, sign-up and authenticator-app (MFA) UI on the web. The session
+  lives in a cookie shared by every subdomain (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`);
+  link to it with `passUrl()` from `@repo/auth/pass`, which only returns to
+  allowlisted hosts (`isAllowedReturnTo`). The Capacitor apps keep their
+  in-app phone sign-in (no cookies there).
 - `apps/storybook` — **The IDEA Design** (design.theideaiq.com), the
   staff-only design site: Storybook (every `@repo/design-system` component
   and every `@repo/email` template in Arabic and English) built into

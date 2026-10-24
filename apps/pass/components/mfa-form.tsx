@@ -9,8 +9,7 @@ import {
 } from "@repo/design-system/components/ui/input-otp";
 import { Label } from "@repo/design-system/components/ui/label";
 import { Spinner } from "@repo/design-system/components/ui/spinner";
-import { useRouter } from "@repo/internationalization/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   type FormEvent,
   useEffect,
@@ -34,12 +33,18 @@ interface Enrollment {
 interface MfaFormProps {
   /** A verified authenticator factor; null means it must be set up first. */
   readonly factorId: string | null;
+  /** An allowed return_to, or null to stay on The IDEA Pass. */
+  readonly returnTo: string | null;
 }
 
-export const MfaForm = ({ factorId }: MfaFormProps) => {
-  const t = useTranslations("admin.mfa");
+/**
+ * Links an authenticator app (TOTP) the first time, then checks its code,
+ * which raises the session to AAL2 in the shared cookie.
+ */
+export const MfaForm = ({ factorId, returnTo }: MfaFormProps) => {
+  const t = useTranslations("pass.mfa");
+  const locale = useLocale();
   const id = useId();
-  const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
   const [code, setCode] = useState("");
@@ -67,7 +72,7 @@ export const MfaForm = ({ factorId }: MfaFormProps) => {
 
       const { data, error } = await supabase.auth.mfa.enroll({
         factorType: "totp",
-        friendlyName: `back-office-${Date.now()}`,
+        friendlyName: `the-idea-pass-${Date.now()}`,
       });
       if (error || !data) {
         setProblem("unavailable");
@@ -104,8 +109,8 @@ export const MfaForm = ({ factorId }: MfaFormProps) => {
       return;
     }
 
-    router.replace("/");
-    router.refresh();
+    // A full navigation, so the next site reads the upgraded session.
+    window.location.assign(returnTo ?? `/${locale}`);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
