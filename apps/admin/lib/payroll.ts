@@ -8,9 +8,9 @@ export interface PlannedPosition {
 }
 
 export interface PayrollMonth {
+  headcount: number;
   /** First day of the month, YYYY-MM-01. */
   month: string;
-  headcount: number;
   total: number;
 }
 

@@ -134,8 +134,10 @@ const ReviewPage = async ({
                 // biome-ignore lint/performance/noImgElement: signed, short-lived URL
                 <img
                   alt={submission.title}
-                  className="max-h-[70vh] w-full rounded-lg border object-contain"
+                  className="h-auto max-h-[70vh] w-full rounded-lg border object-contain"
+                  height={900}
                   src={fileUrl}
+                  width={1200}
                 />
               ) : null}
               {fileUrl ? (

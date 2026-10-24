@@ -39,7 +39,9 @@ export const StatCard = ({
       <div className="font-semibold text-2xl tabular-nums tracking-tight">
         {value}
       </div>
-      {hint ? <div className="text-muted-foreground text-xs">{hint}</div> : null}
+      {hint ? (
+        <div className="text-muted-foreground text-xs">{hint}</div>
+      ) : null}
     </>
   );
   const classes = cn(

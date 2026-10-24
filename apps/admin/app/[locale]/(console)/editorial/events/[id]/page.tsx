@@ -17,8 +17,8 @@ import { formatters } from "@/lib/format";
 import { isUuid } from "@/lib/list";
 import { profileNames } from "@/lib/profiles";
 import { requireSection } from "@/lib/session";
-import { deleteEvent, removeRsvp } from "../../actions";
 import { EventForm } from "../../_components/event-form";
+import { deleteEvent, removeRsvp } from "../../actions";
 
 const EventPage = async ({
   params,
@@ -89,7 +89,9 @@ const EventPage = async ({
           title={t("events.rsvpList")}
         >
           {(rsvps ?? []).length === 0 ? (
-            <p className="text-muted-foreground text-sm">{t("events.noRsvps")}</p>
+            <p className="text-muted-foreground text-sm">
+              {t("events.noRsvps")}
+            </p>
           ) : (
             <Table>
               <TableHeader>

@@ -16,12 +16,7 @@ import { FilterBar } from "@/components/filter-bar";
 import { EmptyState, PageBody, PageHeader } from "@/components/page";
 import { Pagination } from "@/components/pagination";
 import { formatters } from "@/lib/format";
-import {
-  pageRange,
-  param,
-  type SearchParams,
-  searchTerm,
-} from "@/lib/list";
+import { pageRange, param, type SearchParams, searchTerm } from "@/lib/list";
 import { requireSection } from "@/lib/session";
 import { FinanceTabs } from "../_components/finance-tabs";
 

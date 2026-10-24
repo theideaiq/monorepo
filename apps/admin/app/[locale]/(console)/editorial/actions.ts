@@ -99,7 +99,6 @@ export const setPostPublished = staffAction(
         .eq("id", input.id)
         .select("id")
     );
-    return undefined;
   }
 );
 
@@ -154,7 +153,11 @@ export const saveEvent = staffAction(
     };
     if (input.id) {
       affected(
-        await supabase.from("events").update(row).eq("id", input.id).select("id")
+        await supabase
+          .from("events")
+          .update(row)
+          .eq("id", input.id)
+          .select("id")
       );
       return success();
     }
@@ -273,7 +276,6 @@ export const assignSubmission = staffAction(
         .eq("id", input.id)
         .select("id")
     );
-    return undefined;
   }
 );
 
@@ -316,7 +318,6 @@ export const saveReview = staffAction(
         thematic: input.thematic,
       })
     );
-    return undefined;
   }
 );
 
@@ -343,6 +344,5 @@ export const decideSubmission = staffAction(
         .neq("status", "withdrawn")
         .select("id")
     );
-    return undefined;
   }
 );

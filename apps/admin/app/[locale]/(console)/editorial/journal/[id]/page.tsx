@@ -9,10 +9,14 @@ import { toBaghdadInput } from "@/lib/dates";
 import { isUuid } from "@/lib/list";
 import { publishState } from "@/lib/publishing";
 import { requireSection } from "@/lib/session";
-import { deleteIssue } from "../../actions";
 import { IssueForm } from "../../_components/issue-form";
+import { deleteIssue } from "../../actions";
 
-const modes = { draft: "draft", published: "now", scheduled: "schedule" } as const;
+const modes = {
+  draft: "draft",
+  published: "now",
+  scheduled: "schedule",
+} as const;
 
 const IssuePage = async ({
   params,
@@ -64,7 +68,9 @@ const IssuePage = async ({
         <IssueForm
           issue={issue}
           mode={modes[state]}
-          publishAt={state === "scheduled" ? toBaghdadInput(issue.published_at) : ""}
+          publishAt={
+            state === "scheduled" ? toBaghdadInput(issue.published_at) : ""
+          }
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
         />
       </PageBody>

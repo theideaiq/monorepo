@@ -12,18 +12,30 @@ describe("publishing", () => {
 
   test("published_at for each mode", () => {
     expect(
-      publishedAtFor("draft", { current: "2026-11-01T00:00:00Z", now, scheduledAt: null })
+      publishedAtFor("draft", {
+        current: "2026-11-01T00:00:00Z",
+        now,
+        scheduledAt: null,
+      })
     ).toBeNull();
-    expect(publishedAtFor("now", { current: null, now, scheduledAt: null })).toBe(
-      now.toISOString()
-    );
+    expect(
+      publishedAtFor("now", { current: null, now, scheduledAt: null })
+    ).toBe(now.toISOString());
     // Keeps the original date of something already published…
     expect(
-      publishedAtFor("now", { current: "2026-11-01T00:00:00Z", now, scheduledAt: null })
+      publishedAtFor("now", {
+        current: "2026-11-01T00:00:00Z",
+        now,
+        scheduledAt: null,
+      })
     ).toBe("2026-11-01T00:00:00Z");
     // …but publishes a scheduled one right away.
     expect(
-      publishedAtFor("now", { current: "2026-12-01T00:00:00Z", now, scheduledAt: null })
+      publishedAtFor("now", {
+        current: "2026-12-01T00:00:00Z",
+        now,
+        scheduledAt: null,
+      })
     ).toBe(now.toISOString());
     expect(
       publishedAtFor("schedule", {

@@ -9,7 +9,6 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 let nextConfig: NextConfig = {
   ...withLogging(config),
   // The back office is for staff only: keep it out of search engines.
-  // biome-ignore lint/suspicious/useAwait: headers is async
   async headers() {
     return [
       {

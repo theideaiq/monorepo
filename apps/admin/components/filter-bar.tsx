@@ -15,7 +15,7 @@ export const FilterBar = async ({
   const t = await getTranslations("admin.list");
 
   return (
-    <form className="flex flex-wrap items-end gap-2" method="get" role="search">
+    <form className="flex flex-wrap items-end gap-2" method="get">
       {children}
       <Button type="submit" variant="secondary">
         <SearchIcon />

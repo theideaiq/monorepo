@@ -1,5 +1,6 @@
 import {
   BookOpenIcon,
+  type LucideIcon,
   MailIcon,
   MegaphoneIcon,
   PackageCheckIcon,
@@ -16,6 +17,7 @@ import { monthStartIso } from "@/lib/dates";
 import { formatters } from "@/lib/format";
 import { awaitingFulfilment } from "@/lib/fulfilment";
 import { canRead } from "@/lib/roles";
+import type { ServerClient } from "@/lib/session";
 import { requireSection } from "@/lib/session";
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -23,18 +25,138 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return { title: t("dashboard") };
 };
 
-const sum = (rows: { amount: number }[] | null) =>
-  (rows ?? []).reduce((total, row) => total + row.amount, 0);
+type Access = Record<
+  | "editorial"
+  | "finance"
+  | "marketing"
+  | "members"
+  | "orders"
+  | "rentals"
+  | "telegram",
+  boolean
+>;
+
+const head = { count: "exact", head: true } as const;
+
+/** Runs a count only when the role can see it (RLS would hide it anyway). */
+const countIf = async (
+  allowed: boolean,
+  query: () => PromiseLike<{ count: number | null }>
+) => (allowed ? ((await query()).count ?? 0) : 0);
+
+/** The dashboard's numbers, each loaded only for roles that use it. */
+const loadStats = async (supabase: ServerClient, can: Access) => {
+  const since = monthStartIso(new Date());
+
+  const [
+    fulfilment,
+    members,
+    openRentals,
+    overdueRentals,
+    drafts,
+    optedIn,
+    requests,
+    paidOrders,
+    payments,
+    queue,
+  ] = await Promise.all([
+    countIf(can.orders, () =>
+      supabase
+        .from("orders")
+        .select("id", head)
+        .in("status", awaitingFulfilment)
+    ),
+    countIf(can.members, () =>
+      supabase
+        .from("subscriptions")
+        .select("id, plans!inner(audience)", head)
+        .eq("plans.audience", "plus")
+        .in("status", ["active", "past_due"])
+    ),
+    countIf(can.rentals, () =>
+      supabase
+        .from("rentals")
+        .select("id", head)
+        .in("status", ["requested", "active"])
+    ),
+    countIf(can.rentals, () =>
+      supabase.from("rentals").select("id", head).eq("status", "overdue")
+    ),
+    countIf(can.marketing, () =>
+      supabase
+        .from("marketing_campaigns")
+        .select("id", head)
+        .eq("status", "draft")
+    ),
+    countIf(can.marketing, () =>
+      supabase
+        .from("profiles")
+        .select("id", head)
+        .eq("marketing_opt_in", true)
+        .is("banned_at", null)
+    ),
+    countIf(can.telegram, () =>
+      supabase.from("telegram_requests").select("id", head).eq("status", "open")
+    ),
+    can.finance
+      ? supabase
+          .from("orders")
+          .select("total")
+          .gte("paid_at", since)
+          .not("status", "in", "(cancelled,refunded)")
+          .limit(10_000)
+      : null,
+    can.finance
+      ? supabase
+          .from("payments")
+          .select("amount, refunded_amount")
+          .eq("status", "paid")
+          .gte("paid_at", since)
+          .limit(10_000)
+      : null,
+    can.editorial ? supabase.rpc("review_queue") : null,
+  ]);
+
+  return {
+    drafts,
+    fulfilment,
+    members,
+    openRentals: openRentals + overdueRentals,
+    optedIn,
+    overdueRentals,
+    received: (payments?.data ?? []).reduce(
+      (total, row) => total + row.amount - row.refunded_amount,
+      0
+    ),
+    requests,
+    revenue: (paidOrders?.data ?? []).reduce(
+      (total, row) => total + row.total,
+      0
+    ),
+    submissions: (queue?.data ?? []).filter(
+      (row) => row.status === "pending" || row.status === "under_review"
+    ).length,
+  };
+};
+
+interface Card {
+  attention?: boolean;
+  hint?: string;
+  href?: string;
+  icon: LucideIcon;
+  label: string;
+  show: boolean;
+  value: string;
+}
 
 /** Today's work for the signed-in role. */
 const DashboardPage = async () => {
   const { staff, supabase } = await requireSection("dashboard");
   const t = await getTranslations("admin.dashboard");
   const format = formatters(await getLocale());
-  const role = staff.role;
-  const since = monthStartIso(new Date());
+  const { role } = staff;
 
-  const can = {
+  const can: Access = {
     editorial: canRead(role, "editorial"),
     finance: canRead(role, "finance"),
     marketing: canRead(role, "marketing"),
@@ -43,90 +165,73 @@ const DashboardPage = async () => {
     rentals: canRead(role, "rentals"),
     telegram: canRead(role, "telegram"),
   };
+  const stats = await loadStats(supabase, can);
 
-  const none = Promise.resolve(null);
-  const [
-    fulfilment,
-    paidOrders,
-    payments,
-    members,
-    openRentals,
-    overdueRentals,
-    queue,
-    drafts,
-    optedIn,
-    requests,
-  ] = await Promise.all([
-    can.orders
-      ? supabase
-          .from("orders")
-          .select("id", { count: "exact", head: true })
-          .in("status", awaitingFulfilment)
-      : none,
-    can.finance
-      ? supabase
-          .from("orders")
-          .select("amount:total")
-          .gte("paid_at", since)
-          .not("status", "in", "(cancelled,refunded)")
-          .limit(10_000)
-      : none,
-    can.finance
-      ? supabase
-          .from("payments")
-          .select("amount, refunded_amount")
-          .eq("status", "paid")
-          .gte("paid_at", since)
-          .limit(10_000)
-      : none,
-    can.members
-      ? supabase
-          .from("subscriptions")
-          .select("id, plans!inner(audience)", { count: "exact", head: true })
-          .eq("plans.audience", "plus")
-          .in("status", ["active", "past_due"])
-      : none,
-    can.rentals
-      ? supabase
-          .from("rentals")
-          .select("id", { count: "exact", head: true })
-          .in("status", ["requested", "active"])
-      : none,
-    can.rentals
-      ? supabase
-          .from("rentals")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "overdue")
-      : none,
-    can.editorial ? supabase.rpc("review_queue") : none,
-    can.marketing
-      ? supabase
-          .from("marketing_campaigns")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "draft")
-      : none,
-    can.marketing
-      ? supabase
-          .from("profiles")
-          .select("id", { count: "exact", head: true })
-          .eq("marketing_opt_in", true)
-          .is("banned_at", null)
-      : none,
-    can.telegram
-      ? supabase
-          .from("telegram_requests")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "open")
-      : none,
-  ]);
-
-  const pendingSubmissions = (queue?.data ?? []).filter(
-    (row) => row.status === "pending" || row.status === "under_review"
-  ).length;
-  const received = (payments?.data ?? []).reduce(
-    (total, row) => total + row.amount - row.refunded_amount,
-    0
-  );
+  const cards: Card[] = [
+    {
+      attention: stats.fulfilment > 0,
+      hint: t("fulfilmentHint"),
+      href: "/orders?status=awaiting",
+      icon: PackageCheckIcon,
+      label: t("fulfilment"),
+      show: can.orders,
+      value: format.number(stats.fulfilment),
+    },
+    {
+      hint: t("revenueHint", { received: format.money(stats.received) }),
+      href: "/finance",
+      icon: WalletIcon,
+      label: t("revenue"),
+      show: can.finance,
+      value: format.money(stats.revenue),
+    },
+    {
+      href: can.rentals ? "/rentals?view=active" : undefined,
+      icon: SparklesIcon,
+      label: t("members"),
+      show: can.members,
+      value: format.number(stats.members),
+    },
+    {
+      attention: stats.overdueRentals > 0,
+      hint: t("overdue", { count: format.number(stats.overdueRentals) }),
+      href: "/rentals",
+      icon: RepeatIcon,
+      label: t("rentals"),
+      show: can.rentals,
+      value: format.number(stats.openRentals),
+    },
+    {
+      attention: stats.submissions > 0,
+      href: "/editorial/submissions",
+      icon: BookOpenIcon,
+      label: t("submissions"),
+      show: can.editorial,
+      value: format.number(stats.submissions),
+    },
+    {
+      href: "/marketing",
+      icon: MegaphoneIcon,
+      label: t("drafts"),
+      show: can.marketing,
+      value: format.number(stats.drafts),
+    },
+    {
+      href: "/customers?optIn=yes",
+      icon: MailIcon,
+      label: t("optedIn"),
+      show: can.marketing,
+      value: format.number(stats.optedIn),
+    },
+    {
+      attention: stats.requests > 0,
+      href: "/telegram",
+      icon: SendIcon,
+      label: t("telegramRequests"),
+      show: can.telegram,
+      value: format.number(stats.requests),
+    },
+  ];
 
   return (
     <>
@@ -136,81 +241,19 @@ const DashboardPage = async () => {
       />
       <PageBody>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {can.orders ? (
-            <StatCard
-              hint={t("fulfilmentHint")}
-              href="/orders?status=awaiting"
-              icon={PackageCheckIcon}
-              label={t("fulfilment")}
-              tone={(fulfilment?.count ?? 0) > 0 ? "attention" : "default"}
-              value={format.number(fulfilment?.count ?? 0)}
-            />
-          ) : null}
-          {can.finance ? (
-            <StatCard
-              hint={t("revenueHint", { received: format.money(received) })}
-              href="/finance"
-              icon={WalletIcon}
-              label={t("revenue")}
-              value={format.money(sum(paidOrders?.data ?? null))}
-            />
-          ) : null}
-          {can.members ? (
-            <StatCard
-              href={can.rentals ? "/rentals" : undefined}
-              icon={SparklesIcon}
-              label={t("members")}
-              value={format.number(members?.count ?? 0)}
-            />
-          ) : null}
-          {can.rentals ? (
-            <StatCard
-              hint={t("overdue", {
-                count: format.number(overdueRentals?.count ?? 0),
-              })}
-              href="/rentals"
-              icon={RepeatIcon}
-              label={t("rentals")}
-              tone={(overdueRentals?.count ?? 0) > 0 ? "attention" : "default"}
-              value={format.number(
-                (openRentals?.count ?? 0) + (overdueRentals?.count ?? 0)
-              )}
-            />
-          ) : null}
-          {can.editorial ? (
-            <StatCard
-              href="/editorial/submissions"
-              icon={BookOpenIcon}
-              label={t("submissions")}
-              tone={pendingSubmissions > 0 ? "attention" : "default"}
-              value={format.number(pendingSubmissions)}
-            />
-          ) : null}
-          {can.marketing ? (
-            <StatCard
-              href="/marketing"
-              icon={MegaphoneIcon}
-              label={t("drafts")}
-              value={format.number(drafts?.count ?? 0)}
-            />
-          ) : null}
-          {can.marketing ? (
-            <StatCard
-              href="/customers"
-              icon={MailIcon}
-              label={t("optedIn")}
-              value={format.number(optedIn?.count ?? 0)}
-            />
-          ) : null}
-          {can.telegram ? (
-            <StatCard
-              href="/telegram"
-              icon={SendIcon}
-              label={t("telegramRequests")}
-              tone={(requests?.count ?? 0) > 0 ? "attention" : "default"}
-              value={format.number(requests?.count ?? 0)}
-            />
-          ) : null}
+          {cards
+            .filter((card) => card.show)
+            .map((card) => (
+              <StatCard
+                hint={card.hint}
+                href={card.href}
+                icon={card.icon}
+                key={card.label}
+                label={card.label}
+                tone={card.attention ? "attention" : "default"}
+                value={card.value}
+              />
+            ))}
         </div>
       </PageBody>
     </>

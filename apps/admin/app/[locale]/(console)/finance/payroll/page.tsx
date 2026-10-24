@@ -1,4 +1,3 @@
-import { intlLocale } from "@repo/internationalization/format";
 import {
   Table,
   TableBody,
@@ -8,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
+import { intlLocale } from "@repo/internationalization/format";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { PageBody, PageHeader, Panel } from "@/components/page";

@@ -9,7 +9,9 @@ describe("renderMarkdown", () => {
   });
 
   test("shows raw HTML as text", () => {
-    const html = renderMarkdown('<script>alert("x")</script>\n\nHi <b>there</b>');
+    const html = renderMarkdown(
+      '<script>alert("x")</script>\n\nHi <b>there</b>'
+    );
     expect(html).not.toContain("<script>");
     expect(html).not.toContain("<b>");
     expect(html).toContain("&lt;script&gt;");

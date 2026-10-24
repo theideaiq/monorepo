@@ -64,7 +64,11 @@ describe("payroll projection", () => {
       "2026-11-01",
       1
     );
-    expect(first).toEqual({ headcount: 1, month: "2026-11-01", total: 750_000 });
+    expect(first).toEqual({
+      headcount: 1,
+      month: "2026-11-01",
+      total: 750_000,
+    });
   });
 });
 

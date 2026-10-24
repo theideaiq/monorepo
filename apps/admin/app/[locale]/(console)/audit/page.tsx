@@ -62,7 +62,9 @@ const describeMetadata = (metadata: unknown) => {
     parts.push(changed.join(", "));
   }
   for (const [key, value] of Object.entries(rest)) {
-    parts.push(`${key}: ${typeof value === "object" ? JSON.stringify(value) : String(value)}`);
+    parts.push(
+      `${key}: ${typeof value === "object" ? JSON.stringify(value) : String(value)}`
+    );
   }
   return parts.join(" · ");
 };
@@ -88,9 +90,12 @@ const AuditPage = async ({
 
   let query = supabase
     .from("audit_logs")
-    .select("id, actor_id, action, entity_type, entity_id, metadata, created_at", {
-      count: "exact",
-    })
+    .select(
+      "id, actor_id, action, entity_type, entity_id, metadata, created_at",
+      {
+        count: "exact",
+      }
+    )
     .order("created_at", { ascending: false })
     .range(from, to);
   if (action) {
@@ -106,7 +111,10 @@ const AuditPage = async ({
     query = query.eq("actor_id", actor);
   }
   if (DATE.test(since)) {
-    query = query.gte("created_at", fromBaghdadInput(`${since}T00:00`) ?? since);
+    query = query.gte(
+      "created_at",
+      fromBaghdadInput(`${since}T00:00`) ?? since
+    );
   }
   if (DATE.test(until)) {
     query = query.lte(
@@ -212,7 +220,9 @@ const AuditPage = async ({
                       </TableCell>
                       <TableCell>
                         {known
-                          ? t(`actions.${log.action as (typeof ACTIONS)[number]}`)
+                          ? t(
+                              `actions.${log.action as (typeof ACTIONS)[number]}`
+                            )
                           : log.action}
                       </TableCell>
                       <TableCell>

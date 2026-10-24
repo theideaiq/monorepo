@@ -3,7 +3,7 @@ import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { segmentCriteria, resolveRecipients } from "../../_lib/recipients";
+import { resolveRecipients, segmentCriteria } from "../../_lib/recipients";
 import { requireStaffCaller } from "../../_lib/staff";
 
 const body = z.object({ criteria: segmentCriteria });

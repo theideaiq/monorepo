@@ -74,7 +74,10 @@ export const postJournalEntry = staffAction(
 const accountSchema = z.object({
   active: checkbox,
   category: optionalText(60),
-  code: z.string().trim().regex(/^\d{3,6}$/),
+  code: z
+    .string()
+    .trim()
+    .regex(/^\d{3,6}$/),
   id: optionalUuid,
   name: text(120),
   type: z.enum(Enums.account_type),

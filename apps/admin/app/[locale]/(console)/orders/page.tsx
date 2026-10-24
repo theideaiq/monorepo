@@ -19,13 +19,7 @@ import { governorateName, parseAddress } from "@/lib/address";
 import { fromBaghdadInput } from "@/lib/dates";
 import { formatters } from "@/lib/format";
 import { awaitingFulfilment, orderStatuses } from "@/lib/fulfilment";
-import {
-  isUuid,
-  oneOf,
-  pageRange,
-  param,
-  type SearchParams,
-} from "@/lib/list";
+import { isUuid, oneOf, pageRange, param, type SearchParams } from "@/lib/list";
 import { requireSection } from "@/lib/session";
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -77,7 +71,10 @@ const OrdersPage = async ({
     query = query.eq("number", Number(number));
   } else if (q) {
     // Name or phone on the delivery address.
-    const term = q.replace(/[\\%_,()"]/g, " ").trim().slice(0, 60);
+    const term = q
+      .replace(/[\\%_,()"]/g, " ")
+      .trim()
+      .slice(0, 60);
     if (term) {
       query = query.or(
         `shipping_address->>full_name.ilike.%${term}%,shipping_address->>phone.ilike.%${term}%`
@@ -88,7 +85,10 @@ const OrdersPage = async ({
     query = query.eq("user_id", customer);
   }
   if (DATE.test(since)) {
-    query = query.gte("created_at", fromBaghdadInput(`${since}T00:00`) ?? since);
+    query = query.gte(
+      "created_at",
+      fromBaghdadInput(`${since}T00:00`) ?? since
+    );
   }
   if (DATE.test(until)) {
     query = query.lte(

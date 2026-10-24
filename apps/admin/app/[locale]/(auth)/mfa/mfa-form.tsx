@@ -11,7 +11,14 @@ import { Label } from "@repo/design-system/components/ui/label";
 import { Spinner } from "@repo/design-system/components/ui/spinner";
 import { useRouter } from "@repo/internationalization/navigation";
 import { useTranslations } from "next-intl";
-import { type FormEvent, useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  type FormEvent,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 const CODE_LENGTH = 6;
 const CODE_SLOTS = Array.from({ length: CODE_LENGTH }, (_, index) => index);
@@ -55,9 +62,7 @@ export const MfaForm = ({ factorId }: MfaFormProps) => {
             (factor) =>
               factor.factor_type === "totp" && factor.status !== "verified"
           )
-          .map((factor) =>
-            supabase.auth.mfa.unenroll({ factorId: factor.id })
-          )
+          .map((factor) => supabase.auth.mfa.unenroll({ factorId: factor.id }))
       );
 
       const { data, error } = await supabase.auth.mfa.enroll({

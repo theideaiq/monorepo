@@ -6,12 +6,7 @@ import { useTranslations } from "next-intl";
 import { ActionButton } from "@/components/action-button";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import { SelectField, TextField } from "@/components/fields";
-import {
-  deleteHolder,
-  deleteRound,
-  saveHolder,
-  saveRound,
-} from "../actions";
+import { deleteHolder, deleteRound, saveHolder, saveRound } from "../actions";
 
 /** A funding round; amounts are in the round's own currency. */
 export const RoundForm = ({

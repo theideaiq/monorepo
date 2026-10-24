@@ -28,7 +28,6 @@ export const deliverRental = staffAction(
         .eq("status", "requested")
         .select("id")
     );
-    return undefined;
   }
 );
 
@@ -45,7 +44,6 @@ export const cancelRentalRequest = staffAction(
         .eq("status", "requested")
         .select("id")
     );
-    return undefined;
   }
 );
 
@@ -62,7 +60,6 @@ export const returnRental = staffAction(
         .in("status", ["active", "overdue"])
         .select("id")
     );
-    return undefined;
   }
 );
 
@@ -86,6 +83,5 @@ export const changeDueDate = staffAction(
         .in("status", ["active", "overdue"])
         .select("id")
     );
-    return undefined;
   }
 );

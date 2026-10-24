@@ -67,7 +67,10 @@ export const VariantForm = ({
           </FieldGrid>
           {disabled ? null : (
             <div className="flex justify-end gap-2">
-              <SubmitButton size="sm" variant={variant ? "secondary" : "default"}>
+              <SubmitButton
+                size="sm"
+                variant={variant ? "secondary" : "default"}
+              >
                 {variant ? tCommon("save") : t("variants.add")}
               </SubmitButton>
             </div>

@@ -30,7 +30,9 @@ export class ActionFailure extends Error {
 }
 
 /** Throws the mapped error when a Supabase call failed. */
-export const check = <T extends { error: { code?: string; message?: string } | null }>(
+export const check = <
+  T extends { error: { code?: string; message?: string } | null },
+>(
   result: T
 ): T => {
   if (result.error) {

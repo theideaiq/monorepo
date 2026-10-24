@@ -39,7 +39,10 @@ const EquityPage = async () => {
 
   const roundsById = new Map((rounds ?? []).map((round) => [round.id, round]));
   const table = ownership(
-    (holders ?? []).map((holder) => ({ ...holder, shares: Number(holder.shares) }))
+    (holders ?? []).map((holder) => ({
+      ...holder,
+      shares: Number(holder.shares),
+    }))
   );
   const roundOptions = (rounds ?? []).map((round) => ({
     id: round.id,
@@ -61,11 +64,15 @@ const EquityPage = async () => {
                   <TableHead>{t("equity.holder")}</TableHead>
                   <TableHead>{t("equity.type")}</TableHead>
                   <TableHead>{t("equity.round")}</TableHead>
-                  <TableHead className="text-end">{t("equity.shares")}</TableHead>
+                  <TableHead className="text-end">
+                    {t("equity.shares")}
+                  </TableHead>
                   <TableHead className="text-end">
                     {t("equity.ownership")}
                   </TableHead>
-                  <TableHead className="text-end">{t("equity.value")}</TableHead>
+                  <TableHead className="text-end">
+                    {t("equity.value")}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -78,7 +85,9 @@ const EquityPage = async () => {
                     : null;
                   return (
                     <TableRow key={holder.id}>
-                      <TableCell className="font-medium">{holder.name}</TableCell>
+                      <TableCell className="font-medium">
+                        {holder.name}
+                      </TableCell>
                       <TableCell>{t(`equity.types.${holder.type}`)}</TableCell>
                       <TableCell>{round?.name ?? "—"}</TableCell>
                       <TableCell className="text-end tabular-nums">
@@ -90,7 +99,10 @@ const EquityPage = async () => {
                       <TableCell className="text-end tabular-nums">
                         {price === null || !round
                           ? "—"
-                          : format.moneyIn(holder.shares * price, round.currency)}
+                          : format.moneyIn(
+                              holder.shares * price,
+                              round.currency
+                            )}
                       </TableCell>
                     </TableRow>
                   );

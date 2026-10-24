@@ -6,9 +6,9 @@ import { PageBody, PageHeader, Panel } from "@/components/page";
 import { env } from "@/env";
 import { isUuid } from "@/lib/list";
 import { requireSection } from "@/lib/session";
-import { deleteProduct } from "../../actions";
 import { ProductForm } from "../../_components/product-form";
 import { VariantForm } from "../../_components/variant-form";
+import { deleteProduct } from "../../actions";
 
 interface ProductPageProps {
   readonly params: Promise<{ id: string }>;
@@ -73,7 +73,10 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           product={product}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
         />
-        <Panel description={t("variants.description")} title={t("variants.title")}>
+        <Panel
+          description={t("variants.description")}
+          title={t("variants.title")}
+        >
           {(variants ?? []).map((variant) => (
             <VariantForm
               disabled={!canWrite}

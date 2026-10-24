@@ -49,7 +49,9 @@ export const deleteSegment = staffAction(
   "marketing",
   z.object({ id: uuid }),
   async ({ input, supabase }) => {
-    check(await supabase.from("marketing_segments").delete().eq("id", input.id));
+    check(
+      await supabase.from("marketing_segments").delete().eq("id", input.id)
+    );
     return success("deleted");
   }
 );
@@ -73,7 +75,9 @@ export const countRecipients = staffAction(
       { criteria: parseCriteria(segment.criteria) }
     );
     if (!result.ok) {
-      throw new ActionFailure(result.status === 0 ? "apiUnavailable" : "unknown");
+      throw new ActionFailure(
+        result.status === 0 ? "apiUnavailable" : "unknown"
+      );
     }
     return success("saved", { data: { count: result.data.count } });
   },
@@ -108,7 +112,11 @@ export const saveCampaign = staffAction(
       return success();
     }
     const { data } = check(
-      await supabase.from("marketing_campaigns").insert(row).select("id").single()
+      await supabase
+        .from("marketing_campaigns")
+        .insert(row)
+        .select("id")
+        .single()
     );
     return success("saved", { redirectTo: `/marketing/campaigns/${data?.id}` });
   }

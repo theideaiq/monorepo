@@ -178,7 +178,9 @@ const OrderPage = async ({ params }: OrderPageProps) => {
                             {tPay(payment.status)}
                           </StatusBadge>
                         </TableCell>
-                        <TableCell>{format.dateTime(payment.paid_at)}</TableCell>
+                        <TableCell>
+                          {format.dateTime(payment.paid_at)}
+                        </TableCell>
                         <TableCell className="text-end tabular-nums">
                           {format.money(payment.amount)}
                         </TableCell>
@@ -231,7 +233,11 @@ const OrderPage = async ({ params }: OrderPageProps) => {
                 {
                   label: t("phone"),
                   value: (
-                    <a className="hover:underline" dir="ltr" href={`tel:${address.phone}`}>
+                    <a
+                      className="hover:underline"
+                      dir="ltr"
+                      href={`tel:${address.phone}`}
+                    >
                       {address.phone}
                     </a>
                   ),

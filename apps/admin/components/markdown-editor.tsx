@@ -43,10 +43,7 @@ export const MarkdownEditor = ({
   return (
     <Tabs className="grid gap-2" defaultValue="write">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Label
-          className={cn(invalid(name) && "text-destructive")}
-          htmlFor={id}
-        >
+        <Label className={cn(invalid(name) && "text-destructive")} htmlFor={id}>
           {label}
         </Label>
         <TabsList>
@@ -55,7 +52,11 @@ export const MarkdownEditor = ({
         </TabsList>
       </div>
       {/* forceMount keeps the textarea in the form while previewing. */}
-      <TabsContent className="data-[state=inactive]:hidden" forceMount value="write">
+      <TabsContent
+        className="data-[state=inactive]:hidden"
+        forceMount
+        value="write"
+      >
         <Textarea
           aria-invalid={invalid(name) || undefined}
           className="min-h-48 font-mono text-sm"

@@ -39,13 +39,16 @@ export const ActionButton = ({
   variant = "outline",
 }: ActionButtonProps) => {
   const t = useTranslations("admin.common");
-  const form = useRef<HTMLFormElement>(null);
+  const submit = useRef<HTMLButtonElement>(null);
 
   return (
-    <ActionForm action={action} className="contents" ref={form}>
+    <ActionForm action={action} className="contents">
       {Object.entries(fields).map(([name, value]) => (
         <input key={name} name={name} type="hidden" value={value} />
       ))}
+      {confirm ? (
+        <button className="hidden" ref={submit} tabIndex={-1} type="submit" />
+      ) : null}
       {confirm ? (
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -69,7 +72,7 @@ export const ActionButton = ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-              <AlertDialogAction onClick={() => form.current?.requestSubmit()}>
+              <AlertDialogAction onClick={() => submit.current?.click()}>
                 {t("confirm")}
               </AlertDialogAction>
             </AlertDialogFooter>

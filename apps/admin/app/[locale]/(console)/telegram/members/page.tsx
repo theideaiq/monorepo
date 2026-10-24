@@ -27,6 +27,7 @@ import { canRead } from "@/lib/roles";
 import { requireSection } from "@/lib/session";
 import { TelegramTabs } from "../_components/telegram-tabs";
 
+const AT_PREFIX = /^@/;
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.telegram.tabs");
   return { title: t("members") };
@@ -43,7 +44,7 @@ const MembersPage = async ({
   const t = await getTranslations("admin.telegram");
   const format = formatters(await getLocale());
   const { from, page, to } = pageRange(params);
-  const q = searchTerm(param(params, "q")).replace(/^@/, "");
+  const q = searchTerm(param(params, "q")).replace(AT_PREFIX, "");
   const banned = oneOf(params, "banned", ["yes", "no"] as const);
 
   let query = supabase
@@ -129,7 +130,10 @@ const MembersPage = async ({
                           {t("members.banned")}
                         </StatusBadge>
                       ) : (
-                        <span className="text-muted-foreground text-sm" dir="ltr">
+                        <span
+                          className="text-muted-foreground text-sm"
+                          dir="ltr"
+                        >
                           {member.chat_status ?? "—"}
                         </span>
                       )}

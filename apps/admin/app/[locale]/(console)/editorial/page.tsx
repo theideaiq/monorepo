@@ -20,8 +20,8 @@ import { formatters } from "@/lib/format";
 import { pageRange, type SearchParams } from "@/lib/list";
 import { publishState } from "@/lib/publishing";
 import { requireSection } from "@/lib/session";
-import { setPostPublished } from "./actions";
 import { EditorialTabs } from "./_components/editorial-tabs";
+import { setPostPublished } from "./actions";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.editorial");

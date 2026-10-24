@@ -14,6 +14,10 @@ export const SignInForm = () => {
   const messages = useAuthMessages();
 
   return (
-    <PhoneOtpForm locale={locale} messages={messages} redirectTo={`/${locale}`} />
+    <PhoneOtpForm
+      locale={locale}
+      messages={messages}
+      redirectTo={`/${locale}`}
+    />
   );
 };

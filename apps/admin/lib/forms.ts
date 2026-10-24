@@ -127,6 +127,8 @@ export const lines = (maxItems: number, maxLength: number) =>
     )
     .pipe(z.array(z.string().max(maxLength)).max(maxItems));
 
+const TAG_SEPARATOR = /[,،]/;
+
 /** Comma-separated tags, lower-cased and de-duplicated. */
 export const tags = z
   .string()
@@ -134,7 +136,7 @@ export const tags = z
   .transform((value) => [
     ...new Set(
       (value ?? "")
-        .split(/[,،]/)
+        .split(TAG_SEPARATOR)
         .map((tag) => tag.trim().toLowerCase())
         .filter(Boolean)
     ),

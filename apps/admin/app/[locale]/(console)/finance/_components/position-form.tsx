@@ -25,7 +25,9 @@ export const PositionForm = ({
         action={savePosition}
         className="flex flex-1 flex-wrap items-end gap-3"
       >
-        {position ? <input name="id" type="hidden" value={position.id} /> : null}
+        {position ? (
+          <input name="id" type="hidden" value={position.id} />
+        ) : null}
         <TextField
           defaultValue={position?.role_title}
           disabled={disabled}

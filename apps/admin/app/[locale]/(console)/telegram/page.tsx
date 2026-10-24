@@ -17,8 +17,8 @@ import { StatusBadge } from "@/components/status-badge";
 import { formatters } from "@/lib/format";
 import { oneOf, pageRange, type SearchParams } from "@/lib/list";
 import { requireSection } from "@/lib/session";
-import { resolveRequest } from "./actions";
 import { TelegramTabs } from "./_components/telegram-tabs";
+import { resolveRequest } from "./actions";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.telegram");
@@ -107,8 +107,13 @@ const RequestsPage = async ({
                           </StatusBadge>
                         ) : null}
                       </TableCell>
-                      <TableCell>{t(`requests.types.${request.type}`)}</TableCell>
-                      <TableCell className="max-w-md whitespace-pre-wrap" dir="auto">
+                      <TableCell>
+                        {t(`requests.types.${request.type}`)}
+                      </TableCell>
+                      <TableCell
+                        className="max-w-md whitespace-pre-wrap"
+                        dir="auto"
+                      >
                         {request.message}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">

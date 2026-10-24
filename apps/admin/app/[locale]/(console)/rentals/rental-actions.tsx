@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@repo/design-system/components/ui/input";
 import type { RentalStatus } from "@repo/database";
+import { Input } from "@repo/design-system/components/ui/input";
 import { useTranslations } from "next-intl";
 import { ActionButton } from "@/components/action-button";
 import { ActionForm, SubmitButton } from "@/components/action-form";
@@ -13,10 +13,10 @@ import {
 } from "./actions";
 
 interface RentalActionsProps {
-  /** The current due date as YYYY-MM-DD in Baghdad, if any. */
-  readonly due: string;
   /** Today + 14 days, the usual loan period. */
   readonly defaultDue: string;
+  /** The current due date as YYYY-MM-DD in Baghdad, if any. */
+  readonly due: string;
   readonly id: string;
   readonly status: RentalStatus;
 }
@@ -47,7 +47,10 @@ export const RentalActions = ({
         </ActionForm>
         <ActionButton
           action={cancelRentalRequest}
-          confirm={{ description: t("cancelDescription"), title: t("cancelConfirm") }}
+          confirm={{
+            description: t("cancelDescription"),
+            title: t("cancelConfirm"),
+          }}
           fields={{ id }}
           variant="ghost"
         >

@@ -31,7 +31,6 @@ export const setOrderStatus = staffAction(
         .eq("status", input.from)
         .select("id")
     );
-    return undefined;
   }
 );
 
@@ -53,6 +52,5 @@ export const saveOrderNotes = staffAction(
         .eq("id", input.id)
         .select("id")
     );
-    return undefined;
   }
 );

@@ -18,7 +18,11 @@ export const segmentCriteria = z
     crm_status: z.array(z.enum(crmStatuses)).min(1).optional(),
     locale: z.enum(["ar", "en"]).optional(),
     plus_member: z.boolean().optional(),
-    tags: z.array(z.string().trim().toLowerCase().min(1).max(40)).min(1).max(20).optional(),
+    tags: z
+      .array(z.string().trim().toLowerCase().min(1).max(40))
+      .min(1)
+      .max(20)
+      .optional(),
   })
   .strict();
 

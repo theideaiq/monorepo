@@ -1,7 +1,8 @@
 import { TZDate } from "@date-fns/tz";
 import { TIME_ZONE } from "@repo/internationalization/format";
 
-const LOCAL_DATE_TIME = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/;
+const LOCAL_DATE_TIME =
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/;
 
 const pad = (value: number) => String(value).padStart(2, "0");
 

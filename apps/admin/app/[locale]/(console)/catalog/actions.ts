@@ -70,7 +70,11 @@ export const saveProduct = staffAction(
 
     if (input.id) {
       affected(
-        await supabase.from("products").update(row).eq("id", input.id).select("id")
+        await supabase
+          .from("products")
+          .update(row)
+          .eq("id", input.id)
+          .select("id")
       );
       return success();
     }

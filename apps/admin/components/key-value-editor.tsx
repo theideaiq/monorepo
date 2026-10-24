@@ -16,7 +16,7 @@ interface Row {
 interface KeyValueEditorProps {
   readonly defaultValue?: Record<string, unknown> | null;
   readonly label: string;
-  /** Submitted as `<prefix>Key[]` and `<prefix>Value[]`. */
+  /** Field name prefix: rows are submitted as prefixKey[] and prefixValue[]. */
   readonly prefix: string;
 }
 
@@ -68,9 +68,7 @@ export const KeyValueEditor = ({
             id={`${prefix}-${item.id}-value`}
             maxLength={300}
             name={`${prefix}Value[]`}
-            onChange={(event) =>
-              update(item.id, { value: event.target.value })
-            }
+            onChange={(event) => update(item.id, { value: event.target.value })}
             placeholder={t("value")}
             value={item.value}
           />

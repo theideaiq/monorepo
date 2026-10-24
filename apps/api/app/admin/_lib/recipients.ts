@@ -27,10 +27,10 @@ export const parseCriteria = (value: unknown): SegmentCriteria | null => {
 };
 
 export interface Audience {
-  /** Who has an email address on their account (auth.users). */
-  emails: Map<string, string>;
   /** CRM rows of the candidates. */
   contacts: { status: string; tags: string[]; user_id: string }[];
+  /** Who has an email address on their account (auth.users). */
+  emails: Map<string, string>;
   /** Users with a live IDEA Plus membership. */
   plusMembers: Set<string>;
   /** Opted-in, unsuspended profiles. */
@@ -212,5 +212,8 @@ export const resolveRecipients = async (
       ? Promise.resolve(new Set<string>())
       : loadPlusMembers(admin, ids),
   ]);
-  return selectRecipients({ contacts, emails, plusMembers, profiles }, criteria);
+  return selectRecipients(
+    { contacts, emails, plusMembers, profiles },
+    criteria
+  );
 };

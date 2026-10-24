@@ -23,7 +23,10 @@ const StoreSettingsPage = async () => {
       <PageHeader title={t("title")} />
       <CatalogTabs />
       <PageBody className="max-w-3xl">
-        <Panel description={t("settings.description")} title={t("tabs.settings")}>
+        <Panel
+          description={t("settings.description")}
+          title={t("tabs.settings")}
+        >
           <StoreSettingsForm
             disabled={!canWrite}
             freeShippingThreshold={settings?.free_shipping_threshold ?? null}

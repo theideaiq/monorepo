@@ -19,7 +19,10 @@ interface SegmentFormProps {
 }
 
 /** A segment's name and criteria; every criterion set must match. */
-export const SegmentForm = ({ disabled = false, segment }: SegmentFormProps) => {
+export const SegmentForm = ({
+  disabled = false,
+  segment,
+}: SegmentFormProps) => {
   const t = useTranslations("admin.marketing.segments");
   const tCrm = useTranslations("admin.customers.statuses");
   const tCommon = useTranslations("admin.common");
@@ -42,7 +45,9 @@ export const SegmentForm = ({ disabled = false, segment }: SegmentFormProps) => 
             required
           />
           <fieldset className="grid gap-2">
-            <legend className="mb-1 font-medium text-sm">{t("crmStatus")}</legend>
+            <legend className="mb-1 font-medium text-sm">
+              {t("crmStatus")}
+            </legend>
             <div className="flex flex-wrap gap-4">
               {crmStatuses.map((status) => (
                 <CheckboxField

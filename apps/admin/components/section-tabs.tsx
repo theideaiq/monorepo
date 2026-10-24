@@ -27,9 +27,10 @@ export const SectionTabs = ({ tabs }: { readonly tabs: SectionTab[] }) => {
           ((tab.exact
             ? pathname === tab.href
             : pathname === tab.href || pathname.startsWith(`${tab.href}/`)) ||
-          prefixes.some(
-            (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
-          ));
+            prefixes.some(
+              (prefix) =>
+                pathname === prefix || pathname.startsWith(`${prefix}/`)
+            ));
         return (
           <Link
             aria-current={active ? "page" : undefined}

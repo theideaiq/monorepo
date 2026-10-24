@@ -1,7 +1,7 @@
 "use client";
 
-import type { StaffRole } from "@repo/database";
 import { formatPhone } from "@repo/auth/phone";
+import type { StaffRole } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ActionButton } from "@/components/action-button";
@@ -36,7 +36,10 @@ export const RoleForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <ActionForm action={setStaffRole} className="flex flex-wrap items-end gap-2">
+    <ActionForm
+      action={setStaffRole}
+      className="flex flex-wrap items-end gap-2"
+    >
       <input name="userId" type="hidden" value={userId} />
       <SelectField
         defaultValue={role ?? "support"}
@@ -94,7 +97,7 @@ export const StaffLookup = () => {
       <ActionForm
         action={lookupUser}
         className="flex flex-wrap items-end gap-2"
-        onSuccess={(state) => setUser((state.data?.user as FoundUser) ?? null)}
+        onSuccess={(state) => setUser(state.data?.user as FoundUser)}
         silent
       >
         <TextField

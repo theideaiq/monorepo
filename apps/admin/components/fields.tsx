@@ -56,7 +56,12 @@ export const TextField = ({
   wrapperClassName,
   ...props
 }: TextFieldProps) => (
-  <FieldShell className={wrapperClassName} hint={hint} label={label} name={name}>
+  <FieldShell
+    className={wrapperClassName}
+    hint={hint}
+    label={label}
+    name={name}
+  >
     {(id, invalid) => (
       <Input
         aria-describedby={hint ? `${id}-hint` : undefined}
@@ -86,7 +91,12 @@ export const TextareaField = ({
   wrapperClassName,
   ...props
 }: TextareaFieldProps) => (
-  <FieldShell className={wrapperClassName} hint={hint} label={label} name={name}>
+  <FieldShell
+    className={wrapperClassName}
+    hint={hint}
+    label={label}
+    name={name}
+  >
     {(id, invalid) => (
       <Textarea
         aria-describedby={hint ? `${id}-hint` : undefined}
@@ -124,7 +134,10 @@ export const NativeSelect = ({
   </select>
 );
 
-type SelectFieldProps = Omit<ComponentProps<"select">, "id" | "name" | "children"> & {
+type SelectFieldProps = Omit<
+  ComponentProps<"select">,
+  "id" | "name" | "children"
+> & {
   readonly hint?: ReactNode;
   readonly label: ReactNode;
   readonly name: string;
@@ -140,7 +153,12 @@ export const SelectField = ({
   wrapperClassName,
   ...props
 }: SelectFieldProps) => (
-  <FieldShell className={wrapperClassName} hint={hint} label={label} name={name}>
+  <FieldShell
+    className={wrapperClassName}
+    hint={hint}
+    label={label}
+    name={name}
+  >
     {(id, invalid) => (
       <NativeSelect
         aria-describedby={hint ? `${id}-hint` : undefined}

@@ -19,7 +19,10 @@ export const AssignForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <ActionForm action={assignSubmission} className="flex flex-wrap items-end gap-2">
+    <ActionForm
+      action={assignSubmission}
+      className="flex flex-wrap items-end gap-2"
+    >
       <input name="id" type="hidden" value={id} />
       <SelectField
         defaultValue={assignee ?? ""}
@@ -27,7 +30,10 @@ export const AssignForm = ({
         name="assignee"
         options={[
           { label: t("unassigned"), value: "" },
-          ...editors.map((editor) => ({ label: editor.name, value: editor.id })),
+          ...editors.map((editor) => ({
+            label: editor.name,
+            value: editor.id,
+          })),
         ]}
         wrapperClassName="min-w-48 flex-1"
       />
@@ -46,6 +52,13 @@ interface Review {
 }
 
 const SCORES = ["", "0", "10", "20"];
+
+const yesNo = (value: boolean | null | undefined) => {
+  if (value === null || value === undefined) {
+    return "";
+  }
+  return value ? "yes" : "no";
+};
 
 /** The rubric: three criteria scored 0, 10 or 20 (out of 60). */
 export const RubricForm = ({
@@ -75,35 +88,31 @@ export const RubricForm = ({
     <ActionForm action={saveReview}>
       <input name="id" type="hidden" value={id} />
       <FieldGrid columns={3}>
-        {(["technical", "originality", "thematic"] as const).map((criterion) => (
-          <SelectField
-            hint={t(`criteria.${criterion}Hint`)}
-            key={criterion}
-            label={t(`criteria.${criterion}`)}
-            name={criterion}
-            onChange={(event) =>
-              setScores((current) => ({
-                ...current,
-                [criterion]: event.target.value,
-              }))
-            }
-            options={scoreOptions}
-            value={scores[criterion]}
-          />
-        ))}
+        {(["technical", "originality", "thematic"] as const).map(
+          (criterion) => (
+            <SelectField
+              hint={t(`criteria.${criterion}Hint`)}
+              key={criterion}
+              label={t(`criteria.${criterion}`)}
+              name={criterion}
+              onChange={(event) =>
+                setScores((current) => ({
+                  ...current,
+                  [criterion]: event.target.value,
+                }))
+              }
+              options={scoreOptions}
+              value={scores[criterion]}
+            />
+          )
+        )}
       </FieldGrid>
       <p className="font-medium text-sm">
         {t("total", { score: String(total) })}
       </p>
       <FieldGrid>
         <SelectField
-          defaultValue={
-            review?.archive_worthy === null || review?.archive_worthy === undefined
-              ? ""
-              : review.archive_worthy
-                ? "yes"
-                : "no"
-          }
+          defaultValue={yesNo(review?.archive_worthy)}
           label={t("archiveWorthy")}
           name="archiveWorthy"
           options={[

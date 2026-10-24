@@ -37,7 +37,10 @@ export const success = (
   extra: { data?: Record<string, unknown>; redirectTo?: string } = {}
 ): ActionState => ({ notice, status: "success", ...extra });
 
-export const failure = (error: ActionError, fields?: string[]): ActionState => ({
+export const failure = (
+  error: ActionError,
+  fields?: string[]
+): ActionState => ({
   error,
   fields,
   status: "error",

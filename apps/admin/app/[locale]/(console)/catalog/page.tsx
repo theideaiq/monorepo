@@ -166,8 +166,12 @@ const ProductsPage = async ({
                   <TableHead>{t("fields.kind")}</TableHead>
                   <TableHead>{t("fields.category")}</TableHead>
                   <TableHead>{t("fields.status")}</TableHead>
-                  <TableHead className="text-end">{t("fields.price")}</TableHead>
-                  <TableHead className="text-end">{t("fields.stock")}</TableHead>
+                  <TableHead className="text-end">
+                    {t("fields.price")}
+                  </TableHead>
+                  <TableHead className="text-end">
+                    {t("fields.stock")}
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -183,7 +187,12 @@ const ProductsPage = async ({
                           <img
                             alt=""
                             className="size-10 shrink-0 rounded-md border object-cover"
-                            src={productImageUrl(supabaseUrl, product.images[0])}
+                            height={40}
+                            src={productImageUrl(
+                              supabaseUrl,
+                              product.images[0]
+                            )}
+                            width={40}
                           />
                         ) : (
                           <span className="size-10 shrink-0 rounded-md border bg-muted" />

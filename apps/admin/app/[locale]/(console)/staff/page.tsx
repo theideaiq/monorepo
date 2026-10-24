@@ -53,7 +53,9 @@ const StaffPage = async () => {
                     <span className="flex items-center gap-2 font-medium">
                       {name}
                       <StatusBadge
-                        tone={member.role === "superadmin" ? "brand" : "neutral"}
+                        tone={
+                          member.role === "superadmin" ? "brand" : "neutral"
+                        }
                       >
                         {tRoles(member.role)}
                       </StatusBadge>

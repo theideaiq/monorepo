@@ -23,7 +23,6 @@ export const saveCrmContact = staffAction(
         user_id: input.userId,
       })
     );
-    return undefined;
   }
 );
 
@@ -54,6 +53,5 @@ export const setSuspended = staffAction(
         .eq("id", input.userId)
         .select("id")
     );
-    return undefined;
   }
 );

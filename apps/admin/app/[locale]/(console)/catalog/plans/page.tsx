@@ -55,7 +55,9 @@ const PlansPage = async () => {
                 <TableRow>
                   <TableHead>{t("plans.name")}</TableHead>
                   <TableHead>{t("plans.audience")}</TableHead>
-                  <TableHead className="text-end">{t("plans.amount")}</TableHead>
+                  <TableHead className="text-end">
+                    {t("plans.amount")}
+                  </TableHead>
                   <TableHead>{t("plans.interval")}</TableHead>
                   <TableHead className="text-end">{t("plans.slots")}</TableHead>
                   <TableHead>{t("fields.status")}</TableHead>

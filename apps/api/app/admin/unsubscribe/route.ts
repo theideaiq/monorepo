@@ -17,7 +17,8 @@ import { verifyUnsubscribeToken } from "../_lib/unsubscribe";
 const texts = {
   ar: {
     button: "إلغاء الاشتراك",
-    confirm: "هل تريد التوقّف عن تلقّي الرسائل التسويقية من The IDEA عبر البريد الإلكتروني؟",
+    confirm:
+      "هل تريد التوقّف عن تلقّي الرسائل التسويقية من The IDEA عبر البريد الإلكتروني؟",
     done: "تم إلغاء اشتراكك. لن تصلك رسائل تسويقية بعد الآن، ويمكنك تفعيلها مجددًا من إعدادات حسابك.",
     invalid: "هذا الرابط غير صالح. يمكنك إيقاف الرسائل من إعدادات حسابك.",
     title: "إلغاء الاشتراك في الرسائل",
@@ -26,7 +27,8 @@ const texts = {
     button: "Unsubscribe",
     confirm: "Stop receiving marketing email from The IDEA?",
     done: "You're unsubscribed. You won't get marketing email any more; you can turn it back on in your account settings.",
-    invalid: "This link isn't valid. You can turn off marketing email in your account settings.",
+    invalid:
+      "This link isn't valid. You can turn off marketing email in your account settings.",
     title: "Unsubscribe",
   },
 } as const;

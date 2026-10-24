@@ -9,8 +9,8 @@ import { StatusBadge } from "@/components/status-badge";
 import { formatters } from "@/lib/format";
 import { isUuid } from "@/lib/list";
 import { requireSection } from "@/lib/session";
-import { deleteCampaign, sendCampaign } from "../../actions";
 import { CampaignForm } from "../../_components/campaign-form";
+import { deleteCampaign, sendCampaign } from "../../actions";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.marketing.campaigns");
@@ -83,10 +83,7 @@ const CampaignPage = async ({
       <PageBody className="xl:grid-cols-2">
         {editable ? (
           <Panel title={t("campaigns.draft")}>
-            <CampaignForm
-              campaign={campaign}
-              segments={segments ?? []}
-            />
+            <CampaignForm campaign={campaign} segments={segments ?? []} />
           </Panel>
         ) : (
           <Panel title={t("campaigns.results")}>
@@ -114,7 +111,10 @@ const CampaignPage = async ({
             ) : null}
           </Panel>
         )}
-        <Panel description={t("campaigns.previewHint")} title={t("campaigns.preview")}>
+        <Panel
+          description={t("campaigns.previewHint")}
+          title={t("campaigns.preview")}
+        >
           <div className="overflow-hidden rounded-lg border">
             <div className="bg-brand px-5 py-3 text-brand-foreground">
               <BrandLogo className="[&_svg]:text-brand-foreground" />

@@ -7,10 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import { Link } from "@repo/internationalization/navigation";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { EmptyState, PageBody, PageHeader } from "@/components/page";
+import { EmptyState, MaybeLink, PageBody, PageHeader } from "@/components/page";
 import { Pagination } from "@/components/pagination";
 import { SectionTabs } from "@/components/section-tabs";
 import { StatusBadge } from "@/components/status-badge";
@@ -75,6 +74,9 @@ const RentalsPage = async ({
     (rentals ?? []).map((rental) => rental.user_id)
   );
   const linkCustomers = canRead(staff.role, "customers");
+  const memberName = (userId: string | null) =>
+    userId ? (names.get(userId) ?? t("unnamed")) : t("deleted");
+  const showActions = canWrite && view !== "history";
   const defaultDue = addDays(todayInBaghdad(), LOAN_DAYS);
 
   return (
@@ -100,31 +102,26 @@ const RentalsPage = async ({
                   <TableHead>{t("requested")}</TableHead>
                   <TableHead>{t("due")}</TableHead>
                   <TableHead>{t("status")}</TableHead>
-                  {canWrite && view !== "history" ? (
-                    <TableHead className="text-end">
-                      {t("actions")}
-                    </TableHead>
+                  {showActions ? (
+                    <TableHead className="text-end">{t("actions")}</TableHead>
                   ) : null}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {(rentals ?? []).map((rental) => {
-                  const name = rental.user_id
-                    ? (names.get(rental.user_id) ?? t("unnamed"))
-                    : t("deleted");
+                  const name = memberName(rental.user_id);
                   return (
                     <TableRow key={rental.id}>
                       <TableCell>
-                        {rental.product_id ? (
-                          <Link
-                            className="font-medium hover:underline"
-                            href={`/catalog/products/${rental.product_id}`}
-                          >
-                            {localized(rental, "name", locale)}
-                          </Link>
-                        ) : (
-                          localized(rental, "name", locale)
-                        )}
+                        <MaybeLink
+                          className="font-medium hover:underline"
+                          href={
+                            rental.product_id &&
+                            `/catalog/products/${rental.product_id}`
+                          }
+                        >
+                          {localized(rental, "name", locale)}
+                        </MaybeLink>
                         {rental.staff_note ? (
                           <span className="block text-muted-foreground text-xs">
                             {rental.staff_note}
@@ -132,16 +129,15 @@ const RentalsPage = async ({
                         ) : null}
                       </TableCell>
                       <TableCell>
-                        {rental.user_id && linkCustomers ? (
-                          <Link
-                            className="hover:underline"
-                            href={`/customers/${rental.user_id}`}
-                          >
-                            {name}
-                          </Link>
-                        ) : (
-                          name
-                        )}
+                        <MaybeLink
+                          href={
+                            linkCustomers &&
+                            rental.user_id &&
+                            `/customers/${rental.user_id}`
+                          }
+                        >
+                          {name}
+                        </MaybeLink>
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
                         {format.date(rental.requested_at)}
@@ -158,7 +154,7 @@ const RentalsPage = async ({
                           {tStore(`rentalStatus.${rental.status}`)}
                         </StatusBadge>
                       </TableCell>
-                      {canWrite && view !== "history" ? (
+                      {showActions ? (
                         <TableCell className="text-end">
                           <RentalActions
                             defaultDue={defaultDue}

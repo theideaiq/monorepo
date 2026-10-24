@@ -70,7 +70,9 @@ const EventsPage = async ({
                   <TableHead>{t("events.title")}</TableHead>
                   <TableHead>{t("events.startsAt")}</TableHead>
                   <TableHead>{t("events.location")}</TableHead>
-                  <TableHead className="text-end">{t("events.rsvps")}</TableHead>
+                  <TableHead className="text-end">
+                    {t("events.rsvps")}
+                  </TableHead>
                   <TableHead>{t("publish.state")}</TableHead>
                 </TableRow>
               </TableHeader>

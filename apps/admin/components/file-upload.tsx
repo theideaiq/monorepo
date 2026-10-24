@@ -31,6 +31,92 @@ interface FileUploadProps {
   readonly supabaseUrl: string;
 }
 
+const buttonLabel = (uploading: boolean, replacing: boolean) => {
+  if (uploading) {
+    return "uploading";
+  }
+  return replacing ? "replace" : "choose";
+};
+
+interface FileItemProps {
+  readonly accept: "image" | "pdf";
+  readonly isCover: boolean;
+  readonly onMakeCover?: () => void;
+  readonly onRemove: () => void;
+  readonly path: string;
+  readonly url: string;
+}
+
+/** One uploaded file: an image thumbnail or a PDF link, with its buttons. */
+const FileItem = ({
+  accept,
+  isCover,
+  onMakeCover,
+  onRemove,
+  path,
+  url,
+}: FileItemProps) => {
+  const t = useTranslations("admin.upload");
+
+  return (
+    <li className="relative flex items-center gap-2 overflow-hidden rounded-md border bg-muted/40">
+      {accept === "image" ? (
+        // biome-ignore lint/performance/noImgElement: previews of just-uploaded files
+        <img
+          alt=""
+          className="aspect-square w-full object-cover"
+          height={160}
+          src={url}
+          width={160}
+        />
+      ) : (
+        <a
+          className="flex min-w-0 flex-1 items-center gap-2 p-2 text-sm underline-offset-4 hover:underline"
+          href={url}
+          rel="noopener"
+          target="_blank"
+        >
+          <FileTextIcon className="size-4 shrink-0" />
+          <span className="truncate" dir="auto">
+            {fileNameOf(path)}
+          </span>
+        </a>
+      )}
+      <span className="absolute end-1 top-1 flex gap-1">
+        {onMakeCover ? (
+          <Button
+            aria-label={t("makeCover")}
+            className="size-7"
+            onClick={onMakeCover}
+            size="icon"
+            title={t("makeCover")}
+            type="button"
+            variant="secondary"
+          >
+            <StarIcon />
+          </Button>
+        ) : null}
+        <Button
+          aria-label={t("remove")}
+          className="size-7"
+          onClick={onRemove}
+          size="icon"
+          title={t("remove")}
+          type="button"
+          variant="secondary"
+        >
+          <XIcon />
+        </Button>
+      </span>
+      {isCover ? (
+        <span className="absolute start-1 bottom-1 rounded bg-brand px-1.5 py-0.5 font-medium text-[10px] text-brand-foreground">
+          {t("cover")}
+        </span>
+      ) : null}
+    </li>
+  );
+};
+
 const ACCEPT = {
   image: "image/png,image/jpeg,image/webp",
   pdf: "application/pdf",
@@ -106,10 +192,7 @@ export const FileUpload = ({
 
   return (
     <div className="grid gap-2">
-      <Label
-        className={cn(invalid(name) && "text-destructive")}
-        htmlFor={id}
-      >
+      <Label className={cn(invalid(name) && "text-destructive")} htmlFor={id}>
         {label}
       </Label>
 
@@ -121,12 +204,9 @@ export const FileUpload = ({
           value={path}
         />
       ))}
-      {multiple && paths.length === 0 ? (
-        // An empty list still clears the field on save.
-        <input name={`${name}[]`} type="hidden" value="" />
-      ) : null}
-      {multiple ? null : paths.length === 0 ? (
-        <input name={name} type="hidden" value="" />
+      {paths.length === 0 ? (
+        // No file still clears the field on save.
+        <input name={multiple ? `${name}[]` : name} type="hidden" value="" />
       ) : null}
 
       {paths.length > 0 ? (
@@ -137,62 +217,19 @@ export const FileUpload = ({
           )}
         >
           {paths.map((path, index) => (
-            <li
-              className="relative flex items-center gap-2 overflow-hidden rounded-md border bg-muted/40"
+            <FileItem
+              accept={accept}
+              isCover={multiple && accept === "image" && index === 0}
               key={path}
-            >
-              {accept === "image" ? (
-                // biome-ignore lint/performance/noImgElement: previews of just-uploaded files
-                <img
-                  alt=""
-                  className="aspect-square w-full object-cover"
-                  src={publicFileUrl(supabaseUrl, bucket, path)}
-                />
-              ) : (
-                <a
-                  className="flex min-w-0 flex-1 items-center gap-2 p-2 text-sm underline-offset-4 hover:underline"
-                  href={publicFileUrl(supabaseUrl, bucket, path)}
-                  rel="noopener"
-                  target="_blank"
-                >
-                  <FileTextIcon className="size-4 shrink-0" />
-                  <span className="truncate" dir="auto">
-                    {fileNameOf(path)}
-                  </span>
-                </a>
-              )}
-              <span className="absolute end-1 top-1 flex gap-1">
-                {multiple && accept === "image" && index > 0 ? (
-                  <Button
-                    aria-label={t("makeCover")}
-                    className="size-7"
-                    onClick={() => makeFirst(path)}
-                    size="icon"
-                    title={t("makeCover")}
-                    type="button"
-                    variant="secondary"
-                  >
-                    <StarIcon />
-                  </Button>
-                ) : null}
-                <Button
-                  aria-label={t("remove")}
-                  className="size-7"
-                  onClick={() => remove(path)}
-                  size="icon"
-                  title={t("remove")}
-                  type="button"
-                  variant="secondary"
-                >
-                  <XIcon />
-                </Button>
-              </span>
-              {multiple && accept === "image" && index === 0 ? (
-                <span className="absolute start-1 bottom-1 rounded bg-brand px-1.5 py-0.5 font-medium text-[10px] text-brand-foreground">
-                  {t("cover")}
-                </span>
-              ) : null}
-            </li>
+              onMakeCover={
+                multiple && accept === "image" && index > 0
+                  ? () => makeFirst(path)
+                  : undefined
+              }
+              onRemove={() => remove(path)}
+              path={path}
+              url={publicFileUrl(supabaseUrl, bucket, path)}
+            />
           ))}
         </ul>
       ) : null}
@@ -216,11 +253,7 @@ export const FileUpload = ({
             variant="outline"
           >
             {uploading ? <Spinner /> : <UploadIcon />}
-            {uploading
-              ? t("uploading")
-              : paths.length > 0 && !multiple
-                ? t("replace")
-                : t("choose")}
+            {t(buttonLabel(uploading, paths.length > 0 && !multiple))}
           </Button>
           <span className="text-muted-foreground text-xs">
             {hint ??

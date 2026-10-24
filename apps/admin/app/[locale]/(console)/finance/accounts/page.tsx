@@ -36,7 +36,9 @@ const AccountsPage = async () => {
             />
           ))}
           {(accounts ?? []).length === 0 ? (
-            <p className="text-muted-foreground text-sm">{t("accounts.empty")}</p>
+            <p className="text-muted-foreground text-sm">
+              {t("accounts.empty")}
+            </p>
           ) : null}
         </Panel>
         {canWrite ? (

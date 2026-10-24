@@ -12,7 +12,14 @@ import {
 import { getDirection } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
-import { Bar, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  CartesianGrid,
+  ComposedChart,
+  Line,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 export interface MonthPoint {
   expenses: number;

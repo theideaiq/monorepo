@@ -14,6 +14,7 @@ import {
   use,
   useActionState,
   useEffect,
+  useRef,
 } from "react";
 import { toast } from "sonner";
 import { type ActionState, idle } from "@/lib/action-state";
@@ -42,7 +43,9 @@ interface ActionFormProps
   readonly action: FormAction;
   readonly children: ReactNode;
   /** Called with the result of a successful submission. */
-  readonly onSuccess?: (state: Extract<ActionState, { status: "success" }>) => void;
+  readonly onSuccess?: (
+    state: Extract<ActionState, { status: "success" }>
+  ) => void;
   /** Clears the fields after a successful submission (e.g. "add" forms). */
   readonly resetOnSuccess?: boolean;
   /** Skip the toast (the form shows the result itself). */
@@ -67,36 +70,37 @@ export const ActionForm = ({
   const router = useRouter();
   const [state, formAction, pending] = useActionState(action, idle);
 
+  const formRef = useRef<HTMLFormElement>(null);
+  // The latest callbacks, so the effect below runs once per result only.
+  const latest = useRef({ onSuccess, resetOnSuccess, router, silent, t });
+  latest.current = { onSuccess, resetOnSuccess, router, silent, t };
+
   useEffect(() => {
+    const { current } = latest;
     if (state.status === "success") {
-      if (!silent) {
-        toast.success(t(`notices.${state.notice}`));
+      if (!current.silent) {
+        toast.success(current.t(`notices.${state.notice}`));
       }
-      onSuccess?.(state);
+      if (current.resetOnSuccess) {
+        formRef.current?.reset();
+      }
+      current.onSuccess?.(state);
       if (state.redirectTo) {
-        router.push(state.redirectTo);
+        current.router.push(state.redirectTo);
       }
-    } else if (state.status === "error" && !silent) {
-      toast.error(t(`errors.${state.error}`));
+    } else if (state.status === "error" && !current.silent) {
+      toast.error(current.t(`errors.${state.error}`));
     }
-    // Runs once per result; the callbacks are not dependencies.
-    // biome-ignore lint/correctness/useExhaustiveDependencies: see above
   }, [state]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    const submitter = (event.nativeEvent as SubmitEvent).submitter;
+    const formData = new FormData(event.currentTarget);
+    const { submitter } = event.nativeEvent as SubmitEvent;
     if (submitter instanceof HTMLButtonElement && submitter.name) {
       formData.set(submitter.name, submitter.value);
     }
-    startTransition(async () => {
-      await formAction(formData);
-      if (resetOnSuccess) {
-        form.reset();
-      }
-    });
+    startTransition(() => formAction(formData));
   };
 
   const fields = state.status === "error" ? (state.fields ?? []) : [];
@@ -109,6 +113,7 @@ export const ActionForm = ({
         className={cn("grid gap-4", className)}
         noValidate
         onSubmit={handleSubmit}
+        ref={formRef}
         {...props}
       >
         {children}

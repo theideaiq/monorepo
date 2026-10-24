@@ -30,7 +30,7 @@ export const journalTotals = (lines: JournalLineInput[]) => {
 };
 
 const isBlank = (line: JournalLineInput) =>
-  !line.accountId && !line.debit && !line.credit && !line.memo;
+  !(line.accountId || line.debit || line.credit || line.memo);
 
 /**
  * Drops empty rows and checks the rest: at least two lines, each with an
@@ -59,7 +59,7 @@ export const validateJournalLines = (
     ) {
       return { ok: false, problem: "negativeAmount" };
     }
-    if ((line.debit > 0) === (line.credit > 0)) {
+    if (line.debit > 0 === line.credit > 0) {
       return { ok: false, problem: "oneSidePerLine" };
     }
   }

@@ -123,3 +123,21 @@ export const DetailList = ({
     ))}
   </dl>
 );
+
+/** A link when there is somewhere to go, plain text otherwise. */
+export const MaybeLink = ({
+  children,
+  className = "hover:underline",
+  href,
+}: {
+  readonly children: ReactNode;
+  readonly className?: string;
+  readonly href?: string | null | false;
+}) =>
+  href ? (
+    <Link className={className} href={href}>
+      {children}
+    </Link>
+  ) : (
+    children
+  );

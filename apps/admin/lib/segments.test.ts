@@ -10,9 +10,13 @@ describe("segment criteria", () => {
         plusMember: "yes",
         tags: ["gamer"],
       })
-    ).toEqual({ crm_status: ["vip", "customer"], plus_member: true, tags: ["gamer"] });
+    ).toEqual({
+      crm_status: ["vip", "customer"],
+      plus_member: true,
+      tags: ["gamer"],
+    });
 
-    expect(criteriaFromForm({ plusMember: "no", locale: "en" })).toEqual({
+    expect(criteriaFromForm({ locale: "en", plusMember: "no" })).toEqual({
       locale: "en",
       plus_member: false,
     });

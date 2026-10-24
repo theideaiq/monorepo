@@ -46,7 +46,10 @@ export const POST = async (request: Request) => {
   const secret = env.SUPABASE_SECRET_KEY;
   const apiUrl = env.NEXT_PUBLIC_API_URL;
   if (!(resend && env.RESEND_FROM && secret && apiUrl)) {
-    return NextResponse.json({ error: "email_not_configured" }, { status: 503 });
+    return NextResponse.json(
+      { error: "email_not_configured" },
+      { status: 503 }
+    );
   }
 
   const { campaignId } = parsed.data;
@@ -84,13 +87,12 @@ export const POST = async (request: Request) => {
         .maybeSingle();
       criteria = segment ? parseCriteria(segment.criteria) : null;
     }
-    const recipients = criteria
-      ? await resolveRecipients(admin, criteria)
-      : [];
+    const recipients = criteria ? await resolveRecipients(admin, criteria) : [];
 
     for (let start = 0; start < recipients.length; start += BATCH_SIZE) {
-      const batch = recipients.slice(start, start + BATCH_SIZE).map(
-        (recipient) => {
+      const batch = recipients
+        .slice(start, start + BATCH_SIZE)
+        .map((recipient) => {
           const link = unsubscribeUrl(
             apiUrl,
             secret,
@@ -116,8 +118,7 @@ export const POST = async (request: Request) => {
             tags: [{ name: "campaign", value: campaign.id }],
             to: recipient.email,
           };
-        }
-      );
+        });
       // biome-ignore lint/performance/noAwaitInLoops: batches go out one at a time
       const { error } = await resend.batch.send(batch, {
         idempotencyKey: `campaign-${campaign.id}-${start}`,

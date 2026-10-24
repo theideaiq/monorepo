@@ -26,7 +26,7 @@ import {
   searchTerm,
 } from "@/lib/list";
 import { crmStatuses } from "@/lib/segments";
-import { requireSection } from "@/lib/session";
+import { requireSection, type ServerClient } from "@/lib/session";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.customers");
@@ -35,19 +35,12 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const MAX_FILTERED = 1000;
 
-/** Customer search (CRM). */
-const CustomersPage = async ({
-  searchParams,
-}: {
-  readonly searchParams: Promise<SearchParams>;
-}) => {
-  const { supabase } = await requireSection("customers");
-  const params = await searchParams;
-  const locale = await getLocale();
-  const t = await getTranslations("admin.customers");
-  const format = formatters(locale);
-  const { from, page, to } = pageRange(params);
-
+/** Profiles matching the filters, with their CRM rows. */
+const searchCustomers = async (
+  supabase: ServerClient,
+  params: SearchParams
+) => {
+  const { from, to } = pageRange(params);
   const q = param(params, "q");
   const status = oneOf(params, "crm", crmStatuses);
   const tag = searchTerm(param(params, "tag")).toLowerCase();
@@ -57,7 +50,10 @@ const CustomersPage = async ({
   // CRM filters live in crm_contacts (no foreign key to profiles to embed).
   let crmIds: string[] | null = null;
   if (status || tag) {
-    let crm = supabase.from("crm_contacts").select("user_id").limit(MAX_FILTERED);
+    let crm = supabase
+      .from("crm_contacts")
+      .select("user_id")
+      .limit(MAX_FILTERED);
     if (status) {
       crm = crm.eq("status", status);
     }
@@ -92,8 +88,9 @@ const CustomersPage = async ({
     query = query.eq("marketing_opt_in", optIn === "yes");
   }
 
-  const { count, data: profiles } = await query;
-  const ids = (profiles ?? []).map((profile) => profile.id);
+  const { count, data } = await query;
+  const profiles = data ?? [];
+  const ids = profiles.map((profile) => profile.id);
   const { data: contacts } =
     ids.length > 0
       ? await supabase
@@ -101,8 +98,35 @@ const CustomersPage = async ({
           .select("user_id, status, tags")
           .in("user_id", ids)
       : { data: [] };
+
+  return {
+    contacts: contacts ?? [],
+    count,
+    filters: { optIn, q, status, suspended, tag },
+    profiles,
+  };
+};
+
+/** Customer search (CRM). */
+const CustomersPage = async ({
+  searchParams,
+}: {
+  readonly searchParams: Promise<SearchParams>;
+}) => {
+  const { supabase } = await requireSection("customers");
+  const params = await searchParams;
+  const locale = await getLocale();
+  const t = await getTranslations("admin.customers");
+  const format = formatters(locale);
+  const { page } = pageRange(params);
+
+  const { contacts, count, filters, profiles } = await searchCustomers(
+    supabase,
+    params
+  );
+  const { optIn, q, status, suspended, tag } = filters;
   const crmById = new Map(
-    (contacts ?? []).map((contact) => [contact.user_id, contact])
+    contacts.map((contact) => [contact.user_id, contact])
   );
 
   return (
@@ -165,7 +189,7 @@ const CustomersPage = async ({
           />
         </FilterBar>
 
-        {(profiles ?? []).length === 0 ? (
+        {profiles.length === 0 ? (
           <EmptyState title={t("empty")} />
         ) : (
           <div className="rounded-xl border">
@@ -180,7 +204,7 @@ const CustomersPage = async ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(profiles ?? []).map((profile) => {
+                {profiles.map((profile) => {
                   const contact = crmById.get(profile.id);
                   return (
                     <TableRow key={profile.id}>

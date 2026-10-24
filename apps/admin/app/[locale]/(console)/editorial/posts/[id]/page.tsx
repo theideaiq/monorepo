@@ -9,10 +9,14 @@ import { toBaghdadInput } from "@/lib/dates";
 import { isUuid } from "@/lib/list";
 import { publishState } from "@/lib/publishing";
 import { requireSection } from "@/lib/session";
-import { deletePost } from "../../actions";
 import { PostForm } from "../../_components/post-form";
+import { deletePost } from "../../actions";
 
-const modes = { draft: "draft", published: "now", scheduled: "schedule" } as const;
+const modes = {
+  draft: "draft",
+  published: "now",
+  scheduled: "schedule",
+} as const;
 
 const PostPage = async ({
   params,
@@ -61,7 +65,9 @@ const PostPage = async ({
         <PostForm
           mode={modes[state]}
           post={post}
-          publishAt={state === "scheduled" ? toBaghdadInput(post.published_at) : ""}
+          publishAt={
+            state === "scheduled" ? toBaghdadInput(post.published_at) : ""
+          }
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
         />
       </PageBody>

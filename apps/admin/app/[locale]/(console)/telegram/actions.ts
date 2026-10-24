@@ -3,7 +3,14 @@
 import { z } from "zod";
 import { affected, check, staffAction } from "@/lib/action";
 import { success } from "@/lib/action-state";
-import { checkbox, int, optionalText, optionalUuid, text, uuid } from "@/lib/forms";
+import {
+  checkbox,
+  int,
+  optionalText,
+  optionalUuid,
+  text,
+  uuid,
+} from "@/lib/forms";
 
 /** Resolves (e.g. grants an unban) or rejects a request sent to the bot. */
 export const resolveRequest = staffAction(
@@ -20,10 +27,10 @@ export const resolveRequest = staffAction(
         .eq("id", input.id)
         .select("id")
     );
-    return undefined;
   }
 );
 
+const AT_PREFIX = /^@/;
 const CHAT_ID = /^-?\d{1,20}$/;
 
 export const saveChat = staffAction(
@@ -34,7 +41,7 @@ export const saveChat = staffAction(
     moderated: checkbox,
     title: text(200),
     username: optionalText(64).transform((value) =>
-      value ? value.replace(/^@/, "") : null
+      value ? value.replace(AT_PREFIX, "") : null
     ),
   }),
   async ({ input, supabase }) => {

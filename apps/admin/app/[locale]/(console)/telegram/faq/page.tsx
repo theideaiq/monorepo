@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { PageBody, PageHeader, Panel } from "@/components/page";
 import { requireSection } from "@/lib/session";
-import { TelegramTabs } from "../_components/telegram-tabs";
 import { FaqForm } from "../_components/telegram-forms";
+import { TelegramTabs } from "../_components/telegram-tabs";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.telegram.tabs");

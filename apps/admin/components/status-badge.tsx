@@ -1,7 +1,13 @@
 import { cn } from "@repo/design-system/lib/utils";
 import type { ReactNode } from "react";
 
-export type Tone = "neutral" | "info" | "success" | "warning" | "danger" | "brand";
+export type Tone =
+  | "neutral"
+  | "info"
+  | "success"
+  | "warning"
+  | "danger"
+  | "brand";
 
 const tones: Record<Tone, string> = {
   brand: "bg-brand/20 text-foreground border-brand/50",
@@ -18,8 +24,8 @@ const statusTones: Record<string, Tone> = {
   accepted: "success",
   active: "success",
   archived: "neutral",
-  cancelled: "neutral",
   canceled: "neutral",
+  cancelled: "neutral",
   churned: "neutral",
   customer: "info",
   delivered: "success",

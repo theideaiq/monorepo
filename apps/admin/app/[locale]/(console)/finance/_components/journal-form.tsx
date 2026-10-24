@@ -1,9 +1,9 @@
 "use client";
 
+import { formatPrice } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Input } from "@repo/design-system/components/ui/input";
 import { cn } from "@repo/design-system/lib/utils";
-import { formatPrice } from "@repo/commerce";
 import { PlusIcon, XIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -117,32 +117,34 @@ export const JournalForm = ({ accounts, today }: JournalFormProps) => {
               aria-label={t("memo")}
               maxLength={300}
               name="memo[]"
-              onChange={(event) => update(line.id, { memo: event.target.value })}
+              onChange={(event) =>
+                update(line.id, { memo: event.target.value })
+              }
               placeholder={t("memo")}
               value={line.memo}
             />
             <Input
               aria-label={t("debit")}
               dir="ltr"
-              readOnly={toAmount(line.credit) > 0}
               inputMode="numeric"
               name="debit[]"
               onChange={(event) =>
                 update(line.id, { debit: event.target.value })
               }
               placeholder={t("debit")}
+              readOnly={toAmount(line.credit) > 0}
               value={line.debit}
             />
             <Input
               aria-label={t("credit")}
               dir="ltr"
-              readOnly={toAmount(line.debit) > 0}
               inputMode="numeric"
               name="credit[]"
               onChange={(event) =>
                 update(line.id, { credit: event.target.value })
               }
               placeholder={t("credit")}
+              readOnly={toAmount(line.debit) > 0}
               value={line.credit}
             />
             <Button
@@ -174,14 +176,18 @@ export const JournalForm = ({ accounts, today }: JournalFormProps) => {
 
         <div className="grid gap-1 rounded-lg bg-muted/50 p-3 text-sm md:grid-cols-[4fr_1fr_1fr_auto] md:items-center">
           <span className="font-medium">{t("totals")}</span>
-          <span className="tabular-nums">{formatPrice(totals.debit, locale)}</span>
+          <span className="tabular-nums">
+            {formatPrice(totals.debit, locale)}
+          </span>
           <span className="tabular-nums">
             {formatPrice(totals.credit, locale)}
           </span>
           <span
             className={cn(
               "font-medium",
-              totals.balanced ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"
+              totals.balanced
+                ? "text-emerald-600 dark:text-emerald-400"
+                : "text-destructive"
             )}
           >
             {totals.balanced

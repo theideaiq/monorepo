@@ -1,9 +1,9 @@
 import { Marked } from "marked";
 
 const HTML_ESCAPES: Record<string, string> = {
+  "'": "&#39;",
   '"': "&quot;",
   "&": "&amp;",
-  "'": "&#39;",
   "<": "&lt;",
   ">": "&gt;",
 };

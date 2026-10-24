@@ -37,7 +37,12 @@ export const Pagination = async ({
         })}
       </span>
       <span className="flex gap-2">
-        <Button asChild={page > 1} disabled={page <= 1} size="sm" variant="outline">
+        <Button
+          asChild={page > 1}
+          disabled={page <= 1}
+          size="sm"
+          variant="outline"
+        >
           {page > 1 ? (
             <Link href={`${pathname}${withParams(params, { page: page - 1 })}`}>
               <ChevronLeftIcon className="rtl:rotate-180" />

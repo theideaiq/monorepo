@@ -28,14 +28,14 @@ interface CampaignTemplateProps {
 
 const footer = {
   ar: {
+    help: "للمساعدة راسلنا على",
     reason: "تصلك هذه الرسالة لأنك وافقت على تلقّي رسائل The IDEA البريدية.",
     unsubscribe: "إلغاء الاشتراك في هذه الرسائل",
-    help: "للمساعدة راسلنا على",
   },
   en: {
+    help: "Questions? Write to",
     reason: "You're receiving this because you agreed to email from The IDEA.",
     unsubscribe: "Unsubscribe from these emails",
-    help: "Questions? Write to",
   },
 } as const;
 
@@ -107,7 +107,11 @@ export const CampaignTemplate = ({
             </Link>
           </Section>
           <Section
-            style={{ direction: dir, padding: "8px 32px 24px", textAlign: align }}
+            style={{
+              direction: dir,
+              padding: "8px 32px 24px",
+              textAlign: align,
+            }}
           >
             <Markdown
               markdownContainerStyles={{
@@ -133,7 +137,10 @@ export const CampaignTemplate = ({
             </Text>
             <Text style={{ color: "#71717a", fontSize: 12, margin: "0 0 8px" }}>
               {text.help}{" "}
-              <Link href={`mailto:${supportEmail}`} style={{ color: "#71717a" }}>
+              <Link
+                href={`mailto:${supportEmail}`}
+                style={{ color: "#71717a" }}
+              >
                 {supportEmail}
               </Link>
             </Text>

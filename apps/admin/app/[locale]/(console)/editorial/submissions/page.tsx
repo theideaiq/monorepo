@@ -110,7 +110,8 @@ const SubmissionsPage = async ({
                         {row.assigned_to
                           ? t("assignedTo", {
                               name:
-                                editors.get(row.assigned_to) ?? t("unnamedEditor"),
+                                editors.get(row.assigned_to) ??
+                                t("unnamedEditor"),
                             })
                           : t("unassigned")}
                       </span>
