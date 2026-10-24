@@ -4,20 +4,29 @@ Conventions for anyone — human or AI agent — changing this repository.
 
 ## Repository map
 
-- `apps/web` — marketing site (Next.js, i18n routes under `app/[locale]`).
+- `apps/web` — The IDEA's public website (Next.js, i18n routes under
+  `app/[locale]`): store catalog, Plus, Academy, Suite, Club, news, events,
+  journal, legal pages (Markdown in `apps/web/content/legal`).
 - `apps/app` — the product, client-first: the same code runs in the browser
   and, as a static export (`bun run build:native`), inside the Capacitor
   iOS/Android apps. No Server Actions, Route Handlers, `cookies()`, proxy or
   request-time server rendering here; anything that needs a secret goes in
   `apps/api`, called with the user's token (`callApi` in `apps/app/lib/api.ts`).
-- `apps/api` — webhooks, cron jobs and privileged server endpoints.
+- `apps/api` — webhooks (Wayl, Telegram), cron jobs, the calendar feed and
+  privileged endpoints, including `app/admin/*` for the back office.
+- `apps/admin` — the staff back office. Server-rendered with the staff
+  member's cookie session (`@repo/auth/server`) and Server Actions; every
+  query runs as the staff member so RLS applies. Staff rights need an
+  authenticator-app (AAL2) session, enforced by the database too.
 - `apps/email`, `apps/docs`, `apps/storybook` — templates, docs, UI workbench.
+- `packages/commerce` (catalog, prices, cart totals) and `packages/droid`
+  (Telegram bot) are The IDEA's own packages; the rest come from the template.
 - `packages/*` — shared code, imported as `@repo/<name>`. `@repo` is a fixed
   internal scope; never rename it per project.
 - `packages/config/project.json` — the single source of truth for organization,
   project, locales, region and commerce settings. Read it through `@repo/config`.
-- `scripts/` — `init.ts` creates a project from the template (template only);
-  `check-placeholders.ts`, `check-rtl.ts` and `check-i18n.ts` are repo checks.
+- `scripts/` — `check-placeholders.ts`, `check-rtl.ts` and `check-i18n.ts`
+  are repo checks.
 - `ARCHITECTURE_AND_INTEGRATIONS.md` — how the pieces fit together and how to
   set up each integration (Supabase, Capacitor, tracking, Wayl, Vercel).
 

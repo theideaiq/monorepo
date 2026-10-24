@@ -119,6 +119,11 @@ Inside `apps/app`, link with `Link` and `useRouter` from
 
 ## 1. Create a project from the template
 
+> This repository was created from the template on 2026-10-23 with
+> `--commerce physical --keep-modules rate-limit,ai`. The section below is
+> kept as a record of what `init` did and for reference when the template
+> changes; there is no need to run it again here.
+
 > **Two kinds of "organization".** The *template organization* is the client
 > or company the codebase is created for. It is set once by `bun run init`.
 > *Tenant organizations* are the workspaces end users create inside the
@@ -335,6 +340,14 @@ Current schema:
 | `…_storage.sql` | `org-files` (private) and `avatars` (public) buckets with path-based policies |
 | `…_pending_invitations.sql` | `pending_invitations()` RPC for onboarding |
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
+| `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
+| `…_commerce.sql` | Megastore catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
+| `…_plus.sql` | IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
+| `…_editorial.sql` | `posts`, `events` + `event_rsvps` (capacity, closed after start), `journal_issues`, `submissions` + staff-only `submission_reviews`; `review_queue()` hides authors until a decision (blind review) |
+| `…_back_office.sql` | `crm_contacts`, `marketing_segments`, `marketing_campaigns` (opted-in customers only: `profiles.marketing_opt_in`), double-entry ledger (`chart_of_accounts`, `ledger_entries`, `ledger_lines`, `post_journal_entry()`, `ledger_monthly_summary()`), `staff_plan`, `equity_rounds`, `equity_holders` |
+| `…_content_storage.sql` | `catalog` and `editorial` (public) and `submissions` (private, `<author id>/…`) buckets |
+| `…_droid.sql` | Telegram bot tables: `telegram_chats`, `telegram_members`, `telegram_requests`, `telegram_faq` |
+| `…_staff_mfa.sql` | Staff rights require an authenticator-app session (`aal2` claim) in every policy |
 
 ### 2.2 Run the database locally
 

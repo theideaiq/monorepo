@@ -1,12 +1,23 @@
 # The IDEA
 
-The IDEA IQ Inc.'s production monorepo: a Next.js + Supabase SaaS platform built for
-Iraq-first products. It ships Arabic (RTL) and English (LTR) out of the box, takes
-local payments through Wayl, and can be packaged as native iOS and Android apps.
+The IDEA IQ Inc.'s production monorepo: the whole of The IDEA — the
+digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
+(LTR), local payments through Wayl, and native iOS and Android apps.
 
-> **Starting a new project from this template?** Run `bun install && bun run init`
-> first. It asks for your organization and project details, fills in every
-> placeholder token, sets up environment files and removes the modules you don't need.
+| Product line | What it is | Where |
+| --- | --- | --- |
+| Megastore | Gaming, tech, books and lifestyle, delivered across Iraq | `apps/web` (catalog), `apps/app` (cart, checkout, orders) |
+| IDEA Plus | Monthly membership to rent games, books and movies | `apps/web/plus`, `apps/app/plus` |
+| Academy | Courses and cultural-exchange programs | `apps/web/academy` |
+| IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
+| The Club | Community rooms on Telegram | `apps/web/club` |
+| Editorial | News, events with RSVPs, the journal and member submissions | `apps/web`, `apps/app`, `apps/admin` |
+| Droid | Telegram bot: moderation, FAQ, product search, AI assistant | `packages/droid`, `apps/api/app/telegram` |
+
+Built on the shaheenfarjo/monorepo template (initialized with `bun run init`:
+physical-goods commerce, rate-limit and AI modules). It replaces the earlier
+theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
+(legacy bot) repositories, whose git history is merged into this one.
 
 ## Stack
 
@@ -26,9 +37,9 @@ local payments through Wayl, and can be packaged as native iOS and Android apps.
 
 ```
 apps/
-  web/        Marketing site (port 3001)
-  app/        Main product — web + iOS/Android via Capacitor (port 3000)
-  api/        Webhooks, cron jobs and server-only endpoints (port 3002)
+  web/        Public website: store catalog, Plus, Academy, Suite, Club, news, events, journal (port 3001)
+  app/        Customer app — web + iOS/Android via Capacitor (port 3000)
+  api/        Checkout, payment webhooks, cron, Telegram webhook, calendar feed, back-office endpoints (port 3002)
   email/      React Email templates (port 3003)
   docs/       Mintlify documentation (port 3004)
   admin/      Back office for staff: catalog, orders, CRM, finance, editorial (port 3005)
@@ -37,9 +48,11 @@ packages/
   config/     Project identity, locales and regional settings (single source of truth)
   auth/       Supabase Auth clients, phone OTP, session middleware
   database/   Supabase schema, migrations, RLS tests and generated types
-  payments/   Payment-provider interface, Wayl provider, billing logic
+  payments/   Payment-provider interface, Wayl provider, billing (organizations and individuals, store orders)
+  commerce/   Catalog queries, prices, governorates, cart totals
+  droid/      The Telegram bot and its moderation engine
   design-system/, internationalization/, analytics/, security/, seo/, …
-scripts/      Template init and repository checks
+scripts/      Repository checks
 ```
 
 ## Getting started
@@ -49,13 +62,15 @@ Supabase locally.
 
 ```sh
 bun install
-bun run init      # first time only, when creating a project from the template
+bun run db:start  # local Supabase with migrations and seed data (Docker)
 bun run dev       # starts every app
 ```
 
-Each app reads its environment from `.env.local` (created by `init` from the
-`.env.example` files). Without credentials the apps still start; integrations whose
-keys are missing are disabled.
+Each app reads its environment from `.env.local` (copy the app's
+`.env.example`). Without credentials the apps still start; integrations whose
+keys are missing are disabled. Staff sign in to the back office with their
+phone and an authenticator app; grant the first superadmin with SQL (see
+`ARCHITECTURE_AND_INTEGRATIONS.md`).
 
 ## Common scripts
 
@@ -66,7 +81,7 @@ keys are missing are disabled.
 | `bun run check` / `bun run fix` | Lint and format with Biome |
 | `bun run typecheck` | Type-check every workspace |
 | `bun run test` | Run all unit tests |
-| `bun run check:placeholders` | Fail if placeholder tokens remain after init |
+| `bun run check:placeholders` | Fail on leftover template tokens or unbalanced module markers |
 | `bun run check:rtl` / `bun run check:i18n` | Physical Tailwind utilities / UI text missing from the messages files |
 | `bun run db:start` / `db:reset` / `db:test` / `db:types` | Local Supabase, migrations, RLS tests, generated types |
 | `bun run build:native` / `bun run cap:sync` | Static export of `apps/app` / copy it into the iOS and Android projects |
