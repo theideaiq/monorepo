@@ -10,6 +10,7 @@ interface PaginationProps {
   readonly page: number;
   readonly params: SearchParams;
   readonly pathname: string;
+  readonly size?: number;
 }
 
 /** Previous/next links that keep the current filters. */
@@ -18,8 +19,9 @@ export const Pagination = async ({
   page,
   params,
   pathname,
+  size,
 }: PaginationProps) => {
-  const pages = pageCount(count);
+  const pages = pageCount(count, size);
   if (pages <= 1) {
     return null;
   }

@@ -1015,6 +1015,136 @@
         "recipients": "{count} recipients right now",
         "deleteDescription": "Campaigns that used it keep their history."
       }
+    },
+    "finance": {
+      "title": "Finance",
+      "tabs": {
+        "dashboard": "Overview",
+        "journal": "Journal",
+        "accounts": "Chart of accounts",
+        "payments": "Payments",
+        "payroll": "Staff plan",
+        "equity": "Cap table"
+      },
+      "dashboard": {
+        "error": "The ledger summary couldn't be loaded.",
+        "revenueMonth": "Revenue this month",
+        "expensesMonth": "Expenses this month",
+        "cogsMonth": "Cost of goods sold",
+        "netMonth": "Net income this month",
+        "ytd": "Year to date: {amount}",
+        "grossHint": "Gross profit: {amount}",
+        "chart": "Last 12 months",
+        "chartHint": "From posted journal entries, in IQD.",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "net": "Net income"
+      },
+      "journal": {
+        "new": "New journal entry",
+        "newHint": "Every entry needs at least two lines, and debits must equal credits.",
+        "search": "Description or reference",
+        "from": "From",
+        "to": "To",
+        "empty": "No journal entries yet.",
+        "date": "Date",
+        "description": "Description",
+        "reference": "Reference",
+        "referenceHint": "Optional: an invoice, receipt or payment reference.",
+        "lines": "Lines",
+        "account": "Account",
+        "chooseAccount": "Choose an account…",
+        "memo": "Memo",
+        "debit": "Debit",
+        "credit": "Credit",
+        "addLine": "Add line",
+        "removeLine": "Remove line",
+        "totals": "Totals",
+        "balanced": "Balanced",
+        "difference": "Off by {amount}",
+        "post": "Post entry"
+      },
+      "accounts": {
+        "description": "Posted entries keep their accounts; deactivate an account to stop using it.",
+        "empty": "No accounts yet.",
+        "new": "New account",
+        "code": "Code",
+        "name": "Name",
+        "type": "Type",
+        "types": {
+          "asset": "Asset",
+          "liability": "Liability",
+          "equity": "Equity",
+          "revenue": "Revenue",
+          "expense": "Expense"
+        },
+        "category": "Category",
+        "categoryHint": "\"cogs\" marks cost of goods sold.",
+        "active": "Active"
+      },
+      "payments": {
+        "status": "Status",
+        "anyStatus": "All statuses",
+        "empty": "No payments yet.",
+        "date": "Date",
+        "for": "For",
+        "order": "Store order",
+        "subscription": "Subscription",
+        "other": "Other",
+        "customer": "Customer",
+        "amount": "Amount",
+        "refunded": "{amount} refunded"
+      },
+      "payroll": {
+        "thisMonth": "Payroll this month",
+        "headcount": "Headcount",
+        "nextYear": "Next 12 months",
+        "plan": "Positions",
+        "description": "Planned, open and filled positions. Salaries are monthly, in IQD; raises apply on each anniversary of the start date.",
+        "role": "Role",
+        "department": "Department",
+        "salary": "Monthly salary (IQD)",
+        "increase": "Raise %/yr",
+        "start": "Start date",
+        "status": "Status",
+        "statuses": {
+          "planned": "Planned",
+          "hiring": "Hiring",
+          "active": "Filled",
+          "terminated": "Ended"
+        },
+        "projection": "Projection",
+        "projectionHint": "Positions count from their start date; ended positions are left out.",
+        "month": "Month",
+        "total": "Payroll"
+      },
+      "equity": {
+        "capTable": "Cap table",
+        "tableHint": "Ownership is each holder's share of all shares. Values use the round's price per share, in the round's currency.",
+        "empty": "No shareholders yet.",
+        "holder": "Shareholder",
+        "type": "Type",
+        "types": {
+          "founder": "Founder",
+          "investor": "Investor",
+          "employee": "Employee",
+          "advisor": "Advisor"
+        },
+        "round": "Round",
+        "shares": "Shares",
+        "ownership": "Ownership",
+        "value": "Value",
+        "total": "Total",
+        "rounds": "Funding rounds",
+        "roundsHint": "Amounts are in the round's currency (e.g. USD).",
+        "closedOn": "Closed on",
+        "currency": "Currency",
+        "valuationCap": "Valuation cap",
+        "pricePerShare": "Price per share",
+        "deleteRoundDescription": "Its shareholders stay, without a round.",
+        "holders": "Shareholders",
+        "vestingStart": "Vesting start"
+      }
     }
   }
 }
