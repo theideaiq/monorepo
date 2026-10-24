@@ -6,9 +6,9 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 
 - **Account details:** your name, email address, phone number, language and, if you choose, a profile photo.
 - **Delivery details:** your address and governorate, and the phone number our delivery team uses to reach you.
-- **Orders and memberships:** what you order or rent, your IDEA Plus plan, rental history and returns.
-- **Identity verification:** for IDEA Plus rentals we may ask to see a national ID card or passport to prevent fraud. We record that verification took place and keep a copy only if you agree to it or the law requires it.
-- **Organizations (IDEA Suite):** your company's name and details, the members you invite and their roles.
+- **Orders and memberships:** what you order or rent, your plan on The IDEA Plus, rental history and returns.
+- **Identity verification:** for The IDEA Plus rentals we may ask to see a national ID card or passport to prevent fraud. We record that verification took place and keep a copy only if you agree to it or the law requires it.
+- **Organizations (The IDEA Suite):** your company's name and details, the members you invite and their roles.
 - **Content you submit:** Journal submissions (text, images and files), RSVPs to events, messages you send to us through the contact form, by email or to Droid.
 
 ### Data collected automatically
@@ -18,7 +18,7 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 
 ### Data from Telegram
 
-When you talk to Droid or join a room it moderates, Telegram shares with us your Telegram user ID, name, username and language. We also record your membership status in our moderated rooms (for example if you were banned), the requests you send to staff (such as unban or support requests) and, if you link it, which IDEA account your Telegram account belongs to. Messages you send to Droid's AI assistant are processed to generate an answer.
+When you talk to Droid or join a room it moderates, Telegram shares with us your Telegram user ID, name, username and language. We also record your membership status in our moderated rooms (for example if you were banned), the requests you send to staff (such as unban or support requests) and, if you link it, which The IDEA account your Telegram account belongs to. Messages you send to Droid's AI assistant are processed to generate an answer.
 
 ### Payment data
 
@@ -26,7 +26,7 @@ Payments are processed by our payment partner **Wayl**. We receive the payment s
 
 ## 2. How we use your data
 
-- To provide the Service: create your account, process and deliver orders, manage IDEA Plus rentals and returns, run organizations and business plans, and handle event RSVPs and Journal submissions.
+- To provide the Service: create your account, process and deliver orders, manage The IDEA Plus rentals and returns, run organizations and business plans, and handle event RSVPs and Journal submissions.
 - To take payments and keep financial records, as the law requires.
 - To provide customer support and answer your messages.
 - To keep the Service and our community safe: prevent fraud, moderate our rooms and enforce our [Terms](/legal/terms) and [Community guidelines](/legal/community).
@@ -45,7 +45,7 @@ We do **not** sell your personal data. We share it only as needed with:
 - **Service providers** who process data for us: hosting and database (Supabase), payments (Wayl), email delivery (Resend), error monitoring and logging, analytics, and our delivery partners (only what is needed to deliver your order or rental).
 - **Telegram,** when you use Droid or our rooms, under Telegram's own privacy policy.
 - **Authorities,** when the law requires it, or when necessary to protect the rights, property or safety of The IDEA, our users or the public (for example to investigate fraud or unreturned rentals).
-- **Your organization:** if you are a member of an IDEA Suite organization, its administrators can see your name, email and role in that organization.
+- **Your organization:** if you are a member of an organization on The IDEA Suite, its administrators can see your name, email and role in that organization.
 
 ## 5. International transfers
 

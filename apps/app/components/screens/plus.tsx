@@ -484,7 +484,7 @@ const MyRentals = () => {
   );
 };
 
-/** IDEA Plus: membership, plans, the rental catalog and the member's rentals. */
+/** The IDEA Plus: membership, plans, the rental catalog and the member's rentals. */
 export const Plus = () => {
   const t = useTranslations("app.plus");
   const [confirming, setConfirming] = useState(hasPendingCheckout);

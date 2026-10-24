@@ -5,7 +5,7 @@ import type {
 } from "@repo/database";
 
 /**
- * Who pays: a customer organization (business plans) or a single user (IDEA
+ * Who pays: a customer organization (business plans) or a single user (The IDEA
  * Plus memberships and store orders).
  */
 export type BillingOwner =

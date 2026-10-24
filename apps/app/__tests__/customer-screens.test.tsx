@@ -408,7 +408,7 @@ describe("accounts without organizations", () => {
     );
 
     expect(
-      await screen.findByText("Bring your company to IDEA Suite")
+      await screen.findByText("Bring your company to The IDEA Suite")
     ).toBeTruthy();
     expect(
       screen.getByRole("link", { name: "Create a business account" })
@@ -417,7 +417,7 @@ describe("accounts without organizations", () => {
   });
 });
 
-describe("IDEA Plus", () => {
+describe("The IDEA Plus", () => {
   test("subscribes without an organization", async () => {
     const db = fakeDb({
       results: {

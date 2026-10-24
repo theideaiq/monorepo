@@ -31,7 +31,7 @@ export interface Audience {
   contacts: { status: string; tags: string[]; user_id: string }[];
   /** Who has an email address on their account (auth.users). */
   emails: Map<string, string>;
-  /** Users with a live IDEA Plus membership. */
+  /** Users with a live membership of The IDEA Plus. */
   plusMembers: Set<string>;
   /** Opted-in, unsuspended profiles. */
   profiles: { id: string; locale: string }[];

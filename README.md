@@ -7,9 +7,9 @@ digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
 | Product line | What it is | Where |
 | --- | --- | --- |
 | Megastore | Gaming, tech, books and lifestyle, delivered across Iraq | `apps/web` (catalog), `apps/app` (cart, checkout, orders) |
-| IDEA Plus | Monthly membership to rent games, books and movies | `apps/web/plus`, `apps/app/plus` |
+| The IDEA Plus | Monthly membership to rent games, books and movies | `apps/web/plus`, `apps/app/plus` |
 | Academy | Courses and cultural-exchange programs | `apps/web/academy` |
-| IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
+| The IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
 | The Club | Community rooms on Telegram | `apps/web/club` |
 | Editorial | News, events with RSVPs, the journal and member submissions | `apps/web`, `apps/app`, `apps/admin` |
 | Droid | Telegram bot: moderation, FAQ, product search, AI assistant | `packages/droid`, `apps/api/app/telegram` |

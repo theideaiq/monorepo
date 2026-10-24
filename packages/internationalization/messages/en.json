@@ -99,7 +99,7 @@
       "canceled": "Canceled",
       "expired": "Expired"
     },
-    "title": "IDEA Suite plan",
+    "title": "The IDEA Suite plan",
     "description": "Your company's plan and payments.",
     "currentPlan": "Current plan",
     "noPlan": "Your company doesn't have a plan yet.",
@@ -129,9 +129,9 @@
     "nav": {
       "home": "Home",
       "store": "Megastore",
-      "plus": "IDEA Plus",
+      "plus": "The IDEA Plus",
       "academy": "Academy",
-      "suite": "IDEA Suite",
+      "suite": "The IDEA Suite",
       "club": "The Club",
       "news": "News",
       "events": "Events",
@@ -180,14 +180,14 @@
     },
     "appCta": {
       "title": "One account for the whole ecosystem",
-      "description": "Shop the Megastore, manage your IDEA Plus rentals, RSVP to events and submit your work, all from The IDEA app.",
+      "description": "Shop the Megastore, manage your rentals with The IDEA Plus, RSVP to events and submit your work, all from The IDEA app.",
       "button": "Open the app",
       "signIn": "Sign in"
     },
     "home": {
       "meta": {
         "title": "Iraq's digital ecosystem",
-        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, IDEA Plus rentals, the Academy, IDEA Suite for companies and The Club. Based in Baghdad, serving all of Iraq."
+        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, The IDEA Plus rentals, the Academy, The IDEA Suite for companies and The Club. Based in Baghdad, serving all of Iraq."
       },
       "hero": {
         "badge": "The digital ecosystem for Iraq",
@@ -267,9 +267,9 @@
       "clear": "Clear filters",
       "product": {
         "buy": "Buy in the app",
-        "rent": "Rent with IDEA Plus",
+        "rent": "Rent with The IDEA Plus",
         "buyNote": "Orders are placed and paid in The IDEA app.",
-        "rentNote": "Rentals are included in IDEA Plus memberships. Request this item in the app.",
+        "rentNote": "Rentals are included in The IDEA Plus memberships. Request this item in the app.",
         "specs": "Specifications",
         "variants": "Options",
         "description": "Description",
@@ -277,7 +277,7 @@
         "condition": "Condition",
         "sku": "SKU",
         "back": "Back to the store",
-        "plusBack": "Back to IDEA Plus",
+        "plusBack": "Back to The IDEA Plus",
         "image": "{name}, image {number}",
         "delivery": "Delivery to all 19 governorates of Iraq.",
         "seller": "Sold by {seller}",
@@ -304,8 +304,8 @@
     },
     "plus": {
       "meta": {
-        "title": "IDEA Plus — rent games, books and movies",
-        "description": "IDEA Plus is a monthly membership to rent PS5 games, books and movies in Iraq. Choose a plan, request items in the app, and return them when you're done."
+        "title": "The IDEA Plus — rent games, books and movies",
+        "description": "The IDEA Plus is a monthly membership to rent PS5 games, books and movies in Iraq. Choose a plan, request items in the app, and return them when you're done."
       },
       "badge": "The ultimate membership",
       "title": "One membership.",
@@ -403,8 +403,8 @@
     },
     "suite": {
       "meta": {
-        "title": "IDEA Suite — procurement and recruitment for companies",
-        "description": "IDEA Suite gives companies in Iraq one place for procurement and recruitment, with a business plan, purchase orders and monthly invoicing."
+        "title": "The IDEA Suite — procurement and recruitment for companies",
+        "description": "The IDEA Suite gives companies in Iraq one place for procurement and recruitment, with a business plan, purchase orders and monthly invoicing."
       },
       "badge": "For companies",
       "title": "The IDEA Suite",
@@ -519,7 +519,7 @@
           },
           {
             "title": "Answers to common questions",
-            "description": "Ask about the store, IDEA Plus, the Academy or IDEA Suite in a private chat."
+            "description": "Ask about the store, The IDEA Plus, the Academy or The IDEA Suite in a private chat."
           },
           {
             "title": "Product search",
@@ -600,7 +600,7 @@
     "faq": {
       "meta": {
         "title": "Frequently asked questions",
-        "description": "Answers about ordering from the Megastore, IDEA Plus rentals, payments, delivery and your IDEA account."
+        "description": "Answers about ordering from the Megastore, The IDEA Plus rentals, payments, delivery and your account (The IDEA Pass)."
       },
       "title": "Frequently asked questions",
       "description": "Can't find your answer? Contact us or ask Droid on Telegram.",
@@ -611,7 +611,7 @@
           "items": [
             {
               "question": "How do I place an order?",
-              "answer": "Browse the store here or in The IDEA app, then add items to your cart and check out in the app. You need an IDEA account to order."
+              "answer": "Browse the store here or in The IDEA app, then add items to your cart and check out in the app. You need The IDEA Pass to order."
             },
             {
               "question": "How do I pay?",
@@ -628,15 +628,15 @@
           ]
         },
         {
-          "title": "IDEA Plus",
+          "title": "The IDEA Plus",
           "items": [
             {
-              "question": "How does IDEA Plus work?",
+              "question": "How does The IDEA Plus work?",
               "answer": "You subscribe to a monthly plan. Each plan lets you keep a number of items at a time. Request a game, book or movie in the app, we deliver it, and when you're done you return it and request the next one."
             },
             {
               "question": "Can I buy from the Megastore without a membership?",
-              "answer": "Absolutely. The Megastore is open to everyone; IDEA Plus is only needed for rentals."
+              "answer": "Absolutely. The Megastore is open to everyone; The IDEA Plus is only needed for rentals."
             },
             {
               "question": "How do I cancel?",
@@ -649,7 +649,7 @@
           "items": [
             {
               "question": "Do I need a separate account for each service?",
-              "answer": "No. One IDEA account works across the store, IDEA Plus, events, the journal and IDEA Suite."
+              "answer": "No. One account, The IDEA Pass, works across the store, The IDEA Plus, events, the journal and The IDEA Suite."
             },
             {
               "question": "How do I delete my account?",
@@ -664,14 +664,14 @@
       ],
       "support": {
         "title": "Need help with an order or a rental?",
-        "description": "If you have an IDEA account, sign in to the app and open a support ticket. You can follow our replies and add details there, and we'll notify you when we answer.",
+        "description": "If you have The IDEA Pass, sign in to the app and open a support ticket. You can follow our replies and add details there, and we'll notify you when we answer.",
         "cta": "Open a support ticket"
       }
     },
     "contact": {
       "meta": {
         "title": "Contact us",
-        "description": "Questions about an order, IDEA Plus, the Academy or IDEA Suite? Write to The IDEA team."
+        "description": "Questions about an order, The IDEA Plus, the Academy or The IDEA Suite? Write to The IDEA team."
       },
       "title": "Get in touch",
       "description": "We're here to help. Send us a message, email us or reach us on Telegram.",
@@ -683,7 +683,7 @@
         "location": "Location",
         "address": "Baghdad, Iraq",
         "support": "Support tickets",
-        "supportNote": "Signed in? Open a ticket in the app to get help with an order, a rental, IDEA Plus or your account, and follow our replies there.",
+        "supportNote": "Signed in? Open a ticket in the app to get help with an order, a rental, The IDEA Plus or your account, and follow our replies there.",
         "supportCta": "Open a support ticket"
       },
       "form": {
@@ -692,9 +692,9 @@
         "topics": {
           "general": "General question",
           "store": "Megastore order",
-          "plus": "IDEA Plus",
+          "plus": "The IDEA Plus",
           "academy": "Academy",
-          "suite": "IDEA Suite (companies)",
+          "suite": "The IDEA Suite (companies)",
           "careers": "Careers",
           "press": "Press and partnerships"
         },
@@ -732,7 +732,7 @@
         },
         "refund": {
           "title": "Refund and returns policy",
-          "description": "How returns, refunds, cancellations and IDEA Plus rental returns work."
+          "description": "How returns, refunds, cancellations and The IDEA Plus rental returns work."
         },
         "conduct": {
           "title": "Code of conduct",
@@ -800,7 +800,7 @@
       "store": "Store",
       "cart": "Cart",
       "orders": "Orders",
-      "plus": "IDEA Plus",
+      "plus": "The IDEA Plus",
       "events": "Events",
       "submissions": "Submissions",
       "business": "Business",
@@ -838,7 +838,7 @@
         "placed": "Placed on {date}"
       },
       "plus": {
-        "title": "IDEA Plus",
+        "title": "The IDEA Plus",
         "none": "Rent games, books and movies with a monthly membership.",
         "join": "See the plans",
         "member": "{plan} membership",
@@ -890,8 +890,8 @@
         "details": "Specifications",
         "about": "About this product",
         "condition": "Condition",
-        "rentalOnly": "This item is rented with IDEA Plus.",
-        "goToPlus": "Go to IDEA Plus",
+        "rentalOnly": "This item is rented with The IDEA Plus.",
+        "goToPlus": "Go to The IDEA Plus",
         "addFailed": "We couldn't add this to your cart. Please try again.",
         "soldBy": "Sold by {seller}",
         "verifiedSeller": "Verified seller"
@@ -1002,7 +1002,7 @@
       }
     },
     "plus": {
-      "title": "IDEA Plus",
+      "title": "The IDEA Plus",
       "description": "Rent games, books and movies. We deliver them and pick them up when you're done.",
       "membership": {
         "title": "Your membership",
@@ -1033,7 +1033,7 @@
         "request": "Request",
         "requesting": "Requesting…",
         "requested": "Requested. We'll contact you to arrange delivery.",
-        "needMembership": "Join IDEA Plus to rent items.",
+        "needMembership": "Join The IDEA Plus to rent items.",
         "noSlots": "All your rental slots are in use.",
         "needsPlan": "Needs {plan}",
         "needsHigherPlan": "Needs a higher plan",
@@ -1130,9 +1130,9 @@
     },
     "business": {
       "title": "Business",
-      "description": "IDEA Suite: procurement and recruitment for companies.",
+      "description": "The IDEA Suite: procurement and recruitment for companies.",
       "intro": {
-        "title": "Bring your company to IDEA Suite",
+        "title": "Bring your company to The IDEA Suite",
         "description": "Create a business account for your team, or join one you've been invited to.",
         "create": "Create a business account"
       },
@@ -1211,7 +1211,7 @@
       },
       "organization": {
         "title": "Create a business account",
-        "description": "A business account holds your team, projects and IDEA Suite plan.",
+        "description": "A business account holds your team, projects and The IDEA Suite plan.",
         "name": "Company name",
         "namePlaceholder": "e.g. Al-Rafidain Trading",
         "slug": "Address",
@@ -1334,12 +1334,12 @@
       "remove": "Remove from wishlist",
       "save": "Save",
       "saved": "Saved",
-      "rental": "Rented with IDEA Plus",
+      "rental": "Rented with The IDEA Plus",
       "moveToCart": "Move to cart",
       "moving": "Moving…",
       "moveFailed": "We couldn't move this to your cart. Please try again.",
       "chooseOptions": "Choose options",
-      "rentWithPlus": "Rent with IDEA Plus",
+      "rentWithPlus": "Rent with The IDEA Plus",
       "unavailable": "Not available right now",
       "empty": {
         "title": "Your wishlist is empty",
@@ -1463,13 +1463,13 @@
     },
     "kind": {
       "sale": "Megastore",
-      "rental": "IDEA Plus"
+      "rental": "The IDEA Plus"
     },
     "lines": {
       "megastore": "Megastore",
-      "plus": "IDEA Plus",
+      "plus": "The IDEA Plus",
       "academy": "Academy",
-      "suite": "IDEA Suite",
+      "suite": "The IDEA Suite",
       "club": "The Club"
     },
     "ticketStatus": {
@@ -1481,7 +1481,7 @@
     "ticketTopic": {
       "order": "Order",
       "rental": "Rental",
-      "plus": "IDEA Plus",
+      "plus": "The IDEA Plus",
       "account": "Account",
       "other": "Other"
     },
@@ -1546,7 +1546,7 @@
         "order": "Order update",
         "rental": "Rental update",
         "support": "Support update",
-        "plus": "IDEA Plus update",
+        "plus": "The IDEA Plus update",
         "promo": "News from The IDEA",
         "system": "Notice"
       },
@@ -1723,7 +1723,7 @@
         "slug": "Slug",
         "slugHint": "The web address: lower-case letters, numbers and dashes, e.g. ps5-slim.",
         "kind": "Line",
-        "kindHint": "Megastore items are sold; IDEA Plus items are rented to members.",
+        "kindHint": "Megastore items are sold; The IDEA Plus items are rented to members.",
         "status": "Status",
         "statusHint": "Only live products appear in the store.",
         "category": "Category",
@@ -1745,8 +1745,8 @@
         "verified": "Verified seller",
         "verifiedHint": "Shows the verified badge next to the seller.",
         "rentalTier": "Plan needed to rent",
-        "rentalTierHint": "Members on a lower IDEA Plus plan can't rent this item.",
-        "anyPlan": "Any IDEA Plus plan",
+        "rentalTierHint": "Members on a lower The IDEA Plus plan can't rent this item.",
+        "anyPlan": "Any The IDEA Plus plan",
         "tierOption": "Tier {tier}: {names}",
         "unknownTier": "No plan at this tier"
       },
@@ -1780,8 +1780,8 @@
         "description": "Description",
         "audience": "Product line",
         "audiences": {
-          "plus": "IDEA Plus (members)",
-          "business": "IDEA Suite (businesses)"
+          "plus": "The IDEA Plus (members)",
+          "business": "The IDEA Suite (businesses)"
         },
         "amount": "Price (IQD)",
         "amountHint": "Charged each billing period.",
@@ -1799,7 +1799,7 @@
         "inactive": "Hidden",
         "activeHint": "Unavailable plans are hidden from new customers; current subscribers keep them.",
         "tier": "Tier",
-        "tierHint": "1 to 10; higher plans unlock items that need a higher tier. Required for IDEA Plus."
+        "tierHint": "1 to 10; higher plans unlock items that need a higher tier. Required for The IDEA Plus."
       },
       "ratings": {
         "title": "Customer rating",
@@ -1947,7 +1947,7 @@
       "telegram": "Telegram",
       "userId": "User ID",
       "subscription": "Membership",
-      "noSubscription": "No IDEA Plus membership.",
+      "noSubscription": "No The IDEA Plus membership.",
       "renewsOn": "Renews {date}",
       "endsOn": "Ends {date}",
       "crm": "Relationship",
@@ -2010,7 +2010,7 @@
         "crmHint": "None ticked: any status.",
         "tags": "Tags",
         "tagsHint": "Customers with at least one of these tags.",
-        "plusMember": "IDEA Plus",
+        "plusMember": "The IDEA Plus",
         "plusYes": "Members only",
         "plusNo": "Non-members only",
         "locale": "Language",
@@ -2415,7 +2415,7 @@
         "empty": "No members match.",
         "name": "Member",
         "groupStatus": "In the groups",
-        "account": "IDEA account",
+        "account": "The IDEA account",
         "linked": "Linked",
         "lastSeen": "Last seen"
       },
@@ -2426,9 +2426,9 @@
         "topics": {
           "general": "General",
           "store": "Megastore",
-          "plus": "IDEA Plus",
+          "plus": "The IDEA Plus",
           "academy": "Academy",
-          "suite": "IDEA Suite"
+          "suite": "The IDEA Suite"
         },
         "questionAr": "Question (Arabic)",
         "questionEn": "Question (English)",
@@ -2514,7 +2514,7 @@
       "topics": {
         "order": "Order",
         "rental": "Rental",
-        "plus": "IDEA Plus",
+        "plus": "The IDEA Plus",
         "account": "Account",
         "other": "Other"
       },

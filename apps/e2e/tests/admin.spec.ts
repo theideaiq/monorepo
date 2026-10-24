@@ -48,7 +48,7 @@ test.describe("back office", () => {
     await resetStaff();
     await context.addCookies(await sessionCookies(staff.email, urls.admin));
     // Signed in with a password only (AAL1): the console sends staff to The
-    // IDEA Pass for the authenticator app, which comes back afterwards.
+    // The IDEA Pass for the authenticator app, which comes back afterwards.
     await page.goto(`${urls.admin}/en`);
     await expect(page).toHaveURL(
       `${urls.pass}/en/mfa?return_to=${encodeURIComponent(`${urls.admin}/en`)}`

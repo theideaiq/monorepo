@@ -25,7 +25,7 @@ interface ProductFormProps {
   readonly disabled?: boolean;
   readonly product?: Tables<"products">;
   readonly supabaseUrl: string;
-  /** IDEA Plus tiers, with the plan names at each (see `tierOptions`). */
+  /** The IDEA Plus tiers, with the plan names at each (see `tierOptions`). */
   readonly tiers: { names: string; tier: number }[];
 }
 

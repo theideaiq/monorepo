@@ -5,7 +5,7 @@ import { type BotLocale, t } from "./i18n";
 export interface ProductSummary {
   kind: ProductCard["kind"];
   name: string;
-  /** Formatted IQD price; null for rentals (included in IDEA Plus). */
+  /** Formatted IQD price; null for rentals (included in The IDEA Plus). */
   price: string | null;
   /** "In stock: 3" or "Out of stock". */
   stock: string;

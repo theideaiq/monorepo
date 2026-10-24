@@ -50,7 +50,7 @@ Bans apply across all the rooms Droid moderates. Messages that break these rules
 - Editors review submissions blind, without seeing the author's name. Do not put your name inside the work itself, and do not contact editors to influence a decision.
 - Respect the creators in our community: do not copy or republish members' work without their permission.
 
-## 5. IDEA Plus and the store
+## 5. The IDEA Plus and the store
 
 - **Rental respect:** treat rented games, books and movies as if they were your own. Returning them damaged or dirty hurts the next member and may lead to charges.
 - **Honest reviews and questions:** when you talk about products, be honest and don't post fake reviews or misleading claims.

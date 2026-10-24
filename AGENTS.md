@@ -127,6 +127,10 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
+- **Brand name:** always "The IDEA", never a bare "IDEA": The IDEA Pass,
+  The IDEA Plus, The IDEA Suite, The IDEA Design, in English and Arabic copy
+  alike (Latin letters in Arabic text). A user's account is The IDEA Pass.
+  Reword rather than writing "your The IDEA …".
 - **Translations:** every UI string comes from
   `packages/internationalization/messages/{ar,en}.json` (`useTranslations` /
   `getTranslations`), checked by `bun run check:i18n`. Pass numbers and dates

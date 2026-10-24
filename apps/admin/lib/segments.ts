@@ -7,7 +7,7 @@ export const crmStatuses = ["lead", "customer", "vip", "churned"] as const;
  * criterion is optional; a recipient must match all that are set:
  *   crm_status   any of these CRM statuses
  *   tags         at least one of these CRM tags
- *   plus_member  has (true) or hasn't (false) a live IDEA Plus membership
+ *   plus_member  has (true) or hasn't (false) a live membership of The IDEA Plus
  *   locale       preferred language
  * Only customers who opted in to marketing (`profiles.marketing_opt_in`)
  * and aren't suspended ever receive a campaign. apps/api resolves the

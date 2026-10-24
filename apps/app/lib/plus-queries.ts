@@ -9,7 +9,7 @@ import { rememberCheckout } from "./checkout-tracking";
 import { checkoutReturnUrl, openCheckout } from "./hosted-checkout";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
-/** IDEA Plus: rental allowance, rentals and requests. */
+/** The IDEA Plus: rental allowance, rentals and requests. */
 
 export interface RentalAllowance {
   free: number;
@@ -151,8 +151,8 @@ export interface CheckoutPlan {
 }
 
 /**
- * Starts a hosted checkout for a plan: IDEA Plus (owned by the user) without
- * `organizationId`, an IDEA Suite plan with it. Remembers the checkout so
+ * Starts a hosted checkout for a plan: The IDEA Plus (owned by the user) without
+ * `organizationId`, a plan of The IDEA Suite with it. Remembers the checkout so
  * the purchase is reported once paid, then opens the payment page.
  */
 export const usePlanCheckout = (

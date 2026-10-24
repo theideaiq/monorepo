@@ -123,7 +123,7 @@ export const useProjects = (organizationId: string) => {
   });
 };
 
-/** Active plans for one product line: business (IDEA Suite) or Plus. */
+/** Active plans for one product line: business (The IDEA Suite) or Plus. */
 export const usePlans = (audience: "business" | "plus") => {
   const { supabase } = useAuth();
   return useQuery({
@@ -165,7 +165,7 @@ export const useSubscription = (organizationId: string) => {
   });
 };
 
-/** The signed-in user's own (IDEA Plus) subscription. */
+/** The signed-in user's own (The IDEA Plus) subscription. */
 export const usePlusSubscription = (refetchInterval?: number | false) => {
   const { supabase, user } = useAuth();
   return useQuery({

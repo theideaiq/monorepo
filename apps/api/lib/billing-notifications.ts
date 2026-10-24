@@ -23,7 +23,7 @@ const recipientsOf = async (invoice: RenewalInvoice) => {
 };
 
 /**
- * Emails each renewal invoice to its subscriber: the member for IDEA Plus,
+ * Emails each renewal invoice to its subscriber: the member for The IDEA Plus,
  * the organization's owners and admins for business plans.
  * Members without an email (phone-only accounts) are skipped and logged;
  * hook an SMS/WhatsApp notification in here if that matters for the product.

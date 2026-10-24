@@ -480,7 +480,7 @@ describe("notifications", () => {
   });
 });
 
-describe("IDEA Plus tiers", () => {
+describe("The IDEA Plus tiers", () => {
   test("names the plan an item needs and blocks lower tiers", async () => {
     const rental = {
       category_id: null,

@@ -397,7 +397,7 @@ export const createBillingService = ({
     },
     /**
      * Starts paying for a plan; returns the hosted checkout URL. Business
-     * plans belong to an organization, IDEA Plus to the user (`owner`).
+     * plans belong to an organization, The IDEA Plus to the user (`owner`).
      */
     async startCheckout({
       metadata,

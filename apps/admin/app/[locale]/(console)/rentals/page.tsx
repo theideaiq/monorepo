@@ -43,7 +43,7 @@ const addDays = (day: string, days: number) => {
   return date.toISOString().slice(0, 10);
 };
 
-/** IDEA Plus rentals: requests to deliver, items out, returns. */
+/** The IDEA Plus rentals: requests to deliver, items out, returns. */
 const RentalsPage = async ({
   searchParams,
 }: {

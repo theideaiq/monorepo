@@ -52,7 +52,7 @@ flowchart LR
 
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
-| `apps/web` | 3001 | The IDEA's public site: home, Megastore catalog and product pages, IDEA Plus, Academy, Suite, Club, Droid, news, events, journal, legal (Markdown in `apps/web/content/legal`), contact. Next.js Server Components with `next-intl` locale routing (`/ar/…`, `/en/…`) and ISR; reads public data with an anonymous Supabase client. | Vercel |
+| `apps/web` | 3001 | The IDEA's public site: home, Megastore catalog and product pages, The IDEA Plus, Academy, Suite, Club, Droid, news, events, journal, legal (Markdown in `apps/web/content/legal`), contact. Next.js Server Components with `next-intl` locale routing (`/ar/…`, `/en/…`) and ISR; reads public data with an anonymous Supabase client. | Vercel |
 | `apps/app` | 3000 | The product. **Client-first**: every screen renders in the browser and talks to Supabase directly. The same code is built twice: a normal Next.js build for the web, and a static export for the native apps. | Vercel (web) and the App Store / Google Play (native) |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, the Liveblocks and Svix token endpoints. Route handlers only. | Vercel |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
@@ -323,7 +323,7 @@ Current schema:
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | Megastore catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
-| `…_plus.sql` | IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
+| `…_plus.sql` | The IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
 | `…_editorial.sql` | `posts`, `events` + `event_rsvps` (capacity, closed after start), `journal_issues`, `submissions` + staff-only `submission_reviews`; `review_queue()` hides authors until a decision (blind review) |
 | `…_back_office.sql` | `crm_contacts`, `marketing_segments`, `marketing_campaigns` (opted-in customers only: `profiles.marketing_opt_in`), double-entry ledger (`chart_of_accounts`, `ledger_entries`, `ledger_lines`, `post_journal_entry()`, `ledger_monthly_summary()`), `staff_plan`, `equity_rounds`, `equity_holders` |
 | `…_content_storage.sql` | `catalog` and `editorial` (public) and `submissions` (private, `<author id>/…`) buckets |

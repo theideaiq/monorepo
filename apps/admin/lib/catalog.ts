@@ -30,7 +30,7 @@ export const productSchema = z
     nameAr: text(200),
     nameEn: text(200),
     price: int(0),
-    /** Minimum IDEA Plus plan tier for rental items; null = any plan. */
+    /** Minimum The IDEA Plus plan tier for rental items; null = any plan. */
     rentalTier: optionalInt(1, 10),
     seller: text(120),
     slug,
@@ -63,7 +63,7 @@ export const planSchema = z
     name: text(120),
     position: int(0, 10_000),
     rentalSlots: optionalInt(1, 50),
-    /** IDEA Plus plan level; rental items can require a minimum tier. */
+    /** The IDEA Plus plan level; rental items can require a minimum tier. */
     tier: optionalInt(1, 10),
   })
   .refine((plan) => plan.audience !== "plus" || plan.rentalSlots !== null, {
