@@ -1,11 +1,17 @@
+import "../styles.css";
 import { DesignSystemProvider } from "@repo/design-system";
-import { getDirection, locales } from "@repo/internationalization";
+import { fonts } from "@repo/design-system/lib/fonts";
+import { getDirection } from "@repo/internationalization";
 import { routing } from "@repo/internationalization/routing";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from "next-intl/server";
 import type { ReactNode } from "react";
-import { DocumentLanguage } from "@/components/document-language";
 import { AppProviders } from "@/components/providers";
 
 interface LocaleLayoutProperties {
@@ -15,10 +21,22 @@ interface LocaleLayoutProperties {
   }>;
 }
 
-// Every page is prerendered once per language (also for the static export).
-export const generateStaticParams = () => locales.map((locale) => ({ locale }));
-export const dynamicParams = false;
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = await getTranslations("app.meta");
+  return {
+    applicationName: t("title"),
+    description: t("description"),
+    title: { default: t("title"), template: `%s | ${t("title")}` },
+  };
+};
 
+// Draw under the iOS notch / Android status bar; styles.css adds the insets.
+export const viewport: Viewport = { viewportFit: "cover" };
+
+/**
+ * The root layout of The IDEA Spark: the language comes from the URL (the
+ * proxy adds it), so <html lang dir> are right on the server.
+ */
 const LocaleLayout = async ({ children, params }: LocaleLayoutProperties) => {
   const { locale } = await params;
 
@@ -28,17 +46,20 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProperties) => {
 
   setRequestLocale(locale);
   const dir = getDirection(locale);
-  const { app, auth, billing, common, store } = await getMessages();
+  const { app, auth, billing, common, pass, store } = await getMessages();
 
   return (
-    <>
-      <DocumentLanguage dir={dir} locale={locale} />
-      <NextIntlClientProvider messages={{ app, auth, billing, common, store }}>
-        <DesignSystemProvider dir={dir} labels={common.ui}>
-          <AppProviders>{children}</AppProviders>
-        </DesignSystemProvider>
-      </NextIntlClientProvider>
-    </>
+    <html className={fonts} dir={dir} lang={locale} suppressHydrationWarning>
+      <body className="bg-background">
+        <NextIntlClientProvider
+          messages={{ app, auth, billing, common, pass, store }}
+        >
+          <DesignSystemProvider dir={dir} labels={common.ui}>
+            <AppProviders>{children}</AppProviders>
+          </DesignSystemProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 };
 

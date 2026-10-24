@@ -27,7 +27,7 @@ export interface PayableOrder {
 
 /** Where the payment page returns to: the order itself. */
 export const orderPath = (orderId: string) =>
-  `/orders/view?id=${encodeURIComponent(orderId)}`;
+  `/orders/${encodeURIComponent(orderId)}`;
 
 const analyticsItems = (order: PayableOrder, locale: string) =>
   order.order_items.map((item) => ({

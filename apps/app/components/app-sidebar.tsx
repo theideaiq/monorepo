@@ -34,6 +34,7 @@ import { ThemeToggle } from "./theme-toggle";
 
 export const AppSidebar = () => {
   const t = useTranslations("app.nav");
+  const tMeta = useTranslations("app.meta");
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
@@ -52,8 +53,16 @@ export const AppSidebar = () => {
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
-        <Link className="px-2 py-1.5" href="/" onClick={closeOnMobile}>
+        <Link
+          aria-label={tMeta("title")}
+          className="flex items-center gap-2 px-2 py-1.5"
+          href="/"
+          onClick={closeOnMobile}
+        >
           <BrandLogo />
+          <span className="rounded-full bg-brand px-2 py-0.5 font-medium text-brand-foreground text-xs">
+            {tMeta("badge")}
+          </span>
         </Link>
       </SidebarHeader>
       <SidebarContent>

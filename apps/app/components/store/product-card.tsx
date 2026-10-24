@@ -17,10 +17,8 @@ interface ProductCardProps {
   readonly rating?: Rating;
 }
 
-export const productHref = (slug: string) => ({
-  pathname: "/store/product",
-  query: { slug },
-});
+export const productHref = (slug: string) =>
+  `/store/${encodeURIComponent(slug)}`;
 
 /** A catalog tile linking to the product page, with a wishlist heart. */
 export const ProductCard = ({ product, rating }: ProductCardProps) => {

@@ -151,8 +151,8 @@ describe("SecretScanner", () => {
   test("respects package exports", () => {
     const scanner = repo({
       ...packages,
-      "apps/admin/a.ts": `import "@repo/next-config/keys";`,
-      "apps/admin/b.ts": `import "@repo/next-config/missing";`,
+      "apps/app/a.ts": `import "@repo/next-config/keys";`,
+      "apps/app/b.ts": `import "@repo/next-config/missing";`,
     });
     expect(scanner.check()).toEqual([]);
   });

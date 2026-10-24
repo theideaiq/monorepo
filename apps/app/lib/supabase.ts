@@ -1,45 +1,36 @@
 import { createClient as createBrowserClient } from "@repo/auth/client";
-import { createNativeClient } from "@repo/auth/native";
 import type { Database } from "@repo/database";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { secureSessionStorage } from "./native/secure-storage";
-import { isNativeApp } from "./platform";
 
 let client: SupabaseClient<Database> | undefined;
-let prerenderClient: SupabaseClient<Database> | undefined;
+let serverClient: SupabaseClient<Database> | undefined;
 
 /**
- * Static prerendering (build time) renders the loading state only: queries
- * and auth listeners run in the browser. An inert client keeps the build
- * independent of the Supabase env vars; it never makes a request.
+ * Server rendering of client components renders their loading state only:
+ * queries and auth listeners run in the browser. An inert client keeps it
+ * independent of the request; it never makes a request. (Server Components
+ * and Server Actions use `@repo/auth/server` with the session cookie.)
  */
-const getPrerenderClient = () => {
-  prerenderClient ??= createClient<Database>(
-    "http://prerender.invalid",
-    "prerender",
+const getServerRenderClient = () => {
+  serverClient ??= createClient<Database>(
+    "http://server-render.invalid",
+    "server-render",
     { auth: { autoRefreshToken: false, persistSession: false } }
   );
-  return prerenderClient;
+  return serverClient;
 };
 
 /**
- * One Supabase client per app instance:
- *
- * - Web: the cookie-based browser client from @repo/auth.
- * - iOS/Android: plain supabase-js with PKCE, `detectSessionInUrl: false`
- *   (deep links are handled by the native bridge) and the session kept in
- *   the Keychain/Keystore.
- *
- * Every query runs as the signed-in user, so Row Level Security applies.
+ * The browser's Supabase client: the cookie-based client from @repo/auth,
+ * in web browsers and in the iOS/Android apps alike (their WebView loads
+ * The IDEA Spark, so the same session cookie applies). Every query runs as
+ * the signed-in user, so Row Level Security applies.
  */
 export const getSupabase = () => {
   if (typeof window === "undefined") {
-    return getPrerenderClient();
+    return getServerRenderClient();
   }
 
-  client ??= isNativeApp()
-    ? createNativeClient(secureSessionStorage)
-    : createBrowserClient();
-
+  client ??= createBrowserClient();
   return client;
 };

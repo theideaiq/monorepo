@@ -794,6 +794,11 @@
     }
   },
   "app": {
+    "meta": {
+      "title": "The IDEA Spark",
+      "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place.",
+      "badge": "Spark"
+    },
     "nav": {
       "label": "Navigation",
       "home": "Home",
@@ -2612,11 +2617,12 @@
     },
     "home": {
       "title": "Your Pass",
-      "description": "You're signed in to The IDEA Pass. It works across the app, the website and The IDEA Plus.",
+      "description": "You're signed in to The IDEA Pass. It works across The IDEA Spark, the website and The IDEA Plus.",
       "nameLabel": "Name",
       "noName": "Not set yet",
       "phoneLabel": "Mobile number",
-      "openApp": "Open The IDEA app",
+      "openApp": "Open The IDEA Spark",
+      "backOffice": "Open the back office",
       "website": "Visit the website",
       "authenticator": "Authenticator app",
       "authenticatorOn": "On",

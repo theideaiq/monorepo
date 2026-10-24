@@ -19,13 +19,13 @@ import { cn } from "@repo/design-system/lib/utils";
 import { formatDateTime } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { TicketStatusBadge } from "@/components/support/ticket-status-badge";
 import { toSupportError } from "@/lib/errors";
+import { orderPath } from "@/lib/order-checkout";
 import {
   canReply,
   MAX_MESSAGE_LENGTH,
@@ -164,12 +164,15 @@ const CloseTicket = ({ ticketId }: { readonly ticketId: string }) => {
   );
 };
 
-/** /support/view?id=… — a ticket's conversation (query parameter: static export). */
-export const Ticket = () => {
+interface TicketProps {
+  readonly ticketId: string;
+}
+
+/** /support/<id>: a ticket's conversation. */
+export const Ticket = ({ ticketId }: TicketProps) => {
   const t = useTranslations("app.support");
   const tTopic = useTranslations("store.ticketTopic");
   const tCommon = useTranslations("app.common");
-  const ticketId = useSearchParams().get("id") ?? "";
   const ticket = useTicket(ticketId);
   const { data } = ticket;
 
@@ -205,10 +208,7 @@ export const Ticket = () => {
                 {data.order ? (
                   <Link
                     className="text-primary text-sm hover:underline"
-                    href={{
-                      pathname: "/orders/view",
-                      query: { id: data.order.id },
-                    }}
+                    href={orderPath(data.order.id)}
                   >
                     {tCommon("orderNumber", {
                       number: String(data.order.number),

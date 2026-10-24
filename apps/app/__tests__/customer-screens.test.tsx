@@ -218,7 +218,7 @@ describe("checkout", () => {
     expect(url).toBe("http://localhost:3002/orders/checkout");
     expect(body).toMatchObject({
       orderId: "o1",
-      redirectUrl: "http://localhost:3000/en/orders/view?id=o1",
+      redirectUrl: "http://localhost:3000/en/orders/o1",
     });
     expect(track).toHaveBeenCalledWith(
       "begin_checkout",
@@ -256,7 +256,7 @@ describe("checkout", () => {
 
 describe("product page", () => {
   test("adds one copy from a website deep link (?slug=…&add=1)", async () => {
-    searchParams.current = new URLSearchParams("slug=headset&add=1");
+    searchParams.current = new URLSearchParams("add=1");
     const db = fakeDb({
       results: {
         "products.select": {
@@ -275,7 +275,7 @@ describe("product page", () => {
         },
       },
     });
-    renderScreen(<Product />, db.supabase);
+    renderScreen(<Product slug="headset" />, db.supabase);
 
     expect(await screen.findByText("Added to your cart.")).toBeTruthy();
     const insert = db.calls.find(
@@ -458,12 +458,11 @@ describe("The IDEA Plus", () => {
 
 describe("orders", () => {
   test("cancels a pending order", async () => {
-    searchParams.current = new URLSearchParams("id=o1");
     const db = fakeDb({
       results: { "orders.select": { data: [order()], error: null } },
       rpcs: { cancel_order: { data: null, error: null } },
     });
-    renderScreen(<OrderDetail />, db.supabase);
+    renderScreen(<OrderDetail orderId="o1" />, db.supabase);
 
     expect(
       await screen.findByText("This order is waiting for payment.")
@@ -484,7 +483,6 @@ describe("orders", () => {
   });
 
   test("reports the purchase when back from a paid checkout", async () => {
-    searchParams.current = new URLSearchParams("id=o1");
     rememberCheckout({
       currency: "IQD",
       items: [{ id: "p1", name: "Headset", price: 50_000, quantity: 1 }],
@@ -500,7 +498,7 @@ describe("orders", () => {
         },
       },
     });
-    renderScreen(<OrderDetail />, db.supabase);
+    renderScreen(<OrderDetail orderId="o1" />, db.supabase);
 
     expect(
       await screen.findByText(

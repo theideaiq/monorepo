@@ -25,7 +25,6 @@ import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { getPurchasePolicy } from "@repo/payments";
 import { ArrowLeftIcon, CheckIcon, LifeBuoyIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
@@ -316,15 +315,18 @@ const OrderView = ({
   );
 };
 
+interface OrderDetailProps {
+  readonly orderId: string;
+}
+
 /**
- * /orders/view?id=… — also where the payment page returns to. While a
+ * /orders/<id> — also where the payment page returns to. While a
  * remembered checkout waits, the order and its payments are polled and the
  * purchase is reported once the payment is confirmed.
  */
-export const OrderDetail = () => {
+export const OrderDetail = ({ orderId }: OrderDetailProps) => {
   const t = useTranslations("app");
   const locale = useLocale();
-  const orderId = useSearchParams().get("id") ?? "";
   const [watchSince, setWatchSince] = useState<number | null>(() =>
     hasPendingCheckout() ? Date.now() : null
   );
