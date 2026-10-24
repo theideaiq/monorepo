@@ -237,7 +237,7 @@ const resolveExport = (workspace: Workspace, subpath: string) => {
     }
     if (target && key.endsWith("*") && subpath.startsWith(key.slice(0, -1))) {
       const rest = subpath.slice(key.length - 1);
-      return resolveFile(join(workspace.dir, target.replace("*", rest)));
+      return resolveFile(join(workspace.dir, target.replaceAll("*", rest)));
     }
   }
 };
