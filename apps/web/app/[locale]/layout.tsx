@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
+import { env } from "@/env";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
 
@@ -45,7 +46,7 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
         <NextIntlClientProvider messages={{ common, web }}>
           <AnalyticsProvider>
             <DesignSystemProvider dir={dir} labels={common.ui}>
-              <Header />
+              <Header appUrl={env.NEXT_PUBLIC_APP_URL} />
               {children}
               <Footer />
             </DesignSystemProvider>
