@@ -87,8 +87,9 @@ const Plus = async ({ params }: PlusProps) => {
       >
         {plans.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-3">
-            {plans.map((plan) => (
+            {plans.map((plan, index) => (
               <PlanCard
+                featured={plans.length >= 3 && index === 1}
                 href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/plus", {
                   plan: plan.id,
                 })}

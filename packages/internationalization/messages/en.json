@@ -341,13 +341,14 @@
         ]
       },
       "plans": {
-        "title": "Plans",
+        "choose": "Choose {plan}",
         "description": "Billed monthly through Wayl. Cancel any time from your account.",
+        "empty": "Plans will be announced soon.",
+        "featured": "Recommended",
         "perMonth": "per month",
         "perYear": "per year",
         "slots": "{count, plural, one {{slots} item at a time} other {{slots} items at a time}}",
-        "choose": "Choose {plan}",
-        "empty": "Plans will be announced soon."
+        "title": "Plans"
       },
       "catalog": {
         "title": "From the rental catalog",
@@ -1573,6 +1574,20 @@
         "system": "Notice"
       },
       "fallbackBody": "Open to see the details."
+    },
+    "conditionBulb": {
+      "like-new": "Like new",
+      "new": "New",
+      "used": "Used"
+    },
+    "card": {
+      "buy": "Buy",
+      "rent": "Rent with The IDEA Plus"
+    },
+    "souq": {
+      "currency": "IQD",
+      "market": "In the market",
+      "withUs": "With us"
     }
   },
   "admin": {

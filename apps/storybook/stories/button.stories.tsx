@@ -34,6 +34,41 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 /**
+ * `brand`: yellow with dark text, the primary action on pink grounds
+ * (PinkBand).
+ */
+export const Brand: Story = {
+  args: { variant: "brand" },
+  decorators: [
+    (Story) => (
+      <div className="rounded-lg bg-idea-pink p-6">
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+/** `plus`: Plus Violet, only for "Rent with The IDEA Plus". */
+export const Plus: Story = {
+  args: { children: "Rent with The IDEA Plus", variant: "plus" },
+};
+
+/** Heights 36 (default), 44 (lg) and 52 (xl). */
+export const Heights: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-3">
+      <Button {...args}>Default</Button>
+      <Button {...args} size="lg">
+        Large
+      </Button>
+      <Button {...args} size="xl">
+        Extra large
+      </Button>
+    </div>
+  ),
+};
+
+/**
  * Use the `outline` button to reduce emphasis on secondary actions, such as
  * canceling or dismissing a dialog.
  */

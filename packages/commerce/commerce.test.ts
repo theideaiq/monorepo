@@ -1,10 +1,12 @@
 import { describe, expect, test } from "vitest";
 import {
   cartTotals,
+  customerCondition,
   describeAttributes,
   discountPercent,
   governorates,
   localized,
+  showsConditionBulb,
 } from "./index";
 
 describe("commerce helpers", () => {
@@ -43,5 +45,15 @@ describe("commerce helpers", () => {
 
   test("lists all 19 governorates with unique ids", () => {
     expect(new Set(governorates.map((g) => g.id)).size).toBe(19);
+  });
+
+  test("maps stored conditions to the three condition bulbs", () => {
+    expect(customerCondition("new")).toBe("new");
+    expect(customerCondition("open_box")).toBe("like-new");
+    expect(customerCondition("refurbished")).toBe("like-new");
+    expect(customerCondition("used")).toBe("used");
+    expect(showsConditionBulb({ condition: "new", kind: "sale" })).toBe(false);
+    expect(showsConditionBulb({ condition: "new", kind: "rental" })).toBe(true);
+    expect(showsConditionBulb({ condition: "used", kind: "sale" })).toBe(true);
   });
 });

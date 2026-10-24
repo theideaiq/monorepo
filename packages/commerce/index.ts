@@ -42,6 +42,31 @@ export const discountPercent = (
     ? Math.floor(((compareAtPrice - price) / compareAtPrice) * 100)
     : 0;
 
+type ProductCondition = "new" | "open_box" | "refurbished" | "used";
+
+/** The condition customers see, as a condition bulb (brand v1.0). */
+export type CustomerCondition = "like-new" | "new" | "used";
+
+const CUSTOMER_CONDITIONS: Record<ProductCondition, CustomerCondition> = {
+  new: "new",
+  open_box: "like-new",
+  refurbished: "like-new",
+  used: "used",
+};
+
+/**
+ * Maps a product's stored condition to the three conditions customers see:
+ * new, like new (open box or refurbished) or used.
+ */
+export const customerCondition = (condition: ProductCondition) =>
+  CUSTOMER_CONDITIONS[condition];
+
+/** Rentals and anything not new show their condition bulb. */
+export const showsConditionBulb = (product: {
+  readonly condition: ProductCondition;
+  readonly kind: string;
+}) => product.kind === "rental" || product.condition !== "new";
+
 /** Variant attributes as "Color: Black · Storage: 1 TB". */
 export const describeAttributes = (attributes: unknown) =>
   attributes && typeof attributes === "object" && !Array.isArray(attributes)
