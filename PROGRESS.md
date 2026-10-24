@@ -41,6 +41,11 @@ decisions with a date.
       Node 24, its environment variables (section 5 of
       `ARCHITECTURE_AND_INTEGRATIONS.md`) and "skip unaffected projects"
       on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the remote cache.
+- [ ] **Vercel, secrets only in `api`:** remove `RESEND_*`, `ARCJET_KEY`,
+      `UPSTASH_*` and `BETTERSTACK_*` from the `web` (and `admin`, `app`)
+      projects and set them on `api`, which now serves the contact form
+      (`POST /contact`) and the status badge (`GET /status`). Turn on
+      Vercel Firewall bot protection for `web` (Arcjet no longer runs there).
 - [ ] **Wayl:** production keys and the webhook URL
       (`/webhooks/payments` on the API host).
 - [ ] **Telegram:** bot token and webhook (`apps/api/scripts/telegram-setup.ts`).

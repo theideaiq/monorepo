@@ -39,11 +39,12 @@ const baseOptions: Options = {
 
 /**
  * Security headers for every app. The Vercel Toolbar's origins are allowed
- * only when it is enabled (`FLAGS_SECRET` is set).
+ * on preview deployments only, where Vercel shows it.
  */
-export const noseconeOptions: Options = process.env.FLAGS_SECRET
-  ? withVercelToolbar(baseOptions)
-  : baseOptions;
+export const noseconeOptions: Options =
+  process.env.VERCEL_ENV === "preview"
+    ? withVercelToolbar(baseOptions)
+    : baseOptions;
 
 /**
  * The same headers as static `headers()` entries for next.config, for apps

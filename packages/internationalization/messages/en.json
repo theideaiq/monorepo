@@ -705,10 +705,16 @@
         "sending": "Sending…",
         "success": "Thanks! We'll be in touch shortly.",
         "errors": {
+          "forbidden": "We couldn't accept this message. Please email us instead.",
           "invalid": "Please enter your name, a valid email and a message.",
           "rate_limited": "You've already sent a message today. Please try again tomorrow.",
           "unavailable": "The contact form isn't available right now. Please email us instead.",
           "unknown": "Something went wrong. Please try again."
+        },
+        "fieldErrors": {
+          "name": "Please enter your name.",
+          "email": "Please enter an email address that can receive mail.",
+          "message": "Please write your message (up to 5,000 characters)."
         }
       }
     },

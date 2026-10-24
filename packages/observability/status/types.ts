@@ -60,3 +60,10 @@ export interface BetterStackResponse {
     next: unknown;
   };
 }
+
+/** What the status badge shows, served by apps/api at `GET /status`. */
+export interface SystemStatus {
+  state: "degraded" | "operational" | "partial" | "unknown";
+  /** The public status page. */
+  url: string;
+}

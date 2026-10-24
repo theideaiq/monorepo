@@ -25,6 +25,7 @@
     "@repo/observability": "workspace:*",
     "@repo/payments": "workspace:*",
     "@repo/rate-limit": "workspace:*",
+    "@repo/security": "workspace:*",
     "@repo/storage": "workspace:*",
     "@sentry/nextjs": "^10.42.0",
     "@supabase/supabase-js": "^2.115.0",

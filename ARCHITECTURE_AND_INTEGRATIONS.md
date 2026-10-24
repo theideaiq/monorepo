@@ -112,9 +112,13 @@ exactly as Resend sends them; add a story there with every new template.
    `packages/internationalization/messages/{ar,en}.json`. Layouts use logical
    Tailwind utilities so they mirror in RTL. `bun run check:i18n` and
    `bun run check:rtl` enforce both rules in CI.
-5. **Secrets stay on the server.** Only `apps/api` and `apps/admin` hold
-   server keys; client components never import `env.ts`. CI scans every
-   client bundle for server variable names.
+5. **Secrets live only in `apps/api`.** The other apps hold public values
+   only (admin works with the staff member's session and the publishable
+   key); the website's contact form and status badge call the API.
+   `bun run check:secrets` fails on a server-only variable or a
+   secret-reading package module anywhere else, client components never
+   import `env.ts`, and CI scans every client bundle for server variable
+   names.
 
 ### How a request flows
 
@@ -1033,22 +1037,26 @@ deployment succeeds, but the named feature is off or broken without it.
 
 ### 5.3 `web` (apps/web)
 
+Public values only. **Secrets live only in `api`** (`bun run check:secrets`
+fails otherwise): the contact form posts to `POST /contact` on the API and
+the footer's status badge reads `GET /status`, so Resend, Arcjet, Upstash
+and Better Stack are configured on `api`, not here.
+
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_WEB_URL` | Build | This site's URL, `https://example.iq` |
+| `NEXT_PUBLIC_WEB_URL` | Build | This site's URL, `https://theideaiq.com`; also the API's CORS origin for the contact form |
 | `NEXT_PUBLIC_APP_URL` | Build | Product URL, for "Sign in" and "Get started" links |
-| `NEXT_PUBLIC_API_URL` | Optional | API URL |
+| `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
-| `RESEND_TOKEN`, `RESEND_FROM` | Feature | Contact form email. Without them the form shows "unavailable". |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, news, events and journal (read anonymously, under Row Level Security). Without them those sections show empty states. |
 | `NEXT_PUBLIC_GTM_ID` **or** `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | Product analytics |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional | Error reporting |
-| `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | Source map upload during the Vercel build |
-| `BETTERSTACK_API_KEY`, `BETTERSTACK_URL` | Optional | Logs |
-| `ARCJET_KEY` | Optional | Bot protection and request shielding (`ajkey_…`) |
-| `FLAGS_SECRET` | Feature, if `feature-flags` is kept | Vercel Flags toolbar |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Feature, if `rate-limit` is kept | Contact form rate limiting |
+| `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | Source map upload during the Vercel build (build-time only, never read by the site) |
+
+Remove `RESEND_*`, `ARCJET_KEY`, `UPSTASH_*` and `BETTERSTACK_*` from this
+project if they are still set. Page-level bot protection for the site is
+Vercel's Firewall (Bot Protection / Attack Challenge Mode), not Arcjet.
 
 ### 5.4 `app` (apps/app)
 
@@ -1073,7 +1081,7 @@ secret to this project.**
 
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL` | Build | Also the CORS allow-list |
+| `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL` | Build | Also the CORS allow-list (the public `/contact` and `/status` allow the web origin only) |
 | `NEXT_PUBLIC_API_URL` | Feature | This API's public URL; the Wayl webhook URL is derived from it |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Verifying users' tokens |
 | `SUPABASE_SECRET_KEY` | Feature | `sb_secret_…`. Webhooks, cron, account and organization deletion. **Server only.** |
@@ -1082,12 +1090,15 @@ secret to this project.**
 | `WAYL_ENV` | Feature | `live` in Production, `test` in Preview |
 | `WAYL_API_URL` | Optional | Wayl staging server |
 | `PAYMENTS_PROVIDER` | Optional | Leave unset (Wayl when the token is set). Never `mock` in production. |
-| `RESEND_TOKEN`, `RESEND_FROM` | Feature | Renewal invoice emails |
+| `RESEND_TOKEN`, `RESEND_FROM` | Feature | Receipts, renewal invoices and the website's contact form (`POST /contact`, delivered to `supportEmail` in `project.json`); without them the form answers "unavailable" |
+| `ARCJET_KEY` | Optional | `ajkey_…`. Guards the website's public forms (`@repo/security/form`: shield, bots, 5 per 10 minutes, undeliverable addresses) |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Feature | Droid's sessions and flood counters; the contact form's one message per visitor per day |
 | `NEXT_PUBLIC_META_PIXEL_ID`, `META_CONVERSIONS_ACCESS_TOKEN` | Optional | Server-side purchases to Meta; same pixel as the web apps |
 | `NEXT_PUBLIC_TIKTOK_PIXEL_ID`, `TIKTOK_EVENTS_ACCESS_TOKEN` | Optional | Server-side purchases to TikTok |
 | `META_TEST_EVENT_CODE`, `TIKTOK_TEST_EVENT_CODE` | Optional | Verification only; remove in Production |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | `Payment Completed` events |
-| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`, `BETTERSTACK_API_KEY`, `BETTERSTACK_URL` | Optional | |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | |
+| `BETTERSTACK_API_KEY`, `BETTERSTACK_URL` | Optional | Better Stack Uptime token and public status page, for the website's status badge (`GET /status`); without them the badge is hidden |
 | `LIVEBLOCKS_SECRET` | Feature, if `collaboration` is kept | `sk_…` |
 | `SVIX_TOKEN` | Feature, if `webhooks` is kept | Customer webhook portal |
 

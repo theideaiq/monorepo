@@ -17,7 +17,8 @@ incidents) is in `docs/platform`.
   request-time server rendering here; anything that needs a secret goes in
   `apps/api`, called with the user's token (`callApi` in `apps/app/lib/api.ts`).
 - `apps/api` — webhooks (Wayl, Telegram), cron jobs, the calendar feed and
-  privileged endpoints, including `app/admin/*` for the back office.
+  privileged endpoints, including `app/admin/*` for the back office and the
+  website's contact form and status badge. The only app with secrets.
 - `apps/admin` — the staff back office. Server-rendered with the staff
   member's cookie session (`@repo/auth/server`) and Server Actions; every
   query runs as the staff member so RLS applies. Staff rights need an
@@ -35,8 +36,8 @@ incidents) is in `docs/platform`.
 - `packages/config/project.json` — the single source of truth for organization,
   project, locales, region and commerce settings. Read it through `@repo/config`.
 - `apps/e2e` — Playwright journeys with axe accessibility checks.
-- `scripts/` — `check-placeholders.ts`, `check-rtl.ts` and `check-i18n.ts`
-  are repo checks; `vercel-ignore.mjs` is every Vercel project's ignored
+- `scripts/` — `check-placeholders.ts`, `check-rtl.ts`, `check-i18n.ts` and
+  `check-secrets.ts` are repo checks; `vercel-ignore.mjs` is every Vercel project's ignored
   build step.
 - `ARCHITECTURE_AND_INTEGRATIONS.md` — how the pieces fit together and how to
   set up each integration (Supabase, Capacitor, tracking, Wayl, Vercel).
@@ -53,6 +54,7 @@ bun run test:coverage       # every workspace in one Vitest run, with coverage
 bun run check:placeholders  # no unfilled template tokens
 bun run check:rtl           # physical Tailwind utilities (--fix rewrites them)
 bun run check:i18n          # UI text that isn't in the messages files
+bun run check:secrets       # server secrets outside apps/api
 bun run check:unused        # unused files and dependencies (Knip)
 bun run boundaries          # packages import only what they declare
 bun run db:start | db:reset | db:test | db:types
@@ -84,11 +86,22 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   code. `@repo/auth/server` is for server-rendered apps only.
 - **Database:** schema changes are migrations with RLS policies and tests;
   see Database standards below.
-- **Secrets:** never in client code, logs or commits. New env vars go in the
-  package's `keys.ts` and every affected `.env.example`, and in `globalEnv`
-  in `turbo.json` (strict env mode passes nothing else to tasks). A client
-  component never imports `env.ts` or a `keys.ts` with server variables:
-  pass the public value down from a server component instead. CI fails when
+- **Secrets live only in `apps/api`.** Every other app (web, app, admin,
+  storybook, docs, email) holds public values only: no server-only preset in
+  its `env.ts` or `.env.example`, no import of a package module that reads
+  one (`@repo/email`, `@repo/rate-limit`, `@repo/security/form`,
+  `@repo/database/admin`, …). Anything that needs a secret is an `apps/api`
+  endpoint: public forms (the website's `POST /contact`) validate with zod,
+  run `protectForm` from `@repo/security/form` and the Upstash limit, and
+  allow only the website's origin (`webCorsHeaders`); signed-in calls use
+  the user's token. `bun run check:secrets` enforces this (apps/e2e, a test
+  harness, is exempt). Admin Server Actions running as the staff member with
+  the publishable key are fine. Never put secrets in client code, logs or
+  commits. New env vars go in the package's `keys.ts` (a secret in its own
+  `keys.ts`, not mixed into a preset other apps use) and every affected
+  `.env.example`, and in `globalEnv` in `turbo.json` (strict env mode passes
+  nothing else to tasks). A client component never imports `env.ts`: pass
+  the public value down from a server component instead. CI also fails when
   a server variable name reaches a client bundle.
 - **Migrations ship through CI.** After merge, `.github/workflows/migrate.yml`
   runs `supabase db push` against production once CI passes on `main`.
