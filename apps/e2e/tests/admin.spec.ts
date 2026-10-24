@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { customer, sessionCookies, staff, totp } from "../fixtures";
 import { urls } from "../playwright.config";
+import { resetStaff } from "../seed";
 import { expectAccessible } from "./helpers";
 
 test.describe("back office", () => {
@@ -35,6 +36,7 @@ test.describe("back office", () => {
     context,
     page,
   }) => {
+    await resetStaff();
     await context.addCookies(await sessionCookies(staff.email, urls.admin));
     // Signed in with a password only (AAL1): the console asks for the app.
     await page.goto(`${urls.admin}/en`);

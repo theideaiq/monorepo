@@ -31,15 +31,18 @@ export const customer = {
 /** Holds a staff role; the journey links an authenticator app first. */
 export const staff = { email: "e2e-staff@theidea.test", name: "E2E Staff" };
 /**
- * Signs up through the phone form. A test number from
- * packages/database/supabase/config.toml ([auth.sms.test_otp]); CI's e2e job
- * is the only one using it there.
+ * Signs up through the phone form, with the e2e test number from
+ * packages/database/supabase/config.toml ([auth.sms.test_otp]). A stack
+ * started before that number was added needs `supabase stop && supabase
+ * start`, or E2E_PHONE set to another test number (e.g. 9647700000000).
  */
+const phone = process.env.E2E_PHONE ?? "9647700000902";
 export const phoneUser = {
   code: "123456",
-  local: "0770 000 0000",
+  /** As typed: the local format (07…). */
+  local: `0${phone.slice(3)}`,
   name: "E2E Phone",
-  phone: process.env.E2E_PHONE ?? "9647700000000",
+  phone,
 };
 /** An in-stock product of its own, so journeys never touch seeded stock. */
 export const product = {

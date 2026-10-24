@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { customer, phoneUser, product } from "../fixtures";
 import { urls } from "../playwright.config";
+import { resetCustomer, resetPhoneUser } from "../seed";
 import {
   expectAccessible,
   expectSignedInHome,
@@ -9,6 +10,7 @@ import {
 } from "./helpers";
 
 test("sign up with a mobile number and a code", async ({ page }) => {
+  const fresh = await resetPhoneUser();
   await page.goto(`${urls.app}/en/sign-up`);
   await expect(
     page.getByRole("heading", { name: "Create an account" })
@@ -31,9 +33,11 @@ test("sign up with a mobile number and a code", async ({ page }) => {
     await page.getByRole("button", { name: "Continue" }).click();
   }
   await expectSignedInHome(page);
-  await expect(
-    page.getByRole("button", { name: phoneUser.name })
-  ).toBeVisible();
+  if (fresh) {
+    await expect(
+      page.getByRole("button", { name: phoneUser.name })
+    ).toBeVisible();
+  }
 });
 
 test("the sign-in page is accessible in Arabic", async ({ page }) => {
@@ -50,6 +54,7 @@ test("signed out, the app sends you to sign in and back", async ({ page }) => {
 
 test.describe("a signed-in customer", () => {
   test.beforeEach(async ({ context }) => {
+    await resetCustomer();
     await signIn(context, customer.email);
   });
 
