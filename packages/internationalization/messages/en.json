@@ -762,7 +762,9 @@
       "settings": "Settings",
       "more": "More",
       "cartCount": "{count} in cart",
-      "account": "Account"
+      "account": "Account",
+      "wishlist": "Wishlist",
+      "support": "Support"
     },
     "roles": {
       "owner": "Owner",
@@ -845,7 +847,9 @@
         "condition": "Condition",
         "rentalOnly": "This item is rented with IDEA Plus.",
         "goToPlus": "Go to IDEA Plus",
-        "addFailed": "We couldn't add this to your cart. Please try again."
+        "addFailed": "We couldn't add this to your cart. Please try again.",
+        "soldBy": "Sold by {seller}",
+        "verifiedSeller": "Verified seller"
       }
     },
     "cart": {
@@ -948,7 +952,8 @@
         "cancelling": "Cancelling…",
         "cancelFailed": "This order can no longer be cancelled.",
         "cancelledNotice": "This order was cancelled.",
-        "refundedNotice": "This order was refunded."
+        "refundedNotice": "This order was refunded.",
+        "help": "Get help with this order"
       }
     },
     "plus": {
@@ -984,7 +989,11 @@
         "requesting": "Requesting…",
         "requested": "Requested. We'll contact you to arrange delivery.",
         "needMembership": "Join IDEA Plus to rent items.",
-        "noSlots": "All your rental slots are in use."
+        "noSlots": "All your rental slots are in use.",
+        "needsPlan": "Needs {plan}",
+        "needsHigherPlan": "Needs a higher plan",
+        "upgradeTo": "Upgrade to {plan} to rent this item.",
+        "upgrade": "Upgrade your plan to rent this item."
       },
       "rentals": {
         "title": "Your rentals",
@@ -1000,7 +1009,8 @@
         "notCancellable": "This rental has already been delivered.",
         "suspended": "Your account is suspended. Contact support.",
         "unavailable": "This item isn't available right now.",
-        "unknown": "Something went wrong. Please try again."
+        "unknown": "Something went wrong. Please try again.",
+        "needsTier": "This item needs a higher plan. Upgrade your membership to rent it."
       }
     },
     "events": {
@@ -1231,6 +1241,130 @@
     "errors": {
       "loadFailed": "We couldn't load this page.",
       "unknown": "Something went wrong. Please try again."
+    },
+    "reviews": {
+      "title": "Reviews",
+      "none": "No reviews yet.",
+      "summary": "{average} ({count})",
+      "summaryLabel": "Rated {average} out of 5. Reviews: {count}",
+      "verifiedPurchase": "Verified purchase",
+      "anonymous": "A customer",
+      "more": "Show more reviews",
+      "loading": "Loading…",
+      "form": {
+        "title": "Write a review",
+        "editTitle": "Edit your review",
+        "rating": "Your rating",
+        "stars": "{count} out of 5 stars",
+        "ratingRequired": "Choose a rating from 1 to 5 stars.",
+        "comment": "Your review (optional)",
+        "commentPlaceholder": "What did you like? What could be better?",
+        "submit": "Publish review",
+        "saving": "Saving…",
+        "cancel": "Cancel",
+        "errors": {
+          "duplicate": "You've already reviewed this product.",
+          "suspended": "Your account is suspended. Contact support.",
+          "unknown": "We couldn't save your review. Please try again."
+        }
+      },
+      "mine": {
+        "title": "Your review",
+        "rating": "Rated {rating} out of 5",
+        "hidden": "Our team hid this review, so other customers don't see it. You can edit it or contact support.",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deleting": "Deleting…",
+        "deleteTitle": "Delete your review?",
+        "deleteDescription": "Your rating and comment are removed from this product. This can't be undone.",
+        "deleteConfirm": "Delete review",
+        "keep": "Keep review",
+        "deleteFailed": "We couldn't delete your review. Please try again."
+      }
+    },
+    "wishlist": {
+      "title": "Wishlist",
+      "description": "Products you saved for later.",
+      "add": "Save to wishlist",
+      "remove": "Remove from wishlist",
+      "save": "Save",
+      "saved": "Saved",
+      "rental": "Rented with IDEA Plus",
+      "moveToCart": "Move to cart",
+      "moving": "Moving…",
+      "moveFailed": "We couldn't move this to your cart. Please try again.",
+      "chooseOptions": "Choose options",
+      "rentWithPlus": "Rent with IDEA Plus",
+      "unavailable": "Not available right now",
+      "empty": {
+        "title": "Your wishlist is empty",
+        "description": "Tap the heart on a product to save it here.",
+        "browse": "Browse the store"
+      }
+    },
+    "support": {
+      "title": "Support",
+      "description": "Questions about an order, a rental or your account? We're here to help.",
+      "newTicket": "New request",
+      "number": "Ticket #{number}",
+      "lastActivity": "Last activity {date}",
+      "view": {
+        "back": "All requests",
+        "notFound": "We couldn't find this ticket.",
+        "you": "You",
+        "team": "The IDEA support",
+        "reply": "Reply",
+        "replyPlaceholder": "Write your reply…",
+        "closed": "This ticket is closed.",
+        "send": "Send reply",
+        "sending": "Sending…",
+        "close": "Close ticket",
+        "closing": "Closing…",
+        "closeTitle": "Close this ticket?",
+        "closeDescription": "Close it if your problem is solved. You won't be able to reply afterwards.",
+        "closeConfirm": "Close ticket",
+        "keepOpen": "Keep open"
+      },
+      "empty": {
+        "title": "No support requests",
+        "description": "When you contact us, your conversations appear here."
+      },
+      "statusHint": {
+        "open": "We received your message and will reply soon.",
+        "pending": "We replied. Let us know if you need anything else.",
+        "resolved": "We marked this as resolved. Reply if you still need help.",
+        "closed": "This ticket is closed. Open a new request if you need more help."
+      },
+      "errors": {
+        "closed": "This ticket is closed. Open a new request instead.",
+        "orderNotFound": "We couldn't find that order in your account.",
+        "unknown": "Something went wrong. Please try again."
+      },
+      "new": {
+        "title": "New support request",
+        "back": "All requests",
+        "description": "Tell us what happened and we'll get back to you here.",
+        "subject": "Subject",
+        "subjectRequired": "Enter a subject.",
+        "topic": "Topic",
+        "order": "Order (optional)",
+        "noOrder": "No order",
+        "message": "Message",
+        "messagePlaceholder": "Describe the problem or your question.",
+        "messageRequired": "Write your message.",
+        "submit": "Send request",
+        "sending": "Sending…"
+      },
+      "openTicket": "View ticket"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "label": "Notifications",
+      "labelUnread": "Notifications, {count} unread",
+      "many": "{count}+",
+      "markAllRead": "Mark all as read",
+      "empty": "You're all caught up.",
+      "loadFailed": "We couldn't load your notifications."
     }
   },
   "store": {
@@ -1292,6 +1426,86 @@
       "academy": "Academy",
       "suite": "IDEA Suite",
       "club": "The Club"
+    },
+    "ticketStatus": {
+      "open": "Open",
+      "pending": "Awaiting customer",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "ticketTopic": {
+      "order": "Order",
+      "rental": "Rental",
+      "plus": "IDEA Plus",
+      "account": "Account",
+      "other": "Other"
+    },
+    "ticketPriority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "reviewStatus": {
+      "published": "Published",
+      "hidden": "Hidden"
+    },
+    "notifications": {
+      "events": {
+        "order_paid": {
+          "title": "Payment received",
+          "body": "We received the payment for order #{number}."
+        },
+        "order_processing": {
+          "title": "Preparing your order",
+          "body": "We're preparing order #{number}."
+        },
+        "order_shipped": {
+          "title": "Your order is on its way",
+          "body": "Order #{number} has shipped.{hasTracking, select, yes { Tracking number: {tracking}.} other {}}"
+        },
+        "order_delivered": {
+          "title": "Order delivered",
+          "body": "Order #{number} was delivered. Enjoy!"
+        },
+        "order_cancelled": {
+          "title": "Order cancelled",
+          "body": "Order #{number} was cancelled."
+        },
+        "order_refunded": {
+          "title": "Order refunded",
+          "body": "We refunded order #{number}."
+        },
+        "rental_active": {
+          "title": "Your rental has arrived",
+          "body": "{name} is with you{hasDue, select, yes { until {due}} other {}}. Enjoy!"
+        },
+        "rental_overdue": {
+          "title": "Rental overdue",
+          "body": "{name} was due{hasDue, select, yes { on {due}} other {}}. Please return it."
+        },
+        "rental_returned": {
+          "title": "Rental returned",
+          "body": "We received {name} back. Thank you!"
+        },
+        "rental_cancelled": {
+          "title": "Rental cancelled",
+          "body": "Your request for {name} was cancelled."
+        },
+        "support_reply": {
+          "title": "New reply from support",
+          "body": "We replied to ticket #{number}: {subject}"
+        }
+      },
+      "kinds": {
+        "order": "Order update",
+        "rental": "Rental update",
+        "support": "Support update",
+        "plus": "IDEA Plus update",
+        "promo": "News from The IDEA",
+        "system": "Notice"
+      },
+      "fallbackBody": "Open to see the details."
     }
   },
   "admin": {

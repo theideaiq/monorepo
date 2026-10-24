@@ -31,6 +31,7 @@ import {
   useRentals,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusSubscription, useProfile } from "@/lib/queries";
+import { useProductRatings } from "@/lib/review-queries";
 import { useOrders, useProducts } from "@/lib/store-queries";
 
 const WHITESPACE = /\s+/;
@@ -251,6 +252,9 @@ const Featured = () => {
   const t = useTranslations("app.home.featured");
   const tCommon = useTranslations("app.common");
   const products = useProducts({ featured: true, kind: "sale", limit: 8 });
+  const ratings = useProductRatings(
+    products.data?.map((product) => product.id) ?? []
+  );
 
   return (
     <section className="grid gap-4">
@@ -267,7 +271,11 @@ const Featured = () => {
       {products.data?.length ? (
         <ul className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-4">
           {products.data.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              rating={ratings.data?.get(product.id)}
+            />
           ))}
         </ul>
       ) : null}

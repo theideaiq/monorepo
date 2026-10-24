@@ -24,7 +24,7 @@ import { cn } from "@repo/design-system/lib/utils";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { getPurchasePolicy } from "@repo/payments";
-import { ArrowLeftIcon, CheckIcon } from "lucide-react";
+import { ArrowLeftIcon, CheckIcon, LifeBuoyIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -383,6 +383,16 @@ export const OrderDetail = () => {
                   date: formatDate(data.created_at, locale),
                 })}
               </span>
+              <Link
+                className="inline-flex items-center gap-1 text-primary text-sm hover:underline sm:ms-auto"
+                href={{
+                  pathname: "/support/new",
+                  query: { order: data.id, topic: "order" },
+                }}
+              >
+                <LifeBuoyIcon className="size-4" />
+                {t("orders.detail.help")}
+              </Link>
             </div>
             <OrderView
               justPaid={justPaid}

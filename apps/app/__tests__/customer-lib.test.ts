@@ -263,12 +263,13 @@ describe("error messages", () => {
 
 describe("IDEA Plus", () => {
   test("rental allowance", () => {
-    expect(toAllowance([{ in_use: 1, slots: 3 }])).toEqual({
+    expect(toAllowance([{ in_use: 1, slots: 3, tier: 2 }])).toEqual({
       free: 2,
       slots: 3,
+      tier: 2,
       used: 1,
     });
-    expect(toAllowance([])).toEqual({ free: 0, slots: 0, used: 0 });
+    expect(toAllowance([])).toEqual({ free: 0, slots: 0, tier: 0, used: 0 });
     expect(toAllowance([{ in_use: 4, slots: 2 }]).free).toBe(0);
   });
 });

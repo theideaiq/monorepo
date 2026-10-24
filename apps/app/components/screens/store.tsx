@@ -26,6 +26,7 @@ import { type FormEvent, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { ProductCard } from "@/components/store/product-card";
+import { useProductRatings } from "@/lib/review-queries";
 import { useCategories, useProducts } from "@/lib/store-queries";
 
 const PAGE_SIZE = 24;
@@ -68,6 +69,9 @@ export const Store = () => {
     sort,
   };
   const products = useProducts(filters);
+  const ratings = useProductRatings(
+    products.data?.map((product) => product.id) ?? []
+  );
 
   const navigate = (
     next: Partial<Record<"category" | "q" | "sort", string>>
@@ -197,7 +201,11 @@ export const Store = () => {
         {products.data?.length ? (
           <ul className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {products.data.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                rating={ratings.data?.get(product.id)}
+              />
             ))}
           </ul>
         ) : null}
