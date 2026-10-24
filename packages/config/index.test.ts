@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { isPlaceholder, project } from "./index";
+import { isPlaceholder, project, projectName } from "./index";
 
 describe("project config", () => {
   test("detects template placeholders", () => {
@@ -25,5 +25,11 @@ describe("project config", () => {
         expect(isPlaceholder(value)).toBe(false);
       }
     }
+  });
+
+  test("names the project in each locale, falling back to the main name", () => {
+    expect(projectName("ar")).toBe("ايديا");
+    expect(projectName("en")).toBe(project.name);
+    expect(projectName(undefined)).toBe(project.name);
   });
 });
