@@ -97,6 +97,7 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
 };
 
 export type RentalError =
+  | "needsTier"
   | "noSlots"
   | "notCancellable"
   | "suspended"
@@ -108,6 +109,9 @@ export const toRentalError = (error: unknown): RentalError => {
   const message = messageOf(error);
   if (message.includes("No free rental slots")) {
     return "noSlots";
+  }
+  if (message.includes("needs a higher plan")) {
+    return "needsTier";
   }
   if (
     message.includes("All copies are rented out") ||
@@ -141,3 +145,33 @@ export const toRsvpError = (error: unknown): RsvpError => {
 /** A unique violation: the row (an RSVP, a cart line) already exists. */
 export const isDuplicate = (error: unknown) =>
   codeOf(error) === UNIQUE_VIOLATION;
+
+export type SupportError = "closed" | "orderNotFound" | "unknown";
+
+/** create_support_ticket(), replies and close_support_ticket() failures. */
+export const toSupportError = (error: unknown): SupportError => {
+  const message = messageOf(error);
+  if (
+    message.includes("ticket is closed") ||
+    message.includes("already closed")
+  ) {
+    return "closed";
+  }
+  if (message.includes("Order not found")) {
+    return "orderNotFound";
+  }
+  return "unknown";
+};
+
+export type ReviewError = "duplicate" | "suspended" | "unknown";
+
+/** Writing a review: one per product, none from suspended accounts. */
+export const toReviewError = (error: unknown): ReviewError => {
+  if (codeOf(error) === UNIQUE_VIOLATION) {
+    return "duplicate";
+  }
+  if (messageOf(error).includes("Account suspended")) {
+    return "suspended";
+  }
+  return "unknown";
+};

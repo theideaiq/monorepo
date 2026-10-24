@@ -4,28 +4,66 @@ import { formatPrice } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Input } from "@repo/design-system/components/ui/input";
 import { cn } from "@repo/design-system/lib/utils";
-import { PlusIcon, XIcon } from "lucide-react";
+import { PlusIcon, TagsIcon, XIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { ActionForm, FormError, SubmitButton } from "@/components/action-form";
-import { FieldGrid, NativeSelect, TextField } from "@/components/fields";
+import {
+  FieldGrid,
+  NativeSelect,
+  SelectField,
+  TextField,
+} from "@/components/fields";
 import { Panel } from "@/components/page";
+import { type Scenario, scenarios } from "@/lib/finance";
 import { journalTotals } from "@/lib/journal";
 import { postJournalEntry } from "../actions";
+
+interface Dimension {
+  id: number;
+  key: string;
+  value: string;
+}
 
 interface Line {
   accountId: string;
   credit: string;
   debit: string;
+  dimensions: Dimension[];
   id: number;
   memo: string;
+  showDimensions: boolean;
 }
 
 let nextId = 0;
-const emptyLine = (): Line => {
+const newId = () => {
   nextId += 1;
-  return { accountId: "", credit: "", debit: "", id: nextId, memo: "" };
+  return nextId;
 };
+const emptyDimension = (): Dimension => ({ id: newId(), key: "", value: "" });
+const emptyLine = (): Line => ({
+  accountId: "",
+  credit: "",
+  debit: "",
+  dimensions: [emptyDimension()],
+  id: newId(),
+  memo: "",
+  showDimensions: false,
+});
+
+const filledDimensions = (dimensions: Dimension[]) =>
+  dimensions.filter((item) => item.key.trim() && item.value.trim());
+
+/** A line's dimensions as the JSON object the action reads. */
+const dimensionsJson = (dimensions: Dimension[]) =>
+  JSON.stringify(
+    Object.fromEntries(
+      filledDimensions(dimensions).map((item) => [
+        item.key.trim(),
+        item.value.trim(),
+      ])
+    )
+  );
 
 const toAmount = (value: string) => {
   const amount = Number(value.replaceAll(",", ""));
@@ -34,14 +72,24 @@ const toAmount = (value: string) => {
 
 interface JournalFormProps {
   readonly accounts: { code: string; id: string; name: string }[];
+  /** The scenario chosen in the journal list, preselected. */
+  readonly scenario: Scenario;
   readonly today: string;
 }
 
 /** A new double-entry journal entry; posts only when debits equal credits. */
-export const JournalForm = ({ accounts, today }: JournalFormProps) => {
+export const JournalForm = ({
+  accounts,
+  scenario,
+  today,
+}: JournalFormProps) => {
   const t = useTranslations("admin.finance.journal");
+  const tScenario = useTranslations("admin.finance.scenarios");
   const locale = useLocale();
   const [lines, setLines] = useState<Line[]>(() => [emptyLine(), emptyLine()]);
+  const [currency, setCurrency] = useState("IQD");
+  const currencyCode = currency.trim().toUpperCase();
+  const foreign = currencyCode !== "" && currencyCode !== "IQD";
 
   const totals = journalTotals(
     lines.map((line) => ({
@@ -55,6 +103,17 @@ export const JournalForm = ({ accounts, today }: JournalFormProps) => {
     setLines((current) =>
       current.map((line) => (line.id === id ? { ...line, ...change } : line))
     );
+
+  const updateDimension = (
+    line: Line,
+    dimensionId: number,
+    change: Partial<Dimension>
+  ) =>
+    update(line.id, {
+      dimensions: line.dimensions.map((item) =>
+        item.id === dimensionId ? { ...item, ...change } : item
+      ),
+    });
 
   const options = [
     { label: t("chooseAccount"), value: "" },
@@ -88,7 +147,42 @@ export const JournalForm = ({ accounts, today }: JournalFormProps) => {
             maxLength={255}
             name="reference"
           />
+          <SelectField
+            defaultValue={scenario}
+            hint={t("scenarioHint")}
+            label={t("scenario")}
+            name="scenario"
+            options={scenarios.map((value) => ({
+              label: tScenario(value),
+              value,
+            }))}
+          />
+          <div className="grid grid-cols-[6rem_1fr] items-start gap-2">
+            <TextField
+              dir="ltr"
+              label={t("currency")}
+              maxLength={3}
+              name="currency"
+              onChange={(event) => setCurrency(event.target.value)}
+              value={currency}
+            />
+            {foreign ? (
+              <TextField
+                dir="ltr"
+                hint={t("exchangeRateHint", { currency: currencyCode })}
+                inputMode="decimal"
+                label={t("exchangeRate")}
+                name="exchangeRate"
+                required
+              />
+            ) : null}
+          </div>
         </FieldGrid>
+        <p className="text-muted-foreground text-sm">
+          {foreign
+            ? t("currencyForeignHint", { currency: currencyCode })
+            : t("currencyHint")}
+        </p>
       </Panel>
 
       <Panel title={t("lines")}>
@@ -147,6 +241,11 @@ export const JournalForm = ({ accounts, today }: JournalFormProps) => {
               readOnly={toAmount(line.debit) > 0}
               value={line.credit}
             />
+            <input
+              name="dimensions[]"
+              type="hidden"
+              value={dimensionsJson(line.dimensions)}
+            />
             <Button
               aria-label={t("removeLine")}
               disabled={lines.length <= 2}
@@ -161,6 +260,90 @@ export const JournalForm = ({ accounts, today }: JournalFormProps) => {
             >
               <XIcon />
             </Button>
+            <div className="grid gap-2 md:col-span-5">
+              <Button
+                aria-expanded={line.showDimensions}
+                className="w-fit text-muted-foreground"
+                onClick={() =>
+                  update(line.id, { showDimensions: !line.showDimensions })
+                }
+                size="sm"
+                type="button"
+                variant="ghost"
+              >
+                <TagsIcon />
+                {t("dimensionsToggle", {
+                  count: String(filledDimensions(line.dimensions).length),
+                })}
+              </Button>
+              {line.showDimensions ? (
+                <div className="grid gap-2 rounded-md bg-muted/40 p-2 md:ms-6">
+                  <p className="text-muted-foreground text-xs">
+                    {t("dimensionsHint")}
+                  </p>
+                  {line.dimensions.map((item) => (
+                    <div className="flex gap-2" key={item.id}>
+                      <Input
+                        aria-label={t("dimensionKey")}
+                        dir="ltr"
+                        maxLength={60}
+                        onChange={(event) =>
+                          updateDimension(line, item.id, {
+                            key: event.target.value,
+                          })
+                        }
+                        placeholder={t("dimensionKey")}
+                        value={item.key}
+                      />
+                      <Input
+                        aria-label={t("dimensionValue")}
+                        maxLength={120}
+                        onChange={(event) =>
+                          updateDimension(line, item.id, {
+                            value: event.target.value,
+                          })
+                        }
+                        placeholder={t("dimensionValue")}
+                        value={item.value}
+                      />
+                      <Button
+                        aria-label={t("removeDimension")}
+                        onClick={() =>
+                          update(line.id, {
+                            dimensions:
+                              line.dimensions.length > 1
+                                ? line.dimensions.filter(
+                                    (other) => other.id !== item.id
+                                  )
+                                : [emptyDimension()],
+                          })
+                        }
+                        size="icon"
+                        type="button"
+                        variant="ghost"
+                      >
+                        <XIcon />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    className="w-fit"
+                    disabled={line.dimensions.length >= 10}
+                    onClick={() =>
+                      update(line.id, {
+                        dimensions: [...line.dimensions, emptyDimension()],
+                      })
+                    }
+                    size="sm"
+                    type="button"
+                    variant="outline"
+                  >
+                    <PlusIcon />
+                    {t("addDimension")}
+                  </Button>
+                </div>
+              ) : null}
+            </div>
           </div>
         ))}
         <Button

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { PageBody, PageHeader } from "@/components/page";
 import { todayInBaghdad } from "@/lib/dates";
+import { scenarioFrom } from "@/lib/finance";
+import type { SearchParams } from "@/lib/list";
 import { requireSection } from "@/lib/session";
 import { JournalForm } from "../../_components/journal-form";
 
@@ -10,8 +12,13 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return { title: t("new") };
 };
 
-const NewJournalEntryPage = async () => {
+const NewJournalEntryPage = async ({
+  searchParams,
+}: {
+  readonly searchParams: Promise<SearchParams>;
+}) => {
   const { supabase } = await requireSection("finance", "write");
+  const scenario = scenarioFrom(await searchParams);
   const t = await getTranslations("admin.finance");
   const { data: accounts } = await supabase
     .from("chart_of_accounts")
@@ -27,7 +34,11 @@ const NewJournalEntryPage = async () => {
         title={t("journal.new")}
       />
       <PageBody className="max-w-5xl">
-        <JournalForm accounts={accounts ?? []} today={todayInBaghdad()} />
+        <JournalForm
+          accounts={accounts ?? []}
+          scenario={scenario}
+          today={todayInBaghdad()}
+        />
       </PageBody>
     </>
   );

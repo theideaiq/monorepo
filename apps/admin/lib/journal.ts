@@ -7,6 +7,8 @@ export interface JournalLineInput {
   accountId: string;
   credit: number;
   debit: number;
+  /** Report tags, e.g. {"product_line": "plus"}. */
+  dimensions?: Record<string, string>;
   memo?: string | null;
 }
 
@@ -87,5 +89,6 @@ export const toRpcLines = (lines: JournalLineInput[]) =>
     account_id: line.accountId,
     credit: line.credit,
     debit: line.debit,
+    dimensions: line.dimensions ?? {},
     memo: line.memo ?? "",
   }));

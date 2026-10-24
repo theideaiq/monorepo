@@ -5,18 +5,32 @@ import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { getTranslations } from "next-intl/server";
 import { imageUrl, type ProductCard as Product } from "@/lib/data";
+import { formatRating, type Rating } from "@/lib/reviews";
 import { CoverImage } from "./cover-image";
+import { Stars } from "./stars";
 
 const LOW_STOCK = 5;
 
 interface ProductCardProps {
   readonly locale: Locale;
+  /** The plan a rental item needs, shown on the image (e.g. "Plus Extra and above"). */
+  readonly planLabel?: string | null;
   readonly product: Product;
+  /** Published reviews' average and count, when the product has any. */
+  readonly rating?: Rating | null;
 }
 
 /** A product tile linking to its page on this site. */
-export const ProductCard = async ({ locale, product }: ProductCardProps) => {
-  const t = await getTranslations({ locale, namespace: "store" });
+export const ProductCard = async ({
+  locale,
+  planLabel,
+  product,
+  rating,
+}: ProductCardProps) => {
+  const [t, r] = await Promise.all([
+    getTranslations({ locale, namespace: "store" }),
+    getTranslations({ locale, namespace: "web.store.rating" }),
+  ]);
   const name = localized(product, "name", locale);
   const discount = discountPercent(product.price, product.compare_at_price);
   const rental = product.kind === "rental";
@@ -39,12 +53,40 @@ export const ProductCard = async ({ locale, product }: ProductCardProps) => {
               {t(`condition.${product.condition}`)}
             </Badge>
           )}
+          {planLabel ? (
+            <Badge className="border-transparent bg-brand text-brand-foreground">
+              {planLabel}
+            </Badge>
+          ) : null}
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-1 px-1">
         <h3 className="line-clamp-2 font-medium group-hover:text-primary">
           {name}
         </h3>
+        {rating ? (
+          <p className="flex items-center gap-1.5 text-muted-foreground text-xs">
+            <Stars
+              className="text-sm"
+              label={r("label", {
+                rating: formatRating(rating.average, locale),
+              })}
+              value={rating.average}
+            />
+            <span aria-hidden="true">
+              {r("short", {
+                rating: formatRating(rating.average, locale),
+                reviews: formatNumber(rating.count, locale),
+              })}
+            </span>
+            <span className="sr-only">
+              {r("count", {
+                count: rating.count,
+                reviews: formatNumber(rating.count, locale),
+              })}
+            </span>
+          </p>
+        ) : null}
         {rental ? (
           <p className="text-muted-foreground text-sm">{t("kind.rental")}</p>
         ) : (

@@ -2,23 +2,34 @@
 
 import { z } from "zod";
 import { ActionFailure, affected, check, staffAction } from "@/lib/action";
-import { checkbox, optionalText, tags, uuid } from "@/lib/forms";
-import { crmStatuses } from "@/lib/segments";
+import { crmContactSchema, markContactedSchema } from "@/lib/crm";
+import { checkbox, uuid } from "@/lib/forms";
 
 export const saveCrmContact = staffAction(
   "customers",
-  z.object({
-    notes: optionalText(10_000),
-    status: z.enum(crmStatuses),
-    tags,
-    userId: uuid,
-  }),
+  crmContactSchema,
   async ({ input, supabase, staff }) => {
     check(
       await supabase.from("crm_contacts").upsert({
+        last_contacted_at: input.lastContactedAt,
         notes: input.notes,
         status: input.status,
         tags: input.tags,
+        updated_by: staff.userId,
+        user_id: input.userId,
+      })
+    );
+  }
+);
+
+/** "Contacted today": stamps the CRM record with the current time. */
+export const markContacted = staffAction(
+  "customers",
+  markContactedSchema,
+  async ({ input, supabase, staff }) => {
+    check(
+      await supabase.from("crm_contacts").upsert({
+        last_contacted_at: new Date().toISOString(),
         updated_by: staff.userId,
         user_id: input.userId,
       })

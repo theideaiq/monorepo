@@ -34,11 +34,14 @@ import { toRentalError } from "@/lib/errors";
 import { detectPlatform } from "@/lib/platform";
 import {
   isLiveMembership,
+  meetsTier,
+  planForTier,
   type RentalAllowance,
   useCancelRental,
   usePlanCheckout,
   useRentalAllowance,
   useRentals,
+  useRentalTiers,
   useRequestRental,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
@@ -240,11 +243,16 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
 const RentalItem = ({
   allowance,
   member,
+  planName,
   product,
+  requiredTier,
 }: {
   readonly allowance: RentalAllowance | undefined;
   readonly member: boolean;
+  /** The plan that unlocks the item, when it needs a higher one. */
+  readonly planName: string | null;
   readonly product: ProductCard;
+  readonly requiredTier: number | undefined;
 }) => {
   const t = useTranslations("app.plus");
   const locale = useLocale();
@@ -252,10 +260,19 @@ const RentalItem = ({
   const name = localized(product, "name", locale);
   const available = product.stock_count > 0;
   const noSlots = member && allowance !== undefined && allowance.free <= 0;
+  // Unknown until the allowance loads: let the database decide then.
+  const tierTooLow =
+    member &&
+    allowance !== undefined &&
+    !meetsTier(requiredTier, allowance.tier);
 
   let hint: string | null = null;
   if (!member) {
     hint = t("catalog.needMembership");
+  } else if (tierTooLow) {
+    hint = planName
+      ? t("catalog.upgradeTo", { plan: planName })
+      : t("catalog.upgrade");
   } else if (noSlots) {
     hint = t("catalog.noSlots");
   }
@@ -264,6 +281,14 @@ const RentalItem = ({
     <li className="grid content-start gap-2">
       <ProductImage alt={name} path={product.images[0]} />
       <span className="line-clamp-2 font-medium text-sm">{name}</span>
+      {requiredTier ? (
+        <Badge className="justify-self-start" variant="outline">
+          <CrownIcon className="text-brand" />
+          {planName
+            ? t("catalog.needsPlan", { plan: planName })
+            : t("catalog.needsHigherPlan")}
+        </Badge>
+      ) : null}
       <span className="text-muted-foreground text-xs">
         {available
           ? t("catalog.available", {
@@ -280,7 +305,9 @@ const RentalItem = ({
         </p>
       ) : (
         <Button
-          disabled={!(member && available) || noSlots || request.isPending}
+          disabled={
+            !(member && available) || noSlots || tierTooLow || request.isPending
+          }
           onClick={() => request.mutate(product.id)}
           size="sm"
           variant="outline"
@@ -300,6 +327,26 @@ const RentalItem = ({
   );
 };
 
+const RentalCatalogItem = ({
+  plans,
+  requiredTier,
+  ...props
+}: {
+  readonly allowance: RentalAllowance | undefined;
+  readonly member: boolean;
+  readonly plans: readonly { name: string; tier: number | null }[] | undefined;
+  readonly product: ProductCard;
+  readonly requiredTier: number | undefined;
+}) => (
+  <RentalItem
+    {...props}
+    planName={
+      requiredTier ? (planForTier(plans, requiredTier)?.name ?? null) : null
+    }
+    requiredTier={requiredTier}
+  />
+);
+
 const RentalCatalog = ({
   allowance,
   member,
@@ -314,6 +361,10 @@ const RentalCatalog = ({
     limit: 48,
     search: search.trim() || undefined,
   });
+  const tiers = useRentalTiers(
+    products.data?.map((product) => product.id) ?? []
+  );
+  const plans = usePlans("plus");
 
   return (
     <section className="grid gap-4">
@@ -342,11 +393,13 @@ const RentalCatalog = ({
       {products.data?.length ? (
         <ul className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
           {products.data.map((product) => (
-            <RentalItem
+            <RentalCatalogItem
               allowance={allowance}
               key={product.id}
               member={member}
+              plans={plans.data ?? undefined}
               product={product}
+              requiredTier={tiers.data?.get(product.id)}
             />
           ))}
         </ul>

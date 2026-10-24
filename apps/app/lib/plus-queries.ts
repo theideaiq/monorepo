@@ -15,17 +15,66 @@ export interface RentalAllowance {
   free: number;
   /** Slots of the live Plus plan (0 without a membership). */
   slots: number;
+  /** Tier of the live Plus plan (0 without a membership). */
+  tier: number;
   /** Rentals requested, with the member or overdue. */
   used: number;
 }
 
 /** my_rental_allowance() as numbers the UI can use directly. */
 export const toAllowance = (
-  rows: readonly { in_use: number; slots: number }[] | null | undefined
+  rows:
+    | readonly { in_use: number; slots: number; tier?: number | null }[]
+    | null
+    | undefined
 ): RentalAllowance => {
   const slots = rows?.[0]?.slots ?? 0;
   const used = rows?.[0]?.in_use ?? 0;
-  return { free: Math.max(slots - used, 0), slots, used };
+  const tier = rows?.[0]?.tier ?? 0;
+  return { free: Math.max(slots - used, 0), slots, tier, used };
+};
+
+/** Whether a member on plan tier `memberTier` may rent an item. */
+export const meetsTier = (
+  required: number | null | undefined,
+  memberTier: number
+) => required === null || required === undefined || memberTier >= required;
+
+/**
+ * The plan that unlocks an item needing `required`: the plan of that tier,
+ * else the lowest plan above it.
+ */
+export const planForTier = <T extends { tier: number | null }>(
+  plans: readonly T[] | undefined,
+  required: number
+): T | undefined =>
+  (plans ?? [])
+    .filter((plan) => plan.tier !== null && plan.tier >= required)
+    .sort((a, b) => (a.tier ?? 0) - (b.tier ?? 0))[0];
+
+/** The plan tier each rental item needs (absent: any membership). */
+export const useRentalTiers = (productIds: readonly string[]) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: productIds.length > 0,
+    queryFn: async () => {
+      const rows = unwrap(
+        await supabase
+          .from("products")
+          .select("id, rental_tier")
+          .in("id", [...productIds])
+      );
+      const tiers = new Map<string, number>();
+      for (const row of rows ?? []) {
+        if (row.rental_tier !== null) {
+          tiers.set(row.id, row.rental_tier);
+        }
+      }
+      return tiers;
+    },
+    queryKey: queryKeys.rentalTiers(productIds),
+    staleTime: 5 * 60_000,
+  });
 };
 
 export const useRentalAllowance = () => {

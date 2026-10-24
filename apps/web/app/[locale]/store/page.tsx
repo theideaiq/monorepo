@@ -11,7 +11,7 @@ import { PageHero } from "@/components/page-hero";
 import { Pagination } from "@/components/pagination";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
-import { getCategories, getProducts } from "@/lib/data";
+import { getCategories, getProducts, getRatings } from "@/lib/data";
 import { localizedMetadata } from "@/lib/metadata";
 import {
   parseStoreQuery,
@@ -62,6 +62,7 @@ const Store = async ({ params, searchParams }: StoreProps) => {
     }),
   ]);
   const products = rows.slice(0, STORE_PAGE_SIZE);
+  const ratings = await getRatings(products.map((product) => product.id));
   const hasNext = rows.length > STORE_PAGE_SIZE;
   const filtered = Boolean(query.q || query.category);
 
@@ -158,7 +159,12 @@ const Store = async ({ params, searchParams }: StoreProps) => {
         {products.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => (
-              <ProductCard key={product.id} locale={locale} product={product} />
+              <ProductCard
+                key={product.id}
+                locale={locale}
+                product={product}
+                rating={ratings[product.id]}
+              />
             ))}
           </div>
         ) : (

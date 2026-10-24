@@ -17,7 +17,10 @@ export const queryKeys = {
   events: ["events"] as const,
   invitations: (userId: string) => ["invitations", userId] as const,
   memberships: (userId: string) => ["memberships", userId] as const,
+  myReview: (productId: string, userId: string) =>
+    ["reviews", "mine", productId, userId] as const,
   myRsvps: (userId: string) => ["rsvps", userId] as const,
+  notifications: (userId: string) => ["notifications", userId] as const,
   order: (orderId: string) => ["orders", "detail", orderId] as const,
   orderPayments: (orderId: string) => ["order-payments", orderId] as const,
   orders: (userId: string) => ["orders", "list", userId] as const,
@@ -30,16 +33,28 @@ export const queryKeys = {
   plusPayments: (userId: string) => ["plus-payments", userId] as const,
   plusSubscription: (userId: string) => ["plus-subscription", userId] as const,
   product: (slug: string) => ["product", slug] as const,
+  productRatings: (productIds: readonly string[]) =>
+    ["product-ratings", [...productIds].sort().join(",")] as const,
   products: (filters: object) => ["products", filters] as const,
   profile: (userId: string) => ["profile", userId] as const,
   projects: (organizationId: string) => ["projects", organizationId] as const,
   rentalAllowance: (userId: string) => ["rental-allowance", userId] as const,
   rentals: (userId: string) => ["rentals", userId] as const,
+  rentalTiers: (productIds: readonly string[]) =>
+    ["rental-tiers", [...productIds].sort().join(",")] as const,
+  reviews: (productId: string) => ["reviews", "list", productId] as const,
   rsvpCount: (eventId: string) => ["rsvp-count", eventId] as const,
   storeSettings: ["store-settings"] as const,
   submissions: (userId: string) => ["submissions", userId] as const,
   subscription: (organizationId: string) =>
     ["subscription", organizationId] as const,
+  ticket: (ticketId: string) => ["tickets", "detail", ticketId] as const,
+  ticketMessages: (ticketId: string) =>
+    ["tickets", "messages", ticketId] as const,
+  tickets: (userId: string) => ["tickets", "list", userId] as const,
+  unreadNotifications: (userId: string) =>
+    ["notifications", userId, "unread"] as const,
+  wishlist: (userId: string) => ["wishlist", userId] as const,
 };
 
 export const requireUserId = (userId: string | undefined) => {
@@ -117,7 +132,7 @@ export const usePlans = (audience: "business" | "plus") => {
         await supabase
           .from("plans")
           .select(
-            "id, name, description, amount, currency, billing_interval, rental_slots, features_ar, features_en"
+            "id, name, description, amount, currency, billing_interval, rental_slots, tier, features_ar, features_en"
           )
           .eq("active", true)
           .eq("audience", audience)

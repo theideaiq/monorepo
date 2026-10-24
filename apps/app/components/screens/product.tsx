@@ -5,7 +5,12 @@ import type { ProductDetail } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
 import { Link, useRouter } from "@repo/internationalization/navigation";
-import { ArrowLeftIcon, CheckIcon, ShoppingCartIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  BadgeCheckIcon,
+  CheckIcon,
+  ShoppingCartIcon,
+} from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
@@ -13,10 +18,14 @@ import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { Price } from "@/components/store/price";
 import { ProductImage } from "@/components/store/product-image";
+import { ProductReviews } from "@/components/store/product-reviews";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
+import { RatingSummary } from "@/components/store/stars";
 import { StockBadge } from "@/components/store/stock-badge";
+import { WishlistButton } from "@/components/store/wishlist-button";
 import { MAX_QUANTITY } from "@/lib/cart";
 import { pickVariant, variantForDeepLink } from "@/lib/product";
+import { useProductRatings } from "@/lib/review-queries";
 import { useAddToCart, useProduct } from "@/lib/store-queries";
 
 const Details = ({ details }: { readonly details: unknown }) => {
@@ -40,6 +49,34 @@ const Details = ({ details }: { readonly details: unknown }) => {
         ))}
       </dl>
     </section>
+  );
+};
+
+/** Stars and count, jumping to the reviews below. */
+const RatingLink = ({ productId }: { readonly productId: string }) => {
+  const rating = useProductRatings([productId]).data?.get(productId);
+  return rating ? (
+    <a className="justify-self-start hover:underline" href="#reviews">
+      <RatingSummary className="text-sm" rating={rating} />
+    </a>
+  ) : null;
+};
+
+/** Who sells the product, and whether The IDEA verified the seller. */
+const Seller = ({ product }: { readonly product: ProductDetail }) => {
+  const t = useTranslations("app.store.product");
+  return (
+    <p className="flex flex-wrap items-center gap-2 text-sm">
+      <span className="text-muted-foreground">
+        {t("soldBy", { seller: product.seller })}
+      </span>
+      {product.verified ? (
+        <span className="inline-flex items-center gap-1 font-medium text-emerald-700 text-xs dark:text-emerald-300">
+          <BadgeCheckIcon className="size-4" />
+          {t("verifiedSeller")}
+        </span>
+      ) : null}
+    </p>
   );
 };
 
@@ -137,6 +174,8 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
             </Link>
           ) : null}
           <h2 className="font-semibold text-2xl tracking-tight">{name}</h2>
+          <RatingLink productId={product.id} />
+          <Seller product={product} />
           <Price
             className="text-xl"
             compareAtPrice={
@@ -159,9 +198,12 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
         {product.kind === "rental" ? (
           <div className="grid gap-3 rounded-lg border p-4">
             <p className="text-sm">{t("rentalOnly")}</p>
-            <Button asChild className="justify-self-start">
-              <Link href="/plus">{t("goToPlus")}</Link>
-            </Button>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild>
+                <Link href="/plus">{t("goToPlus")}</Link>
+              </Button>
+              <WishlistButton productId={product.id} withLabel />
+            </div>
           </div>
         ) : (
           <>
@@ -218,6 +260,7 @@ const ProductView = ({ product }: { readonly product: ProductDetail }) => {
                 <ShoppingCartIcon />
                 {add.isPending ? t("adding") : t("addToCart")}
               </Button>
+              <WishlistButton productId={product.id} withLabel />
             </div>
             {added ? (
               <p
@@ -280,7 +323,12 @@ export const Product = () => {
         {!slug || product.data === null ? (
           <p className="text-muted-foreground">{t("product.notFound")}</p>
         ) : null}
-        {product.data ? <ProductView product={product.data} /> : null}
+        {product.data ? (
+          <>
+            <ProductView product={product.data} />
+            <ProductReviews productId={product.data.id} />
+          </>
+        ) : null}
       </div>
     </>
   );

@@ -4,13 +4,18 @@ import { vi } from "vitest";
 
 /** One call to a query builder: the table, the operation and its filters. */
 export interface QueryCall {
+  /** The columns passed to select(), and its options ({ count, head }). */
+  columns?: string;
   filters: [string, ...unknown[]][];
   operation: "delete" | "insert" | "select" | "update" | "upsert";
   payload?: unknown;
+  selectOptions?: { count?: string; head?: boolean };
   table: string;
 }
 
 interface Result {
+  /** For select(…, { count: "exact" }). */
+  count?: number | null;
   data: unknown;
   error: unknown;
 }
@@ -33,7 +38,8 @@ const FILTERS = [
 /**
  * A Supabase stand-in for screens: `from(table)` builds an awaitable query
  * that resolves to `results["table.operation"]`, `rpc(name, args)` to
- * `rpcs[name]`. Every call is recorded for assertions.
+ * `rpcs[name]`. Every call is recorded for assertions; a resolver function
+ * can answer by the call's columns, filters or select options.
  */
 export const fakeDb = ({
   results = {},
@@ -80,7 +86,14 @@ export const fakeDb = ({
         return builder;
       };
     }
-    builder.select = () => builder;
+    builder.select = (
+      columns?: string,
+      options?: QueryCall["selectOptions"]
+    ) => {
+      call.columns = columns;
+      call.selectOptions = options;
+      return builder;
+    };
     builder.single = () => {
       single = true;
       return builder;
@@ -122,3 +135,18 @@ export const fakeDb = ({
 
   return { calls, rpc, rpcCalls, supabase };
 };
+
+/** The calls made to one table with one operation. */
+export const callsTo = (
+  calls: readonly QueryCall[],
+  table: string,
+  operation: QueryCall["operation"]
+) =>
+  calls.filter((call) => call.table === table && call.operation === operation);
+
+/** Whether a call filtered `column` with `filter` (e.g. "in", "is"). */
+export const hasFilter = (call: QueryCall, filter: string, column?: string) =>
+  call.filters.some(
+    ([name, first]) =>
+      name === filter && (column === undefined || first === column)
+  );

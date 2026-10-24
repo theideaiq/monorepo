@@ -2,7 +2,9 @@ import {
   BriefcaseBusinessIcon,
   CalendarDaysIcon,
   CrownIcon,
+  HeartIcon,
   HouseIcon,
+  LifeBuoyIcon,
   type LucideIcon,
   PackageIcon,
   PenLineIcon,
@@ -20,7 +22,9 @@ export type NavKey =
   | "plus"
   | "settings"
   | "store"
-  | "submissions";
+  | "submissions"
+  | "support"
+  | "wishlist";
 
 export interface NavItem {
   href: string;
@@ -33,11 +37,13 @@ export const navItems: NavItem[] = [
   { href: "/", icon: HouseIcon, key: "home" },
   { href: "/store", icon: ShoppingBagIcon, key: "store" },
   { href: "/cart", icon: ShoppingCartIcon, key: "cart" },
+  { href: "/wishlist", icon: HeartIcon, key: "wishlist" },
   { href: "/orders", icon: PackageIcon, key: "orders" },
   { href: "/plus", icon: CrownIcon, key: "plus" },
   { href: "/events", icon: CalendarDaysIcon, key: "events" },
   { href: "/submissions", icon: PenLineIcon, key: "submissions" },
   { href: "/business", icon: BriefcaseBusinessIcon, key: "business" },
+  { href: "/support", icon: LifeBuoyIcon, key: "support" },
   { href: "/settings", icon: Settings2Icon, key: "settings" },
 ];
 

@@ -41,9 +41,12 @@ end;
 $$;
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
--- Start from an empty store so the local seed doesn't change the counts (the
--- transaction is rolled back at the end).
-truncate public.products, public.posts, public.events, public.chart_of_accounts cascade;
+-- Start from an empty store and no staff so existing data (the local seed,
+-- or data imported into a real project) doesn't change the counts. The
+-- transaction is rolled back at the end.
+truncate public.products, public.orders, public.rentals, public.posts, public.events,
+  public.chart_of_accounts cascade;
+delete from public.staff;
 
 -- U is a customer, V another customer, S a superadmin, E an editor,
 -- P a support agent, F finance.
@@ -70,8 +73,8 @@ insert into public.products (id, slug, name_ar, name_en, price, stock_count, sta
 insert into public.product_variants (id, product_id, attributes, price_override, stock_count) values
   ('21000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001', '{"Edition":"Digital"}', 650000, 3);
 
-insert into public.plans (id, name, amount, billing_interval, audience, rental_slots)
-values ('plus-test', 'Plus', 25000, 'month', 'plus', 1);
+insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)
+values ('plus-test', 'Plus', 25000, 'month', 'plus', 1, 1);
 
 update public.store_settings set shipping_fee = 5000, free_shipping_threshold = 1000000;
 

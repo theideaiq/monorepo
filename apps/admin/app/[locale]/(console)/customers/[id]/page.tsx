@@ -4,7 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { PageBody, PageHeader, Panel } from "@/components/page";
 import { StatusBadge } from "@/components/status-badge";
 import { parseAddress } from "@/lib/address";
-import { formatters } from "@/lib/format";
+import { type Formatters, formatters } from "@/lib/format";
 import { isUuid } from "@/lib/list";
 import { canRead } from "@/lib/roles";
 import { requireSection, type ServerClient } from "@/lib/session";
@@ -97,6 +97,11 @@ const loadCustomer = async (
   };
 };
 
+const optionalDateTime = (
+  format: Formatters,
+  iso: string | null | undefined
+) => (iso ? format.dateTime(iso) : null);
+
 const CustomerPage = async ({
   params,
 }: {
@@ -187,6 +192,11 @@ const CustomerPage = async ({
           <Panel title={t("crm")}>
             <CrmForm
               disabled={!canWrite}
+              lastContactedAt={contact?.last_contacted_at ?? null}
+              lastContactedLabel={optionalDateTime(
+                format,
+                contact?.last_contacted_at
+              )}
               notes={contact?.notes ?? null}
               status={contact?.status ?? "lead"}
               tags={contact?.tags ?? []}
