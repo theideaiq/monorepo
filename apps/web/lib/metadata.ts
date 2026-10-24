@@ -57,7 +57,6 @@ type StaticPage =
   | "academy"
   | "careers"
   | "club"
-  | "droid"
   | "events"
   | "faq"
   | "journal"

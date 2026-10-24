@@ -143,7 +143,6 @@
       "news": "News",
       "events": "Events",
       "journal": "Journal",
-      "droid": "The IDEA Droid",
       "about": "Our story",
       "careers": "Careers",
       "faq": "FAQ",
@@ -160,11 +159,10 @@
         "plus": "A monthly membership to rent games, books and movies.",
         "academy": "Courses and cultural-exchange programs.",
         "suite": "Procurement and recruitment for companies.",
-        "club": "Our community rooms on Telegram.",
+        "club": "Our Telegram rooms and The IDEA Droid.",
         "news": "Announcements and stories from The IDEA.",
         "events": "Meetups, launches and community nights.",
-        "journal": "Our journal of members' writing and art.",
-        "droid": "Our Telegram bot and the Spark Catcher game."
+        "journal": "Our journal of members' writing and art."
       }
     },
     "footer": {
@@ -462,7 +460,7 @@
     "club": {
       "meta": {
         "title": "The IDEA Club — our community on Telegram",
-        "description": "The IDEA Club is a digital clubhouse on Telegram for innovators, artists, gamers and thinkers. Pick your rooms and join the conversation."
+        "description": "The IDEA Club is a digital clubhouse on Telegram for innovators, artists, gamers and thinkers, looked after by The IDEA Droid, our bot. Pick your rooms and join the conversation."
       },
       "title": "Welcome to",
       "highlight": "The IDEA Club.",
@@ -510,49 +508,45 @@
         "highlight": "jump in?",
         "description": "Don't miss the next big idea or late-night gaming session.",
         "button": "Open Telegram"
+      },
+      "droid": {
+        "badge": "@TheIdeaDroidBot",
+        "title": "Meet The IDEA Droid",
+        "subtitle": "Our Telegram bot keeps The IDEA Club's rooms friendly, answers your questions and helps you find what you're looking for.",
+        "open": "Open in Telegram",
+        "features": {
+          "title": "What The IDEA Droid does",
+          "items": [
+            {
+              "title": "Community moderation",
+              "description": "Helps keep The IDEA Club's rooms safe and on topic, following our community guidelines."
+            },
+            {
+              "title": "Answers to common questions",
+              "description": "Ask about the store, The IDEA Plus, the Academy or The IDEA Suite in a private chat."
+            },
+            {
+              "title": "Product search",
+              "description": "Search the Megastore from Telegram and open products in the app."
+            },
+            {
+              "title": "AI assistant",
+              "description": "Ask in Arabic or English. Answers are generated automatically, so double-check anything important with our team."
+            },
+            {
+              "title": "Talk to the team",
+              "description": "Send a support message or an unban request, and our staff will review it."
+            }
+          ]
+        },
+        "game": {
+          "title": "Spark Catcher",
+          "description": "Our mini-game: catch the falling light bulbs, dodge the bugs and keep your energy up. Best played inside Telegram, but it works in your browser too.",
+          "play": "Play Spark Catcher"
+        },
+        "privacy": "The IDEA Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
+        "privacyLink": "Privacy policy"
       }
-    },
-    "droid": {
-      "meta": {
-        "title": "The IDEA Droid — our Telegram bot",
-        "description": "The IDEA Droid (@TheIdeaDroidBot) is our Telegram bot: it keeps our community rooms safe, answers common questions, finds products and helps as an AI assistant."
-      },
-      "badge": "@TheIdeaDroidBot",
-      "title": "Meet The IDEA Droid",
-      "subtitle": "Our Telegram bot keeps The IDEA Club's rooms friendly, answers your questions and helps you find what you're looking for.",
-      "open": "Open in Telegram",
-      "features": {
-        "title": "What The IDEA Droid does",
-        "items": [
-          {
-            "title": "Community moderation",
-            "description": "Helps keep The IDEA Club's rooms safe and on topic, following our community guidelines."
-          },
-          {
-            "title": "Answers to common questions",
-            "description": "Ask about the store, The IDEA Plus, the Academy or The IDEA Suite in a private chat."
-          },
-          {
-            "title": "Product search",
-            "description": "Search the Megastore from Telegram and open products in the app."
-          },
-          {
-            "title": "AI assistant",
-            "description": "Ask in Arabic or English. Answers are generated automatically, so double-check anything important with our team."
-          },
-          {
-            "title": "Talk to the team",
-            "description": "Send a support message or an unban request, and our staff will review it."
-          }
-        ]
-      },
-      "game": {
-        "title": "Spark Catcher",
-        "description": "Our mini-game: catch the falling light bulbs, dodge the bugs and keep your energy up. Best played inside Telegram, but it works in your browser too.",
-        "play": "Play Spark Catcher"
-      },
-      "privacy": "The IDEA Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
-      "privacyLink": "Privacy policy"
     },
     "about": {
       "meta": {

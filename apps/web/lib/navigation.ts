@@ -6,7 +6,6 @@
 type Described =
   | "academy"
   | "club"
-  | "droid"
   | "events"
   | "journal"
   | "news"
@@ -42,7 +41,6 @@ export const navigationGroups: NavigationGroup[] = [
       { described: "news", href: "/news", id: "news" },
       { described: "events", href: "/events", id: "events" },
       { described: "journal", href: "/journal", id: "journal" },
-      { described: "droid", href: "/droid", id: "droid" },
     ],
   },
   {
