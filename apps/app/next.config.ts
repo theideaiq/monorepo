@@ -13,17 +13,19 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
  */
 let nextConfig: NextConfig = {
   ...withLogging(config),
-  // The back office and The IDEA Pass: never indexed.
   async headers() {
+    // The back office and The IDEA Pass: never indexed.
     const noindex = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
     return [
-      "admin/:path*",
-      "mfa",
-      "pass",
-      "sign-in",
-      "sign-out",
-      "sign-up",
-    ].map((path) => ({ headers: noindex, source: `/:locale(ar|en)/${path}` }));
+      ...["admin/:path*", "mfa", "pass", "sign-in", "sign-out", "sign-up"].map(
+        (path) => ({ headers: noindex, source: `/:locale(ar|en)/${path}` })
+      ),
+      // Universal Links: Apple reads this file (no extension) as JSON.
+      {
+        headers: [{ key: "Content-Type", value: "application/json" }],
+        source: "/.well-known/apple-app-site-association",
+      },
+    ];
   },
   // Detail pages used query parameters while the app was a static export;
   // old links (the website, payment returns, notifications) keep working.

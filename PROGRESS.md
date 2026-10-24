@@ -24,8 +24,9 @@ decisions with a date.
 - [ ] **Supabase:** `supabase db push` the new migrations (or let
       `migrate.yml` do it once its secrets are set). Turn on TOTP MFA
       (Authentication → Sign In / Providers → Multi-factor) — staff rights
-      need an authenticator-app session. Set the Site URL and redirect URLs
-      for the website, app and back office.
+      need an authenticator-app session. Set the Site URL to
+      `https://spark.theideaiq.com` and add `https://spark.theideaiq.com/**`
+      (and the website's URL) to the redirect URLs.
 - [ ] **GitHub → Environments → `production`:** `SUPABASE_ACCESS_TOKEN`,
       `SUPABASE_DB_PASSWORD`, `BACKUP_PASSPHRASE`, optional
       `BACKUP_HEARTBEAT_URL`; repository variable `SUPABASE_PROJECT_REF`
@@ -33,26 +34,32 @@ decisions with a date.
 - [ ] **GitHub → Code security:** switch CodeQL "default setup" off (it
       still lists the obsolete "Analyze (java-kotlin)"); `codeql.yml`
       replaces it.
-- [ ] **The IDEA Design:** Vercel project `storybook` on
-      `design.theideaiq.com` (DNS), with `NEXT_PUBLIC_SUPABASE_URL`,
-      `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_PASS_URL`; set
-      `NEXT_PUBLIC_DESIGN_URL` where other apps link to it.
-- [ ] **Vercel:** five projects (web, app, admin, api, storybook), each with
-      Node 24, its environment variables (section 5 of
-      `ARCHITECTURE_AND_INTEGRATIONS.md`) and "skip unaffected projects"
-      on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the remote cache.
+- [ ] **Vercel: four projects**, each with Node 24, its environment
+      variables (section 5 of `ARCHITECTURE_AND_INTEGRATIONS.md`) and "skip
+      unaffected projects" on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the
+      remote cache.
+      - `web` (`apps/web`) → `theideaiq.com`
+      - `app` (`apps/app`, The IDEA Spark with The IDEA Pass and the back
+        office) → `spark.theideaiq.com` (DNS)
+      - `api` (`apps/api`) → the API host
+      - `storybook` (`apps/storybook`, The IDEA Design) →
+        `design.theideaiq.com` (DNS), with `NEXT_PUBLIC_SUPABASE_URL` and
+        `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- [ ] **Vercel, retire the old projects:** delete the `admin` and `pass`
+      projects (their apps are now `/admin` and the Pass pages in Spark);
+      redirect any `admin.`/`pass.` DNS to `spark.theideaiq.com` if they
+      were ever published. Remove `NEXT_PUBLIC_PASS_URL` and
+      `NEXT_PUBLIC_ADMIN_URL` from every project.
+- [ ] **Vercel, shared URLs:** on every project set
+      `NEXT_PUBLIC_APP_URL=https://spark.theideaiq.com` (every "Sign in"
+      goes to The IDEA Pass there), and `NEXT_PUBLIC_DESIGN_URL`; set
+      `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on web, app and
+      storybook (production only).
 - [ ] **Vercel, secrets only in `api`:** remove `RESEND_*`, `ARCJET_KEY`,
-      `UPSTASH_*` and `BETTERSTACK_*` from the `web` (and `admin`, `app`)
-      projects and set them on `api`, which now serves the contact form
-      (`POST /contact`) and the status badge (`GET /status`). Turn on
-      Vercel Firewall bot protection for `web` (Arcjet no longer runs there).
-- [ ] **The IDEA Pass:** a Vercel project for `apps/pass` on
-      `pass.theideaiq.com` (DNS); on every project set
-      `NEXT_PUBLIC_PASS_URL=https://pass.theideaiq.com`, and
-      `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on pass, app, admin
-      and the design site (production only), `NEXT_PUBLIC_ADMIN_URL` on
-      pass and admin; add `https://pass.theideaiq.com/**` to Supabase's
-      redirect URLs (`ARCHITECTURE_AND_INTEGRATIONS.md`, "The IDEA Pass").
+      `UPSTASH_*` and `BETTERSTACK_*` from the `web` and `app` projects and
+      set them on `api`, which serves the contact form (`POST /contact`)
+      and the status badge (`GET /status`). Turn on Vercel Firewall bot
+      protection for `web` (Arcjet no longer runs there).
 - [ ] **Wayl:** production keys and the webhook URL
       (`/webhooks/payments` on the API host).
 - [ ] **Telegram:** bot token and webhook (`apps/api/scripts/telegram-setup.ts`).
@@ -60,7 +67,8 @@ decisions with a date.
       hstspreload.org (the sites already send the preload header).
 - [ ] **First staff member:** in the SQL editor,
       `insert into staff (user_id, role) values ('<user id>', 'superadmin')`;
-      they then enroll an authenticator app in the back office.
+      they then link an authenticator app on The IDEA Pass and open
+      `https://spark.theideaiq.com/ar/admin`.
 - [ ] Delete the old branches on `theideaiq/monorepo` (the session's token
       is not allowed to).
 
@@ -102,5 +110,9 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-24: Four deployments only (web, app, api, design). The app is The
+  IDEA Spark at `spark.theideaiq.com`, server-rendered, with The IDEA Pass
+  and the back office (`/admin`) inside it; `apps/pass` and `apps/admin`
+  are gone, and so are `NEXT_PUBLIC_PASS_URL` and `NEXT_PUBLIC_ADMIN_URL`.
 - 2026-10-24: The IDEA keeps its staff-role model (`private.has_staff_role`
   with AAL2); auibsal's permission system was not adopted.

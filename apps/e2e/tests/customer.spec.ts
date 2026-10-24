@@ -67,6 +67,18 @@ test("signed out, the app sends you to The IDEA Pass and back", async ({
   ).toBeVisible();
 });
 
+test("app-link files are served without a locale redirect", async ({
+  request,
+}) => {
+  for (const file of ["apple-app-site-association", "assetlinks.json"]) {
+    const response = await request.get(`${urls.app}/.well-known/${file}`, {
+      maxRedirects: 0,
+    });
+    expect(response.status()).toBe(200);
+    expect(response.headers()["content-type"]).toContain("json");
+  }
+});
+
 test("old detail links open the new pages", async ({ page }) => {
   await page.goto(`${urls.app}/en/store/product?slug=${product.slug}`);
   await expect(page).toHaveURL(
