@@ -40,7 +40,6 @@ export const ProductImage = ({
           priority={priority}
           sizes={sizes}
           src={src}
-          unoptimized
         />
       ) : (
         <div

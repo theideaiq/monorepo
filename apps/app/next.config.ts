@@ -1,4 +1,9 @@
-import { config, withAnalyzer } from "@repo/next-config";
+import {
+  catalogImagePatterns,
+  config,
+  isLocalUrl,
+  withAnalyzer,
+} from "@repo/next-config";
 import { withLogging, withSentry } from "@repo/observability/next-config";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
@@ -26,6 +31,13 @@ let nextConfig: NextConfig = {
         source: "/.well-known/apple-app-site-association",
       },
     ];
+  },
+  // Catalog images (Supabase Storage and the cover-art sources), optimized
+  // on the server so the browser only loads from this origin.
+  images: {
+    ...config.images,
+    dangerouslyAllowLocalIP: isLocalUrl(env.NEXT_PUBLIC_SUPABASE_URL),
+    remotePatterns: catalogImagePatterns(env.NEXT_PUBLIC_SUPABASE_URL),
   },
   // Detail pages used query parameters while the app was a static export;
   // old links (the website, payment returns, notifications) keep working.
