@@ -5,6 +5,21 @@ import { urls } from "../playwright.config";
 
 /** No serious or critical WCAG 2.1 A/AA violations on the page as shown. */
 export const expectAccessible = async (page: Page) => {
+  // Let transitions settle first: a button fading back in from its disabled
+  // opacity would otherwise be measured mid-fade and fail color contrast.
+  // Endless animations (spinners) are skipped.
+  await page.evaluate(() =>
+    Promise.allSettled(
+      document
+        .getAnimations()
+        .filter(
+          (animation) =>
+            animation.effect?.getComputedTiming().endTime !==
+            Number.POSITIVE_INFINITY
+        )
+        .map((animation) => animation.finished)
+    )
+  );
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
     .analyze();
