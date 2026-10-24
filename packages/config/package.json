@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./index.ts",
+    "./contact": "./contact.ts",
     "./project.json": "./project.json"
   },
   "scripts": {

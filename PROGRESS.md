@@ -33,10 +33,26 @@ decisions with a date.
 - [ ] **GitHub → Code security:** switch CodeQL "default setup" off (it
       still lists the obsolete "Analyze (java-kotlin)"); `codeql.yml`
       replaces it.
+- [ ] **The IDEA Design:** Vercel project `storybook` on
+      `design.theideaiq.com` (DNS), with `NEXT_PUBLIC_SUPABASE_URL`,
+      `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_PASS_URL`; set
+      `NEXT_PUBLIC_DESIGN_URL` where other apps link to it.
 - [ ] **Vercel:** five projects (web, app, admin, api, storybook), each with
       Node 24, its environment variables (section 5 of
       `ARCHITECTURE_AND_INTEGRATIONS.md`) and "skip unaffected projects"
       on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the remote cache.
+- [ ] **Vercel, secrets only in `api`:** remove `RESEND_*`, `ARCJET_KEY`,
+      `UPSTASH_*` and `BETTERSTACK_*` from the `web` (and `admin`, `app`)
+      projects and set them on `api`, which now serves the contact form
+      (`POST /contact`) and the status badge (`GET /status`). Turn on
+      Vercel Firewall bot protection for `web` (Arcjet no longer runs there).
+- [ ] **The IDEA Pass:** a Vercel project for `apps/pass` on
+      `pass.theideaiq.com` (DNS); on every project set
+      `NEXT_PUBLIC_PASS_URL=https://pass.theideaiq.com`, and
+      `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on pass, app, admin
+      and the design site (production only), `NEXT_PUBLIC_ADMIN_URL` on
+      pass and admin; add `https://pass.theideaiq.com/**` to Supabase's
+      redirect URLs (`ARCHITECTURE_AND_INTEGRATIONS.md`, "The IDEA Pass").
 - [ ] **Wayl:** production keys and the webhook URL
       (`/webhooks/payments` on the API host).
 - [ ] **Telegram:** bot token and webhook (`apps/api/scripts/telegram-setup.ts`).
@@ -58,8 +74,6 @@ decisions with a date.
 - [ ] `PRODUCT_CARD_COLUMNS` doesn't select `rental_tier`, so cards can't
       badge tiered rentals.
 - [ ] `product_review_list.author_name` should be typed nullable.
-- [ ] `apps/email` preview build fetches Google Fonts at build time and fails
-      without network access; consider bundling the font.
 
 ## Decisions
 

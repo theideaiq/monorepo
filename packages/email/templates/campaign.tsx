@@ -160,16 +160,3 @@ export const CampaignTemplate = ({
     </Html>
   );
 };
-
-CampaignTemplate.PreviewProps = {
-  body: "# New arrivals\n\nThe latest **games** and **books** are in the Megastore.\n\n[Shop now](https://theideaiq.com)",
-  brandName: "The IDEA",
-  locale: "en",
-  siteUrl: "https://theideaiq.com",
-  subject: "New arrivals at The IDEA",
-  supportEmail: "hi@theideaiq.com",
-  unsubscribeUrl: "https://theideaiq.com",
-} satisfies CampaignTemplateProps;
-
-// biome-ignore lint/complexity/noRedundantDefaultExport: React Email's preview server loads templates through their default export.
-export default CampaignTemplate;

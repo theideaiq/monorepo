@@ -147,7 +147,7 @@ describe("private chats", () => {
     expect(text).toContain("720,000");
     expect(text).toContain("In stock: 3");
     expect(text).toContain("https://theideaiq.com/en/store/playstation-5");
-    expect(text).toContain("Rent with IDEA Plus · Out of stock");
+    expect(text).toContain("Rent with The IDEA Plus · Out of stock");
     expect(text).not.toMatch(PAYMENT_WORDS);
   });
 

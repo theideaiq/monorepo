@@ -4,7 +4,7 @@ import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 
-/** Daily: flags IDEA Plus rentals past their due date as overdue. */
+/** Daily: flags The IDEA Plus rentals past their due date as overdue. */
 export const GET = async (request: Request): Promise<Response> => {
   if (!isAuthorizedCronRequest(request)) {
     return unauthorized();

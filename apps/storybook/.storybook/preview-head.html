@@ -1,15 +1,17 @@
-<!-- https://github.com/vercel/geist-font/issues/72 -->
+<!-- The IDEA's brand fonts (packages/design-system/lib/fonts.ts): Poppins for
+     Latin text, Cairo for Arabic. The apps load them with next/font. -->
 
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
 <link
-  href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Cairo:wght@300..800&family=Poppins:wght@300;400;500;600;700&family=Geist+Mono:wght@100..900&display=swap"
   rel="stylesheet"
 >
 
 <style>
 :root {
-  --font-geist-sans: "Geist", sans-serif;
+  --font-latin: "Poppins";
+  --font-arabic: "Cairo";
   --font-geist-mono: "Geist Mono", monospace;
 }
 body {

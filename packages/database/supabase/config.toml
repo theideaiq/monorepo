@@ -280,6 +280,8 @@ max_frequency = "5s"
 # the same number are throttled (max_frequency above).
 9647700000000 = "123456"
 9647700000901 = "123456"
+# apps/e2e: the phone sign-up journey (deleted and re-created each run).
+9647700000902 = "123456"
 
 # Configure logged in session timeouts.
 # [auth.sessions]

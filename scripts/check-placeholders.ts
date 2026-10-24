@@ -18,7 +18,6 @@ const IGNORED_DIRECTORIES = new Set([
   ".claude",
   ".git",
   ".next",
-  ".react-email",
   ".turbo",
   "dist",
   "node_modules",

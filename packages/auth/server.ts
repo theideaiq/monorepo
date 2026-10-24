@@ -5,6 +5,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
+import { authCookieOptions } from "./cookies";
 import { keys } from "./keys";
 import {
   ACTIVE_ORGANIZATION_COOKIE,
@@ -28,6 +29,7 @@ export const createClient = async () => {
     NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
+      cookieOptions: authCookieOptions(),
       cookies: {
         getAll() {
           return cookieStore.getAll();

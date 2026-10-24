@@ -14,6 +14,8 @@ export default defineConfig({
       "apps/admin",
       "apps/api",
       "apps/app",
+      "apps/storybook",
+      "apps/pass",
       "apps/web",
       "packages/analytics",
       "packages/auth",
@@ -24,6 +26,7 @@ export default defineConfig({
       "packages/next-config",
       "packages/payments",
       "packages/storage",
+      "scripts",
     ],
   },
 });

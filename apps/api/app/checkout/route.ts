@@ -18,7 +18,7 @@ import { isManager, membershipRole } from "@/lib/membership";
 const body = z.object({
   /** Ad identifiers from `getAttribution()` in @repo/analytics/client. */
   attribution: attributionSchema.optional(),
-  /** Business plans are paid by an organization; IDEA Plus by the user. */
+  /** Business plans are paid by an organization; The IDEA Plus by the user. */
   organizationId: z.uuid().optional(),
   planId: z.string().min(1),
   redirectUrl: z.url().optional(),
@@ -39,7 +39,7 @@ export const OPTIONS = preflight;
 
 /**
  * Starts a checkout for a plan: a business plan for an organization the
- * caller manages, or IDEA Plus for the caller. Called by the web app and the native apps
+ * caller manages, or The IDEA Plus for the caller. Called by the web app and the native apps
  * with `Authorization: Bearer <Supabase access token>`.
  */
 export const POST = async (request: Request) => {

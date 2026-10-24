@@ -50,7 +50,7 @@ const BusinessIntro = () => {
 };
 
 /**
- * The Business (IDEA Suite) section: the organization switcher and tabs
+ * The Business (The IDEA Suite) section: the organization switcher and tabs
  * around a screen that needs an active organization. Without one, it shows
  * the introduction instead.
  */

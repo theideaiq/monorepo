@@ -41,7 +41,7 @@ nextConfig.redirects = async () => [
     permanent: true,
     source: "/:locale(ar|en)/legal",
   },
-  // The template's pricing page became IDEA Plus; the old site's store URL.
+  // The template's pricing page became The IDEA Plus; the old site's store URL.
   {
     destination: "/:locale/plus",
     permanent: true,

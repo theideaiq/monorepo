@@ -1,6 +1,9 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+// Public and build-time values only, so every app may use this preset. The
+// Better Stack API token (status badge) is in ./status/keys, read by
+// apps/api only.
 export const keys = () =>
   createEnv({
     client: {
@@ -10,17 +13,13 @@ export const keys = () =>
     // Treat KEY="" (as in .env.example) as unset.
     emptyStringAsUndefined: true,
     runtimeEnv: {
-      BETTERSTACK_API_KEY: process.env.BETTERSTACK_API_KEY,
-      BETTERSTACK_URL: process.env.BETTERSTACK_URL,
       NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
       SENTRY_ORG: process.env.SENTRY_ORG,
       SENTRY_PROJECT: process.env.SENTRY_PROJECT,
     },
     server: {
-      BETTERSTACK_API_KEY: z.string().optional(),
-      BETTERSTACK_URL: z.url().optional(),
-
-      // Added by Sentry Integration, Vercel Marketplace
+      // Added by Sentry Integration, Vercel Marketplace (source map upload
+      // at build time; slugs, not secrets).
       SENTRY_ORG: z.string().optional(),
       SENTRY_PROJECT: z.string().optional(),
     },

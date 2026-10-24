@@ -106,7 +106,7 @@ const Contact = async ({ params }: ContactProps) => {
           ))}
         </ul>
         <Suspense>
-          <ContactForm />
+          <ContactForm apiUrl={env.NEXT_PUBLIC_API_URL} />
         </Suspense>
       </div>
     </>

@@ -5,7 +5,7 @@
  * access, a key-value store, an optional AI model), so it runs the same in
  * the webhook route and in offline tests.
  *
- * - Private chats: a menu (store search, IDEA Plus, FAQ, links, newsletter,
+ * - Private chats: a menu (store search, The IDEA Plus, FAQ, links, newsletter,
  *   unban requests) and, when an AI model is configured, an assistant.
  * - Moderated groups: banned words and investment spam are deleted (edits
  *   too), repeated messages are muted, admins can /ban across every

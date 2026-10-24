@@ -261,7 +261,7 @@ describe("error messages", () => {
   });
 });
 
-describe("IDEA Plus", () => {
+describe("The IDEA Plus", () => {
   test("rental allowance", () => {
     expect(toAllowance([{ in_use: 1, slots: 3, tier: 2 }])).toEqual({
       free: 2,

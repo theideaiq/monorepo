@@ -52,13 +52,95 @@ flowchart LR
 
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
-| `apps/web` | 3001 | The IDEA's public site: home, Megastore catalog and product pages, IDEA Plus, Academy, Suite, Club, Droid, news, events, journal, legal (Markdown in `apps/web/content/legal`), contact. Next.js Server Components with `next-intl` locale routing (`/ar/…`, `/en/…`) and ISR; reads public data with an anonymous Supabase client. | Vercel |
+| `apps/web` | 3001 | The IDEA's public site: home, Megastore catalog and product pages, The IDEA Plus, Academy, Suite, Club, Droid, news, events, journal, legal (Markdown in `apps/web/content/legal`), contact. Next.js Server Components with `next-intl` locale routing (`/ar/…`, `/en/…`) and ISR; reads public data with an anonymous Supabase client. | Vercel |
 | `apps/app` | 3000 | The product. **Client-first**: every screen renders in the browser and talks to Supabase directly. The same code is built twice: a normal Next.js build for the web, and a static export for the native apps. | Vercel (web) and the App Store / Google Play (native) |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, the Liveblocks and Svix token endpoints. Route handlers only. | Vercel |
-| `apps/email` | 3003 | React Email templates (`@repo/email`). | Not deployed (dev preview) |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
 | `apps/admin` | 3005 | The back office for staff (catalog, orders, rentals, CRM, marketing, finance, editorial, Telegram, staff, audit log). **Server-rendered** with the staff member's cookie session (`@repo/auth/server`), Server Actions, phone OTP plus an authenticator app (AAL2: enable **Authentication → Multi-Factor → TOTP** in Supabase; it is on in the local stack. The database itself only grants staff rights to AAL2 sessions); every query runs as the staff member so RLS applies, and privileged steps (campaign email, staff lookup) go through `apps/api/app/admin/*`. Grant the first superadmin with SQL (`insert into staff (user_id, role) values ('<user id>', 'superadmin')`). Not indexed. | Vercel |
-| `apps/storybook` | 6006 | Design-system workbench. | Optional |
+| `apps/storybook` | 6006 | **The IDEA Design**: the staff-only design site with every UI component and email template (see [The IDEA Design](#the-idea-design)). | Vercel (`design.theideaiq.com`) |
+| `apps/pass` | 3006 | **The IDEA Pass**: the only sign-in, sign-up and authenticator-app UI on the web (see below). Server-rendered, publishable key only. | Vercel (`pass.theideaiq.com`) |
+
+### The IDEA Design
+
+`apps/storybook` is the one place to review UI and email. `bun run dev`
+there is plain Storybook on port 6006 (no gate). `bun run build` runs
+`storybook build -o public` and then `next build`: the Next.js shell has
+no pages of its own and serves the static build, with `proxy.ts` in front
+of every path (the manager, the iframe and every asset):
+
+1. It reads the Supabase session cookie that The IDEA Pass writes
+   (`sb-<project ref>-auth-token`, whole or chunked, `base64-` or plain),
+   shared across subdomains when `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` is set.
+2. No cookie, an expired token or one Supabase rejects (`getClaims`, with
+   the publishable key): redirect to
+   `${NEXT_PUBLIC_PASS_URL}/{locale}/sign-in?return_to=<this URL>`. The gate
+   never refreshes a session (that would spend the browser's refresh token);
+   Pass refreshes it and sends the visitor back.
+3. It reads the visitor's own `staff` row as that user (RLS lets everyone
+   read their own row). No row: a plain bilingual 403 page. A row but an
+   `aal1` token: redirect to Pass `/{locale}/mfa`, since staff rights need an
+   authenticator app. Tokens issued to third-party apps (`client_id`) are
+   refused.
+
+The locale comes from `NEXT_LOCALE`, then `Accept-Language`, then Arabic.
+Responses are `Cache-Control: private, no-store` and `noindex`. Environment:
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (unset =
+503, fail closed) and `NEXT_PUBLIC_PASS_URL` (defaults to
+`http://localhost:3006` in development). Other apps link to it with
+`NEXT_PUBLIC_DESIGN_URL` (`@repo/next-config/keys`). Emails are reviewed
+under **The IDEA Design → Emails**, rendered with `@react-email/components`
+exactly as Resend sends them; add a story there with every new template.
+
+### The IDEA Pass
+
+`apps/pass` (port 3006, `pass.theideaiq.com`) is the only sign-in and sign-up
+UI on the web, for customers and staff alike. It is server-rendered (ar/en,
+RTL), loads no analytics, and holds no secrets: it signs people in with the
+publishable key and leaves the session in the shared cookie.
+
+- **Routes.** `/{locale}/sign-in?return_to=<absolute url>`,
+  `/{locale}/sign-up?return_to=…` (phone OTP, `@repo/auth/components/phone-otp-form`),
+  `/{locale}/mfa?return_to=…` (link or enter the authenticator app, which
+  raises the session to AAL2), `/{locale}/sign-out?return_to=…` and
+  `/{locale}` ("Your Pass": name, phone, authenticator status, links to the
+  app, sign-out). Link to them with `passUrl(path, returnTo, locale)` from
+  `@repo/auth/pass`.
+- **Shared session cookie.** `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com`
+  makes the browser client, the server client and the proxy session refresh
+  (`authCookieOptions()` in `packages/auth/cookies.ts`) write the
+  `@supabase/ssr` cookie (`sb-<project ref>-auth-token`, chunked `.0`, `.1`,
+  possibly `base64-` prefixed) for the whole domain, so `theideaiq.com`,
+  `app.`, `admin.`, `design.` and `pass.` read the same session. Set the
+  same value on every project; leave it unset locally and on previews
+  (host-only cookie; on localhost cookies are shared across ports anyway).
+- **return_to.** `isAllowedReturnTo(url)` accepts only http(s) URLs whose
+  host is that of `NEXT_PUBLIC_WEB_URL`, `_APP_URL`, `_ADMIN_URL`,
+  `_DESIGN_URL`, `_API_URL` or `_PASS_URL` (plus localhost in development);
+  anything else falls back to the app (`safeReturnTo`). Without a return_to
+  the Pass stays on "Your Pass". After signing in the browser does a full
+  navigation to return_to, so the next site reads the new cookie.
+- **Sign-out.** The "Your Pass" button is a Server Action. The `/sign-out`
+  route signs out only on navigations from The IDEA's own sites
+  (`Sec-Fetch-Site: same-site` or `same-origin`); a link from anywhere else
+  lands on "Your Pass" instead, so other sites can't sign people out.
+- **The back office** has no sign-in of its own: signed-out visitors go to
+  the Pass sign-in, staff on AAL1 to the Pass `/mfa` (both coming back to
+  `NEXT_PUBLIC_ADMIN_URL`); the no-access page signs out through the Pass.
+  Staff rights still need AAL2 in the database.
+- **The app, web build:** `/sign-in`, `/sign-up` and `RequireAuth` send the
+  visitor to the Pass with return_to back to the page they wanted
+  (`apps/app/lib/pass.ts`); the website's "Sign in" links go there too.
+- **Native exception.** The Capacitor apps (`BUILD_TARGET=native`) have no
+  cookies to share: they keep the in-app phone sign-in (the same form, with
+  the native client and the session in the Keychain/Keystore), decided at
+  runtime by `usesPass()`.
+- **Later: OAuth consent.** Signing in to third-party apps with The IDEA
+  Pass can use Supabase Auth's OAuth 2.1 server (Authentication → OAuth
+  Server): Supabase sends people to an authorization page on the Pass
+  (for example `/{locale}/oauth/consent?authorization_id=…`), which shows the
+  client and scopes and calls `supabase.auth.oauth.approveAuthorization` or
+  `denyAuthorization`. Add it as another page under `apps/pass/app/[locale]`;
+  the sign-in redirect with return_to already brings people back to it.
 
 ### Principles that shape the code
 
@@ -82,9 +164,13 @@ flowchart LR
    `packages/internationalization/messages/{ar,en}.json`. Layouts use logical
    Tailwind utilities so they mirror in RTL. `bun run check:i18n` and
    `bun run check:rtl` enforce both rules in CI.
-5. **Secrets stay on the server.** Only `apps/api` and `apps/admin` hold
-   server keys; client components never import `env.ts`. CI scans every
-   client bundle for server variable names.
+5. **Secrets live only in `apps/api`.** The other apps hold public values
+   only (admin works with the staff member's session and the publishable
+   key); the website's contact form and status badge call the API.
+   `bun run check:secrets` fails on a server-only variable or a
+   secret-reading package module anywhere else, client components never
+   import `env.ts`, and CI scans every client bundle for server variable
+   names.
 
 ### How a request flows
 
@@ -237,7 +323,7 @@ Current schema:
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | Megastore catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
-| `…_plus.sql` | IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
+| `…_plus.sql` | The IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
 | `…_editorial.sql` | `posts`, `events` + `event_rsvps` (capacity, closed after start), `journal_issues`, `submissions` + staff-only `submission_reviews`; `review_queue()` hides authors until a decision (blind review) |
 | `…_back_office.sql` | `crm_contacts`, `marketing_segments`, `marketing_campaigns` (opted-in customers only: `profiles.marketing_opt_in`), double-entry ledger (`chart_of_accounts`, `ledger_entries`, `ledger_lines`, `post_journal_entry()`, `ledger_monthly_summary()`), `staff_plan`, `equity_rounds`, `equity_holders` |
 | `…_content_storage.sql` | `catalog` and `editorial` (public) and `submissions` (private, `<author id>/…`) buckets |
@@ -445,6 +531,7 @@ In the Supabase dashboard:
    - `capacitor://localhost/**` (iOS app)
    - `https://localhost/**` (Android app)
    - `<bundle id>://**`, for example `iq.example.app://**` (native deep links)
+   - `https://pass.theideaiq.com/**` (The IDEA Pass)
 2. **Authentication → Sign In / Providers → Phone:** enable it.
 3. **SMS delivery.** Either configure a provider in the dashboard, or deploy
    the bundled Send SMS hook. It tries providers in order (a local SMS
@@ -964,6 +1051,7 @@ Create three Vercel projects from the same repository:
 | web | `apps/web` | `example.iq` | Marketing site |
 | app | `apps/app` | `app.example.iq` | Product, web build |
 | api | `apps/api` | `api.example.iq` | Cron jobs are defined in `apps/api/vercel.json` |
+| storybook | `apps/storybook` | `design.theideaiq.com` | The IDEA Design; `vercel.json` sets `bun run build` (Storybook, then Next.js). Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_PASS_URL`. No Vercel Authentication: the proxy is the gate. |
 
 For each project:
 
@@ -1002,22 +1090,26 @@ deployment succeeds, but the named feature is off or broken without it.
 
 ### 5.3 `web` (apps/web)
 
+Public values only. **Secrets live only in `api`** (`bun run check:secrets`
+fails otherwise): the contact form posts to `POST /contact` on the API and
+the footer's status badge reads `GET /status`, so Resend, Arcjet, Upstash
+and Better Stack are configured on `api`, not here.
+
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_WEB_URL` | Build | This site's URL, `https://example.iq` |
+| `NEXT_PUBLIC_WEB_URL` | Build | This site's URL, `https://theideaiq.com`; also the API's CORS origin for the contact form |
 | `NEXT_PUBLIC_APP_URL` | Build | Product URL, for "Sign in" and "Get started" links |
-| `NEXT_PUBLIC_API_URL` | Optional | API URL |
+| `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
-| `RESEND_TOKEN`, `RESEND_FROM` | Feature | Contact form email. Without them the form shows "unavailable". |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, news, events and journal (read anonymously, under Row Level Security). Without them those sections show empty states. |
 | `NEXT_PUBLIC_GTM_ID` **or** `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | Product analytics |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional | Error reporting |
-| `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | Source map upload during the Vercel build |
-| `BETTERSTACK_API_KEY`, `BETTERSTACK_URL` | Optional | Logs |
-| `ARCJET_KEY` | Optional | Bot protection and request shielding (`ajkey_…`) |
-| `FLAGS_SECRET` | Feature, if `feature-flags` is kept | Vercel Flags toolbar |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Feature, if `rate-limit` is kept | Contact form rate limiting |
+| `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | Source map upload during the Vercel build (build-time only, never read by the site) |
+
+Remove `RESEND_*`, `ARCJET_KEY`, `UPSTASH_*` and `BETTERSTACK_*` from this
+project if they are still set. Page-level bot protection for the site is
+Vercel's Firewall (Bot Protection / Attack Challenge Mode), not Arcjet.
 
 ### 5.4 `app` (apps/app)
 
@@ -1042,7 +1134,7 @@ secret to this project.**
 
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL` | Build | Also the CORS allow-list |
+| `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL` | Build | Also the CORS allow-list (the public `/contact` and `/status` allow the web origin only) |
 | `NEXT_PUBLIC_API_URL` | Feature | This API's public URL; the Wayl webhook URL is derived from it |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Verifying users' tokens |
 | `SUPABASE_SECRET_KEY` | Feature | `sb_secret_…`. Webhooks, cron, account and organization deletion. **Server only.** |
@@ -1051,12 +1143,15 @@ secret to this project.**
 | `WAYL_ENV` | Feature | `live` in Production, `test` in Preview |
 | `WAYL_API_URL` | Optional | Wayl staging server |
 | `PAYMENTS_PROVIDER` | Optional | Leave unset (Wayl when the token is set). Never `mock` in production. |
-| `RESEND_TOKEN`, `RESEND_FROM` | Feature | Renewal invoice emails |
+| `RESEND_TOKEN`, `RESEND_FROM` | Feature | Receipts, renewal invoices and the website's contact form (`POST /contact`, delivered to `supportEmail` in `project.json`); without them the form answers "unavailable" |
+| `ARCJET_KEY` | Optional | `ajkey_…`. Guards the website's public forms (`@repo/security/form`: shield, bots, 5 per 10 minutes, undeliverable addresses) |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Feature | Droid's sessions and flood counters; the contact form's one message per visitor per day |
 | `NEXT_PUBLIC_META_PIXEL_ID`, `META_CONVERSIONS_ACCESS_TOKEN` | Optional | Server-side purchases to Meta; same pixel as the web apps |
 | `NEXT_PUBLIC_TIKTOK_PIXEL_ID`, `TIKTOK_EVENTS_ACCESS_TOKEN` | Optional | Server-side purchases to TikTok |
 | `META_TEST_EVENT_CODE`, `TIKTOK_TEST_EVENT_CODE` | Optional | Verification only; remove in Production |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | `Payment Completed` events |
-| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`, `BETTERSTACK_API_KEY`, `BETTERSTACK_URL` | Optional | |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | |
+| `BETTERSTACK_API_KEY`, `BETTERSTACK_URL` | Optional | Better Stack Uptime token and public status page, for the website's status badge (`GET /status`); without them the badge is hidden |
 | `LIVEBLOCKS_SECRET` | Feature, if `collaboration` is kept | `sk_…` |
 | `SVIX_TOKEN` | Feature, if `webhooks` is kept | Customer webhook portal |
 
@@ -1085,3 +1180,14 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 - [ ] Cron jobs listed in Vercel and `CRON_SECRET` set.
 - [ ] Native apps built with production values, deep links registered,
       account deletion tested, submitted (3.8).
+
+### 5.8 `pass` (apps/pass) and the shared session
+
+| Variable | Need | Notes |
+| --- | --- | --- |
+| `NEXT_PUBLIC_PASS_URL` | Feature, on every project | `https://pass.theideaiq.com`; every "Sign in" links there (defaults to `http://localhost:3006`) |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature, on every project that reads the session (pass, app, admin, storybook) | `.theideaiq.com`; unset on previews |
+| `NEXT_PUBLIC_ADMIN_URL`, `NEXT_PUBLIC_DESIGN_URL` | Feature (pass, admin) | Allowed return_to hosts; admin also uses its own as the way back |
+| `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_API_URL` | Build (pass) | Allowed return_to hosts and the "Your Pass" links |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Publishable key only |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_*`, `BETTERSTACK_*` | Optional | |

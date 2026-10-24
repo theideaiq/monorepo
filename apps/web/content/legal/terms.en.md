@@ -2,27 +2,27 @@
 
 Welcome to The IDEA. These Terms of Service ("Terms") are a legally binding agreement between you, whether personally or on behalf of an entity ("you"), and The IDEA IQ Inc. ("The IDEA", "we", "us" or "our"), based in Baghdad, Iraq.
 
-They apply to our website (theideaiq.com), The IDEA app on the web, iOS and Android, our Telegram bot Droid (@TheIdeaDroidBot) and our community rooms, and every service we offer through them: the Megastore, IDEA Plus, the Academy, IDEA Suite, The Club, events and the Journal (together, the "Service").
+They apply to our website (theideaiq.com), The IDEA app on the web, iOS and Android, our Telegram bot Droid (@TheIdeaDroidBot) and our community rooms, and every service we offer through them: the Megastore, The IDEA Plus, the Academy, The IDEA Suite, The Club, events and the Journal (together, the "Service").
 
 By accessing or using the Service you confirm that you have read, understood and agree to be bound by these Terms and by the policies they refer to: the [Privacy policy](/legal/privacy), the [Refund and returns policy](/legal/refund), the [Code of conduct](/legal/conduct) and the [Community guidelines](/legal/community). **If you do not agree, do not use the Service.**
 
 ## 2. Eligibility
 
-The Service is intended for people who are at least 13 years old. People under 13 may not use or register for the Service. If you are a minor where you live, you may use the Service only with the permission and supervision of a parent or guardian, who accepts these Terms on your behalf. Paid services (orders, IDEA Plus and business plans) require you to be legally able to enter into a contract.
+The Service is intended for people who are at least 13 years old. People under 13 may not use or register for the Service. If you are a minor where you live, you may use the Service only with the permission and supervision of a parent or guardian, who accepts these Terms on your behalf. Paid services (orders, The IDEA Plus and business plans) require you to be legally able to enter into a contract.
 
 ## 3. Your account
 
-Some features, such as ordering, IDEA Plus rentals, RSVPs, Journal submissions and IDEA Suite, require an IDEA account. You agree to:
+Some features, such as ordering, The IDEA Plus rentals, RSVPs, Journal submissions and The IDEA Suite, require The IDEA Pass (your account). You agree to:
 
 - provide true, accurate and complete information, and keep it up to date;
 - keep your sign-in details confidential, and accept responsibility for all activity on your account;
 - tell us promptly at [hi@theideaiq.com](mailto:hi@theideaiq.com) if you believe your account has been used without your permission.
 
-**Identity verification.** To prevent fraud, we may ask IDEA Plus members to confirm their identity (for example with a national ID card or passport) before delivering rented items. We may refuse or cancel a rental if verification fails.
+**Identity verification.** To prevent fraud, we may ask The IDEA Plus members to confirm their identity (for example with a national ID card or passport) before delivering rented items. We may refuse or cancel a rental if verification fails.
 
 You can delete your account at any time from the app's settings. We may suspend or close accounts that break these Terms.
 
-## 4. Organizations (IDEA Suite)
+## 4. Organizations (The IDEA Suite)
 
 A company can create an organization in the app, invite members and give them roles. The person who creates an organization or subscribes it to a business plan confirms that they are authorized to act for the company. The company is responsible for the activity of its members within the organization and for paying its plan and orders.
 
@@ -33,9 +33,9 @@ A company can create an organization in the app, invite members and give them ro
 - We deliver to the 19 governorates of Iraq. Delivery times are estimates.
 - Products are sold by The IDEA. Manufacturer warranties, where they exist, are passed on to you as described on the product page.
 
-## 6. IDEA Plus membership and rentals
+## 6. The IDEA Plus membership and rentals
 
-IDEA Plus is a monthly membership that lets you rent games, books and movies. Each plan allows a set number of items at a time ("rental slots").
+The IDEA Plus is a monthly membership that lets you rent games, books and movies. Each plan allows a set number of items at a time ("rental slots").
 
 - **Using rentals.** Rented items remain our property. Use them with care and only for personal, non-commercial use. Do not copy, resell, lend or modify them.
 - **Returns.** Return each item in the condition you received it, normal wear excepted, when you are done with it or when your membership ends. Late returns may count against your rental slots until the item is back.

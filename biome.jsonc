@@ -28,10 +28,23 @@
       // Mintlify content and static assets.
       "!apps/docs/**/*.json",
       "!apps/docs/**/*.svg",
-      "!apps/email/.react-email"
+      "!apps/e2e/test-results",
+      "!apps/e2e/playwright-report",
+      // Storybook's build output, served by apps/storybook.
+      "!apps/storybook/public"
     ]
   },
   "overrides": [
+    {
+      // Playwright journeys: inline URL and name patterns read best in place,
+      // and steps run one after another on purpose.
+      "includes": ["apps/e2e/**"],
+      "linter": {
+        "rules": {
+          "performance": { "noAwaitInLoops": "off", "useTopLevelRegex": "off" }
+        }
+      }
+    },
     {
       // Supabase Edge Functions run on Deno.
       "includes": ["packages/database/supabase/functions/**"],

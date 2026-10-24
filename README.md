@@ -7,9 +7,9 @@ digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
 | Product line | What it is | Where |
 | --- | --- | --- |
 | Megastore | Gaming, tech, books and lifestyle, delivered across Iraq | `apps/web` (catalog), `apps/app` (cart, checkout, orders) |
-| IDEA Plus | Monthly membership to rent games, books and movies | `apps/web/plus`, `apps/app/plus` |
+| The IDEA Plus | Monthly membership to rent games, books and movies | `apps/web/plus`, `apps/app/plus` |
 | Academy | Courses and cultural-exchange programs | `apps/web/academy` |
-| IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
+| The IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
 | The Club | Community rooms on Telegram | `apps/web/club` |
 | Editorial | News, events with RSVPs, the journal and member submissions | `apps/web`, `apps/app`, `apps/admin` |
 | Droid | Telegram bot: moderation, FAQ, product search, AI assistant | `packages/droid`, `apps/api/app/telegram` |
@@ -40,10 +40,9 @@ apps/
   web/        Public website: store catalog, Plus, Academy, Suite, Club, news, events, journal (port 3001)
   app/        Customer app — web + iOS/Android via Capacitor (port 3000)
   api/        Checkout, payment webhooks, cron, Telegram webhook, calendar feed, back-office endpoints (port 3002)
-  email/      React Email templates (port 3003)
   docs/       Mintlify documentation (port 3004)
   admin/      Back office for staff: catalog, orders, CRM, finance, editorial (port 3005)
-  storybook/  Design-system workbench (port 6006)
+  storybook/  The IDEA Design: staff-only UI and email review, design.theideaiq.com (port 6006)
 packages/
   config/     Project identity, locales and regional settings (single source of truth)
   auth/       Supabase Auth clients, phone OTP, session middleware

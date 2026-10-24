@@ -17,12 +17,25 @@ incidents) is in `docs/platform`.
   request-time server rendering here; anything that needs a secret goes in
   `apps/api`, called with the user's token (`callApi` in `apps/app/lib/api.ts`).
 - `apps/api` — webhooks (Wayl, Telegram), cron jobs, the calendar feed and
-  privileged endpoints, including `app/admin/*` for the back office.
+  privileged endpoints, including `app/admin/*` for the back office and the
+  website's contact form and status badge. The only app with secrets.
 - `apps/admin` — the staff back office. Server-rendered with the staff
   member's cookie session (`@repo/auth/server`) and Server Actions; every
   query runs as the staff member so RLS applies. Staff rights need an
-  authenticator-app (AAL2) session, enforced by the database too.
-- `apps/email`, `apps/docs`, `apps/storybook` — templates, docs, UI workbench.
+  authenticator-app (AAL2) session, enforced by the database too. It has
+  no sign-in of its own: it sends people to The IDEA Pass.
+- `apps/pass` — **The IDEA Pass** (port 3006, `pass.theideaiq.com`): the only
+  sign-in, sign-up and authenticator-app (MFA) UI on the web. The session
+  lives in a cookie shared by every subdomain (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`);
+  link to it with `passUrl()` from `@repo/auth/pass`, which only returns to
+  allowlisted hosts (`isAllowedReturnTo`). The Capacitor apps keep their
+  in-app phone sign-in (no cookies there).
+- `apps/storybook` — **The IDEA Design** (design.theideaiq.com), the
+  staff-only design site: Storybook (every `@repo/design-system` component
+  and every `@repo/email` template in Arabic and English) built into
+  `public/` and served by a small Next.js shell whose `proxy.ts` gate
+  (`lib/gate.ts`) lets in only aal2 staff signed in through The IDEA Pass.
+- `apps/docs` — the documentation site.
 - `packages/commerce` (catalog, prices, cart totals) and `packages/droid`
   (Telegram bot) are The IDEA's own packages; the rest come from the template.
 - `packages/*` — shared code, imported as `@repo/<name>`. `@repo` is a fixed
@@ -30,8 +43,8 @@ incidents) is in `docs/platform`.
 - `packages/config/project.json` — the single source of truth for organization,
   project, locales, region and commerce settings. Read it through `@repo/config`.
 - `apps/e2e` — Playwright journeys with axe accessibility checks.
-- `scripts/` — `check-placeholders.ts`, `check-rtl.ts` and `check-i18n.ts`
-  are repo checks; `vercel-ignore.mjs` is every Vercel project's ignored
+- `scripts/` — `check-placeholders.ts`, `check-rtl.ts`, `check-i18n.ts` and
+  `check-secrets.ts` are repo checks; `vercel-ignore.mjs` is every Vercel project's ignored
   build step.
 - `ARCHITECTURE_AND_INTEGRATIONS.md` — how the pieces fit together and how to
   set up each integration (Supabase, Capacitor, tracking, Wayl, Vercel).
@@ -48,10 +61,12 @@ bun run test:coverage       # every workspace in one Vitest run, with coverage
 bun run check:placeholders  # no unfilled template tokens
 bun run check:rtl           # physical Tailwind utilities (--fix rewrites them)
 bun run check:i18n          # UI text that isn't in the messages files
+bun run check:secrets       # server secrets outside apps/api
 bun run check:unused        # unused files and dependencies (Knip)
 bun run boundaries          # packages import only what they declare
 bun run db:start | db:reset | db:test | db:types
 bun run --cwd packages/database db:test:sync   # copy the pgTAP preamble
+bun run --cwd apps/e2e e2e  # Playwright journeys + axe (local stack running)
 bun run build:native        # static export of apps/app for Capacitor
 bun run cap:sync            # build:native + copy into the iOS/Android projects
 bun run gen:package         # scaffold packages/<name>
@@ -78,11 +93,22 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   code. `@repo/auth/server` is for server-rendered apps only.
 - **Database:** schema changes are migrations with RLS policies and tests;
   see Database standards below.
-- **Secrets:** never in client code, logs or commits. New env vars go in the
-  package's `keys.ts` and every affected `.env.example`, and in `globalEnv`
-  in `turbo.json` (strict env mode passes nothing else to tasks). A client
-  component never imports `env.ts` or a `keys.ts` with server variables:
-  pass the public value down from a server component instead. CI fails when
+- **Secrets live only in `apps/api`.** Every other app (web, app, admin,
+  storybook, docs, email) holds public values only: no server-only preset in
+  its `env.ts` or `.env.example`, no import of a package module that reads
+  one (`@repo/email`, `@repo/rate-limit`, `@repo/security/form`,
+  `@repo/database/admin`, …). Anything that needs a secret is an `apps/api`
+  endpoint: public forms (the website's `POST /contact`) validate with zod,
+  run `protectForm` from `@repo/security/form` and the Upstash limit, and
+  allow only the website's origin (`webCorsHeaders`); signed-in calls use
+  the user's token. `bun run check:secrets` enforces this (apps/e2e, a test
+  harness, is exempt). Admin Server Actions running as the staff member with
+  the publishable key are fine. Never put secrets in client code, logs or
+  commits. New env vars go in the package's `keys.ts` (a secret in its own
+  `keys.ts`, not mixed into a preset other apps use) and every affected
+  `.env.example`, and in `globalEnv` in `turbo.json` (strict env mode passes
+  nothing else to tasks). A client component never imports `env.ts`: pass
+  the public value down from a server component instead. CI also fails when
   a server variable name reaches a client bundle.
 - **Migrations ship through CI.** After merge, `.github/workflows/migrate.yml`
   runs `supabase db push` against production once CI passes on `main`.
@@ -101,6 +127,10 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
+- **Brand name:** always "The IDEA", never a bare "IDEA": The IDEA Pass,
+  The IDEA Plus, The IDEA Suite, The IDEA Design, in English and Arabic copy
+  alike (Latin letters in Arabic text). A user's account is The IDEA Pass.
+  Reword rather than writing "your The IDEA …".
 - **Translations:** every UI string comes from
   `packages/internationalization/messages/{ar,en}.json` (`useTranslations` /
   `getTranslations`), checked by `bun run check:i18n`. Pass numbers and dates

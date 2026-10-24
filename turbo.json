@@ -11,8 +11,7 @@
         "!.next/cache/**",
         "out/**",
         "**/generated/**",
-        "storybook-static/**",
-        ".react-email/**"
+        "storybook-static/**"
       ]
     },
     "build:native": {
@@ -59,7 +58,6 @@
     "OPENAI_API_KEY",
     "ARCJET_KEY",
     "BETTERSTACK_*",
-    "FLAGS_SECRET",
     "CRON_SECRET",
     "META_*",
     "TIKTOK_*",

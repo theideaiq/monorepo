@@ -8,7 +8,7 @@ interface AuthLayoutProps {
   readonly children: ReactNode;
 }
 
-/** Sign-in, authenticator app and no-access pages. */
+/** The no-access page (sign-in and the authenticator app are on The IDEA Pass). */
 const AuthLayout = ({ children }: AuthLayoutProps) => {
   const t = useTranslations("admin.meta");
 

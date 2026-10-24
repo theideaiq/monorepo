@@ -20,15 +20,6 @@
     "apps/app": {
       "ignoreDependencies": ["@capacitor/android", "@capacitor/ios"]
     },
-    "apps/email": {
-      "ignoreDependencies": [
-        "@react-email/components",
-        "@repo/email",
-        "react",
-        "@types/react",
-        "next"
-      ]
-    },
     "packages/email": {
       "ignoreDependencies": ["react-dom", "@types/react-dom"]
     }

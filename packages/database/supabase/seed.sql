@@ -12,7 +12,7 @@ values
   ('plus-premium', 'Plus Premium', 'Four items at a time', 40000, 'IQD', 'month', 'plus', 4, 3,
     '{"أربعة أغراض في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة","دعوات لفعاليات النادي"}',
     '{"Four items at a time","Free delivery","Early access to new releases","Invitations to Club events"}', 3),
-  ('suite-business-monthly', 'IDEA Suite', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
+  ('suite-business-monthly', 'The IDEA Suite', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
     '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
 
@@ -100,5 +100,5 @@ insert into public.telegram_faq (topic, question_ar, question_en, answer_ar, ans
     'Pick a plan, then request games or books in the app and we deliver them. Return them whenever you like and request more.', 1)
 on conflict do nothing;
 
--- Newest releases need IDEA Plus Extra or higher.
+-- Newest releases need The IDEA Plus Extra or higher.
 update public.products set rental_tier = 2 where slug = 'ea-fc-26-ps5';

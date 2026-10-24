@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { authCookieOptions } from "./cookies";
 import { keys } from "./keys";
 
 export interface UpdateSessionOptions {
@@ -36,6 +37,7 @@ export const updateSession = async (
     NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
+      cookieOptions: authCookieOptions(),
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -73,4 +75,45 @@ export const updateSession = async (
 
   // Return supabaseResponse as-is: it carries the refreshed session cookies.
   return supabaseResponse;
+};
+
+/**
+ * Refreshes an expired access token on an existing proxy response (for
+ * example one from the i18n middleware) and writes the new session cookies
+ * onto it with the shared cookie scope. Cookies set on the proxy response
+ * are also visible to `cookies()` in the Server Components of the request.
+ * Access control stays in the pages and Server Actions.
+ */
+export const refreshSession = async <T extends NextResponse>(
+  request: NextRequest,
+  response: T
+) => {
+  const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } =
+    keys();
+
+  if (!(NEXT_PUBLIC_SUPABASE_URL && NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)) {
+    return response;
+  }
+
+  const supabase = createServerClient(
+    NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    {
+      cookieOptions: authCookieOptions(),
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          for (const { name, value, options } of cookiesToSet) {
+            response.cookies.set(name, value, options);
+          }
+        },
+      },
+    }
+  );
+
+  await supabase.auth.getUser();
+
+  return response;
 };

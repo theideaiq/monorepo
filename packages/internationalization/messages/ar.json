@@ -99,7 +99,7 @@
       "canceled": "ملغاة",
       "expired": "منتهية"
     },
-    "title": "باقة IDEA Suite",
+    "title": "باقة The IDEA Suite",
     "description": "باقة شركتك ومدفوعاتها.",
     "currentPlan": "الباقة الحالية",
     "noPlan": "ليست لدى شركتك باقة بعد.",
@@ -129,9 +129,9 @@
     "nav": {
       "home": "الرئيسية",
       "store": "الميغاستور",
-      "plus": "IDEA Plus",
+      "plus": "The IDEA Plus",
       "academy": "الأكاديمية",
-      "suite": "IDEA Suite",
+      "suite": "The IDEA Suite",
       "club": "النادي",
       "news": "الأخبار",
       "events": "الفعاليات",
@@ -180,14 +180,14 @@
     },
     "appCta": {
       "title": "حساب واحد للمنظومة كلها",
-      "description": "تسوّق من الميغاستور، وأدِر استئجاراتك في IDEA Plus، وسجّل حضورك في الفعاليات، وقدّم أعمالك، كل ذلك من تطبيق The IDEA.",
+      "description": "تسوّق من الميغاستور، وأدِر استئجاراتك في The IDEA Plus، وسجّل حضورك في الفعاليات، وقدّم أعمالك، كل ذلك من تطبيق The IDEA.",
       "button": "افتح التطبيق",
       "signIn": "تسجيل الدخول"
     },
     "home": {
       "meta": {
         "title": "المنظومة الرقمية للعراق",
-        "description": "تسوّق واستأجر وتعلّم وتواصل مع The IDEA: الميغاستور، واستئجار IDEA Plus، والأكاديمية، و IDEA Suite للشركات، والنادي. من بغداد إلى كل العراق."
+        "description": "تسوّق واستأجر وتعلّم وتواصل مع The IDEA: الميغاستور، واستئجار The IDEA Plus، والأكاديمية، و The IDEA Suite للشركات، والنادي. من بغداد إلى كل العراق."
       },
       "hero": {
         "badge": "المنظومة الرقمية للعراق",
@@ -267,9 +267,9 @@
       "clear": "مسح عوامل التصفية",
       "product": {
         "buy": "اشترِ من التطبيق",
-        "rent": "استأجر مع IDEA Plus",
+        "rent": "استأجر مع The IDEA Plus",
         "buyNote": "يتم الطلب والدفع من تطبيق The IDEA.",
-        "rentNote": "الاستئجار مشمول باشتراكات IDEA Plus. اطلب هذا المنتج من التطبيق.",
+        "rentNote": "الاستئجار مشمول باشتراكات The IDEA Plus. اطلب هذا المنتج من التطبيق.",
         "specs": "المواصفات",
         "variants": "الخيارات",
         "description": "الوصف",
@@ -277,7 +277,7 @@
         "condition": "الحالة",
         "sku": "رمز المنتج",
         "back": "العودة إلى المتجر",
-        "plusBack": "العودة إلى IDEA Plus",
+        "plusBack": "العودة إلى The IDEA Plus",
         "image": "{name}، الصورة {number}",
         "delivery": "التوصيل إلى محافظات العراق التسع عشرة.",
         "seller": "يبيعه {seller}",
@@ -304,8 +304,8 @@
     },
     "plus": {
       "meta": {
-        "title": "IDEA Plus — استأجر الألعاب والكتب والأفلام",
-        "description": "IDEA Plus اشتراك شهري لاستئجار ألعاب PS5 والكتب والأفلام في العراق. اختر خطتك، واطلب من التطبيق، وأعِد ما استأجرته متى انتهيت منه."
+        "title": "The IDEA Plus — استأجر الألعاب والكتب والأفلام",
+        "description": "The IDEA Plus اشتراك شهري لاستئجار ألعاب PS5 والكتب والأفلام في العراق. اختر خطتك، واطلب من التطبيق، وأعِد ما استأجرته متى انتهيت منه."
       },
       "badge": "الاشتراك الأمثل",
       "title": "اشتراك واحد.",
@@ -403,11 +403,11 @@
     },
     "suite": {
       "meta": {
-        "title": "IDEA Suite — الشراء والتوظيف للشركات",
-        "description": "يمنح IDEA Suite الشركات في العراق مكانًا واحدًا للشراء والتوظيف، مع خطة أعمال وأوامر شراء وفوترة شهرية."
+        "title": "The IDEA Suite — الشراء والتوظيف للشركات",
+        "description": "يمنح The IDEA Suite الشركات في العراق مكانًا واحدًا للشراء والتوظيف، مع خطة أعمال وأوامر شراء وفوترة شهرية."
       },
       "badge": "للشركات",
-      "title": "IDEA Suite",
+      "title": "The IDEA Suite",
       "subtitle": "حلول مؤسسية للشراء والتوظيف. جهّز فريقك واعثر على الكفاءات، بحساب أعمال واحد.",
       "services": {
         "title": "ما نقدّمه للشركات",
@@ -519,7 +519,7 @@
           },
           {
             "title": "إجابات عن الأسئلة الشائعة",
-            "description": "اسأل عن المتجر أو IDEA Plus أو الأكاديمية أو IDEA Suite في محادثة خاصة."
+            "description": "اسأل عن المتجر أو The IDEA Plus أو الأكاديمية أو The IDEA Suite في محادثة خاصة."
           },
           {
             "title": "البحث عن المنتجات",
@@ -600,7 +600,7 @@
     "faq": {
       "meta": {
         "title": "الأسئلة الشائعة",
-        "description": "إجابات عن الطلب من الميغاستور، واستئجار IDEA Plus، والدفع، والتوصيل، وحسابك في The IDEA."
+        "description": "إجابات عن الطلب من الميغاستور، واستئجار The IDEA Plus، والدفع، والتوصيل، وحسابك في The IDEA."
       },
       "title": "الأسئلة الشائعة",
       "description": "لم تجد إجابتك؟ تواصل معنا أو اسأل درويد على تيليغرام.",
@@ -628,15 +628,15 @@
           ]
         },
         {
-          "title": "IDEA Plus",
+          "title": "The IDEA Plus",
           "items": [
             {
-              "question": "كيف يعمل IDEA Plus؟",
+              "question": "كيف يعمل The IDEA Plus؟",
               "answer": "تشترك في خطة شهرية تتيح لك الاحتفاظ بعدد من المواد في الوقت نفسه. اطلب لعبة أو كتابًا أو فيلمًا من التطبيق، فنوصله إليك، وحين تنتهي منه تعيده وتطلب التالي."
             },
             {
               "question": "هل يمكنني الشراء من الميغاستور دون اشتراك؟",
-              "answer": "بالتأكيد. الميغاستور متاح للجميع، ولا تحتاج إلى IDEA Plus إلا للاستئجار."
+              "answer": "بالتأكيد. الميغاستور متاح للجميع، ولا تحتاج إلى The IDEA Plus إلا للاستئجار."
             },
             {
               "question": "كيف ألغي اشتراكي؟",
@@ -649,7 +649,7 @@
           "items": [
             {
               "question": "هل أحتاج إلى حساب منفصل لكل خدمة؟",
-              "answer": "لا. يعمل حساب The IDEA الواحد في المتجر و IDEA Plus والفعاليات والمجلة و IDEA Suite."
+              "answer": "لا. يعمل حساب The IDEA الواحد في المتجر و The IDEA Plus والفعاليات والمجلة و The IDEA Suite."
             },
             {
               "question": "كيف أحذف حسابي؟",
@@ -671,7 +671,7 @@
     "contact": {
       "meta": {
         "title": "تواصل معنا",
-        "description": "لديك سؤال عن طلب أو عن IDEA Plus أو الأكاديمية أو IDEA Suite؟ راسل فريق The IDEA."
+        "description": "لديك سؤال عن طلب أو عن The IDEA Plus أو الأكاديمية أو The IDEA Suite؟ راسل فريق The IDEA."
       },
       "title": "تواصل معنا",
       "description": "نحن هنا لمساعدتك. أرسل لنا رسالة، أو راسلنا بالبريد الإلكتروني، أو تواصل معنا على تيليغرام.",
@@ -683,7 +683,7 @@
         "location": "الموقع",
         "address": "بغداد، العراق",
         "support": "تذاكر الدعم",
-        "supportNote": "هل سجّلت دخولك؟ افتح تذكرة في التطبيق لتحصل على المساعدة بخصوص طلب أو استئجار أو IDEA Plus أو حسابك، وتابع ردودنا هناك.",
+        "supportNote": "هل سجّلت دخولك؟ افتح تذكرة في التطبيق لتحصل على المساعدة بخصوص طلب أو استئجار أو The IDEA Plus أو حسابك، وتابع ردودنا هناك.",
         "supportCta": "افتح تذكرة دعم"
       },
       "form": {
@@ -692,9 +692,9 @@
         "topics": {
           "general": "سؤال عام",
           "store": "طلب من الميغاستور",
-          "plus": "IDEA Plus",
+          "plus": "The IDEA Plus",
           "academy": "الأكاديمية",
-          "suite": "IDEA Suite (للشركات)",
+          "suite": "The IDEA Suite (للشركات)",
           "careers": "الوظائف",
           "press": "الإعلام والشراكات"
         },
@@ -705,10 +705,16 @@
         "sending": "جارٍ الإرسال…",
         "success": "شكرًا لك! سنتواصل معك قريبًا.",
         "errors": {
+          "forbidden": "تعذّر علينا قبول هذه الرسالة. يُرجى مراسلتنا بالبريد الإلكتروني.",
           "invalid": "يُرجى إدخال اسمك وبريد إلكتروني صحيح ورسالة.",
           "rate_limited": "لقد أرسلت رسالة اليوم بالفعل. يُرجى المحاولة غدًا.",
           "unavailable": "نموذج التواصل غير متاح حاليًا. يُرجى مراسلتنا بالبريد الإلكتروني.",
           "unknown": "حدث خطأ ما. يُرجى المحاولة مرة أخرى."
+        },
+        "fieldErrors": {
+          "name": "يُرجى إدخال اسمك.",
+          "email": "يُرجى إدخال بريد إلكتروني صالح لاستقبال الرسائل.",
+          "message": "يُرجى كتابة رسالتك (حتى 5000 حرف)."
         }
       }
     },
@@ -726,7 +732,7 @@
         },
         "refund": {
           "title": "سياسة الاسترداد والإرجاع",
-          "description": "كيف تتم عمليات الإرجاع والاسترداد والإلغاء وإعادة مواد IDEA Plus المستأجرة."
+          "description": "كيف تتم عمليات الإرجاع والاسترداد والإلغاء وإعادة مواد The IDEA Plus المستأجرة."
         },
         "conduct": {
           "title": "مدوّنة السلوك",
@@ -794,7 +800,7 @@
       "store": "المتجر",
       "cart": "السلة",
       "orders": "الطلبات",
-      "plus": "IDEA Plus",
+      "plus": "The IDEA Plus",
       "events": "الفعاليات",
       "submissions": "المشاركات",
       "business": "الأعمال",
@@ -832,7 +838,7 @@
         "placed": "قُدّم في {date}"
       },
       "plus": {
-        "title": "IDEA Plus",
+        "title": "The IDEA Plus",
         "none": "استأجر الألعاب والكتب والأفلام باشتراك شهري.",
         "join": "اطّلع على الباقات",
         "member": "عضوية {plan}",
@@ -884,8 +890,8 @@
         "details": "المواصفات",
         "about": "عن هذا المنتج",
         "condition": "الحالة",
-        "rentalOnly": "يُستأجر هذا المنتج عبر IDEA Plus.",
-        "goToPlus": "انتقل إلى IDEA Plus",
+        "rentalOnly": "يُستأجر هذا المنتج عبر The IDEA Plus.",
+        "goToPlus": "انتقل إلى The IDEA Plus",
         "addFailed": "تعذّرت إضافة المنتج إلى السلة. حاول مرة أخرى.",
         "soldBy": "البائع: {seller}",
         "verifiedSeller": "بائع موثّق"
@@ -996,7 +1002,7 @@
       }
     },
     "plus": {
-      "title": "IDEA Plus",
+      "title": "The IDEA Plus",
       "description": "استأجر الألعاب والكتب والأفلام. نوصلها إليك ونستلمها منك عند الانتهاء.",
       "membership": {
         "title": "عضويتك",
@@ -1027,7 +1033,7 @@
         "request": "اطلب",
         "requesting": "جارٍ الطلب…",
         "requested": "تم الطلب. سنتواصل معك لترتيب التوصيل.",
-        "needMembership": "اشترك في IDEA Plus لتستأجر.",
+        "needMembership": "اشترك في The IDEA Plus لتستأجر.",
         "noSlots": "جميع خانات الاستئجار لديك مستخدمة.",
         "needsPlan": "يتطلّب {plan}",
         "needsHigherPlan": "يتطلّب خطة أعلى",
@@ -1124,9 +1130,9 @@
     },
     "business": {
       "title": "الأعمال",
-      "description": "IDEA Suite: حلول المشتريات والتوظيف للشركات.",
+      "description": "The IDEA Suite: حلول المشتريات والتوظيف للشركات.",
       "intro": {
-        "title": "انضم بشركتك إلى IDEA Suite",
+        "title": "انضم بشركتك إلى The IDEA Suite",
         "description": "أنشئ حساب أعمال لفريقك، أو انضم إلى حساب دُعيت إليه.",
         "create": "إنشاء حساب أعمال"
       },
@@ -1205,7 +1211,7 @@
       },
       "organization": {
         "title": "إنشاء حساب أعمال",
-        "description": "يضم حساب الأعمال فريقك ومشاريعك وباقة IDEA Suite.",
+        "description": "يضم حساب الأعمال فريقك ومشاريعك وباقة The IDEA Suite.",
         "name": "اسم الشركة",
         "namePlaceholder": "مثال: الرافدين للتجارة",
         "slug": "العنوان",
@@ -1328,12 +1334,12 @@
       "remove": "أزل من المفضّلة",
       "save": "احفظ",
       "saved": "محفوظ",
-      "rental": "يُستأجر مع IDEA Plus",
+      "rental": "يُستأجر مع The IDEA Plus",
       "moveToCart": "انقل إلى السلة",
       "moving": "جارٍ النقل…",
       "moveFailed": "تعذّر نقل المنتج إلى سلتك. حاول مرة أخرى.",
       "chooseOptions": "اختر الخيارات",
-      "rentWithPlus": "استأجره مع IDEA Plus",
+      "rentWithPlus": "استأجره مع The IDEA Plus",
       "unavailable": "غير متوفر حاليًا",
       "empty": {
         "title": "قائمة المفضّلة فارغة",
@@ -1457,13 +1463,13 @@
     },
     "kind": {
       "sale": "الميغاستور",
-      "rental": "IDEA Plus"
+      "rental": "The IDEA Plus"
     },
     "lines": {
       "megastore": "الميغاستور",
-      "plus": "IDEA Plus",
+      "plus": "The IDEA Plus",
       "academy": "الأكاديمية",
-      "suite": "IDEA Suite",
+      "suite": "The IDEA Suite",
       "club": "النادي"
     },
     "ticketStatus": {
@@ -1475,7 +1481,7 @@
     "ticketTopic": {
       "order": "طلب شراء",
       "rental": "استئجار",
-      "plus": "IDEA Plus",
+      "plus": "The IDEA Plus",
       "account": "الحساب",
       "other": "أخرى"
     },
@@ -1540,7 +1546,7 @@
         "order": "تحديث على طلب",
         "rental": "تحديث على استئجار",
         "support": "تحديث من الدعم",
-        "plus": "تحديث على IDEA Plus",
+        "plus": "تحديث على The IDEA Plus",
         "promo": "جديد The IDEA",
         "system": "تنبيه"
       },
@@ -1552,29 +1558,6 @@
       "title": "لوحة إدارة The IDEA",
       "description": "لوحة تحكّم فريق عمل The IDEA.",
       "badge": "الفريق"
-    },
-    "signIn": {
-      "title": "الدخول إلى لوحة الإدارة",
-      "description": "لفريق العمل فقط. سجّل الدخول برقم هاتفك، ثم أكّد بتطبيق المصادقة."
-    },
-    "mfa": {
-      "title": "تطبيق المصادقة",
-      "enrollTitle": "إعداد تطبيق المصادقة",
-      "enrollDescription": "حسابات فريق العمل محمية بخطوة تحقّق ثانية. اربط تطبيق مصادقة مرة واحدة، وستُدخل رمزه في كل مرة تسجّل فيها الدخول.",
-      "challengeTitle": "أدخل رمز تطبيق المصادقة",
-      "challengeDescription": "افتح تطبيق المصادقة وأدخل الرمز المكوّن من 6 أرقام الخاص بـ The IDEA.",
-      "stepInstall": "ثبّت تطبيق مصادقة (Google Authenticator أو Microsoft Authenticator أو 1Password…).",
-      "stepScan": "امسح رمز QR هذا بالتطبيق، أو أدخل مفتاح الإعداد أدناه.",
-      "stepCode": "أدخل الرمز المكوّن من 6 أرقام الذي يظهر في التطبيق.",
-      "qrAlt": "رمز QR لتطبيق المصادقة",
-      "secretLabel": "مفتاح الإعداد",
-      "codeLabel": "الرمز المكوّن من 6 أرقام",
-      "verify": "تأكيد",
-      "verifying": "جارٍ التحقّق…",
-      "errors": {
-        "invalidCode": "الرمز غير صحيح. تأكّد من ضبط الوقت في هاتفك وجرّب أحدث رمز.",
-        "unavailable": "تطبيقات المصادقة غير مفعّلة في هذا المشروع بعد. اطلب من أحد المسؤولين تفعيل المصادقة متعددة العوامل (TOTP) في Supabase."
-      }
     },
     "noAccess": {
       "title": "لا تملك صلاحية الدخول",
@@ -1696,7 +1679,7 @@
       "fulfilmentHint": "مدفوعة أو قيد التحضير",
       "revenue": "إيرادات هذا الشهر",
       "revenueHint": "الطلبات المدفوعة · {received} مقبوضة عبر المدفوعات",
-      "members": "مشتركو IDEA Plus النشطون",
+      "members": "مشتركو The IDEA Plus النشطون",
       "rentals": "الإعارات المفتوحة",
       "overdue": "{count} متأخرة",
       "submissions": "مشاركات بانتظار المراجعة",
@@ -1740,7 +1723,7 @@
         "slug": "المعرّف في الرابط",
         "slugHint": "عنوان الصفحة: أحرف إنجليزية صغيرة وأرقام وشرطات، مثل ps5-slim.",
         "kind": "القسم",
-        "kindHint": "منتجات الميغاستور للبيع، ومنتجات IDEA Plus للإعارة للمشتركين.",
+        "kindHint": "منتجات الميغاستور للبيع، ومنتجات The IDEA Plus للإعارة للمشتركين.",
         "status": "الحالة",
         "statusHint": "تظهر في المتجر المنتجات المنشورة فقط.",
         "category": "الفئة",
@@ -1762,8 +1745,8 @@
         "verified": "بائع موثّق",
         "verifiedHint": "تظهر شارة التوثيق بجانب اسم البائع.",
         "rentalTier": "الخطة المطلوبة للاستئجار",
-        "rentalTierHint": "لا يستطيع أعضاء خطط IDEA Plus الأدنى استئجار هذا المنتج.",
-        "anyPlan": "أي خطة من IDEA Plus",
+        "rentalTierHint": "لا يستطيع أعضاء خطط The IDEA Plus الأدنى استئجار هذا المنتج.",
+        "anyPlan": "أي خطة من The IDEA Plus",
         "tierOption": "المستوى {tier}: {names}",
         "unknownTier": "لا توجد خطة بهذا المستوى"
       },
@@ -1797,8 +1780,8 @@
         "description": "الوصف",
         "audience": "القسم",
         "audiences": {
-          "plus": "IDEA Plus (للمشتركين)",
-          "business": "IDEA Suite (للشركات)"
+          "plus": "The IDEA Plus (للمشتركين)",
+          "business": "The IDEA Suite (للشركات)"
         },
         "amount": "السعر (دينار)",
         "amountHint": "يُدفع في كل دورة فوترة.",
@@ -1816,7 +1799,7 @@
         "inactive": "مخفية",
         "activeHint": "الخطط غير المتاحة تُخفى عن العملاء الجدد، ويحتفظ بها المشتركون الحاليون.",
         "tier": "المستوى",
-        "tierHint": "من 1 إلى 10؛ الخطط الأعلى تتيح منتجات تتطلب مستوى أعلى. إلزامي لخطط IDEA Plus."
+        "tierHint": "من 1 إلى 10؛ الخطط الأعلى تتيح منتجات تتطلب مستوى أعلى. إلزامي لخطط The IDEA Plus."
       },
       "ratings": {
         "title": "تقييم العملاء",
@@ -1964,7 +1947,7 @@
       "telegram": "تيليجرام",
       "userId": "معرّف المستخدم",
       "subscription": "الاشتراك",
-      "noSubscription": "لا يوجد اشتراك في IDEA Plus.",
+      "noSubscription": "لا يوجد اشتراك في The IDEA Plus.",
       "renewsOn": "يتجدّد في {date}",
       "endsOn": "ينتهي في {date}",
       "crm": "العلاقة مع العميل",
@@ -2027,7 +2010,7 @@
         "crmHint": "إن لم تحدّد شيئًا: كل الحالات.",
         "tags": "الوسوم",
         "tagsHint": "العملاء الذين لديهم وسم واحد على الأقل من هذه الوسوم.",
-        "plusMember": "IDEA Plus",
+        "plusMember": "The IDEA Plus",
         "plusYes": "المشتركون فقط",
         "plusNo": "غير المشتركين فقط",
         "locale": "اللغة",
@@ -2432,7 +2415,7 @@
         "empty": "لا يوجد أعضاء مطابقون.",
         "name": "العضو",
         "groupStatus": "في المجموعات",
-        "account": "حساب IDEA",
+        "account": "حساب The IDEA",
         "linked": "مرتبط",
         "lastSeen": "آخر ظهور"
       },
@@ -2443,9 +2426,9 @@
         "topics": {
           "general": "عام",
           "store": "الميغاستور",
-          "plus": "IDEA Plus",
+          "plus": "The IDEA Plus",
           "academy": "الأكاديمية",
-          "suite": "IDEA Suite"
+          "suite": "The IDEA Suite"
         },
         "questionAr": "السؤال (بالعربية)",
         "questionEn": "السؤال (بالإنجليزية)",
@@ -2531,7 +2514,7 @@
       "topics": {
         "order": "طلب شراء",
         "rental": "استئجار",
-        "plus": "IDEA Plus",
+        "plus": "The IDEA Plus",
         "account": "الحساب",
         "other": "أخرى"
       },
@@ -2598,6 +2581,69 @@
       "hide": "إخفاء",
       "unhide": "نشر",
       "deleteDescription": "سيُحذف التقييم نهائيًا. لإزالته من المتجر مع الاحتفاظ به، أخفِه بدلًا من ذلك."
+    }
+  },
+  "design": {
+    "forbidden": {
+      "title": "The IDEA Design مخصّص لفريق العمل",
+      "body": "أنت مسجّل الدخول، لكن حسابك غير مدرج في قائمة فريق العمل. إذا كان يجب أن تملك صلاحية الدخول، فاطلب من أحد المسؤولين إضافتك من لوحة الإدارة.",
+      "switch": "تسجيل الدخول بحساب آخر"
+    }
+  },
+  "pass": {
+    "meta": {
+      "title": "The IDEA Pass",
+      "description": "حساب واحد لكل خدمات The IDEA: التطبيق والمتجر و The IDEA Plus وغيرها."
+    },
+    "badge": "Pass",
+    "continueTo": "ستنتقل بعدها إلى {host}.",
+    "signIn": {
+      "title": "تسجيل الدخول إلى The IDEA Pass",
+      "description": "استخدم رقم هاتفك المحمول. حساب واحد للتطبيق والمتجر و The IDEA Plus.",
+      "noAccount": "جديد على The IDEA؟",
+      "signUpLink": "احصل على The IDEA Pass",
+      "deleted": "تم حذف حسابك."
+    },
+    "signUp": {
+      "title": "احصل على The IDEA Pass",
+      "description": "سجّل برقم هاتفك المحمول. حساب واحد لكل خدمات The IDEA.",
+      "haveAccount": "لديك The IDEA Pass بالفعل؟",
+      "signInLink": "سجّل الدخول"
+    },
+    "home": {
+      "title": "حسابك في The IDEA Pass",
+      "description": "أنت مسجّل الدخول إلى The IDEA Pass، ويعمل حسابك في التطبيق والموقع و The IDEA Plus.",
+      "nameLabel": "الاسم",
+      "noName": "لم يُحدَّد بعد",
+      "phoneLabel": "رقم الهاتف المحمول",
+      "openApp": "افتح تطبيق The IDEA",
+      "website": "زيارة الموقع",
+      "authenticator": "تطبيق المصادقة",
+      "authenticatorOn": "مفعّل",
+      "authenticatorOff": "غير مُعَدّ",
+      "setUpAuthenticator": "إعداد"
+    },
+    "signOut": {
+      "title": "تسجيل الخروج"
+    },
+    "mfa": {
+      "title": "تطبيق المصادقة",
+      "enrollTitle": "إعداد تطبيق المصادقة",
+      "enrollDescription": "احمِ حسابك بخطوة تحقّق ثانية. اربط تطبيق مصادقة مرة واحدة، وستُدخل رمزه عندما يطلبه أحد المواقع. حسابات فريق العمل تحتاجه لدخول لوحة الإدارة.",
+      "challengeTitle": "أدخل رمز تطبيق المصادقة",
+      "challengeDescription": "افتح تطبيق المصادقة وأدخل الرمز المكوّن من 6 أرقام الخاص بـ The IDEA.",
+      "stepInstall": "ثبّت تطبيق مصادقة (Google Authenticator أو Microsoft Authenticator أو 1Password…).",
+      "stepScan": "امسح رمز QR هذا بالتطبيق، أو أدخل مفتاح الإعداد أدناه.",
+      "stepCode": "أدخل الرمز المكوّن من 6 أرقام الذي يظهر في التطبيق.",
+      "qrAlt": "رمز QR لتطبيق المصادقة",
+      "secretLabel": "مفتاح الإعداد",
+      "codeLabel": "الرمز المكوّن من 6 أرقام",
+      "verify": "تأكيد",
+      "verifying": "جارٍ التحقّق…",
+      "errors": {
+        "invalidCode": "الرمز غير صحيح. تأكّد من ضبط الوقت في هاتفك وجرّب أحدث رمز.",
+        "unavailable": "تطبيقات المصادقة غير مفعّلة في هذا المشروع بعد. اطلب من أحد المسؤولين تفعيل المصادقة متعددة العوامل (TOTP) في Supabase."
+      }
     }
   }
 }

@@ -1,10 +1,13 @@
 import type { Database } from "@repo/database";
 import { createBrowserClient } from "@supabase/ssr";
+import { authCookieOptions } from "./cookies";
 import { keys } from "./keys";
 
 /**
  * Browser client for the web build. Sessions live in cookies so server
- * components and the proxy can read them. (`createBrowserClient` reuses one
+ * components and the proxy can read them, on the shared parent domain when
+ * NEXT_PUBLIC_AUTH_COOKIE_DOMAIN is set (one sign-in on The IDEA Pass for
+ * every site). (`createBrowserClient` reuses one
  * instance per page.) The Capacitor apps use `createNativeClient` instead.
  */
 export const createClient = () => {
@@ -19,7 +22,8 @@ export const createClient = () => {
 
   return createBrowserClient<Database>(
     NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    { cookieOptions: authCookieOptions() }
   );
 };
 

@@ -18,13 +18,14 @@ const ROOTS = [
   "apps/admin/components",
   "apps/app/app",
   "apps/app/components",
+  "apps/pass/app",
+  "apps/pass/components",
   "apps/web/app",
   "apps/web/components",
 ];
 const IGNORED_DIRECTORIES = new Set([
   ".claude",
   ".next",
-  ".react-email",
   "node_modules",
   "out",
 ]);

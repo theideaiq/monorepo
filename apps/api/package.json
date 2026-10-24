@@ -6,7 +6,7 @@
     "build": "next build",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "next dev -p 3002",
-    "start": "next start",
+    "start": "next start -p 3002",
     "telegram:setup": "bun scripts/telegram-setup.ts",
     "test": "NODE_ENV=test vitest run",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
@@ -25,6 +25,7 @@
     "@repo/observability": "workspace:*",
     "@repo/payments": "workspace:*",
     "@repo/rate-limit": "workspace:*",
+    "@repo/security": "workspace:*",
     "@repo/storage": "workspace:*",
     "@sentry/nextjs": "^10.42.0",
     "@supabase/supabase-js": "^2.115.0",

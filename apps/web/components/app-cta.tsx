@@ -3,7 +3,7 @@ import type { Locale } from "@repo/internationalization";
 import { MoveRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { env } from "@/env";
-import { appLink } from "@/lib/links";
+import { appLink, passSignInLink } from "@/lib/links";
 
 /** The call to action to open The IDEA app. */
 export const AppCta = async ({ locale }: { readonly locale: Locale }) => {
@@ -30,7 +30,7 @@ export const AppCta = async ({ locale }: { readonly locale: Locale }) => {
             size="lg"
             variant="outline"
           >
-            <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/sign-in")}>
+            <a href={passSignInLink(env.NEXT_PUBLIC_APP_URL, locale)}>
               {t("signIn")}
             </a>
           </Button>
