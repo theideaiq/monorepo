@@ -15,8 +15,10 @@ const isTemplate = existsSync(join(root, "scripts/init.ts"));
 const TOKEN = /\{\{([A-Z][A-Z0-9_]*)\}\}/g;
 
 const IGNORED_DIRECTORIES = new Set([
+  ".claude",
   ".git",
   ".next",
+  ".react-email",
   ".turbo",
   "dist",
   "node_modules",

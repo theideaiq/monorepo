@@ -82,9 +82,9 @@ flowchart LR
    `packages/internationalization/messages/{ar,en}.json`. Layouts use logical
    Tailwind utilities so they mirror in RTL. `bun run check:i18n` and
    `bun run check:rtl` enforce both rules in CI.
-5. **Optional modules are removable.** CMS, collaboration, notifications,
-   outbound webhooks, feature flags, rate limiting and AI helpers are wrapped in
-   `<module:id>` markers so `bun run init` can delete them cleanly.
+5. **Secrets stay on the server.** Only `apps/api` and `apps/admin` hold
+   server keys; client components never import `env.ts`. CI scans every
+   client bundle for server variable names.
 
 ### How a request flows
 
@@ -117,12 +117,11 @@ Inside `apps/app`, link with `Link` and `useRouter` from
 
 ---
 
-## 1. Create a project from the template
+## 1. The project and its organizations
 
 > This repository was created from the template on 2026-10-23 with
 > `--commerce physical --keep-modules rate-limit,ai`. The section below is
-> kept as a record of what `init` did and for reference when the template
-> changes; there is no need to run it again here.
+> kept as a short record; there is nothing to run here.
 
 > **Two kinds of "organization".** The *template organization* is the client
 > or company the codebase is created for. It is set once by `bun run init`.
@@ -130,116 +129,12 @@ Inside `apps/app`, link with `Link` and `useRouter` from
 > product (teams, companies, clinics…). They are rows in the `organizations`
 > table and are covered at the end of this section.
 
-### 1.1 Prerequisites
-
-- Node.js 22 or newer (`.nvmrc`) and Bun (the version is pinned in the root
-  `package.json` under `packageManager`).
-- Docker, to run Supabase locally.
-- A fresh copy of the template: GitHub's **Use this template** button, or
-  `git clone` followed by pointing `origin` at the client's repository.
-
-### 1.2 Run the generator
-
-```sh
-bun install
-bun run init
-```
-
-The interactive CLI asks for each value, shows a summary and applies it after
-you confirm. For scripted setups, pass every value as a flag:
-
-```sh
-bun run init --yes \
-  --org-name "شركة الرافدين" \
-  --org-slug rafidain \
-  --project-name "Rafidain Booking" \
-  --project-slug rafidain-booking \
-  --project-url https://booking.rafidain.iq \
-  --support-email support@rafidain.iq \
-  --bundle-id iq.rafidain.booking \
-  --default-locale ar \
-  --commerce physical \
-  --keep-modules cms,rate-limit
-```
-
-| Flag | Asked as | Used for | Default |
-| --- | --- | --- | --- |
-| `--org-name` | Organization name | Legal and footer text, emails. Any script (Arabic is fine). | required |
-| `--org-slug` | Organization slug | Identifiers and the default repository URL | slug of the name |
-| `--project-name` | Project name | Product name in the UI, app stores, metadata | required |
-| `--project-slug` | Project slug | Root package name | slug of the name |
-| `--project-url` | Public website URL | Canonical URLs, sitemaps, emails | `https://<project-slug>.iq` |
-| `--support-email` | Support email | Contact and security addresses | `support@<domain>` |
-| `--repo-url` | Repository URL | README and docs links | the `origin` remote |
-| `--bundle-id` | iOS/Android app ID | Capacitor `appId`, the deep-link scheme | reversed domain + slug |
-| `--default-locale` | Default language | `project.locale.default` | `ar` |
-| `--commerce` | What does this project sell? | `project.commerce.allowNativeCheckout` | `digital` |
-| `--keep-modules` | Optional modules to keep | Everything else is deleted | all modules |
-| `--skip-install` | | Skip `bun install` and code tidying | off |
-| `--root` | | Initialize another directory | current directory |
-
-`bun run init --help` prints the same list.
-
-### 1.3 What the generator does
-
-In order:
-
-1. **Refuses to run twice.** If `packages/config/project.json` no longer holds
-   placeholders, the repository is already initialized and init stops.
-2. **Fills in placeholder tokens.** Every text file is scanned for the
-   double-brace tokens (organization name and slug, project name, slug and URL,
-   support email, repository URL, bundle id, year) and each one is replaced.
-3. **Applies project settings.** Sets the default locale and the commerce mode
-   in `project.json`, and renames the root package.
-4. **Removes the modules you didn't keep.** It deletes their packages and
-   files, removes `<module:id>` … `</module:id>` blocks from shared files (TS,
-   JSX, env files, YAML) and drops their dependencies from every
-   `package.json`.
-5. **Removes template-only files.** That means `scripts/init.ts`,
-   `scripts/template/`, the template CI workflow and the `init` and
-   `test:template` scripts.
-6. **Creates `.env.local` files** next to every `.env.example`. Existing files
-   are never overwritten.
-7. **Installs and tidies.** Runs `bun install`, then Biome, to remove imports
-   and variables left unused by the removed modules.
-8. **Verifies.** Runs `bun run check:placeholders`, which fails if any token
-   or unbalanced module marker is left.
-
-#### Optional modules
-
-| Id | Module | Removes |
-| --- | --- | --- |
-| `collaboration` | Live cursors and presence (Liveblocks) | `packages/collaboration`, `apps/app/components/collaboration`, `apps/api/app/collaboration` |
-| `notifications` | In-app notification feed (Knock) | `packages/notifications`, the app's notifications provider |
-| `webhooks` | Outbound webhooks and a customer portal (Svix) | `packages/webhooks`, the webhooks screen, `apps/api/app/webhooks/portal` |
-| `feature-flags` | Vercel Flags with PostHog decisions | `packages/feature-flags`, `apps/web/app/.well-known` |
-| `rate-limit` | Upstash rate limiting | `packages/rate-limit` |
-| `ai` | AI SDK helpers and chat components | `packages/ai` |
-
-#### Choosing the commerce mode
-
-| Mode | Choose it when the project sells… | Effect |
-| --- | --- | --- |
-| `digital` | Subscriptions, SaaS seats, digital content | Checkout is web-only. Inside the iOS/Android apps the billing screen explains that plans are managed on the website, and `apps/api` rejects native checkout requests. App Store guideline 3.1.1 and Google Play's payments policy require their own billing for digital goods. |
-| `physical` | Physical goods or real-world services (retail, bookings, delivery) | Wayl checkout is allowed in the apps too (it opens in the system browser). Both stores allow third-party payment for these (App Store guideline 3.1.3(e)). |
-
-The rule lives in `getPurchasePolicy()` (`packages/payments/policy.ts`) and is
-enforced by the client and again by `apps/api/app/checkout`.
-
-### 1.4 After init
-
-1. Review the diff and commit it: `git add -A && git commit -m "Initialize project"`.
-2. Start Supabase locally and fill in `.env.local` files
-   ([section 2](#2-supabase-migrations-and-row-level-security)).
-3. Run `bun run dev`. The app is at http://localhost:3000, the site at
-   http://localhost:3001 and the API at http://localhost:3002.
-4. Create the Supabase project, the three Vercel projects and their
-   environment variables ([section 5](#5-vercel-environment-variables)).
-5. Create the native projects ([section 3](#3-build-sync-and-release-the-ios-and-android-apps)).
-
-To change regional settings later (time zone, currency, enabled languages),
-edit `packages/config/project.json`. Do **not** change `bundleId` after a
-store release: the stores treat a new id as a different app.
+The generator (`bun run init`), its options and the optional-module markers
+live in the template repository, `shaheenfarjo/monorepo`. They were removed
+here once the project existed: `scripts/init.ts`, `scripts/template/` and the
+unused modules (CMS, collaboration, notifications service, outbound webhooks,
+feature flags) are gone, and `bun run check:placeholders` fails on any
+template token left behind.
 
 ### 1.5 Tenant organizations in the product
 
@@ -310,7 +205,7 @@ The database is the final guard: `private.protect_last_owner` refuses to
 remove the last owner's membership, so even a request that skips the checks
 cannot orphan an organization. The app then clears the local session,
 analytics identity and stored organization, and the sign-in page confirms the
-deletion. The pgTAP suite (`rls.test.sql`) and `apps/api/__tests__/deletion.test.ts`
+deletion. The pgTAP suite (`10_rls.test.sql`) and `apps/api/__tests__/deletion.test.ts`
 cover these rules.
 
 ---
@@ -463,7 +358,7 @@ grant all on public.bookings to service_role;
 ### 2.4 Test the policies
 
 RLS tests are pgTAP files run inside a transaction that is rolled back.
-`rls.test.sql` shows the pattern: insert fixtures as the superuser, then switch
+`10_rls.test.sql` shows the pattern: insert fixtures as the superuser, then switch
 identity with the helpers and assert what each user can see or do.
 
 ```sql
@@ -503,12 +398,21 @@ and runs:
 
 1. every migration and `seed.sql`;
 2. `supabase db lint --fail-on warning`;
-3. the pgTAP suite;
+3. the pgTAP suite (`bun run db:test`): the shared preamble is in sync,
+   `00_structure` (RLS and a primary key on every table), `00_advisors` (the
+   Supabase advisor lints at zero) and the feature suites;
 4. a diff of `types.ts` against freshly generated types;
 5. integration tests for auth, billing and storage against the real stack
    (`SUPABASE_INTEGRATION=1`).
 
 ### 2.6 Deploy migrations to a hosted project
+
+In production this is automatic: after a merge to `main`, the **Migrate
+production database** workflow (`.github/workflows/migrate.yml`) runs
+`supabase db push` once CI passes, and **Back up production database**
+(`backup.yml`) takes an encrypted nightly dump. Setup and restore steps:
+[`docs/platform`](docs/platform/README.md). The manual commands below are
+for a new environment or a first push.
 
 Create one Supabase project per environment (at least *production*, ideally
 also *staging*) in a region close to your users; Frankfurt (`eu-central-1`)
@@ -1067,7 +971,7 @@ For each project:
 - **Build Command:** `turbo run build`, so the packages an app depends on
   are built first.
 - **Install Command:** `bun install`. Vercel detects Bun from `bun.lock`.
-- **Node.js Version:** 22.x.
+- **Node.js Version:** 24.x (matches `.nvmrc`).
 - Keep **Automatically expose System Environment Variables** on (`VERCEL`,
   `VERCEL_ENV`, `VERCEL_URL`).
 

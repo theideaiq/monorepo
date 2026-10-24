@@ -19,24 +19,68 @@ env:
   NEXT_PUBLIC_WEB_URL: http://localhost:3001
   NEXT_PUBLIC_API_URL: http://localhost:3002
   TURBO_TELEMETRY_DISABLED: "1"
+  # Vercel Remote Cache: unchanged packages are not rebuilt or re-tested.
+  # Inactive until TURBO_TOKEN (secret) and TURBO_TEAM (variable) are set.
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
 jobs:
+  # New or updated packages with known vulnerabilities fail the PR.
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+
   checks:
     name: Lint, typecheck, test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@v7
+      # A squash merge's message carries every commit message of the pull
+      # request; a workflow skip marker in any of them would skip CI, the
+      # production migration and the deployments on main.
+      - name: Commit messages carry no workflow skip marker
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          if gh api "repos/${{ github.repository }}/pulls/$PR/commits" --paginate --jq '.[].commit.message' \
+            | grep -Eiq '\[(skip ci|ci skip|no ci|skip actions|actions skip)\]'; then
+            echo "A commit message in this pull request contains a workflow skip marker. Reword it before merging."
+            exit 1
+          fi
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: package.json
       - run: bun install --frozen-lockfile
+      # Known vulnerabilities in the lockfile (high or critical) fail the build.
+      - run: bun audit --audit-level=high
       - run: bun run check
+      - run: bunx turbo boundaries
       - run: bun run typecheck
-      - run: bun run test
+      - run: bun run test:coverage
       - run: bun run check:placeholders
       - run: bun run check:rtl
       - run: bun run check:i18n
+      - run: bun run check:unused
+      - name: Upload coverage artifact
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-report
+          path: coverage/cobertura-coverage.xml
+          retention-days: 14
 
   build:
     name: Build apps
@@ -52,9 +96,23 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: bun install --frozen-lockfile
-      - run: bunx turbo build --filter=api --filter=app --filter=web --filter=admin
+      - run: bunx turbo build --filter=api --filter=app --filter=web --filter=admin --filter=@repo/storybook
       # The static export bundled into the iOS/Android apps (Capacitor).
       - run: bunx turbo build:native --filter=app
+      # No secret may reach a browser bundle: the client chunks must not
+      # contain the secret-key prefix or a server-only variable name. Every
+      # directory must exist, or the check is not checking anything.
+      - name: No secrets in client bundles
+        run: |
+          set -e
+          dirs="apps/app/.next/static apps/app/out apps/web/.next/static apps/api/.next/static apps/admin/.next/static"
+          for dir in $dirs; do
+            test -d "$dir" || { echo "Missing $dir"; exit 1; }
+          done
+          if grep -rqE "sb_secret_[A-Za-z0-9_-]{8,}|SUPABASE_SECRET_KEY|RESEND_TOKEN|CRON_SECRET|TELEGRAM_BOT_TOKEN|TELEGRAM_WEBHOOK_SECRET|WAYL_API_TOKEN|WAYL_WEBHOOK_SECRET|GOOGLE_GENERATIVE_AI_API_KEY|OPENAI_API_KEY|META_CONVERSIONS_ACCESS_TOKEN|TIKTOK_EVENTS_ACCESS_TOKEN|UPSTASH_REDIS_REST_TOKEN|ARCJET_KEY" $dirs; then
+            echo "A secret name or value reached a client bundle."
+            exit 1
+          fi
 
   database:
     name: Database (migrations, RLS, integration)
@@ -72,9 +130,9 @@ jobs:
       - name: Lint schema
         working-directory: packages/database
         run: bunx supabase db lint --level warning --fail-on warning
-      - name: Row Level Security tests (pgTAP)
+      - name: Row Level Security, structure and advisor tests (pgTAP)
         working-directory: packages/database
-        run: bunx supabase test db
+        run: bun run db:test
       - name: Generated types are up to date
         run: |
           (cd packages/database && bunx supabase gen types typescript --local --schema public) \
@@ -84,4 +142,4 @@ jobs:
       - name: Integration tests (auth, billing, storage)
         run: |
           eval "$(cd packages/database && bunx supabase status -o env | grep -E '^(API_URL|PUBLISHABLE_KEY|SECRET_KEY)=' | sed 's/^/export /')"
-          SUPABASE_INTEGRATION=1 bunx turbo test --filter=@repo/auth --filter=@repo/payments --filter=@repo/storage
+          SUPABASE_INTEGRATION=1 bunx turbo test --force --filter=@repo/auth --filter=@repo/payments --filter=@repo/storage

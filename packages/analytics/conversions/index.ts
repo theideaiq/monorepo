@@ -7,7 +7,7 @@ import {
   toMeta,
   toTikTok,
 } from "../events";
-import { keys } from "../keys";
+import { keys } from "./keys";
 import { buildMetaEvent, type MetaOptions, sendMetaEvents } from "./meta";
 import {
   buildTikTokEvent,

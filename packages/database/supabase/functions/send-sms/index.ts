@@ -9,7 +9,7 @@
 //   SMS_GATEWAY_URL / SMS_GATEWAY_TOKEN / SMS_SENDER_ID   (http)
 //   TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN / TWILIO_FROM   (twilio)
 //   TWILIO_WHATSAPP_FROM                                   (twilio-whatsapp)
-import { Webhook } from "standardwebhooks";
+import { Webhook } from "npm:standardwebhooks@1.0.0";
 
 interface HookPayload {
   sms: { otp: string };

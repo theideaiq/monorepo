@@ -15,12 +15,16 @@ import { Link } from "@repo/internationalization/navigation";
 import { Menu, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import { env } from "@/env";
 import { appLink } from "@/lib/links";
 import { navigationGroups } from "@/lib/navigation";
 import { LanguageSwitcher } from "./language-switcher";
 
-export const Header = () => {
+interface HeaderProperties {
+  // Passed in by the server layout so the client bundle never imports env.ts.
+  readonly appUrl: string;
+}
+
+export const Header = ({ appUrl }: HeaderProperties) => {
   const t = useTranslations("web.nav");
   const common = useTranslations("common");
   const locale = useLocale();
@@ -81,14 +85,10 @@ export const Header = () => {
             <ModeToggle labels={themeLabels} />
           </div>
           <Button asChild className="hidden md:inline-flex" variant="ghost">
-            <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/sign-in")}>
-              {t("signIn")}
-            </a>
+            <a href={appLink(appUrl, locale, "/sign-in")}>{t("signIn")}</a>
           </Button>
           <Button asChild className="hidden sm:inline-flex">
-            <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale)}>
-              {t("openApp")}
-            </a>
+            <a href={appLink(appUrl, locale)}>{t("openApp")}</a>
           </Button>
           <Button
             aria-expanded={isOpen}
@@ -127,14 +127,10 @@ export const Header = () => {
               <LanguageSwitcher />
               <ModeToggle labels={themeLabels} />
               <Button asChild className="ms-auto" variant="outline">
-                <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/sign-in")}>
-                  {t("signIn")}
-                </a>
+                <a href={appLink(appUrl, locale, "/sign-in")}>{t("signIn")}</a>
               </Button>
               <Button asChild>
-                <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale)}>
-                  {t("openApp")}
-                </a>
+                <a href={appLink(appUrl, locale)}>{t("openApp")}</a>
               </Button>
             </div>
           </nav>

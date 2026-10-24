@@ -1,5 +1,5 @@
 import { keys as ai } from "@repo/ai/keys";
-import { keys as analytics } from "@repo/analytics/keys";
+import { keys as analytics } from "@repo/analytics/conversions/keys";
 import { keys as auth } from "@repo/auth/keys";
 import { keys as database } from "@repo/database/keys";
 import { keys as droid } from "@repo/droid/keys";

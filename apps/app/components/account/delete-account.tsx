@@ -91,12 +91,15 @@ const BlockerItem = ({ blocker, onResolved }: BlockerItemProps) => {
 
   const makeOwner = useMutation({
     mutationFn: async () => {
+      if (!memberId) {
+        throw new Error("No member chosen");
+      }
       // RLS: only owners may grant the owner role.
       const { data, error } = await supabase
         .from("memberships")
         .update({ role: "owner" })
         .eq("organization_id", blocker.organization_id)
-        .eq("user_id", memberId ?? "")
+        .eq("user_id", memberId)
         .select("user_id");
       if (error || data.length === 0) {
         throw error ?? new Error("Membership not updated");

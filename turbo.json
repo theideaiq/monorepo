@@ -2,7 +2,7 @@
   "$schema": "https://turborepo.com/schema.json",
   "globalDependencies": ["**/.env.*local"],
   "ui": "tui",
-  "envMode": "loose",
+  "envMode": "strict",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -23,12 +23,8 @@
       "cache": false,
       "dependsOn": ["build:native"]
     },
-    "typecheck": {
-      "dependsOn": ["^typecheck"]
-    },
-    "test": {
-      "dependsOn": ["^test"]
-    },
+    "typecheck": {},
+    "test": {},
     "analyze": {
       "dependsOn": ["^analyze"]
     },
@@ -42,5 +38,39 @@
     "//#clean": {
       "cache": false
     }
-  }
+  },
+  "globalEnv": [
+    "CI",
+    "NODE_ENV",
+    "VERCEL",
+    "VERCEL_*",
+    "NEXT_PUBLIC_*",
+    "SKIP_ENV_VALIDATION",
+    "ANALYZE",
+    "BUILD_TARGET",
+    "CAP_SERVER_URL",
+    "SUPABASE_INTEGRATION",
+    "SUPABASE_SECRET_KEY",
+    "API_URL",
+    "PUBLISHABLE_KEY",
+    "SECRET_KEY",
+    "AI_*",
+    "GOOGLE_GENERATIVE_AI_API_KEY",
+    "OPENAI_API_KEY",
+    "ARCJET_KEY",
+    "BETTERSTACK_*",
+    "FLAGS_SECRET",
+    "CRON_SECRET",
+    "META_*",
+    "TIKTOK_*",
+    "PAYMENTS_PROVIDER",
+    "WAYL_*",
+    "RESEND_*",
+    "SENTRY_*",
+    "STORE_NOTIFICATIONS_EMAIL",
+    "TELEGRAM_*",
+    "UPSTASH_*",
+    "E2E_*",
+    "PLAYWRIGHT_*"
+  ]
 }

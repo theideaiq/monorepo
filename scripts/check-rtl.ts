@@ -17,7 +17,9 @@ import { extname, join, relative } from "node:path";
 
 const ROOTS = ["apps", "packages"];
 const IGNORED_DIRECTORIES = new Set([
+  ".claude",
   ".next",
+  ".react-email",
   ".turbo",
   "dist",
   "node_modules",
