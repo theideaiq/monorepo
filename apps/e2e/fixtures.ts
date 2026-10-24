@@ -91,7 +91,7 @@ const BASE32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 /** The current 6-digit code for a base32 TOTP secret (RFC 6238, SHA-1, 30 s). */
 export const totp = (base32: string, at = Date.now()) => {
   let bits = "";
-  for (const char of base32.replace(/=+$/, "").toUpperCase()) {
+  for (const char of base32.replace(/[=]+$/, "").toUpperCase()) {
     bits += BASE32.indexOf(char).toString(2).padStart(5, "0");
   }
   const bytes = Buffer.from(
@@ -100,7 +100,8 @@ export const totp = (base32: string, at = Date.now()) => {
   const counter = Buffer.alloc(8);
   counter.writeBigUInt64BE(BigInt(Math.floor(at / 30_000)));
   const hmac = createHmac("sha1", bytes).update(counter).digest();
-  const offset = (hmac.at(-1) ?? 0) & 0x0f;
-  const value = (hmac.readUInt32BE(offset) & 0x7f_ff_ff_ff) % 1_000_000;
+  // Dynamic truncation: the low 4 bits pick the offset, the top bit is dropped.
+  const offset = (hmac.at(-1) ?? 0) % 16;
+  const value = (hmac.readUInt32BE(offset) % 2 ** 31) % 1_000_000;
   return String(value).padStart(6, "0");
 };

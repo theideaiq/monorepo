@@ -15,7 +15,10 @@ import {
  */
 type Db = ReturnType<typeof admin>;
 
-const findUser = async (db: Db, match: (u: { email?: string; phone?: string }) => boolean) => {
+const findUser = async (
+  db: Db,
+  match: (u: { email?: string; phone?: string }) => boolean
+) => {
   for (let page = 1; page < 50; page += 1) {
     const { data, error } = await db.auth.admin.listUsers({
       page,
@@ -29,38 +32,35 @@ const findUser = async (db: Db, match: (u: { email?: string; phone?: string }) =
       return found;
     }
   }
-  return undefined;
 };
 
 const ensureUser = async (db: Db, email: string, name: string) => {
   const found = await findUser(db, (u) => u.email === email);
-  const id =
-    found?.id ??
-    (await db.auth.admin
-      .createUser({
-        email,
-        email_confirm: true,
-        password: PASSWORD,
-        user_metadata: { full_name: name },
-      })
-      .then(({ data, error }) => {
-        if (error || !data.user) {
-          throw error ?? new Error(`${email} not created`);
-        }
-        return data.user.id;
-      }));
+  let id = found?.id;
+  if (!id) {
+    const created = await db.auth.admin.createUser({
+      email,
+      email_confirm: true,
+      password: PASSWORD,
+      user_metadata: { full_name: name },
+    });
+    if (created.error || !created.data.user) {
+      throw created.error ?? new Error(`${email} not created`);
+    }
+    ({ id } = created.data.user);
+  }
   // Keeps the password known and the account usable after earlier runs.
   await db.auth.admin.updateUserById(id, {
     ban_duration: "none",
     password: PASSWORD,
   });
   // Saving the profile marks onboarding as done (updated_at > created_at).
-  const { error } = await db
+  const saved = await db
     .from("profiles")
     .update({ banned_at: null, full_name: name, locale: "en" })
     .eq("id", id);
-  if (error) {
-    throw error;
+  if (saved.error) {
+    throw saved.error;
   }
   return id;
 };

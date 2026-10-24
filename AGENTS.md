@@ -41,6 +41,7 @@ bun run test                # Vitest in every workspace
 bun run check:placeholders
 bun run check:rtl           # physical Tailwind utilities (--fix rewrites them)
 bun run check:i18n          # UI text that isn't in the messages files
+bun run --cwd apps/e2e e2e  # Playwright journeys + axe (local stack running)
 bun run build:native        # static export of apps/app for Capacitor
 bun run cap:sync            # build:native + copy into the iOS/Android projects
 bun run gen:package         # scaffold packages/<name>

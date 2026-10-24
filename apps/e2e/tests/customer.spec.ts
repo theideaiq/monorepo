@@ -8,9 +8,7 @@ import {
   watchConsole,
 } from "./helpers";
 
-test("sign up with a mobile number and a code", async ({
-  page,
-}) => {
+test("sign up with a mobile number and a code", async ({ page }) => {
   await page.goto(`${urls.app}/en/sign-up`);
   await expect(
     page.getByRole("heading", { name: "Create an account" })
@@ -78,10 +76,10 @@ test.describe("a signed-in customer", () => {
     await expect(
       page.getByRole("status").filter({ hasText: "Added to your cart." })
     ).toBeVisible();
-    const save = page.getByRole("button", { name: "Save", exact: true });
+    const save = page.getByRole("button", { exact: true, name: "Save" });
     await save.click();
     await expect(
-      page.getByRole("button", { name: "Saved", exact: true })
+      page.getByRole("button", { exact: true, name: "Saved" })
     ).toHaveAttribute("aria-pressed", "true");
 
     await page.getByRole("link", { name: "View cart" }).click();
