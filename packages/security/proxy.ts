@@ -27,6 +27,14 @@ const baseOptions: Options = {
   // Keeps the origin on cross-site requests so analytics attribution works,
   // without leaking full URLs (paths, query strings) to third parties.
   referrerPolicy: { policy: ["strict-origin-when-cross-origin"] },
+  // Two years, every subdomain, and eligible for the browsers' preload list
+  // (submit theideaiq.com once at hstspreload.org, after every subdomain
+  // serves HTTPS).
+  strictTransportSecurity: {
+    includeSubDomains: true,
+    maxAge: 63_072_000,
+    preload: true,
+  },
 };
 
 /**

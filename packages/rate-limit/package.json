@@ -11,7 +11,7 @@
     "@t3-oss/env-nextjs": "^0.13.10",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.3",
-    "zod": "^4.3.6"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

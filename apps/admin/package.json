@@ -28,7 +28,7 @@
     "import-in-the-middle": "^3.0.0",
     "lucide-react": "^1.41.0",
     "marked": "^18.0.14",
-    "next": "16.3.8",
+    "next": "16.4.3",
     "next-intl": "^4.14.9",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -36,7 +36,7 @@
     "require-in-the-middle": "8.0.1",
     "server-only": "^0.0.1",
     "sonner": "^2.0.7",
-    "zod": "^4.3.6"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",

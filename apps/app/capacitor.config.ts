@@ -1,5 +1,5 @@
 import type { CapacitorConfig } from "@capacitor/cli";
-import project from "../../packages/config/project.json";
+import project from "@repo/config/project.json" with { type: "json" };
 
 if (project.bundleId.startsWith("{{")) {
   throw new Error(
