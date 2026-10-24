@@ -823,7 +823,7 @@
       "title": "Orders",
       "detail": "Order",
       "orderNumber": "Order #{number}",
-      "total": "{count} orders",
+      "total": "Total: {count}",
       "search": "Order number, name or phone",
       "status": "Status",
       "anyStatus": "All statuses",
@@ -904,7 +904,7 @@
     "customers": {
       "title": "Customers",
       "detail": "Customer",
-      "count": "{count} customers",
+      "count": "Total: {count}",
       "search": "Name or user ID",
       "crmStatus": "CRM status",
       "anyStatus": "Any CRM status",

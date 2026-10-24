@@ -823,7 +823,7 @@
       "title": "الطلبات",
       "detail": "الطلب",
       "orderNumber": "الطلب رقم {number}",
-      "total": "{count} طلب",
+      "total": "الإجمالي: {count}",
       "search": "رقم الطلب أو الاسم أو الهاتف",
       "status": "الحالة",
       "anyStatus": "كل الحالات",
@@ -904,7 +904,7 @@
     "customers": {
       "title": "العملاء",
       "detail": "العميل",
-      "count": "{count} عميل",
+      "count": "الإجمالي: {count}",
       "search": "الاسم أو معرّف المستخدم",
       "crmStatus": "حالة العلاقة",
       "anyStatus": "كل حالات العلاقة",
