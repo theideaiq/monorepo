@@ -15,7 +15,7 @@ export const escapeHtml = (value: string) =>
   value.replace(HTML_SPECIAL, (char) => HTML_ESCAPES[char] ?? char);
 
 /**
- * Markdown → HTML for previews of posts, campaigns and submissions.
+ * Markdown → HTML for previews of posts and submissions.
  * Submissions are written by members, so raw HTML is shown as text, and
  * links and images only keep http(s), mailto, tel and relative URLs.
  */

@@ -52,7 +52,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(37);
+select plan(39);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- U and V are customers, P is support, F is finance.
@@ -244,8 +244,6 @@ select pg_temp.reset_role();
 insert into public.chart_of_accounts (id, code, name, type) values
   ('62000000-0000-0000-0000-000000000001', '1000', 'Cash', 'asset'),
   ('62000000-0000-0000-0000-000000000002', '4000', 'Sales', 'revenue');
-insert into public.fixed_assets (name, purchase_date, cost, salvage_value, useful_life_months)
-values ('Laptop', current_date - interval '12 months', 1200000, 0, 24);
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000b4', 'aal2');
 select lives_ok(
@@ -263,13 +261,37 @@ select is(
   (select sum(revenue)::int from public.ledger_monthly_summary(current_date - 31, current_date, 'forecast')),
   500, 'forecasts have their own summary'
 );
-select is(
-  (select book_value from public.fixed_asset_schedule()),
-  600000::bigint, 'straight-line depreciation halves a 2-year asset after a year'
+select throws_ok(
+  $$ select * from archive.fixed_assets $$,
+  '42501', null, 'finance staff cannot reach the retired fixed assets'
 );
 
+-- ── Newsletter contacts (Resend sync) ───────────────────────────────────────
+
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000b1');
-select is((select count(*)::int from public.fixed_assets), 0, 'customers cannot see fixed assets');
+update public.profiles set marketing_opt_in = true
+  where id = '00000000-0000-0000-0000-0000000000b1';
+select throws_ok(
+  $$ select * from public.newsletter_audience() $$,
+  '42501', null, 'customers cannot list the newsletter audience'
+);
+select throws_ok(
+  $$ select public.mark_newsletter_synced(array['00000000-0000-0000-0000-0000000000b1']::uuid[]) $$,
+  '42501', null, 'customers cannot mark contacts as synced'
+);
+
+-- apps/api runs these as the service role.
+select pg_temp.reset_role();
+select public.mark_newsletter_synced(array['00000000-0000-0000-0000-0000000000b1']::uuid[]);
+select ok(
+  has_function_privilege('service_role', 'public.newsletter_audience()', 'execute')
+    and has_function_privilege('service_role', 'public.mark_newsletter_synced(uuid[])', 'execute')
+    and (select marketing_opt_in and opt_in_changed_at is not null and synced_at is not null
+           and email = 'u@example.iq'
+         from public.newsletter_audience()
+         where user_id = '00000000-0000-0000-0000-0000000000b1'),
+  'opting in is stamped, and the sync sees it with the email and sync time'
+);
 
 select * from finish();
 rollback;
