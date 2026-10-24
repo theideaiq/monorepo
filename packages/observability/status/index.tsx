@@ -1,9 +1,6 @@
-import "server-only";
-import { keys } from "../keys";
-import type { BetterStackResponse } from "./types";
+import type { SystemStatus } from "./types";
 
-const apiKey = keys().BETTERSTACK_API_KEY;
-const url = keys().BETTERSTACK_URL;
+export type { SystemStatus } from "./types";
 
 export interface StatusLabels {
   degraded: string;
@@ -12,76 +9,39 @@ export interface StatusLabels {
   unknown: string;
 }
 
-const defaultLabels: StatusLabels = {
-  degraded: "Degraded performance",
-  operational: "All systems normal",
-  partial: "Partial outage",
-  unknown: "Unable to fetch status",
+const colors: Record<SystemStatus["state"], string> = {
+  degraded: "bg-destructive",
+  operational: "bg-success",
+  partial: "bg-warning",
+  unknown: "bg-muted-foreground",
 };
 
 interface StatusProps {
-  /** Translated texts; English by default. */
-  readonly labels?: StatusLabels;
+  /** Translated texts. */
+  readonly labels: StatusLabels;
+  /** From `GET /status` on apps/api (`fetchStatus` in ./server). */
+  readonly status: SystemStatus;
 }
 
-export const Status = async ({ labels = defaultLabels }: StatusProps) => {
-  if (!(apiKey && url)) {
-    return null;
-  }
-
-  let statusColor = "bg-muted-foreground";
-  let statusLabel = labels.unknown;
-
-  try {
-    const response = await fetch(
-      "https://uptime.betterstack.com/api/v2/monitors",
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch status");
-    }
-
-    const { data } = (await response.json()) as BetterStackResponse;
-
-    const status =
-      data.filter((monitor) => monitor.attributes.status === "up").length /
-      data.length;
-
-    if (status === 0) {
-      statusColor = "bg-destructive";
-      statusLabel = labels.degraded;
-    } else if (status < 1) {
-      statusColor = "bg-warning";
-      statusLabel = labels.partial;
-    } else {
-      statusColor = "bg-success";
-      statusLabel = labels.operational;
-    }
-  } catch {
-    // Unreachable or misconfigured: keep the "unknown" status.
-  }
-
+/** A dot and a label linking to the public status page. */
+export const Status = ({ labels, status }: StatusProps) => {
+  const color = colors[status.state];
   return (
     <a
       className="flex items-center gap-3 font-medium text-sm"
-      href={url}
+      href={status.url}
       rel="noreferrer"
       target="_blank"
     >
       <span className="relative flex h-2 w-2">
         <span
-          className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${statusColor}`}
+          className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${color}`}
         />
         <span
-          className={`relative inline-flex h-2 w-2 rounded-full ${statusColor}`}
+          className={`relative inline-flex h-2 w-2 rounded-full ${color}`}
         />
       </span>
-      <span className="text-muted-foreground">{statusLabel}</span>
+      <span className="text-muted-foreground">{labels[status.state]}</span>
     </a>
   );
 };

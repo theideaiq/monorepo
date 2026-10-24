@@ -1,8 +1,9 @@
 import { project } from "@repo/config";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import { Link } from "@repo/internationalization/navigation";
-import { Status } from "@repo/observability/status";
 import { getTranslations } from "next-intl/server";
+import { SystemStatusBadge } from "@/components/system-status";
+import { env } from "@/env";
 import { legalDocuments } from "@/lib/legal";
 import { telegram } from "@/lib/links";
 import { navigationGroups } from "@/lib/navigation";
@@ -40,7 +41,8 @@ export const Footer = async () => {
               {t("web.footer.telegram")}
             </a>
           </div>
-          <Status
+          <SystemStatusBadge
+            apiUrl={env.NEXT_PUBLIC_API_URL}
             labels={{
               degraded: t("common.status.degraded"),
               operational: t("common.status.operational"),
