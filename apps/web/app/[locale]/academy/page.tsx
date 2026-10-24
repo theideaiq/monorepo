@@ -1,3 +1,5 @@
+import { Highlight } from "@repo/design-system/components/brand/highlight";
+import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale, Messages } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
@@ -37,7 +39,7 @@ const Academy = async ({ params }: AcademyProps) => {
       </PageHero>
 
       <Section title={t("academy.tracks.title")}>
-        <p className="mb-6 rounded-lg border border-brand/40 bg-brand/10 p-4 text-sm">
+        <p className="mb-6 rounded-md border border-brand/40 bg-brand/10 p-4 text-sm">
           {t("academy.status")}
         </p>
         <FeatureGrid
@@ -70,17 +72,15 @@ const Academy = async ({ params }: AcademyProps) => {
         </p>
       </Section>
 
-      <Section>
-        <div className="flex flex-col items-center gap-4 rounded-2xl border bg-muted/40 p-10 text-center">
-          <h2 className="font-bold text-2xl">{t("academy.cta.title")}</h2>
-          <p className="max-w-xl text-muted-foreground">
-            {t("academy.cta.description")}
-          </p>
-          <Button asChild>
+      <PinkBand
+        action={
+          <Button asChild size="lg" variant="brand">
             <Link href="/contact?topic=academy">{t("academy.cta.button")}</Link>
           </Button>
-        </div>
-      </Section>
+        }
+        description={t("academy.cta.description")}
+        title={<Highlight>{t("academy.cta.title")}</Highlight>}
+      />
     </>
   );
 };

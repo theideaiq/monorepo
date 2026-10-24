@@ -45,7 +45,7 @@ export const PendingInvitations = ({ onJoined }: PendingInvitationsProps) => {
   }
 
   return (
-    <section className="grid gap-3 rounded-lg border p-4">
+    <section className="grid gap-3 rounded-md border p-4">
       <div className="grid gap-1">
         <h2 className="font-medium">{t("business.invitations.title")}</h2>
         <p className="text-muted-foreground text-sm">

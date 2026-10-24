@@ -43,7 +43,8 @@
       "sidebar": "Sidebar",
       "sidebarDescription": "Displays the mobile sidebar.",
       "toggleSidebar": "Toggle sidebar"
-    }
+    },
+    "brandLine": "Switch on."
   },
   "auth": {
     "codeLabel": "Verification code",
@@ -138,11 +139,11 @@
       "plus": "The IDEA Plus",
       "academy": "Academy",
       "suite": "The IDEA Suite",
-      "club": "The Club",
+      "club": "The IDEA Club",
       "news": "News",
       "events": "Events",
       "journal": "Journal",
-      "droid": "Droid bot",
+      "droid": "The IDEA Droid",
       "about": "Our story",
       "careers": "Careers",
       "faq": "FAQ",
@@ -185,7 +186,8 @@
       "comingSoon": "In preparation"
     },
     "appCta": {
-      "title": "One account for the whole ecosystem",
+      "title": "One account for",
+      "highlight": "the whole ecosystem",
       "description": "Shop the Megastore, manage your rentals with The IDEA Plus, RSVP to events and submit your work, all from The IDEA app.",
       "button": "Open the app",
       "signIn": "Sign in"
@@ -193,7 +195,7 @@
     "home": {
       "meta": {
         "title": "Iraq's digital ecosystem",
-        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, The IDEA Plus rentals, the Academy, The IDEA Suite for companies and The Club. Based in Baghdad, serving all of Iraq."
+        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, The IDEA Plus rentals, the Academy, The IDEA Suite for companies and The IDEA Club. Based in Baghdad, serving all of Iraq."
       },
       "hero": {
         "badge": "The digital ecosystem for Iraq",
@@ -223,7 +225,7 @@
       },
       "events": {
         "title": "Next events",
-        "empty": "No upcoming events right now. Follow The Club on Telegram to hear about the next one."
+        "empty": "No upcoming events right now. Follow The IDEA Club on Telegram to hear about the next one."
       },
       "values": {
         "title": "Built for the",
@@ -341,13 +343,14 @@
         ]
       },
       "plans": {
-        "title": "Plans",
+        "choose": "Choose {plan}",
         "description": "Billed monthly through Wayl. Cancel any time from your account.",
+        "empty": "Plans will be announced soon.",
+        "featured": "Recommended",
         "perMonth": "per month",
         "perYear": "per year",
         "slots": "{count, plural, one {{slots} item at a time} other {{slots} items at a time}}",
-        "choose": "Choose {plan}",
-        "empty": "Plans will be announced soon."
+        "title": "Plans"
       },
       "catalog": {
         "title": "From the rental catalog",
@@ -449,7 +452,8 @@
         "empty": "Contact us for a business plan tailored to your company."
       },
       "cta": {
-        "title": "Talk to our team",
+        "title": "Talk to",
+        "highlight": "our team",
         "description": "Tell us about your company and what you need.",
         "contact": "Contact sales",
         "app": "Set up your organization"
@@ -457,7 +461,7 @@
     },
     "club": {
       "meta": {
-        "title": "The Club — The IDEA's community on Telegram",
+        "title": "The IDEA Club — our community on Telegram",
         "description": "The IDEA Club is a digital clubhouse on Telegram for innovators, artists, gamers and thinkers. Pick your rooms and join the conversation."
       },
       "title": "Welcome to",
@@ -502,26 +506,27 @@
       "guidelines": "Before you join, read our community guidelines.",
       "guidelinesLink": "Community guidelines",
       "cta": {
-        "title": "Ready to jump in?",
+        "title": "Ready to",
+        "highlight": "jump in?",
         "description": "Don't miss the next big idea or late-night gaming session.",
         "button": "Open Telegram"
       }
     },
     "droid": {
       "meta": {
-        "title": "Droid — The IDEA's Telegram bot",
-        "description": "Droid (@TheIdeaDroidBot) is The IDEA's Telegram bot: it keeps our community rooms safe, answers common questions, finds products and helps as an AI assistant."
+        "title": "The IDEA Droid — our Telegram bot",
+        "description": "The IDEA Droid (@TheIdeaDroidBot) is our Telegram bot: it keeps our community rooms safe, answers common questions, finds products and helps as an AI assistant."
       },
       "badge": "@TheIdeaDroidBot",
-      "title": "Meet Droid",
-      "subtitle": "Our Telegram bot keeps The Club's rooms friendly, answers your questions and helps you find what you're looking for.",
+      "title": "Meet The IDEA Droid",
+      "subtitle": "Our Telegram bot keeps The IDEA Club's rooms friendly, answers your questions and helps you find what you're looking for.",
       "open": "Open in Telegram",
       "features": {
-        "title": "What Droid does",
+        "title": "What The IDEA Droid does",
         "items": [
           {
             "title": "Community moderation",
-            "description": "Helps keep The Club's rooms safe and on topic, following our community guidelines."
+            "description": "Helps keep The IDEA Club's rooms safe and on topic, following our community guidelines."
           },
           {
             "title": "Answers to common questions",
@@ -546,7 +551,7 @@
         "description": "Our mini-game: catch the falling light bulbs, dodge the bugs and keep your energy up. Best played inside Telegram, but it works in your browser too.",
         "play": "Play Spark Catcher"
       },
-      "privacy": "Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
+      "privacy": "The IDEA Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
       "privacyLink": "Privacy policy"
     },
     "about": {
@@ -609,7 +614,7 @@
         "description": "Answers about ordering from the Megastore, The IDEA Plus rentals, payments, delivery and your account (The IDEA Pass)."
       },
       "title": "Frequently asked questions",
-      "description": "Can't find your answer? Contact us or ask Droid on Telegram.",
+      "description": "Can't find your answer? Contact us or ask The IDEA Droid on Telegram.",
       "contact": "Contact us",
       "groups": [
         {
@@ -685,7 +690,7 @@
         "email": "Email",
         "emailNote": "For any question; we reply in Arabic or English.",
         "telegram": "Telegram",
-        "telegramNote": "Chat with Droid, our bot, or join The Club.",
+        "telegramNote": "Chat with The IDEA Droid, our bot, or join The IDEA Club.",
         "location": "Location",
         "address": "Baghdad, Iraq",
         "support": "Support tickets",
@@ -746,7 +751,7 @@
         },
         "community": {
           "title": "Community guidelines",
-          "description": "The rules for The Club's rooms on Telegram, comments and member submissions."
+          "description": "The rules for The IDEA Club's rooms on Telegram, comments and member submissions."
         }
       }
     },
@@ -802,8 +807,7 @@
   "app": {
     "meta": {
       "title": "The IDEA Spark",
-      "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place.",
-      "badge": "Spark"
+      "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place."
     },
     "nav": {
       "label": "Navigation",
@@ -1493,7 +1497,7 @@
       "plus": "The IDEA Plus",
       "academy": "Academy",
       "suite": "The IDEA Suite",
-      "club": "The Club"
+      "club": "The IDEA Club"
     },
     "ticketStatus": {
       "open": "Open",
@@ -1574,13 +1578,26 @@
         "system": "Notice"
       },
       "fallbackBody": "Open to see the details."
+    },
+    "conditionBulb": {
+      "like-new": "Like new",
+      "new": "New",
+      "used": "Used"
+    },
+    "card": {
+      "buy": "Buy",
+      "rent": "Rent with The IDEA Plus"
+    },
+    "souq": {
+      "currency": "IQD",
+      "market": "In the market",
+      "withUs": "With us"
     }
   },
   "admin": {
     "meta": {
       "title": "The IDEA back office",
-      "description": "Staff console for The IDEA.",
-      "badge": "Staff"
+      "description": "Staff console for The IDEA."
     },
     "noAccess": {
       "title": "No access",
@@ -2420,7 +2437,7 @@
         "reopen": "Reopen"
       },
       "chats": {
-        "description": "Groups Droid moderates. A ban in one moderated group applies in all of them.",
+        "description": "Groups The IDEA Droid moderates. A ban in one moderated group applies in all of them.",
         "empty": "No groups yet. Add the bot to a group as an administrator, then add the group here.",
         "new": "Add a group",
         "id": "Chat ID",
@@ -2443,7 +2460,7 @@
         "lastSeen": "Last seen"
       },
       "faq": {
-        "description": "Droid offers these answers in private chats, in the member's language.",
+        "description": "The IDEA Droid offers these answers in private chats, in the member's language.",
         "new": "New question",
         "topic": "Topic",
         "topics": {
@@ -2618,7 +2635,6 @@
       "title": "The IDEA Pass",
       "description": "One account for everything at The IDEA: the app, the store, The IDEA Plus and more."
     },
-    "badge": "Pass",
     "continueTo": "You'll continue to {host}.",
     "signIn": {
       "title": "Sign in to The IDEA Pass",

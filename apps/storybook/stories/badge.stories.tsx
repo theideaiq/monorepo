@@ -59,3 +59,33 @@ export const Outline: Story = {
     variant: "outline",
   },
 };
+
+const tones = [
+  "neutral",
+  "brand",
+  "highlight",
+  "plus",
+  "academy",
+  "suite",
+  "club",
+  "launcher",
+  "success",
+  "warning",
+  "danger",
+] as const;
+
+/**
+ * Every tone. Product accents (plus, academy, suite, club, launcher) only
+ * on their own line's pages; status tones always carry an icon and a word.
+ */
+export const Tones: Story = {
+  render: () => (
+    <div className="flex max-w-md flex-wrap gap-2">
+      {tones.map((tone) => (
+        <Badge key={tone} variant={tone}>
+          {tone}
+        </Badge>
+      ))}
+    </div>
+  ),
+};

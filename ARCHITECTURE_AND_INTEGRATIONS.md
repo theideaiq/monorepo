@@ -699,7 +699,8 @@ permissions, icons, `capacitor.config.ts`).
   `cap:sync` with the Spark URL and the offline text from the messages
   files (`app.native.offline`). `shell.js` is git-ignored.
 - `apps/app/native/assets/`: icon and splash sources for
-  `@capacitor/assets` (the light-bulb mark on `#0f1014`).
+  `@capacitor/assets`: the yellow bulb on The IDEA Pink (`#D81B60`), rendered
+  from `docs/brand/logos` (brand v1.0).
 - `apps/app/lib/native/`: client helpers: `push.ts` and
   `use-native-push.ts` (push registration), `share.ts` (share sheet with
   Web Share and clipboard fallbacks), `checkout.ts`

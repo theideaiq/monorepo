@@ -2,10 +2,13 @@
 
 import { localized } from "@repo/commerce";
 import type { ProductCard as ProductCardData } from "@repo/commerce/catalog";
+import { buttonVariants } from "@repo/design-system/components/ui/button";
+import { cn } from "@repo/design-system/lib/utils";
 import { Link } from "@repo/internationalization/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { Rating } from "@/lib/review-queries";
 import { Price } from "./price";
+import { ProductConditionBulb } from "./product-condition-bulb";
 import { ProductImage } from "./product-image";
 import { RatingSummary } from "./stars";
 import { StockBadge } from "./stock-badge";
@@ -20,15 +23,21 @@ interface ProductCardProps {
 export const productHref = (slug: string) =>
   `/store/${encodeURIComponent(slug)}`;
 
-/** A catalog tile linking to the product page, with a wishlist heart. */
+/**
+ * A catalog tile linking to the product page, with a wishlist heart: the
+ * image on a sunken ground, a 2-line name, the price (with any saving), the condition bulb for used and rental items, and a full-width
+ * call to action (violet for rentals).
+ */
 export const ProductCard = ({ product, rating }: ProductCardProps) => {
   const locale = useLocale();
+  const t = useTranslations("store");
   const name = localized(product, "name", locale);
+  const rental = product.kind === "rental";
 
   return (
     <li className="relative">
       <Link
-        className="group grid gap-2 rounded-xl p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="group grid gap-2 rounded-lg p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
         href={productHref(product.slug)}
       >
         <ProductImage
@@ -45,7 +54,19 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
           />
           {rating ? <RatingSummary rating={rating} /> : null}
           <StockBadge count={product.stock_count} />
+          <ProductConditionBulb product={product} />
         </div>
+        <span
+          className={cn(
+            buttonVariants({
+              size: "sm",
+              variant: rental ? "plus" : "default",
+            }),
+            "w-full"
+          )}
+        >
+          {rental ? t("card.rent") : t("card.buy")}
+        </span>
       </Link>
       <WishlistButton
         className="absolute end-3 top-3 size-8 rounded-full bg-background/80 shadow-sm backdrop-blur"

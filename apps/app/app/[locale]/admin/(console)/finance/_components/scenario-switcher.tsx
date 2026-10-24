@@ -22,7 +22,7 @@ export const ScenarioSwitcher = async ({
   return (
     <nav
       aria-label={t("scenario")}
-      className="inline-flex w-fit rounded-lg border bg-muted/40 p-0.5 text-sm"
+      className="inline-flex w-fit rounded-md border bg-muted/40 p-0.5 text-sm"
     >
       {scenarios.map((scenario) => (
         <Link

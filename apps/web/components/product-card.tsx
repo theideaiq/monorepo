@@ -1,5 +1,7 @@
 import { discountPercent, formatPrice, localized } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
+import { buttonVariants } from "@repo/design-system/components/ui/button";
+import { cn } from "@repo/design-system/lib/utils";
 import type { Locale } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
@@ -7,6 +9,7 @@ import { getTranslations } from "next-intl/server";
 import { imageUrl, type ProductCard as Product } from "@/lib/data";
 import { formatRating, type Rating } from "@/lib/reviews";
 import { CoverImage } from "./cover-image";
+import { ProductConditionBulb } from "./product-condition-bulb";
 import { Stars } from "./stars";
 
 const LOW_STOCK = 5;
@@ -20,7 +23,12 @@ interface ProductCardProps {
   readonly rating?: Rating | null;
 }
 
-/** A product tile linking to its page on this site. */
+/**
+ * A product tile linking to its page on this site: the image on a sunken
+ * ground, badges top-start, a 2-line name, the price, the condition bulb
+ * for used and rental items, and a full-width call to action (violet for
+ * rentals).
+ */
 export const ProductCard = async ({
   locale,
   planLabel,
@@ -37,7 +45,7 @@ export const ProductCard = async ({
 
   return (
     <Link
-      className="group flex flex-col gap-3 rounded-xl border bg-card p-3 transition-shadow hover:shadow-md"
+      className="group flex flex-col gap-3 rounded-lg border bg-card p-3 shadow-1 transition-shadow hover:shadow-2"
       href={`/store/${product.slug}`}
     >
       <div className="relative">
@@ -48,20 +56,11 @@ export const ProductCard = async ({
               {t("price.save", { percent: formatNumber(discount, locale) })}
             </Badge>
           ) : null}
-          {product.condition === "new" ? null : (
-            <Badge variant="secondary">
-              {t(`condition.${product.condition}`)}
-            </Badge>
-          )}
-          {planLabel ? (
-            <Badge className="border-transparent bg-brand text-brand-foreground">
-              {planLabel}
-            </Badge>
-          ) : null}
+          {planLabel ? <Badge variant="highlight">{planLabel}</Badge> : null}
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-1 px-1">
-        <h3 className="line-clamp-2 font-medium group-hover:text-primary">
+        <h3 className="line-clamp-2 font-medium group-hover:text-pink-text">
           {name}
         </h3>
         {rating ? (
@@ -91,11 +90,11 @@ export const ProductCard = async ({
           <p className="text-muted-foreground text-sm">{t("kind.rental")}</p>
         ) : (
           <p className="flex flex-wrap items-baseline gap-2">
-            <span className="font-semibold">
+            <span className="font-mono font-semibold tabular-nums">
               {formatPrice(product.price, locale)}
             </span>
             {discount > 0 && product.compare_at_price ? (
-              <span className="text-muted-foreground text-sm line-through">
+              <span className="font-mono text-muted-foreground text-sm tabular-nums line-through">
                 {formatPrice(product.compare_at_price, locale)}
               </span>
             ) : null}
@@ -110,7 +109,16 @@ export const ProductCard = async ({
         >
           {stockLabel(t, product.stock_count, locale)}
         </p>
+        <ProductConditionBulb locale={locale} product={product} />
       </div>
+      <span
+        className={cn(
+          buttonVariants({ variant: rental ? "plus" : "default" }),
+          "w-full"
+        )}
+      >
+        {rental ? t("card.rent") : t("card.buy")}
+      </span>
     </Link>
   );
 };

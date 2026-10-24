@@ -49,7 +49,7 @@ const PlansPage = async () => {
         {(plans ?? []).length === 0 ? (
           <EmptyState title={t("plans.empty")} />
         ) : (
-          <div className="rounded-xl border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>

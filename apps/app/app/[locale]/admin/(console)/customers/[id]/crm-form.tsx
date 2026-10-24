@@ -41,7 +41,7 @@ export const CrmForm = ({
 
   return (
     <div className="grid gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/50 p-3 text-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 p-3 text-sm">
         <span>
           {lastContactedLabel
             ? t("lastContactedOn", { date: lastContactedLabel })

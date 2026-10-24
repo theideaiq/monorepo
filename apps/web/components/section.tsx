@@ -34,7 +34,7 @@ export const Section = ({
         </div>
         {action ? (
           <Link
-            className="inline-flex items-center gap-2 font-medium text-primary text-sm hover:underline"
+            className="inline-flex items-center gap-2 font-medium text-pink-text text-sm hover:underline"
             href={action.href}
           >
             {action.label}
@@ -49,7 +49,7 @@ export const Section = ({
 
 /** A muted, centred note for empty lists. */
 export const EmptyState = ({ children }: { readonly children: ReactNode }) => (
-  <p className="rounded-lg border border-dashed p-8 text-center text-muted-foreground">
+  <p className="rounded-md border border-dashed p-8 text-center text-muted-foreground">
     {children}
   </p>
 );

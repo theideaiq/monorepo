@@ -31,13 +31,14 @@ const ar = {
   floodWarning:
     "{name}، أرسلت الرسالة نفسها عدة مرات. تم إيقافك عن الكتابة لخمس دقائق.",
   linkApp: "تطبيق The IDEA",
-  linkClub: "The Club على تيليجرام",
+  linkClub: "The IDEA Club على تيليجرام",
   links: "روابط",
   linksTitle: "روابط The IDEA:",
   linkWebsite: "الموقع",
-  menuGreeting: "أهلاً {name}! أنا Droid، مساعد The IDEA. كيف يمكنني مساعدتك؟",
+  menuGreeting:
+    "أهلاً {name}! أنا The IDEA Droid، مساعدك من The IDEA. كيف يمكنني مساعدتك؟",
   menuGreetingAi:
-    "أهلاً {name}! أنا Droid، مساعد The IDEA. اختر من القائمة أو اكتب سؤالك مباشرة.",
+    "أهلاً {name}! أنا The IDEA Droid، مساعدك من The IDEA. اختر من القائمة أو اكتب سؤالك مباشرة.",
   newPost: "منشور جديد في {channel}:",
   newPostOpen: "افتح المنشور",
   newsletterNowOff: "أوقفت النشرة الإخبارية. لن نرسل لك منشوراتنا الجديدة.",
@@ -91,13 +92,14 @@ const en: Record<MessageKey, string> = {
   floodWarning:
     "{name}, you sent the same message several times. You're muted for five minutes.",
   linkApp: "The IDEA app",
-  linkClub: "The Club on Telegram",
+  linkClub: "The IDEA Club on Telegram",
   links: "Links",
   linksTitle: "The IDEA links:",
   linkWebsite: "Website",
-  menuGreeting: "Hi {name}! I'm Droid, The IDEA's assistant. How can I help?",
+  menuGreeting:
+    "Hi {name}! I'm The IDEA Droid, your assistant. How can I help?",
   menuGreetingAi:
-    "Hi {name}! I'm Droid, The IDEA's assistant. Pick an option or just type your question.",
+    "Hi {name}! I'm The IDEA Droid, your assistant. Pick an option or just type your question.",
   newPost: "New post in {channel}:",
   newPostOpen: "Open the post",
   newsletterNowOff: "Newsletter turned off. We won't send you new posts.",

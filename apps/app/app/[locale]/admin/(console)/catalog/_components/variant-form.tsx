@@ -24,7 +24,7 @@ export const VariantForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <div className="grid gap-3 rounded-lg border p-3">
+    <div className="grid gap-3 rounded-md border p-3">
       <ActionForm action={saveVariant} resetOnSuccess={!variant}>
         <input name="productId" type="hidden" value={productId} />
         {variant ? <input name="id" type="hidden" value={variant.id} /> : null}

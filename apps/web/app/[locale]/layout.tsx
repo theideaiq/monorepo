@@ -1,10 +1,12 @@
 import "./styles.css";
 import { AnalyticsProvider } from "@repo/analytics/provider";
 import { DesignSystemProvider } from "@repo/design-system";
+import { themeColor } from "@repo/design-system/lib/brand";
 import { fonts } from "@repo/design-system/lib/fonts";
 import { cn } from "@repo/design-system/lib/utils";
 import { getDirection, locales } from "@repo/internationalization";
 import { routing } from "@repo/internationalization/routing";
+import type { Viewport } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -20,6 +22,8 @@ interface RootLayoutProperties {
     locale: string;
   }>;
 }
+
+export const viewport: Viewport = { themeColor };
 
 export const generateStaticParams = () => locales.map((locale) => ({ locale }));
 

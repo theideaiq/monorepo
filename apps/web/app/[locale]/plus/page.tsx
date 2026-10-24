@@ -1,3 +1,6 @@
+import { Highlight } from "@repo/design-system/components/brand/highlight";
+import { PinkBand } from "@repo/design-system/components/brand/pink-band";
+import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale, Messages } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
@@ -65,7 +68,7 @@ const Plus = async ({ params }: PlusProps) => {
         <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, index) => (
             <li
-              className="flex flex-col gap-2 rounded-xl border p-5"
+              className="flex flex-col gap-2 rounded-lg border p-5"
               key={step.title}
             >
               <span className="flex size-9 items-center justify-center rounded-full bg-brand font-bold text-brand-foreground">
@@ -87,8 +90,9 @@ const Plus = async ({ params }: PlusProps) => {
       >
         {plans.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-3">
-            {plans.map((plan) => (
+            {plans.map((plan, index) => (
               <PlanCard
+                featured={plans.length >= 3 && index === 1}
                 href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/plus", {
                   plan: plan.id,
                 })}
@@ -108,12 +112,12 @@ const Plus = async ({ params }: PlusProps) => {
           <ol className="grid gap-4 md:grid-cols-3">
             {tiers.map((plan, index) => (
               <li
-                className="flex flex-col gap-3 rounded-xl border p-5"
+                className="flex flex-col gap-3 rounded-lg border p-5"
                 key={plan.id}
               >
-                <span className="w-fit rounded-full bg-brand px-3 py-1 font-semibold text-brand-foreground text-sm">
+                <Badge className="px-3 py-1 text-sm" variant="plus">
                   {plan.name}
-                </span>
+                </Badge>
                 <p className="text-muted-foreground text-sm">
                   {index === 0
                     ? t("tiers.entry")
@@ -157,6 +161,22 @@ const Plus = async ({ params }: PlusProps) => {
           <EmptyState>{t("catalog.empty")}</EmptyState>
         )}
       </Section>
+
+      <PinkBand
+        action={
+          <Button asChild className="gap-2" size="lg" variant="brand">
+            <a href={plusUrl}>
+              {t("cta")} <MoveRight className="size-4 rtl:rotate-180" />
+            </a>
+          </Button>
+        }
+        description={t("subtitle")}
+        title={
+          <>
+            {t("title")} <Highlight>{t("highlight")}</Highlight>
+          </>
+        }
+      />
     </>
   );
 };

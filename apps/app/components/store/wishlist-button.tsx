@@ -47,7 +47,7 @@ export const WishlistButton = ({
       variant={withLabel ? "outline" : "secondary"}
     >
       <HeartIcon
-        className={cn(saved && "fill-primary text-primary")}
+        className={cn(saved && "fill-primary text-pink-text")}
         data-saved={saved}
       />
       {withLabel ? text : null}

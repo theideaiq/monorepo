@@ -65,7 +65,7 @@ export const EmptyState = ({
   readonly children?: ReactNode;
   readonly title: ReactNode;
 }) => (
-  <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-10 text-center">
+  <div className="flex flex-col items-center justify-center gap-2 rounded-md border border-dashed p-10 text-center">
     <InboxIcon className="size-8 text-muted-foreground" />
     <p className="font-medium">{title}</p>
     {children}
@@ -88,7 +88,7 @@ export const Panel = ({
 }) => (
   <section
     className={cn(
-      "grid content-start gap-4 rounded-xl border bg-card p-4 text-card-foreground md:p-5",
+      "grid content-start gap-4 rounded-lg border bg-card p-4 text-card-foreground md:p-5",
       className
     )}
   >

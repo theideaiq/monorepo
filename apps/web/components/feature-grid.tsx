@@ -18,11 +18,11 @@ export const FeatureGrid = ({
   <ul className={cn("grid gap-4 sm:grid-cols-2 lg:grid-cols-4", className)}>
     {items.map(({ description, icon: Icon, title }) => (
       <li
-        className="flex flex-col gap-3 rounded-xl border bg-card p-5"
+        className="flex flex-col gap-3 rounded-lg border bg-card p-5"
         key={title}
       >
         {Icon ? (
-          <span className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <span className="flex size-10 items-center justify-center rounded-md bg-primary/10 text-pink-text">
             <Icon aria-hidden="true" className="size-5" />
           </span>
         ) : null}

@@ -1,5 +1,6 @@
 import "../styles.css";
 import { DesignSystemProvider } from "@repo/design-system";
+import { themeColor } from "@repo/design-system/lib/brand";
 import { fonts } from "@repo/design-system/lib/fonts";
 import { getDirection } from "@repo/internationalization";
 import { routing } from "@repo/internationalization/routing";
@@ -31,7 +32,10 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 // Draw under the iOS notch / Android status bar; styles.css adds the insets.
-export const viewport: Viewport = { viewportFit: "cover" };
+export const viewport: Viewport = {
+  themeColor,
+  viewportFit: "cover",
+};
 
 /**
  * The root layout of The IDEA Spark: the language comes from the URL (the

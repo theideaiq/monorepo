@@ -27,7 +27,7 @@ export const Price = ({ className, compareAtPrice, price }: PriceProps) => {
           <span className="text-muted-foreground text-xs tabular-nums line-through">
             {formatPrice(compareAtPrice, locale)}
           </span>
-          <span className="font-medium text-primary text-xs">
+          <span className="font-medium text-pink-text text-xs">
             {t("save", { percent: formatNumber(percent, locale) })}
           </span>
         </>

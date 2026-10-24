@@ -163,7 +163,7 @@ const OrderNotices = ({
   if (justPaid || (watching && order.paid_at)) {
     return (
       <p
-        className="rounded-md bg-emerald-500/10 p-4 text-emerald-700 text-sm dark:text-emerald-300"
+        className="rounded-md bg-success/10 p-4 text-sm text-success"
         role="status"
       >
         {t("thanks")}
@@ -385,7 +385,7 @@ export const OrderDetail = ({ orderId }: OrderDetailProps) => {
                 })}
               </span>
               <Link
-                className="inline-flex items-center gap-1 text-primary text-sm hover:underline sm:ms-auto"
+                className="inline-flex items-center gap-1 text-pink-text text-sm hover:underline sm:ms-auto"
                 href={{
                   pathname: "/support/new",
                   query: { order: data.id, topic: "order" },

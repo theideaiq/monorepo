@@ -22,7 +22,7 @@ export const SellerLine = async ({
     <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground text-sm">
       <span>{t("seller", { seller })}</span>
       {verified ? (
-        <span className="inline-flex items-center gap-1 font-medium text-primary">
+        <span className="inline-flex items-center gap-1 font-medium text-pink-text">
           <BadgeCheck aria-hidden="true" className="size-4" />
           {t("verifiedSeller")}
         </span>
@@ -128,7 +128,7 @@ export const ProductReviews = async ({
       {reviews.length > 0 ? (
         <div className="flex flex-col gap-4">
           <h3 className="sr-only">{t("latest")}</h3>
-          <ul className="flex flex-col divide-y rounded-xl border">
+          <ul className="flex flex-col divide-y rounded-lg border">
             {reviews.map((review) => (
               <li className="flex flex-col gap-2 p-5" key={review.id}>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">

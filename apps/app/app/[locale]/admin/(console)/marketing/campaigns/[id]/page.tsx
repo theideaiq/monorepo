@@ -120,11 +120,11 @@ const CampaignPage = async ({
           description={t("campaigns.previewHint")}
           title={t("campaigns.preview")}
         >
-          <div className="overflow-hidden rounded-lg border">
-            <div className="bg-brand px-5 py-3 text-brand-foreground">
-              <BrandLogo className="[&_svg]:text-brand-foreground" />
+          <div className="overflow-hidden rounded-md border">
+            <div className="bg-idea-pink px-5 py-3 text-center text-on-pink">
+              <BrandLogo variant="on-pink" />
             </div>
-            <div className="bg-white p-5 text-zinc-900" dir="auto">
+            <div className="bg-white p-5 text-on-yellow" dir="auto">
               <MarkdownPreview invert={false} source={campaign.body} />
             </div>
           </div>

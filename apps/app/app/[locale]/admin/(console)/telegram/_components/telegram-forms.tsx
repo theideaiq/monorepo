@@ -25,7 +25,7 @@ export const ChatForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <div className="flex flex-wrap items-end gap-3 rounded-lg border p-3">
+    <div className="flex flex-wrap items-end gap-3 rounded-md border p-3">
       <ActionForm
         action={saveChat}
         className="flex flex-1 flex-wrap items-end gap-3"
@@ -110,7 +110,7 @@ export const FaqForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <div className="grid gap-3 rounded-lg border p-4">
+    <div className="grid gap-3 rounded-md border p-4">
       <ActionForm action={saveFaq}>
         {entry ? <input name="id" type="hidden" value={entry.id} /> : null}
         <fieldset className="grid gap-4" disabled={disabled}>

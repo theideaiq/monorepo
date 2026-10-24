@@ -77,10 +77,10 @@ const Membership = ({
   const live = subscription.data;
 
   return (
-    <Card className="border-brand/40 bg-gradient-to-br from-brand/10 to-transparent">
+    <Card className="border-2 border-plus">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <CrownIcon className="size-5 text-brand" />
+          <CrownIcon className="size-5 text-plus" />
           {t("title")}
         </CardTitle>
         <CardDescription>
@@ -204,7 +204,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
                   <ul className="grid gap-1.5">
                     {features.map((feature) => (
                       <li className="flex gap-2" key={feature}>
-                        <CheckIcon className="mt-0.5 size-4 shrink-0 text-primary" />
+                        <CheckIcon className="mt-0.5 size-4 shrink-0 text-pink-text" />
                         <span>{feature}</span>
                       </li>
                     ))}
@@ -282,7 +282,7 @@ const RentalItem = ({
       <span className="line-clamp-2 font-medium text-sm">{name}</span>
       {requiredTier ? (
         <Badge className="justify-self-start" variant="outline">
-          <CrownIcon className="text-brand" />
+          <CrownIcon className="text-plus" />
           {planName
             ? t("catalog.needsPlan", { plan: planName })
             : t("catalog.needsHigherPlan")}
@@ -296,10 +296,7 @@ const RentalItem = ({
           : t("catalog.unavailable")}
       </span>
       {request.isSuccess ? (
-        <p
-          className="text-emerald-700 text-xs dark:text-emerald-300"
-          role="status"
-        >
+        <p className="text-success text-xs" role="status">
           {t("catalog.requested")}
         </p>
       ) : (
@@ -425,7 +422,7 @@ const MyRentals = () => {
         <p className="text-muted-foreground text-sm">{t("rentals.empty")}</p>
       ) : null}
       {rentals.data?.length ? (
-        <ul className="divide-y rounded-xl border">
+        <ul className="divide-y rounded-lg border">
           {rentals.data.map((rental) => (
             <li
               className="flex flex-wrap items-center justify-between gap-3 p-4"

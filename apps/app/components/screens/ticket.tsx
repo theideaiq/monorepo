@@ -56,7 +56,7 @@ const Messages = ({ ticketId }: { readonly ticketId: string }) => {
         return (
           <li
             className={cn(
-              "grid max-w-[85%] gap-1 rounded-xl p-3 text-sm",
+              "grid max-w-[85%] gap-1 rounded-lg p-3 text-sm",
               mine
                 ? "justify-self-end bg-primary/10"
                 : "justify-self-start border bg-card"
@@ -207,7 +207,7 @@ export const Ticket = ({ ticketId }: TicketProps) => {
                 </span>
                 {data.order ? (
                   <Link
-                    className="text-primary text-sm hover:underline"
+                    className="text-pink-text text-sm hover:underline"
                     href={orderPath(data.order.id)}
                   >
                     {tCommon("orderNumber", {

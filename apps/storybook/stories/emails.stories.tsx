@@ -55,7 +55,7 @@ const email = (make: (lang: Lang) => Sample): Story => ({
             {make(lang).subject}
           </figcaption>
           <iframe
-            className="h-[760px] w-full rounded-lg border bg-white"
+            className="h-[760px] w-full rounded-md border bg-white"
             srcDoc={(loaded.html as string[])[i]}
             title={make(lang).subject}
           />

@@ -45,7 +45,7 @@ const StaffPage = async () => {
             const name = names.get(member.user_id) ?? t("unnamed");
             return (
               <div
-                className="grid gap-3 rounded-lg border p-3"
+                className="grid gap-3 rounded-md border p-3"
                 key={member.user_id}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">

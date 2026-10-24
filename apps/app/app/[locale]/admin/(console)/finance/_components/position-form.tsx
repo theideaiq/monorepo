@@ -20,7 +20,7 @@ export const PositionForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <div className="flex flex-wrap items-end gap-3 rounded-lg border p-3">
+    <div className="flex flex-wrap items-end gap-3 rounded-md border p-3">
       <ActionForm
         action={savePosition}
         className="flex flex-1 flex-wrap items-end gap-3"

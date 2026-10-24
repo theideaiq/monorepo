@@ -79,7 +79,7 @@ const ActiveOrders = () => {
   return (
     <Panel
       action={<ViewAll href="/orders" />}
-      icon={<PackageIcon className="size-5 text-primary" />}
+      icon={<PackageIcon className="size-5 text-pink-text" />}
       title={t("home.orders.title")}
     >
       {orders.isPending ? <SectionSpinner className="py-6" /> : null}
@@ -143,7 +143,7 @@ const PlusPanel = () => {
   return (
     <Panel
       action={<ViewAll href="/plus" />}
-      icon={<CrownIcon className="size-5 text-brand" />}
+      icon={<CrownIcon className="size-5 text-plus" />}
       title={t("title")}
     >
       {subscription.isPending ? <SectionSpinner className="py-6" /> : null}
@@ -218,7 +218,7 @@ const NextEvents = () => {
   return (
     <Panel
       action={<ViewAll href="/events" />}
-      icon={<CalendarDaysIcon className="size-5 text-primary" />}
+      icon={<CalendarDaysIcon className="size-5 text-pink-text" />}
       title={t("title")}
     >
       {rsvps.isPending ? <SectionSpinner className="py-6" /> : null}

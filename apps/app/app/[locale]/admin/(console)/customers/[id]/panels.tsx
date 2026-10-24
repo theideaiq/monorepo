@@ -43,7 +43,7 @@ export const OrdersPanel = async ({
     <Panel
       actions={
         <Link
-          className="text-primary text-sm hover:underline"
+          className="text-pink-text text-sm hover:underline"
           href={`/orders?customer=${id}`}
         >
           {t("allOrders")}

@@ -83,8 +83,8 @@ const EventCard = ({
             />
           </div>
         ) : (
-          <div className="flex aspect-[4/1] items-center justify-center bg-gradient-to-br from-primary/15 to-brand/15">
-            <CalendarDaysIcon className="size-8 text-primary/60" />
+          <div className="flex aspect-[4/1] items-center justify-center bg-surface-sunken">
+            <CalendarDaysIcon className="size-8 text-pink-text/60" />
           </div>
         )}
         <CardHeader>

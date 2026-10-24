@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from "@storybook/react";
  */
 const meta: Meta<typeof ResizablePanelGroup> = {
   args: {
-    className: "max-w-96 rounded-lg border",
+    className: "max-w-96 rounded-md border",
     orientation: "horizontal",
   },
   argTypes: {

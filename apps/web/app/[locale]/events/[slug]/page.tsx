@@ -129,11 +129,11 @@ const EventPage = async ({ params }: EventProps) => {
             />
           ) : null}
         </div>
-        <aside className="flex h-fit flex-col gap-4 rounded-xl border p-5">
+        <aside className="flex h-fit flex-col gap-4 rounded-lg border p-5">
           <div className="flex gap-3">
             <CalendarDays
               aria-hidden="true"
-              className="mt-0.5 size-5 shrink-0 text-primary"
+              className="mt-0.5 size-5 shrink-0 text-pink-text"
             />
             <div>
               <p className="font-medium text-sm">{t("when")}</p>
@@ -145,7 +145,7 @@ const EventPage = async ({ params }: EventProps) => {
           <div className="flex gap-3">
             <MapPin
               aria-hidden="true"
-              className="mt-0.5 size-5 shrink-0 text-primary"
+              className="mt-0.5 size-5 shrink-0 text-pink-text"
             />
             <div>
               <p className="font-medium text-sm">{t("where")}</p>
@@ -156,7 +156,7 @@ const EventPage = async ({ params }: EventProps) => {
             <div className="flex gap-3">
               <Users
                 aria-hidden="true"
-                className="mt-0.5 size-5 shrink-0 text-primary"
+                className="mt-0.5 size-5 shrink-0 text-pink-text"
               />
               <div>
                 <p className="font-medium text-sm">{t("capacity")}</p>

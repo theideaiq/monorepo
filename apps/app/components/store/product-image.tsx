@@ -28,7 +28,7 @@ export const ProductImage = ({
   return (
     <div
       className={cn(
-        "relative aspect-square overflow-hidden rounded-lg bg-muted",
+        "relative aspect-square overflow-hidden rounded-md bg-muted",
         className
       )}
     >

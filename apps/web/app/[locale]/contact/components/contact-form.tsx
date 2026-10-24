@@ -142,7 +142,7 @@ export const ContactForm = ({
   return (
     <form
       aria-busy={pending}
-      className="flex w-full flex-col gap-4 rounded-xl border bg-card p-6 md:p-8"
+      className="flex w-full flex-col gap-4 rounded-lg border bg-card p-6 md:p-8"
       noValidate
       onSubmit={submit}
     >
@@ -205,7 +205,7 @@ export const ContactForm = ({
         <p
           className={cn(
             "text-sm",
-            result?.ok ? "text-primary" : "text-destructive"
+            result?.ok ? "text-pink-text" : "text-destructive"
           )}
           role={result?.ok ? "status" : "alert"}
         >

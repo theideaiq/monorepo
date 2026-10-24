@@ -11,6 +11,8 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
+import { emailTailwindConfig } from "../brand";
+import { EmailButton, EmailHeader } from "../components";
 
 export type OrderEmailLocale = "ar" | "en";
 
@@ -49,6 +51,7 @@ export interface OrderConfirmationProps {
 const copy = {
   ar: {
     address: "عنوان التوصيل",
+    contact: "راسلنا",
     greeting: (name: string) => `شكراً لك يا ${name}!`,
     heading: (number: string) => `تم تأكيد طلبك ${number}`,
     intro: "استلمنا دفعتك وبدأنا تجهيز طلبك. سنتواصل معك عند خروجه للتوصيل.",
@@ -63,6 +66,7 @@ const copy = {
   },
   en: {
     address: "Delivery address",
+    contact: "Email us",
     greeting: (name: string) => `Thank you, ${name}!`,
     heading: (number: string) => `Your order ${number} is confirmed`,
     intro:
@@ -99,26 +103,27 @@ export const OrderConfirmationTemplate = ({
   const end = locale === "ar" ? "left" : "right";
 
   return (
-    <Tailwind>
+    <Tailwind config={emailTailwindConfig}>
       <Html dir={dir} lang={locale}>
         <Head />
         <Preview>{text.preview(orderNumber)}</Preview>
-        <Body className="bg-zinc-50 font-sans">
+        <Body className="bg-surface font-sans">
           <Container
             className="mx-auto max-w-[560px] py-12"
             style={{ direction: dir }}
           >
+            <EmailHeader />
             <Section
-              className="rounded-md bg-white p-8"
+              className="bg-surface-raised p-8"
               style={{ textAlign: align }}
             >
-              <Text className="mt-0 mb-2 font-semibold text-2xl text-zinc-950">
+              <Text className="mt-0 mb-2 font-semibold text-2xl text-ink">
                 {text.heading(orderNumber)}
               </Text>
-              <Text className="m-0 text-zinc-700">
+              <Text className="m-0 text-ink">
                 {text.greeting(address.fullName)}
               </Text>
-              <Text className="mt-2 text-zinc-500">{text.intro}</Text>
+              <Text className="mt-2 text-ink-muted">{text.intro}</Text>
 
               <Hr className="my-6" />
 
@@ -128,20 +133,20 @@ export const OrderConfirmationTemplate = ({
                   key={`${item.name}-${item.details ?? ""}`}
                 >
                   <Column style={{ textAlign: align }}>
-                    <Text className="m-0 font-medium text-zinc-950">
+                    <Text className="m-0 font-medium text-ink">
                       {item.name}
                     </Text>
                     {item.details ? (
-                      <Text className="m-0 text-sm text-zinc-500">
+                      <Text className="m-0 text-ink-muted text-sm">
                         {item.details}
                       </Text>
                     ) : null}
-                    <Text className="m-0 text-sm text-zinc-500">
+                    <Text className="m-0 text-ink-muted text-sm">
                       {text.quantity(item.quantity)}
                     </Text>
                   </Column>
                   <Column style={{ textAlign: end, verticalAlign: "top" }}>
-                    <Text className="m-0 text-zinc-950">{item.total}</Text>
+                    <Text className="m-0 text-ink">{item.total}</Text>
                   </Column>
                 </Row>
               ))}
@@ -150,62 +155,63 @@ export const OrderConfirmationTemplate = ({
 
               <Row>
                 <Column style={{ textAlign: align }}>
-                  <Text className="m-0 text-zinc-500">{text.subtotal}</Text>
+                  <Text className="m-0 text-ink-muted">{text.subtotal}</Text>
                 </Column>
                 <Column style={{ textAlign: end }}>
-                  <Text className="m-0 text-zinc-700">{subtotal}</Text>
+                  <Text className="m-0 text-ink">{subtotal}</Text>
                 </Column>
               </Row>
               <Row>
                 <Column style={{ textAlign: align }}>
-                  <Text className="m-0 text-zinc-500">{text.shipping}</Text>
+                  <Text className="m-0 text-ink-muted">{text.shipping}</Text>
                 </Column>
                 <Column style={{ textAlign: end }}>
-                  <Text className="m-0 text-zinc-700">{shipping}</Text>
+                  <Text className="m-0 text-ink">{shipping}</Text>
                 </Column>
               </Row>
               <Row className="mt-2">
                 <Column style={{ textAlign: align }}>
-                  <Text className="m-0 font-semibold text-zinc-950">
+                  <Text className="m-0 font-semibold text-ink">
                     {text.total}
                   </Text>
                 </Column>
                 <Column style={{ textAlign: end }}>
-                  <Text className="m-0 font-semibold text-zinc-950">
-                    {total}
-                  </Text>
+                  <Text className="m-0 font-semibold text-ink">{total}</Text>
                 </Column>
               </Row>
 
               <Hr className="my-6" />
 
-              <Text className="mt-0 mb-1 font-semibold text-zinc-950">
+              <Text className="mt-0 mb-1 font-semibold text-ink">
                 {text.address}
               </Text>
-              <Text className="m-0 text-zinc-700">{address.fullName}</Text>
+              <Text className="m-0 text-ink">{address.fullName}</Text>
               <Text
-                className="m-0 text-zinc-700"
+                className="m-0 text-ink"
                 style={{ direction: "ltr", textAlign: align }}
               >
                 {address.phone}
               </Text>
-              <Text className="m-0 text-zinc-700">
+              <Text className="m-0 text-ink">
                 {[address.governorate, address.city]
                   .filter(Boolean)
                   .join(" · ")}
               </Text>
-              <Text className="m-0 text-zinc-700">{address.address}</Text>
+              <Text className="m-0 text-ink">{address.address}</Text>
               {address.notes ? (
-                <Text className="m-0 text-zinc-500">
+                <Text className="m-0 text-ink-muted">
                   {text.notes}: {address.notes}
                 </Text>
               ) : null}
 
               <Hr className="my-6" />
 
-              <Text className="m-0 text-sm text-zinc-500">
+              <Text className="mt-0 mb-4 text-ink-muted text-sm">
                 {text.support(supportEmail)}
               </Text>
+              <EmailButton href={`mailto:${supportEmail}`}>
+                {text.contact}
+              </EmailButton>
             </Section>
           </Container>
         </Body>

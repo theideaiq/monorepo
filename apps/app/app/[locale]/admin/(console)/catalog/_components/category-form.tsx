@@ -22,7 +22,7 @@ export const CategoryForm = ({
   const tCommon = useTranslations("admin.common");
 
   return (
-    <div className="flex flex-wrap items-end gap-3 rounded-lg border p-3">
+    <div className="flex flex-wrap items-end gap-3 rounded-md border p-3">
       <ActionForm
         action={saveCategory}
         className="flex flex-1 flex-wrap items-end gap-3"

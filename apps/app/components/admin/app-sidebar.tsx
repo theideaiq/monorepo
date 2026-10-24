@@ -78,10 +78,7 @@ export const AppSidebar = ({ name, role, sections }: AppSidebarProps) => {
     <Sidebar variant="inset">
       <SidebarHeader>
         <Link className="flex items-center gap-2 px-2 py-1.5" href="/">
-          <BrandLogo />
-          <span className="rounded-full bg-brand px-2 py-0.5 font-medium text-brand-foreground text-xs">
-            {t("meta.badge")}
-          </span>
+          <BrandLogo line="Staff" />
         </Link>
       </SidebarHeader>
       <SidebarContent>

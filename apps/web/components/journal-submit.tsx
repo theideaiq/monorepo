@@ -13,8 +13,8 @@ export const JournalSubmit = async ({
 }) => {
   const t = await getTranslations({ locale, namespace: "web.journal.submit" });
   return (
-    <div className="flex flex-col items-start gap-3 rounded-2xl border bg-muted/40 p-8">
-      <PenLine aria-hidden="true" className="size-8 text-primary" />
+    <div className="flex flex-col items-start gap-3 rounded-lg border bg-surface-raised p-8 shadow-1">
+      <PenLine aria-hidden="true" className="size-8 text-pink-text" />
       <h2 className="font-bold text-2xl">{t("title")}</h2>
       <p className="max-w-2xl text-muted-foreground">{t("description")}</p>
       <Button asChild>

@@ -1,3 +1,5 @@
+import { BulbKicker } from "@repo/design-system/components/brand/bulb-kicker";
+import { Highlight } from "@repo/design-system/components/brand/highlight";
 import { cn } from "@repo/design-system/lib/utils";
 import type { ReactNode } from "react";
 
@@ -5,13 +7,16 @@ interface PageHeroProps {
   readonly badge?: string;
   readonly children?: ReactNode;
   readonly className?: string;
-  /** Highlighted end of the title, in the brand colour. */
+  /** The highlighted second line of the title (a yellow Highlight). */
   readonly highlight?: string;
   readonly subtitle?: string;
   readonly title: string;
 }
 
-/** The heading block at the top of every page. */
+/**
+ * The heading block at the top of every page: a bulb kicker, a plain first
+ * line and a highlighted second, on the page surface.
+ */
 export const PageHero = ({
   badge,
   children,
@@ -21,27 +26,21 @@ export const PageHero = ({
   title,
 }: PageHeroProps) => (
   <section
-    className={cn(
-      "relative overflow-hidden border-b bg-gradient-to-b from-muted/60 to-background",
-      className
-    )}
+    className={cn("relative overflow-hidden border-b bg-surface", className)}
   >
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 -top-24 mx-auto size-[32rem] rounded-full bg-primary/10 blur-3xl"
-    />
     <div className="container relative mx-auto flex max-w-4xl flex-col items-center gap-6 px-4 py-16 text-center md:py-24">
+      <BulbKicker size="lg" />
       {badge ? (
-        <span className="rounded-full border bg-background px-3 py-1 font-medium text-xs uppercase tracking-wide">
+        <span className="rounded-full border bg-surface-raised px-3 py-1 font-medium text-xs uppercase tracking-wide">
           {badge}
         </span>
       ) : null}
-      <h1 className="text-balance font-bold text-4xl tracking-tight md:text-6xl">
+      <h1 className="text-balance text-display-xl [&:lang(ar)]:text-display-ar">
         {title}
         {highlight ? (
           <>
             {" "}
-            <span className="text-primary">{highlight}</span>
+            <Highlight>{highlight}</Highlight>
           </>
         ) : null}
       </h1>

@@ -139,7 +139,7 @@ const ReviewPage = async ({
                 // biome-ignore lint/performance/noImgElement: signed, short-lived URL
                 <img
                   alt={submission.title}
-                  className="h-auto max-h-[70vh] w-full rounded-lg border object-contain"
+                  className="h-auto max-h-[70vh] w-full rounded-md border object-contain"
                   height={900}
                   src={fileUrl}
                   width={1200}
@@ -159,7 +159,7 @@ const ReviewPage = async ({
             </div>
           ) : null}
           {submission.body ? (
-            <div className="rounded-lg border p-4 md:p-6">
+            <div className="rounded-md border p-4 md:p-6">
               <MarkdownPreview
                 className="prose-base"
                 dir="auto"

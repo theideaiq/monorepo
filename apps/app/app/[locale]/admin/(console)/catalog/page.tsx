@@ -158,7 +158,7 @@ const ProductsPage = async ({
         {(products ?? []).length === 0 ? (
           <EmptyState title={t("products.empty")} />
         ) : (
-          <div className="rounded-xl border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -211,7 +211,7 @@ const ProductsPage = async ({
                         {product.featured ? (
                           <StarIcon
                             aria-label={t("fields.featured")}
-                            className="size-4 shrink-0 fill-brand text-brand"
+                            className="size-4 shrink-0 fill-bulb-yellow text-warning"
                           />
                         ) : null}
                       </Link>

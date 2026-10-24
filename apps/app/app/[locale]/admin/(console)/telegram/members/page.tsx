@@ -98,7 +98,7 @@ const MembersPage = async ({
         {(members ?? []).length === 0 ? (
           <EmptyState title={t("members.empty")} />
         ) : (
-          <div className="rounded-xl border">
+          <div className="rounded-lg border">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -141,7 +141,7 @@ const MembersPage = async ({
                     <TableCell>
                       {member.user_id && linkCustomers ? (
                         <Link
-                          className="text-primary hover:underline"
+                          className="text-pink-text hover:underline"
                           href={`/customers/${member.user_id}`}
                         >
                           {t("members.linked")}

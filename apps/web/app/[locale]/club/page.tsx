@@ -1,3 +1,5 @@
+import { Highlight } from "@repo/design-system/components/brand/highlight";
+import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale, Messages } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
@@ -73,12 +75,12 @@ const Club = async ({ params }: ClubProps) => {
                 key={room.title}
               >
                 <a
-                  className="group flex h-full flex-col gap-4 rounded-2xl border bg-card p-6 transition-colors hover:border-primary"
+                  className="group flex h-full flex-col gap-4 rounded-lg border bg-card p-6 shadow-1 transition-colors hover:border-club"
                   href={telegram.club}
                   {...external}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-brand text-white">
+                    <span className="flex size-11 items-center justify-center rounded-lg bg-club text-on-accent-warm">
                       <Icon aria-hidden="true" className="size-5" />
                     </span>
                     <ArrowUpRight className="size-5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 rtl:-scale-x-100" />
@@ -96,23 +98,27 @@ const Club = async ({ params }: ClubProps) => {
         </ul>
         <p className="mt-6 text-muted-foreground text-sm">
           {t("guidelines")}{" "}
-          <Link className="text-primary underline" href="/legal/community">
+          <Link className="text-pink-text underline" href="/legal/community">
             {t("guidelinesLink")}
           </Link>
         </p>
       </Section>
 
-      <Section>
-        <div className="flex flex-col items-center gap-4 rounded-2xl bg-foreground p-10 text-center text-background">
-          <h2 className="font-bold text-3xl">{t("cta.title")}</h2>
-          <p className="max-w-xl text-background/75">{t("cta.description")}</p>
-          <Button asChild size="lg">
+      <PinkBand
+        action={
+          <Button asChild size="lg" variant="brand">
             <a href={telegram.club} {...external}>
               {t("cta.button")}
             </a>
           </Button>
-        </div>
-      </Section>
+        }
+        description={t("cta.description")}
+        title={
+          <>
+            {t("cta.title")} <Highlight>{t("cta.highlight")}</Highlight>
+          </>
+        }
+      />
     </>
   );
 };
