@@ -4,9 +4,10 @@ import { withSecurityHeaders } from "@repo/security/proxy";
 import type { NextRequest } from "next/server";
 
 export const config = {
-  // Every route except static assets and the PostHog ingest rewrites.
+  // Every route except static assets, the PostHog ingest rewrites and
+  // /.well-known (app links: apple-app-site-association, assetlinks.json).
   matcher: [
-    "/((?!_next/static|_next/image|ingest|favicon.ico|robots.txt|.*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|webmanifest)).*)",
+    "/((?!_next/static|_next/image|ingest|\\.well-known|favicon.ico|robots.txt|.*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|webmanifest)).*)",
   ],
 };
 

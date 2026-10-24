@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@repo/auth/provider";
 import type { StaffRole } from "@repo/database";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import { Button } from "@repo/design-system/components/ui/button";
@@ -38,6 +39,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { signOut } from "@/lib/admin/auth-actions";
 import { Link, usePathname } from "@/lib/admin/navigation";
 import { type Section, sectionHref } from "@/lib/admin/roles";
+import { unregisterPushNotifications } from "@/lib/native/push";
 
 const icons: Record<Section, LucideIcon> = {
   audit: ScrollTextIcon,
@@ -67,6 +69,7 @@ export const AppSidebar = ({ name, role, sections }: AppSidebarProps) => {
   const tAuth = useTranslations("auth");
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
+  const { supabase } = useAuth();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -125,7 +128,12 @@ export const AppSidebar = ({ name, role, sections }: AppSidebarProps) => {
             </span>
           </div>
           <div className="flex items-center justify-between gap-1">
-            <form action={signOut}>
+            <form
+              action={async () => {
+                await unregisterPushNotifications(supabase);
+                await signOut();
+              }}
+            >
               <Button size="sm" type="submit" variant="ghost">
                 <LogOutIcon className="rtl:rotate-180" />
                 {tAuth("signOut")}

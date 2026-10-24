@@ -19,7 +19,6 @@ import {
   formatDate,
   formatNumber,
 } from "@repo/internationalization/format";
-import { getPurchasePolicy } from "@repo/payments";
 import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -31,7 +30,6 @@ import {
   reportCompletedCheckout,
 } from "@/lib/checkout-tracking";
 import { toRentalError } from "@/lib/errors";
-import { detectPlatform } from "@/lib/platform";
 import {
   isLiveMembership,
   meetsTier,
@@ -46,6 +44,7 @@ import {
 } from "@/lib/plus-queries";
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
 import { useProducts } from "@/lib/store-queries";
+import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 
 const POLL_MS = 3000;
 
@@ -154,15 +153,15 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
   const plans = usePlans("plus");
   const subscription = usePlusSubscription();
   const checkout = usePlanCheckout("/plus");
-  const policy = getPurchasePolicy(detectPlatform());
+  const canSell = useCanSellDigitalGoods();
   const member = isLiveMembership(subscription.data?.status);
 
   return (
     <section className="grid gap-4">
       <h2 className="font-semibold text-lg">{t("title")}</h2>
-      {policy.allowed ? null : (
+      {canSell === false ? (
         <p className="rounded-md bg-muted p-4 text-sm">{tBilling("webOnly")}</p>
-      )}
+      ) : null}
       {plans.isPending ? <SectionSpinner /> : null}
       {plans.isError ? <ErrorState onRetry={() => plans.refetch()} /> : null}
       {plans.data?.length === 0 ? (
@@ -212,7 +211,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
                   </ul>
                 ) : null}
               </CardContent>
-              {policy.allowed && !member ? (
+              {canSell === true && !member ? (
                 <CardFooter>
                   <Button
                     className="w-full"

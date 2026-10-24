@@ -1415,6 +1415,17 @@
       "markAllRead": "Mark all as read",
       "empty": "You're all caught up.",
       "loadFailed": "We couldn't load your notifications."
+    },
+    "native": {
+      "offline": {
+        "title": "You're offline",
+        "description": "The IDEA Spark needs an internet connection. Check your Wi-Fi or mobile data, then try again.",
+        "retry": "Try again",
+        "stillOffline": "Still offline. We'll reconnect as soon as the connection is back."
+      },
+      "share": {
+        "copied": "Link copied"
+      }
     }
   },
   "store": {

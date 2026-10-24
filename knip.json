@@ -18,7 +18,13 @@
       "entry": ["scripts/*.{js,mjs,ts}"]
     },
     "apps/app": {
-      "ignoreDependencies": ["@capacitor/android", "@capacitor/ios"]
+      "entry": ["lib/native/*.ts"],
+      "ignoreDependencies": [
+        "@capacitor/android",
+        "@capacitor/ios",
+        "@capacitor/splash-screen",
+        "@capacitor/status-bar"
+      ]
     },
     "packages/email": {
       "ignoreDependencies": ["react-dom", "@types/react-dom"]
@@ -27,6 +33,7 @@
   "ignore": [
     "packages/design-system/components/ui/**",
     "apps/web/public/**",
+    "apps/app/native/www/**",
     "packages/database/supabase/functions/**"
   ]
 }

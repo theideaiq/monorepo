@@ -23,7 +23,6 @@ import {
 import { cn } from "@repo/design-system/lib/utils";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { getPurchasePolicy } from "@repo/payments";
 import { ArrowLeftIcon, CheckIcon, LifeBuoyIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -39,12 +38,12 @@ import {
 import { toCheckoutError } from "@/lib/errors";
 import { usePayOrder } from "@/lib/order-checkout";
 import { orderProgress, progressSteps } from "@/lib/orders";
-import { detectPlatform } from "@/lib/platform";
 import {
   useCancelOrder,
   useOrder,
   useOrderPayments,
 } from "@/lib/store-queries";
+import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 
 const POLL_MS = 3000;
 /** Stop waiting for the payment webhook after this long. */
@@ -204,7 +203,7 @@ const OrderView = ({
   const tCheckout = useTranslations("app.checkout.errors");
   const locale = useLocale();
   const pay = usePayOrder();
-  const policy = getPurchasePolicy(detectPlatform());
+  const canSell = useCanSellDigitalGoods();
   const pending = order.status === "pending";
   const address = order.shipping_address as unknown as ShippingAddress;
   const total = formatPrice(order.total, locale);
@@ -215,7 +214,7 @@ const OrderView = ({
 
       {pending ? (
         <div className="flex flex-wrap gap-3">
-          {policy.allowed ? (
+          {canSell === true ? (
             <Button
               disabled={pay.isPending}
               onClick={() => pay.mutate(order, { onSuccess: onPay })}

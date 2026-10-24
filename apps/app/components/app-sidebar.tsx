@@ -2,6 +2,7 @@
 
 import { resetIdentity } from "@repo/analytics/client";
 import { UserMenu } from "@repo/auth/components/user-menu";
+import { useAuth } from "@repo/auth/provider";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import {
   Sidebar,
@@ -26,6 +27,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
+import { unregisterPushNotifications } from "@/lib/native/push";
 import { useProfile } from "@/lib/queries";
 import { useCartCount } from "@/lib/store-queries";
 import { LanguageSwitcher } from "./language-switcher";
@@ -39,6 +41,7 @@ export const AppSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { supabase } = useAuth();
   const authMessages = useAuthMessages();
   const { isMobile, setOpenMobile } = useSidebar();
   const profile = useProfile();
@@ -110,6 +113,7 @@ export const AppSidebar = () => {
               resetIdentity();
               router.replace("/sign-in");
             }}
+            onSigningOut={() => unregisterPushNotifications(supabase)}
           />
           <div className="flex shrink-0 items-center">
             <LanguageSwitcher />

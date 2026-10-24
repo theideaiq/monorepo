@@ -37,12 +37,21 @@ export const env = withPresets(
     extends: presets,
     runtimeEnv: {
       CRON_SECRET: process.env.CRON_SECRET,
+      FCM_SERVICE_ACCOUNT: process.env.FCM_SERVICE_ACCOUNT,
+      PUSH_WEBHOOK_SECRET: process.env.PUSH_WEBHOOK_SECRET,
       STORE_NOTIFICATIONS_EMAIL: process.env.STORE_NOTIFICATIONS_EMAIL,
     },
     server: {
       // Shared secret Vercel Cron sends as a Bearer token. Generate with
       // `openssl rand -hex 32`. Cron routes reject every request when unset.
       CRON_SECRET: z.string().min(32).optional(),
+      // Firebase service account key (the JSON file's contents, or base64
+      // of it) for push notifications through FCM HTTP v1. Push is off
+      // while unset.
+      FCM_SERVICE_ACCOUNT: z.string().min(1).optional(),
+      // Bearer token the Supabase database webhook on `notifications`
+      // inserts sends to POST /webhooks/notifications (`openssl rand -hex 32`).
+      PUSH_WEBHOOK_SECRET: z.string().min(32).optional(),
       // Optional inbox that gets an email for every paid store order.
       STORE_NOTIFICATIONS_EMAIL: z.email().optional(),
     },
