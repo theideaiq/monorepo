@@ -961,6 +961,60 @@
       "endsOn": "Ends {date}",
       "crm": "Relationship",
       "crmUpdated": "Last updated {date}"
+    },
+    "marketing": {
+      "title": "Marketing",
+      "tabs": {
+        "campaigns": "Campaigns",
+        "segments": "Segments"
+      },
+      "campaignStatus": {
+        "draft": "Draft",
+        "sending": "Sending",
+        "sent": "Sent",
+        "failed": "Failed"
+      },
+      "campaigns": {
+        "new": "New campaign",
+        "detail": "Campaign",
+        "create": "Create draft",
+        "empty": "No campaigns yet.",
+        "subject": "Subject",
+        "segment": "Audience",
+        "segmentHint": "Only customers who opted in to marketing email receive campaigns.",
+        "everyone": "Everyone who opted in",
+        "status": "Status",
+        "sentCount": "Recipients",
+        "sentAt": "Sent",
+        "date": "Date",
+        "body": "Message",
+        "bodyHint": "Markdown. It's placed in The IDEA's email template with an unsubscribe link.",
+        "draft": "Draft",
+        "results": "Results",
+        "preview": "Preview",
+        "previewHint": "The saved version, as it will look in the email.",
+        "send": "Send now",
+        "sendConfirm": "Send this campaign now?",
+        "sendDescription": "It goes to: {audience}. Sending can't be undone.",
+        "failedHint": "Sending stopped partway. The recipient count shows how many emails went out."
+      },
+      "segments": {
+        "description": "Segments choose who receives a campaign. Every criterion you set must match; leave one on \"Any\" to ignore it.",
+        "new": "New segment",
+        "create": "Create segment",
+        "name": "Name",
+        "crmStatus": "CRM status",
+        "crmHint": "None ticked: any status.",
+        "tags": "Tags",
+        "tagsHint": "Customers with at least one of these tags.",
+        "plusMember": "IDEA Plus",
+        "plusYes": "Members only",
+        "plusNo": "Non-members only",
+        "locale": "Language",
+        "count": "Count recipients",
+        "recipients": "{count} recipients right now",
+        "deleteDescription": "Campaigns that used it keep their history."
+      }
     }
   }
 }

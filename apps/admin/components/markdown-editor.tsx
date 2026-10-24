@@ -17,7 +17,7 @@ import { MarkdownPreview } from "./markdown-preview";
 interface MarkdownEditorProps {
   readonly defaultValue?: string | null;
   /** Text direction of the content (an Arabic body in an English UI…). */
-  readonly dir?: "ltr" | "rtl";
+  readonly dir?: "ltr" | "rtl" | "auto";
   readonly hint?: string;
   readonly label: string;
   readonly maxLength?: number;
