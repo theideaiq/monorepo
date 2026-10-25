@@ -1,6 +1,6 @@
 import { safeReturnTo } from "@repo/auth/pass";
 import { localePath, withoutLocalePrefix } from "@repo/internationalization";
-import { safeNextPath } from "@/lib/app-navigation";
+import { safeNextPath } from "@repo/internationalization/app-paths";
 
 export type SearchParams = Promise<
   Record<string, string | string[] | undefined>

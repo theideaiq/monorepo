@@ -1,7 +1,7 @@
+import { safeNextPath } from "@repo/internationalization/app-paths";
 import { describe, expect, test, vi } from "vitest";
 import { deepLinkPath } from "@/components/native-bridge";
 import { ApiError, callApi } from "@/lib/api";
-import { safeNextPath } from "@/lib/app-navigation";
 import { toInvitationError, toOrganizationError } from "@/lib/errors";
 import { preferredLocale, resolveLocalizedPath } from "@/lib/locale";
 import { fakeSupabase } from "./render";

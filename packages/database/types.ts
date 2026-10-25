@@ -727,6 +727,7 @@ export type Database = {
           link: string | null;
           pushed_at: string | null;
           read_at: string | null;
+          telegram_sent_at: string | null;
           user_id: string;
           whatsapp_sent_at: string | null;
         };
@@ -739,6 +740,7 @@ export type Database = {
           link?: string | null;
           pushed_at?: string | null;
           read_at?: string | null;
+          telegram_sent_at?: string | null;
           user_id: string;
           whatsapp_sent_at?: string | null;
         };
@@ -751,6 +753,7 @@ export type Database = {
           link?: string | null;
           pushed_at?: string | null;
           read_at?: string | null;
+          telegram_sent_at?: string | null;
           user_id?: string;
           whatsapp_sent_at?: string | null;
         };
@@ -1971,6 +1974,8 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
+          join_rule: string;
+          join_tier: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated: boolean;
           title: string;
           username: string | null;
@@ -1978,6 +1983,8 @@ export type Database = {
         Insert: {
           created_at?: string;
           id: number;
+          join_rule?: string;
+          join_tier?: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated?: boolean;
           title: string;
           username?: string | null;
@@ -1985,6 +1992,8 @@ export type Database = {
         Update: {
           created_at?: string;
           id?: number;
+          join_rule?: string;
+          join_tier?: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated?: boolean;
           title?: string;
           username?: string | null;
@@ -2364,6 +2373,23 @@ export type Database = {
           kind: Database["public"]["Enums"]["notification_kind"];
           link: string;
           locale: string;
+          user_id: string;
+        }[];
+      };
+      claim_telegram_notifications: {
+        Args: {
+          max_age?: string;
+          max_rows?: number;
+          notification_ids?: string[];
+        };
+        Returns: {
+          data: Json;
+          event: string;
+          id: string;
+          kind: Database["public"]["Enums"]["notification_kind"];
+          link: string;
+          locale: string;
+          telegram_id: number;
           user_id: string;
         }[];
       };
@@ -2850,6 +2876,15 @@ export type Database = {
           target: string;
         };
         Returns: undefined;
+      };
+      telegram_join_check: {
+        Args: { chat: number; member: number };
+        Returns: {
+          allowed: boolean;
+          linked: boolean;
+          needed: Database["public"]["Enums"]["bulb_tier"];
+          rule: string;
+        }[];
       };
       touch_affiliate: {
         Args: { affiliate_code: string; via?: string };

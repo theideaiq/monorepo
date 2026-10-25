@@ -1,4 +1,10 @@
 /**
+ * Paths inside The IDEA's sites: a safe post-sign-in destination, and the
+ * current page for links stored in older shapes (notifications sent on the
+ * website, in push and on Telegram).
+ */
+
+/**
  * A post-sign-in destination taken from the URL. Only paths inside this app
  * are accepted, never absolute or protocol-relative URLs (open redirects).
  */

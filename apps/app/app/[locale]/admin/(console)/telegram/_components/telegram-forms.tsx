@@ -12,7 +12,10 @@ import {
 } from "@/components/admin/fields";
 import { deleteChat, deleteFaq, saveChat, saveFaq } from "../actions";
 
-/** A group or channel Droid is an admin of (membership is recorded). */
+/**
+ * A group or channel Droid is an admin of, and who it lets in on a join
+ * request: anyone, members with a linked The IDEA Pass, or a Bulbs tier.
+ */
 export const ChatForm = ({
   chat,
   disabled = false,
@@ -22,6 +25,7 @@ export const ChatForm = ({
 }) => {
   const t = useTranslations("admin.telegram.chats");
   const tCommon = useTranslations("admin.common");
+  const tTier = useTranslations("app.bulbs.tiers");
 
   return (
     <div className="flex flex-wrap items-end gap-3 rounded-md border p-3">
@@ -66,6 +70,31 @@ export const ChatForm = ({
           maxLength={64}
           name="username"
           wrapperClassName="w-40"
+        />
+        <SelectField
+          defaultValue={chat?.join_rule ?? "open"}
+          disabled={disabled}
+          label={t("joinRule")}
+          name="joinRule"
+          options={(["open", "pass", "tier"] as const).map((value) => ({
+            label: t(`joinRules.${value}`),
+            value,
+          }))}
+          wrapperClassName="w-44"
+        />
+        <SelectField
+          defaultValue={chat?.join_tier ?? ""}
+          disabled={disabled}
+          label={t("joinTier")}
+          name="joinTier"
+          options={[
+            { label: t("joinTierNone"), value: "" },
+            ...(["glow", "shine", "beam", "blaze"] as const).map((value) => ({
+              label: tTier(`${value}.name`),
+              value,
+            })),
+          ]}
+          wrapperClassName="w-36"
         />
         {disabled ? null : (
           <SubmitButton variant={chat ? "secondary" : "default"}>

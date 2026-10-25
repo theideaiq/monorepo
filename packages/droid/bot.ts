@@ -10,7 +10,9 @@
  *   can search the store, read the FAQ and the newsletter.
  * - Inline mode: `@TheIdeaDroidBot <product>` in any chat shares products.
  * - Groups and channels: the bot records membership in the chats it's an
- *   admin of and sends new channel posts to newsletter subscribers.
+ *   admin of, approves join requests by each chat's rule (open, linked The
+ *   IDEA Pass or a Bulbs tier) and sends new channel posts to newsletter
+ *   subscribers.
  *   Moderation is left to Telegram's own tools.
  */
 
@@ -57,6 +59,7 @@ export const ALLOWED_UPDATES = [
   "message",
   "callback_query",
   "inline_query",
+  "chat_join_request",
   "channel_post",
   "chat_member",
   "my_chat_member",
@@ -500,6 +503,54 @@ const answerInline = async (ctx: DroidContext) => {
   await ctx.answerInlineQuery(results, { cache_time: 60 });
 };
 
+// ── The Club: join requests ─────────────────────────────────────────────────
+
+/**
+ * Approves a join request that passes the chat's rule (open, linked The
+ * IDEA Pass, or a Bulbs tier); otherwise declines it and tells the person
+ * how to get in. Chats without a rule are left to their admins.
+ */
+const handleJoinRequest = async (ctx: DroidContext) => {
+  const request = ctx.chatJoinRequest;
+  if (!request || request.from.is_bot) {
+    return;
+  }
+  const { chat, from } = request;
+  const check = await ctx.droid.data.joinCheck(chat.id, from.id);
+  if (!check) {
+    return;
+  }
+  if (check.allowed) {
+    await ctx.api.approveChatJoinRequest(chat.id, from.id);
+    return;
+  }
+  await ctx.api.declineChatJoinRequest(chat.id, from.id);
+  const locale = localeOf(from.language_code);
+  const title = "title" in chat ? (chat.title ?? "") : "";
+  const needsTier = check.linked && check.needed;
+  try {
+    await ctx.api.sendMessage(
+      request.user_chat_id,
+      needsTier
+        ? t(locale, "joinNeedsTier", {
+            chat: title,
+            tier: t(locale, `tier_${check.needed}` as MessageKey),
+          })
+        : t(locale, "joinNotLinked", { chat: title }),
+      {
+        reply_markup: new InlineKeyboard().url(
+          t(locale, needsTier ? "bulbsOpen" : "connect"),
+          `${ctx.droid.siteUrl}${localePath(locale, needsTier ? "/pass/bulbs" : "/pass/settings")}`
+        ),
+      }
+    );
+  } catch (error) {
+    ctx.droid.logger.error("Droid could not explain a declined join", {
+      error: describeError(error),
+    });
+  }
+};
+
 // ── Channels: the newsletter ────────────────────────────────────────────────
 
 const sendNewsletterPost = async (
@@ -654,6 +705,8 @@ export const createBot = (options: DroidOptions) => {
 
   bot.on("inline_query", (ctx) => answerInline(ctx));
 
+  bot.on("chat_join_request", (ctx) => handleJoinRequest(ctx));
+
   bot.command("search", async (ctx) => {
     if (!ctx.match.trim() && ctx.chat.type === "private") {
       await askFor(ctx, "search");
@@ -749,3 +802,45 @@ export const createBot = (options: DroidOptions) => {
 };
 
 export type DroidBot = ReturnType<typeof createBot>;
+
+/**
+ * Sends a notification (an order update, a support reply…) to a member on
+ * Telegram: its title and text, with a button to open it on the website.
+ * False when they blocked the bot or never started it.
+ */
+export const notifyMember = async (
+  api: DroidBot["api"],
+  {
+    body,
+    locale,
+    telegramId,
+    title,
+    url,
+  }: {
+    body: string;
+    locale: BotLocale;
+    telegramId: number;
+    title: string;
+    url: string;
+  }
+) => {
+  try {
+    await api.sendMessage(
+      telegramId,
+      `<b>${escapeHtml(title)}</b>\n${escapeHtml(body)}`,
+      {
+        parse_mode: "HTML",
+        reply_markup: new InlineKeyboard().url(
+          t(locale, "notificationOpen"),
+          url
+        ),
+      }
+    );
+    return true;
+  } catch (error) {
+    if (error instanceof GrammyError && error.error_code === 403) {
+      return false;
+    }
+    throw error;
+  }
+};

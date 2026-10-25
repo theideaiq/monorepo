@@ -4,6 +4,7 @@ import { project } from "@repo/config";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import { Button } from "@repo/design-system/components/ui/button";
 import { withoutLocalePrefix } from "@repo/internationalization";
+import { safeNextPath } from "@repo/internationalization/app-paths";
 import { useRouter } from "@repo/internationalization/navigation";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -11,7 +12,6 @@ import { useEffect, useRef } from "react";
 import { DeleteAccountDialog } from "@/components/account/delete-account";
 import { ProfileForm } from "@/components/profile-form";
 import { ErrorState, FullPageSpinner } from "@/components/states";
-import { safeNextPath } from "@/lib/app-navigation";
 import { needsOnboarding } from "@/lib/onboarding";
 import { useMemberships, useProfile } from "@/lib/queries";
 

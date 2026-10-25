@@ -7,6 +7,8 @@ const getPushSender = vi.fn();
 const deliverWhatsApp = vi.fn();
 const getWhatsAppSender = vi.fn();
 const authenticateRequest = vi.fn();
+const getDroid = vi.fn();
+const deliverTelegram = vi.fn();
 
 vi.mock("@/env", () => ({
   env: {
@@ -28,6 +30,11 @@ vi.mock("@/lib/whatsapp/deliver", () => ({
   deliverWhatsAppNotifications: (...args: unknown[]) =>
     deliverWhatsApp(...args),
 }));
+vi.mock("@/lib/telegram", () => ({ getDroid: () => getDroid() }));
+vi.mock("@/lib/telegram-notify", () => ({
+  deliverTelegramNotifications: (...args: unknown[]) =>
+    deliverTelegram(...args),
+}));
 vi.mock("@repo/auth/verify", () => ({
   authenticateRequest: (request: Request) => authenticateRequest(request),
 }));
@@ -45,6 +52,7 @@ const ID = "7c9e6679-7425-40de-944b-e07fc1f90ae7";
 const TOKEN = "fcm-token-0000000000000000";
 const SUMMARY = { failed: 0, notifications: 1, removed: 0, sent: 2 };
 const WHATSAPP_SUMMARY = { failed: 0, notifications: 1, sent: 1, skipped: 0 };
+const TELEGRAM_SUMMARY = { blocked: 0, failed: 0, sent: 1 };
 
 const post = (path: string, body: unknown, authorization?: string) =>
   new Request(`https://api.theideaiq.com${path}`, {
@@ -65,6 +73,8 @@ beforeEach(() => {
   deliver.mockResolvedValue(SUMMARY);
   getWhatsAppSender.mockReturnValue(null);
   deliverWhatsApp.mockResolvedValue(WHATSAPP_SUMMARY);
+  getDroid.mockReturnValue(undefined);
+  deliverTelegram.mockResolvedValue(TELEGRAM_SUMMARY);
 });
 
 describe("POST /webhooks/notifications", () => {
@@ -127,6 +137,20 @@ describe("POST /webhooks/notifications", () => {
       fallbackLanguage: "ar",
       ids: [ID],
     });
+  });
+
+  test("also sends the notification on Telegram when Droid is set up", async () => {
+    const bot = { api: {} };
+    getDroid.mockReturnValue(Promise.resolve(bot));
+    const response = await webhook.POST(
+      post("/webhooks/notifications", insert, `Bearer ${SECRET}`)
+    );
+    expect(await response.json()).toEqual({
+      ok: true,
+      ...SUMMARY,
+      telegram: TELEGRAM_SUMMARY,
+    });
+    expect(deliverTelegram).toHaveBeenCalledWith({}, bot, [ID]);
   });
 
   test("sends WhatsApp messages without push", async () => {

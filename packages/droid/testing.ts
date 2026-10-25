@@ -9,6 +9,7 @@ import type {
   BulbBalance,
   DroidData,
   FaqEntry,
+  JoinCheck,
   OrderSummary,
   TelegramChat,
   TelegramMember,
@@ -41,6 +42,8 @@ export interface FakeDataState {
   bulbs: Map<string, BulbBalance>;
   chats: TelegramChat[];
   faq: FaqEntry[];
+  /** "chatId:memberId" → the join check. */
+  joins: Map<string, JoinCheck>;
   /** Telegram id → The IDEA Pass member. */
   links: Map<number, string>;
   members: Map<number, TelegramMember>;
@@ -51,8 +54,11 @@ export interface FakeDataState {
 }
 
 export const createFakeData = (
-  initial: Partial<Omit<FakeDataState, "bulbs" | "links" | "members">> & {
+  initial: Partial<
+    Omit<FakeDataState, "bulbs" | "joins" | "links" | "members">
+  > & {
     bulbs?: Record<string, BulbBalance>;
+    joins?: Record<string, JoinCheck>;
     links?: Record<number, string>;
     members?: TelegramMember[];
   } = {}
@@ -61,6 +67,7 @@ export const createFakeData = (
     bulbs: new Map(Object.entries(initial.bulbs ?? {})),
     chats: initial.chats ?? [],
     faq: initial.faq ?? [],
+    joins: new Map(Object.entries(initial.joins ?? {})),
     links: new Map(
       Object.entries(initial.links ?? {}).map(([id, owner]) => [
         Number(id),
@@ -110,6 +117,8 @@ export const createFakeData = (
     getLinkedUser: (memberId) =>
       Promise.resolve(state.links.get(memberId) ?? null),
     getMember: (id) => Promise.resolve(state.members.get(id) ?? null),
+    joinCheck: (chatId, memberId) =>
+      Promise.resolve(state.joins.get(`${chatId}:${memberId}`) ?? null),
     listFaq: (topic) =>
       Promise.resolve(
         state.faq.filter((entry) => !topic || entry.topic === topic)

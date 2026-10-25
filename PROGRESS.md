@@ -295,6 +295,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   @BotFather → /setinline for the bot, then `bun run --cwd apps/api
   telegram:setup`. Next: Club join approvals by tier and order updates on
   Telegram.
+- 2026-10-25: **The Club's join rules and order updates on Telegram.**
+  Each chat Droid runs has a join rule (anyone, The IDEA Pass members who
+  linked Telegram, or a Bulbs tier and up; Back office → Telegram → Chats);
+  Droid approves join requests that pass and tells the others how to
+  qualify. Notifications (order updates, support replies…) also reach
+  members who linked Telegram as a Droid message with a button to the page.
+  Owner steps: in each Club room, make Droid an admin that can add
+  members and turn on "Approve new members" for its invite link; set the
+  rule in the back office; re-run `bun run --cwd apps/api telegram:setup`.
+  Migration `20261203000000_telegram_club.sql`. Next: the Mini App and
+  automatic topic posts, then The IDEA Suite workspace.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

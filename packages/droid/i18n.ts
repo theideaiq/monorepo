@@ -27,6 +27,10 @@ const ar = {
   faqTopic_store: "المتجر",
   faqTopic_suite: "The IDEA Suite",
   inlineOpen: "افتح في المتجر",
+  joinNeedsTier:
+    "{chat} لأعضاء {tier} فما فوق. يرتفع مستواك كلما تسوّقت من The IDEA، ويمكنك متابعة تقدّمك في My Pass.",
+  joinNotLinked:
+    "للانضمام إلى {chat}، اربط Telegram بـ The IDEA Pass أولاً (My Pass ← الإعدادات ← Telegram)، ثم اطلب الانضمام مرة أخرى.",
   linkApp: "تطبيق The IDEA",
   linkClub: "The IDEA Club على تيليجرام",
   links: "روابط",
@@ -40,6 +44,7 @@ const ar = {
   newsletterNowOn: "فعّلت النشرة الإخبارية. سنرسل لك منشوراتنا الجديدة.",
   newsletterOff: "النشرة الإخبارية: متوقفة",
   newsletterOn: "النشرة الإخبارية: مفعّلة ✓",
+  notificationOpen: "افتح",
   notLinked:
     "اربط Telegram بـ The IDEA Pass لترى طلباتك ورصيدك هنا. افتح My Pass ← الإعدادات ← Telegram.",
   orderLine: "#{number} · {status} · {total}",
@@ -72,6 +77,10 @@ const ar = {
   supportSent:
     "وصلت رسالتك. رقم طلب الدعم #{number}، وستجد الرد في My Pass ← الدعم.",
   supportSentTelegram: "وصلت رسالتك إلى فريق الدعم وسنرد عليك هنا قريباً.",
+  tier_beam: "شعاع",
+  tier_blaze: "وهج",
+  tier_glow: "توهّج",
+  tier_shine: "لمعة",
 } as const;
 
 export type MessageKey = keyof typeof ar;
@@ -94,6 +103,10 @@ const en: Record<MessageKey, string> = {
   faqTopic_store: "Store",
   faqTopic_suite: "The IDEA Suite",
   inlineOpen: "Open in the store",
+  joinNeedsTier:
+    "{chat} is for {tier} members and up. Your tier rises as you shop at The IDEA; follow your progress in My Pass.",
+  joinNotLinked:
+    "To join {chat}, connect Telegram to The IDEA Pass first (My Pass → Settings → Telegram), then ask to join again.",
   linkApp: "The IDEA app",
   linkClub: "The IDEA Club on Telegram",
   links: "Links",
@@ -107,6 +120,7 @@ const en: Record<MessageKey, string> = {
   newsletterNowOn: "Newsletter turned on. We'll send you our new posts.",
   newsletterOff: "Newsletter: off",
   newsletterOn: "Newsletter: on ✓",
+  notificationOpen: "Open",
   notLinked:
     "Connect Telegram to The IDEA Pass to see your orders and Bulbs here: My Pass → Settings → Telegram.",
   orderLine: "#{number} · {status} · {total}",
@@ -141,6 +155,10 @@ const en: Record<MessageKey, string> = {
     "Got it. Your support request is #{number}; you'll find the reply in My Pass → Support.",
   supportSentTelegram:
     "Your message reached our support team; we'll reply here soon.",
+  tier_beam: "Beam",
+  tier_blaze: "Blaze",
+  tier_glow: "Glow",
+  tier_shine: "Shine",
 };
 
 const messages: Record<BotLocale, Record<MessageKey, string>> = { ar, en };

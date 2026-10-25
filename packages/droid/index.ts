@@ -7,15 +7,18 @@ export {
   type DroidContext,
   type DroidOptions,
   type Logger,
+  notifyMember,
   SITE_URL,
   STALE_UPDATE_SECONDS,
 } from "./bot";
 export {
   type BulbBalance,
+  type BulbTier,
   createSupabaseData,
   type DroidData,
   type FaqEntry,
   type FaqTopic,
+  type JoinCheck,
   type MemberProfile,
   type OrderSummary,
   type TelegramChat,

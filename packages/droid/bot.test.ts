@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { notifyMember } from "./bot";
 import type { TelegramMember } from "./data";
 import {
   type ApiCall,
@@ -442,5 +443,107 @@ describe("channel newsletter", () => {
     expect(textOf(messages[0])).toBe("New post in The IDEA:");
     expect(buttonsOf(messages[0])[0]?.url).toBe("https://t.me/theideaiq/42");
     expect(state.members.get(2)?.newsletter_opt_in).toBe(false);
+  });
+});
+
+describe("The Club's join requests", () => {
+  const request = (chatId: number, from: ReturnType<typeof user>) => ({
+    chat_join_request: {
+      chat: { id: chatId, title: "Beam room", type: "supergroup" as const },
+      date: NOW_SECONDS,
+      from,
+      user_chat_id: from.id,
+    } as never,
+  });
+
+  test("approves requests that pass the chat's rule", async () => {
+    const { data } = createFakeData({
+      joins: {
+        "-500:1": { allowed: true, linked: true, needed: "beam", rule: "tier" },
+      },
+    });
+    const { send, sent } = createTestBot({ data });
+    await send(request(-500, user(1)));
+    expect(sent("approveChatJoinRequest")[0]?.payload).toMatchObject({
+      chat_id: -500,
+      user_id: 1,
+    });
+    expect(sent()).toHaveLength(0);
+  });
+
+  test("declines the rest and says how to get in", async () => {
+    const { data } = createFakeData({
+      joins: {
+        "-500:1": {
+          allowed: false,
+          linked: true,
+          needed: "beam",
+          rule: "tier",
+        },
+        "-500:2": { allowed: false, linked: false, needed: null, rule: "pass" },
+      },
+    });
+    const { send, sent } = createTestBot({ data });
+
+    await send(request(-500, user(1, { language_code: "en" })));
+    expect(sent("declineChatJoinRequest")).toHaveLength(1);
+    expect(textOf(sent()[0])).toContain("Beam room is for Beam members and up");
+    expect(buttonsOf(sent()[0])[0]?.url).toBe(
+      "https://theideaiq.com/pass/bulbs"
+    );
+
+    await send(request(-500, user(2, { language_code: "en" })));
+    expect(textOf(sent()[1])).toContain("connect Telegram to The IDEA Pass");
+    expect(buttonsOf(sent()[1])[0]?.url).toBe(
+      "https://theideaiq.com/pass/settings"
+    );
+  });
+
+  test("leaves chats without a rule to their admins", async () => {
+    const { data } = createFakeData();
+    const { calls, send } = createTestBot({ data });
+    await send(request(-600, user(3)));
+    expect(calls).toHaveLength(0);
+  });
+});
+
+describe("notifications on Telegram", () => {
+  test("sends the title, text and a button, and reports a blocked bot", async () => {
+    const { data } = createFakeData();
+    const { bot, sent } = createTestBot({ data });
+    expect(
+      await notifyMember(bot.api, {
+        body: "Open it to see the details.",
+        locale: "en",
+        telegramId: 42,
+        title: "Your order is on its way",
+        url: "https://theideaiq.com/pass/orders/o1",
+      })
+    ).toBe(true);
+    expect(textOf(sent()[0])).toBe(
+      "<b>Your order is on its way</b>\nOpen it to see the details."
+    );
+    expect(buttonsOf(sent()[0])[0]).toMatchObject({
+      text: "Open",
+      url: "https://theideaiq.com/pass/orders/o1",
+    });
+
+    const blocked = createTestBot(
+      { data },
+      {
+        sendMessage: () => ({
+          error: { code: 403, description: "Forbidden: bot was blocked" },
+        }),
+      }
+    );
+    expect(
+      await notifyMember(blocked.bot.api, {
+        body: "x",
+        locale: "ar",
+        telegramId: 42,
+        title: "y",
+        url: "https://theideaiq.com",
+      })
+    ).toBe(false);
   });
 });

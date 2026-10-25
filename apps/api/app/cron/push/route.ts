@@ -5,11 +5,13 @@ import { NextResponse } from "next/server";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 import { getPushSender } from "@/lib/push";
 import { deliverPushNotifications } from "@/lib/push/deliver";
+import { getDroid } from "@/lib/telegram";
+import { deliverTelegramNotifications } from "@/lib/telegram-notify";
 import { getWhatsAppSender, whatsappFallbackLanguage } from "@/lib/whatsapp";
 import { deliverWhatsAppNotifications } from "@/lib/whatsapp/deliver";
 
 /**
- * Catch-up for push notifications and WhatsApp messages the database
+ * Catch-up for push notifications, Telegram and WhatsApp messages the database
  * webhook missed (API down, webhook not set up yet): sends unsent
  * notifications of the last day on each configured channel.
  */
@@ -20,17 +22,21 @@ export const GET = async (request: Request): Promise<Response> => {
 
   const pushSender = getPushSender();
   const whatsappSender = getWhatsAppSender();
-  if (!(pushSender || whatsappSender)) {
+  const droid = getDroid();
+  if (!(pushSender || whatsappSender || droid)) {
     return NextResponse.json({ ok: true, skipped: "push_not_configured" });
   }
 
   const admin = createAdminClient();
-  const [push, whatsapp] = await Promise.allSettled([
+  const [push, whatsapp, telegram] = await Promise.allSettled([
     pushSender ? deliverPushNotifications(admin, pushSender) : null,
     whatsappSender
       ? deliverWhatsAppNotifications(admin, whatsappSender, {
           fallbackLanguage: whatsappFallbackLanguage(),
         })
+      : null,
+    droid
+      ? droid.then((bot) => deliverTelegramNotifications(admin, bot))
       : null,
   ]);
 
@@ -40,7 +46,14 @@ export const GET = async (request: Request): Promise<Response> => {
   if (whatsapp.status === "rejected") {
     log.error(`WhatsApp catch-up failed: ${parseError(whatsapp.reason)}`);
   }
-  if (push.status === "rejected" || whatsapp.status === "rejected") {
+  if (telegram.status === "rejected") {
+    log.error(`Telegram catch-up failed: ${parseError(telegram.reason)}`);
+  }
+  if (
+    push.status === "rejected" ||
+    whatsapp.status === "rejected" ||
+    telegram.status === "rejected"
+  ) {
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 
@@ -48,5 +61,6 @@ export const GET = async (request: Request): Promise<Response> => {
     ok: true,
     ...(push.value ?? { skipped: "push_not_configured" }),
     ...(whatsapp.value ? { whatsapp: whatsapp.value } : {}),
+    ...(telegram.value ? { telegram: telegram.value } : {}),
   });
 };
