@@ -22,6 +22,10 @@
     {
       "path": "/cron/newsletter-contacts",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/cron/bulbs",
+      "schedule": "30 3 * * *"
     }
   ]
 }

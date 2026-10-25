@@ -816,6 +816,7 @@
       "support": "Support",
       "sell": "Sell to us",
       "pass": "My Pass",
+      "bulbs": "Bulbs",
       "backOffice": "Back office"
     },
     "roles": {
@@ -1534,6 +1535,60 @@
         "withdrawing": "Withdrawing…",
         "actionFailed": "That didn't work. Refresh and try again."
       }
+    },
+    "bulbs": {
+      "title": "Bulbs",
+      "available": "Bulbs you can use",
+      "worth": "Worth {amount}",
+      "pending": "{bulbs} more on the way (after the return window)",
+      "rate": "{rate}% back in Bulbs",
+      "progressLabel": "Progress to the next tier",
+      "toNext": "Spend {amount} more to reach {tier}.",
+      "topTier": "You're at the top tier.",
+      "spend": "Spent in the last 12 months: {amount}",
+      "tiersTitle": "Tiers",
+      "from": "From {amount} a year",
+      "everyone": "Every member",
+      "cashback": "{rate}% back in Bulbs",
+      "perks": {
+        "club": "The members-only Club room",
+        "priority": "First in line for events and rare items",
+        "support": "Quick-reply support"
+      },
+      "rules": {
+        "value": "1 Bulb is worth 100 IQD.",
+        "plus": "The IDEA Plus members earn 1% more on every tier.",
+        "pending": "Bulbs from an order are usable 7 days after delivery; a cancelled or refunded order takes them back.",
+        "tradeIn": "Sell to us for store credit and it's paid in Bulbs, with 20% more than the cash offer.",
+        "expiry": "Bulbs don't expire while you're active; after 12 months without any activity they do, and we remind you a month before."
+      },
+      "historyTitle": "History",
+      "empty": "No Bulbs yet. Your first order earns cashback and a 20-Bulb welcome bonus.",
+      "usableFrom": "usable from {date}",
+      "voided": "cancelled",
+      "kinds": {
+        "purchase": "Cashback on an order",
+        "bonus": "Bonus",
+        "firstOrder": "First-order bonus",
+        "trade_in": "Trade-in paid in Bulbs",
+        "redemption": "Spent on an order",
+        "adjustment": "Adjusted by The IDEA",
+        "expiry": "Expired"
+      },
+      "tiers": {
+        "glow": {
+          "name": "Glow"
+        },
+        "shine": {
+          "name": "Shine"
+        },
+        "beam": {
+          "name": "Beam"
+        },
+        "blaze": {
+          "name": "Blaze"
+        }
+      }
     }
   },
   "store": {
@@ -1689,6 +1744,10 @@
         "rental_due_soon": {
           "title": "Rental due soon",
           "body": "{name} is due back{hasDue, select, yes { on {due}} other {}}."
+        },
+        "bulbs_expiring": {
+          "title": "Your Bulbs expire soon",
+          "body": "Your {bulbs} Bulbs expire on {date}. Any order or activity keeps them."
         }
       },
       "kinds": {
@@ -2388,6 +2447,17 @@
         "unnamed": "No name",
         "since": "Member since {date}",
         "unknown": "No member with this number, or the code has expired."
+      },
+      "bulbs": {
+        "title": "Bulbs",
+        "available": "Usable",
+        "pending": "Pending",
+        "tier": "Tier",
+        "spend": "Spent in 12 months",
+        "amount": "Bulbs to add or take away",
+        "amountHint": "Negative to take away, e.g. -50.",
+        "reason": "Reason",
+        "adjust": "Adjust Bulbs"
       }
     },
     "finance": {
@@ -2397,7 +2467,8 @@
         "journal": "Journal",
         "accounts": "Chart of accounts",
         "payments": "Payments",
-        "settings": "Settings"
+        "settings": "Settings",
+        "bulbs": "Bulbs"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -2500,6 +2571,21 @@
         "taxHint": "Rate on taxable profit, e.g. 15.",
         "vat": "VAT / sales tax (%)",
         "vatHint": "0 if no sales tax applies."
+      },
+      "bulbs": {
+        "available": "Usable Bulbs held",
+        "pending": "Pending Bulbs",
+        "value": "What members hold",
+        "valueHint": "Usable and pending Bulbs at 100 IQD each.",
+        "rates": "Rates",
+        "ratesHint": "The 12-month spend that reaches each tier and its cashback, in percent. Changes apply to orders delivered from now on.",
+        "minSpend": "{tier}: from (IQD a year)",
+        "rate": "{tier}: cashback (%)",
+        "glowHint": "Every member starts at this tier.",
+        "plusBonus": "The IDEA Plus bonus (percentage points)",
+        "plusBonusHint": "Added to the tier's cashback for Plus members.",
+        "multipliers": "Category multipliers",
+        "multipliersHint": "1 earns the full rate, 0.5 half (for low-margin items like laptops), 0 nothing."
       }
     },
     "editorial": {
@@ -2965,7 +3051,7 @@
         "delivery": "Every order and delivery, tracked here",
         "events": "Events and meetups, RSVP in a tap",
         "sell": "Sell or trade in what you no longer use",
-        "bulbs": "Bulbs: rewards for everything you do at The IDEA (coming soon)"
+        "bulbs": "{bulbs} Bulbs, {rate}% back on every order"
       }
     },
     "signOut": {

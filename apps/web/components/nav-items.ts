@@ -5,6 +5,7 @@ import {
   HeartIcon,
   IdCardIcon,
   LifeBuoyIcon,
+  LightbulbIcon,
   type LucideIcon,
   PackageIcon,
   PenLineIcon,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 
 export type NavKey =
+  | "bulbs"
   | "events"
   | "orders"
   | "pass"
@@ -31,6 +33,7 @@ export interface NavItem {
 /** The sections of My Pass, in menu order. */
 export const navItems: NavItem[] = [
   { href: "/pass", icon: IdCardIcon, key: "pass" },
+  { href: "/pass/bulbs", icon: LightbulbIcon, key: "bulbs" },
   { href: "/pass/orders", icon: PackageIcon, key: "orders" },
   { href: "/pass/plus", icon: CrownIcon, key: "plus" },
   { href: "/pass/wishlist", icon: HeartIcon, key: "wishlist" },

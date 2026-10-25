@@ -39,6 +39,84 @@ export type Database = {
         };
         Relationships: [];
       };
+      bulb_entries: {
+        Row: {
+          amount: number;
+          available_at: string;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          kind: Database["public"]["Enums"]["bulb_kind"];
+          order_id: string | null;
+          reason: string | null;
+          status: Database["public"]["Enums"]["bulb_status"];
+          trade_in_id: string | null;
+          user_id: string;
+        };
+        Insert: {
+          amount: number;
+          available_at?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind: Database["public"]["Enums"]["bulb_kind"];
+          order_id?: string | null;
+          reason?: string | null;
+          status?: Database["public"]["Enums"]["bulb_status"];
+          trade_in_id?: string | null;
+          user_id: string;
+        };
+        Update: {
+          amount?: number;
+          available_at?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind?: Database["public"]["Enums"]["bulb_kind"];
+          order_id?: string | null;
+          reason?: string | null;
+          status?: Database["public"]["Enums"]["bulb_status"];
+          trade_in_id?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bulb_entries_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bulb_entries_trade_in_id_fkey";
+            columns: ["trade_in_id"];
+            isOneToOne: false;
+            referencedRelation: "trade_ins";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      bulb_tiers: {
+        Row: {
+          min_spend: number;
+          rate: number;
+          tier: Database["public"]["Enums"]["bulb_tier"];
+          updated_at: string;
+        };
+        Insert: {
+          min_spend: number;
+          rate: number;
+          tier: Database["public"]["Enums"]["bulb_tier"];
+          updated_at?: string;
+        };
+        Update: {
+          min_spend?: number;
+          rate?: number;
+          tier?: Database["public"]["Enums"]["bulb_tier"];
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       cart_items: {
         Row: {
           condition: Database["public"]["Enums"]["product_condition"] | null;
@@ -857,6 +935,7 @@ export type Database = {
       };
       product_categories: {
         Row: {
+          bulb_multiplier: number;
           created_at: string;
           id: string;
           kind: Database["public"]["Enums"]["product_kind"];
@@ -866,6 +945,7 @@ export type Database = {
           slug: string;
         };
         Insert: {
+          bulb_multiplier?: number;
           created_at?: string;
           id?: string;
           kind?: Database["public"]["Enums"]["product_kind"];
@@ -875,6 +955,7 @@ export type Database = {
           slug: string;
         };
         Update: {
+          bulb_multiplier?: number;
           created_at?: string;
           id?: string;
           kind?: Database["public"]["Enums"]["product_kind"];
@@ -1350,6 +1431,7 @@ export type Database = {
       };
       store_settings: {
         Row: {
+          bulb_plus_bonus: number;
           cash_on_delivery_enabled: boolean;
           free_shipping_threshold: number | null;
           id: boolean;
@@ -1362,6 +1444,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          bulb_plus_bonus?: number;
           cash_on_delivery_enabled?: boolean;
           free_shipping_threshold?: number | null;
           id?: boolean;
@@ -1374,6 +1457,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          bulb_plus_bonus?: number;
           cash_on_delivery_enabled?: boolean;
           free_shipping_threshold?: number | null;
           id?: boolean;
@@ -1930,6 +2014,36 @@ export type Database = {
           slug: string;
         }[];
       };
+      adjust_bulbs: {
+        Args: { bulbs: number; member: string; why: string };
+        Returns: {
+          amount: number;
+          available_at: string;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          kind: Database["public"]["Enums"]["bulb_kind"];
+          order_id: string | null;
+          reason: string | null;
+          status: Database["public"]["Enums"]["bulb_status"];
+          trade_in_id: string | null;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "bulb_entries";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      bulbs_outstanding: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          available: number;
+          pending: number;
+          value_iqd: number;
+        }[];
+      };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
       check_pass: {
@@ -2121,6 +2235,28 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      member_bulbs: {
+        Args: { member: string };
+        Returns: {
+          available: number;
+          pending: number;
+          rate: number;
+          spend: number;
+          tier: Database["public"]["Enums"]["bulb_tier"];
+        }[];
+      };
+      my_bulbs: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          available: number;
+          next_min_spend: number;
+          next_tier: Database["public"]["Enums"]["bulb_tier"];
+          pending: number;
+          rate: number;
+          spend: number;
+          tier: Database["public"]["Enums"]["bulb_tier"];
+        }[];
+      };
       my_calendar_token: { Args: Record<PropertyKey, never>; Returns: string };
       my_pass_secret: {
         Args: Record<PropertyKey, never>;
@@ -2249,6 +2385,10 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string;
       };
+      run_bulb_expiry: {
+        Args: Record<PropertyKey, never>;
+        Returns: Record<string, unknown>;
+      };
       search_products: {
         Args: {
           search_category?: string;
@@ -2288,6 +2428,10 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      set_bulb_rates: {
+        Args: { multipliers?: Json; plus_bonus: number };
+        Returns: undefined;
+      };
       set_staff_role: {
         Args: {
           new_role: Database["public"]["Enums"]["staff_role"];
@@ -2301,6 +2445,15 @@ export type Database = {
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
       billing_interval: "month" | "year";
+      bulb_kind:
+        | "purchase"
+        | "bonus"
+        | "trade_in"
+        | "redemption"
+        | "adjustment"
+        | "expiry";
+      bulb_status: "pending" | "available" | "void";
+      bulb_tier: "glow" | "shine" | "beam" | "blaze";
       crm_status: "lead" | "customer" | "vip" | "churned";
       ledger_scenario: "actual" | "forecast" | "budget";
       notification_kind:
@@ -2531,6 +2684,16 @@ export const Constants = {
     Enums: {
       account_type: ["asset", "liability", "equity", "revenue", "expense"],
       billing_interval: ["month", "year"],
+      bulb_kind: [
+        "purchase",
+        "bonus",
+        "trade_in",
+        "redemption",
+        "adjustment",
+        "expiry",
+      ],
+      bulb_status: ["pending", "available", "void"],
+      bulb_tier: ["glow", "shine", "beam", "blaze"],
       crm_status: ["lead", "customer", "vip", "churned"],
       ledger_scenario: ["actual", "forecast", "budget"],
       notification_kind: [

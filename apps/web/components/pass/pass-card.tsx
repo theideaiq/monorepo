@@ -9,10 +9,12 @@ import {
   HandCoinsIcon,
   LightbulbIcon,
   type LucideIcon,
+  SparklesIcon,
   TruckIcon,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { env } from "@/env";
+import { type BulbTier, tierPerks } from "@/lib/bulbs";
 import { appLink } from "@/lib/links";
 import type { PassSession } from "@/lib/pass/session";
 import { LiveCard } from "./live-card";
@@ -80,36 +82,44 @@ const Perks = ({
  * authenticator app, sign-out and, for staff, The IDEA Spark.
  */
 export const PassCard = async ({ session }: PassCardProps) => {
-  const [locale, t, card] = await Promise.all([
+  const [locale, t, card, tBulbs] = await Promise.all([
     getLocale(),
     getTranslations("pass.home"),
     getTranslations("pass.card"),
+    getTranslations("app.bulbs"),
   ]);
   // Everyone reads their own rows (RLS); staff see a link to the back office.
-  const [{ data: profile }, { data: staff }, { data: subscription }] =
-    await Promise.all([
-      session.supabase
-        .from("profiles")
-        .select("full_name, created_at")
-        .eq("id", session.user.id)
-        .maybeSingle(),
-      session.supabase
-        .from("staff")
-        .select("role")
-        .eq("user_id", session.user.id)
-        .maybeSingle(),
-      session.supabase
-        .from("subscriptions")
-        .select("status, plan:plans!inner (name, rental_slots, audience)")
-        .eq("user_id", session.user.id)
-        .eq("plan.audience", "plus")
-        .eq("status", "active")
-        .limit(1)
-        .maybeSingle(),
-    ]);
+  const [
+    { data: profile },
+    { data: staff },
+    { data: subscription },
+    { data: bulbRows },
+  ] = await Promise.all([
+    session.supabase
+      .from("profiles")
+      .select("full_name, created_at")
+      .eq("id", session.user.id)
+      .maybeSingle(),
+    session.supabase
+      .from("staff")
+      .select("role")
+      .eq("user_id", session.user.id)
+      .maybeSingle(),
+    session.supabase
+      .from("subscriptions")
+      .select("status, plan:plans!inner (name, rental_slots, audience)")
+      .eq("user_id", session.user.id)
+      .eq("plan.audience", "plus")
+      .eq("status", "active")
+      .limit(1)
+      .maybeSingle(),
+    session.supabase.rpc("my_bulbs"),
+  ]);
   const name = profile?.full_name?.trim();
   const phone = session.user.phone ? formatPhone(session.user.phone) : null;
   const plan = subscription?.plan ?? null;
+  const bulbs = bulbRows?.[0] ?? null;
+  const tier: BulbTier = bulbs?.tier ?? "glow";
 
   const perks: Perk[] = [
     plan
@@ -128,7 +138,20 @@ export const PassCard = async ({ session }: PassCardProps) => {
     { icon: TruckIcon, text: card("perks.delivery") },
     { href: "/events", icon: CalendarDaysIcon, text: card("perks.events") },
     { href: "/pass/sell", icon: HandCoinsIcon, text: card("perks.sell") },
-    { icon: LightbulbIcon, text: card("perks.bulbs") },
+    {
+      href: "/pass/bulbs",
+      icon: LightbulbIcon,
+      text: card("perks.bulbs", {
+        bulbs: formatNumber(bulbs?.available ?? 0, locale),
+        rate: formatNumber(Number(bulbs?.rate ?? 0), locale, {
+          maximumFractionDigits: 2,
+        }),
+      }),
+    },
+    ...tierPerks[tier].map((perk) => ({
+      icon: SparklesIcon,
+      text: tBulbs(`perks.${perk}`),
+    })),
   ];
 
   return (
@@ -145,6 +168,8 @@ export const PassCard = async ({ session }: PassCardProps) => {
             }
             name={name || t("noName")}
             plan={plan?.name ?? null}
+            tier={tier}
+            tierName={tBulbs(`tiers.${tier}.name`)}
           />
           <WalletButton />
         </div>

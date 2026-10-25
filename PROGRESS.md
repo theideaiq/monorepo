@@ -238,6 +238,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Accepted submissions become Members' work posts with the member's byline
   (back office → Editorial → the submission → Create the post). Migration
   `20261127000000_the_post.sql`.
+- 2026-10-25: **Bulbs (earning).** Cashback in Bulbs on delivered orders by
+  tier (Glow 3%, Shine 4% from 250,000 IQD, Beam 5% from 750,000 IQD,
+  Blaze 7% from 2,000,000 IQD in 12 months; Plus +1%; laptops half),
+  pending for 7 days; a 20-Bulb first-order bonus; trade-ins paid in Bulbs
+  at +20% plus a 10-Bulb bonus; expiry after 12 months without activity.
+  The Pass card changes colour with the tier. My Pass → Bulbs; support
+  adjusts on the customer page; finance edits rates in Finance → Bulbs.
+  Next: spending Bulbs at checkout and the tiers' delivery perks. Not yet:
+  the birthday gift (no birthday on profiles), the photo-review and event
+  check-in bonuses (no photos or check-ins yet), Telegram's bonus (with
+  Telegram sign-in). Migration `20261128000000_bulbs.sql`.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

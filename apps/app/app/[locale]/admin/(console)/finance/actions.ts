@@ -14,7 +14,14 @@ import {
   journalEntrySchema,
   parseDimensions,
 } from "@/lib/admin/finance";
-import { checkbox, optionalText, optionalUuid, text } from "@/lib/admin/forms";
+import {
+  checkbox,
+  decimalIn,
+  int,
+  optionalText,
+  optionalUuid,
+  text,
+} from "@/lib/admin/forms";
 import { toRpcLines, validateJournalLines } from "@/lib/admin/journal";
 
 const { Enums } = Constants.public;
@@ -129,6 +136,63 @@ export const saveFinancialSettings = staffAction(
         })
         .eq("id", true)
         .select("id")
+    );
+    return success();
+  }
+);
+
+// ── Bulbs ───────────────────────────────────────────────────────────────────
+
+const tierFields = Object.fromEntries(
+  (["glow", "shine", "beam", "blaze"] as const).flatMap((tier) => [
+    [`${tier}Min`, int(0, 1_000_000_000)],
+    [`${tier}Rate`, decimalIn(0, 50)],
+  ])
+);
+
+/**
+ * Bulbs rates: each tier's 12-month spend and cashback, the Plus bonus and
+ * the category multipliers (fields named `multiplier:<category id>`).
+ */
+export const saveBulbRates = staffAction(
+  "finance",
+  z.object({ ...tierFields, plusBonus: decimalIn(0, 20) }).catchall(z.string()),
+  async ({ input, supabase }) => {
+    const values = input as Record<string, unknown>;
+    if (Number(values.glowMin) !== 0) {
+      // Glow is every member's tier.
+      throw new ActionFailure("invalid");
+    }
+    const updates = await Promise.all(
+      (["glow", "shine", "beam", "blaze"] as const).map((tier) =>
+        supabase
+          .from("bulb_tiers")
+          .update({
+            min_spend: Number(values[`${tier}Min`]),
+            rate: Number(values[`${tier}Rate`]),
+          })
+          .eq("tier", tier)
+          .select("tier")
+      )
+    );
+    for (const result of updates) {
+      affected(result);
+    }
+    const multipliers: Record<string, number> = {};
+    for (const [key, value] of Object.entries(values)) {
+      if (key.startsWith("multiplier:")) {
+        const parsed = decimalIn(0, 5).safeParse(value);
+        if (!parsed.success) {
+          throw new ActionFailure("invalid");
+        }
+        multipliers[key.slice("multiplier:".length)] = parsed.data;
+      }
+    }
+    check(
+      await supabase.rpc("set_bulb_rates", {
+        multipliers,
+        plus_bonus: Number(values.plusBonus),
+      })
     );
     return success();
   }
