@@ -41,6 +41,7 @@ export type Database = {
       };
       cart_items: {
         Row: {
+          condition: Database["public"]["Enums"]["product_condition"] | null;
           created_at: string;
           id: string;
           product_id: string;
@@ -50,6 +51,7 @@ export type Database = {
           variant_id: string | null;
         };
         Insert: {
+          condition?: Database["public"]["Enums"]["product_condition"] | null;
           created_at?: string;
           id?: string;
           product_id: string;
@@ -59,6 +61,7 @@ export type Database = {
           variant_id?: string | null;
         };
         Update: {
+          condition?: Database["public"]["Enums"]["product_condition"] | null;
           created_at?: string;
           id?: string;
           product_id?: string;
@@ -534,6 +537,7 @@ export type Database = {
       order_items: {
         Row: {
           attributes: NonNullable<Json>;
+          condition: Database["public"]["Enums"]["product_condition"] | null;
           id: string;
           name_ar: string;
           name_en: string;
@@ -545,6 +549,7 @@ export type Database = {
         };
         Insert: {
           attributes?: NonNullable<Json>;
+          condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
           name_ar: string;
           name_en: string;
@@ -556,6 +561,7 @@ export type Database = {
         };
         Update: {
           attributes?: NonNullable<Json>;
+          condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
           name_ar?: string;
           name_en?: string;
@@ -1006,12 +1012,14 @@ export type Database = {
           description_en: string | null;
           details: NonNullable<Json>;
           featured: boolean;
+          group_key: string | null;
           id: string;
           images: string[];
           kind: Database["public"]["Enums"]["product_kind"];
           name_ar: string;
           name_en: string;
           price: number;
+          rental_stock: number;
           rental_tier: number | null;
           seller: string;
           slug: string;
@@ -1030,12 +1038,14 @@ export type Database = {
           description_en?: string | null;
           details?: NonNullable<Json>;
           featured?: boolean;
+          group_key?: string | null;
           id?: string;
           images?: string[];
           kind?: Database["public"]["Enums"]["product_kind"];
           name_ar: string;
           name_en: string;
           price: number;
+          rental_stock?: number;
           rental_tier?: number | null;
           seller?: string;
           slug: string;
@@ -1054,12 +1064,14 @@ export type Database = {
           description_en?: string | null;
           details?: NonNullable<Json>;
           featured?: boolean;
+          group_key?: string | null;
           id?: string;
           images?: string[];
           kind?: Database["public"]["Enums"]["product_kind"];
           name_ar?: string;
           name_en?: string;
           price?: number;
+          rental_stock?: number;
           rental_tier?: number | null;
           seller?: string;
           slug?: string;
@@ -1264,6 +1276,102 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [];
+      };
+      stock_items: {
+        Row: {
+          acquired_at: string;
+          condition: Database["public"]["Enums"]["product_condition"];
+          cost: number | null;
+          created_at: string;
+          id: string;
+          location: string;
+          note: string | null;
+          order_item_id: string | null;
+          price: number | null;
+          product_id: string;
+          purpose: Database["public"]["Enums"]["stock_purpose"];
+          rental_id: string | null;
+          serial: string | null;
+          status: Database["public"]["Enums"]["stock_status"];
+          trade_in_id: string | null;
+          updated_at: string;
+          variant_id: string | null;
+        };
+        Insert: {
+          acquired_at?: string;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          cost?: number | null;
+          created_at?: string;
+          id?: string;
+          location?: string;
+          note?: string | null;
+          order_item_id?: string | null;
+          price?: number | null;
+          product_id: string;
+          purpose?: Database["public"]["Enums"]["stock_purpose"];
+          rental_id?: string | null;
+          serial?: string | null;
+          status?: Database["public"]["Enums"]["stock_status"];
+          trade_in_id?: string | null;
+          updated_at?: string;
+          variant_id?: string | null;
+        };
+        Update: {
+          acquired_at?: string;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          cost?: number | null;
+          created_at?: string;
+          id?: string;
+          location?: string;
+          note?: string | null;
+          order_item_id?: string | null;
+          price?: number | null;
+          product_id?: string;
+          purpose?: Database["public"]["Enums"]["stock_purpose"];
+          rental_id?: string | null;
+          serial?: string | null;
+          status?: Database["public"]["Enums"]["stock_status"];
+          trade_in_id?: string | null;
+          updated_at?: string;
+          variant_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stock_items_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "stock_items_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "stock_items_rental_id_fkey";
+            columns: ["rental_id"];
+            isOneToOne: false;
+            referencedRelation: "rentals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "stock_items_trade_in_id_fkey";
+            columns: ["trade_in_id"];
+            isOneToOne: false;
+            referencedRelation: "trade_ins";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "stock_items_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       store_settings: {
         Row: {
@@ -2079,6 +2187,16 @@ export type Database = {
         };
         Returns: string;
       };
+      product_offers: {
+        Args: { offer_product: string };
+        Returns: {
+          available: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          price: number;
+          purpose: Database["public"]["Enums"]["stock_purpose"];
+          variant_id: string;
+        }[];
+      };
       product_review_list: {
         Args: { max_rows?: number; review_product: string; skip?: number };
         Returns: {
@@ -2155,12 +2273,14 @@ export type Database = {
           description_en: string | null;
           details: NonNullable<Json>;
           featured: boolean;
+          group_key: string | null;
           id: string;
           images: string[];
           kind: Database["public"]["Enums"]["product_kind"];
           name_ar: string;
           name_en: string;
           price: number;
+          rental_stock: number;
           rental_tier: number | null;
           seller: string;
           slug: string;
@@ -2235,6 +2355,14 @@ export type Database = {
         | "finance"
         | "marketing"
         | "support";
+      stock_purpose: "sale" | "rental" | "business";
+      stock_status:
+        | "available"
+        | "reserved"
+        | "sold"
+        | "rented"
+        | "repair"
+        | "retired";
       submission_status:
         | "pending"
         | "under_review"
@@ -2460,6 +2588,15 @@ export const Constants = {
         "finance",
         "marketing",
         "support",
+      ],
+      stock_purpose: ["sale", "rental", "business"],
+      stock_status: [
+        "available",
+        "reserved",
+        "sold",
+        "rented",
+        "repair",
+        "retired",
       ],
       submission_status: [
         "pending",

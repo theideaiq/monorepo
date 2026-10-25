@@ -4,6 +4,7 @@ import { track } from "@repo/analytics/client";
 import { useAuth } from "@repo/auth/provider";
 import {
   getProductBySlug,
+  getProductOffers,
   getStoreSettings,
   listCategories,
   listDeliveryZones,
@@ -16,7 +17,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { type CartItem, cartCount, MAX_QUANTITY } from "./cart";
+import {
+  type CartItem,
+  cartCount,
+  isOtherCondition,
+  MAX_QUANTITY,
+} from "./cart";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /** Store catalog, cart and orders, all through RLS. */
@@ -69,20 +75,63 @@ export const useDeliveryZones = () => {
 };
 
 const CART_COLUMNS =
-  "id, quantity, product_id, variant_id, product:products (id, slug, kind, status, name_ar, name_en, price, compare_at_price, currency, images, stock_count), variant:product_variants (id, attributes, price_override, stock_count, image)" as const;
+  "id, quantity, condition, product_id, variant_id, product:products (id, slug, kind, status, condition, name_ar, name_en, price, compare_at_price, currency, images, stock_count), variant:product_variants (id, attributes, price_override, stock_count, image)" as const;
+
+/** Adds the copies on offer to lines in another condition (used, …). */
+const withOffers = async (
+  supabase: ReturnType<typeof useAuth>["supabase"],
+  items: CartItem[]
+) => {
+  const productIds = [
+    ...new Set(items.filter(isOtherCondition).map((item) => item.product_id)),
+  ];
+  if (productIds.length === 0) {
+    return items;
+  }
+  const offers = new Map(
+    await Promise.all(
+      productIds.map(
+        async (id) => [id, await getProductOffers(supabase, id)] as const
+      )
+    )
+  );
+  return items.map((item) => {
+    if (!isOtherCondition(item)) {
+      return item;
+    }
+    const offer = offers
+      .get(item.product_id)
+      ?.find(
+        (candidate) =>
+          candidate.purpose === "sale" &&
+          candidate.condition === item.condition &&
+          candidate.variant_id === item.variant_id
+      );
+    return {
+      ...item,
+      offer:
+        offer && offer.price !== null
+          ? { available: offer.available, price: offer.price }
+          : null,
+    };
+  });
+};
 
 export const useCart = () => {
   const { supabase, user } = useAuth();
   return useQuery({
     enabled: Boolean(user),
     queryFn: async () =>
-      unwrap(
-        await supabase
-          .from("cart_items")
-          .select(CART_COLUMNS)
-          .eq("user_id", requireUserId(user?.id))
-          .order("created_at")
-      ) as unknown as CartItem[],
+      withOffers(
+        supabase,
+        unwrap(
+          await supabase
+            .from("cart_items")
+            .select(CART_COLUMNS)
+            .eq("user_id", requireUserId(user?.id))
+            .order("created_at")
+        ) as unknown as CartItem[]
+      ),
     queryKey: queryKeys.cart(user?.id ?? ""),
   });
 };
@@ -95,6 +144,8 @@ export const useCartCount = () => {
 
 export interface AddToCart {
   analytics: { currency: string; id: string; name: string; price: number };
+  /** Another condition than the product's own (a used copy); null otherwise. */
+  condition?: CartItem["condition"];
   productId: string;
   quantity: number;
   variantId: string | null;
@@ -102,14 +153,19 @@ export interface AddToCart {
 
 /**
  * Adds to the cart: raises the quantity of an existing line (one line per
- * product and variant) or inserts a new one.
+ * product, variant and condition) or inserts a new one.
  */
 export const useAddToCart = () => {
   const { supabase, user } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ productId, quantity, variantId }: AddToCart) => {
+    mutationFn: async ({
+      condition = null,
+      productId,
+      quantity,
+      variantId,
+    }: AddToCart) => {
       const userId = requireUserId(user?.id);
       let existing = supabase
         .from("cart_items")
@@ -119,6 +175,9 @@ export const useAddToCart = () => {
       existing = variantId
         ? existing.eq("variant_id", variantId)
         : existing.is("variant_id", null);
+      existing = condition
+        ? existing.eq("condition", condition)
+        : existing.is("condition", null);
       const line = unwrap(await existing.maybeSingle());
 
       if (line) {
@@ -135,6 +194,7 @@ export const useAddToCart = () => {
 
       unwrap(
         await supabase.from("cart_items").insert({
+          condition,
           product_id: productId,
           quantity: Math.min(quantity, MAX_QUANTITY),
           user_id: userId,
@@ -182,7 +242,7 @@ export const useUpdateCartLine = () => {
 };
 
 const ORDER_COLUMNS =
-  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, name_ar, name_en, attributes, unit_price, quantity)" as const;
+  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, condition, name_ar, name_en, attributes, unit_price, quantity)" as const;
 
 export const useOrders = () => {
   const { supabase, user } = useAuth();

@@ -332,6 +332,7 @@ describe("product page", () => {
       (call) => call.table === "cart_items" && call.operation === "insert"
     );
     expect(insert?.payload).toEqual({
+      condition: null,
       product_id: "p1",
       quantity: 1,
       user_id: USER_ID,

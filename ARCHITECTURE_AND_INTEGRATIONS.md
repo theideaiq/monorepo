@@ -1140,6 +1140,37 @@ outside this template.
 
 ### 4.2 Wayl payments
 
+#### Stock per copy (the shared catalogue)
+
+One product is one real thing (a game, an album, a console); every
+physical copy of it is a row in `stock_items` with its condition (new, open
+box, refurbished, used), its purpose (for sale, for rent with The IDEA Plus,
+or used by the business), its status (available, reserved, sold, rented, in
+repair, retired), where it is, what it cost and, for a copy priced on its
+own such as a used one, its price (else the catalog price). Only catalog
+staff read copies (costs included); customers see `product_offers(product)`:
+available copies by variant, condition and purpose, with the lowest price.
+
+- **Counts follow the copies.** `products.stock_count` (available copies of
+  the product's kind without a variant), `product_variants.stock_count` and
+  `products.rental_stock` are kept by triggers. Writing a count directly
+  (the product form, the CSV import, the catalog workflow) adds copies in
+  the product's condition or retires available ones.
+- **Orders take copies.** Cart and order lines carry a `condition` (null is
+  the product's own). `create_order` prices a line from the copies it will
+  get (cheapest first; the dearest of them, so it never undercharges), and
+  the order takes them when it is paid (cash orders at once); a cancelled
+  order gives them back.
+- **Rentals hold a copy**: any product with copies for rent can be rented,
+  not only rental items, and a returned or cancelled rental frees it.
+- **Trade-ins** completed into a product become one used copy that cost the
+  offer, linked to the request.
+- **Other formats**: products sharing `group_key` (the album on vinyl, CD and
+  cassette) list each other on the product page, which also offers buy new
+  or used, rent with Plus and "Sell to us".
+- **Back office**: Catalog → product → **Copies** adds copies and edits or
+  removes each one.
+
 #### Delivery, pickup and cash orders
 
 Store orders are placed with `create_order(shipping, fulfilment,

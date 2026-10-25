@@ -29,6 +29,7 @@ import { QuantityStepper } from "@/components/store/quantity-stepper";
 import {
   type CartLineView,
   freeShippingRemaining,
+  isOtherCondition,
   lineProblem,
   MAX_QUANTITY,
   summarizeCart,
@@ -41,6 +42,7 @@ import {
 
 const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
   const t = useTranslations("app.cart");
+  const conditions = useTranslations("store.condition");
   const locale = useLocale();
   const update = useUpdateCartLine();
   const { item } = line;
@@ -72,6 +74,11 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
             {item.variant ? (
               <span className="text-muted-foreground text-xs">
                 {describeAttributes(item.variant.attributes)}
+              </span>
+            ) : null}
+            {item.condition && isOtherCondition(item) ? (
+              <span className="text-muted-foreground text-xs">
+                {conditions(item.condition)}
               </span>
             ) : null}
           </div>

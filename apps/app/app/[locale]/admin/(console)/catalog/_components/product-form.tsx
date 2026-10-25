@@ -189,6 +189,14 @@ export const ProductForm = ({
                 value,
               }))}
             />
+            <TextField
+              defaultValue={product?.group_key ?? ""}
+              dir="ltr"
+              hint={t("fields.groupKeyHint")}
+              label={t("fields.groupKey")}
+              maxLength={120}
+              name="groupKey"
+            />
           </FieldGrid>
         </Panel>
 

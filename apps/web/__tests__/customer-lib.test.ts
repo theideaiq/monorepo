@@ -34,6 +34,7 @@ const product = (
   overrides: Partial<NonNullable<CartItem["product"]>> = {}
 ) => ({
   compare_at_price: null,
+  condition: "new" as const,
   currency: "IQD",
   id: "p1",
   images: [],
@@ -48,6 +49,7 @@ const product = (
 });
 
 const item = (overrides: Partial<CartItem> = {}): CartItem => ({
+  condition: null,
   id: "c1",
   product: product(),
   product_id: "p1",
@@ -60,6 +62,21 @@ const item = (overrides: Partial<CartItem> = {}): CartItem => ({
 const settings = { freeShippingThreshold: 100_000, shippingFee: 5000 };
 
 describe("cart", () => {
+  test("a used copy of a new product is priced and counted from its offer", () => {
+    const used = toCartLine(
+      item({ condition: "used", offer: { available: 1, price: 6000 } })
+    );
+    expect(used.unitPrice).toBe(6000);
+    expect(used.available).toBe(1);
+    expect(used.buyable).toBe(true);
+    // No used copy left: the line can't be ordered.
+    expect(toCartLine(item({ condition: "used", offer: null })).buyable).toBe(
+      false
+    );
+    // The product's own condition is the main listing.
+    expect(toCartLine(item({ condition: "new" })).unitPrice).toBe(10_000);
+  });
+
   test("prices lines like create_order(), variant price first", () => {
     expect(toCartLine(item()).unitPrice).toBe(10_000);
     const withVariant = toCartLine(

@@ -9,6 +9,7 @@ import { isUuid } from "@/lib/admin/list";
 import { ratingSummary } from "@/lib/admin/reviews";
 import { canRead } from "@/lib/admin/roles";
 import { requireSection } from "@/lib/admin/session";
+import { CopiesPanel } from "../../_components/copies-panel";
 import { CoverFinder } from "../../_components/cover-finder";
 import { ProductForm } from "../../_components/product-form";
 import { RatingPanel } from "../../_components/rating-panel";
@@ -35,6 +36,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
     { data: categories },
     { data: plans },
     { data: reviews },
+    { data: copies },
   ] = await Promise.all([
     supabase.from("products").select("*").eq("id", id).maybeSingle(),
     supabase
@@ -56,6 +58,13 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       .select("rating, status")
       .eq("product_id", id)
       .limit(10_000),
+    supabase
+      .from("stock_items")
+      .select("*")
+      .eq("product_id", id)
+      .order("status")
+      .order("created_at", { ascending: false })
+      .limit(500),
   ]);
 
   if (!product) {
@@ -105,6 +114,11 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           product={product}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
           tiers={tierOptions(plans ?? [])}
+        />
+        <CopiesPanel
+          copies={copies ?? []}
+          disabled={!canWrite}
+          product={product}
         />
         <RatingPanel
           productId={product.id}

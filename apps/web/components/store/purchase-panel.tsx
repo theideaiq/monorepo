@@ -1,11 +1,12 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import { describeAttributes, localized } from "@repo/commerce";
-import type { ProductDetail } from "@repo/commerce/catalog";
+import { describeAttributes, formatPrice, localized } from "@repo/commerce";
+import type { ProductDetail, ProductOffer } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
 import { localePath } from "@repo/internationalization";
+import { formatNumber } from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { CheckIcon, ShoppingCartIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -61,6 +62,49 @@ const VariantPicker = ({
   );
 };
 
+type Condition = ProductDetail["condition"];
+
+interface ConditionPickerProps {
+  readonly offers: readonly ProductOffer[];
+  readonly onPick: (condition: Condition) => void;
+  readonly value: Condition;
+}
+
+/** New, open box, refurbished or used: each with its price and copies left. */
+const ConditionPicker = ({ offers, onPick, value }: ConditionPickerProps) => {
+  const t = useTranslations("app.store.product");
+  const conditions = useTranslations("store.condition");
+  const locale = useLocale();
+  return (
+    <fieldset className="grid gap-2">
+      <legend className="mb-2 font-medium text-sm">{t("condition")}</legend>
+      <div className="flex flex-wrap gap-2">
+        {offers.map((offer) => (
+          <button
+            aria-pressed={offer.condition === value}
+            className={cn(
+              "grid rounded-md border px-3 py-2 text-start text-sm transition-colors",
+              offer.condition === value
+                ? "border-primary bg-primary/10"
+                : "hover:bg-accent"
+            )}
+            key={offer.condition}
+            onClick={() => onPick(offer.condition)}
+            type="button"
+          >
+            <span className="font-medium">{conditions(offer.condition)}</span>
+            <span className="text-muted-foreground text-xs">
+              {offer.price === null ? null : formatPrice(offer.price, locale)}
+              {" · "}
+              {t("left", { count: formatNumber(offer.available, locale) })}
+            </span>
+          </button>
+        ))}
+      </div>
+    </fieldset>
+  );
+};
+
 /** Rental items: rented with The IDEA Plus, not bought. */
 const RentPanel = ({ productId }: { readonly productId: string }) => {
   const t = useTranslations("app.store.product");
@@ -83,8 +127,11 @@ const RentPanel = ({ productId }: { readonly productId: string }) => {
  * goes to the sign-in first.
  */
 export const PurchasePanel = ({
+  offers = [],
   product,
 }: {
+  /** The copies on offer (product_offers); empty when unknown. */
+  readonly offers?: readonly ProductOffer[];
   readonly product: ProductDetail;
 }) => {
   const t = useTranslations("app.store.product");
@@ -96,16 +143,33 @@ export const PurchasePanel = ({
   const [variantId, setVariantId] = useState<string | null>(
     () => variantForDeepLink(product.product_variants)?.id ?? null
   );
+  const [condition, setCondition] = useState<Condition>(product.condition);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const autoAdded = useRef(false);
 
   const selection = pickVariant(product, variantId);
+  // Copies for sale of the chosen variant, by condition.
+  const forSale = offers.filter(
+    (offer) =>
+      offer.purpose === "sale" &&
+      offer.variant_id === (selection.variant?.id ?? null)
+  );
+  const chosen = forSale.find((offer) => offer.condition === condition);
+  const otherCondition = condition !== product.condition;
+  const price = otherCondition
+    ? (chosen?.price ?? selection.price)
+    : selection.price;
+  // Without offers (not loaded), the variant's or product's count.
+  const stock = offers.length > 0 ? (chosen?.available ?? 0) : selection.stock;
+  const showConditions =
+    forSale.length > 1 ||
+    (forSale.length === 1 && forSale[0]?.condition !== product.condition);
   const canAdd =
     product.kind === "sale" &&
     product.status === "active" &&
     selection.ready &&
-    selection.stock > 0;
+    stock > 0;
 
   const addToCart = (amount: number) => {
     if (!user) {
@@ -125,8 +189,9 @@ export const PurchasePanel = ({
           currency: product.currency,
           id: product.id,
           name: localized(product, "name", locale),
-          price: selection.price,
+          price,
         },
+        condition: otherCondition ? condition : null,
         productId: product.id,
         quantity: amount,
         variantId: selection.variant?.id ?? null,
@@ -155,6 +220,16 @@ export const PurchasePanel = ({
 
   return (
     <div className="grid gap-4">
+      {showConditions ? (
+        <ConditionPicker
+          offers={forSale}
+          onPick={(picked) => {
+            setCondition(picked);
+            setQuantity(1);
+          }}
+          value={condition}
+        />
+      ) : null}
       {product.product_variants.length > 0 ? (
         <VariantPicker
           onPick={(id) => {
@@ -172,7 +247,7 @@ export const PurchasePanel = ({
           disabled={!canAdd}
           increaseLabel={t("increase")}
           label={t("quantity")}
-          max={Math.max(1, Math.min(selection.stock, MAX_QUANTITY))}
+          max={Math.max(1, Math.min(stock, MAX_QUANTITY))}
           onChange={setQuantity}
           value={quantity}
         />
@@ -201,6 +276,13 @@ export const PurchasePanel = ({
       {add.isError ? (
         <p className="text-destructive text-sm" role="alert">
           {t("addFailed")}
+        </p>
+      ) : null}
+      {offers.some((offer) => offer.purpose === "rental") ? (
+        <p className="text-sm">
+          <Link className="font-medium text-plus hover:underline" href="/plus">
+            {t("alsoRent")}
+          </Link>
         </p>
       ) : null}
     </div>

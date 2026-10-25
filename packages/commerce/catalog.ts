@@ -160,6 +160,66 @@ export const getProductBySlug = async (
   return row as ProductDetail | null;
 };
 
+/**
+ * What a product can be had as: its available copies by variant, condition
+ * and purpose (for sale or for rent), with the lowest price for sale.
+ */
+export interface ProductOffer {
+  available: number;
+  condition: Tables<"products">["condition"];
+  /** Lowest sale price; null for copies for rent. */
+  price: number | null;
+  purpose: "rental" | "sale";
+  variant_id: string | null;
+}
+
+export const getProductOffers = async (
+  supabase: Client,
+  productId: string
+): Promise<ProductOffer[]> => {
+  const rows =
+    unwrap(
+      await supabase.rpc("product_offers", { offer_product: productId })
+    ) ?? [];
+  // The generated types can't tell that a variant or a price may be null.
+  return rows.flatMap((row) =>
+    row.purpose === "business"
+      ? []
+      : [
+          {
+            available: row.available,
+            condition: row.condition,
+            price: (row.price as number | null) ?? null,
+            purpose: row.purpose,
+            variant_id: (row.variant_id as string | null) ?? null,
+          },
+        ]
+  );
+};
+
+/**
+ * The same work in other formats (vinyl, CD, cassette; PS5, Xbox):
+ * active products sharing the product's `group_key`.
+ */
+export const listOtherFormats = async (
+  supabase: Client,
+  product: Pick<Tables<"products">, "group_key" | "id">
+): Promise<ProductCard[]> => {
+  if (!product.group_key) {
+    return [];
+  }
+  return unwrap(
+    await supabase
+      .from("products")
+      .select(PRODUCT_CARD_COLUMNS)
+      .eq("group_key", product.group_key)
+      .eq("status", "active")
+      .neq("id", product.id)
+      .order("name_en")
+      .limit(8)
+  ) as ProductCard[];
+};
+
 /** The store's counter, when customers may collect orders there. */
 export interface PickupLocation {
   address_ar: string;

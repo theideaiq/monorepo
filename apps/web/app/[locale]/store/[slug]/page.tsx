@@ -5,13 +5,13 @@ import { localePath } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { JsonLd } from "@repo/seo/json-ld";
-import { MoveLeft, Truck } from "lucide-react";
+import { HandCoins, MoveLeft, Truck } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { CoverImage } from "@/components/cover-image";
-import { stockLabel } from "@/components/product-card";
+import { ProductCard, stockLabel } from "@/components/product-card";
 import { ProductConditionBulb } from "@/components/product-condition-bulb";
 import {
   ProductReviews,
@@ -21,6 +21,8 @@ import {
 import { WriteReview } from "@/components/store/product-reviews";
 import { PurchasePanel } from "@/components/store/purchase-panel";
 import {
+  getOffers,
+  getOtherFormats,
   getPlans,
   getProduct,
   getProductSlugs,
@@ -79,13 +81,16 @@ const ProductPage = async ({ params }: ProductProps) => {
     notFound();
   }
 
-  const [t, store, ratings, reviews, plan] = await Promise.all([
-    getTranslations({ locale, namespace: "web.store.product" }),
-    getTranslations({ locale, namespace: "store" }),
-    getRatings([product.id]),
-    getReviews(product.id, REVIEWS_SHOWN),
-    rentalPlan(product),
-  ]);
+  const [t, store, ratings, reviews, plan, offers, otherFormats] =
+    await Promise.all([
+      getTranslations({ locale, namespace: "web.store.product" }),
+      getTranslations({ locale, namespace: "store" }),
+      getRatings([product.id]),
+      getReviews(product.id, REVIEWS_SHOWN),
+      rentalPlan(product),
+      getOffers(product.id),
+      getOtherFormats(product),
+    ]);
   const rating = ratings[product.id] ?? null;
   const name = localized(product, "name", locale);
   const description = localized(product, "description", locale);
@@ -198,7 +203,7 @@ const ProductPage = async ({ params }: ProductProps) => {
 
           <div className="flex flex-col gap-2">
             <Suspense>
-              <PurchasePanel product={product} />
+              <PurchasePanel offers={offers} product={product} />
             </Suspense>
             {plan ? (
               <div className="flex flex-col gap-1 rounded-md border border-brand/60 bg-brand/10 p-3 text-sm">
@@ -216,6 +221,13 @@ const ProductPage = async ({ params }: ProductProps) => {
                 {t("delivery")}
               </p>
             )}
+            <Link
+              className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
+              href="/pass/sell"
+            >
+              <HandCoins aria-hidden="true" className="size-4" />
+              {t("sellToUs")}
+            </Link>
           </div>
 
           {description ? (
@@ -242,6 +254,19 @@ const ProductPage = async ({ params }: ProductProps) => {
           ) : null}
         </div>
       </div>
+
+      {otherFormats.length > 0 ? (
+        <section className="mt-12 flex flex-col gap-4">
+          <h2 className="font-semibold text-xl">{t("otherFormats")}</h2>
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4">
+            {otherFormats.map((format) => (
+              <li key={format.id}>
+                <ProductCard locale={locale} product={format} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <ProductReviews
         locale={locale}
