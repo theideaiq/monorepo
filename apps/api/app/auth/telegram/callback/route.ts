@@ -1,4 +1,3 @@
-import { createAdminClient } from "@repo/database/admin";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { type NextRequest, NextResponse } from "next/server";
@@ -13,51 +12,8 @@ import {
   TICKET_PURPOSE,
   telegramClient,
 } from "@/lib/telegram-login/config";
-import {
-  exchangeCode,
-  seal,
-  type TelegramIdentity,
-  unseal,
-} from "@/lib/telegram-login/oidc";
-
-/**
- * The member a linked Telegram account belongs to, as a one-time sign-in
- * token for the website (`verifyOtp` with the token hash), or why not.
- */
-const signInToken = async (identity: TelegramIdentity) => {
-  const admin = createAdminClient();
-  const { data: member } = await admin
-    .from("telegram_members")
-    .select("user_id")
-    .eq("id", identity.id)
-    .maybeSingle();
-  if (!member?.user_id) {
-    return null;
-  }
-  const [{ data: user }, { data: profile }] = await Promise.all([
-    admin.auth.admin.getUserById(member.user_id),
-    admin
-      .from("profiles")
-      .select("banned_at")
-      .eq("id", member.user_id)
-      .maybeSingle(),
-  ]);
-  const email = user.user?.email;
-  if (profile?.banned_at) {
-    return { error: "suspended" } as const;
-  }
-  if (!email) {
-    return null;
-  }
-  const { data, error } = await admin.auth.admin.generateLink({
-    email,
-    type: "magiclink",
-  });
-  if (error || !data.properties?.hashed_token) {
-    throw error ?? new Error("No sign-in token");
-  }
-  return { tokenHash: data.properties.hashed_token } as const;
-};
+import { exchangeCode, seal, unseal } from "@/lib/telegram-login/oidc";
+import { signInToken } from "@/lib/telegram-login/sign-in";
 
 /**
  * Telegram sends the browser back here. A linked account signs straight in;
@@ -94,7 +50,8 @@ export const GET = async (request: NextRequest) => {
       redirectUri: callbackUrl(request),
       verifier: login.verifier,
     });
-    const signIn = login.mode === "link" ? null : await signInToken(identity);
+    const signIn =
+      login.mode === "link" ? null : await signInToken(identity.id);
     if (signIn && "error" in signIn) {
       return finish({ error: signIn.error });
     }

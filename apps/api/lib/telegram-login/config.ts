@@ -35,6 +35,13 @@ export const telegramClient = (): TelegramClient | null =>
       }
     : null;
 
+/**
+ * The key for link tickets: the sign-in client's secret, or the bot's token
+ * when only the Mini App is set up (its tickets come from initData).
+ */
+export const ticketSecret = () =>
+  env.TELEGRAM_LOGIN_CLIENT_SECRET ?? env.TELEGRAM_BOT_TOKEN ?? null;
+
 /** Telegram returns here (an Allowed URL in @BotFather). */
 export const callbackUrl = (request: Request) =>
   new URL("/auth/telegram/callback", request.url).toString();

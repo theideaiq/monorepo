@@ -180,24 +180,31 @@ const pendingKey = (userId: number) => `pending:${userId}`;
 
 // ── Private chat: menu and features ─────────────────────────────────────────
 
-const menuKeyboard = (locale: BotLocale, member: TelegramMember | null) =>
-  new InlineKeyboard()
-    .text(t(locale, "orders"), "m:orders")
-    .text(t(locale, "bulbs"), "m:bulbs")
-    .row()
-    .text(t(locale, "search"), "m:search")
-    .row()
-    .text(t(locale, "support"), "m:support")
-    .row()
-    .text(t(locale, "plus"), "m:plus")
-    .text(t(locale, "faq"), "m:faq")
-    .row()
-    .text(t(locale, "links"), "m:links")
-    .row()
-    .text(
-      t(locale, member?.newsletter_opt_in ? "newsletterOn" : "newsletterOff"),
-      "m:news"
-    );
+const menuKeyboard = (ctx: DroidContext, member: TelegramMember | null) => {
+  const { locale } = ctx;
+  return (
+    new InlineKeyboard()
+      // The website as a Mini App, signed in with Telegram (/tg).
+      .webApp(t(locale, "shop"), siteLink(ctx, "/tg"))
+      .row()
+      .text(t(locale, "orders"), "m:orders")
+      .text(t(locale, "bulbs"), "m:bulbs")
+      .row()
+      .text(t(locale, "search"), "m:search")
+      .row()
+      .text(t(locale, "support"), "m:support")
+      .row()
+      .text(t(locale, "plus"), "m:plus")
+      .text(t(locale, "faq"), "m:faq")
+      .row()
+      .text(t(locale, "links"), "m:links")
+      .row()
+      .text(
+        t(locale, member?.newsletter_opt_in ? "newsletterOn" : "newsletterOff"),
+        "m:news"
+      )
+  );
+};
 
 const backKeyboard = (locale: BotLocale, target = "m:home") =>
   new InlineKeyboard().text(t(locale, "back"), target);
@@ -233,7 +240,7 @@ const showMenu = async (ctx: DroidContext) => {
     ctx,
     t(ctx.locale, "menuGreeting", { name: ctx.from.first_name }),
     {
-      reply_markup: menuKeyboard(ctx.locale, member),
+      reply_markup: menuKeyboard(ctx, member),
     }
   );
 };
@@ -465,7 +472,7 @@ const toggleNewsletter = async (ctx: DroidContext) => {
   await respond(
     ctx,
     t(ctx.locale, "menuGreeting", { name: ctx.from.first_name }),
-    { reply_markup: menuKeyboard(ctx.locale, member) }
+    { reply_markup: menuKeyboard(ctx, member) }
   );
 };
 

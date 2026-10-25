@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 /**
- * Points Droid's Telegram webhook at this API and publishes its commands.
+ * Points Droid's Telegram webhook at this API, publishes its commands and
+ * sets the menu button that opens the website as a Mini App (/tg).
  *
  *   bun run --cwd apps/api telegram:setup
  *
@@ -67,6 +68,20 @@ for (const [locale, commands] of Object.entries(DROID_COMMANDS)) {
     scope: { type: "all_chat_administrators" },
     ...language,
   });
+}
+
+// The menu button beside the message box opens the website as a Mini App.
+const site = process.env.NEXT_PUBLIC_WEB_URL;
+if (site) {
+  await call("setChatMenuButton", {
+    menu_button: {
+      text: "The IDEA",
+      type: "web_app",
+      web_app: { url: new URL("/tg", site).toString() },
+    },
+  });
+} else {
+  console.warn("Set NEXT_PUBLIC_WEB_URL to add the Mini App menu button.");
 }
 
 console.log(`Webhook set to ${url}`);

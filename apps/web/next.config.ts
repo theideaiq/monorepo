@@ -119,6 +119,7 @@ nextConfig.headers = async () => [
     "sign-in",
     "sign-out",
     "sign-up",
+    "tg",
     "cart",
     "checkout",
     "onboarding",
