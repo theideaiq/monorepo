@@ -14,7 +14,6 @@ export const EditorialTabs = async () => {
           match: ["/editorial/posts"],
         },
         { href: "/editorial/events", label: t("events") },
-        { href: "/editorial/journal", label: t("journal") },
         { href: "/editorial/submissions", label: t("submissions") },
       ]}
     />

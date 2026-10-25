@@ -51,13 +51,11 @@ export const localizedMetadata = (
 
 type StaticPage =
   | "about"
-  | "academy"
   | "careers"
   | "club"
   | "events"
   | "faq"
-  | "journal"
-  | "news"
+  | "post"
   | "suite";
 
 /** `generateMetadata` for a page whose title and description are in `web.<page>.meta`. */

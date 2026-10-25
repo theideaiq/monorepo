@@ -70,6 +70,15 @@ insert into public.posts (slug, title_ar, title_en, excerpt_ar, excerpt_en, body
     'نطلق اليوم منصة The IDEA الجديدة.', 'Today we are launching the new The IDEA platform.', now())
 on conflict (slug) do nothing;
 
+insert into public.posts (slug, section, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, published_at) values
+  ('how-plus-rentals-work', 'learn', 'كيف يعمل الإيجار في The IDEA Plus', 'How The IDEA Plus rentals work',
+    'اختر، استلم، أعد: دليل قصير.', 'Pick, receive, return: a short guide.',
+    'اختر ما تريد من المتجر، ونوصله إليك، وتعيده متى انتهيت.', 'Pick what you want in the store, we deliver it, and you return it when you are done.', now()),
+  ('behind-the-counter', 'stories', 'خلف الكاونتر', 'Behind the counter',
+    'لقاء مع فريق المتجر.', 'Meet the store team.',
+    'تعرّف على الفريق الذي يختار كل قطعة في المتجر.', 'Meet the team who pick every item in the store.', now())
+on conflict (slug) do nothing;
+
 insert into public.events (slug, title_ar, title_en, description_ar, description_en, location, starts_at, ends_at, capacity, published) values
   ('launch-night', 'ليلة الإطلاق', 'Launch night',
     'أمسية للاحتفال بإطلاق المنصة.', 'An evening to celebrate the launch.',

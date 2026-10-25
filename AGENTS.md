@@ -12,7 +12,7 @@ incidents) is in `docs/platform`.
   routes under `app/[locale]`), with a `proxy.ts` (locale, session refresh,
   security headers) and the cookie session (`@repo/auth/server`):
   - the public pages: store catalog and product pages (buying, reviews),
-    Plus, Academy, Suite, Club, news, events (RSVP), journal, legal pages
+    Plus, Suite, Club, The IDEA Post (`/post`), events (RSVP), legal pages
     (Markdown in `apps/web/content/legal`);
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in`,
     `/sign-up`, `/mfa`, `/sign-out`, the only sign-in UI on the web. A

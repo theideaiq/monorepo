@@ -149,7 +149,7 @@ export const listOrganizationFiles = async (
   });
 };
 
-/** Public URL of a catalog image or editorial file (cover, journal PDF). */
+/** Public URL of a catalog image or an editorial cover. */
 export const getPublicFileUrl = (
   supabase: Client,
   bucket: typeof buckets.catalog.id | typeof buckets.editorial.id,

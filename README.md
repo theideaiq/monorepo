@@ -8,10 +8,9 @@ digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
 | --- | --- | --- |
 | Megastore | Gaming, tech, books and lifestyle, delivered across Iraq | `apps/web` (catalog), `apps/app` (cart, checkout, orders) |
 | The IDEA Plus | Monthly membership to rent games, books and movies | `apps/web/plus`, `apps/app/plus` |
-| Academy | Courses and cultural-exchange programs | `apps/web/academy` |
 | The IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
 | The Club | Community rooms on Telegram | `apps/web/club` |
-| Editorial | News, events with RSVPs, the journal and member submissions | `apps/web`, `apps/app` (customer area and back office) |
+| The IDEA Post and events | The IDEA Post at `/post` (News, Stories, Members' work, Learn), events with RSVPs and member submissions | `apps/web`, `apps/app` (customer area and back office) |
 | Droid | Telegram bot: moderation, FAQ, product search, AI assistant | `packages/droid`, `apps/api/app/telegram` |
 
 Built on the shaheenfarjo/monorepo template (initialized with `bun run init`:
@@ -37,7 +36,7 @@ theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
 
 ```
 apps/
-  web/        Public website: store catalog, Plus, Academy, Suite, Club, news, events, journal (port 3001)
+  web/        Public website: store catalog, Plus, Suite, Club, The IDEA Post, events (port 3001)
   app/        The IDEA Spark (spark.theideaiq.com): customer app, The IDEA Pass (sign-in) and the
               back office under /admin; web + iOS/Android via Capacitor (port 3000)
   api/        Checkout, payment webhooks, cron, Telegram webhook, calendar feed, back-office endpoints (port 3002)

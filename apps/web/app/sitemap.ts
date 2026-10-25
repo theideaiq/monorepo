@@ -1,19 +1,19 @@
 import { locales } from "@repo/internationalization";
 import type { MetadataRoute } from "next";
-import { getEvents, getIssues, getPosts, getProductSlugs } from "@/lib/data";
+import { getEvents, getPosts, getProductSlugs } from "@/lib/data";
 import { legalDocuments } from "@/lib/legal";
 import { siteUrl } from "@/lib/metadata";
+import { postPath } from "@/lib/post";
 import { buildSitemap, type SitemapPage, staticPaths } from "@/lib/sitemap";
 
 export const revalidate = 3600;
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-  const [products, posts, upcoming, past, issues] = await Promise.all([
+  const [products, posts, upcoming, past] = await Promise.all([
     getProductSlugs(),
-    getPosts(1000),
+    getPosts({ limit: 1000 }),
     getEvents({ limit: 1000 }),
     getEvents({ limit: 1000, past: true }),
-    getIssues(),
   ]);
 
   const pages: SitemapPage[] = [
@@ -28,15 +28,11 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     })),
     ...posts.map(({ slug, updated_at }) => ({
       lastModified: updated_at,
-      path: `/news/${slug}`,
+      path: postPath(slug),
     })),
     ...[...upcoming, ...past].map(({ slug, updated_at }) => ({
       lastModified: updated_at,
       path: `/events/${slug}`,
-    })),
-    ...issues.map(({ id, updated_at }) => ({
-      lastModified: updated_at,
-      path: `/journal/${id}`,
     })),
   ];
 

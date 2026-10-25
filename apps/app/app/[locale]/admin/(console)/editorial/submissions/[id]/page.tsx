@@ -4,6 +4,7 @@ import { ExternalLinkIcon, FileTextIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
+import { ActionButton } from "@/components/admin/action-button";
 import { MarkdownPreview } from "@/components/admin/markdown-preview";
 import {
   DetailList,
@@ -14,12 +15,14 @@ import {
 import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
 import {
   AssignForm,
   DecisionForm,
   RubricForm,
 } from "../../_components/review-forms";
+import { publishSubmission } from "../../actions";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.editorial.review");
@@ -47,26 +50,31 @@ const ReviewPage = async ({
   const tStore = await getTranslations("store");
   const format = formatters(await getLocale());
 
-  const [{ data: submission }, { data: review }, { data: staffRows }] =
-    await Promise.all([
-      // No author_id here: blind review.
-      supabase
-        .from("submissions")
-        .select(
-          "id, title, type, body, file_path, status, assigned_to, decision_note, submitted_at, decided_at"
-        )
-        .eq("id", id)
-        .maybeSingle(),
-      supabase
-        .from("submission_reviews")
-        .select("*")
-        .eq("submission_id", id)
-        .maybeSingle(),
-      supabase
-        .from("staff")
-        .select("user_id, role")
-        .in("role", ["editor", "admin", "superadmin"]),
-    ]);
+  const [
+    { data: submission },
+    { data: review },
+    { data: staffRows },
+    { data: post },
+  ] = await Promise.all([
+    // No author_id here: blind review.
+    supabase
+      .from("submissions")
+      .select(
+        "id, title, type, body, file_path, status, assigned_to, decision_note, submitted_at, decided_at"
+      )
+      .eq("id", id)
+      .maybeSingle(),
+    supabase
+      .from("submission_reviews")
+      .select("*")
+      .eq("submission_id", id)
+      .maybeSingle(),
+    supabase
+      .from("staff")
+      .select("user_id, role")
+      .in("role", ["editor", "admin", "superadmin"]),
+    supabase.from("posts").select("id").eq("submission_id", id).maybeSingle(),
+  ]);
   if (!submission) {
     notFound();
   }
@@ -187,6 +195,24 @@ const ReviewPage = async ({
               status={submission.status}
             />
           </Panel>
+          {submission.status === "accepted" ? (
+            <Panel description={t("publishHint")} title={t("publish")}>
+              {post ? (
+                <Button asChild className="w-fit" variant="outline">
+                  <Link href={`/editorial/posts/${post.id}`}>
+                    {t("openPost")}
+                  </Link>
+                </Button>
+              ) : (
+                <ActionButton
+                  action={publishSubmission}
+                  fields={{ id: submission.id }}
+                >
+                  {t("createPost")}
+                </ActionButton>
+              )}
+            </Panel>
+          ) : null}
         </div>
       </PageBody>
     </>

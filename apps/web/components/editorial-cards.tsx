@@ -3,40 +3,51 @@ import type { Locale } from "@repo/internationalization";
 import { formatDate, formatDateTime } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { CalendarDays, MapPin } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { type EventRow, editorialUrl, type PostSummary } from "@/lib/data";
+import { postPath } from "@/lib/post";
 import { CoverImage } from "./cover-image";
 
 const cardClass =
   "group flex flex-col gap-3 rounded-lg border bg-card p-3 transition-shadow hover:shadow-md";
 
-export const PostCard = ({
+/** A post of The IDEA Post: cover, section, date, title and excerpt. */
+export const PostCard = async ({
   locale,
   post,
 }: {
   readonly locale: Locale;
   readonly post: PostSummary;
 }) => {
+  const t = await getTranslations({ locale, namespace: "web.post" });
   const title = localized(post, "title", locale);
   const excerpt = localized(post, "excerpt", locale);
 
   return (
-    <Link className={cardClass} href={`/news/${post.slug}`}>
+    <Link className={cardClass} href={postPath(post.slug)}>
       <CoverImage alt={title} src={editorialUrl(post.cover_image)} />
       <div className="flex flex-col gap-2 px-1 pb-1">
-        {post.published_at ? (
-          <time
-            className="text-muted-foreground text-xs"
-            dateTime={post.published_at}
-          >
-            {formatDate(post.published_at, locale, "long")}
-          </time>
-        ) : null}
+        <p className="flex flex-wrap items-center gap-x-2 text-muted-foreground text-xs">
+          <span className="font-medium text-pink-text">
+            {t(`sections.${post.section}.title`)}
+          </span>
+          {post.published_at ? (
+            <time dateTime={post.published_at}>
+              {formatDate(post.published_at, locale, "long")}
+            </time>
+          ) : null}
+        </p>
         <h3 className="font-semibold text-lg leading-snug group-hover:text-pink-text">
           {title}
         </h3>
         {excerpt ? (
           <p className="line-clamp-3 text-muted-foreground text-sm">
             {excerpt}
+          </p>
+        ) : null}
+        {post.byline ? (
+          <p className="text-muted-foreground text-xs">
+            {t("byline", { name: post.byline })}
           </p>
         ) : null}
       </div>

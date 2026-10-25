@@ -1,5 +1,6 @@
 "use server";
 
+import { Constants } from "@repo/database";
 import { z } from "zod";
 import {
   ActionFailure,
@@ -8,10 +9,10 @@ import {
   staffAction,
 } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
+import { slugify } from "@/lib/admin/catalog-import";
 import {
   checkbox,
   dateTime,
-  int,
   optionalDateTime,
   optionalInt,
   optionalStoragePath,
@@ -43,12 +44,14 @@ const resolvePublishedAt = (
 const postSchema = z.object({
   bodyAr: z.string().max(100_000).default(""),
   bodyEn: z.string().max(100_000).default(""),
+  byline: optionalText(120),
   coverImage: optionalStoragePath,
   excerptAr: optionalText(500),
   excerptEn: optionalText(500),
   id: optionalUuid,
   mode: publishMode,
   publishAt: optionalDateTime,
+  section: z.enum(Constants.public.Enums.post_section),
   slug,
   titleAr: text(200),
   titleEn: text(200),
@@ -70,10 +73,12 @@ export const savePost = staffAction(
     const row = {
       body_ar: input.bodyAr,
       body_en: input.bodyEn,
+      byline: input.byline,
       cover_image: input.coverImage,
       excerpt_ar: input.excerptAr,
       excerpt_en: input.excerptEn,
       published_at: resolvePublishedAt(input.mode, current, input.publishAt),
+      section: input.section,
       slug: input.slug,
       title_ar: input.titleAr,
       title_en: input.titleEn,
@@ -198,76 +203,6 @@ export const removeRsvp = staffAction(
   }
 );
 
-// ── Journal issues ──────────────────────────────────────────────────────────
-
-const issueSchema = z.object({
-  coverImage: optionalStoragePath,
-  descriptionAr: optionalText(5000),
-  descriptionEn: optionalText(5000),
-  id: optionalUuid,
-  issue: int(1, 10_000),
-  mode: publishMode,
-  pdfPath: optionalStoragePath,
-  publishAt: optionalDateTime,
-  titleAr: text(200),
-  titleEn: text(200),
-  volume: int(1, 10_000),
-});
-
-export const saveIssue = staffAction(
-  "editorial",
-  issueSchema,
-  async ({ input, supabase }) => {
-    if (input.mode !== "draft" && !input.pdfPath) {
-      // A published issue needs its PDF (also a database check).
-      throw new ActionFailure("invalid");
-    }
-    let current: string | null = null;
-    if (input.id) {
-      const { data } = await supabase
-        .from("journal_issues")
-        .select("published_at")
-        .eq("id", input.id)
-        .maybeSingle();
-      current = data?.published_at ?? null;
-    }
-    const row = {
-      cover_image: input.coverImage,
-      description_ar: input.descriptionAr,
-      description_en: input.descriptionEn,
-      issue: input.issue,
-      pdf_path: input.pdfPath,
-      published_at: resolvePublishedAt(input.mode, current, input.publishAt),
-      title_ar: input.titleAr,
-      title_en: input.titleEn,
-      volume: input.volume,
-    };
-    if (input.id) {
-      affected(
-        await supabase
-          .from("journal_issues")
-          .update(row)
-          .eq("id", input.id)
-          .select("id")
-      );
-      return success();
-    }
-    const { data } = check(
-      await supabase.from("journal_issues").insert(row).select("id").single()
-    );
-    return success("saved", { redirectTo: `/editorial/journal/${data?.id}` });
-  }
-);
-
-export const deleteIssue = staffAction(
-  "editorial",
-  z.object({ id: uuid }),
-  async ({ input, supabase }) => {
-    check(await supabase.from("journal_issues").delete().eq("id", input.id));
-    return success("deleted", { redirectTo: "/editorial/journal" });
-  }
-);
-
 // ── Submissions ─────────────────────────────────────────────────────────────
 
 export const assignSubmission = staffAction(
@@ -349,5 +284,51 @@ export const decideSubmission = staffAction(
         .neq("status", "withdrawn")
         .select("id")
     );
+  }
+);
+
+/**
+ * Publishes an accepted submission in The IDEA Post: a draft in Members'
+ * work with the member's name as the byline, opened in the post editor for
+ * the editors to translate, shape and schedule.
+ */
+export const publishSubmission = staffAction(
+  "editorial",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    const { data: submission } = check(
+      await supabase
+        .from("submissions")
+        .select("id, title, body, status")
+        .eq("id", input.id)
+        .maybeSingle()
+    );
+    if (!submission) {
+      throw new ActionFailure("notFound");
+    }
+    if (submission.status !== "accepted") {
+      throw new ActionFailure("transition");
+    }
+    // The author's name is revealed to editors once a decision is made.
+    const { data: queue } = check(await supabase.rpc("review_queue"));
+    const author = queue?.find((row) => row.id === input.id)?.author_name;
+    const base = slugify(submission.title) || "members-work";
+    const { data } = check(
+      await supabase
+        .from("posts")
+        .insert({
+          body_ar: submission.body ?? "",
+          body_en: submission.body ?? "",
+          byline: author?.trim() || null,
+          section: "members",
+          slug: `${base.slice(0, 100)}-${input.id.slice(0, 8)}`,
+          submission_id: input.id,
+          title_ar: submission.title.slice(0, 200),
+          title_en: submission.title.slice(0, 200),
+        })
+        .select("id")
+        .single()
+    );
+    return success("saved", { redirectTo: `/editorial/posts/${data?.id}` });
   }
 );

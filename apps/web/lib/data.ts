@@ -13,6 +13,7 @@ import {
 import type { Tables } from "@repo/database";
 import { log } from "@repo/observability/log";
 import { publicFileUrl } from "@repo/storage";
+import type { PostSection } from "./post";
 import { type Rating, type Review, ratingsById } from "./reviews";
 import { createPublicClient, supabaseUrl } from "./supabase";
 
@@ -215,7 +216,7 @@ export const getPlans = (audience: "business" | "plus") =>
 
 // ── Editorial ───────────────────────────────────────────────────────────────
 
-/** Public URL of a cover image or journal PDF in the `editorial` bucket. */
+/** Public URL of a cover image in the `editorial` bucket. */
 export const editorialUrl = (path: string | null | undefined) => {
   if (!path) {
     return null;
@@ -227,35 +228,46 @@ export const editorialUrl = (path: string | null | undefined) => {
 };
 
 const POST_SUMMARY =
-  "id, slug, title_ar, title_en, excerpt_ar, excerpt_en, cover_image, published_at, updated_at" as const;
+  "id, slug, section, byline, title_ar, title_en, excerpt_ar, excerpt_en, cover_image, published_at, updated_at" as const;
 
 export type PostSummary = Pick<
   Tables<"posts">,
+  | "byline"
   | "cover_image"
   | "excerpt_ar"
   | "excerpt_en"
   | "id"
   | "published_at"
+  | "section"
   | "slug"
   | "title_ar"
   | "title_en"
   | "updated_at"
 >;
 
-export const getPosts = (limit = 24) =>
+/** Published posts of The IDEA Post, newest first (one section or all). */
+export const getPosts = ({
+  limit = 24,
+  section,
+}: {
+  limit?: number;
+  section?: PostSection;
+} = {}) =>
   fallback("posts", [] as PostSummary[], async () => {
     const supabase = createPublicClient();
     if (!supabase) {
       return [];
     }
+    let query = supabase
+      .from("posts")
+      .select(POST_SUMMARY)
+      .not("published_at", "is", null)
+      .lte("published_at", new Date().toISOString());
+    if (section) {
+      query = query.eq("section", section);
+    }
     return rows(
-      await supabase
-        .from("posts")
-        .select(POST_SUMMARY)
-        .not("published_at", "is", null)
-        .lte("published_at", new Date().toISOString())
-        .order("published_at", { ascending: false })
-        .limit(limit)
+      await query.order("published_at", { ascending: false }).limit(limit)
     );
   });
 
@@ -268,7 +280,7 @@ export const getPost = async (slug: string) => {
     await supabase
       .from("posts")
       .select(
-        "id, slug, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, cover_image, published_at, updated_at"
+        "id, slug, section, byline, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, cover_image, published_at, updated_at"
       )
       .eq("slug", slug)
       .not("published_at", "is", null)
@@ -347,55 +359,3 @@ export const getRsvpCount = (eventId: string) =>
       check(await supabase.rpc("event_rsvp_count", { event: eventId }))
     );
   });
-
-export type JournalIssue = Pick<
-  Tables<"journal_issues">,
-  | "cover_image"
-  | "description_ar"
-  | "description_en"
-  | "id"
-  | "issue"
-  | "pdf_path"
-  | "published_at"
-  | "title_ar"
-  | "title_en"
-  | "updated_at"
-  | "volume"
->;
-
-const ISSUE_COLUMNS =
-  "id, volume, issue, title_ar, title_en, description_ar, description_en, cover_image, pdf_path, published_at, updated_at" as const;
-
-export const getIssues = () =>
-  fallback("journal_issues", [] as JournalIssue[], async () => {
-    const supabase = createPublicClient();
-    if (!supabase) {
-      return [];
-    }
-    return rows(
-      await supabase
-        .from("journal_issues")
-        .select(ISSUE_COLUMNS)
-        .not("published_at", "is", null)
-        .lte("published_at", new Date().toISOString())
-        .order("volume", { ascending: false })
-        .order("issue", { ascending: false })
-    );
-  });
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-export const getIssue = async (id: string) => {
-  const supabase = createPublicClient();
-  if (!(supabase && UUID.test(id))) {
-    return null;
-  }
-  return check(
-    await supabase
-      .from("journal_issues")
-      .select(ISSUE_COLUMNS)
-      .eq("id", id)
-      .not("published_at", "is", null)
-      .maybeSingle()
-  );
-};

@@ -53,7 +53,7 @@ flowchart LR
 
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
-| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (home, Megastore catalog and product pages, The IDEA Plus, Academy, Suite, Club, news, events, journal, legal in `apps/web/content/legal`, contact), **The IDEA Pass** (sign-in, sign-up, authenticator app) and **My Pass** (`/pass`: orders, Plus, wishlist, Sell to us, events, submissions, support, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
+| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (home, Megastore catalog and product pages, The IDEA Plus, Suite, Club, The IDEA Post, events, legal in `apps/web/content/legal`, contact), **The IDEA Pass** (sign-in, sign-up, authenticator app) and **My Pass** (`/pass`: orders, Plus, wishlist, Sell to us, events, submissions, support, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
 | `apps/app` | 3000 | **The IDEA Spark** (`spark.theideaiq.com`), for staff and businesses: the **back office** under `/{locale}/admin` and **The IDEA Suite** under `/{locale}/business` (see [The IDEA Spark](#the-idea-spark)). No sign-in of its own: it sends people to The IDEA Pass on the website. | Vercel |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, push notifications, the back office's privileged steps (`app/admin/*`), the website's contact form and status badge. Route handlers only. | Vercel |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
@@ -101,7 +101,7 @@ load on every page (never inside the iOS/Android apps).
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Public pages | `/{locale}`, `/store`, `/store/<slug>`, `/plus`, `/academy`, `/suite`, `/club`, `/news`, `/events`, `/journal`, `/about`, `/faq`, `/contact`, `/legal/…` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
+| Public pages | `/{locale}`, `/store`, `/store/<slug>`, `/plus`, `/suite`, `/club`, `/post` (The IDEA Post: `/post/news`, `/post/stories`, `/post/members`, `/post/learn` and posts at `/post/<slug>`), `/events`, `/about`, `/faq`, `/contact`, `/legal/…` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
 | The IDEA Pass | `/{locale}/sign-in`, `/sign-up`, `/mfa`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
 | My Pass | `/{locale}/pass` (the membership card and a summary), `/pass/orders`, `/pass/orders/<id>`, `/pass/plus`, `/pass/wishlist`, `/pass/sell`, `/pass/events`, `/pass/submissions`, `/pass/support`, `/pass/support/<id>`, `/pass/settings` | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
 | Cart and checkout | `/{locale}/cart`, `/checkout` | `app/[locale]/(checkout)` |
@@ -114,6 +114,18 @@ load on every page (never inside the iOS/Android apps).
   iOS/Android shell loads the same pages, so the same cookie applies there.
   The header shows "Sign in" (coming back to the same page) or the cart
   and "My Pass".
+- **The IDEA Post.** One publication at `/post` (News, Journal and the
+  Academy page merged; online only). Posts have a section (`news`,
+  `stories`, `members` for members' work, `learn` for guides) and an
+  optional byline (empty means The IDEA); `/post/<section>` lists one
+  section and `/post/<slug>` is a post (the database keeps slugs off the
+  section names). Members submit work from My Pass; editors review it
+  blind in the back office (Editorial → Submissions) and, once it is
+  accepted, **Create the post** opens a draft in Members' work with the
+  member's name as the byline (`posts.submission_id`; only accepted
+  submissions, once each). The Learn page also carries the Academy's
+  programs and its "register your interest" link. Migration
+  `20261127000000_the_post.sql` retired the PDF journal issues.
 - **Old links.** Pages that moved into My Pass (`/orders`, `/support`,
   `/sell`, `/settings`, `/submissions`, `/wishlist`) and the static-export
   detail links (`/store/product?slug=…`, `/orders/view?id=…`,
@@ -449,7 +461,7 @@ Current schema:
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | Megastore catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
 | `…_plus.sql` | The IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
-| `…_editorial.sql` | `posts`, `events` + `event_rsvps` (capacity, closed after start), `journal_issues`, `submissions` + staff-only `submission_reviews`; `review_queue()` hides authors until a decision (blind review) |
+| `…_editorial.sql` | `posts`, `events` + `event_rsvps` (capacity, closed after start), `submissions` + staff-only `submission_reviews`; `review_queue()` hides authors until a decision (blind review) |
 | `…_back_office.sql` | `crm_contacts`, `marketing_segments`, `marketing_campaigns` (opted-in customers only: `profiles.marketing_opt_in`), double-entry ledger (`chart_of_accounts`, `ledger_entries`, `ledger_lines`, `post_journal_entry()`, `ledger_monthly_summary()`), `staff_plan`, `equity_rounds`, `equity_holders` |
 | `…_content_storage.sql` | `catalog` and `editorial` (public) and `submissions` (private, `<author id>/…`) buckets |
 | `…_droid.sql` | Telegram bot tables: `telegram_chats`, `telegram_members`, `telegram_requests`, `telegram_faq` |
@@ -1470,7 +1482,7 @@ and Better Stack are configured on `api`, not here.
 | `NEXT_PUBLIC_DESIGN_URL` | Optional | The IDEA Design, an allowed return_to host |
 | `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, news, events and journal (read anonymously, under Row Level Security). Without them those sections show empty states. |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, The IDEA Post and events (read anonymously, under Row Level Security). Without them those sections show empty states. |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | Product analytics |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional | Error reporting |

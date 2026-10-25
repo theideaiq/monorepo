@@ -232,6 +232,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   the device, so it works offline and in the apps), the member's perks,
   and "Add to Google Wallet" (same rotating code). Staff check a card in
   Customers → Check a Pass. Migration `20261126000000_pass_card.sql`.
+- 2026-10-25: **The IDEA Post.** News, the Journal and the Academy page
+  are one publication at `/post` with four sections (News, Stories,
+  Members' work, Learn), online only: the PDF journal issues are gone.
+  Accepted submissions become Members' work posts with the member's byline
+  (back office → Editorial → the submission → Create the post). Migration
+  `20261127000000_the_post.sql`.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers
