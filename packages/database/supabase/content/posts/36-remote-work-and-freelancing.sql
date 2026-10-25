@@ -65,7 +65,7 @@ begin
 
 ## الخطوة 5: استلم أجرك
 
-المنصات الكبيرة تتيح سحب الأرباح بطرق مختلفة، منها **Payoneer** وخدمات تحويل مثل **Wise**. أما PayPal فاستقبال الأموال به من العراق محدود أو غير متاح، لذلك **تحقّق من خدمات الدفع التي تعمل في العراق** قبل قبول أي عمل، واعرف رسومها ومدة توثيق الحساب. وتحتاج غالباً حساباً مصرفياً محلياً لسحب أموالك (اقرأ [دليل الحسابات المصرفية في العراق](/post/bank-accounts-in-iraq)).
+المنصات الكبيرة تتيح سحب الأرباح بطرق مختلفة، منها **Payoneer** والتحويل المصرفي المباشر حسب المنصة. أما PayPal فاستقبال الأموال به من العراق محدود أو غير متاح، لذلك **تحقّق من خدمات الدفع التي تعمل في العراق** قبل قبول أي عمل، واعرف رسومها ومدة توثيق الحساب. وتحتاج غالباً حساباً مصرفياً محلياً لسحب أموالك (اقرأ [دليل الحسابات المصرفية في العراق](/post/bank-accounts-in-iraq)).
 
 ## احمِ نفسك
 
@@ -79,7 +79,7 @@ begin
 - [Upwork](https://www.upwork.com) و[Fiverr](https://www.fiverr.com) و[Freelancer.com](https://www.freelancer.com)
 - [خمسات](https://khamsat.com) و[مستقل](https://mostaql.com)
 - [Behance](https://www.behance.net) و[ArtStation](https://www.artstation.com) و[Dribbble](https://dribbble.com)
-- [Payoneer](https://www.payoneer.com) و[Wise](https://wise.com)
+- [Payoneer](https://www.payoneer.com)
 - [المهارات الشخصية في العمل](/post/soft-skills)
 - ولتتعرّف على من سبقوك في العمل الحر: [The IDEA Club](https://t.me/theideaclub)$ar$,
     $en$Don't have five years of experience? That's fine. Remote work lets you work for companies and individuals around the world from home, with no daily commute or fixed office. It spread fast during the COVID-19 pandemic and is now a main career path for many people, or a second source of income.
@@ -136,7 +136,7 @@ Pricing depends on your field, the hours a job takes and your level. Look at wha
 
 ## Step 5: Get paid
 
-The big platforms offer several withdrawal methods, including **Payoneer** and transfer services such as **Wise**. Receiving money through PayPal from Iraq is limited or unavailable, so **check which payment services work in Iraq** before you accept a job, along with their fees and how long verification takes. You'll usually need a local bank account to withdraw your money (see [our guide to bank accounts in Iraq](/post/bank-accounts-in-iraq)).
+The big platforms offer several withdrawal methods, including **Payoneer** and, on some platforms, direct bank transfer. Receiving money through PayPal from Iraq is limited or unavailable, so **check which payment services work in Iraq** before you accept a job, along with their fees and how long verification takes. You'll usually need a local bank account to withdraw your money (see [our guide to bank accounts in Iraq](/post/bank-accounts-in-iraq)).
 
 ## Protect yourself
 
@@ -150,7 +150,7 @@ The big platforms offer several withdrawal methods, including **Payoneer** and t
 - [Upwork](https://www.upwork.com), [Fiverr](https://www.fiverr.com) and [Freelancer.com](https://www.freelancer.com)
 - [Khamsat](https://khamsat.com) and [Mostaql](https://mostaql.com)
 - [Behance](https://www.behance.net), [ArtStation](https://www.artstation.com) and [Dribbble](https://dribbble.com)
-- [Payoneer](https://www.payoneer.com) and [Wise](https://wise.com)
+- [Payoneer](https://www.payoneer.com)
 - [Soft skills at work](/post/soft-skills)
 - To meet people who've been freelancing for years: [The IDEA Club](https://t.me/theideaclub)$en$,
     now() - interval '36 minutes'

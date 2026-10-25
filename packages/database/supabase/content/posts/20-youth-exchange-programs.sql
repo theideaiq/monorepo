@@ -7,10 +7,10 @@ begin
   values (
     'youth-exchange-programs',
     'learn',
-    $ar$برامج التبادل الشبابية عبر الإنترنت: TED وLoT وDEP وSYE$ar$,
-    $en$Online youth exchanges: TED, LoT, DEP and SYE$en$,
-    $ar$أربعة برامج مجانية تطوّر قيادتك وإنجليزيتك وتعرّفك على شباب من حول العالم، من بيتك.$ar$,
-    $en$Four free programs that build your leadership and English and connect you with young people worldwide, from home.$en$,
+    $ar$برامج التبادل الشبابية عبر الإنترنت: TED وLoT وSYE$ar$,
+    $en$Online youth exchanges: TED, LoT and SYE$en$,
+    $ar$ثلاثة برامج مجانية تطوّر قيادتك وإنجليزيتك وتعرّفك على شباب من حول العالم، من بيتك.$ar$,
+    $en$Three free programs that build your leadership and English and connect you with young people worldwide, from home.$en$,
     $ar$لا تحتاج جواز سفر لتعيش تجربة تبادل ثقافي. هناك برامج مجانية عبر الإنترنت تجمع طلبة من العراق ودول أخرى، تتعلم فيها القيادة والعمل المجتمعي، وتمارس الإنجليزية مع أقرانك. وهي أيضاً خطوة ممتازة قبل التقديم على برامج أكبر مثل [IYLEP](/post/iylep-guide) أو الدراسة في الخارج.
 
 المواعيد والشروط في هذه البرامج تتغير من سنة لأخرى، فتحقق دائماً من الموقع الرسمي لكل برنامج.
@@ -35,16 +35,6 @@ begin
 - **ماذا تكسب:** فهماً للتنوع الثقافي وتقبّل وجهات النظر المختلفة، ومهارات في حل المشكلات والتفكير النقدي وحل النزاعات.
 - **التقديم:** يُفتح عادةً في الربيع، وقد يُشترط ألّا تكون مشاركاً في برنامج تبادل آخر في الفترة نفسها.
 
-## برنامج التبادل الرقمي (DEP)
-
-تديره منظمة My Project Exchange، ويشارك فيه طلبة من عشرات الدول.
-
-- **من يشارك:** طلبة بأعمار تقارب 14 إلى 18 سنة.
-- **المدة والالتزام:** من 8 إلى 12 أسبوعاً، بساعتين إلى 5 ساعات أسبوعياً.
-- **كيف يعمل:** يُقسّم المشاركون إلى "عائلات" يشرف على كل منها ميسّران، ويكون لكل مشارك شريك من بلد آخر. هناك مكالمة عائلية ومكالمة مع الشريك كل أسبوع، ومهمة أسبوعية، ومجتمع نصي للعائلة على Slack.
-- **الشهادة:** يحصل من يُكمل البرنامج على شهادة، وقد تختلف درجتها حسب عدد الأسابيع التي أتممتها ونشاطك.
-- **برامج أخرى من المنظمة:** مثل المراسلة النصية مع شريك من بلد آخر (Pen Pals)، وأدوار الميسّرين لمن هم أكبر سناً، وبرامج زمالة لتطوير المشاريع المجتمعية. تُفتح هذه البرامج وتُغلق على مدار السنة.
-
 ## تمكين الشباب السوري (SYE) – برنامج العراق
 
 مبادرة غير ربحية تساعد طلبة الإعدادية في المناطق المتأثرة بعدم الاستقرار على التقديم للجامعات في الخارج، ولها برنامج خاص بالطلبة العراقيين.
@@ -57,7 +47,6 @@ begin
 ## كيف تختار؟
 
 - إذا كنت تريد تجربة قيادية ومشروعاً مجتمعياً: TED أو LoT.
-- إذا كنت تريد ممارسة الإنجليزية والتعرف على ثقافات كثيرة: DEP.
 - إذا كنت في سنتك الأخيرة وتخطط للجامعة في الخارج: SYE، مع [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap).
 
 ولا تنسَ أن تضيف كل برنامج تُكمله إلى سيرتك الذاتية وملفك على LinkedIn، كما شرحنا في [خطواتك الأولى على الإنترنت](/post/first-steps-online).
@@ -66,7 +55,6 @@ begin
 
 - [World Learning](https://www.worldlearning.org)
 - [Leaders of Tomorrow](https://lotep.org)
-- [My Project Exchange](https://myprojectexchange.com)
 - [Syrian Youth Empowerment](https://syempowerment.org)
 - [The IDEA Club](https://t.me/theideaclub) لمعرفة مواعيد فتح التقديم$ar$,
     $en$You don't need a passport to have an exchange experience. Free online programs bring together students from Iraq and other countries to learn leadership and community work and practice English with their peers. They're also a great step before applying to bigger programs like [IYLEP](/post/iylep-guide) or studying abroad.
@@ -93,16 +81,6 @@ An Iraqi program founded by IYLEP alumni with support from World Learning, conne
 - **What you gain:** an understanding of cultural diversity and different viewpoints, plus problem-solving, critical thinking and conflict-resolution skills.
 - **Applying:** usually opens in the spring; you may be required not to take part in another exchange at the same time.
 
-## Digital Exchange Program (DEP)
-
-Run by My Project Exchange, with students from dozens of countries.
-
-- **Who:** students aged roughly 14 to 18.
-- **Length and commitment:** 8 to 12 weeks, at 2 to 5 hours a week.
-- **How it works:** participants are grouped into "families," each with two facilitators, and every participant gets a partner from another country. Each week there's a family call, a partner call, an assignment and a family community on Slack.
-- **Certificate:** participants who finish receive a certificate, which can depend on how many weeks you completed and how active you were.
-- **Other programs from the organization:** written exchanges with a partner abroad (Pen Pals), facilitator roles for older participants and fellowships for community projects. These open and close throughout the year.
-
 ## Syrian Youth Empowerment (SYE): Iraq program
 
 A nonprofit that helps high school students in regions affected by instability apply to universities abroad, with a dedicated program for Iraqi students.
@@ -115,7 +93,6 @@ A nonprofit that helps high school students in regions affected by instability a
 ## Which one is for you?
 
 - For leadership and a community project: TED or LoT.
-- To practice English and meet many cultures: DEP.
 - If you're in your final year and aiming for university abroad: SYE, alongside [the study-abroad roadmap](/post/study-abroad-roadmap).
 
 Add every program you complete to your CV and LinkedIn profile, as we explain in [your first steps online](/post/first-steps-online).
@@ -124,7 +101,6 @@ Add every program you complete to your CV and LinkedIn profile, as we explain in
 
 - [World Learning](https://www.worldlearning.org)
 - [Leaders of Tomorrow](https://lotep.org)
-- [My Project Exchange](https://myprojectexchange.com)
 - [Syrian Youth Empowerment](https://syempowerment.org)
 - [The IDEA Club](https://t.me/theideaclub) to hear when applications open$en$,
     now() - interval '20 minutes'

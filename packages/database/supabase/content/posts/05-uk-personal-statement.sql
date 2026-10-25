@@ -21,7 +21,7 @@ begin
 2. **How have your qualifications and studies helped you to prepare for this course or subject?** كيف ساعدتك دراستك ومؤهلاتك على الاستعداد له؟
 3. **What else have you done to prepare outside of education, and why are these experiences useful?** ماذا فعلت خارج الدراسة لتستعد، ولماذا هذه التجارب مفيدة؟
 
-المجموع ما زال **4,000 حرف** (تُحسب المسافات وعلامات الترقيم)، وكل إجابة لا تقل عن **350 حرفاً**. تحقق من التفاصيل الحالية في [صفحة UCAS الرسمية](https://www.ucas.com/undergraduate/applying-to-university/writing-your-personal-statement) قبل أن تكتب.
+المجموع ما زال **4,000 حرف** (تُحسب المسافات وعلامات الترقيم)، وكل إجابة لا تقل عن **350 حرفاً**. تحقق من التفاصيل الحالية في [صفحة UCAS الرسمية](https://www.ucas.com/applying/applying-to-university/writing-your-personal-statement) قبل أن تكتب.
 
 ## ما الذي يجب أن يظهر في إجاباتك
 
@@ -71,8 +71,8 @@ begin
 
 ## روابط رسمية
 
-- [UCAS: كتابة البيان الشخصي](https://www.ucas.com/undergraduate/applying-to-university/writing-your-personal-statement)
-- [UCAS: تعبئة طلب البكالوريوس](https://www.ucas.com/undergraduate/applying-to-university/filling-in-your-ucas-undergraduate-application)
+- [UCAS: كتابة البيان الشخصي](https://www.ucas.com/applying/applying-to-university/writing-your-personal-statement)
+- [UCAS: تعبئة طلب البكالوريوس](https://www.ucas.com/applying/applying-to-university/filling-in-your-ucas-application)
 - [UCAS](https://www.ucas.com)
 
 اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap) و[مقالة Common App](/post/common-app-essay).$ar$,
@@ -86,7 +86,7 @@ For courses starting in 2026 onward, UCAS replaced the free-form statement with 
 2. **How have your qualifications and studies helped you to prepare for this course or subject?**
 3. **What else have you done to prepare outside of education, and why are these experiences useful?**
 
-The total is still **4,000 characters** (spaces and punctuation count), with at least **350 characters** per answer. Check the current details on [UCAS's official page](https://www.ucas.com/undergraduate/applying-to-university/writing-your-personal-statement) before you write.
+The total is still **4,000 characters** (spaces and punctuation count), with at least **350 characters** per answer. Check the current details on [UCAS's official page](https://www.ucas.com/applying/applying-to-university/writing-your-personal-statement) before you write.
 
 ## What your answers should show
 
@@ -136,8 +136,8 @@ International applicants are advised to address, within their answers:
 
 ## Official links
 
-- [UCAS: writing your personal statement](https://www.ucas.com/undergraduate/applying-to-university/writing-your-personal-statement)
-- [UCAS: filling in your undergraduate application](https://www.ucas.com/undergraduate/applying-to-university/filling-in-your-ucas-undergraduate-application)
+- [UCAS: writing your personal statement](https://www.ucas.com/applying/applying-to-university/writing-your-personal-statement)
+- [UCAS: filling in your undergraduate application](https://www.ucas.com/applying/applying-to-university/filling-in-your-ucas-application)
 - [UCAS](https://www.ucas.com)
 
 See also: our [study abroad roadmap](/post/study-abroad-roadmap) and the [Common App essay](/post/common-app-essay).$en$,

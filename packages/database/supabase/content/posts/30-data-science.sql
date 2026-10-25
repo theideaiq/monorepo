@@ -54,7 +54,6 @@ begin
 
 - [Kaggle](https://www.kaggle.com): مجموعات بيانات ومسابقات ودورات قصيرة مجانية.
 - [Machine Learning Mastery](https://machinelearningmastery.com): شروحات عملية.
-- [Papers with Code](https://paperswithcode.com): أبحاث مع الكود المرافق لها.
 - [Towards Data Science](https://towardsdatascience.com): مقالات من ممارسين.
 - [GitHub](https://github.com): مشاريع مفتوحة تتعلّم منها.
 
@@ -109,7 +108,6 @@ Projects are the best proof of skill: analyze a real dataset, enter Kaggle compe
 
 - [Kaggle](https://www.kaggle.com): datasets, competitions and free short courses.
 - [Machine Learning Mastery](https://machinelearningmastery.com): practical tutorials.
-- [Papers with Code](https://paperswithcode.com): research papers with their code.
 - [Towards Data Science](https://towardsdatascience.com): articles by practitioners.
 - [GitHub](https://github.com): open projects to learn from.
 

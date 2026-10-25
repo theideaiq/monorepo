@@ -78,7 +78,7 @@ IELTS اختصار لـ International English Language Testing System، وهو �
 ## روابط رسمية
 
 - [الموقع الرسمي لـ IELTS](https://ielts.org)
-- [البحث عن مركز اختبار](https://ielts.org/take-a-test/test-centres)
+- [البحث عن مركز اختبار](https://ielts.org/test-centres)
 - [مواد تحضير مجانية من British Council](https://takeielts.britishcouncil.org/take-ielts/prepare)
 - [IELTS من IDP](https://ielts.idp.com)$ar$,
     $en$If you plan to study at a university outside Iraq, or to apply for work or immigration in an English-speaking country, you'll usually need to prove your English. IELTS is one of the most common ways to do that, alongside TOEFL and the [Duolingo English Test](/post/duolingo-english-test).
@@ -148,7 +148,7 @@ Before you book, make sure the universities you're targeting accept IELTS, and c
 ## Official links
 
 - [IELTS official website](https://ielts.org)
-- [Find a test center](https://ielts.org/take-a-test/test-centres)
+- [Find a test center](https://ielts.org/test-centres)
 - [Free preparation from the British Council](https://takeielts.britishcouncil.org/take-ielts/prepare)
 - [IELTS by IDP](https://ielts.idp.com)$en$,
     now() - interval '11 minutes'

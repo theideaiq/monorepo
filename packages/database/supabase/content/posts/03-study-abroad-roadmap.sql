@@ -60,7 +60,7 @@ begin
 
 1. **قدّم على قائمتك (نحو 15 جامعة)** في دول مختلفة، وإن قُبلت في أكثر من واحدة فقارن بين العروض.
 2. **الكليات المجتمعية في أمريكا وكندا:** قبولها أسهل وتكاليفها أقل، ويمكنك الانتقال بعدها إلى جامعة لإكمال البكالوريوس. اقرأ [دليل الكليات المجتمعية](/post/community-colleges).
-3. **جامعات أوروبا الشرقية:** فيها جامعات جيدة نسبياً بتكاليف معقولة، مثل [University of Tartu](https://ut.ee/en) في إستونيا و[Warsaw University of Technology](https://pw.edu.pl/engpw) في بولندا.
+3. **جامعات أوروبا الشرقية:** فيها جامعات جيدة نسبياً بتكاليف معقولة، مثل [University of Tartu](https://ut.ee/en) في إستونيا و[Warsaw University of Technology](https://www.pw.edu.pl) في بولندا.
 4. **الجامعات الأمريكية في المنطقة:** بيئة ومناهج قوية، ومنح مثل Tomorrow's Leaders. راجع [قائمتنا](/post/american-universities-in-the-region).
 5. **الدراسة عبر الإنترنت:** جامعات مثل [University of the People](https://www.uopeople.edu) تقدّم شهادات إلكترونية برسوم منخفضة ومنح، ومنصات مثل [MIT OpenCourseWare](https://ocw.mit.edu) تتيح مواد مجانية للتعلم.
 6. **الدراسة في العراق:** في جامعة حكومية أو أهلية (ومنها [التعليم الموازي](/post/parallel-admission))، ثم التقديم على دراسات عليا في الخارج بعد البكالوريوس، وهي غالباً أسهل تمويلاً.
@@ -122,7 +122,7 @@ You'll apply widely and many schools will say no. That's normal. A rejection doe
 
 1. **Apply to your list (about 15 universities)** across several countries. If you get more than one offer, compare them.
 2. **Community colleges in the US and Canada:** easier admission and lower costs, with a path to transfer into a university for your bachelor's. See our [community colleges guide](/post/community-colleges).
-3. **Eastern European universities:** relatively strong schools at reasonable cost, such as the [University of Tartu](https://ut.ee/en) in Estonia and [Warsaw University of Technology](https://pw.edu.pl/engpw) in Poland.
+3. **Eastern European universities:** relatively strong schools at reasonable cost, such as the [University of Tartu](https://ut.ee/en) in Estonia and [Warsaw University of Technology](https://www.pw.edu.pl) in Poland.
 4. **American universities in the region:** strong programs and scholarships such as Tomorrow's Leaders. See [our list](/post/american-universities-in-the-region).
 5. **Online degrees:** universities like [University of the People](https://www.uopeople.edu) offer low-cost online degrees with scholarships, and [MIT OpenCourseWare](https://ocw.mit.edu) has free course materials.
 6. **Study in Iraq:** at a public or private university (including [parallel admission](/post/parallel-admission)), then apply for a master's abroad after your bachelor's; graduate funding is often easier to find.

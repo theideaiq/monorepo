@@ -57,7 +57,7 @@ begin
 
 - [Introduction to the Internet of Things على edX](https://www.edx.org/learn/iot-internet-of-things)
 - [دورات إنترنت الأشياء على Coursera](https://www.coursera.org/courses?query=internet%20of%20things)، ومنها دورات البرمجة على لوحات IoT.
-- [Industrial IoT on Google Cloud على Coursera](https://www.coursera.org/learn/industrial-iot-markets-security)
+- [دورات إنترنت الأشياء على Coursera](https://www.coursera.org/courses?query=internet%20of%20things)
 - [منصة إدراك](https://www.edraak.org): دورات عربية مجانية، ابحث فيها عن إنترنت الأشياء.
 - [Arduino Docs](https://docs.arduino.cc) و[Raspberry Pi Learn](https://www.raspberrypi.com/documentation/): مراجع رسمية ومشاريع للمبتدئين.
 
@@ -108,7 +108,7 @@ The field is open, and you'll find plenty of YouTube tutorials for every step.
 
 - [Introduction to the Internet of Things on edX](https://www.edx.org/learn/iot-internet-of-things)
 - [Internet of Things courses on Coursera](https://www.coursera.org/courses?query=internet%20of%20things), including programming with IoT boards.
-- [Industrial IoT on Google Cloud on Coursera](https://www.coursera.org/learn/industrial-iot-markets-security)
+- [Internet of Things courses on Coursera](https://www.coursera.org/courses?query=internet%20of%20things)
 - [Edraak](https://www.edraak.org): free Arabic courses; search for Internet of Things.
 - [Arduino Docs](https://docs.arduino.cc) and [Raspberry Pi documentation](https://www.raspberrypi.com/documentation/): official references and beginner projects.
 

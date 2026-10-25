@@ -1,5 +1,6 @@
 import { localePath, withoutLocalePrefix } from "@repo/internationalization";
 import type {
+  Heading,
   Nodes,
   Parent,
   PhrasingContent,
@@ -257,6 +258,29 @@ const localizeLinks = (node: Nodes, locale: string) => {
   }
 };
 
+/**
+ * Shifts headings so the shallowest one in the document is a level-1
+ * heading (rendered as h2): "## Section" and "# Section" both become h2, so
+ * levels are never skipped under the page's h1.
+ */
+const normalizeHeadings = (tree: Root) => {
+  const headings: Heading[] = [];
+  const collect = (node: Nodes) => {
+    if (node.type === "heading") {
+      headings.push(node);
+    } else if ("children" in node) {
+      for (const child of node.children) {
+        collect(child);
+      }
+    }
+  };
+  collect(tree);
+  const shift = Math.min(...headings.map((heading) => heading.depth)) - 1;
+  for (const heading of headings) {
+    heading.depth = (heading.depth - shift) as Heading["depth"];
+  }
+};
+
 interface MarkdownProps {
   readonly className?: string;
   /** Prefixes site-relative links with this language. */
@@ -267,6 +291,7 @@ interface MarkdownProps {
 /** Renders Markdown as React elements; raw HTML is never rendered. */
 export const Markdown = ({ className, locale, source }: MarkdownProps) => {
   const tree = parseMarkdown(source);
+  normalizeHeadings(tree);
   if (locale) {
     localizeLinks(tree, locale);
   }

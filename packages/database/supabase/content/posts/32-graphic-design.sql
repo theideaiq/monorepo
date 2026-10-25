@@ -95,7 +95,7 @@ begin
 
 ## مصادر للتعلّم
 
-- [Intro to Graphic Design على Udacity](https://www.udacity.com/course/intro-to-graphic-design--ud861)
+- [Graphic Design Specialization من CalArts على Coursera](https://www.coursera.org/specializations/graphic-design)
 - [Graphic Design Specialization من CalArts على Coursera](https://www.coursera.org/specializations/graphic-design)، ومنها Fundamentals of Graphic Design وIdeas from the History of Graphic Design.
 - [منصة إدراك](https://www.edraak.org): دورات عربية مجانية في التصميم.
 - [Adobe Creative Cloud على YouTube](https://www.youtube.com/@AdobeCreativeCloud): دروس ولقاءات مع مصمّمين.
@@ -187,7 +187,7 @@ Design depends heavily on your creative vision and on teaching yourself, which i
 
 ## Where to learn
 
-- [Intro to Graphic Design on Udacity](https://www.udacity.com/course/intro-to-graphic-design--ud861)
+- [Graphic Design Specialization by CalArts on Coursera](https://www.coursera.org/specializations/graphic-design)
 - [CalArts Graphic Design Specialization on Coursera](https://www.coursera.org/specializations/graphic-design), including Fundamentals of Graphic Design and Ideas from the History of Graphic Design.
 - [Edraak](https://www.edraak.org): free Arabic design courses.
 - [Adobe Creative Cloud on YouTube](https://www.youtube.com/@AdobeCreativeCloud): tutorials and talks with designers.

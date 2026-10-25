@@ -59,7 +59,7 @@ Git أداة لإدارة المشاريع تحفظ نسخة من كل تغيي�
 دورات مجانية أو بمساعدة مالية على Coursera في المهارات المهنية وكتابة السيرة والتحضير للمقابلات:
 
 - [المهارات الشخصية للنجاح المهني](https://www.coursera.org/collections/soft-skills-career-success)
-- [Career Planning](https://www.coursera.org/learn/career-planning-tsu)
+- [Career Planning](https://www.coursera.org/learn/career-planning)
 - [Interview Techniques](https://www.coursera.org/learn/interview-techniques)
 - [Interview Preparation](https://www.coursera.org/learn/interview-preparation)
 
@@ -120,7 +120,7 @@ If you're technical, a simple personal website showing your work and CV makes an
 Free (or with financial aid) courses on Coursera about career skills, writing a CV and preparing for interviews:
 
 - [Soft skills for career success](https://www.coursera.org/collections/soft-skills-career-success)
-- [Career Planning](https://www.coursera.org/learn/career-planning-tsu)
+- [Career Planning](https://www.coursera.org/learn/career-planning)
 - [Interview Techniques](https://www.coursera.org/learn/interview-techniques)
 - [Interview Preparation](https://www.coursera.org/learn/interview-preparation)
 
