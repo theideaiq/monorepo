@@ -80,6 +80,15 @@ export const describeAttributes = (attributes: unknown) =>
     : "";
 
 /**
+ * A plan's name in the reader's language: `name_ar` on Arabic pages when
+ * it's set, else `name` (English).
+ */
+export const planName = (
+  plan: { readonly name: string; readonly name_ar?: string | null },
+  locale: string
+) => (locale === "ar" && plan.name_ar ? plan.name_ar : plan.name);
+
+/**
  * A variant's name for customers: its label in their language, else its
  * attributes, else nothing (a product's only, unlabelled variant).
  */

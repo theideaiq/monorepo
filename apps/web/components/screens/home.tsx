@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice, localized } from "@repo/commerce";
+import { formatPrice, localized, planName } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
@@ -160,7 +160,7 @@ const PlusPanel = () => {
           <div className="grid gap-1 text-sm">
             {plan ? (
               <span className="font-medium">
-                {t("member", { plan: plan.name })}
+                {t("member", { plan: planName(plan, locale) })}
               </span>
             ) : null}
             {subscription.data?.current_period_end ? (

@@ -1,3 +1,4 @@
+import type { Locale } from "@repo/internationalization";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -6,7 +7,7 @@ import { StatusBadge } from "@/components/admin/status-badge";
 import { parseAddress } from "@/lib/admin/address";
 import { type Formatters, formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";
-import { canRead } from "@/lib/admin/roles";
+import { canRead, canWrite as canWriteSection } from "@/lib/admin/roles";
 import { requireSection, type ServerClient } from "@/lib/admin/session";
 import { BulbsPanel } from "./bulbs-panel";
 import { CrmForm } from "./crm-form";
@@ -17,6 +18,7 @@ import {
   SubscriptionsPanel,
   SuspendButton,
 } from "./panels";
+import { SupportPanel } from "./support-panel";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.customers");
@@ -24,7 +26,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 type Access = Record<
-  "orders" | "rentals" | "subscription" | "telegram",
+  "orders" | "rentals" | "subscription" | "support" | "telegram",
   boolean
 >;
 
@@ -44,6 +46,7 @@ const loadCustomer = async (
     rentals,
     subscriptions,
     telegram,
+    tickets,
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -85,6 +88,14 @@ const loadCustomer = async (
           .eq("user_id", id)
           .maybeSingle()
       : none,
+    can.support
+      ? supabase
+          .from("support_tickets")
+          .select("id, number, subject, status, last_message_at")
+          .eq("user_id", id)
+          .order("last_message_at", { ascending: false })
+          .limit(5)
+      : none,
   ]);
 
   return {
@@ -95,6 +106,7 @@ const loadCustomer = async (
     staffRow,
     subscriptions,
     telegram,
+    tickets,
   };
 };
 
@@ -102,6 +114,51 @@ const optionalDateTime = (
   format: Formatters,
   iso: string | null | undefined
 ) => (iso ? format.dateTime(iso) : null);
+
+type Loaded = Awaited<ReturnType<typeof loadCustomer>>;
+
+/** Orders, rentals and support tickets, each when the role reads them. */
+const ActivityColumn = ({
+  canOpenTickets,
+  format,
+  id,
+  locale,
+  orders,
+  rentals,
+  tickets,
+}: {
+  readonly canOpenTickets: boolean;
+  readonly format: Formatters;
+  readonly id: string;
+  readonly locale: Locale;
+  readonly orders: Loaded["orders"];
+  readonly rentals: Loaded["rentals"];
+  readonly tickets: Loaded["tickets"];
+}) => (
+  <div className="grid content-start gap-6">
+    {orders ? (
+      <OrdersPanel format={format} id={id} orders={orders.data ?? []} />
+    ) : null}
+
+    {rentals ? (
+      <RentalsPanel
+        format={format}
+        locale={locale}
+        rentals={rentals.data ?? []}
+      />
+    ) : null}
+
+    {tickets ? (
+      <SupportPanel
+        canOpen={canOpenTickets}
+        customerId={id}
+        format={format}
+        orders={orders?.data ?? []}
+        tickets={tickets.data ?? []}
+      />
+    ) : null}
+  </div>
+);
 
 const CustomerPage = async ({
   params,
@@ -122,6 +179,7 @@ const CustomerPage = async ({
     rentals: canRead(staff.role, "rentals"),
     subscription:
       canRead(staff.role, "rentals") || canRead(staff.role, "finance"),
+    support: canRead(staff.role, "support"),
     telegram: canRead(staff.role, "telegram"),
   };
   const {
@@ -132,6 +190,7 @@ const CustomerPage = async ({
     staffRow,
     subscriptions,
     telegram,
+    tickets,
   } = await loadCustomer(supabase, id, can);
 
   if (!profile) {
@@ -162,19 +221,15 @@ const CustomerPage = async ({
         ) : null}
       </PageHeader>
       <PageBody className="lg:grid-cols-[1fr_22rem]">
-        <div className="grid content-start gap-6">
-          {orders ? (
-            <OrdersPanel format={format} id={id} orders={orders.data ?? []} />
-          ) : null}
-
-          {rentals ? (
-            <RentalsPanel
-              format={format}
-              locale={locale}
-              rentals={rentals.data ?? []}
-            />
-          ) : null}
-        </div>
+        <ActivityColumn
+          canOpenTickets={canWriteSection(staff.role, "support")}
+          format={format}
+          id={id}
+          locale={locale}
+          orders={orders}
+          rentals={rentals}
+          tickets={tickets}
+        />
 
         <div className="grid content-start gap-6">
           <ProfilePanel

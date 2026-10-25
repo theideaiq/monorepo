@@ -73,6 +73,7 @@ export const planSchema = z
     id: slug.max(64),
     isNew: checkbox,
     name: text(120),
+    nameAr: optionalText(120),
     position: int(0, 10_000),
     rentalSlots: optionalInt(1, 50),
     /** The IDEA Plus plan level; rental items can require a minimum tier. */

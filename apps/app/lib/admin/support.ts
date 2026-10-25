@@ -125,3 +125,12 @@ export const ticketUpdateSchema = z.object({
   status: z.enum(ticketStatuses),
   ticketId: uuid,
 });
+
+/** A ticket opened by staff for a customer, with its first (staff) message. */
+export const openTicketSchema = z.object({
+  body: text(5000),
+  customerId: uuid,
+  orderId: optionalUuid,
+  subject: text(200),
+  topic: z.enum(ticketTopics),
+});

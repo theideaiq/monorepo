@@ -2544,7 +2544,9 @@
         "empty": "No plans yet.",
         "id": "Plan ID",
         "idHint": "Permanent, e.g. plus-monthly. Lower-case letters, numbers and dashes.",
-        "name": "Name",
+        "name": "Name (English)",
+        "nameAr": "Name (Arabic)",
+        "nameArHint": "Shown on Arabic pages; while it's empty they show the English name.",
         "description": "Description",
         "audience": "Product line",
         "audiences": {
@@ -2976,6 +2978,15 @@
         "amountHint": "Negative to take away, e.g. -50.",
         "reason": "Reason",
         "adjust": "Adjust Bulbs"
+      },
+      "support": {
+        "title": "Support tickets",
+        "none": "No tickets yet.",
+        "openTitle": "Open a ticket for this customer",
+        "subject": "Subject",
+        "message": "Message to the customer",
+        "messageHint": "They see it in My Pass and get a notification; the ticket waits on their reply.",
+        "open": "Open ticket"
       }
     },
     "finance": {

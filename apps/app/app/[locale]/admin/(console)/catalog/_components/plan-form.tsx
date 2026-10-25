@@ -52,6 +52,14 @@ export const PlanForm = ({ disabled = false, plan }: PlanFormProps) => {
               name="name"
               required
             />
+            <TextField
+              defaultValue={plan?.name_ar ?? ""}
+              dir="rtl"
+              hint={t("nameArHint")}
+              label={t("nameAr")}
+              maxLength={120}
+              name="nameAr"
+            />
             <SelectField
               label={t("audience")}
               name="audience"

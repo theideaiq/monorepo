@@ -1,4 +1,4 @@
-import { formatPrice } from "@repo/commerce";
+import { formatPrice, planName } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
 import type { Locale } from "@repo/internationalization";
@@ -40,7 +40,7 @@ export const PlanCard = async ({
         </span>
       ) : null}
       <div className="flex flex-col gap-2">
-        <h3 className="text-h3">{plan.name}</h3>
+        <h3 className="text-h3">{planName(plan, locale)}</h3>
         <p className="flex items-baseline gap-2">
           <span className="font-bold font-mono text-3xl tabular-nums">
             {formatPrice(plan.amount, locale)}
@@ -75,7 +75,7 @@ export const PlanCard = async ({
         size="lg"
         variant={featured ? "default" : "outline"}
       >
-        <a href={href}>{t("choose", { plan: plan.name })}</a>
+        <a href={href}>{t("choose", { plan: planName(plan, locale) })}</a>
       </Button>
     </div>
   );

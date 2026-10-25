@@ -1301,6 +1301,7 @@ export type Database = {
           features_en: string[];
           id: string;
           name: string;
+          name_ar: string | null;
           position: number;
           rental_slots: number | null;
           tier: number | null;
@@ -1317,6 +1318,7 @@ export type Database = {
           features_en?: string[];
           id: string;
           name: string;
+          name_ar?: string | null;
           position?: number;
           rental_slots?: number | null;
           tier?: number | null;
@@ -1333,6 +1335,7 @@ export type Database = {
           features_en?: string[];
           id?: string;
           name?: string;
+          name_ar?: string | null;
           position?: number;
           rental_slots?: number | null;
           tier?: number | null;
@@ -3439,6 +3442,35 @@ export type Database = {
         }[];
       };
       notify_rentals_due_soon: { Args: { within?: string }; Returns: number };
+      open_support_ticket_for: {
+        Args: {
+          customer: string;
+          ticket_body: string;
+          ticket_order?: string;
+          ticket_subject: string;
+          ticket_topic?: Database["public"]["Enums"]["ticket_topic"];
+        };
+        Returns: {
+          assigned_to: string | null;
+          created_at: string;
+          id: string;
+          last_message_at: string;
+          number: number;
+          order_id: string | null;
+          priority: Database["public"]["Enums"]["ticket_priority"];
+          status: Database["public"]["Enums"]["ticket_status"];
+          subject: string;
+          topic: Database["public"]["Enums"]["ticket_topic"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "support_tickets";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       pending_invitations: {
         Args: Record<PropertyKey, never>;
         Returns: {

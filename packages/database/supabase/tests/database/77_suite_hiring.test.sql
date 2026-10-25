@@ -49,6 +49,7 @@ end;
 $$;
 
 grant execute on all functions in schema pg_temp to public;
+-- </preamble>
 select plan(15);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────

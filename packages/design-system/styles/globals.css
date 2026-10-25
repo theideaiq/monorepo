@@ -127,8 +127,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans:
-    var(--font-readex), var(--font-arabic), var(--font-latin), ui-sans-serif,
-    system-ui, sans-serif;
+    var(--font-readex), var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --font-mono: var(--font-geist-mono);

@@ -1,5 +1,6 @@
 "use client";
 
+import { planName } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -99,7 +100,7 @@ const OrganizationBilling = () => {
               >
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between gap-2">
-                    {plan.name}
+                    {planName(plan, locale)}
                     {isCurrent ? <Badge>{t("current")}</Badge> : null}
                   </CardTitle>
                   <CardDescription>

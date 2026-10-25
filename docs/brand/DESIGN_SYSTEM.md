@@ -96,7 +96,7 @@ On phones scale `display-xl` to 44/48 and `display` to 36/42. Arabic never below
 
 Add every other token from `tokens.css` and expose them in `@theme inline` as `--color-*` (`bg-idea-pink`, `text-pink-text`, `bg-surface-sunken`, `bg-plus` …).
 
-Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/font/google` (subsets `latin` and `arabic`, weights 400, 500, 600, 700) as the first `--font-sans` family; keep Cairo as the Arabic fallback; remove Poppins after one release; keep Geist Mono.
+Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/font/google` (subsets `latin` and `arabic`, weights 400, 500, 600, 700) as the first `--font-sans` family; keep Cairo as the Arabic fallback; keep Geist Mono. (Poppins, the previous Latin font, was removed on 2026-10-25.)
 
 ## 4. Components
 
