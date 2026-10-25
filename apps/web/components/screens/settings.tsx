@@ -22,6 +22,7 @@ import { DeleteAccountCard } from "@/components/account/delete-account";
 import { PageHeader } from "@/components/page-header";
 import { ProfileForm } from "@/components/profile-form";
 import { SectionSpinner } from "@/components/states";
+import { TelegramSettingsCard } from "@/components/telegram-settings";
 import { WhatsAppSettingsCard } from "@/components/whatsapp-settings";
 import { useProfile } from "@/lib/queries";
 
@@ -123,6 +124,7 @@ export const Settings = () => {
           </CardContent>
         </Card>
         <WhatsAppSettingsCard />
+        <TelegramSettingsCard />
         <Appearance />
         <DeleteAccountCard />
       </div>

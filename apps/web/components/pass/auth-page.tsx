@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { hostOf, readReturnTo, type SearchParams } from "@/lib/pass/return-to";
 import { getPassSession } from "@/lib/pass/session";
 import { PassSignIn } from "./pass-sign-in";
+import { TelegramButton } from "./telegram-button";
 
 interface AuthPageProps {
   readonly mode: "sign-in" | "sign-up";
@@ -53,6 +54,7 @@ export const AuthPage = async ({ mode, searchParams }: AuthPageProps) => {
         </p>
       ) : null}
       <PassSignIn mode={mode} returnTo={returnTo} />
+      <TelegramButton returnTo={returnTo} />
     </div>
   );
 };

@@ -319,6 +319,26 @@ session in the shared cookie.
   records a payout of everything ready from 25,000 IQD
   (`record_affiliate_payout()`): by ZainCash, FIB, Qi or bank transfer with
   its reference, or as Bulbs worth 20% more, credited at once.
+- **Telegram sign-in** (migration `20261202000000_telegram_login.sql`).
+  Telegram's OpenID Connect (core.telegram.org/bots/telegram-login), run
+  by the API with the bot's Client ID and Secret (`TELEGRAM_LOGIN_*`, from
+  @BotFather → Login Widget, whose Allowed URLs include
+  `<API URL>/auth/telegram/callback`). `GET /auth/telegram/start` keeps the
+  state, PKCE verifier and `return_to` in a signed 10-minute cookie and
+  sends the browser to Telegram (scope `openid profile
+  telegram:bot_access`); `GET /auth/telegram/callback` exchanges the code
+  and checks the ID token against Telegram's keys (`jose`,
+  `lib/telegram-login`). A Telegram account already linked
+  (`telegram_members.user_id`) signs in through a one-time magic-link token
+  (`auth.admin.generateLink`) that `/sign-in/telegram` on the website
+  verifies; a new one comes back with a signed ticket: the member signs in
+  with an email code there (receipts and recovery) and
+  `POST /auth/telegram/link` links it with `link_telegram()` (service
+  only: one account per member, never someone else's; 10 Bulbs the first
+  time). From My Pass → Settings the flow runs with `mode=link`, so it
+  always links to the signed-in member and never switches accounts;
+  `unlink_telegram()` disconnects. `GET /auth/telegram/available` tells the
+  website whether to show the buttons.
 - **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
   Google Wallet" link for a generic pass whose QR code rotates in Google
   Wallet with the same secret (`rotatingBarcode.totpDetails`), so both
