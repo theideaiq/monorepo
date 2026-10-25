@@ -3,8 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * End-to-end journeys against a local Supabase stack and the three Next.js
- * apps: The IDEA Spark (customer app, The IDEA Pass and the back office),
- * the website and the API, which the website's forms and status badge call
+ * apps: the website (with The IDEA Pass, My Pass, the cart and checkout),
+ * The IDEA Spark (the back office and business) and the API, which both call
  * (CI: .github/workflows/ci.yml, job "e2e"). Locally: `bun run
  * db:start`, then `bun run --cwd apps/e2e e2e`; the servers are started here
  * unless already running. E2E_START=start runs the built apps (`next start`,
@@ -48,7 +48,7 @@ process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??=
 
 const app = process.env.E2E_APP_URL ?? "http://localhost:3000";
 const web = process.env.E2E_WEB_URL ?? "http://localhost:3001";
-// The IDEA Pass is part of The IDEA Spark (NEXT_PUBLIC_APP_URL); it sends
+// The IDEA Pass is part of the website (NEXT_PUBLIC_WEB_URL); it sends
 // people back to these hosts.
 process.env.NEXT_PUBLIC_APP_URL ??= app;
 process.env.NEXT_PUBLIC_WEB_URL ??= web;
@@ -82,7 +82,7 @@ export default defineConfig({
       command: `bun run --cwd ../app ${script}${port(app)}`,
       reuseExistingServer: true,
       timeout: 240_000,
-      url: `${app}/en/sign-in`,
+      url: `${app}/robots.txt`,
     },
     {
       command: `bun run --cwd ../web ${script}${port(web)}`,

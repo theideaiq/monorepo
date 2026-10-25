@@ -1,19 +1,14 @@
-import {
-  describeAttributes,
-  discountPercent,
-  formatPrice,
-  localized,
-} from "@repo/commerce";
+import { discountPercent, formatPrice, localized } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
-import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { JsonLd } from "@repo/seo/json-ld";
-import { MoveLeft, ShoppingBag, Truck } from "lucide-react";
+import { MoveLeft, Truck } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Suspense } from "react";
 import { CoverImage } from "@/components/cover-image";
 import { stockLabel } from "@/components/product-card";
 import { ProductConditionBulb } from "@/components/product-condition-bulb";
@@ -22,7 +17,8 @@ import {
   RatingLink,
   SellerLine,
 } from "@/components/product-reviews";
-import { env } from "@/env";
+import { WriteReview } from "@/components/store/product-reviews";
+import { PurchasePanel } from "@/components/store/purchase-panel";
 import {
   getPlans,
   getProduct,
@@ -32,7 +28,6 @@ import {
   imageUrl,
   type ProductDetail,
 } from "@/lib/data";
-import { appProductLink } from "@/lib/links";
 import { markdownToText } from "@/lib/markdown";
 import { localizedMetadata, siteUrl } from "@/lib/metadata";
 import { requiredPlan } from "@/lib/plus";
@@ -75,37 +70,6 @@ const rentalPlan = async ({
     ? requiredPlan(await getPlans("plus"), tier)
     : null;
 
-/** Buy (pink) or rent with The IDEA Plus (violet), in the app. */
-const BuyAction = async ({
-  href,
-  locale,
-  rental,
-}: {
-  readonly href: string;
-  readonly locale: Locale;
-  readonly rental: boolean;
-}) => {
-  const t = await getTranslations({ locale, namespace: "web.store.product" });
-  return (
-    <>
-      <Button
-        asChild
-        className="w-full gap-2 sm:w-fit"
-        size="lg"
-        variant={rental ? "plus" : "default"}
-      >
-        <a href={href}>
-          <ShoppingBag className="size-4" />
-          {rental ? t("rent") : t("buy")}
-        </a>
-      </Button>
-      <p className="text-muted-foreground text-sm">
-        {rental ? t("rentNote") : t("buyNote")}
-      </p>
-    </>
-  );
-};
-
 const ProductPage = async ({ params }: ProductProps) => {
   const { locale, slug } = await params;
   setRequestLocale(locale);
@@ -130,7 +94,6 @@ const ProductPage = async ({ params }: ProductProps) => {
   const discount = discountPercent(product.price, product.compare_at_price);
   const rental = product.kind === "rental";
   const specs = productSpecs(product.details);
-  const buyUrl = appProductLink(env.NEXT_PUBLIC_APP_URL, locale, slug);
   const pageUrl = new URL(`/${locale}/store/${slug}`, siteUrl()).href;
 
   return (
@@ -233,7 +196,9 @@ const ProductPage = async ({ params }: ProductProps) => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <BuyAction href={buyUrl} locale={locale} rental={rental} />
+            <Suspense>
+              <PurchasePanel product={product} />
+            </Suspense>
             {plan ? (
               <div className="flex flex-col gap-1 rounded-md border border-brand/60 bg-brand/10 p-3 text-sm">
                 <p className="font-medium">
@@ -251,35 +216,6 @@ const ProductPage = async ({ params }: ProductProps) => {
               </p>
             )}
           </div>
-
-          {product.product_variants.length > 0 ? (
-            <section className="flex flex-col gap-3">
-              <h2 className="font-semibold text-lg">{t("variants")}</h2>
-              <ul className="divide-y rounded-md border">
-                {product.product_variants.map((variant) => (
-                  <li
-                    className="flex flex-wrap items-center justify-between gap-2 p-3 text-sm"
-                    key={variant.id}
-                  >
-                    <span>{describeAttributes(variant.attributes)}</span>
-                    <span className="flex items-center gap-3">
-                      {rental ? null : (
-                        <span className="font-medium">
-                          {formatPrice(
-                            variant.price_override ?? product.price,
-                            locale
-                          )}
-                        </span>
-                      )}
-                      <span className="text-muted-foreground">
-                        {stockLabel(store, variant.stock_count, locale)}
-                      </span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
 
           {description ? (
             <section className="flex flex-col gap-3">
@@ -310,7 +246,7 @@ const ProductPage = async ({ params }: ProductProps) => {
         locale={locale}
         rating={rating}
         reviews={reviews}
-        writeUrl={buyUrl}
+        write={<WriteReview productId={product.id} />}
       />
     </div>
   );

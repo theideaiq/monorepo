@@ -1,6 +1,5 @@
 import { localized } from "@repo/commerce";
 import { project } from "@repo/config";
-import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
 import {
   formatDateTime,
@@ -14,9 +13,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CoverImage } from "@/components/cover-image";
-import { env } from "@/env";
+import { RsvpButton } from "@/components/rsvp-button";
 import { editorialUrl, getEvent, getEvents, getRsvpCount } from "@/lib/data";
-import { appLink } from "@/lib/links";
+import { seatsLeft } from "@/lib/events";
 import { Markdown, markdownToText } from "@/lib/markdown";
 import { localizedMetadata, siteUrl } from "@/lib/metadata";
 
@@ -180,11 +179,10 @@ const EventPage = async ({ params }: EventProps) => {
                     : t("noRsvps")}
                 </p>
               )}
-              <Button asChild className="w-full">
-                <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/events")}>
-                  {t("rsvp")}
-                </a>
-              </Button>
+              <RsvpButton
+                eventId={event.id}
+                full={seatsLeft(event.capacity, rsvps ?? undefined) === 0}
+              />
             </>
           )}
         </aside>

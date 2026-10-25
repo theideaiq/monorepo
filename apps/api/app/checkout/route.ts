@@ -26,20 +26,28 @@ const body = z.object({
 
 const platforms = new Set<Platform>(["web", "ios", "android"]);
 
-/** Only redirect back into our own app, never to arbitrary sites. */
-const safeRedirect = (redirectUrl: string | undefined) => {
-  const app = new URL(env.NEXT_PUBLIC_APP_URL);
+/**
+ * Only redirect back to our own sites, never to arbitrary ones: the website
+ * for The IDEA Plus (My Pass), The IDEA Spark for business plans.
+ */
+const safeRedirect = (redirectUrl: string | undefined, business: boolean) => {
+  const home = business
+    ? new URL(
+        `/${project.locale.default}/business/billing`,
+        env.NEXT_PUBLIC_APP_URL
+      )
+    : new URL(`/${project.locale.default}/pass/plus`, env.NEXT_PUBLIC_WEB_URL);
   if (!redirectUrl) {
-    return new URL(`/${project.locale.default}/billing`, app).toString();
+    return home.toString();
   }
-  return new URL(redirectUrl).origin === app.origin ? redirectUrl : undefined;
+  return new URL(redirectUrl).origin === home.origin ? redirectUrl : undefined;
 };
 
 export const OPTIONS = preflight;
 
 /**
  * Starts a checkout for a plan: a business plan for an organization the
- * caller manages, or The IDEA Plus for the caller. Called by the web app and the native apps
+ * caller manages, or The IDEA Plus for the caller. Called by the website, The IDEA Spark and the native apps
  * with `Authorization: Bearer <Supabase access token>`.
  */
 export const POST = async (request: Request) => {
@@ -67,7 +75,10 @@ export const POST = async (request: Request) => {
   }
 
   const { organizationId, planId } = parsed.data;
-  const redirectUrl = safeRedirect(parsed.data.redirectUrl);
+  const redirectUrl = safeRedirect(
+    parsed.data.redirectUrl,
+    organizationId !== undefined
+  );
   if (!redirectUrl) {
     return json({ error: "invalid_redirect" }, 400);
   }

@@ -25,7 +25,36 @@ nextConfig.images = {
   ],
 };
 
+// Pages that moved into My Pass (/pass/…): links stored before the move
+// (notifications, emails, payment returns, Telegram) keep working. /plus
+// stays the public page; its management page is /pass/plus.
+const passSections = "orders|sell|settings|submissions|support|wishlist";
+
 nextConfig.redirects = async () => [
+  // Detail pages took a query parameter while the app was a static export.
+  {
+    destination: "/:locale/pass/orders/:id",
+    has: [{ key: "id", type: "query", value: "(?<id>[^&]+)" }],
+    permanent: true,
+    source: "/:locale(ar|en)/orders/view",
+  },
+  {
+    destination: "/:locale/pass/support/:id",
+    has: [{ key: "id", type: "query", value: "(?<id>[^&]+)" }],
+    permanent: true,
+    source: "/:locale(ar|en)/support/view",
+  },
+  {
+    destination: "/:locale/store/:slug",
+    has: [{ key: "slug", type: "query", value: "(?<slug>[^&]+)" }],
+    permanent: true,
+    source: "/:locale(ar|en)/store/product",
+  },
+  {
+    destination: "/:locale/pass/:section/:path*",
+    permanent: true,
+    source: `/:locale(ar|en)/:section(${passSections})/:path*`,
+  },
   {
     destination: "/:locale/legal/terms",
     permanent: true,
@@ -61,6 +90,25 @@ nextConfig.redirects = async () => [
  * script and is shown inside Telegram's clients, so it gets its own policy.
  */
 nextConfig.headers = async () => [
+  // The IDEA Pass and My Pass: never indexed.
+  ...[
+    "mfa",
+    "pass/:path*",
+    "sign-in",
+    "sign-out",
+    "sign-up",
+    "cart",
+    "checkout",
+    "onboarding",
+  ].map((path) => ({
+    headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+    source: `/:locale(ar|en)/${path}`,
+  })),
+  // Universal Links: Apple reads this file (no extension) as JSON.
+  {
+    headers: [{ key: "Content-Type", value: "application/json" }],
+    source: "/.well-known/apple-app-site-association",
+  },
   {
     headers: [
       {

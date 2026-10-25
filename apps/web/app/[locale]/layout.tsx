@@ -11,8 +11,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
-import { env } from "@/env";
-import { passSignInLink } from "@/lib/links";
+import { AppProviders } from "@/components/providers";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
 
@@ -37,8 +36,9 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
   // Lets pages under this layout render statically.
   setRequestLocale(locale);
   const dir = getDirection(locale);
-  // Client components only need the shared and marketing texts.
-  const { common, web } = await getMessages();
+  // Texts the client components use: shared, The IDEA Pass and My Pass,
+  // the store and the marketing pages.
+  const { app, auth, billing, common, pass, store, web } = await getMessages();
 
   return (
     <html
@@ -48,15 +48,16 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
       suppressHydrationWarning
     >
       <body>
-        <NextIntlClientProvider messages={{ common, web }}>
+        <NextIntlClientProvider
+          messages={{ app, auth, billing, common, pass, store, web }}
+        >
           <AnalyticsProvider>
             <DesignSystemProvider dir={dir} labels={common.ui}>
-              <Header
-                appUrl={env.NEXT_PUBLIC_APP_URL}
-                signInUrl={passSignInLink(env.NEXT_PUBLIC_APP_URL, locale)}
-              />
-              {children}
-              <Footer />
+              <AppProviders>
+                <Header />
+                {children}
+                <Footer />
+              </AppProviders>
             </DesignSystemProvider>
           </AnalyticsProvider>
         </NextIntlClientProvider>

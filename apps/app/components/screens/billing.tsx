@@ -18,7 +18,6 @@ import { ErrorState, SectionSpinner } from "@/components/states";
 import { reportCompletedCheckout } from "@/lib/checkout-tracking";
 import { usePlanCheckout } from "@/lib/plus-queries";
 import { usePayments, usePlans, useSubscription } from "@/lib/queries";
-import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 
 /** The active organization's The IDEA Suite plan (`audience = 'business'`). */
 const OrganizationBilling = () => {
@@ -31,7 +30,6 @@ const OrganizationBilling = () => {
   const checkout = usePlanCheckout("/business/billing", active.id);
   // Digital goods can't use a third-party checkout inside the iOS/Android
   // apps (see @repo/payments policy and commerce.allowNativeCheckout).
-  const canSell = useCanSellDigitalGoods();
 
   // Back from the hosted checkout: report the purchase once it is paid.
   useEffect(() => {
@@ -80,9 +78,6 @@ const OrganizationBilling = () => {
 
       <section className="grid gap-4">
         <h2 className="font-semibold text-lg">{t("choosePlan")}</h2>
-        {canSell === false ? (
-          <p className="rounded-md bg-muted p-4 text-sm">{t("webOnly")}</p>
-        ) : null}
         {canManage ? null : (
           <p className="text-muted-foreground text-sm">{t("managersOnly")}</p>
         )}
@@ -124,7 +119,7 @@ const OrganizationBilling = () => {
                       ))}
                     </ul>
                   ) : null}
-                  {canSell === true && canManage ? (
+                  {canManage ? (
                     <Button
                       className="w-full"
                       disabled={checkout.isPending}

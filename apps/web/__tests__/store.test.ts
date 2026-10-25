@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { appLink, appProductLink } from "@/lib/links";
+import { appLink, pagePath } from "@/lib/links";
 import { productJsonLd, productSpecs } from "@/lib/product";
 import { parseStoreQuery, storeQueryString } from "@/lib/store-params";
 
@@ -42,13 +42,13 @@ describe("parseStoreQuery", () => {
   });
 });
 
-describe("app links", () => {
-  it("points at the app's query-parameter routes", () => {
-    expect(appProductLink("https://app.theideaiq.com/", "ar", "ps5-slim")).toBe(
-      "https://app.theideaiq.com/ar/store/ps5-slim"
+describe("links", () => {
+  it("builds locale-prefixed paths here and URLs on The IDEA Spark", () => {
+    expect(pagePath("ar", "/pass/plus", { plan: "p1" })).toBe(
+      "/ar/pass/plus?plan=p1"
     );
-    expect(appLink("https://app.theideaiq.com", "en", "/events")).toBe(
-      "https://app.theideaiq.com/en/events"
+    expect(appLink("https://spark.theideaiq.com/", "en", "/business")).toBe(
+      "https://spark.theideaiq.com/en/business"
     );
   });
 });

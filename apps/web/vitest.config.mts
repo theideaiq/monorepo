@@ -1,9 +1,9 @@
 import path from "node:path";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  // tsconfig keeps JSX for Next.js; tests need it compiled.
-  oxc: { jsx: { runtime: "automatic" } },
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./"),
@@ -11,8 +11,10 @@ export default defineConfig({
     },
   },
   test: {
-    environment: "node",
-    exclude: ["node_modules", ".next"],
-    include: ["**/*.test.{ts,tsx}"],
+    environment: "jsdom",
+    // next-intl imports "next/navigation" without an extension, which only
+    // resolves when Vite bundles it (and lets the setup file mock it).
+    server: { deps: { inline: ["next-intl"] } },
+    setupFiles: ["./__tests__/setup.ts"],
   },
 });

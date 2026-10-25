@@ -13,9 +13,8 @@ import { PageHero } from "@/components/page-hero";
 import { Pagination } from "@/components/pagination";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
-import { env } from "@/env";
 import { getCategories, getProducts, getRatings } from "@/lib/data";
-import { appLink } from "@/lib/links";
+import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import {
   parseStoreQuery,
@@ -193,7 +192,7 @@ const Store = async ({ params, searchParams }: StoreProps) => {
       <PinkBand
         action={
           <Button asChild className="gap-2" size="lg" variant="brand">
-            <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/sell")}>
+            <a href={pagePath(locale, "/pass/sell")}>
               <HandCoins aria-hidden="true" />
               {t("store.sell.cta")}
             </a>

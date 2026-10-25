@@ -22,7 +22,7 @@ const DEFAULT_LOCALE = "ar";
 type Locale = (typeof LOCALES)[number];
 
 export interface GateEnv {
-  /** The IDEA Pass: The IDEA Spark (NEXT_PUBLIC_APP_URL). */
+  /** The IDEA Pass: the website (NEXT_PUBLIC_WEB_URL). */
   passUrl: string;
   publishableKey: string;
   supabaseUrl: string;
@@ -108,8 +108,8 @@ export const localeFrom = (request: Request): Locale => {
 };
 
 /**
- * `${NEXT_PUBLIC_APP_URL}/${locale}/${path}?return_to=…` (The IDEA Pass, in The
- * IDEA Spark), the same URL as
+ * `${NEXT_PUBLIC_WEB_URL}/${locale}/${path}?return_to=…` (The IDEA Pass, on
+ * the website), the same URL as
  * `passUrl` from @repo/auth/pass builds, but from the injected `GateEnv` so
  * the gate stays testable without process.env.
  */

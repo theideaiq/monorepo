@@ -61,20 +61,10 @@
     "apps/app": {
       "name": "app",
       "dependencies": {
-        "@capacitor/android": "^8.5.2",
-        "@capacitor/app": "^8.1.2",
-        "@capacitor/browser": "^8.0.5",
-        "@capacitor/core": "^8.5.2",
-        "@capacitor/ios": "^8.5.2",
-        "@capacitor/push-notifications": "^8.1.3",
-        "@capacitor/share": "^8.0.3",
-        "@capacitor/splash-screen": "^8.0.2",
-        "@capacitor/status-bar": "^8.0.4",
         "@date-fns/tz": "^1.5.0",
         "@repo/analytics": "workspace:*",
         "@repo/auth": "workspace:*",
         "@repo/commerce": "workspace:*",
-        "@repo/config": "workspace:*",
         "@repo/database": "workspace:*",
         "@repo/design-system": "workspace:*",
         "@repo/internationalization": "workspace:*",
@@ -92,7 +82,6 @@
         "marked": "^18.0.14",
         "next": "16.4.3",
         "next-intl": "^4.14.9",
-        "next-themes": "^0.4.6",
         "react": "19.3.0",
         "react-dom": "19.3.0",
         "recharts": "^3.8.0",
@@ -102,7 +91,6 @@
         "zod": "^4.6.7",
       },
       "devDependencies": {
-        "@capacitor/cli": "^8.5.2",
         "@repo/typescript-config": "workspace:*",
         "@tailwindcss/postcss": "^4.2.1",
         "@testing-library/dom": "^10.4.1",
@@ -177,6 +165,15 @@
     "apps/web": {
       "name": "web",
       "dependencies": {
+        "@capacitor/android": "^8.5.2",
+        "@capacitor/app": "^8.1.2",
+        "@capacitor/browser": "^8.0.5",
+        "@capacitor/core": "^8.5.2",
+        "@capacitor/ios": "^8.5.2",
+        "@capacitor/push-notifications": "^8.1.3",
+        "@capacitor/share": "^8.0.3",
+        "@capacitor/splash-screen": "^8.0.2",
+        "@capacitor/status-bar": "^8.0.4",
         "@repo/analytics": "workspace:*",
         "@repo/auth": "workspace:*",
         "@repo/commerce": "workspace:*",
@@ -186,13 +183,14 @@
         "@repo/internationalization": "workspace:*",
         "@repo/next-config": "workspace:*",
         "@repo/observability": "workspace:*",
+        "@repo/payments": "workspace:*",
         "@repo/security": "workspace:*",
         "@repo/seo": "workspace:*",
         "@repo/storage": "workspace:*",
-        "@rescale/nemo": "^2.1.1",
         "@sentry/nextjs": "^10.42.0",
         "@supabase/supabase-js": "^2.115.0",
         "@t3-oss/env-nextjs": "^0.13.10",
+        "@tanstack/react-query": "^5.104.1",
         "import-in-the-middle": "^3.0.0",
         "lucide-react": "^1.41.0",
         "mdast-util-from-markdown": "^2.0.2",
@@ -200,19 +198,26 @@
         "micromark-extension-gfm": "^3.0.0",
         "next": "16.4.3",
         "next-intl": "^4.14.9",
+        "next-themes": "^0.4.6",
         "react": "19.3.0",
         "react-dom": "19.3.0",
         "require-in-the-middle": "8.0.1",
+        "server-only": "^0.0.1",
         "sharp": "^0.35.5",
         "zod": "^4.6.7",
       },
       "devDependencies": {
+        "@capacitor/cli": "^8.5.2",
         "@repo/typescript-config": "workspace:*",
         "@tailwindcss/postcss": "^4.2.1",
+        "@testing-library/dom": "^10.4.1",
+        "@testing-library/react": "^16.3.2",
         "@types/mdast": "^4.0.4",
         "@types/node": "24.19.1",
         "@types/react": "19.3.0",
         "@types/react-dom": "19.3.0",
+        "@vitejs/plugin-react": "^5.1.4",
+        "jsdom": "^28.1.0",
         "tailwindcss": "^4.2.1",
         "typescript": "^7.0.2",
         "vitest": "^5.0.3",
@@ -1506,8 +1511,6 @@
     "@repo/storybook": ["@repo/storybook@workspace:apps/storybook"],
 
     "@repo/typescript-config": ["@repo/typescript-config@workspace:packages/typescript-config"],
-
-    "@rescale/nemo": ["@rescale/nemo@2.2.0", "", { "dependencies": { "path-to-regexp": "^6.1.0" }, "peerDependencies": { "next": ">=13.0.0" } }, "sha512-AetzvHmtJ8Q0U1SEpBmWgCZfQZgBfr++Ok0AUMHGJVdaU1w+OB1/x/PMoskulL5xrnFLRdUlmMBhYl+JTgZMjA=="],
 
     "@rolldown/binding-android-arm-eabi": ["@rolldown/binding-android-arm-eabi@1.2.15", "", { "os": "android", "cpu": "arm" }, "sha512-aLcgK9gIJ3YRvrrtfSBbRa27F5WrpiTaPulnFpsHPxpUHgFlSgnU4854MHwoRGEBhfRJDWCS2WQ7lIjskE9Olw=="],
 
@@ -2932,8 +2935,6 @@
     "path-parse": ["path-parse@1.0.7", "", {}, "sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw=="],
 
     "path-scurry": ["path-scurry@2.0.2", "", { "dependencies": { "lru-cache": "^11.0.0", "minipass": "^7.1.2" } }, "sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg=="],
-
-    "path-to-regexp": ["path-to-regexp@6.3.0", "", {}, "sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ=="],
 
     "path-type": ["path-type@4.0.0", "", {}, "sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw=="],
 

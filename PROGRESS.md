@@ -26,8 +26,9 @@ decisions with a date.
       `migrate.yml` do it once its secrets are set). Turn on TOTP MFA
       (Authentication → Sign In / Providers → Multi-factor) — staff rights
       need an authenticator-app session. Set the Site URL to
-      `https://spark.theideaiq.com` and add `https://spark.theideaiq.com/**`
-      (and the website's URL) to the redirect URLs.
+      `https://theideaiq.com` (The IDEA Pass lives on the website) and add
+      `https://theideaiq.com/**` and `https://spark.theideaiq.com/**` to
+      the redirect URLs.
 - [ ] **Supabase, email codes (The IDEA Pass sign-in;
       `ARCHITECTURE_AND_INTEGRATIONS.md` 2.7):**
       - Authentication → Sign In / Providers → Email: enabled, Confirm
@@ -56,20 +57,22 @@ decisions with a date.
       unaffected projects" on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the
       remote cache.
       - `web` (`apps/web`) → `theideaiq.com`
-      - `app` (`apps/app`, The IDEA Spark with The IDEA Pass and the back
-        office) → `spark.theideaiq.com` (DNS)
+      - `app` (`apps/app`, The IDEA Spark: the back office and The IDEA
+        Suite) → `spark.theideaiq.com` (DNS)
       - `api` (`apps/api`) → the API host
       - `storybook` (`apps/storybook`, The IDEA Design) →
         `design.theideaiq.com` (DNS), with `NEXT_PUBLIC_SUPABASE_URL` and
         `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 - [ ] **Vercel, retire the old projects:** delete the `admin` and `pass`
-      projects (their apps are now `/admin` and the Pass pages in Spark);
+      projects (their apps are now `/admin` in Spark and the Pass pages on
+      the website);
       redirect any `admin.`/`pass.` DNS to `spark.theideaiq.com` if they
       were ever published. Remove `NEXT_PUBLIC_PASS_URL` and
       `NEXT_PUBLIC_ADMIN_URL` from every project.
 - [ ] **Vercel, shared URLs:** on every project set
-      `NEXT_PUBLIC_APP_URL=https://spark.theideaiq.com` (every "Sign in"
-      goes to The IDEA Pass there), and `NEXT_PUBLIC_DESIGN_URL`; set
+      `NEXT_PUBLIC_WEB_URL=https://theideaiq.com` (every "Sign in" goes to
+      The IDEA Pass there), `NEXT_PUBLIC_APP_URL=https://spark.theideaiq.com`
+      and `NEXT_PUBLIC_DESIGN_URL`; set
       `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on web, app and
       storybook (production only).
 - [ ] **Vercel, secrets only in `api`:** remove `RESEND_*`, `ARCJET_KEY`,
@@ -92,7 +95,8 @@ decisions with a date.
       (`/ar/sign-up`), then in the SQL editor:
       `insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '<their email>';`
       they then link an authenticator app on The IDEA Pass and open
-      `https://spark.theideaiq.com/ar/admin`.
+      `https://spark.theideaiq.com/ar/admin` (or "Open the back office"
+      in My Pass).
 - [ ] **Brand v1.0 (after the brand pull request ships):** paste the
       three Supabase auth templates again
       (`packages/database/supabase/templates`, now with the pink header;
@@ -104,24 +108,24 @@ decisions with a date.
 - [ ] Delete the old branches on `theideaiq/monorepo` (the session's token
       is not allowed to).
 
-## Native apps (The IDEA Spark on iOS/Android)
+## Native apps (the website on iOS/Android)
 
-The shell is in place (Capacitor loading `https://spark.theideaiq.com`,
+The shell is in place (Capacitor loading `https://theideaiq.com`,
 offline screen, splash/status bar, push, share, app-link files); these
 steps need Xcode, Android Studio and the store/Firebase accounts
 (`ARCHITECTURE_AND_INTEGRATIONS.md`, section 3).
 
-- [ ] `bun run --cwd apps/app cap:add` and `cap:assets`; commit
-      `apps/app/ios` and `apps/app/android`.
+- [ ] `bun run --cwd apps/web cap:add` and `cap:assets`; commit
+      `apps/web/ios` and `apps/web/android`.
 - [ ] Firebase project with the iOS and Android apps; APNs key uploaded;
       `GoogleService-Info.plist` / `google-services.json` copied in (not
       committed); `AppDelegate` hands Capacitor the FCM token (3.5).
 - [ ] Xcode capabilities: Push Notifications, Background Modes → Remote
       notifications, Associated Domains (`applinks:` and
-      `webcredentials:spark.theideaiq.com`); Android `autoVerify` intent
+      `webcredentials:theideaiq.com`); Android `autoVerify` intent
       filter and `allowBackup="false"` (3.3, 3.6).
 - [ ] Fill `APPLE_TEAM_ID` and `PLAY_APP_SIGNING_SHA256_FINGERPRINT` in
-      `apps/app/public/.well-known/` and verify both URLs return JSON.
+      `apps/web/public/.well-known/` and verify both URLs return JSON.
 - [ ] Vercel `api`: `FCM_SERVICE_ACCOUNT`, `PUSH_WEBHOOK_SECRET`; Supabase
       database webhook on `notifications` inserts →
       `/webhooks/notifications` (3.5).
@@ -196,13 +200,31 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   when staff press **Mark cash collected**. Owner step: set the pickup
   address and hours, and check the zone fees.
 - 2026-10-24: **Sell to us** (trade-ins): customers send an item with
-  photos from Spark (`/sell`), staff review it in the back office
+  photos from My Pass (`/pass/sell`), staff review it in the back office
   (Trade-ins), make an offer the customer accepts or declines, and can turn
   a completed request into a draft product. Migration
   `20261120000300_trade_ins.sql` (private `trade-ins` bucket). The
   website's store page links to it.
 - 2026-10-24: **WhatsApp order updates** through the Meta WhatsApp Cloud
-  API for customers who opt in (Spark → Settings): order confirmed, order
+  API for customers who opt in (My Pass → Settings): order confirmed, order
   shipped, rental due soon, trade-in offer. Off until the owner creates the
   templates and sets `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID`
   (`ARCHITECTURE_AND_INTEGRATIONS.md` 4.4).
+- 2026-10-25: **The website and Spark split.** theideaiq.com (`apps/web`)
+  holds every customer feature: The IDEA Pass sign-in pages, **My Pass**
+  (`/pass`: the membership card, orders, Plus, wishlist, Sell to us,
+  events, submissions, support, settings), the cart and checkout, and
+  buying, reviews and RSVPs on the public pages. The iOS/Android apps
+  load the website. **The IDEA Spark** (`apps/app`) is only for staff (the
+  back office) and businesses (The IDEA Suite at `/business`); it has no
+  sign-in of its own and sends people to the website's, and its old
+  customer paths redirect there. A person's membership is The IDEA Pass:
+  the word "account" is never shown. Owner step: Supabase Site URL and
+  redirect URLs (above), and `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` on `web`.
+- 2026-10-25: Next, in order: one shared catalogue with stock per copy
+  (condition, purpose, location, cost and price); The Post (News, Journal
+  and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers
+  Glow 3%, Shine 4% from 250,000 IQD, Beam 5% from 750,000 IQD, Blaze 7%
+  from 2,000,000 IQD of spend in 12 months; Plus +1%; consoles and laptops
+  half; server-written only); invites and affiliates; Telegram sign-in and
+  linking (OIDC) with a slimmer Droid; The IDEA Suite workspace.

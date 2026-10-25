@@ -1,6 +1,6 @@
 /**
- * Links to The IDEA Pass (the sign-in, sign-up, authenticator and "Your
- * Pass" pages of The IDEA Spark, apps/app), the only sign-in UI on the web,
+ * Links to The IDEA Pass (the sign-in, sign-up, authenticator and "My
+ * Pass" pages of the website, apps/web), the only sign-in UI on the web,
  * and the check of where it may send people back to afterwards.
  *
  * Reads the public URLs straight from `process.env.NEXT_PUBLIC_*` (inlined
@@ -8,8 +8,8 @@
  * in every app, whichever env presets it extends.
  */
 
-/** Where The IDEA Spark runs when NEXT_PUBLIC_APP_URL is not set (local dev). */
-export const DEFAULT_PASS_URL = "http://localhost:3000";
+/** Where the website runs when NEXT_PUBLIC_WEB_URL is not set (local dev). */
+export const DEFAULT_PASS_URL = "http://localhost:3001";
 
 const TRAILING_SLASH = /\/+$/;
 const LOCALHOST = new Set(["localhost", "127.0.0.1", "[::1]"]);
@@ -23,9 +23,9 @@ export interface ReturnToOptions {
   hosts?: Iterable<string>;
 }
 
-/** The Pass origin (The IDEA Spark), without a trailing slash. */
+/** The Pass origin (the website), without a trailing slash. */
 export const passOrigin = () =>
-  (process.env.NEXT_PUBLIC_APP_URL || DEFAULT_PASS_URL).replace(
+  (process.env.NEXT_PUBLIC_WEB_URL || DEFAULT_PASS_URL).replace(
     TRAILING_SLASH,
     ""
   );
@@ -42,8 +42,8 @@ const hostOf = (value: string | undefined) => {
 };
 
 /**
- * The hostnames of The IDEA's own sites: the website, The IDEA Spark (with
- * the Pass and the back office), the design site and the API.
+ * The hostnames of The IDEA's own sites: the website (with the Pass), The
+ * IDEA Spark (business and the back office), the design site and the API.
  */
 export const allowedReturnToHosts = () =>
   new Set(
@@ -90,20 +90,20 @@ export const isAllowedReturnTo = (
 };
 
 /**
- * `url` when it is allowed, otherwise `fallback` (by default the app, which
- * is where most people are headed).
+ * `url` when it is allowed, otherwise `fallback` (by default the website,
+ * which is where most people are headed).
  */
 export const safeReturnTo = (
   url: string | null | undefined,
-  fallback: string | null = process.env.NEXT_PUBLIC_APP_URL ?? null,
+  fallback: string | null = process.env.NEXT_PUBLIC_WEB_URL ?? null,
   options?: ReturnToOptions
 ) => (isAllowedReturnTo(url, options) ? url : fallback);
 
 /**
  * A link to a Pass page, e.g.
  * `passUrl("/sign-in", "https://theideaiq.com/en/store", "en")` →
- * `https://spark.theideaiq.com/en/sign-in?return_to=https%3A%2F%2Ftheideaiq…`.
- * `"/"` is "Your Pass" (`/{locale}/pass`). Without a locale, The IDEA Spark
+ * `https://theideaiq.com/en/sign-in?return_to=https%3A%2F%2Ftheideaiq…`.
+ * `"/"` is "My Pass" (`/{locale}/pass`). Without a locale, the website
  * picks one from the browser.
  */
 export const passUrl = (

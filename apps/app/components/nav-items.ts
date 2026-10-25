@@ -1,32 +1,6 @@
-import {
-  BriefcaseBusinessIcon,
-  CalendarDaysIcon,
-  CrownIcon,
-  HandCoinsIcon,
-  HeartIcon,
-  HouseIcon,
-  LifeBuoyIcon,
-  type LucideIcon,
-  PackageIcon,
-  PenLineIcon,
-  Settings2Icon,
-  ShoppingBagIcon,
-  ShoppingCartIcon,
-} from "lucide-react";
+import { BriefcaseBusinessIcon, type LucideIcon } from "lucide-react";
 
-export type NavKey =
-  | "business"
-  | "cart"
-  | "events"
-  | "home"
-  | "orders"
-  | "plus"
-  | "sell"
-  | "settings"
-  | "store"
-  | "submissions"
-  | "support"
-  | "wishlist";
+export type NavKey = "business";
 
 export interface NavItem {
   href: string;
@@ -34,24 +8,10 @@ export interface NavItem {
   key: NavKey;
 }
 
-/** The signed-in app's sections, in sidebar order. */
+/** The sections of The IDEA Spark for businesses, in sidebar order. */
 export const navItems: NavItem[] = [
-  { href: "/", icon: HouseIcon, key: "home" },
-  { href: "/store", icon: ShoppingBagIcon, key: "store" },
-  { href: "/cart", icon: ShoppingCartIcon, key: "cart" },
-  { href: "/wishlist", icon: HeartIcon, key: "wishlist" },
-  { href: "/orders", icon: PackageIcon, key: "orders" },
-  { href: "/plus", icon: CrownIcon, key: "plus" },
-  { href: "/sell", icon: HandCoinsIcon, key: "sell" },
-  { href: "/events", icon: CalendarDaysIcon, key: "events" },
-  { href: "/submissions", icon: PenLineIcon, key: "submissions" },
   { href: "/business", icon: BriefcaseBusinessIcon, key: "business" },
-  { href: "/support", icon: LifeBuoyIcon, key: "support" },
-  { href: "/settings", icon: Settings2Icon, key: "settings" },
 ];
-
-/** The sections in the phone tab bar; the rest are under "More". */
-export const tabBarKeys: NavKey[] = ["home", "store", "cart", "orders"];
 
 /** Whether `pathname` is inside the section at `href`. */
 export const isActivePath = (pathname: string, href: string) =>

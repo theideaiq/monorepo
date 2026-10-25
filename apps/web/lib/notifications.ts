@@ -1,0 +1,195 @@
+"use client";
+
+import { useAuth } from "@repo/auth/provider";
+import { formatPrice } from "@repo/commerce";
+import type { Enums, Json } from "@repo/database";
+import type { Locale } from "@repo/internationalization";
+import { formatDate } from "@repo/internationalization/format";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { currentAppPath, safeNextPath } from "./app-navigation";
+import { queryKeys, requireUserId, unwrap } from "./queries";
+
+/**
+ * In-app notifications, written by database triggers. Each row carries an
+ * `event` key and its `data`; the text comes from the viewer's translations
+ * (`store.notifications`), so a notification reads in their language.
+ */
+
+export type NotificationKind = Enums<"notification_kind">;
+
+/**
+ * Every event the triggers emit (see the customer_features, trade_ins and
+ * whatsapp migrations).
+ */
+export const NOTIFICATION_EVENTS = [
+  "order_paid",
+  "order_processing",
+  "order_shipped",
+  "order_delivered",
+  "order_cancelled",
+  "order_refunded",
+  "rental_active",
+  "rental_overdue",
+  "rental_returned",
+  "rental_cancelled",
+  "rental_due_soon",
+  "support_reply",
+  "trade_in_offer",
+  "trade_in_rejected",
+  "trade_in_completed",
+] as const;
+
+export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
+
+export const isKnownEvent = (event: string): event is NotificationEvent =>
+  NOTIFICATION_EVENTS.includes(event as NotificationEvent);
+
+export interface NotificationRow {
+  created_at: string;
+  data: Json;
+  event: string;
+  id: string;
+  kind: NotificationKind;
+  link: string | null;
+  read_at: string | null;
+}
+
+/** Message keys under `store.notifications`, with their values. */
+export interface NotificationText {
+  body: `events.${NotificationEvent}.body` | "fallbackBody";
+  title: `events.${NotificationEvent}.title` | `kinds.${NotificationKind}`;
+  values: Record<string, string>;
+}
+
+const asRecord = (data: Json): Record<string, Json | undefined> =>
+  data && typeof data === "object" && !Array.isArray(data) ? data : {};
+
+const text = (value: Json | undefined) =>
+  typeof value === "string" || typeof value === "number" ? String(value) : "";
+
+/**
+ * Which messages render a notification, with its data formatted for them
+ * (numbers as text, dates in Baghdad time). Unknown events fall back to a
+ * title for their kind and a generic line.
+ */
+export const describeNotification = (
+  notification: Pick<NotificationRow, "data" | "event" | "kind">,
+  locale: Locale
+): NotificationText => {
+  const data = asRecord(notification.data);
+  const { event } = notification;
+
+  if (!isKnownEvent(event)) {
+    return {
+      body: "fallbackBody",
+      title: `kinds.${notification.kind}`,
+      values: {},
+    };
+  }
+
+  const values: Record<string, string> = {};
+  if (
+    event.startsWith("order_") ||
+    event.startsWith("trade_in_") ||
+    event === "support_reply"
+  ) {
+    values.number = text(data.number);
+  }
+  if (event === "order_shipped") {
+    values.tracking = text(data.tracking);
+    values.hasTracking = values.tracking ? "yes" : "no";
+  }
+  if (event === "support_reply") {
+    values.subject = text(data.subject);
+  }
+  if (event.startsWith("trade_in_")) {
+    values.title = text(data.title);
+  }
+  if (event === "trade_in_offer") {
+    const amount = Number(text(data.amount));
+    values.amount = Number.isFinite(amount) ? formatPrice(amount, locale) : "";
+  }
+  if (event.startsWith("rental_")) {
+    const english = text(data.name_en);
+    const arabic = text(data.name_ar);
+    values.name = (locale === "en" ? english : arabic) || english || arabic;
+    const due = text(data.due_at);
+    values.due = due ? formatDate(due, locale) : "";
+    values.hasDue = values.due ? "yes" : "no";
+  }
+
+  return {
+    body: `events.${event}.body` as const,
+    title: `events.${event}.title` as const,
+    values,
+  };
+};
+
+/** The app path to open, or null for a missing or unsafe link. */
+export const notificationHref = (link: string | null) => {
+  const path = safeNextPath(link);
+  return path ? currentAppPath(path) : null;
+};
+
+const NOTIFICATION_COLUMNS =
+  "id, kind, event, data, link, read_at, created_at" as const;
+const POLL_MS = 60_000;
+
+export const useNotifications = (enabled = true) => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user) && enabled,
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("notifications")
+          .select(NOTIFICATION_COLUMNS)
+          .eq("user_id", requireUserId(user?.id))
+          .order("created_at", { ascending: false })
+          .limit(20)
+      ) as NotificationRow[],
+    queryKey: queryKeys.notifications(user?.id ?? ""),
+    refetchOnWindowFocus: true,
+  });
+};
+
+/** Unread notifications, counted by the database; polled every minute. */
+export const useUnreadCount = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", requireUserId(user?.id))
+        .is("read_at", null);
+      if (error) {
+        throw error;
+      }
+      return count ?? 0;
+    },
+    queryKey: queryKeys.unreadNotifications(user?.id ?? ""),
+    refetchInterval: POLL_MS,
+    refetchOnWindowFocus: true,
+  });
+};
+
+/** mark_notifications_read(): some notifications, or all without ids. */
+export const useMarkNotificationsRead = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (ids?: string[]) =>
+      unwrap(
+        await supabase.rpc(
+          "mark_notifications_read",
+          ids ? { notification_ids: ids } : {}
+        )
+      ),
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.notifications(user?.id ?? ""),
+      }),
+  });
+};

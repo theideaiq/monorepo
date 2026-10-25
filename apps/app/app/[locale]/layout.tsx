@@ -38,8 +38,9 @@ export const viewport: Viewport = {
 };
 
 /**
- * The root layout of The IDEA Spark: the language comes from the URL (the
- * proxy adds it), so <html lang dir> are right on the server.
+ * The root layout of The IDEA Spark (the back office and The IDEA Suite):
+ * the language comes from the URL (the proxy adds it), so <html lang dir>
+ * are right on the server.
  */
 const LocaleLayout = async ({ children, params }: LocaleLayoutProperties) => {
   const { locale } = await params;
@@ -50,13 +51,13 @@ const LocaleLayout = async ({ children, params }: LocaleLayoutProperties) => {
 
   setRequestLocale(locale);
   const dir = getDirection(locale);
-  const { app, auth, billing, common, pass, store } = await getMessages();
+  const { app, auth, billing, common, store } = await getMessages();
 
   return (
     <html className={fonts} dir={dir} lang={locale} suppressHydrationWarning>
       <body className="bg-background">
         <NextIntlClientProvider
-          messages={{ app, auth, billing, common, pass, store }}
+          messages={{ app, auth, billing, common, store }}
         >
           <DesignSystemProvider dir={dir} labels={common.ui}>
             <AppProviders>{children}</AppProviders>

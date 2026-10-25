@@ -4,8 +4,7 @@ import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
 import { MoveRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { env } from "@/env";
-import { appLink, passSignInLink } from "@/lib/links";
+import { pagePath } from "@/lib/links";
 
 /** The page's main call to action, to open The IDEA app: the Pink Band. */
 export const AppCta = async ({ locale }: { readonly locale: Locale }) => {
@@ -16,14 +15,12 @@ export const AppCta = async ({ locale }: { readonly locale: Locale }) => {
       action={
         <>
           <Button asChild size="lg" variant="brand">
-            <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale)}>
+            <a href={pagePath(locale, "/pass")}>
               {t("button")} <MoveRight className="size-4 rtl:rotate-180" />
             </a>
           </Button>
           <Button asChild className={onPinkOutline} size="lg" variant="outline">
-            <a href={passSignInLink(env.NEXT_PUBLIC_APP_URL, locale)}>
-              {t("signIn")}
-            </a>
+            <a href={pagePath(locale, "/sign-in")}>{t("signIn")}</a>
           </Button>
         </>
       }

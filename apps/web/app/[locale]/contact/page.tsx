@@ -6,7 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { PageHero } from "@/components/page-hero";
 import { env } from "@/env";
-import { appLink, telegram } from "@/lib/links";
+import { pagePath, telegram } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import { ContactForm } from "./components/contact-form";
 
@@ -43,7 +43,7 @@ const Contact = async ({ params }: ContactProps) => {
     value?: string;
   }[] = [
     {
-      href: appLink(env.NEXT_PUBLIC_APP_URL, locale, "/support"),
+      href: pagePath(locale, "/pass/support"),
       icon: LifeBuoy,
       label: t("details.support"),
       note: t("details.supportNote"),
