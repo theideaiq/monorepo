@@ -2,14 +2,19 @@ import { cn } from "@repo/design-system/lib/utils";
 import type { Locale } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
 import { getTranslations } from "next-intl/server";
-import { type PostSection, postSections, sectionPath } from "@/lib/post";
+import {
+  eventsPath,
+  type PostSection,
+  postSections,
+  sectionPath,
+} from "@/lib/post";
 
-/** The IDEA Post's sections as tabs, with "Everything" first. */
+/** The IDEA Post's sections as tabs: "Everything", the sections, then Events. */
 export const PostSections = async ({
   current,
   locale,
 }: {
-  readonly current?: PostSection;
+  readonly current?: PostSection | "events";
   readonly locale: Locale;
 }) => {
   const t = await getTranslations({ locale, namespace: "web.post" });
@@ -20,6 +25,7 @@ export const PostSections = async ({
       href: sectionPath(section),
       label: t(`sections.${section}.title`),
     })),
+    { active: current === "events", href: eventsPath, label: t("events") },
   ];
   return (
     <nav aria-label={t("title")} className="-mx-4 overflow-x-auto px-4">

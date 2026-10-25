@@ -11,12 +11,17 @@ incidents) is in `docs/platform`.
 - `apps/web` — **theideaiq.com**, everything customers see (Next.js, i18n
   routes under `app/[locale]`), with a `proxy.ts` (locale, session refresh,
   security headers) and the cookie session (`@repo/auth/server`):
-  - the public pages: Home is the storefront (search, categories, featured
-    and new products) and `/rent` its rental side, with `/store` the full
-    catalog and product pages (buying, reviews); `/discover` (Club, events,
-    The IDEA Post), Plus, Suite, Club, The IDEA Post (`/post`), events
-    (RSVP); the company's pages under `/about` (careers, FAQ, contact) and
-    legal pages (Markdown in `apps/web/content/legal`);
+  - the public pages, organised like the phone tabs (Shop, Rent,
+    Discover, Cart, My Pass): Shop is Home, the storefront (search,
+    categories, featured and new products), with `/store` the full catalog
+    and product pages (buying, reviews) and Sell to us; Rent is `/plus`,
+    everything about renting with The IDEA Plus (the rental catalog with
+    categories, then plans and tiers); Discover is The IDEA Post (`/post`:
+    News, Stories, Learn and Events at `/post/events` with RSVP, plus the
+    Club); `/suite` for companies; About & info at `/about` (careers,
+    FAQ, contact, preferences, the version) and legal pages (Markdown in
+    `apps/web/content/legal`). The header menu matches the tabs, and the
+    footer is one slim line on wider screens;
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in`,
     `/sign-up`, `/mfa`, `/sign-out`, the only sign-in UI on the web. A
     person's membership *is* The IDEA Pass; never show the word "account".

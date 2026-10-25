@@ -15,13 +15,8 @@ import { useCartCount } from "@/lib/store-queries";
 
 const tabs = [
   { href: "/", icon: ShoppingBagIcon, id: "shop", match: ["/store"] },
-  { href: "/rent", icon: RepeatIcon, id: "rent", match: ["/plus"] },
-  {
-    href: "/discover",
-    icon: CompassIcon,
-    id: "discover",
-    match: ["/club", "/events", "/post"],
-  },
+  { href: "/plus", icon: RepeatIcon, id: "rent", match: [] },
+  { href: "/post", icon: CompassIcon, id: "discover", match: ["/club"] },
   { href: "/cart", icon: ShoppingCartIcon, id: "cart", match: [] },
   { href: "/pass", icon: IdCardIcon, id: "pass", match: [] },
 ] as const;

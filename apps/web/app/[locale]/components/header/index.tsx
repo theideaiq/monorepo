@@ -3,25 +3,20 @@
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import { ModeToggle } from "@repo/design-system/components/mode-toggle";
 import { Button } from "@repo/design-system/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@repo/design-system/components/ui/navigation-menu";
-import { Link } from "@repo/internationalization/navigation";
+import { cn } from "@repo/design-system/lib/utils";
+import { Link, usePathname } from "@repo/internationalization/navigation";
 import { Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { navigationGroups } from "@/lib/navigation";
+import { isCurrentItem, navigationItems } from "@/lib/navigation";
 import { AccountActions } from "./account-actions";
 import { LanguageSwitcher } from "./language-switcher";
 
+/** The site's header: the logo, the same sections as the phone tabs, and the Pass. */
 export const Header = () => {
   const t = useTranslations("web.nav");
   const common = useTranslations("common");
+  const pathname = usePathname();
   const [isOpen, setOpen] = useState(false);
   const themeLabels = {
     dark: common("theme.dark"),
@@ -38,40 +33,30 @@ export const Header = () => {
           <BrandLogo />
         </Link>
 
-        <NavigationMenu className="hidden flex-1 justify-center lg:flex">
-          <NavigationMenuList className="gap-1">
-            {navigationGroups.map((group) => (
-              <NavigationMenuItem key={group.id}>
-                <NavigationMenuTrigger className="font-medium text-sm">
-                  {t(`groups.${group.id}`)}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[min(36rem,90vw)] gap-1 p-3 sm:grid-cols-2">
-                    {group.items.map((item) => (
-                      <li key={item.id}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            className="flex flex-col gap-1 rounded-md p-3 hover:bg-muted"
-                            href={item.href}
-                          >
-                            <span className="font-medium text-sm">
-                              {t(item.id)}
-                            </span>
-                            {item.described ? (
-                              <span className="text-muted-foreground text-xs leading-snug">
-                                {t(`descriptions.${item.described}`)}
-                              </span>
-                            ) : null}
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
+        <nav
+          aria-label={t("label")}
+          className="hidden flex-1 justify-center lg:flex"
+        >
+          <ul className="flex items-center gap-1">
+            {navigationItems.map((item) => {
+              const current = isCurrentItem(pathname, item);
+              return (
+                <li key={item.id}>
+                  <Link
+                    aria-current={current ? "page" : undefined}
+                    className={cn(
+                      "rounded-md px-3 py-2 font-medium text-sm transition-colors hover:bg-muted",
+                      current ? "text-foreground" : "text-muted-foreground"
+                    )}
+                    href={item.href}
+                  >
+                    {t(item.id)}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
         <div className="ms-auto flex items-center gap-2">
           <div className="hidden items-center gap-1 md:flex">
@@ -93,25 +78,22 @@ export const Header = () => {
 
         {isOpen ? (
           <nav className="absolute inset-x-0 top-full max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-b bg-background px-4 py-6 shadow-lg lg:hidden">
-            <div className="grid gap-6 sm:grid-cols-3">
-              {navigationGroups.map((group) => (
-                <div className="flex flex-col gap-2" key={group.id}>
-                  <p className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
-                    {t(`groups.${group.id}`)}
-                  </p>
-                  {group.items.map((item) => (
-                    <Link
-                      className="py-1 text-lg"
-                      href={item.href}
-                      key={item.id}
-                      onClick={close}
-                    >
-                      {t(item.id)}
-                    </Link>
-                  ))}
-                </div>
+            <ul className="flex flex-col gap-1">
+              {navigationItems.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    aria-current={
+                      isCurrentItem(pathname, item) ? "page" : undefined
+                    }
+                    className="block py-1 text-lg"
+                    href={item.href}
+                    onClick={close}
+                  >
+                    {t(item.id)}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
             <div className="mt-6 flex flex-wrap items-center gap-2 border-t pt-4">
               <LanguageSwitcher />
               <ModeToggle labels={themeLabels} />

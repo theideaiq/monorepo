@@ -1,3 +1,4 @@
+import { project } from "@repo/config";
 import { Highlight } from "@repo/design-system/components/brand/highlight";
 import type { Locale, Messages } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
@@ -9,31 +10,39 @@ import {
   Lightbulb,
   Mail,
   MoveRight,
-  Scale,
   ShieldCheck,
   Target,
   Truck,
+  Users,
   Wallet,
 } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AppCta } from "@/components/app-cta";
+import { AppPreferences, NativeAppVersion } from "@/components/app-preferences";
 import { FeatureGrid } from "@/components/feature-grid";
 import { PageHero } from "@/components/page-hero";
 import { ProductLines } from "@/components/product-lines";
 import { Section } from "@/components/section";
+import { SystemStatusBadge } from "@/components/system-status";
+import { env } from "@/env";
+import { legalDocuments } from "@/lib/legal";
+import { telegram } from "@/lib/links";
 import { staticPageMetadata } from "@/lib/metadata";
+import { APP_VERSION, buildId } from "@/lib/version";
 
 type Values = Messages["web"]["about"]["values"]["items"];
 const valueIcons = [Truck, Wallet, ShieldCheck, Headphones];
 
-/** The rest of the company's pages. */
+/** The company's other pages. */
 const more = [
-  { href: "/suite", icon: Building2, id: "suite" },
-  { href: "/about/careers", icon: Briefcase, id: "careers" },
   { href: "/about/faq", icon: CircleHelp, id: "faq" },
   { href: "/about/contact", icon: Mail, id: "contact" },
-  { href: "/legal/terms", icon: Scale, id: "legal" },
+  { href: "/about/careers", icon: Briefcase, id: "careers" },
+  { href: "/suite", icon: Building2, id: "suite" },
+  { href: "/club", icon: Users, id: "club" },
 ] as const;
+
+const infoLink = "text-muted-foreground hover:text-foreground";
 
 interface AboutProps {
   params: Promise<{ locale: Locale }>;
@@ -41,10 +50,19 @@ interface AboutProps {
 
 export const generateMetadata = staticPageMetadata("about", "/about");
 
+/**
+ * About & info: the company's other pages, language and theme, contact,
+ * the legal pages and the version first, then our story.
+ */
 const About = async ({ params }: AboutProps) => {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: "web.about" });
+  const [t, web, info, common] = await Promise.all([
+    getTranslations({ locale, namespace: "web.about" }),
+    getTranslations({ locale, namespace: "web" }),
+    getTranslations({ locale, namespace: "web.info" }),
+    getTranslations({ locale, namespace: "common" }),
+  ]);
   const values = t.raw("values.items") as Values;
 
   return (
@@ -55,6 +73,82 @@ const About = async ({ params }: AboutProps) => {
         subtitle={t("subtitle")}
         title={t("title")}
       />
+
+      <Section className="grid gap-6 lg:grid-cols-3">
+        <nav aria-label={t("more.title")} className="lg:col-span-2">
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {more.map(({ href, icon: Icon, id }) => (
+              <li key={id}>
+                <Link
+                  className="flex h-full items-center justify-between gap-3 rounded-lg border bg-card p-4 transition-shadow hover:shadow-2"
+                  href={href}
+                >
+                  <span className="flex items-center gap-3 font-medium">
+                    <Icon
+                      aria-hidden="true"
+                      className="size-5 text-pink-text"
+                    />
+                    {t(`more.${id}`)}
+                  </span>
+                  <MoveRight
+                    aria-hidden="true"
+                    className="size-4 text-muted-foreground rtl:rotate-180"
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="flex flex-col gap-5 rounded-lg border bg-card p-5 text-sm">
+          <div className="flex flex-col gap-2">
+            <h2 className="font-semibold">{info("preferences")}</h2>
+            <AppPreferences />
+          </div>
+          <div className="flex flex-col gap-1">
+            <h2 className="font-semibold">{info("contact")}</h2>
+            <a
+              className={infoLink}
+              dir="ltr"
+              href={`mailto:${project.supportEmail}`}
+            >
+              {project.supportEmail}
+            </a>
+            <a
+              className={infoLink}
+              href={telegram.club}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {info("telegram")}
+            </a>
+          </div>
+          <div className="flex flex-col gap-1">
+            <h2 className="font-semibold">{info("legal")}</h2>
+            {legalDocuments.map(({ slug }) => (
+              <Link className={infoLink} href={`/legal/${slug}`} key={slug}>
+                {web(`legal.documents.${slug}.title`)}
+              </Link>
+            ))}
+          </div>
+          <div className="flex flex-col gap-2 text-muted-foreground">
+            <h2 className="font-semibold text-foreground">{info("app")}</h2>
+            <p dir="ltr">
+              {info("versionLine", { build: buildId(), version: APP_VERSION })}
+            </p>
+            <NativeAppVersion />
+            <SystemStatusBadge
+              apiUrl={env.NEXT_PUBLIC_API_URL}
+              labels={{
+                degraded: common("status.degraded"),
+                operational: common("status.operational"),
+                partial: common("status.partial"),
+                unknown: common("status.unknown"),
+              }}
+            />
+          </div>
+        </div>
+      </Section>
+
       <Section>
         <FeatureGrid
           className="lg:grid-cols-3"
@@ -110,28 +204,10 @@ const About = async ({ params }: AboutProps) => {
       <Section title={t("linesTitle")}>
         <ProductLines locale={locale} />
       </Section>
-      <Section title={t("more.title")}>
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {more.map(({ href, icon: Icon, id }) => (
-            <li key={id}>
-              <Link
-                className="flex h-full items-center justify-between gap-3 rounded-lg border bg-card p-4 transition-shadow hover:shadow-2"
-                href={href}
-              >
-                <span className="flex items-center gap-3 font-medium">
-                  <Icon aria-hidden="true" className="size-5 text-pink-text" />
-                  {t(`more.${id}`)}
-                </span>
-                <MoveRight
-                  aria-hidden="true"
-                  className="size-4 text-muted-foreground rtl:rotate-180"
-                />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </Section>
       <AppCta locale={locale} />
+      <p className="container mx-auto px-4 pb-10 text-muted-foreground text-xs">
+        {web("footer.trademarks")}
+      </p>
     </>
   );
 };

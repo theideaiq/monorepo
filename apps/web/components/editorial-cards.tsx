@@ -5,7 +5,7 @@ import { Link } from "@repo/internationalization/navigation";
 import { CalendarDays, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { type EventRow, editorialUrl, type PostSummary } from "@/lib/data";
-import { postPath } from "@/lib/post";
+import { eventPath, postPath, sectionOf } from "@/lib/post";
 import { CoverImage } from "./cover-image";
 
 const cardClass =
@@ -29,7 +29,7 @@ export const PostCard = async ({
       <div className="flex flex-col gap-2 px-1 pb-1">
         <p className="flex flex-wrap items-center gap-x-2 text-muted-foreground text-xs">
           <span className="font-medium text-pink-text">
-            {t(`sections.${post.section}.title`)}
+            {t(`sections.${sectionOf(post.section)}.title`)}
           </span>
           {post.published_at ? (
             <time dateTime={post.published_at}>
@@ -65,7 +65,7 @@ export const EventCard = ({
   const title = localized(event, "title", locale);
 
   return (
-    <Link className={cardClass} href={`/events/${event.slug}`}>
+    <Link className={cardClass} href={eventPath(event.slug)}>
       <CoverImage alt={title} src={editorialUrl(event.cover_image)} />
       <div className="flex flex-col gap-2 px-1 pb-1">
         <h3 className="font-semibold text-lg leading-snug group-hover:text-pink-text">

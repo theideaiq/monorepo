@@ -91,7 +91,7 @@ export const buildPosts = (
     lines: [`${formatDateTime(event.starts_at, locale)} · ${event.location}`],
     photo: editorialUrl(event.cover_image),
     title: localized(event, "title", locale),
-    url: siteUrl(locale, `/events/${event.slug}`),
+    url: siteUrl(locale, `/post/events/${event.slug}`),
   }));
 
   const { products } = sources;

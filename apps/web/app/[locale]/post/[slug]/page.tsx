@@ -23,6 +23,7 @@ import {
   type PostSection,
   postPath,
   postSections,
+  sectionOf,
   sectionPath,
 } from "@/lib/post";
 
@@ -93,7 +94,7 @@ const SectionPage = async ({
           <EmptyState>{t("empty")}</EmptyState>
         )}
       </Section>
-      {section === "members" ? (
+      {section === "stories" ? (
         <Section>
           <PostSubmit locale={locale} />
         </Section>
@@ -119,7 +120,7 @@ const Article = async ({
   const title = localized(post, "title", locale);
   const excerpt = localized(post, "excerpt", locale);
   const cover = editorialUrl(post.cover_image);
-  const sectionTitle = t(`sections.${post.section}.title`);
+  const sectionTitle = t(`sections.${sectionOf(post.section)}.title`);
   const author = post.byline ?? t("theIdea");
 
   return (
@@ -144,7 +145,7 @@ const Article = async ({
       />
       <Link
         className="mb-6 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-        href={sectionPath(post.section)}
+        href={sectionPath(sectionOf(post.section))}
       >
         <MoveLeft className="size-4 rtl:rotate-180" />
         {t("back", { section: sectionTitle })}
@@ -153,7 +154,7 @@ const Article = async ({
         <p className="flex flex-wrap items-center gap-x-3 text-muted-foreground text-sm">
           <Link
             className="font-medium text-pink-text hover:underline"
-            href={sectionPath(post.section)}
+            href={sectionPath(sectionOf(post.section))}
           >
             {sectionTitle}
           </Link>

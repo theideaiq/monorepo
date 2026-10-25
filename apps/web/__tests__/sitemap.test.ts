@@ -30,7 +30,13 @@ describe("buildSitemap", () => {
   });
 
   it("covers the site's main sections", () => {
-    for (const path of ["/store", "/plus", "/post", "/post/learn", "/events"]) {
+    for (const path of [
+      "/store",
+      "/plus",
+      "/post",
+      "/post/learn",
+      "/post/events",
+    ]) {
       expect(staticPaths).toContain(path);
     }
     expect(staticPaths).not.toContain("/pricing");

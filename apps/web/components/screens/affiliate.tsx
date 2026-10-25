@@ -18,6 +18,7 @@ import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { CheckIcon, CopyIcon, Share2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
+import { InviteCard } from "@/components/invite-card";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -376,6 +377,7 @@ const Stage = ({ mine }: { readonly mine: Mine | null }) => {
  * My Pass → Affiliate: apply, then the link and code, earnings, payout
  * details and the commission history.
  */
+/** Invite & earn: invite friends, then the affiliate program for creators. */
 export const Affiliate = () => {
   const t = useTranslations("app.affiliate");
   const mine = useMyAffiliate();
@@ -390,8 +392,12 @@ export const Affiliate = () => {
   return (
     <div className="grid gap-6">
       <PageHeader title={t("title")} />
-      <p className="text-muted-foreground">{t("description")}</p>
-      <Stage mine={mine.data} />
+      <InviteCard />
+      <section className="grid gap-4">
+        <h2 className="font-semibold text-lg">{t("programTitle")}</h2>
+        <p className="text-muted-foreground">{t("description")}</p>
+        <Stage mine={mine.data} />
+      </section>
     </div>
   );
 };

@@ -8,7 +8,6 @@ import type { Locale } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { LightbulbIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { InviteCard } from "@/components/invite-card";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { type BulbTier, tierPerks, tierProgress } from "@/lib/bulbs";
@@ -170,8 +169,6 @@ export const Bulbs = () => {
           </p>
         </div>
       </section>
-
-      <InviteCard />
 
       <section className="grid gap-3">
         <h2 className="font-semibold">{t("tiersTitle")}</h2>

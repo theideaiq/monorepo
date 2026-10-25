@@ -101,9 +101,9 @@ load on every page (never inside the iOS/Android apps).
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Public pages | `/{locale}`, `/store`, `/store/<slug>`, `/plus`, `/suite`, `/club`, `/post` (The IDEA Post: `/post/news`, `/post/stories`, `/post/members`, `/post/learn` and posts at `/post/<slug>`), `/events`, `/about`, `/faq`, `/contact`, `/legal/…` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
+| Public pages | Shop: `/{locale}`, `/store`, `/store/<slug>`; Rent: `/plus` (rental catalog, plans, tiers); Discover: `/post` (The IDEA Post: `/post/news`, `/post/stories`, `/post/learn`, events at `/post/events` and `/post/events/<slug>`, posts at `/post/<slug>`), `/club`; `/suite`; About & info: `/about`, `/about/faq`, `/about/contact`, `/about/careers`; `/legal/…` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
 | The IDEA Pass | `/{locale}/sign-in`, `/sign-up`, `/mfa`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
-| My Pass | `/{locale}/pass` (the membership card and a summary), `/pass/orders`, `/pass/orders/<id>`, `/pass/plus`, `/pass/wishlist`, `/pass/sell`, `/pass/events`, `/pass/submissions`, `/pass/support`, `/pass/support/<id>`, `/pass/settings` | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
+| My Pass | `/{locale}/pass` (the membership card and a summary), `/pass/orders`, `/pass/orders/<id>`, `/pass/plus`, `/pass/wishlist`, `/pass/sell`, `/pass/affiliate` (Invite & earn), `/pass/support`, `/pass/support/<id>`, `/pass/settings`; `/pass/events` and `/pass/submissions` open from My Pass's home and The IDEA Post | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
 | Cart and checkout | `/{locale}/cart`, `/checkout` | `app/[locale]/(checkout)` |
 
 - **Session.** The browser client (`@repo/auth/client`) and the server
@@ -115,13 +115,16 @@ load on every page (never inside the iOS/Android apps).
   The header shows "Sign in" (coming back to the same page) or the cart
   and "My Pass".
 - **The IDEA Post.** One publication at `/post` (News, Journal and the
-  Academy page merged; online only). Posts have a section (`news`,
-  `stories`, `members` for members' work, `learn` for guides) and an
+  Academy page merged; online only), the Discover tab. Posts have a
+  section (`news`, `stories` for features and members' work, `learn` for
+  guides; the old `members` value is refused since
+  `20261207000000_post_restructure.sql`), and events are The Post's fifth
+  tab at `/post/events`. Posts have an
   optional byline (empty means The IDEA); `/post/<section>` lists one
   section and `/post/<slug>` is a post (the database keeps slugs off the
   section names). Members submit work from My Pass; editors review it
   blind in the back office (Editorial → Submissions) and, once it is
-  accepted, **Create the post** opens a draft in Members' work with the
+  accepted, **Create the post** opens a draft in Stories with the
   member's name as the byline (`posts.submission_id`; only accepted
   submissions, once each). The Learn page also carries the Academy's
   programs and its "register your interest" link. Migration

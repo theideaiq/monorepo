@@ -137,29 +137,28 @@
       "home": "الرئيسية",
       "store": "الميغاستور",
       "plus": "The IDEA Plus",
-      "suite": "The IDEA Suite",
+      "suite": "للشركات",
       "club": "The IDEA Club",
       "post": "The IDEA Post",
       "events": "الفعاليات",
-      "about": "قصتنا",
+      "about": "من نحن ومعلومات",
       "careers": "الوظائف",
       "faq": "الأسئلة الشائعة",
       "contact": "تواصل معنا",
       "signIn": "تسجيل الدخول",
-      "groups": {
-        "ecosystem": "المنظومة",
-        "community": "المجتمع",
-        "company": "الشركة"
-      },
       "descriptions": {
         "store": "ألعاب وتقنية وكتب ومستلزمات حياتية، مع التوصيل إلى كل أنحاء العراق.",
         "plus": "اشتراك شهري لاستئجار الألعاب والكتب والأفلام.",
         "suite": "خدمات الشراء والتوظيف للشركات.",
         "club": "غرفنا على تيليغرام وThe IDEA Droid.",
-        "post": "أخبار وقصص وأعمال الأعضاء وأدلّة من The IDEA.",
+        "post": "أخبار وقصص وأدلّة وفعاليات من The IDEA.",
         "events": "لقاءات وإطلاقات وأمسيات مجتمعية."
       },
-      "myPass": "بطاقتي"
+      "myPass": "بطاقتي",
+      "label": "الرئيسية",
+      "shop": "تسوّق",
+      "rent": "استئجار",
+      "discover": "اكتشف"
     },
     "tabs": {
       "label": "الأقسام الرئيسية",
@@ -233,25 +232,12 @@
       "rent": "استئجار"
     },
     "rent": {
-      "meta": {
-        "title": "استأجر الألعاب والكتب والأفلام",
-        "description": "كل ما يمكنك استئجاره مع The IDEA Plus: ألعاب PS5 وكتب وأفلام، نوصلها إلى كل أنحاء العراق ونستلمها متى انتهيت."
-      },
       "title": "استأجر",
       "highlight": "مع The IDEA Plus",
       "searchLabel": "ابحث في المواد المتاحة للاستئجار",
       "searchPlaceholder": "ابحث عن لعبة أو كتاب أو فيلم للاستئجار…",
-      "plansFrom": "خطط The IDEA Plus تبدأ من {price} شهريًا",
       "plans": "شاهد خطط The IDEA Plus",
       "empty": "لا توجد مواد للاستئجار تطابق بحثك حاليًا."
-    },
-    "discover": {
-      "meta": {
-        "title": "اكتشف",
-        "description": "The IDEA Club على تيليغرام والفعاليات و The IDEA Post: الجانب المجتمعي من The IDEA."
-      },
-      "title": "اكتشف",
-      "description": "The IDEA Club والفعاليات و The IDEA Post: ما يحدث حول The IDEA."
     },
     "store": {
       "meta": {
@@ -317,8 +303,8 @@
     },
     "plus": {
       "meta": {
-        "title": "The IDEA Plus — استأجر الألعاب والكتب والأفلام",
-        "description": "The IDEA Plus عضوية شهرية لاستئجار ألعاب PS5 والكتب والأفلام في العراق. اختر خطة، واطلب المواد من بطاقتك، وأعِدها عندما تنتهي."
+        "title": "استأجر مع The IDEA Plus",
+        "description": "استأجر ألعاب PS5 والكتب والأفلام مع The IDEA Plus: الكتالوج والباقات وطريقة العمل. توصيل إلى كل العراق واستلام عند الانتهاء."
       },
       "badge": "الاشتراك الأمثل",
       "title": "اشتراك واحد.",
@@ -569,7 +555,7 @@
         "careers": "الوظائف",
         "faq": "الأسئلة الشائعة",
         "contact": "تواصل معنا",
-        "legal": "الشروط والسياسات"
+        "club": "The IDEA Club"
       }
     },
     "careers": {
@@ -753,10 +739,10 @@
     "post": {
       "meta": {
         "title": "The IDEA Post",
-        "description": "أخبار وقصص، وكتابات الأعضاء وأعمالهم الفنية، وأدلّة من The IDEA."
+        "description": "أخبار وقصص وأعمال الأعضاء وأدلّة وفعاليات من The IDEA."
       },
       "title": "The IDEA Post",
-      "description": "أخبار The IDEA، وقصص من مجتمعنا، وكتابات الأعضاء وأعمالهم الفنية، وأدلّة لتتعلّم شيئًا جديدًا.",
+      "description": "أخبار The IDEA، وقصص من مجتمعنا وأعمال الأعضاء أنفسهم، وأدلّة لتتعلّم شيئًا جديدًا، والفعاليات.",
       "all": "الكل",
       "empty": "لم يُنشر شيء هنا بعد. عُد قريبًا.",
       "byline": "بقلم {name}",
@@ -769,7 +755,7 @@
         },
         "stories": {
           "title": "قصص",
-          "description": "تقارير ولقاءات من مجتمعنا."
+          "description": "تقارير ولقاءات، وكتابات الأعضاء وأعمالهم الفنية المختارة بمراجعة لا تكشف أسماءهم."
         },
         "members": {
           "title": "أعمال الأعضاء",
@@ -820,7 +806,9 @@
           "description": "راسلنا وأخبرنا بالبرنامج أو المجال الذي يهمّك.",
           "button": "سجّل اهتمامك"
         }
-      }
+      },
+      "events": "الفعاليات",
+      "club": "انضم إلى النادي"
     },
     "events": {
       "meta": {
@@ -839,7 +827,8 @@
       "rsvps": "{count, plural, one {شخص واحد سيحضر} two {شخصان سيحضران} few {{number} أشخاص سيحضرون} many {{number} شخصًا سيحضرون} other {{number} شخص سيحضرون}}",
       "noRsvps": "كن أول من يسجّل حضوره.",
       "rsvp": "سجّل حضورك",
-      "ended": "انتهت هذه الفعالية."
+      "ended": "انتهت هذه الفعالية.",
+      "mine": "حجوزاتك"
     },
     "invite": {
       "title": "دعاك صديق إلى The IDEA",
@@ -859,6 +848,15 @@
       "invalid": "هذا الرابط غير فعّال. يمكنك التسوق وجمع Bulbs كالمعتاد.",
       "signIn": "سجّل الدخول بـ The IDEA Pass",
       "shop": "تسوّق من المتجر"
+    },
+    "info": {
+      "preferences": "اللغة والمظهر",
+      "contact": "تواصل معنا",
+      "telegram": "The IDEA Club على تيليجرام",
+      "legal": "الشروط والسياسات",
+      "app": "هذا التطبيق",
+      "versionLine": "الإصدار {version} · البناء {build}",
+      "appVersion": "التطبيق {version}"
     }
   },
   "app": {
@@ -884,7 +882,8 @@
       "pass": "بطاقتي",
       "bulbs": "Bulbs",
       "backOffice": "لوحة الإدارة",
-      "affiliate": "الشراكة"
+      "affiliate": "ادعُ واربح",
+      "about": "من نحن ومعلومات"
     },
     "roles": {
       "owner": "مالك",
@@ -1723,7 +1722,7 @@
       "stats": "{invited} مدعوّ · {rewarded} مكافأة"
     },
     "affiliate": {
-      "title": "الشراكة",
+      "title": "ادعُ واربح",
       "description": "شارك The IDEA مع متابعيك: يحصلون على خصم 5% وتربح من كل طلب يُسلَّم.",
       "apply": {
         "title": "انضم إلى برنامج الشركاء",
@@ -1785,7 +1784,8 @@
         "void": "ملغى"
       },
       "readyFrom": "جاهز من {date}",
-      "bulbsCredited": "{bulbs} Bulbs"
+      "bulbsCredited": "{bulbs} Bulbs",
+      "programTitle": "برنامج الشركاء"
     },
     "suite": {
       "status": {

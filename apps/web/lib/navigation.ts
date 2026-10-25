@@ -1,45 +1,34 @@
 /**
- * The site's navigation, shared by the header and the footer. Titles come
- * from `web.nav.<id>`, descriptions from `web.nav.descriptions.<id>`.
+ * The site's menu, matching the phone tabs: Shop, Rent and Discover, then
+ * The IDEA Suite for companies and About & info. Labels come from
+ * `web.nav.<id>`.
  */
 
-type Described = "club" | "events" | "plus" | "post" | "store" | "suite";
-
 export interface NavigationItem {
-  described?: Described;
   href: string;
-  id: "about" | "careers" | "contact" | "faq" | Described;
+  id: "about" | "discover" | "rent" | "shop" | "suite";
 }
 
-export interface NavigationGroup {
-  id: "community" | "company" | "ecosystem";
-  items: NavigationItem[];
-}
-
-export const navigationGroups: NavigationGroup[] = [
-  {
-    id: "ecosystem",
-    items: [
-      { described: "store", href: "/store", id: "store" },
-      { described: "plus", href: "/plus", id: "plus" },
-      { described: "suite", href: "/suite", id: "suite" },
-    ],
-  },
-  {
-    id: "community",
-    items: [
-      { described: "club", href: "/club", id: "club" },
-      { described: "post", href: "/post", id: "post" },
-      { described: "events", href: "/events", id: "events" },
-    ],
-  },
-  {
-    id: "company",
-    items: [
-      { href: "/about", id: "about" },
-      { href: "/about/careers", id: "careers" },
-      { href: "/about/faq", id: "faq" },
-      { href: "/about/contact", id: "contact" },
-    ],
-  },
+export const navigationItems: NavigationItem[] = [
+  { href: "/", id: "shop" },
+  { href: "/plus", id: "rent" },
+  { href: "/post", id: "discover" },
+  { href: "/suite", id: "suite" },
+  { href: "/about", id: "about" },
 ];
+
+/** Whether `pathname` is the item's page or one below it. */
+export const isCurrentItem = (pathname: string, item: NavigationItem) => {
+  const below = (path: string) =>
+    pathname === path || pathname.startsWith(`${path}/`);
+  switch (item.id) {
+    case "shop":
+      return pathname === "/" || below("/store");
+    case "discover":
+      return below("/post") || below("/club");
+    case "about":
+      return below("/about") || below("/legal");
+    default:
+      return below(item.href);
+  }
+};

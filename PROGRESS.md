@@ -373,6 +373,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   of the same product. Migrations `20261205100000_photo_review_void.sql`
   and `20261206000000_suite_procurement.sql`. Next: Suite hiring (job
   requests, candidates, shortlists).
+- 2026-10-25: **The website, reorganised around the tabs.** Shop (Home,
+  the catalog, Sell to us), Rent (`/plus`: the rental catalog with
+  categories, then plans and tiers; `/rent` is gone), Discover (The IDEA
+  Post with News, Stories, Learn and Events at `/post/events`, plus the
+  Club; `/discover` and `/events` are gone), Cart and My Pass. Members'
+  work is part of Stories. The header menu matches the tabs (plus For
+  companies and About & info); the footer is one slim line on wider
+  screens; About & info (`/about`) has the company's pages, language and
+  theme, contact, legal pages and the version. My Pass's menu: card,
+  Bulbs, orders, Plus, wishlist, Sell to us, Invite & earn (invite
+  friends and the affiliate program), support, settings, About & info.
+  Migration `20261207000000_post_restructure.sql`.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers
