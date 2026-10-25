@@ -1622,6 +1622,53 @@ until both `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
 | `rental_due_soon` | name, item, due date | `Hi {{1}}, a reminder that {{2}} from The IDEA Plus is due back on {{3}}.` | `مرحباً {{1}}، تذكير بأن موعد إرجاع {{2}} من The IDEA Plus هو {{3}}.` |
 | `trade_in_offer` | name, request number, item, offer | `Hi {{1}}, we made an offer on your request {{2}} ({{3}}): {{4}}. Open My Pass on theideaiq.com to accept or decline.` | `مرحباً {{1}}، قدّمنا عرضاً على طلبك {{2}} ({{3}}): {{4}}. افتح بطاقتك على theideaiq.com لقبوله أو رفضه.` |
 
+### 4.5 Delivery with Boxy
+
+Purchases are delivered by **Boxy** (tryboxy.com); rentals aren't, yet.
+Customers pay The IDEA's own zone fees at checkout (`delivery_zones`);
+Boxy bills The IDEA. Store pickup stays as it is.
+
+- **Checkout:** after the governorate, the customer picks their area from
+  Boxy's list (`delivery_areas`, copied daily by `/cron/boxy?areas=1`).
+  Boxy matches an address by its province code (`delivery_zones.
+  carrier_province`) and the area's name, stored as the address's city.
+  Before the first copy the field is free text.
+- **Sending:** back office → order → **Delivery with Boxy**: staff pick
+  the parcel size and whether it's fragile and press **Send with Boxy**.
+  `apps/api` (`/admin/shipments`, `lib/boxy`) creates the Boxy order (cash
+  orders: Boxy collects the order total; orders paid online: nothing),
+  asks for a pick-up, records the parcel in `shipments` and marks the order
+  shipped with its tracking code and page (the customer is notified and
+  sees **Track your parcel** in My Pass). The panel prints the label,
+  refreshes the status and cancels the parcel before it is collected.
+- **Following:** Boxy's webhooks (only up to "in transit") and the sync job
+  (`/cron/boxy`: daily on Vercel and every 15 minutes from
+  `.github/workflows/boxy-sync.yml`) read each open parcel from Boxy. A
+  delivered parcel marks the order delivered; for a cash order, record the
+  cash with **Cash collected** when Boxy hands it over. A returned parcel
+  is flagged on the order: cancel it (the copies go back in stock) or
+  refund it.
+
+**Owner setup**
+
+1. Boxy dashboard → Settings → **Create a Personal Token**: set the key
+   and secret as `BOXY_API_KEY` and `BOXY_API_SECRET` on the `api` Vercel
+   project. Test first with the sandbox (`BOXY_API_URL=
+   https://api-stg.tryboxy.dev/api/v1`, its own token), then remove
+   `BOXY_API_URL` (production is the default) and use production keys.
+2. Boxy dashboard → pick-up locations: add the store or warehouse parcels
+   are collected from, and set its uid as `BOXY_PICKUP_LOCATION` (or make
+   it the default and leave the variable unset).
+3. Boxy dashboard → Settings → Webhooks: URL
+   `https://api.theideaiq.com/webhooks/boxy`, all order triggers, with a
+   custom header `x-boxy-secret` (or your name in `BOXY_WEBHOOK_HEADER`)
+   whose value is a long random string (`openssl rand -hex 32`), also set
+   as `BOXY_WEBHOOK_SECRET`.
+4. GitHub → repository → Settings → Secrets → Actions: add `CRON_SECRET`
+   (the same value as on the `api` project) so the 15-minute sync runs.
+5. Redeploy `api`, then run **Follow Boxy parcels** once from GitHub
+   Actions (or wait for the daily cron) to copy Boxy's areas.
+
 ## 5. Vercel environment variables
 
 ### 5.1 Projects

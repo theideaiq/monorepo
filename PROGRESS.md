@@ -22,6 +22,11 @@ decisions with a date.
 
 ## Launch checklist (needs an owner with access)
 
+- [ ] **Delivery with Boxy** (ARCHITECTURE_AND_INTEGRATIONS.md 4.5): Boxy
+      key and secret on the `api` project (sandbox first), the pick-up
+      location, the webhook with its custom header, `CRON_SECRET` as a
+      GitHub Actions secret, then run "Follow Boxy parcels" once to copy
+      Boxy's areas.
 - [ ] **Supabase:** `supabase db push` the new migrations (or let
       `migrate.yml` do it once its secrets are set). Turn on TOTP MFA
       (Authentication → Sign In / Providers → Multi-factor) — staff rights
@@ -162,6 +167,10 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-25: Purchases are delivered by Boxy, sent by staff from the order
+  page (size, fragile) and collected by Boxy's pick-up; customers keep
+  paying The IDEA's zone fees and store pickup stays. Rental deliveries are
+  undecided.
 - 2026-10-25: Variants instead of "(CD)" / "(Vinyl)" products. One product
   per work with a variant per version (format, platform, colour, edition);
   condition stays on each copy; titles sold and rented become one product;

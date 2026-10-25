@@ -24,7 +24,12 @@ export interface ShippingAddress {
   phone: string;
 }
 
-export type AddressField = "address" | "fullName" | "governorate" | "phone";
+export type AddressField =
+  | "address"
+  | "city"
+  | "fullName"
+  | "governorate"
+  | "phone";
 
 /** The parts of a delivery zone the form needs. */
 export interface ZoneChoice {
@@ -56,19 +61,54 @@ export type ValidatedAddress =
   | { errors: AddressField[]; shipping: null; zoneId: null }
   | { errors: []; shipping: ShippingAddress; zoneId: string | null };
 
+/** Whether the city is one of the courier's areas (any city when unknown). */
+const inAreas = (city: string, areas: readonly string[] | undefined) =>
+  !areas || areas.length === 0 || areas.includes(city.trim());
+
+/**
+ * What a delivery address is missing: the zone (`zone` undefined when
+ * there are no zones: then a governorate id), an area, the address.
+ */
+const deliveryErrors = (
+  form: AddressForm,
+  zone: ZoneChoice | null | undefined,
+  areas: readonly string[] | undefined
+): AddressField[] => {
+  const errors: AddressField[] = [];
+  const hasZone =
+    zone === undefined ? governorateIds.has(form.governorate) : zone !== null;
+  if (!hasZone) {
+    errors.push("governorate");
+  }
+  if (!inAreas(form.city, areas)) {
+    errors.push("city");
+  }
+  if (!form.address.trim()) {
+    errors.push("address");
+  }
+  return errors;
+};
+
 /**
  * Checks the form like `create_order()` does and returns the payload, or
  * the fields to fix. The phone is normalized to E.164 ("0770…" works).
  * Pickup needs only a name and a phone. Delivery needs an address and a
  * zone from `zones` (its governorate goes on the address); without zones,
- * a governorate id, from which the database finds the zone.
+ * a governorate id, from which the database finds the zone. When the
+ * courier's `areas` for the zone are known, the city must be one of them
+ * (the courier matches the address by it).
  */
 export const validateAddress = (
   form: AddressForm,
   {
+    areas,
     fulfilment = "delivery",
     zones,
-  }: { fulfilment?: Fulfilment; zones?: readonly ZoneChoice[] } = {}
+  }: {
+    areas?: readonly string[];
+    fulfilment?: Fulfilment;
+    zones?: readonly ZoneChoice[];
+  } = {}
 ): ValidatedAddress => {
   const errors: AddressField[] = [];
   const phone = normalizePhone(form.phone);
@@ -81,11 +121,8 @@ export const validateAddress = (
   if (!phone) {
     errors.push("phone");
   }
-  if (delivery && (zones ? !zone : !governorateIds.has(form.governorate))) {
-    errors.push("governorate");
-  }
-  if (delivery && !form.address.trim()) {
-    errors.push("address");
+  if (delivery) {
+    errors.push(...deliveryErrors(form, zones ? zone : undefined, areas));
   }
 
   if (errors.length > 0 || !phone) {
