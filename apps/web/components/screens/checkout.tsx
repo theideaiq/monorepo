@@ -52,6 +52,7 @@ import {
 import { useBulbTiers, useMyBulbs } from "@/lib/bulbs-queries";
 import { summarizeCart } from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
+import { useInviteDiscount } from "@/lib/invites";
 import { orderPath, usePlaceOrder } from "@/lib/order-checkout";
 import { isNativeApp } from "@/lib/platform";
 import { useProfile } from "@/lib/queries";
@@ -580,11 +581,14 @@ const planCheckout = ({
   bulbs,
   cart,
   freeDeliveryFrom,
+  invited,
   method,
   settings,
   zoneFee,
 }: {
   bulbs: number;
+  /** The member's first order through a friend's invite. */
+  invited: boolean;
   cart: Parameters<typeof summarizeCart>[0] | undefined;
   freeDeliveryFrom: number | null;
   method: Fulfilment;
@@ -597,7 +601,8 @@ const planCheckout = ({
           cart,
           settings,
           { freeDeliveryFrom, fulfilment: method, zoneFee },
-          bulbs
+          bulbs,
+          invited
         )
       : null;
   return {
@@ -687,6 +692,7 @@ export const Checkout = () => {
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [useBulbs, setUseBulbs] = useState(false);
   const { availableBulbs, freeDeliveryFrom } = useCheckoutBulbs();
+  const invited = useInviteDiscount().data === true;
 
   // The form starts from the account: its phone number and name.
   const address: AddressForm = form ?? {
@@ -710,6 +716,7 @@ export const Checkout = () => {
     bulbs: useBulbs ? availableBulbs : 0,
     cart: cart.data,
     freeDeliveryFrom,
+    invited,
     method,
     settings: settings.data,
     zoneFee: zone?.fee,

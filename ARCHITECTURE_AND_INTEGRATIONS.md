@@ -283,6 +283,20 @@ session in the shared cookie.
   free delivery (Shine from 50,000 IQD, Beam and Blaze always), mirrored
   for the checkout total by `deliveryFee()`/`cartTotals()` in
   `@repo/commerce`. Plus payments can't take Bulbs yet.
+- **Invite friends** (migration `20261130000000_referrals.sql`). Every
+  member has `profiles.invite_code` (read through `my_invites()`; the
+  column isn't granted to clients) and shares
+  `theideaiq.com/i/<code>`. The page remembers the code on the device
+  (`lib/invites.ts`, 30 days) and `InviteClaimer` calls `claim_invite()`
+  once the visitor is signed in: new members only (no paid or confirmed
+  order), one inviter each, never themselves (`referrals`). Their first
+  order gets 10% off, at most 15,000 IQD (`orders.discount`,
+  `discount_source = 'invite'`, priced in `create_order()` and mirrored by
+  `cartTotals()`), on one order only. When it's delivered the inviter
+  earns 50 Bulbs, pending through the return window and voided by a
+  refund, at most 20 a month, and none when the friend's order shares a
+  phone number or address with the inviter's own orders. The invite card
+  is on My Pass → Bulbs. Affiliates come next and reuse `orders.discount`.
 - **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
   Google Wallet" link for a generic pass whose QR code rotates in Google
   Wallet with the same secret (`rotatingBarcode.totpDetails`), so both

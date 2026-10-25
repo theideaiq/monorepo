@@ -255,6 +255,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Shine delivers free from 50,000 IQD, Beam and Blaze always (Finance →
   Bulbs). Not yet: Bulbs for Plus payments. Migration
   `20261129000000_bulbs_checkout.sql`.
+- 2026-10-25: **Invite friends.** Each member's link
+  (`theideaiq.com/i/<code>`, on My Pass → Bulbs) gives a new member 10% off
+  their first order (up to 15,000 IQD); the inviter earns 50 Bulbs once it
+  is delivered, up to 20 a month, never for orders sharing their phone or
+  address. Migration `20261130000000_referrals.sql`. Next: affiliates.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

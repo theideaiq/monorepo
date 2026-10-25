@@ -1,5 +1,5 @@
 import { describeAttributes, localized } from "@repo/commerce";
-import type { OrderStatus } from "@repo/database";
+import type { OrderStatus, Tables } from "@repo/database";
 import {
   Table,
   TableBody,
@@ -21,7 +21,7 @@ import {
 } from "@/components/admin/page";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { governorateName, parseAddress } from "@/lib/admin/address";
-import { formatters } from "@/lib/admin/format";
+import { type Formatters, formatters } from "@/lib/admin/format";
 import {
   canCollectCash,
   nextOrderStatuses,
@@ -44,6 +44,64 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 type Translate = Awaited<ReturnType<typeof getTranslations>>;
+
+/** Subtotal, delivery, the invite or affiliate discount, Bulbs and total. */
+const OrderTotals = ({
+  format,
+  order,
+  t,
+}: {
+  readonly format: Formatters;
+  readonly order: Tables<"orders">;
+  readonly t: Translate;
+}) => (
+  <TableFooter>
+    <TableRow>
+      <TableCell colSpan={3}>{t("subtotal")}</TableCell>
+      <TableCell className="text-end tabular-nums">
+        {format.money(order.subtotal)}
+      </TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell colSpan={3}>{t("shipping")}</TableCell>
+      <TableCell className="text-end tabular-nums">
+        {format.money(order.shipping_fee)}
+      </TableCell>
+    </TableRow>
+    {order.discount > 0 ? (
+      <TableRow>
+        <TableCell colSpan={3}>
+          {t(
+            order.discount_source === "affiliate"
+              ? "discounts.affiliate"
+              : "discounts.invite"
+          )}
+        </TableCell>
+        <TableCell className="text-end tabular-nums" dir="ltr">
+          −{format.money(order.discount)}
+        </TableCell>
+      </TableRow>
+    ) : null}
+    {order.bulbs_used > 0 ? (
+      <TableRow>
+        <TableCell colSpan={3}>
+          {t("bulbs", { bulbs: format.number(order.bulbs_used) })}
+        </TableCell>
+        <TableCell className="text-end tabular-nums" dir="ltr">
+          −{format.money(order.bulbs_discount)}
+        </TableCell>
+      </TableRow>
+    ) : null}
+    <TableRow>
+      <TableCell className="font-semibold" colSpan={3}>
+        {t("totalAmount")}
+      </TableCell>
+      <TableCell className="text-end font-semibold tabular-nums">
+        {format.money(order.total)}
+      </TableCell>
+    </TableRow>
+  </TableFooter>
+);
 
 /** Delivery or pickup, the payment method and, for delivery, where to. */
 const methodDetails = ({
@@ -276,38 +334,7 @@ const OrderPage = async ({ params }: OrderPageProps) => {
                   </TableRow>
                 ))}
               </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={3}>{t("subtotal")}</TableCell>
-                  <TableCell className="text-end tabular-nums">
-                    {format.money(order.subtotal)}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={3}>{t("shipping")}</TableCell>
-                  <TableCell className="text-end tabular-nums">
-                    {format.money(order.shipping_fee)}
-                  </TableCell>
-                </TableRow>
-                {order.bulbs_used > 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={3}>
-                      {t("bulbs", { bulbs: format.number(order.bulbs_used) })}
-                    </TableCell>
-                    <TableCell className="text-end tabular-nums" dir="ltr">
-                      −{format.money(order.bulbs_discount)}
-                    </TableCell>
-                  </TableRow>
-                ) : null}
-                <TableRow>
-                  <TableCell className="font-semibold" colSpan={3}>
-                    {t("totalAmount")}
-                  </TableCell>
-                  <TableCell className="text-end font-semibold tabular-nums">
-                    {format.money(order.total)}
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
+              <OrderTotals format={format} order={order} t={t} />
             </Table>
           </Panel>
 

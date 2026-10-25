@@ -20,6 +20,7 @@ export const queryKeys = {
   deliveryZones: ["delivery-zones"] as const,
   events: ["events"] as const,
   invitations: (userId: string) => ["invitations", userId] as const,
+  invites: (userId: string) => ["invites", userId] as const,
   memberships: (userId: string) => ["memberships", userId] as const,
   myReview: (productId: string, userId: string) =>
     ["reviews", "mine", productId, userId] as const,
@@ -42,6 +43,7 @@ export const queryKeys = {
   products: (filters: object) => ["products", filters] as const,
   profile: (userId: string) => ["profile", userId] as const,
   projects: (organizationId: string) => ["projects", organizationId] as const,
+  referral: (userId: string) => ["referral", userId] as const,
   rentalAllowance: (userId: string) => ["rental-allowance", userId] as const,
   rentals: (userId: string) => ["rentals", userId] as const,
   rentalTiers: (productIds: readonly string[]) =>

@@ -793,6 +793,16 @@
       "noRsvps": "Be the first to RSVP.",
       "rsvp": "RSVP",
       "ended": "This event has ended."
+    },
+    "invite": {
+      "title": "A friend invited you to The IDEA",
+      "description": "Join The IDEA with a friend's invite and get 10% off your first order.",
+      "offer": "Join with The IDEA Pass and get 10% off your first order (up to {cap}).",
+      "claimed": "You're in: 10% off your first order (up to {cap}).",
+      "claimedBy": "{name} invited you: 10% off your first order (up to {cap}).",
+      "notEligible": "This invite is for new members only. You can still shop and earn Bulbs.",
+      "join": "Join with The IDEA Pass",
+      "shop": "Shop the store"
     }
   },
   "app": {
@@ -929,7 +939,8 @@
       "outOfStock": "Out of stock. Remove it to continue.",
       "problems": "Fix the items marked below to check out.",
       "updateFailed": "We couldn't update your cart. Please try again.",
-      "bulbs": "Bulbs ({bulbs})"
+      "bulbs": "Bulbs ({bulbs})",
+      "discount": "Friend's invite"
     },
     "checkout": {
       "title": "Checkout",
@@ -1601,6 +1612,15 @@
       },
       "freeDelivery": "Free delivery on every order",
       "freeDeliveryFrom": "Free delivery from {amount}"
+    },
+    "friends": {
+      "title": "Invite friends",
+      "description": "Friends who join with your link get 10% off their first order (up to {cap}). You get 50 Bulbs once it's delivered, up to 20 a month.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "share": "Share",
+      "shareText": "Join The IDEA with my invite and get 10% off your first order.",
+      "stats": "{invited} invited · {rewarded} rewarded"
     }
   },
   "store": {
@@ -2343,7 +2363,11 @@
         "confirm": "Record {amount} collected in cash?",
         "confirmDescription": "The order is marked paid and delivered, and a cash payment is recorded for finance."
       },
-      "bulbs": "Paid with {bulbs} Bulbs"
+      "bulbs": "Paid with {bulbs} Bulbs",
+      "discounts": {
+        "invite": "Friend's invite",
+        "affiliate": "Affiliate code"
+      }
     },
     "rentals": {
       "title": "Rentals",
