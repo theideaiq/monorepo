@@ -1147,7 +1147,8 @@
         "ends": "تنتهي في {date}",
         "allowance": "خانات الاستئجار",
         "slots": "{free} من {slots} متاحة",
-        "confirming": "جارٍ تأكيد دفعتك…"
+        "confirming": "جارٍ تأكيد دفعتك…",
+        "company": "تدفعها شركتك"
       },
       "plans": {
         "title": "الباقات",
@@ -1279,24 +1280,13 @@
         "as": "بصفة {role}"
       },
       "tabs": {
-        "projects": "المشاريع",
         "members": "الأعضاء",
         "billing": "الباقة",
         "settings": "الإعدادات",
         "procurement": "المشتريات",
-        "invoices": "الفواتير"
-      },
-      "projects": {
-        "title": "المشاريع",
-        "description": "كل ما تعمل عليه شركتك.",
-        "empty": {
-          "title": "لا توجد مشاريع بعد",
-          "description": "أنشئ مشروعك الأول للبدء."
-        },
-        "newProject": "مشروع جديد",
-        "projectName": "اسم المشروع",
-        "creating": "جارٍ الإنشاء…",
-        "createdAt": "أُنشئ في {date}"
+        "invoices": "الفواتير",
+        "overview": "نظرة عامة",
+        "plus": "The IDEA Plus"
       },
       "members": {
         "title": "الأعضاء",
@@ -1331,6 +1321,16 @@
         "description": "يمكن للمالكين والمشرفين فقط تغيير هذه الإعدادات.",
         "name": "اسم الشركة",
         "slug": "العنوان"
+      },
+      "overview": {
+        "description": "ما يحتاج انتباهك في The IDEA.",
+        "quotesToAnswer": "عروض أسعار بانتظار ردّك",
+        "openRequests": "طلبات مفتوحة",
+        "unpaidInvoices": "فواتير غير مدفوعة",
+        "unpaidTotal": "المستحق {total}",
+        "plusSeats": "أعضاء لديهم The IDEA Plus",
+        "plan": "باقة The IDEA Suite: {plan}",
+        "noPlan": "لا توجد باقة The IDEA Suite بعد. اطّلع على الباقات"
       }
     },
     "onboarding": {
@@ -1855,7 +1855,9 @@
         "cancel": "إلغاء الطلب",
         "cancelTitle": "إلغاء هذا الطلب؟",
         "cancelError": "تعذّر إلغاء الطلب.",
-        "keep": "إبقاء"
+        "keep": "إبقاء",
+        "print": "طباعة",
+        "printOrder": "اطبع أمر الشراء"
       },
       "invoices": {
         "title": "الفواتير",
@@ -1867,6 +1869,58 @@
         "order": "أمر الشراء #{number}",
         "orderWithReference": "أمر الشراء #{number} · {reference}",
         "howToPay": "ادفع بالتحويل المصرفي أو ZainCash أو FIB أو Qi مع ذكر رقم الفاتورة. لديك سؤال؟ تواصل مع الدعم."
+      },
+      "plus": {
+        "title": "The IDEA Plus لفريقك",
+        "description": "امنح أعضاء شركتك The IDEA Plus. نوافق على كل طلب، فيحصل العضو على عضويته وتصلك فاتورة شهرية.",
+        "managersOnly": "يختار المالكون والمسؤولون من يحصل على The IDEA Plus.",
+        "seats": "العضويات",
+        "empty": "لا أحد لديه The IDEA Plus عبر شركتك بعد.",
+        "unnamed": "عضو بلا اسم",
+        "planLine": "{plan} · {price} شهريًا",
+        "renews": "يتجدد في {date}",
+        "until": "حتى {date}",
+        "withdraw": "سحب الطلب",
+        "end": "إنهاء",
+        "endError": "لم تنجح العملية. حاول مجددًا.",
+        "status": {
+          "requested": "بانتظار الموافقة",
+          "active": "فعّالة",
+          "ended": "منتهية",
+          "declined": "مرفوضة"
+        },
+        "request": {
+          "title": "امنح عضوًا The IDEA Plus",
+          "description": "الباقات الشهرية فقط. لا يمكن منحها لعضو لديه The IDEA Plus خاصة به.",
+          "member": "العضو",
+          "plan": "الباقة",
+          "choose": "اختر",
+          "planOption": "{plan} · {price} شهريًا",
+          "send": "اطلبها",
+          "error": "لم تنجح العملية. ربما لدى العضو طلب قائم."
+        }
+      },
+      "document": {
+        "title": "مستند",
+        "print": "اطبع أو احفظ PDF",
+        "notFound": "هذا المستند غير متاح.",
+        "billTo": "الفاتورة إلى",
+        "item": "البند",
+        "quantity": "الكمية",
+        "unitPrice": "سعر الوحدة",
+        "amount": "المبلغ",
+        "total": "الإجمالي",
+        "footer": "The IDEA IQ · بغداد، العراق. الأسعار بالدينار العراقي.",
+        "validUntil": "صالح حتى {date}",
+        "reference": "مرجعكم: {reference}",
+        "due": "تستحق في {date}",
+        "paidOn": "دُفعت في {date}",
+        "order": "أمر الشراء #{number}",
+        "kinds": {
+          "quote": "عرض السعر #{number}",
+          "order": "أمر الشراء #{number}",
+          "invoice": "الفاتورة #{number}"
+        }
       }
     }
   },
@@ -2047,6 +2101,10 @@
         "invoice_issued": {
           "title": "فاتورة جديدة",
           "body": "الفاتورة #{number} بمبلغ {amount}، تستحق في {date}."
+        },
+        "plus_seat_active": {
+          "title": "The IDEA Plus من شركتك",
+          "body": "منحتك شركتك The IDEA Plus ({plan}). ابدأ الاستئجار."
         }
       },
       "kinds": {
@@ -3409,7 +3467,9 @@
       "cancelRequest": "إلغاء الطلب",
       "tabs": {
         "requests": "الطلبات",
-        "orders": "أوامر الشراء"
+        "orders": "أوامر الشراء",
+        "invoices": "الفواتير",
+        "seats": "مقاعد The IDEA Plus"
       },
       "quotes": {
         "number": "عرض السعر رقم {number}",
@@ -3445,6 +3505,34 @@
         "issueInvoice": "إصدار فاتورة",
         "markPaid": "تحديد كمدفوعة",
         "voidInvoice": "إلغاء الفاتورة"
+      },
+      "seats": {
+        "title": "مقاعد The IDEA Plus",
+        "description": "عضويات تدفعها الشركات. الموافقة تبدأ عضوية The IDEA Plus للعضو وتصدر فاتورة الشهر الأول للشركة.",
+        "empty": "لا توجد مقاعد بعد.",
+        "member": "العضو",
+        "company": "الشركة",
+        "plan": "الباقة",
+        "status": "الحالة",
+        "until": "مدفوعة حتى",
+        "approve": "موافقة",
+        "approveDescription": "يحصل العضو على The IDEA Plus الآن وتصدر للشركة فاتورة الشهر الأول مستحقة خلال 15 يومًا.",
+        "decline": "رفض",
+        "end": "إنهاء في نهاية الشهر"
+      },
+      "invoices": {
+        "title": "الفواتير",
+        "empty": "لا توجد فواتير بعد.",
+        "invoice": "الفاتورة",
+        "number": "#{number}",
+        "company": "الشركة",
+        "for": "عن",
+        "order": "أمر الشراء #{number}",
+        "amount": "المبلغ",
+        "status": "الحالة",
+        "due": "الاستحقاق",
+        "markPaid": "تحديد كمدفوعة",
+        "void": "إلغاء"
       }
     }
   },

@@ -385,6 +385,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Bulbs, orders, Plus, wishlist, Sell to us, Invite & earn (invite
   friends and the affiliate program), support, settings, About & info.
   Migration `20261207000000_post_restructure.sql`.
+- 2026-10-25: **The IDEA Suite: Overview, printable documents, Plus for
+  teams.** Business opens on an Overview (quotes to answer, open requests,
+  unpaid invoices, Plus members, plan) instead of the template's Projects.
+  Quotes, purchase orders and invoices open as printable pages (print or
+  save as PDF). Companies can give members The IDEA Plus: owners and
+  admins ask, finance approves, the company is invoiced monthly
+  (`/cron/plus-seats`). Migration `20261208000000_team_plus.sql`. Next:
+  Suite hiring.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

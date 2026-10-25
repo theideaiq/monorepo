@@ -1,107 +1,129 @@
 "use client";
 
-import { useAuth } from "@repo/auth/provider";
-import { Button } from "@repo/design-system/components/ui/button";
 import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@repo/design-system/components/ui/empty";
-import { Input } from "@repo/design-system/components/ui/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FolderIcon, PlusIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { type FormEvent, useState } from "react";
+  formatCurrency,
+  formatNumber,
+} from "@repo/internationalization/format";
+import { Link } from "@repo/internationalization/navigation";
+import {
+  ChevronRightIcon,
+  CrownIcon,
+  FileTextIcon,
+  type LucideIcon,
+  PackageSearchIcon,
+  ReceiptIcon,
+} from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { BusinessShell } from "@/components/business/business-shell";
-import { ProjectList } from "@/components/business/project-list";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { queryKeys, useProjects } from "@/lib/queries";
+import { useSuiteOverview } from "@/lib/procurement-queries";
+import { usePlans, useSubscription } from "@/lib/queries";
 
-const Projects = () => {
-  const t = useTranslations("app.business.projects");
-  const { supabase, user } = useAuth();
+const Tile = ({
+  detail,
+  href,
+  icon: Icon,
+  label,
+  value,
+}: {
+  readonly detail?: string;
+  readonly href: string;
+  readonly icon: LucideIcon;
+  readonly label: string;
+  readonly value: string;
+}) => (
+  <Link
+    className="flex items-center justify-between gap-4 rounded-lg border bg-card p-4 transition-shadow hover:shadow-2"
+    href={href}
+  >
+    <span className="flex items-center gap-3">
+      <Icon aria-hidden="true" className="size-5 shrink-0 text-pink-text" />
+      <span className="grid gap-0.5">
+        <span className="text-muted-foreground text-sm">{label}</span>
+        <span className="font-semibold text-xl tabular-nums">{value}</span>
+        {detail ? (
+          <span className="text-muted-foreground text-xs">{detail}</span>
+        ) : null}
+      </span>
+    </span>
+    <ChevronRightIcon
+      aria-hidden="true"
+      className="size-4 text-muted-foreground rtl:rotate-180"
+    />
+  </Link>
+);
+
+/** What needs the company's attention: requests, quotes, invoices, Plus, plan. */
+const Overview = () => {
+  const t = useTranslations("app.business.overview");
+  const locale = useLocale();
   const { active } = useActiveOrganization();
-  const queryClient = useQueryClient();
-  const projects = useProjects(active.id);
-  const [name, setName] = useState("");
+  const overview = useSuiteOverview(active.id);
+  const plans = usePlans("business");
+  const subscription = useSubscription(active.id);
+  const plan = plans.data?.find((row) => row.id === subscription.data?.plan_id);
 
-  const create = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase.from("projects").insert({
-        created_by: user?.id ?? "",
-        name: name.trim(),
-        organization_id: active.id,
-      });
-      if (error) {
-        throw error;
-      }
-    },
-    onSuccess: async () => {
-      setName("");
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.projects(active.id),
-      });
-    },
-  });
-
-  const submit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (name.trim()) {
-      create.mutate();
-    }
-  };
+  if (overview.isPending) {
+    return <SectionSpinner />;
+  }
+  if (overview.isError) {
+    return <ErrorState onRetry={() => overview.refetch()} />;
+  }
+  const { data } = overview;
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="grid gap-1">
-          <h2 className="font-semibold text-xl tracking-tight">
-            {active.name}
-          </h2>
-          <p className="text-muted-foreground text-sm">{t("description")}</p>
-        </div>
-        <form className="flex w-full gap-2 sm:w-auto" onSubmit={submit}>
-          <Input
-            aria-label={t("projectName")}
-            className="flex-1 sm:w-48"
-            maxLength={120}
-            onChange={(event) => setName(event.target.value)}
-            placeholder={t("projectName")}
-            value={name}
-          />
-          <Button disabled={create.isPending || !name.trim()} type="submit">
-            <PlusIcon />
-            {create.isPending ? t("creating") : t("newProject")}
-          </Button>
-        </form>
+      <div className="grid gap-1">
+        <h2 className="font-semibold text-xl tracking-tight">{active.name}</h2>
+        <p className="text-muted-foreground text-sm">{t("description")}</p>
       </div>
-
-      {projects.isPending ? <SectionSpinner /> : null}
-      {projects.isError ? (
-        <ErrorState onRetry={() => projects.refetch()} />
-      ) : null}
-      {projects.data?.length === 0 ? (
-        <Empty className="border border-dashed">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <FolderIcon />
-            </EmptyMedia>
-            <EmptyTitle>{t("empty.title")}</EmptyTitle>
-            <EmptyDescription>{t("empty.description")}</EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      ) : null}
-      {projects.data?.length ? <ProjectList projects={projects.data} /> : null}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Tile
+          href="/business/procurement"
+          icon={FileTextIcon}
+          label={t("quotesToAnswer")}
+          value={formatNumber(data.quotesToAnswer, locale)}
+        />
+        <Tile
+          href="/business/procurement"
+          icon={PackageSearchIcon}
+          label={t("openRequests")}
+          value={formatNumber(data.openRequests, locale)}
+        />
+        <Tile
+          detail={
+            data.unpaidInvoices
+              ? t("unpaidTotal", {
+                  total: formatCurrency(data.unpaidTotal, locale),
+                })
+              : undefined
+          }
+          href="/business/invoices"
+          icon={ReceiptIcon}
+          label={t("unpaidInvoices")}
+          value={formatNumber(data.unpaidInvoices, locale)}
+        />
+        <Tile
+          href="/business/plus"
+          icon={CrownIcon}
+          label={t("plusSeats")}
+          value={formatNumber(data.plusSeats, locale)}
+        />
+      </div>
+      <Link
+        className="text-muted-foreground text-sm underline"
+        href="/business/billing"
+      >
+        {plan ? t("plan", { plan: plan.name }) : t("noPlan")}
+      </Link>
     </div>
   );
 };
 
-/** /business: the active organization's projects, or the introduction. */
+/** /business: the active company's overview, or the introduction. */
 export const Business = () => (
   <BusinessShell>
-    <Projects />
+    <Overview />
   </BusinessShell>
 );

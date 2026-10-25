@@ -65,6 +65,7 @@
         "@repo/analytics": "workspace:*",
         "@repo/auth": "workspace:*",
         "@repo/commerce": "workspace:*",
+        "@repo/config": "workspace:*",
         "@repo/database": "workspace:*",
         "@repo/design-system": "workspace:*",
         "@repo/internationalization": "workspace:*",

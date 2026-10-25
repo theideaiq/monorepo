@@ -47,6 +47,7 @@ export const NOTIFICATION_EVENTS = [
   "affiliate_paid",
   "quote_sent",
   "invoice_issued",
+  "plus_seat_active",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -147,6 +148,7 @@ const extraValues: Partial<
   bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
   invoice_issued: invoiceValues,
+  plus_seat_active: (data) => ({ plan: text(data.plan) }),
   quote_sent: quoteValues,
 };
 

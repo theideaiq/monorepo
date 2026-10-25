@@ -38,7 +38,6 @@ export const queryKeys = {
     ["product-ratings", [...productIds].sort().join(",")] as const,
   products: (filters: object) => ["products", filters] as const,
   profile: (userId: string) => ["profile", userId] as const,
-  projects: (organizationId: string) => ["projects", organizationId] as const,
   rentalAllowance: (userId: string) => ["rental-allowance", userId] as const,
   rentals: (userId: string) => ["rentals", userId] as const,
   rentalTiers: (productIds: readonly string[]) =>
@@ -110,21 +109,6 @@ export const usePendingInvitations = () => {
     enabled: Boolean(user),
     queryFn: async () => unwrap(await supabase.rpc("pending_invitations")),
     queryKey: queryKeys.invitations(user?.id ?? ""),
-  });
-};
-
-export const useProjects = (organizationId: string) => {
-  const { supabase } = useAuth();
-  return useQuery({
-    queryFn: async () =>
-      unwrap(
-        await supabase
-          .from("projects")
-          .select("id, name, created_at")
-          .eq("organization_id", organizationId)
-          .order("created_at", { ascending: false })
-      ),
-    queryKey: queryKeys.projects(organizationId),
   });
 };
 

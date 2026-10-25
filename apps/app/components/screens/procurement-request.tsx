@@ -162,6 +162,12 @@ const QuoteCard = ({
         <CardTitle className="flex flex-wrap items-center gap-2">
           {t("request.quote", { number: String(quote.number) })}
           <Badge variant="outline">{t(`status.quote.${quote.status}`)}</Badge>
+          <Link
+            className="ms-auto font-normal text-muted-foreground text-sm underline"
+            href={`/documents/quote/${quote.id}`}
+          >
+            {t("request.print")}
+          </Link>
         </CardTitle>
         {quote.valid_until ? (
           <CardDescription>
@@ -217,6 +223,9 @@ const QuoteCard = ({
                 })}
               </span>
             ) : null}
+            <Link className="underline" href={`/documents/order/${order.id}`}>
+              {t("request.printOrder")}
+            </Link>
             {invoice ? (
               <Link className="underline" href="/business/invoices">
                 {t("request.invoice", {

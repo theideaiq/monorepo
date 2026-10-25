@@ -159,7 +159,7 @@ export const usePlans = (audience: "business" | "plus") => {
 
 const LIVE_SUBSCRIPTION = ["active", "past_due", "incomplete"] as const;
 const SUBSCRIPTION_COLUMNS =
-  "id, plan_id, status, current_period_end, cancel_at_period_end" as const;
+  "id, plan_id, status, current_period_end, cancel_at_period_end, provider" as const;
 
 export const useSubscription = (organizationId: string) => {
   const { supabase } = useAuth();

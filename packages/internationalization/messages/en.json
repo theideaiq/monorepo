@@ -1147,7 +1147,8 @@
         "ends": "Ends on {date}",
         "allowance": "Rental slots",
         "slots": "{free} of {slots} free",
-        "confirming": "We're confirming your payment…"
+        "confirming": "We're confirming your payment…",
+        "company": "Paid by your company"
       },
       "plans": {
         "title": "Plans",
@@ -1279,24 +1280,13 @@
         "as": "as {role}"
       },
       "tabs": {
-        "projects": "Projects",
         "members": "Members",
         "billing": "Plan",
         "settings": "Settings",
         "procurement": "Procurement",
-        "invoices": "Invoices"
-      },
-      "projects": {
-        "title": "Projects",
-        "description": "Everything your company is working on.",
-        "empty": {
-          "title": "No projects yet",
-          "description": "Create your first project to get started."
-        },
-        "newProject": "New project",
-        "projectName": "Project name",
-        "creating": "Creating…",
-        "createdAt": "Created {date}"
+        "invoices": "Invoices",
+        "overview": "Overview",
+        "plus": "The IDEA Plus"
       },
       "members": {
         "title": "Members",
@@ -1331,6 +1321,16 @@
         "description": "Only owners and admins can change these settings.",
         "name": "Company name",
         "slug": "Address"
+      },
+      "overview": {
+        "description": "What needs your attention at The IDEA.",
+        "quotesToAnswer": "Quotes to answer",
+        "openRequests": "Open requests",
+        "unpaidInvoices": "Unpaid invoices",
+        "unpaidTotal": "{total} due",
+        "plusSeats": "Members with The IDEA Plus",
+        "plan": "The IDEA Suite plan: {plan}",
+        "noPlan": "No The IDEA Suite plan yet. See plans"
       }
     },
     "onboarding": {
@@ -1855,7 +1855,9 @@
         "cancel": "Cancel request",
         "cancelTitle": "Cancel this request?",
         "cancelError": "The request couldn't be cancelled.",
-        "keep": "Keep"
+        "keep": "Keep",
+        "print": "Print",
+        "printOrder": "Print the purchase order"
       },
       "invoices": {
         "title": "Invoices",
@@ -1867,6 +1869,58 @@
         "order": "Purchase order #{number}",
         "orderWithReference": "Purchase order #{number} · {reference}",
         "howToPay": "Pay by bank transfer, ZainCash, FIB or Qi, quoting the invoice number. Questions? Contact support."
+      },
+      "plus": {
+        "title": "The IDEA Plus for your team",
+        "description": "Give members of your company The IDEA Plus. We approve each request, the member gets their membership, and you get a monthly invoice.",
+        "managersOnly": "Owners and admins choose who gets The IDEA Plus.",
+        "seats": "Memberships",
+        "empty": "No one has The IDEA Plus through your company yet.",
+        "unnamed": "Unnamed member",
+        "planLine": "{plan} · {price} a month",
+        "renews": "renews {date}",
+        "until": "until {date}",
+        "withdraw": "Withdraw",
+        "end": "End",
+        "endError": "That didn't work. Try again.",
+        "status": {
+          "requested": "Waiting for approval",
+          "active": "Active",
+          "ended": "Ended",
+          "declined": "Declined"
+        },
+        "request": {
+          "title": "Give a member The IDEA Plus",
+          "description": "Monthly plans only. A member who already has their own The IDEA Plus can't get one.",
+          "member": "Member",
+          "plan": "Plan",
+          "choose": "Choose",
+          "planOption": "{plan} · {price} a month",
+          "send": "Ask for it",
+          "error": "That didn't work. The member may already have a request."
+        }
+      },
+      "document": {
+        "title": "Document",
+        "print": "Print or save as PDF",
+        "notFound": "This document isn't available.",
+        "billTo": "Bill to",
+        "item": "Item",
+        "quantity": "Qty",
+        "unitPrice": "Unit price",
+        "amount": "Amount",
+        "total": "Total",
+        "footer": "The IDEA IQ · Baghdad, Iraq. Prices in Iraqi dinars.",
+        "validUntil": "Valid until {date}",
+        "reference": "Your reference: {reference}",
+        "due": "Due {date}",
+        "paidOn": "Paid {date}",
+        "order": "Purchase order #{number}",
+        "kinds": {
+          "quote": "Quote #{number}",
+          "order": "Purchase order #{number}",
+          "invoice": "Invoice #{number}"
+        }
       }
     }
   },
@@ -2047,6 +2101,10 @@
         "invoice_issued": {
           "title": "New invoice",
           "body": "Invoice #{number} for {amount}, due {date}."
+        },
+        "plus_seat_active": {
+          "title": "The IDEA Plus from your company",
+          "body": "Your company gave you The IDEA Plus ({plan}). Start renting."
         }
       },
       "kinds": {
@@ -3409,7 +3467,9 @@
       "cancelRequest": "Cancel request",
       "tabs": {
         "requests": "Requests",
-        "orders": "Purchase orders"
+        "orders": "Purchase orders",
+        "invoices": "Invoices",
+        "seats": "The IDEA Plus seats"
       },
       "quotes": {
         "number": "Quote #{number}",
@@ -3445,6 +3505,34 @@
         "issueInvoice": "Issue invoice",
         "markPaid": "Mark paid",
         "voidInvoice": "Void invoice"
+      },
+      "seats": {
+        "title": "The IDEA Plus seats",
+        "description": "Memberships companies pay for. Approving one starts the member's The IDEA Plus and invoices the company for the first month.",
+        "empty": "No seats yet.",
+        "member": "Member",
+        "company": "Company",
+        "plan": "Plan",
+        "status": "Status",
+        "until": "Paid until",
+        "approve": "Approve",
+        "approveDescription": "The member gets The IDEA Plus now and the company is invoiced for the first month, due in 15 days.",
+        "decline": "Decline",
+        "end": "End at the end of the month"
+      },
+      "invoices": {
+        "title": "Invoices",
+        "empty": "No invoices yet.",
+        "invoice": "Invoice",
+        "number": "#{number}",
+        "company": "Company",
+        "for": "For",
+        "order": "Purchase order #{number}",
+        "amount": "Amount",
+        "status": "Status",
+        "due": "Due",
+        "markPaid": "Mark paid",
+        "void": "Void"
       }
     }
   },

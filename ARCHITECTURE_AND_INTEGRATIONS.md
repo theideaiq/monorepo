@@ -153,7 +153,7 @@ sends staff to the back office and everyone else to The IDEA Suite.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| The IDEA Suite | `/{locale}/business`, `/business/procurement` (requests and quotes, `/business/procurement/<id>`), `/business/invoices`, `/business/members`, `/business/billing`, `/business/settings`, `/business/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
+| The IDEA Suite | `/{locale}/business` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/business/procurement` (requests and quotes, `/business/procurement/<id>`), `/business/invoices`, `/business/plus` (The IDEA Plus for the team), `/documents/<quote|order|invoice>/<id>` (printable), `/business/members`, `/business/billing`, `/business/settings`, `/business/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
 | Back office | `/{locale}/admin/…` (catalog, orders, rentals, customers and CRM, marketing, finance, editorial, reviews, The IDEA Suite, support, Telegram, staff, audit log) | `app/[locale]/admin`, `components/admin`, `lib/admin` |
 
 - **Sign-in.** Spark has none of its own: signed-out visitors go to The
@@ -176,6 +176,23 @@ sends staff to the back office and everyone else to The IDEA Suite.
   `set_purchase_order_status`, `issue_invoice`, `set_invoice_status`),
   migration `20261206000000_suite_procurement.sql`. The website's
   notification bell opens `/business…` links on The IDEA Spark.
+- **Printable documents.** `/documents/quote/<id>`, `/documents/order/<id>`
+  and `/documents/invoice/<id>` lay a quote, purchase order or invoice out
+  for paper; the browser's print dialog prints it or saves it as a PDF
+  (Arabic and English alike, which PDF libraries render poorly). Company
+  members and support/finance staff can open them (RLS).
+- **The IDEA Plus for a company's team.** Owners and admins ask for a
+  monthly Plus plan for a member (Business → The IDEA Plus); finance
+  approves it in Back office → The IDEA Suite → The IDEA Plus seats, which
+  gives the member a Plus subscription (provider `company`, so rentals and
+  tiers work as usual; the Wayl renewals skip it) and invoices the company
+  for the first month. `GET /cron/plus-seats` (daily, 06:15 UTC) extends
+  the seats due within three days by a month and invoices each company
+  once for them. Ending a seat, or the member leaving the company, lets the
+  month run out. Invoices can now have a description instead of a purchase
+  order. Table `plus_seats`; RPCs `request_plus_seat`, `activate_plus_seat`,
+  `decline_plus_seat`, `end_plus_seat`, `run_plus_seat_renewals`; migration
+  `20261208000000_team_plus.sql`.
 - **Indexing.** Every page sends `noindex`.
 
 ### The IDEA Pass

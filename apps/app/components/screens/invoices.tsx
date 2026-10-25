@@ -36,9 +36,17 @@ const InvoiceList = () => {
                 key={invoice.id}
               >
                 <div className="grid gap-0.5">
-                  <span className="font-medium">
+                  <Link
+                    className="font-medium underline"
+                    href={`/documents/invoice/${invoice.id}`}
+                  >
                     {t("invoices.number", { number: String(invoice.number) })}
-                  </span>
+                  </Link>
+                  {invoice.description ? (
+                    <span className="text-muted-foreground text-xs">
+                      {invoice.description}
+                    </span>
+                  ) : null}
                   <span className="text-muted-foreground text-xs">
                     {invoice.status === "paid" && invoice.paid_at
                       ? t("invoices.paidOn", {

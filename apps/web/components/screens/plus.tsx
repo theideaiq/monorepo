@@ -101,6 +101,7 @@ const Membership = ({
                       })}
                 </span>
               ) : null}
+              {live.provider === "company" ? <span>{t("company")}</span> : null}
             </span>
           ) : (
             t("none")
@@ -510,7 +511,10 @@ export const Plus = () => {
       <div className="flex flex-1 flex-col gap-8">
         <p className="max-w-2xl text-muted-foreground">{t("description")}</p>
         <Membership allowance={allowance.data} confirming={confirming} />
-        <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
+        {/* A membership the company pays for isn't bought here. */}
+        {member && subscription.data?.provider === "company" ? null : (
+          <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
+        )}
         <MyRentals />
         <RentalCatalog allowance={allowance.data} member={member} />
       </div>

@@ -54,6 +54,24 @@ test("a company sends a procurement request and accepts the quote", async ({
   await expect(page.getByText("Your reference: PO-E2E-1")).toBeVisible();
   await expectAccessible(page);
 
-  await page.getByRole("link", { name: "Invoices" }).click();
+  // The purchase order, laid out for printing.
+  await page.getByRole("link", { name: "Print the purchase order" }).click();
+  await expect(
+    page.getByRole("heading", { name: /^Purchase order #\d+/ })
+  ).toBeVisible();
+  await expect(page.getByText("E2E Company")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Print or save as PDF" })
+  ).toBeVisible();
+  await expectAccessible(page);
+
+  await page.goto(`${urls.app}/business`);
+  await expect(page.getByText("Quotes to answer")).toBeVisible();
+  await page.getByRole("link", { exact: true, name: "Invoices" }).click();
   await expect(page.getByText("No invoices yet.")).toBeVisible();
+  await page.getByRole("link", { exact: true, name: "The IDEA Plus" }).click();
+  await expect(
+    page.getByText("No one has The IDEA Plus through your company yet.")
+  ).toBeVisible();
+  await expectAccessible(page);
 });

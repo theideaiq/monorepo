@@ -147,3 +147,31 @@ export const setInvoiceStatus = staffAction(
     return success();
   }
 );
+
+/** Finance approves a company's The IDEA Plus seat (subscription and invoice). */
+export const activateSeat = staffAction(
+  "suite",
+  z.object({ seatId: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("activate_plus_seat", { seat: input.seatId }));
+    return success();
+  }
+);
+
+export const declineSeat = staffAction(
+  "suite",
+  z.object({ seatId: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("decline_plus_seat", { seat: input.seatId }));
+    return success();
+  }
+);
+
+export const endSeat = staffAction(
+  "suite",
+  z.object({ seatId: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("end_plus_seat", { seat: input.seatId }));
+    return success();
+  }
+);

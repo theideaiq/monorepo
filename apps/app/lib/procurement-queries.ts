@@ -154,12 +154,60 @@ export const useInvoices = (organizationId: string) => {
         await supabase
           .from("invoices")
           .select(
-            "id, number, amount, status, due_on, issued_at, paid_at, purchase_orders (number, customer_reference, quotes (request_id))"
+            "id, number, amount, status, description, due_on, issued_at, paid_at, purchase_orders (number, customer_reference, quotes (request_id))"
           )
           .eq("organization_id", organizationId)
           .order("issued_at", { ascending: false })
           .limit(100)
       ),
     queryKey: keys.invoices(organizationId),
+  });
+};
+
+/** What needs the company's attention, for the Overview. */
+export const useSuiteOverview = (organizationId: string) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: async () => {
+      const [requests, quotes, invoices, seats] = await Promise.all([
+        supabase
+          .from("procurement_requests")
+          .select("id", { count: "exact", head: true })
+          .eq("organization_id", organizationId)
+          .in("status", ["submitted", "quoted"]),
+        supabase
+          .from("quotes")
+          .select("id, procurement_requests!inner (organization_id)", {
+            count: "exact",
+            head: true,
+          })
+          .eq("status", "sent")
+          .eq("procurement_requests.organization_id", organizationId),
+        supabase
+          .from("invoices")
+          .select("amount")
+          .eq("organization_id", organizationId)
+          .eq("status", "issued"),
+        supabase
+          .from("plus_seats")
+          .select("id", { count: "exact", head: true })
+          .eq("organization_id", organizationId)
+          .eq("status", "active"),
+      ]);
+      const unpaid = unwrap(invoices) ?? [];
+      for (const result of [requests, quotes, seats]) {
+        if (result.error) {
+          throw result.error;
+        }
+      }
+      return {
+        openRequests: requests.count ?? 0,
+        plusSeats: seats.count ?? 0,
+        quotesToAnswer: quotes.count ?? 0,
+        unpaidInvoices: unpaid.length,
+        unpaidTotal: unpaid.reduce((sum, row) => sum + row.amount, 0),
+      };
+    },
+    queryKey: ["suite-overview", organizationId] as const,
   });
 };
