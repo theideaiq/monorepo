@@ -13,8 +13,9 @@ import {
 import { deleteChat, deleteFaq, saveChat, saveFaq } from "../actions";
 
 /**
- * A group or channel Droid is an admin of, and who it lets in on a join
- * request: anyone, members with a linked The IDEA Pass, or a Bulbs tier.
+ * A group or channel Droid is an admin of, who it lets in on a join
+ * request (anyone, members with a linked The IDEA Pass, or a Bulbs tier),
+ * and the forum topics it posts news, events and new arrivals to.
  */
 export const ChatForm = ({
   chat,
@@ -95,6 +96,30 @@ export const ChatForm = ({
             })),
           ]}
           wrapperClassName="w-36"
+        />
+        {(["news", "events", "arrivals"] as const).map((kind) => (
+          <TextField
+            defaultValue={chat?.[`${kind}_topic`] ?? ""}
+            dir="ltr"
+            disabled={disabled}
+            hint={t("topicHint")}
+            inputMode="numeric"
+            key={kind}
+            label={t(`topics.${kind}`)}
+            name={`${kind}Topic`}
+            wrapperClassName="w-32"
+          />
+        ))}
+        <SelectField
+          defaultValue={chat?.post_locale ?? "ar"}
+          disabled={disabled}
+          label={t("postLocale")}
+          name="postLocale"
+          options={(["ar", "en"] as const).map((value) => ({
+            label: t(`postLocales.${value}`),
+            value,
+          }))}
+          wrapperClassName="w-32"
         />
         {disabled ? null : (
           <SubmitButton variant={chat ? "secondary" : "default"}>

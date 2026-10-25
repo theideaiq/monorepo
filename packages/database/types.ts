@@ -1972,29 +1972,41 @@ export type Database = {
       };
       telegram_chats: {
         Row: {
+          arrivals_topic: number | null;
           created_at: string;
+          events_topic: number | null;
           id: number;
           join_rule: string;
           join_tier: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated: boolean;
+          news_topic: number | null;
+          post_locale: string;
           title: string;
           username: string | null;
         };
         Insert: {
+          arrivals_topic?: number | null;
           created_at?: string;
+          events_topic?: number | null;
           id: number;
           join_rule?: string;
           join_tier?: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated?: boolean;
+          news_topic?: number | null;
+          post_locale?: string;
           title: string;
           username?: string | null;
         };
         Update: {
+          arrivals_topic?: number | null;
           created_at?: string;
+          events_topic?: number | null;
           id?: number;
           join_rule?: string;
           join_tier?: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated?: boolean;
+          news_topic?: number | null;
+          post_locale?: string;
           title?: string;
           username?: string | null;
         };
@@ -2072,6 +2084,30 @@ export type Database = {
           updated_at?: string;
           user_id?: string | null;
           username?: string | null;
+        };
+        Relationships: [];
+      };
+      telegram_posts: {
+        Row: {
+          created_at: string;
+          id: string;
+          kind: Database["public"]["Enums"]["telegram_post_kind"];
+          ref_id: string;
+          sent_at: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          kind: Database["public"]["Enums"]["telegram_post_kind"];
+          ref_id: string;
+          sent_at?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          kind?: Database["public"]["Enums"]["telegram_post_kind"];
+          ref_id?: string;
+          sent_at?: string | null;
         };
         Relationships: [];
       };
@@ -2391,6 +2427,14 @@ export type Database = {
           locale: string;
           telegram_id: number;
           user_id: string;
+        }[];
+      };
+      claim_telegram_posts: {
+        Args: { max_rows?: number };
+        Returns: {
+          id: string;
+          kind: Database["public"]["Enums"]["telegram_post_kind"];
+          ref_id: string;
         }[];
       };
       claim_whatsapp_notifications: {
@@ -2745,6 +2789,10 @@ export type Database = {
           verified_purchase: boolean;
         }[];
       };
+      queue_due_telegram_posts: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       record_affiliate_payout: {
         Args: { affiliate: string; reference?: string };
         Returns: {
@@ -2988,6 +3036,7 @@ export type Database = {
         | "past_due"
         | "canceled"
         | "expired";
+      telegram_post_kind: "news" | "events" | "arrivals";
       telegram_request_status: "open" | "resolved" | "rejected";
       telegram_request_type: "unban" | "support";
       ticket_priority: "low" | "normal" | "high" | "urgent";
@@ -3242,6 +3291,7 @@ export const Constants = {
         "canceled",
         "expired",
       ],
+      telegram_post_kind: ["news", "events", "arrivals"],
       telegram_request_status: ["open", "resolved", "rejected"],
       telegram_request_type: ["unban", "support"],
       ticket_priority: ["low", "normal", "high", "urgent"],
