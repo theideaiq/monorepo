@@ -1,4 +1,4 @@
-import { describeAttributes, localized } from "@repo/commerce";
+import { localized, variantName } from "@repo/commerce";
 import type { OrderStatus, Tables } from "@repo/database";
 import {
   Table,
@@ -249,7 +249,10 @@ const OrderPage = async ({ params }: OrderPageProps) => {
       .select("*, delivery_zone:delivery_zones (name_ar, name_en)")
       .eq("id", id)
       .maybeSingle(),
-    supabase.from("order_items").select("*").eq("order_id", id),
+    supabase
+      .from("order_items")
+      .select("*, variant:product_variants (label_ar, label_en)")
+      .eq("order_id", id),
     showPayments
       ? supabase
           .from("payments")
@@ -316,9 +319,20 @@ const OrderPage = async ({ params }: OrderPageProps) => {
                       ) : (
                         localized(item, "name", locale)
                       )}
-                      {describeAttributes(item.attributes) ? (
+                      {variantName(
+                        { ...item.variant, attributes: item.attributes },
+                        locale
+                      ) ? (
                         <span className="block text-muted-foreground text-xs">
-                          {describeAttributes(item.attributes)}
+                          {variantName(
+                            { ...item.variant, attributes: item.attributes },
+                            locale
+                          )}
+                        </span>
+                      ) : null}
+                      {item.condition && item.condition !== "new" ? (
+                        <span className="block text-muted-foreground text-xs">
+                          {tStore(`condition.${item.condition}`)}
                         </span>
                       ) : null}
                     </TableCell>

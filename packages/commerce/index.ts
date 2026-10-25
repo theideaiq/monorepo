@@ -97,6 +97,43 @@ export const variantName = (
     locale
   ) || describeAttributes(variant.attributes);
 
+/**
+ * A variant's key in a product page address (`?variant=vinyl`): its English
+ * label (else SKU, else id) in lower case with dashes.
+ */
+export const variantSlug = (variant: {
+  readonly id: string;
+  readonly label_en?: string | null;
+  readonly sku?: string | null;
+}) =>
+  (variant.label_en || variant.sku || variant.id)
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || variant.id;
+
+interface VariantPrice {
+  readonly active?: boolean;
+  readonly position?: number;
+  readonly price: number;
+}
+
+/** The variants customers can choose (hidden ones left out), in order. */
+export const liveVariants = <Variant extends VariantPrice>(
+  variants: readonly Variant[] | null | undefined
+) =>
+  (variants ?? [])
+    .filter((variant) => variant.active !== false)
+    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+
+/**
+ * Whether a product's live variants cost different amounts, so its price
+ * reads "From …" (the product's price is the cheapest).
+ */
+export const hasPriceRange = (
+  variants: readonly VariantPrice[] | null | undefined
+) => new Set(liveVariants(variants).map((variant) => variant.price)).size > 1;
+
 /** Iraq's governorates, for delivery addresses. */
 export const governorates = [
   { ar: "بغداد", en: "Baghdad", id: "baghdad" },

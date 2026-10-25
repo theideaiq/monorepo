@@ -1,7 +1,10 @@
+import { liveVariants } from "@repo/commerce";
+
 interface VariantLike {
   /** False for a hidden variant; missing counts as live. */
   active?: boolean;
   id: string;
+  position?: number;
   price: number;
   stock_count: number;
 }
@@ -10,11 +13,6 @@ interface ProductLike<Variant extends VariantLike> {
   price: number;
   product_variants: Variant[];
 }
-
-/** The variants customers can choose (hidden ones left out). */
-export const liveVariants = <Variant extends VariantLike>(
-  variants: readonly Variant[]
-) => variants.filter((variant) => variant.active !== false);
 
 /**
  * The chosen variant of a product with its price and stock, like

@@ -251,6 +251,16 @@
       "search": "بحث",
       "categories": "الأقسام",
       "allCategories": "الكل",
+      "formatsLabel": "الصيغ",
+      "allFormats": "كل الصيغ",
+      "formats": {
+        "CD": "قرص CD",
+        "Vinyl": "أسطوانة فينيل",
+        "Cassette": "كاسيت",
+        "CD+DVD": "CD + DVD",
+        "DVD": "DVD",
+        "Blu-ray": "Blu-ray"
+      },
       "sortLabel": "الترتيب حسب",
       "sort": {
         "newest": "الأحدث",
@@ -2575,8 +2585,11 @@
           "condition": "new أو used أو refurbished أو open_box.",
           "stock": "الكمية المتوفرة.",
           "status": "draft أو active أو archived. تبدأ المنتجات الجديدة مسودات ما لم يُحدَّد غير ذلك.",
-          "barcode": "يُحفظ في المواصفات باسم Barcode.",
-          "sku": "يُحفظ في المواصفات باسم SKU.",
+          "barcode": "في صف نسخة: الرمز الشريطي للنسخة؛ وإلا يُحفظ في المواصفات باسم Barcode.",
+          "sku": "في صف نسخة: رمز SKU للنسخة؛ وإلا يُحفظ في المواصفات باسم SKU.",
+          "variant_en": "اسم النسخة بالإنجليزية، مثل Vinyl. الصفوف التي تشترك في المعرّف ولكل منها نسخة مختلفة تصبح منتجًا واحدًا، ويكون سعر الصف ومخزونه ورمزه ورمزه الشريطي وصوره للنسخة.",
+          "variant_ar": "اسم النسخة بالعربية، مثل أسطوانة فينيل.",
+          "format": "صيغة النسخة لتصفية المتجر: CD أو Vinyl أو Cassette أو Blu-ray…",
           "description_en": "الوصف بالإنجليزية.",
           "description_ar": "الوصف بالعربية.",
           "image_urls": "روابط الصور تفصل بينها |، من Cover Art Archive أو Open Library أو Wikimedia، أو مسارات التخزين. تحل محل صور المنتج."
@@ -2628,6 +2641,10 @@
           "status": "الحالة",
           "barcode": "الباركود",
           "sku": "رمز SKU",
+          "variant_en": "النسخة",
+          "variant_ar": "اسم النسخة بالعربية",
+          "format": "الصيغة",
+          "variants": "النسخ",
           "description_en": "الوصف بالإنجليزية",
           "description_ar": "الوصف بالعربية",
           "image_urls": "الصور",
@@ -2637,6 +2654,7 @@
         "errors": {
           "compareAtNotHigher": "يجب أن يكون السعر قبل الخصم أعلى من السعر",
           "duplicateSlug": "المعرّف نفسه موجود في صف آخر",
+          "duplicateVariant": "صف آخر لهذا المنتج يسمّي النسخة نفسها",
           "invalidCompareAt": "ليس عددًا صحيحًا من الدنانير",
           "invalidCondition": "استخدم new أو used أو refurbished أو open_box",
           "invalidImage": "روابط Cover Art Archive أو Open Library أو Wikimedia أو مسارات التخزين فقط",
@@ -2649,6 +2667,7 @@
           "missingSlug": "أضف معرّفًا أو اسمًا بالإنجليزية",
           "tooLong": "طويل جدًا",
           "tooManyImages": "12 صورة على الأكثر",
+          "tooManyVariants": "50 نسخة على الأكثر لكل منتج",
           "unknownCategory": "لا توجد فئة بهذا المعرّف"
         },
         "errorLine": "{field}: {problem}",

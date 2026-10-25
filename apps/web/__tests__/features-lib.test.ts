@@ -246,21 +246,21 @@ describe("wishlist", () => {
       name_ar: "سماعة",
       name_en: "Headset",
       price: 50_000,
-      product_variants: [{ active: true, id: "v0" }],
       slug: "headset",
       status: "active",
       stock_count: 3,
+      variants: [{ active: true, id: "v0", price: 50_000 }],
       ...overrides,
-    }) as Parameters<typeof wishlistAction>[0];
+    }) as unknown as Parameters<typeof wishlistAction>[0];
 
   test("what a saved product can do", () => {
     expect(wishlistAction(product())).toBe("move");
     expect(
       wishlistAction(
         product({
-          product_variants: [
-            { active: true, id: "v1" },
-            { active: true, id: "v2" },
+          variants: [
+            { active: true, id: "v1", price: 50_000 },
+            { active: true, id: "v2", price: 60_000 },
           ],
         })
       )

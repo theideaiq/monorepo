@@ -1,6 +1,6 @@
 "use client";
 
-import { localized } from "@repo/commerce";
+import { hasPriceRange, localized } from "@repo/commerce";
 import type { ProductCard as ProductCardData } from "@repo/commerce/catalog";
 import { buttonVariants } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
@@ -12,6 +12,7 @@ import { ProductConditionBulb } from "./product-condition-bulb";
 import { ProductImage } from "./product-image";
 import { RatingSummary } from "./stars";
 import { StockBadge } from "./stock-badge";
+import { VariantChips } from "./variant-chips";
 import { WishlistButton } from "./wishlist-button";
 
 interface ProductCardProps {
@@ -25,8 +26,9 @@ export const productHref = (slug: string) =>
 
 /**
  * A catalog tile linking to the product page, with a wishlist heart: the
- * image on a sunken ground, a 2-line name, the price (with any saving), the condition bulb for used items, and a full-width
- * call to action (violet for rentals).
+ * image on a sunken ground, a 2-line name, the versions it comes in, the
+ * price ("from" across versions, with any saving), the condition bulb for
+ * used items, and a full-width call to action (violet for rentals).
  */
 export const ProductCard = ({ product, rating }: ProductCardProps) => {
   const locale = useLocale();
@@ -49,9 +51,11 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
             whether the name takes one line or two. */}
         <div className="grid flex-1 content-start gap-1 px-1">
           <span className="line-clamp-2 font-medium text-sm">{name}</span>
+          <VariantChips locale={locale} variants={product.variants} />
           <Price
             className="text-sm"
             compareAtPrice={product.compare_at_price}
+            from={hasPriceRange(product.variants)}
             price={product.price}
           />
           {rating ? <RatingSummary rating={rating} /> : null}

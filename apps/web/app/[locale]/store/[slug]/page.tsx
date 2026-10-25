@@ -1,4 +1,9 @@
-import { discountPercent, formatPrice, localized } from "@repo/commerce";
+import {
+  discountPercent,
+  formatPrice,
+  hasPriceRange,
+  localized,
+} from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
 import { localePath } from "@repo/internationalization";
@@ -99,6 +104,8 @@ const ProductPage = async ({ params }: ProductProps) => {
     .filter((url): url is string => Boolean(url));
   const discount = discountPercent(product.price, product.compare_at_price);
   const rental = product.kind === "rental";
+  // Several versions at different prices: the cheapest, as "From …".
+  const priceRange = hasPriceRange(product.product_variants);
   const specs = productSpecs(product.details);
   const pageUrl = new URL(localePath(locale, `/store/${slug}`), siteUrl()).href;
 
@@ -174,7 +181,11 @@ const ProductPage = async ({ params }: ProductProps) => {
             {rental ? null : (
               <p className="flex flex-wrap items-baseline gap-3">
                 <span className="font-bold text-2xl">
-                  {formatPrice(product.price, locale)}
+                  {priceRange
+                    ? store("price.from", {
+                        price: formatPrice(product.price, locale),
+                      })
+                    : formatPrice(product.price, locale)}
                 </span>
                 {discount > 0 && product.compare_at_price ? (
                   <>

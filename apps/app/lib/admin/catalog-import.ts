@@ -2,8 +2,14 @@
  * The spreadsheet import (back office → Catalog → Import): reads a CSV
  * export of the inventory sheet in the browser, validates every row,
  * compares it with the products already in the catalog and builds the
- * batches for `import_products` (migration 20261120000200). A blank cell
- * never overwrites a value; only the fields that differ are sent.
+ * batches for `import_products` (migrations 20261120000200 and
+ * 20261213000000). A blank cell never overwrites a value; only the fields
+ * that differ are sent.
+ *
+ * Variants: rows that share a slug and name a version (`variant_en`, with
+ * an optional `format`) become one product with a variant per row; on
+ * those rows price, compare-at price, stock, SKU, barcode and pictures are
+ * the variant's. The product's other fields come from its first row.
  */
 import { Constants, type Json, type Tables } from "@repo/database";
 import { isCatalogImage } from "./catalog-images";
@@ -28,6 +34,9 @@ export const IMPORT_COLUMNS = [
   "status",
   "barcode",
   "sku",
+  "variant_en",
+  "variant_ar",
+  "format",
   "description_en",
   "description_ar",
   "image_urls",
@@ -49,6 +58,8 @@ const COLUMN_ALIASES: Record<string, ImportColumn> = {
   quantity: "stock",
   stock_count: "stock",
   upc: "barcode",
+  variant: "variant_en",
+  version: "variant_en",
 };
 
 /** Columns written as `details.<Key>` (e.g. `details.Artist`) set that specification. */
@@ -64,8 +75,24 @@ const MAX_DESCRIPTION = 10_000;
 const MAX_SLUG = 120;
 const MAX_DETAIL = 500;
 const MAX_STOCK = 1_000_000;
+const MAX_VARIANT_LABEL = 60;
+/** Variants per product (the RPC accepts up to 50). */
+const MAX_VARIANTS = 50;
 /** Rows per `import_products` call (the RPC accepts up to 500). */
 export const IMPORT_BATCH_SIZE = 100;
+
+/** One version of a product, from a row naming one (`variant_en`). */
+export interface ImportVariant {
+  attributes?: Record<string, string>;
+  barcode?: string;
+  compare_at_price?: number;
+  images?: string[];
+  label_ar?: string;
+  label_en: string;
+  price?: number;
+  sku?: string;
+  stock_count?: number;
+}
 
 /** The product fields a sheet can set (the RPC's item shape, minus slug). */
 export interface ImportFields {
@@ -82,6 +109,8 @@ export interface ImportFields {
   price?: number;
   status?: ProductStatus;
   stock_count?: number;
+  /** Its versions, when its rows name them; upserted by English label. */
+  variants?: ImportVariant[];
 }
 
 export type ImportField = keyof ImportFields;
@@ -90,6 +119,7 @@ export type ImportField = keyof ImportFields;
 export type RowErrorCode =
   | "compareAtNotHigher"
   | "duplicateSlug"
+  | "duplicateVariant"
   | "invalidCompareAt"
   | "invalidCondition"
   | "invalidImage"
@@ -102,6 +132,7 @@ export type RowErrorCode =
   | "missingSlug"
   | "tooLong"
   | "tooManyImages"
+  | "tooManyVariants"
   | "unknownCategory";
 
 export interface RowError {
@@ -116,6 +147,8 @@ export interface ParsedRow {
   /** Line in the file (the header is line 1). */
   line: number;
   slug: string;
+  /** The version this row is, when it names one. */
+  variant?: ImportVariant;
 }
 
 export type SheetProblem = "empty" | "noNameOrSlug";
@@ -260,29 +293,57 @@ export const parseCsv = (input: string): string[][] => {
 const csvCell = (value: string) =>
   CSV_SPECIAL.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
 
-/** The downloadable template: the header and one example row. */
+const TEMPLATE_ROWS = [
+  [
+    "adele-25",
+    "Adele – 25",
+    "أديل – 25",
+    "sale",
+    "vinyl",
+    "69750",
+    "",
+    "new",
+    "1",
+    "draft",
+    "0889853086813",
+    "VIN-0001",
+    "Vinyl",
+    "أسطوانة فينيل",
+    "Vinyl",
+    "25 by Adele, first released in 2015.",
+    "ألبوم 25 من Adele، صدر أول مرة عام 2015.",
+    "https://coverartarchive.org/release-group/5537624c-3d2f-4f5c-8099-df916082c85c/front-500",
+  ],
+  [
+    "adele-25",
+    "",
+    "",
+    "",
+    "",
+    "29750",
+    "",
+    "new",
+    "2",
+    "",
+    "",
+    "CD-0001",
+    "CD",
+    "قرص CD",
+    "CD",
+    "",
+    "",
+    "",
+  ],
+];
+
+/**
+ * The downloadable template: the header and an album in two versions (one
+ * row each, sharing the slug).
+ */
 export const templateCsv = () =>
-  `﻿${[
+  `\uFEFF${[
     IMPORT_COLUMNS.join(","),
-    [
-      "",
-      "Adele – 25 (Vinyl)",
-      "أديل – 25 (أسطوانة فينيل)",
-      "sale",
-      "vinyl",
-      "69750",
-      "",
-      "new",
-      "1",
-      "draft",
-      "0889853086813",
-      "VIN-0001",
-      "25 by Adele, first released in 2015, on vinyl.",
-      "ألبوم 25 من Adele، صدر أول مرة عام 2015، على أسطوانة فينيل.",
-      "https://coverartarchive.org/release-group/5537624c-3d2f-4f5c-8099-df916082c85c/front-500",
-    ]
-      .map(csvCell)
-      .join(","),
+    ...TEMPLATE_ROWS.map((row) => row.map(csvCell).join(",")),
   ].join("\r\n")}\r\n`;
 
 // ── Cells ───────────────────────────────────────────────────────────────────
@@ -494,13 +555,16 @@ const parseSpecs = (
   cell: Cell,
   details: Record<string, string>,
   fields: ImportFields,
-  errors: RowError[]
+  errors: RowError[],
+  /** A variant row keeps its barcode and SKU on the variant. */
+  variantRow: boolean
 ) => {
   const specs: Record<string, string> = {};
   for (const [key, value] of Object.entries({
     ...details,
-    [BARCODE_DETAIL]: cell("barcode"),
-    [SKU_DETAIL]: cell("sku"),
+    ...(variantRow
+      ? {}
+      : { [BARCODE_DETAIL]: cell("barcode"), [SKU_DETAIL]: cell("sku") }),
   })) {
     const trimmed = value.trim();
     if (!trimmed) {
@@ -515,6 +579,52 @@ const parseSpecs = (
   if (Object.keys(specs).length > 0) {
     fields.details = specs;
   }
+};
+
+/**
+ * A row naming a version (`variant_en`): its label, format, price, stock,
+ * SKU, barcode and pictures become the variant's, taken off the product.
+ */
+const parseVariant = (
+  cell: Cell,
+  fields: ImportFields,
+  errors: RowError[]
+): ImportVariant | undefined => {
+  const labelEn = cell("variant_en");
+  if (!labelEn) {
+    return undefined;
+  }
+  const labelAr = cell("variant_ar");
+  if (
+    labelEn.length > MAX_VARIANT_LABEL ||
+    labelAr.length > MAX_VARIANT_LABEL
+  ) {
+    errors.push({ code: "tooLong", column: "variant_en" });
+  }
+  const variant: ImportVariant = { label_en: labelEn };
+  if (labelAr) {
+    variant.label_ar = labelAr;
+  }
+  if (cell("format")) {
+    variant.attributes = { Format: cell("format") };
+  }
+  for (const key of ["barcode", "sku"] as const) {
+    if (cell(key)) {
+      variant[key] = cell(key);
+    }
+  }
+  for (const key of [
+    "price",
+    "compare_at_price",
+    "stock_count",
+    "images",
+  ] as const) {
+    if (fields[key] !== undefined) {
+      (variant as unknown as Record<string, unknown>)[key] = fields[key];
+      delete fields[key];
+    }
+  }
+  return variant;
 };
 
 /** Validates one row's cells (by column) into fields and errors. */
@@ -537,9 +647,12 @@ export const parseRow = (
   parseChoices(cell, fields, errors, categories);
   parseNumbers(cell, fields, errors);
   parseImages(cell, fields, errors);
-  parseSpecs(cell, details, fields, errors);
+  const variant = parseVariant(cell, fields, errors);
+  parseSpecs(cell, details, fields, errors, variant !== undefined);
 
-  return { errors, fields, line, slug };
+  return variant
+    ? { errors, fields, line, slug, variant }
+    : { errors, fields, line, slug };
 };
 
 /** Reads a whole CSV export into validated rows. */
@@ -577,24 +690,71 @@ export const parseSheet = (
     rows.push(parseRow(byColumn, details, index + 2, categories));
   });
 
-  const counts = new Map<string, number>();
-  for (const row of rows) {
-    if (row.slug) {
-      counts.set(row.slug, (counts.get(row.slug) ?? 0) + 1);
-    }
-  }
-  for (const row of rows) {
-    if ((counts.get(row.slug) ?? 0) > 1) {
-      row.errors.push({ code: "duplicateSlug", column: "slug" });
-    }
-  }
-
+  const grouped = groupVariants(rows);
   return {
-    problem: rows.length === 0 ? "empty" : undefined,
-    rows,
+    problem: grouped.length === 0 ? "empty" : undefined,
+    rows: grouped,
     unknownColumns: map.unknown,
   };
 };
+
+/** Rows by slug, in sheet order (rows without a slug stay on their own). */
+const rowsBySlug = (rows: readonly ParsedRow[]) => {
+  const groups = new Map<string, ParsedRow[]>();
+  for (const row of rows) {
+    const key = row.slug || `#${row.line}`;
+    groups.set(key, [...(groups.get(key) ?? []), row]);
+  }
+  return [...groups.values()];
+};
+
+/** Why a group of rows can't be one product, if it can't. */
+const groupProblem = (group: readonly ParsedRow[]): RowErrorCode | null => {
+  if (group.length < 2) {
+    return null;
+  }
+  const labels = group.map((row) => row.variant?.label_en.toLowerCase());
+  if (labels.some((label) => label === undefined)) {
+    return "duplicateSlug";
+  }
+  return new Set(labels).size < labels.length ? "duplicateVariant" : null;
+};
+
+/** One product from its version rows: the first row's fields, then any the others add. */
+const mergeVersions = (group: readonly ParsedRow[]): ParsedRow => {
+  const [first] = group as [ParsedRow, ...ParsedRow[]];
+  const fields: ImportFields = {};
+  for (const row of group) {
+    for (const [key, value] of Object.entries(row.fields)) {
+      (fields as Record<string, unknown>)[key] ??= value;
+    }
+  }
+  fields.variants = group.flatMap((row) => (row.variant ? [row.variant] : []));
+  const errors = group.flatMap((row) => row.errors);
+  if (fields.variants.length > MAX_VARIANTS) {
+    errors.push({ code: "tooManyVariants", column: "variant_en" });
+  }
+  return { errors, fields, line: first.line, slug: first.slug };
+};
+
+/**
+ * Merges rows that share a slug into one product when every one names a
+ * different version; any other repeated slug is an error on each row.
+ */
+export const groupVariants = (rows: readonly ParsedRow[]): ParsedRow[] =>
+  rowsBySlug(rows).flatMap((group) => {
+    const problem = groupProblem(group);
+    if (problem) {
+      for (const row of group) {
+        row.errors.push({
+          code: problem,
+          column: problem === "duplicateSlug" ? "slug" : "variant_en",
+        });
+      }
+      return group;
+    }
+    return group[0]?.variant ? [mergeVersions(group)] : group;
+  });
 
 // ── Diff ────────────────────────────────────────────────────────────────────
 
@@ -624,10 +784,26 @@ const mergedErrors = (
 ): RowError[] => {
   const errors: RowError[] = [];
   if (!existing) {
-    for (const field of ["name_en", "name_ar", "price"] as const) {
+    for (const field of ["name_en", "name_ar"] as const) {
       if (fields[field] === undefined) {
         errors.push({ code: "missingForNew", column: field });
       }
+    }
+    // A new product's price is its own, or each new version's.
+    const priced = fields.variants
+      ? fields.variants.every((variant) => variant.price !== undefined)
+      : fields.price !== undefined;
+    if (!priced) {
+      errors.push({ code: "missingForNew", column: "price" });
+    }
+  }
+  for (const variant of fields.variants ?? []) {
+    if (
+      variant.compare_at_price !== undefined &&
+      variant.price !== undefined &&
+      variant.compare_at_price <= variant.price
+    ) {
+      errors.push({ code: "compareAtNotHigher", column: "compare_at_price" });
     }
   }
   const price = fields.price ?? existing?.price;
@@ -677,6 +853,11 @@ const changes = (
   if (differing.length > 0) {
     changed.push("details");
     item.details = Object.fromEntries(differing);
+  }
+  // Versions are upserted by label (the database keeps what's unchanged).
+  if (fields.variants) {
+    changed.push("variants");
+    item.variants = fields.variants;
   }
   return { changed, item };
 };

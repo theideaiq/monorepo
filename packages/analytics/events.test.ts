@@ -96,3 +96,15 @@ describe("consent", () => {
     });
   });
 });
+
+describe("variants", () => {
+  it("sends the chosen version to GA4 as item_variant", () => {
+    expect(
+      toGa4(
+        "add_to_cart",
+        { items: [{ id: "p1", quantity: 1, variant: "Vinyl" }] },
+        "IQD"
+      ).params.items
+    ).toEqual([{ item_id: "p1", item_variant: "Vinyl", quantity: 1 }]);
+  });
+});

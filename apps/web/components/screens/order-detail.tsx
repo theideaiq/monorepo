@@ -2,11 +2,11 @@
 
 import { formatPhone } from "@repo/auth/phone";
 import {
-  describeAttributes,
   type Fulfilment,
   formatPrice,
   localized,
   type PaymentMethod,
+  variantName,
 } from "@repo/commerce";
 import {
   AlertDialog,
@@ -351,9 +351,15 @@ const OrderView = ({
                 >
                   <span className="grid min-w-0 gap-0.5">
                     <span>{localized(item, "name", locale)}</span>
-                    {describeAttributes(item.attributes) ? (
+                    {variantName(
+                      { ...item.variant, attributes: item.attributes },
+                      locale
+                    ) ? (
                       <span className="text-muted-foreground text-xs">
-                        {describeAttributes(item.attributes)}
+                        {variantName(
+                          { ...item.variant, attributes: item.attributes },
+                          locale
+                        )}
                       </span>
                     ) : null}
                     {item.condition && item.condition !== "new" ? (

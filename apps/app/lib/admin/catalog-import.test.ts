@@ -81,9 +81,83 @@ describe("cells", () => {
   test("the template has every column and parses cleanly", () => {
     const parsed = parseSheet(templateCsv(), categorySlugs);
     expect(parseCsv(templateCsv())[0]).toEqual([...IMPORT_COLUMNS]);
+    // One album in two versions: one product with two variants.
     expect(parsed.rows).toHaveLength(1);
     expect(parsed.rows[0]?.errors).toEqual([]);
-    expect(parsed.rows[0]?.slug).toBe("adele-25-vinyl");
+    expect(parsed.rows[0]?.slug).toBe("adele-25");
+    expect(
+      parsed.rows[0]?.fields.variants?.map((variant) => variant.label_en)
+    ).toEqual(["Vinyl", "CD"]);
+  });
+});
+
+describe("variants", () => {
+  const header =
+    "slug,name_en,name_ar,price,stock,barcode,sku,variant_en,variant_ar,format";
+
+  test("rows sharing a slug, each a version, become one product", () => {
+    const { rows } = parseSheet(
+      sheet(
+        header,
+        "adele-21,Adele – 21,أديل – 21,69750,1,0602527000000,LP-1,Vinyl,أسطوانة فينيل,Vinyl",
+        "adele-21,,,39750,2,,CD-1,CD,قرص CD,CD"
+      ),
+      categorySlugs
+    );
+    expect(rows).toHaveLength(1);
+    const [row] = rows;
+    expect(row?.errors).toEqual([]);
+    expect(row?.fields.price).toBeUndefined();
+    expect(row?.fields.details).toBeUndefined();
+    expect(row?.fields.variants).toEqual([
+      {
+        attributes: { Format: "Vinyl" },
+        barcode: "0602527000000",
+        label_ar: "أسطوانة فينيل",
+        label_en: "Vinyl",
+        price: 69_750,
+        sku: "LP-1",
+        stock_count: 1,
+      },
+      {
+        attributes: { Format: "CD" },
+        label_ar: "قرص CD",
+        label_en: "CD",
+        price: 39_750,
+        sku: "CD-1",
+        stock_count: 2,
+      },
+    ]);
+    const [preview] = buildPreview(rows, [], []);
+    expect(preview?.status).toBe("new");
+  });
+
+  test("a repeated slug without versions, or the same version twice, is an error", () => {
+    const repeated = parseSheet(
+      sheet(header, "a,A,أ,1,1,,,,,", "a,A,أ,1,1,,,,,"),
+      categorySlugs
+    );
+    expect(repeated.rows.map((row) => row.errors[0]?.code)).toEqual([
+      "duplicateSlug",
+      "duplicateSlug",
+    ]);
+    const twice = parseSheet(
+      sheet(header, "a,A,أ,1,1,,,CD,,", "a,,,2,1,,,cd,,"),
+      categorySlugs
+    );
+    expect(twice.rows.map((row) => row.errors[0]?.code)).toEqual([
+      "duplicateVariant",
+      "duplicateVariant",
+    ]);
+  });
+
+  test("a new product with versions needs every version priced", () => {
+    const { rows } = parseSheet(
+      sheet(header, "b,B,ب,,1,,,CD,,", "b,,,10,1,,,Vinyl,,"),
+      categorySlugs
+    );
+    const [preview] = buildPreview(rows, [], []);
+    expect(preview?.status).toBe("error");
   });
 });
 

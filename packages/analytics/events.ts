@@ -11,6 +11,8 @@ export interface AnalyticsItem {
   /** Unit price, in the event currency. */
   price?: number;
   quantity?: number;
+  /** The version chosen (a format, platform or colour), when there is one. */
+  variant?: string;
 }
 
 interface Commerce {
@@ -121,6 +123,7 @@ export const toGa4 = <E extends AnalyticsEvent>(
           item_category: item.category,
           item_id: item.id,
           item_name: item.name,
+          item_variant: item.variant,
           price: item.price,
           quantity: item.quantity,
         })
