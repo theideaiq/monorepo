@@ -1,6 +1,6 @@
 import { safeReturnTo } from "@repo/auth/pass";
 import { localePath } from "@repo/internationalization";
-import { safeNextPath } from "@/lib/app-navigation";
+import { safeNextPath } from "@repo/internationalization/app-paths";
 
 /**
  * Where to go after signing out: `return_to` when it is a path on this site

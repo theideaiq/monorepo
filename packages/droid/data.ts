@@ -43,6 +43,18 @@ export type OrderSummary = Pick<
   "created_at" | "id" | "number" | "status" | "total"
 >;
 
+/** Whether a join request passes the chat's rule (`telegram_join_check`). */
+export interface JoinCheck {
+  allowed: boolean;
+  /** Whether the Telegram account is linked to The IDEA Pass. */
+  linked: boolean;
+  /** The tier a `tier` room needs. */
+  needed: BulbTier | null;
+  rule: string;
+}
+
+export type BulbTier = "beam" | "blaze" | "glow" | "shine";
+
 /** A member's Bulbs: usable now, and still in the return window. */
 export interface BulbBalance {
   available: number;
@@ -61,6 +73,8 @@ export interface DroidData {
   /** The IDEA Pass member a Telegram account is linked to, if any. */
   getLinkedUser: (memberId: number) => Promise<string | null>;
   getMember: (id: number) => Promise<TelegramMember | null>;
+  /** The chat's join rule applied to a Telegram account; null if unknown. */
+  joinCheck: (chatId: number, memberId: number) => Promise<JoinCheck | null>;
   listFaq: (topic?: FaqTopic) => Promise<FaqEntry[]>;
   /** Members who opted into the newsletter and aren't banned. */
   listNewsletterMembers: (
@@ -185,6 +199,23 @@ export const createSupabaseData = (
       .maybeSingle();
     check({ error });
     return data;
+  },
+
+  async joinCheck(chatId, memberId) {
+    const { data, error } = await supabase.rpc("telegram_join_check", {
+      chat: chatId,
+      member: memberId,
+    });
+    check({ error });
+    const row = data?.[0];
+    return row
+      ? {
+          allowed: row.allowed,
+          linked: row.linked,
+          needed: row.needed,
+          rule: row.rule,
+        }
+      : null;
   },
 
   async listFaq(topic) {

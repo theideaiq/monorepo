@@ -1,7 +1,7 @@
 import type { Database } from "@repo/database";
+import { safeNextPath } from "@repo/internationalization/app-paths";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { callApi } from "../api";
-import { safeNextPath } from "../app-navigation";
 import { detectPlatform } from "../platform";
 
 /**

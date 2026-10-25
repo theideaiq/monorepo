@@ -4,9 +4,12 @@ import { useAuth } from "@repo/auth/provider";
 import { formatPrice } from "@repo/commerce";
 import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
+import {
+  currentAppPath,
+  safeNextPath,
+} from "@repo/internationalization/app-paths";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { currentAppPath, safeNextPath } from "./app-navigation";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /**

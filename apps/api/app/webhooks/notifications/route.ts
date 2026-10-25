@@ -7,6 +7,8 @@ import { env } from "@/env";
 import { getPushSender } from "@/lib/push";
 import { deliverPushNotifications } from "@/lib/push/deliver";
 import { hasBearerSecret } from "@/lib/push/secret";
+import { getDroid } from "@/lib/telegram";
+import { deliverTelegramNotifications } from "@/lib/telegram-notify";
 import { getWhatsAppSender, whatsappFallbackLanguage } from "@/lib/whatsapp";
 import { deliverWhatsAppNotifications } from "@/lib/whatsapp/deliver";
 
@@ -18,8 +20,9 @@ const payloadSchema = z.object({
 });
 
 /**
- * Pushes a new notification to the recipient's phones and, for the events
- * with a WhatsApp template, sends it on WhatsApp to customers who opted in.
+ * Pushes a new notification to the recipient's phones, sends it on Telegram
+ * to members who linked it and, for the events with a WhatsApp template,
+ * on WhatsApp to customers who opted in.
  * Called by a Supabase Database Webhook on inserts into `notifications`,
  * with `Authorization: Bearer <PUSH_WEBHOOK_SECRET>`. Only the row id is
  * taken from the payload; the row itself is read (and claimed) from the
@@ -39,19 +42,23 @@ export const POST = async (request: Request): Promise<Response> => {
 
   const pushSender = getPushSender();
   const whatsappSender = getWhatsAppSender();
-  if (!(pushSender || whatsappSender)) {
+  const droid = getDroid();
+  if (!(pushSender || whatsappSender || droid)) {
     return NextResponse.json({ ok: true, skipped: "push_not_configured" });
   }
 
   const ids = [payload.data.record.id];
   const admin = createAdminClient();
-  const [push, whatsapp] = await Promise.allSettled([
+  const [push, whatsapp, telegram] = await Promise.allSettled([
     pushSender ? deliverPushNotifications(admin, pushSender, ids) : null,
     whatsappSender
       ? deliverWhatsAppNotifications(admin, whatsappSender, {
           fallbackLanguage: whatsappFallbackLanguage(),
           ids,
         })
+      : null,
+    droid
+      ? droid.then((bot) => deliverTelegramNotifications(admin, bot, ids))
       : null,
   ]);
 
@@ -61,7 +68,14 @@ export const POST = async (request: Request): Promise<Response> => {
   if (whatsapp.status === "rejected") {
     log.error(`WhatsApp webhook failed: ${parseError(whatsapp.reason)}`);
   }
-  if (push.status === "rejected" || whatsapp.status === "rejected") {
+  if (telegram.status === "rejected") {
+    log.error(`Telegram notifications failed: ${parseError(telegram.reason)}`);
+  }
+  if (
+    push.status === "rejected" ||
+    whatsapp.status === "rejected" ||
+    telegram.status === "rejected"
+  ) {
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 
@@ -69,5 +83,6 @@ export const POST = async (request: Request): Promise<Response> => {
     ok: true,
     ...(push.value ?? { skipped: "push_not_configured" }),
     ...(whatsapp.value ? { whatsapp: whatsapp.value } : {}),
+    ...(telegram.value ? { telegram: telegram.value } : {}),
   });
 };

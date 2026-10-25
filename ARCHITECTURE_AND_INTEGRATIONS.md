@@ -351,6 +351,16 @@ session in the shared cookie.
   bans, unban requests) and the AI assistant were removed in favour of
   Telegram's own tools. `bun run --cwd apps/api telegram:setup` sets the
   webhook, its update types and the command lists.
+  **The Club's join rules** (migration `20261203000000_telegram_club.sql`):
+  each chat in Back office → Telegram → Chats has `join_rule` (anyone,
+  members with a linked The IDEA Pass, or a Bulbs tier and up). For chats
+  whose invite link asks to approve new members, Droid approves join
+  requests that pass `telegram_join_check()` and declines the rest with a
+  message saying how to qualify (connect Telegram, or reach the tier).
+  **Order updates on Telegram:** the notifications webhook and the push
+  catch-up cron also send each notification as a Droid message (its title,
+  a generic line and a button to the page on the website) to members who
+  linked Telegram, claimed once with `claim_telegram_notifications()`.
 - **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
   Google Wallet" link for a generic pass whose QR code rotates in Google
   Wallet with the same secret (`rotatingBarcode.totpDetails`), so both
