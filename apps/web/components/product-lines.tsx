@@ -33,7 +33,7 @@ export const ProductLines = async ({ locale }: { readonly locale: Locale }) => {
           <Icon aria-hidden="true" className="size-8 text-pink-text" />
           <h3 className="font-semibold text-lg">{t(`store.lines.${id}`)}</h3>
           <p className="flex-1 text-muted-foreground text-sm leading-relaxed">
-            {t(`web.home.lines.${id}`)}
+            {t(`web.about.lines.${id}`)}
           </p>
           <span className="inline-flex items-center gap-1 font-medium text-pink-text text-sm">
             {t("web.ui.learnMore")}

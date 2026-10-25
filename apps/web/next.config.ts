@@ -98,6 +98,12 @@ nextConfig.redirects = async () => [
     permanent: true,
     source: "/megastore",
   }),
+  // The company pages live under /about.
+  ...everyLanguage({
+    destination: "/about/:page",
+    permanent: true,
+    source: "/:page(careers|contact|faq)",
+  }),
   // The Droid's page became a section of the Club's.
   ...everyLanguage({
     destination: "/club#droid",

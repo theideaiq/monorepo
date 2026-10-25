@@ -15,7 +15,7 @@ interface CareersProps {
 type Steps = Messages["web"]["careers"]["apply"]["steps"];
 type Areas = Messages["web"]["careers"]["areas"]["items"];
 
-export const generateMetadata = staticPageMetadata("careers", "/careers");
+export const generateMetadata = staticPageMetadata("careers", "/about/careers");
 
 const Careers = async ({ params }: CareersProps) => {
   const { locale } = await params;

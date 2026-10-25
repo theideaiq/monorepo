@@ -25,7 +25,7 @@ export const LearnPrograms = async ({
   const programs = t.raw("programs.items") as Programs;
   const register = (
     <Button asChild size="lg" variant="brand">
-      <Link href="/contact?topic=academy">{t("cta.button")}</Link>
+      <Link href="/about/contact?topic=academy">{t("cta.button")}</Link>
     </Button>
   );
 

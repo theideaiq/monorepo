@@ -5,7 +5,9 @@ import type { MetadataRoute } from "next";
 export const staticPaths = [
   "",
   "/store",
+  "/rent",
   "/plus",
+  "/discover",
   "/suite",
   "/club",
   "/post",
@@ -15,9 +17,9 @@ export const staticPaths = [
   "/post/learn",
   "/events",
   "/about",
-  "/careers",
-  "/faq",
-  "/contact",
+  "/about/careers",
+  "/about/faq",
+  "/about/contact",
 ] as const;
 
 export interface SitemapPage {

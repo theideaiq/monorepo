@@ -138,6 +138,22 @@ export const getRentals = (limit = 8) =>
     );
   });
 
+/** The plan tier each of these rental items needs, keyed by product id. */
+export const getRentalTiers = (productIds: string[]) =>
+  fallback("rentalTiers", {} as Record<string, number | null>, async () => {
+    const supabase = productIds.length > 0 ? createPublicClient() : null;
+    if (!supabase) {
+      return {};
+    }
+    const tiers = rows(
+      await supabase
+        .from("products")
+        .select("id, rental_tier")
+        .in("id", productIds)
+    );
+    return Object.fromEntries(tiers.map((row) => [row.id, row.rental_tier]));
+  });
+
 // ── Reviews ─────────────────────────────────────────────────────────────────
 
 /**

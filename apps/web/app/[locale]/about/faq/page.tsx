@@ -21,7 +21,7 @@ interface FaqProps {
 
 type Groups = Messages["web"]["faq"]["groups"];
 
-export const generateMetadata = staticPageMetadata("faq", "/faq");
+export const generateMetadata = staticPageMetadata("faq", "/about/faq");
 
 const Faq = async ({ params }: FaqProps) => {
   const { locale } = await params;
@@ -46,7 +46,7 @@ const Faq = async ({ params }: FaqProps) => {
       />
       <PageHero subtitle={t("description")} title={t("title")}>
         <Button asChild variant="outline">
-          <Link href="/contact">{t("contact")}</Link>
+          <Link href="/about/contact">{t("contact")}</Link>
         </Button>
       </PageHero>
       <Section className="max-w-3xl">

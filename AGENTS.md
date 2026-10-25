@@ -11,9 +11,12 @@ incidents) is in `docs/platform`.
 - `apps/web` — **theideaiq.com**, everything customers see (Next.js, i18n
   routes under `app/[locale]`), with a `proxy.ts` (locale, session refresh,
   security headers) and the cookie session (`@repo/auth/server`):
-  - the public pages: store catalog and product pages (buying, reviews),
-    Plus, Suite, Club, The IDEA Post (`/post`), events (RSVP), legal pages
-    (Markdown in `apps/web/content/legal`);
+  - the public pages: Home is the storefront (search, categories, featured
+    and new products) and `/rent` its rental side, with `/store` the full
+    catalog and product pages (buying, reviews); `/discover` (Club, events,
+    The IDEA Post), Plus, Suite, Club, The IDEA Post (`/post`), events
+    (RSVP); the company's pages under `/about` (careers, FAQ, contact) and
+    legal pages (Markdown in `apps/web/content/legal`);
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in`,
     `/sign-up`, `/mfa`, `/sign-out`, the only sign-in UI on the web. A
     person's membership *is* The IDEA Pass; never show the word "account".
