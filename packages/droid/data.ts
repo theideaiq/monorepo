@@ -37,29 +37,38 @@ export type FaqEntry = Pick<
 
 export type FaqTopic = "academy" | "general" | "plus" | "store" | "suite";
 
+/** One of a member's orders, for "Track my order". */
+export type OrderSummary = Pick<
+  Tables<"orders">,
+  "created_at" | "id" | "number" | "status" | "total"
+>;
+
+/** A member's Bulbs: usable now, and still in the return window. */
+export interface BulbBalance {
+  available: number;
+  pending: number;
+}
+
 export interface DroidData {
-  createRequest: (
-    memberId: number,
-    type: "support" | "unban",
-    message: string
-  ) => Promise<void>;
-  /** Latest-first lookup by @username (case-insensitive, without "@"). */
-  findMemberByUsername: (username: string) => Promise<TelegramMember | null>;
+  /** A support request from someone who hasn't linked The IDEA Pass. */
+  createRequest: (memberId: number, message: string) => Promise<void>;
+  /** A support ticket for a member (My Pass → Support); its number. */
+  createTicket: (userId: string, message: string) => Promise<number>;
+  getBulbs: (userId: string) => Promise<BulbBalance>;
   /** The chat, or null when the bot never registered it. */
   getChat: (chatId: number) => Promise<TelegramChat | null>;
   getFaq: (id: string) => Promise<FaqEntry | null>;
+  /** The IDEA Pass member a Telegram account is linked to, if any. */
+  getLinkedUser: (memberId: number) => Promise<string | null>;
   getMember: (id: number) => Promise<TelegramMember | null>;
-  hasOpenRequest: (
-    memberId: number,
-    type: "support" | "unban"
-  ) => Promise<boolean>;
   listFaq: (topic?: FaqTopic) => Promise<FaqEntry[]>;
-  listModeratedChats: () => Promise<TelegramChat[]>;
   /** Members who opted into the newsletter and aren't banned. */
   listNewsletterMembers: (
     offset: number,
     limit: number
   ) => Promise<Pick<TelegramMember, "id" | "language_code">[]>;
+  /** A member's latest orders, newest first. */
+  listOrders: (userId: string, limit: number) => Promise<OrderSummary[]>;
   /** Registers a chat (new chats are moderated) or refreshes its title. */
   saveChat: (chat: Omit<TelegramChat, "moderated">) => Promise<void>;
   searchProducts: (query: string, limit: number) => Promise<ProductCard[]>;
@@ -73,8 +82,6 @@ export interface DroidData {
   upsertMember: (member: MemberProfile) => Promise<void>;
 }
 
-const LIKE_WILDCARDS = /[%_\\]/g;
-
 const check = ({ error }: { error: { message: string } | null }) => {
   if (error) {
     throw new Error(error.message);
@@ -87,24 +94,57 @@ const MEMBER_COLUMNS =
 export const createSupabaseData = (
   supabase: SupabaseClient<Database>
 ): DroidData => ({
-  async createRequest(memberId, type, message) {
+  async createRequest(memberId, message) {
     check(
       await supabase
         .from("telegram_requests")
-        .insert({ member_id: memberId, message, type })
+        .insert({ member_id: memberId, message, type: "support" })
     );
   },
 
-  async findMemberByUsername(username) {
-    const { data, error } = await supabase
-      .from("telegram_members")
-      .select(MEMBER_COLUMNS)
-      .ilike("username", username.replace(LIKE_WILDCARDS, "\\$&"))
-      .order("updated_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+  async createTicket(userId, message) {
+    const { data: ticket, error } = await supabase
+      .from("support_tickets")
+      .insert({
+        subject: message.split("\n")[0]?.slice(0, 80) || "Telegram",
+        user_id: userId,
+      })
+      .select("id, number")
+      .single();
     check({ error });
-    return data;
+    if (!ticket) {
+      throw new Error("The support ticket wasn't created");
+    }
+    check(
+      await supabase
+        .from("support_messages")
+        .insert({ author_id: userId, body: message, ticket_id: ticket.id })
+    );
+    return ticket.number;
+  },
+
+  async getBulbs(userId) {
+    const { data, error } = await supabase
+      .from("bulb_entries")
+      .select("amount, status, available_at")
+      .eq("user_id", userId)
+      .neq("status", "void");
+    check({ error });
+    const now = Date.now();
+    let available = 0;
+    let pending = 0;
+    for (const entry of data ?? []) {
+      if (
+        entry.status === "pending" &&
+        new Date(entry.available_at).getTime() > now
+      ) {
+        pending += entry.amount;
+      } else {
+        // Spent, expired and available entries (expiry is a negative entry).
+        available += entry.amount;
+      }
+    }
+    return { available: Math.max(0, available), pending };
   },
 
   async getChat(chatId) {
@@ -127,6 +167,16 @@ export const createSupabaseData = (
     return data;
   },
 
+  async getLinkedUser(memberId) {
+    const { data, error } = await supabase
+      .from("telegram_members")
+      .select("user_id")
+      .eq("id", memberId)
+      .maybeSingle();
+    check({ error });
+    return data?.user_id ?? null;
+  },
+
   async getMember(id) {
     const { data, error } = await supabase
       .from("telegram_members")
@@ -135,17 +185,6 @@ export const createSupabaseData = (
       .maybeSingle();
     check({ error });
     return data;
-  },
-
-  async hasOpenRequest(memberId, type) {
-    const { count, error } = await supabase
-      .from("telegram_requests")
-      .select("id", { count: "exact", head: true })
-      .eq("member_id", memberId)
-      .eq("type", type)
-      .eq("status", "open");
-    check({ error });
-    return (count ?? 0) > 0;
   },
 
   async listFaq(topic) {
@@ -162,15 +201,6 @@ export const createSupabaseData = (
     return data ?? [];
   },
 
-  async listModeratedChats() {
-    const { data, error } = await supabase
-      .from("telegram_chats")
-      .select("id, title, username, moderated")
-      .eq("moderated", true);
-    check({ error });
-    return data ?? [];
-  },
-
   async listNewsletterMembers(offset, limit) {
     const { data, error } = await supabase
       .from("telegram_members")
@@ -179,6 +209,17 @@ export const createSupabaseData = (
       .is("banned_at", null)
       .order("id")
       .range(offset, offset + limit - 1);
+    check({ error });
+    return data ?? [];
+  },
+
+  async listOrders(userId, limit) {
+    const { data, error } = await supabase
+      .from("orders")
+      .select("id, number, status, total, created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(limit);
     check({ error });
     return data ?? [];
   },

@@ -38,7 +38,6 @@ export const saveChat = staffAction(
   z.object({
     id: z.string().trim().regex(CHAT_ID),
     isNew: checkbox,
-    moderated: checkbox,
     title: text(200),
     username: optionalText(64).transform((value) =>
       value ? value.replace(AT_PREFIX, "") : null
@@ -46,7 +45,6 @@ export const saveChat = staffAction(
   }),
   async ({ input, supabase }) => {
     const row = {
-      moderated: input.moderated,
       title: input.title,
       username: input.username,
     };

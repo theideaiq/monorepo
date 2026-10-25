@@ -27,7 +27,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const statuses = ["open", "resolved", "rejected"] as const;
 
-/** Unban requests and other messages members sent to the bot. */
+/** Support requests people sent to the bot (and older unban requests). */
 const RequestsPage = async ({
   searchParams,
 }: {

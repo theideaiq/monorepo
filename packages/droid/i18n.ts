@@ -10,15 +10,13 @@ export const localeOf = (languageCode: string | undefined): BotLocale =>
   languageCode?.toLowerCase().startsWith("en") ? "en" : "ar";
 
 const ar = {
-  aiError:
-    "عذراً، لم أتمكن من الرد الآن. جرّب مرة أخرى بعد قليل أو استخدم القائمة.",
-  aiSystemLocale: "Reply in Arabic (Modern Standard Arabic, friendly).",
   back: "‹ رجوع",
-  banDone: "تم حظر {name} من {count} مجموعة.",
-  banNotAdmin: "هذا الأمر للمشرفين فقط.",
-  banNotFound: "لم أجد هذا المستخدم. ردّ على إحدى رسائله واكتب /ban.",
-  banProtected: "لا يمكن حظر مشرف.",
-  banUsage: "اكتب /ban @username أو ردّ على رسالة الشخص واكتب /ban.",
+  bulbs: "رصيدي من Bulbs",
+  bulbsOpen: "افتح Bulbs",
+  bulbsPending: "و{pending} في الطريق (تصبح متاحة بعد فترة الإرجاع).",
+  bulbsText:
+    "لديك {available} Bulbs (بقيمة {worth}) جاهزة للاستخدام عند الدفع.",
+  connect: "اربط حسابك من My Pass",
   faq: "الأسئلة الشائعة",
   faqEmpty: "لا توجد أسئلة شائعة بعد.",
   faqPickQuestion: "اختر سؤالاً:",
@@ -28,8 +26,7 @@ const ar = {
   faqTopic_plus: "The IDEA Plus",
   faqTopic_store: "المتجر",
   faqTopic_suite: "The IDEA Suite",
-  floodWarning:
-    "{name}، أرسلت الرسالة نفسها عدة مرات. تم إيقافك عن الكتابة لخمس دقائق.",
+  inlineOpen: "افتح في المتجر",
   linkApp: "تطبيق The IDEA",
   linkClub: "The IDEA Club على تيليجرام",
   links: "روابط",
@@ -37,14 +34,27 @@ const ar = {
   linkWebsite: "الموقع",
   menuGreeting:
     "أهلاً {name}! أنا The IDEA Droid، مساعدك من The IDEA. كيف يمكنني مساعدتك؟",
-  menuGreetingAi:
-    "أهلاً {name}! أنا The IDEA Droid، مساعدك من The IDEA. اختر من القائمة أو اكتب سؤالك مباشرة.",
   newPost: "منشور جديد في {channel}:",
   newPostOpen: "افتح المنشور",
   newsletterNowOff: "أوقفت النشرة الإخبارية. لن نرسل لك منشوراتنا الجديدة.",
   newsletterNowOn: "فعّلت النشرة الإخبارية. سنرسل لك منشوراتنا الجديدة.",
   newsletterOff: "النشرة الإخبارية: متوقفة",
   newsletterOn: "النشرة الإخبارية: مفعّلة ✓",
+  notLinked:
+    "اربط Telegram بـ The IDEA Pass لترى طلباتك ورصيدك هنا. افتح My Pass ← الإعدادات ← Telegram.",
+  orderLine: "#{number} · {status} · {total}",
+  orderStatus_cancelled: "ملغى",
+  orderStatus_confirmed: "مؤكد",
+  orderStatus_delivered: "تم التسليم",
+  orderStatus_paid: "مدفوع",
+  orderStatus_pending: "بانتظار الدفع",
+  orderStatus_processing: "قيد التجهيز",
+  orderStatus_refunded: "مسترد",
+  orderStatus_shipped: "في الطريق",
+  orders: "تتبّع طلبي",
+  ordersEmpty: "لا توجد طلبات بعد.",
+  ordersOpen: "كل طلباتي",
+  ordersTitle: "آخر طلباتك:",
   outOfStock: "غير متوفر حالياً",
   plus: "The IDEA Plus",
   plusOpen: "اشترك في The IDEA Plus",
@@ -57,29 +67,23 @@ const ar = {
   searchResults: "نتائج البحث عن «{query}»:",
   searchUsage: "اكتب /search ثم اسم المنتج، مثلاً: /search بلايستيشن",
   stock: "متوفر: {count}",
-  unban: "طلب رفع الحظر",
-  unbanDuplicate: "لديك طلب رفع حظر قيد المراجعة. سيتواصل معك فريقنا قريباً.",
-  unbanNotBanned: "حسابك غير محظور في مجموعاتنا.",
-  unbanPrompt:
-    "اكتب رسالة قصيرة لفريق الدعم تشرح فيها لماذا يجب رفع الحظر عنك:",
-  unbanSent: "وصل طلبك إلى فريق الدعم وسنراجعه قريباً.",
-  welcome:
-    "أهلاً بك {name} في {chat}! نرجو احترام الجميع والالتزام بقواعد المجموعة.",
+  support: "تحدّث معنا",
+  supportPrompt: "اكتب رسالتك لفريق الدعم وسنرد عليك في أقرب وقت:",
+  supportSent:
+    "وصلت رسالتك. رقم طلب الدعم #{number}، وستجد الرد في My Pass ← الدعم.",
+  supportSentTelegram: "وصلت رسالتك إلى فريق الدعم وسنرد عليك هنا قريباً.",
 } as const;
 
 export type MessageKey = keyof typeof ar;
 
 const en: Record<MessageKey, string> = {
-  aiError:
-    "Sorry, I couldn't answer just now. Try again in a moment or use the menu.",
-  aiSystemLocale: "Reply in English (friendly, concise).",
   back: "‹ Back",
-  banDone: "{name} has been banned from {count} group(s).",
-  banNotAdmin: "Only admins can use this command.",
-  banNotFound:
-    "I couldn't find that user. Reply to one of their messages with /ban.",
-  banProtected: "Admins can't be banned.",
-  banUsage: "Send /ban @username, or reply to someone's message with /ban.",
+  bulbs: "My Bulbs",
+  bulbsOpen: "Open Bulbs",
+  bulbsPending: "Plus {pending} on the way (usable after the return window).",
+  bulbsText:
+    "You have {available} Bulbs (worth {worth}) ready to spend at checkout.",
+  connect: "Connect on My Pass",
   faq: "FAQ",
   faqEmpty: "There are no FAQs yet.",
   faqPickQuestion: "Pick a question:",
@@ -89,8 +93,7 @@ const en: Record<MessageKey, string> = {
   faqTopic_plus: "The IDEA Plus",
   faqTopic_store: "Store",
   faqTopic_suite: "The IDEA Suite",
-  floodWarning:
-    "{name}, you sent the same message several times. You're muted for five minutes.",
+  inlineOpen: "Open in the store",
   linkApp: "The IDEA app",
   linkClub: "The IDEA Club on Telegram",
   links: "Links",
@@ -98,14 +101,27 @@ const en: Record<MessageKey, string> = {
   linkWebsite: "Website",
   menuGreeting:
     "Hi {name}! I'm The IDEA Droid, your assistant. How can I help?",
-  menuGreetingAi:
-    "Hi {name}! I'm The IDEA Droid, your assistant. Pick an option or just type your question.",
   newPost: "New post in {channel}:",
   newPostOpen: "Open the post",
   newsletterNowOff: "Newsletter turned off. We won't send you new posts.",
   newsletterNowOn: "Newsletter turned on. We'll send you our new posts.",
   newsletterOff: "Newsletter: off",
   newsletterOn: "Newsletter: on ✓",
+  notLinked:
+    "Connect Telegram to The IDEA Pass to see your orders and Bulbs here: My Pass → Settings → Telegram.",
+  orderLine: "#{number} · {status} · {total}",
+  orderStatus_cancelled: "Cancelled",
+  orderStatus_confirmed: "Confirmed",
+  orderStatus_delivered: "Delivered",
+  orderStatus_paid: "Paid",
+  orderStatus_pending: "Awaiting payment",
+  orderStatus_processing: "Being prepared",
+  orderStatus_refunded: "Refunded",
+  orderStatus_shipped: "On the way",
+  orders: "Track my order",
+  ordersEmpty: "No orders yet.",
+  ordersOpen: "All my orders",
+  ordersTitle: "Your latest orders:",
   outOfStock: "Out of stock",
   plus: "The IDEA Plus",
   plusOpen: "Join The IDEA Plus",
@@ -119,15 +135,12 @@ const en: Record<MessageKey, string> = {
   searchUsage:
     "Send /search followed by a product name, e.g. /search PlayStation",
   stock: "In stock: {count}",
-  unban: "Request unban",
-  unbanDuplicate:
-    "You already have an unban request under review. Our team will get back to you soon.",
-  unbanNotBanned: "Your account isn't banned from our groups.",
-  unbanPrompt:
-    "Write a short message to our support team explaining why the ban should be lifted:",
-  unbanSent: "Your request reached our support team; we'll review it soon.",
-  welcome:
-    "Welcome to {chat}, {name}! Please be respectful and follow the group rules.",
+  support: "Talk to us",
+  supportPrompt: "Write your message to our support team and we'll reply soon:",
+  supportSent:
+    "Got it. Your support request is #{number}; you'll find the reply in My Pass → Support.",
+  supportSentTelegram:
+    "Your message reached our support team; we'll reply here soon.",
 };
 
 const messages: Record<BotLocale, Record<MessageKey, string>> = { ar, en };

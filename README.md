@@ -11,7 +11,7 @@ digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
 | The IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
 | The Club | Community rooms on Telegram | `apps/web/club` |
 | The IDEA Post and events | The IDEA Post at `/post` (News, Stories, Members' work, Learn), events with RSVPs and member submissions | `apps/web`, `apps/app` (customer area and back office) |
-| Droid | Telegram bot: moderation, FAQ, product search, AI assistant | `packages/droid`, `apps/api/app/telegram` |
+| Droid | Telegram bot: orders and Bulbs for linked members, support, FAQ, product search (also inline) | `packages/droid`, `apps/api/app/telegram` |
 
 Built on the shaheenfarjo/monorepo template (initialized with `bun run init`:
 physical-goods commerce, rate-limit and AI modules). It replaces the earlier

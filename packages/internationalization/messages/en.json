@@ -2893,14 +2893,13 @@
         "reopen": "Reopen"
       },
       "chats": {
-        "description": "Groups The IDEA Droid moderates. A ban in one moderated group applies in all of them.",
+        "description": "Groups and channels The IDEA Droid is an admin of: it records who joins and sends new channel posts to newsletter subscribers. Moderation uses Telegram's own tools.",
         "empty": "No groups yet. Add the bot to a group as an administrator, then add the group here.",
         "new": "Add a group",
         "id": "Chat ID",
         "idHint": "e.g. -1001234567890",
         "title": "Name",
-        "username": "Username",
-        "moderated": "Moderated"
+        "username": "Username"
       },
       "members": {
         "search": "Username or name",
