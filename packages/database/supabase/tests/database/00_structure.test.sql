@@ -67,19 +67,21 @@ select is_empty(
   'Every table in public and private has Row Level Security enabled'
 );
 
--- Tables with RLS but intentionally no policy: only the service role (which
--- bypasses RLS) and SECURITY DEFINER functions touch them.
+-- Every RLS table has a policy, so the advisor's "RLS enabled, no policy"
+-- lint stays at zero. Service-only tables (only the service role, which
+-- bypasses RLS, and SECURITY DEFINER functions touch them) carry a
+-- restrictive "No client access" policy instead of none.
 select is_empty(
   $$
-    select c.relname::text
+    select n.nspname || '.' || c.relname
     from pg_class c
     join pg_namespace n on n.oid = c.relnamespace
     where c.relkind in ('r', 'p')
-      and n.nspname = 'public'
+      and n.nspname in ('public', 'private', 'archive')
+      and c.relrowsecurity
       and not exists (select 1 from pg_policy p where p.polrelid = c.oid)
-      and c.relname not in ('webhook_events')
   $$,
-  'Every table in public has at least one policy (except webhook_events)'
+  'Every table with Row Level Security has at least one policy'
 );
 
 select ok(
