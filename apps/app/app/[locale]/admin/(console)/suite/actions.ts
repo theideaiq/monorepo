@@ -1,0 +1,149 @@
+"use server";
+
+import { z } from "zod";
+import { affected, check, staffAction } from "@/lib/admin/action";
+import { success } from "@/lib/admin/action-state";
+import { int, optionalDate, optionalText, text, uuid } from "@/lib/admin/forms";
+
+/**
+ * The IDEA Suite procurement, run as the staff member: support writes and
+ * sends quotes and marks orders delivered; finance invoices them. The
+ * database checks each step (migration 20261206000000_suite_procurement).
+ */
+
+export const cancelRequest = staffAction(
+  "suite",
+  z.object({ requestId: uuid }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("cancel_procurement_request", {
+        request: input.requestId,
+      })
+    );
+    return success();
+  }
+);
+
+export const createQuote = staffAction(
+  "suite",
+  z.object({
+    notes: optionalText(2000),
+    requestId: uuid,
+    validUntil: optionalDate,
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.from("quotes").insert({
+        notes: input.notes,
+        request_id: input.requestId,
+        valid_until: input.validUntil,
+      })
+    );
+    return success();
+  }
+);
+
+export const deleteQuote = staffAction(
+  "suite",
+  z.object({ quoteId: uuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("quotes")
+        .delete()
+        .eq("id", input.quoteId)
+        .select("id")
+    );
+    return success("deleted");
+  }
+);
+
+export const addQuoteLine = staffAction(
+  "suite",
+  z.object({
+    description: text(300),
+    quantity: int(1, 100_000),
+    quoteId: uuid,
+    unitPrice: int(0, 1_000_000_000_000),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.from("quote_lines").insert({
+        description: input.description,
+        quantity: input.quantity,
+        quote_id: input.quoteId,
+        unit_price: input.unitPrice,
+      })
+    );
+    return success();
+  }
+);
+
+export const removeQuoteLine = staffAction(
+  "suite",
+  z.object({ lineId: uuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("quote_lines")
+        .delete()
+        .eq("id", input.lineId)
+        .select("id")
+    );
+    return success("deleted");
+  }
+);
+
+export const sendQuote = staffAction(
+  "suite",
+  z.object({ quoteId: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("send_quote", { quote: input.quoteId }));
+    return success("sent");
+  }
+);
+
+export const setOrderStatus = staffAction(
+  "suite",
+  z.object({
+    orderId: uuid,
+    status: z.enum(["delivered", "cancelled"]),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("set_purchase_order_status", {
+        new_status: input.status,
+        purchase_order: input.orderId,
+      })
+    );
+    return success();
+  }
+);
+
+export const issueInvoice = staffAction(
+  "suite",
+  z.object({ days: int(0, 120), orderId: uuid }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("issue_invoice", {
+        days: input.days,
+        purchase_order: input.orderId,
+      })
+    );
+    return success();
+  }
+);
+
+export const setInvoiceStatus = staffAction(
+  "suite",
+  z.object({ invoiceId: uuid, status: z.enum(["paid", "void"]) }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("set_invoice_status", {
+        invoice: input.invoiceId,
+        new_status: input.status,
+      })
+    );
+    return success();
+  }
+);

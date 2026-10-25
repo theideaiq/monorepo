@@ -150,14 +150,29 @@ sends staff to the back office and everyone else to The IDEA Suite.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| The IDEA Suite | `/{locale}/business`, `/business/members`, `/business/billing`, `/business/settings`, `/business/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
-| Back office | `/{locale}/admin/…` (catalog, orders, rentals, customers and CRM, marketing, finance, editorial, reviews, support, Telegram, staff, audit log) | `app/[locale]/admin`, `components/admin`, `lib/admin` |
+| The IDEA Suite | `/{locale}/business`, `/business/procurement` (requests and quotes, `/business/procurement/<id>`), `/business/invoices`, `/business/members`, `/business/billing`, `/business/settings`, `/business/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
+| Back office | `/{locale}/admin/…` (catalog, orders, rentals, customers and CRM, marketing, finance, editorial, reviews, The IDEA Suite, support, Telegram, staff, audit log) | `app/[locale]/admin`, `components/admin`, `lib/admin` |
 
 - **Sign-in.** Spark has none of its own: signed-out visitors go to The
   IDEA Pass on the website (`passUrl` from `@repo/auth/pass`) with
   `return_to` set to the Spark page, and the shared cookie on
   `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` signs them in here too. Old customer
   paths (`/cart`, `/orders/…`, `/sign-in`, …) redirect to the website.
+- **Procurement (The IDEA Suite).** A company's owners and admins send a
+  request (what they need, an optional budget and date). Support answers in
+  Back office → The IDEA Suite with one or more quotes (priced lines) and
+  sends them; the company's owners and admins get a `quote_sent`
+  notification and accept one (with their own PO reference; the others are
+  withdrawn) or decline. An accepted quote becomes a purchase order;
+  support marks it delivered and finance issues its invoice (due in 30
+  days by default, `invoice_issued` notification) and marks it paid. Every
+  member of the company sees its requests, sent quotes, orders and
+  invoices; drafts stay with staff. Tables `procurement_requests`,
+  `quotes`, `quote_lines`, `purchase_orders`, `invoices`; the steps are
+  RPCs (`send_quote`, `decide_quote`, `cancel_procurement_request`,
+  `set_purchase_order_status`, `issue_invoice`, `set_invoice_status`),
+  migration `20261206000000_suite_procurement.sql`. The website's
+  notification bell opens `/business…` links on The IDEA Spark.
 - **Indexing.** Every page sends `noindex`.
 
 ### The IDEA Pass

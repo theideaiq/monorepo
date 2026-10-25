@@ -41,6 +41,8 @@ export const NOTIFICATION_EVENTS = [
   "bulbs_birthday",
   "affiliate_approved",
   "affiliate_paid",
+  "quote_sent",
+  "invoice_issued",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -99,6 +101,33 @@ const affiliateValues = (
   };
 };
 
+/** A quote's number, request title and total (`quote_sent`). */
+const quoteValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const total = Number(text(data.total));
+  return {
+    number: text(data.number),
+    title: text(data.title),
+    total: Number.isFinite(total) ? formatPrice(total, locale) : "",
+  };
+};
+
+/** An invoice's number, amount and due date (`invoice_issued`). */
+const invoiceValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const amount = Number(text(data.amount));
+  const due = text(data.due_on);
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    date: due ? formatDate(due, locale) : "",
+    number: text(data.number),
+  };
+};
+
 /** Events whose data needs formatting beyond the common fields. */
 const extraValues: Partial<
   Record<
@@ -111,7 +140,10 @@ const extraValues: Partial<
 > = {
   affiliate_approved: affiliateValues,
   affiliate_paid: affiliateValues,
+  bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
+  invoice_issued: invoiceValues,
+  quote_sent: quoteValues,
 };
 
 /**

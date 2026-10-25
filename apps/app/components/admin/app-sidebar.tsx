@@ -17,6 +17,7 @@ import {
 } from "@repo/design-system/components/ui/sidebar";
 import {
   BookOpenIcon,
+  BriefcaseBusinessIcon,
   HandCoinsIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
@@ -52,6 +53,7 @@ const icons: Record<Section, LucideIcon> = {
   rentals: RepeatIcon,
   reviews: StarIcon,
   staff: ShieldCheckIcon,
+  suite: BriefcaseBusinessIcon,
   support: LifeBuoyIcon,
   telegram: SendIcon,
   tradeIns: HandCoinsIcon,

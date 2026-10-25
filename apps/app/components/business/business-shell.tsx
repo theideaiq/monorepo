@@ -18,6 +18,8 @@ import { PendingInvitations } from "./pending-invitations";
 
 const TABS = [
   { href: "/business", key: "projects" },
+  { href: "/business/procurement", key: "procurement" },
+  { href: "/business/invoices", key: "invoices" },
   { href: "/business/members", key: "members" },
   { href: "/business/billing", key: "billing" },
   { href: "/business/settings", key: "settings" },
@@ -86,7 +88,10 @@ export const BusinessShell = ({
                 className="-mx-4 flex gap-1 overflow-x-auto px-4 sm:mx-0 sm:px-0"
               >
                 {TABS.map((tab) => {
-                  const current = pathname === tab.href;
+                  const current =
+                    pathname === tab.href ||
+                    (tab.href !== "/business" &&
+                      pathname.startsWith(`${tab.href}/`));
                   return (
                     <Link
                       aria-current={current ? "page" : undefined}

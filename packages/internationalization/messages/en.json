@@ -1283,7 +1283,9 @@
         "projects": "Projects",
         "members": "Members",
         "billing": "Plan",
-        "settings": "Settings"
+        "settings": "Settings",
+        "procurement": "Procurement",
+        "invoices": "Invoices"
       },
       "projects": {
         "title": "Projects",
@@ -1784,6 +1786,88 @@
       },
       "readyFrom": "ready from {date}",
       "bulbsCredited": "{bulbs} Bulbs"
+    },
+    "suite": {
+      "status": {
+        "request": {
+          "submitted": "Submitted",
+          "quoted": "Quoted",
+          "ordered": "Ordered",
+          "delivered": "Delivered",
+          "cancelled": "Cancelled"
+        },
+        "quote": {
+          "draft": "Draft",
+          "sent": "Sent",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "withdrawn": "Withdrawn"
+        },
+        "order": {
+          "open": "Open",
+          "delivered": "Delivered",
+          "cancelled": "Cancelled"
+        },
+        "invoice": {
+          "issued": "Issued",
+          "paid": "Paid",
+          "void": "Void"
+        }
+      },
+      "procurement": {
+        "title": "Procurement",
+        "description": "Tell us what your company needs. We send you a quote, you accept it, and it becomes a purchase order with a monthly invoice.",
+        "managersOnly": "Owners and admins send requests and answer quotes.",
+        "requests": "Requests",
+        "empty": "No requests yet.",
+        "number": "Request #{number}",
+        "new": {
+          "title": "New request",
+          "description": "Products, equipment or services: describe it and we'll quote it.",
+          "what": "What do you need?",
+          "whatPlaceholder": "For example: 12 laptops for the new office",
+          "details": "Details",
+          "detailsPlaceholder": "Specs, quantities, brands, delivery address…",
+          "budget": "Budget (IQD, optional)",
+          "neededBy": "Needed by (optional)",
+          "send": "Send request",
+          "error": "The request couldn't be sent. Try again."
+        }
+      },
+      "request": {
+        "notFound": "This request isn't in this company.",
+        "awaitingQuote": "We're preparing your quote. You'll get a notification when it's ready.",
+        "quote": "Quote #{number}",
+        "validUntil": "Valid until {date}",
+        "lineQuantity": "{quantity} × {price}",
+        "total": "Total",
+        "order": "Purchase order #{number}",
+        "yourReference": "Your reference: {reference}",
+        "invoice": "Invoice #{number} · {status}",
+        "reference": "Your PO reference (optional)",
+        "referencePlaceholder": "For example: PO-2026-114",
+        "accept": "Accept quote",
+        "decline": "Decline",
+        "declineTitle": "Decline this quote?",
+        "decideError": "That didn't work. The quote may have expired or already been answered.",
+        "budget": "Budget {budget}",
+        "neededBy": "Needed by {date}",
+        "cancel": "Cancel request",
+        "cancelTitle": "Cancel this request?",
+        "cancelError": "The request couldn't be cancelled.",
+        "keep": "Keep"
+      },
+      "invoices": {
+        "title": "Invoices",
+        "description": "Invoices for your purchase orders.",
+        "empty": "No invoices yet.",
+        "number": "Invoice #{number}",
+        "due": "Due {date}",
+        "paidOn": "Paid {date}",
+        "order": "Purchase order #{number}",
+        "orderWithReference": "Purchase order #{number} · {reference}",
+        "howToPay": "Pay by bank transfer, ZainCash, FIB or Qi, quoting the invoice number. Questions? Contact support."
+      }
     }
   },
   "store": {
@@ -1955,6 +2039,14 @@
         "bulbs_birthday": {
           "title": "Happy birthday from The IDEA",
           "body": "We've added {bulbs} Bulbs to The IDEA Pass. Enjoy your day!"
+        },
+        "quote_sent": {
+          "title": "You have a quote",
+          "body": "Quote #{number} for {title}: {total}. Open it to accept or decline."
+        },
+        "invoice_issued": {
+          "title": "New invoice",
+          "body": "Invoice #{number} for {amount}, due {date}."
         }
       },
       "kinds": {
@@ -2054,7 +2146,8 @@
       "support": "Support",
       "reviews": "Reviews",
       "tradeIns": "Trade-ins",
-      "affiliates": "Affiliates"
+      "affiliates": "Affiliates",
+      "suite": "The IDEA Suite"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -3295,6 +3388,64 @@
         "hint": "Percent of the price after the follower's 5% discount, by category. Finance sets them."
       },
       "saveDecision": "Save decision"
+    },
+    "suite": {
+      "title": "The IDEA Suite",
+      "count": "{count} requests",
+      "status": "Status",
+      "views": {
+        "open": "Open",
+        "all": "All"
+      },
+      "empty": "No requests here.",
+      "request": "Request",
+      "company": "Company",
+      "budget": "Budget",
+      "neededBy": "Needed by",
+      "received": "Received",
+      "number": "Request #{number}",
+      "details": "Details",
+      "requestedBy": "Requested by",
+      "cancelRequest": "Cancel request",
+      "tabs": {
+        "requests": "Requests",
+        "orders": "Purchase orders"
+      },
+      "quotes": {
+        "number": "Quote #{number}",
+        "notes": "Notes for the company",
+        "validUntil": "Valid until",
+        "validUntilDate": "Valid until {date}",
+        "create": "Create draft quote",
+        "new": "New quote",
+        "description": "Item",
+        "quantity": "Quantity",
+        "unitPrice": "Unit price (IQD)",
+        "lineTotal": "Line total",
+        "addLine": "Add line",
+        "noLines": "No lines yet.",
+        "total": "Total: {total}",
+        "send": "Send to the company",
+        "sendDescription": "The company's owners and admins are notified and can accept or decline it. A sent quote can't be edited."
+      },
+      "orders": {
+        "title": "Purchase orders",
+        "empty": "No purchase orders yet.",
+        "order": "Order",
+        "number": "PO #{number}",
+        "total": "Total",
+        "reference": "Company reference",
+        "created": "Created",
+        "invoice": "Invoice",
+        "invoiceNumber": "Invoice #{number}",
+        "due": "Due {date}",
+        "notInvoiced": "Not invoiced",
+        "markDelivered": "Mark delivered",
+        "cancel": "Cancel order",
+        "issueInvoice": "Issue invoice",
+        "markPaid": "Mark paid",
+        "voidInvoice": "Void invoice"
+      }
     }
   },
   "design": {

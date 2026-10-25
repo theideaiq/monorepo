@@ -653,6 +653,63 @@ export type Database = {
           },
         ];
       };
+      invoices: {
+        Row: {
+          amount: number;
+          created_by: string | null;
+          due_on: string;
+          id: string;
+          issued_at: string;
+          number: number;
+          organization_id: string;
+          paid_at: string | null;
+          purchase_order_id: string;
+          status: Database["public"]["Enums"]["invoice_status"];
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          created_by?: string | null;
+          due_on: string;
+          id?: string;
+          issued_at?: string;
+          number?: never;
+          organization_id: string;
+          paid_at?: string | null;
+          purchase_order_id: string;
+          status?: Database["public"]["Enums"]["invoice_status"];
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          created_by?: string | null;
+          due_on?: string;
+          id?: string;
+          issued_at?: string;
+          number?: never;
+          organization_id?: string;
+          paid_at?: string | null;
+          purchase_order_id?: string;
+          status?: Database["public"]["Enums"]["invoice_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "invoices_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "invoices_purchase_order_id_fkey";
+            columns: ["purchase_order_id"];
+            isOneToOne: true;
+            referencedRelation: "purchase_orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ledger_entries: {
         Row: {
           created_at: string;
@@ -1193,6 +1250,59 @@ export type Database = {
           },
         ];
       };
+      procurement_requests: {
+        Row: {
+          assigned_to: string | null;
+          budget: number | null;
+          created_at: string;
+          created_by: string | null;
+          details: string | null;
+          id: string;
+          needed_by: string | null;
+          number: number;
+          organization_id: string;
+          status: Database["public"]["Enums"]["procurement_status"];
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          assigned_to?: string | null;
+          budget?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          details?: string | null;
+          id?: string;
+          needed_by?: string | null;
+          number?: never;
+          organization_id: string;
+          status?: Database["public"]["Enums"]["procurement_status"];
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          assigned_to?: string | null;
+          budget?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          details?: string | null;
+          id?: string;
+          needed_by?: string | null;
+          number?: never;
+          organization_id?: string;
+          status?: Database["public"]["Enums"]["procurement_status"];
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "procurement_requests_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       product_categories: {
         Row: {
           affiliate_rate: number;
@@ -1495,6 +1605,60 @@ export type Database = {
           },
         ];
       };
+      purchase_orders: {
+        Row: {
+          created_at: string;
+          customer_reference: string | null;
+          delivered_at: string | null;
+          id: string;
+          number: number;
+          organization_id: string;
+          quote_id: string;
+          status: Database["public"]["Enums"]["purchase_order_status"];
+          total: number;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          customer_reference?: string | null;
+          delivered_at?: string | null;
+          id?: string;
+          number?: never;
+          organization_id: string;
+          quote_id: string;
+          status?: Database["public"]["Enums"]["purchase_order_status"];
+          total: number;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          customer_reference?: string | null;
+          delivered_at?: string | null;
+          id?: string;
+          number?: never;
+          organization_id?: string;
+          quote_id?: string;
+          status?: Database["public"]["Enums"]["purchase_order_status"];
+          total?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "purchase_orders_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "purchase_orders_quote_id_fkey";
+            columns: ["quote_id"];
+            isOneToOne: true;
+            referencedRelation: "quotes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       push_devices: {
         Row: {
           created_at: string;
@@ -1521,6 +1685,107 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [];
+      };
+      quote_lines: {
+        Row: {
+          created_at: string;
+          description: string;
+          id: string;
+          position: number;
+          product_id: string | null;
+          quantity: number;
+          quote_id: string;
+          unit_price: number;
+        };
+        Insert: {
+          created_at?: string;
+          description: string;
+          id?: string;
+          position?: number;
+          product_id?: string | null;
+          quantity: number;
+          quote_id: string;
+          unit_price: number;
+        };
+        Update: {
+          created_at?: string;
+          description?: string;
+          id?: string;
+          position?: number;
+          product_id?: string | null;
+          quantity?: number;
+          quote_id?: string;
+          unit_price?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quote_lines_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "quote_lines_quote_id_fkey";
+            columns: ["quote_id"];
+            isOneToOne: false;
+            referencedRelation: "quotes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      quotes: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          decided_at: string | null;
+          decided_by: string | null;
+          id: string;
+          notes: string | null;
+          number: number;
+          request_id: string;
+          sent_at: string | null;
+          status: Database["public"]["Enums"]["quote_status"];
+          updated_at: string;
+          valid_until: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          id?: string;
+          notes?: string | null;
+          number?: never;
+          request_id: string;
+          sent_at?: string | null;
+          status?: Database["public"]["Enums"]["quote_status"];
+          updated_at?: string;
+          valid_until?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          id?: string;
+          notes?: string | null;
+          number?: never;
+          request_id?: string;
+          sent_at?: string | null;
+          status?: Database["public"]["Enums"]["quote_status"];
+          updated_at?: string;
+          valid_until?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quotes_request_id_fkey";
+            columns: ["request_id"];
+            isOneToOne: false;
+            referencedRelation: "procurement_requests";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       referrals: {
         Row: {
@@ -2440,6 +2705,10 @@ export type Database = {
         }[];
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
+      cancel_procurement_request: {
+        Args: { request: string };
+        Returns: undefined;
+      };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
       check_in_rsvp: {
         Args: { event: string; member: string };
@@ -2637,8 +2906,16 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      decide_quote: {
+        Args: { accept: boolean; quote: string; reference?: string };
+        Returns: string;
+      };
       event_rsvp_count: { Args: { event: string }; Returns: number };
       import_products: { Args: { items: Json }; Returns: Json };
+      issue_invoice: {
+        Args: { days?: number; purchase_order: string };
+        Returns: string;
+      };
       ledger_monthly_summary: {
         Args: {
           from_date: string;
@@ -2968,6 +3245,7 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      send_quote: { Args: { quote: string }; Returns: undefined };
       set_affiliate_payout: {
         Args: {
           account?: string;
@@ -2978,6 +3256,20 @@ export type Database = {
       set_affiliate_rates: { Args: { rates: Json }; Returns: undefined };
       set_bulb_rates: {
         Args: { multipliers?: Json; plus_bonus: number };
+        Returns: undefined;
+      };
+      set_invoice_status: {
+        Args: {
+          invoice: string;
+          new_status: Database["public"]["Enums"]["invoice_status"];
+        };
+        Returns: undefined;
+      };
+      set_purchase_order_status: {
+        Args: {
+          new_status: Database["public"]["Enums"]["purchase_order_status"];
+          purchase_order: string;
+        };
         Returns: undefined;
       };
       set_staff_role: {
@@ -3024,6 +3316,7 @@ export type Database = {
       bulb_status: "pending" | "available" | "void";
       bulb_tier: "glow" | "shine" | "beam" | "blaze";
       crm_status: "lead" | "customer" | "vip" | "churned";
+      invoice_status: "issued" | "paid" | "void";
       ledger_scenario: "actual" | "forecast" | "budget";
       notification_kind:
         | "order"
@@ -3053,9 +3346,17 @@ export type Database = {
         | "expired"
         | "refunded";
       post_section: "news" | "stories" | "members" | "learn";
+      procurement_status:
+        | "submitted"
+        | "quoted"
+        | "ordered"
+        | "delivered"
+        | "cancelled";
       product_condition: "new" | "used" | "refurbished" | "open_box";
       product_kind: "sale" | "rental";
       product_status: "draft" | "active" | "archived";
+      purchase_order_status: "open" | "delivered" | "cancelled";
+      quote_status: "draft" | "sent" | "accepted" | "declined" | "withdrawn";
       referral_status: "pending" | "rewarded" | "void";
       rental_status:
         | "requested"
@@ -3270,6 +3571,7 @@ export const Constants = {
       bulb_status: ["pending", "available", "void"],
       bulb_tier: ["glow", "shine", "beam", "blaze"],
       crm_status: ["lead", "customer", "vip", "churned"],
+      invoice_status: ["issued", "paid", "void"],
       ledger_scenario: ["actual", "forecast", "budget"],
       notification_kind: [
         "order",
@@ -3302,9 +3604,18 @@ export const Constants = {
         "refunded",
       ],
       post_section: ["news", "stories", "members", "learn"],
+      procurement_status: [
+        "submitted",
+        "quoted",
+        "ordered",
+        "delivered",
+        "cancelled",
+      ],
       product_condition: ["new", "used", "refurbished", "open_box"],
       product_kind: ["sale", "rental"],
       product_status: ["draft", "active", "archived"],
+      purchase_order_status: ["open", "delivered", "cancelled"],
+      quote_status: ["draft", "sent", "accepted", "declined", "withdrawn"],
       referral_status: ["pending", "rewarded", "void"],
       rental_status: [
         "requested",
