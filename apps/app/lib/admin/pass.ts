@@ -1,9 +1,10 @@
 import { type PassPath, passUrl } from "@repo/auth/pass";
+import { localePath } from "@repo/internationalization";
 
 const TRAILING_SLASH = /\/+$/;
 
 /** The back office's home in `locale` (a path in The IDEA Spark). */
-export const adminHome = (locale: string) => `/${locale}/admin`;
+export const adminHome = (locale: string) => localePath(locale, "/admin");
 
 /**
  * A Pass page on the website (sign-in, the authenticator app, sign-out)

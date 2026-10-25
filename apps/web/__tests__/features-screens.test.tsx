@@ -283,7 +283,7 @@ describe("support", () => {
       })
     );
     await waitFor(() =>
-      expect(router.replace).toHaveBeenCalledWith("/en/pass/support/t1")
+      expect(router.replace).toHaveBeenCalledWith("/pass/support/t1")
     );
   });
 
@@ -430,7 +430,7 @@ describe("notifications", () => {
         name: "mark_notifications_read",
       })
     );
-    expect(router.push).toHaveBeenCalledWith("/en/pass/orders/o1");
+    expect(router.push).toHaveBeenCalledWith("/pass/orders/o1");
   });
 });
 

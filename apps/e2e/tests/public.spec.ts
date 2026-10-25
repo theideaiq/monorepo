@@ -17,7 +17,9 @@ test.describe("public site", () => {
         page,
       }) => {
         const noErrors = watchConsole(page);
-        const response = await page.goto(`${urls.web}/${locale}${path}`);
+        // English pages have no locale prefix.
+        const prefix = locale === "en" ? "" : `/${locale}`;
+        const response = await page.goto(`${urls.web}${prefix}${path}`);
         expect(response?.status()).toBe(200);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.locator("html")).toHaveAttribute(
@@ -41,9 +43,9 @@ test.describe("public site", () => {
   }
 
   test("the catalog links to the product page", async ({ page }) => {
-    await page.goto(`${urls.web}/en/store`);
+    await page.goto(`${urls.web}/store`);
     await page.getByRole("link", { name: product.name }).first().click();
-    await expect(page).toHaveURL(new RegExp(`/en/store/${product.slug}$`));
+    await expect(page).toHaveURL(new RegExp(`/store/${product.slug}$`));
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       product.name
     );

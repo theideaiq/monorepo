@@ -40,10 +40,8 @@ describe("return_to", () => {
     expect(await readReturnTo(params({ next: "/cart" }), "ar")).toBe(
       "/ar/cart"
     );
-    expect(await readReturnTo(params({ next: "/en/cart" }), "en")).toBe(
-      "/en/cart"
-    );
-    expect(await readReturnTo(params({ next: "/" }), "en")).toBe("/en");
+    expect(await readReturnTo(params({ next: "/cart" }), "en")).toBe("/cart");
+    expect(await readReturnTo(params({ next: "/" }), "en")).toBe("/");
     expect(
       await readReturnTo(params({ next: "https://evil.example" }), "en")
     ).toBeNull();

@@ -13,6 +13,8 @@
  *   recorded.
  * - Channels: new posts are sent to newsletter subscribers.
  */
+
+import { localePath } from "@repo/internationalization";
 import type { LanguageModel } from "ai";
 import { Bot, type Context, GrammyError, InlineKeyboard } from "grammy";
 import type { ChatMember, User, UserFromGetMe } from "grammy/types";
@@ -391,7 +393,7 @@ const showFaqAnswer = async (ctx: DroidContext, id: string) => {
 const showLinks = async (ctx: DroidContext) => {
   const { appUrl, clubUrl, siteUrl } = ctx.droid;
   const keyboard = new InlineKeyboard()
-    .url(t(ctx.locale, "linkWebsite"), `${siteUrl}/${ctx.locale}`)
+    .url(t(ctx.locale, "linkWebsite"), `${siteUrl}${localePath(ctx.locale)}`)
     .row()
     .url(t(ctx.locale, "linkClub"), clubUrl)
     .row();
@@ -405,7 +407,10 @@ const showLinks = async (ctx: DroidContext) => {
 const showPlus = async (ctx: DroidContext) => {
   await respond(ctx, t(ctx.locale, "plusText"), {
     reply_markup: new InlineKeyboard()
-      .url(t(ctx.locale, "plusOpen"), `${ctx.droid.siteUrl}/${ctx.locale}/plus`)
+      .url(
+        t(ctx.locale, "plusOpen"),
+        `${ctx.droid.siteUrl}${localePath(ctx.locale, "/plus")}`
+      )
       .row()
       .text(t(ctx.locale, "back"), "m:home"),
   });

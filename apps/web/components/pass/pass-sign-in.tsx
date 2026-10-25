@@ -3,6 +3,7 @@
 import { identify, track } from "@repo/analytics/client";
 import { EmailOtpForm } from "@repo/auth/components/email-otp-form";
 import { useAuth } from "@repo/auth/provider";
+import { localePath } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
@@ -46,7 +47,7 @@ export const PassSignIn = ({ mode, returnTo }: PassSignInProps) => {
           identify(userId);
           track(isSignUp ? "sign_up" : "login", { method: "email" });
           // A full navigation, so the next page (or site) reads the cookie.
-          window.location.assign(returnTo ?? `/${locale}/pass`);
+          window.location.assign(returnTo ?? localePath(locale, "/pass"));
         }}
         shouldCreateUser={isSignUp}
         supabase={supabase}

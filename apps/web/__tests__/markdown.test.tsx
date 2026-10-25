@@ -100,7 +100,7 @@ describe("localizeHref", () => {
     );
     expect(localizeHref("/ar/store", "en")).toBe("/ar/store");
     expect(localizeHref("/store", undefined)).toBe("/store");
-    expect(localizeHref("/store", "en")).toBe("/en/store");
+    expect(localizeHref("/store", "en")).toBe("/store");
   });
 });
 

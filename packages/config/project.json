@@ -9,7 +9,7 @@
   "repoUrl": "https://github.com/theideaiq/monorepo",
   "bundleId": "com.theideaiq.app",
   "locale": {
-    "default": "ar",
+    "default": "en",
     "enabled": ["ar", "en"]
   },
   "region": {

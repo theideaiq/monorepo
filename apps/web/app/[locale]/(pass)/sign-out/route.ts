@@ -1,4 +1,5 @@
 import { createClient } from "@repo/auth/server";
+import { localePath } from "@repo/internationalization";
 import { type NextRequest, NextResponse } from "next/server";
 import { afterSignOut } from "@/lib/pass/sign-out";
 
@@ -21,7 +22,7 @@ export const GET = async (request: NextRequest, { params }: Context) => {
   const { origin } = request.nextUrl;
 
   if (!OWN_SITES.has(request.headers.get("sec-fetch-site") ?? "")) {
-    return NextResponse.redirect(new URL(`/${locale}/pass`, origin));
+    return NextResponse.redirect(new URL(localePath(locale, "/pass"), origin));
   }
 
   const supabase = await createClient();

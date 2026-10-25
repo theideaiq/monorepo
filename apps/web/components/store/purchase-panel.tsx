@@ -5,6 +5,7 @@ import { describeAttributes, localized } from "@repo/commerce";
 import type { ProductDetail } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
+import { localePath } from "@repo/internationalization";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { CheckIcon, ShoppingCartIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -112,7 +113,7 @@ export const PurchasePanel = ({
       router.push({
         pathname: "/sign-in",
         query: {
-          return_to: `/${locale}${productHref(product.slug)}?add=1`,
+          return_to: `${localePath(locale, productHref(product.slug))}?add=1`,
         },
       });
       return;

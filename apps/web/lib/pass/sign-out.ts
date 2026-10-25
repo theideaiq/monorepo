@@ -1,4 +1,5 @@
 import { safeReturnTo } from "@repo/auth/pass";
+import { localePath } from "@repo/internationalization";
 import { safeNextPath } from "@/lib/app-navigation";
 
 /**
@@ -8,4 +9,4 @@ import { safeNextPath } from "@/lib/app-navigation";
 export const afterSignOut = (returnTo: string | null, locale: string) =>
   safeNextPath(returnTo) ??
   safeReturnTo(returnTo, null) ??
-  `/${locale}/sign-in`;
+  localePath(locale, "/sign-in");

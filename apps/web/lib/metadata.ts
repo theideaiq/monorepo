@@ -1,6 +1,6 @@
 import { project } from "@repo/config";
 import type { Locale } from "@repo/internationalization";
-import { locales } from "@repo/internationalization";
+import { localePath, locales } from "@repo/internationalization";
 import { createMetadata } from "@repo/seo/metadata";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -34,23 +34,20 @@ export const localizedMetadata = (
   locale: Locale,
   path: string,
   { image, type = "website", ...page }: PageMetadata
-): Metadata => {
-  const suffix = path === "/" ? "" : path;
-
-  return createMetadata({
+): Metadata =>
+  createMetadata({
     ...page,
     alternates: {
-      canonical: `/${locale}${suffix}`,
+      canonical: localePath(locale, path),
       languages: Object.fromEntries(
-        locales.map((language) => [language, `/${language}${suffix}`])
+        locales.map((language) => [language, localePath(language, path)])
       ),
     },
     image: image ?? undefined,
     locale,
     metadataBase: siteUrl(),
-    openGraph: { type, url: `/${locale}${suffix}` },
+    openGraph: { type, url: localePath(locale, path) },
   });
-};
 
 type StaticPage =
   | "about"

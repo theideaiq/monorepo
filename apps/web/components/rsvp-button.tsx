@@ -2,6 +2,7 @@
 
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
+import { localePath } from "@repo/internationalization";
 import { Link, usePathname } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useMyRsvps, useRsvp } from "@/lib/community-queries";
@@ -32,7 +33,7 @@ export const RsvpButton = ({ eventId, full }: RsvpButtonProps) => {
         <Link
           href={{
             pathname: "/sign-in",
-            query: { return_to: `/${locale}${pathname}` },
+            query: { return_to: localePath(locale, pathname) },
           }}
         >
           {t("rsvp")}

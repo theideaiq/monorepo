@@ -2,11 +2,12 @@ import { defineRouting } from "next-intl/routing";
 import { defaultLocale, locales } from "./config";
 
 /**
- * Every URL carries its locale (/ar/…, /en/…); each app's proxy adds it to
- * paths without one.
+ * English, the default, has no prefix (`/store`); every other language does
+ * (`/ar/store`). Each app's proxy sends visitors to their language (cookie,
+ * then Accept-Language) and serves unprefixed paths in English.
  */
 export const routing = defineRouting({
   defaultLocale,
-  localePrefix: "always",
+  localePrefix: "as-needed",
   locales,
 });

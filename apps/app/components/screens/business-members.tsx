@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/design-system/components/ui/select";
+import { localePath } from "@repo/internationalization";
 import { formatDate } from "@repo/internationalization/format";
 import { useRouter } from "@repo/internationalization/navigation";
 import { CheckIcon, CopyIcon } from "lucide-react";
@@ -41,7 +42,7 @@ import {
 } from "@/lib/business-queries";
 
 const inviteLink = (locale: string, token: string) =>
-  `${env.NEXT_PUBLIC_APP_URL}/${locale}/invite?token=${token}`;
+  `${env.NEXT_PUBLIC_APP_URL}${localePath(locale, "/invite")}?token=${token}`;
 
 const CopyButton = ({ text }: { readonly text: string }) => {
   const t = useTranslations("app.business.members.pending");

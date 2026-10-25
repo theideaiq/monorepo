@@ -1,3 +1,4 @@
+import { localePath } from "@repo/internationalization";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { hostOf, readReturnTo, type SearchParams } from "@/lib/pass/return-to";
@@ -19,7 +20,7 @@ export const AuthPage = async ({ mode, searchParams }: AuthPageProps) => {
   ]);
 
   if (session) {
-    redirect(returnTo ?? `/${locale}/pass`);
+    redirect(returnTo ?? localePath(locale, "/pass"));
   }
 
   const t = await getTranslations("pass");

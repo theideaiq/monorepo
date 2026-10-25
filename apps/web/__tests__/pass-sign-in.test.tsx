@@ -9,7 +9,7 @@ vi.mock("@repo/analytics/client", () => ({ identify, track }));
 const { PassSignIn } = await import("@/components/pass/pass-sign-in");
 
 // The email link lands on the app's sign-in callback page.
-const CALLBACK = /\/en\/auth\/callback$/;
+const CALLBACK = /\/auth\/callback$/;
 const CONTINUE = /^Continue$/;
 const RESEND_IN = /^Resend code in/;
 const assign = vi.fn();
@@ -84,7 +84,7 @@ describe("The IDEA Pass email sign-in", () => {
         status: 422,
       },
     });
-    renderWithApp(<PassSignIn mode="sign-in" returnTo="/en/cart" />, {
+    renderWithApp(<PassSignIn mode="sign-in" returnTo="/cart" />, {
       locale: "en",
       supabase,
     });
@@ -110,13 +110,13 @@ describe("The IDEA Pass email sign-in", () => {
       name: "Get The IDEA Pass with this email",
     });
     expect(signUp.getAttribute("href")).toBe(
-      `/en/sign-up?return_to=${encodeURIComponent("/en/cart")}`
+      `/sign-up?return_to=${encodeURIComponent("/cart")}`
     );
   });
 
   test("signs up with a name and the emailed code", async () => {
     const { signInWithOtp, supabase, verifyOtp } = setup();
-    renderWithApp(<PassSignIn mode="sign-up" returnTo="/en/cart" />, {
+    renderWithApp(<PassSignIn mode="sign-up" returnTo="/cart" />, {
       locale: "en",
       supabase,
     });
@@ -158,7 +158,7 @@ describe("The IDEA Pass email sign-in", () => {
       target: { value: "123456" },
     });
 
-    await waitFor(() => expect(assign).toHaveBeenCalledWith("/en/cart"));
+    await waitFor(() => expect(assign).toHaveBeenCalledWith("/cart"));
     expect(verifyOtp).toHaveBeenCalledWith({
       email: "sara@example.com",
       token: "123456",

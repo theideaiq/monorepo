@@ -1,4 +1,5 @@
 import { passUrl } from "@repo/auth/pass";
+import { localePath } from "@repo/internationalization";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { env } from "@/env";
@@ -14,7 +15,11 @@ const SparkHome = async () => {
 
   if (!session) {
     redirect(
-      passUrl("/sign-in", `${env.NEXT_PUBLIC_APP_URL}/${locale}`, locale)
+      passUrl(
+        "/sign-in",
+        `${env.NEXT_PUBLIC_APP_URL}${localePath(locale)}`,
+        locale
+      )
     );
   }
 
@@ -24,7 +29,7 @@ const SparkHome = async () => {
     .eq("user_id", session.user.id)
     .maybeSingle();
 
-  redirect(staff ? `/${locale}/admin` : `/${locale}/business`);
+  redirect(localePath(locale, staff ? "/admin" : "/business"));
 };
 
 export default SparkHome;

@@ -119,11 +119,14 @@ load on every page (never inside the iOS/Android apps).
   detail links (`/store/product?slug=…`, `/orders/view?id=…`,
   `/support/view?id=…`) redirect (`next.config.ts`); stored notification
   links are mapped (`currentAppPath`).
-- **Locale.** `proxy.ts` (next-intl) adds `/ar` or `/en` to every path
-  (cookie, then `Accept-Language`, then Arabic); `<html lang dir>` are set on
-  the server. Link with `Link`/`useRouter` from
-  `@repo/internationalization/navigation`. `/.well-known` (app links) is
-  left alone.
+- **Locale.** English, the default, has no prefix (`/store`); Arabic is
+  `/ar/store` (next-intl `localePrefix: "as-needed"`). `proxy.ts` sends
+  visitors to their language (cookie, then `Accept-Language`, then
+  English) and serves unprefixed paths in English; `<html lang dir>` are
+  set on the server. Link with `Link`/`useRouter` from
+  `@repo/internationalization/navigation`, and build any other path with
+  `localePath(locale, path)` from `@repo/internationalization` (never
+  `` `/${locale}…` `` by hand). `/.well-known` (app links) is left alone.
 - **Indexing.** The Pass, My Pass, the cart and checkout send `noindex`
   (metadata and `X-Robots-Tag`).
 
@@ -201,7 +204,7 @@ session in the shared cookie.
   `spark.` and `design.` read the same session. Set the same value on web,
   app and storybook; leave it unset locally and on previews (host-only
   cookie; on localhost cookies are shared across ports anyway).
-- **return_to.** A path on the website (`/en/cart`) is kept as is. An
+- **return_to.** A path on the website (`/cart`, `/ar/cart`) is kept as is. An
   absolute URL must be http(s) on the host of `NEXT_PUBLIC_WEB_URL`,
   `_APP_URL`, `_DESIGN_URL` or `_API_URL` (plus localhost in development,
   `isAllowedReturnTo`); anything else falls back to the website
@@ -661,7 +664,7 @@ In the Supabase dashboard:
    - **Change Email Address** ← `email_change.html`, subject
      `تأكيد البريد الإلكتروني · Confirm your email for The IDEA Pass`.
    Each shows `{{ .Token }}` and no link. Send yourself a code from
-   `/en/sign-up` to check it arrives from hi@theideaiq.com.
+   `/sign-up` to check it arrives from hi@theideaiq.com.
 6. **Rate limits.** Under **Authentication → Rate Limits**, set the emails
    per hour to what Resend's plan allows (for example 100) and keep the
    per-address interval at 60 s (the form's resend cooldown).

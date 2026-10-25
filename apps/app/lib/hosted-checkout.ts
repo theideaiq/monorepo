@@ -1,3 +1,4 @@
+import { localePath } from "@repo/internationalization";
 import { env } from "@/env";
 
 /** Opens the hosted checkout in this tab. */
@@ -7,4 +8,4 @@ export const openCheckout = (url: string) => {
 
 /** Where the payment page sends the customer back to (a page of The IDEA Spark). */
 export const checkoutReturnUrl = (locale: string, path: string) =>
-  `${env.NEXT_PUBLIC_APP_URL}/${locale}${path}`;
+  `${env.NEXT_PUBLIC_APP_URL}${localePath(locale, path)}`;

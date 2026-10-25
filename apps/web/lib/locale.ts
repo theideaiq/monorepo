@@ -2,6 +2,7 @@ import {
   defaultLocale,
   isLocale,
   type Locale,
+  localePath,
 } from "@repo/internationalization";
 
 const STORAGE_KEY = "locale";
@@ -48,7 +49,8 @@ export const preferredLocale = (
 
 /**
  * Where to go for a URL that may lack a locale: locale-prefixed paths are
- * kept, others get the preferred locale (`/billing` → `/ar/billing`).
+ * kept, others get the preferred locale (`/billing` → `/ar/billing`, or
+ * `/billing` itself for English).
  */
 export const resolveLocalizedPath = (path: string, locale: Locale) => {
   const [pathname = "/", search = ""] = path.split(QUERY_OR_HASH, 2);
@@ -58,6 +60,5 @@ export const resolveLocalizedPath = (path: string, locale: Locale) => {
     return path;
   }
 
-  const rest = pathname === "/" ? "" : pathname;
-  return `/${locale}${rest}${search}`;
+  return `${localePath(locale, pathname)}${search}`;
 };

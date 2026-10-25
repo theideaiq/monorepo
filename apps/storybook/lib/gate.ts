@@ -17,7 +17,8 @@ const BASE64_PREFIX = "base64-";
 const DASH = /-/g;
 const UNDERSCORE = /_/g;
 const LOCALES = ["ar", "en"] as const;
-const DEFAULT_LOCALE = "ar";
+// English, the website's default language, has no prefix in its URLs.
+const DEFAULT_LOCALE = "en";
 
 type Locale = (typeof LOCALES)[number];
 
@@ -108,8 +109,8 @@ export const localeFrom = (request: Request): Locale => {
 };
 
 /**
- * `${NEXT_PUBLIC_WEB_URL}/${locale}/${path}?return_to=…` (The IDEA Pass, on
- * the website), the same URL as
+ * `${NEXT_PUBLIC_WEB_URL}/${path}?return_to=…` (`/ar/${path}` in Arabic; The
+ * IDEA Pass, on the website), the same URL as
  * `passUrl` from @repo/auth/pass builds, but from the injected `GateEnv` so
  * the gate stays testable without process.env.
  */
@@ -119,7 +120,8 @@ export const passUrl = (
   returnTo: string,
   locale: Locale
 ) => {
-  const location = new URL(`/${locale}/${path}`, env.passUrl);
+  const prefix = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
+  const location = new URL(`${prefix}/${path}`, env.passUrl);
   location.searchParams.set("return_to", returnTo);
   return location.toString();
 };

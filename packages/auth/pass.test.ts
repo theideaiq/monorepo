@@ -84,16 +84,20 @@ describe("allowedReturnToHosts", () => {
 });
 
 describe("passUrl", () => {
-  test("builds locale-prefixed links with an encoded return_to", () => {
+  test("builds localized links with an encoded return_to", () => {
     expect(
       passUrl(
         "/sign-in",
-        "https://spark.theideaiq.com/en/cart?next=1",
-        "en",
+        "https://spark.theideaiq.com/ar/business?next=1",
+        "ar",
         "https://theideaiq.com/"
       )
     ).toBe(
-      "https://theideaiq.com/en/sign-in?return_to=https%3A%2F%2Fspark.theideaiq.com%2Fen%2Fcart%3Fnext%3D1"
+      "https://theideaiq.com/ar/sign-in?return_to=https%3A%2F%2Fspark.theideaiq.com%2Far%2Fbusiness%3Fnext%3D1"
+    );
+    // English, the default language, has no prefix.
+    expect(passUrl("/", null, "en", "https://theideaiq.com")).toBe(
+      "https://theideaiq.com/pass"
     );
   });
 

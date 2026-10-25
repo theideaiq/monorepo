@@ -1,5 +1,6 @@
 import { project } from "@repo/config";
 import { createAdminClient } from "@repo/database/admin";
+import { localePath } from "@repo/internationalization";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { buildCalendar } from "@/lib/ics";
@@ -88,7 +89,7 @@ export const GET = async (
         title:
           (locale === "en" ? event.title_en : event.title_ar) || event.title_en,
         updatedAt: new Date(event.updated_at),
-        url: `${project.url}/${locale}/events/${event.slug}`,
+        url: `${project.url}${localePath(locale, `/events/${event.slug}`)}`,
       }))
       .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime());
 

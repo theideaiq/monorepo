@@ -10,7 +10,9 @@ export {
   isLocale,
   type Locale,
   localeDefinitions,
+  localePath,
   locales,
+  withoutLocalePrefix,
 } from "./config";
 
 export type Messages = typeof en;

@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@repo/design-system/components/ui/sidebar";
+import { localePath } from "@repo/internationalization";
 import { Link, usePathname } from "@repo/internationalization/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ExternalLinkIcon, IdCardIcon, ShieldIcon } from "lucide-react";
@@ -95,7 +96,7 @@ export const AppSidebar = () => {
               {staff.data ? (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild tooltip={t("backOffice")}>
-                    <a href={`/${locale}/admin`}>
+                    <a href={localePath(locale, "/admin")}>
                       <ShieldIcon />
                       <span>{t("backOffice")}</span>
                     </a>

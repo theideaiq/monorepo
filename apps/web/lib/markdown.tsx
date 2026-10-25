@@ -1,3 +1,4 @@
+import { localePath, withoutLocalePrefix } from "@repo/internationalization";
 import type {
   Nodes,
   Parent,
@@ -232,18 +233,17 @@ const renderNode = (
   }
 };
 
-const LOCALE_PREFIX = /^\/[a-z]{2,3}(?:\/|$)/;
-
 /**
  * Site-relative links ("/legal/terms") get the reader's language prefix
- * ("/ar/legal/terms"), so they don't bounce through a locale redirect.
+ * ("/ar/legal/terms"; none for English), so they don't bounce through a
+ * locale redirect. Links that already name a language are kept.
  */
 export const localizeHref = (href: string, locale?: string) =>
   locale &&
   href.startsWith("/") &&
   !href.startsWith("//") &&
-  !LOCALE_PREFIX.test(href)
-    ? `/${locale}${href}`
+  withoutLocalePrefix(href) === href
+    ? localePath(locale, href)
     : href;
 
 const localizeLinks = (node: Nodes, locale: string) => {

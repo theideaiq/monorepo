@@ -1,3 +1,4 @@
+import { locales } from "@repo/internationalization";
 import {
   catalogImagePatterns,
   config,
@@ -42,7 +43,9 @@ let nextConfig: NextConfig = {
   // The customer pages and The IDEA Pass moved to the website; links from
   // before (notifications, emails, payment returns) go there.
   async redirects() {
-    const locale = ":locale(ar|en)";
+    const prefixed = `/:locale(${locales.join("|")})`;
+    const sections =
+      ":section(orders|plus|sell|settings|submissions|support|wishlist)";
     return [
       ...[
         "auth/callback",
@@ -56,17 +59,20 @@ let nextConfig: NextConfig = {
         "sign-out",
         "sign-up",
         "store/:path*",
-      ].map((path) => ({
-        destination: `${WEB_URL}/:locale/${path}`,
-        permanent: false,
-        source: `/${locale}/${path}`,
-      })),
-      {
         // The website sends these on to /pass/… (and old ?id= links too).
-        destination: `${WEB_URL}/:locale/:section/:path*`,
-        permanent: false,
-        source: `/${locale}/:section(orders|plus|sell|settings|submissions|support|wishlist)/:path*`,
-      },
+        `${sections}/:path*`,
+      ].flatMap((path) => [
+        {
+          destination: `${WEB_URL}/${path}`,
+          permanent: false,
+          source: `/${path}`,
+        },
+        {
+          destination: `${WEB_URL}/:locale/${path}`,
+          permanent: false,
+          source: `${prefixed}/${path}`,
+        },
+      ]),
     ];
   },
 };

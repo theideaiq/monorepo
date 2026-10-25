@@ -16,6 +16,7 @@ import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Label } from "@repo/design-system/components/ui/label";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
+import { localePath } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link, usePathname } from "@repo/internationalization/navigation";
 import { BadgeCheckIcon, EyeOffIcon, PenLineIcon } from "lucide-react";
@@ -230,7 +231,7 @@ export const WriteReview = ({ productId }: { readonly productId: string }) => {
       <Link
         href={{
           pathname: "/sign-in",
-          query: { return_to: `/${locale}${pathname}#reviews` },
+          query: { return_to: `${localePath(locale, pathname)}#reviews` },
         }}
       >
         <PenLineIcon aria-hidden="true" className="size-4" />

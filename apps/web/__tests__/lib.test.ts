@@ -11,12 +11,14 @@ describe("locale", () => {
     expect(preferredLocale("en", ["ar-IQ"])).toBe("en");
     expect(preferredLocale(null, ["fr-FR", "en-US"])).toBe("en");
     expect(preferredLocale(null, ["ar-IQ", "en"])).toBe("ar");
-    expect(preferredLocale("xx", ["fr"])).toBe("ar");
+    expect(preferredLocale("xx", ["fr"])).toBe("en");
   });
 
   test("adds a locale to paths without one", () => {
     expect(resolveLocalizedPath("/", "ar")).toBe("/ar");
-    expect(resolveLocalizedPath("/billing?x=1", "en")).toBe("/en/billing?x=1");
+    // English, the default language, has no prefix.
+    expect(resolveLocalizedPath("/billing?x=1", "en")).toBe("/billing?x=1");
+    expect(resolveLocalizedPath("/", "en")).toBe("/");
     expect(resolveLocalizedPath("/en/settings", "ar")).toBe("/en/settings");
     expect(resolveLocalizedPath("/ar", "en")).toBe("/ar");
   });

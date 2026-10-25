@@ -9,6 +9,7 @@ import {
   InputOTPSlot,
 } from "@repo/design-system/components/ui/input-otp";
 import { Label } from "@repo/design-system/components/ui/label";
+import { localePath } from "@repo/internationalization";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import {
@@ -36,7 +37,7 @@ const callbackUrl = (locale: string | undefined) =>
   typeof window === "undefined"
     ? undefined
     : new URL(
-        locale ? `/${locale}/auth/callback` : "/auth/callback",
+        locale ? localePath(locale, "/auth/callback") : "/auth/callback",
         window.location.origin
       ).toString();
 const CODE_SLOTS = Array.from(

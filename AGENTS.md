@@ -159,7 +159,10 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   into messages already formatted with `@repo/internationalization/format`
   (Latin digits, Baghdad time); ICU `#`/`{n, number}` would use Arabic-Indic
   digits. Link with `Link`/`useRouter` from
-  `@repo/internationalization/navigation` so URLs keep their `/ar` or `/en`.
+  `@repo/internationalization/navigation` so URLs keep their language:
+  English, the default, has no prefix (`/store`), Arabic is `/ar/store`.
+  Build any other path with `localePath(locale, path)` from
+  `@repo/internationalization`, never `` `/${locale}…` `` by hand.
 - **Localization:** UI must work in Arabic (RTL) and English (LTR). Use logical
   Tailwind utilities (`ms-*`, `pe-*`, `start-*`, `text-start`), never physical
   ones (`ml-*`, `pr-*`, `left-*`, `text-left`); `bun run check:rtl` enforces

@@ -9,6 +9,7 @@ import {
 } from "@repo/design-system/components/ui/input-otp";
 import { Label } from "@repo/design-system/components/ui/label";
 import { Spinner } from "@repo/design-system/components/ui/spinner";
+import { localePath } from "@repo/internationalization";
 import { useLocale, useTranslations } from "next-intl";
 import {
   type FormEvent,
@@ -110,7 +111,7 @@ export const MfaForm = ({ factorId, returnTo }: MfaFormProps) => {
     }
 
     // A full navigation, so the next site reads the upgraded session.
-    window.location.assign(returnTo ?? `/${locale}/pass`);
+    window.location.assign(returnTo ?? localePath(locale, "/pass"));
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
