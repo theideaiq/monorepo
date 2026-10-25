@@ -2,8 +2,7 @@ import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
 import { PenLine } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { env } from "@/env";
-import { appLink } from "@/lib/links";
+import { pagePath } from "@/lib/links";
 
 /** Invites members to submit their work in the app. */
 export const JournalSubmit = async ({
@@ -18,9 +17,7 @@ export const JournalSubmit = async ({
       <h2 className="font-bold text-2xl">{t("title")}</h2>
       <p className="max-w-2xl text-muted-foreground">{t("description")}</p>
       <Button asChild>
-        <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/submissions")}>
-          {t("button")}
-        </a>
+        <a href={pagePath(locale, "/pass/submissions")}>{t("button")}</a>
       </Button>
     </div>
   );

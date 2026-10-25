@@ -14,7 +14,7 @@ const { accessTokenFrom, checkAccess, localeFrom } = await import("./gate");
 
 const SUPABASE = "https://abcdefghijklmnop.supabase.co";
 const env = {
-  passUrl: "https://spark.theideaiq.com",
+  passUrl: "https://theideaiq.com",
   publishableKey: "sb_publishable_x",
   supabaseUrl: SUPABASE,
 };
@@ -81,7 +81,7 @@ describe("The IDEA Design gate", () => {
     expect(result).toMatchObject({ kind: "redirect", reason: "sign-in" });
     const location = locationOf(result);
     expect(location.origin + location.pathname).toBe(
-      "https://spark.theideaiq.com/ar/sign-in"
+      "https://theideaiq.com/ar/sign-in"
     );
     expect(location.searchParams.get("return_to")).toBe(PAGE);
   });

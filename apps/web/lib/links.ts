@@ -1,34 +1,30 @@
-import { passUrl } from "@repo/auth/pass";
-
 /**
- * Links into The IDEA Spark (apps/app), to The IDEA Pass (in The IDEA
- * Spark) and to our Telegram presence.
+ * Links to pages of this site, to The IDEA Spark (apps/app: business and
+ * the back office) and to our Telegram presence.
  */
 
 const TRAILING_SLASH = /\/$/;
 
-/** `${appUrl}/${locale}${path}` with optional query parameters. */
+const withQuery = (base: string, params?: Record<string, string>) => {
+  const query = params ? new URLSearchParams(params).toString() : "";
+  return query ? `${base}?${query}` : base;
+};
+
+/** `/${locale}${path}` on this site, with optional query parameters. */
+export const pagePath = (
+  locale: string,
+  path = "",
+  params?: Record<string, string>
+) => withQuery(`/${locale}${path}`, params);
+
+/** `${appUrl}/${locale}${path}` on The IDEA Spark. */
 export const appLink = (
   appUrl: string,
   locale: string,
   path = "",
   params?: Record<string, string>
-) => {
-  const base = `${appUrl.replace(TRAILING_SLASH, "")}/${locale}${path}`;
-  const query = params ? new URLSearchParams(params).toString() : "";
-  return query ? `${base}?${query}` : base;
-};
-
-/** Where a product is bought (or rented, for Plus items) in the app. */
-export const appProductLink = (appUrl: string, locale: string, slug: string) =>
-  appLink(appUrl, locale, `/store/${encodeURIComponent(slug)}`);
-
-/**
- * "Sign in": The IDEA Pass sign-in on The IDEA Spark, which then opens the
- * app (signed in, through the shared session cookie).
- */
-export const passSignInLink = (appUrl: string, locale: string) =>
-  passUrl("/sign-in", appLink(appUrl, locale), locale);
+) =>
+  withQuery(`${appUrl.replace(TRAILING_SLASH, "")}/${locale}${path}`, params);
 
 export const telegram = {
   bot: "https://t.me/TheIdeaDroidBot",

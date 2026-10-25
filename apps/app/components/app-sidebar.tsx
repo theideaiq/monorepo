@@ -2,6 +2,7 @@
 
 import { resetIdentity } from "@repo/analytics/client";
 import { UserMenu } from "@repo/auth/components/user-menu";
+import { passUrl } from "@repo/auth/pass";
 import { useAuth } from "@repo/auth/provider";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import {
@@ -13,23 +14,16 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@repo/design-system/components/ui/sidebar";
-import { formatNumber } from "@repo/internationalization/format";
-import {
-  Link,
-  usePathname,
-  useRouter,
-} from "@repo/internationalization/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import { Link, usePathname } from "@repo/internationalization/navigation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ExternalLinkIcon, IdCardIcon, ShieldIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
-import { unregisterPushNotifications } from "@/lib/native/push";
 import { useProfile } from "@/lib/queries";
-import { useCartCount } from "@/lib/store-queries";
 import { LanguageSwitcher } from "./language-switcher";
 import { isActivePath, navItems } from "./nav-items";
 import { ThemeToggle } from "./theme-toggle";
@@ -39,13 +33,24 @@ export const AppSidebar = () => {
   const tMeta = useTranslations("app.meta");
   const locale = useLocale();
   const pathname = usePathname();
-  const router = useRouter();
   const queryClient = useQueryClient();
-  const { supabase } = useAuth();
+  const { supabase, user } = useAuth();
   const authMessages = useAuthMessages();
   const { isMobile, setOpenMobile } = useSidebar();
   const profile = useProfile();
-  const cartCount = useCartCount();
+  // Staff see the back office (RLS: everyone reads only their own row).
+  const staff = useQuery({
+    enabled: Boolean(user),
+    queryFn: async () =>
+      (
+        await supabase
+          .from("staff")
+          .select("role")
+          .eq("user_id", user?.id ?? "")
+          .maybeSingle()
+      ).data,
+    queryKey: ["staff", user?.id],
+  });
 
   const closeOnMobile = () => {
     if (isMobile) {
@@ -84,18 +89,28 @@ export const AppSidebar = () => {
                         <span>{title}</span>
                       </Link>
                     </SidebarMenuButton>
-                    {item.key === "cart" && cartCount > 0 ? (
-                      <SidebarMenuBadge
-                        aria-label={t("cartCount", {
-                          count: formatNumber(cartCount, locale),
-                        })}
-                      >
-                        {formatNumber(cartCount, locale)}
-                      </SidebarMenuBadge>
-                    ) : null}
                   </SidebarMenuItem>
                 );
               })}
+              {staff.data ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild tooltip={t("backOffice")}>
+                    <a href={`/${locale}/admin`}>
+                      <ShieldIcon />
+                      <span>{t("backOffice")}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ) : null}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={t("pass")}>
+                  <a href={passUrl("/", null, locale)}>
+                    <IdCardIcon />
+                    <span>{t("pass")}</span>
+                    <ExternalLinkIcon className="ms-auto rtl:-scale-x-100" />
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -108,9 +123,8 @@ export const AppSidebar = () => {
             onSignedOut={() => {
               queryClient.clear();
               resetIdentity();
-              router.replace("/sign-in");
+              window.location.assign(passUrl("/sign-in", null, locale));
             }}
-            onSigningOut={() => unregisterPushNotifications(supabase)}
           />
           <div className="flex shrink-0 items-center">
             <LanguageSwitcher />

@@ -1,5 +1,4 @@
 import { describe, expect, test, vi } from "vitest";
-import { deepLinkPath } from "@/components/native-bridge";
 import { ApiError, callApi } from "@/lib/api";
 import { toInvitationError, toOrganizationError } from "@/lib/errors";
 import { preferredLocale, resolveLocalizedPath } from "@/lib/locale";
@@ -57,18 +56,6 @@ describe("database errors", () => {
     expect(toOrganizationError(new Error("offline"))).toBe("unknown");
     expect(toInvitationError({ code: "P0002" })).toBe("expired");
     expect(toInvitationError({ code: "42501" })).toBe("wrongAccount");
-  });
-});
-
-describe("deep links", () => {
-  test("map to in-app paths", () => {
-    expect(deepLinkPath("https://app.example.iq/ar/billing")).toBe(
-      "/ar/billing"
-    );
-    expect(deepLinkPath("com.example.app://ar/invite?token=t")).toBe(
-      "/ar/invite?token=t"
-    );
-    expect(deepLinkPath("com.example.app://billing/")).toBe("/billing");
   });
 });
 

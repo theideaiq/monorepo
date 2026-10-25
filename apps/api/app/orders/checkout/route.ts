@@ -22,16 +22,19 @@ const body = z.object({
 
 const platforms = new Set<Platform>(["web", "ios", "android"]);
 
-/** Only redirect back into our own app, never to arbitrary sites. */
+/**
+ * Only redirect back to the website (My Pass, where orders live), never to
+ * arbitrary sites.
+ */
 const safeRedirect = (redirectUrl: string | undefined, orderId: string) => {
-  const app = new URL(env.NEXT_PUBLIC_APP_URL);
+  const web = new URL(env.NEXT_PUBLIC_WEB_URL);
   if (!redirectUrl) {
     return new URL(
-      `/${project.locale.default}/orders/${orderId}`,
-      app
+      `/${project.locale.default}/pass/orders/${orderId}`,
+      web
     ).toString();
   }
-  return new URL(redirectUrl).origin === app.origin ? redirectUrl : undefined;
+  return new URL(redirectUrl).origin === web.origin ? redirectUrl : undefined;
 };
 
 export const OPTIONS = preflight;

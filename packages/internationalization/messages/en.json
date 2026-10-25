@@ -57,7 +57,7 @@
       "invalid_code": "That code is incorrect or has expired.",
       "invalid_email": "Enter a valid email address, e.g. name@example.com.",
       "invalid_phone": "Enter a valid mobile number, e.g. 0770 123 4567.",
-      "no_account": "There's no account with this email yet.",
+      "no_account": "There's no The IDEA Pass with this email yet.",
       "rate_limited": "Too many attempts. Please wait a moment and try again.",
       "signups_disabled": "New sign-ups are currently closed.",
       "unknown": "Something went wrong. Please try again."
@@ -70,15 +70,15 @@
     "signIn": {
       "title": "Welcome back",
       "description": "Sign in with your email.",
-      "noAccount": "Don't have an account?",
+      "noAccount": "New to The IDEA?",
       "signUpLink": "Sign up",
-      "deleted": "Your account has been deleted."
+      "deleted": "Your Pass has been deleted."
     },
     "signOut": "Sign out",
     "signUp": {
-      "title": "Create an account",
+      "title": "Get The IDEA Pass",
       "description": "Sign up with your email.",
-      "haveAccount": "Already have an account?",
+      "haveAccount": "Already have The IDEA Pass?",
       "signInLink": "Sign in"
     },
     "verify": "Verify",
@@ -148,7 +148,6 @@
       "faq": "FAQ",
       "contact": "Contact",
       "signIn": "Sign in",
-      "openApp": "Open the app",
       "groups": {
         "ecosystem": "Ecosystem",
         "community": "Community",
@@ -163,10 +162,11 @@
         "news": "Announcements and stories from The IDEA.",
         "events": "Meetups, launches and community nights.",
         "journal": "Our journal of members' writing and art."
-      }
+      },
+      "myPass": "My Pass"
     },
     "footer": {
-      "tagline": "Baghdad's digital ecosystem: shopping, rentals, learning, community and services for companies, in one account.",
+      "tagline": "Baghdad's digital ecosystem: shopping, rentals, learning, community and services for companies, with one Pass.",
       "legal": "Legal",
       "email": "Email",
       "telegram": "Telegram",
@@ -184,10 +184,10 @@
       "comingSoon": "In preparation"
     },
     "appCta": {
-      "title": "One account for",
-      "highlight": "the whole ecosystem",
-      "description": "Shop the Megastore, manage your rentals with The IDEA Plus, RSVP to events and submit your work, all from The IDEA app.",
-      "button": "Open the app",
+      "title": "One Pass for",
+      "highlight": "everything at The IDEA",
+      "description": "Shop the Megastore, manage your rentals with The IDEA Plus, RSVP to events and submit your work, all with The IDEA Pass.",
+      "button": "Open My Pass",
       "signIn": "Sign in"
     },
     "home": {
@@ -199,13 +199,13 @@
         "badge": "The digital ecosystem for Iraq",
         "title": "Innovation for",
         "highlight": "every aspect of life.",
-        "subtitle": "Shop, learn, play and grow with The IDEA. One account, endless possibilities. Based in Baghdad and serving all of Iraq.",
+        "subtitle": "Shop, learn, play and grow with The IDEA. One Pass, endless possibilities. Based in Baghdad and serving all of Iraq.",
         "primary": "Get started",
         "secondary": "Our story"
       },
       "lines": {
         "title": "Explore our universe",
-        "description": "Five product lines, one account.",
+        "description": "Five product lines, one Pass.",
         "megastore": "Iraq's destination for gaming, tech, books and lifestyle, delivered to all 19 governorates.",
         "plus": "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done.",
         "academy": "Courses and cultural-exchange programs that connect Iraq with the world.",
@@ -255,7 +255,7 @@
         "description": "Gaming, tech, books and lifestyle products with delivery across Iraq. Browse the catalog of The IDEA Megastore."
       },
       "title": "The Megastore",
-      "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order in The IDEA app and pay through Wayl.",
+      "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order here and pay through Wayl or cash on delivery.",
       "searchLabel": "Search the store",
       "searchPlaceholder": "Search products…",
       "search": "Search",
@@ -272,10 +272,6 @@
       "empty": "No products match your search.",
       "clear": "Clear filters",
       "product": {
-        "buy": "Buy in the app",
-        "rent": "Rent with The IDEA Plus",
-        "buyNote": "Orders are placed and paid in The IDEA app.",
-        "rentNote": "Rentals are included in The IDEA Plus memberships. Request this item in the app.",
         "specs": "Specifications",
         "variants": "Options",
         "description": "Description",
@@ -289,7 +285,7 @@
         "seller": "Sold by {seller}",
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
-        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade in the app."
+        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from My Pass."
       },
       "rating": {
         "label": "Rated {rating} out of 5",
@@ -301,8 +297,7 @@
         "summary": "{rating} out of 5",
         "basedOn": "{count, plural, one {Based on {reviews} review} other {Based on {reviews} reviews}}",
         "empty": "No reviews yet. Bought or rented this item? Be the first to review it.",
-        "write": "Write a review in the app",
-        "writeNote": "Reviews are written in The IDEA app by signed-in customers. Reviews from people who bought or rented the item are marked as verified.",
+        "writeNote": "Reviews are written by signed-in customers. Reviews from people who bought or rented the item are marked as verified.",
         "verified": "Verified purchase",
         "anonymous": "A customer",
         "latest": "Latest reviews"
@@ -316,13 +311,13 @@
     "plus": {
       "meta": {
         "title": "The IDEA Plus — rent games, books and movies",
-        "description": "The IDEA Plus is a monthly membership to rent PS5 games, books and movies in Iraq. Choose a plan, request items in the app, and return them when you're done."
+        "description": "The IDEA Plus is a monthly membership to rent PS5 games, books and movies in Iraq. Choose a plan, request items from My Pass, and return them when you're done."
       },
       "badge": "The ultimate membership",
       "title": "One membership.",
       "highlight": "Endless entertainment.",
       "subtitle": "Books, games and movies, delivered to your door. Keep them as long as you like, then swap them for something new.",
-      "cta": "Join in the app",
+      "cta": "Join The IDEA Plus",
       "seePlans": "See the plans",
       "how": {
         "title": "How it works",
@@ -333,7 +328,7 @@
           },
           {
             "title": "Request what you want",
-            "description": "Browse the rental catalog in the app and request a game, book or movie."
+            "description": "Browse the rental catalog and request a game, book or movie."
           },
           {
             "title": "We deliver it",
@@ -347,7 +342,7 @@
       },
       "plans": {
         "choose": "Choose {plan}",
-        "description": "Billed monthly through Wayl. Cancel any time from your account.",
+        "description": "Billed monthly through Wayl. Cancel any time from My Pass.",
         "empty": "Plans will be announced soon.",
         "featured": "Recommended",
         "perMonth": "per month",
@@ -357,7 +352,7 @@
       },
       "catalog": {
         "title": "From the rental catalog",
-        "description": "A preview of what you can rent. The full catalog is in the app.",
+        "description": "A preview of what you can rent. The full catalog is in the Megastore.",
         "browse": "Browse the full catalog",
         "empty": "The rental catalog is being stocked.",
         "needsPlan": "{plan} and above"
@@ -433,8 +428,8 @@
             "description": "Tell us who you're looking for and we help you find and screen candidates."
           },
           {
-            "title": "Team accounts",
-            "description": "Your company is an organization in The IDEA app: invite colleagues and give each one the right role."
+            "title": "Team workspaces",
+            "description": "Your company is an organization in The IDEA Spark: invite colleagues and give each one the right role."
           },
           {
             "title": "Monthly invoicing",
@@ -445,7 +440,7 @@
       "how": {
         "title": "Getting started",
         "steps": [
-          "Create your company's organization in The IDEA app.",
+          "Create your company's organization in The IDEA Spark.",
           "Choose a business plan and invite your team.",
           "Contact us with your first procurement or hiring request."
         ]
@@ -532,7 +527,7 @@
             },
             {
               "title": "Product search",
-              "description": "Search the Megastore from Telegram and open products in the app."
+              "description": "Search the Megastore from Telegram and open products on the website."
             },
             {
               "title": "AI assistant",
@@ -564,7 +559,7 @@
       "subtitle": "The IDEA is not just a company. It is an ecosystem designed to bridge the gap between commerce, education and entertainment for the modern Iraqi.",
       "mission": {
         "title": "Our mission",
-        "description": "To give every Iraqi one digital account with seamless access to quality products, learning and entertainment."
+        "description": "To give every Iraqi one digital Pass with seamless access to quality products, learning and entertainment."
       },
       "vision": {
         "title": "Our vision",
@@ -610,7 +605,7 @@
     "faq": {
       "meta": {
         "title": "Frequently asked questions",
-        "description": "Answers about ordering from the Megastore, The IDEA Plus rentals, payments, delivery and your account (The IDEA Pass)."
+        "description": "Answers about ordering from the Megastore, The IDEA Plus rentals, payments, delivery and The IDEA Pass."
       },
       "title": "Frequently asked questions",
       "description": "Can't find your answer? Contact us or ask The IDEA Droid on Telegram.",
@@ -621,7 +616,7 @@
           "items": [
             {
               "question": "How do I place an order?",
-              "answer": "Browse the store here or in The IDEA app, then add items to your cart and check out in the app. You need The IDEA Pass to order."
+              "answer": "Browse the store, add items to your cart and check out. You need The IDEA Pass to order; signing up takes a minute."
             },
             {
               "question": "How do I pay?",
@@ -633,7 +628,7 @@
             },
             {
               "question": "Can I return an item?",
-              "answer": "Yes, under the conditions in our refund and returns policy. Contact us from your order in the app or by email."
+              "answer": "Yes, under the conditions in our refund and returns policy. Contact us from your order in My Pass or by email."
             }
           ]
         },
@@ -642,7 +637,7 @@
           "items": [
             {
               "question": "How does The IDEA Plus work?",
-              "answer": "You subscribe to a monthly plan. Each plan lets you keep a number of items at a time. Request a game, book or movie in the app, we deliver it, and when you're done you return it and request the next one."
+              "answer": "You subscribe to a monthly plan. Each plan lets you keep a number of items at a time. Request a game, book or movie, we deliver it, and when you're done you return it and request the next one."
             },
             {
               "question": "Can I buy from the Megastore without a membership?",
@@ -650,31 +645,31 @@
             },
             {
               "question": "How do I cancel?",
-              "answer": "You can cancel your membership from your account in the app. It stays active until the end of the period you paid for. Please return any rented items."
+              "answer": "You can cancel your membership from My Pass. It stays active until the end of the period you paid for. Please return any rented items."
             }
           ]
         },
         {
-          "title": "Your account",
+          "title": "The IDEA Pass",
           "items": [
             {
-              "question": "Do I need a separate account for each service?",
-              "answer": "No. One account, The IDEA Pass, works across the store, The IDEA Plus, events, the journal and The IDEA Suite."
+              "question": "Do I need to sign up separately for each service?",
+              "answer": "No. One The IDEA Pass works across the store, The IDEA Plus, events, The Post and The IDEA Suite."
             },
             {
-              "question": "How do I delete my account?",
-              "answer": "You can delete your account from the app's settings. Some records, such as invoices, are kept as the law requires."
+              "question": "How do I delete The IDEA Pass?",
+              "answer": "You can delete it from the settings in My Pass. Some records, such as invoices, are kept as the law requires."
             },
             {
               "question": "How do I get help with an order or a rental?",
-              "answer": "Sign in to The IDEA app and open a support ticket from the Support page. You can follow our replies there. Without an account, email hi@theideaiq.com or use the contact form."
+              "answer": "Sign in and open a support ticket from Support in My Pass. You can follow our replies there. Without The IDEA Pass, email hi@theideaiq.com or use the contact form."
             }
           ]
         }
       ],
       "support": {
         "title": "Need help with an order or a rental?",
-        "description": "If you have The IDEA Pass, sign in to the app and open a support ticket. You can follow our replies and add details there, and we'll notify you when we answer.",
+        "description": "If you have The IDEA Pass, sign in and open a support ticket. You can follow our replies and add details there, and we'll notify you when we answer.",
         "cta": "Open a support ticket"
       }
     },
@@ -693,7 +688,7 @@
         "location": "Location",
         "address": "Baghdad, Iraq",
         "support": "Support tickets",
-        "supportNote": "Signed in? Open a ticket in the app to get help with an order, a rental, The IDEA Plus or your account, and follow our replies there.",
+        "supportNote": "Signed in? Open a ticket in My Pass to get help with an order, a rental or The IDEA Plus, and follow our replies there.",
         "supportCta": "Open a support ticket"
       },
       "form": {
@@ -767,10 +762,10 @@
     "events": {
       "meta": {
         "title": "Events",
-        "description": "Launches, meetups and community nights from The IDEA. RSVP in the app."
+        "description": "Launches, meetups and community nights from The IDEA. RSVP with The IDEA Pass."
       },
       "title": "Events",
-      "description": "Launches, meetups and community nights. RSVP in The IDEA app.",
+      "description": "Launches, meetups and community nights. RSVP with The IDEA Pass.",
       "upcoming": "Upcoming",
       "past": "Past events",
       "empty": "No upcoming events right now.",
@@ -780,7 +775,7 @@
       "capacity": "Places",
       "rsvps": "{count, plural, one {{number} person is going} other {{number} people are going}}",
       "noRsvps": "Be the first to RSVP.",
-      "rsvp": "RSVP in the app",
+      "rsvp": "RSVP",
       "ended": "This event has ended."
     },
     "journal": {
@@ -798,8 +793,8 @@
       "published": "Published {date}",
       "submit": {
         "title": "Submit your work",
-        "description": "Members can submit essays, poetry, fiction, theatre or visual art in The IDEA app. Editors review every submission without seeing the author's name.",
-        "button": "Submit in the app"
+        "description": "Members can submit essays, poetry, fiction, theatre or visual art from My Pass. Editors review every submission without seeing the author's name.",
+        "button": "Submit your work"
       }
     }
   },
@@ -810,7 +805,6 @@
     },
     "nav": {
       "label": "Navigation",
-      "home": "Home",
       "store": "Store",
       "cart": "Cart",
       "orders": "Orders",
@@ -821,10 +815,11 @@
       "settings": "Settings",
       "more": "More",
       "cartCount": "{count} in cart",
-      "account": "Account",
       "wishlist": "Wishlist",
       "support": "Support",
-      "sell": "Sell to us"
+      "sell": "Sell to us",
+      "pass": "My Pass",
+      "backOffice": "Back office"
     },
     "roles": {
       "owner": "Owner",
@@ -973,7 +968,7 @@
         "notPayable": "This order can no longer be paid.",
         "outOfStock": "Some items don't have enough stock. Check your cart.",
         "payment": "We couldn't open the payment page. Please try again.",
-        "suspended": "Your account is suspended. Contact support.",
+        "suspended": "Your Pass is suspended. Contact support.",
         "unavailable": "A product in your cart is no longer available. Check your cart.",
         "unknown": "Something went wrong. Please try again.",
         "cashUnavailable": "Cash payment isn't available right now. Choose to pay online.",
@@ -1107,7 +1102,7 @@
       "errors": {
         "noSlots": "All your rental slots are in use. Return an item first.",
         "notCancellable": "This rental has already been delivered.",
-        "suspended": "Your account is suspended. Contact support.",
+        "suspended": "Your Pass is suspended. Contact support.",
         "unavailable": "This item isn't available right now.",
         "unknown": "Something went wrong. Please try again.",
         "needsTier": "This item needs a higher plan. Upgrade your membership to rent it."
@@ -1253,13 +1248,13 @@
     },
     "onboarding": {
       "title": "Welcome to {name}",
-      "description": "Let's set up your account. It only takes a minute.",
+      "description": "Let's set up your Pass. It only takes a minute.",
       "profile": {
         "title": "What should we call you?",
         "description": "We use your name for orders, deliveries and events.",
         "fullName": "Full name",
         "language": "Preferred language",
-        "languageHint": "Used in the app and in the messages we send you.",
+        "languageHint": "Used on the website and in the messages we send you.",
         "marketing": "Send me news and offers",
         "marketingHint": "New products, events and member offers by email or SMS. You can turn this off at any time in Settings.",
         "submit": "Continue"
@@ -1314,20 +1309,20 @@
         "theme": "Theme"
       },
       "deleteAccount": {
-        "title": "Delete account",
-        "description": "Permanently delete your account and personal data. This can't be undone.",
-        "open": "Delete account",
-        "dialogTitle": "Delete your account?",
+        "title": "Delete The IDEA Pass",
+        "description": "Permanently delete your Pass and personal data. This can't be undone.",
+        "open": "Delete The IDEA Pass",
+        "dialogTitle": "Delete your Pass?",
         "consequences": "Your profile, cart, RSVPs, submissions and sign-in are deleted, and you leave every business account you belong to. Order and payment records are kept for accounting, without your name.",
         "confirmLabel": "To confirm, type “{phrase}”",
-        "confirmPhrase": "delete my account",
-        "confirm": "Delete my account permanently",
+        "confirmPhrase": "delete my pass",
+        "confirm": "Delete my Pass permanently",
         "deleting": "Deleting…",
-        "failed": "Your account couldn't be deleted. Please try again.",
+        "failed": "Your Pass couldn't be deleted. Please try again.",
         "checking": "Checking your business accounts…",
         "blockers": {
           "title": "First, resolve your business accounts",
-          "description": "You're the only owner of the business accounts below. Make another member an owner, or delete the account. Then you can delete yours.",
+          "description": "You're the only owner of the business accounts below. Make another member an owner, or delete the business account. Then you can delete your Pass.",
           "handOver": "Make another member an owner",
           "makeOwner": "Make owner",
           "onlyMember": "You're the only member, so this business account can only be deleted.",
@@ -1378,7 +1373,7 @@
         "cancel": "Cancel",
         "errors": {
           "duplicate": "You've already reviewed this product.",
-          "suspended": "Your account is suspended. Contact support.",
+          "suspended": "Your Pass is suspended. Contact support.",
           "unknown": "We couldn't save your review. Please try again."
         }
       },
@@ -1394,7 +1389,8 @@
         "deleteConfirm": "Delete review",
         "keep": "Keep review",
         "deleteFailed": "We couldn't delete your review. Please try again."
-      }
+      },
+      "signInToWrite": "Sign in to write a review"
     },
     "wishlist": {
       "title": "Wishlist",
@@ -1418,7 +1414,7 @@
     },
     "support": {
       "title": "Support",
-      "description": "Questions about an order, a rental or your account? We're here to help.",
+      "description": "Questions about an order, a rental or The IDEA Pass? We're here to help.",
       "newTicket": "New request",
       "number": "Ticket #{number}",
       "lastActivity": "Last activity {date}",
@@ -1451,7 +1447,7 @@
       },
       "errors": {
         "closed": "This ticket is closed. Open a new request instead.",
-        "orderNotFound": "We couldn't find that order in your account.",
+        "orderNotFound": "We couldn't find that order in your orders.",
         "unknown": "Something went wrong. Please try again."
       },
       "new": {
@@ -1483,7 +1479,7 @@
     "native": {
       "offline": {
         "title": "You're offline",
-        "description": "The IDEA Spark needs an internet connection. Check your Wi-Fi or mobile data, then try again.",
+        "description": "The IDEA needs an internet connection. Check your Wi-Fi or mobile data, then try again.",
         "retry": "Try again",
         "stillOffline": "Still offline. We'll reconnect as soon as the connection is back."
       },
@@ -1612,7 +1608,7 @@
       "order": "Order",
       "rental": "Rental",
       "plus": "The IDEA Plus",
-      "account": "Account",
+      "account": "The IDEA Pass",
       "other": "Other"
     },
     "ticketPriority": {
@@ -2884,37 +2880,36 @@
   "pass": {
     "meta": {
       "title": "The IDEA Pass",
-      "description": "One account for everything at The IDEA: the app, the store, The IDEA Plus and more."
+      "description": "Your membership of everything at The IDEA: the store, The IDEA Plus, events and more."
     },
     "continueTo": "You'll continue to {host}.",
     "signIn": {
       "title": "Sign in to The IDEA Pass",
-      "description": "Use your email. One account for the app, the store and The IDEA Plus.",
+      "description": "Use your email. One Pass for the store, The IDEA Plus and everything at The IDEA.",
       "noAccount": "New to The IDEA?",
       "signUpLink": "Get The IDEA Pass",
-      "deleted": "Your account has been deleted.",
+      "deleted": "Your Pass has been deleted.",
       "noAccountSignUp": "Get The IDEA Pass with this email"
     },
     "signUp": {
       "title": "Get The IDEA Pass",
-      "description": "Sign up with your email. One account for everything at The IDEA.",
+      "description": "Sign up with your email. One Pass for everything at The IDEA.",
       "haveAccount": "Already have The IDEA Pass?",
       "signInLink": "Sign in"
     },
     "home": {
-      "title": "Your Pass",
-      "description": "You're signed in to The IDEA Pass. It works across The IDEA Spark, the website and The IDEA Plus.",
+      "title": "My Pass",
+      "description": "Your membership card for everything at The IDEA: orders, The IDEA Plus, events and more.",
       "nameLabel": "Name",
       "noName": "Not set yet",
       "phoneLabel": "Mobile number",
-      "openApp": "Open The IDEA Spark",
       "backOffice": "Open the back office",
-      "website": "Visit the website",
       "authenticator": "Authenticator app",
       "authenticatorOn": "On",
       "authenticatorOff": "Not set up",
       "setUpAuthenticator": "Set up",
-      "emailLabel": "Email"
+      "emailLabel": "Email",
+      "memberSince": "Member since {date}"
     },
     "signOut": {
       "title": "Sign out"
@@ -2922,7 +2917,7 @@
     "mfa": {
       "title": "Authenticator app",
       "enrollTitle": "Set up your authenticator app",
-      "enrollDescription": "Protect your account with a second step. Link an authenticator app once; you'll enter its code when a site asks for it. Staff accounts need it for the back office.",
+      "enrollDescription": "Protect your Pass with a second step. Link an authenticator app once; you'll enter its code when a site asks for it. Staff need it for the back office.",
       "challengeTitle": "Enter your authenticator code",
       "challengeDescription": "Open your authenticator app and enter the 6-digit code for The IDEA.",
       "stepInstall": "Install an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…).",

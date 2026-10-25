@@ -12,8 +12,7 @@ import { LifeBuoy } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/page-hero";
 import { Section } from "@/components/section";
-import { env } from "@/env";
-import { appLink } from "@/lib/links";
+import { pagePath } from "@/lib/links";
 import { staticPageMetadata } from "@/lib/metadata";
 
 interface FaqProps {
@@ -82,9 +81,7 @@ const Faq = async ({ params }: FaqProps) => {
               </div>
             </div>
             <Button asChild className="shrink-0">
-              <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/support")}>
-                {t("support.cta")}
-              </a>
+              <a href={pagePath(locale, "/pass/support")}>{t("support.cta")}</a>
             </Button>
           </aside>
         </div>

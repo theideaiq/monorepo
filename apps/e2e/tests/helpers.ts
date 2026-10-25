@@ -50,11 +50,12 @@ export const watchConsole = (page: Page) => {
 
 /** Signs in by password through the API and hands the session to the browser. */
 export const signIn = async (context: BrowserContext, email: string) => {
-  await context.addCookies(await sessionCookies(email, urls.app));
+  await context.addCookies(await sessionCookies(email, urls.web));
 };
 
+/** My Pass, signed in: the page and its notifications bell. */
 export const expectSignedInHome = async (page: Page) => {
-  await expect(page).toHaveURL(new RegExp(`${urls.app}/en/?$`));
+  await expect(page).toHaveURL(new RegExp(`${urls.web}/en/pass$`));
   await expect(
     page.getByRole("button", { name: /^Notifications/ })
   ).toBeVisible();

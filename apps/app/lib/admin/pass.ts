@@ -1,11 +1,17 @@
-import type { PassPath } from "@repo/auth/pass";
+import { type PassPath, passUrl } from "@repo/auth/pass";
+
+const TRAILING_SLASH = /\/+$/;
 
 /** The back office's home in `locale` (a path in The IDEA Spark). */
 export const adminHome = (locale: string) => `/${locale}/admin`;
 
 /**
- * A Pass page (sign-in, the authenticator app, sign-out) that comes back to
- * the back office afterwards.
+ * A Pass page on the website (sign-in, the authenticator app, sign-out)
+ * that comes back to the back office afterwards.
  */
 export const passLink = (path: Exclude<PassPath, "/">, locale: string) =>
-  `/${locale}${path}?${new URLSearchParams({ return_to: adminHome(locale) })}`;
+  passUrl(
+    path,
+    `${(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(TRAILING_SLASH, "")}${adminHome(locale)}`,
+    locale
+  );

@@ -79,7 +79,7 @@ describe("allowedReturnToHosts", () => {
       "spark.theideaiq.com",
       "theideaiq.com",
     ]);
-    expect(passOrigin()).toBe("https://spark.theideaiq.com");
+    expect(passOrigin()).toBe("https://theideaiq.com");
   });
 });
 
@@ -90,10 +90,10 @@ describe("passUrl", () => {
         "/sign-in",
         "https://spark.theideaiq.com/en/cart?next=1",
         "en",
-        "https://spark.theideaiq.com/"
+        "https://theideaiq.com/"
       )
     ).toBe(
-      "https://spark.theideaiq.com/en/sign-in?return_to=https%3A%2F%2Fspark.theideaiq.com%2Fen%2Fcart%3Fnext%3D1"
+      "https://theideaiq.com/en/sign-in?return_to=https%3A%2F%2Fspark.theideaiq.com%2Fen%2Fcart%3Fnext%3D1"
     );
   });
 

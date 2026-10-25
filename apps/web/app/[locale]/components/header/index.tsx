@@ -13,23 +13,15 @@ import {
 } from "@repo/design-system/components/ui/navigation-menu";
 import { Link } from "@repo/internationalization/navigation";
 import { Menu, X } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { appLink } from "@/lib/links";
 import { navigationGroups } from "@/lib/navigation";
+import { AccountActions } from "./account-actions";
 import { LanguageSwitcher } from "./language-switcher";
 
-interface HeaderProperties {
-  // Passed in by the server layout so the client bundle never imports env.ts.
-  readonly appUrl: string;
-  /** The IDEA Pass sign-in, coming back to the app. */
-  readonly signInUrl: string;
-}
-
-export const Header = ({ appUrl, signInUrl }: HeaderProperties) => {
+export const Header = () => {
   const t = useTranslations("web.nav");
   const common = useTranslations("common");
-  const locale = useLocale();
   const [isOpen, setOpen] = useState(false);
   const themeLabels = {
     dark: common("theme.dark"),
@@ -86,12 +78,7 @@ export const Header = ({ appUrl, signInUrl }: HeaderProperties) => {
             <LanguageSwitcher />
             <ModeToggle labels={themeLabels} />
           </div>
-          <Button asChild className="hidden md:inline-flex" variant="ghost">
-            <a href={signInUrl}>{t("signIn")}</a>
-          </Button>
-          <Button asChild className="hidden sm:inline-flex">
-            <a href={appLink(appUrl, locale)}>{t("openApp")}</a>
-          </Button>
+          <AccountActions className="hidden sm:flex" />
           <Button
             aria-expanded={isOpen}
             aria-label={isOpen ? common("closeMenu") : common("openMenu")}
@@ -128,12 +115,7 @@ export const Header = ({ appUrl, signInUrl }: HeaderProperties) => {
             <div className="mt-6 flex flex-wrap items-center gap-2 border-t pt-4">
               <LanguageSwitcher />
               <ModeToggle labels={themeLabels} />
-              <Button asChild className="ms-auto" variant="outline">
-                <a href={signInUrl}>{t("signIn")}</a>
-              </Button>
-              <Button asChild>
-                <a href={appLink(appUrl, locale)}>{t("openApp")}</a>
-              </Button>
+              <AccountActions className="ms-auto" onNavigate={close} />
             </div>
           </nav>
         ) : null}

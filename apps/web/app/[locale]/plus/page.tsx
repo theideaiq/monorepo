@@ -11,9 +11,8 @@ import { PageHero } from "@/components/page-hero";
 import { PlanCard } from "@/components/plan-card";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
-import { env } from "@/env";
 import { getPlans, getRatings, getRentals } from "@/lib/data";
-import { appLink } from "@/lib/links";
+import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import { plansByTier, requiredPlan } from "@/lib/plus";
 
@@ -44,7 +43,7 @@ const Plus = async ({ params }: PlusProps) => {
   const ratings = await getRatings(rentals.map((product) => product.id));
   const tiers = plansByTier(plans);
   const steps = t.raw("how.steps") as Steps;
-  const plusUrl = appLink(env.NEXT_PUBLIC_APP_URL, locale, "/plus");
+  const plusUrl = pagePath(locale, "/pass/plus");
 
   return (
     <>
@@ -93,7 +92,7 @@ const Plus = async ({ params }: PlusProps) => {
             {plans.map((plan, index) => (
               <PlanCard
                 featured={plans.length >= 3 && index === 1}
-                href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/plus", {
+                href={pagePath(locale, "/pass/plus", {
                   plan: plan.id,
                 })}
                 key={plan.id}

@@ -17,9 +17,8 @@ import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { ProductLines } from "@/components/product-lines";
 import { EmptyState, Section } from "@/components/section";
-import { env } from "@/env";
 import { getEvents, getPosts, getProducts, getRatings } from "@/lib/data";
-import { appLink } from "@/lib/links";
+import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
 export const revalidate = 300;
@@ -66,7 +65,7 @@ const Home = async ({ params }: HomeProps) => {
         title={t("home.hero.title")}
       >
         <Button asChild className="gap-2" size="lg">
-          <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale)}>
+          <a href={pagePath(locale, "/pass")}>
             {t("home.hero.primary")}
             <MoveRight className="size-4 rtl:rotate-180" />
           </a>

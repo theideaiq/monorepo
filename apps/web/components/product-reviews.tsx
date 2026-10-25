@@ -1,9 +1,9 @@
 import { Badge } from "@repo/design-system/components/ui/badge";
-import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
-import { BadgeCheck, PenLine, ShieldCheck } from "lucide-react";
+import { BadgeCheck, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
 import { formatRating, type Rating, type Review } from "@/lib/reviews";
 import { Stars } from "./stars";
 
@@ -68,8 +68,8 @@ interface ProductReviewsProps {
   readonly locale: Locale;
   readonly rating: Rating | null;
   readonly reviews: Review[];
-  /** Where reviews are written: the product's page in the app. */
-  readonly writeUrl: string;
+  /** Writing a review: the signed-in customer's own (a client island). */
+  readonly write: ReactNode;
 }
 
 /** The rating summary and latest published reviews of a product. */
@@ -77,7 +77,7 @@ export const ProductReviews = async ({
   locale,
   rating,
   reviews,
-  writeUrl,
+  write,
 }: ProductReviewsProps) => {
   const [t, ratingT] = await Promise.all([
     getTranslations({ locale, namespace: "web.store.reviews" }),
@@ -116,12 +116,7 @@ export const ProductReviews = async ({
         ) : (
           <p className="text-muted-foreground">{t("empty")}</p>
         )}
-        <Button asChild className="w-fit gap-2" variant="outline">
-          <a href={writeUrl}>
-            <PenLine aria-hidden="true" className="size-4" />
-            {t("write")}
-          </a>
-        </Button>
+        {write}
         <p className="text-muted-foreground text-xs">{t("writeNote")}</p>
       </div>
 
