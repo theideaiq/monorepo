@@ -10,10 +10,17 @@ type Source = Exclude<
   () => unknown
 >;
 
+type FrameAncestor = Extract<
+  Exclude<Directives["frameAncestors"], undefined>,
+  readonly unknown[]
+>[number];
+
 export interface CspSources {
   connect?: string[];
   font?: string[];
   frame?: string[];
+  /** Sites allowed to show these pages in a frame (none by default). */
+  frameAncestors?: string[];
   img?: string[];
   media?: string[];
   script?: string[];
@@ -66,6 +73,16 @@ export const catalogLookupCspSources: CspSources = {
   ],
 };
 
+/**
+ * Telegram Mini Apps: the website opened inside Telegram (the Droid's
+ * "Shop" button). Telegram Web shows it in a frame, and the page loads
+ * Telegram's Web App script.
+ */
+export const telegramMiniAppCspSources: CspSources = {
+  frameAncestors: ["https://web.telegram.org", "https://*.telegram.org"],
+  script: ["https://telegram.org"],
+};
+
 /** Our own API (apps/api), called directly from the browser by apps/app. */
 export const apiCspSources = (url: string | undefined): CspSources =>
   url ? { connect: [new URL(url).origin] } : {};
@@ -89,6 +106,10 @@ const isDevelopment = process.env.NODE_ENV === "development";
 
 const merge = (sources: CspSources[], key: keyof CspSources): Source[] =>
   [...new Set(sources.flatMap((source) => source[key] ?? []))] as Source[];
+
+/** Whether any of these sources lets other sites frame the pages. */
+export const allowsFraming = (sources: CspSources[]) =>
+  merge(sources, "frameAncestors").length > 0;
 
 /**
  * Builds a Content Security Policy for Nosecone.
@@ -117,9 +138,14 @@ export const createContentSecurityPolicy = (
         ...merge(sources, "script"),
       ];
 
+  const frameAncestors = merge(sources, "frameAncestors") as FrameAncestor[];
+
   return {
     directives: {
       ...defaults.contentSecurityPolicy.directives,
+      ...(frameAncestors.length > 0 && {
+        frameAncestors: ["'self'", ...frameAncestors],
+      }),
       connectSrc: ["'self'", ...merge(sources, "connect")],
       fontSrc: ["'self'", "data:", ...merge(sources, "font")],
       frameSrc: ["'self'", ...merge(sources, "frame")],

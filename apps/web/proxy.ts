@@ -1,6 +1,7 @@
 import { refreshSession } from "@repo/auth/proxy";
 import { internationalizationMiddleware } from "@repo/internationalization/proxy";
-import { withSecurityHeaders } from "@repo/security/proxy";
+import { telegramMiniAppCspSources } from "@repo/security/csp";
+import { noseconeOptionsWith, withSecurityHeaders } from "@repo/security/proxy";
 import type { NextRequest } from "next/server";
 
 export const config = {
@@ -12,6 +13,10 @@ export const config = {
   ],
 };
 
+// The website is also the Droid's Mini App (/tg, then the store, cart and
+// checkout), which Telegram Web shows in a frame.
+const options = noseconeOptionsWith(telegramMiniAppCspSources);
+
 /**
  * Adds the locale prefix (/ar; none for English), keeps the shared session cookie of
  * The IDEA Pass fresh (so its pages and Server Actions read a valid token)
@@ -21,5 +26,5 @@ export const config = {
  */
 export default async function proxy(request: NextRequest) {
   const response = internationalizationMiddleware(request);
-  return withSecurityHeaders(await refreshSession(request, response));
+  return withSecurityHeaders(await refreshSession(request, response), options);
 }

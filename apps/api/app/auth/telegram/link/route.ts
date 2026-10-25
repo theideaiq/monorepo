@@ -8,7 +8,7 @@ import { corsHeaders, preflight } from "@/lib/cors";
 import {
   type LinkTicket,
   TICKET_PURPOSE,
-  telegramClient,
+  ticketSecret,
 } from "@/lib/telegram-login/config";
 import { unseal } from "@/lib/telegram-login/oidc";
 
@@ -18,7 +18,7 @@ const bodySchema = z.object({ ticket: z.string().min(10).max(2000) });
 
 /**
  * Links the Telegram account a ticket vouches for (from the sign-in
- * callback) to the caller, and pays the 10-Bulb bonus the first time.
+ * callback or the Mini App) to the caller, and pays the 10-Bulb bonus the first time.
  */
 export const POST = async (request: Request) => {
   const headers = corsHeaders(request);
@@ -29,13 +29,13 @@ export const POST = async (request: Request) => {
   if (!session) {
     return json({ error: "unauthorized" }, 401);
   }
-  const client = telegramClient();
-  if (!client) {
+  const secret = ticketSecret();
+  if (!secret) {
     return json({ error: "not_configured" }, 503);
   }
   const body = bodySchema.safeParse(await request.json().catch(() => null));
   const ticket = body.success
-    ? unseal<LinkTicket>(client.clientSecret, TICKET_PURPOSE, body.data.ticket)
+    ? unseal<LinkTicket>(secret, TICKET_PURPOSE, body.data.ticket)
     : null;
   if (!ticket) {
     return json({ error: "invalid_ticket" }, 400);

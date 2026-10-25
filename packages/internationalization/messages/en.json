@@ -3304,6 +3304,15 @@
         "suspended": "This Pass is suspended. Contact support.",
         "taken": "This Telegram account is already connected to another Pass.",
         "unavailable": "Telegram sign-in isn't available right now. Use your email instead."
+      },
+      "miniApp": {
+        "title": "The IDEA in Telegram",
+        "opening": "Opening The IDEA…",
+        "welcome": "Connect The IDEA Pass to see your orders, Bulbs and member prices right here in Telegram.",
+        "welcomeName": "Hi {name}! Connect The IDEA Pass to see your orders, Bulbs and member prices right here in Telegram.",
+        "connect": "Connect The IDEA Pass",
+        "browse": "Browse the store",
+        "suspended": "This Pass is suspended. Contact support."
       }
     }
   }

@@ -5,6 +5,7 @@ import {
   withVercelToolbar,
 } from "@nosecone/next";
 import {
+  allowsFraming,
   apiCspSources,
   type CspSources,
   createContentSecurityPolicy,
@@ -27,6 +28,11 @@ const buildOptions = (extraSources: CspSources[] = []): Options => {
     // `require-corp` blocks third-party images, pixels and iframes that do not
     // send a Cross-Origin-Resource-Policy header (most analytics endpoints).
     crossOriginEmbedderPolicy: false,
+    // Pages other sites may frame say so with CSP frame-ancestors, which
+    // X-Frame-Options (same origin only) would contradict.
+    ...(allowsFraming(extraSources) && {
+      xFrameOptions: false,
+    }),
     // Keeps the origin on cross-site requests so analytics attribution works,
     // without leaking full URLs (paths, query strings) to third parties.
     referrerPolicy: { policy: ["strict-origin-when-cross-origin"] },

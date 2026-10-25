@@ -71,6 +71,7 @@ const ar = {
   searchPrompt: "اكتب اسم المنتج الذي تبحث عنه:",
   searchResults: "نتائج البحث عن «{query}»:",
   searchUsage: "اكتب /search ثم اسم المنتج، مثلاً: /search بلايستيشن",
+  shop: "🛍️ تسوّق في المتجر",
   stock: "متوفر: {count}",
   support: "تحدّث معنا",
   supportPrompt: "اكتب رسالتك لفريق الدعم وسنرد عليك في أقرب وقت:",
@@ -148,6 +149,7 @@ const en: Record<MessageKey, string> = {
   searchResults: "Results for “{query}”:",
   searchUsage:
     "Send /search followed by a product name, e.g. /search PlayStation",
+  shop: "🛍️ Shop the store",
   stock: "In stock: {count}",
   support: "Talk to us",
   supportPrompt: "Write your message to our support team and we'll reply soon:",

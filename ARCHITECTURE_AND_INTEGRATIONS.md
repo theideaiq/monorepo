@@ -339,6 +339,18 @@ session in the shared cookie.
   always links to the signed-in member and never switches accounts;
   `unlink_telegram()` disconnects. `GET /auth/telegram/available` tells the
   website whether to show the buttons.
+- **The Mini App** (`/tg` on the website). Droid's "Shop the store" button
+  and the chat menu button (`setChatMenuButton`, set by `telegram:setup`)
+  open the website inside Telegram. The page loads Telegram's Web App
+  script and posts its signed `initData` to `POST /auth/telegram/web-app`,
+  which checks it with the bot's token (HMAC-SHA256 with the key
+  `WebAppData`, at most an hour old; `lib/telegram-login/web-app.ts`) and
+  answers like the sign-in callback: a one-time token for a linked account
+  or a link ticket for a new one, finished by `/sign-in/telegram`. Link
+  tickets are sealed with the Login client secret, or the bot's token when
+  only the Mini App is set up. The website's security headers allow
+  Telegram Web to frame it (`telegramMiniAppCspSources`: CSP
+  `frame-ancestors` for `web.telegram.org`, no `X-Frame-Options`).
 - **Droid** (`packages/droid`, webhook `apps/api/app/telegram/webhook`).
   A menu in private chats: Track my order and My Bulbs for members who
   linked Telegram (`telegram_members.user_id`; others get a link to My Pass

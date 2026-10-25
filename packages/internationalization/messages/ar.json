@@ -3304,6 +3304,15 @@
         "suspended": "هذا الـ Pass موقوف. تواصل مع الدعم.",
         "taken": "حساب Telegram هذا مرتبط بـ Pass آخر.",
         "unavailable": "تسجيل الدخول عبر Telegram غير متاح حالياً. استخدم بريدك الإلكتروني."
+      },
+      "miniApp": {
+        "title": "The IDEA في Telegram",
+        "opening": "جارٍ فتح The IDEA…",
+        "welcome": "اربط The IDEA Pass لترى طلباتك وBulbs وأسعار الأعضاء هنا في Telegram.",
+        "welcomeName": "أهلاً {name}! اربط The IDEA Pass لترى طلباتك وBulbs وأسعار الأعضاء هنا في Telegram.",
+        "connect": "اربط The IDEA Pass",
+        "browse": "تصفّح المتجر",
+        "suspended": "هذا الـ Pass موقوف. تواصل مع الدعم."
       }
     }
   }

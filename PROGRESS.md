@@ -306,6 +306,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   rule in the back office; re-run `bun run --cwd apps/api telegram:setup`.
   Migration `20261203000000_telegram_club.sql`. Next: the Mini App and
   automatic topic posts, then The IDEA Suite workspace.
+- 2026-10-25: **The Mini App.** The Droid's menu has "Shop the store" and
+  the chat's menu button opens the website inside Telegram (`/tg`): a
+  linked Telegram account signs straight in to The IDEA Pass, a new one is
+  linked to the member signed in (or offered to connect, or to browse as a
+  guest), then on to the store, in Arabic for Arabic Telegram apps. Owner
+  steps: re-run `bun run --cwd apps/api telegram:setup` (with
+  `NEXT_PUBLIC_WEB_URL` set) to add the menu button; optionally register it
+  in @BotFather → Bot Settings → Configure Mini App with
+  `https://theideaiq.com/tg`. No new secrets: it uses the bot's token.
+  Next: automatic topic posts.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

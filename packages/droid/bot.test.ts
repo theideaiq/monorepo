@@ -39,9 +39,15 @@ const moderatedChats = () => [
 ];
 
 interface Keyboard {
-  inline_keyboard: { callback_data?: string; text: string; url?: string }[][];
+  inline_keyboard: {
+    callback_data?: string;
+    text: string;
+    url?: string;
+    web_app?: { url: string };
+  }[][];
 }
 
+const ARABIC_MINI_APP = /\/ar\/tg$/;
 const PAYMENT_WORDS = /wayl|pay\b|checkout/i;
 
 const required = <T>(value: T | undefined): T => {
@@ -68,7 +74,9 @@ describe("private chats", () => {
 
     const [reply] = sent();
     expect(textOf(reply)).toContain("أهلاً User1");
-    expect(buttonsOf(reply).map((b) => b.callback_data)).toEqual([
+    const [shop, ...menu] = buttonsOf(reply);
+    expect(shop?.web_app?.url).toMatch(ARABIC_MINI_APP);
+    expect(menu.map((b) => b.callback_data)).toEqual([
       "m:orders",
       "m:bulbs",
       "m:search",
