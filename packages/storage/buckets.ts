@@ -18,7 +18,7 @@ export const buckets = {
     mimeTypes: ["image/png", "image/jpeg", "image/webp"],
     public: true,
   },
-  /** Post and event covers and journal PDFs (public); editors write. */
+  /** Post and event covers (public); editors write. */
   editorial: {
     id: "editorial",
     maxBytes: 50 * 1024 * 1024,

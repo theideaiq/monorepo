@@ -64,7 +64,7 @@ export const systemPrompt = ({
     "- Academy: courses and cultural-exchange programs (enquiries through the contact page).",
     "- The IDEA Suite: procurement and recruitment services for companies, with business plans.",
     "- The IDEA Club: community rooms on Telegram (https://t.me/theideaclub).",
-    "- Editorial: news, events with RSVPs, a journal and member submissions.",
+    "- Editorial: The IDEA Post (news, stories, members' work and learning guides), events with RSVPs and member submissions.",
     `Website: ${siteUrl}. Store: ${siteUrl}${localePath(locale, "/store")}. The IDEA Plus: ${siteUrl}${localePath(locale, "/plus")}.${appUrl ? ` App: ${appUrl}.` : ""} Support email: hi@theideaiq.com.`,
     "Rules:",
     "- For any question about products, availability, prices or stock, call search_products and only state what it returns. Never guess or invent prices, stock, discounts, delivery times or links.",

@@ -1,9 +1,14 @@
 "use client";
 
-import type { Tables } from "@repo/database";
+import { Constants, type Tables } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
-import { FieldGrid, TextareaField, TextField } from "@/components/admin/fields";
+import {
+  FieldGrid,
+  SelectField,
+  TextareaField,
+  TextField,
+} from "@/components/admin/fields";
 import { FileUpload } from "@/components/admin/file-upload";
 import { MarkdownEditor } from "@/components/admin/markdown-editor";
 import { Panel } from "@/components/admin/page";
@@ -18,7 +23,10 @@ interface PostFormProps {
   readonly supabaseUrl: string;
 }
 
-/** A bilingual news post with Markdown bodies and a cover image. */
+/**
+ * A bilingual post of The IDEA Post (its section and byline, Markdown
+ * bodies and a cover image).
+ */
 export const PostForm = ({
   mode,
   post,
@@ -57,6 +65,22 @@ export const PostForm = ({
             maxLength={120}
             name="slug"
             required
+          />
+          <SelectField
+            defaultValue={post?.section ?? "news"}
+            label={t("section")}
+            name="section"
+            options={Constants.public.Enums.post_section.map((value) => ({
+              label: t(`sections.${value}`),
+              value,
+            }))}
+          />
+          <TextField
+            defaultValue={post?.byline ?? ""}
+            hint={t("bylineHint")}
+            label={t("byline")}
+            maxLength={120}
+            name="byline"
           />
         </FieldGrid>
         <FieldGrid>

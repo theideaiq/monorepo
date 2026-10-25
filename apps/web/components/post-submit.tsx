@@ -4,13 +4,9 @@ import { PenLine } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { pagePath } from "@/lib/links";
 
-/** Invites members to submit their work in the app. */
-export const JournalSubmit = async ({
-  locale,
-}: {
-  readonly locale: Locale;
-}) => {
-  const t = await getTranslations({ locale, namespace: "web.journal.submit" });
+/** Invites members to submit their work to The IDEA Post from My Pass. */
+export const PostSubmit = async ({ locale }: { readonly locale: Locale }) => {
+  const t = await getTranslations({ locale, namespace: "web.post.submit" });
   return (
     <div className="flex flex-col items-start gap-3 rounded-lg border bg-surface-raised p-8 shadow-1">
       <PenLine aria-hidden="true" className="size-8 text-pink-text" />

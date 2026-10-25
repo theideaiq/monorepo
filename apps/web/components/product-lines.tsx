@@ -3,8 +3,8 @@ import { Link } from "@repo/internationalization/navigation";
 import {
   Building2,
   Gamepad2,
-  GraduationCap,
   MoveRight,
+  Newspaper,
   ShoppingBag,
   Users,
 } from "lucide-react";
@@ -13,9 +13,9 @@ import { getTranslations } from "next-intl/server";
 const lines = [
   { href: "/store", icon: ShoppingBag, id: "megastore" },
   { href: "/plus", icon: Gamepad2, id: "plus" },
-  { href: "/academy", icon: GraduationCap, id: "academy" },
   { href: "/suite", icon: Building2, id: "suite" },
   { href: "/club", icon: Users, id: "club" },
+  { href: "/post", icon: Newspaper, id: "post" },
 ] as const;
 
 /** The five product lines of the ecosystem, each linking to its page. */

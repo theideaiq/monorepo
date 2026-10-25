@@ -28,7 +28,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return { title: t("title") };
 };
 
-/** News posts: drafts, scheduled and published. */
+/** The IDEA Post: drafts, scheduled and published posts in every section. */
 const PostsPage = async ({
   searchParams,
 }: {
@@ -43,7 +43,7 @@ const PostsPage = async ({
 
   const { count, data: posts } = await supabase
     .from("posts")
-    .select("id, slug, title_ar, title_en, published_at, updated_at", {
+    .select("id, slug, section, title_ar, title_en, published_at, updated_at", {
       count: "exact",
     })
     .order("published_at", { ascending: false, nullsFirst: true })
@@ -91,11 +91,9 @@ const PostsPage = async ({
                         >
                           {localized(post, "title", locale)}
                         </Link>
-                        <span
-                          className="block text-muted-foreground text-xs"
-                          dir="ltr"
-                        >
-                          {post.slug}
+                        <span className="block text-muted-foreground text-xs">
+                          {t(`posts.sections.${post.section}`)} ·{" "}
+                          <span dir="ltr">{post.slug}</span>
                         </span>
                       </TableCell>
                       <TableCell>

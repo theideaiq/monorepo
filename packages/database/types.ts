@@ -340,51 +340,6 @@ export type Database = {
           },
         ];
       };
-      journal_issues: {
-        Row: {
-          cover_image: string | null;
-          created_at: string;
-          description_ar: string | null;
-          description_en: string | null;
-          id: string;
-          issue: number;
-          pdf_path: string | null;
-          published_at: string | null;
-          title_ar: string;
-          title_en: string;
-          updated_at: string;
-          volume: number;
-        };
-        Insert: {
-          cover_image?: string | null;
-          created_at?: string;
-          description_ar?: string | null;
-          description_en?: string | null;
-          id?: string;
-          issue: number;
-          pdf_path?: string | null;
-          published_at?: string | null;
-          title_ar: string;
-          title_en: string;
-          updated_at?: string;
-          volume: number;
-        };
-        Update: {
-          cover_image?: string | null;
-          created_at?: string;
-          description_ar?: string | null;
-          description_en?: string | null;
-          id?: string;
-          issue?: number;
-          pdf_path?: string | null;
-          published_at?: string | null;
-          title_ar?: string;
-          title_en?: string;
-          updated_at?: string;
-          volume?: number;
-        };
-        Relationships: [];
-      };
       ledger_entries: {
         Row: {
           created_at: string;
@@ -840,13 +795,16 @@ export type Database = {
           author_id: string | null;
           body_ar: string;
           body_en: string;
+          byline: string | null;
           cover_image: string | null;
           created_at: string;
           excerpt_ar: string | null;
           excerpt_en: string | null;
           id: string;
           published_at: string | null;
+          section: Database["public"]["Enums"]["post_section"];
           slug: string;
+          submission_id: string | null;
           title_ar: string;
           title_en: string;
           updated_at: string;
@@ -855,13 +813,16 @@ export type Database = {
           author_id?: string | null;
           body_ar?: string;
           body_en?: string;
+          byline?: string | null;
           cover_image?: string | null;
           created_at?: string;
           excerpt_ar?: string | null;
           excerpt_en?: string | null;
           id?: string;
           published_at?: string | null;
+          section?: Database["public"]["Enums"]["post_section"];
           slug: string;
+          submission_id?: string | null;
           title_ar: string;
           title_en: string;
           updated_at?: string;
@@ -870,18 +831,29 @@ export type Database = {
           author_id?: string | null;
           body_ar?: string;
           body_en?: string;
+          byline?: string | null;
           cover_image?: string | null;
           created_at?: string;
           excerpt_ar?: string | null;
           excerpt_en?: string | null;
           id?: string;
           published_at?: string | null;
+          section?: Database["public"]["Enums"]["post_section"];
           slug?: string;
+          submission_id?: string | null;
           title_ar?: string;
           title_en?: string;
           updated_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "posts_submission_id_fkey";
+            columns: ["submission_id"];
+            isOneToOne: true;
+            referencedRelation: "submissions";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       product_categories: {
         Row: {
@@ -2358,6 +2330,7 @@ export type Database = {
         | "canceled"
         | "expired"
         | "refunded";
+      post_section: "news" | "stories" | "members" | "learn";
       product_condition: "new" | "used" | "refurbished" | "open_box";
       product_kind: "sale" | "rental";
       product_status: "draft" | "active" | "archived";
@@ -2590,6 +2563,7 @@ export const Constants = {
         "expired",
         "refunded",
       ],
+      post_section: ["news", "stories", "members", "learn"],
       product_condition: ["new", "used", "refurbished", "open_box"],
       product_kind: ["sale", "rental"],
       product_status: ["draft", "active", "archived"],

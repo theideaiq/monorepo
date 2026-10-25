@@ -137,12 +137,10 @@
       "home": "Home",
       "store": "Megastore",
       "plus": "The IDEA Plus",
-      "academy": "Academy",
       "suite": "The IDEA Suite",
       "club": "The IDEA Club",
-      "news": "News",
+      "post": "The IDEA Post",
       "events": "Events",
-      "journal": "Journal",
       "about": "Our story",
       "careers": "Careers",
       "faq": "FAQ",
@@ -156,12 +154,10 @@
       "descriptions": {
         "store": "Gaming, tech, books and lifestyle, delivered across Iraq.",
         "plus": "A monthly membership to rent games, books and movies.",
-        "academy": "Courses and cultural-exchange programs.",
         "suite": "Procurement and recruitment for companies.",
         "club": "Our Telegram rooms and The IDEA Droid.",
-        "news": "Announcements and stories from The IDEA.",
-        "events": "Meetups, launches and community nights.",
-        "journal": "Our journal of members' writing and art."
+        "post": "News, stories, members' work and guides from The IDEA.",
+        "events": "Meetups, launches and community nights."
       },
       "myPass": "My Pass"
     },
@@ -193,7 +189,7 @@
     "home": {
       "meta": {
         "title": "Iraq's digital ecosystem",
-        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, The IDEA Plus rentals, the Academy, The IDEA Suite for companies and The IDEA Club. Based in Baghdad, serving all of Iraq."
+        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, The IDEA Plus rentals, The IDEA Post, The IDEA Suite for companies and The IDEA Club. Based in Baghdad, serving all of Iraq."
       },
       "hero": {
         "badge": "The digital ecosystem for Iraq",
@@ -208,7 +204,7 @@
         "description": "Five product lines, one Pass.",
         "megastore": "Iraq's destination for gaming, tech, books and lifestyle, delivered to all 19 governorates.",
         "plus": "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done.",
-        "academy": "Courses and cultural-exchange programs that connect Iraq with the world.",
+        "post": "News, stories, members' writing and art, and guides to learn something new.",
         "suite": "Procurement and recruitment for companies, with a business plan and monthly invoicing.",
         "club": "Community rooms on Telegram for gamers, readers, artists and thinkers."
       },
@@ -218,8 +214,8 @@
         "empty": "New products are on their way. Check back soon."
       },
       "news": {
-        "title": "Latest news",
-        "empty": "No news yet."
+        "title": "From The IDEA Post",
+        "empty": "Nothing published yet."
       },
       "events": {
         "title": "Next events",
@@ -364,50 +360,6 @@
         "description": "Most of the catalog is open to every plan. Some items, such as new releases and collector's editions, need a higher plan; they are marked with the plan they need. Every plan includes everything the plans below it can rent.",
         "entry": "Every item without a plan mark.",
         "higher": "Also the items marked “{plan}”."
-      }
-    },
-    "academy": {
-      "meta": {
-        "title": "The Academy",
-        "description": "The IDEA Academy: courses and cultural-exchange programs that connect Iraq with the world. Register your interest."
-      },
-      "badge": "The Academy",
-      "title": "Expand your",
-      "highlight": "horizon.",
-      "subtitle": "Whether you want to master a new skill or take part in a cultural exchange, your journey starts here.",
-      "status": "The Academy is preparing its first programs. Tell us what you'd like to learn and we'll let you know when enrolment opens.",
-      "tracks": {
-        "title": "Two tracks",
-        "learn": {
-          "title": "Learning",
-          "description": "Practical courses in technology, business, languages and the arts, taught in Arabic and English."
-        },
-        "exchange": {
-          "title": "Cultural exchange",
-          "description": "Programs that build understanding and lasting connections between Iraq and the global community."
-        }
-      },
-      "programs": {
-        "title": "Programs we're building",
-        "items": [
-          {
-            "title": "Student exchange",
-            "description": "Study periods abroad with partner universities and institutions."
-          },
-          {
-            "title": "Heritage Reborn",
-            "description": "A collaborative residency for artists, historians and developers to bring Iraq's ancient history to life with digital tools."
-          },
-          {
-            "title": "The Majlis Dialogue",
-            "description": "Open conversations that connect Iraqi entrepreneurs and students with mentors and thinkers from around the world."
-          }
-        ]
-      },
-      "cta": {
-        "title": "Interested?",
-        "description": "Send us a message with the program or subject you're interested in.",
-        "button": "Register your interest"
       }
     },
     "suite": {
@@ -751,15 +703,77 @@
         }
       }
     },
-    "news": {
+    "post": {
       "meta": {
-        "title": "News",
-        "description": "Announcements, launches and stories from The IDEA."
+        "title": "The IDEA Post",
+        "description": "News, stories, members' writing and art, and guides from The IDEA."
       },
-      "title": "News",
-      "description": "Announcements, launches and stories from across The IDEA.",
-      "empty": "No news yet. Check back soon.",
-      "back": "All news"
+      "title": "The IDEA Post",
+      "description": "News from The IDEA, stories from our community, members' writing and art, and guides to learn something new.",
+      "all": "Everything",
+      "empty": "Nothing published here yet. Check back soon.",
+      "byline": "By {name}",
+      "theIdea": "The IDEA",
+      "back": "Back to {section}",
+      "sections": {
+        "news": {
+          "title": "News",
+          "description": "Announcements and launches from across The IDEA."
+        },
+        "stories": {
+          "title": "Stories",
+          "description": "Features and interviews from our community."
+        },
+        "members": {
+          "title": "Members' work",
+          "description": "Essays, poetry, fiction, theatre and art by members, chosen through blind review."
+        },
+        "learn": {
+          "title": "Learn",
+          "description": "Guides and courses, and the cultural-exchange programs we're building."
+        }
+      },
+      "submit": {
+        "title": "Submit your work",
+        "description": "Members can submit essays, poetry, fiction, theatre or visual art from My Pass. Editors review every submission without seeing the author's name, and accepted work is published here.",
+        "button": "Submit your work"
+      },
+      "learn": {
+        "status": "We're preparing the first courses and programs. Tell us what you'd like to learn and we'll let you know when enrolment opens.",
+        "tracks": {
+          "title": "Two tracks",
+          "learn": {
+            "title": "Learning",
+            "description": "Practical courses in technology, business, languages and the arts, taught in Arabic and English."
+          },
+          "exchange": {
+            "title": "Cultural exchange",
+            "description": "Programs that build understanding and lasting connections between Iraq and the global community."
+          }
+        },
+        "programs": {
+          "title": "Programs we're building",
+          "items": [
+            {
+              "title": "Student exchange",
+              "description": "Study periods abroad with partner universities and institutions."
+            },
+            {
+              "title": "Heritage Reborn",
+              "description": "A collaborative residency for artists, historians and developers to bring Iraq's ancient history to life with digital tools."
+            },
+            {
+              "title": "The Majlis Dialogue",
+              "description": "Open conversations that connect Iraqi entrepreneurs and students with mentors and thinkers from around the world."
+            }
+          ]
+        },
+        "cta": {
+          "title": "Interested?",
+          "description": "Send us a message with the program or subject you're interested in.",
+          "button": "Register your interest"
+        }
+      }
     },
     "events": {
       "meta": {
@@ -779,25 +793,6 @@
       "noRsvps": "Be the first to RSVP.",
       "rsvp": "RSVP",
       "ended": "This event has ended."
-    },
-    "journal": {
-      "meta": {
-        "title": "The Journal",
-        "description": "The IDEA's journal: writing and visual art by our members, published in issues you can read as PDF."
-      },
-      "title": "The Journal",
-      "description": "Writing and visual art by our members, chosen through blind review and published in issues.",
-      "issue": "Volume {volume} · Issue {issue}",
-      "empty": "The first issue is in the works.",
-      "read": "Read the PDF",
-      "noPdf": "The PDF of this issue isn't available yet.",
-      "back": "All issues",
-      "published": "Published {date}",
-      "submit": {
-        "title": "Submit your work",
-        "description": "Members can submit essays, poetry, fiction, theatre or visual art from My Pass. Editors review every submission without seeing the author's name.",
-        "button": "Submit your work"
-      }
     }
   },
   "app": {
@@ -1146,7 +1141,7 @@
     },
     "submissions": {
       "title": "Submissions",
-      "description": "Send your writing or visual art to the journal. Editors review every submission without seeing the author's name.",
+      "description": "Send your writing or visual art to The IDEA Post. Editors review every submission without seeing the author's name.",
       "form": {
         "title": "Submit your work",
         "workTitle": "Title",
@@ -1598,7 +1593,7 @@
     "lines": {
       "megastore": "Megastore",
       "plus": "The IDEA Plus",
-      "academy": "Academy",
+      "post": "The IDEA Post",
       "suite": "The IDEA Suite",
       "club": "The IDEA Club"
     },
@@ -2510,9 +2505,8 @@
     "editorial": {
       "title": "Editorial",
       "tabs": {
-        "posts": "News",
+        "posts": "The IDEA Post",
         "events": "Events",
-        "journal": "Journal",
         "submissions": "Submissions"
       },
       "publish": {
@@ -2541,6 +2535,15 @@
         "titleEn": "Title (English)",
         "slug": "Slug",
         "slugHint": "The web address, e.g. new-games-arrive.",
+        "section": "Section",
+        "sections": {
+          "news": "News",
+          "stories": "Stories",
+          "members": "Members' work",
+          "learn": "Learn"
+        },
+        "byline": "Byline",
+        "bylineHint": "Who wrote it, as shown on the post. Leave empty for The IDEA.",
         "excerptAr": "Summary (Arabic)",
         "excerptEn": "Summary (English)",
         "cover": "Cover image",
@@ -2574,23 +2577,6 @@
         "unnamed": "Unnamed member",
         "removeRsvp": "Remove this RSVP?",
         "deleteDescription": "Its RSVPs are deleted too."
-      },
-      "journal": {
-        "new": "New issue",
-        "empty": "No journal issues yet.",
-        "number": "Issue",
-        "volumeIssue": "Vol. {volume}, No. {issue}",
-        "title": "Title",
-        "titleAr": "Title (Arabic)",
-        "titleEn": "Title (English)",
-        "volume": "Volume",
-        "issue": "Issue number",
-        "descriptionAr": "Description (Arabic)",
-        "descriptionEn": "Description (English)",
-        "pdf": "Issue PDF",
-        "pdfHint": "Required before publishing. Up to 50 MB.",
-        "noPdf": "No PDF yet",
-        "cover": "Cover image"
       },
       "submissions": {
         "all": "All submissions",
@@ -2642,7 +2628,11 @@
         "decisionHint": "The author sees this status.",
         "decisionNote": "Note to the author",
         "decisionNoteHint": "Shown to the author with the decision.",
-        "saveDecision": "Save decision"
+        "saveDecision": "Save decision",
+        "publish": "The IDEA Post",
+        "publishHint": "Accepted work is published in Members' work. This creates a draft with the member's name as the byline.",
+        "createPost": "Create the post",
+        "openPost": "Open the post"
       }
     },
     "telegram": {

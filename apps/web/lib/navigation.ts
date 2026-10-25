@@ -3,15 +3,7 @@
  * from `web.nav.<id>`, descriptions from `web.nav.descriptions.<id>`.
  */
 
-type Described =
-  | "academy"
-  | "club"
-  | "events"
-  | "journal"
-  | "news"
-  | "plus"
-  | "store"
-  | "suite";
+type Described = "club" | "events" | "plus" | "post" | "store" | "suite";
 
 export interface NavigationItem {
   described?: Described;
@@ -30,7 +22,6 @@ export const navigationGroups: NavigationGroup[] = [
     items: [
       { described: "store", href: "/store", id: "store" },
       { described: "plus", href: "/plus", id: "plus" },
-      { described: "academy", href: "/academy", id: "academy" },
       { described: "suite", href: "/suite", id: "suite" },
     ],
   },
@@ -38,9 +29,8 @@ export const navigationGroups: NavigationGroup[] = [
     id: "community",
     items: [
       { described: "club", href: "/club", id: "club" },
-      { described: "news", href: "/news", id: "news" },
+      { described: "post", href: "/post", id: "post" },
       { described: "events", href: "/events", id: "events" },
-      { described: "journal", href: "/journal", id: "journal" },
     ],
   },
   {

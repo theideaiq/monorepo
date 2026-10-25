@@ -35,7 +35,6 @@ const ACTIONS = ["insert", "update", "delete"] as const;
 const ENTITIES = [
   "crm_contacts",
   "events",
-  "journal_issues",
   "ledger_entries",
   "orders",
   "posts",

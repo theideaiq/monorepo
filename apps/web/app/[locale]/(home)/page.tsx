@@ -50,7 +50,7 @@ const Home = async ({ params }: HomeProps) => {
   const t = await getTranslations({ locale, namespace: "web" });
   const [featured, posts, events] = await Promise.all([
     getProducts({ featured: true, limit: 8 }),
-    getPosts(3),
+    getPosts({ limit: 3 }),
     getEvents({ limit: 3 }),
   ]);
   const ratings = await getRatings(featured.map((product) => product.id));
@@ -136,7 +136,7 @@ const Home = async ({ params }: HomeProps) => {
       </section>
 
       <Section
-        action={{ href: "/news", label: t("ui.viewAll") }}
+        action={{ href: "/post", label: t("ui.viewAll") }}
         title={t("home.news.title")}
       >
         {posts.length > 0 ? (
