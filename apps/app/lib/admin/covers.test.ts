@@ -33,11 +33,9 @@ const mockFetch = (routes: Record<string, unknown>) =>
 
 describe("coverStrategy", () => {
   test("maps categories to sources", () => {
-    expect(coverStrategy("vinyl")).toBe("music");
-    expect(coverStrategy("cds-and-cassettes")).toBe("music");
+    expect(coverStrategy("music")).toBe("music");
     expect(coverStrategy("books")).toBe("books");
-    expect(coverStrategy("rent-books")).toBe("books");
-    expect(coverStrategy("rent-games")).toBe("wikipedia");
+    expect(coverStrategy("gaming")).toBe("wikipedia");
     expect(coverStrategy(null)).toBe("wikipedia");
   });
 });
@@ -242,7 +240,7 @@ describe("findCovers", () => {
     });
     const covers = await findCovers(
       { details: {}, name_en: "Frankenstein in Baghdad – Ahmed Saadawi" },
-      "rent-books",
+      "books",
       { fetch: fetcher }
     );
     expect(covers.map((cover) => cover.url)).toEqual([

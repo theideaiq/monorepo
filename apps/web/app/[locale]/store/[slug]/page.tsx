@@ -17,7 +17,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { CoverImage } from "@/components/cover-image";
-import { ProductCard, stockLabel } from "@/components/product-card";
+import { stockLabel } from "@/components/product-card";
 import { ProductConditionBulb } from "@/components/product-condition-bulb";
 import {
   ProductReviews,
@@ -28,7 +28,6 @@ import { WriteReview } from "@/components/store/product-reviews";
 import { PurchasePanel } from "@/components/store/purchase-panel";
 import {
   getOffers,
-  getOtherFormats,
   getPlans,
   getProduct,
   getProductSlugs,
@@ -70,14 +69,12 @@ export const generateMetadata = async ({
   });
 };
 
-/** The Plus plan a rental item needs, when it needs more than the entry plan. */
+/** The Plus plan renting it needs, when it needs more than the entry plan. */
 const rentalPlan = async ({
-  kind,
+  rentable,
   rental_tier: tier,
-}: Pick<ProductDetail, "kind" | "rental_tier">) =>
-  kind === "rental" && tier !== null
-    ? requiredPlan(await getPlans("plus"), tier)
-    : null;
+}: Pick<ProductDetail, "rentable" | "rental_tier">) =>
+  rentable && tier !== null ? requiredPlan(await getPlans("plus"), tier) : null;
 
 const ProductPage = async ({ params }: ProductProps) => {
   const { locale, slug } = await params;
@@ -87,16 +84,14 @@ const ProductPage = async ({ params }: ProductProps) => {
     notFound();
   }
 
-  const [t, store, ratings, reviews, plan, offers, otherFormats] =
-    await Promise.all([
-      getTranslations({ locale, namespace: "web.store.product" }),
-      getTranslations({ locale, namespace: "store" }),
-      getRatings([product.id]),
-      getReviews(product.id, REVIEWS_SHOWN),
-      rentalPlan(product),
-      getOffers(product.id),
-      getOtherFormats(product),
-    ]);
+  const [t, store, ratings, reviews, plan, offers] = await Promise.all([
+    getTranslations({ locale, namespace: "web.store.product" }),
+    getTranslations({ locale, namespace: "store" }),
+    getRatings([product.id]),
+    getReviews(product.id, REVIEWS_SHOWN),
+    rentalPlan(product),
+    getOffers(product.id),
+  ]);
   const rating = ratings[product.id] ?? null;
   const name = localized(product, "name", locale);
   const description = localized(product, "description", locale);
@@ -266,19 +261,6 @@ const ProductPage = async ({ params }: ProductProps) => {
           ) : null}
         </div>
       </div>
-
-      {otherFormats.length > 0 ? (
-        <section className="mt-12 flex flex-col gap-4">
-          <h2 className="font-semibold text-xl">{t("otherFormats")}</h2>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4">
-            {otherFormats.map((format) => (
-              <li key={format.id}>
-                <ProductCard locale={locale} product={format} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
 
       <ProductReviews
         locale={locale}

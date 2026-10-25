@@ -69,9 +69,9 @@ insert into public.staff (user_id, role) values
   ('00000000-0000-0000-0000-0000000000e2', 'admin'),
   ('00000000-0000-0000-0000-0000000000e3', 'editor');
 
-insert into public.product_categories (slug, name_ar, name_en, kind) values
-  ('vinyl', 'أسطوانات الفينيل', 'Vinyl records', 'sale'),
-  ('books', 'الكتب', 'Books', 'sale');
+insert into public.product_categories (slug, name_ar, name_en) values
+  ('vinyl', 'أسطوانات الفينيل', 'Vinyl records'),
+  ('books', 'الكتب', 'Books');
 
 insert into public.products (slug, name_ar, name_en, price, status, kind, details, description_ar, category_id) values
   ('adele-25-vinyl', 'أديل – 25 (أسطوانة فينيل)', 'Adele – 25 (Vinyl)', 69750, 'active', 'sale',

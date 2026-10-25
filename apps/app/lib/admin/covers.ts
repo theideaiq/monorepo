@@ -9,8 +9,8 @@ import { isRemoteCatalogImage } from "./catalog-images";
 
 export type CoverStrategy = "books" | "music" | "wikipedia";
 
-const MUSIC_CATEGORIES = new Set(["vinyl", "cds-and-cassettes"]);
-const BOOK_CATEGORIES = new Set(["books", "rent-books"]);
+const MUSIC_CATEGORIES = new Set(["music"]);
+const BOOK_CATEGORIES = new Set(["books"]);
 
 /** Which source to ask, by category slug. */
 export const coverStrategy = (

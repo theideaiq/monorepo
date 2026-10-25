@@ -16,13 +16,13 @@ values
     '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
 
-insert into public.product_categories (id, slug, name_ar, name_en, kind, position) values
-  ('50000000-0000-0000-0000-000000000001', 'gaming', 'الألعاب', 'Gaming', 'sale', 1),
-  ('50000000-0000-0000-0000-000000000002', 'laptops', 'الحواسيب', 'Laptops', 'sale', 2),
-  ('50000000-0000-0000-0000-000000000003', 'phones', 'الهواتف', 'Phones', 'sale', 3),
-  ('50000000-0000-0000-0000-000000000004', 'books', 'الكتب', 'Books', 'sale', 4),
-  ('50000000-0000-0000-0000-000000000005', 'rent-games', 'ألعاب للإيجار', 'Games to rent', 'rental', 5),
-  ('50000000-0000-0000-0000-000000000006', 'rent-books', 'كتب للإيجار', 'Books to rent', 'rental', 6)
+insert into public.product_categories (id, slug, name_ar, name_en, position) values
+  ('50000000-0000-0000-0000-000000000001', 'gaming', 'الألعاب', 'Gaming', 1),
+  ('50000000-0000-0000-0000-000000000002', 'laptops', 'الحواسيب', 'Laptops', 2),
+  ('50000000-0000-0000-0000-000000000003', 'phones', 'الهواتف', 'Phones', 3),
+  ('50000000-0000-0000-0000-000000000004', 'books', 'الكتب', 'Books', 4),
+  ('50000000-0000-0000-0000-000000000005', 'music', 'الموسيقى', 'Music', 5),
+  ('50000000-0000-0000-0000-000000000006', 'films', 'الأفلام', 'Films', 6)
 on conflict (id) do nothing;
 
 insert into public.products
@@ -44,15 +44,15 @@ values
     'الخيميائي', 'The Alchemist',
     'رواية باولو كويلو.', 'The novel by Paulo Coelho.',
     15000, null, 40, false, '{"Language": "Arabic"}'),
-  ('elden-ring-ps5', 'rental', 'active', '50000000-0000-0000-0000-000000000005',
+  ('elden-ring-ps5', 'rental', 'active', '50000000-0000-0000-0000-000000000001',
     'إلدن رينغ (PS5)', 'Elden Ring (PS5)',
     'لعبة إلدن رينغ لجهاز بلايستيشن ٥.', 'Elden Ring for PlayStation 5.',
     60000, null, 3, true, '{"Platform": "PS5"}'),
-  ('ea-fc-26-ps5', 'rental', 'active', '50000000-0000-0000-0000-000000000005',
+  ('ea-fc-26-ps5', 'rental', 'active', '50000000-0000-0000-0000-000000000001',
     'EA FC 26 (PS5)', 'EA FC 26 (PS5)',
     'أحدث إصدار من سلسلة كرة القدم.', 'The latest edition of the football series.',
     70000, null, 5, false, '{"Platform": "PS5"}'),
-  ('one-hundred-years-of-solitude', 'rental', 'active', '50000000-0000-0000-0000-000000000006',
+  ('one-hundred-years-of-solitude', 'rental', 'active', '50000000-0000-0000-0000-000000000004',
     'مئة عام من العزلة', 'One Hundred Years of Solitude',
     'رواية غابرييل غارسيا ماركيز.', 'The novel by Gabriel García Márquez.',
     20000, null, 2, false, '{"Language": "Arabic"}')
@@ -132,4 +132,4 @@ update public.store_settings set
   pickup_hours_en = 'Saturday to Thursday, 10 am – 9 pm';
 
 -- Affiliate commission on media (see the affiliates migration).
-update public.product_categories set affiliate_rate = 8 where slug in ('books', 'vinyl', 'cds-and-cassettes');
+update public.product_categories set affiliate_rate = 8 where slug in ('books', 'music');

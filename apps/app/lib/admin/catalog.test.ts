@@ -42,11 +42,11 @@ describe("product form", () => {
     expect(parsed.price).toBe(50_000);
   });
 
-  test("sale items have no tier; an empty tier means any plan", () => {
+  test("shop products keep a tier for their copies for rent; empty means any plan", () => {
     expect(
       productSchema.parse({ ...product, kind: "sale", rentalTier: "3" })
         .rentalTier
-    ).toBeNull();
+    ).toBe(3);
     const anyPlan = productSchema.parse({ ...product, rentalTier: "" });
     expect(anyPlan.rentalTier).toBeNull();
     expect(anyPlan.verified).toBe(false);

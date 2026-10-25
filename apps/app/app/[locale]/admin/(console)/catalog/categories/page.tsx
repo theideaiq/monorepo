@@ -16,7 +16,6 @@ const CategoriesPage = async () => {
   const { data: categories } = await supabase
     .from("product_categories")
     .select("*")
-    .order("kind")
     .order("position");
 
   return (

@@ -286,8 +286,7 @@
         "verifiedSeller": "بائع موثّق",
         "requiresPlan": "يتطلب خطة {plan} أو أعلى",
         "requiresPlanNote": "هذه المادة متاحة لأعضاء خطة {plan} وما فوقها. يمكن لأعضاء الخطط الأخرى الترقية من بطاقتهم.",
-        "sellToUs": "لديك واحدة؟ بِعها لنا",
-        "otherFormats": "صيغ أخرى"
+        "sellToUs": "لديك واحدة؟ بِعها لنا"
       },
       "rating": {
         "label": "التقييم {rating} من 5",
@@ -2483,9 +2482,7 @@
         "rentalTierHint": "لا يستطيع أعضاء خطط The IDEA Plus الأدنى استئجار هذا المنتج.",
         "anyPlan": "أي خطة من The IDEA Plus",
         "tierOption": "المستوى {tier}: {names}",
-        "unknownTier": "لا توجد خطة بهذا المستوى",
-        "groupKey": "مجموعة الصيغ الأخرى",
-        "groupKeyHint": "تظهر المنتجات التي تحمل المجموعة نفسها كصيغ أخرى لبعضها، مثل kind-of-blue للأسطوانة والقرص والكاسيت."
+        "unknownTier": "لا توجد خطة بهذا المستوى"
       },
       "variants": {
         "title": "الخيارات",
@@ -2590,7 +2587,7 @@
           "name_en": "الاسم بالإنجليزية. مطلوب للمنتج الجديد.",
           "name_ar": "الاسم بالعربية. مطلوب للمنتج الجديد.",
           "kind": "sale أو rental. المنتجات الجديدة للبيع ما لم يُحدَّد غير ذلك.",
-          "category": "معرّف الفئة، مثل vinyl أو books أو rent-games.",
+          "category": "معرّف الفئة، مثل music أو books أو films.",
           "price": "السعر بالدينار العراقي، بلا كسور. مطلوب للمنتج الجديد.",
           "compare_at_price": "السعر القديم يظهر مشطوبًا، ويجب أن يكون أعلى من السعر.",
           "condition": "new أو used أو refurbished أو open_box.",

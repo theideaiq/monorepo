@@ -64,7 +64,6 @@ const AffiliatesPage = async ({
       supabase
         .from("product_categories")
         .select("id, name_ar, name_en, affiliate_rate")
-        .eq("kind", "sale")
         .order("position"),
     ]);
   const affiliates = data ?? [];

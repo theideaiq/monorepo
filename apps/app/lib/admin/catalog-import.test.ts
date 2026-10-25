@@ -14,6 +14,7 @@ import {
 
 const categories = [
   { id: "c-vinyl", slug: "vinyl" },
+  { id: "c-music", slug: "music" },
   { id: "c-books", slug: "books" },
 ];
 const categorySlugs = new Set(categories.map((category) => category.slug));

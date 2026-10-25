@@ -334,6 +334,7 @@ export const product = (extra: Partial<ProductCard> = {}): ProductCard => ({
   name_ar: "بلايستيشن 5",
   name_en: "PlayStation 5",
   price: 720_000,
+  rentable: false,
   slug: "playstation-5",
   stock_count: 3,
   variants: [],

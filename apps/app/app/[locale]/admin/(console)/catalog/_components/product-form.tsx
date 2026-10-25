@@ -91,14 +91,6 @@ const PricingPanel = ({
             value,
           }))}
         />
-        <TextField
-          defaultValue={product?.group_key ?? ""}
-          dir="ltr"
-          hint={t("fields.groupKeyHint")}
-          label={t("fields.groupKey")}
-          maxLength={120}
-          name="groupKey"
-        />
       </FieldGrid>
     </Panel>
   );
@@ -195,7 +187,7 @@ export const ProductForm = ({
               name="seller"
               required
             />
-            {kind === "rental" ? (
+            {kind === "rental" || product?.rentable ? (
               <SelectField
                 defaultValue={String(currentTier ?? "")}
                 hint={t("fields.rentalTierHint")}

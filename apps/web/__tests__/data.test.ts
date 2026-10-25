@@ -118,12 +118,12 @@ describe("getReviews", () => {
 });
 
 describe("getRentals", () => {
-  it("selects active rentals with their plan tier", async () => {
+  it("selects active rentable products with their plan tier", async () => {
     await getRentals(4);
     const select = state.calls.find((call) => call.method === "select");
     expect(String(select?.args[0]).endsWith(", rental_tier")).toBe(true);
     expect(state.calls).toContainEqual({
-      args: ["kind", "rental"],
+      args: ["rentable", true],
       method: "eq",
     });
     expect(state.calls).toContainEqual({

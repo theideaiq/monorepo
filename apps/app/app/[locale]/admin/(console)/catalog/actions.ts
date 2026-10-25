@@ -31,7 +31,6 @@ export const saveProduct = staffAction(
       description_en: input.descriptionEn,
       details: keyValues(input.detailKey, input.detailValue),
       featured: input.featured,
-      group_key: input.groupKey,
       images: input.images,
       kind: input.kind,
       name_ar: input.nameAr,
@@ -146,7 +145,6 @@ export const deleteVariant = staffAction(
 
 const categorySchema = z.object({
   id: optionalUuid,
-  kind: z.enum(Enums.product_kind),
   nameAr: text(120),
   nameEn: text(120),
   position: int(0, 10_000),
@@ -158,7 +156,6 @@ export const saveCategory = staffAction(
   categorySchema,
   async ({ input, supabase }) => {
     const row = {
-      kind: input.kind,
       name_ar: input.nameAr,
       name_en: input.nameEn,
       position: input.position,
