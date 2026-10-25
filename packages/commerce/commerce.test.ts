@@ -26,6 +26,7 @@ describe("commerce helpers", () => {
       bulbsDiscount: 0,
       bulbsUsed: 0,
       count: 0,
+      discount: 0,
       shippingFee: 0,
       subtotal: 0,
       total: 0,
@@ -63,6 +64,29 @@ describe("commerce helpers", () => {
       bulbsUsed: 80,
       total: 0,
     });
+  });
+
+  test("takes a friend's invite off the first order, capped", () => {
+    const settings = { freeShippingThreshold: null, shippingFee: 5000 };
+    const delivery = { fulfilment: "delivery" as const, zoneFee: 5000 };
+    expect(
+      cartTotals(
+        [{ quantity: 1, unitPrice: 50_000 }],
+        settings,
+        delivery,
+        0,
+        true
+      )
+    ).toMatchObject({ discount: 5000, total: 50_000 });
+    expect(
+      cartTotals(
+        [{ quantity: 1, unitPrice: 400_000 }],
+        settings,
+        delivery,
+        0,
+        true
+      )
+    ).toMatchObject({ discount: 15_000, total: 390_000 });
   });
 
   test("prices delivery by zone and makes pickup free", () => {

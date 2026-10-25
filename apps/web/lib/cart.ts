@@ -102,7 +102,9 @@ export const summarizeCart = (
   settings: StoreSettings,
   choice?: DeliveryChoice,
   /** Bulbs to spend (capped at what the order costs). */
-  bulbs = 0
+  bulbs = 0,
+  /** The member's first order through a friend's invite. */
+  invited = false
 ) => {
   const lines = items.map(toCartLine);
   const orderable = lines.filter((line) => line.buyable);
@@ -114,7 +116,7 @@ export const summarizeCart = (
     canCheckout: orderable.length > 0 && problems.length === 0,
     lines,
     problems: problems.length,
-    totals: cartTotals(orderable, settings, choice, bulbs),
+    totals: cartTotals(orderable, settings, choice, bulbs, invited),
   };
 };
 

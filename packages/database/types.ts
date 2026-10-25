@@ -640,6 +640,8 @@ export type Database = {
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
           number: number;
@@ -663,6 +665,8 @@ export type Database = {
           created_at?: string;
           currency?: string;
           delivery_zone_id?: string | null;
+          discount?: number;
+          discount_source?: string | null;
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           id?: string;
           number?: never;
@@ -686,6 +690,8 @@ export type Database = {
           created_at?: string;
           currency?: string;
           delivery_zone_id?: string | null;
+          discount?: number;
+          discount_source?: string | null;
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           id?: string;
           number?: never;
@@ -1160,6 +1166,7 @@ export type Database = {
           created_at: string;
           full_name: string | null;
           id: string;
+          invite_code: string;
           locale: string;
           marketing_opt_in: boolean;
           member_number: number;
@@ -1174,6 +1181,7 @@ export type Database = {
           created_at?: string;
           full_name?: string | null;
           id: string;
+          invite_code?: string;
           locale?: string;
           marketing_opt_in?: boolean;
           member_number?: never;
@@ -1188,6 +1196,7 @@ export type Database = {
           created_at?: string;
           full_name?: string | null;
           id?: string;
+          invite_code?: string;
           locale?: string;
           marketing_opt_in?: boolean;
           member_number?: never;
@@ -1258,6 +1267,41 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [];
+      };
+      referrals: {
+        Row: {
+          created_at: string;
+          invitee_id: string;
+          inviter_id: string;
+          order_id: string | null;
+          rewarded_at: string | null;
+          status: Database["public"]["Enums"]["referral_status"];
+        };
+        Insert: {
+          created_at?: string;
+          invitee_id: string;
+          inviter_id: string;
+          order_id?: string | null;
+          rewarded_at?: string | null;
+          status?: Database["public"]["Enums"]["referral_status"];
+        };
+        Update: {
+          created_at?: string;
+          invitee_id?: string;
+          inviter_id?: string;
+          order_id?: string | null;
+          rewarded_at?: string | null;
+          status?: Database["public"]["Enums"]["referral_status"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "referrals_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       rentals: {
         Row: {
@@ -2065,6 +2109,7 @@ export type Database = {
           valid: boolean;
         }[];
       };
+      claim_invite: { Args: { code: string }; Returns: string };
       claim_push_notifications: {
         Args: {
           max_age?: string;
@@ -2123,6 +2168,8 @@ export type Database = {
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
           number: number;
@@ -2215,6 +2262,8 @@ export type Database = {
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
           number: number;
@@ -2272,6 +2321,15 @@ export type Database = {
         }[];
       };
       my_calendar_token: { Args: Record<PropertyKey, never>; Returns: string };
+      my_invites: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          code: string;
+          invited: number;
+          rewarded: number;
+          rewarded_this_month: number;
+        }[];
+      };
       my_pass_secret: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -2501,6 +2559,7 @@ export type Database = {
       product_condition: "new" | "used" | "refurbished" | "open_box";
       product_kind: "sale" | "rental";
       product_status: "draft" | "active" | "archived";
+      referral_status: "pending" | "rewarded" | "void";
       rental_status:
         | "requested"
         | "active"
@@ -2744,6 +2803,7 @@ export const Constants = {
       product_condition: ["new", "used", "refurbished", "open_box"],
       product_kind: ["sale", "rental"],
       product_status: ["draft", "active", "archived"],
+      referral_status: ["pending", "rewarded", "void"],
       rental_status: [
         "requested",
         "active",

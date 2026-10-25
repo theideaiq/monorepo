@@ -8,6 +8,8 @@ interface OrderSummaryProps {
   /** IQD paid with Bulbs, and how many. */
   readonly bulbsDiscount?: number;
   readonly bulbsUsed?: number;
+  /** IQD off from a friend's invite (or later an affiliate code). */
+  readonly discount?: number;
   readonly shippingFee: number;
   readonly subtotal: number;
   readonly total: number;
@@ -20,6 +22,7 @@ interface OrderSummaryProps {
 export const OrderSummary = ({
   bulbsDiscount = 0,
   bulbsUsed = 0,
+  discount = 0,
   shippingFee,
   subtotal,
   total,
@@ -42,6 +45,14 @@ export const OrderSummary = ({
             : formatPrice(shippingFee, locale)}
         </dd>
       </div>
+      {discount > 0 ? (
+        <div className="flex justify-between gap-4">
+          <dt className="text-muted-foreground">{t("discount")}</dt>
+          <dd className="tabular-nums" dir="ltr">
+            −{formatPrice(discount, locale)}
+          </dd>
+        </div>
+      ) : null}
       {bulbsDiscount > 0 ? (
         <div className="flex justify-between gap-4">
           <dt className="text-muted-foreground">

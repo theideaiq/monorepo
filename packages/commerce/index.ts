@@ -133,6 +133,14 @@ export interface DeliveryChoice {
 /** 1 Bulb takes 100 IQD off an order. */
 export const BULB_VALUE_IQD = 100;
 
+/** A friend's invite: 10% off the first order, at most 15,000 IQD. */
+export const INVITE_DISCOUNT_RATE = 0.1;
+export const INVITE_DISCOUNT_CAP = 15_000;
+
+/** The invite discount on a subtotal, mirroring `create_order()`. */
+export const inviteDiscount = (subtotal: number) =>
+  Math.min(Math.floor(subtotal * INVITE_DISCOUNT_RATE), INVITE_DISCOUNT_CAP);
+
 /**
  * The delivery fee, mirroring `create_order()`: pickup is free; delivery
  * costs the zone's fee unless the subtotal reaches the free-delivery
@@ -172,18 +180,21 @@ export const cartTotals = (
   settings: StoreSettings,
   choice?: DeliveryChoice,
   /** Bulbs the member wants to spend (capped at what the order costs). */
-  bulbs = 0
+  bulbs = 0,
+  /** The member's first order through a friend's invite. */
+  invited = false
 ) => {
   const subtotal = lines.reduce(
     (sum, line) => sum + line.unitPrice * line.quantity,
     0
   );
   const shippingFee = deliveryFee(subtotal, settings, choice);
+  const discount = invited ? inviteDiscount(subtotal) : 0;
   const bulbsUsed = Math.max(
     0,
     Math.min(
       Math.floor(bulbs),
-      Math.floor((subtotal + shippingFee) / BULB_VALUE_IQD)
+      Math.floor((subtotal + shippingFee - discount) / BULB_VALUE_IQD)
     )
   );
   const bulbsDiscount = bulbsUsed * BULB_VALUE_IQD;
@@ -191,9 +202,10 @@ export const cartTotals = (
     bulbsDiscount,
     bulbsUsed,
     count: lines.reduce((sum, line) => sum + line.quantity, 0),
+    discount,
     shippingFee,
     subtotal,
-    total: subtotal + shippingFee - bulbsDiscount,
+    total: subtotal + shippingFee - discount - bulbsDiscount,
   };
 };
 
