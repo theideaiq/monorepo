@@ -16,7 +16,8 @@ export const Footer = async () => {
 
   return (
     <footer className="border-t bg-surface-raised">
-      <div className="container mx-auto grid gap-10 px-4 py-14 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
+      {/* On phones the tabs replace these links; About has the same pages. */}
+      <div className="container mx-auto hidden gap-10 px-4 py-14 md:grid lg:grid-cols-[1.4fr_repeat(4,1fr)]">
         <div className="flex flex-col items-start gap-4">
           <Link aria-label={t("web.nav.home")} href="/">
             <BrandLogo />
@@ -75,7 +76,7 @@ export const Footer = async () => {
           ))}
         </nav>
       </div>
-      <div className="border-t">
+      <div className="md:border-t">
         <div className="container mx-auto flex flex-col gap-2 px-4 py-6 text-muted-foreground text-xs">
           <p>
             {t("web.footer.copyright", {

@@ -325,6 +325,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   The company's pages moved under `/about` (careers, FAQ, contact; old
   links redirect); `/suite` stays where it is. Next: the app layout (bottom
   tabs on phones, slim header, home-screen install, no accidental zoom).
+- 2026-10-25: **The website as an app, part 2: the layout.** On phones,
+  tabs along the bottom (Shop, Rent, Discover, Cart with its count, My
+  Pass; hidden during sign-in, checkout and onboarding) replace the
+  footer's links; added to the home screen, the site opens full screen
+  (web app manifest, Apple web-app tags) and fits around the notch and
+  home bar. Pinch zoom stays (iOS ignores a lock and it fails
+  accessibility), but nothing zooms by itself: form fields are 16px on
+  touch screens and double-tap zoom is off. No tap flash, no rubber-band
+  bounce when installed, sideways rows without scrollbars, and a loading
+  placeholder instead of a blank page.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers
