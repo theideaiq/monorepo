@@ -1286,7 +1286,8 @@
         "procurement": "المشتريات",
         "invoices": "الفواتير",
         "overview": "نظرة عامة",
-        "plus": "The IDEA Plus"
+        "plus": "The IDEA Plus",
+        "hiring": "التوظيف"
       },
       "members": {
         "title": "الأعضاء",
@@ -1330,7 +1331,8 @@
         "unpaidTotal": "المستحق {total}",
         "plusSeats": "أعضاء لديهم The IDEA Plus",
         "plan": "باقة The IDEA Suite: {plan}",
-        "noPlan": "لا توجد باقة The IDEA Suite بعد. اطّلع على الباقات"
+        "noPlan": "لا توجد باقة The IDEA Suite بعد. اطّلع على الباقات",
+        "candidatesToReview": "مرشحون بانتظار المراجعة"
       }
     },
     "onboarding": {
@@ -1921,6 +1923,66 @@
           "order": "أمر الشراء #{number}",
           "invoice": "الفاتورة #{number}"
         }
+      },
+      "hiring": {
+        "title": "التوظيف",
+        "description": "أخبرنا بمن تبحث عنه. نجد المرشحين ونقيّمهم ونرسلهم إليك؛ وأنت تختار أو ترفض أو توظّف.",
+        "managersOnly": "ينشر المالكون والمسؤولون الوظائف ويقررون بشأن المرشحين.",
+        "jobs": "الوظائف",
+        "empty": "لا توجد وظائف بعد.",
+        "number": "الوظيفة #{number}",
+        "toReview": "{count} بانتظار المراجعة",
+        "notFound": "هذه الوظيفة ليست ضمن هذه الشركة.",
+        "awaiting": "نبحث عن مرشحين. سيصلك إشعار عن كل مرشح.",
+        "proposedOn": "رُشّح في {date}",
+        "cv": "افتح السيرة الذاتية",
+        "note": "ملاحظة إلى The IDEA (اختياري)",
+        "notePlaceholder": "مثلاً: مقابلة يوم الأحد",
+        "shortlist": "القائمة المختصرة",
+        "hire": "توظيف",
+        "reject": "رفض",
+        "decideError": "لم تنجح العملية. ربما شُغلت الوظيفة أو أُغلقت.",
+        "yourNote": "ملاحظتك: {note}",
+        "close": "أغلق هذه الوظيفة",
+        "openings": "المطلوب توظيفهم: {count}",
+        "salary": "{min} – {max} شهريًا",
+        "salaryFrom": "من {min} شهريًا",
+        "salaryUpTo": "حتى {max} شهريًا",
+        "types": {
+          "full_time": "دوام كامل",
+          "part_time": "دوام جزئي",
+          "contract": "عقد",
+          "internship": "تدريب"
+        },
+        "status": {
+          "job": {
+            "open": "مفتوحة",
+            "filled": "مشغولة",
+            "closed": "مغلقة"
+          },
+          "candidate": {
+            "proposed": "جديد",
+            "shortlisted": "في القائمة المختصرة",
+            "rejected": "مرفوض",
+            "hired": "تم توظيفه",
+            "withdrawn": "مسحوب"
+          }
+        },
+        "new": {
+          "title": "وظيفة جديدة",
+          "description": "أي دور، من موظف واحد إلى فريق كامل.",
+          "role": "الدور",
+          "rolePlaceholder": "مثلاً: محاسب",
+          "details": "التفاصيل",
+          "detailsPlaceholder": "المسؤوليات، الخبرة، اللغات، ساعات العمل…",
+          "location": "الموقع",
+          "type": "نوع العقد",
+          "salaryMin": "الراتب من (د.ع شهريًا، اختياري)",
+          "salaryMax": "الراتب حتى (د.ع شهريًا، اختياري)",
+          "openings": "عدد الأشخاص",
+          "send": "انشر الوظيفة",
+          "error": "تعذّر نشر الوظيفة. تحقق من نطاق الراتب وحاول مجددًا."
+        }
       }
     }
   },
@@ -2105,6 +2167,10 @@
         "plus_seat_active": {
           "title": "The IDEA Plus من شركتك",
           "body": "منحتك شركتك The IDEA Plus ({plan}). ابدأ الاستئجار."
+        },
+        "candidate_proposed": {
+          "title": "مرشح جديد",
+          "body": "{name} لوظيفة {title}. افتحه للمراجعة."
         }
       },
       "kinds": {
@@ -3469,7 +3535,8 @@
         "requests": "الطلبات",
         "orders": "أوامر الشراء",
         "invoices": "الفواتير",
-        "seats": "مقاعد The IDEA Plus"
+        "seats": "مقاعد The IDEA Plus",
+        "hiring": "التوظيف"
       },
       "quotes": {
         "number": "عرض السعر رقم {number}",
@@ -3533,6 +3600,35 @@
         "due": "الاستحقاق",
         "markPaid": "تحديد كمدفوعة",
         "void": "إلغاء"
+      },
+      "hiring": {
+        "title": "التوظيف",
+        "description": "طلبات التوظيف من الشركات. رشّح مرشحين بعد تقييمهم مع سيرهم الذاتية؛ والشركة تختار أو ترفض أو توظّف.",
+        "empty": "لا توجد وظائف بعد.",
+        "job": "الوظيفة",
+        "number": "الوظيفة #{number}",
+        "company": "الشركة",
+        "status": "الحالة",
+        "candidates": "المرشحون",
+        "posted": "تاريخ النشر",
+        "noCandidates": "لم يُرشّح أحد بعد.",
+        "openCv": "افتح السيرة الذاتية",
+        "companyNote": "ملاحظة الشركة: {note}",
+        "withdraw": "سحب",
+        "propose": "رشّح مرشحًا",
+        "details": "التفاصيل",
+        "type": "نوع العقد",
+        "location": "الموقع",
+        "salary": "الراتب (شهريًا)",
+        "openings": "المطلوب توظيفهم",
+        "close": "أغلق الوظيفة",
+        "fullName": "الاسم الكامل",
+        "headline": "المسمّى",
+        "summary": "نبذة",
+        "cv": "السيرة الذاتية (PDF)",
+        "uploading": "جارٍ الرفع…",
+        "uploadError": "تعذّر رفع السيرة الذاتية. PDF فقط وحتى 10 ميغابايت.",
+        "uploaded": "تم رفع السيرة الذاتية."
       }
     }
   },

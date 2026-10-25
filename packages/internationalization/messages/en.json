@@ -1286,7 +1286,8 @@
         "procurement": "Procurement",
         "invoices": "Invoices",
         "overview": "Overview",
-        "plus": "The IDEA Plus"
+        "plus": "The IDEA Plus",
+        "hiring": "Hiring"
       },
       "members": {
         "title": "Members",
@@ -1330,7 +1331,8 @@
         "unpaidTotal": "{total} due",
         "plusSeats": "Members with The IDEA Plus",
         "plan": "The IDEA Suite plan: {plan}",
-        "noPlan": "No The IDEA Suite plan yet. See plans"
+        "noPlan": "No The IDEA Suite plan yet. See plans",
+        "candidatesToReview": "Candidates to review"
       }
     },
     "onboarding": {
@@ -1921,6 +1923,66 @@
           "order": "Purchase order #{number}",
           "invoice": "Invoice #{number}"
         }
+      },
+      "hiring": {
+        "title": "Hiring",
+        "description": "Tell us who you're looking for. We find and vet candidates and send them to you; you shortlist, reject or hire.",
+        "managersOnly": "Owners and admins post jobs and decide on candidates.",
+        "jobs": "Jobs",
+        "empty": "No jobs yet.",
+        "number": "Job #{number}",
+        "toReview": "{count} to review",
+        "notFound": "This job isn't in this company.",
+        "awaiting": "We're looking for candidates. You'll get a notification for each one.",
+        "proposedOn": "proposed {date}",
+        "cv": "Open CV",
+        "note": "Note for The IDEA (optional)",
+        "notePlaceholder": "For example: interview on Sunday",
+        "shortlist": "Shortlist",
+        "hire": "Hire",
+        "reject": "Reject",
+        "decideError": "That didn't work. The job may already be filled or closed.",
+        "yourNote": "Your note: {note}",
+        "close": "Close this job",
+        "openings": "{count} to hire",
+        "salary": "{min} – {max} a month",
+        "salaryFrom": "From {min} a month",
+        "salaryUpTo": "Up to {max} a month",
+        "types": {
+          "full_time": "Full time",
+          "part_time": "Part time",
+          "contract": "Contract",
+          "internship": "Internship"
+        },
+        "status": {
+          "job": {
+            "open": "Open",
+            "filled": "Filled",
+            "closed": "Closed"
+          },
+          "candidate": {
+            "proposed": "New",
+            "shortlisted": "Shortlisted",
+            "rejected": "Rejected",
+            "hired": "Hired",
+            "withdrawn": "Withdrawn"
+          }
+        },
+        "new": {
+          "title": "New job",
+          "description": "Any role, from one hire to a team.",
+          "role": "Role",
+          "rolePlaceholder": "For example: Accountant",
+          "details": "Details",
+          "detailsPlaceholder": "Responsibilities, experience, languages, working hours…",
+          "location": "Location",
+          "type": "Contract",
+          "salaryMin": "Salary from (IQD a month, optional)",
+          "salaryMax": "Salary up to (IQD a month, optional)",
+          "openings": "How many people",
+          "send": "Post the job",
+          "error": "The job couldn't be posted. Check the salary range and try again."
+        }
       }
     }
   },
@@ -2105,6 +2167,10 @@
         "plus_seat_active": {
           "title": "The IDEA Plus from your company",
           "body": "Your company gave you The IDEA Plus ({plan}). Start renting."
+        },
+        "candidate_proposed": {
+          "title": "New candidate",
+          "body": "{name} for {title}. Open it to review."
         }
       },
       "kinds": {
@@ -3469,7 +3535,8 @@
         "requests": "Requests",
         "orders": "Purchase orders",
         "invoices": "Invoices",
-        "seats": "The IDEA Plus seats"
+        "seats": "The IDEA Plus seats",
+        "hiring": "Hiring"
       },
       "quotes": {
         "number": "Quote #{number}",
@@ -3533,6 +3600,35 @@
         "due": "Due",
         "markPaid": "Mark paid",
         "void": "Void"
+      },
+      "hiring": {
+        "title": "Hiring",
+        "description": "Companies' job requests. Propose vetted candidates with their CV; the company shortlists, rejects or hires.",
+        "empty": "No jobs yet.",
+        "job": "Job",
+        "number": "Job #{number}",
+        "company": "Company",
+        "status": "Status",
+        "candidates": "Candidates",
+        "posted": "Posted",
+        "noCandidates": "No candidates proposed yet.",
+        "openCv": "Open CV",
+        "companyNote": "The company's note: {note}",
+        "withdraw": "Withdraw",
+        "propose": "Propose a candidate",
+        "details": "Details",
+        "type": "Contract",
+        "location": "Location",
+        "salary": "Salary (a month)",
+        "openings": "To hire",
+        "close": "Close the job",
+        "fullName": "Full name",
+        "headline": "Headline",
+        "summary": "Summary",
+        "cv": "CV (PDF)",
+        "uploading": "Uploading…",
+        "uploadError": "The CV couldn't be uploaded. PDF only, up to 10 MB.",
+        "uploaded": "CV uploaded."
       }
     }
   },

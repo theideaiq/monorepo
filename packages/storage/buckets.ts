@@ -11,6 +11,16 @@ export const buckets = {
     mimeTypes: ["image/png", "image/jpeg", "image/webp"],
     public: true,
   },
+  /**
+   * Candidates' CVs (PDF) under "<organization id>/…": support uploads them,
+   * the company's members read them.
+   */
+  candidates: {
+    id: "candidates",
+    maxBytes: 10 * 1024 * 1024,
+    mimeTypes: ["application/pdf"],
+    public: false,
+  },
   /** Product images (public); admins write. */
   catalog: {
     id: "catalog",

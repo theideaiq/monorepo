@@ -393,6 +393,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   admins ask, finance approves, the company is invoiced monthly
   (`/cron/plus-seats`). Migration `20261208000000_team_plus.sql`. Next:
   Suite hiring.
+- 2026-10-25: **The IDEA Suite: hiring.** Companies post job requests
+  (Business → Hiring); support proposes vetted candidates with a CV
+  (Back office → The IDEA Suite → Hiring); the company shortlists, rejects
+  or hires, and hiring as many as asked fills the job. Migration
+  `20261209000000_suite_hiring.sql`. Next: the back office (inbox, grouped
+  menu, search, counter mode).
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

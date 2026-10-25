@@ -19,6 +19,7 @@ import { PendingInvitations } from "./pending-invitations";
 const TABS = [
   { href: "/business", key: "overview" },
   { href: "/business/procurement", key: "procurement" },
+  { href: "/business/hiring", key: "hiring" },
   { href: "/business/invoices", key: "invoices" },
   { href: "/business/plus", key: "plus" },
   { href: "/business/members", key: "members" },

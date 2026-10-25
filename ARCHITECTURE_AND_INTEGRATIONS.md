@@ -153,7 +153,7 @@ sends staff to the back office and everyone else to The IDEA Suite.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| The IDEA Suite | `/{locale}/business` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/business/procurement` (requests and quotes, `/business/procurement/<id>`), `/business/invoices`, `/business/plus` (The IDEA Plus for the team), `/documents/<quote|order|invoice>/<id>` (printable), `/business/members`, `/business/billing`, `/business/settings`, `/business/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
+| The IDEA Suite | `/{locale}/business` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/business/procurement` (requests and quotes, `/business/procurement/<id>`), `/business/hiring` (jobs and candidates, `/business/hiring/<id>`), `/business/invoices`, `/business/plus` (The IDEA Plus for the team), `/documents/<quote|order|invoice>/<id>` (printable), `/business/members`, `/business/billing`, `/business/settings`, `/business/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
 | Back office | `/{locale}/admin/…` (catalog, orders, rentals, customers and CRM, marketing, finance, editorial, reviews, The IDEA Suite, support, Telegram, staff, audit log) | `app/[locale]/admin`, `components/admin`, `lib/admin` |
 
 - **Sign-in.** Spark has none of its own: signed-out visitors go to The
@@ -176,6 +176,18 @@ sends staff to the back office and everyone else to The IDEA Suite.
   `set_purchase_order_status`, `issue_invoice`, `set_invoice_status`),
   migration `20261206000000_suite_procurement.sql`. The website's
   notification bell opens `/business…` links on The IDEA Spark.
+- **Hiring (The IDEA Suite).** Owners and admins post a job request (role,
+  details, location, contract, salary range, how many people). Support
+  proposes vetted candidates in Back office → The IDEA Suite → Hiring
+  (name, headline, summary and a PDF CV uploaded to the private
+  `candidates` bucket under `<organization id>/…`); the company's owners
+  and admins get a `candidate_proposed` notification and shortlist,
+  reject or hire, with an optional note. Hiring as many as asked fills the
+  job; owners, admins or support can close it. Every member of the company
+  sees its jobs and candidates (withdrawn ones stay with staff) and opens
+  CVs through short-lived signed links. Tables `job_requests`,
+  `candidates`; RPCs `decide_candidate`, `close_job_request`; migration
+  `20261209000000_suite_hiring.sql`.
 - **Printable documents.** `/documents/quote/<id>`, `/documents/order/<id>`
   and `/documents/invoice/<id>` lay a quote, purchase order or invoice out
   for paper; the browser's print dialog prints it or saves it as a PDF

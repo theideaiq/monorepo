@@ -346,6 +346,62 @@ export type Database = {
         };
         Relationships: [];
       };
+      candidates: {
+        Row: {
+          company_note: string | null;
+          created_at: string;
+          cv_path: string | null;
+          decided_at: string | null;
+          decided_by: string | null;
+          full_name: string;
+          headline: string | null;
+          id: string;
+          job_request_id: string;
+          proposed_by: string | null;
+          status: Database["public"]["Enums"]["candidate_status"];
+          summary: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          company_note?: string | null;
+          created_at?: string;
+          cv_path?: string | null;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          full_name: string;
+          headline?: string | null;
+          id?: string;
+          job_request_id: string;
+          proposed_by?: string | null;
+          status?: Database["public"]["Enums"]["candidate_status"];
+          summary?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          company_note?: string | null;
+          created_at?: string;
+          cv_path?: string | null;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          full_name?: string;
+          headline?: string | null;
+          id?: string;
+          job_request_id?: string;
+          proposed_by?: string | null;
+          status?: Database["public"]["Enums"]["candidate_status"];
+          summary?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "candidates_job_request_id_fkey";
+            columns: ["job_request_id"];
+            isOneToOne: false;
+            referencedRelation: "job_requests";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       cart_items: {
         Row: {
           condition: Database["public"]["Enums"]["product_condition"] | null;
@@ -709,6 +765,65 @@ export type Database = {
             columns: ["purchase_order_id"];
             isOneToOne: true;
             referencedRelation: "purchase_orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      job_requests: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          description: string | null;
+          employment_type: Database["public"]["Enums"]["employment_type"];
+          id: string;
+          location: string | null;
+          number: number;
+          openings: number;
+          organization_id: string;
+          salary_max: number | null;
+          salary_min: number | null;
+          status: Database["public"]["Enums"]["job_status"];
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          description?: string | null;
+          employment_type?: Database["public"]["Enums"]["employment_type"];
+          id?: string;
+          location?: string | null;
+          number?: never;
+          openings?: number;
+          organization_id: string;
+          salary_max?: number | null;
+          salary_min?: number | null;
+          status?: Database["public"]["Enums"]["job_status"];
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          description?: string | null;
+          employment_type?: Database["public"]["Enums"]["employment_type"];
+          id?: string;
+          location?: string | null;
+          number?: never;
+          openings?: number;
+          organization_id?: string;
+          salary_max?: number | null;
+          salary_min?: number | null;
+          status?: Database["public"]["Enums"]["job_status"];
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "job_requests_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
             referencedColumns: ["id"];
           },
         ];
@@ -2851,6 +2966,7 @@ export type Database = {
           user_id: string;
         }[];
       };
+      close_job_request: { Args: { job: string }; Returns: undefined };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
       complete_order_payment: {
         Args: { order_id: string };
@@ -2973,6 +3089,14 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      decide_candidate: {
+        Args: {
+          candidate: string;
+          decision: Database["public"]["Enums"]["candidate_status"];
+          note?: string;
+        };
+        Returns: undefined;
       };
       decide_quote: {
         Args: { accept: boolean; quote: string; reference?: string };
@@ -3393,8 +3517,16 @@ export type Database = {
         | "expiry";
       bulb_status: "pending" | "available" | "void";
       bulb_tier: "glow" | "shine" | "beam" | "blaze";
+      candidate_status:
+        | "proposed"
+        | "shortlisted"
+        | "rejected"
+        | "hired"
+        | "withdrawn";
       crm_status: "lead" | "customer" | "vip" | "churned";
+      employment_type: "full_time" | "part_time" | "contract" | "internship";
       invoice_status: "issued" | "paid" | "void";
+      job_status: "open" | "filled" | "closed";
       ledger_scenario: "actual" | "forecast" | "budget";
       notification_kind:
         | "order"
@@ -3649,8 +3781,17 @@ export const Constants = {
       ],
       bulb_status: ["pending", "available", "void"],
       bulb_tier: ["glow", "shine", "beam", "blaze"],
+      candidate_status: [
+        "proposed",
+        "shortlisted",
+        "rejected",
+        "hired",
+        "withdrawn",
+      ],
       crm_status: ["lead", "customer", "vip", "churned"],
+      employment_type: ["full_time", "part_time", "contract", "internship"],
       invoice_status: ["issued", "paid", "void"],
+      job_status: ["open", "filled", "closed"],
       ledger_scenario: ["actual", "forecast", "budget"],
       notification_kind: [
         "order",
