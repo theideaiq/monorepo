@@ -405,6 +405,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   with a search box; the counter checks a The IDEA Pass by camera, scanner
   or typing and shows Bulbs, Plus, rentals and today's events with
   check-in. Migration `20261210000000_counter.sql`.
+- 2026-10-25: **The IDEA Post content.** The Telegram channel's guides,
+  rewritten and updated (digital SAT, UCAS's three-question personal
+  statement, current USMLE rules; closed opportunities dropped, overlapping
+  posts merged), as one file per post in
+  `packages/database/supabase/content/posts` (a news post, a story and the
+  Learn guides). **Owner step:** run Actions → "Import The IDEA Post
+  content" once; it doesn't post them to The IDEA Club. Edit them in
+  Back office → Editorial afterwards (re-running the import overwrites
+  posts with the same slug).
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

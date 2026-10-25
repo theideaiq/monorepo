@@ -12,6 +12,15 @@ const render = (source: string, locale?: string) =>
   renderToStaticMarkup(<Markdown locale={locale} source={source} />);
 
 describe("Markdown", () => {
+  it("starts the shallowest heading at h2 so no level is skipped", () => {
+    const html = renderToStaticMarkup(
+      <Markdown source={"## Section\n\nText\n\n### Detail\n\n## Next"} />
+    );
+    expect(html).toContain("<h2>Section</h2>");
+    expect(html).toContain("<h3>Detail</h3>");
+    expect(html).toContain("<h2>Next</h2>");
+  });
+
   it("renders headings, emphasis, lists and tables", () => {
     const html = render(
       "# Title\n\nSome **bold** and _italic_.\n\n- one\n- two\n\n| a | b |\n|---|---|\n| 1 | 2 |"
