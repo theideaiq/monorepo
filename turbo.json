@@ -54,6 +54,7 @@
     "BETTERSTACK_*",
     "CRON_SECRET",
     "FCM_SERVICE_ACCOUNT",
+    "GOOGLE_WALLET_*",
     "PUSH_WEBHOOK_SECRET",
     "META_*",
     "TIKTOK_*",

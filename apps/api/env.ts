@@ -40,6 +40,8 @@ export const env = withPresets(
     runtimeEnv: {
       CRON_SECRET: process.env.CRON_SECRET,
       FCM_SERVICE_ACCOUNT: process.env.FCM_SERVICE_ACCOUNT,
+      GOOGLE_WALLET_ISSUER_ID: process.env.GOOGLE_WALLET_ISSUER_ID,
+      GOOGLE_WALLET_SERVICE_ACCOUNT: process.env.GOOGLE_WALLET_SERVICE_ACCOUNT,
       PUSH_WEBHOOK_SECRET: process.env.PUSH_WEBHOOK_SECRET,
       STORE_NOTIFICATIONS_EMAIL: process.env.STORE_NOTIFICATIONS_EMAIL,
     },
@@ -51,6 +53,11 @@ export const env = withPresets(
       // of it) for push notifications through FCM HTTP v1. Push is off
       // while unset.
       FCM_SERVICE_ACCOUNT: z.string().min(1).optional(),
+      // Google Wallet (Pay & Wallet Console → Google Wallet API): the
+      // issuer ID, and the key of a service account added to the issuer
+      // (JSON or base64). "Add to Google Wallet" is hidden while unset.
+      GOOGLE_WALLET_ISSUER_ID: z.string().regex(/^\d+$/).optional(),
+      GOOGLE_WALLET_SERVICE_ACCOUNT: z.string().min(1).optional(),
       // Bearer token the Supabase database webhook on `notifications`
       // inserts sends to POST /webhooks/notifications (`openssl rand -hex 32`).
       PUSH_WEBHOOK_SECRET: z.string().min(32).optional(),

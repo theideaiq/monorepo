@@ -226,6 +226,28 @@ session in the shared cookie.
   scopes and calls `supabase.auth.oauth.approveAuthorization` or
   `denyAuthorization`. Add it under `apps/web/app/[locale]/(pass)`;
   the sign-in redirect with return_to already brings people back to it.
+- **The card.** My Pass opens with the membership card
+  (`apps/web/components/pass`): an ID-1 card with guilloché drawn from
+  formulas, a sheen that follows the pointer, the member's name and
+  number (`profiles.member_number`, from 100001) and a QR code with a
+  6-digit code that changes every 30 seconds. The code is TOTP (RFC 6238,
+  HMAC-SHA1): `my_pass_secret()` hands the member their own secret once,
+  the device keeps it (`localStorage`) and works the code out itself, so
+  the card works offline and in the iOS/Android apps with no server call.
+  The QR code carries `IDEA:<member number>:<code>`; at the counter staff
+  scan it into **Customers → Check a Pass**, which calls `check_pass()`
+  (support staff and admins, AAL2) and accepts the current code and the
+  ones either side of it. A screenshot stops working within a minute.
+- **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
+  Google Wallet" link for a generic pass whose QR code rotates in Google
+  Wallet with the same secret (`rotatingBarcode.totpDetails`), so both
+  are checked the same way. The button shows only when
+  `GOOGLE_WALLET_ISSUER_ID` and `GOOGLE_WALLET_SERVICE_ACCOUNT` are set:
+  create an issuer in the Google Pay & Wallet Console, enable the Google
+  Wallet API in a Google Cloud project, create a service account there,
+  add its email as a user of the issuer, and put its JSON key (or base64
+  of it) on the `api` project. Apple Wallet needs an Apple Developer pass
+  certificate and is not built yet.
 
 ### The back office
 
@@ -1489,6 +1511,7 @@ project.**
 | `SUPABASE_SECRET_KEY` | Feature | `sb_secret_…`. Webhooks, cron, account and organization deletion. **Server only.** |
 | `CRON_SECRET` | Feature | At least 32 characters (`openssl rand -hex 32`). Vercel sends it to the cron routes; without it every cron call is rejected. |
 | `FCM_SERVICE_ACCOUNT` | Feature | Firebase service account JSON (or base64 of it) for push notifications to the iOS/Android apps (3.5); push is off without it. **Server only.** |
+| `GOOGLE_WALLET_ISSUER_ID`, `GOOGLE_WALLET_SERVICE_ACCOUNT` | Feature | Google Wallet issuer ID and a service account key (JSON or base64) added to the issuer, for "Add to Google Wallet" on The IDEA Pass card; the button is hidden without them. **Server only.** |
 | `PUSH_WEBHOOK_SECRET` | Feature | At least 32 characters; the Supabase database webhook on `notifications` sends it to `POST /webhooks/notifications` (3.5). |
 | `WAYL_API_TOKEN`, `WAYL_WEBHOOK_SECRET` | Feature | Payments. Checkout fails in production without them. |
 | `WAYL_ENV` | Feature | `live` in Production, `test` in Preview |

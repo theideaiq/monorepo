@@ -2380,7 +2380,20 @@
       "lastContactedOn": "آخر تواصل في {date}",
       "neverContacted": "لم يُتواصل معه بعد",
       "contactedToday": "تم التواصل اليوم",
-      "lastContactedHint": "بتوقيت بغداد. اتركه فارغًا إن لم يُتواصل معه."
+      "lastContactedHint": "بتوقيت بغداد. اتركه فارغًا إن لم يُتواصل معه.",
+      "checkPass": {
+        "title": "تحقّق من Pass",
+        "description": "امسح رمز QR في البطاقة عند الكاونتر، أو اكتب رقم العضوية والرمز المكوّن من 6 أرقام.",
+        "scanned": "رمز QR أو رقم العضوية",
+        "code": "الرمز",
+        "codeHint": "فقط عند كتابة رقم العضوية",
+        "check": "تحقّق",
+        "valid": "صالح",
+        "invalid": "غير صالح",
+        "unnamed": "بلا اسم",
+        "since": "عضو منذ {date}",
+        "unknown": "لا يوجد عضو بهذا الرقم، أو انتهت صلاحية الرمز."
+      }
     },
     "finance": {
       "title": "المالية",
@@ -2946,6 +2959,24 @@
       "setUpAuthenticator": "إعداد",
       "emailLabel": "البريد الإلكتروني",
       "memberSince": "عضو منذ {date}"
+    },
+    "card": {
+      "member": "عضو",
+      "showAtCounter": "اعرض هذا عند الكاونتر",
+      "newCodeIn": "رمز جديد خلال {seconds} ث",
+      "unavailable": "تعذّر تحميل البطاقة. تحقّق من الاتصال وحاول مجدداً.",
+      "addToWallet": "إضافة إلى Google Wallet",
+      "walletFailed": "تعذّر فتح Google Wallet. حاول مجدداً.",
+      "perks": {
+        "title": "مع The IDEA Pass",
+        "plus": "{plan}: {slots} إيجارات في الوقت نفسه",
+        "plusMember": "The IDEA Plus: {plan}",
+        "joinPlus": "اشترك في The IDEA Plus لاستئجار الألعاب والمزيد",
+        "delivery": "كل طلب وتوصيل، تتابعه من هنا",
+        "events": "الفعاليات واللقاءات، سجّل حضورك بلمسة",
+        "sell": "بِع أو استبدل ما لم تعد تستخدمه",
+        "bulbs": "Bulbs: مكافآت على كل ما تفعله في The IDEA (قريباً)"
+      }
     },
     "signOut": {
       "title": "تسجيل الخروج"

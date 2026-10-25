@@ -28,6 +28,7 @@ import {
 } from "@/lib/admin/list";
 import { Link } from "@/lib/admin/navigation";
 import { requireSection, type ServerClient } from "@/lib/admin/session";
+import { CheckPass } from "./_components/check-pass";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.customers");
@@ -167,7 +168,7 @@ const CustomersPage = async ({
 }: {
   readonly searchParams: Promise<SearchParams>;
 }) => {
-  const { supabase } = await requireSection("customers");
+  const { canWrite, supabase } = await requireSection("customers");
   const params = await searchParams;
   const locale = await getLocale();
   const t = await getTranslations("admin.customers");
@@ -190,6 +191,7 @@ const CustomersPage = async ({
         title={t("title")}
       />
       <PageBody>
+        {canWrite ? <CheckPass /> : null}
         <FilterBar>
           <Input
             aria-label={t("search")}

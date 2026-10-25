@@ -2380,7 +2380,20 @@
       "lastContactedOn": "Last contacted {date}",
       "neverContacted": "Not contacted yet",
       "contactedToday": "Contacted today",
-      "lastContactedHint": "Baghdad time. Leave empty if they haven't been contacted."
+      "lastContactedHint": "Baghdad time. Leave empty if they haven't been contacted.",
+      "checkPass": {
+        "title": "Check a Pass",
+        "description": "Scan the card's QR code at the counter, or type the member number and the 6-digit code.",
+        "scanned": "QR code or member number",
+        "code": "Code",
+        "codeHint": "Only when typing the member number",
+        "check": "Check",
+        "valid": "Valid",
+        "invalid": "Not valid",
+        "unnamed": "No name",
+        "since": "Member since {date}",
+        "unknown": "No member with this number, or the code has expired."
+      }
     },
     "finance": {
       "title": "Finance",
@@ -2946,6 +2959,24 @@
       "setUpAuthenticator": "Set up",
       "emailLabel": "Email",
       "memberSince": "Member since {date}"
+    },
+    "card": {
+      "member": "Member",
+      "showAtCounter": "Show this at the counter",
+      "newCodeIn": "New code in {seconds}s",
+      "unavailable": "The card couldn't load. Check your connection and try again.",
+      "addToWallet": "Add to Google Wallet",
+      "walletFailed": "Google Wallet couldn't open. Try again.",
+      "perks": {
+        "title": "With The IDEA Pass",
+        "plus": "{plan}: {slots} rentals at a time",
+        "plusMember": "The IDEA Plus: {plan}",
+        "joinPlus": "Join The IDEA Plus to rent games and more",
+        "delivery": "Every order and delivery, tracked here",
+        "events": "Events and meetups, RSVP in a tap",
+        "sell": "Sell or trade in what you no longer use",
+        "bulbs": "Bulbs: rewards for everything you do at The IDEA (coming soon)"
+      }
     },
     "signOut": {
       "title": "Sign out"

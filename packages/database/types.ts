@@ -1100,6 +1100,7 @@ export type Database = {
           id: string;
           locale: string;
           marketing_opt_in: boolean;
+          member_number: number;
           updated_at: string;
           whatsapp_opt_in: boolean;
           whatsapp_phone: string | null;
@@ -1113,6 +1114,7 @@ export type Database = {
           id: string;
           locale?: string;
           marketing_opt_in?: boolean;
+          member_number?: never;
           updated_at?: string;
           whatsapp_opt_in?: boolean;
           whatsapp_phone?: string | null;
@@ -1126,6 +1128,7 @@ export type Database = {
           id?: string;
           locale?: string;
           marketing_opt_in?: boolean;
+          member_number?: never;
           updated_at?: string;
           whatsapp_opt_in?: boolean;
           whatsapp_phone?: string | null;
@@ -1957,6 +1960,16 @@ export type Database = {
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
+      check_pass: {
+        Args: { scanned: string };
+        Returns: {
+          full_name: string;
+          member_number: number;
+          member_since: string;
+          user_id: string;
+          valid: boolean;
+        }[];
+      };
       claim_push_notifications: {
         Args: {
           max_age?: string;
@@ -2137,6 +2150,13 @@ export type Database = {
         Returns: number;
       };
       my_calendar_token: { Args: Record<PropertyKey, never>; Returns: string };
+      my_pass_secret: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          member_number: number;
+          secret: string;
+        }[];
+      };
       my_rental_allowance: {
         Args: Record<PropertyKey, never>;
         Returns: {
