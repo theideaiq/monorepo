@@ -335,6 +335,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   touch screens and double-tap zoom is off. No tap flash, no rubber-band
   bounce when installed, sideways rows without scrollbars, and a loading
   placeholder instead of a blank page.
+- 2026-10-25: **Automatic posts to the Club's topics.** Droid posts The
+  IDEA Post's news, upcoming events and new arrivals (several at once as one
+  list) to the forum topics set per chat in Back office → Telegram → Chats,
+  in Arabic or English. Owner steps: in Supabase → Database → Webhooks, add
+  a webhook on INSERT into `public.telegram_posts` that POSTs to
+  `https://api.theideaiq.com/webhooks/telegram-posts` with the header
+  `Authorization: Bearer <PUSH_WEBHOOK_SECRET>` (like the notifications
+  webhook); Droid must be an admin that can post in those topics; fill in
+  the topic IDs in the back office. Migration
+  `20261204000000_telegram_posts.sql`. Next: The IDEA Suite workspace.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

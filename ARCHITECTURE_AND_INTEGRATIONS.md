@@ -373,6 +373,18 @@ session in the shared cookie.
   catch-up cron also send each notification as a Droid message (its title,
   a generic line and a button to the page on the website) to members who
   linked Telegram, claimed once with `claim_telegram_notifications()`.
+  **Automatic topic posts** (migration `20261204000000_telegram_posts.sql`):
+  each chat can name a forum topic for news (`news_topic`), events
+  (`events_topic`) and new arrivals (`arrivals_topic`); 0 is the chat
+  itself (General, or a channel), empty is off, and `post_locale` picks the
+  language. Triggers queue a post of The IDEA Post when it's published, a
+  published upcoming event, and a product added in the last two weeks when
+  it goes on sale or for rent (`telegram_posts`). A Supabase Database
+  Webhook on inserts into `telegram_posts` calls
+  `POST /webhooks/telegram-posts` (Bearer `PUSH_WEBHOOK_SECRET`), and
+  `/cron/telegram-posts` (daily) queues scheduled posts whose time came and
+  sends anything missed; `claim_telegram_posts()` hands each row out once.
+  Several new arrivals at once become one list post.
 - **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
   Google Wallet" link for a generic pass whose QR code rotates in Google
   Wallet with the same secret (`rotatingBarcode.totpDetails`), so both

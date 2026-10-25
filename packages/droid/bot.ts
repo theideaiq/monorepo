@@ -851,3 +851,41 @@ export const notifyMember = async (
     throw error;
   }
 };
+
+/** A post for the Club's topics: a title, lines under it, a picture and a button. */
+export interface ChatPost {
+  buttonLabel: string;
+  lines: string[];
+  /** An https image URL, or null for a text post. */
+  photo: string | null;
+  title: string;
+  url: string;
+}
+
+/**
+ * Posts to a chat Droid runs, in a forum topic (`threadId`; 0 for the chat
+ * itself): a photo with the text as its caption, or a text message.
+ */
+export const postToChat = async (
+  api: DroidBot["api"],
+  {
+    chatId,
+    post,
+    threadId,
+  }: { chatId: number; post: ChatPost; threadId: number }
+) => {
+  const text = [
+    `<b>${escapeHtml(post.title)}</b>`,
+    ...post.lines.map(escapeHtml),
+  ].join("\n");
+  const other = {
+    ...(threadId > 0 && { message_thread_id: threadId }),
+    parse_mode: "HTML" as const,
+    reply_markup: new InlineKeyboard().url(post.buttonLabel, post.url),
+  };
+  if (post.photo) {
+    await api.sendPhoto(chatId, post.photo, { caption: text, ...other });
+  } else {
+    await api.sendMessage(chatId, text, other);
+  }
+};

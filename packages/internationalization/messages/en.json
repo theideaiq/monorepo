@@ -2939,7 +2939,7 @@
         "reopen": "Reopen"
       },
       "chats": {
-        "description": "Groups and channels The IDEA Droid is an admin of. With join requests on in Telegram, Droid lets people in by each chat's rule (anyone, members who linked The IDEA Pass, or a Bulbs tier and up) and tells the others how to qualify. It also records who joins and sends new channel posts to newsletter subscribers.",
+        "description": "Groups and channels The IDEA Droid is an admin of. With join requests on in Telegram, Droid lets people in by each chat's rule (anyone, members who linked The IDEA Pass, or a Bulbs tier and up) and tells the others how to qualify. It also records who joins and sends new channel posts to newsletter subscribers. Droid can also post The IDEA Post's news, upcoming events and new arrivals to a forum topic of each chat (the topic ID is the number at the end of a link to a message in it).",
         "empty": "No groups yet. Add the bot to a group as an administrator, then add the group here.",
         "new": "Add a group",
         "id": "Chat ID",
@@ -2953,7 +2953,18 @@
           "tier": "From a Bulbs tier"
         },
         "joinTier": "Tier",
-        "joinTierNone": "—"
+        "joinTierNone": "—",
+        "topics": {
+          "news": "News topic",
+          "events": "Events topic",
+          "arrivals": "New arrivals topic"
+        },
+        "topicHint": "Topic ID; 0 = the chat itself; empty = don't post",
+        "postLocale": "Post language",
+        "postLocales": {
+          "ar": "Arabic",
+          "en": "English"
+        }
       },
       "members": {
         "search": "Username or name",

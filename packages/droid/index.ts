@@ -1,5 +1,6 @@
 export {
   ALLOWED_UPDATES,
+  type ChatPost,
   CLUB_URL,
   createBot,
   DROID_COMMANDS,
@@ -8,6 +9,7 @@ export {
   type DroidOptions,
   type Logger,
   notifyMember,
+  postToChat,
   SITE_URL,
   STALE_UPDATE_SECONDS,
 } from "./bot";

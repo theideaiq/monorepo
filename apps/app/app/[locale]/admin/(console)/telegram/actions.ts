@@ -12,6 +12,7 @@ import {
   checkbox,
   choice,
   int,
+  optionalInt,
   optionalText,
   optionalUuid,
   text,
@@ -39,15 +40,22 @@ export const resolveRequest = staffAction(
 const AT_PREFIX = /^@/;
 const CHAT_ID = /^-?\d{1,20}$/;
 
+/** A forum topic's thread id; 0 for the chat itself, empty for none. */
+const topic = optionalInt(0, 2_147_483_647);
+
 export const saveChat = staffAction(
   "telegram",
   z.object({
+    arrivalsTopic: topic,
+    eventsTopic: topic,
     id: z.string().trim().regex(CHAT_ID),
     isNew: checkbox,
     joinRule: choice(["open", "pass", "tier"] as const),
     joinTier: z
       .enum(["", "glow", "shine", "beam", "blaze"])
       .transform((value) => value || null),
+    newsTopic: topic,
+    postLocale: choice(["ar", "en"] as const),
     title: text(200),
     username: optionalText(64).transform((value) =>
       value ? value.replace(AT_PREFIX, "") : null
@@ -59,8 +67,12 @@ export const saveChat = staffAction(
       throw new ActionFailure("invalid");
     }
     const row = {
+      arrivals_topic: input.arrivalsTopic,
+      events_topic: input.eventsTopic,
       join_rule: input.joinRule,
       join_tier: input.joinTier,
+      news_topic: input.newsTopic,
+      post_locale: input.postLocale,
       title: input.title,
       username: input.username,
     };
