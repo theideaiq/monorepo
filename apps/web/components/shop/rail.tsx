@@ -29,7 +29,7 @@ export const Rail = ({ action, children, title }: RailProps) => (
     </div>
     <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 lg:grid-cols-4">
       {Children.map(children, (child) => (
-        <li className="w-[44%] shrink-0 snap-start sm:w-[30%] md:w-auto">
+        <li className="flex w-[44%] shrink-0 snap-start sm:w-[30%] md:w-auto">
           {child}
         </li>
       ))}

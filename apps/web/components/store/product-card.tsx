@@ -35,9 +35,9 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
   const rental = product.kind === "rental";
 
   return (
-    <li className="relative">
+    <li className="relative flex">
       <Link
-        className="group grid gap-2 rounded-lg p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="group flex w-full flex-col gap-2 rounded-lg p-1 outline-none focus-visible:ring-2 focus-visible:ring-ring"
         href={productHref(product.slug)}
       >
         <ProductImage
@@ -45,7 +45,9 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
           className="transition-opacity group-hover:opacity-90"
           path={product.images[0]}
         />
-        <div className="grid gap-1 px-1">
+        {/* Grows so the button sits at the bottom of every tile in a row,
+            whether the name takes one line or two. */}
+        <div className="grid flex-1 content-start gap-1 px-1">
           <span className="line-clamp-2 font-medium text-sm">{name}</span>
           <Price
             className="text-sm"
