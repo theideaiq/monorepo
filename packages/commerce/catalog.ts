@@ -10,7 +10,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 type Client = SupabaseClient<Database>;
 
 export const PRODUCT_CARD_COLUMNS =
-  "id, slug, kind, name_ar, name_en, price, compare_at_price, currency, condition, stock_count, images, featured, category_id, variants:product_variants (id, label_ar, label_en, attributes, price, active, position)" as const;
+  "id, slug, kind, rentable, name_ar, name_en, price, compare_at_price, currency, condition, stock_count, images, featured, category_id, variants:product_variants (id, label_ar, label_en, attributes, price, active, position)" as const;
 
 /** What a card shows of a variant: its name (format chips) and price ("from"). */
 export type CardVariant = Pick<
@@ -37,6 +37,7 @@ export type ProductCard = Pick<
   | "name_ar"
   | "name_en"
   | "price"
+  | "rentable"
   | "slug"
   | "stock_count"
 > & {
@@ -79,16 +80,19 @@ export interface ProductFilters {
   sort?: "newest" | "price-asc" | "price-desc";
 }
 
-export const listCategories = async (supabase: Client, kind?: ProductKind) => {
-  let query = supabase
-    .from("product_categories")
-    .select("id, slug, name_ar, name_en, kind, position")
-    .order("position");
-  if (kind) {
-    query = query.eq("kind", kind);
-  }
-  return unwrap(await query);
-};
+/**
+ * The categories a tab lists, in their order: the shop's (with products
+ * for sale) or, for `"rental"`, the Rent tab's (with rentable products).
+ */
+export const listCategories = async (
+  supabase: Client,
+  kind: ProductKind = "sale"
+) =>
+  unwrap(
+    await supabase
+      .rpc("listed_categories", { for_rent: kind === "rental" })
+      .select("id, slug, name_ar, name_en, position")
+  );
 
 /** Longest search term sent to the database (the store's ?q= is cut there too). */
 const SEARCH_MAX_LENGTH = 100;
@@ -147,8 +151,11 @@ export const listProducts = async (
         category ? ", product_categories!inner (slug)" : ""
       }${formatJoin}`
     )
-    .eq("status", "active")
-    .eq("kind", kind);
+    .eq("status", "active");
+  // The Rent tab lists every rentable product (rental items, and shop
+  // products with copies for rent); the shop, products for sale.
+  query =
+    kind === "rental" ? query.eq("rentable", true) : query.eq("kind", kind);
 
   if (category) {
     query = query.eq("product_categories.slug", category);
@@ -181,22 +188,25 @@ const withoutJoins = (rows: unknown[]): ProductCard[] =>
   );
 
 /**
- * The formats on sale (`attributes.Format` of live variants of live
- * products of a kind), for the store's format filter, A to Z.
+ * The formats a tab offers (`attributes.Format` of live variants of live
+ * products for sale, or rentable ones for `"rental"`), for the format
+ * filter, A to Z.
  */
 export const listFormats = async (
   supabase: Client,
   kind: ProductKind = "sale"
 ): Promise<string[]> => {
+  const query = supabase
+    .from("product_variants")
+    .select("attributes, product:products!inner (status, kind, rentable)")
+    .eq("active", true)
+    .eq("product.status", "active")
+    .not("attributes->>Format", "is", null)
+    .limit(5000);
   const rows = unwrap(
-    await supabase
-      .from("product_variants")
-      .select("attributes, product:products!inner (status, kind)")
-      .eq("active", true)
-      .eq("product.status", "active")
-      .eq("product.kind", kind)
-      .not("attributes->>Format", "is", null)
-      .limit(5000)
+    await (kind === "rental"
+      ? query.eq("product.rentable", true)
+      : query.eq("product.kind", kind))
   ) as { attributes: unknown }[];
   const formats = new Set<string>();
   for (const { attributes } of rows) {
@@ -260,29 +270,6 @@ export const getProductOffers = async (
           },
         ]
   );
-};
-
-/**
- * The same work in other formats (vinyl, CD, cassette; PS5, Xbox):
- * active products sharing the product's `group_key`.
- */
-export const listOtherFormats = async (
-  supabase: Client,
-  product: Pick<Tables<"products">, "group_key" | "id">
-): Promise<ProductCard[]> => {
-  if (!product.group_key) {
-    return [];
-  }
-  return unwrap(
-    await supabase
-      .from("products")
-      .select(PRODUCT_CARD_COLUMNS)
-      .eq("group_key", product.group_key)
-      .eq("status", "active")
-      .neq("id", product.id)
-      .order("name_en")
-      .limit(8)
-  ) as ProductCard[];
 };
 
 /** The store's counter, when customers may collect orders there. */

@@ -169,6 +169,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-25: Catalogue reshape (variants, part 3; migration
+  `20261216000000`): 604 products became 542 titles, with formats,
+  platforms and colours as variants and open-box and used items as copies.
+  The 7 open-box copies priced at or above new now cost 75% of new, down to
+  the next …4,750 / …9,750 step. The 16 titles sold and rented are one
+  shop product each with copies for rent; Vinyl and CDs became Music and
+  the rental categories folded into Games, Books and Films. Old `-cd`,
+  `-vinyl`, `-open-box` and `-rental` addresses stop working (no
+  redirects). The first-catalog import statements and workflow were
+  removed, since re-running them would undo this.
+
 - 2026-10-25: Purchases are delivered by Boxy, sent by staff from the order
   page (size, fragile) and collected by Boxy's pick-up; customers keep
   paying The IDEA's zone fees and store pickup stays. Rental deliveries are

@@ -3,7 +3,6 @@ import {
   getProductOffers,
   listCategories,
   listFormats,
-  listOtherFormats,
   listProducts,
   PRODUCT_CARD_COLUMNS,
   type ProductCard,
@@ -96,15 +95,6 @@ export const getOffers = (productId: string) =>
     return supabase ? await getProductOffers(supabase, productId) : [];
   });
 
-/** The same work in other formats (vinyl, CD, cassette…). */
-export const getOtherFormats = (
-  product: Parameters<typeof listOtherFormats>[1]
-) =>
-  fallback("otherFormats", [] as ProductCard[], async () => {
-    const supabase = createPublicClient();
-    return supabase ? await listOtherFormats(supabase, product) : [];
-  });
-
 /** Slugs of every active product, for the sitemap and static params. */
 export const getProductSlugs = () =>
   fallback(
@@ -128,7 +118,7 @@ export const getProductSlugs = () =>
 
 export type RentalCard = ProductCard & Pick<Tables<"products">, "rental_tier">;
 
-/** Newest active rental items, with the plan tier each one needs. */
+/** Newest rentable products, with the plan tier each one needs. */
 export const getRentals = (limit = 8) =>
   fallback("rentals", [] as RentalCard[], async () => {
     const supabase = createPublicClient();
@@ -140,7 +130,7 @@ export const getRentals = (limit = 8) =>
         .from("products")
         .select(`${PRODUCT_CARD_COLUMNS}, rental_tier`)
         .eq("status", "active")
-        .eq("kind", "rental")
+        .eq("rentable", true)
         .order("created_at", { ascending: false })
         .limit(limit)
     );

@@ -140,6 +140,7 @@ const Rent = async ({ params, searchParams }: RentProps) => {
               const plan = requiredPlan(plans, productTiers[product.id]);
               return (
                 <ProductCard
+                  forRent
                   key={product.id}
                   locale={locale}
                   planLabel={

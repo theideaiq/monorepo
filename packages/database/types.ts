@@ -1527,7 +1527,6 @@ export type Database = {
           bulb_multiplier: number;
           created_at: string;
           id: string;
-          kind: Database["public"]["Enums"]["product_kind"];
           name_ar: string;
           name_en: string;
           position: number;
@@ -1538,7 +1537,6 @@ export type Database = {
           bulb_multiplier?: number;
           created_at?: string;
           id?: string;
-          kind?: Database["public"]["Enums"]["product_kind"];
           name_ar: string;
           name_en: string;
           position?: number;
@@ -1549,7 +1547,6 @@ export type Database = {
           bulb_multiplier?: number;
           created_at?: string;
           id?: string;
-          kind?: Database["public"]["Enums"]["product_kind"];
           name_ar?: string;
           name_en?: string;
           position?: number;
@@ -1683,13 +1680,13 @@ export type Database = {
           description_en: string | null;
           details: NonNullable<Json>;
           featured: boolean;
-          group_key: string | null;
           id: string;
           images: string[];
           kind: Database["public"]["Enums"]["product_kind"];
           name_ar: string;
           name_en: string;
           price: number;
+          rentable: boolean;
           rental_stock: number;
           rental_tier: number | null;
           seller: string;
@@ -1710,13 +1707,13 @@ export type Database = {
           description_en?: string | null;
           details?: NonNullable<Json>;
           featured?: boolean;
-          group_key?: string | null;
           id?: string;
           images?: string[];
           kind?: Database["public"]["Enums"]["product_kind"];
           name_ar: string;
           name_en: string;
           price: number;
+          rentable?: boolean;
           rental_stock?: number;
           rental_tier?: number | null;
           seller?: string;
@@ -1737,13 +1734,13 @@ export type Database = {
           description_en?: string | null;
           details?: NonNullable<Json>;
           featured?: boolean;
-          group_key?: string | null;
           id?: string;
           images?: string[];
           kind?: Database["public"]["Enums"]["product_kind"];
           name_ar?: string;
           name_en?: string;
           price?: number;
+          rentable?: boolean;
           rental_stock?: number;
           rental_tier?: number | null;
           seller?: string;
@@ -3296,6 +3293,25 @@ export type Database = {
         };
         Returns: undefined;
       };
+      listed_categories: {
+        Args: { for_rent?: boolean };
+        Returns: {
+          affiliate_rate: number;
+          bulb_multiplier: number;
+          created_at: string;
+          id: string;
+          name_ar: string;
+          name_en: string;
+          position: number;
+          slug: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "product_categories";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
       mark_cash_collected: {
         Args: { order_id: string };
         Returns: {
@@ -3618,13 +3634,13 @@ export type Database = {
           description_en: string | null;
           details: NonNullable<Json>;
           featured: boolean;
-          group_key: string | null;
           id: string;
           images: string[];
           kind: Database["public"]["Enums"]["product_kind"];
           name_ar: string;
           name_en: string;
           price: number;
+          rentable: boolean;
           rental_stock: number;
           rental_tier: number | null;
           seller: string;

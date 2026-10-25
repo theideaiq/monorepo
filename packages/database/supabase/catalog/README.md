@@ -1,15 +1,15 @@
 # Catalog import
 
-Product data, not schema. `statements/` holds the first catalog (604
-products: store, vinyl, CDs and cassettes, Plus rentals) as idempotent
-upserts, one statement per file, run in order by the **Import the catalog
-into production** workflow (`.github/workflows/import-catalog.yml`, run by
-hand from GitHub Actions). Re-running it updates names, descriptions, prices
-and pictures but never resets stock, status or featured flags set in the
-back office.
-
-Items with no stock, a price under 1,000 IQD or an unidentified album import
-as drafts. Prices of items not on the inventory sheet are estimates.
+The first catalog (604 products: store, vinyl, CDs and cassettes, Plus
+rentals) was loaded into production on 2026-10-24 by a one-off "Import the
+catalog into production" workflow, from upsert statements in this folder.
+On 2026-10-25 migration `20261216000000_catalogue_reshape.sql` folded it
+into 542 titles with variants (formats, platforms, colours), copies by
+condition, and one product per title sold and rented. The statements and
+the workflow were removed then: running them again would have recreated
+the old one-product-per-version catalog. Both are in the Git history.
 
 For new stock, use **Back office → Catalog → Import** (a CSV of the
-inventory sheet, previewed before anything is saved).
+inventory sheet with `variant_en`, `variant_ar` and `format` columns,
+previewed before anything is saved). To copy the catalog into another
+database, restore a backup (`docs/platform`).

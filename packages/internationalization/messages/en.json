@@ -286,8 +286,7 @@
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
         "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from My Pass.",
-        "sellToUs": "Have one? Sell it to us",
-        "otherFormats": "Other formats"
+        "sellToUs": "Have one? Sell it to us"
       },
       "rating": {
         "label": "Rated {rating} out of 5",
@@ -2483,9 +2482,7 @@
         "rentalTierHint": "Members on a lower The IDEA Plus plan can't rent this item.",
         "anyPlan": "Any The IDEA Plus plan",
         "tierOption": "Tier {tier}: {names}",
-        "unknownTier": "No plan at this tier",
-        "groupKey": "Other formats group",
-        "groupKeyHint": "Products with the same group show each other as other formats, e.g. kind-of-blue for the vinyl, CD and cassette."
+        "unknownTier": "No plan at this tier"
       },
       "variants": {
         "title": "Variants",
@@ -2590,7 +2587,7 @@
           "name_en": "English name. Needed for a new product.",
           "name_ar": "Arabic name. Needed for a new product.",
           "kind": "sale or rental. New products are sale items unless set.",
-          "category": "The category's slug, e.g. vinyl, books or rent-games.",
+          "category": "The category's slug, e.g. music, books or films.",
           "price": "Price in IQD, whole dinars. Needed for a new product.",
           "compare_at_price": "The old price, shown crossed out. Must be higher than the price.",
           "condition": "new, used, refurbished or open_box.",

@@ -21,6 +21,8 @@ import { VariantChips } from "./store/variant-chips";
 const LOW_STOCK = 5;
 
 interface ProductCardProps {
+  /** Shown as a rental (violet, no price), as on the Rent tab; default: rental items. */
+  readonly forRent?: boolean;
   readonly locale: Locale;
   /** The plan a rental item needs, shown on the image (e.g. "Plus Extra and above"). */
   readonly planLabel?: string | null;
@@ -36,6 +38,7 @@ interface ProductCardProps {
  * a full-width call to action (violet for rentals).
  */
 export const ProductCard = async ({
+  forRent,
   locale,
   planLabel,
   product,
@@ -47,7 +50,7 @@ export const ProductCard = async ({
   ]);
   const name = localized(product, "name", locale);
   const discount = discountPercent(product.price, product.compare_at_price);
-  const rental = product.kind === "rental";
+  const rental = forRent ?? product.kind === "rental";
 
   return (
     <Link

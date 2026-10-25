@@ -198,6 +198,10 @@ for any schema change; it also runs the structure and advisor checks.
   price, compare-at price and stock are derived ("from" the cheapest live
   variant) and are set on the variants; cart lines, copies and rentals
   always name their variant (a product with one live variant fills it in).
+  One title is one product: a title both sold and rented is a `sale`
+  product with copies for rent (`rentable`, derived from its copies; the
+  Rent tab lists rentable products), and categories (Music, Games, Books,
+  Films…) are shared by both tabs.
 - **RLS on every table.** Enable it in the migration that creates the table
   and add policies with pgTAP tests. `00_structure.test.sql` fails when a
   table in `public` or `private` lacks RLS or a primary key, or any RLS

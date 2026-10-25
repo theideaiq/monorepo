@@ -1403,9 +1403,13 @@ available copies by variant, condition and purpose, with the lowest price.
   not only rental items, and a returned or cancelled rental frees it.
 - **Trade-ins** completed into a product become one used copy that cost the
   offer, linked to the request.
-- **Other formats**: products sharing `group_key` (the album on vinyl, CD and
-  cassette) list each other on the product page, which also offers buy new
-  or used, rent with Plus and "Sell to us".
+- **One product per title**: the album on vinyl, CD and cassette is one
+  product with a variant per format; a title sold and rented is one shop
+  product with copies for rent (`products.rentable`, kept from its copies),
+  listed on the Rent tab too. The product page offers each version new or
+  used, rent with Plus and "Sell to us".
+- **Categories** have no kind: the shop lists those with products for sale
+  and the Rent tab those with rentable products (`listed_categories`).
 - **Back office**: Catalog → product → **Copies** adds copies and edits or
   removes each one.
 

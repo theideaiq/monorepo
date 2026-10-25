@@ -299,7 +299,7 @@ const TEMPLATE_ROWS = [
     "Adele – 25",
     "أديل – 25",
     "sale",
-    "vinyl",
+    "music",
     "69750",
     "",
     "new",
