@@ -37,9 +37,9 @@ export const navigationGroups: NavigationGroup[] = [
     id: "company",
     items: [
       { href: "/about", id: "about" },
-      { href: "/careers", id: "careers" },
-      { href: "/faq", id: "faq" },
-      { href: "/contact", id: "contact" },
+      { href: "/about/careers", id: "careers" },
+      { href: "/about/faq", id: "faq" },
+      { href: "/about/contact", id: "contact" },
     ],
   },
 ];

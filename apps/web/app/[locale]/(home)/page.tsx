@@ -1,23 +1,26 @@
 import { Highlight } from "@repo/design-system/components/brand/highlight";
+import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Button } from "@repo/design-system/components/ui/button";
-import type { Locale, Messages } from "@repo/internationalization";
+import { type Locale, localePath } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
-import {
-  Headphones,
-  MoveRight,
-  ShieldCheck,
-  Truck,
-  Wallet,
-} from "lucide-react";
+import { HandCoins, MoveRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { AppCta } from "@/components/app-cta";
 import { EventCard, PostCard } from "@/components/editorial-cards";
-import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
-import { ProductLines } from "@/components/product-lines";
-import { EmptyState, Section } from "@/components/section";
-import { getEvents, getPosts, getProducts, getRatings } from "@/lib/data";
+import { EmptyState } from "@/components/section";
+import { CategoryChips } from "@/components/shop/category-chips";
+import { MemberStrip } from "@/components/shop/member-strip";
+import { Rail } from "@/components/shop/rail";
+import { ShopSwitch } from "@/components/shop/shop-switch";
+import { StoreSearch } from "@/components/shop/store-search";
+import {
+  getCategories,
+  getEvents,
+  getPosts,
+  getProducts,
+  getRatings,
+} from "@/lib/data";
 import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
@@ -28,9 +31,6 @@ interface HomeProps {
     locale: Locale;
   }>;
 }
-
-type Values = Messages["web"]["home"]["values"]["items"];
-const valueIcons = [Truck, Wallet, ShieldCheck, Headphones];
 
 export const generateMetadata = async ({
   params,
@@ -44,128 +44,135 @@ export const generateMetadata = async ({
   });
 };
 
+/**
+ * Home is the storefront: search, categories, what's featured and new,
+ * a way into rentals, then events and The IDEA Post. The company's own
+ * pages are under /about.
+ */
 const Home = async ({ params }: HomeProps) => {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "web" });
-  const [featured, posts, events] = await Promise.all([
+  const [categories, featured, newest, posts, events] = await Promise.all([
+    getCategories("sale"),
     getProducts({ featured: true, limit: 8 }),
-    getPosts({ limit: 3 }),
-    getEvents({ limit: 3 }),
+    getProducts({ limit: 8, sort: "newest" }),
+    getPosts({ limit: 4 }),
+    getEvents({ limit: 4 }),
   ]);
-  const ratings = await getRatings(featured.map((product) => product.id));
-  const values = t.raw("home.values.items") as Values;
+  const ratings = await getRatings(
+    [...featured, ...newest].map((product) => product.id)
+  );
+  const card = (product: (typeof featured)[number]) => (
+    <ProductCard
+      key={product.id}
+      locale={locale}
+      product={product}
+      rating={ratings[product.id]}
+    />
+  );
 
   return (
     <>
-      <PageHero
-        badge={t("home.hero.badge")}
-        highlight={t("home.hero.highlight")}
-        subtitle={t("home.hero.subtitle")}
-        title={t("home.hero.title")}
-      >
-        <Button asChild className="gap-2" size="lg">
-          <a href={pagePath(locale, "/pass")}>
-            {t("home.hero.primary")}
-            <MoveRight className="size-4 rtl:rotate-180" />
-          </a>
-        </Button>
-        <Button asChild size="lg" variant="outline">
-          <Link href="/about">{t("home.hero.secondary")}</Link>
-        </Button>
-      </PageHero>
+      <div className="container mx-auto flex flex-col gap-4 px-4 pt-6 pb-2">
+        <ShopSwitch active="buy" locale={locale} />
+        <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
+          {t("home.title")}
+        </h1>
+        <StoreSearch
+          action={localePath(locale, "/store")}
+          id="home-search"
+          label={t("store.searchLabel")}
+          placeholder={t("store.searchPlaceholder")}
+        />
+        <CategoryChips
+          categories={categories}
+          hrefFor={(slug) => `/store?category=${encodeURIComponent(slug)}`}
+          label={t("store.categories")}
+          locale={locale}
+        />
+        <MemberStrip />
+      </div>
 
-      <Section
-        description={t("home.lines.description")}
-        title={t("home.lines.title")}
-      >
-        <ProductLines locale={locale} />
-      </Section>
+      {featured.length > 0 ? (
+        <Rail
+          action={{ href: "/store", label: t("ui.viewAll") }}
+          title={t("home.featured.title")}
+        >
+          {featured.map(card)}
+        </Rail>
+      ) : null}
 
-      <Section
-        action={{ href: "/store", label: t("ui.viewAll") }}
-        description={t("home.featured.description")}
-        title={t("home.featured.title")}
-      >
-        {featured.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {featured.map((product) => (
-              <ProductCard
-                key={product.id}
-                locale={locale}
-                product={product}
-                rating={ratings[product.id]}
-              />
-            ))}
-          </div>
-        ) : (
+      {newest.length > 0 ? (
+        <Rail
+          action={{ href: "/store", label: t("ui.viewAll") }}
+          title={t("home.newest.title")}
+        >
+          {newest.map(card)}
+        </Rail>
+      ) : (
+        <div className="container mx-auto px-4 py-6">
           <EmptyState>{t("home.featured.empty")}</EmptyState>
-        )}
-      </Section>
+        </div>
+      )}
 
-      <section className="container mx-auto px-4 py-14">
-        <div className="grid gap-10 rounded-lg border bg-surface-raised p-8 shadow-1 md:grid-cols-2 md:p-12">
-          <div className="flex flex-col gap-4">
-            <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
-              {t("home.values.title")}{" "}
-              <Highlight>{t("home.values.highlight")}</Highlight>
+      <section className="container mx-auto px-4 py-6">
+        <Link
+          className="group flex flex-col gap-3 rounded-lg border bg-surface-raised p-6 shadow-1 transition-shadow hover:shadow-2 md:flex-row md:items-center md:justify-between md:p-8"
+          href="/rent"
+        >
+          <div className="flex flex-col gap-1">
+            <h2 className="font-bold text-xl tracking-tight md:text-2xl">
+              {t("home.rent.title")}{" "}
+              <Highlight>{t("home.rent.highlight")}</Highlight>
             </h2>
-            <p className="text-lg text-muted-foreground">
-              {t("home.values.description")}
+            <p className="text-muted-foreground">
+              {t("home.rent.description")}
             </p>
           </div>
-          <ul className="grid gap-6 sm:grid-cols-2">
-            {values.map((value, index) => {
-              const Icon = valueIcons[index] ?? ShieldCheck;
-              return (
-                <li className="flex gap-3" key={value.title}>
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-brand text-brand-foreground">
-                    <Icon aria-hidden="true" className="size-5" />
-                  </span>
-                  <div className="flex flex-col gap-1">
-                    <p className="font-medium">{value.title}</p>
-                    <p className="text-muted-foreground text-sm">
-                      {value.description}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+          <span className="inline-flex items-center gap-2 font-medium text-pink-text">
+            {t("home.rent.cta")}
+            <MoveRight aria-hidden="true" className="size-4 rtl:rotate-180" />
+          </span>
+        </Link>
       </section>
 
-      <Section
-        action={{ href: "/post", label: t("ui.viewAll") }}
-        title={t("home.news.title")}
-      >
-        {posts.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-3">
-            {posts.map((post) => (
-              <PostCard key={post.id} locale={locale} post={post} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState>{t("home.news.empty")}</EmptyState>
-        )}
-      </Section>
+      {events.length > 0 ? (
+        <Rail
+          action={{ href: "/events", label: t("ui.viewAll") }}
+          title={t("home.events.title")}
+        >
+          {events.map((event) => (
+            <EventCard event={event} key={event.id} locale={locale} />
+          ))}
+        </Rail>
+      ) : null}
 
-      <Section
-        action={{ href: "/events", label: t("ui.viewAll") }}
-        title={t("home.events.title")}
-      >
-        {events.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-3">
-            {events.map((event) => (
-              <EventCard event={event} key={event.id} locale={locale} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState>{t("home.events.empty")}</EmptyState>
-        )}
-      </Section>
+      {posts.length > 0 ? (
+        <Rail
+          action={{ href: "/post", label: t("ui.viewAll") }}
+          title={t("home.news.title")}
+        >
+          {posts.map((post) => (
+            <PostCard key={post.id} locale={locale} post={post} />
+          ))}
+        </Rail>
+      ) : null}
 
-      <AppCta locale={locale} />
+      <div className="pt-8">
+        <PinkBand
+          action={
+            <Button asChild className="gap-2" size="lg" variant="brand">
+              <a href={pagePath(locale, "/pass/sell")}>
+                <HandCoins aria-hidden="true" />
+                {t("store.sell.cta")}
+              </a>
+            </Button>
+          }
+          description={t("store.sell.description")}
+          title={<Highlight>{t("store.sell.title")}</Highlight>}
+        />
+      </div>
     </>
   );
 };

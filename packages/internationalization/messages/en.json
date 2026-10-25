@@ -191,28 +191,6 @@
         "title": "Iraq's digital ecosystem",
         "description": "Shop, rent, learn and connect with The IDEA: the Megastore, The IDEA Plus rentals, The IDEA Post, The IDEA Suite for companies and The IDEA Club. Based in Baghdad, serving all of Iraq."
       },
-      "hero": {
-        "badge": "The digital ecosystem for Iraq",
-        "title": "Innovation for",
-        "highlight": "every aspect of life.",
-        "subtitle": "Shop, learn, play and grow with The IDEA. One Pass, endless possibilities. Based in Baghdad and serving all of Iraq.",
-        "primary": "Get started",
-        "secondary": "Our story"
-      },
-      "lines": {
-        "title": "Explore our universe",
-        "description": "Five product lines, one Pass.",
-        "megastore": "Iraq's destination for gaming, tech, books and lifestyle, delivered to all 19 governorates.",
-        "plus": "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done.",
-        "post": "News, stories, members' writing and art, and guides to learn something new.",
-        "suite": "Procurement and recruitment for companies, with a business plan and monthly invoicing.",
-        "club": "Community rooms on Telegram for gamers, readers, artists and thinkers."
-      },
-      "featured": {
-        "title": "Featured in the Megastore",
-        "description": "A few picks from the catalog.",
-        "empty": "New products are on their way. Check back soon."
-      },
       "news": {
         "title": "From The IDEA Post",
         "empty": "Nothing published yet."
@@ -221,29 +199,51 @@
         "title": "Next events",
         "empty": "No upcoming events right now. Follow The IDEA Club on Telegram to hear about the next one."
       },
-      "values": {
-        "title": "Built for the",
-        "highlight": "modern Iraqi.",
-        "description": "We know the local challenges, so we built a platform around trust, clear prices and quality.",
-        "items": [
-          {
-            "title": "Delivery across Iraq",
-            "description": "Orders and rentals are delivered to all 19 governorates."
-          },
-          {
-            "title": "Local payments",
-            "description": "Pay securely through Wayl with the methods you already use."
-          },
-          {
-            "title": "Genuine products",
-            "description": "Every item is listed with its condition: new, open box, refurbished or used."
-          },
-          {
-            "title": "Support in Arabic and English",
-            "description": "Reach us by email or on Telegram."
-          }
-        ]
+      "title": "What are you looking for?",
+      "newest": {
+        "title": "New arrivals"
+      },
+      "rent": {
+        "title": "Rent instead of buying",
+        "highlight": "with The IDEA Plus.",
+        "description": "Games, books and movies for a monthly fee: we deliver them and pick them up when you're done.",
+        "cta": "See what's for rent"
+      },
+      "member": {
+        "guest": "Earn Bulbs on every order with The IDEA Pass",
+        "bulbs": "{available} Bulbs · {tier}",
+        "orders": "Orders on the way: {count}"
+      },
+      "featured": {
+        "title": "Featured",
+        "empty": "New products are on their way. Check back soon."
       }
+    },
+    "shop": {
+      "label": "Buy or rent",
+      "buy": "Buy",
+      "rent": "Rent"
+    },
+    "rent": {
+      "meta": {
+        "title": "Rent games, books and movies",
+        "description": "Everything you can rent with The IDEA Plus: PS5 games, books and movies, delivered across Iraq and picked up when you're done."
+      },
+      "title": "Rent",
+      "highlight": "with The IDEA Plus",
+      "searchLabel": "Search the rentals",
+      "searchPlaceholder": "Search games, books and movies to rent…",
+      "plansFrom": "The IDEA Plus plans from {price} a month",
+      "plans": "See The IDEA Plus plans",
+      "empty": "Nothing to rent matches that yet."
+    },
+    "discover": {
+      "meta": {
+        "title": "Discover",
+        "description": "The IDEA Club on Telegram, events and The IDEA Post: the community side of The IDEA."
+      },
+      "title": "Discover",
+      "description": "The IDEA Club, events and The IDEA Post: what's happening around The IDEA."
     },
     "store": {
       "meta": {
@@ -523,6 +523,44 @@
       "company": {
         "title": "The company",
         "description": "The IDEA is operated by The IDEA IQ Inc., based in Baghdad, Iraq."
+      },
+      "values": {
+        "title": "Built for the",
+        "highlight": "modern Iraqi.",
+        "description": "We know the local challenges, so we built a platform around trust, clear prices and quality.",
+        "items": [
+          {
+            "title": "Delivery across Iraq",
+            "description": "Orders and rentals are delivered to all 19 governorates."
+          },
+          {
+            "title": "Local payments",
+            "description": "Pay securely through Wayl with the methods you already use."
+          },
+          {
+            "title": "Genuine products",
+            "description": "Every item is listed with its condition: new, open box, refurbished or used."
+          },
+          {
+            "title": "Support in Arabic and English",
+            "description": "Reach us by email or on Telegram."
+          }
+        ]
+      },
+      "lines": {
+        "megastore": "Iraq's destination for gaming, tech, books and lifestyle, delivered to all 19 governorates.",
+        "plus": "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done.",
+        "post": "News, stories, members' writing and art, and guides to learn something new.",
+        "suite": "Procurement and recruitment for companies, with a business plan and monthly invoicing.",
+        "club": "Community rooms on Telegram for gamers, readers, artists and thinkers."
+      },
+      "more": {
+        "title": "More about The IDEA",
+        "suite": "The IDEA Suite for companies",
+        "careers": "Careers",
+        "faq": "FAQ",
+        "contact": "Contact us",
+        "legal": "Terms and policies"
       }
     },
     "careers": {

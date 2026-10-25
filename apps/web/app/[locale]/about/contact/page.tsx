@@ -22,7 +22,7 @@ export const generateMetadata = async ({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "web.contact.meta" });
 
-  return localizedMetadata(locale, "/contact", {
+  return localizedMetadata(locale, "/about/contact", {
     description: t("description"),
     title: t("title"),
   });

@@ -229,6 +229,14 @@
  * text-body-ar, text-price… The display sizes step down on phones; Arabic
  * is never set below 14px, so captions are for Latin text and numbers.
  */
+/* Sideways rows (category chips, product rails): swipe, no scrollbar. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @utility text-display-xl {
   font-size: 44px;
   font-weight: 700;

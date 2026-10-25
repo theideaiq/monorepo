@@ -8,6 +8,10 @@ const pages = [
   { name: "store", path: "/store" },
   { name: "product page", path: `/store/${product.slug}` },
   { name: "Plus", path: "/plus" },
+  { name: "rentals", path: "/rent" },
+  { name: "Discover", path: "/discover" },
+  { name: "About", path: "/about" },
+  { name: "FAQ", path: "/about/faq" },
 ];
 
 test.describe("public site", () => {

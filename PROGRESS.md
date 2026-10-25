@@ -316,6 +316,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   in @BotFather → Bot Settings → Configure Mini App with
   `https://theideaiq.com/tg`. No new secrets: it uses the bot's token.
   Next: automatic topic posts.
+- 2026-10-25: **The website as an app, part 1: the storefront.** Home is
+  now the shop: a Buy | Rent switch, search, category chips, the member's
+  Bulbs and orders on the way (or a nudge to get The IDEA Pass), featured
+  and new products, a way into rentals, events and The IDEA Post. `/rent`
+  is the rental storefront (with the plan each item needs and "plans from
+  … a month"); `/discover` gathers The IDEA Club, events and The IDEA Post.
+  The company's pages moved under `/about` (careers, FAQ, contact; old
+  links redirect); `/suite` stays where it is. Next: the app layout (bottom
+  tabs on phones, slim header, home-screen install, no accidental zoom).
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

@@ -45,7 +45,7 @@ const Suite = async ({ params }: SuiteProps) => {
     <>
       <PageHero badge={t("badge")} subtitle={t("subtitle")} title={t("title")}>
         <Button asChild size="lg">
-          <Link href="/contact?topic=suite">{t("cta.contact")}</Link>
+          <Link href="/about/contact?topic=suite">{t("cta.contact")}</Link>
         </Button>
         <Button asChild size="lg" variant="outline">
           <a href={organizationUrl}>{t("cta.app")}</a>
@@ -94,7 +94,7 @@ const Suite = async ({ params }: SuiteProps) => {
       <PinkBand
         action={
           <Button asChild size="lg" variant="brand">
-            <Link href="/contact?topic=suite">{t("cta.contact")}</Link>
+            <Link href="/about/contact?topic=suite">{t("cta.contact")}</Link>
           </Button>
         }
         description={t("cta.description")}
