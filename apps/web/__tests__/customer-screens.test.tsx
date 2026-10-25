@@ -325,7 +325,18 @@ describe("product page", () => {
             description_ar: null,
             description_en: "Wireless.",
             details: { Battery: "30 h" },
-            product_variants: [],
+            product_variants: [
+              {
+                active: true,
+                attributes: {},
+                id: "v0",
+                label_ar: null,
+                label_en: null,
+                price: saleProduct.price,
+                sku: null,
+                stock_count: saleProduct.stock_count,
+              },
+            ],
           } as unknown as Parameters<typeof PurchasePanel>[0]["product"]
         }
       />,
@@ -341,7 +352,7 @@ describe("product page", () => {
       product_id: "p1",
       quantity: 1,
       user_id: USER_ID,
-      variant_id: null,
+      variant_id: "v0",
     });
     expect(router.replace).toHaveBeenCalled();
   });

@@ -79,6 +79,24 @@ export const describeAttributes = (attributes: unknown) =>
         .join(" · ")
     : "";
 
+/**
+ * A variant's name for customers: its label in their language, else its
+ * attributes, else nothing (a product's only, unlabelled variant).
+ */
+export const variantName = (
+  variant: {
+    readonly attributes?: unknown;
+    readonly label_ar?: string | null;
+    readonly label_en?: string | null;
+  },
+  locale: string
+) =>
+  localized(
+    { label_ar: variant.label_ar ?? null, label_en: variant.label_en ?? null },
+    "label",
+    locale
+  ) || describeAttributes(variant.attributes);
+
 /** Iraq's governorates, for delivery addresses. */
 export const governorates = [
   { ar: "بغداد", en: "Baghdad", id: "baghdad" },

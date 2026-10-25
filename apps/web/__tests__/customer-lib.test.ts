@@ -6,7 +6,11 @@ import {
   governorateName,
   validateAddress,
 } from "@/lib/address";
-import { pickVariant, variantForDeepLink } from "@/lib/app-product";
+import {
+  liveVariants,
+  pickVariant,
+  variantForDeepLink,
+} from "@/lib/app-product";
 import {
   type CartItem,
   cartCount,
@@ -55,7 +59,7 @@ const item = (overrides: Partial<CartItem> = {}): CartItem => ({
   product_id: "p1",
   quantity: 2,
   variant: null,
-  variant_id: null,
+  variant_id: "v0",
   ...overrides,
 });
 
@@ -83,9 +87,12 @@ describe("cart", () => {
       item({
         variant: {
           attributes: { Color: "Black" },
+          compare_at_price: null,
           id: "v1",
-          image: null,
-          price_override: 12_000,
+          images: [],
+          label_ar: "أسود",
+          label_en: "Black",
+          price: 12_000,
           stock_count: 1,
         },
         variant_id: "v1",
@@ -143,21 +150,22 @@ describe("cart", () => {
 });
 
 describe("product variants", () => {
-  const base = { price: 100, product_variants: [], stock_count: 3 };
+  const base = { price: 100, product_variants: [] };
   const variants = [
-    { id: "a", price_override: 150, stock_count: 0 },
-    { id: "b", price_override: null, stock_count: 4 },
+    { id: "a", price: 150, stock_count: 0 },
+    { id: "b", price: 100, stock_count: 4 },
   ];
 
-  test("products without variants are ready with their own stock", () => {
-    expect(pickVariant(base, null)).toMatchObject({
+  test("a product with one variant has it chosen", () => {
+    const single = { ...base, product_variants: [variants[1]] };
+    expect(pickVariant(single, null)).toMatchObject({
       price: 100,
       ready: true,
-      stock: 3,
+      stock: 4,
     });
   });
 
-  test("products with variants wait for a choice", () => {
+  test("products with several variants wait for a choice", () => {
     const withVariants = { ...base, product_variants: variants };
     expect(pickVariant(withVariants, null)).toMatchObject({
       ready: false,
@@ -172,6 +180,15 @@ describe("product variants", () => {
       price: 100,
       stock: 4,
     });
+  });
+
+  test("hidden variants can't be chosen", () => {
+    const withHidden = {
+      ...base,
+      product_variants: [{ ...variants[0], active: false }, variants[1]],
+    };
+    expect(pickVariant(withHidden, "a").variant?.id).toBe("b");
+    expect(liveVariants(withHidden.product_variants)).toHaveLength(1);
   });
 
   test("deep links preselect only an unambiguous variant", () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { describeAttributes, formatPrice, localized } from "@repo/commerce";
+import { formatPrice, localized, variantName } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
@@ -58,7 +58,7 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
       >
         <ProductImage
           alt={name}
-          path={item.variant?.image ?? item.product?.images[0]}
+          path={item.variant?.images[0] ?? item.product?.images[0]}
           sizes="96px"
         />
       </Link>
@@ -71,9 +71,9 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
             >
               {name}
             </Link>
-            {item.variant ? (
+            {item.variant && variantName(item.variant, locale) ? (
               <span className="text-muted-foreground text-xs">
-                {describeAttributes(item.variant.attributes)}
+                {variantName(item.variant, locale)}
               </span>
             ) : null}
             {item.condition && isOtherCondition(item) ? (

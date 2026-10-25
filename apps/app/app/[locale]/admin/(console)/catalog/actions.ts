@@ -2,12 +2,7 @@
 
 import { Constants } from "@repo/database";
 import { z } from "zod";
-import {
-  ActionFailure,
-  affected,
-  check,
-  staffAction,
-} from "@/lib/admin/action";
+import { affected, check, staffAction } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
 import { planSchema, productSchema } from "@/lib/admin/catalog";
 import {
@@ -51,10 +46,24 @@ export const saveProduct = staffAction(
     };
 
     if (input.id) {
+      // With several variants, price and stock are set on each variant
+      // (the product's are derived), so the form doesn't send them.
+      const { count } = check(
+        await supabase
+          .from("product_variants")
+          .select("id", { count: "exact", head: true })
+          .eq("product_id", input.id)
+      );
+      const {
+        compare_at_price: _compareAtPrice,
+        price: _price,
+        stock_count: _stock,
+        ...shared
+      } = row;
       affected(
         await supabase
           .from("products")
-          .update(row)
+          .update((count ?? 0) > 1 ? shared : row)
           .eq("id", input.id)
           .select("id")
       );
@@ -78,12 +87,18 @@ export const deleteProduct = staffAction(
 );
 
 const variantSchema = z.object({
+  active: checkbox,
   attrKey: z.array(z.string()).optional(),
   attrValue: z.array(z.string()).optional(),
+  barcode: optionalText(64),
+  compareAtPrice: optionalInt(0),
   id: optionalUuid,
+  labelAr: optionalText(60),
+  labelEn: optionalText(60),
   position: int(0, 10_000),
-  priceOverride: optionalInt(0),
+  price: int(0),
   productId: uuid,
+  rentalStock: int(0, 1_000_000),
   sku: optionalText(64),
   stock: int(0, 1_000_000),
 });
@@ -93,14 +108,17 @@ export const saveVariant = staffAction(
   variantSchema,
   async ({ input, supabase }) => {
     const attributes = keyValues(input.attrKey, input.attrValue);
-    if (Object.keys(attributes).length === 0) {
-      throw new ActionFailure("invalid");
-    }
     const row = {
+      active: input.active,
       attributes,
+      barcode: input.barcode,
+      compare_at_price: input.compareAtPrice,
+      label_ar: input.labelAr ?? input.labelEn,
+      label_en: input.labelEn ?? input.labelAr,
       position: input.position,
-      price_override: input.priceOverride,
+      price: input.price,
       product_id: input.productId,
+      rental_stock: input.rentalStock,
       sku: input.sku,
       stock_count: input.stock,
     };
@@ -288,6 +306,7 @@ const copyFields = {
   price: optionalInt(1),
   purpose: z.enum(Enums.stock_purpose),
   serial: optionalText(120),
+  variantId: uuid,
 };
 
 const copyRow = (input: {
@@ -298,6 +317,7 @@ const copyRow = (input: {
   price: number | null;
   purpose: (typeof Enums.stock_purpose)[number];
   serial: string | null;
+  variantId: string;
 }) => ({
   condition: input.condition,
   cost: input.cost,
@@ -306,16 +326,16 @@ const copyRow = (input: {
   price: input.price,
   purpose: input.purpose,
   serial: input.serial,
+  variant_id: input.variantId,
 });
 
-/** Adds copies of a product (or a variant), all alike. */
+/** Adds copies of a variant of a product, all alike. */
 export const addCopies = staffAction(
   "catalog",
   z.object({
     ...copyFields,
     count: int(1, 100),
     productId: uuid,
-    variantId: optionalUuid,
   }),
   async ({ input, supabase }) => {
     check(
@@ -323,7 +343,6 @@ export const addCopies = staffAction(
         Array.from({ length: input.count }, () => ({
           ...copyRow(input),
           product_id: input.productId,
-          variant_id: input.variantId,
         }))
       )
     );
@@ -331,7 +350,7 @@ export const addCopies = staffAction(
   }
 );
 
-/** Edits one copy: its condition, purpose, status, place and prices. */
+/** Edits one copy: its variant, condition, purpose, status, place and prices. */
 export const saveCopy = staffAction(
   "catalog",
   z.object({

@@ -189,6 +189,15 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 Rules for `packages/database`. Run `bun run --cwd packages/database db:test`
 for any schema change; it also runs the structure and advisor checks.
 
+- **Products and variants.** A product is the work (album, game, book,
+  device); its variants are the versions customers choose (format,
+  platform, colour, edition), each with its own label, price, SKU, barcode
+  and stock. Every product has at least one variant (a default one is made
+  on insert); condition (new, open box, used) belongs to each copy in
+  `stock_items`, never to a variant. With several variants, the product's
+  price, compare-at price and stock are derived ("from" the cheapest live
+  variant) and are set on the variants; cart lines, copies and rentals
+  always name their variant (a product with one live variant fills it in).
 - **RLS on every table.** Enable it in the migration that creates the table
   and add policies with pgTAP tests. `00_structure.test.sql` fails when a
   table in `public` or `private` lacks RLS or a primary key, or any RLS

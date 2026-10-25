@@ -411,7 +411,7 @@ export type Database = {
           quantity: number;
           updated_at: string;
           user_id: string;
-          variant_id: string | null;
+          variant_id: string;
         };
         Insert: {
           condition?: Database["public"]["Enums"]["product_condition"] | null;
@@ -421,7 +421,7 @@ export type Database = {
           quantity?: number;
           updated_at?: string;
           user_id?: string;
-          variant_id?: string | null;
+          variant_id: string;
         };
         Update: {
           condition?: Database["public"]["Enums"]["product_condition"] | null;
@@ -431,7 +431,7 @@ export type Database = {
           quantity?: number;
           updated_at?: string;
           user_id?: string;
-          variant_id?: string | null;
+          variant_id?: string;
         };
         Relationships: [
           {
@@ -442,11 +442,11 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "cart_items_variant_id_fkey";
-            columns: ["variant_id"];
+            foreignKeyName: "cart_items_product_variant_fkey";
+            columns: ["product_id", "variant_id"];
             isOneToOne: false;
             referencedRelation: "product_variants";
-            referencedColumns: ["id"];
+            referencedColumns: ["product_id", "id"];
           },
         ];
       };
@@ -1567,37 +1567,61 @@ export type Database = {
       };
       product_variants: {
         Row: {
+          active: boolean;
           attributes: NonNullable<Json>;
+          barcode: string | null;
+          compare_at_price: number | null;
           created_at: string;
+          details: NonNullable<Json>;
           id: string;
-          image: string | null;
+          images: string[];
+          label_ar: string | null;
+          label_en: string | null;
           position: number;
-          price_override: number | null;
+          price: number;
           product_id: string;
+          rental_stock: number;
           sku: string | null;
           stock_count: number;
+          updated_at: string;
         };
         Insert: {
+          active?: boolean;
           attributes?: NonNullable<Json>;
+          barcode?: string | null;
+          compare_at_price?: number | null;
           created_at?: string;
+          details?: NonNullable<Json>;
           id?: string;
-          image?: string | null;
+          images?: string[];
+          label_ar?: string | null;
+          label_en?: string | null;
           position?: number;
-          price_override?: number | null;
+          price: number;
           product_id: string;
+          rental_stock?: number;
           sku?: string | null;
           stock_count?: number;
+          updated_at?: string;
         };
         Update: {
+          active?: boolean;
           attributes?: NonNullable<Json>;
+          barcode?: string | null;
+          compare_at_price?: number | null;
           created_at?: string;
+          details?: NonNullable<Json>;
           id?: string;
-          image?: string | null;
+          images?: string[];
+          label_ar?: string | null;
+          label_en?: string | null;
           position?: number;
-          price_override?: number | null;
+          price?: number;
           product_id?: string;
+          rental_stock?: number;
           sku?: string | null;
           stock_count?: number;
+          updated_at?: string;
         };
         Relationships: [
           {
@@ -1634,6 +1658,7 @@ export type Database = {
           status: Database["public"]["Enums"]["product_status"];
           stock_count: number;
           updated_at: string;
+          variant_text: string;
           verified: boolean;
         };
         Insert: {
@@ -1660,6 +1685,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["product_status"];
           stock_count?: number;
           updated_at?: string;
+          variant_text?: string;
           verified?: boolean;
         };
         Update: {
@@ -1686,6 +1712,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["product_status"];
           stock_count?: number;
           updated_at?: string;
+          variant_text?: string;
           verified?: boolean;
         };
         Relationships: [
@@ -2016,6 +2043,7 @@ export type Database = {
           status: Database["public"]["Enums"]["rental_status"];
           updated_at: string;
           user_id: string | null;
+          variant_id: string | null;
         };
         Insert: {
           due_at?: string | null;
@@ -2031,6 +2059,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["rental_status"];
           updated_at?: string;
           user_id?: string | null;
+          variant_id?: string | null;
         };
         Update: {
           due_at?: string | null;
@@ -2046,6 +2075,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["rental_status"];
           updated_at?: string;
           user_id?: string | null;
+          variant_id?: string | null;
         };
         Relationships: [
           {
@@ -2053,6 +2083,13 @@ export type Database = {
             columns: ["product_id"];
             isOneToOne: false;
             referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rentals_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
             referencedColumns: ["id"];
           },
         ];
@@ -2102,7 +2139,7 @@ export type Database = {
           status: Database["public"]["Enums"]["stock_status"];
           trade_in_id: string | null;
           updated_at: string;
-          variant_id: string | null;
+          variant_id: string;
         };
         Insert: {
           acquired_at?: string;
@@ -2121,7 +2158,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["stock_status"];
           trade_in_id?: string | null;
           updated_at?: string;
-          variant_id?: string | null;
+          variant_id: string;
         };
         Update: {
           acquired_at?: string;
@@ -2140,7 +2177,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["stock_status"];
           trade_in_id?: string | null;
           updated_at?: string;
-          variant_id?: string | null;
+          variant_id?: string;
         };
         Relationships: [
           {
@@ -2158,6 +2195,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "stock_items_product_variant_fkey";
+            columns: ["product_id", "variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["product_id", "id"];
+          },
+          {
             foreignKeyName: "stock_items_rental_id_fkey";
             columns: ["rental_id"];
             isOneToOne: false;
@@ -2169,13 +2213,6 @@ export type Database = {
             columns: ["trade_in_id"];
             isOneToOne: false;
             referencedRelation: "trade_ins";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "stock_items_variant_id_fkey";
-            columns: ["variant_id"];
-            isOneToOne: false;
-            referencedRelation: "product_variants";
             referencedColumns: ["id"];
           },
         ];
@@ -3355,7 +3392,7 @@ export type Database = {
         Returns: string;
       };
       request_rental: {
-        Args: { rental_product: string };
+        Args: { rental_product: string; rental_variant?: string };
         Returns: {
           due_at: string | null;
           due_reminder_at: string | null;
@@ -3370,6 +3407,7 @@ export type Database = {
           status: Database["public"]["Enums"]["rental_status"];
           updated_at: string;
           user_id: string | null;
+          variant_id: string | null;
         };
         SetofOptions: {
           from: "*";
@@ -3438,6 +3476,7 @@ export type Database = {
           status: Database["public"]["Enums"]["product_status"];
           stock_count: number;
           updated_at: string;
+          variant_text: string;
           verified: boolean;
         }[];
         SetofOptions: {

@@ -162,6 +162,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-25: Variants instead of "(CD)" / "(Vinyl)" products. One product
+  per work with a variant per version (format, platform, colour, edition);
+  condition stays on each copy; titles sold and rented become one product;
+  "CDs and cassettes" and "Vinyl" merge into Music with a Format filter; the
+  old `-cd` / `-vinyl` / `-open-box` addresses are not redirected.
 - 2026-10-24: Four deployments only (web, app, api, design). The app is The
   IDEA Spark at `spark.theideaiq.com`, server-rendered, with The IDEA Pass
   and the back office (`/admin`) inside it; `apps/pass` and `apps/admin`

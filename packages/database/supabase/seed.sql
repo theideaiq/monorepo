@@ -58,10 +58,21 @@ values
     20000, null, 2, false, '{"Language": "Arabic"}')
 on conflict (slug) do nothing;
 
-insert into public.product_variants (product_id, sku, attributes, price_override, stock_count, position)
-select id, 'PS5-SLIM-DISC', '{"Edition": "Disc"}'::jsonb, null::bigint, 5, 1 from public.products where slug = 'playstation-5-slim'
-union all
-select id, 'PS5-SLIM-DIGITAL', '{"Edition": "Digital"}'::jsonb, 650000, 3, 2 from public.products where slug = 'playstation-5-slim'
+-- The product's default variant becomes the disc edition; the digital one
+-- is a second variant.
+update public.product_variants v set
+  sku = 'PS5-SLIM-DISC',
+  label_en = 'Disc',
+  label_ar = 'بقرص',
+  attributes = '{"Edition": "Disc"}'::jsonb,
+  stock_count = 5,
+  position = 1
+from public.products p
+where p.id = v.product_id and p.slug = 'playstation-5-slim' and v.sku is null;
+
+insert into public.product_variants (product_id, sku, label_en, label_ar, attributes, price, stock_count, position)
+select id, 'PS5-SLIM-DIGITAL', 'Digital', 'رقمي', '{"Edition": "Digital"}'::jsonb, 650000, 3, 2
+from public.products where slug = 'playstation-5-slim'
 on conflict (sku) do nothing;
 
 insert into public.posts (slug, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, published_at) values

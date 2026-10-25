@@ -2292,6 +2292,9 @@
       "transition": "This status change isn't allowed.",
       "inUse": "It's still in use, so it can't be deleted.",
       "lastSuperadmin": "There must always be at least one superadmin.",
+      "lastVariant": "A product needs at least one variant.",
+      "chooseVariant": "This product has several variants: choose one.",
+      "variantPricing": "This product has variants: set price and stock on each variant below.",
       "apiUnavailable": "The server couldn't be reached. Try again shortly.",
       "unknown": "Something went wrong. Try again."
     },
@@ -2467,12 +2470,20 @@
       },
       "variants": {
         "title": "Variants",
-        "description": "Options such as colour or storage, each with its own stock and an optional price.",
-        "attributes": "Options",
+        "description": "The versions customers choose (format, platform, colour, edition), each with its own price, stock and barcode. Condition (new, open box, used) is set per copy, not here.",
+        "labelEn": "Name (English)",
+        "labelAr": "Name (Arabic)",
+        "labelHint": "Shown to customers, e.g. Vinyl. Leave empty on a product's only variant.",
+        "attributes": "Attributes",
+        "attributesHint": "For filters, e.g. Format: Vinyl.",
         "sku": "SKU",
+        "barcode": "Barcode",
         "price": "Price (IQD)",
-        "priceHint": "Empty: the product price.",
-        "add": "Add variant"
+        "compareAtPrice": "Compare-at price (IQD)",
+        "rentalStock": "Copies for rent",
+        "active": "Offered to customers",
+        "add": "Add variant",
+        "variantPriced": "Price and stock are set on each variant below; the product shows the lowest price."
       },
       "categories": {
         "description": "Categories group products in the store. Deleting one leaves its products without a category.",
@@ -2678,6 +2689,8 @@
         }
       },
       "copies": {
+        "variant": "Variant",
+        "variantNumber": "Variant {number}",
         "title": "Copies",
         "description": "Every physical copy: its condition, what it is for, where it is, what it cost and, for a copy priced on its own (a used one), its price. Counts above follow these.",
         "add": "Add copies",

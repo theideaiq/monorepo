@@ -4,7 +4,7 @@ import type { Tables } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ActionButton } from "@/components/admin/action-button";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
-import { FieldGrid, TextField } from "@/components/admin/fields";
+import { CheckboxField, FieldGrid, TextField } from "@/components/admin/fields";
 import { KeyValueEditor } from "@/components/admin/key-value-editor";
 import { deleteVariant, saveVariant } from "../actions";
 
@@ -14,7 +14,7 @@ interface VariantFormProps {
   readonly variant?: Tables<"product_variants">;
 }
 
-/** One variant (e.g. "Color: Black · Storage: 1 TB") or the "add" form. */
+/** One variant (e.g. "Vinyl", "PS5", "Black") or the "add" form. */
 export const VariantForm = ({
   disabled = false,
   productId,
@@ -29,6 +29,22 @@ export const VariantForm = ({
         <input name="productId" type="hidden" value={productId} />
         {variant ? <input name="id" type="hidden" value={variant.id} /> : null}
         <fieldset className="grid gap-3" disabled={disabled}>
+          <FieldGrid columns={2}>
+            <TextField
+              defaultValue={variant?.label_en ?? ""}
+              hint={t("variants.labelHint")}
+              label={t("variants.labelEn")}
+              maxLength={60}
+              name="labelEn"
+            />
+            <TextField
+              defaultValue={variant?.label_ar ?? ""}
+              dir="rtl"
+              label={t("variants.labelAr")}
+              maxLength={60}
+              name="labelAr"
+            />
+          </FieldGrid>
           <KeyValueEditor
             defaultValue={variant?.attributes as Record<string, unknown>}
             label={t("variants.attributes")}
@@ -36,19 +52,19 @@ export const VariantForm = ({
           />
           <FieldGrid columns={4}>
             <TextField
-              defaultValue={variant?.sku ?? ""}
+              defaultValue={variant?.price ?? ""}
               dir="ltr"
-              label={t("variants.sku")}
-              maxLength={64}
-              name="sku"
-            />
-            <TextField
-              defaultValue={variant?.price_override ?? ""}
-              dir="ltr"
-              hint={t("variants.priceHint")}
               inputMode="numeric"
               label={t("variants.price")}
-              name="priceOverride"
+              name="price"
+              required
+            />
+            <TextField
+              defaultValue={variant?.compare_at_price ?? ""}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("variants.compareAtPrice")}
+              name="compareAtPrice"
             />
             <TextField
               defaultValue={variant?.stock_count ?? 0}
@@ -58,6 +74,28 @@ export const VariantForm = ({
               name="stock"
             />
             <TextField
+              defaultValue={variant?.rental_stock ?? 0}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("variants.rentalStock")}
+              name="rentalStock"
+            />
+            <TextField
+              defaultValue={variant?.sku ?? ""}
+              dir="ltr"
+              label={t("variants.sku")}
+              maxLength={64}
+              name="sku"
+            />
+            <TextField
+              defaultValue={variant?.barcode ?? ""}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("variants.barcode")}
+              maxLength={64}
+              name="barcode"
+            />
+            <TextField
               defaultValue={variant?.position ?? 0}
               dir="ltr"
               inputMode="numeric"
@@ -65,6 +103,11 @@ export const VariantForm = ({
               name="position"
             />
           </FieldGrid>
+          <CheckboxField
+            defaultChecked={variant?.active ?? true}
+            label={t("variants.active")}
+            name="active"
+          />
           {disabled ? null : (
             <div className="flex justify-end gap-2">
               <SubmitButton

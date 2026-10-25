@@ -246,7 +246,7 @@ describe("wishlist", () => {
       name_ar: "سماعة",
       name_en: "Headset",
       price: 50_000,
-      product_variants: [],
+      product_variants: [{ active: true, id: "v0" }],
       slug: "headset",
       status: "active",
       stock_count: 3,
@@ -255,9 +255,16 @@ describe("wishlist", () => {
 
   test("what a saved product can do", () => {
     expect(wishlistAction(product())).toBe("move");
-    expect(wishlistAction(product({ product_variants: [{ id: "v1" }] }))).toBe(
-      "choose"
-    );
+    expect(
+      wishlistAction(
+        product({
+          product_variants: [
+            { active: true, id: "v1" },
+            { active: true, id: "v2" },
+          ],
+        })
+      )
+    ).toBe("choose");
     expect(wishlistAction(product({ stock_count: 0 }))).toBe("unavailable");
     expect(wishlistAction(product({ status: "archived" }))).toBe("unavailable");
     expect(wishlistAction(product({ kind: "rental" }))).toBe("rent");
