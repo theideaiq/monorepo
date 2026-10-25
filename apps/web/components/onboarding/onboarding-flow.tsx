@@ -3,6 +3,7 @@
 import { project } from "@repo/config";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
 import { Button } from "@repo/design-system/components/ui/button";
+import { withoutLocalePrefix } from "@repo/internationalization";
 import { useRouter } from "@repo/internationalization/navigation";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -14,10 +15,6 @@ import { safeNextPath } from "@/lib/app-navigation";
 import { needsOnboarding } from "@/lib/onboarding";
 import { useMemberships, useProfile } from "@/lib/queries";
 
-/** A `next` path without its locale prefix (the router adds the locale). */
-const LOCALE_PREFIX = /^\/(ar|en)(?=\/|$|\?)/;
-const withoutLocale = (path: string) => path.replace(LOCALE_PREFIX, "") || "/";
-
 /**
  * First run after sign-up: name, language and marketing emails. Business
  * accounts (organizations) are optional and live under Business, so there
@@ -27,7 +24,8 @@ export const OnboardingFlow = () => {
   const t = useTranslations("app.onboarding");
   const tAccount = useTranslations("app.settings.deleteAccount");
   const router = useRouter();
-  const next = withoutLocale(
+  // Without its locale prefix: the router adds the locale.
+  const next = withoutLocalePrefix(
     safeNextPath(useSearchParams().get("next")) ?? "/pass"
   );
   const memberships = useMemberships();

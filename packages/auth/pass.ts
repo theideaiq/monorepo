@@ -8,6 +8,8 @@
  * in every app, whichever env presets it extends.
  */
 
+import { localePath } from "@repo/internationalization";
+
 /** Where the website runs when NEXT_PUBLIC_WEB_URL is not set (local dev). */
 export const DEFAULT_PASS_URL = "http://localhost:3001";
 
@@ -101,10 +103,10 @@ export const safeReturnTo = (
 
 /**
  * A link to a Pass page, e.g.
- * `passUrl("/sign-in", "https://theideaiq.com/en/store", "en")` →
- * `https://theideaiq.com/en/sign-in?return_to=https%3A%2F%2Ftheideaiq…`.
- * `"/"` is "My Pass" (`/{locale}/pass`). Without a locale, the website
- * picks one from the browser.
+ * `passUrl("/sign-in", "https://theideaiq.com/ar/store", "ar")` →
+ * `https://theideaiq.com/ar/sign-in?return_to=https%3A%2F%2Ftheideaiq…`
+ * (English pages have no prefix: `/sign-in`). `"/"` is My Pass (`/pass`).
+ * Without a locale, the website picks one from the browser.
  */
 export const passUrl = (
   path: PassPath,
@@ -112,10 +114,9 @@ export const passUrl = (
   locale?: string | null,
   origin: string = passOrigin()
 ) => {
-  const prefix = locale ? `/${locale}` : "";
   const suffix = path === "/" ? "/pass" : path;
   const url = new URL(
-    `${origin.replace(TRAILING_SLASH, "")}${prefix}${suffix}`
+    `${origin.replace(TRAILING_SLASH, "")}${locale ? localePath(locale, suffix) : suffix}`
   );
   if (returnTo) {
     url.searchParams.set("return_to", returnTo);

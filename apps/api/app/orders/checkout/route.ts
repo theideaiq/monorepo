@@ -4,7 +4,6 @@ import {
   getConversions,
 } from "@repo/analytics/conversions";
 import { authenticateRequest } from "@repo/auth/verify";
-import { project } from "@repo/config";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { getPurchasePolicy, type Platform } from "@repo/payments";
@@ -29,10 +28,7 @@ const platforms = new Set<Platform>(["web", "ios", "android"]);
 const safeRedirect = (redirectUrl: string | undefined, orderId: string) => {
   const web = new URL(env.NEXT_PUBLIC_WEB_URL);
   if (!redirectUrl) {
-    return new URL(
-      `/${project.locale.default}/pass/orders/${orderId}`,
-      web
-    ).toString();
+    return new URL(`/pass/orders/${orderId}`, web).toString();
   }
   return new URL(redirectUrl).origin === web.origin ? redirectUrl : undefined;
 };

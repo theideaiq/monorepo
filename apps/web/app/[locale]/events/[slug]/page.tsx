@@ -1,6 +1,7 @@
 import { localized } from "@repo/commerce";
 import { project } from "@repo/config";
 import type { Locale } from "@repo/internationalization";
+import { localePath } from "@repo/internationalization";
 import {
   formatDateTime,
   formatNumber,
@@ -96,7 +97,7 @@ const EventPage = async ({ params }: EventProps) => {
             url: siteUrl().href,
           },
           startDate: event.starts_at,
-          url: new URL(`/${locale}/events/${slug}`, siteUrl()).href,
+          url: new URL(localePath(locale, `/events/${slug}`), siteUrl()).href,
         }}
       />
       <Link

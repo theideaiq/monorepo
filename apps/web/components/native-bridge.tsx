@@ -2,6 +2,7 @@
 
 import { bindAuthToAppLifecycle, handleAuthDeepLink } from "@repo/auth/native";
 import { useAuth } from "@repo/auth/provider";
+import { localePath } from "@repo/internationalization";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { preferredLocale, resolveLocalizedPath } from "@/lib/locale";
@@ -63,11 +64,11 @@ export const NativeBridge = () => {
           const locale = preferredLocale();
           try {
             if (await handleAuthDeepLink(supabase, url)) {
-              router.replace(`/${locale}`);
+              router.replace(localePath(locale));
               return;
             }
           } catch {
-            router.replace(`/${locale}/sign-in`);
+            router.replace(localePath(locale, "/sign-in"));
             return;
           }
           router.push(resolveLocalizedPath(deepLinkPath(url), locale));

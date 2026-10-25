@@ -10,6 +10,7 @@
   "dependencies": {
     "@repo/database": "workspace:*",
     "@repo/design-system": "workspace:*",
+    "@repo/internationalization": "workspace:*",
     "@supabase/ssr": "^0.12.6",
     "@supabase/supabase-js": "^2.115.0",
     "@t3-oss/env-nextjs": "^0.13.10",

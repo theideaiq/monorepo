@@ -13,12 +13,14 @@ import { expectAccessible } from "./helpers";
 
 /** `?return_to=…` back to the back office's home in `locale`. */
 const toAdmin = (locale: string) =>
-  `?return_to=${encodeURIComponent(`${urls.app}/${locale}/admin`)}`;
+  `?return_to=${encodeURIComponent(
+    `${urls.app}${locale === "en" ? "" : `/${locale}`}/admin`
+  )}`;
 
 test.describe("back office", () => {
   test("visitors are sent to The IDEA Pass to sign in", async ({ page }) => {
-    await page.goto(`${urls.app}/en/admin`);
-    await expect(page).toHaveURL(`${urls.web}/en/sign-in${toAdmin("en")}`);
+    await page.goto(`${urls.app}/admin`);
+    await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
     await expect(page.getByLabel("Email")).toBeVisible();
     await expectAccessible(page);
 
@@ -32,8 +34,8 @@ test.describe("back office", () => {
     page,
   }) => {
     await context.addCookies(await sessionCookies(customer.email, urls.app));
-    await page.goto(`${urls.app}/en/admin/customers`);
-    await expect(page).toHaveURL(/\/en\/admin\/no-access$/);
+    await page.goto(`${urls.app}/admin/customers`);
+    await expect(page).toHaveURL(/\/admin\/no-access$/);
     await expect(
       page.getByRole("heading", { name: "No access" })
     ).toBeVisible();
@@ -41,9 +43,9 @@ test.describe("back office", () => {
 
     // Signs out through The IDEA Pass, then the back office asks to sign in.
     await page.getByRole("link", { name: "Sign out" }).click();
-    await expect(page).toHaveURL(`${urls.web}/en/sign-in${toAdmin("en")}`);
-    await page.goto(`${urls.app}/en/admin/customers`);
-    await expect(page).toHaveURL(new RegExp(`^${urls.web}/en/sign-in`));
+    await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
+    await page.goto(`${urls.app}/admin/customers`);
+    await expect(page).toHaveURL(new RegExp(`^${urls.web}/sign-in`));
   });
 
   test("staff link an authenticator app before the console opens", async ({
@@ -51,8 +53,8 @@ test.describe("back office", () => {
   }) => {
     await resetStaff();
     // Staff sign in with an email code like everyone else…
-    await page.goto(`${urls.app}/en/admin`);
-    await expect(page).toHaveURL(`${urls.web}/en/sign-in${toAdmin("en")}`);
+    await page.goto(`${urls.app}/admin`);
+    await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
     await page.getByLabel("Email").fill(staff.email);
     await clearInbox(staff.email);
     await page.getByRole("button", { name: "Continue" }).click();
@@ -61,7 +63,7 @@ test.describe("back office", () => {
       .fill(await emailedCode(staff.email));
     // …which is AAL1 only: the console sends them on to The IDEA Pass for
     // the authenticator app, which comes back afterwards.
-    await expect(page).toHaveURL(`${urls.web}/en/mfa${toAdmin("en")}`, {
+    await expect(page).toHaveURL(`${urls.web}/mfa${toAdmin("en")}`, {
       timeout: 15_000,
     });
     const secret = page.locator("code");
@@ -69,15 +71,15 @@ test.describe("back office", () => {
     await expectAccessible(page);
 
     await page.getByLabel("6-digit code").fill(totp(await secret.innerText()));
-    await expect(page).toHaveURL(new RegExp(`${urls.app}/en/admin$`));
+    await expect(page).toHaveURL(new RegExp(`${urls.app}/admin$`));
     await expect(
       page.getByRole("heading", { name: "Dashboard" })
     ).toBeVisible();
     await expectAccessible(page);
 
     // My Pass links staff to the back office.
-    await page.goto(`${urls.web}/en/pass`);
+    await page.goto(`${urls.web}/pass`);
     await page.getByRole("link", { name: "Open the back office" }).click();
-    await expect(page).toHaveURL(new RegExp(`${urls.app}/en/admin$`));
+    await expect(page).toHaveURL(new RegExp(`${urls.app}/admin$`));
   });
 });

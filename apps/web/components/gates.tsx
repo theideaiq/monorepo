@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
+import { localePath } from "@repo/internationalization";
 import { usePathname, useRouter } from "@repo/internationalization/navigation";
 import { useLocale } from "next-intl";
 import { type ReactNode, useEffect } from "react";
@@ -29,7 +30,7 @@ export const RequireAuth = ({ children }: GateProps) => {
     if (loading || user) {
       return;
     }
-    const returnTo = `/${locale}${pathname === "/" ? "" : pathname}${window.location.search}`;
+    const returnTo = `${localePath(locale, pathname)}${window.location.search}`;
     router.replace({
       pathname: "/sign-in",
       query: takeAccountDeletedNotice()

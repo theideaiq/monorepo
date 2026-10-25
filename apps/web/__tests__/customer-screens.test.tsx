@@ -427,7 +427,7 @@ describe("accounts without organizations", () => {
 
     await waitFor(() =>
       expect(router.replace).toHaveBeenCalledWith(
-        expect.stringContaining("/en/onboarding")
+        expect.stringContaining("/onboarding?")
       )
     );
     expect(screen.queryByText("inside the app")).toBeNull();

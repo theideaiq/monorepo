@@ -55,7 +55,7 @@ export const signIn = async (context: BrowserContext, email: string) => {
 
 /** My Pass, signed in: the page and its notifications bell. */
 export const expectSignedInHome = async (page: Page) => {
-  await expect(page).toHaveURL(new RegExp(`${urls.web}/en/pass$`));
+  await expect(page).toHaveURL(new RegExp(`${urls.web}/pass$`));
   await expect(
     page.getByRole("button", { name: /^Notifications/ })
   ).toBeVisible();

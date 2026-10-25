@@ -4,7 +4,6 @@ import {
   getConversions,
 } from "@repo/analytics/conversions";
 import { authenticateRequest } from "@repo/auth/verify";
-import { project } from "@repo/config";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { getPurchasePolicy, type Platform } from "@repo/payments";
@@ -32,11 +31,8 @@ const platforms = new Set<Platform>(["web", "ios", "android"]);
  */
 const safeRedirect = (redirectUrl: string | undefined, business: boolean) => {
   const home = business
-    ? new URL(
-        `/${project.locale.default}/business/billing`,
-        env.NEXT_PUBLIC_APP_URL
-      )
-    : new URL(`/${project.locale.default}/pass/plus`, env.NEXT_PUBLIC_WEB_URL);
+    ? new URL("/business/billing", env.NEXT_PUBLIC_APP_URL)
+    : new URL("/pass/plus", env.NEXT_PUBLIC_WEB_URL);
   if (!redirectUrl) {
     return home.toString();
   }

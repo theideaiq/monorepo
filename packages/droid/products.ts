@@ -1,5 +1,6 @@
 import { formatPrice, localized } from "@repo/commerce";
 import type { ProductCard } from "@repo/commerce/catalog";
+import { localePath } from "@repo/internationalization";
 import { type BotLocale, t } from "./i18n";
 
 export interface ProductSummary {
@@ -13,7 +14,7 @@ export interface ProductSummary {
 }
 
 export const productUrl = (siteUrl: string, locale: BotLocale, slug: string) =>
-  `${siteUrl}/${locale}/store/${encodeURIComponent(slug)}`;
+  `${siteUrl}${localePath(locale, `/store/${encodeURIComponent(slug)}`)}`;
 
 export const summarizeProduct = (
   product: ProductCard,

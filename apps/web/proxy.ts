@@ -13,7 +13,7 @@ export const config = {
 };
 
 /**
- * Adds the locale prefix (/ar, /en), keeps the shared session cookie of
+ * Adds the locale prefix (/ar; none for English), keeps the shared session cookie of
  * The IDEA Pass fresh (so its pages and Server Actions read a valid token)
  * and adds the security headers (Nosecone). The site holds no secrets: its
  * forms and privileged steps go to apps/api. Access control stays in the

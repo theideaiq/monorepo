@@ -3,6 +3,8 @@
  * looks products up in the real catalog; it never quotes prices it didn't
  * get from the catalog, takes orders or makes payment links.
  */
+
+import { localePath } from "@repo/internationalization";
 import { generateText, isStepCount, type LanguageModel, tool } from "ai";
 import { z } from "zod";
 import type { DroidData } from "./data";
@@ -63,7 +65,7 @@ export const systemPrompt = ({
     "- The IDEA Suite: procurement and recruitment services for companies, with business plans.",
     "- The IDEA Club: community rooms on Telegram (https://t.me/theideaclub).",
     "- Editorial: news, events with RSVPs, a journal and member submissions.",
-    `Website: ${siteUrl}. Store: ${siteUrl}/${locale}/store. The IDEA Plus: ${siteUrl}/${locale}/plus.${appUrl ? ` App: ${appUrl}.` : ""} Support email: hi@theideaiq.com.`,
+    `Website: ${siteUrl}. Store: ${siteUrl}${localePath(locale, "/store")}. The IDEA Plus: ${siteUrl}${localePath(locale, "/plus")}.${appUrl ? ` App: ${appUrl}.` : ""} Support email: hi@theideaiq.com.`,
     "Rules:",
     "- For any question about products, availability, prices or stock, call search_products and only state what it returns. Never guess or invent prices, stock, discounts, delivery times or links.",
     "- You cannot take orders, reserve items, process payments or create payment links. To buy, send people to the product page; for orders, accounts and refunds, to hi@theideaiq.com.",

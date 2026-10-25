@@ -1,3 +1,4 @@
+import { localePath } from "@repo/internationalization";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -30,16 +31,16 @@ const MfaPage = async ({ searchParams }: MfaPageProps) => {
   if (!session) {
     // Sign in first, then come back here (with the same return_to).
     redirect(
-      `/${locale}/sign-in?${new URLSearchParams({
+      `${localePath(locale, "/sign-in")}?${new URLSearchParams({
         return_to: returnTo
-          ? `/${locale}/mfa?${new URLSearchParams({ return_to: returnTo })}`
-          : `/${locale}/mfa`,
+          ? `${localePath(locale, "/mfa")}?${new URLSearchParams({ return_to: returnTo })}`
+          : localePath(locale, "/mfa"),
       })}`
     );
   }
 
   if (session.aal === "aal2") {
-    redirect(returnTo ?? `/${locale}/pass`);
+    redirect(returnTo ?? localePath(locale, "/pass"));
   }
 
   const t = await getTranslations("pass.mfa");

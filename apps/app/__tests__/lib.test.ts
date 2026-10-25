@@ -1,26 +1,9 @@
 import { describe, expect, test, vi } from "vitest";
 import { ApiError, callApi } from "@/lib/api";
 import { toInvitationError, toOrganizationError } from "@/lib/errors";
-import { preferredLocale, resolveLocalizedPath } from "@/lib/locale";
 import { safeNextPath } from "@/lib/navigation";
 import { isValidSlug, suggestSlug } from "@/lib/slug";
 import { fakeSupabase } from "./render";
-
-describe("locale", () => {
-  test("prefers the saved choice, then the device language", () => {
-    expect(preferredLocale("en", ["ar-IQ"])).toBe("en");
-    expect(preferredLocale(null, ["fr-FR", "en-US"])).toBe("en");
-    expect(preferredLocale(null, ["ar-IQ", "en"])).toBe("ar");
-    expect(preferredLocale("xx", ["fr"])).toBe("ar");
-  });
-
-  test("adds a locale to paths without one", () => {
-    expect(resolveLocalizedPath("/", "ar")).toBe("/ar");
-    expect(resolveLocalizedPath("/billing?x=1", "en")).toBe("/en/billing?x=1");
-    expect(resolveLocalizedPath("/en/settings", "ar")).toBe("/en/settings");
-    expect(resolveLocalizedPath("/ar", "en")).toBe("/ar");
-  });
-});
 
 describe("redirect targets", () => {
   test("only accepts paths inside the app", () => {

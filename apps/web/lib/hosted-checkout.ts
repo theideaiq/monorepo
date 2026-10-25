@@ -1,3 +1,4 @@
+import { localePath } from "@repo/internationalization";
 import { env } from "@/env";
 import { isNativeApp } from "./platform";
 
@@ -17,4 +18,6 @@ export const openCheckout = async (url: string) => {
  * in the system browser), so they send none.
  */
 export const checkoutReturnUrl = (locale: string, path: string) =>
-  isNativeApp() ? undefined : `${env.NEXT_PUBLIC_WEB_URL}/${locale}${path}`;
+  isNativeApp()
+    ? undefined
+    : `${env.NEXT_PUBLIC_WEB_URL}${localePath(locale, path)}`;

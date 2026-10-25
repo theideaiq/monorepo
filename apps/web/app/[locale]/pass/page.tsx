@@ -1,3 +1,4 @@
+import { localePath } from "@repo/internationalization";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { PassCard } from "@/components/pass/pass-card";
@@ -10,7 +11,7 @@ const MyPassPage = async () => {
 
   if (!session) {
     redirect(
-      `/${locale}/sign-in?${new URLSearchParams({ return_to: `/${locale}/pass` })}`
+      `${localePath(locale, "/sign-in")}?${new URLSearchParams({ return_to: localePath(locale, "/pass") })}`
     );
   }
 

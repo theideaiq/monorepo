@@ -228,3 +228,8 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   from 2,000,000 IQD of spend in 12 months; Plus +1%; consoles and laptops
   half; server-written only); invites and affiliates; Telegram sign-in and
   linking (OIDC) with a slimmer Droid; The IDEA Suite workspace.
+- 2026-10-25: **English URLs have no prefix.** English is the default
+  language and lives at `/` (`/store`, `/pass`); Arabic keeps `/ar`
+  (`/ar/store`). Visitors whose browser or saved choice is Arabic are
+  sent to `/ar`; old `/en/…` links redirect to the unprefixed page.
+  `localePath()` builds every path.

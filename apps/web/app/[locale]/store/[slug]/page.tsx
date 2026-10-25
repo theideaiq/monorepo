@@ -1,6 +1,7 @@
 import { discountPercent, formatPrice, localized } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
+import { localePath } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { JsonLd } from "@repo/seo/json-ld";
@@ -94,7 +95,7 @@ const ProductPage = async ({ params }: ProductProps) => {
   const discount = discountPercent(product.price, product.compare_at_price);
   const rental = product.kind === "rental";
   const specs = productSpecs(product.details);
-  const pageUrl = new URL(`/${locale}/store/${slug}`, siteUrl()).href;
+  const pageUrl = new URL(localePath(locale, `/store/${slug}`), siteUrl()).href;
 
   return (
     <div className="container mx-auto px-4 py-10">

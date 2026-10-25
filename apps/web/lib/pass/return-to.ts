@@ -1,4 +1,5 @@
 import { safeReturnTo } from "@repo/auth/pass";
+import { localePath, withoutLocalePrefix } from "@repo/internationalization";
 import { safeNextPath } from "@/lib/app-navigation";
 
 export type SearchParams = Promise<
@@ -29,9 +30,7 @@ export const readReturnTo = async (
   }
   const next = safeNextPath(first(params.next));
   if (next && locale) {
-    return next.startsWith(`/${locale}/`) || next === `/${locale}`
-      ? next
-      : `/${locale}${next === "/" ? "" : next}`;
+    return localePath(locale, withoutLocalePrefix(next));
   }
   return null;
 };

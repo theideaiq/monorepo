@@ -13,11 +13,12 @@ export const config = {
 };
 
 // The back office also looks up product covers from the browser.
-const ADMIN_PATH = /^\/(?:ar|en)\/admin(?:\/|$)/;
+// English paths have no locale prefix (/admin), the others do (/ar/admin).
+const ADMIN_PATH = /^(?:\/(?:ar|en))?\/admin(?:\/|$)/;
 const adminOptions = noseconeOptionsWith(catalogLookupCspSources);
 
 /**
- * Adds the locale prefix (/ar, /en), keeps the shared session cookie fresh
+ * Adds the locale prefix (/ar; none for English), keeps the shared session cookie fresh
  * (so Server Components and Server Actions read a valid token) and adds the
  * security headers (Nosecone). Access control stays in the pages, the
  * Server Actions and Row Level Security.

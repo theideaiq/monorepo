@@ -80,9 +80,14 @@ describe("The IDEA Design gate", () => {
     const result = await checkAccess(request(), env, NOW);
     expect(result).toMatchObject({ kind: "redirect", reason: "sign-in" });
     const location = locationOf(result);
+    // English, the default language, has no prefix.
     expect(location.origin + location.pathname).toBe(
-      "https://theideaiq.com/ar/sign-in"
+      "https://theideaiq.com/sign-in"
     );
+    const arabic = locationOf(
+      await checkAccess(request("NEXT_LOCALE=ar"), env, NOW)
+    );
+    expect(arabic.pathname).toBe("/ar/sign-in");
     expect(location.searchParams.get("return_to")).toBe(PAGE);
   });
 
@@ -92,8 +97,11 @@ describe("The IDEA Design gate", () => {
       localeFrom(request(undefined, { "accept-language": "en-US,en;q=0.9" }))
     ).toBe("en");
     expect(localeFrom(request(undefined, { "accept-language": "fr" }))).toBe(
-      "ar"
+      "en"
     );
+    expect(
+      localeFrom(request(undefined, { "accept-language": "ar-IQ,ar;q=0.9" }))
+    ).toBe("ar");
   });
 
   test("an expired session also goes to Pass, never refreshed here", async () => {
@@ -129,7 +137,7 @@ describe("The IDEA Design gate", () => {
     );
     expect(result).toMatchObject({ kind: "redirect", reason: "mfa" });
     const location = locationOf(result);
-    expect(location.pathname).toBe("/en/mfa");
+    expect(location.pathname).toBe("/mfa");
     expect(location.searchParams.get("return_to")).toBe(PAGE);
   });
 

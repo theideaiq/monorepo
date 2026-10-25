@@ -1,4 +1,7 @@
+import { localePath } from "@repo/internationalization";
+
 /**
+import { localePath } from "@repo/internationalization";
  * Links to pages of this site, to The IDEA Spark (apps/app: business and
  * the back office) and to our Telegram presence.
  */
@@ -10,21 +13,24 @@ const withQuery = (base: string, params?: Record<string, string>) => {
   return query ? `${base}?${query}` : base;
 };
 
-/** `/${locale}${path}` on this site, with optional query parameters. */
+/** `path` in `locale` on this site (`localePath`), with optional query parameters. */
 export const pagePath = (
   locale: string,
   path = "",
   params?: Record<string, string>
-) => withQuery(`/${locale}${path}`, params);
+) => withQuery(localePath(locale, path), params);
 
-/** `${appUrl}/${locale}${path}` on The IDEA Spark. */
+/** `path` in `locale` on The IDEA Spark. */
 export const appLink = (
   appUrl: string,
   locale: string,
   path = "",
   params?: Record<string, string>
 ) =>
-  withQuery(`${appUrl.replace(TRAILING_SLASH, "")}/${locale}${path}`, params);
+  withQuery(
+    `${appUrl.replace(TRAILING_SLASH, "")}${localePath(locale, path)}`,
+    params
+  );
 
 export const telegram = {
   bot: "https://t.me/TheIdeaDroidBot",

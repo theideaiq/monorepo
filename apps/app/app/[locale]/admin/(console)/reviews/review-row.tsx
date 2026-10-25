@@ -1,6 +1,7 @@
 import { localized } from "@repo/commerce";
 import { TableCell, TableRow } from "@repo/design-system/components/ui/table";
 import type { Locale } from "@repo/internationalization";
+import { localePath } from "@repo/internationalization";
 import { BadgeCheckIcon, ExternalLinkIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/admin/action-button";
@@ -74,7 +75,7 @@ const ProductCell = async ({
         {product && storeUrl ? (
           <a
             className="inline-flex items-center gap-1 hover:text-foreground"
-            href={`${storeUrl}/${locale}/store/product?slug=${encodeURIComponent(product.slug)}`}
+            href={`${storeUrl}${localePath(locale, `/store/${encodeURIComponent(product.slug)}`)}`}
             rel="noopener"
             target="_blank"
           >

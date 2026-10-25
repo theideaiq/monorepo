@@ -1,5 +1,6 @@
 import { localized } from "@repo/commerce";
 import type { Locale } from "@repo/internationalization";
+import { localePath } from "@repo/internationalization";
 import { formatDate } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { JsonLd } from "@repo/seo/json-ld";
@@ -60,7 +61,10 @@ const Post = async ({ params }: PostProps) => {
           datePublished: post.published_at,
           headline: title,
           ...(cover ? { image: [cover] } : {}),
-          mainEntityOfPage: new URL(`/${locale}/news/${slug}`, siteUrl()).href,
+          mainEntityOfPage: new URL(
+            localePath(locale, `/news/${slug}`),
+            siteUrl()
+          ).href,
         }}
       />
       <Link

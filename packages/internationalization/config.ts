@@ -34,3 +34,26 @@ export const getDirection = (locale: string): Direction =>
 
 export const getLocaleLabel = (locale: Locale) =>
   localeDefinitions[locale].label;
+
+const LEADING = /^[?#]/;
+
+/**
+ * `path` in `locale`, as the site serves it: English, the default, has no
+ * prefix (`/pass`), every other language does (`/ar/pass`). `path` starts
+ * with "/" (or is "" or "/" for the home page) and may carry a query.
+ */
+export const localePath = (locale: string, path = "/") => {
+  const rest = path === "/" ? "" : path;
+  if (locale !== defaultLocale) {
+    return `/${locale}${rest}`;
+  }
+  return rest === "" || LEADING.test(rest) ? `/${rest}` : rest;
+};
+
+const PREFIX = new RegExp(`^/(${locales.join("|")})(?=/|$|[?#])`);
+
+/** `path` without its locale prefix, if it has one (`/ar/pass` → `/pass`). */
+export const withoutLocalePrefix = (path: string) => {
+  const rest = path.replace(PREFIX, "");
+  return rest === "" || LEADING.test(rest) ? `/${rest}` : rest;
+};

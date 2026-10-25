@@ -1,3 +1,4 @@
+import { localePath } from "@repo/internationalization";
 import type { MetadataRoute } from "next";
 
 /** Pages without dynamic segments. */
@@ -36,7 +37,7 @@ export const buildSitemap = (
     const languages = Object.fromEntries(
       locales.map((locale) => [
         locale,
-        new URL(`/${locale}${path}`, baseUrl).href,
+        new URL(localePath(locale, path), baseUrl).href,
       ])
     );
     return locales.map((locale) => ({

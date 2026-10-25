@@ -3,6 +3,7 @@
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
+import { localePath } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link, usePathname } from "@repo/internationalization/navigation";
 import { ShoppingCartIcon } from "lucide-react";
@@ -63,7 +64,7 @@ export const AccountActions = ({
           href={{
             pathname: "/sign-in",
             query: {
-              return_to: `/${locale}${pathname === "/" ? "" : pathname}`,
+              return_to: localePath(locale, pathname),
             },
           }}
           onClick={onNavigate}

@@ -1,3 +1,4 @@
+import { locales } from "@repo/internationalization";
 import {
   catalogImagePatterns,
   config,
@@ -30,58 +31,79 @@ nextConfig.images = {
 // stays the public page; its management page is /pass/plus.
 const passSections = "orders|sell|settings|submissions|support|wishlist";
 
+type Redirect = Awaited<
+  ReturnType<NonNullable<NextConfig["redirects"]>>
+>[number];
+
+/**
+ * A redirect for a page in every language: English pages have no prefix
+ * (`/x`), the others do (`/ar/x`; older `/en/x` links too).
+ */
+const everyLanguage = ({
+  destination,
+  source,
+  ...rest
+}: Redirect): Redirect[] => [
+  { ...rest, destination, source },
+  {
+    ...rest,
+    destination: `/:locale${destination}`,
+    source: `/:locale(${locales.join("|")})${source}`,
+  },
+];
+
 nextConfig.redirects = async () => [
   // Detail pages took a query parameter while the app was a static export.
-  {
-    destination: "/:locale/pass/orders/:id",
+  ...everyLanguage({
+    destination: "/pass/orders/:id",
     has: [{ key: "id", type: "query", value: "(?<id>[^&]+)" }],
     permanent: true,
-    source: "/:locale(ar|en)/orders/view",
-  },
-  {
-    destination: "/:locale/pass/support/:id",
+    source: "/orders/view",
+  }),
+  ...everyLanguage({
+    destination: "/pass/support/:id",
     has: [{ key: "id", type: "query", value: "(?<id>[^&]+)" }],
     permanent: true,
-    source: "/:locale(ar|en)/support/view",
-  },
-  {
-    destination: "/:locale/store/:slug",
+    source: "/support/view",
+  }),
+  ...everyLanguage({
+    destination: "/store/:slug",
     has: [{ key: "slug", type: "query", value: "(?<slug>[^&]+)" }],
     permanent: true,
-    source: "/:locale(ar|en)/store/product",
-  },
-  {
-    destination: "/:locale/pass/:section/:path*",
+    source: "/store/product",
+  }),
+  ...everyLanguage({
+    destination: "/pass/:section/:path*",
     permanent: true,
-    source: `/:locale(ar|en)/:section(${passSections})/:path*`,
-  },
-  {
-    destination: "/:locale/legal/terms",
+    source: `/:section(${passSections})/:path*`,
+  }),
+  ...everyLanguage({
+    destination: "/legal/terms",
     permanent: true,
-    source: "/:locale(ar|en)/legal",
-  },
+    source: "/legal",
+  }),
   // The template's pricing page became The IDEA Plus; the old site's store URL.
-  {
-    destination: "/:locale/plus",
+  ...everyLanguage({
+    destination: "/plus",
     permanent: true,
-    source: "/:locale(ar|en)/pricing",
-  },
+    source: "/pricing",
+  }),
   {
     destination: "/games/spark-catcher/index.html",
     permanent: false,
     source: "/games/spark-catcher",
   },
-  {
-    destination: "/:locale/store",
+  ...everyLanguage({
+    destination: "/store",
     permanent: true,
-    source: "/:locale(ar|en)/megastore",
-  },
+    source: "/megastore",
+  }),
   // The Droid's page became a section of the Club's.
-  {
-    destination: "/:locale/club#droid",
+  ...everyLanguage({
+    destination: "/club#droid",
     permanent: true,
-    source: "/:locale(ar|en)/droid",
-  },
+    source: "/droid",
+  }),
 ];
 
 /**
@@ -100,10 +122,12 @@ nextConfig.headers = async () => [
     "cart",
     "checkout",
     "onboarding",
-  ].map((path) => ({
-    headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
-    source: `/:locale(ar|en)/${path}`,
-  })),
+  ].flatMap((path) =>
+    [`/${path}`, `/:locale(${locales.join("|")})/${path}`].map((source) => ({
+      headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      source,
+    }))
+  ),
   // Universal Links: Apple reads this file (no extension) as JSON.
   {
     headers: [{ key: "Content-Type", value: "application/json" }],

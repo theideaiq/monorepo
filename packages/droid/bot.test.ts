@@ -146,7 +146,7 @@ describe("private chats", () => {
     expect(text).toContain("<b>PlayStation 5</b>");
     expect(text).toContain("720,000");
     expect(text).toContain("In stock: 3");
-    expect(text).toContain("https://theideaiq.com/en/store/playstation-5");
+    expect(text).toContain("https://theideaiq.com/store/playstation-5");
     expect(text).toContain("Rent with The IDEA Plus · Out of stock");
     expect(text).not.toMatch(PAYMENT_WORDS);
   });
@@ -312,9 +312,7 @@ describe("AI assistant", () => {
     expect(textOf(sent()[0])).toBe("PlayStation 5 costs IQD 720,000.");
     // The tool result reached the model.
     const secondCall = JSON.stringify(model.doGenerateCalls[1]?.prompt);
-    expect(secondCall).toContain(
-      "https://theideaiq.com/en/store/playstation-5"
-    );
+    expect(secondCall).toContain("https://theideaiq.com/store/playstation-5");
     // The system prompt forbids made-up prices and payment links.
     const system = JSON.stringify(model.doGenerateCalls[0]?.prompt);
     expect(system).toContain("Never guess or invent prices");

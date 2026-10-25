@@ -48,7 +48,7 @@ describe("links", () => {
       "/ar/pass/plus?plan=p1"
     );
     expect(appLink("https://spark.theideaiq.com/", "en", "/business")).toBe(
-      "https://spark.theideaiq.com/en/business"
+      "https://spark.theideaiq.com/business"
     );
   });
 });

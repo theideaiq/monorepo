@@ -32,6 +32,6 @@ describe("sign-in link landing page", () => {
     renderWithApp(<AuthCallback />, { locale: "en", supabase: fakeSupabase() });
 
     expect(await screen.findByRole("alert")).toBeTruthy();
-    expect(screen.getByRole("link").getAttribute("href")).toBe("/en/sign-in");
+    expect(screen.getByRole("link").getAttribute("href")).toBe("/sign-in");
   });
 });
