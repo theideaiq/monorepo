@@ -44,6 +44,8 @@ export const env = withPresets(
       GOOGLE_WALLET_SERVICE_ACCOUNT: process.env.GOOGLE_WALLET_SERVICE_ACCOUNT,
       PUSH_WEBHOOK_SECRET: process.env.PUSH_WEBHOOK_SECRET,
       STORE_NOTIFICATIONS_EMAIL: process.env.STORE_NOTIFICATIONS_EMAIL,
+      TELEGRAM_LOGIN_CLIENT_ID: process.env.TELEGRAM_LOGIN_CLIENT_ID,
+      TELEGRAM_LOGIN_CLIENT_SECRET: process.env.TELEGRAM_LOGIN_CLIENT_SECRET,
     },
     server: {
       // Shared secret Vercel Cron sends as a Bearer token. Generate with
@@ -63,6 +65,11 @@ export const env = withPresets(
       PUSH_WEBHOOK_SECRET: z.string().min(32).optional(),
       // Optional inbox that gets an email for every paid store order.
       STORE_NOTIFICATIONS_EMAIL: z.email().optional(),
+      // Telegram sign-in (OpenID Connect): the Client ID and Secret from
+      // @BotFather → the bot → Login Widget, whose Allowed URLs include
+      // <API URL>/auth/telegram/callback. Hidden while unset.
+      TELEGRAM_LOGIN_CLIENT_ID: z.string().regex(/^\d+$/).optional(),
+      TELEGRAM_LOGIN_CLIENT_SECRET: z.string().min(16).optional(),
     },
     skipValidation: process.env.SKIP_ENV_VALIDATION === "true",
   }),

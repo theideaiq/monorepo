@@ -57,6 +57,7 @@ export const queryKeys = {
   submissions: (userId: string) => ["submissions", userId] as const,
   subscription: (organizationId: string) =>
     ["subscription", organizationId] as const,
+  telegram: (userId: string) => ["telegram", userId] as const,
   ticket: (ticketId: string) => ["tickets", "detail", ticketId] as const,
   ticketMessages: (ticketId: string) =>
     ["tickets", "messages", ticketId] as const,

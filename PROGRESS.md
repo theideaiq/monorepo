@@ -29,6 +29,11 @@ decisions with a date.
       `https://theideaiq.com` (The IDEA Pass lives on the website) and add
       `https://theideaiq.com/**` and `https://spark.theideaiq.com/**` to
       the redirect URLs.
+- [ ] **Telegram sign-in:** in @BotFather open the bot → Login Widget, add
+      the Allowed URL `https://api.theideaiq.com/auth/telegram/callback`
+      (and the website origin `https://theideaiq.com`), then set
+      `TELEGRAM_LOGIN_CLIENT_ID` and `TELEGRAM_LOGIN_CLIENT_SECRET` on the
+      Vercel api project. "Continue with Telegram" appears once they're set.
 - [ ] **Supabase, email codes (The IDEA Pass sign-in;
       `ARCHITECTURE_AND_INTEGRATIONS.md` 2.7):**
       - Authentication → Sign In / Providers → Email: enabled, Confirm
@@ -272,6 +277,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   FIB, Qi or bank transfer, or as Bulbs worth 20% more. Migration
   `20261201000000_affiliates.sql`. Next: Telegram sign-in and a slimmer
   Droid.
+- 2026-10-25: **Telegram sign-in.** "Continue with Telegram" on The IDEA
+  Pass sign-in pages (Telegram's OpenID Connect, run by the API). A linked
+  account signs straight in; a new one signs in once with an email code
+  (receipts and recovery) and is linked. My Pass → Settings connects or
+  disconnects Telegram; connecting the first time earns 10 Bulbs. Hidden
+  until `TELEGRAM_LOGIN_CLIENT_ID`/`SECRET` are set. Migration
+  `20261202000000_telegram_login.sql`. Next: the slimmer Droid and Club
+  join approvals.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

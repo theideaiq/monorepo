@@ -1384,6 +1384,15 @@
           "phoneRequired": "Add your WhatsApp number to turn updates on."
         },
         "failed": "Your WhatsApp settings couldn't be saved."
+      },
+      "telegram": {
+        "title": "Telegram",
+        "description": "Connect Telegram to sign in with it and get order updates from our bot. You'll get 10 Bulbs the first time.",
+        "linkedDescription": "You can sign in with Telegram, and our bot can message you about your orders.",
+        "linkedAs": "Connected as {name}",
+        "connect": "Connect Telegram",
+        "disconnect": "Disconnect",
+        "failed": "We couldn't disconnect Telegram. Try again."
       }
     },
     "errors": {
@@ -3273,6 +3282,21 @@
       "errors": {
         "invalidCode": "That code didn't work. Check the time on your phone and try the newest code.",
         "unavailable": "Authenticator apps aren't enabled for this project yet. Ask an administrator to turn on TOTP multi-factor authentication in Supabase."
+      }
+    },
+    "telegram": {
+      "title": "Continue with Telegram",
+      "continue": "Continue with Telegram",
+      "signingIn": "Signing you in…",
+      "back": "Back to sign-in",
+      "welcome": "Your Telegram account is verified. Enter your email to finish: we'll send your receipts there and use it if you ever need to recover The IDEA Pass.",
+      "welcomeName": "Hi {name}, your Telegram account is verified. Enter your email to finish: we'll send your receipts there and use it if you ever need to recover The IDEA Pass.",
+      "errors": {
+        "cancelled": "Telegram sign-in was cancelled.",
+        "failed": "We couldn't sign you in with Telegram. Try again, or use your email.",
+        "suspended": "This Pass is suspended. Contact support.",
+        "taken": "This Telegram account is already connected to another Pass.",
+        "unavailable": "Telegram sign-in isn't available right now. Use your email instead."
       }
     }
   }

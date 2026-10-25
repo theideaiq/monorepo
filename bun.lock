@@ -41,6 +41,7 @@
         "@t3-oss/env-nextjs": "^0.13.10",
         "@upstash/redis": "^1.36.3",
         "import-in-the-middle": "^3.0.0",
+        "jose": "^6.2.12",
         "next": "16.4.3",
         "react": "19.3.0",
         "react-dom": "19.3.0",

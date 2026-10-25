@@ -2522,6 +2522,16 @@ export type Database = {
           revenue: number;
         }[];
       };
+      link_telegram: {
+        Args: {
+          first_name?: string;
+          last_name?: string;
+          member: string;
+          telegram_id: number;
+          username?: string;
+        };
+        Returns: undefined;
+      };
       mark_cash_collected: {
         Args: { order_id: string };
         Returns: {
@@ -2637,6 +2647,13 @@ export type Database = {
           in_use: number;
           slots: number;
           tier: number;
+        }[];
+      };
+      my_telegram: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          first_name: string;
+          username: string;
         }[];
       };
       my_whatsapp_settings: {
@@ -2841,6 +2858,7 @@ export type Database = {
           name: string;
         }[];
       };
+      unlink_telegram: { Args: Record<PropertyKey, never>; Returns: undefined };
       withdraw_trade_in: { Args: { trade_in: string }; Returns: undefined };
     };
     Enums: {
