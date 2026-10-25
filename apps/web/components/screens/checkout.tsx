@@ -61,6 +61,7 @@ import { isNativeApp } from "@/lib/platform";
 import { useProfile } from "@/lib/queries";
 import {
   useCart,
+  useDeliveryAreas,
   useDeliveryZones,
   useStoreSettings,
 } from "@/lib/store-queries";
@@ -262,6 +263,8 @@ const PaymentCard = ({
 
 interface ContactCardProps {
   readonly address: AddressForm;
+  /** The courier's areas in the chosen zone; empty when unknown. */
+  readonly areas: readonly string[];
   readonly busy: boolean;
   readonly fieldErrors: AddressField[];
   readonly method: Fulfilment;
@@ -274,6 +277,7 @@ interface ContactCardProps {
 /** The recipient, and the delivery address and zone (or the store's counter). */
 const ContactCard = ({
   address,
+  areas,
   busy,
   fieldErrors,
   method,
@@ -368,15 +372,45 @@ const ContactCard = ({
                   </SelectContent>
                 </Select>
               </Field>
-              <Field htmlFor={`${id}-city`} label={t("address.city")} optional>
-                <Input
-                  autoComplete="address-level2"
-                  id={`${id}-city`}
-                  maxLength={60}
-                  onChange={(event) => set("city")(event.target.value)}
-                  value={address.city}
-                />
-              </Field>
+              {areas.length > 0 ? (
+                <Field
+                  error={fieldError("city")}
+                  hint={t("address.areaHint")}
+                  htmlFor={`${id}-city`}
+                  label={t("address.area")}
+                >
+                  <Input
+                    aria-describedby={describedBy("city")}
+                    aria-invalid={fieldErrors.includes("city")}
+                    autoComplete="off"
+                    dir="rtl"
+                    id={`${id}-city`}
+                    list={`${id}-areas`}
+                    maxLength={60}
+                    onChange={(event) => set("city")(event.target.value)}
+                    value={address.city}
+                  />
+                  <datalist id={`${id}-areas`}>
+                    {areas.map((area) => (
+                      <option key={area} value={area} />
+                    ))}
+                  </datalist>
+                </Field>
+              ) : (
+                <Field
+                  htmlFor={`${id}-city`}
+                  label={t("address.city")}
+                  optional
+                >
+                  <Input
+                    autoComplete="address-level2"
+                    id={`${id}-city`}
+                    maxLength={60}
+                    onChange={(event) => set("city")(event.target.value)}
+                    value={address.city}
+                  />
+                </Field>
+              )}
               <div className="sm:col-span-2">
                 <Field
                   error={fieldError("address")}
@@ -673,6 +707,16 @@ const resolveChoices = ({
   };
 };
 
+/** The courier's areas the address needs (delivery to a known zone). */
+const useCheckoutAreas = (
+  method: Fulfilment,
+  zone: DeliveryZone | undefined
+): string[] => {
+  const province =
+    method === "delivery" ? (zone?.carrier_province ?? null) : null;
+  return useDeliveryAreas(province).data ?? [];
+};
+
 /**
  * Checkout: delivery (address and zone) or pickup, online or cash payment,
  * then `create_order` (which prices the fee from the zone) and, for online
@@ -716,6 +760,8 @@ export const Checkout = () => {
       zones: zones.data,
     });
 
+  const areas = useCheckoutAreas(method, zone);
+
   const { paidWithBulbs, summary, tierFreeDelivery } = planCheckout({
     bulbs: useBulbs ? availableBulbs : 0,
     cart: cart.data,
@@ -731,6 +777,7 @@ export const Checkout = () => {
     event.preventDefault();
     setError(null);
     const result = validateAddress(address, {
+      areas,
       fulfilment: method,
       zones: zoneList,
     });
@@ -827,6 +874,7 @@ export const Checkout = () => {
               ) : null}
               <ContactCard
                 address={address}
+                areas={areas}
                 busy={busy}
                 fieldErrors={fieldErrors}
                 method={method}

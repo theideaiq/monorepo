@@ -341,7 +341,14 @@ export const getStoreSettings = async (supabase: Client) => {
 
 export type DeliveryZone = Pick<
   Tables<"delivery_zones">,
-  "fee" | "governorate" | "id" | "max_days" | "min_days" | "name_ar" | "name_en"
+  | "carrier_province"
+  | "fee"
+  | "governorate"
+  | "id"
+  | "max_days"
+  | "min_days"
+  | "name_ar"
+  | "name_en"
 >;
 
 /** The zones customers can choose at checkout, in the store's order. */
@@ -351,11 +358,33 @@ export const listDeliveryZones = async (
   unwrap(
     await supabase
       .from("delivery_zones")
-      .select("id, governorate, name_ar, name_en, fee, min_days, max_days")
+      .select(
+        "id, governorate, carrier_province, name_ar, name_en, fee, min_days, max_days"
+      )
       .eq("active", true)
       .order("position")
       .order("name_en")
   ) ?? [];
+
+/**
+ * The courier's areas in a province (Boxy's names, which it matches the
+ * address by), A to Z, for the checkout's area picker. Empty until the
+ * sync job has copied them, or for a province without any.
+ */
+export const listDeliveryAreas = async (
+  supabase: Client,
+  province: string
+): Promise<string[]> =>
+  (
+    unwrap(
+      await supabase
+        .from("delivery_areas")
+        .select("name")
+        .eq("province", province)
+        .order("name")
+        .limit(5000)
+    ) ?? []
+  ).map((area) => area.name);
 
 /** Public URL of a product image stored in the `catalog` bucket. */
 export const productImageUrl = (supabaseUrl: string, path: string) =>

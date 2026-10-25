@@ -32,7 +32,11 @@ import { Link } from "@/lib/admin/navigation";
 import { canRead } from "@/lib/admin/roles";
 import { requireSection } from "@/lib/admin/session";
 import { markCashCollected, setOrderStatus } from "../actions";
+import { BoxyPanel } from "./boxy-panel";
 import { OrderNotesForm } from "./order-notes-form";
+
+/** Orders ready to go out with Boxy: paid online, or cash orders confirmed. */
+const SENDABLE = new Set(["paid", "confirmed", "processing"]);
 
 interface OrderPageProps {
   readonly params: Promise<{ id: string }>;
@@ -243,26 +247,37 @@ const OrderPage = async ({ params }: OrderPageProps) => {
   const format = formatters(locale);
   const showPayments = canRead(staff.role, "finance");
 
-  const [{ data: order }, { data: items }, payments] = await Promise.all([
-    supabase
-      .from("orders")
-      .select("*, delivery_zone:delivery_zones (name_ar, name_en)")
-      .eq("id", id)
-      .maybeSingle(),
-    supabase
-      .from("order_items")
-      .select("*, variant:product_variants (label_ar, label_en)")
-      .eq("order_id", id),
-    showPayments
-      ? supabase
-          .from("payments")
-          .select(
-            "id, reference_id, amount, refunded_amount, status, payment_method, paid_at, created_at"
-          )
-          .eq("order_id", id)
-          .order("created_at", { ascending: false })
-      : Promise.resolve(null),
-  ]);
+  const [{ data: order }, { data: items }, payments, { data: shipment }] =
+    await Promise.all([
+      supabase
+        .from("orders")
+        .select(
+          "*, delivery_zone:delivery_zones (name_ar, name_en, carrier_province)"
+        )
+        .eq("id", id)
+        .maybeSingle(),
+      supabase
+        .from("order_items")
+        .select("*, variant:product_variants (label_ar, label_en)")
+        .eq("order_id", id),
+      showPayments
+        ? supabase
+            .from("payments")
+            .select(
+              "id, reference_id, amount, refunded_amount, status, payment_method, paid_at, created_at"
+            )
+            .eq("order_id", id)
+            .order("created_at", { ascending: false })
+        : Promise.resolve(null),
+      supabase
+        .from("shipments")
+        .select(
+          "action_required, cash_amount, delivered_at, fee, fragile, history, pickup_id, returned_at, size, status, status_title, synced_at, tracking_code, tracking_url"
+        )
+        .eq("order_id", id)
+        .eq("active", true)
+        .maybeSingle(),
+    ]);
 
   if (!order) {
     notFound();
@@ -395,6 +410,17 @@ const OrderPage = async ({ params }: OrderPageProps) => {
         </div>
 
         <div className="grid content-start gap-6">
+          {pickup ? null : (
+            <BoxyPanel
+              addressReady={Boolean(
+                order.delivery_zone?.carrier_province && address.city.trim()
+              )}
+              canSend={SENDABLE.has(order.status)}
+              canWrite={canWrite}
+              orderId={order.id}
+              shipment={shipment}
+            />
+          )}
           {moves.length > 0 ? (
             <MovesPanel
               moves={moves}

@@ -7,6 +7,7 @@ import {
   getProductOffers,
   getStoreSettings,
   listCategories,
+  listDeliveryAreas,
   listDeliveryZones,
   listProducts,
   type ProductFilters,
@@ -61,6 +62,17 @@ export const useStoreSettings = () => {
     queryFn: () => getStoreSettings(supabase),
     queryKey: queryKeys.storeSettings,
     staleTime: 5 * 60_000,
+  });
+};
+
+/** The courier's areas in a province, for the checkout's area picker. */
+export const useDeliveryAreas = (province: string | null | undefined) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: Boolean(province),
+    queryFn: () => listDeliveryAreas(supabase, province ?? ""),
+    queryKey: ["delivery-areas", province ?? ""],
+    staleTime: 60 * 60_000,
   });
 };
 
@@ -249,7 +261,7 @@ export const useUpdateCartLine = () => {
 };
 
 const ORDER_COLUMNS =
-  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, condition, name_ar, name_en, attributes, unit_price, quantity, variant:product_variants (label_ar, label_en))" as const;
+  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, tracking_url, paid_at, created_at, order_items (id, product_id, variant_id, condition, name_ar, name_en, attributes, unit_price, quantity, variant:product_variants (label_ar, label_en))" as const;
 
 export const useOrders = () => {
   const { supabase, user } = useAuth();

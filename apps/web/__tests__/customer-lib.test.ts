@@ -219,6 +219,16 @@ describe("delivery address", () => {
     });
   });
 
+  test("with the courier's areas known, the city must be one of them", () => {
+    const areas = ["الكرادة", "المنصور"];
+    expect(validateAddress(filled, { areas }).errors).toEqual(["city"]);
+    expect(
+      validateAddress({ ...filled, city: " الكرادة " }, { areas }).errors
+    ).toEqual([]);
+    // Unknown areas (before the first copy): any city goes.
+    expect(validateAddress(filled, { areas: [] }).errors).toEqual([]);
+  });
+
   test("pickup needs only a name and a phone", () => {
     expect(
       validateAddress(

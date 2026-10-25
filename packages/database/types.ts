@@ -510,9 +510,40 @@ export type Database = {
         };
         Relationships: [];
       };
+      delivery_areas: {
+        Row: {
+          active: boolean;
+          code: string | null;
+          id: string;
+          name: string;
+          province: string;
+          remote: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          code?: string | null;
+          id: string;
+          name: string;
+          province: string;
+          remote?: boolean;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          code?: string | null;
+          id?: string;
+          name?: string;
+          province?: string;
+          remote?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       delivery_zones: {
         Row: {
           active: boolean;
+          carrier_province: string | null;
           created_at: string;
           fee: number;
           governorate: string | null;
@@ -526,6 +557,7 @@ export type Database = {
         };
         Insert: {
           active?: boolean;
+          carrier_province?: string | null;
           created_at?: string;
           fee: number;
           governorate?: string | null;
@@ -539,6 +571,7 @@ export type Database = {
         };
         Update: {
           active?: boolean;
+          carrier_province?: string | null;
           created_at?: string;
           fee?: number;
           governorate?: string | null;
@@ -1065,6 +1098,7 @@ export type Database = {
           subtotal: number;
           total: number;
           tracking_number: string | null;
+          tracking_url: string | null;
           updated_at: string;
           user_id: string | null;
         };
@@ -1091,6 +1125,7 @@ export type Database = {
           subtotal: number;
           total: number;
           tracking_number?: string | null;
+          tracking_url?: string | null;
           updated_at?: string;
           user_id?: string | null;
         };
@@ -1117,6 +1152,7 @@ export type Database = {
           subtotal?: number;
           total?: number;
           tracking_number?: string | null;
+          tracking_url?: string | null;
           updated_at?: string;
           user_id?: string | null;
         };
@@ -2094,6 +2130,92 @@ export type Database = {
           },
         ];
       };
+      shipments: {
+        Row: {
+          action_required: string | null;
+          active: boolean;
+          cancelled_at: string | null;
+          carrier: string;
+          carrier_id: string;
+          cash_amount: number;
+          created_at: string;
+          created_by: string | null;
+          delivered_at: string | null;
+          fee: number | null;
+          fragile: boolean;
+          history: NonNullable<Json>;
+          id: string;
+          order_id: string;
+          pickup_id: string | null;
+          returned_at: string | null;
+          size: string;
+          status: string;
+          status_title: string | null;
+          synced_at: string | null;
+          tracking_code: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          action_required?: string | null;
+          active?: boolean;
+          cancelled_at?: string | null;
+          carrier?: string;
+          carrier_id: string;
+          cash_amount?: number;
+          created_at?: string;
+          created_by?: string | null;
+          delivered_at?: string | null;
+          fee?: number | null;
+          fragile?: boolean;
+          history?: NonNullable<Json>;
+          id?: string;
+          order_id: string;
+          pickup_id?: string | null;
+          returned_at?: string | null;
+          size: string;
+          status?: string;
+          status_title?: string | null;
+          synced_at?: string | null;
+          tracking_code?: string | null;
+          tracking_url?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          action_required?: string | null;
+          active?: boolean;
+          cancelled_at?: string | null;
+          carrier?: string;
+          carrier_id?: string;
+          cash_amount?: number;
+          created_at?: string;
+          created_by?: string | null;
+          delivered_at?: string | null;
+          fee?: number | null;
+          fragile?: boolean;
+          history?: NonNullable<Json>;
+          id?: string;
+          order_id?: string;
+          pickup_id?: string | null;
+          returned_at?: string | null;
+          size?: string;
+          status?: string;
+          status_title?: string | null;
+          synced_at?: string | null;
+          tracking_code?: string | null;
+          tracking_url?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "shipments_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       staff: {
         Row: {
           created_at: string;
@@ -3044,6 +3166,7 @@ export type Database = {
           subtotal: number;
           total: number;
           tracking_number: string | null;
+          tracking_url: string | null;
           updated_at: string;
           user_id: string | null;
         };
@@ -3195,6 +3318,7 @@ export type Database = {
           subtotal: number;
           total: number;
           tracking_number: string | null;
+          tracking_url: string | null;
           updated_at: string;
           user_id: string | null;
         };

@@ -333,6 +333,16 @@ const OrderView = ({
                 </span>
               </p>
             ) : null}
+            {order.tracking_url?.startsWith("https://") ? (
+              <a
+                className="font-medium text-pink-text text-sm hover:underline"
+                href={order.tracking_url}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {t("trackParcel")}
+              </a>
+            ) : null}
           </CardContent>
         </Card>
       ) : null}

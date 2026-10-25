@@ -49,6 +49,7 @@
     "MAILPIT_URL",
     "ARCJET_KEY",
     "BETTERSTACK_*",
+    "BOXY_*",
     "CRON_SECRET",
     "FCM_SERVICE_ACCOUNT",
     "GOOGLE_WALLET_*",

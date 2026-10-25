@@ -1013,13 +1013,15 @@
       "title": "Checkout",
       "address": {
         "title": "Delivery address",
-        "description": "We deliver to all of Iraq's governorates and call before delivering.",
+        "description": "We deliver across Iraq with Boxy and call before delivering.",
         "fullName": "Full name",
         "phone": "Mobile number",
         "phoneHint": "For example 0770 123 4567.",
         "governorate": "Governorate",
         "governoratePlaceholder": "Choose a governorate",
         "city": "City or district",
+        "area": "Area",
+        "areaHint": "Start typing, then pick your area from the list.",
         "address": "Address",
         "addressPlaceholder": "Neighbourhood, street, building, nearest landmark",
         "notes": "Delivery notes",
@@ -1031,6 +1033,7 @@
         "fullName": "Enter the recipient's name.",
         "phone": "Enter a valid mobile number.",
         "governorate": "Choose a governorate.",
+        "city": "Pick your area from the list.",
         "address": "Enter the delivery address."
       },
       "summary": "Order summary",
@@ -1116,6 +1119,7 @@
         "items": "Items",
         "address": "Delivery address",
         "tracking": "Tracking number",
+        "trackParcel": "Track your parcel",
         "summary": "Summary",
         "subtotal": "Subtotal",
         "shipping": "Delivery",
@@ -2305,6 +2309,11 @@
       "lastVariant": "A product needs at least one variant.",
       "chooseVariant": "This product has several variants: choose one.",
       "variantPricing": "This product has variants: set price and stock on each variant below.",
+      "notShippable": "This order can't be sent now (already sent, not paid or confirmed, or collected at the store).",
+      "noDeliveryArea": "The address has no delivery area Boxy knows. Call the customer and fix the address first.",
+      "carrierRejected": "Boxy didn't accept the parcel. Check the address and phone number, then try again.",
+      "carrierNotConfigured": "Delivery with Boxy isn't set up yet (the Boxy key is missing on the API).",
+      "notCancellable": "Boxy can no longer cancel this parcel (it has been collected).",
       "apiUnavailable": "The server couldn't be reached. Try again shortly.",
       "unknown": "Something went wrong. Try again."
     },
@@ -2811,6 +2820,34 @@
       "discounts": {
         "invite": "Friend's invite",
         "affiliate": "Affiliate code"
+      },
+      "boxy": {
+        "title": "Delivery with Boxy",
+        "sendHint": "Pack the order, choose the parcel size, then send it: Boxy collects it with the next pick-up.",
+        "size": "Parcel size",
+        "sizes": {
+          "S": "Small",
+          "M": "Medium",
+          "L": "Large"
+        },
+        "fragile": "Fragile",
+        "send": "Send with Boxy",
+        "noArea": "This address has no Boxy area, so Boxy may refuse it. Call the customer to confirm the area.",
+        "collect": "Courier collects",
+        "prepaid": "Nothing (paid online)",
+        "fee": "Boxy's fee",
+        "parcel": "Parcel",
+        "pickup": "Pick-up",
+        "pickupRequested": "Requested",
+        "pickupMissing": "Not requested yet",
+        "returned": "Returned to The IDEA. Cancel the order (the copies go back in stock) or refund it.",
+        "synced": "Updated from Boxy {at}",
+        "label": "Print label",
+        "openLabel": "Open label",
+        "refresh": "Refresh",
+        "cancel": "Cancel parcel",
+        "cancelConfirm": "Cancel this parcel with Boxy?",
+        "cancelHint": "The order goes back to processing, ready to send again."
       }
     },
     "rentals": {

@@ -15,6 +15,11 @@ export type ActionError =
   | "lastVariant"
   | "chooseVariant"
   | "variantPricing"
+  | "notShippable"
+  | "noDeliveryArea"
+  | "carrierRejected"
+  | "carrierNotConfigured"
+  | "notCancellable"
   | "apiUnavailable"
   | "unknown";
 

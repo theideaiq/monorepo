@@ -1,0 +1,36 @@
+name: Follow Boxy parcels
+
+# Boxy's webhooks stop at "in transit", so delivered and returned parcels
+# are read from its API: every 15 minutes here, and daily by Vercel Cron.
+# Run by hand, it also copies Boxy's delivery areas. Needs the repository
+# secret CRON_SECRET (the same value as the API project's); without it the
+# job does nothing.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: boxy-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Sync open parcels
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          QUERY: ${{ github.event_name == 'workflow_dispatch' && '?areas=1' || '' }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "CRON_SECRET is not set; skipping."
+            exit 0
+          fi
+          curl --fail-with-body --silent --show-error --max-time 120 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "https://api.theideaiq.com/cron/boxy${QUERY}"
