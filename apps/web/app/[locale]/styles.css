@@ -50,3 +50,26 @@
     animation: none;
   }
 }
+
+/* App feel: no grey flash on tap, no double-tap zoom (pinch still works). */
+html {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Phones zoom into form fields with text under 16px; keep them at 16px on
+   touch screens so nothing zooms by itself. */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Opened from the home screen: no rubber-band bounce past the page. */
+@media (display-mode: standalone) {
+  body {
+    overscroll-behavior-y: none;
+  }
+}

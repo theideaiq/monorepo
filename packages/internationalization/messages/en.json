@@ -161,6 +161,14 @@
       },
       "myPass": "My Pass"
     },
+    "tabs": {
+      "label": "Main",
+      "shop": "Shop",
+      "rent": "Rent",
+      "discover": "Discover",
+      "cart": "Cart",
+      "pass": "My Pass"
+    },
     "footer": {
       "tagline": "Baghdad's digital ecosystem: shopping, rentals, learning, community and services for companies, with one Pass.",
       "legal": "Legal",

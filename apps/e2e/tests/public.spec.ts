@@ -46,6 +46,29 @@ test.describe("public site", () => {
     }
   }
 
+  test.describe("on a phone", () => {
+    test.use({ viewport: { height: 844, width: 390 } });
+
+    test("the tabs lead around the app and are accessible", async ({
+      page,
+    }) => {
+      await page.goto(`${urls.web}/`);
+      const tabs = page.getByRole("navigation", { name: "Main" });
+      await expect(tabs).toBeVisible();
+      await expect(tabs.getByRole("link", { name: "Shop" })).toHaveAttribute(
+        "aria-current",
+        "page"
+      );
+      await tabs.getByRole("link", { name: "Rent" }).click();
+      await expect(page).toHaveURL(/\/rent$/);
+      await expect(tabs.getByRole("link", { name: "Rent" })).toHaveAttribute(
+        "aria-current",
+        "page"
+      );
+      await expectAccessible(page);
+    });
+  });
+
   test("the catalog links to the product page", async ({ page }) => {
     await page.goto(`${urls.web}/store`);
     await page.getByRole("link", { name: product.name }).first().click();
