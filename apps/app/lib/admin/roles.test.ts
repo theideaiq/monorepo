@@ -4,7 +4,9 @@ import {
   canRead,
   canWrite,
   isStaffRole,
+  sectionGroups,
   sections,
+  visibleGroups,
   visibleSections,
 } from "./roles";
 
@@ -54,6 +56,7 @@ describe("role → sections", () => {
   test("support handles customers, tickets, trade-ins, reviews, orders, rentals and Telegram", () => {
     expect(visibleSections("support")).toEqual([
       "dashboard",
+      "counter",
       "orders",
       "rentals",
       "customers",
@@ -69,6 +72,15 @@ describe("role → sections", () => {
     expect(canWrite("support", "tradeIns")).toBe(true);
     expect(canRead("editor", "tradeIns")).toBe(false);
     expect(canRead("support", "finance")).toBe(false);
+  });
+
+  test("every section is in one navigation group", () => {
+    const grouped = sectionGroups.flatMap((group) => group.sections);
+    expect([...grouped].sort()).toEqual([...sections].sort());
+    expect(visibleGroups("editor")).toEqual([
+      { id: "today", sections: ["dashboard"] },
+      { id: "community", sections: ["editorial"] },
+    ]);
   });
 
   test("no role, no access", () => {

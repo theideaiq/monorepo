@@ -399,6 +399,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   or hires, and hiring as many as asked fills the job. Migration
   `20261209000000_suite_hiring.sql`. Next: the back office (inbox, grouped
   menu, search, counter mode).
+- 2026-10-25: **Back office: inbox, grouped menu, search, counter.** The
+  dashboard starts with what's waiting on the signed-in role; the menu is
+  grouped (Today, Sales, Catalog, Community, Companies, Money, Help, Team)
+  with a search box; the counter checks a The IDEA Pass by camera, scanner
+  or typing and shows Bulbs, Plus, rentals and today's events with
+  check-in. Migration `20261210000000_counter.sql`.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

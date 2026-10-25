@@ -10,6 +10,7 @@ import {
 import { success } from "@/lib/admin/action-state";
 import { crmContactSchema, markContactedSchema } from "@/lib/admin/crm";
 import { checkbox, uuid } from "@/lib/admin/forms";
+import { scannedPass } from "@/lib/admin/pass-code";
 
 export const saveCrmContact = staffAction(
   "customers",
@@ -93,12 +94,11 @@ export const checkPass = staffAction(
     scanned: z.string().trim().max(200).optional(),
   }),
   async ({ input, supabase }) => {
-    const digits = (value: string | undefined) =>
-      (value ?? "").replace(/\D/g, "");
-    const scanned = input.scanned?.startsWith("IDEA:")
-      ? input.scanned
-      : `IDEA:${digits(input.scanned)}:${digits(input.code)}`;
-    const { data } = check(await supabase.rpc("check_pass", { scanned }));
+    const { data } = check(
+      await supabase.rpc("check_pass", {
+        scanned: scannedPass(input.scanned, input.code),
+      })
+    );
     const row = data?.[0];
     const result: CheckedPass = {
       memberNumber: row?.member_number ?? null,

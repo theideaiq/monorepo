@@ -2271,7 +2271,8 @@
       "reviews": "التقييمات",
       "tradeIns": "الشراء من العملاء",
       "affiliates": "الشركاء",
-      "suite": "The IDEA Suite"
+      "suite": "The IDEA Suite",
+      "counter": "الكاونتر"
     },
     "roles": {
       "superadmin": "مشرف عام",
@@ -2380,7 +2381,25 @@
       "optedIn": "عملاء وافقوا على الرسائل البريدية",
       "telegramRequests": "طلبات تيليجرام المفتوحة",
       "openTickets": "تذاكر دعم مفتوحة",
-      "openTicketsHint": "بانتظار الفريق · {unassigned} دون مسؤول"
+      "openTicketsHint": "بانتظار الفريق · {unassigned} دون مسؤول",
+      "inbox": {
+        "title": "بانتظارك",
+        "empty": "لا شيء بانتظارك. رائع.",
+        "items": {
+          "tickets": "تذاكر دعم بلا مسؤول",
+          "orders": "طلبات للتجهيز أو الشحن",
+          "rentalRequests": "طلبات استئجار",
+          "overdueRentals": "استئجارات متأخرة",
+          "tradeIns": "طلبات \"بِع لنا\" جديدة",
+          "submissions": "مشاركات للمراجعة",
+          "telegram": "طلبات تيليجرام",
+          "affiliates": "طلبات انضمام للشركاء",
+          "procurement": "طلبات شراء جديدة للتسعير",
+          "jobs": "وظائف مفتوحة بلا مرشحين بعد",
+          "seats": "مقاعد The IDEA Plus للموافقة",
+          "invoices": "فواتير شركات متأخرة"
+        }
+      }
     },
     "catalog": {
       "title": "الكتالوج",
@@ -3629,6 +3648,73 @@
         "uploading": "جارٍ الرفع…",
         "uploadError": "تعذّر رفع السيرة الذاتية. PDF فقط وحتى 10 ميغابايت.",
         "uploaded": "تم رفع السيرة الذاتية."
+      }
+    },
+    "navGroups": {
+      "today": "اليوم",
+      "sales": "المبيعات",
+      "catalog": "الكتالوج",
+      "community": "المجتمع",
+      "companies": "الشركات",
+      "money": "المالية",
+      "help": "المساعدة",
+      "team": "الفريق"
+    },
+    "search": {
+      "title": "بحث",
+      "label": "ابحث في لوحة الإدارة",
+      "placeholder": "ابحث…",
+      "hint": "أرقام الطلبات والتذاكر وطلبات الشراء والوظائف، والأعضاء بالاسم أو رقم The IDEA Pass، والمنتجات، وعناوين التذاكر.",
+      "for": "نتائج \"{query}\"",
+      "empty": "لم يُعثر على شيء.",
+      "orders": "الطلبات",
+      "order": "الطلب #{number}",
+      "members": "الأعضاء",
+      "unnamed": "عضو بلا اسم",
+      "products": "المنتجات",
+      "tickets": "تذاكر الدعم",
+      "ticket": "التذكرة #{number}",
+      "requests": "طلبات الشراء",
+      "request": "الطلب #{number}",
+      "jobs": "الوظائف",
+      "job": "الوظيفة #{number}"
+    },
+    "counter": {
+      "title": "الكاونتر",
+      "check": "تحقق من The IDEA Pass",
+      "description": "امسح رمز QR على البطاقة (بالكاميرا أو الماسح)، أو اكتب رقم العضو والرمز المكوّن من 6 أرقام.",
+      "camera": "امسح بالكاميرا",
+      "stopCamera": "أوقف الكاميرا",
+      "cameraError": "الكاميرا غير متاحة. استخدم الماسح أو اكتب الرمز.",
+      "scanned": "الرمز الممسوح أو رقم العضو",
+      "code": "الرمز",
+      "codeHint": "الأرقام الستة على البطاقة",
+      "submit": "تحقق",
+      "valid": "صالحة",
+      "invalid": "غير صالحة",
+      "expired": "تغيّر الرمز. اطلب من العضو تحديث بطاقته.",
+      "unknown": "لا يوجد عضو بهذا الرقم.",
+      "unnamed": "عضو بلا اسم",
+      "number": "رقم العضو",
+      "since": "عضو منذ",
+      "bulbs": "Bulbs",
+      "plus": "The IDEA Plus",
+      "noPlus": "ليس مشتركًا",
+      "openMember": "افتح صفحة العضو",
+      "rentals": "الاستئجارات",
+      "noRentals": "لا توجد استئجارات مفتوحة.",
+      "due": "تستحق في {date}",
+      "openRentals": "افتح الاستئجارات",
+      "events": "فعاليات اليوم",
+      "noEvents": "لا حجوزات لفعاليات قريبة.",
+      "checkIn": "تسجيل الحضور",
+      "checkedIn": "تم تسجيل الحضور",
+      "rentalStatus": {
+        "requested": "مطلوب",
+        "active": "نشط",
+        "overdue": "متأخر",
+        "returned": "مُعاد",
+        "cancelled": "ملغى"
       }
     }
   },

@@ -8,6 +8,7 @@ import type { StaffRole } from "@repo/database";
  */
 export const sections = [
   "dashboard",
+  "counter",
   "catalog",
   "orders",
   "rentals",
@@ -31,6 +32,7 @@ export const sectionHref: Record<Section, string> = {
   affiliates: "/affiliates",
   audit: "/audit",
   catalog: "/catalog",
+  counter: "/counter",
   customers: "/customers",
   dashboard: "/",
   editorial: "/editorial",
@@ -80,6 +82,8 @@ const roleAccess: Record<StaffRole, AccessMap> = {
   marketing: { affiliates: "write", customers: "read", dashboard: "read" },
   superadmin: everything(),
   support: {
+    // The counter: checking Pass cards, Bulbs and rentals in person.
+    counter: "write",
     customers: "write",
     dashboard: "read",
     orders: "write",
@@ -105,6 +109,29 @@ export const canWrite = (
   role: StaffRole | null | undefined,
   section: Section
 ) => accessTo(role, section) === "write";
+
+/** The navigation's groups, in order; empty groups are hidden. */
+export const sectionGroups = [
+  { id: "today", sections: ["dashboard", "counter"] },
+  { id: "sales", sections: ["orders", "rentals", "tradeIns", "customers"] },
+  { id: "catalog", sections: ["catalog", "reviews"] },
+  { id: "community", sections: ["editorial", "telegram", "affiliates"] },
+  { id: "companies", sections: ["suite"] },
+  { id: "money", sections: ["finance"] },
+  { id: "help", sections: ["support"] },
+  { id: "team", sections: ["staff", "audit"] },
+] as const satisfies readonly { id: string; sections: readonly Section[] }[];
+
+export type SectionGroup = (typeof sectionGroups)[number]["id"];
+
+/** The groups the role can use, each with only its visible sections. */
+export const visibleGroups = (role: StaffRole | null | undefined) =>
+  sectionGroups
+    .map((group) => ({
+      id: group.id,
+      sections: group.sections.filter((section) => canRead(role, section)),
+    }))
+    .filter((group) => group.sections.length > 0);
 
 /** Sections shown in the navigation, in order. */
 export const visibleSections = (role: StaffRole | null | undefined) =>

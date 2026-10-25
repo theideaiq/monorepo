@@ -9,6 +9,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -27,6 +28,7 @@ import {
   MegaphoneIcon,
   PackageIcon,
   RepeatIcon,
+  ScanLineIcon,
   ScrollTextIcon,
   SendIcon,
   ShieldCheckIcon,
@@ -39,12 +41,18 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { signOut } from "@/lib/admin/auth-actions";
 import { Link, usePathname } from "@/lib/admin/navigation";
-import { type Section, sectionHref } from "@/lib/admin/roles";
+import {
+  type Section,
+  type SectionGroup,
+  sectionHref,
+} from "@/lib/admin/roles";
+import { AdminSearch } from "./admin-search";
 
 const icons: Record<Section, LucideIcon> = {
   affiliates: MegaphoneIcon,
   audit: ScrollTextIcon,
   catalog: PackageIcon,
+  counter: ScanLineIcon,
   customers: UsersIcon,
   dashboard: LayoutDashboardIcon,
   editorial: BookOpenIcon,
@@ -60,13 +68,16 @@ const icons: Record<Section, LucideIcon> = {
 };
 
 interface AppSidebarProps {
+  readonly groups: { id: SectionGroup; sections: Section[] }[];
   readonly name: string | null;
   readonly role: StaffRole;
-  readonly sections: Section[];
 }
 
-/** The console navigation: only the sections the staff role can use. */
-export const AppSidebar = ({ name, role, sections }: AppSidebarProps) => {
+/**
+ * The console navigation: search, then the sections the staff role can
+ * use, in groups.
+ */
+export const AppSidebar = ({ groups, name, role }: AppSidebarProps) => {
   const t = useTranslations("admin");
   const tAuth = useTranslations("auth");
   const pathname = usePathname();
@@ -83,37 +94,49 @@ export const AppSidebar = ({ name, role, sections }: AppSidebarProps) => {
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {sections.map((section) => {
-                const Icon = icons[section];
-                const href = sectionHref[section];
-                return (
-                  <SidebarMenuItem key={section}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isActive(href)}
-                      tooltip={t(`nav.${section}`)}
-                    >
-                      <Link
-                        href={href}
-                        onClick={() => {
-                          if (isMobile) {
-                            setOpenMobile(false);
-                          }
-                        }}
+        <div className="px-2 pt-1">
+          <AdminSearch
+            onSearch={() => {
+              if (isMobile) {
+                setOpenMobile(false);
+              }
+            }}
+          />
+        </div>
+        {groups.map((group) => (
+          <SidebarGroup key={group.id}>
+            <SidebarGroupLabel>{t(`navGroups.${group.id}`)}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.sections.map((section) => {
+                  const Icon = icons[section];
+                  const href = sectionHref[section];
+                  return (
+                    <SidebarMenuItem key={section}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive(href)}
+                        tooltip={t(`nav.${section}`)}
                       >
-                        <Icon />
-                        <span>{t(`nav.${section}`)}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                        <Link
+                          href={href}
+                          onClick={() => {
+                            if (isMobile) {
+                              setOpenMobile(false);
+                            }
+                          }}
+                        >
+                          <Icon />
+                          <span>{t(`nav.${section}`)}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
       <SidebarFooter>
         <div className="grid gap-2 rounded-md border bg-background/60 p-2">

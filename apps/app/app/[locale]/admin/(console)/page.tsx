@@ -11,11 +11,13 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { PageBody, PageHeader } from "@/components/admin/page";
+import { PageBody, PageHeader, Panel } from "@/components/admin/page";
 import { StatCard } from "@/components/admin/stat-card";
 import { monthStartIso } from "@/lib/admin/dates";
 import { formatters } from "@/lib/admin/format";
 import { awaitingFulfilment } from "@/lib/admin/fulfilment";
+import { loadInbox } from "@/lib/admin/inbox";
+import { Link } from "@/lib/admin/navigation";
 import { canRead } from "@/lib/admin/roles";
 import type { ServerClient } from "@/lib/admin/session";
 import { requireSection } from "@/lib/admin/session";
@@ -156,7 +158,7 @@ interface Card {
   value: string;
 }
 
-/** Today's work for the signed-in role. */
+/** Today's work for the signed-in role: the inbox, then the numbers. */
 const DashboardPage = async () => {
   const { staff, supabase } = await requireSection("dashboard");
   const t = await getTranslations("admin.dashboard");
@@ -173,7 +175,10 @@ const DashboardPage = async () => {
     support: canRead(role, "support"),
     telegram: canRead(role, "telegram"),
   };
-  const stats = await loadStats(supabase, can);
+  const [stats, inbox] = await Promise.all([
+    loadStats(supabase, can),
+    loadInbox(supabase, role),
+  ]);
 
   const cards: Card[] = [
     {
@@ -252,6 +257,27 @@ const DashboardPage = async () => {
         title={t("title")}
       />
       <PageBody>
+        <Panel title={t("inbox.title")}>
+          {inbox.length === 0 ? (
+            <p className="text-muted-foreground text-sm">{t("inbox.empty")}</p>
+          ) : (
+            <ul className="divide-y text-sm">
+              {inbox.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    className="flex items-center justify-between gap-3 py-2 hover:underline"
+                    href={item.href}
+                  >
+                    <span>{t(`inbox.items.${item.id}`)}</span>
+                    <span className="rounded-full bg-accent px-2 py-0.5 font-semibold text-pink-text tabular-nums">
+                      {format.number(item.count)}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {cards
             .filter((card) => card.show)
