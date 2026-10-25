@@ -76,6 +76,26 @@ test.describe("back office", () => {
       page.getByRole("heading", { name: "Dashboard" })
     ).toBeVisible();
     await expectAccessible(page);
+    await expect(
+      page.getByRole("heading", { name: "Waiting on you" })
+    ).toBeVisible();
+
+    // Search from the sidebar, then the counter.
+    await page
+      .getByRole("searchbox", { name: "Search the back office" })
+      .fill("E2E");
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/admin\/search\?q=E2E$/);
+    await expect(page.getByRole("heading", { name: "Search" })).toBeVisible();
+    await expectAccessible(page);
+
+    await page.getByRole("link", { name: "Counter" }).click();
+    await page
+      .getByLabel("Scanned code or member number")
+      .fill("IDEA:1:000000");
+    await page.getByRole("button", { exact: true, name: "Check" }).click();
+    await expect(page.getByText("No member with that number.")).toBeVisible();
+    await expectAccessible(page);
 
     // My Pass links staff to the back office.
     await page.goto(`${urls.web}/pass`);

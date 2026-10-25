@@ -2271,7 +2271,8 @@
       "reviews": "Reviews",
       "tradeIns": "Trade-ins",
       "affiliates": "Affiliates",
-      "suite": "The IDEA Suite"
+      "suite": "The IDEA Suite",
+      "counter": "Counter"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -2380,7 +2381,25 @@
       "optedIn": "Customers opted in to email",
       "telegramRequests": "Open Telegram requests",
       "openTickets": "Open support tickets",
-      "openTicketsHint": "Waiting on staff · {unassigned} unassigned"
+      "openTicketsHint": "Waiting on staff · {unassigned} unassigned",
+      "inbox": {
+        "title": "Waiting on you",
+        "empty": "Nothing waiting. Nice.",
+        "items": {
+          "tickets": "Unassigned support tickets",
+          "orders": "Orders to prepare or ship",
+          "rentalRequests": "Rental requests",
+          "overdueRentals": "Overdue rentals",
+          "tradeIns": "New \"Sell to us\" requests",
+          "submissions": "Submissions to review",
+          "telegram": "Telegram requests",
+          "affiliates": "Affiliate applications",
+          "procurement": "New procurement requests to quote",
+          "jobs": "Open jobs with no candidates yet",
+          "seats": "The IDEA Plus seats to approve",
+          "invoices": "Overdue company invoices"
+        }
+      }
     },
     "catalog": {
       "title": "Catalog",
@@ -3629,6 +3648,73 @@
         "uploading": "Uploading…",
         "uploadError": "The CV couldn't be uploaded. PDF only, up to 10 MB.",
         "uploaded": "CV uploaded."
+      }
+    },
+    "navGroups": {
+      "today": "Today",
+      "sales": "Sales",
+      "catalog": "Catalog",
+      "community": "Community",
+      "companies": "Companies",
+      "money": "Money",
+      "help": "Help",
+      "team": "Team"
+    },
+    "search": {
+      "title": "Search",
+      "label": "Search the back office",
+      "placeholder": "Search…",
+      "hint": "Order, ticket, request and job numbers, members by name or Pass number, products, ticket subjects.",
+      "for": "Results for \"{query}\"",
+      "empty": "Nothing found.",
+      "orders": "Orders",
+      "order": "Order #{number}",
+      "members": "Members",
+      "unnamed": "Unnamed member",
+      "products": "Products",
+      "tickets": "Support tickets",
+      "ticket": "Ticket #{number}",
+      "requests": "Procurement requests",
+      "request": "Request #{number}",
+      "jobs": "Jobs",
+      "job": "Job #{number}"
+    },
+    "counter": {
+      "title": "Counter",
+      "check": "Check a The IDEA Pass",
+      "description": "Scan the card's QR code (camera or scanner), or type the member number and the 6-digit code.",
+      "camera": "Scan with the camera",
+      "stopCamera": "Stop the camera",
+      "cameraError": "The camera isn't available. Use a scanner or type the code.",
+      "scanned": "Scanned code or member number",
+      "code": "Code",
+      "codeHint": "The 6 digits on the card",
+      "submit": "Check",
+      "valid": "Valid",
+      "invalid": "Not valid",
+      "expired": "The code has changed. Ask the member to refresh their card.",
+      "unknown": "No member with that number.",
+      "unnamed": "Unnamed member",
+      "number": "Member number",
+      "since": "Member since",
+      "bulbs": "Bulbs",
+      "plus": "The IDEA Plus",
+      "noPlus": "Not a member",
+      "openMember": "Open the member's page",
+      "rentals": "Rentals",
+      "noRentals": "No open rentals.",
+      "due": "Due {date}",
+      "openRentals": "Open rentals",
+      "events": "Events today",
+      "noEvents": "No RSVPs for events around now.",
+      "checkIn": "Check in",
+      "checkedIn": "Checked in",
+      "rentalStatus": {
+        "requested": "Requested",
+        "active": "Active",
+        "overdue": "Overdue",
+        "returned": "Returned",
+        "cancelled": "Cancelled"
       }
     }
   },

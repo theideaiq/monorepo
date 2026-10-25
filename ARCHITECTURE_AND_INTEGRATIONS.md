@@ -154,7 +154,7 @@ sends staff to the back office and everyone else to The IDEA Suite.
 | Area | Routes | Code |
 | --- | --- | --- |
 | The IDEA Suite | `/{locale}/business` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/business/procurement` (requests and quotes, `/business/procurement/<id>`), `/business/hiring` (jobs and candidates, `/business/hiring/<id>`), `/business/invoices`, `/business/plus` (The IDEA Plus for the team), `/documents/<quote|order|invoice>/<id>` (printable), `/business/members`, `/business/billing`, `/business/settings`, `/business/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
-| Back office | `/{locale}/admin/…` (catalog, orders, rentals, customers and CRM, marketing, finance, editorial, reviews, The IDEA Suite, support, Telegram, staff, audit log) | `app/[locale]/admin`, `components/admin`, `lib/admin` |
+| Back office | `/{locale}/admin/…`: the dashboard (an inbox of what's waiting, then the numbers), the counter, search (`/admin/search`), then sections grouped by Today, Sales (orders, rentals, trade-ins, customers and CRM), Catalog (catalog, reviews), Community (editorial, Telegram, affiliates), Companies (The IDEA Suite), Money (finance), Help (support) and Team (staff, audit log) | `app/[locale]/admin`, `components/admin`, `lib/admin` |
 
 - **Sign-in.** Spark has none of its own: signed-out visitors go to The
   IDEA Pass on the website (`passUrl` from `@repo/auth/pass`) with
@@ -205,6 +205,19 @@ sends staff to the back office and everyone else to The IDEA Suite.
   order. Table `plus_seats`; RPCs `request_plus_seat`, `activate_plus_seat`,
   `decline_plus_seat`, `end_plus_seat`, `run_plus_seat_renewals`; migration
   `20261208000000_team_plus.sql`.
+- **Back office tools.** The dashboard opens on "Waiting on you": unassigned
+  tickets, orders to prepare, rental requests and overdue rentals, new
+  trade-ins, submissions, Telegram requests, affiliate applications,
+  procurement requests to quote, jobs without candidates, Plus seats to
+  approve and overdue company invoices, each for the roles that handle
+  them (`lib/admin/inbox.ts`). The sidebar's search (`/admin/search`)
+  looks up order, ticket, request and job numbers, members by name or Pass
+  number, and products. The counter (`/admin/counter`, support) checks a
+  member's The IDEA Pass with the camera (where the browser has
+  BarcodeDetector), a USB scanner or by typing, then shows their Bulbs,
+  Plus and open rentals and checks them in at events around now
+  (`check_in_rsvp`, now open to support too; migration
+  `20261210000000_counter.sql`).
 - **Indexing.** Every page sends `noindex`.
 
 ### The IDEA Pass
