@@ -3266,11 +3266,11 @@
       "title": "Staff",
       "description": "Back-office roles. Only superadmins can change them.",
       "add": "Add a staff member",
-      "addDescription": "Find their account by the mobile number or email they sign in with, then choose a role. They must have signed in to The IDEA at least once.",
+      "addDescription": "Look them up by the mobile number or email they use for The IDEA Pass, then choose a role. They must have signed in at least once.",
       "lookup": "Mobile number or email",
       "lookupHint": "e.g. 0770 123 4567 or name@theideaiq.com",
       "find": "Find",
-      "notFound": "No account uses that number or email.",
+      "notFound": "No The IDEA Pass uses that number or email.",
       "unnamed": "Unnamed",
       "currentRole": "Current role: {role}",
       "grant": "Grant role",
@@ -3282,7 +3282,7 @@
       "since": "Since {date}",
       "revoke": "Revoke",
       "revokeConfirm": "Remove {name} from staff?",
-      "revokeDescription": "They lose access to the back office immediately. Their customer account stays."
+      "revokeDescription": "They lose access to the back office immediately and keep their The IDEA Pass."
     },
     "audit": {
       "title": "Audit log",

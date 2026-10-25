@@ -414,6 +414,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   content" once; it doesn't post them to The IDEA Club. Edit them in
   Back office → Editorial afterwards (re-running the import overwrites
   posts with the same slug).
+- 2026-10-25: **Cloudflare blocks server calls to `api.theideaiq.com`.**
+  Requests from Vercel (Spark's back office, e.g. Staff → Find) get
+  Cloudflare's bot challenge (403, `cf-mitigated: challenge`) and never reach
+  apps/api; Telegram, Wayl and Supabase webhooks would hit the same wall.
+  **Owner step:** in Cloudflare (theideaiq.com zone) either set the `api`
+  DNS record to DNS only (grey cloud; Vercel serves it with its own TLS and
+  firewall), or turn off Bot Fight Mode and add a WAF custom rule that skips
+  bot protection and challenges for `api.theideaiq.com`. The back office now
+  says "the server couldn't be reached" instead of "your role can't do
+  this" when that happens.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

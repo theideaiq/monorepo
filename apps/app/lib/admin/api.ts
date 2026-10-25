@@ -1,5 +1,6 @@
 import "server-only";
 
+import { log } from "@repo/observability/log";
 import { env } from "@/env";
 import type { ServerClient } from "./session";
 
@@ -40,6 +41,16 @@ export const callApi = async <T>(
     } & T;
 
     if (!response.ok) {
+      // A firewall in front of apps/api (Cloudflare's bot challenge sends
+      // `cf-mitigated`) answers with an HTML page, not our JSON error: the
+      // request never reached the API, so report it as unreachable rather
+      // than as the API's own 403.
+      if (!payload.error || response.headers.has("cf-mitigated")) {
+        log.warn(
+          `apps/api ${path} answered ${response.status} without reaching the API (${response.headers.get("cf-mitigated") ?? "no JSON error"})`
+        );
+        return { error: "unavailable", ok: false, status: 0 };
+      }
       return {
         error: payload.error ?? "request_failed",
         ok: false,
