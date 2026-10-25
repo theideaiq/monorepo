@@ -7,6 +7,7 @@ import {
   discountPercent,
   governorates,
   localized,
+  orderDiscount,
   showsConditionBulb,
 } from "./index";
 
@@ -27,6 +28,7 @@ describe("commerce helpers", () => {
       bulbsUsed: 0,
       count: 0,
       discount: 0,
+      discountSource: null,
       shippingFee: 0,
       subtotal: 0,
       total: 0,
@@ -70,23 +72,39 @@ describe("commerce helpers", () => {
     const settings = { freeShippingThreshold: null, shippingFee: 5000 };
     const delivery = { fulfilment: "delivery" as const, zoneFee: 5000 };
     expect(
-      cartTotals(
-        [{ quantity: 1, unitPrice: 50_000 }],
-        settings,
-        delivery,
-        0,
-        true
-      )
+      cartTotals([{ quantity: 1, unitPrice: 50_000 }], settings, delivery, 0, {
+        invited: true,
+      })
     ).toMatchObject({ discount: 5000, total: 50_000 });
     expect(
-      cartTotals(
-        [{ quantity: 1, unitPrice: 400_000 }],
-        settings,
-        delivery,
-        0,
-        true
-      )
+      cartTotals([{ quantity: 1, unitPrice: 400_000 }], settings, delivery, 0, {
+        invited: true,
+      })
     ).toMatchObject({ discount: 15_000, total: 390_000 });
+  });
+
+  test("takes the larger of an invite and an affiliate's 5%", () => {
+    const settings = { freeShippingThreshold: null, shippingFee: 0 };
+    const lines = (unitPrice: number) => [{ quantity: 1, unitPrice }];
+    expect(
+      cartTotals(lines(100_000), settings, undefined, 0, { affiliate: true })
+    ).toMatchObject({ discount: 5000, discountSource: "affiliate" });
+    expect(
+      cartTotals(lines(100_000), settings, undefined, 0, {
+        affiliate: true,
+        invited: true,
+      })
+    ).toMatchObject({ discount: 10_000, discountSource: "invite" });
+    expect(
+      cartTotals(lines(400_000), settings, undefined, 0, {
+        affiliate: true,
+        invited: true,
+      })
+    ).toMatchObject({ discount: 20_000, discountSource: "affiliate" });
+    expect(orderDiscount(100_000)).toEqual({
+      discount: 0,
+      discountSource: null,
+    });
   });
 
   test("prices delivery by zone and makes pickup free", () => {

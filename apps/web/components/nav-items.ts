@@ -7,12 +7,14 @@ import {
   LifeBuoyIcon,
   LightbulbIcon,
   type LucideIcon,
+  MegaphoneIcon,
   PackageIcon,
   PenLineIcon,
   Settings2Icon,
 } from "lucide-react";
 
 export type NavKey =
+  | "affiliate"
   | "bulbs"
   | "events"
   | "orders"
@@ -40,6 +42,7 @@ export const navItems: NavItem[] = [
   { href: "/pass/sell", icon: HandCoinsIcon, key: "sell" },
   { href: "/pass/events", icon: CalendarDaysIcon, key: "events" },
   { href: "/pass/submissions", icon: PenLineIcon, key: "submissions" },
+  { href: "/pass/affiliate", icon: MegaphoneIcon, key: "affiliate" },
   { href: "/pass/support", icon: LifeBuoyIcon, key: "support" },
   { href: "/pass/settings", icon: Settings2Icon, key: "settings" },
 ];

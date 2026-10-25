@@ -803,6 +803,15 @@
       "notEligible": "This invite is for new members only. You can still shop and earn Bulbs.",
       "join": "Join with The IDEA Pass",
       "shop": "Shop the store"
+    },
+    "affiliateLink": {
+      "title": "5% off at The IDEA",
+      "description": "A creator's link to The IDEA: 5% off your orders for 30 days.",
+      "offer": "Sign in with The IDEA Pass and your orders in the next 30 days get 5% off.",
+      "from": "{name}'s link: your orders in the next 30 days get 5% off.",
+      "invalid": "This link isn't active. You can still shop and earn Bulbs.",
+      "signIn": "Sign in with The IDEA Pass",
+      "shop": "Shop the store"
     }
   },
   "app": {
@@ -827,7 +836,8 @@
       "sell": "Sell to us",
       "pass": "My Pass",
       "bulbs": "Bulbs",
-      "backOffice": "Back office"
+      "backOffice": "Back office",
+      "affiliate": "Affiliate"
     },
     "roles": {
       "owner": "Owner",
@@ -940,7 +950,8 @@
       "problems": "Fix the items marked below to check out.",
       "updateFailed": "We couldn't update your cart. Please try again.",
       "bulbs": "Bulbs ({bulbs})",
-      "discount": "Friend's invite"
+      "discount": "Friend's invite",
+      "affiliateDiscount": "Affiliate discount"
     },
     "checkout": {
       "title": "Checkout",
@@ -1021,7 +1032,15 @@
         "use": "Use my Bulbs on this order",
         "using": "Using {bulbs} Bulbs: {amount} off"
       },
-      "tierDelivery": "Free delivery with your tier."
+      "tierDelivery": "Free delivery with your tier.",
+      "affiliate": {
+        "title": "Have a code?",
+        "description": "A creator's code takes 5% off.",
+        "applied": "Code {code} from {name}: 5% off this order.",
+        "label": "Affiliate code",
+        "apply": "Apply",
+        "invalid": "That code isn't active."
+      }
     },
     "orders": {
       "title": "Orders",
@@ -1621,6 +1640,71 @@
       "share": "Share",
       "shareText": "Join The IDEA with my invite and get 10% off your first order.",
       "stats": "{invited} invited · {rewarded} rewarded"
+    },
+    "affiliate": {
+      "title": "Affiliate",
+      "description": "Share The IDEA with your followers: they get 5% off, you earn on every delivered order.",
+      "apply": {
+        "title": "Become an affiliate",
+        "terms": "Earn 8% on vinyl, CDs and books, 3% on tech and consoles, and 20% of a new Plus member's first 3 months. Payouts are monthly from IQD 25,000, by ZainCash, FIB, Qi, bank transfer, or as Bulbs worth 20% more.",
+        "pitch": "Where will you share it?",
+        "pitchPlaceholder": "Your audience, your platform, how often you post…",
+        "channel": "Link to your page (optional)",
+        "submit": "Apply",
+        "failed": "We couldn't send your application. Try again.",
+        "channelPlaceholder": "instagram.com/…"
+      },
+      "reviewing": "Thanks for applying. Our team is reviewing your application and will let you know.",
+      "rejected": "Your application wasn't approved this time.",
+      "suspended": "Your affiliate link is paused. Contact support to find out more.",
+      "link": {
+        "title": "Your link and code",
+        "description": "Followers who use your link or type your code at checkout get 5% off for 30 days. The last link or code they used counts.",
+        "copy": "Copy",
+        "copied": "Copied",
+        "share": "Share",
+        "code": "Checkout code:"
+      },
+      "shareText": "Get 5% off at The IDEA with my code {code}.",
+      "balance": {
+        "ready": "Ready to pay",
+        "holding": "In the return window",
+        "paid": "Paid so far",
+        "summary": "{orders} orders · {plus} Plus members. Paid monthly once you reach {minimum}."
+      },
+      "payout": {
+        "title": "How you're paid",
+        "method": "Payout method",
+        "bulbsBonus": "Bulbs payouts are worth 20% more, credited at once.",
+        "wallet": "Wallet phone number",
+        "iban": "IBAN",
+        "save": "Save",
+        "saved": "Saved",
+        "failed": "We couldn't save that. Check the details and try again."
+      },
+      "methods": {
+        "bulbs": "Bulbs (+20%)",
+        "zaincash": "ZainCash",
+        "fib": "FIB",
+        "qi": "Qi Card",
+        "bank": "Bank transfer"
+      },
+      "commissions": "Commissions",
+      "noCommissions": "No commissions yet. Share your link to get started.",
+      "payouts": "Payouts",
+      "kinds": {
+        "order": "Order delivered",
+        "plus": "Plus membership",
+        "clawback": "Returned order"
+      },
+      "states": {
+        "holding": "Pending",
+        "ready": "Ready",
+        "paid": "Paid",
+        "void": "Voided"
+      },
+      "readyFrom": "ready from {date}",
+      "bulbsCredited": "{bulbs} Bulbs"
     }
   },
   "store": {
@@ -1780,6 +1864,14 @@
         "bulbs_expiring": {
           "title": "Your Bulbs expire soon",
           "body": "Your {bulbs} Bulbs expire on {date}. Any order or activity keeps them."
+        },
+        "affiliate_approved": {
+          "title": "You're an affiliate",
+          "body": "Your code is {code}. Share your link from My Pass and earn on every delivered order."
+        },
+        "affiliate_paid": {
+          "title": "Affiliate payout sent",
+          "body": "{hasBulbs, select, yes {We've added {bulbs} Bulbs for your {amount} in commissions.} other {We've sent {amount} in commissions.}}"
         }
       },
       "kinds": {
@@ -1878,7 +1970,8 @@
       "audit": "Audit log",
       "support": "Support",
       "reviews": "Reviews",
-      "tradeIns": "Trade-ins"
+      "tradeIns": "Trade-ins",
+      "affiliates": "Affiliates"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -3032,6 +3125,73 @@
       "rejectHint": "If you can't take the item. The customer sees the reason.",
       "rejectReason": "Reason",
       "reject": "Decline the item"
+    },
+    "affiliates": {
+      "title": "Affiliates",
+      "detail": "Affiliate",
+      "count": "{count} affiliates",
+      "empty": "No affiliates here.",
+      "status": "Status",
+      "member": "Member",
+      "code": "Code",
+      "ready": "Ready to pay",
+      "holding": "In the return window",
+      "paid": "Paid",
+      "applied": "Applied",
+      "unnamed": "Unnamed member",
+      "appliedOn": "Applied {date}",
+      "statuses": {
+        "applied": "Applications",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "suspended": "Suspended",
+        "all": "All"
+      },
+      "application": "Application",
+      "pitch": "Where they'll share",
+      "channel": "Page",
+      "decidedBy": "Decided by",
+      "decide": "Decision",
+      "decision": "Decision",
+      "decisions": {
+        "approved": "Approve",
+        "rejected": "Reject",
+        "suspended": "Suspend"
+      },
+      "codeHint": "4 to 20 letters and digits. Followers type it at checkout; their link is theideaiq.com/a/ followed by the code.",
+      "note": "Note to the member",
+      "noteHint": "Shown to them when an application is rejected.",
+      "balance": "Balance",
+      "payoutMethod": "Paid by",
+      "reference": "Transfer reference",
+      "referenceHint": "The ZainCash, FIB, Qi or bank reference of the transfer you've sent.",
+      "payBulbsHint": "Paid as Bulbs, with 20% more value, credited at once.",
+      "recordPayout": "Record payout of everything ready",
+      "payoutRule": "Payouts are monthly, from {minimum} ready to pay.",
+      "commissions": "Commissions",
+      "noCommissions": "No commissions yet.",
+      "payouts": "Payouts",
+      "kind": "Kind",
+      "amount": "Amount",
+      "date": "Date",
+      "method": "Method",
+      "bulbsCredited": "{bulbs} Bulbs",
+      "kinds": {
+        "order": "Order delivered",
+        "plus": "Plus membership",
+        "clawback": "Clawback"
+      },
+      "states": {
+        "holding": "In the return window",
+        "ready": "Ready",
+        "paid": "Paid",
+        "void": "Voided"
+      },
+      "rates": {
+        "title": "Commission rates",
+        "hint": "Percent of the price after the follower's 5% discount, by category. Finance sets them."
+      },
+      "saveDecision": "Save decision"
     }
   },
   "design": {

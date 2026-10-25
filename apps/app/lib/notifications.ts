@@ -19,7 +19,7 @@ export type NotificationKind = Enums<"notification_kind">;
 
 /**
  * Every event the triggers emit (see the customer_features, trade_ins,
- * whatsapp and bulbs migrations).
+ * whatsapp, bulbs and affiliates migrations).
  */
 export const NOTIFICATION_EVENTS = [
   "order_paid",
@@ -38,6 +38,8 @@ export const NOTIFICATION_EVENTS = [
   "trade_in_rejected",
   "trade_in_completed",
   "bulbs_expiring",
+  "affiliate_approved",
+  "affiliate_paid",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -79,6 +81,36 @@ const bulbsExpiringValues = (
     bulbs: Number.isFinite(bulbs) ? formatNumber(bulbs, locale) : "",
     date: expires ? formatDate(expires, locale) : "",
   };
+};
+
+/** An affiliate's code (approved) or payout amount and Bulbs (paid). */
+const affiliateValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const amount = Number(text(data.amount));
+  const bulbs = Number(text(data.bulbs));
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    bulbs: Number.isFinite(bulbs) ? formatNumber(bulbs, locale) : "",
+    code: text(data.code),
+    hasBulbs: text(data.bulbs) ? "yes" : "no",
+  };
+};
+
+/** Events whose data needs formatting beyond the common fields. */
+const extraValues: Partial<
+  Record<
+    NotificationEvent,
+    (
+      data: Record<string, Json | undefined>,
+      locale: Locale
+    ) => Record<string, string>
+  >
+> = {
+  affiliate_approved: affiliateValues,
+  affiliate_paid: affiliateValues,
+  bulbs_expiring: bulbsExpiringValues,
 };
 
 /**
@@ -123,9 +155,7 @@ export const describeNotification = (
     const amount = Number(text(data.amount));
     values.amount = Number.isFinite(amount) ? formatPrice(amount, locale) : "";
   }
-  if (event === "bulbs_expiring") {
-    Object.assign(values, bulbsExpiringValues(data, locale));
-  }
+  Object.assign(values, extraValues[event]?.(data, locale));
   if (event.startsWith("rental_")) {
     const english = text(data.name_en);
     const arabic = text(data.name_ar);

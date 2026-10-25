@@ -260,6 +260,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   their first order (up to 15,000 IQD); the inviter earns 50 Bulbs once it
   is delivered, up to 20 a month, never for orders sharing their phone or
   address. Migration `20261130000000_referrals.sql`. Next: affiliates.
+- 2026-10-25: **Affiliates.** Members apply on My Pass → Affiliate;
+  marketing approves them with a code (Back office → Affiliates). Their
+  link (`theideaiq.com/a/<code>`) or code at checkout gives followers 5%
+  off for 30 days (the last one used counts; a typed code beats a link;
+  the larger of an invite and the affiliate discount applies). They earn
+  8% on vinyl, CDs and books and 3% on the rest (finance sets the rate per
+  category) once an order is delivered and its 7-day return window has
+  passed, plus 20% of a new Plus member's first 3 months; refunds are
+  voided or clawed back. Finance pays monthly from 25,000 IQD by ZainCash,
+  FIB, Qi or bank transfer, or as Bulbs worth 20% more. Migration
+  `20261201000000_affiliates.sql`. Next: Telegram sign-in and a slimmer
+  Droid.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

@@ -119,3 +119,6 @@ update public.store_settings set
   pickup_address_en = 'The IDEA store, Street 62, Karrada, Baghdad',
   pickup_hours_ar = 'السبت إلى الخميس، ١٠ صباحاً – ٩ مساءً',
   pickup_hours_en = 'Saturday to Thursday, 10 am – 9 pm';
+
+-- Affiliate commission on media (see the affiliates migration).
+update public.product_categories set affiliate_rate = 8 where slug in ('books', 'vinyl', 'cds-and-cassettes');

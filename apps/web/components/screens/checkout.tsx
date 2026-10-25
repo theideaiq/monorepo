@@ -8,6 +8,7 @@ import {
   formatPrice,
   localized,
   type PaymentMethod,
+  type Promo,
 } from "@repo/commerce";
 import type { DeliveryZone, PickupLocation } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
@@ -41,6 +42,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { AffiliateCodeCard } from "@/components/store/affiliate-code-card";
 import { OrderSummary } from "@/components/store/order-summary";
 import {
   type AddressField,
@@ -49,6 +51,7 @@ import {
   emptyAddress,
   validateAddress,
 } from "@/lib/address";
+import { useAffiliateReferrer } from "@/lib/affiliates";
 import { useBulbTiers, useMyBulbs } from "@/lib/bulbs-queries";
 import { summarizeCart } from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
@@ -581,14 +584,14 @@ const planCheckout = ({
   bulbs,
   cart,
   freeDeliveryFrom,
-  invited,
   method,
+  promo,
   settings,
   zoneFee,
 }: {
   bulbs: number;
-  /** The member's first order through a friend's invite. */
-  invited: boolean;
+  /** The invite or affiliate discount the member qualifies for. */
+  promo: Promo;
   cart: Parameters<typeof summarizeCart>[0] | undefined;
   freeDeliveryFrom: number | null;
   method: Fulfilment;
@@ -602,7 +605,7 @@ const planCheckout = ({
           settings,
           { freeDeliveryFrom, fulfilment: method, zoneFee },
           bulbs,
-          invited
+          promo
         )
       : null;
   return {
@@ -693,6 +696,7 @@ export const Checkout = () => {
   const [useBulbs, setUseBulbs] = useState(false);
   const { availableBulbs, freeDeliveryFrom } = useCheckoutBulbs();
   const invited = useInviteDiscount().data === true;
+  const affiliate = Boolean(useAffiliateReferrer().data);
 
   // The form starts from the account: its phone number and name.
   const address: AddressForm = form ?? {
@@ -716,8 +720,8 @@ export const Checkout = () => {
     bulbs: useBulbs ? availableBulbs : 0,
     cart: cart.data,
     freeDeliveryFrom,
-    invited,
     method,
+    promo: { affiliate, invited },
     settings: settings.data,
     zoneFee: zone?.fee,
   });
@@ -831,6 +835,7 @@ export const Checkout = () => {
                 zone={zone}
                 zones={zoneList}
               />
+              <AffiliateCodeCard busy={busy} />
               <BulbsCard
                 available={availableBulbs}
                 busy={busy}

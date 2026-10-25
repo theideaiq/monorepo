@@ -102,6 +102,7 @@ describe("cart", () => {
       bulbsUsed: 0,
       count: 2,
       discount: 0,
+      discountSource: null,
       shippingFee: 5000,
       subtotal: 20_000,
       total: 25_000,
