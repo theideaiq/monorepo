@@ -5,6 +5,7 @@ import { BadgeCheck, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { formatRating, type Rating, type Review } from "@/lib/reviews";
+import { ReviewPhotos } from "./review-photos";
 import { Stars } from "./stars";
 
 /** "Sold by …" with a verified-seller badge. */
@@ -155,6 +156,12 @@ export const ProductReviews = async ({
                     {review.comment.trim()}
                   </p>
                 ) : null}
+                <ReviewPhotos
+                  label={t("photoAlt", {
+                    name: review.author_name?.trim() || t("anonymous"),
+                  })}
+                  photos={review.photos ?? []}
+                />
               </li>
             ))}
           </ul>

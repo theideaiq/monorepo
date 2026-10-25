@@ -32,6 +32,13 @@ export const buckets = {
     mimeTypes: undefined,
     public: false,
   },
+  /** Product review photos (public) under "<user id>/…"; only the author writes. */
+  reviews: {
+    id: "reviews",
+    maxBytes: 5 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp"],
+    public: true,
+  },
   /** Submitted work under "<author id>/…"; the author and editors read it. */
   submissions: {
     id: "submissions",

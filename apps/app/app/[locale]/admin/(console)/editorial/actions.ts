@@ -203,6 +203,21 @@ export const removeRsvp = staffAction(
   }
 );
 
+/** Checks a member in at the door; the database pays the 10-Bulb bonus once. */
+export const checkInRsvp = staffAction(
+  "editorial",
+  z.object({ eventId: uuid, userId: uuid }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("check_in_rsvp", {
+        event: input.eventId,
+        member: input.userId,
+      })
+    );
+    return success();
+  }
+);
+
 // ── Submissions ─────────────────────────────────────────────────────────────
 
 export const assignSubmission = staffAction(

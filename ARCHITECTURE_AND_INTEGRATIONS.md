@@ -319,6 +319,15 @@ session in the shared cookie.
   records a payout of everything ready from 25,000 IQD
   (`record_affiliate_payout()`): by ZainCash, FIB, Qi or bank transfer with
   its reference, or as Bulbs worth 20% more, credited at once.
+- **More Bulbs** (migration `20261205000000_bulbs_extras.sql`). The IDEA
+  Plus payments earn cashback at the member's rate when paid
+  (`bulbs_on_payment`, voided on refund); `run_birthday_bulbs()` (daily
+  `/cron/bulbs`) pays 25 Bulbs on birthdays in Baghdad time with a
+  `bulbs_birthday` notification (`profiles.birthday`, read only through
+  `my_birthday()`, set once by the member); a published review with photos
+  (`product_reviews.photos`, public `reviews` bucket, "<user id>/…") of a
+  bought or rented product earns 5 Bulbs once; `check_in_rsvp()` (editors)
+  marks `event_rsvps.checked_in_at` and pays 10 Bulbs once per event.
 - **Telegram sign-in** (migration `20261202000000_telegram_login.sql`).
   Telegram's OpenID Connect (core.telegram.org/bots/telegram-login), run
   by the API with the bot's Client ID and Secret (`TELEGRAM_LOGIN_*`, from

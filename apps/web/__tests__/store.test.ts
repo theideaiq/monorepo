@@ -118,6 +118,7 @@ describe("product helpers", () => {
     comment: ` Great ${id} `,
     created_at: "2026-10-20T09:30:00Z",
     id,
+    photos: [],
     rating,
     verified_purchase: true,
   });

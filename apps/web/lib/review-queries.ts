@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
+import { uploadReviewPhoto } from "@repo/storage";
 import {
   useInfiniteQuery,
   useMutation,
@@ -66,9 +67,13 @@ export interface ReviewRow {
   comment: string | null;
   created_at: string;
   id: string;
+  photos: string[];
   rating: number;
   verified_purchase: boolean;
 }
+
+/** Photos a review can carry. */
+export const MAX_REVIEW_PHOTOS = 4;
 
 /** Published reviews, newest first, a page at a time. */
 export const useProductReviews = (productId: string) => {
@@ -101,7 +106,9 @@ export const useMyReview = (productId: string) => {
       unwrap(
         await supabase
           .from("product_reviews")
-          .select("id, rating, comment, status, verified_purchase, created_at")
+          .select(
+            "id, rating, comment, photos, status, verified_purchase, created_at"
+          )
           .eq("product_id", productId)
           .eq("user_id", requireUserId(user?.id))
           .maybeSingle()
@@ -122,6 +129,8 @@ const useRefreshReviews = () => {
 
 export interface ReviewDraft {
   comment: string;
+  /** Uploaded photo paths (`useUploadReviewPhoto`). */
+  photos: string[];
   rating: number;
 }
 
@@ -142,7 +151,7 @@ export const useSaveReview = (productId: string) => {
         unwrap(
           await supabase
             .from("product_reviews")
-            .update({ comment, rating: draft.rating })
+            .update({ comment, photos: draft.photos, rating: draft.rating })
             .eq("id", reviewId)
         );
         return;
@@ -150,6 +159,7 @@ export const useSaveReview = (productId: string) => {
       unwrap(
         await supabase.from("product_reviews").insert({
           comment,
+          photos: draft.photos,
           product_id: productId,
           rating: draft.rating,
           user_id: requireUserId(user?.id),
@@ -157,6 +167,15 @@ export const useSaveReview = (productId: string) => {
       );
     },
     onSettled: refresh,
+  });
+};
+
+/** Uploads one photo for the user's review and returns its path. */
+export const useUploadReviewPhoto = () => {
+  const { supabase, user } = useAuth();
+  return useMutation({
+    mutationFn: async (file: File) =>
+      (await uploadReviewPhoto(supabase, requireUserId(user?.id), file)).path,
   });
 };
 

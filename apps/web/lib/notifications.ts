@@ -41,6 +41,7 @@ export const NOTIFICATION_EVENTS = [
   "trade_in_rejected",
   "trade_in_completed",
   "bulbs_expiring",
+  "bulbs_birthday",
   "affiliate_approved",
   "affiliate_paid",
 ] as const;
@@ -73,7 +74,7 @@ const asRecord = (data: Json): Record<string, Json | undefined> =>
 const text = (value: Json | undefined) =>
   typeof value === "string" || typeof value === "number" ? String(value) : "";
 
-/** The Bulbs and the expiry date of a `bulbs_expiring` reminder. */
+/** The Bulbs (and, for `bulbs_expiring`, the expiry date) of a Bulbs notice. */
 const bulbsExpiringValues = (
   data: Record<string, Json | undefined>,
   locale: Locale
@@ -113,6 +114,7 @@ const extraValues: Partial<
 > = {
   affiliate_approved: affiliateValues,
   affiliate_paid: affiliateValues,
+  bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
 };
 

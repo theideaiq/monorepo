@@ -14,6 +14,8 @@ export interface Review {
   comment: string | null;
   created_at: string;
   id: string;
+  /** Paths in the public `reviews` bucket. */
+  photos: string[];
   rating: number;
   verified_purchase: boolean;
 }

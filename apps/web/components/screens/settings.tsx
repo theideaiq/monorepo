@@ -19,6 +19,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useId } from "react";
 import { DeleteAccountCard } from "@/components/account/delete-account";
+import { BirthdayCard } from "@/components/birthday-settings";
 import { PageHeader } from "@/components/page-header";
 import { ProfileForm } from "@/components/profile-form";
 import { SectionSpinner } from "@/components/states";
@@ -123,6 +124,7 @@ export const Settings = () => {
             )}
           </CardContent>
         </Card>
+        <BirthdayCard />
         <WhatsAppSettingsCard />
         <TelegramSettingsCard />
         <Appearance />

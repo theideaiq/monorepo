@@ -114,6 +114,7 @@ describe("product page actions", () => {
     );
     expect(callsTo(db.calls, "product_reviews", "insert")[0]?.payload).toEqual({
       comment: "Great sound.",
+      photos: [],
       product_id: "p1",
       rating: 4,
       user_id: USER_ID,
@@ -142,7 +143,11 @@ describe("product page actions", () => {
       expect(callsTo(db.calls, "product_reviews", "update")).toHaveLength(1)
     );
     const [update] = callsTo(db.calls, "product_reviews", "update");
-    expect(update?.payload).toEqual({ comment: "Not great.", rating: 5 });
+    expect(update?.payload).toEqual({
+      comment: "Not great.",
+      photos: [],
+      rating: 5,
+    });
     expect(update?.filters).toContainEqual(["eq", "id", "mine"]);
   });
 
