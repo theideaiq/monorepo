@@ -9,7 +9,7 @@ import { eventPath, postPath, sectionOf } from "@/lib/post";
 import { CoverImage } from "./cover-image";
 
 const cardClass =
-  "group flex flex-col gap-3 rounded-lg border bg-card p-3 transition-shadow hover:shadow-md";
+  "group flex w-full flex-col gap-3 rounded-lg border bg-card p-3 transition-shadow hover:shadow-md";
 
 /** A post of The IDEA Post: cover, section, date, title and excerpt. */
 export const PostCard = async ({

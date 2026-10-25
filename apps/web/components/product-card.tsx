@@ -45,7 +45,7 @@ export const ProductCard = async ({
 
   return (
     <Link
-      className="group flex flex-col gap-3 rounded-lg border bg-card p-3 shadow-1 transition-shadow hover:shadow-2"
+      className="group flex w-full flex-col gap-3 rounded-lg border bg-card p-3 shadow-1 transition-shadow hover:shadow-2"
       href={`/store/${product.slug}`}
     >
       <div className="relative">
