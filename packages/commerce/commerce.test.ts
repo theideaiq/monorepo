@@ -149,7 +149,12 @@ describe("commerce helpers", () => {
     expect(customerCondition("refurbished")).toBe("like-new");
     expect(customerCondition("used")).toBe("used");
     expect(showsConditionBulb({ condition: "new", kind: "sale" })).toBe(false);
-    expect(showsConditionBulb({ condition: "new", kind: "rental" })).toBe(true);
+    expect(showsConditionBulb({ condition: "new", kind: "rental" })).toBe(
+      false
+    );
+    expect(showsConditionBulb({ condition: "used", kind: "rental" })).toBe(
+      false
+    );
     expect(showsConditionBulb({ condition: "used", kind: "sale" })).toBe(true);
   });
 });

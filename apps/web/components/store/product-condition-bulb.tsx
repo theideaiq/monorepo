@@ -9,7 +9,7 @@ interface ProductConditionBulbProps {
   readonly product: Parameters<typeof showsConditionBulb>[0];
 }
 
-/** The condition bulb and its word, for rentals and anything not new. */
+/** The condition bulb and its word, for items for sale that aren't new. */
 export const ProductConditionBulb = ({
   className,
   product,

@@ -3,7 +3,7 @@ import type { AuthError, SupabaseClient } from "@supabase/supabase-js";
 import { normalizePhone } from "./phone";
 
 /**
- * One-time codes for The IDEA Pass. People sign in with a 6-digit code sent
+ * One-time codes for The IDEA Pass. People sign in with an 8-digit code sent
  * by email (`sendEmailOtp` / `verifyEmailOtp`). The phone code path
  * (`sendPhoneOtp` / `verifyPhoneOtp`) is kept for when phone sign-in comes
  * back, but the phone provider is switched off (supabase/config.toml).
@@ -38,7 +38,7 @@ export type EmailOtpResult<T = undefined> =
   | OtpFailure;
 
 /** Digits in an email code (`otp_length` in supabase/config.toml). */
-export const EMAIL_CODE_LENGTH = 6;
+export const EMAIL_CODE_LENGTH = 8;
 /** How long an email code is valid, in seconds (`otp_expiry`). */
 export const EMAIL_CODE_EXPIRY_SECONDS = 600;
 
@@ -194,7 +194,7 @@ interface SendEmailOtpOptions {
 }
 
 /**
- * Emails a 6-digit code. Supabase sends its confirmation email to a new
+ * Emails an 8-digit code. Supabase sends its confirmation email to a new
  * address and its "magic link" email to an existing one; both templates
  * (supabase/templates) show only the code.
  */

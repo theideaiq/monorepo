@@ -134,7 +134,7 @@ describe("The IDEA Pass email sign-in", () => {
     fireEvent.click(screen.getByRole("button", { name: CONTINUE }));
 
     expect(
-      await screen.findByText("We emailed a 6-digit code to sara@example.com.")
+      await screen.findByText("We emailed an 8-digit code to sara@example.com.")
     ).toBeTruthy();
     expect(signInWithOtp).toHaveBeenCalledWith({
       email: "sara@example.com",
@@ -155,13 +155,13 @@ describe("The IDEA Pass email sign-in", () => {
     ).toBe(true);
 
     fireEvent.change(screen.getByLabelText("Verification code"), {
-      target: { value: "123456" },
+      target: { value: "12345678" },
     });
 
     await waitFor(() => expect(assign).toHaveBeenCalledWith("/cart"));
     expect(verifyOtp).toHaveBeenCalledWith({
       email: "sara@example.com",
-      token: "123456",
+      token: "12345678",
       type: "email",
     });
     expect(identify).toHaveBeenCalledWith("user-1");
@@ -186,7 +186,7 @@ describe("The IDEA Pass email sign-in", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "متابعة" }));
     fireEvent.change(await screen.findByLabelText("رمز التحقق"), {
-      target: { value: "000000" },
+      target: { value: "00000000" },
     });
 
     expect(

@@ -25,7 +25,7 @@ export const productHref = (slug: string) =>
 
 /**
  * A catalog tile linking to the product page, with a wishlist heart: the
- * image on a sunken ground, a 2-line name, the price (with any saving), the condition bulb for used and rental items, and a full-width
+ * image on a sunken ground, a 2-line name, the price (with any saving), the condition bulb for used items, and a full-width
  * call to action (violet for rentals).
  */
 export const ProductCard = ({ product, rating }: ProductCardProps) => {

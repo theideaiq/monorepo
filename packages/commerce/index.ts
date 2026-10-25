@@ -61,11 +61,15 @@ const CUSTOMER_CONDITIONS: Record<ProductCondition, CustomerCondition> = {
 export const customerCondition = (condition: ProductCondition) =>
   CUSTOMER_CONDITIONS[condition];
 
-/** Rentals and anything not new show their condition bulb. */
+/**
+ * Anything for sale that isn't new shows its condition bulb. Rentals don't:
+ * the member borrows a copy and gives it back, so its grade isn't theirs to
+ * weigh.
+ */
 export const showsConditionBulb = (product: {
   readonly condition: ProductCondition;
   readonly kind: string;
-}) => product.kind === "rental" || product.condition !== "new";
+}) => product.kind !== "rental" && product.condition !== "new";
 
 /** Variant attributes as "Color: Black · Storage: 1 TB". */
 export const describeAttributes = (attributes: unknown) =>

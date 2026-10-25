@@ -26,7 +26,7 @@ interface ProductCardProps {
 /**
  * A product tile linking to its page on this site: the image on a sunken
  * ground, badges top-start, a 2-line name, the price, the condition bulb
- * for used and rental items, and a full-width call to action (violet for
+ * for used items, and a full-width call to action (violet for
  * rentals).
  */
 export const ProductCard = async ({
@@ -49,7 +49,11 @@ export const ProductCard = async ({
       href={`/store/${product.slug}`}
     >
       <div className="relative">
-        <CoverImage alt={name} src={imageUrl(product.images[0])} />
+        <CoverImage
+          alt={name}
+          fit="product"
+          src={imageUrl(product.images[0])}
+        />
         <div className="absolute start-2 top-2 flex flex-wrap gap-1">
           {discount > 0 ? (
             <Badge>

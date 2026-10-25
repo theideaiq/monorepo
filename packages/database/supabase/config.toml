@@ -245,8 +245,9 @@ secure_password_change = false
 # default 60s, which matches the form's resend cooldown; locally the journeys
 # and integration tests send codes back to back.
 max_frequency = "1s"
-# Number of characters used in the email OTP.
-otp_length = 6
+# Number of characters used in the email OTP (production uses 8 too; the
+# website's code box takes EMAIL_CODE_LENGTH digits, packages/auth/otp.ts).
+otp_length = 8
 # Number of seconds before the email OTP expires (10 minutes).
 otp_expiry = 600
 

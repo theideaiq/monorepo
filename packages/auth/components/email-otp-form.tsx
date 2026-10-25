@@ -81,7 +81,7 @@ const getSubmitLabel = (
 };
 
 /**
- * Passwordless sign-in and sign-up with a 6-digit code sent by email (no
+ * Passwordless sign-in and sign-up with an 8-digit code sent by email (no
  * links, which break inside the iOS/Android apps): the address, then the
  * code, with resend after a cooldown and a way back to change the address.
  */

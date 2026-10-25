@@ -14,7 +14,7 @@ interface ProductImageProps {
   readonly sizes?: string;
 }
 
-/** A square catalog image, or a placeholder when the product has none. */
+/** A catalog image, whole, in a square tile; a placeholder when there is none. */
 export const ProductImage = ({
   alt,
   className,
@@ -28,14 +28,16 @@ export const ProductImage = ({
   return (
     <div
       className={cn(
-        "relative aspect-square overflow-hidden rounded-md bg-muted",
+        "relative aspect-square overflow-hidden rounded-md bg-surface-sunken",
         className
       )}
     >
       {src ? (
         <Image
           alt={alt}
-          className="object-cover"
+          // The whole picture: covers, posters, box art and photos have
+          // different shapes; cropping them made the tiles look random.
+          className="object-contain p-2"
           fill
           priority={priority}
           sizes={sizes}

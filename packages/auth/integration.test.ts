@@ -15,7 +15,7 @@ const url = process.env.API_URL ?? "http://127.0.0.1:54321";
 const publishableKey = process.env.PUBLISHABLE_KEY ?? "";
 const mailpit = process.env.MAILPIT_URL ?? "http://127.0.0.1:54324";
 
-const CODE = /\b(\d{6})\b/;
+const CODE = /\b(\d{8})\b/;
 
 interface MailpitSummary {
   Created: string;
