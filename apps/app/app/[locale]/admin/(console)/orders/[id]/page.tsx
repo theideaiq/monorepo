@@ -289,6 +289,16 @@ const OrderPage = async ({ params }: OrderPageProps) => {
                     {format.money(order.shipping_fee)}
                   </TableCell>
                 </TableRow>
+                {order.bulbs_used > 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={3}>
+                      {t("bulbs", { bulbs: format.number(order.bulbs_used) })}
+                    </TableCell>
+                    <TableCell className="text-end tabular-nums" dir="ltr">
+                      −{format.money(order.bulbs_discount)}
+                    </TableCell>
+                  </TableRow>
+                ) : null}
                 <TableRow>
                   <TableCell className="font-semibold" colSpan={3}>
                     {t("totalAmount")}

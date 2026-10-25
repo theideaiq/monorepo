@@ -269,8 +269,20 @@ session in the shared cookie.
   and edits the tiers, the Plus bonus and the multipliers (Finance → Bulbs,
   `bulbs_outstanding`, `set_bulb_rates`). `GET /cron/bulbs` (daily, 03:30
   UTC) runs `run_bulb_expiry()`: a reminder after 11 months without
-  activity and expiry at 12. Spending Bulbs at checkout and the tiers'
-  delivery perks come next.
+  activity and expiry at 12.
+- **Spending Bulbs and tier delivery** (migration
+  `20261129000000_bulbs_checkout.sql`). `create_order(…, use_bulbs)` takes
+  up to the whole order (delivery included) in Bulbs at 100 IQD each,
+  from what is usable now (a per-member advisory lock serialises
+  checkouts), records `orders.bulbs_used`/`bulbs_discount` and writes a
+  `redemption` entry; an order paid in full with Bulbs is paid at once
+  (`complete_order_payment`, no hosted checkout; the confirmation email
+  goes through `POST /orders/confirmation`). Cancelling or refunding
+  voids the redemption (the Bulbs come back), and cashback is earned only
+  on the share paid in money. `bulb_tiers.free_delivery_from` gives tiers
+  free delivery (Shine from 50,000 IQD, Beam and Blaze always), mirrored
+  for the checkout total by `deliveryFee()`/`cartTotals()` in
+  `@repo/commerce`. Plus payments can't take Bulbs yet.
 - **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
   Google Wallet" link for a generic pass whose QR code rotates in Google
   Wallet with the same secret (`rotatingBarcode.totpDetails`), so both

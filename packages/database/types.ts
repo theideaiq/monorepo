@@ -98,18 +98,21 @@ export type Database = {
       };
       bulb_tiers: {
         Row: {
+          free_delivery_from: number | null;
           min_spend: number;
           rate: number;
           tier: Database["public"]["Enums"]["bulb_tier"];
           updated_at: string;
         };
         Insert: {
+          free_delivery_from?: number | null;
           min_spend: number;
           rate: number;
           tier: Database["public"]["Enums"]["bulb_tier"];
           updated_at?: string;
         };
         Update: {
+          free_delivery_from?: number | null;
           min_spend?: number;
           rate?: number;
           tier?: Database["public"]["Enums"]["bulb_tier"];
@@ -630,6 +633,8 @@ export type Database = {
       };
       orders: {
         Row: {
+          bulbs_discount: number;
+          bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
           created_at: string;
@@ -651,6 +656,8 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
+          bulbs_discount?: number;
+          bulbs_used?: number;
           cash_collected_by?: string | null;
           confirmation_emailed_at?: string | null;
           created_at?: string;
@@ -672,6 +679,8 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
+          bulbs_discount?: number;
+          bulbs_used?: number;
           cash_collected_by?: string | null;
           confirmation_emailed_at?: string | null;
           created_at?: string;
@@ -2104,8 +2113,11 @@ export type Database = {
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           payment_method?: Database["public"]["Enums"]["order_payment_method"];
           shipping: Json;
+          use_bulbs?: number;
         };
         Returns: {
+          bulbs_discount: number;
+          bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
           created_at: string;
@@ -2196,6 +2208,8 @@ export type Database = {
       mark_cash_collected: {
         Args: { order_id: string };
         Returns: {
+          bulbs_discount: number;
+          bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
           created_at: string;

@@ -30,7 +30,7 @@ const BulbsPage = async () => {
     supabase.rpc("bulbs_outstanding"),
     supabase
       .from("bulb_tiers")
-      .select("tier, min_spend, rate")
+      .select("tier, min_spend, rate, free_delivery_from")
       .order("min_spend"),
     supabase.from("store_settings").select("bulb_plus_bonus").maybeSingle(),
     supabase

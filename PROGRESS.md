@@ -245,10 +245,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   at +20% plus a 10-Bulb bonus; expiry after 12 months without activity.
   The Pass card changes colour with the tier. My Pass → Bulbs; support
   adjusts on the customer page; finance edits rates in Finance → Bulbs.
-  Next: spending Bulbs at checkout and the tiers' delivery perks. Not yet:
+  Not yet:
   the birthday gift (no birthday on profiles), the photo-review and event
   check-in bonuses (no photos or check-ins yet), Telegram's bonus (with
   Telegram sign-in). Migration `20261128000000_bulbs.sql`.
+- 2026-10-25: **Bulbs (spending).** Bulbs pay up to the whole order at
+  checkout, delivery included (100 IQD each); an order paid in full with
+  Bulbs needs no payment page, and a cancelled order gives them back.
+  Shine delivers free from 50,000 IQD, Beam and Blaze always (Finance →
+  Bulbs). Not yet: Bulbs for Plus payments. Migration
+  `20261129000000_bulbs_checkout.sql`.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

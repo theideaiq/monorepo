@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice } from "@repo/commerce";
+import { BULB_VALUE_IQD, formatPrice } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Progress } from "@repo/design-system/components/ui/progress";
 import { cn } from "@repo/design-system/lib/utils";
@@ -10,12 +10,7 @@ import { LightbulbIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import {
-  BULB_VALUE_IQD,
-  type BulbTier,
-  tierPerks,
-  tierProgress,
-} from "@/lib/bulbs";
+import { type BulbTier, tierPerks, tierProgress } from "@/lib/bulbs";
 import {
   type BulbEntry,
   useBulbEntries,
@@ -175,6 +170,15 @@ export const Bulbs = () => {
                 <li>
                   {t("cashback", { rate: rate(Number(row.rate), locale) })}
                 </li>
+                {row.free_delivery_from === null ? null : (
+                  <li>
+                    {row.free_delivery_from === 0
+                      ? t("freeDelivery")
+                      : t("freeDeliveryFrom", {
+                          amount: formatPrice(row.free_delivery_from, locale),
+                        })}
+                  </li>
+                )}
                 {tierPerks[row.tier].map((perk) => (
                   <li key={perk}>{t(`perks.${perk}`)}</li>
                 ))}
@@ -184,6 +188,7 @@ export const Bulbs = () => {
         </ul>
         <ul className="grid list-disc gap-1 ps-5 text-muted-foreground text-sm">
           <li>{t("rules.value")}</li>
+          <li>{t("rules.spend")}</li>
           <li>{t("rules.plus")}</li>
           <li>{t("rules.pending")}</li>
           <li>{t("rules.tradeIn")}</li>

@@ -100,7 +100,9 @@ export const toCartLine = (item: CartItem): CartLineView => {
 export const summarizeCart = (
   items: readonly CartItem[],
   settings: StoreSettings,
-  choice?: DeliveryChoice
+  choice?: DeliveryChoice,
+  /** Bulbs to spend (capped at what the order costs). */
+  bulbs = 0
 ) => {
   const lines = items.map(toCartLine);
   const orderable = lines.filter((line) => line.buyable);
@@ -112,7 +114,7 @@ export const summarizeCart = (
     canCheckout: orderable.length > 0 && problems.length === 0,
     lines,
     problems: problems.length,
-    totals: cartTotals(orderable, settings, choice),
+    totals: cartTotals(orderable, settings, choice, bulbs),
   };
 };
 

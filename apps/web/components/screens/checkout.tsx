@@ -2,6 +2,7 @@
 
 import { useAuth } from "@repo/auth/provider";
 import {
+  BULB_VALUE_IQD,
   describeAttributes,
   type Fulfilment,
   formatPrice,
@@ -17,6 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/design-system/components/ui/card";
+import { Checkbox } from "@repo/design-system/components/ui/checkbox";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import {
@@ -47,6 +49,7 @@ import {
   emptyAddress,
   validateAddress,
 } from "@/lib/address";
+import { useBulbTiers, useMyBulbs } from "@/lib/bulbs-queries";
 import { summarizeCart } from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
 import { orderPath, usePlaceOrder } from "@/lib/order-checkout";
@@ -417,10 +420,66 @@ const ContactCard = ({
   );
 };
 
+interface BulbsCardProps {
+  /** Bulbs the member can spend now. */
+  readonly available: number;
+  readonly busy: boolean;
+  readonly onChange: (use: boolean) => void;
+  readonly use: boolean;
+  /** Bulbs the order would take (all of them up to what it costs). */
+  readonly using: number;
+}
+
+/** Pay with Bulbs: up to the whole order, 100 IQD each. */
+const BulbsCard = ({
+  available,
+  busy,
+  onChange,
+  use,
+  using,
+}: BulbsCardProps) => {
+  const t = useTranslations("app.checkout.bulbs");
+  const locale = useLocale() as Locale;
+  if (available <= 0) {
+    return null;
+  }
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>
+          {t("available", {
+            amount: formatPrice(available * BULB_VALUE_IQD, locale),
+            bulbs: formatNumber(available, locale),
+          })}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <label className="flex items-center gap-3 text-sm" htmlFor="use-bulbs">
+          <Checkbox
+            checked={use}
+            disabled={busy}
+            id="use-bulbs"
+            onCheckedChange={(checked) => onChange(checked === true)}
+          />
+          {use
+            ? t("using", {
+                amount: formatPrice(using * BULB_VALUE_IQD, locale),
+                bulbs: formatNumber(using, locale),
+              })
+            : t("use")}
+        </label>
+      </CardContent>
+    </Card>
+  );
+};
+
 interface SummaryCardProps {
   readonly busy: boolean;
   readonly cash: boolean;
   readonly error: CheckoutError | null;
+  /** Delivery is free thanks to the member's tier. */
+  readonly freeDelivery: boolean;
   readonly method: Fulfilment;
   readonly summary: ReturnType<typeof summarizeCart>;
 }
@@ -430,6 +489,7 @@ const SummaryCard = ({
   busy,
   cash,
   error,
+  freeDelivery,
   method,
   summary,
 }: SummaryCardProps) => {
@@ -473,6 +533,9 @@ const SummaryCard = ({
             ))}
         </ul>
         <OrderSummary {...summary.totals} />
+        {freeDelivery ? (
+          <p className="text-muted-foreground text-xs">{t("tierDelivery")}</p>
+        ) : null}
         {error ? (
           <p className="text-destructive text-sm" role="alert">
             {t(`errors.${error}`)}
@@ -495,6 +558,78 @@ const SummaryCard = ({
     </Card>
   );
 };
+
+/** What the member can spend now and their tier's free-delivery perk. */
+const useCheckoutBulbs = () => {
+  const bulbs = useMyBulbs();
+  const tiers = useBulbTiers();
+  return {
+    availableBulbs: Math.max(0, bulbs.data?.available ?? 0),
+    freeDeliveryFrom:
+      tiers.data?.find((row) => row.tier === bulbs.data?.tier)
+        ?.free_delivery_from ?? null,
+  };
+};
+
+/**
+ * The cart priced for the chosen delivery, the member's tier and the Bulbs
+ * they spend: whether the tier made delivery free and whether Bulbs pay the
+ * whole order (then nothing is left to pay, online or in cash).
+ */
+const planCheckout = ({
+  bulbs,
+  cart,
+  freeDeliveryFrom,
+  method,
+  settings,
+  zoneFee,
+}: {
+  bulbs: number;
+  cart: Parameters<typeof summarizeCart>[0] | undefined;
+  freeDeliveryFrom: number | null;
+  method: Fulfilment;
+  settings: Parameters<typeof summarizeCart>[1] | undefined;
+  zoneFee: number | undefined;
+}) => {
+  const summary =
+    cart && settings
+      ? summarizeCart(
+          cart,
+          settings,
+          { freeDeliveryFrom, fulfilment: method, zoneFee },
+          bulbs
+        )
+      : null;
+  return {
+    paidWithBulbs: summary?.totals.total === 0,
+    summary,
+    tierFreeDelivery: isTierFreeDelivery({
+      fee: zoneFee ?? settings?.shippingFee,
+      freeDeliveryFrom,
+      method,
+      totals: summary?.totals,
+    }),
+  };
+};
+
+/** Whether the member's tier made delivery free (the store's own threshold aside). */
+const isTierFreeDelivery = ({
+  fee,
+  freeDeliveryFrom,
+  method,
+  totals,
+}: {
+  fee: number | undefined;
+  freeDeliveryFrom: number | null;
+  method: Fulfilment;
+  totals?: { shippingFee: number; subtotal: number };
+}) =>
+  totals !== undefined &&
+  method === "delivery" &&
+  freeDeliveryFrom !== null &&
+  totals.subtotal >= freeDeliveryFrom &&
+  totals.shippingFee === 0 &&
+  (fee ?? 0) > 0;
 
 /**
  * What the customer can choose (pickup and cash only when the store offers
@@ -550,6 +685,8 @@ export const Checkout = () => {
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [useBulbs, setUseBulbs] = useState(false);
+  const { availableBulbs, freeDeliveryFrom } = useCheckoutBulbs();
 
   // The form starts from the account: its phone number and name.
   const address: AddressForm = form ?? {
@@ -569,13 +706,14 @@ export const Checkout = () => {
       zones: zones.data,
     });
 
-  const summary =
-    cart.data && settings.data
-      ? summarizeCart(cart.data, settings.data, {
-          fulfilment: method,
-          zoneFee: zone?.fee,
-        })
-      : null;
+  const { paidWithBulbs, summary, tierFreeDelivery } = planCheckout({
+    bulbs: useBulbs ? availableBulbs : 0,
+    cart: cart.data,
+    freeDeliveryFrom,
+    method,
+    settings: settings.data,
+    zoneFee: zone?.fee,
+  });
   const busy = place.isPending || place.isSuccess;
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -592,8 +730,9 @@ export const Checkout = () => {
     const request = {
       deliveryZone: result.zoneId,
       fulfilment: method,
-      paymentMethod,
+      paymentMethod: paidWithBulbs ? ("online" as const) : paymentMethod,
       shipping: result.shipping,
+      useBulbs: summary?.totals.bulbsUsed ?? 0,
     };
     place.mutate(request, {
       onError: (mutationError) => setError(toCheckoutError(mutationError)),
@@ -685,7 +824,14 @@ export const Checkout = () => {
                 zone={zone}
                 zones={zoneList}
               />
-              {cashOffered ? (
+              <BulbsCard
+                available={availableBulbs}
+                busy={busy}
+                onChange={setUseBulbs}
+                use={useBulbs}
+                using={summary.totals.bulbsUsed}
+              />
+              {cashOffered && !paidWithBulbs ? (
                 <PaymentCard
                   busy={busy}
                   method={method}
@@ -697,8 +843,9 @@ export const Checkout = () => {
 
             <SummaryCard
               busy={busy}
-              cash={cash}
+              cash={cash && !paidWithBulbs}
               error={error}
+              freeDelivery={tierFreeDelivery}
               method={method}
               summary={summary}
             />

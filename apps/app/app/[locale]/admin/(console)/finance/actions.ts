@@ -18,6 +18,7 @@ import {
   checkbox,
   decimalIn,
   int,
+  optionalInt,
   optionalText,
   optionalUuid,
   text,
@@ -147,12 +148,14 @@ const tierFields = Object.fromEntries(
   (["glow", "shine", "beam", "blaze"] as const).flatMap((tier) => [
     [`${tier}Min`, int(0, 1_000_000_000)],
     [`${tier}Rate`, decimalIn(0, 50)],
+    [`${tier}FreeDelivery`, optionalInt(0, 1_000_000_000)],
   ])
 );
 
 /**
- * Bulbs rates: each tier's 12-month spend and cashback, the Plus bonus and
- * the category multipliers (fields named `multiplier:<category id>`).
+ * Bulbs rates: each tier's 12-month spend, cashback and free delivery (from
+ * a subtotal; empty for none, 0 for always), the Plus bonus and the
+ * category multipliers (fields named `multiplier:<category id>`).
  */
 export const saveBulbRates = staffAction(
   "finance",
@@ -168,6 +171,7 @@ export const saveBulbRates = staffAction(
         supabase
           .from("bulb_tiers")
           .update({
+            free_delivery_from: values[`${tier}FreeDelivery`] as number | null,
             min_spend: Number(values[`${tier}Min`]),
             rate: Number(values[`${tier}Rate`]),
           })

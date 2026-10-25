@@ -1,4 +1,5 @@
 import { formatPhone } from "@repo/auth/phone";
+import { formatPrice } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
@@ -94,6 +95,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
     { data: staff },
     { data: subscription },
     { data: bulbRows },
+    { data: tierRows },
   ] = await Promise.all([
     session.supabase
       .from("profiles")
@@ -114,12 +116,21 @@ export const PassCard = async ({ session }: PassCardProps) => {
       .limit(1)
       .maybeSingle(),
     session.supabase.rpc("my_bulbs"),
+    session.supabase.from("bulb_tiers").select("tier, free_delivery_from"),
   ]);
   const name = profile?.full_name?.trim();
   const phone = session.user.phone ? formatPhone(session.user.phone) : null;
   const plan = subscription?.plan ?? null;
   const bulbs = bulbRows?.[0] ?? null;
   const tier: BulbTier = bulbs?.tier ?? "glow";
+  const freeDeliveryFrom =
+    tierRows?.find((row) => row.tier === tier)?.free_delivery_from ?? null;
+  const deliveryPerk =
+    freeDeliveryFrom === null
+      ? card("perks.delivery")
+      : tBulbs(freeDeliveryFrom === 0 ? "freeDelivery" : "freeDeliveryFrom", {
+          amount: formatPrice(freeDeliveryFrom, locale),
+        });
 
   const perks: Perk[] = [
     plan
@@ -135,7 +146,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
                 }),
         }
       : { href: "/plus", icon: CrownIcon, text: card("perks.joinPlus") },
-    { icon: TruckIcon, text: card("perks.delivery") },
+    { icon: TruckIcon, text: deliveryPerk },
     { href: "/events", icon: CalendarDaysIcon, text: card("perks.events") },
     { href: "/pass/sell", icon: HandCoinsIcon, text: card("perks.sell") },
     {
