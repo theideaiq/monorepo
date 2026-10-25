@@ -141,6 +141,38 @@ export const INVITE_DISCOUNT_CAP = 15_000;
 export const inviteDiscount = (subtotal: number) =>
   Math.min(Math.floor(subtotal * INVITE_DISCOUNT_RATE), INVITE_DISCOUNT_CAP);
 
+/** An affiliate's link or code: 5% off, no cap. */
+export const AFFILIATE_DISCOUNT_RATE = 0.05;
+
+/** What takes money off an order (`orders.discount_source`). */
+export type DiscountSource = "affiliate" | "invite";
+
+/** The discounts a member's next order qualifies for. */
+export interface Promo {
+  /** An affiliate's link or code in the past 30 days. */
+  affiliate?: boolean;
+  /** The member's first order through a friend's invite. */
+  invited?: boolean;
+}
+
+/**
+ * The order's one discount, mirroring `create_order()`: the larger of the
+ * invite and the affiliate's 5%, the invite on a tie.
+ */
+export const orderDiscount = (
+  subtotal: number,
+  promo: Promo = {}
+): { discount: number; discountSource: DiscountSource | null } => {
+  const invite = promo.invited ? inviteDiscount(subtotal) : 0;
+  const affiliate = promo.affiliate
+    ? Math.floor(subtotal * AFFILIATE_DISCOUNT_RATE)
+    : 0;
+  if (affiliate > invite) {
+    return { discount: affiliate, discountSource: "affiliate" };
+  }
+  return { discount: invite, discountSource: invite > 0 ? "invite" : null };
+};
+
 /**
  * The delivery fee, mirroring `create_order()`: pickup is free; delivery
  * costs the zone's fee unless the subtotal reaches the free-delivery
@@ -181,15 +213,15 @@ export const cartTotals = (
   choice?: DeliveryChoice,
   /** Bulbs the member wants to spend (capped at what the order costs). */
   bulbs = 0,
-  /** The member's first order through a friend's invite. */
-  invited = false
+  /** The invite or affiliate discount the member qualifies for. */
+  promo: Promo = {}
 ) => {
   const subtotal = lines.reduce(
     (sum, line) => sum + line.unitPrice * line.quantity,
     0
   );
   const shippingFee = deliveryFee(subtotal, settings, choice);
-  const discount = invited ? inviteDiscount(subtotal) : 0;
+  const { discount, discountSource } = orderDiscount(subtotal, promo);
   const bulbsUsed = Math.max(
     0,
     Math.min(
@@ -203,6 +235,7 @@ export const cartTotals = (
     bulbsUsed,
     count: lines.reduce((sum, line) => sum + line.quantity, 0),
     discount,
+    discountSource,
     shippingFee,
     subtotal,
     total: subtotal + shippingFee - discount - bulbsDiscount,

@@ -11,6 +11,9 @@ import { useQuery } from "@tanstack/react-query";
  */
 
 export const queryKeys = {
+  affiliate: (userId: string) => ["affiliate", userId] as const,
+  affiliateReferrer: (userId: string) =>
+    ["affiliate-referrer", userId] as const,
   bulbEntries: (userId: string) => ["bulbs", userId, "entries"] as const,
   bulbs: (userId: string) => ["bulbs", userId] as const,
   bulbTiers: ["bulb-tiers"] as const,

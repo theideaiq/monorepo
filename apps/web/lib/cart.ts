@@ -2,6 +2,7 @@ import {
   type CartLine,
   cartTotals,
   type DeliveryChoice,
+  type Promo,
   type StoreSettings,
 } from "@repo/commerce";
 
@@ -103,8 +104,8 @@ export const summarizeCart = (
   choice?: DeliveryChoice,
   /** Bulbs to spend (capped at what the order costs). */
   bulbs = 0,
-  /** The member's first order through a friend's invite. */
-  invited = false
+  /** The invite or affiliate discount the member qualifies for. */
+  promo: Promo = {}
 ) => {
   const lines = items.map(toCartLine);
   const orderable = lines.filter((line) => line.buyable);
@@ -116,7 +117,7 @@ export const summarizeCart = (
     canCheckout: orderable.length > 0 && problems.length === 0,
     lines,
     problems: problems.length,
-    totals: cartTotals(orderable, settings, choice, bulbs, invited),
+    totals: cartTotals(orderable, settings, choice, bulbs, promo),
   };
 };
 

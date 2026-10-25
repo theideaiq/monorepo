@@ -242,7 +242,7 @@ export const useUpdateCartLine = () => {
 };
 
 const ORDER_COLUMNS =
-  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, condition, name_ar, name_en, attributes, unit_price, quantity)" as const;
+  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, condition, name_ar, name_en, attributes, unit_price, quantity)" as const;
 
 export const useOrders = () => {
   const { supabase, user } = useAuth();

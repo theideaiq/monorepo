@@ -9,6 +9,192 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      affiliate_attributions: {
+        Row: {
+          affiliate_id: string;
+          member_id: string;
+          touched_at: string;
+          via: string;
+        };
+        Insert: {
+          affiliate_id: string;
+          member_id: string;
+          touched_at?: string;
+          via: string;
+        };
+        Update: {
+          affiliate_id?: string;
+          member_id?: string;
+          touched_at?: string;
+          via?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_attributions_affiliate_id_fkey";
+            columns: ["affiliate_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliates";
+            referencedColumns: ["user_id"];
+          },
+        ];
+      };
+      affiliate_commissions: {
+        Row: {
+          affiliate_id: string;
+          amount: number;
+          available_at: string;
+          created_at: string;
+          id: string;
+          kind: Database["public"]["Enums"]["affiliate_commission_kind"];
+          order_id: string | null;
+          payment_id: string | null;
+          payout_id: string | null;
+          status: Database["public"]["Enums"]["affiliate_commission_status"];
+        };
+        Insert: {
+          affiliate_id: string;
+          amount: number;
+          available_at?: string;
+          created_at?: string;
+          id?: string;
+          kind: Database["public"]["Enums"]["affiliate_commission_kind"];
+          order_id?: string | null;
+          payment_id?: string | null;
+          payout_id?: string | null;
+          status?: Database["public"]["Enums"]["affiliate_commission_status"];
+        };
+        Update: {
+          affiliate_id?: string;
+          amount?: number;
+          available_at?: string;
+          created_at?: string;
+          id?: string;
+          kind?: Database["public"]["Enums"]["affiliate_commission_kind"];
+          order_id?: string | null;
+          payment_id?: string | null;
+          payout_id?: string | null;
+          status?: Database["public"]["Enums"]["affiliate_commission_status"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_commissions_affiliate_id_fkey";
+            columns: ["affiliate_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliates";
+            referencedColumns: ["user_id"];
+          },
+          {
+            foreignKeyName: "affiliate_commissions_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "affiliate_commissions_payment_id_fkey";
+            columns: ["payment_id"];
+            isOneToOne: false;
+            referencedRelation: "payments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "affiliate_commissions_payout_id_fkey";
+            columns: ["payout_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliate_payouts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      affiliate_payouts: {
+        Row: {
+          account: string | null;
+          affiliate_id: string;
+          amount: number;
+          bulbs: number | null;
+          created_at: string;
+          id: string;
+          method: Database["public"]["Enums"]["affiliate_payout_method"];
+          paid_by: string | null;
+          reference: string | null;
+        };
+        Insert: {
+          account?: string | null;
+          affiliate_id: string;
+          amount: number;
+          bulbs?: number | null;
+          created_at?: string;
+          id?: string;
+          method: Database["public"]["Enums"]["affiliate_payout_method"];
+          paid_by?: string | null;
+          reference?: string | null;
+        };
+        Update: {
+          account?: string | null;
+          affiliate_id?: string;
+          amount?: number;
+          bulbs?: number | null;
+          created_at?: string;
+          id?: string;
+          method?: Database["public"]["Enums"]["affiliate_payout_method"];
+          paid_by?: string | null;
+          reference?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_payouts_affiliate_id_fkey";
+            columns: ["affiliate_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliates";
+            referencedColumns: ["user_id"];
+          },
+        ];
+      };
+      affiliates: {
+        Row: {
+          channel: string | null;
+          code: string | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          payout_account: string | null;
+          payout_method: Database["public"]["Enums"]["affiliate_payout_method"];
+          pitch: string;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["affiliate_status"];
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          channel?: string | null;
+          code?: string | null;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          payout_account?: string | null;
+          payout_method?: Database["public"]["Enums"]["affiliate_payout_method"];
+          pitch: string;
+          staff_note?: string | null;
+          status?: Database["public"]["Enums"]["affiliate_status"];
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          channel?: string | null;
+          code?: string | null;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          payout_account?: string | null;
+          payout_method?: Database["public"]["Enums"]["affiliate_payout_method"];
+          pitch?: string;
+          staff_note?: string | null;
+          status?: Database["public"]["Enums"]["affiliate_status"];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       audit_logs: {
         Row: {
           action: string;
@@ -633,6 +819,7 @@ export type Database = {
       };
       orders: {
         Row: {
+          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -658,6 +845,7 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
+          affiliate_id?: string | null;
           bulbs_discount?: number;
           bulbs_used?: number;
           cash_collected_by?: string | null;
@@ -683,6 +871,7 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
+          affiliate_id?: string | null;
           bulbs_discount?: number;
           bulbs_used?: number;
           cash_collected_by?: string | null;
@@ -708,6 +897,13 @@ export type Database = {
           user_id?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "orders_affiliate_id_fkey";
+            columns: ["affiliate_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliates";
+            referencedColumns: ["user_id"];
+          },
           {
             foreignKeyName: "orders_delivery_zone_id_fkey";
             columns: ["delivery_zone_id"];
@@ -950,6 +1146,7 @@ export type Database = {
       };
       product_categories: {
         Row: {
+          affiliate_rate: number;
           bulb_multiplier: number;
           created_at: string;
           id: string;
@@ -960,6 +1157,7 @@ export type Database = {
           slug: string;
         };
         Insert: {
+          affiliate_rate?: number;
           bulb_multiplier?: number;
           created_at?: string;
           id?: string;
@@ -970,6 +1168,7 @@ export type Database = {
           slug: string;
         };
         Update: {
+          affiliate_rate?: number;
           bulb_multiplier?: number;
           created_at?: string;
           id?: string;
@@ -1615,6 +1814,7 @@ export type Database = {
       };
       subscriptions: {
         Row: {
+          affiliate_id: string | null;
           cancel_at_period_end: boolean;
           created_at: string;
           current_period_end: string | null;
@@ -1628,6 +1828,7 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
+          affiliate_id?: string | null;
           cancel_at_period_end?: boolean;
           created_at?: string;
           current_period_end?: string | null;
@@ -1641,6 +1842,7 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
+          affiliate_id?: string | null;
           cancel_at_period_end?: boolean;
           created_at?: string;
           current_period_end?: string | null;
@@ -1654,6 +1856,13 @@ export type Database = {
           user_id?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "subscriptions_affiliate_id_fkey";
+            columns: ["affiliate_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliates";
+            referencedColumns: ["user_id"];
+          },
           {
             foreignKeyName: "subscriptions_organization_id_fkey";
             columns: ["organization_id"];
@@ -2089,6 +2298,38 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      affiliate_balances: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          affiliate_id: string;
+          available: number;
+          paid: number;
+          pending: number;
+        }[];
+      };
+      apply_affiliate: {
+        Args: { channel?: string; pitch: string };
+        Returns: {
+          channel: string | null;
+          code: string | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          payout_account: string | null;
+          payout_method: Database["public"]["Enums"]["affiliate_payout_method"];
+          pitch: string;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["affiliate_status"];
+          updated_at: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "affiliates";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       bulbs_outstanding: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -2161,6 +2402,7 @@ export type Database = {
           use_bulbs?: number;
         };
         Returns: {
+          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -2237,6 +2479,34 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      decide_affiliate: {
+        Args: {
+          code?: string;
+          decision: Database["public"]["Enums"]["affiliate_status"];
+          member: string;
+          note?: string;
+        };
+        Returns: {
+          channel: string | null;
+          code: string | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          payout_account: string | null;
+          payout_method: Database["public"]["Enums"]["affiliate_payout_method"];
+          pitch: string;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["affiliate_status"];
+          updated_at: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "affiliates";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       event_rsvp_count: { Args: { event: string }; Returns: number };
       import_products: { Args: { items: Json }; Returns: Json };
       ledger_monthly_summary: {
@@ -2255,6 +2525,7 @@ export type Database = {
       mark_cash_collected: {
         Args: { order_id: string };
         Returns: {
+          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -2306,6 +2577,29 @@ export type Database = {
           rate: number;
           spend: number;
           tier: Database["public"]["Enums"]["bulb_tier"];
+        }[];
+      };
+      my_affiliate: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          available: number;
+          code: string;
+          orders: number;
+          paid: number;
+          payout_account: string;
+          payout_method: Database["public"]["Enums"]["affiliate_payout_method"];
+          pending: number;
+          plus_members: number;
+          status: Database["public"]["Enums"]["affiliate_status"];
+        }[];
+      };
+      my_affiliate_referrer: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          code: string;
+          expires_at: string;
+          name: string;
+          via: string;
         }[];
       };
       my_bulbs: {
@@ -2408,6 +2702,26 @@ export type Database = {
           verified_purchase: boolean;
         }[];
       };
+      record_affiliate_payout: {
+        Args: { affiliate: string; reference?: string };
+        Returns: {
+          account: string | null;
+          affiliate_id: string;
+          amount: number;
+          bulbs: number | null;
+          created_at: string;
+          id: string;
+          method: Database["public"]["Enums"]["affiliate_payout_method"];
+          paid_by: string | null;
+          reference: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "affiliate_payouts";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       register_push_device: {
         Args: { device_platform: string; device_token: string };
         Returns: string;
@@ -2500,6 +2814,14 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      set_affiliate_payout: {
+        Args: {
+          account?: string;
+          method: Database["public"]["Enums"]["affiliate_payout_method"];
+        };
+        Returns: undefined;
+      };
+      set_affiliate_rates: { Args: { rates: Json }; Returns: undefined };
       set_bulb_rates: {
         Args: { multipliers?: Json; plus_bonus: number };
         Returns: undefined;
@@ -2512,10 +2834,21 @@ export type Database = {
         };
         Returns: undefined;
       };
+      touch_affiliate: {
+        Args: { affiliate_code: string; via?: string };
+        Returns: {
+          code: string;
+          name: string;
+        }[];
+      };
       withdraw_trade_in: { Args: { trade_in: string }; Returns: undefined };
     };
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
+      affiliate_commission_kind: "order" | "plus" | "clawback";
+      affiliate_commission_status: "pending" | "void" | "paid";
+      affiliate_payout_method: "zaincash" | "fib" | "qi" | "bank" | "bulbs";
+      affiliate_status: "applied" | "approved" | "rejected" | "suspended";
       billing_interval: "month" | "year";
       bulb_kind:
         | "purchase"
@@ -2756,6 +3089,10 @@ export const Constants = {
   public: {
     Enums: {
       account_type: ["asset", "liability", "equity", "revenue", "expense"],
+      affiliate_commission_kind: ["order", "plus", "clawback"],
+      affiliate_commission_status: ["pending", "void", "paid"],
+      affiliate_payout_method: ["zaincash", "fib", "qi", "bank", "bulbs"],
+      affiliate_status: ["applied", "approved", "rejected", "suspended"],
       billing_interval: ["month", "year"],
       bulb_kind: [
         "purchase",

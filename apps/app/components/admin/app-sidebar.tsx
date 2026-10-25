@@ -23,6 +23,7 @@ import {
   LifeBuoyIcon,
   LogOutIcon,
   type LucideIcon,
+  MegaphoneIcon,
   PackageIcon,
   RepeatIcon,
   ScrollTextIcon,
@@ -40,6 +41,7 @@ import { Link, usePathname } from "@/lib/admin/navigation";
 import { type Section, sectionHref } from "@/lib/admin/roles";
 
 const icons: Record<Section, LucideIcon> = {
+  affiliates: MegaphoneIcon,
   audit: ScrollTextIcon,
   catalog: PackageIcon,
   customers: UsersIcon,

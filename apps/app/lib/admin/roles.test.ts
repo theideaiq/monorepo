@@ -30,6 +30,7 @@ describe("role → sections", () => {
     expect(visibleSections("finance")).toEqual([
       "dashboard",
       "orders",
+      "affiliates",
       "finance",
     ]);
     expect(accessTo("finance", "orders")).toBe("read");
@@ -38,8 +39,13 @@ describe("role → sections", () => {
     expect(canRead("finance", "reviews")).toBe(false);
   });
 
-  test("marketing reads customers (newsletters go out from Resend)", () => {
-    expect(visibleSections("marketing")).toEqual(["dashboard", "customers"]);
+  test("marketing reads customers (newsletters go out from Resend) and runs affiliates", () => {
+    expect(visibleSections("marketing")).toEqual([
+      "dashboard",
+      "customers",
+      "affiliates",
+    ]);
+    expect(canWrite("marketing", "affiliates")).toBe(true);
     expect(canWrite("marketing", "customers")).toBe(false);
     expect(canRead("marketing", "support")).toBe(false);
   });

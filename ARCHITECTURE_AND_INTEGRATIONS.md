@@ -296,7 +296,29 @@ session in the shared cookie.
   earns 50 Bulbs, pending through the return window and voided by a
   refund, at most 20 a month, and none when the friend's order shares a
   phone number or address with the inviter's own orders. The invite card
-  is on My Pass → Bulbs. Affiliates come next and reuse `orders.discount`.
+  is on My Pass → Bulbs.
+- **Affiliates** (migration `20261201000000_affiliates.sql`). Members
+  apply on My Pass → Affiliate (`apply_affiliate()`); marketing approves
+  them in the back office with a code (`decide_affiliate()`, which also
+  notifies them). The link `theideaiq.com/a/<code>` is remembered on the
+  device until sign-in (`lib/affiliates.ts`, `AffiliateToucher`) and, like
+  the code typed at checkout, recorded by `touch_affiliate()` in
+  `affiliate_attributions` (the last link or code wins; a code typed at
+  checkout replaces a link). For 30 days the member's orders get 5% off
+  (`orders.discount`, `discount_source = 'affiliate'`,
+  `orders.affiliate_id`); one discount per order, the larger of the invite
+  and the affiliate's, mirrored by `orderDiscount()` in `@repo/commerce`.
+  A delivered order earns the category's `affiliate_rate` (8% vinyl, CDs
+  and books, 3% otherwise; Back office → Affiliates, finance) on the price
+  after the discount, held 7 days for returns; nothing when the order
+  shares a phone number or address with the affiliate. A new Plus member's
+  first membership (attributed on its first payments,
+  `subscriptions.affiliate_id`) earns 20% of the first 3 monthly payments
+  or a quarter of a yearly one. Refunds void unpaid commissions and claw
+  back paid ones from the next payout (`affiliate_commissions`). Finance
+  records a payout of everything ready from 25,000 IQD
+  (`record_affiliate_payout()`): by ZainCash, FIB, Qi or bank transfer with
+  its reference, or as Bulbs worth 20% more, credited at once.
 - **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
   Google Wallet" link for a generic pass whose QR code rotates in Google
   Wallet with the same secret (`rotatingBarcode.totpDetails`), so both

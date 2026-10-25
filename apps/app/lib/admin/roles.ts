@@ -12,6 +12,7 @@ export const sections = [
   "orders",
   "rentals",
   "customers",
+  "affiliates",
   "support",
   "tradeIns",
   "reviews",
@@ -26,6 +27,7 @@ export type Section = (typeof sections)[number];
 
 /** Where each section lives in the console (paths without the locale). */
 export const sectionHref: Record<Section, string> = {
+  affiliates: "/affiliates",
   audit: "/audit",
   catalog: "/catalog",
   customers: "/customers",
@@ -63,8 +65,15 @@ const everything = (exclude: Section[] = []): AccessMap =>
 const roleAccess: Record<StaffRole, AccessMap> = {
   admin: everything(["staff"]),
   editor: { dashboard: "read", editorial: "write" },
-  finance: { dashboard: "read", finance: "write", orders: "read" },
-  marketing: { customers: "read", dashboard: "read" },
+  // Finance pays affiliates; marketing approves them (the database checks
+  // which of the two each step needs).
+  finance: {
+    affiliates: "write",
+    dashboard: "read",
+    finance: "write",
+    orders: "read",
+  },
+  marketing: { affiliates: "write", customers: "read", dashboard: "read" },
   superadmin: everything(),
   support: {
     customers: "write",
