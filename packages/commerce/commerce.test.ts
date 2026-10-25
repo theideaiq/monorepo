@@ -8,6 +8,7 @@ import {
   governorates,
   localized,
   orderDiscount,
+  planName,
   showsConditionBulb,
 } from "./index";
 
@@ -156,5 +157,21 @@ describe("commerce helpers", () => {
       false
     );
     expect(showsConditionBulb({ condition: "used", kind: "sale" })).toBe(true);
+  });
+});
+
+describe("planName", () => {
+  const plan = { name: "Plus Extra", name_ar: "بلس إكسترا" };
+
+  test("Arabic pages show the Arabic name", () => {
+    expect(planName(plan, "ar")).toBe("بلس إكسترا");
+    expect(planName(plan, "en")).toBe("Plus Extra");
+  });
+
+  test("falls back to the English name", () => {
+    expect(planName({ name: "Plus Extra", name_ar: null }, "ar")).toBe(
+      "Plus Extra"
+    );
+    expect(planName({ name: "Plus Extra" }, "ar")).toBe("Plus Extra");
   });
 });

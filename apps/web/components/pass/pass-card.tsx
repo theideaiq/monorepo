@@ -1,5 +1,5 @@
 import { formatPhone } from "@repo/auth/phone";
-import { formatPrice } from "@repo/commerce";
+import { formatPrice, planName } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
@@ -109,7 +109,9 @@ export const PassCard = async ({ session }: PassCardProps) => {
       .maybeSingle(),
     session.supabase
       .from("subscriptions")
-      .select("status, plan:plans!inner (name, rental_slots, audience)")
+      .select(
+        "status, plan:plans!inner (name, name_ar, rental_slots, audience)"
+      )
       .eq("user_id", session.user.id)
       .eq("plan.audience", "plus")
       .eq("status", "active")
@@ -139,9 +141,9 @@ export const PassCard = async ({ session }: PassCardProps) => {
           icon: CrownIcon,
           text:
             plan.rental_slots === null
-              ? card("perks.plusMember", { plan: plan.name })
+              ? card("perks.plusMember", { plan: planName(plan, locale) })
               : card("perks.plus", {
-                  plan: plan.name,
+                  plan: planName(plan, locale),
                   slots: formatNumber(plan.rental_slots, locale),
                 }),
         }
@@ -182,7 +184,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
                 : null
             }
             name={name || t("noName")}
-            plan={plan?.name ?? null}
+            plan={plan ? planName(plan, locale) : null}
             tier={tier}
             tierName={tBulbs(`tiers.${tier}.name`)}
           />

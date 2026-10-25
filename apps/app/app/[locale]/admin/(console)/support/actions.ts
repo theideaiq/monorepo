@@ -2,7 +2,11 @@
 
 import { affected, check, staffAction } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
-import { replySchema, ticketUpdateSchema } from "@/lib/admin/support";
+import {
+  openTicketSchema,
+  replySchema,
+  ticketUpdateSchema,
+} from "@/lib/admin/support";
 
 /**
  * A staff reply (the customer sees it and the ticket moves to pending) or
@@ -41,5 +45,27 @@ export const updateTicket = staffAction(
         .select("id")
     );
     return success();
+  }
+);
+
+/**
+ * Opens a ticket for a customer (from their page): the ticket is theirs,
+ * the first message is the staff member's, so it waits on the customer and
+ * they're notified. Assigned to whoever opened it.
+ */
+export const openTicketForCustomer = staffAction(
+  "support",
+  openTicketSchema,
+  async ({ input, supabase }) => {
+    const { data } = check(
+      await supabase.rpc("open_support_ticket_for", {
+        customer: input.customerId,
+        ticket_body: input.body,
+        ticket_order: input.orderId ?? undefined,
+        ticket_subject: input.subject,
+        ticket_topic: input.topic,
+      })
+    );
+    return success("sent", { redirectTo: `/support/${data?.id}` });
   }
 );

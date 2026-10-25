@@ -233,6 +233,7 @@ export const savePlan = staffAction(
       features_ar: input.featuresAr,
       features_en: input.featuresEn,
       name: input.name,
+      name_ar: input.nameAr,
       position: input.position,
       rental_slots: input.rentalSlots,
       tier: input.tier,

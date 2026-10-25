@@ -1,3 +1,4 @@
+import { planName } from "@repo/commerce";
 import { Highlight } from "@repo/design-system/components/brand/highlight";
 import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Badge } from "@repo/design-system/components/ui/badge";
@@ -143,7 +144,9 @@ const Rent = async ({ params, searchParams }: RentProps) => {
                   locale={locale}
                   planLabel={
                     plan
-                      ? t("plus.catalog.needsPlan", { plan: plan.name })
+                      ? t("plus.catalog.needsPlan", {
+                          plan: planName(plan, locale),
+                        })
                       : null
                   }
                   product={product}
@@ -225,12 +228,14 @@ const Rent = async ({ params, searchParams }: RentProps) => {
                     key={plan.id}
                   >
                     <Badge className="px-3 py-1 text-sm" variant="plus">
-                      {plan.name}
+                      {planName(plan, locale)}
                     </Badge>
                     <p className="text-muted-foreground text-sm">
                       {index === 0
                         ? t("plus.tiers.entry")
-                        : t("plus.tiers.higher", { plan: plan.name })}
+                        : t("plus.tiers.higher", {
+                            plan: planName(plan, locale),
+                          })}
                     </p>
                   </li>
                 ))}

@@ -151,19 +151,21 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       (3.8, 3.9).
 
 
-- [ ] Staff cannot open a support ticket on a customer's behalf.
+- [x] Staff open a support ticket on a customer's behalf (customer page →
+      Support tickets; `open_support_ticket_for`), 2026-10-25.
 - [ ] A staff reply on a closed ticket keeps it closed (by design today;
       decide whether it should reopen).
-- [ ] Plan names are stored in English only; Arabic pages show the English
-      name.
-- [ ] `PRODUCT_CARD_COLUMNS` doesn't select `rental_tier`, so cards can't
-      badge tiered rentals.
-- [ ] `product_review_list.author_name` should be typed nullable.
+- [x] Plans have an Arabic name (`plans.name_ar`, back office plan form);
+      Arabic pages fall back to the English name while it's empty, 2026-10-25.
+- [x] Tiered rentals are badged: rental lists fetch `rental_tier`
+      (`getRentals`, `getRentalTiers`, `useRentalTiers`).
+- [x] `author_name` is handled as nullable in the website's review types
+      (the generated function type can't express it).
 
 - [ ] Brand v1.0 follow-ups: rename The Club / Droid in the legal
       Markdown documents (legal review); store checked market prices
-      (price, date, evidence) so SouqPrice can show; remove Poppins from
-      `lib/fonts.ts` in the next release.
+      (price, date, evidence) so SouqPrice can show. (Poppins removed
+      2026-10-25.)
 
 ## Decisions
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { planName } from "@repo/commerce";
 import {
   formatCurrency,
   formatNumber,
@@ -122,7 +123,7 @@ const Overview = () => {
         className="text-muted-foreground text-sm underline"
         href="/business/billing"
       >
-        {plan ? t("plan", { plan: plan.name }) : t("noPlan")}
+        {plan ? t("plan", { plan: planName(plan, locale) }) : t("noPlan")}
       </Link>
     </div>
   );

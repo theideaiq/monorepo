@@ -3,6 +3,7 @@ import {
   formatPrice,
   hasPriceRange,
   localized,
+  planName,
 } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
@@ -219,10 +220,10 @@ const ProductPage = async ({ params }: ProductProps) => {
             {plan ? (
               <div className="flex flex-col gap-1 rounded-md border border-brand/60 bg-brand/10 p-3 text-sm">
                 <p className="font-medium">
-                  {t("requiresPlan", { plan: plan.name })}
+                  {t("requiresPlan", { plan: planName(plan, locale) })}
                 </p>
                 <p className="text-muted-foreground">
-                  {t("requiresPlanNote", { plan: plan.name })}
+                  {t("requiresPlanNote", { plan: planName(plan, locale) })}
                 </p>
               </div>
             ) : null}

@@ -1,6 +1,6 @@
 "use client";
 
-import { localized } from "@repo/commerce";
+import { localized, planName } from "@repo/commerce";
 import type { ProductCard } from "@repo/commerce/catalog";
 import type { RentalStatus } from "@repo/database";
 import { Badge } from "@repo/design-system/components/ui/badge";
@@ -87,7 +87,7 @@ const Membership = ({
           {live && plan ? (
             <span className="flex flex-wrap items-center gap-2">
               <span className="font-medium text-foreground">
-                {t("plan", { plan: plan.name })}
+                {t("plan", { plan: planName(plan, locale) })}
               </span>
               <Badge variant="secondary">{tBilling(live.status)}</Badge>
               {live.current_period_end ? (
@@ -181,7 +181,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
             >
               <CardHeader>
                 <CardTitle className="flex items-center justify-between gap-2">
-                  {plan.name}
+                  {planName(plan, locale)}
                   {current ? <Badge>{t("current")}</Badge> : null}
                 </CardTitle>
                 <CardDescription>
@@ -243,14 +243,14 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
 const RentalItem = ({
   allowance,
   member,
-  planName,
+  neededPlan,
   product,
   requiredTier,
 }: {
   readonly allowance: RentalAllowance | undefined;
   readonly member: boolean;
   /** The plan that unlocks the item, when it needs a higher one. */
-  readonly planName: string | null;
+  readonly neededPlan: string | null;
   readonly product: ProductCard;
   readonly requiredTier: number | undefined;
 }) => {
@@ -270,8 +270,8 @@ const RentalItem = ({
   if (!member) {
     hint = t("catalog.needMembership");
   } else if (tierTooLow) {
-    hint = planName
-      ? t("catalog.upgradeTo", { plan: planName })
+    hint = neededPlan
+      ? t("catalog.upgradeTo", { plan: neededPlan })
       : t("catalog.upgrade");
   } else if (noSlots) {
     hint = t("catalog.noSlots");
@@ -284,8 +284,8 @@ const RentalItem = ({
       {requiredTier ? (
         <Badge className="justify-self-start" variant="outline">
           <CrownIcon className="text-plus" />
-          {planName
-            ? t("catalog.needsPlan", { plan: planName })
+          {neededPlan
+            ? t("catalog.needsPlan", { plan: neededPlan })
             : t("catalog.needsHigherPlan")}
         </Badge>
       ) : null}
@@ -331,18 +331,22 @@ const RentalCatalogItem = ({
 }: {
   readonly allowance: RentalAllowance | undefined;
   readonly member: boolean;
-  readonly plans: readonly { name: string; tier: number | null }[] | undefined;
+  readonly plans:
+    | readonly { name: string; name_ar: string | null; tier: number | null }[]
+    | undefined;
   readonly product: ProductCard;
   readonly requiredTier: number | undefined;
-}) => (
-  <RentalItem
-    {...props}
-    planName={
-      requiredTier ? (planForTier(plans, requiredTier)?.name ?? null) : null
-    }
-    requiredTier={requiredTier}
-  />
-);
+}) => {
+  const locale = useLocale();
+  const plan = requiredTier ? planForTier(plans, requiredTier) : undefined;
+  return (
+    <RentalItem
+      {...props}
+      neededPlan={plan ? planName(plan, locale) : null}
+      requiredTier={requiredTier}
+    />
+  );
+};
 
 const RentalCatalog = ({
   allowance,
