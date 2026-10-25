@@ -7,6 +7,7 @@ import {
   check,
   staffAction,
 } from "@/lib/admin/action";
+import { success } from "@/lib/admin/action-state";
 import { crmContactSchema, markContactedSchema } from "@/lib/admin/crm";
 import { checkbox, uuid } from "@/lib/admin/forms";
 
@@ -69,5 +70,43 @@ export const setSuspended = staffAction(
         .eq("id", input.userId)
         .select("id")
     );
+  }
+);
+
+export interface CheckedPass {
+  memberNumber: number | null;
+  memberSince: string | null;
+  name: string | null;
+  userId: string | null;
+  valid: boolean;
+}
+
+/**
+ * Checks a The IDEA Pass card at the counter: the scanned QR code
+ * (`IDEA:<member number>:<code>`), or the member number and the 6-digit
+ * code typed in. `check_pass` accepts only a current code.
+ */
+export const checkPass = staffAction(
+  "customers",
+  z.object({
+    code: z.string().trim().max(64).optional(),
+    scanned: z.string().trim().max(200).optional(),
+  }),
+  async ({ input, supabase }) => {
+    const digits = (value: string | undefined) =>
+      (value ?? "").replace(/\D/g, "");
+    const scanned = input.scanned?.startsWith("IDEA:")
+      ? input.scanned
+      : `IDEA:${digits(input.scanned)}:${digits(input.code)}`;
+    const { data } = check(await supabase.rpc("check_pass", { scanned }));
+    const row = data?.[0];
+    const result: CheckedPass = {
+      memberNumber: row?.member_number ?? null,
+      memberSince: row?.member_since ?? null,
+      name: row?.full_name ?? null,
+      userId: row?.user_id ?? null,
+      valid: row?.valid ?? false,
+    };
+    return success("saved", { data: { pass: result } });
   }
 );

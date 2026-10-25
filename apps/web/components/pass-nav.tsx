@@ -22,7 +22,7 @@ export const PassNav = () => {
         {navItems.map((item) => {
           const active = isActivePath(pathname, item.href);
           return (
-            <li key={item.key}>
+            <li className="shrink-0" key={item.key}>
               <Link
                 aria-current={active ? "page" : undefined}
                 className={cn(

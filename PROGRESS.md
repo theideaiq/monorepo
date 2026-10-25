@@ -105,6 +105,11 @@ decisions with a date.
       icons and splash; switch every social avatar and the Telegram
       channels (The IDEA Club, The IDEA Post, The IDEA Droid, The IDEA
       Staff) to the new tiles (`docs/brand/BRAND_GUIDELINES.md`, 13).
+- [ ] **Google Wallet (optional):** an issuer in the Google Pay & Wallet
+      Console and a service account added to it; set
+      `GOOGLE_WALLET_ISSUER_ID` and `GOOGLE_WALLET_SERVICE_ACCOUNT` on the
+      `api` project (`ARCHITECTURE_AND_INTEGRATIONS.md`, The IDEA Pass →
+      Google Wallet). Until then the card has no wallet button.
 - [ ] Delete the old branches on `theideaiq/monorepo` (the session's token
       is not allowed to).
 
@@ -221,6 +226,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   customer paths redirect there. A person's membership is The IDEA Pass:
   the word "account" is never shown. Owner step: Supabase Site URL and
   redirect URLs (above), and `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` on `web`.
+- 2026-10-25: **The IDEA Pass card.** My Pass opens with a passport-style
+  card: guilloché, a sheen that follows the pointer, a member number and a
+  QR code with a code that changes every 30 seconds (TOTP worked out on
+  the device, so it works offline and in the apps), the member's perks,
+  and "Add to Google Wallet" (same rotating code). Staff check a card in
+  Customers → Check a Pass. Migration `20261126000000_pass_card.sql`.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers
