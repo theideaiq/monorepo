@@ -18,7 +18,7 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 
 ### Data from Telegram
 
-When you talk to Droid or join a room it moderates, Telegram shares with us your Telegram user ID, name, username and language. We also record your membership status in our moderated rooms (for example if you were banned), the requests you send to staff (such as unban or support requests) and, if you link it, which The IDEA account your Telegram account belongs to. Messages you send to Droid's AI assistant are processed to generate an answer.
+When you talk to Droid or join a room it helps run, Telegram shares with us your Telegram user ID, name, username and language. We also record your membership status in those rooms (for example if you were banned), the support requests you send to our team through Droid and, if you link it, which The IDEA Pass your Telegram account belongs to, so that Droid can show you your orders and Bulbs and sign you in with Telegram.
 
 ### Payment data
 

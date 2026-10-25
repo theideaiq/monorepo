@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { ActionButton } from "@/components/admin/action-button";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import {
-  CheckboxField,
   FieldGrid,
   SelectField,
   TextareaField,
@@ -13,7 +12,7 @@ import {
 } from "@/components/admin/fields";
 import { deleteChat, deleteFaq, saveChat, saveFaq } from "../actions";
 
-/** A group the bot moderates (bans apply across all moderated groups). */
+/** A group or channel Droid is an admin of (membership is recorded). */
 export const ChatForm = ({
   chat,
   disabled = false,
@@ -67,13 +66,6 @@ export const ChatForm = ({
           maxLength={64}
           name="username"
           wrapperClassName="w-40"
-        />
-        <CheckboxField
-          className="pb-2"
-          defaultChecked={chat?.moderated ?? true}
-          disabled={disabled}
-          label={t("moderated")}
-          name="moderated"
         />
         {disabled ? null : (
           <SubmitButton variant={chat ? "secondary" : "default"}>

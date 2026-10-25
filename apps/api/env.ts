@@ -1,4 +1,3 @@
-import { keys as ai } from "@repo/ai/keys";
 import { keys as analytics } from "@repo/analytics/conversions/keys";
 import { keys as auth } from "@repo/auth/keys";
 import { keys as database } from "@repo/database/keys";
@@ -16,7 +15,6 @@ import { z } from "zod";
 import { keys as whatsapp } from "./lib/whatsapp/keys";
 
 const presets = envPresets(
-  ai(),
   auth(),
   analytics(),
   core(),

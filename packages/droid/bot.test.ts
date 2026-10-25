@@ -1,4 +1,3 @@
-import { MockLanguageModelV4 } from "ai/test";
 import { describe, expect, test } from "vitest";
 import type { TelegramMember } from "./data";
 import {
@@ -38,23 +37,6 @@ const moderatedChats = () => [
   { id: OTHER_GROUP, moderated: true, title: "Gaming", username: null },
 ];
 
-const adminsResponder =
-  (
-    adminIds: number[],
-    bot: Record<string, unknown> = {
-      can_delete_messages: true,
-      can_restrict_members: true,
-    }
-  ) =>
-  () => [
-    {
-      status: "administrator",
-      user: BOT_INFO,
-      ...bot,
-    },
-    ...adminIds.map((id) => ({ status: "creator", user: user(id) })),
-  ];
-
 interface Keyboard {
   inline_keyboard: { callback_data?: string; text: string; url?: string }[][];
 }
@@ -86,7 +68,10 @@ describe("private chats", () => {
     const [reply] = sent();
     expect(textOf(reply)).toContain("أهلاً User1");
     expect(buttonsOf(reply).map((b) => b.callback_data)).toEqual([
+      "m:orders",
+      "m:bulbs",
       "m:search",
+      "m:support",
       "m:plus",
       "m:faq",
       "m:links",
@@ -102,18 +87,7 @@ describe("private chats", () => {
     expect(textOf(sent()[0])).toContain("Hi User1");
   });
 
-  test("offers an unban request only to banned members", async () => {
-    const { data } = createFakeData({
-      members: [member(1, { banned_at: new Date(NOW).toISOString() })],
-    });
-    const { send, sent } = createTestBot({ data });
-    await send(privateText(user(1), "/start"));
-    expect(buttonsOf(sent()[0]).map((b) => b.callback_data)).toContain(
-      "m:unban"
-    );
-  });
-
-  test("without an AI model, free text gets the menu", async () => {
+  test("free text gets the menu", async () => {
     const { data } = createFakeData();
     const { send, sent } = createTestBot({ data });
     await send(privateText(user(1), "hello there"));
@@ -222,6 +196,89 @@ describe("private chats", () => {
     ]);
   });
 
+  test("orders and Bulbs ask to connect The IDEA Pass first", async () => {
+    const { data } = createFakeData();
+    const { send, sent } = createTestBot({ data });
+    await send(privateText(user(1, { language_code: "en" }), "/orders"));
+    expect(textOf(sent()[0])).toContain("Connect Telegram to The IDEA Pass");
+    expect(buttonsOf(sent()[0])[0]?.url).toBe(
+      "https://theideaiq.com/pass/settings"
+    );
+  });
+
+  test("linked members track their latest orders", async () => {
+    const { data } = createFakeData({
+      links: { 1: "u1" },
+      orders: [
+        {
+          created_at: "2026-10-20T10:00:00Z",
+          id: "o2",
+          number: 1043,
+          status: "shipped",
+          total: 725_000,
+          user_id: "u1",
+        },
+        {
+          created_at: "2026-10-01T10:00:00Z",
+          id: "o1",
+          number: 1012,
+          status: "delivered",
+          total: 50_000,
+          user_id: "u1",
+        },
+        {
+          created_at: "2026-10-01T10:00:00Z",
+          id: "o9",
+          number: 9999,
+          status: "paid",
+          total: 1,
+          user_id: "someone-else",
+        },
+      ],
+    });
+    const { send, sent } = createTestBot({ data });
+    await send(privateText(user(1, { language_code: "en" }), "/orders"));
+    const text = textOf(sent()[0]).replace(/\s/g, " ");
+    expect(text).toContain("#1043 · On the way · IQD 725,000");
+    expect(text).toContain("#1012 · Delivered · IQD 50,000");
+    expect(text).not.toContain("9999");
+    expect(buttonsOf(sent()[0])[0]?.url).toBe(
+      "https://theideaiq.com/pass/orders"
+    );
+  });
+
+  test("linked members see their Bulbs", async () => {
+    const { data } = createFakeData({
+      bulbs: { u1: { available: 120, pending: 35 } },
+      links: { 1: "u1" },
+    });
+    const { send, sent } = createTestBot({ data });
+    await send(callback(user(1, { language_code: "en" }), "m:bulbs"));
+    const text = textOf(sent("editMessageText")[0]).replace(/\s/g, " ");
+    expect(text).toContain("120 Bulbs (worth IQD 12,000)");
+    expect(text).toContain("Plus 35 on the way");
+  });
+
+  test("Talk to us: a ticket for members, a Telegram request otherwise", async () => {
+    const { data, state } = createFakeData({ links: { 1: "u1" } });
+    const { send, sent } = createTestBot({ data });
+
+    await send(callback(user(1, { language_code: "en" }), "m:support"));
+    expect(textOf(sent()[0])).toContain("Write your message");
+    await send(
+      privateText(user(1, { language_code: "en" }), "Where is my order?")
+    );
+    expect(state.tickets).toEqual([
+      { message: "Where is my order?", number: 1001, userId: "u1" },
+    ]);
+    expect(textOf(sent()[1])).toContain("#1001");
+
+    await send(privateText(user(2), "/support My card is broken"));
+    expect(state.requests).toEqual([
+      { memberId: 2, message: "My card is broken" },
+    ]);
+  });
+
   test("newsletter toggles telegram_members.newsletter_opt_in", async () => {
     const { data, state } = createFakeData();
     const { send, calls } = createTestBot({ data });
@@ -236,34 +293,6 @@ describe("private chats", () => {
     ]);
   });
 
-  test("unban requests: only when banned, once at a time", async () => {
-    const { data, state } = createFakeData({
-      members: [
-        member(1, { banned_at: new Date(NOW).toISOString() }),
-        member(2),
-      ],
-    });
-    const { send, sent } = createTestBot({ data });
-
-    await send(callback(user(2), "m:unban"));
-    expect(textOf(sent()[0])).toBe("حسابك غير محظور في مجموعاتنا.");
-
-    await send(callback(user(1), "m:unban"));
-    await send(privateText(user(1), "I'm sorry, it was a mistake"));
-    expect(state.requests).toEqual([
-      {
-        memberId: 1,
-        message: "I'm sorry, it was a mistake",
-        status: "open",
-        type: "unban",
-      },
-    ]);
-
-    await send(callback(user(1), "m:unban"));
-    expect(textOf(sent().at(-1))).toContain("قيد المراجعة");
-    expect(state.requests).toHaveLength(1);
-  });
-
   test("drops messages older than five minutes", async () => {
     const { data } = createFakeData();
     const { send, calls } = createTestBot({ data });
@@ -272,210 +301,62 @@ describe("private chats", () => {
   });
 });
 
-describe("AI assistant", () => {
-  const usage = {
-    inputTokens: { cacheRead: 0, cacheWrite: 0, noCache: 10, total: 10 },
-    outputTokens: { reasoning: 0, text: 5, total: 5 },
-  };
-
-  test("answers private messages with catalog data and keeps history", async () => {
+describe("inline mode", () => {
+  test("shares products in any chat", async () => {
     const { data } = createFakeData({ products: [product()] });
-    const model = new MockLanguageModelV4({
-      doGenerate: [
-        {
-          content: [
-            {
-              input: JSON.stringify({ query: "PlayStation" }),
-              toolCallId: "call-1",
-              toolName: "search_products",
-              type: "tool-call",
-            },
-          ],
-          finishReason: { raw: "tool_calls", unified: "tool-calls" },
-          usage,
-          warnings: [],
-        },
-        {
-          content: [{ text: "PlayStation 5 costs IQD 720,000.", type: "text" }],
-          finishReason: { raw: "stop", unified: "stop" },
-          usage,
-          warnings: [],
-        },
-      ],
+    const { send, sent } = createTestBot({ data });
+    await send({
+      inline_query: {
+        chat_type: "supergroup",
+        from: user(1, { language_code: "en" }),
+        id: "q1",
+        offset: "",
+        query: "playstation",
+      },
     });
-    const { send, sent, store } = createTestBot({ data, model });
-
-    await send(
-      privateText(user(1, { language_code: "en" }), "How much is a PS5?")
-    );
-
-    expect(textOf(sent()[0])).toBe("PlayStation 5 costs IQD 720,000.");
-    // The tool result reached the model.
-    const secondCall = JSON.stringify(model.doGenerateCalls[1]?.prompt);
-    expect(secondCall).toContain("https://theideaiq.com/store/playstation-5");
-    // The system prompt forbids made-up prices and payment links.
-    const system = JSON.stringify(model.doGenerateCalls[0]?.prompt);
-    expect(system).toContain("Never guess or invent prices");
-    expect(system).toContain("payment links");
-
-    expect(await store.get("ai:1")).toEqual([
-      { content: "How much is a PS5?", role: "user" },
-      { content: "PlayStation 5 costs IQD 720,000.", role: "assistant" },
-    ]);
-  });
-
-  test("falls back to an apology and the menu when the model fails", async () => {
-    const { data } = createFakeData();
-    const model = new MockLanguageModelV4({
-      doGenerate: () => Promise.reject(new Error("quota")),
+    const [answer] = sent("answerInlineQuery");
+    const results = required(answer).payload.results as {
+      title: string;
+      url: string;
+    }[];
+    expect(results).toHaveLength(1);
+    expect(results[0]).toMatchObject({
+      title: "PlayStation 5",
+      url: "https://theideaiq.com/store/playstation-5",
     });
-    const { send, sent } = createTestBot({ data, model });
-    await send(privateText(user(1), "مرحبا"));
-    const reply = sent().at(-1);
-    expect(textOf(reply)).toContain("عذراً");
-    expect(buttonsOf(reply).length).toBeGreaterThan(0);
   });
 });
 
-describe("group moderation", () => {
-  test("deletes banned words when the bot can delete", async () => {
-    const { data } = createFakeData({ chats: moderatedChats() });
-    const { send, calls } = createTestBot(
-      { data },
-      { getChatAdministrators: adminsResponder([50]) }
-    );
-    await send(groupText(GROUP, user(1), "يا گواد"));
-    const deletion = calls.find((c) => c.method === "deleteMessages");
-    expect(deletion?.payload.chat_id).toBe(GROUP);
-  });
-
-  test("deletes investment spam", async () => {
-    const { data } = createFakeData({ chats: moderatedChats() });
-    const { send, calls } = createTestBot(
-      { data },
-      { getChatAdministrators: adminsResponder([50]) }
-    );
-    await send(
-      groupText(GROUP, user(1), "Earn $500 daily trading crypto, DM me now")
-    );
-    expect(calls.some((c) => c.method === "deleteMessages")).toBe(true);
-  });
-
-  test("leaves clean messages, admins and unmoderated chats alone", async () => {
-    const { data } = createFakeData({
-      chats: [
-        ...moderatedChats(),
-        { id: -1003, moderated: false, title: "Staff", username: null },
-      ],
-    });
-    const { send, calls } = createTestBot(
-      { data },
-      { getChatAdministrators: adminsResponder([50]) }
-    );
-    await send(groupText(GROUP, user(1), "هناك كتاب جديد في المتجر"));
-    await send(groupText(GROUP, user(50), "slut"));
-    await send(groupText(-1003, user(1), "slut"));
-    expect(calls.some((c) => c.method === "deleteMessages")).toBe(false);
-  });
-
-  test("doesn't try to delete without the right", async () => {
-    const { data } = createFakeData({ chats: moderatedChats() });
-    const { send, calls } = createTestBot(
-      { data },
-      {
-        getChatAdministrators: adminsResponder([50], {
-          can_delete_messages: false,
-          can_restrict_members: false,
-        }),
-      }
-    );
-    await send(groupText(GROUP, user(1), "slut"));
-    expect(calls.some((c) => c.method === "deleteMessages")).toBe(false);
-  });
-
-  test("re-checks edited messages", async () => {
-    const { data } = createFakeData({ chats: moderatedChats() });
-    const { send, calls } = createTestBot(
-      { data },
-      { getChatAdministrators: adminsResponder([]) }
-    );
-    await send({
-      edited_message: {
-        chat: { id: GROUP, title: "The Club", type: "supergroup" },
-        date: NOW_SECONDS - 3600,
-        edit_date: NOW_SECONDS,
-        from: user(1),
-        message_id: 77,
-        text: "now it says s.l.u.t",
-      },
-    });
-    expect(
-      calls.find((c) => c.method === "deleteMessages")?.payload.message_ids
-    ).toEqual([77]);
-  });
-
-  test("mutes after more than three identical messages", async () => {
-    const { data } = createFakeData({ chats: moderatedChats() });
-    const { send, calls, sent } = createTestBot(
-      { data },
-      { getChatAdministrators: adminsResponder([]) }
-    );
-    for (const _ of [1, 2, 3, 4]) {
-      // biome-ignore lint/performance/noAwaitInLoops: messages arrive in order
-      await send(groupText(GROUP, user(1), "join my channel"));
-    }
-    const deletion = calls.find((c) => c.method === "deleteMessages");
-    expect(deletion?.payload.message_ids).toHaveLength(4);
-    const restriction = calls.find((c) => c.method === "restrictChatMember");
-    expect(restriction?.payload.user_id).toBe(1);
-    expect(restriction?.payload.until_date).toBe(NOW_SECONDS + 300);
-    expect(textOf(sent().at(-1))).toContain("خمس دقائق");
-  });
-
-  test("welcomes new members and syncs chat_member", async () => {
-    const { data, state } = createFakeData({
-      chats: moderatedChats(),
-      members: [member(7, { banned_at: "2026-01-01T00:00:00Z" })],
-    });
+describe("groups", () => {
+  test("records membership changes without moderating", async () => {
+    const { data, state } = createFakeData({ chats: moderatedChats() });
     const { send, sent } = createTestBot({ data });
     const change = (oldStatus: string, newStatus: string) => ({
       chat_member: {
         chat: { id: GROUP, title: "The Club", type: "supergroup" as const },
         date: NOW_SECONDS,
         from: user(50),
-        new_chat_member: {
-          status: newStatus,
-          user: user(7, { language_code: "en" }),
-        },
-        old_chat_member: {
-          status: oldStatus,
-          user: user(7, { language_code: "en" }),
-        },
+        new_chat_member: { status: newStatus, user: user(7) },
+        old_chat_member: { status: oldStatus, user: user(7) },
       } as never,
     });
 
-    // Banned elsewhere in the network: joining gets them banned here too.
-    await send(change("left", "member"));
-    expect(state.members.get(7)?.banned_at).toBe("2026-01-01T00:00:00Z");
-    expect(state.members.get(7)?.chat_status).toBe("kicked");
-    expect(sent("banChatMember")[0]?.payload).toMatchObject({
-      chat_id: GROUP,
-      user_id: 7,
-    });
-    expect(sent()).toHaveLength(0);
-
-    // An admin lifts the ban in Telegram, then they can join.
-    await send(change("kicked", "left"));
-    expect(state.members.get(7)?.banned_at).toBeNull();
     await send(change("left", "member"));
     expect(state.members.get(7)?.chat_status).toBe("member");
-    expect(textOf(sent()[0])).toBe(
-      "Welcome to The Club, User7! Please be respectful and follow the group rules."
-    );
-
     await send(change("member", "kicked"));
     expect(state.members.get(7)?.banned_at).toBe(new Date(NOW).toISOString());
-    expect(state.members.get(7)?.chat_status).toBe("kicked");
+    await send(change("kicked", "left"));
+    expect(state.members.get(7)?.banned_at).toBeNull();
+    // No welcomes, bans or deletions: Telegram's own tools do that.
+    expect(sent()).toHaveLength(0);
+    expect(sent("banChatMember")).toHaveLength(0);
+  });
+
+  test("leaves group messages alone", async () => {
+    const { data } = createFakeData({ chats: moderatedChats() });
+    const { calls, send } = createTestBot({ data });
+    await send(groupText(GROUP, user(3), "buy crypto now, guaranteed profit"));
+    expect(calls).toHaveLength(0);
   });
 
   test("registers a chat when the bot becomes admin", async () => {
@@ -498,89 +379,6 @@ describe("group moderation", () => {
     expect(state.chats).toEqual([
       { id: -2000, moderated: true, title: "New group", username: "newgroup" },
     ]);
-  });
-});
-
-describe("/ban", () => {
-  const statusResponder =
-    (statuses: Record<number, string>) =>
-    (payload: Record<string, unknown>) => ({
-      status: statuses[payload.user_id as number] ?? "member",
-      user: user(payload.user_id as number),
-    });
-
-  test("admins ban by reply across every moderated chat", async () => {
-    const { data, state } = createFakeData({ chats: moderatedChats() });
-    const { send, calls, sent } = createTestBot(
-      { data },
-      {
-        getChatAdministrators: adminsResponder([50]),
-        getChatMember: statusResponder({ 50: "creator" }),
-      }
-    );
-    await send(
-      groupText(GROUP, user(50, { language_code: "en" }), "/ban", {
-        reply_to_message: {
-          chat: { id: GROUP, title: "The Club", type: "supergroup" },
-          date: NOW_SECONDS,
-          from: user(8, { username: "spammer" }),
-          message_id: 900,
-          text: "spam",
-        },
-      })
-    );
-    const bans = calls.filter((c) => c.method === "banChatMember");
-    expect(bans.map((c) => c.payload.chat_id).sort()).toEqual(
-      [OTHER_GROUP, GROUP].sort()
-    );
-    expect(state.members.get(8)?.banned_at).not.toBeNull();
-    expect(textOf(sent().at(-1))).toBe(
-      "@spammer has been banned from 2 group(s)."
-    );
-  });
-
-  test("admins ban by @username", async () => {
-    const { data } = createFakeData({
-      chats: moderatedChats(),
-      members: [member(9, { username: "Troll" })],
-    });
-    const { send, calls } = createTestBot(
-      { data },
-      {
-        getChatAdministrators: adminsResponder([50]),
-        getChatMember: statusResponder({ 50: "administrator" }),
-      }
-    );
-    await send(groupText(GROUP, user(50), "/ban @troll"));
-    expect(
-      calls
-        .filter((c) => c.method === "banChatMember")
-        .map((c) => c.payload.user_id)
-    ).toEqual([9, 9]);
-  });
-
-  test("non-admins can't ban, and admins can't be banned", async () => {
-    const { data } = createFakeData({
-      chats: moderatedChats(),
-      members: [member(51, { username: "othermod" })],
-    });
-    const { send, calls, sent } = createTestBot(
-      { data },
-      {
-        getChatAdministrators: adminsResponder([50, 51]),
-        getChatMember: statusResponder({
-          50: "administrator",
-          51: "administrator",
-        }),
-      }
-    );
-    await send(groupText(GROUP, user(1), "/ban @othermod"));
-    expect(textOf(sent().at(-1))).toBe("هذا الأمر للمشرفين فقط.");
-    await send(groupText(GROUP, user(50), "/ban @othermod"));
-    expect(textOf(sent().at(-1))).toBe("لا يمكن حظر مشرف.");
-    await send(groupText(GROUP, user(50), "/ban @nobody"));
-    expect(textOf(sent().at(-1))).toContain("لم أجد");
-    expect(calls.some((c) => c.method === "banChatMember")).toBe(false);
   });
 });
 

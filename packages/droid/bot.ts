@@ -2,23 +2,26 @@
  * Droid, The IDEA's Telegram bot (@TheIdeaDroidBot).
  *
  * `createBot` builds a grammY bot from injected dependencies (database
- * access, a key-value store, an optional AI model), so it runs the same in
- * the webhook route and in offline tests.
+ * access and a key-value store), so it runs the same in the webhook route
+ * and in offline tests.
  *
- * - Private chats: a menu (store search, The IDEA Plus, FAQ, links, newsletter,
- *   unban requests) and, when an AI model is configured, an assistant.
- * - Moderated groups: banned words and investment spam are deleted (edits
- *   too), repeated messages are muted, admins can /ban across every
- *   moderated group, new members are welcomed and membership changes are
- *   recorded.
- * - Channels: new posts are sent to newsletter subscribers.
+ * - Private chats: a menu. Members who linked Telegram to The IDEA Pass
+ *   track their orders, see their Bulbs and open support tickets; everyone
+ *   can search the store, read the FAQ and the newsletter.
+ * - Inline mode: `@TheIdeaDroidBot <product>` in any chat shares products.
+ * - Groups and channels: the bot records membership in the chats it's an
+ *   admin of and sends new channel posts to newsletter subscribers.
+ *   Moderation is left to Telegram's own tools.
  */
 
+import { BULB_VALUE_IQD, formatPrice } from "@repo/commerce";
 import { localePath } from "@repo/internationalization";
-import type { LanguageModel } from "ai";
 import { Bot, type Context, GrammyError, InlineKeyboard } from "grammy";
-import type { ChatMember, User, UserFromGetMe } from "grammy/types";
-import { askAssistant } from "./assistant";
+import type {
+  InlineQueryResultArticle,
+  User,
+  UserFromGetMe,
+} from "grammy/types";
 import type {
   DroidData,
   FaqTopic,
@@ -26,9 +29,7 @@ import type {
   TelegramChat,
   TelegramMember,
 } from "./data";
-import { FLOOD_MUTE_SECONDS, trackFlood } from "./flood";
 import { type BotLocale, localeOf, type MessageKey, t } from "./i18n";
-import { createModerator, detectSpam, type Moderator } from "./moderation";
 import { escapeHtml, productHtml, summarizeProduct } from "./products";
 import type { KeyValueStore } from "./store";
 
@@ -38,10 +39,11 @@ export const CLUB_URL = "https://t.me/theideaclub";
 export const STALE_UPDATE_SECONDS = 5 * 60;
 
 const CHAT_CACHE_SECONDS = 5 * 60;
-const ADMINS_CACHE_SECONDS = 10 * 60;
 const MEMBER_CACHE_SECONDS = 6 * 60 * 60;
 const PENDING_SECONDS = 15 * 60;
 const SEARCH_LIMIT = 5;
+const INLINE_LIMIT = 10;
+const ORDERS_LIMIT = 3;
 const NEWSLETTER_PAGE = 100;
 const FAQ_TOPICS: FaqTopic[] = ["general", "store", "plus", "academy", "suite"];
 const FAQ_BUTTON_LENGTH = 60;
@@ -49,15 +51,12 @@ const POST_DEDUPE_SECONDS = 24 * 60 * 60;
 const MENU_CALLBACK = /^m:(\w+)$/;
 const FAQ_TOPIC_CALLBACK = /^faq:t:(\w+)$/;
 const FAQ_QUESTION_CALLBACK = /^faq:q:([\w-]+)$/;
-const NUMERIC_ID = /^\d+$/;
-const AT_SIGN = /^@/;
-const WHITESPACE = /\s+/;
 
 /** Updates the webhook subscribes to (`chat_member` must be asked for). */
 export const ALLOWED_UPDATES = [
   "message",
-  "edited_message",
   "callback_query",
+  "inline_query",
   "channel_post",
   "chat_member",
   "my_chat_member",
@@ -72,25 +71,23 @@ export const DROID_COMMANDS: Record<
   }
 > = {
   ar: {
-    admins: [
-      { command: "ban", description: "حظر مستخدم من كل المجموعات" },
-      { command: "search", description: "البحث في المتجر" },
-    ],
+    admins: [{ command: "search", description: "البحث في المتجر" }],
     private: [
       { command: "start", description: "القائمة الرئيسية" },
+      { command: "orders", description: "تتبّع طلباتي" },
+      { command: "bulbs", description: "رصيدي من Bulbs" },
       { command: "search", description: "البحث في المتجر" },
-      { command: "menu", description: "عرض القائمة" },
+      { command: "support", description: "تحدّث معنا" },
     ],
   },
   en: {
-    admins: [
-      { command: "ban", description: "Ban a user from every group" },
-      { command: "search", description: "Search the store" },
-    ],
+    admins: [{ command: "search", description: "Search the store" }],
     private: [
       { command: "start", description: "Main menu" },
+      { command: "orders", description: "Track my orders" },
+      { command: "bulbs", description: "My Bulbs" },
       { command: "search", description: "Search the store" },
-      { command: "menu", description: "Show the menu" },
+      { command: "support", description: "Talk to us" },
     ],
   },
 };
@@ -108,9 +105,6 @@ export interface DroidOptions {
   clubUrl?: string;
   data: DroidData;
   logger?: Logger;
-  /** Without a model, private messages get the menu. */
-  model?: LanguageModel;
-  moderator?: Moderator;
   now?: () => number;
   siteUrl?: string;
   store: KeyValueStore;
@@ -122,8 +116,6 @@ interface Runtime {
   clubUrl: string;
   data: DroidData;
   logger: Logger;
-  model?: LanguageModel;
-  moderator: Moderator;
   now: () => number;
   siteUrl: string;
   store: KeyValueStore;
@@ -136,15 +128,7 @@ export interface DroidFlavor {
 
 export type DroidContext = Context & DroidFlavor;
 
-interface ChatAdmins {
-  canDelete: boolean;
-  canRestrict: boolean;
-  ids: number[];
-}
-
-type Pending = "search" | "unban";
-
-const ADMIN_STATUSES = new Set(["administrator", "creator"]);
+type Pending = "search" | "support";
 
 const profileOf = (user: User): MemberProfile => ({
   first_name: user.first_name,
@@ -154,43 +138,6 @@ const profileOf = (user: User): MemberProfile => ({
   username: user.username ?? null,
 });
 
-const displayName = (user: Pick<User, "first_name" | "username">) =>
-  user.username ? `@${user.username}` : user.first_name;
-
-const memberName = (member: MemberProfile) =>
-  member.username
-    ? `@${member.username}`
-    : (member.first_name ?? String(member.id));
-
-/**
- * Someone banned across the network who joins (another) moderated group is
- * banned there too. Unbanning stays a deliberate admin action: lifting the
- * ban in Telegram (kicked → left) clears it (see `banChange`).
- */
-const rebanIfBanned = async (
-  runtime: Runtime,
-  api: Context["api"],
-  chatId: number,
-  user: User
-) => {
-  const known = await runtime.data.getMember(user.id);
-  if (!known?.banned_at) {
-    return false;
-  }
-  try {
-    await api.banChatMember(chatId, user.id);
-  } catch (error) {
-    runtime.logger.error("Droid could not re-ban a member", {
-      chatId,
-      error: describeError(error),
-      memberId: user.id,
-    });
-  }
-  // Still banned; keep the original ban time.
-  await runtime.data.setMemberStatus(profileOf(user), "kicked", undefined);
-  return true;
-};
-
 /** Banned when kicked, unbanned when an admin lifts the ban, else unchanged. */
 const banChange = (previous: string, next: string) => {
   if (next === "kicked") {
@@ -199,14 +146,12 @@ const banChange = (previous: string, next: string) => {
   return previous === "kicked" ? false : undefined;
 };
 
-const isMember = (member: ChatMember) =>
-  member.status === "member" ||
-  member.status === "administrator" ||
-  member.status === "creator" ||
-  (member.status === "restricted" && member.is_member);
-
 const describeError = (error: unknown) =>
   error instanceof Error ? error.message : String(error);
+
+/** A path on the website in the person's language. */
+const siteLink = (ctx: DroidContext, path: string) =>
+  `${ctx.droid.siteUrl}${localePath(ctx.locale, path)}`;
 
 // ── Cached lookups ──────────────────────────────────────────────────────────
 
@@ -224,41 +169,22 @@ const getChat = async (
   return chat;
 };
 
-const getAdmins = async (ctx: DroidContext, chatId: number) => {
-  const key = `admins:${chatId}`;
-  const cached = await ctx.droid.store.get<ChatAdmins>(key);
-  if (cached) {
-    return cached;
-  }
-  const members = await ctx.api.getChatAdministrators(chatId);
-  const self = members.find((member) => member.user.id === ctx.me.id);
-  const admins: ChatAdmins = {
-    canDelete:
-      self?.status === "creator" ||
-      (self?.status === "administrator" && self.can_delete_messages),
-    canRestrict:
-      self?.status === "creator" ||
-      (self?.status === "administrator" && self.can_restrict_members),
-    ids: members.map((member) => member.user.id),
-  };
-  await ctx.droid.store.set(key, admins, ADMINS_CACHE_SECONDS);
-  return admins;
-};
-
 const forgetChat = async ({ store }: Runtime, chatId: number) => {
-  await Promise.all([
-    store.delete(`chat:${chatId}`),
-    store.delete(`admins:${chatId}`),
-  ]);
+  await store.delete(`chat:${chatId}`);
 };
 
 const pendingKey = (userId: number) => `pending:${userId}`;
 
 // ── Private chat: menu and features ─────────────────────────────────────────
 
-const menuKeyboard = (locale: BotLocale, member: TelegramMember | null) => {
-  const keyboard = new InlineKeyboard()
+const menuKeyboard = (locale: BotLocale, member: TelegramMember | null) =>
+  new InlineKeyboard()
+    .text(t(locale, "orders"), "m:orders")
+    .text(t(locale, "bulbs"), "m:bulbs")
+    .row()
     .text(t(locale, "search"), "m:search")
+    .row()
+    .text(t(locale, "support"), "m:support")
     .row()
     .text(t(locale, "plus"), "m:plus")
     .text(t(locale, "faq"), "m:faq")
@@ -269,11 +195,6 @@ const menuKeyboard = (locale: BotLocale, member: TelegramMember | null) => {
       t(locale, member?.newsletter_opt_in ? "newsletterOn" : "newsletterOff"),
       "m:news"
     );
-  if (member?.banned_at) {
-    keyboard.row().text(t(locale, "unban"), "m:unban");
-  }
-  return keyboard;
-};
 
 const backKeyboard = (locale: BotLocale, target = "m:home") =>
   new InlineKeyboard().text(t(locale, "back"), target);
@@ -305,10 +226,117 @@ const showMenu = async (ctx: DroidContext) => {
     return;
   }
   const member = await ctx.droid.data.getMember(ctx.from.id);
-  const key: MessageKey = ctx.droid.model ? "menuGreetingAi" : "menuGreeting";
-  await respond(ctx, t(ctx.locale, key, { name: ctx.from.first_name }), {
-    reply_markup: menuKeyboard(ctx.locale, member),
+  await respond(
+    ctx,
+    t(ctx.locale, "menuGreeting", { name: ctx.from.first_name }),
+    {
+      reply_markup: menuKeyboard(ctx.locale, member),
+    }
+  );
+};
+
+/**
+ * The IDEA Pass member behind this Telegram account; otherwise explains how
+ * to connect it and returns null.
+ */
+const linkedUser = async (ctx: DroidContext) => {
+  if (!ctx.from) {
+    return null;
+  }
+  const userId = await ctx.droid.data.getLinkedUser(ctx.from.id);
+  if (!userId) {
+    await respond(ctx, t(ctx.locale, "notLinked"), {
+      reply_markup: new InlineKeyboard()
+        .url(t(ctx.locale, "connect"), siteLink(ctx, "/pass/settings"))
+        .row()
+        .text(t(ctx.locale, "back"), "m:home"),
+    });
+  }
+  return userId;
+};
+
+const showOrders = async (ctx: DroidContext) => {
+  const userId = await linkedUser(ctx);
+  if (!userId) {
+    return;
+  }
+  const orders = await ctx.droid.data.listOrders(userId, ORDERS_LIMIT);
+  const lines = orders.map((order) =>
+    t(ctx.locale, "orderLine", {
+      number: order.number,
+      status: t(ctx.locale, `orderStatus_${order.status}` as MessageKey),
+      total: formatPrice(order.total, ctx.locale),
+    })
+  );
+  await respond(
+    ctx,
+    orders.length > 0
+      ? [t(ctx.locale, "ordersTitle"), ...lines].join("\n")
+      : t(ctx.locale, "ordersEmpty"),
+    {
+      reply_markup: new InlineKeyboard()
+        .url(t(ctx.locale, "ordersOpen"), siteLink(ctx, "/pass/orders"))
+        .row()
+        .text(t(ctx.locale, "back"), "m:home"),
+    }
+  );
+};
+
+const showBulbs = async (ctx: DroidContext) => {
+  const userId = await linkedUser(ctx);
+  if (!userId) {
+    return;
+  }
+  const { available, pending } = await ctx.droid.data.getBulbs(userId);
+  const text = [
+    t(ctx.locale, "bulbsText", {
+      available,
+      worth: formatPrice(available * BULB_VALUE_IQD, ctx.locale),
+    }),
+    pending > 0 ? t(ctx.locale, "bulbsPending", { pending }) : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+  await respond(ctx, text, {
+    reply_markup: new InlineKeyboard()
+      .url(t(ctx.locale, "bulbsOpen"), siteLink(ctx, "/pass/bulbs"))
+      .row()
+      .text(t(ctx.locale, "back"), "m:home"),
   });
+};
+
+const askFor = async (ctx: DroidContext, pending: Pending) => {
+  if (!ctx.from) {
+    return;
+  }
+  await ctx.droid.store.set<Pending>(
+    pendingKey(ctx.from.id),
+    pending,
+    PENDING_SECONDS
+  );
+  await ctx.reply(
+    t(ctx.locale, pending === "search" ? "searchPrompt" : "supportPrompt")
+  );
+};
+
+/**
+ * "Talk to us": a support ticket for members (answered in My Pass →
+ * Support), a Telegram request for everyone else (answered here).
+ */
+const submitSupport = async (ctx: DroidContext, rawMessage: string) => {
+  if (!ctx.from) {
+    return;
+  }
+  const message = rawMessage.trim().slice(0, 2000);
+  const { data } = ctx.droid;
+  const userId = await data.getLinkedUser(ctx.from.id);
+  if (userId) {
+    const number = await data.createTicket(userId, message);
+    await ctx.reply(t(ctx.locale, "supportSent", { number }));
+    return;
+  }
+  await data.createRequest(ctx.from.id, message);
+  await ctx.reply(t(ctx.locale, "supportSentTelegram"));
 };
 
 const runSearch = async (ctx: DroidContext, rawQuery: string) => {
@@ -433,171 +461,46 @@ const toggleNewsletter = async (ctx: DroidContext) => {
   });
   await respond(
     ctx,
-    t(ctx.locale, ctx.droid.model ? "menuGreetingAi" : "menuGreeting", {
-      name: ctx.from.first_name,
-    }),
+    t(ctx.locale, "menuGreeting", { name: ctx.from.first_name }),
     { reply_markup: menuKeyboard(ctx.locale, member) }
   );
 };
 
-/** Null when the person may send an unban request, else the reason not. */
-const unbanBlocker = async (
-  ctx: DroidContext,
-  userId: number
-): Promise<MessageKey | null> => {
-  const member = await ctx.droid.data.getMember(userId);
-  if (!member?.banned_at) {
-    return "unbanNotBanned";
-  }
-  if (await ctx.droid.data.hasOpenRequest(userId, "unban")) {
-    return "unbanDuplicate";
-  }
-  return null;
-};
-
-const startUnban = async (ctx: DroidContext) => {
-  if (!ctx.from) {
+/** `@TheIdeaDroidBot <product>` in any chat: products to share. */
+const answerInline = async (ctx: DroidContext) => {
+  const query = ctx.inlineQuery?.query.trim().slice(0, 100) ?? "";
+  if (!query) {
+    await ctx.answerInlineQuery([], { cache_time: 300 });
     return;
   }
-  const blocker = await unbanBlocker(ctx, ctx.from.id);
-  if (blocker) {
-    await ctx.reply(t(ctx.locale, blocker));
-    return;
-  }
-  await ctx.droid.store.set<Pending>(
-    pendingKey(ctx.from.id),
-    "unban",
-    PENDING_SECONDS
-  );
-  await ctx.reply(t(ctx.locale, "unbanPrompt"));
+  const { data, siteUrl } = ctx.droid;
+  const products = await data.searchProducts(query, INLINE_LIMIT);
+  const results: InlineQueryResultArticle[] = products.map((product) => {
+    const summary = summarizeProduct(product, ctx.locale, siteUrl);
+    return {
+      description: [
+        summary.price ?? t(ctx.locale, "rental"),
+        summary.stock,
+      ].join(" · "),
+      id: product.id,
+      input_message_content: {
+        link_preview_options: { url: summary.url },
+        message_text: productHtml(summary, ctx.locale),
+        parse_mode: "HTML",
+      },
+      reply_markup: new InlineKeyboard().url(
+        t(ctx.locale, "inlineOpen"),
+        summary.url
+      ),
+      title: summary.name,
+      type: "article",
+      url: summary.url,
+    };
+  });
+  await ctx.answerInlineQuery(results, { cache_time: 60 });
 };
 
-const submitUnban = async (ctx: DroidContext, message: string) => {
-  if (!ctx.from) {
-    return;
-  }
-  const blocker = await unbanBlocker(ctx, ctx.from.id);
-  if (blocker) {
-    await ctx.reply(t(ctx.locale, blocker));
-    return;
-  }
-  await ctx.droid.data.createRequest(
-    ctx.from.id,
-    "unban",
-    message.trim().slice(0, 2000)
-  );
-  await ctx.reply(t(ctx.locale, "unbanSent"));
-};
-
-const answerWithAssistant = async (ctx: DroidContext, text: string) => {
-  const { appUrl, data, logger, model, siteUrl, store } = ctx.droid;
-  if (!(model && ctx.from)) {
-    await showMenu(ctx);
-    return;
-  }
-  await ctx.replyWithChatAction("typing").catch(() => undefined);
-  try {
-    const reply = await askAssistant({
-      appUrl,
-      data,
-      locale: ctx.locale,
-      model,
-      siteUrl,
-      store,
-      text: text.slice(0, 2000),
-      userId: ctx.from.id,
-    });
-    await ctx.reply(reply, { link_preview_options: { is_disabled: true } });
-  } catch (error) {
-    logger.error("Droid assistant failed", { error: describeError(error) });
-    const member = await data.getMember(ctx.from.id);
-    await ctx.reply(t(ctx.locale, "aiError"), {
-      reply_markup: menuKeyboard(ctx.locale, member),
-    });
-  }
-};
-
-// ── Groups: moderation, /ban, membership ────────────────────────────────────
-
-const deleteMessages = async (
-  ctx: DroidContext,
-  chatId: number,
-  messageIds: number[]
-) => {
-  try {
-    await ctx.api.deleteMessages(chatId, messageIds);
-  } catch (error) {
-    ctx.droid.logger.error("Droid could not delete messages", {
-      chatId,
-      error: describeError(error),
-    });
-  }
-};
-
-const isUnwanted = ({ moderator }: Runtime, text: string) =>
-  text.length > 0 && (moderator.find(text) !== null || detectSpam(text).spam);
-
-const muteFlooder = async (
-  ctx: DroidContext,
-  chatId: number,
-  user: User,
-  messageIds: number[],
-  admins: ChatAdmins
-) => {
-  if (admins.canDelete) {
-    await deleteMessages(ctx, chatId, messageIds);
-  }
-  if (!admins.canRestrict) {
-    return;
-  }
-  await ctx.api.restrictChatMember(
-    chatId,
-    user.id,
-    {
-      can_send_audios: false,
-      can_send_documents: false,
-      can_send_messages: false,
-      can_send_other_messages: false,
-      can_send_photos: false,
-      can_send_polls: false,
-      can_send_video_notes: false,
-      can_send_videos: false,
-      can_send_voice_notes: false,
-    },
-    {
-      until_date: Math.floor(ctx.droid.now() / 1000) + FLOOD_MUTE_SECONDS,
-    }
-  );
-  await ctx.api.sendMessage(
-    chatId,
-    t(localeOf(user.language_code), "floodWarning", { name: displayName(user) })
-  );
-};
-
-const banEverywhere = async (
-  ctx: DroidContext,
-  target: MemberProfile,
-  currentChatId: number
-) => {
-  const chats = await ctx.droid.data.listModeratedChats();
-  const chatIds = new Set([currentChatId, ...chats.map((chat) => chat.id)]);
-  let banned = 0;
-  for (const chatId of chatIds) {
-    try {
-      // biome-ignore lint/performance/noAwaitInLoops: a few groups, in order, to stay under Telegram's rate limits
-      await ctx.api.banChatMember(chatId, target.id);
-      banned += 1;
-    } catch (error) {
-      ctx.droid.logger.error("Droid could not ban a member", {
-        chatId,
-        error: describeError(error),
-        memberId: target.id,
-      });
-    }
-  }
-  await ctx.droid.data.setMemberStatus(target, "kicked", true);
-  return banned;
-};
+// ── Channels: the newsletter ────────────────────────────────────────────────
 
 const sendNewsletterPost = async (
   ctx: DroidContext,
@@ -651,71 +554,6 @@ const broadcastPost = async (ctx: DroidContext) => {
   }
 };
 
-const replyTo = (ctx: DroidContext, key: MessageKey) =>
-  ctx.reply(t(ctx.locale, key), {
-    reply_parameters: { message_id: ctx.msg?.message_id ?? 0 },
-  });
-
-const statusIn = (ctx: DroidContext, userId: number) =>
-  ctx
-    .getChatMember(userId)
-    .then((member) => member.status as string)
-    .catch(() => "left");
-
-/** The person a /ban is about: the replied-to sender, @username or id. */
-const banTarget = async (
-  ctx: DroidContext,
-  argument: string
-): Promise<MemberProfile | null> => {
-  const replied = ctx.msg?.reply_to_message;
-  if (replied?.from && !replied.from.is_bot && !replied.sender_chat) {
-    return profileOf(replied.from);
-  }
-  if (NUMERIC_ID.test(argument)) {
-    return await ctx.droid.data.getMember(Number(argument));
-  }
-  return argument
-    ? await ctx.droid.data.findMemberByUsername(argument.replace(AT_SIGN, ""))
-    : null;
-};
-
-/** /ban: chat admins ban someone from every moderated chat. */
-const banCommand = async (ctx: DroidContext & { match: string }) => {
-  const { chat, msg: message } = ctx;
-  if (!(message && chat)) {
-    return;
-  }
-  const anonymousAdmin = message.sender_chat?.id === chat.id;
-  if (
-    !(
-      anonymousAdmin ||
-      (ctx.from && ADMIN_STATUSES.has(await statusIn(ctx, ctx.from.id)))
-    )
-  ) {
-    await replyTo(ctx, "banNotAdmin");
-    return;
-  }
-
-  const [argument = ""] = ctx.match.trim().split(WHITESPACE);
-  const target = await banTarget(ctx, argument);
-  if (!target) {
-    await replyTo(ctx, argument ? "banNotFound" : "banUsage");
-    return;
-  }
-  if (ADMIN_STATUSES.has(await statusIn(ctx, target.id))) {
-    await replyTo(ctx, "banProtected");
-    return;
-  }
-
-  const count = await banEverywhere(ctx, target, chat.id);
-  if (message.reply_to_message) {
-    await deleteMessages(ctx, chat.id, [message.reply_to_message.message_id]);
-  }
-  await ctx.reply(
-    t(ctx.locale, "banDone", { count, name: memberName(target) })
-  );
-};
-
 // ── The bot ─────────────────────────────────────────────────────────────────
 
 export const createBot = (options: DroidOptions) => {
@@ -724,8 +562,6 @@ export const createBot = (options: DroidOptions) => {
     clubUrl: options.clubUrl ?? CLUB_URL,
     data: options.data,
     logger: options.logger ?? console,
-    model: options.model,
-    moderator: options.moderator ?? createModerator(),
     now: options.now ?? Date.now,
     siteUrl: options.siteUrl ?? SITE_URL,
     store: options.store,
@@ -745,10 +581,7 @@ export const createBot = (options: DroidOptions) => {
   // acting on them now would surprise people.
   bot.use(async (ctx, next) => {
     const { update } = ctx;
-    const date =
-      update.edited_message?.edit_date ??
-      update.message?.date ??
-      update.channel_post?.date;
+    const date = update.message?.date ?? update.channel_post?.date;
     if (
       date !== undefined &&
       runtime.now() / 1000 - date > STALE_UPDATE_SECONDS
@@ -803,118 +636,27 @@ export const createBot = (options: DroidOptions) => {
       new_chat_member: next,
       old_chat_member: previous,
     } = ctx.chatMember;
-    if (
-      ADMIN_STATUSES.has(next.status) ||
-      ADMIN_STATUSES.has(previous.status)
-    ) {
-      await runtime.store.delete(`admins:${chat.id}`);
-    }
     if (next.status === previous.status || next.user.is_bot) {
       return;
     }
-    const registered = await getChat(runtime, chat.id);
-    if (!registered) {
+    if (!(await getChat(runtime, chat.id))) {
       return;
     }
-
-    const profile = profileOf(next.user);
-    const joined = isMember(next) && !isMember(previous);
-
-    if (
-      joined &&
-      registered.moderated &&
-      (await rebanIfBanned(runtime, ctx.api, chat.id, next.user))
-    ) {
-      return;
-    }
-
     await runtime.data.setMemberStatus(
-      profile,
+      profileOf(next.user),
       next.status,
       banChange(previous.status, next.status)
     );
-
-    if (registered.moderated && chat.type !== "channel" && joined) {
-      await ctx.api.sendMessage(
-        chat.id,
-        t(localeOf(next.user.language_code), "welcome", {
-          chat: chat.title ?? "",
-          name: displayName(next.user),
-        })
-      );
-    }
   });
 
   // New channel posts go to newsletter subscribers.
   bot.on("channel_post", (ctx) => broadcastPost(ctx));
 
-  const groups = bot.chatType(["group", "supergroup"]);
-
-  // Moderation runs before commands, so "/search <banned word>" is caught.
-  groups.on(["message", "edited_message"], async (ctx, next) => {
-    const message = ctx.msg;
-    const sender = message.from;
-    const registered = await getChat(runtime, ctx.chat.id);
-    if (
-      !(registered?.moderated && sender) ||
-      sender.id === ctx.me.id ||
-      message.sender_chat?.id === ctx.chat.id ||
-      message.is_automatic_forward
-    ) {
-      await next();
-      return;
-    }
-
-    const admins = await getAdmins(ctx, ctx.chat.id);
-    if (admins.ids.includes(sender.id)) {
-      await next();
-      return;
-    }
-
-    const text = message.text ?? message.caption ?? "";
-    if (isUnwanted(runtime, text)) {
-      if (admins.canDelete) {
-        await deleteMessages(ctx, ctx.chat.id, [message.message_id]);
-      }
-      runtime.logger.info("Droid removed a message", {
-        chatId: ctx.chat.id,
-        deleted: admins.canDelete,
-        memberId: sender.id,
-      });
-      return;
-    }
-
-    if (ctx.editedMessage) {
-      return;
-    }
-
-    const content = text || message.sticker?.file_unique_id || "";
-    if (content) {
-      const flood = await trackFlood(runtime.store, {
-        chatId: ctx.chat.id,
-        content,
-        messageId: message.message_id,
-        userId: sender.id,
-      });
-      if (flood) {
-        await muteFlooder(ctx, ctx.chat.id, sender, flood, admins);
-        return;
-      }
-    }
-
-    await next();
-  });
-
-  groups.command("ban", (ctx) => banCommand(ctx));
+  bot.on("inline_query", (ctx) => answerInline(ctx));
 
   bot.command("search", async (ctx) => {
-    if (!ctx.match.trim() && ctx.chat.type === "private" && ctx.from) {
-      await runtime.store.set<Pending>(
-        pendingKey(ctx.from.id),
-        "search",
-        PENDING_SECONDS
-      );
-      await ctx.reply(t(ctx.locale, "searchPrompt"));
+    if (!ctx.match.trim() && ctx.chat.type === "private") {
+      await askFor(ctx, "search");
       return;
     }
     await runSearch(ctx, ctx.match);
@@ -925,6 +667,13 @@ export const createBot = (options: DroidOptions) => {
   direct.command(["start", "menu", "help"], async (ctx) => {
     await runtime.store.delete(pendingKey(ctx.from.id));
     await showMenu(ctx);
+  });
+  direct.command("orders", (ctx) => showOrders(ctx));
+  direct.command("bulbs", (ctx) => showBulbs(ctx));
+  direct.command("support", async (ctx) => {
+    await (ctx.match.trim()
+      ? submitSupport(ctx, ctx.match)
+      : askFor(ctx, "support"));
   });
 
   direct.on("message:text", async (ctx) => {
@@ -939,15 +688,18 @@ export const createBot = (options: DroidOptions) => {
       await runtime.store.delete(key);
       await (pending === "search"
         ? runSearch(ctx, text)
-        : submitUnban(ctx, text));
+        : submitSupport(ctx, text));
       return;
     }
-    await answerWithAssistant(ctx, text);
+    await showMenu(ctx);
   });
 
   bot.callbackQuery(MENU_CALLBACK, async (ctx) => {
     const [, action] = ctx.match;
     switch (action) {
+      case "bulbs":
+        await showBulbs(ctx);
+        break;
       case "faq":
         await showFaqTopics(ctx);
         break;
@@ -957,19 +709,17 @@ export const createBot = (options: DroidOptions) => {
       case "news":
         await toggleNewsletter(ctx);
         return;
+      case "orders":
+        await showOrders(ctx);
+        break;
       case "plus":
         await showPlus(ctx);
         break;
       case "search":
-        await runtime.store.set<Pending>(
-          pendingKey(ctx.from.id),
-          "search",
-          PENDING_SECONDS
-        );
-        await ctx.reply(t(ctx.locale, "searchPrompt"));
+        await askFor(ctx, "search");
         break;
-      case "unban":
-        await startUnban(ctx);
+      case "support":
+        await askFor(ctx, "support");
         break;
       default:
         await showMenu(ctx);
@@ -990,7 +740,7 @@ export const createBot = (options: DroidOptions) => {
     await ctx.answerCallbackQuery();
   });
 
-  // Buttons from old menus.
+  // Buttons from old menus (unban, the assistant).
   bot.on("callback_query", async (ctx) => {
     await ctx.answerCallbackQuery();
   });

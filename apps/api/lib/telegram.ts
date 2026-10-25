@@ -1,6 +1,5 @@
 import "server-only";
 
-import { getChatModel } from "@repo/ai/lib/models";
 import { createAdminClient } from "@repo/database/admin";
 import {
   createBot,
@@ -24,7 +23,7 @@ const createStore = (): KeyValueStore => {
     );
   }
   // Fine for local development; on serverless each instance would keep its
-  // own sessions and flood counters.
+  // own pending replies and caches.
   log.warn("Droid is using an in-memory store: set the Upstash Redis keys.");
   return createMemoryStore();
 };
@@ -43,7 +42,6 @@ export const getDroid = () => {
       appUrl: `${env.NEXT_PUBLIC_WEB_URL}/pass`,
       data: createSupabaseData(createAdminClient()),
       logger: log,
-      model: getChatModel(),
       store: createStore(),
       token,
     });

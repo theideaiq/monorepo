@@ -339,6 +339,18 @@ session in the shared cookie.
   always links to the signed-in member and never switches accounts;
   `unlink_telegram()` disconnects. `GET /auth/telegram/available` tells the
   website whether to show the buttons.
+- **Droid** (`packages/droid`, webhook `apps/api/app/telegram/webhook`).
+  A menu in private chats: Track my order and My Bulbs for members who
+  linked Telegram (`telegram_members.user_id`; others get a link to My Pass
+  → Settings), store search, Talk to us (a support ticket in My Pass →
+  Support for members, a Telegram request in the back office otherwise),
+  The IDEA Plus, FAQ, links and the newsletter. Inline mode
+  (`@TheIdeaDroidBot <product>` in any chat) shares products. In groups and
+  channels it records membership and sends new channel posts to newsletter
+  subscribers; moderation (word filters, spam, flood muting, network-wide
+  bans, unban requests) and the AI assistant were removed in favour of
+  Telegram's own tools. `bun run --cwd apps/api telegram:setup` sets the
+  webhook, its update types and the command lists.
 - **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
   Google Wallet" link for a generic pass whose QR code rotates in Google
   Wallet with the same secret (`rotatingBarcode.totpDetails`), so both

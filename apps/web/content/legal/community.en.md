@@ -36,13 +36,13 @@ We have zero tolerance for attacks based on ethnicity, nationality, religion, se
 
 ## 3. Moderation and enforcement
 
-Our moderators and Droid, our bot, keep the rooms safe. We use notices, warnings and bans:
+Our moderators keep the rooms safe with Telegram's own tools. We use notices, warnings and bans:
 
 - **Notice:** a recorded reminder for minor issues, such as light spam. Notices expire after 60 days.
 - **Warning:** for repeated or more serious behaviour. Five active warnings lead to a ban.
 - **Immediate ban:** for severe violations such as hate speech, gore, doxing, scams or raids.
 
-Bans apply across all the rooms Droid moderates. Messages that break these rules may be deleted without notice. Please respect the moderators' decisions. If you believe you were treated unfairly, send an unban or support request to our team through Droid (@TheIdeaDroidBot) or email [hi@theideaiq.com](mailto:hi@theideaiq.com); a member of staff will review it.
+Bans apply across The Club's rooms. Messages that break these rules may be deleted without notice. Please respect the moderators' decisions. If you believe you were treated unfairly, write to our team through Droid (@TheIdeaDroidBot → Talk to us) or email [hi@theideaiq.com](mailto:hi@theideaiq.com); a member of staff will review it.
 
 ## 4. Journal submissions and shared work
 

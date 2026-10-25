@@ -5,7 +5,14 @@
 import type { ProductCard } from "@repo/commerce/catalog";
 import type { Update, UserFromGetMe } from "grammy/types";
 import { createBot, type DroidOptions } from "./bot";
-import type { DroidData, FaqEntry, TelegramChat, TelegramMember } from "./data";
+import type {
+  BulbBalance,
+  DroidData,
+  FaqEntry,
+  OrderSummary,
+  TelegramChat,
+  TelegramMember,
+} from "./data";
 import { createMemoryStore } from "./store";
 
 export const BOT_INFO = {
@@ -31,29 +38,40 @@ const nextId = () => {
 };
 
 export interface FakeDataState {
+  bulbs: Map<string, BulbBalance>;
   chats: TelegramChat[];
   faq: FaqEntry[];
+  /** Telegram id → The IDEA Pass member. */
+  links: Map<number, string>;
   members: Map<number, TelegramMember>;
+  orders: (OrderSummary & { user_id: string })[];
   products: ProductCard[];
-  requests: {
-    memberId: number;
-    message: string;
-    status: string;
-    type: string;
-  }[];
+  requests: { memberId: number; message: string }[];
+  tickets: { message: string; number: number; userId: string }[];
 }
 
 export const createFakeData = (
-  initial: Partial<Omit<FakeDataState, "members">> & {
+  initial: Partial<Omit<FakeDataState, "bulbs" | "links" | "members">> & {
+    bulbs?: Record<string, BulbBalance>;
+    links?: Record<number, string>;
     members?: TelegramMember[];
   } = {}
 ) => {
   const state: FakeDataState = {
+    bulbs: new Map(Object.entries(initial.bulbs ?? {})),
     chats: initial.chats ?? [],
     faq: initial.faq ?? [],
+    links: new Map(
+      Object.entries(initial.links ?? {}).map(([id, owner]) => [
+        Number(id),
+        owner,
+      ])
+    ),
     members: new Map((initial.members ?? []).map((m) => [m.id, m])),
+    orders: initial.orders ?? [],
     products: initial.products ?? [],
     requests: initial.requests ?? [],
+    tickets: initial.tickets ?? [],
   };
 
   const blankMember = (id: number): TelegramMember => ({
@@ -75,39 +93,40 @@ export const createFakeData = (
   };
 
   const data: DroidData = {
-    createRequest: (memberId, type, message) => {
-      state.requests.push({ memberId, message, status: "open", type });
+    createRequest: (memberId, message) => {
+      state.requests.push({ memberId, message });
       return Promise.resolve();
     },
-    findMemberByUsername: (username) =>
-      Promise.resolve(
-        [...state.members.values()].find(
-          (m) => m.username?.toLowerCase() === username.toLowerCase()
-        ) ?? null
-      ),
+    createTicket: (userId, message) => {
+      const number = 1001 + state.tickets.length;
+      state.tickets.push({ message, number, userId });
+      return Promise.resolve(number);
+    },
+    getBulbs: (userId) =>
+      Promise.resolve(state.bulbs.get(userId) ?? { available: 0, pending: 0 }),
     getChat: (chatId) =>
       Promise.resolve(state.chats.find((c) => c.id === chatId) ?? null),
     getFaq: (id) => Promise.resolve(state.faq.find((f) => f.id === id) ?? null),
+    getLinkedUser: (memberId) =>
+      Promise.resolve(state.links.get(memberId) ?? null),
     getMember: (id) => Promise.resolve(state.members.get(id) ?? null),
-    hasOpenRequest: (memberId, type) =>
-      Promise.resolve(
-        state.requests.some(
-          (r) =>
-            r.memberId === memberId && r.type === type && r.status === "open"
-        )
-      ),
     listFaq: (topic) =>
       Promise.resolve(
         state.faq.filter((entry) => !topic || entry.topic === topic)
       ),
-    listModeratedChats: () =>
-      Promise.resolve(state.chats.filter((chat) => chat.moderated)),
     listNewsletterMembers: (offset, limit) =>
       Promise.resolve(
         [...state.members.values()]
           .filter((m) => m.newsletter_opt_in && !m.banned_at)
           .slice(offset, offset + limit)
           .map(({ id, language_code }) => ({ id, language_code }))
+      ),
+    listOrders: (userId, limit) =>
+      Promise.resolve(
+        state.orders
+          .filter((order) => order.user_id === userId)
+          .slice(0, limit)
+          .map(({ user_id: _owner, ...order }) => order)
       ),
     saveChat: (chat) => {
       const existing = state.chats.find((c) => c.id === chat.id);

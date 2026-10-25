@@ -285,6 +285,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   until `TELEGRAM_LOGIN_CLIENT_ID`/`SECRET` are set. Migration
   `20261202000000_telegram_login.sql`. Next: the slimmer Droid and Club
   join approvals.
+- 2026-10-25: **A slimmer Droid.** The menu now has Track my order, My
+  Bulbs and Talk to us (a support ticket) for members who linked Telegram,
+  plus store search, FAQ, The IDEA Plus, links and the newsletter; inline
+  search shares products in any chat. Removed: the word filter and spam
+  engine, flood muting, `/ban` across groups, unban requests, welcomes and
+  the AI assistant (and `packages/ai` with its `AI_*` keys); Telegram's own
+  tools moderate The Club. Legal pages updated to match. Owner steps:
+  @BotFather → /setinline for the bot, then `bun run --cwd apps/api
+  telegram:setup`. Next: Club join approvals by tier and order updates on
+  Telegram.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

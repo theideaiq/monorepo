@@ -55,7 +55,7 @@ Payments are processed by our payment partner **Wayl**, which supports local pay
 
 ## 9. Community spaces and Droid
 
-The Club's rooms on Telegram, comments and other shared spaces are governed by the [Community guidelines](/legal/community). Droid, our Telegram bot, helps moderate those rooms and may restrict or ban accounts that break the rules. Droid's AI assistant generates answers automatically: they may be incomplete or wrong, and they are not professional, legal or financial advice. Confirm anything important with our team.
+The Club's rooms on Telegram, comments and other shared spaces are governed by the [Community guidelines](/legal/community). Our moderators keep those rooms safe with Telegram's own tools and may restrict or ban accounts that break the rules. Droid, our Telegram bot, searches the store, answers common questions and, for members who link Telegram to The IDEA Pass, shows their orders and Bulbs.
 
 ## 10. Intellectual property
 
