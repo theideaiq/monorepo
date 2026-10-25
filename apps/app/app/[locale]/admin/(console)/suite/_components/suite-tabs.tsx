@@ -8,6 +8,7 @@ export const SuiteTabs = async () => {
     <SectionTabs
       tabs={[
         { exact: true, href: "/suite", label: t("requests") },
+        { href: "/suite/hiring", label: t("hiring") },
         { href: "/suite/orders", label: t("orders") },
         { href: "/suite/invoices", label: t("invoices") },
         { href: "/suite/seats", label: t("seats") },
