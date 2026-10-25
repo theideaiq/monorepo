@@ -1,6 +1,6 @@
 "use client";
 
-import { Constants, type Tables } from "@repo/database";
+import type { Tables } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import {
@@ -15,6 +15,7 @@ import { Panel } from "@/components/admin/page";
 import type { PublishMode } from "@/lib/admin/publishing";
 import { savePost } from "../actions";
 import { PublishField } from "./publish-field";
+import { postSections } from "./sections";
 
 interface PostFormProps {
   readonly mode: PublishMode;
@@ -70,7 +71,7 @@ export const PostForm = ({
             defaultValue={post?.section ?? "news"}
             label={t("section")}
             name="section"
-            options={Constants.public.Enums.post_section.map((value) => ({
+            options={postSections.map((value) => ({
               label: t(`sections.${value}`),
               value,
             }))}

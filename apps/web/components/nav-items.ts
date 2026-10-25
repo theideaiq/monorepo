@@ -1,28 +1,26 @@
 import {
-  CalendarDaysIcon,
   CrownIcon,
   HandCoinsIcon,
   HeartIcon,
   IdCardIcon,
+  InfoIcon,
   LifeBuoyIcon,
   LightbulbIcon,
   type LucideIcon,
   MegaphoneIcon,
   PackageIcon,
-  PenLineIcon,
   Settings2Icon,
 } from "lucide-react";
 
 export type NavKey =
+  | "about"
   | "affiliate"
   | "bulbs"
-  | "events"
   | "orders"
   | "pass"
   | "plus"
   | "sell"
   | "settings"
-  | "submissions"
   | "support"
   | "wishlist";
 
@@ -32,7 +30,10 @@ export interface NavItem {
   key: NavKey;
 }
 
-/** The sections of My Pass, in menu order. */
+/**
+ * The sections of My Pass, in menu order, then About & info. Your events
+ * and submissions open from My Pass's home and from The IDEA Post.
+ */
 export const navItems: NavItem[] = [
   { href: "/pass", icon: IdCardIcon, key: "pass" },
   { href: "/pass/bulbs", icon: LightbulbIcon, key: "bulbs" },
@@ -40,11 +41,10 @@ export const navItems: NavItem[] = [
   { href: "/pass/plus", icon: CrownIcon, key: "plus" },
   { href: "/pass/wishlist", icon: HeartIcon, key: "wishlist" },
   { href: "/pass/sell", icon: HandCoinsIcon, key: "sell" },
-  { href: "/pass/events", icon: CalendarDaysIcon, key: "events" },
-  { href: "/pass/submissions", icon: PenLineIcon, key: "submissions" },
   { href: "/pass/affiliate", icon: MegaphoneIcon, key: "affiliate" },
   { href: "/pass/support", icon: LifeBuoyIcon, key: "support" },
   { href: "/pass/settings", icon: Settings2Icon, key: "settings" },
+  { href: "/about", icon: InfoIcon, key: "about" },
 ];
 
 /** Whether `pathname` is inside the section at `href`. */

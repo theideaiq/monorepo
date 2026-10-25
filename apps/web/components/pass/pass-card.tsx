@@ -147,7 +147,11 @@ export const PassCard = async ({ session }: PassCardProps) => {
         }
       : { href: "/plus", icon: CrownIcon, text: card("perks.joinPlus") },
     { icon: TruckIcon, text: deliveryPerk },
-    { href: "/events", icon: CalendarDaysIcon, text: card("perks.events") },
+    {
+      href: "/post/events",
+      icon: CalendarDaysIcon,
+      text: card("perks.events"),
+    },
     { href: "/pass/sell", icon: HandCoinsIcon, text: card("perks.sell") },
     {
       href: "/pass/bulbs",

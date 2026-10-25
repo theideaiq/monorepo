@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(9);
+select plan(11);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- M is a member who submits work, E an editor.
@@ -91,23 +91,32 @@ select throws_ok(
   '23514', null, 'a post cannot take a section page''s address'
 );
 
+select throws_ok(
+  $$ insert into public.posts (slug, title_ar, title_en) values ('events', 'x', 'x') $$,
+  '23514', null, 'a post cannot take the events page''s address'
+);
+select throws_ok(
+  $$ insert into public.posts (slug, title_ar, title_en, section) values ('old-work', 'x', 'x', 'members') $$,
+  '23514', null, 'members'' work is published as Stories now'
+);
+
 -- ── Members' work ───────────────────────────────────────────────────────────
 
 select lives_ok(
   $$ insert into public.posts (slug, title_ar, title_en, section, byline, submission_id, published_at)
-     values ('a-poem', 'قصيدة', 'A poem', 'members', 'Member M',
+     values ('a-poem', 'قصيدة', 'A poem', 'stories', 'Member M',
              '00000000-0000-0000-0000-00000000a0a1', now()) $$,
-  'an accepted submission becomes members'' work with the member''s byline'
+  'an accepted submission becomes a story with the member''s byline'
 );
 select throws_ok(
   $$ insert into public.posts (slug, title_ar, title_en, section, submission_id)
-     values ('a-draft', 'مسودة', 'A draft', 'members', '00000000-0000-0000-0000-00000000a0a2') $$,
+     values ('a-draft', 'مسودة', 'A draft', 'stories', '00000000-0000-0000-0000-00000000a0a2') $$,
   '23514', 'Only an accepted submission can be published',
   'a submission still under review cannot be published'
 );
 select throws_ok(
   $$ insert into public.posts (slug, title_ar, title_en, section, submission_id)
-     values ('a-poem-again', 'قصيدة', 'A poem', 'members', '00000000-0000-0000-0000-00000000a0a1') $$,
+     values ('a-poem-again', 'قصيدة', 'A poem', 'stories', '00000000-0000-0000-0000-00000000a0a1') $$,
   '23505', null, 'a submission is published once'
 );
 
@@ -126,7 +135,7 @@ select is(
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000a1');
 select throws_ok(
-  $$ insert into public.posts (slug, title_ar, title_en, section) values ('mine', 'x', 'x', 'members') $$,
+  $$ insert into public.posts (slug, title_ar, title_en, section) values ('mine', 'x', 'x', 'stories') $$,
   '42501', null, 'members cannot publish posts themselves'
 );
 

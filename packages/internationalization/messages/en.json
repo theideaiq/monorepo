@@ -137,29 +137,28 @@
       "home": "Home",
       "store": "Megastore",
       "plus": "The IDEA Plus",
-      "suite": "The IDEA Suite",
+      "suite": "For companies",
       "club": "The IDEA Club",
       "post": "The IDEA Post",
       "events": "Events",
-      "about": "Our story",
+      "about": "About & info",
       "careers": "Careers",
       "faq": "FAQ",
       "contact": "Contact",
       "signIn": "Sign in",
-      "groups": {
-        "ecosystem": "Ecosystem",
-        "community": "Community",
-        "company": "Company"
-      },
       "descriptions": {
         "store": "Gaming, tech, books and lifestyle, delivered across Iraq.",
         "plus": "A monthly membership to rent games, books and movies.",
         "suite": "Procurement and recruitment for companies.",
         "club": "Our Telegram rooms and The IDEA Droid.",
-        "post": "News, stories, members' work and guides from The IDEA.",
+        "post": "News, stories, guides and events from The IDEA.",
         "events": "Meetups, launches and community nights."
       },
-      "myPass": "My Pass"
+      "myPass": "My Pass",
+      "label": "Main",
+      "shop": "Shop",
+      "rent": "Rent",
+      "discover": "Discover"
     },
     "tabs": {
       "label": "Main",
@@ -233,25 +232,12 @@
       "rent": "Rent"
     },
     "rent": {
-      "meta": {
-        "title": "Rent games, books and movies",
-        "description": "Everything you can rent with The IDEA Plus: PS5 games, books and movies, delivered across Iraq and picked up when you're done."
-      },
       "title": "Rent",
       "highlight": "with The IDEA Plus",
       "searchLabel": "Search the rentals",
       "searchPlaceholder": "Search games, books and movies to rent…",
-      "plansFrom": "The IDEA Plus plans from {price} a month",
       "plans": "See The IDEA Plus plans",
       "empty": "Nothing to rent matches that yet."
-    },
-    "discover": {
-      "meta": {
-        "title": "Discover",
-        "description": "The IDEA Club on Telegram, events and The IDEA Post: the community side of The IDEA."
-      },
-      "title": "Discover",
-      "description": "The IDEA Club, events and The IDEA Post: what's happening around The IDEA."
     },
     "store": {
       "meta": {
@@ -317,8 +303,8 @@
     },
     "plus": {
       "meta": {
-        "title": "The IDEA Plus — rent games, books and movies",
-        "description": "The IDEA Plus is a monthly membership to rent PS5 games, books and movies in Iraq. Choose a plan, request items from My Pass, and return them when you're done."
+        "title": "Rent with The IDEA Plus",
+        "description": "Rent PS5 games, books and movies with The IDEA Plus: the catalog, the plans and how it works. Delivered across Iraq and picked up when you're done."
       },
       "badge": "The ultimate membership",
       "title": "One membership.",
@@ -569,7 +555,7 @@
         "careers": "Careers",
         "faq": "FAQ",
         "contact": "Contact us",
-        "legal": "Terms and policies"
+        "club": "The IDEA Club"
       }
     },
     "careers": {
@@ -753,10 +739,10 @@
     "post": {
       "meta": {
         "title": "The IDEA Post",
-        "description": "News, stories, members' writing and art, and guides from The IDEA."
+        "description": "News, stories, members' work, guides and events from The IDEA."
       },
       "title": "The IDEA Post",
-      "description": "News from The IDEA, stories from our community, members' writing and art, and guides to learn something new.",
+      "description": "News from The IDEA, stories from our community and members' own work, guides to learn something new, and events.",
       "all": "Everything",
       "empty": "Nothing published here yet. Check back soon.",
       "byline": "By {name}",
@@ -769,7 +755,7 @@
         },
         "stories": {
           "title": "Stories",
-          "description": "Features and interviews from our community."
+          "description": "Features, interviews and members' own writing and art, chosen through blind review."
         },
         "members": {
           "title": "Members' work",
@@ -820,7 +806,9 @@
           "description": "Send us a message with the program or subject you're interested in.",
           "button": "Register your interest"
         }
-      }
+      },
+      "events": "Events",
+      "club": "Join the Club"
     },
     "events": {
       "meta": {
@@ -839,7 +827,8 @@
       "rsvps": "{count, plural, one {{number} person is going} other {{number} people are going}}",
       "noRsvps": "Be the first to RSVP.",
       "rsvp": "RSVP",
-      "ended": "This event has ended."
+      "ended": "This event has ended.",
+      "mine": "Your RSVPs"
     },
     "invite": {
       "title": "A friend invited you to The IDEA",
@@ -859,6 +848,15 @@
       "invalid": "This link isn't active. You can still shop and earn Bulbs.",
       "signIn": "Sign in with The IDEA Pass",
       "shop": "Shop the store"
+    },
+    "info": {
+      "preferences": "Language and theme",
+      "contact": "Contact",
+      "telegram": "The IDEA Club on Telegram",
+      "legal": "Terms and policies",
+      "app": "This app",
+      "versionLine": "Version {version} · build {build}",
+      "appVersion": "App {version}"
     }
   },
   "app": {
@@ -884,7 +882,8 @@
       "pass": "My Pass",
       "bulbs": "Bulbs",
       "backOffice": "Back office",
-      "affiliate": "Affiliate"
+      "affiliate": "Invite & earn",
+      "about": "About & info"
     },
     "roles": {
       "owner": "Owner",
@@ -1723,7 +1722,7 @@
       "stats": "{invited} invited · {rewarded} rewarded"
     },
     "affiliate": {
-      "title": "Affiliate",
+      "title": "Invite & earn",
       "description": "Share The IDEA with your followers: they get 5% off, you earn on every delivered order.",
       "apply": {
         "title": "Become an affiliate",
@@ -1785,7 +1784,8 @@
         "void": "Voided"
       },
       "readyFrom": "ready from {date}",
-      "bulbsCredited": "{bulbs} Bulbs"
+      "bulbsCredited": "{bulbs} Bulbs",
+      "programTitle": "Affiliate program"
     },
     "suite": {
       "status": {

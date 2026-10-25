@@ -119,7 +119,7 @@ const Home = async ({ params }: HomeProps) => {
       <section className="container mx-auto px-4 py-6">
         <Link
           className="group flex flex-col gap-3 rounded-lg border bg-surface-raised p-6 shadow-1 transition-shadow hover:shadow-2 md:flex-row md:items-center md:justify-between md:p-8"
-          href="/rent"
+          href="/plus"
         >
           <div className="flex flex-col gap-1">
             <h2 className="font-bold text-xl tracking-tight md:text-2xl">
@@ -139,7 +139,7 @@ const Home = async ({ params }: HomeProps) => {
 
       {events.length > 0 ? (
         <Rail
-          action={{ href: "/events", label: t("ui.viewAll") }}
+          action={{ href: "/post/events", label: t("ui.viewAll") }}
           title={t("home.events.title")}
         >
           {events.map((event) => (

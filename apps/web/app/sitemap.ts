@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { getEvents, getPosts, getProductSlugs } from "@/lib/data";
 import { legalDocuments } from "@/lib/legal";
 import { siteUrl } from "@/lib/metadata";
-import { postPath } from "@/lib/post";
+import { eventPath, postPath } from "@/lib/post";
 import { buildSitemap, type SitemapPage, staticPaths } from "@/lib/sitemap";
 
 export const revalidate = 3600;
@@ -32,7 +32,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     })),
     ...[...upcoming, ...past].map(({ slug, updated_at }) => ({
       lastModified: updated_at,
-      path: `/events/${slug}`,
+      path: eventPath(slug),
     })),
   ];
 

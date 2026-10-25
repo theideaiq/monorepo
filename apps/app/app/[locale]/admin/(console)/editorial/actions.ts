@@ -1,6 +1,5 @@
 "use server";
 
-import { Constants } from "@repo/database";
 import { z } from "zod";
 import {
   ActionFailure,
@@ -23,6 +22,7 @@ import {
   uuid,
 } from "@/lib/admin/forms";
 import { type PublishMode, publishedAtFor } from "@/lib/admin/publishing";
+import { postSections } from "./_components/sections";
 
 const publishMode = z.enum(["draft", "now", "schedule"]);
 
@@ -51,7 +51,7 @@ const postSchema = z.object({
   id: optionalUuid,
   mode: publishMode,
   publishAt: optionalDateTime,
-  section: z.enum(Constants.public.Enums.post_section),
+  section: z.enum(postSections),
   slug,
   titleAr: text(200),
   titleEn: text(200),
@@ -335,7 +335,7 @@ export const publishSubmission = staffAction(
           body_ar: submission.body ?? "",
           body_en: submission.body ?? "",
           byline: author?.trim() || null,
-          section: "members",
+          section: "stories",
           slug: `${base.slice(0, 100)}-${input.id.slice(0, 8)}`,
           submission_id: input.id,
           title_ar: submission.title.slice(0, 200),

@@ -19,6 +19,7 @@ import { editorialUrl, getEvent, getEvents, getRsvpCount } from "@/lib/data";
 import { seatsLeft } from "@/lib/events";
 import { Markdown, markdownToText } from "@/lib/markdown";
 import { localizedMetadata, siteUrl } from "@/lib/metadata";
+import { eventPath, eventsPath } from "@/lib/post";
 
 // The RSVP count changes often; refresh the page every minute.
 export const revalidate = 60;
@@ -38,7 +39,7 @@ export const generateMetadata = async ({
   if (!event) {
     return {};
   }
-  return localizedMetadata(locale, `/events/${slug}`, {
+  return localizedMetadata(locale, eventPath(slug), {
     description: markdownToText(localized(event, "description", locale), 160),
     image: editorialUrl(event.cover_image),
     title: localized(event, "title", locale),
@@ -97,12 +98,12 @@ const EventPage = async ({ params }: EventProps) => {
             url: siteUrl().href,
           },
           startDate: event.starts_at,
-          url: new URL(localePath(locale, `/events/${slug}`), siteUrl()).href,
+          url: new URL(localePath(locale, eventPath(slug)), siteUrl()).href,
         }}
       />
       <Link
         className="mb-6 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-        href="/events"
+        href={eventsPath}
       >
         <MoveLeft className="size-4 rtl:rotate-180" />
         {t("back")}

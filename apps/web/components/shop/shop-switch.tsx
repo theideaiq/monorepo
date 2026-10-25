@@ -5,10 +5,10 @@ import { getTranslations } from "next-intl/server";
 
 const tabs = [
   { href: "/", id: "buy" },
-  { href: "/rent", id: "rent" },
+  { href: "/plus", id: "rent" },
 ] as const;
 
-/** Buy | Rent: the two storefronts, Home and Rent. */
+/** Buy | Rent: the two storefronts, Home and Rent (The IDEA Plus). */
 export const ShopSwitch = async ({
   active,
   locale,

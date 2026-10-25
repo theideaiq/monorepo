@@ -7,9 +7,9 @@ const pages = [
   { name: "home", path: "" },
   { name: "store", path: "/store" },
   { name: "product page", path: `/store/${product.slug}` },
-  { name: "Plus", path: "/plus" },
-  { name: "rentals", path: "/rent" },
-  { name: "Discover", path: "/discover" },
+  { name: "Rent", path: "/plus" },
+  { name: "Discover", path: "/post" },
+  { name: "events", path: "/post/events" },
   { name: "About", path: "/about" },
   { name: "FAQ", path: "/about/faq" },
 ];
@@ -60,11 +60,13 @@ test.describe("public site", () => {
         "page"
       );
       await tabs.getByRole("link", { name: "Rent" }).click();
-      await expect(page).toHaveURL(/\/rent$/);
+      await expect(page).toHaveURL(/\/plus$/);
       await expect(tabs.getByRole("link", { name: "Rent" })).toHaveAttribute(
         "aria-current",
         "page"
       );
+      await tabs.getByRole("link", { name: "Discover" }).click();
+      await expect(page).toHaveURL(/\/post$/);
       await expectAccessible(page);
     });
   });
