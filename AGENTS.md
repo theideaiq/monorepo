@@ -191,8 +191,10 @@ for any schema change; it also runs the structure and advisor checks.
 
 - **RLS on every table.** Enable it in the migration that creates the table
   and add policies with pgTAP tests. `00_structure.test.sql` fails when a
-  table in `public` or `private` lacks RLS or a primary key, or a
-  `public` table has no policy (only `webhook_events` is service-only).
+  table in `public` or `private` lacks RLS or a primary key, or any RLS
+  table has no policy. A service-only table (reached only by the service
+  role or SECURITY DEFINER functions) gets a restrictive "No client access"
+  policy (`to anon, authenticated using (false)`), never none.
 - **Supabase advisors at zero.** `00_advisors.test.sql` expresses the
   advisor lints as pgTAP: every foreign key has an index, at most one
   permissive policy per table, role and action (merge with OR; split

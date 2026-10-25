@@ -17,7 +17,7 @@ export interface FoundUser {
   staffTitle: string | null;
 }
 
-/** Finds an account by phone or email (apps/api reads auth.users). */
+/** Finds a The IDEA Pass by phone or email (apps/api reads auth.users). */
 export const lookupUser = staffAction(
   "staff",
   z.object({ query: z.string().trim().min(3).max(320) }),
