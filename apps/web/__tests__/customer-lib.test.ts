@@ -1,3 +1,4 @@
+import { liveVariants } from "@repo/commerce";
 import { describe, expect, test } from "vitest";
 import { isActivePath } from "@/components/nav-items";
 import {
@@ -6,11 +7,7 @@ import {
   governorateName,
   validateAddress,
 } from "@/lib/address";
-import {
-  liveVariants,
-  pickVariant,
-  variantForDeepLink,
-} from "@/lib/app-product";
+import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import {
   type CartItem,
   cartCount,

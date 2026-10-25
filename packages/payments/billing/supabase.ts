@@ -150,7 +150,7 @@ export const createSupabaseBillingRepository = (
       await supabase
         .from("orders")
         .select(
-          "id, number, user_id, status, total, currency, shipping_fee, order_items (name_en, unit_price, quantity)"
+          "id, number, user_id, status, total, currency, shipping_fee, order_items (name_en, unit_price, quantity, variant:product_variants (label_en))"
         )
         .eq("id", orderId)
         .maybeSingle()
@@ -158,11 +158,16 @@ export const createSupabaseBillingRepository = (
     if (!row) {
       return null;
     }
-    const lines = row.order_items.map((item) => ({
-      amount: item.unit_price * item.quantity,
-      label:
-        item.quantity > 1 ? `${item.name_en} × ${item.quantity}` : item.name_en,
-    }));
+    const lines = row.order_items.map((item) => {
+      // "Adele – 21 (Vinyl)" when the line names a version.
+      const name = item.variant?.label_en
+        ? `${item.name_en} (${item.variant.label_en})`
+        : item.name_en;
+      return {
+        amount: item.unit_price * item.quantity,
+        label: item.quantity > 1 ? `${name} × ${item.quantity}` : name,
+      };
+    });
     if (row.shipping_fee > 0) {
       lines.push({ amount: row.shipping_fee, label: "Delivery" });
     }

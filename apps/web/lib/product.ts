@@ -1,7 +1,14 @@
-import { localized } from "@repo/commerce";
+import {
+  liveVariants,
+  localized,
+  variantName,
+  variantSlug,
+} from "@repo/commerce";
 import type { ProductDetail } from "@repo/commerce/catalog";
 import type {
+  Offer,
   Product,
+  ProductGroup,
   Review as ReviewLd,
   WithContext,
 } from "@repo/seo/json-ld";
@@ -91,7 +98,39 @@ const ratingJsonLd = (rating?: Rating | null, reviews: Review[] = []) => {
   };
 };
 
-/** schema.org Product data; rentals have no purchase offer. */
+/** schema.org properties a product's variants can vary by, by attribute. */
+const VARIES_BY: Record<string, string> = {
+  Color: "https://schema.org/color",
+  Colour: "https://schema.org/color",
+  Material: "https://schema.org/material",
+  Pattern: "https://schema.org/pattern",
+  Size: "https://schema.org/size",
+};
+
+const offerJsonLd = (
+  product: ProductDetail,
+  price: number,
+  inStock: boolean,
+  url: string
+): Offer => ({
+  "@type": "Offer",
+  availability: inStock
+    ? "https://schema.org/InStock"
+    : "https://schema.org/OutOfStock",
+  itemCondition: CONDITIONS[product.condition],
+  price,
+  priceCurrency: product.currency,
+  ...(product.seller
+    ? { seller: { "@type": "Organization" as const, name: product.seller } }
+    : {}),
+  url,
+});
+
+/**
+ * schema.org data for a product page: a Product, or a ProductGroup with one
+ * Product per version when it comes in several. Rentals have no purchase
+ * offer.
+ */
 export const productJsonLd = ({
   images,
   locale,
@@ -100,42 +139,79 @@ export const productJsonLd = ({
   product,
   rating,
   reviews,
-}: ProductJsonLdInput): WithContext<Product> => {
+}: ProductJsonLdInput): WithContext<Product> | WithContext<ProductGroup> => {
   const description = localized(product, "description", locale);
-  return {
-    "@context": "https://schema.org",
-    "@type": "Product",
+  const sale = product.kind === "sale";
+  const shared = {
     ...(description ? { description } : {}),
     ...(images.length > 0 ? { image: images } : {}),
     ...(product.category
       ? { category: localized(product.category, "name", locale) }
       : {}),
     name,
-    sku: product.product_variants[0]?.sku ?? product.slug,
     url: pageUrl,
-    ...(product.kind === "sale"
+    ...ratingJsonLd(rating, reviews),
+  };
+  const variants = liveVariants(product.product_variants);
+
+  if (variants.length > 1) {
+    const variesBy = [
+      ...new Set(
+        variants.flatMap((variant) =>
+          Object.keys((variant.attributes ?? {}) as Record<string, unknown>)
+        )
+      ),
+    ]
+      .map((key) => VARIES_BY[key])
+      .filter((property): property is string => Boolean(property));
+    return {
+      "@context": "https://schema.org",
+      "@type": "ProductGroup",
+      ...shared,
+      productGroupID: product.slug,
+      ...(variesBy.length > 0 ? { variesBy } : {}),
+      hasVariant: variants.map((variant) => {
+        const url = `${pageUrl}?variant=${encodeURIComponent(variantSlug(variant))}`;
+        const label = variantName(variant, locale);
+        return {
+          "@type": "Product" as const,
+          name: label ? `${name} – ${label}` : name,
+          sku: variant.sku ?? `${product.slug}-${variantSlug(variant)}`,
+          ...(variant.barcode ? { gtin: variant.barcode } : {}),
+          ...(variant.images[0] ? { image: variant.images } : {}),
+          url,
+          ...(sale
+            ? {
+                offers: offerJsonLd(
+                  product,
+                  variant.price,
+                  variant.stock_count > 0,
+                  url
+                ),
+              }
+            : {}),
+        };
+      }),
+    };
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    ...shared,
+    sku: product.product_variants[0]?.sku ?? product.slug,
+    ...(product.product_variants[0]?.barcode
+      ? { gtin: product.product_variants[0].barcode }
+      : {}),
+    ...(sale
       ? {
-          offers: {
-            "@type": "Offer" as const,
-            availability:
-              product.stock_count > 0
-                ? "https://schema.org/InStock"
-                : "https://schema.org/OutOfStock",
-            itemCondition: CONDITIONS[product.condition],
-            price: product.price,
-            priceCurrency: product.currency,
-            ...(product.seller
-              ? {
-                  seller: {
-                    "@type": "Organization" as const,
-                    name: product.seller,
-                  },
-                }
-              : {}),
-            url: pageUrl,
-          },
+          offers: offerJsonLd(
+            product,
+            product.price,
+            product.stock_count > 0,
+            pageUrl
+          ),
         }
       : {}),
-    ...ratingJsonLd(rating, reviews),
   };
 };

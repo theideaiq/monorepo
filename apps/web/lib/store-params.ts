@@ -1,5 +1,5 @@
 /**
- * The store catalog's state lives in the URL (?category=&q=&sort=&page=), so
+ * The store catalog's state lives in the URL (?category=&format=&q=&sort=&page=), so
  * every view is linkable and works without JavaScript.
  */
 
@@ -10,6 +10,8 @@ export type StoreSort = (typeof storeSorts)[number];
 
 export interface StoreQuery {
   category?: string;
+  /** A variant format (CD, Vinyl, …), as stored in `attributes.Format`. */
+  format?: string;
   page: number;
   q?: string;
   sort: StoreSort;
@@ -26,12 +28,14 @@ const first = (value: string | string[] | undefined) =>
 /** Parses untrusted search params into a valid query, dropping bad values. */
 export const parseStoreQuery = (params: RawParams): StoreQuery => {
   const category = first(params.category)?.trim();
+  const format = first(params.format)?.trim().slice(0, 40);
   const q = first(params.q)?.trim().slice(0, 100);
   const sort = first(params.sort);
   const page = Number.parseInt(first(params.page) ?? "1", 10);
 
   return {
     category: category && SLUG.test(category) ? category : undefined,
+    format: format || undefined,
     page: Number.isFinite(page) && page >= 1 ? Math.min(page, MAX_PAGE) : 1,
     q: q || undefined,
     sort: storeSorts.includes(sort as StoreSort)
@@ -49,6 +53,9 @@ export const storeQueryString = (
   const params = new URLSearchParams();
   if (next.category) {
     params.set("category", next.category);
+  }
+  if (next.format) {
+    params.set("format", next.format);
   }
   if (next.q) {
     params.set("q", next.q);

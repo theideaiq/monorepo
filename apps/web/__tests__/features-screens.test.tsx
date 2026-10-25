@@ -191,7 +191,12 @@ describe("wishlist", () => {
           data: [
             {
               created_at: "2026-11-03T10:00:00Z",
-              product: { ...product, category_id: null, featured: false },
+              product: {
+                ...product,
+                category_id: null,
+                featured: false,
+                variants: product.product_variants,
+              },
               product_id: "p1",
             },
             {
@@ -200,11 +205,11 @@ describe("wishlist", () => {
                 ...product,
                 id: "p2",
                 name_en: "Controller",
-                product_variants: [
-                  { active: true, id: "v1" },
-                  { active: true, id: "v2" },
-                ],
                 slug: "controller",
+                variants: [
+                  { active: true, id: "v1", price: 50_000 },
+                  { active: true, id: "v2", price: 60_000 },
+                ],
               },
               product_id: "p2",
             },

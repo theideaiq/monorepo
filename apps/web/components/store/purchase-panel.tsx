@@ -1,7 +1,13 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import { formatPrice, localized, variantName } from "@repo/commerce";
+import {
+  formatPrice,
+  liveVariants,
+  localized,
+  variantName,
+  variantSlug,
+} from "@repo/commerce";
 import type { ProductDetail, ProductOffer } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
@@ -15,13 +21,10 @@ import { useEffect, useRef, useState } from "react";
 import { productHref } from "@/components/store/product-card";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
 import { WishlistButton } from "@/components/store/wishlist-button";
-import {
-  liveVariants,
-  pickVariant,
-  variantForDeepLink,
-} from "@/lib/app-product";
+import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import { MAX_QUANTITY } from "@/lib/cart";
 import { useAddToCart } from "@/lib/store-queries";
+import { Price } from "./price";
 
 interface VariantPickerProps {
   readonly onPick: (id: string) => void;
@@ -142,12 +145,35 @@ export const PurchasePanel = ({
   const t = useTranslations("app.store.product");
   const locale = useLocale();
   const router = useRouter();
-  const deepLinkAdd = useSearchParams().get("add") === "1";
+  const searchParams = useSearchParams();
+  const deepLinkAdd = searchParams.get("add") === "1";
   const add = useAddToCart();
   const { loading, user } = useAuth();
-  const [variantId, setVariantId] = useState<string | null>(
-    () => variantForDeepLink(product.product_variants)?.id ?? null
-  );
+  // `?variant=vinyl` opens the page on that version.
+  const [variantId, setVariantId] = useState<string | null>(() => {
+    const wanted = searchParams.get("variant");
+    const linked = wanted
+      ? liveVariants(product.product_variants).find(
+          (variant) => variantSlug(variant) === wanted
+        )
+      : undefined;
+    return (linked ?? variantForDeepLink(product.product_variants))?.id ?? null;
+  });
+  const pickVariantId = (id: string) => {
+    setVariantId(id);
+    setQuantity(1);
+    const picked = product.product_variants.find(
+      (variant) => variant.id === id
+    );
+    if (picked) {
+      // The address names the chosen version, so it can be shared.
+      window.history.replaceState(
+        null,
+        "",
+        `?variant=${encodeURIComponent(variantSlug(picked))}`
+      );
+    }
+  };
   const [condition, setCondition] = useState<Condition>(product.condition);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
@@ -181,11 +207,12 @@ export const PurchasePanel = ({
       return;
     }
     if (!user) {
-      // Sign in first; the link adds one copy on the way back.
+      // Sign in first; the link adds one copy (of the chosen version) on
+      // the way back.
       router.push({
         pathname: "/sign-in",
         query: {
-          return_to: `${localePath(locale, productHref(product.slug))}?add=1`,
+          return_to: `${localePath(locale, productHref(product.slug))}?variant=${encodeURIComponent(variantSlug(chosenVariant))}&add=1`,
         },
       });
       return;
@@ -198,6 +225,7 @@ export const PurchasePanel = ({
           id: product.id,
           name: localized(product, "name", locale),
           price,
+          variant: variantName(chosenVariant, "en") || undefined,
         },
         condition: otherCondition ? condition : null,
         productId: product.id,
@@ -219,7 +247,11 @@ export const PurchasePanel = ({
     if (canAdd && user) {
       addToCart(1);
     }
-    router.replace(productHref(product.slug));
+    router.replace(
+      chosenVariant && liveVariants(product.product_variants).length > 1
+        ? `${productHref(product.slug)}?variant=${encodeURIComponent(variantSlug(chosenVariant))}`
+        : productHref(product.slug)
+    );
   }, [deepLinkAdd, loading]);
 
   if (product.kind === "rental") {
@@ -239,15 +271,23 @@ export const PurchasePanel = ({
         />
       ) : null}
       {liveVariants(product.product_variants).length > 1 ? (
-        <VariantPicker
-          onPick={(id) => {
-            setVariantId(id);
-            setQuantity(1);
-          }}
-          product={product}
-          ready={selection.ready}
-          variantId={variantId}
-        />
+        <>
+          <VariantPicker
+            onPick={pickVariantId}
+            product={product}
+            ready={selection.ready}
+            variantId={variantId}
+          />
+          {chosenVariant ? (
+            <Price
+              className="text-lg"
+              compareAtPrice={
+                otherCondition ? null : chosenVariant.compare_at_price
+              }
+              price={price}
+            />
+          ) : null}
+        </>
       ) : null}
       <div className="flex flex-wrap items-center gap-3">
         <QuantityStepper

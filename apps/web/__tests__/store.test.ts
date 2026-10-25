@@ -102,6 +102,55 @@ describe("product helpers", () => {
     });
   });
 
+  it("marks up a product with several versions as a group of offers", () => {
+    const variant = (
+      id: string,
+      label: string,
+      price: number,
+      stock: number
+    ) => ({
+      active: true,
+      attributes: { Format: label },
+      barcode: id === "v2" ? "0602527000000" : null,
+      id,
+      images: [],
+      label_ar: label,
+      label_en: label,
+      position: id === "v1" ? 0 : 1,
+      price,
+      sku: null,
+      stock_count: stock,
+    });
+    const data = productJsonLd({
+      images: [],
+      locale: "en",
+      name: "Adele – 21",
+      pageUrl: "https://theideaiq.com/store/adele-21",
+      product: {
+        ...product,
+        product_variants: [
+          variant("v1", "CD", 39_750, 1),
+          variant("v2", "Vinyl", 69_750, 0),
+        ],
+        slug: "adele-21",
+      } as unknown as Parameters<typeof productJsonLd>[0]["product"],
+    }) as unknown as Record<string, unknown> & {
+      hasVariant: Record<string, unknown>[];
+    };
+    expect(data["@type"]).toBe("ProductGroup");
+    expect(data.productGroupID).toBe("adele-21");
+    expect(data.hasVariant).toHaveLength(2);
+    expect(data.hasVariant[1]).toMatchObject({
+      gtin: "0602527000000",
+      name: "Adele – 21 – Vinyl",
+      offers: {
+        availability: "https://schema.org/OutOfStock",
+        price: 69_750,
+      },
+      url: "https://theideaiq.com/store/adele-21?variant=vinyl",
+    });
+  });
+
   it("has no purchase offer for rentals", () => {
     const data = productJsonLd({
       images: [],

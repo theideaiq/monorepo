@@ -10,7 +10,19 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 type Client = SupabaseClient<Database>;
 
 export const PRODUCT_CARD_COLUMNS =
-  "id, slug, kind, name_ar, name_en, price, compare_at_price, currency, condition, stock_count, images, featured, category_id" as const;
+  "id, slug, kind, name_ar, name_en, price, compare_at_price, currency, condition, stock_count, images, featured, category_id, variants:product_variants (id, label_ar, label_en, attributes, price, active, position)" as const;
+
+/** What a card shows of a variant: its name (format chips) and price ("from"). */
+export type CardVariant = Pick<
+  Tables<"product_variants">,
+  | "active"
+  | "attributes"
+  | "id"
+  | "label_ar"
+  | "label_en"
+  | "position"
+  | "price"
+>;
 
 export type ProductCard = Pick<
   Tables<"products">,
@@ -27,7 +39,10 @@ export type ProductCard = Pick<
   | "price"
   | "slug"
   | "stock_count"
->;
+> & {
+  /** Its variants (live or hidden; see `liveVariants`). */
+  variants: CardVariant[];
+};
 
 export type ProductDetail = Tables<"products"> & {
   category: Pick<
@@ -54,6 +69,8 @@ export interface ProductFilters {
   /** Category slug. */
   category?: string;
   featured?: boolean;
+  /** Products with a live variant in this format (`attributes.Format`). */
+  format?: string;
   kind?: ProductKind;
   limit?: number;
   offset?: number;
@@ -88,6 +105,7 @@ export const listProducts = async (
   {
     category,
     featured,
+    format,
     kind = "sale",
     limit = 24,
     offset = 0,
@@ -96,6 +114,8 @@ export const listProducts = async (
   }: ProductFilters = {}
 ): Promise<ProductCard[]> => {
   const term = search?.trim().slice(0, SEARCH_MAX_LENGTH);
+  // A format filter joins the live variants in that format.
+  const formatJoin = format ? ", format:product_variants!inner (id)" : "";
   if (term) {
     let ranked = supabase
       .rpc("search_products", {
@@ -103,30 +123,40 @@ export const listProducts = async (
         search_kind: kind,
         search_term: term,
       })
-      .select(PRODUCT_CARD_COLUMNS);
+      .select(`${PRODUCT_CARD_COLUMNS}${formatJoin}`);
     if (featured) {
       ranked = ranked.eq("featured", true);
+    }
+    if (format) {
+      ranked = ranked
+        .eq("format.attributes->>Format", format)
+        .eq("format.active", true);
     }
     if (sort !== "newest") {
       ranked = ranked.order("price", { ascending: sort === "price-asc" });
     }
-    return unwrap(
-      await ranked.range(offset, offset + limit - 1)
-    ) as unknown as ProductCard[];
+    return withoutJoins(
+      unwrap(await ranked.range(offset, offset + limit - 1)) as unknown[]
+    );
   }
 
   let query = supabase
     .from("products")
     .select(
-      category
-        ? `${PRODUCT_CARD_COLUMNS}, product_categories!inner (slug)`
-        : PRODUCT_CARD_COLUMNS
+      `${PRODUCT_CARD_COLUMNS}${
+        category ? ", product_categories!inner (slug)" : ""
+      }${formatJoin}`
     )
     .eq("status", "active")
     .eq("kind", kind);
 
   if (category) {
     query = query.eq("product_categories.slug", category);
+  }
+  if (format) {
+    query = query
+      .eq("format.attributes->>Format", format)
+      .eq("format.active", true);
   }
   if (featured) {
     query = query.eq("featured", true);
@@ -137,10 +167,45 @@ export const listProducts = async (
       ? query.order("created_at", { ascending: false })
       : query.order("price", { ascending: sort === "price-asc" });
 
-  const rows = unwrap(await query.range(offset, offset + limit - 1));
-  return (
-    rows as unknown as (ProductCard & { product_categories?: unknown })[]
-  ).map(({ product_categories: _category, ...product }) => product);
+  return withoutJoins(
+    unwrap(await query.range(offset, offset + limit - 1)) as unknown[]
+  );
+};
+
+/** Cards without the rows joined only to filter (category, format). */
+const withoutJoins = (rows: unknown[]): ProductCard[] =>
+  (
+    rows as (ProductCard & { format?: unknown; product_categories?: unknown })[]
+  ).map(
+    ({ format: _format, product_categories: _category, ...product }) => product
+  );
+
+/**
+ * The formats on sale (`attributes.Format` of live variants of live
+ * products of a kind), for the store's format filter, A to Z.
+ */
+export const listFormats = async (
+  supabase: Client,
+  kind: ProductKind = "sale"
+): Promise<string[]> => {
+  const rows = unwrap(
+    await supabase
+      .from("product_variants")
+      .select("attributes, product:products!inner (status, kind)")
+      .eq("active", true)
+      .eq("product.status", "active")
+      .eq("product.kind", kind)
+      .not("attributes->>Format", "is", null)
+      .limit(5000)
+  ) as { attributes: unknown }[];
+  const formats = new Set<string>();
+  for (const { attributes } of rows) {
+    const value = (attributes as Record<string, unknown> | null)?.Format;
+    if (typeof value === "string" && value.trim()) {
+      formats.add(value.trim());
+    }
+  }
+  return [...formats].sort((a, b) => a.localeCompare(b));
 };
 
 export const getProductBySlug = async (

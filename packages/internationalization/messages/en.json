@@ -251,6 +251,16 @@
       "search": "Search",
       "categories": "Categories",
       "allCategories": "All",
+      "formatsLabel": "Formats",
+      "allFormats": "All formats",
+      "formats": {
+        "CD": "CD",
+        "Vinyl": "Vinyl",
+        "Cassette": "Cassette",
+        "CD+DVD": "CD + DVD",
+        "DVD": "DVD",
+        "Blu-ray": "Blu-ray"
+      },
       "sortLabel": "Sort by",
       "sort": {
         "newest": "Newest",
@@ -2575,8 +2585,11 @@
           "condition": "new, used, refurbished or open_box.",
           "stock": "Units on hand.",
           "status": "draft, active or archived. New products start as drafts unless set.",
-          "barcode": "Saved in the specifications as Barcode.",
-          "sku": "Saved in the specifications as SKU.",
+          "barcode": "On a version row, the version's barcode; otherwise saved in the specifications as Barcode.",
+          "sku": "On a version row, the version's SKU; otherwise saved in the specifications as SKU.",
+          "variant_en": "A version's name, e.g. Vinyl. Rows sharing a slug, each with its own version, become one product; their price, stock, SKU, barcode and images are the version's.",
+          "variant_ar": "The version's Arabic name, e.g. أسطوانة فينيل.",
+          "format": "The version's format for the store filter: CD, Vinyl, Cassette, Blu-ray…",
           "description_en": "English description.",
           "description_ar": "Arabic description.",
           "image_urls": "Image links separated by |, from the Cover Art Archive, Open Library or Wikimedia, or catalog storage paths. Replaces the product's images."
@@ -2628,6 +2641,10 @@
           "status": "Status",
           "barcode": "Barcode",
           "sku": "SKU",
+          "variant_en": "Version",
+          "variant_ar": "Arabic version name",
+          "format": "Format",
+          "variants": "Versions",
           "description_en": "English description",
           "description_ar": "Arabic description",
           "image_urls": "Images",
@@ -2637,6 +2654,7 @@
         "errors": {
           "compareAtNotHigher": "the compare-at price must be higher than the price",
           "duplicateSlug": "the same slug appears on another row",
+          "duplicateVariant": "another row of this product names the same version",
           "invalidCompareAt": "not a whole number of dinars",
           "invalidCondition": "use new, used, refurbished or open_box",
           "invalidImage": "only links to the Cover Art Archive, Open Library or Wikimedia, or storage paths",
@@ -2649,6 +2667,7 @@
           "missingSlug": "add a slug or an English name",
           "tooLong": "too long",
           "tooManyImages": "at most 12 images",
+          "tooManyVariants": "at most 50 versions per product",
           "unknownCategory": "no category has this slug"
         },
         "errorLine": "{field}: {problem}",

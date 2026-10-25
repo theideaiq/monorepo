@@ -1,4 +1,4 @@
-import { formatPrice, localized } from "@repo/commerce";
+import { formatPrice, hasPriceRange, localized } from "@repo/commerce";
 import { productImageUrl } from "@repo/commerce/catalog";
 import type { Database } from "@repo/database";
 import { type ChatPost, type DroidBot, postToChat, t } from "@repo/droid";
@@ -40,7 +40,10 @@ const catalogUrl = (path: string | undefined) =>
 interface Sources {
   events: Database["public"]["Tables"]["events"]["Row"][];
   posts: Database["public"]["Tables"]["posts"]["Row"][];
-  products: Database["public"]["Tables"]["products"]["Row"][];
+  products: (Database["public"]["Tables"]["products"]["Row"] & {
+    /** Its variants' prices, for a "from" price; missing reads as one price. */
+    product_variants?: { active: boolean; price: number }[];
+  })[];
 }
 
 const loadSources = async (
@@ -62,7 +65,7 @@ const loadSources = async (
     ids.arrivals.length > 0
       ? admin
           .from("products")
-          .select("*")
+          .select("*, product_variants (active, price)")
           .in("id", ids.arrivals)
           .eq("status", "active")
       : none,
@@ -95,13 +98,18 @@ export const buildPosts = (
   }));
 
   const { products } = sources;
+  // "From …" when the versions cost different amounts.
+  const price = (product: Sources["products"][number]) =>
+    hasPriceRange(product.product_variants)
+      ? t(locale, "priceFrom", { price: formatPrice(product.price, locale) })
+      : formatPrice(product.price, locale);
   let arrivals: ChatPost[] = [];
   const [only] = products;
   if (products.length === 1 && only) {
     arrivals = [
       {
         buttonLabel: t(locale, "postProductOpen"),
-        lines: [formatPrice(only.price, locale)],
+        lines: [price(only)],
         photo: catalogUrl(only.images[0]),
         title: `${t(locale, "postArrivals")}: ${localized(only, "name", locale)}`,
         url: siteUrl(locale, `/store/${only.slug}`),
@@ -116,7 +124,7 @@ export const buildPosts = (
         lines: [
           ...listed.map(
             (product) =>
-              `• ${localized(product, "name", locale)} — ${formatPrice(product.price, locale)}`
+              `• ${localized(product, "name", locale)} — ${price(product)}`
           ),
           ...(more > 0 ? [t(locale, "postArrivalsMore", { count: more })] : []),
         ],

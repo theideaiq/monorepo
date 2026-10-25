@@ -1,4 +1,9 @@
-import { discountPercent, formatPrice, localized } from "@repo/commerce";
+import {
+  discountPercent,
+  formatPrice,
+  hasPriceRange,
+  localized,
+} from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { buttonVariants } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
@@ -11,6 +16,7 @@ import { formatRating, type Rating } from "@/lib/reviews";
 import { CoverImage } from "./cover-image";
 import { ProductConditionBulb } from "./product-condition-bulb";
 import { Stars } from "./stars";
+import { VariantChips } from "./store/variant-chips";
 
 const LOW_STOCK = 5;
 
@@ -25,9 +31,9 @@ interface ProductCardProps {
 
 /**
  * A product tile linking to its page on this site: the image on a sunken
- * ground, badges top-start, a 2-line name, the price, the condition bulb
- * for used items, and a full-width call to action (violet for
- * rentals).
+ * ground, badges top-start, a 2-line name, the versions it comes in, the
+ * price ("from" across versions), the condition bulb for used items, and
+ * a full-width call to action (violet for rentals).
  */
 export const ProductCard = async ({
   locale,
@@ -67,6 +73,7 @@ export const ProductCard = async ({
         <h3 className="line-clamp-2 font-medium group-hover:text-pink-text">
           {name}
         </h3>
+        <VariantChips locale={locale} variants={product.variants} />
         {rating ? (
           <p className="flex items-center gap-1.5 text-muted-foreground text-xs">
             <Stars
@@ -95,7 +102,9 @@ export const ProductCard = async ({
         ) : (
           <p className="flex flex-wrap items-baseline gap-2">
             <span className="font-mono font-semibold tabular-nums">
-              {formatPrice(product.price, locale)}
+              {hasPriceRange(product.variants)
+                ? t("price.from", { price: formatPrice(product.price, locale) })
+                : formatPrice(product.price, locale)}
             </span>
             {discount > 0 && product.compare_at_price ? (
               <span className="font-mono text-muted-foreground text-sm tabular-nums line-through">

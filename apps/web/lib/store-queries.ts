@@ -143,7 +143,14 @@ export const useCartCount = () => {
 };
 
 export interface AddToCart {
-  analytics: { currency: string; id: string; name: string; price: number };
+  analytics: {
+    currency: string;
+    id: string;
+    name: string;
+    price: number;
+    /** The chosen version's English name, when the product has several. */
+    variant?: string;
+  };
   /** Another condition than the product's own (a used copy); null otherwise. */
   condition?: CartItem["condition"];
   productId: string;
@@ -210,6 +217,7 @@ export const useAddToCart = () => {
             name: analytics.name,
             price: analytics.price,
             quantity,
+            variant: analytics.variant,
           },
         ],
         value: analytics.price * quantity,
@@ -241,7 +249,7 @@ export const useUpdateCartLine = () => {
 };
 
 const ORDER_COLUMNS =
-  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, condition, name_ar, name_en, attributes, unit_price, quantity)" as const;
+  "id, number, status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, paid_at, created_at, order_items (id, product_id, variant_id, condition, name_ar, name_en, attributes, unit_price, quantity, variant:product_variants (label_ar, label_en))" as const;
 
 export const useOrders = () => {
   const { supabase, user } = useAuth();

@@ -336,5 +336,6 @@ export const product = (extra: Partial<ProductCard> = {}): ProductCard => ({
   price: 720_000,
   slug: "playstation-5",
   stock_count: 3,
+  variants: [],
   ...extra,
 });

@@ -13,7 +13,7 @@ import { PageHero } from "@/components/page-hero";
 import { Pagination } from "@/components/pagination";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
-import { getCategories, getProducts, getRatings } from "@/lib/data";
+import { getCategories, getFormats, getProducts, getRatings } from "@/lib/data";
 import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import {
@@ -22,6 +22,16 @@ import {
   storeQueryString,
   storeSorts,
 } from "@/lib/store-params";
+
+/** Formats with a name in the messages files; others show as stored. */
+const NAMED_FORMATS = [
+  "CD",
+  "Vinyl",
+  "Cassette",
+  "CD+DVD",
+  "DVD",
+  "Blu-ray",
+] as const;
 
 interface StoreProps {
   params: Promise<{ locale: Locale }>;
@@ -40,7 +50,9 @@ export const generateMetadata = async ({
     title: t("title"),
   });
   // Filtered and paginated views point search engines at the main catalog.
-  const filtered = Boolean(query.q || query.category || query.page > 1);
+  const filtered = Boolean(
+    query.q || query.category || query.format || query.page > 1
+  );
   return filtered
     ? { ...metadata, robots: { follow: true, index: false } }
     : metadata;
@@ -52,10 +64,12 @@ const Store = async ({ params, searchParams }: StoreProps) => {
   const query = parseStoreQuery(await searchParams);
   const t = await getTranslations({ locale, namespace: "web" });
 
-  const [categories, rows] = await Promise.all([
+  const [categories, formats, rows] = await Promise.all([
     getCategories("sale"),
+    getFormats(),
     getProducts({
       category: query.category,
+      format: query.format,
       kind: "sale",
       // One extra row tells whether there is a next page.
       limit: STORE_PAGE_SIZE + 1,
@@ -67,7 +81,11 @@ const Store = async ({ params, searchParams }: StoreProps) => {
   const products = rows.slice(0, STORE_PAGE_SIZE);
   const ratings = await getRatings(products.map((product) => product.id));
   const hasNext = rows.length > STORE_PAGE_SIZE;
-  const filtered = Boolean(query.q || query.category);
+  const filtered = Boolean(query.q || query.category || query.format);
+  const formatName = (format: string) =>
+    (NAMED_FORMATS as readonly string[]).includes(format)
+      ? t(`store.formats.${format as (typeof NAMED_FORMATS)[number]}`)
+      : format;
 
   const chip = (active: boolean) =>
     cn(
@@ -88,6 +106,9 @@ const Store = async ({ params, searchParams }: StoreProps) => {
         >
           {query.category ? (
             <input name="category" type="hidden" value={query.category} />
+          ) : null}
+          {query.format ? (
+            <input name="format" type="hidden" value={query.format} />
           ) : null}
           <div className="flex flex-1 flex-col gap-1 text-sm">
             <label className="sr-only" htmlFor="store-search">
@@ -152,6 +173,30 @@ const Store = async ({ params, searchParams }: StoreProps) => {
             </Link>
           ))}
         </nav>
+
+        {formats.length > 1 ? (
+          <nav
+            aria-label={t("store.formatsLabel")}
+            className="-mt-4 mb-8 flex flex-wrap gap-2"
+          >
+            <Link
+              className={chip(!query.format)}
+              href={`/store${storeQueryString(query, { format: undefined, page: 1 })}`}
+            >
+              {t("store.allFormats")}
+            </Link>
+            {formats.map((format) => (
+              <Link
+                aria-current={query.format === format ? "page" : undefined}
+                className={chip(query.format === format)}
+                href={`/store${storeQueryString(query, { format, page: 1 })}`}
+                key={format}
+              >
+                {formatName(format)}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
 
         {query.q ? (
           <p className="mb-4 text-muted-foreground">

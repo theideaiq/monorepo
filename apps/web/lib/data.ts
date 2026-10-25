@@ -2,6 +2,7 @@ import {
   getProductBySlug,
   getProductOffers,
   listCategories,
+  listFormats,
   listOtherFormats,
   listProducts,
   PRODUCT_CARD_COLUMNS,
@@ -80,6 +81,13 @@ export const getProduct = async (slug: string) => {
   const supabase = createPublicClient();
   return supabase ? await getProductBySlug(supabase, slug) : null;
 };
+
+/** The formats on sale (CD, Vinyl, …), for the store's format filter. */
+export const getFormats = () =>
+  fallback("listFormats", [] as string[], async () => {
+    const supabase = createPublicClient();
+    return supabase ? await listFormats(supabase) : [];
+  });
 
 /** The copies a product is on offer as (new, used, for rent…). */
 export const getOffers = (productId: string) =>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import type { ProductCard } from "@repo/commerce/catalog";
+import { liveVariants } from "@repo/commerce";
+import { PRODUCT_CARD_COLUMNS, type ProductCard } from "@repo/commerce/catalog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 import { useAddToCart } from "./store-queries";
@@ -12,16 +13,13 @@ export interface WishlistItem {
   created_at: string;
   product:
     | (ProductCard & {
-        /** Its variants: with several to choose from, one is picked on its page. */
-        product_variants: { active: boolean; id: string }[];
         status: string;
       })
     | null;
   product_id: string;
 }
 
-const WISHLIST_COLUMNS =
-  "product_id, created_at, product:products (id, slug, kind, status, name_ar, name_en, price, compare_at_price, currency, condition, stock_count, images, featured, category_id, product_variants (id, active))" as const;
+const WISHLIST_COLUMNS = `product_id, created_at, product:products (${PRODUCT_CARD_COLUMNS}, status)`;
 
 export const useWishlist = () => {
   const { supabase, user } = useAuth();
@@ -93,9 +91,7 @@ export const useMoveToCart = () => {
       name: string;
       product: NonNullable<WishlistItem["product"]>;
     }) => {
-      const [variant, ...others] = product.product_variants.filter(
-        (candidate) => candidate.active
-      );
+      const [variant, ...others] = liveVariants(product.variants);
       if (!variant || others.length > 0) {
         throw new Error("Choose a variant");
       }

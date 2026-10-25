@@ -1,6 +1,6 @@
 "use client";
 
-import { localized } from "@repo/commerce";
+import { liveVariants, localized } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Empty,
@@ -38,7 +38,7 @@ export const wishlistAction = (
   if (product.kind === "rental") {
     return "rent";
   }
-  if (product.product_variants.filter((variant) => variant.active).length > 1) {
+  if (liveVariants(product.variants).length > 1) {
     return "choose";
   }
   return product.stock_count > 0 ? "move" : "unavailable";
