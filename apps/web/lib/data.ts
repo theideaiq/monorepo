@@ -1,10 +1,13 @@
 import {
   getProductBySlug,
+  getProductOffers,
   listCategories,
+  listOtherFormats,
   listProducts,
   PRODUCT_CARD_COLUMNS,
   type ProductCard,
   type ProductFilters,
+  type ProductOffer,
   productImageUrl,
 } from "@repo/commerce/catalog";
 import type { Tables } from "@repo/database";
@@ -50,7 +53,11 @@ const rows = <T>(result: {
 
 // ── Catalog ─────────────────────────────────────────────────────────────────
 
-export type { ProductCard, ProductDetail } from "@repo/commerce/catalog";
+export type {
+  ProductCard,
+  ProductDetail,
+  ProductOffer,
+} from "@repo/commerce/catalog";
 
 export const getProducts = (filters: ProductFilters) =>
   fallback("listProducts", [] as ProductCard[], async () => {
@@ -72,6 +79,22 @@ export const getProduct = async (slug: string) => {
   const supabase = createPublicClient();
   return supabase ? await getProductBySlug(supabase, slug) : null;
 };
+
+/** The copies a product is on offer as (new, used, for rent…). */
+export const getOffers = (productId: string) =>
+  fallback("productOffers", [] as ProductOffer[], async () => {
+    const supabase = createPublicClient();
+    return supabase ? await getProductOffers(supabase, productId) : [];
+  });
+
+/** The same work in other formats (vinyl, CD, cassette…). */
+export const getOtherFormats = (
+  product: Parameters<typeof listOtherFormats>[1]
+) =>
+  fallback("otherFormats", [] as ProductCard[], async () => {
+    const supabase = createPublicClient();
+    return supabase ? await listOtherFormats(supabase, product) : [];
+  });
 
 /** Slugs of every active product, for the sitemap and static params. */
 export const getProductSlugs = () =>

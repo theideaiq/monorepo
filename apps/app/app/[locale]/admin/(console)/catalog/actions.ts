@@ -36,6 +36,7 @@ export const saveProduct = staffAction(
       description_en: input.descriptionEn,
       details: keyValues(input.detailKey, input.detailValue),
       featured: input.featured,
+      group_key: input.groupKey,
       images: input.images,
       kind: input.kind,
       name_ar: input.nameAr,
@@ -275,6 +276,86 @@ export const deleteDeliveryZone = staffAction(
   z.object({ id: uuid }),
   async ({ input, supabase }) => {
     check(await supabase.from("delivery_zones").delete().eq("id", input.id));
+    return success("deleted");
+  }
+);
+
+const copyFields = {
+  condition: z.enum(Enums.product_condition),
+  cost: optionalInt(0),
+  location: optionalText(120),
+  note: optionalText(1000),
+  price: optionalInt(1),
+  purpose: z.enum(Enums.stock_purpose),
+  serial: optionalText(120),
+};
+
+const copyRow = (input: {
+  condition: (typeof Enums.product_condition)[number];
+  cost: number | null;
+  location: string | null;
+  note: string | null;
+  price: number | null;
+  purpose: (typeof Enums.stock_purpose)[number];
+  serial: string | null;
+}) => ({
+  condition: input.condition,
+  cost: input.cost,
+  location: input.location ?? "",
+  note: input.note,
+  price: input.price,
+  purpose: input.purpose,
+  serial: input.serial,
+});
+
+/** Adds copies of a product (or a variant), all alike. */
+export const addCopies = staffAction(
+  "catalog",
+  z.object({
+    ...copyFields,
+    count: int(1, 100),
+    productId: uuid,
+    variantId: optionalUuid,
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.from("stock_items").insert(
+        Array.from({ length: input.count }, () => ({
+          ...copyRow(input),
+          product_id: input.productId,
+          variant_id: input.variantId,
+        }))
+      )
+    );
+    return success();
+  }
+);
+
+/** Edits one copy: its condition, purpose, status, place and prices. */
+export const saveCopy = staffAction(
+  "catalog",
+  z.object({
+    ...copyFields,
+    id: uuid,
+    status: z.enum(Enums.stock_status),
+  }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("stock_items")
+        .update({ ...copyRow(input), status: input.status })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success();
+  }
+);
+
+export const deleteCopy = staffAction(
+  "catalog",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.from("stock_items").delete().eq("id", input.id));
     return success("deleted");
   }
 );

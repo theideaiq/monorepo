@@ -284,6 +284,7 @@ const OrderView = ({
   readonly watching: boolean;
 }) => {
   const t = useTranslations("app.orders.detail");
+  const conditions = useTranslations("store.condition");
   const tCheckout = useTranslations("app.checkout.errors");
   const locale = useLocale();
   const pay = usePayOrder();
@@ -353,6 +354,11 @@ const OrderView = ({
                     {describeAttributes(item.attributes) ? (
                       <span className="text-muted-foreground text-xs">
                         {describeAttributes(item.attributes)}
+                      </span>
+                    ) : null}
+                    {item.condition && item.condition !== "new" ? (
+                      <span className="text-muted-foreground text-xs">
+                        {conditions(item.condition)}
                       </span>
                     ) : null}
                     <span className="text-muted-foreground text-xs tabular-nums">

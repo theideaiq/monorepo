@@ -285,7 +285,9 @@
         "seller": "يبيعه {seller}",
         "verifiedSeller": "بائع موثّق",
         "requiresPlan": "يتطلب خطة {plan} أو أعلى",
-        "requiresPlanNote": "هذه المادة متاحة لأعضاء خطة {plan} وما فوقها. يمكن لأعضاء الخطط الأخرى الترقية من بطاقتهم."
+        "requiresPlanNote": "هذه المادة متاحة لأعضاء خطة {plan} وما فوقها. يمكن لأعضاء الخطط الأخرى الترقية من بطاقتهم.",
+        "sellToUs": "لديك واحدة؟ بِعها لنا",
+        "otherFormats": "صيغ أخرى"
       },
       "rating": {
         "label": "التقييم {rating} من 5",
@@ -904,7 +906,9 @@
         "goToPlus": "انتقل إلى The IDEA Plus",
         "addFailed": "تعذّرت إضافة المنتج إلى السلة. حاول مرة أخرى.",
         "soldBy": "البائع: {seller}",
-        "verifiedSeller": "بائع موثّق"
+        "verifiedSeller": "بائع موثّق",
+        "left": "متبقٍ: {count}",
+        "alsoRent": "متاح أيضاً للاستئجار مع The IDEA Plus"
       }
     },
     "cart": {
@@ -1945,7 +1949,7 @@
         "compareAt": "السعر قبل الخصم",
         "compareAtHint": "السعر القديم يظهر مشطوبًا، ويجب أن يكون أعلى من السعر الحالي.",
         "stock": "المخزون",
-        "stockHint": "الكمية المتوفرة (عدد النسخ للإعارة).",
+        "stockHint": "النسخ المتاحة للبيع (أو للاستئجار لمواد الاستئجار). تغييره يضيف نسخاً أو يسحبها بحالة المنتج؛ أدِر كل نسخة على حدة في قسم النسخ.",
         "condition": "الحالة الفنية",
         "descriptionAr": "الوصف (بالعربية)",
         "descriptionEn": "الوصف (بالإنجليزية)",
@@ -1959,7 +1963,9 @@
         "rentalTierHint": "لا يستطيع أعضاء خطط The IDEA Plus الأدنى استئجار هذا المنتج.",
         "anyPlan": "أي خطة من The IDEA Plus",
         "tierOption": "المستوى {tier}: {names}",
-        "unknownTier": "لا توجد خطة بهذا المستوى"
+        "unknownTier": "لا توجد خطة بهذا المستوى",
+        "groupKey": "مجموعة الصيغ الأخرى",
+        "groupKeyHint": "تظهر المنتجات التي تحمل المجموعة نفسها كصيغ أخرى لبعضها، مثل kind-of-blue للأسطوانة والقرص والكاسيت."
       },
       "variants": {
         "title": "الخيارات",
@@ -2171,6 +2177,36 @@
           "coverartarchive": "Cover Art Archive",
           "openlibrary": "Open Library",
           "wikipedia": "Wikipedia"
+        }
+      },
+      "copies": {
+        "title": "النسخ",
+        "description": "كل نسخة فعلية: حالتها، والغرض منها، ومكانها، وتكلفتها، وسعرها إن كان لها سعر خاص (كالنسخ المستعملة). الأعداد أعلاه تتبعها.",
+        "add": "إضافة نسخ",
+        "count": "العدد",
+        "purpose": "الغرض",
+        "status": "الحالة",
+        "location": "المكان",
+        "cost": "التكلفة (د.ع)",
+        "price": "سعر خاص (د.ع)",
+        "priceHint": "اتركه فارغاً لاعتماد سعر الكتالوج.",
+        "serial": "الرقم التسلسلي",
+        "note": "ملاحظة",
+        "empty": "لا توجد نسخ بعد.",
+        "summary": "المتاح {available} من {total}",
+        "fromTradeIn": "من طلب «بِع لنا»",
+        "purposes": {
+          "sale": "للبيع",
+          "rental": "للاستئجار (Plus)",
+          "business": "للاستخدام الداخلي"
+        },
+        "statuses": {
+          "available": "متاحة",
+          "reserved": "محجوزة",
+          "sold": "مباعة",
+          "rented": "مستأجَرة",
+          "repair": "قيد الإصلاح",
+          "retired": "مسحوبة"
         }
       }
     },

@@ -204,6 +204,7 @@ describe("wishlist", () => {
       expect(callsTo(db.calls, "wishlist_items", "delete")).toHaveLength(1)
     );
     expect(callsTo(db.calls, "cart_items", "insert")[0]?.payload).toEqual({
+      condition: null,
       product_id: "p1",
       quantity: 1,
       user_id: USER_ID,

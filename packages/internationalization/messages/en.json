@@ -285,7 +285,9 @@
         "seller": "Sold by {seller}",
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
-        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from My Pass."
+        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from My Pass.",
+        "sellToUs": "Have one? Sell it to us",
+        "otherFormats": "Other formats"
       },
       "rating": {
         "label": "Rated {rating} out of 5",
@@ -904,7 +906,9 @@
         "goToPlus": "Go to The IDEA Plus",
         "addFailed": "We couldn't add this to your cart. Please try again.",
         "soldBy": "Sold by {seller}",
-        "verifiedSeller": "Verified seller"
+        "verifiedSeller": "Verified seller",
+        "left": "{count} left",
+        "alsoRent": "Also for rent with The IDEA Plus"
       }
     },
     "cart": {
@@ -1945,7 +1949,7 @@
         "compareAt": "Compare-at price",
         "compareAtHint": "The old price, shown crossed out. Must be higher than the price.",
         "stock": "Stock",
-        "stockHint": "Units on hand (copies, for rentals).",
+        "stockHint": "Available copies for sale (for rent, for rental items). Changing it adds or retires copies in the product's condition; manage single copies under Copies.",
         "condition": "Condition",
         "descriptionAr": "Description (Arabic)",
         "descriptionEn": "Description (English)",
@@ -1959,7 +1963,9 @@
         "rentalTierHint": "Members on a lower The IDEA Plus plan can't rent this item.",
         "anyPlan": "Any The IDEA Plus plan",
         "tierOption": "Tier {tier}: {names}",
-        "unknownTier": "No plan at this tier"
+        "unknownTier": "No plan at this tier",
+        "groupKey": "Other formats group",
+        "groupKeyHint": "Products with the same group show each other as other formats, e.g. kind-of-blue for the vinyl, CD and cassette."
       },
       "variants": {
         "title": "Variants",
@@ -2171,6 +2177,36 @@
           "coverartarchive": "Cover Art Archive",
           "openlibrary": "Open Library",
           "wikipedia": "Wikipedia"
+        }
+      },
+      "copies": {
+        "title": "Copies",
+        "description": "Every physical copy: its condition, what it is for, where it is, what it cost and, for a copy priced on its own (a used one), its price. Counts above follow these.",
+        "add": "Add copies",
+        "count": "How many",
+        "purpose": "For",
+        "status": "Status",
+        "location": "Location",
+        "cost": "Cost (IQD)",
+        "price": "Own price (IQD)",
+        "priceHint": "Leave empty for the catalog price.",
+        "serial": "Serial number",
+        "note": "Note",
+        "empty": "No copies yet.",
+        "summary": "{available} available of {total}",
+        "fromTradeIn": "From a trade-in",
+        "purposes": {
+          "sale": "For sale",
+          "rental": "For rent (Plus)",
+          "business": "Used by the business"
+        },
+        "statuses": {
+          "available": "Available",
+          "reserved": "Reserved",
+          "sold": "Sold",
+          "rented": "Rented out",
+          "repair": "In repair",
+          "retired": "Retired"
         }
       }
     },

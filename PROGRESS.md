@@ -233,3 +233,10 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   (`/ar/store`). Visitors whose browser or saved choice is Arabic are
   sent to `/ar`; old `/en/…` links redirect to the unprefixed page.
   `localePath()` builds every path.
+- 2026-10-25: **Shared catalogue.** One product per real thing, with every
+  physical copy in `stock_items` (condition, for sale / for rent / used by
+  the business, status, location, cost, own price). Stock counts are
+  derived from the copies; orders, rentals and trade-ins take and release
+  specific copies; product pages offer buy new or used, rent with Plus,
+  Sell to us and other formats (`group_key`). Migration
+  `20261125000000_stock_copies.sql` turns today's counts into copies.

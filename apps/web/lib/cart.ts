@@ -8,8 +8,11 @@ import {
 /** The most of one line `cart_items` accepts (check constraint). */
 export const MAX_QUANTITY = 20;
 
+type Condition = "new" | "open_box" | "refurbished" | "used";
+
 export interface CartProduct {
   compare_at_price: number | null;
+  condition: Condition;
   currency: string;
   id: string;
   images: string[];
@@ -32,7 +35,14 @@ export interface CartVariant {
 
 /** A `cart_items` row with its product and variant. */
 export interface CartItem {
+  /** The condition asked for; null is the product's own (its main listing). */
+  condition: Condition | null;
   id: string;
+  /**
+   * For a line in another condition (a used copy of a new product): its
+   * copies for sale and their lowest price, from `product_offers`.
+   */
+  offer?: { available: number; price: number } | null;
   product: CartProduct | null;
   product_id: string;
   quantity: number;
@@ -48,9 +58,26 @@ export interface CartLineView extends CartLine {
   item: CartItem;
 }
 
-/** Prices a cart line like `create_order()` does (variant price first). */
+/** Whether a line asks for another condition than the product's own. */
+export const isOtherCondition = (item: CartItem) =>
+  item.condition !== null && item.condition !== item.product?.condition;
+
+/**
+ * Prices a cart line like `create_order()` does: copies in another
+ * condition at their own price, else the variant price, then the product's.
+ */
 export const toCartLine = (item: CartItem): CartLineView => {
   const { product } = item;
+  if (isOtherCondition(item)) {
+    return {
+      available: item.offer?.available ?? 0,
+      buyable: product?.status === "active" && Boolean(item.offer),
+      compareAtPrice: null,
+      item,
+      quantity: item.quantity,
+      unitPrice: item.offer?.price ?? 0,
+    };
+  }
   const buyable = product?.status === "active" && product.kind === "sale";
   const available = item.variant
     ? item.variant.stock_count

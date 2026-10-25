@@ -35,6 +35,7 @@ export const productSchema = z
     detailKey: z.array(z.string()).optional(),
     detailValue: z.array(z.string()).optional(),
     featured: checkbox,
+    groupKey: optionalText(120),
     id: optionalUuid,
     images: catalogImages(12),
     kind: z.enum(Enums.product_kind),
