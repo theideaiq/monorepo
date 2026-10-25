@@ -125,6 +125,8 @@ export const createSupabaseBillingRepository = (
         .from("subscriptions")
         .select()
         .in("status", ["active", "past_due"])
+        // Company-paid The IDEA Plus renews by invoice (run_plus_seat_renewals).
+        .neq("provider", "company")
         .lte("current_period_end", date.toISOString())
     );
     return rows.map(toSubscription);

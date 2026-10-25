@@ -17,9 +17,10 @@ import { useAuthMessages } from "@/lib/auth-messages";
 import { PendingInvitations } from "./pending-invitations";
 
 const TABS = [
-  { href: "/business", key: "projects" },
+  { href: "/business", key: "overview" },
   { href: "/business/procurement", key: "procurement" },
   { href: "/business/invoices", key: "invoices" },
+  { href: "/business/plus", key: "plus" },
   { href: "/business/members", key: "members" },
   { href: "/business/billing", key: "billing" },
   { href: "/business/settings", key: "settings" },

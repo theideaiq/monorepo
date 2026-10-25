@@ -657,39 +657,42 @@ export type Database = {
         Row: {
           amount: number;
           created_by: string | null;
+          description: string | null;
           due_on: string;
           id: string;
           issued_at: string;
           number: number;
           organization_id: string;
           paid_at: string | null;
-          purchase_order_id: string;
+          purchase_order_id: string | null;
           status: Database["public"]["Enums"]["invoice_status"];
           updated_at: string;
         };
         Insert: {
           amount: number;
           created_by?: string | null;
+          description?: string | null;
           due_on: string;
           id?: string;
           issued_at?: string;
           number?: never;
           organization_id: string;
           paid_at?: string | null;
-          purchase_order_id: string;
+          purchase_order_id?: string | null;
           status?: Database["public"]["Enums"]["invoice_status"];
           updated_at?: string;
         };
         Update: {
           amount?: number;
           created_by?: string | null;
+          description?: string | null;
           due_on?: string;
           id?: string;
           issued_at?: string;
           number?: never;
           organization_id?: string;
           paid_at?: string | null;
-          purchase_order_id?: string;
+          purchase_order_id?: string | null;
           status?: Database["public"]["Enums"]["invoice_status"];
           updated_at?: string;
         };
@@ -1184,6 +1187,67 @@ export type Database = {
           tier?: number | null;
         };
         Relationships: [];
+      };
+      plus_seats: {
+        Row: {
+          created_at: string;
+          ended_at: string | null;
+          id: string;
+          organization_id: string;
+          plan_id: string;
+          requested_by: string | null;
+          status: Database["public"]["Enums"]["plus_seat_status"];
+          subscription_id: string | null;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          ended_at?: string | null;
+          id?: string;
+          organization_id: string;
+          plan_id: string;
+          requested_by?: string | null;
+          status?: Database["public"]["Enums"]["plus_seat_status"];
+          subscription_id?: string | null;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          ended_at?: string | null;
+          id?: string;
+          organization_id?: string;
+          plan_id?: string;
+          requested_by?: string | null;
+          status?: Database["public"]["Enums"]["plus_seat_status"];
+          subscription_id?: string | null;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_seats_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plus_seats_plan_id_fkey";
+            columns: ["plan_id"];
+            isOneToOne: false;
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plus_seats_subscription_id_fkey";
+            columns: ["subscription_id"];
+            isOneToOne: true;
+            referencedRelation: "subscriptions";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       posts: {
         Row: {
@@ -2638,6 +2702,10 @@ export type Database = {
           slug: string;
         }[];
       };
+      activate_plus_seat: {
+        Args: { days?: number; seat: string };
+        Returns: string;
+      };
       adjust_bulbs: {
         Args: { bulbs: number; member: string; why: string };
         Returns: {
@@ -2910,6 +2978,8 @@ export type Database = {
         Args: { accept: boolean; quote: string; reference?: string };
         Returns: string;
       };
+      decline_plus_seat: { Args: { seat: string }; Returns: undefined };
+      end_plus_seat: { Args: { seat: string }; Returns: undefined };
       event_rsvp_count: { Args: { event: string }; Returns: number };
       import_products: { Args: { items: Json }; Returns: Json };
       issue_invoice: {
@@ -3156,6 +3226,10 @@ export type Database = {
         Args: { device_platform: string; device_token: string };
         Returns: string;
       };
+      request_plus_seat: {
+        Args: { member: string; org: string; plan: string };
+        Returns: string;
+      };
       request_rental: {
         Args: { rental_product: string };
         Returns: {
@@ -3205,6 +3279,10 @@ export type Database = {
       run_bulb_expiry: {
         Args: Record<PropertyKey, never>;
         Returns: Record<string, unknown>;
+      };
+      run_plus_seat_renewals: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
       };
       search_products: {
         Args: {
@@ -3345,6 +3423,7 @@ export type Database = {
         | "canceled"
         | "expired"
         | "refunded";
+      plus_seat_status: "requested" | "active" | "ended" | "declined";
       post_section: "news" | "stories" | "members" | "learn";
       procurement_status:
         | "submitted"
@@ -3603,6 +3682,7 @@ export const Constants = {
         "expired",
         "refunded",
       ],
+      plus_seat_status: ["requested", "active", "ended", "declined"],
       post_section: ["news", "stories", "members", "learn"],
       procurement_status: [
         "submitted",

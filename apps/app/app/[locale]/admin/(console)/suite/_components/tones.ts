@@ -30,3 +30,10 @@ export const invoiceTone: Record<Enums["invoice_status"], Tone> = {
   paid: "success",
   void: "neutral",
 };
+
+export const seatTone: Record<Enums["plus_seat_status"], Tone> = {
+  active: "success",
+  declined: "neutral",
+  ended: "neutral",
+  requested: "danger",
+};

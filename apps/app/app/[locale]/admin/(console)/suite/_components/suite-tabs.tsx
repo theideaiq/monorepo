@@ -9,6 +9,8 @@ export const SuiteTabs = async () => {
       tabs={[
         { exact: true, href: "/suite", label: t("requests") },
         { href: "/suite/orders", label: t("orders") },
+        { href: "/suite/invoices", label: t("invoices") },
+        { href: "/suite/seats", label: t("seats") },
       ]}
     />
   );
