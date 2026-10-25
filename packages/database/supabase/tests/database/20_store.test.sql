@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(49);
+select plan(51);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- Start from an empty store and no staff so existing data (the local seed,
@@ -83,8 +83,10 @@ insert into public.products (id, slug, name_ar, name_en, price, stock_count, sta
   ('20000000-0000-0000-0000-000000000002', 'draft-item', 'مسودة', 'Draft', 1000, 5, 'draft', 'sale'),
   ('20000000-0000-0000-0000-000000000003', 'elden-ring', 'إلدن رينغ', 'Elden Ring', 60000, 1, 'active', 'rental');
 
-insert into public.product_variants (id, product_id, attributes, price_override, stock_count) values
-  ('21000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001', '{"Edition":"Digital"}', 650000, 3);
+-- The PS5 got its default variant (the disc edition) with its price and
+-- stock; the digital edition is a second variant.
+insert into public.product_variants (id, product_id, label_en, label_ar, attributes, price, stock_count) values
+  ('21000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001', 'Digital', 'رقمي', '{"Edition":"Digital"}', 650000, 3);
 
 insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)
 values ('plus-test', 'Plus', 25000, 'month', 'plus', 1, 1);
@@ -107,7 +109,7 @@ select is(
 );
 update public.products set price = 1 where slug = 'ps5';
 select pg_temp.reset_role();
-select is((select price from public.products where slug = 'ps5'), 700000::bigint, 'customer price change had no effect');
+select is((select price from public.products where slug = 'ps5'), 650000::bigint, 'customer price change had no effect (the price is the cheapest variant''s)');
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000a3', 'aal2');
 select lives_ok(
@@ -135,12 +137,18 @@ select throws_ok(
   'P0002', 'Cart is empty', 'an empty cart cannot be ordered'
 );
 
-insert into public.cart_items (product_id, quantity) values ('20000000-0000-0000-0000-000000000001', 1);
+select throws_ok(
+  $$ insert into public.cart_items (product_id, quantity) values ('20000000-0000-0000-0000-000000000001', 1) $$,
+  '23514', 'Choose a variant', 'a product with several variants needs one chosen'
+);
+insert into public.cart_items (product_id, variant_id, quantity)
+  select product_id, id, 1 from public.product_variants
+  where product_id = '20000000-0000-0000-0000-000000000001' and label_en is null;
 insert into public.cart_items (product_id, variant_id, quantity)
   values ('20000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', 2);
 select throws_ok(
-  $$ insert into public.cart_items (product_id, quantity, user_id)
-     values ('20000000-0000-0000-0000-000000000001', 1, '00000000-0000-0000-0000-0000000000a2') $$,
+  $$ insert into public.cart_items (product_id, variant_id, quantity, user_id)
+     values ('20000000-0000-0000-0000-000000000001', '21000000-0000-0000-0000-000000000001', 1, '00000000-0000-0000-0000-0000000000a2') $$,
   '42501', null, 'users cannot fill someone else''s cart'
 );
 select throws_ok(
@@ -192,12 +200,17 @@ select public.complete_order_payment((select id from public.orders limit 1));
 select pg_temp.reset_role();
 select is((select status::text from public.orders), 'paid', 'the order is paid');
 select is(
-  (select stock_count from public.products where slug = 'ps5'), 1,
+  (select stock_count from public.product_variants
+   where product_id = '20000000-0000-0000-0000-000000000001' and label_en is null), 1,
   'stock is taken once, even if the webhook repeats'
 );
 select is(
-  (select stock_count from public.product_variants), 1,
+  (select stock_count from public.product_variants where id = '21000000-0000-0000-0000-000000000001'), 1,
   'variant stock is taken'
+);
+select is(
+  (select stock_count from public.products where slug = 'ps5'), 2,
+  'the product''s stock is every variant''s'
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000a5', 'aal2');

@@ -3,12 +3,12 @@
 import { useAuth } from "@repo/auth/provider";
 import {
   BULB_VALUE_IQD,
-  describeAttributes,
   type Fulfilment,
   formatPrice,
   localized,
   type PaymentMethod,
   type Promo,
+  variantName,
 } from "@repo/commerce";
 import type { DeliveryZone, PickupLocation } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
@@ -524,9 +524,9 @@ const SummaryCard = ({
                       ? localized(item.product, "name", locale)
                       : null}
                   </span>
-                  {item.variant ? (
+                  {item.variant && variantName(item.variant, locale) ? (
                     <span className="block text-muted-foreground text-xs">
-                      {describeAttributes(item.variant.attributes)}
+                      {variantName(item.variant, locale)}
                     </span>
                   ) : null}
                 </span>

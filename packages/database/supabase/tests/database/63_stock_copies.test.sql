@@ -81,8 +81,8 @@ update public.delivery_zones set active = true, fee = 5000 where governorate = '
 insert into public.products (id, slug, name_ar, name_en, price, stock_count, status, kind, condition) values
   ('63000000-0000-0000-0000-000000000001', 'zelda', 'زيلدا', 'Zelda', 60000, 3, 'active', 'sale', 'new'),
   ('63000000-0000-0000-0000-000000000002', 'blue-train', 'بلو ترين', 'Blue Train', 40000, 0, 'active', 'sale', 'new');
-insert into public.product_variants (id, product_id, attributes, stock_count) values
-  ('63100000-0000-0000-0000-000000000001', '63000000-0000-0000-0000-000000000002', '{"Format":"Vinyl"}', 2);
+insert into public.product_variants (id, product_id, label_en, attributes, price, stock_count) values
+  ('63100000-0000-0000-0000-000000000001', '63000000-0000-0000-0000-000000000002', 'Vinyl', '{"Format":"Vinyl"}', 40000, 2);
 
 -- ── Counts become copies ────────────────────────────────────────────────────
 

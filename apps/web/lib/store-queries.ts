@@ -75,7 +75,7 @@ export const useDeliveryZones = () => {
 };
 
 const CART_COLUMNS =
-  "id, quantity, condition, product_id, variant_id, product:products (id, slug, kind, status, condition, name_ar, name_en, price, compare_at_price, currency, images, stock_count), variant:product_variants (id, attributes, price_override, stock_count, image)" as const;
+  "id, quantity, condition, product_id, variant_id, product:products (id, slug, kind, status, condition, name_ar, name_en, price, compare_at_price, currency, images, stock_count), variant:product_variants (id, label_ar, label_en, attributes, price, compare_at_price, stock_count, images)" as const;
 
 /** Adds the copies on offer to lines in another condition (used, …). */
 const withOffers = async (
@@ -148,7 +148,8 @@ export interface AddToCart {
   condition?: CartItem["condition"];
   productId: string;
   quantity: number;
-  variantId: string | null;
+  /** The chosen variant (a product's only one when there is no choice). */
+  variantId: string;
 }
 
 /**
@@ -171,10 +172,8 @@ export const useAddToCart = () => {
         .from("cart_items")
         .select("id, quantity")
         .eq("user_id", userId)
-        .eq("product_id", productId);
-      existing = variantId
-        ? existing.eq("variant_id", variantId)
-        : existing.is("variant_id", null);
+        .eq("product_id", productId)
+        .eq("variant_id", variantId);
       existing = condition
         ? existing.eq("condition", condition)
         : existing.is("condition", null);

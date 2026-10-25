@@ -28,9 +28,12 @@ export interface CartProduct {
 
 export interface CartVariant {
   attributes: unknown;
+  compare_at_price: number | null;
   id: string;
-  image: string | null;
-  price_override: number | null;
+  images: string[];
+  label_ar: string | null;
+  label_en: string | null;
+  price: number;
   stock_count: number;
 }
 
@@ -48,11 +51,11 @@ export interface CartItem {
   product_id: string;
   quantity: number;
   variant: CartVariant | null;
-  variant_id: string | null;
+  variant_id: string;
 }
 
 export interface CartLineView extends CartLine {
-  /** Copies left: the variant's stock when there is one. */
+  /** Copies left of the line's variant. */
   available: number;
   /** False when the product was archived or can't be bought anymore. */
   buyable: boolean;
@@ -65,7 +68,7 @@ export const isOtherCondition = (item: CartItem) =>
 
 /**
  * Prices a cart line like `create_order()` does: copies in another
- * condition at their own price, else the variant price, then the product's.
+ * condition at their own price, else the variant's price.
  */
 export const toCartLine = (item: CartItem): CartLineView => {
   const { product } = item;
@@ -80,17 +83,18 @@ export const toCartLine = (item: CartItem): CartLineView => {
     };
   }
   const buyable = product?.status === "active" && product.kind === "sale";
-  const available = item.variant
-    ? item.variant.stock_count
-    : (product?.stock_count ?? 0);
-
+  // The variant is always there; the product is the fallback if it can't
+  // be read.
+  const { variant } = item;
   return {
-    available,
+    available: variant ? variant.stock_count : (product?.stock_count ?? 0),
     buyable,
-    compareAtPrice: product?.compare_at_price ?? null,
+    compareAtPrice: variant
+      ? variant.compare_at_price
+      : (product?.compare_at_price ?? null),
     item,
     quantity: item.quantity,
-    unitPrice: item.variant?.price_override ?? product?.price ?? 0,
+    unitPrice: variant ? variant.price : (product?.price ?? 0),
   };
 };
 

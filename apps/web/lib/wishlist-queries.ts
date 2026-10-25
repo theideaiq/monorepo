@@ -12,8 +12,8 @@ export interface WishlistItem {
   created_at: string;
   product:
     | (ProductCard & {
-        /** Variant ids: a product with options is chosen on its page. */
-        product_variants: { id: string }[];
+        /** Its variants: with several to choose from, one is picked on its page. */
+        product_variants: { active: boolean; id: string }[];
         status: string;
       })
     | null;
@@ -21,7 +21,7 @@ export interface WishlistItem {
 }
 
 const WISHLIST_COLUMNS =
-  "product_id, created_at, product:products (id, slug, kind, status, name_ar, name_en, price, compare_at_price, currency, condition, stock_count, images, featured, category_id, product_variants (id))" as const;
+  "product_id, created_at, product:products (id, slug, kind, status, name_ar, name_en, price, compare_at_price, currency, condition, stock_count, images, featured, category_id, product_variants (id, active))" as const;
 
 export const useWishlist = () => {
   const { supabase, user } = useAuth();
@@ -76,7 +76,10 @@ export const useToggleWishlist = () => {
   });
 };
 
-/** Moves a wishlist item to the cart (one copy, no variant) and removes it. */
+/**
+ * Moves a wishlist item to the cart (one copy of its only live variant) and
+ * removes it.
+ */
 export const useMoveToCart = () => {
   const { supabase, user } = useAuth();
   const queryClient = useQueryClient();
@@ -88,8 +91,14 @@ export const useMoveToCart = () => {
       product,
     }: {
       name: string;
-      product: ProductCard;
+      product: NonNullable<WishlistItem["product"]>;
     }) => {
+      const [variant, ...others] = product.product_variants.filter(
+        (candidate) => candidate.active
+      );
+      if (!variant || others.length > 0) {
+        throw new Error("Choose a variant");
+      }
       await addToCart.mutateAsync({
         analytics: {
           currency: product.currency,
@@ -99,7 +108,7 @@ export const useMoveToCart = () => {
         },
         productId: product.id,
         quantity: 1,
-        variantId: null,
+        variantId: variant.id,
       });
       unwrap(
         await supabase

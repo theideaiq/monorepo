@@ -63,7 +63,19 @@ const product = {
   name_ar: "سماعة",
   name_en: "Headset",
   price: 50_000,
-  product_variants: [],
+  product_variants: [
+    {
+      active: true,
+      attributes: {},
+      compare_at_price: null,
+      id: "v0",
+      label_ar: null,
+      label_en: null,
+      price: 50_000,
+      sku: null,
+      stock_count: 4,
+    },
+  ],
   rental_tier: null,
   seller: "Baghdad Games",
   slug: "headset",
@@ -188,7 +200,10 @@ describe("wishlist", () => {
                 ...product,
                 id: "p2",
                 name_en: "Controller",
-                product_variants: [{ id: "v1" }],
+                product_variants: [
+                  { active: true, id: "v1" },
+                  { active: true, id: "v2" },
+                ],
                 slug: "controller",
               },
               product_id: "p2",
@@ -213,7 +228,7 @@ describe("wishlist", () => {
       product_id: "p1",
       quantity: 1,
       user_id: USER_ID,
-      variant_id: null,
+      variant_id: "v0",
     });
     expect(callsTo(db.calls, "wishlist_items", "delete")[0]?.filters).toEqual([
       ["eq", "user_id", USER_ID],

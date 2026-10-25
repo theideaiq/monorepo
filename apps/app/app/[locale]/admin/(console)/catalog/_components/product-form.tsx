@@ -27,7 +27,82 @@ interface ProductFormProps {
   readonly supabaseUrl: string;
   /** The IDEA Plus tiers, with the plan names at each (see `tierOptions`). */
   readonly tiers: { names: string; tier: number }[];
+  /**
+   * The product has several variants: its price and stock are theirs (set
+   * on each variant), shown here read-only.
+   */
+  readonly variantPriced?: boolean;
 }
+
+/**
+ * Price, compare-at price, stock, condition and the other-formats group.
+ * With several variants, price and stock are theirs: shown read-only.
+ */
+const PricingPanel = ({
+  product,
+  variantPriced,
+}: {
+  readonly product?: Tables<"products">;
+  readonly variantPriced: boolean;
+}) => {
+  const t = useTranslations("admin.catalog");
+  const tStore = useTranslations("store");
+  return (
+    <Panel
+      description={variantPriced ? t("variants.variantPriced") : undefined}
+      title={t("products.pricing")}
+    >
+      <FieldGrid columns={4}>
+        <TextField
+          defaultValue={product?.price ?? ""}
+          dir="ltr"
+          hint={t("fields.priceHint")}
+          inputMode="numeric"
+          label={t("fields.price")}
+          name="price"
+          readOnly={variantPriced}
+          required
+        />
+        <TextField
+          defaultValue={product?.compare_at_price ?? ""}
+          dir="ltr"
+          hint={t("fields.compareAtHint")}
+          inputMode="numeric"
+          label={t("fields.compareAt")}
+          name="compareAtPrice"
+          readOnly={variantPriced}
+        />
+        <TextField
+          defaultValue={product?.stock_count ?? 0}
+          dir="ltr"
+          hint={t("fields.stockHint")}
+          inputMode="numeric"
+          label={t("fields.stock")}
+          name="stock"
+          readOnly={variantPriced}
+          required
+        />
+        <SelectField
+          defaultValue={product?.condition ?? "new"}
+          label={t("fields.condition")}
+          name="condition"
+          options={Enums.product_condition.map((value) => ({
+            label: tStore(`condition.${value}`),
+            value,
+          }))}
+        />
+        <TextField
+          defaultValue={product?.group_key ?? ""}
+          dir="ltr"
+          hint={t("fields.groupKeyHint")}
+          label={t("fields.groupKey")}
+          maxLength={120}
+          name="groupKey"
+        />
+      </FieldGrid>
+    </Panel>
+  );
+};
 
 export const ProductForm = ({
   categories,
@@ -35,6 +110,7 @@ export const ProductForm = ({
   product,
   supabaseUrl,
   tiers,
+  variantPriced = false,
 }: ProductFormProps) => {
   const t = useTranslations("admin.catalog");
   const tStore = useTranslations("store");
@@ -152,53 +228,7 @@ export const ProductForm = ({
           />
         </Panel>
 
-        <Panel title={t("products.pricing")}>
-          <FieldGrid columns={4}>
-            <TextField
-              defaultValue={product?.price ?? ""}
-              dir="ltr"
-              hint={t("fields.priceHint")}
-              inputMode="numeric"
-              label={t("fields.price")}
-              name="price"
-              required
-            />
-            <TextField
-              defaultValue={product?.compare_at_price ?? ""}
-              dir="ltr"
-              hint={t("fields.compareAtHint")}
-              inputMode="numeric"
-              label={t("fields.compareAt")}
-              name="compareAtPrice"
-            />
-            <TextField
-              defaultValue={product?.stock_count ?? 0}
-              dir="ltr"
-              hint={t("fields.stockHint")}
-              inputMode="numeric"
-              label={t("fields.stock")}
-              name="stock"
-              required
-            />
-            <SelectField
-              defaultValue={product?.condition ?? "new"}
-              label={t("fields.condition")}
-              name="condition"
-              options={Enums.product_condition.map((value) => ({
-                label: tStore(`condition.${value}`),
-                value,
-              }))}
-            />
-            <TextField
-              defaultValue={product?.group_key ?? ""}
-              dir="ltr"
-              hint={t("fields.groupKeyHint")}
-              label={t("fields.groupKey")}
-              maxLength={120}
-              name="groupKey"
-            />
-          </FieldGrid>
-        </Panel>
+        <PricingPanel product={product} variantPriced={variantPriced} />
 
         <Panel title={t("products.content")}>
           <FieldGrid>

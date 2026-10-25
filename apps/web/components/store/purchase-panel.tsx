@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import { describeAttributes, formatPrice, localized } from "@repo/commerce";
+import { formatPrice, localized, variantName } from "@repo/commerce";
 import type { ProductDetail, ProductOffer } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
@@ -15,7 +15,11 @@ import { useEffect, useRef, useState } from "react";
 import { productHref } from "@/components/store/product-card";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
 import { WishlistButton } from "@/components/store/wishlist-button";
-import { pickVariant, variantForDeepLink } from "@/lib/app-product";
+import {
+  liveVariants,
+  pickVariant,
+  variantForDeepLink,
+} from "@/lib/app-product";
 import { MAX_QUANTITY } from "@/lib/cart";
 import { useAddToCart } from "@/lib/store-queries";
 
@@ -33,11 +37,12 @@ const VariantPicker = ({
   variantId,
 }: VariantPickerProps) => {
   const t = useTranslations("app.store.product");
+  const locale = useLocale();
   return (
     <fieldset className="grid gap-2">
       <legend className="mb-2 font-medium text-sm">{t("options")}</legend>
       <div className="flex flex-wrap gap-2">
-        {product.product_variants.map((variant) => (
+        {liveVariants(product.product_variants).map((variant) => (
           <button
             aria-pressed={variant.id === variantId}
             className={cn(
@@ -51,7 +56,7 @@ const VariantPicker = ({
             onClick={() => onPick(variant.id)}
             type="button"
           >
-            {describeAttributes(variant.attributes) || variant.sku}
+            {variantName(variant, locale) || variant.sku}
           </button>
         ))}
       </div>
@@ -152,8 +157,7 @@ export const PurchasePanel = ({
   // Copies for sale of the chosen variant, by condition.
   const forSale = offers.filter(
     (offer) =>
-      offer.purpose === "sale" &&
-      offer.variant_id === (selection.variant?.id ?? null)
+      offer.purpose === "sale" && offer.variant_id === selection.variant?.id
   );
   const chosen = forSale.find((offer) => offer.condition === condition);
   const otherCondition = condition !== product.condition;
@@ -165,13 +169,17 @@ export const PurchasePanel = ({
   const showConditions =
     forSale.length > 1 ||
     (forSale.length === 1 && forSale[0]?.condition !== product.condition);
+  const chosenVariant = selection.variant;
   const canAdd =
     product.kind === "sale" &&
     product.status === "active" &&
-    selection.ready &&
+    chosenVariant !== null &&
     stock > 0;
 
   const addToCart = (amount: number) => {
+    if (!chosenVariant) {
+      return;
+    }
     if (!user) {
       // Sign in first; the link adds one copy on the way back.
       router.push({
@@ -194,7 +202,7 @@ export const PurchasePanel = ({
         condition: otherCondition ? condition : null,
         productId: product.id,
         quantity: amount,
-        variantId: selection.variant?.id ?? null,
+        variantId: chosenVariant.id,
       },
       { onSuccess: () => setAdded(true) }
     );
@@ -230,7 +238,7 @@ export const PurchasePanel = ({
           value={condition}
         />
       ) : null}
-      {product.product_variants.length > 0 ? (
+      {liveVariants(product.product_variants).length > 1 ? (
         <VariantPicker
           onPick={(id) => {
             setVariantId(id);

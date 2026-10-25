@@ -12,6 +12,9 @@ export type ActionError =
   | "transition"
   | "inUse"
   | "lastSuperadmin"
+  | "lastVariant"
+  | "chooseVariant"
+  | "variantPricing"
   | "apiUnavailable"
   | "unknown";
 
@@ -61,6 +64,15 @@ export const databaseError = (error: DatabaseError): ActionError => {
   }
   if (message.includes("at least one superadmin")) {
     return "lastSuperadmin";
+  }
+  if (message.includes("at least one variant")) {
+    return "lastVariant";
+  }
+  if (message.includes("Choose a variant")) {
+    return "chooseVariant";
+  }
+  if (message.includes("set its price and stock on each variant")) {
+    return "variantPricing";
   }
   switch (error.code) {
     case "23505":

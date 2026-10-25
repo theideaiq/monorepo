@@ -1,4 +1,6 @@
-import { localized } from "@repo/commerce";
+import { localized, variantName } from "@repo/commerce";
+import type { Locale } from "@repo/internationalization";
+import { formatNumber } from "@repo/internationalization/format";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/admin/action-button";
@@ -114,11 +116,21 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           product={product}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
           tiers={tierOptions(plans ?? [])}
+          variantPriced={(variants ?? []).length > 1}
         />
         <CopiesPanel
           copies={copies ?? []}
           disabled={!canWrite}
           product={product}
+          variants={(variants ?? []).map((variant, index) => ({
+            id: variant.id,
+            label:
+              variantName(variant, locale) ||
+              variant.sku ||
+              t("copies.variantNumber", {
+                number: formatNumber(index + 1, locale as Locale),
+              }),
+          }))}
         />
         <RatingPanel
           productId={product.id}

@@ -15,22 +15,48 @@ const { Enums } = Constants.public;
 
 type Copy = Tables<"stock_items">;
 
+/** A product's variant as the copies panel names it. */
+export interface CopyVariant {
+  id: string;
+  label: string;
+}
+
 interface CopyFieldsProps {
   readonly copy?: Copy;
   readonly defaultCondition: Copy["condition"];
   readonly defaultPurpose: Copy["purpose"];
+  /** The product's variants (at least one). */
+  readonly variants: readonly CopyVariant[];
 }
 
-/** Condition, purpose, place, prices, serial and note of a copy. */
+/** Variant, condition, purpose, place, prices, serial and note of a copy. */
 const CopyFields = ({
   copy,
   defaultCondition,
   defaultPurpose,
+  variants,
 }: CopyFieldsProps) => {
   const t = useTranslations("admin.catalog");
   const tStore = useTranslations("store");
   return (
     <FieldGrid columns={4}>
+      {variants.length > 1 ? (
+        <SelectField
+          defaultValue={copy?.variant_id ?? variants[0]?.id}
+          label={t("copies.variant")}
+          name="variantId"
+          options={variants.map((variant) => ({
+            label: variant.label,
+            value: variant.id,
+          }))}
+        />
+      ) : (
+        <input
+          name="variantId"
+          type="hidden"
+          value={copy?.variant_id ?? variants[0]?.id ?? ""}
+        />
+      )}
       <SelectField
         defaultValue={copy?.condition ?? defaultCondition}
         label={t("fields.condition")}
@@ -153,6 +179,7 @@ interface CopiesPanelProps {
   readonly copies: Copy[];
   readonly disabled: boolean;
   readonly product: Pick<Tables<"products">, "condition" | "id" | "kind">;
+  readonly variants: readonly CopyVariant[];
 }
 
 /**
@@ -163,12 +190,14 @@ export const CopiesPanel = ({
   copies,
   disabled,
   product,
+  variants,
 }: CopiesPanelProps) => {
   const t = useTranslations("admin.catalog");
   const format = formatters(useLocale() as Locale);
   const defaults = {
     defaultCondition: product.condition,
     defaultPurpose: product.kind === "rental" ? "rental" : "sale",
+    variants,
   } as const;
   const available = copies.filter((copy) => copy.status === "available");
 
