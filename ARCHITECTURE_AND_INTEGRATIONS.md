@@ -251,6 +251,26 @@ session in the shared cookie.
   scan it into **Customers → Check a Pass**, which calls `check_pass()`
   (support staff and admins, AAL2) and accepts the current code and the
   ones either side of it. A screenshot stops working within a minute.
+- **Bulbs.** The IDEA Pass rewards (migration `20261128000000_bulbs.sql`):
+  1 Bulb = 100 IQD. Every movement is a row in `bulb_entries`, written only
+  by triggers and SECURITY DEFINER functions (no insert, update or delete
+  policy). A delivered order earns its tier's cashback on the items (not
+  delivery), times the category's `bulb_multiplier` (laptops 0.5), plus
+  `store_settings.bulb_plus_bonus` for Plus members, and a one-time
+  20-Bulb first-order bonus; both stay `pending` for 7 days (the return
+  window) and count as usable once `available_at` passes, and a cancelled
+  or refunded order voids them. A completed trade-in earns 10, and a
+  store-credit payout is paid in Bulbs at 120% of the offer. The tier
+  (`bulb_tiers`: Glow, Shine 250,000, Beam 750,000, Blaze 2,000,000 IQD of
+  delivered orders in 12 months) sets the rate and the card's colour.
+  Members read `my_bulbs()` (My Pass → Bulbs, `/pass/bulbs`); support
+  sees and adjusts a member's Bulbs with a reason on the customer page
+  (`member_bulbs`, `adjust_bulbs`, audited); finance sees what members hold
+  and edits the tiers, the Plus bonus and the multipliers (Finance → Bulbs,
+  `bulbs_outstanding`, `set_bulb_rates`). `GET /cron/bulbs` (daily, 03:30
+  UTC) runs `run_bulb_expiry()`: a reminder after 11 months without
+  activity and expiry at 12. Spending Bulbs at checkout and the tiers'
+  delivery perks come next.
 - **Google Wallet.** `POST /pass/wallet` on the API signs a "save to
   Google Wallet" link for a generic pass whose QR code rotates in Google
   Wallet with the same secret (`rotatingBarcode.totpDetails`), so both

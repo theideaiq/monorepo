@@ -8,6 +8,7 @@ import { type Formatters, formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";
 import { canRead } from "@/lib/admin/roles";
 import { requireSection, type ServerClient } from "@/lib/admin/session";
+import { BulbsPanel } from "./bulbs-panel";
 import { CrmForm } from "./crm-form";
 import {
   OrdersPanel,
@@ -180,6 +181,13 @@ const CustomerPage = async ({
             lastPhone={lastPhone}
             profile={profile}
             telegram={telegram ? { member: telegram.data } : null}
+          />
+
+          <BulbsPanel
+            canAdjust={canWrite}
+            format={format}
+            supabase={supabase}
+            userId={id}
           />
 
           {subscriptions ? (

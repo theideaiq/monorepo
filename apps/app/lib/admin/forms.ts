@@ -67,6 +67,15 @@ export const optionalDecimal = (min = 0) =>
     .transform((value) => (value ? Number(value.replaceAll(",", "")) : null))
     .pipe(z.union([z.null(), z.number().min(min)]));
 
+/** A required decimal number within a range, e.g. a rate in percent. */
+export const decimalIn = (min: number, max: number) =>
+  z
+    .string()
+    .trim()
+    .min(1)
+    .transform((value) => Number(value.replaceAll(",", "")))
+    .pipe(z.number().min(min).max(max));
+
 /** A checkbox: present ("on") means true. */
 export const checkbox = z
   .string()

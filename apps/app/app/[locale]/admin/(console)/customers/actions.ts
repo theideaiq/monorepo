@@ -110,3 +110,31 @@ export const checkPass = staffAction(
     return success("saved", { data: { pass: result } });
   }
 );
+
+/**
+ * Adds or takes away a member's Bulbs with a reason (`adjust_bulbs`: support
+ * and finance staff; audited).
+ */
+export const adjustBulbs = staffAction(
+  "customers",
+  z.object({
+    bulbs: z
+      .string()
+      .trim()
+      .regex(/^[-−]?\d{1,6}$/)
+      .transform((value) => Number(value.replace("−", "-")))
+      .refine((value) => value !== 0),
+    reason: z.string().trim().min(3).max(300),
+    userId: uuid,
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("adjust_bulbs", {
+        bulbs: input.bulbs,
+        member: input.userId,
+        why: input.reason,
+      })
+    );
+    return success();
+  }
+);

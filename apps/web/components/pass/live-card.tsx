@@ -2,11 +2,13 @@
 
 import { useAuth } from "@repo/auth/provider";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
+import { cn } from "@repo/design-system/lib/utils";
 import { formatNumber } from "@repo/internationalization/format";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import { encode } from "uqr";
+import { type BulbTier, tierCardBackground } from "@/lib/bulbs";
 import {
   formatMemberNumber,
   importPassKey,
@@ -147,6 +149,10 @@ interface LiveCardProps {
   readonly name: string;
   /** The member's The IDEA Plus plan, when they have one. */
   readonly plan: string | null;
+  /** The member's tier: the card changes colour with it. */
+  readonly tier: BulbTier;
+  /** The tier's name, in the page's language. */
+  readonly tierName: string;
 }
 
 /**
@@ -154,7 +160,13 @@ interface LiveCardProps {
  * pointer, the member's name and number, and a QR code with a 6-digit code
  * that changes every 30 seconds (shown at the counter, checked there).
  */
-export const LiveCard = ({ memberSince, name, plan }: LiveCardProps) => {
+export const LiveCard = ({
+  memberSince,
+  name,
+  plan,
+  tier,
+  tierName,
+}: LiveCardProps) => {
   const t = useTranslations("pass.card");
   const locale = useLocale();
   const card = useCard();
@@ -195,7 +207,9 @@ export const LiveCard = ({ memberSince, name, plan }: LiveCardProps) => {
           onPointerMove={onPointerMove}
           ref={ref}
         >
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_90%_at_10%_0%,#f0507f_0%,#d81b60_45%,#8f0f3f_100%)]" />
+          <div
+            className={cn("absolute inset-0 -z-10", tierCardBackground[tier])}
+          />
           <Guilloche className="absolute inset-0 -z-10 size-full text-white/40" />
           <div className="pass-sheen pointer-events-none absolute inset-0" />
 
@@ -208,7 +222,7 @@ export const LiveCard = ({ memberSince, name, plan }: LiveCardProps) => {
               />
               <div className="grid min-w-0 gap-1">
                 <p className="text-[0.625rem] text-white/75 uppercase tracking-[0.2em] sm:text-xs">
-                  {plan ?? t("member")}
+                  {[tierName, plan].filter(Boolean).join(" · ")}
                 </p>
                 <p className="truncate font-semibold text-lg leading-tight sm:text-3xl">
                   {name}

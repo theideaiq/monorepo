@@ -4,7 +4,7 @@ import { useAuth } from "@repo/auth/provider";
 import { formatPrice } from "@repo/commerce";
 import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
-import { formatDate } from "@repo/internationalization/format";
+import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { currentAppPath, safeNextPath } from "./navigation";
 import { queryKeys, requireUserId, unwrap } from "./queries";
@@ -18,8 +18,8 @@ import { queryKeys, requireUserId, unwrap } from "./queries";
 export type NotificationKind = Enums<"notification_kind">;
 
 /**
- * Every event the triggers emit (see the customer_features, trade_ins and
- * whatsapp migrations).
+ * Every event the triggers emit (see the customer_features, trade_ins,
+ * whatsapp and bulbs migrations).
  */
 export const NOTIFICATION_EVENTS = [
   "order_paid",
@@ -37,6 +37,7 @@ export const NOTIFICATION_EVENTS = [
   "trade_in_offer",
   "trade_in_rejected",
   "trade_in_completed",
+  "bulbs_expiring",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -66,6 +67,19 @@ const asRecord = (data: Json): Record<string, Json | undefined> =>
 
 const text = (value: Json | undefined) =>
   typeof value === "string" || typeof value === "number" ? String(value) : "";
+
+/** The Bulbs and the expiry date of a `bulbs_expiring` reminder. */
+const bulbsExpiringValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const bulbs = Number(text(data.bulbs));
+  const expires = text(data.expires_at);
+  return {
+    bulbs: Number.isFinite(bulbs) ? formatNumber(bulbs, locale) : "",
+    date: expires ? formatDate(expires, locale) : "",
+  };
+};
 
 /**
  * Which messages render a notification, with its data formatted for them
@@ -108,6 +122,9 @@ export const describeNotification = (
   if (event === "trade_in_offer") {
     const amount = Number(text(data.amount));
     values.amount = Number.isFinite(amount) ? formatPrice(amount, locale) : "";
+  }
+  if (event === "bulbs_expiring") {
+    Object.assign(values, bulbsExpiringValues(data, locale));
   }
   if (event.startsWith("rental_")) {
     const english = text(data.name_en);
