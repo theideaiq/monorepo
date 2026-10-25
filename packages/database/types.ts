@@ -236,6 +236,7 @@ export type Database = {
           kind: Database["public"]["Enums"]["bulb_kind"];
           order_id: string | null;
           payment_id: string | null;
+          product_id: string | null;
           reason: string | null;
           review_id: string | null;
           status: Database["public"]["Enums"]["bulb_status"];
@@ -252,6 +253,7 @@ export type Database = {
           kind: Database["public"]["Enums"]["bulb_kind"];
           order_id?: string | null;
           payment_id?: string | null;
+          product_id?: string | null;
           reason?: string | null;
           review_id?: string | null;
           status?: Database["public"]["Enums"]["bulb_status"];
@@ -268,6 +270,7 @@ export type Database = {
           kind?: Database["public"]["Enums"]["bulb_kind"];
           order_id?: string | null;
           payment_id?: string | null;
+          product_id?: string | null;
           reason?: string | null;
           review_id?: string | null;
           status?: Database["public"]["Enums"]["bulb_status"];
@@ -294,6 +297,13 @@ export type Database = {
             columns: ["payment_id"];
             isOneToOne: false;
             referencedRelation: "payments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bulb_entries_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
             referencedColumns: ["id"];
           },
           {
@@ -2375,6 +2385,7 @@ export type Database = {
           kind: Database["public"]["Enums"]["bulb_kind"];
           order_id: string | null;
           payment_id: string | null;
+          product_id: string | null;
           reason: string | null;
           review_id: string | null;
           status: Database["public"]["Enums"]["bulb_status"];

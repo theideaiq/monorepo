@@ -50,7 +50,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(17);
+select plan(18);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- M is a member who bought a book, P a Plus member, S support, E an editor.
@@ -153,6 +153,16 @@ select is(
    where r.user_id = '00000000-0000-0000-0000-0000000007e1'),
   'void',
   'hiding the review voids it'
+);
+delete from public.product_reviews where user_id = '00000000-0000-0000-0000-0000000007e1';
+insert into public.product_reviews (product_id, user_id, rating, comment, photos)
+values ('74000000-0000-0000-0000-0000000000a1',
+  '00000000-0000-0000-0000-0000000007e1', 5, 'Again', array['00000000-0000-0000-0000-0000000007e1/y.webp']);
+select results_eq(
+  $$ select count(*)::integer from public.bulb_entries
+     where user_id = '00000000-0000-0000-0000-0000000007e1' and reason = 'photo_review' $$,
+  $$ values (1) $$,
+  'deleting a photo review and writing it again earns nothing more'
 );
 
 -- ── Event check-ins ─────────────────────────────────────────────────────────

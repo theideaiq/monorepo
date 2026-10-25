@@ -7,23 +7,27 @@
 --   with a notification. Members set their birthday once in My Pass;
 --   support can correct it.
 -- - Photo review: 5 Bulbs for a published review with a photo of a product
---   the member bought or rented, once per review; voided if staff hide it.
+--   the member bought or rented, once per product (deleting the review and
+--   writing it again earns nothing more); voided if staff hide it.
 -- - Event check-in: 10 Bulbs when staff check a member in at an event they
 --   RSVP'd for, once per event.
 
 alter table public.bulb_entries
   add column payment_id uuid references public.payments (id) on delete set null,
   add column review_id uuid references public.product_reviews (id) on delete set null,
-  add column event_id uuid references public.events (id) on delete set null;
+  add column event_id uuid references public.events (id) on delete set null,
+  add column product_id uuid references public.products (id) on delete set null;
 
 create index bulb_entries_payment_idx on public.bulb_entries (payment_id);
 create index bulb_entries_review_idx on public.bulb_entries (review_id);
 create index bulb_entries_event_idx on public.bulb_entries (event_id);
+create index bulb_entries_product_idx on public.bulb_entries (product_id);
 
 create unique index bulb_entries_payment_purchase_key
   on public.bulb_entries (payment_id) where kind = 'purchase';
+-- Per member and product, not per review, so a deleted review keeps its entry.
 create unique index bulb_entries_photo_review_key
-  on public.bulb_entries (review_id) where reason = 'photo_review';
+  on public.bulb_entries (user_id, product_id) where reason = 'photo_review';
 create unique index bulb_entries_check_in_key
   on public.bulb_entries (user_id, event_id) where reason = 'event_check_in';
 -- One birthday bonus a year: the reason carries the year (birthday_2026).
@@ -221,8 +225,8 @@ begin
     update public.bulb_entries set status = 'void'
     where review_id = new.id and reason = 'photo_review' and status <> 'void';
   elsif new.status = 'published' and new.verified_purchase and cardinality(new.photos) > 0 then
-    insert into public.bulb_entries (user_id, amount, kind, review_id, reason)
-    values (new.user_id, 5, 'bonus', new.id, 'photo_review')
+    insert into public.bulb_entries (user_id, amount, kind, review_id, product_id, reason)
+    values (new.user_id, 5, 'bonus', new.id, new.product_id, 'photo_review')
     on conflict do nothing;
   end if;
   return null;
