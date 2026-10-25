@@ -363,6 +363,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   the event's RSVP list). Reviews take up to 4 photos (public `reviews`
   bucket). Migration `20261205000000_bulbs_extras.sql`. Apple Wallet is
   dropped for now (it isn't free). Next: The IDEA Suite workspace.
+- 2026-10-25: **The IDEA Suite: procurement.** Companies send procurement
+  requests from The IDEA Spark (Business → Procurement); support quotes them
+  in Back office → The IDEA Suite; the company accepts a quote (it becomes a
+  purchase order, with their own PO reference) or declines; support marks
+  it delivered; finance issues the invoice and marks it paid (Business →
+  Invoices). Owners and admins are notified of quotes and invoices. Also,
+  hiding a photo review now voids the bonus from an earlier, deleted review
+  of the same product. Migrations `20261205100000_photo_review_void.sql`
+  and `20261206000000_suite_procurement.sql`. Next: Suite hiring (job
+  requests, candidates, shortlists).
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

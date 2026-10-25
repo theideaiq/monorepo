@@ -1283,7 +1283,9 @@
         "projects": "المشاريع",
         "members": "الأعضاء",
         "billing": "الباقة",
-        "settings": "الإعدادات"
+        "settings": "الإعدادات",
+        "procurement": "المشتريات",
+        "invoices": "الفواتير"
       },
       "projects": {
         "title": "المشاريع",
@@ -1784,6 +1786,88 @@
       },
       "readyFrom": "جاهز من {date}",
       "bulbsCredited": "{bulbs} Bulbs"
+    },
+    "suite": {
+      "status": {
+        "request": {
+          "submitted": "مُرسل",
+          "quoted": "تم التسعير",
+          "ordered": "تم الطلب",
+          "delivered": "تم التسليم",
+          "cancelled": "ملغى"
+        },
+        "quote": {
+          "draft": "مسودة",
+          "sent": "مُرسل",
+          "accepted": "مقبول",
+          "declined": "مرفوض",
+          "withdrawn": "مسحوب"
+        },
+        "order": {
+          "open": "مفتوح",
+          "delivered": "تم التسليم",
+          "cancelled": "ملغى"
+        },
+        "invoice": {
+          "issued": "صادرة",
+          "paid": "مدفوعة",
+          "void": "ملغاة"
+        }
+      },
+      "procurement": {
+        "title": "المشتريات",
+        "description": "أخبرنا بما تحتاجه شركتك. نرسل لك عرض سعر، وعند قبوله يصبح أمر شراء بفاتورة شهرية.",
+        "managersOnly": "يرسل المالكون والمسؤولون الطلبات ويردّون على عروض الأسعار.",
+        "requests": "الطلبات",
+        "empty": "لا توجد طلبات بعد.",
+        "number": "الطلب #{number}",
+        "new": {
+          "title": "طلب جديد",
+          "description": "منتجات أو معدات أو خدمات: صِفها ونرسل لك عرض سعر.",
+          "what": "ما الذي تحتاجه؟",
+          "whatPlaceholder": "مثلاً: 12 حاسوباً محمولاً للمكتب الجديد",
+          "details": "التفاصيل",
+          "detailsPlaceholder": "المواصفات، الكميات، العلامات التجارية، عنوان التسليم…",
+          "budget": "الميزانية (د.ع، اختياري)",
+          "neededBy": "مطلوب بحلول (اختياري)",
+          "send": "إرسال الطلب",
+          "error": "تعذّر إرسال الطلب. حاول مجدداً."
+        }
+      },
+      "request": {
+        "notFound": "هذا الطلب ليس ضمن هذه الشركة.",
+        "awaitingQuote": "نعمل على تجهيز عرض السعر. سيصلك إشعار عندما يصبح جاهزاً.",
+        "quote": "عرض السعر #{number}",
+        "validUntil": "صالح حتى {date}",
+        "lineQuantity": "{quantity} × {price}",
+        "total": "الإجمالي",
+        "order": "أمر الشراء #{number}",
+        "yourReference": "مرجعكم: {reference}",
+        "invoice": "الفاتورة #{number} · {status}",
+        "reference": "رقم أمر الشراء لديكم (اختياري)",
+        "referencePlaceholder": "مثلاً: PO-2026-114",
+        "accept": "قبول العرض",
+        "decline": "رفض",
+        "declineTitle": "رفض عرض السعر هذا؟",
+        "decideError": "لم تنجح العملية. ربما انتهت صلاحية العرض أو تمّ الرد عليه.",
+        "budget": "الميزانية {budget}",
+        "neededBy": "مطلوب بحلول {date}",
+        "cancel": "إلغاء الطلب",
+        "cancelTitle": "إلغاء هذا الطلب؟",
+        "cancelError": "تعذّر إلغاء الطلب.",
+        "keep": "إبقاء"
+      },
+      "invoices": {
+        "title": "الفواتير",
+        "description": "فواتير أوامر الشراء الخاصة بكم.",
+        "empty": "لا توجد فواتير بعد.",
+        "number": "الفاتورة #{number}",
+        "due": "تستحق في {date}",
+        "paidOn": "دُفعت في {date}",
+        "order": "أمر الشراء #{number}",
+        "orderWithReference": "أمر الشراء #{number} · {reference}",
+        "howToPay": "ادفع بالتحويل المصرفي أو ZainCash أو FIB أو Qi مع ذكر رقم الفاتورة. لديك سؤال؟ تواصل مع الدعم."
+      }
     }
   },
   "store": {
@@ -1955,6 +2039,14 @@
         "bulbs_birthday": {
           "title": "عيد ميلاد سعيد من The IDEA",
           "body": "أضفنا {bulbs} Bulbs إلى The IDEA Pass. استمتع بيومك!"
+        },
+        "quote_sent": {
+          "title": "وصلك عرض سعر",
+          "body": "عرض السعر #{number} لـ {title}: {total}. افتحه لقبوله أو رفضه."
+        },
+        "invoice_issued": {
+          "title": "فاتورة جديدة",
+          "body": "الفاتورة #{number} بمبلغ {amount}، تستحق في {date}."
         }
       },
       "kinds": {
@@ -2054,7 +2146,8 @@
       "support": "الدعم",
       "reviews": "التقييمات",
       "tradeIns": "الشراء من العملاء",
-      "affiliates": "الشركاء"
+      "affiliates": "الشركاء",
+      "suite": "The IDEA Suite"
     },
     "roles": {
       "superadmin": "مشرف عام",
@@ -3295,6 +3388,64 @@
         "hint": "نسبة من السعر بعد خصم المتابع 5%، حسب الفئة. يحددها قسم المالية."
       },
       "saveDecision": "احفظ القرار"
+    },
+    "suite": {
+      "title": "The IDEA Suite",
+      "count": "{count} طلبات",
+      "status": "الحالة",
+      "views": {
+        "open": "المفتوحة",
+        "all": "الكل"
+      },
+      "empty": "لا توجد طلبات هنا.",
+      "request": "الطلب",
+      "company": "الشركة",
+      "budget": "الميزانية",
+      "neededBy": "مطلوب بحلول",
+      "received": "تاريخ الاستلام",
+      "number": "الطلب رقم {number}",
+      "details": "التفاصيل",
+      "requestedBy": "مقدّم الطلب",
+      "cancelRequest": "إلغاء الطلب",
+      "tabs": {
+        "requests": "الطلبات",
+        "orders": "أوامر الشراء"
+      },
+      "quotes": {
+        "number": "عرض السعر رقم {number}",
+        "notes": "ملاحظات للشركة",
+        "validUntil": "صالح حتى",
+        "validUntilDate": "صالح حتى {date}",
+        "create": "إنشاء مسودة عرض سعر",
+        "new": "عرض سعر جديد",
+        "description": "البند",
+        "quantity": "الكمية",
+        "unitPrice": "سعر الوحدة (د.ع)",
+        "lineTotal": "المجموع",
+        "addLine": "إضافة بند",
+        "noLines": "لا توجد بنود بعد.",
+        "total": "الإجمالي: {total}",
+        "send": "إرسال إلى الشركة",
+        "sendDescription": "سيتم إشعار مالكي الشركة ومسؤوليها ليقبلوه أو يرفضوه. لا يمكن تعديل عرض السعر بعد إرساله."
+      },
+      "orders": {
+        "title": "أوامر الشراء",
+        "empty": "لا توجد أوامر شراء بعد.",
+        "order": "الأمر",
+        "number": "أمر الشراء رقم {number}",
+        "total": "الإجمالي",
+        "reference": "مرجع الشركة",
+        "created": "تاريخ الإنشاء",
+        "invoice": "الفاتورة",
+        "invoiceNumber": "الفاتورة رقم {number}",
+        "due": "تستحق في {date}",
+        "notInvoiced": "بدون فاتورة",
+        "markDelivered": "تحديد كمُسلّم",
+        "cancel": "إلغاء الأمر",
+        "issueInvoice": "إصدار فاتورة",
+        "markPaid": "تحديد كمدفوعة",
+        "voidInvoice": "إلغاء الفاتورة"
+      }
     }
   },
   "design": {

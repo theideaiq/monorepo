@@ -10,6 +10,7 @@ import {
 } from "@repo/internationalization/app-paths";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { appLink } from "./links";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /**
@@ -44,6 +45,8 @@ export const NOTIFICATION_EVENTS = [
   "bulbs_birthday",
   "affiliate_approved",
   "affiliate_paid",
+  "quote_sent",
+  "invoice_issued",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -102,6 +105,33 @@ const affiliateValues = (
   };
 };
 
+/** A quote's number, request title and total (`quote_sent`). */
+const quoteValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const total = Number(text(data.total));
+  return {
+    number: text(data.number),
+    title: text(data.title),
+    total: Number.isFinite(total) ? formatPrice(total, locale) : "",
+  };
+};
+
+/** An invoice's number, amount and due date (`invoice_issued`). */
+const invoiceValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const amount = Number(text(data.amount));
+  const due = text(data.due_on);
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    date: due ? formatDate(due, locale) : "",
+    number: text(data.number),
+  };
+};
+
 /** Events whose data needs formatting beyond the common fields. */
 const extraValues: Partial<
   Record<
@@ -116,6 +146,8 @@ const extraValues: Partial<
   affiliate_paid: affiliateValues,
   bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
+  invoice_issued: invoiceValues,
+  quote_sent: quoteValues,
 };
 
 /**
@@ -177,10 +209,24 @@ export const describeNotification = (
   };
 };
 
-/** The app path to open, or null for a missing or unsafe link. */
-export const notificationHref = (link: string | null) => {
+const SUITE_PATH = /^\/business(?:[/?#]|$)/;
+
+/**
+ * The path to open, or null for a missing or unsafe link. The IDEA Suite's
+ * pages (`/business…`) are on The IDEA Spark, so those links are absolute.
+ */
+export const notificationHref = (
+  link: string | null,
+  locale: Locale = "en",
+  appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ""
+) => {
   const path = safeNextPath(link);
-  return path ? currentAppPath(path) : null;
+  if (!path) {
+    return null;
+  }
+  return SUITE_PATH.test(path)
+    ? appLink(appUrl, locale, path)
+    : currentAppPath(path);
 };
 
 const NOTIFICATION_COLUMNS =

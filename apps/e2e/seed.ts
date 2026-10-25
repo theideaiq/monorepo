@@ -144,3 +144,24 @@ export const ensureProduct = async () => {
     )
   );
 };
+
+/** The customer's company ("E2E Company"), owned by them, with no requests. */
+export const resetCompany = async () => {
+  const db = admin();
+  const userId = await ensureUser(customer.email, customer.name);
+  check(await db.from("organizations").delete().eq("slug", "e2e-company"));
+  const { data, error } = await db
+    .from("organizations")
+    .insert({ created_by: userId, name: "E2E Company", slug: "e2e-company" })
+    .select("id")
+    .single();
+  if (error) {
+    throw error;
+  }
+  check(
+    await db
+      .from("memberships")
+      .insert({ organization_id: data.id, role: "owner", user_id: userId })
+  );
+  return data.id;
+};

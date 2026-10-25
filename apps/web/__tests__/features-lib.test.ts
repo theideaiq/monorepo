@@ -131,6 +131,14 @@ describe("notifications", () => {
     expect(notificationHref("/orders/o1")).toBe("/pass/orders/o1");
     expect(notificationHref("/plus?plan=p1")).toBe("/pass/plus?plan=p1");
     expect(notificationHref("/events")).toBe("/events");
+    // The IDEA Suite is on The IDEA Spark.
+    expect(
+      notificationHref(
+        "/business/invoices",
+        "ar",
+        "https://spark.theideaiq.com"
+      )
+    ).toBe("https://spark.theideaiq.com/ar/business/invoices");
     // Links stored while detail pages took a query parameter.
     expect(notificationHref("/orders/view?id=o1")).toBe("/pass/orders/o1");
     expect(notificationHref("/support/view?id=t%201")).toBe(

@@ -50,7 +50,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(18);
+select plan(19);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- M is a member who bought a book, P a Plus member, S support, E an editor.
@@ -163,6 +163,15 @@ select results_eq(
      where user_id = '00000000-0000-0000-0000-0000000007e1' and reason = 'photo_review' $$,
   $$ values (1) $$,
   'deleting a photo review and writing it again earns nothing more'
+);
+update public.bulb_entries set status = 'available'
+where user_id = '00000000-0000-0000-0000-0000000007e1' and reason = 'photo_review';
+update public.product_reviews set status = 'hidden' where user_id = '00000000-0000-0000-0000-0000000007e1';
+select is(
+  (select status::text from public.bulb_entries
+   where user_id = '00000000-0000-0000-0000-0000000007e1' and reason = 'photo_review'),
+  'void',
+  'hiding the rewritten review voids the earlier review''s bonus'
 );
 
 -- ── Event check-ins ─────────────────────────────────────────────────────────
