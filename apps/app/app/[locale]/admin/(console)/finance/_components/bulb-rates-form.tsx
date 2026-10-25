@@ -18,6 +18,7 @@ interface BulbRatesFormProps {
   readonly disabled: boolean;
   readonly plusBonus: number;
   readonly tiers: {
+    free_delivery_from: number | null;
     min_spend: number;
     rate: number;
     tier: Enums<"bulb_tier">;
@@ -40,7 +41,7 @@ export const BulbRatesForm = ({
     <ActionForm action={saveBulbRates}>
       <fieldset className="grid gap-6" disabled={disabled}>
         {tiers.map((tier) => (
-          <FieldGrid key={tier.tier}>
+          <FieldGrid columns={3} key={tier.tier}>
             <TextField
               defaultValue={tier.min_spend}
               dir="ltr"
@@ -56,6 +57,14 @@ export const BulbRatesForm = ({
               inputMode="decimal"
               label={t("rate", { tier: tTier(`${tier.tier}.name`) })}
               name={`${tier.tier}Rate`}
+            />
+            <TextField
+              defaultValue={tier.free_delivery_from ?? ""}
+              dir="ltr"
+              hint={t("freeDeliveryHint")}
+              inputMode="numeric"
+              label={t("freeDelivery", { tier: tTier(`${tier.tier}.name`) })}
+              name={`${tier.tier}FreeDelivery`}
             />
           </FieldGrid>
         ))}

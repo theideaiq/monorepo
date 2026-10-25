@@ -381,6 +381,8 @@ const OrderView = ({
             </CardHeader>
             <CardContent className="grid gap-3">
               <OrderSummary
+                bulbsDiscount={order.bulbs_discount}
+                bulbsUsed={order.bulbs_used}
                 shippingFee={order.shipping_fee}
                 subtotal={order.subtotal}
                 total={order.total}

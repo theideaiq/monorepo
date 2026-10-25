@@ -928,7 +928,8 @@
       "notEnoughStock": "Only {count} available. Lower the quantity to continue.",
       "outOfStock": "Out of stock. Remove it to continue.",
       "problems": "Fix the items marked below to check out.",
-      "updateFailed": "We couldn't update your cart. Please try again."
+      "updateFailed": "We couldn't update your cart. Please try again.",
+      "bulbs": "Bulbs ({bulbs})"
     },
     "checkout": {
       "title": "Checkout",
@@ -973,7 +974,8 @@
         "unknown": "Something went wrong. Please try again.",
         "cashUnavailable": "Cash payment isn't available right now. Choose to pay online.",
         "pickupUnavailable": "Pickup from the store isn't available right now. Choose delivery.",
-        "zoneUnavailable": "We can't deliver to this governorate right now. Choose another, or pick up from the store."
+        "zoneUnavailable": "We can't deliver to this governorate right now. Choose another, or pick up from the store.",
+        "notEnoughBulbs": "You don't have that many Bulbs any more. Check the amount and try again."
       },
       "fulfilment": {
         "title": "Delivery or pickup",
@@ -1001,7 +1003,14 @@
       },
       "placeOrderCash": "Place order · {amount}",
       "cashNote": "You'll pay {amount} in cash when your order arrives.",
-      "pickupCashNote": "You'll pay {amount} at the store when you collect your order."
+      "pickupCashNote": "You'll pay {amount} at the store when you collect your order.",
+      "bulbs": {
+        "title": "Pay with Bulbs",
+        "available": "You have {bulbs} Bulbs ({amount}).",
+        "use": "Use my Bulbs on this order",
+        "using": "Using {bulbs} Bulbs: {amount} off"
+      },
+      "tierDelivery": "Free delivery with your tier."
     },
     "orders": {
       "title": "Orders",
@@ -1560,7 +1569,8 @@
         "plus": "The IDEA Plus members earn 1% more on every tier.",
         "pending": "Bulbs from an order are usable 7 days after delivery; a cancelled or refunded order takes them back.",
         "tradeIn": "Sell to us for store credit and it's paid in Bulbs, with 20% more than the cash offer.",
-        "expiry": "Bulbs don't expire while you're active; after 12 months without any activity they do, and we remind you a month before."
+        "expiry": "Bulbs don't expire while you're active; after 12 months without any activity they do, and we remind you a month before.",
+        "spend": "Spend Bulbs at checkout: they pay up to the whole order, delivery included. A cancelled order gives them back."
       },
       "historyTitle": "History",
       "empty": "No Bulbs yet. Your first order earns cashback and a 20-Bulb welcome bonus.",
@@ -1588,7 +1598,9 @@
         "blaze": {
           "name": "Blaze"
         }
-      }
+      },
+      "freeDelivery": "Free delivery on every order",
+      "freeDeliveryFrom": "Free delivery from {amount}"
     }
   },
   "store": {
@@ -2330,7 +2342,8 @@
         "action": "Mark cash collected",
         "confirm": "Record {amount} collected in cash?",
         "confirmDescription": "The order is marked paid and delivered, and a cash payment is recorded for finance."
-      }
+      },
+      "bulbs": "Paid with {bulbs} Bulbs"
     },
     "rentals": {
       "title": "Rentals",
@@ -2585,7 +2598,9 @@
         "plusBonus": "The IDEA Plus bonus (percentage points)",
         "plusBonusHint": "Added to the tier's cashback for Plus members.",
         "multipliers": "Category multipliers",
-        "multipliersHint": "1 earns the full rate, 0.5 half (for low-margin items like laptops), 0 nothing."
+        "multipliersHint": "1 earns the full rate, 0.5 half (for low-margin items like laptops), 0 nothing.",
+        "freeDelivery": "{tier}: free delivery from (IQD)",
+        "freeDeliveryHint": "Empty for none, 0 for every order."
       }
     },
     "editorial": {

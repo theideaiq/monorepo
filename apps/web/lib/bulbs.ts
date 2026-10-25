@@ -8,8 +8,6 @@ import type { Enums } from "@repo/database";
 
 export type BulbTier = Enums<"bulb_tier">;
 
-export const BULB_VALUE_IQD = 100;
-
 export const bulbTiers = [
   "glow",
   "shine",

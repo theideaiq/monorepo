@@ -1,16 +1,25 @@
 "use client";
 
 import { formatPrice } from "@repo/commerce";
+import { formatNumber } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 
 interface OrderSummaryProps {
+  /** IQD paid with Bulbs, and how many. */
+  readonly bulbsDiscount?: number;
+  readonly bulbsUsed?: number;
   readonly shippingFee: number;
   readonly subtotal: number;
   readonly total: number;
 }
 
-/** Subtotal, delivery and total rows, for the cart, checkout and orders. */
+/**
+ * Subtotal, delivery, Bulbs and total rows, for the cart, checkout and
+ * orders.
+ */
 export const OrderSummary = ({
+  bulbsDiscount = 0,
+  bulbsUsed = 0,
   shippingFee,
   subtotal,
   total,
@@ -33,6 +42,16 @@ export const OrderSummary = ({
             : formatPrice(shippingFee, locale)}
         </dd>
       </div>
+      {bulbsDiscount > 0 ? (
+        <div className="flex justify-between gap-4">
+          <dt className="text-muted-foreground">
+            {t("bulbs", { bulbs: formatNumber(bulbsUsed, locale) })}
+          </dt>
+          <dd className="tabular-nums" dir="ltr">
+            −{formatPrice(bulbsDiscount, locale)}
+          </dd>
+        </div>
+      ) : null}
       <div className="flex justify-between gap-4 border-t pt-2 font-semibold text-base">
         <dt>{t("total")}</dt>
         <dd className="tabular-nums">{formatPrice(total, locale)}</dd>

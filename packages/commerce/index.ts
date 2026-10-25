@@ -120,15 +120,23 @@ export type PaymentMethod = "cash_on_delivery" | "online";
 
 /** Pickup or delivery, and the chosen zone's fee for delivery. */
 export interface DeliveryChoice {
+  /**
+   * The member's tier perk: the subtotal from which delivery is free (0 for
+   * always), or null without one.
+   */
+  freeDeliveryFrom?: number | null;
   fulfilment: Fulfilment;
   /** The delivery zone's fee; the store's default fee when none is chosen. */
   zoneFee?: number | null;
 }
 
+/** 1 Bulb takes 100 IQD off an order. */
+export const BULB_VALUE_IQD = 100;
+
 /**
  * The delivery fee, mirroring `create_order()`: pickup is free; delivery
  * costs the zone's fee unless the subtotal reaches the free-delivery
- * threshold.
+ * threshold or the member's tier delivers free.
  */
 export const deliveryFee = (
   subtotal: number,
@@ -144,6 +152,13 @@ export const deliveryFee = (
   ) {
     return 0;
   }
+  if (
+    choice?.freeDeliveryFrom !== null &&
+    choice?.freeDeliveryFrom !== undefined &&
+    subtotal >= choice.freeDeliveryFrom
+  ) {
+    return 0;
+  }
   return choice?.zoneFee ?? settings.shippingFee;
 };
 
@@ -155,18 +170,30 @@ export const deliveryFee = (
 export const cartTotals = (
   lines: CartLine[],
   settings: StoreSettings,
-  choice?: DeliveryChoice
+  choice?: DeliveryChoice,
+  /** Bulbs the member wants to spend (capped at what the order costs). */
+  bulbs = 0
 ) => {
   const subtotal = lines.reduce(
     (sum, line) => sum + line.unitPrice * line.quantity,
     0
   );
   const shippingFee = deliveryFee(subtotal, settings, choice);
+  const bulbsUsed = Math.max(
+    0,
+    Math.min(
+      Math.floor(bulbs),
+      Math.floor((subtotal + shippingFee) / BULB_VALUE_IQD)
+    )
+  );
+  const bulbsDiscount = bulbsUsed * BULB_VALUE_IQD;
   return {
+    bulbsDiscount,
+    bulbsUsed,
     count: lines.reduce((sum, line) => sum + line.quantity, 0),
     shippingFee,
     subtotal,
-    total: subtotal + shippingFee,
+    total: subtotal + shippingFee - bulbsDiscount,
   };
 };
 

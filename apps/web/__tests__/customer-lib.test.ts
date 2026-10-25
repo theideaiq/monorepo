@@ -98,6 +98,8 @@ describe("cart", () => {
   test("totals the orderable lines with delivery", () => {
     const summary = summarizeCart([item()], settings);
     expect(summary.totals).toEqual({
+      bulbsDiscount: 0,
+      bulbsUsed: 0,
       count: 2,
       shippingFee: 5000,
       subtotal: 20_000,

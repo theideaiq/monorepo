@@ -14,9 +14,10 @@ const requestBody = z.object({ orderId: z.uuid() });
 export const OPTIONS = preflight;
 
 /**
- * Emails the confirmation of one of the caller's cash orders, once (online
- * orders are confirmed by the payment webhook). The order is claimed by
- * setting `confirmation_emailed_at`, so repeated calls send nothing more.
+ * Emails the confirmation of one of the caller's cash orders (or one paid
+ * in full with Bulbs), once (online orders are confirmed by the payment
+ * webhook). The order is claimed by setting `confirmation_emailed_at`, so
+ * repeated calls send nothing more.
  */
 export const POST = async (request: Request) => {
   const headers = corsHeaders(request);
@@ -40,7 +41,8 @@ export const POST = async (request: Request) => {
     .update({ confirmation_emailed_at: new Date().toISOString() })
     .eq("id", orderId)
     .eq("user_id", session.userId)
-    .eq("payment_method", "cash_on_delivery")
+    // Cash orders, and orders paid in full with Bulbs (nothing paid online).
+    .or("payment_method.eq.cash_on_delivery,total.eq.0")
     .is("confirmation_emailed_at", null)
     .select("id");
   if (error) {

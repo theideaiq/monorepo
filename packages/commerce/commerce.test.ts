@@ -23,6 +23,8 @@ describe("commerce helpers", () => {
   test("mirrors create_order's delivery fee", () => {
     const settings = { freeShippingThreshold: 100_000, shippingFee: 5000 };
     expect(cartTotals([], settings)).toEqual({
+      bulbsDiscount: 0,
+      bulbsUsed: 0,
       count: 0,
       shippingFee: 0,
       subtotal: 0,
@@ -34,6 +36,33 @@ describe("commerce helpers", () => {
     expect(
       cartTotals([{ quantity: 1, unitPrice: 100_000 }], settings)
     ).toMatchObject({ shippingFee: 0, total: 100_000 });
+  });
+
+  test("delivers free for the member's tier", () => {
+    const settings = { freeShippingThreshold: null, shippingFee: 5000 };
+    const lines = [{ quantity: 1, unitPrice: 40_000 }];
+    const delivery = { fulfilment: "delivery" as const, zoneFee: 5000 };
+    expect(
+      cartTotals(lines, settings, { ...delivery, freeDeliveryFrom: 50_000 })
+    ).toMatchObject({ shippingFee: 5000 });
+    expect(
+      cartTotals(lines, settings, { ...delivery, freeDeliveryFrom: 0 })
+    ).toMatchObject({ shippingFee: 0, total: 40_000 });
+  });
+
+  test("takes 100 IQD off per Bulb, never more than the order", () => {
+    const settings = { freeShippingThreshold: null, shippingFee: 5000 };
+    const lines = [{ quantity: 1, unitPrice: 3000 }];
+    const delivery = { fulfilment: "delivery" as const, zoneFee: 5000 };
+    expect(cartTotals(lines, settings, delivery, 30)).toMatchObject({
+      bulbsDiscount: 3000,
+      bulbsUsed: 30,
+      total: 5000,
+    });
+    expect(cartTotals(lines, settings, delivery, 500)).toMatchObject({
+      bulbsUsed: 80,
+      total: 0,
+    });
   });
 
   test("prices delivery by zone and makes pickup free", () => {

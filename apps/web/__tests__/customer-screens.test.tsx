@@ -182,7 +182,7 @@ describe("checkout", () => {
           error: null,
         },
       },
-      rpcs: { create_order: createOrder },
+      rpcs: { create_order: createOrder, my_bulbs: { data: [], error: null } },
     });
 
   const chooseBaghdad = () => {
@@ -211,7 +211,9 @@ describe("checkout", () => {
     fireEvent.click(submit);
     expect(await screen.findByText("Choose a governorate.")).toBeTruthy();
     expect(screen.getByText("Enter the delivery address.")).toBeTruthy();
-    expect(db.rpc).not.toHaveBeenCalled();
+    expect(db.rpcCalls.some((call) => call.name === "create_order")).toBe(
+      false
+    );
 
     chooseBaghdad();
     fireEvent.change(screen.getByLabelText("Address"), {
@@ -222,7 +224,7 @@ describe("checkout", () => {
     await waitFor(() =>
       expect(openCheckout).toHaveBeenCalledWith("https://pay.example/1")
     );
-    expect(db.rpcCalls[0]).toEqual({
+    expect(db.rpcCalls.find((call) => call.name === "create_order")).toEqual({
       args: {
         delivery_zone: "zone-baghdad",
         fulfilment: "delivery",
@@ -235,6 +237,7 @@ describe("checkout", () => {
           notes: "",
           phone: "+9647701234567",
         },
+        use_bulbs: 0,
       },
       name: "create_order",
     });
@@ -271,7 +274,9 @@ describe("checkout", () => {
     fireEvent.click(screen.getByRole("button", { name: PLACE_CASH_ORDER }));
 
     await waitFor(() => expect(router.replace).toHaveBeenCalled());
-    expect(db.rpcCalls[0]?.args).toMatchObject({
+    expect(
+      db.rpcCalls.find((call) => call.name === "create_order")?.args
+    ).toMatchObject({
       delivery_zone: "zone-baghdad",
       fulfilment: "delivery",
       payment_method: "cash_on_delivery",

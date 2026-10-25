@@ -76,14 +76,16 @@ export interface PlaceOrder {
   fulfilment: Fulfilment;
   paymentMethod: PaymentMethod;
   shipping: object;
+  /** Bulbs to spend; the server caps them at what the order costs. */
+  useBulbs: number;
 }
 
 /**
- * Asks apps/api to email the confirmation of a cash order (online orders
- * are confirmed by the payment webhook). Best effort: the order is placed
+ * Asks apps/api to email the confirmation of a cash order or one paid in
+ * full with Bulbs (online payments are confirmed by the payment webhook). Best effort: the order is placed
  * either way, and the API sends it once.
  */
-const requestCashConfirmation = async (
+const requestConfirmation = async (
   supabase: Parameters<typeof callApi>[0],
   orderId: string
 ) => {
@@ -113,12 +115,14 @@ export const usePlaceOrder = () => {
       fulfilment,
       paymentMethod,
       shipping,
+      useBulbs,
     }: PlaceOrder) => {
       const created = unwrap(
         await supabase.rpc("create_order", {
           fulfilment,
           payment_method: paymentMethod,
           shipping: { ...shipping },
+          use_bulbs: useBulbs,
           ...(deliveryZone ? { delivery_zone: deliveryZone } : {}),
         })
       );
@@ -141,8 +145,9 @@ export const usePlaceOrder = () => {
         value: order.total,
       });
 
-      if (paymentMethod === "cash_on_delivery") {
-        await requestCashConfirmation(supabase, order.id);
+      // Cash, or paid in full with Bulbs: nothing to pay online now.
+      if (paymentMethod === "cash_on_delivery" || order.total === 0) {
+        await requestConfirmation(supabase, order.id);
         return { order, paymentError: null, url: null };
       }
 

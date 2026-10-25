@@ -58,6 +58,7 @@ export type CheckoutError =
   | "cartEmpty"
   | "cashUnavailable"
   | "invalidAddress"
+  | "notEnoughBulbs"
   | "notPayable"
   | "outOfStock"
   | "payment"
@@ -83,6 +84,9 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
   const message = messageOf(error);
   if (message.includes("Cart is empty")) {
     return "cartEmpty";
+  }
+  if (message.includes("Not enough Bulbs")) {
+    return "notEnoughBulbs";
   }
   if (message.includes("Not enough stock")) {
     return "outOfStock";

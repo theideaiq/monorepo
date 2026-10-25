@@ -58,7 +58,7 @@ export const useBulbTiers = () => {
       unwrap(
         await supabase
           .from("bulb_tiers")
-          .select("tier, min_spend, rate")
+          .select("tier, min_spend, rate, free_delivery_from")
           .order("min_spend")
       ) ?? [],
     queryKey: queryKeys.bulbTiers,
