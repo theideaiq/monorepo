@@ -354,6 +354,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   found nothing (its empty-array filter never matched); fixed. Product
   pictures now show whole in a square tile (no cropping), so covers,
   posters, box art and photos line up. Rentals no longer show a condition.
+- 2026-10-25: **More ways to earn Bulbs.** The IDEA Plus payments earn
+  cashback at the member's rate, usable at once (refunds void it); 25 Bulbs
+  on the member's birthday (set once in My Pass → Settings; support
+  corrects it), with a notification; 5 Bulbs for a published photo review of
+  something the member bought or rented (hiding it voids them); 10 Bulbs
+  when an editor checks a member in at an event (Back office → Editorial →
+  the event's RSVP list). Reviews take up to 4 photos (public `reviews`
+  bucket). Migration `20261205000000_bulbs_extras.sql`. Apple Wallet is
+  dropped for now (it isn't free). Next: The IDEA Suite workspace.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

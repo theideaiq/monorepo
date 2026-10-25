@@ -231,10 +231,13 @@ export type Database = {
           available_at: string;
           created_at: string;
           created_by: string | null;
+          event_id: string | null;
           id: string;
           kind: Database["public"]["Enums"]["bulb_kind"];
           order_id: string | null;
+          payment_id: string | null;
           reason: string | null;
+          review_id: string | null;
           status: Database["public"]["Enums"]["bulb_status"];
           trade_in_id: string | null;
           user_id: string;
@@ -244,10 +247,13 @@ export type Database = {
           available_at?: string;
           created_at?: string;
           created_by?: string | null;
+          event_id?: string | null;
           id?: string;
           kind: Database["public"]["Enums"]["bulb_kind"];
           order_id?: string | null;
+          payment_id?: string | null;
           reason?: string | null;
+          review_id?: string | null;
           status?: Database["public"]["Enums"]["bulb_status"];
           trade_in_id?: string | null;
           user_id: string;
@@ -257,20 +263,44 @@ export type Database = {
           available_at?: string;
           created_at?: string;
           created_by?: string | null;
+          event_id?: string | null;
           id?: string;
           kind?: Database["public"]["Enums"]["bulb_kind"];
           order_id?: string | null;
+          payment_id?: string | null;
           reason?: string | null;
+          review_id?: string | null;
           status?: Database["public"]["Enums"]["bulb_status"];
           trade_in_id?: string | null;
           user_id?: string;
         };
         Relationships: [
           {
+            foreignKeyName: "bulb_entries_event_id_fkey";
+            columns: ["event_id"];
+            isOneToOne: false;
+            referencedRelation: "events";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "bulb_entries_order_id_fkey";
             columns: ["order_id"];
             isOneToOne: false;
             referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bulb_entries_payment_id_fkey";
+            columns: ["payment_id"];
+            isOneToOne: false;
+            referencedRelation: "payments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bulb_entries_review_id_fkey";
+            columns: ["review_id"];
+            isOneToOne: false;
+            referencedRelation: "product_reviews";
             referencedColumns: ["id"];
           },
           {
@@ -458,16 +488,22 @@ export type Database = {
       };
       event_rsvps: {
         Row: {
+          checked_in_at: string | null;
+          checked_in_by: string | null;
           created_at: string;
           event_id: string;
           user_id: string;
         };
         Insert: {
+          checked_in_at?: string | null;
+          checked_in_by?: string | null;
           created_at?: string;
           event_id: string;
           user_id?: string;
         };
         Update: {
+          checked_in_at?: string | null;
+          checked_in_by?: string | null;
           created_at?: string;
           event_id?: string;
           user_id?: string;
@@ -1188,6 +1224,7 @@ export type Database = {
           comment: string | null;
           created_at: string;
           id: string;
+          photos: string[];
           product_id: string;
           rating: number;
           status: Database["public"]["Enums"]["review_status"];
@@ -1199,6 +1236,7 @@ export type Database = {
           comment?: string | null;
           created_at?: string;
           id?: string;
+          photos?: string[];
           product_id: string;
           rating: number;
           status?: Database["public"]["Enums"]["review_status"];
@@ -1210,6 +1248,7 @@ export type Database = {
           comment?: string | null;
           created_at?: string;
           id?: string;
+          photos?: string[];
           product_id?: string;
           rating?: number;
           status?: Database["public"]["Enums"]["review_status"];
@@ -1364,6 +1403,7 @@ export type Database = {
         Row: {
           avatar_url: string | null;
           banned_at: string | null;
+          birthday: string | null;
           calendar_token: string;
           created_at: string;
           full_name: string | null;
@@ -1379,6 +1419,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null;
           banned_at?: string | null;
+          birthday?: string | null;
           calendar_token?: string;
           created_at?: string;
           full_name?: string | null;
@@ -1394,6 +1435,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null;
           banned_at?: string | null;
+          birthday?: string | null;
           calendar_token?: string;
           created_at?: string;
           full_name?: string | null;
@@ -2328,10 +2370,13 @@ export type Database = {
           available_at: string;
           created_at: string;
           created_by: string | null;
+          event_id: string | null;
           id: string;
           kind: Database["public"]["Enums"]["bulb_kind"];
           order_id: string | null;
+          payment_id: string | null;
           reason: string | null;
+          review_id: string | null;
           status: Database["public"]["Enums"]["bulb_status"];
           trade_in_id: string | null;
           user_id: string;
@@ -2385,6 +2430,10 @@ export type Database = {
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
+      check_in_rsvp: {
+        Args: { event: string; member: string };
+        Returns: string;
+      };
       check_pass: {
         Args: { scanned: string };
         Returns: {
@@ -2682,6 +2731,7 @@ export type Database = {
           via: string;
         }[];
       };
+      my_birthday: { Args: Record<PropertyKey, never>; Returns: string };
       my_bulbs: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -2785,6 +2835,7 @@ export type Database = {
           comment: string;
           created_at: string;
           id: string;
+          photos: string[];
           rating: number;
           verified_purchase: boolean;
         }[];
@@ -2862,6 +2913,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string;
       };
+      run_birthday_bulbs: { Args: Record<PropertyKey, never>; Returns: number };
       run_bulb_expiry: {
         Args: Record<PropertyKey, never>;
         Returns: Record<string, unknown>;

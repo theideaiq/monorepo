@@ -26,6 +26,7 @@ export type BulbEntry = Pick<
   | "id"
   | "kind"
   | "order_id"
+  | "payment_id"
   | "reason"
   | "status"
 >;
@@ -40,7 +41,7 @@ export const useBulbEntries = () => {
         await supabase
           .from("bulb_entries")
           .select(
-            "id, amount, kind, status, reason, order_id, available_at, created_at"
+            "id, amount, kind, status, reason, order_id, payment_id, available_at, created_at"
           )
           .eq("user_id", requireUserId(user?.id))
           .order("created_at", { ascending: false })

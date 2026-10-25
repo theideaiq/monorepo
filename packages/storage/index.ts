@@ -162,7 +162,10 @@ export const getPublicFileUrl = (
  */
 export const publicFileUrl = (
   supabaseUrl: string,
-  bucket: typeof buckets.catalog.id | typeof buckets.editorial.id,
+  bucket:
+    | typeof buckets.catalog.id
+    | typeof buckets.editorial.id
+    | typeof buckets.reviews.id,
   path: string
 ) =>
   `${supabaseUrl.replace(TRAILING_SLASH, "")}/storage/v1/object/public/${bucket}/${path
@@ -229,6 +232,21 @@ export const uploadTradeInPhoto = (
   return upload(
     supabase,
     buckets.tradeIns.id,
+    objectPath(userId, file.name),
+    file
+  );
+};
+
+/** Uploads a photo for a product review, under the author's folder. */
+export const uploadReviewPhoto = (
+  supabase: Client,
+  userId: string,
+  file: File
+) => {
+  assertAllowed("reviews", file);
+  return upload(
+    supabase,
+    buckets.reviews.id,
     objectPath(userId, file.name),
     file
   );

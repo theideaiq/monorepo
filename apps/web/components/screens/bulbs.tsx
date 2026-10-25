@@ -19,6 +19,30 @@ import {
   useMyBulbs,
 } from "@/lib/bulbs-queries";
 
+/** Bonuses with their own label, by reason ("birthday_2026" is a birthday). */
+const BONUS_LABELS = {
+  event_check_in: "checkIn",
+  first_order: "firstOrder",
+  invite: "invite",
+  photo_review: "photoReview",
+  telegram: "telegram",
+} as const;
+
+const entryLabelKey = (entry: BulbEntry) => {
+  if (entry.kind === "purchase" && entry.payment_id) {
+    return "plusPayment";
+  }
+  if (entry.kind === "bonus" && entry.reason) {
+    if (entry.reason.startsWith("birthday_")) {
+      return "birthday";
+    }
+    if (entry.reason in BONUS_LABELS) {
+      return BONUS_LABELS[entry.reason as keyof typeof BONUS_LABELS];
+    }
+  }
+  return entry.kind;
+};
+
 const rate = (value: number, locale: Locale) =>
   formatNumber(value, locale, { maximumFractionDigits: 2 });
 
@@ -26,10 +50,7 @@ const rate = (value: number, locale: Locale) =>
 const EntryRow = ({ entry }: { readonly entry: BulbEntry }) => {
   const t = useTranslations("app.bulbs");
   const locale = useLocale() as Locale;
-  const label =
-    entry.kind === "bonus" && entry.reason === "first_order"
-      ? t("kinds.firstOrder")
-      : t(`kinds.${entry.kind}`);
+  const label = t(`kinds.${entryLabelKey(entry)}`);
   const pending =
     entry.status === "pending" && new Date(entry.available_at) > new Date();
 

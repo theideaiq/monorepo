@@ -38,6 +38,7 @@ export const NOTIFICATION_EVENTS = [
   "trade_in_rejected",
   "trade_in_completed",
   "bulbs_expiring",
+  "bulbs_birthday",
   "affiliate_approved",
   "affiliate_paid",
 ] as const;

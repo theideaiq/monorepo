@@ -306,7 +306,8 @@
         "writeNote": "Reviews are written by signed-in customers. Reviews from people who bought or rented the item are marked as verified.",
         "verified": "Verified purchase",
         "anonymous": "A customer",
-        "latest": "Latest reviews"
+        "latest": "Latest reviews",
+        "photoAlt": "Photo from {name}'s review"
       },
       "sell": {
         "title": "Sell to us",
@@ -1439,6 +1440,15 @@
         "connect": "Connect Telegram",
         "disconnect": "Disconnect",
         "failed": "We couldn't disconnect Telegram. Try again."
+      },
+      "birthday": {
+        "title": "Birthday",
+        "description": "Tell us your birthday and we'll give you 25 Bulbs every year on the day.",
+        "label": "Your birthday",
+        "save": "Save",
+        "once": "You can set it once. To change it later, contact support.",
+        "locked": "To change it, contact support.",
+        "failed": "Your birthday couldn't be saved. Try again."
       }
     },
     "errors": {
@@ -1469,7 +1479,14 @@
           "duplicate": "You've already reviewed this product.",
           "suspended": "Your Pass is suspended. Contact support.",
           "unknown": "We couldn't save your review. Please try again."
-        }
+        },
+        "photos": "Photos (optional)",
+        "photosHint": "Add up to 4 photos of the product. A photo review of something you bought or rented earns 5 Bulbs.",
+        "addPhoto": "Add photo",
+        "uploading": "Uploading…",
+        "removePhoto": "Remove photo",
+        "photoAlt": "Your review photo",
+        "photoFailed": "The photo couldn't be uploaded. Use a PNG, JPEG or WebP under 5 MB."
       },
       "mine": {
         "title": "Your review",
@@ -1482,7 +1499,8 @@
         "deleteDescription": "Your rating and comment are removed from this product. This can't be undone.",
         "deleteConfirm": "Delete review",
         "keep": "Keep review",
-        "deleteFailed": "We couldn't delete your review. Please try again."
+        "deleteFailed": "We couldn't delete your review. Please try again.",
+        "photoAlt": "Your review photo"
       },
       "signInToWrite": "Sign in to write a review"
     },
@@ -1668,7 +1686,13 @@
         "trade_in": "Trade-in paid in Bulbs",
         "redemption": "Spent on an order",
         "adjustment": "Adjusted by The IDEA",
-        "expiry": "Expired"
+        "expiry": "Expired",
+        "plusPayment": "Cashback on The IDEA Plus",
+        "birthday": "Birthday bonus",
+        "photoReview": "Photo review bonus",
+        "checkIn": "Event check-in bonus",
+        "invite": "Invite bonus",
+        "telegram": "Telegram bonus"
       },
       "tiers": {
         "glow": {
@@ -1927,6 +1951,10 @@
         "affiliate_paid": {
           "title": "Affiliate payout sent",
           "body": "{hasBulbs, select, yes {We've added {bulbs} Bulbs for your {amount} in commissions.} other {We've sent {amount} in commissions.}}"
+        },
+        "bulbs_birthday": {
+          "title": "Happy birthday from The IDEA",
+          "body": "We've added {bulbs} Bulbs to The IDEA Pass. Enjoy your day!"
         }
       },
       "kinds": {
@@ -2849,7 +2877,9 @@
         "rsvpDate": "RSVP'd",
         "unnamed": "Unnamed member",
         "removeRsvp": "Remove this RSVP?",
-        "deleteDescription": "Its RSVPs are deleted too."
+        "deleteDescription": "Its RSVPs are deleted too.",
+        "checkedIn": "Checked in",
+        "checkIn": "Check in"
       },
       "submissions": {
         "all": "All submissions",

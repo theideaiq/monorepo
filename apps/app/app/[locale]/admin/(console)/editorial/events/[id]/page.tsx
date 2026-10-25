@@ -18,7 +18,7 @@ import { isUuid } from "@/lib/admin/list";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
 import { EventForm } from "../../_components/event-form";
-import { deleteEvent, removeRsvp } from "../../actions";
+import { checkInRsvp, deleteEvent, removeRsvp } from "../../actions";
 
 const EventPage = async ({
   params,
@@ -39,7 +39,7 @@ const EventPage = async ({
     supabase.from("events").select("*").eq("id", id).maybeSingle(),
     supabase
       .from("event_rsvps")
-      .select("user_id, created_at")
+      .select("user_id, created_at, checked_in_at")
       .eq("event_id", id)
       .order("created_at"),
   ]);
@@ -98,6 +98,7 @@ const EventPage = async ({
                 <TableRow>
                   <TableHead>{t("events.attendee")}</TableHead>
                   <TableHead>{t("events.rsvpDate")}</TableHead>
+                  <TableHead>{t("events.checkedIn")}</TableHead>
                   <TableHead />
                 </TableRow>
               </TableHeader>
@@ -109,6 +110,20 @@ const EventPage = async ({
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       {format.date(rsvp.created_at)}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {rsvp.checked_in_at ? (
+                        format.dateTime(rsvp.checked_in_at)
+                      ) : (
+                        <ActionButton
+                          action={checkInRsvp}
+                          fields={{ eventId: event.id, userId: rsvp.user_id }}
+                          size="sm"
+                          variant="secondary"
+                        >
+                          {t("events.checkIn")}
+                        </ActionButton>
+                      )}
                     </TableCell>
                     <TableCell className="text-end">
                       <ActionButton

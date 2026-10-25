@@ -19,16 +19,27 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { localePath } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link, usePathname } from "@repo/internationalization/navigation";
-import { BadgeCheckIcon, EyeOffIcon, PenLineIcon } from "lucide-react";
+import {
+  BadgeCheckIcon,
+  EyeOffIcon,
+  ImagePlusIcon,
+  PenLineIcon,
+  XIcon,
+} from "lucide-react";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
+import { ReviewPhotos } from "@/components/review-photos";
 import { ErrorState } from "@/components/states";
 import { toReviewError } from "@/lib/errors";
+import { reviewImage } from "@/lib/images";
 import {
   MAX_COMMENT_LENGTH,
+  MAX_REVIEW_PHOTOS,
   useDeleteReview,
   useMyReview,
   useSaveReview,
+  useUploadReviewPhoto,
 } from "@/lib/review-queries";
 import { StarInput, Stars } from "./stars";
 
@@ -41,6 +52,87 @@ const VerifiedBadge = () => {
       <BadgeCheckIcon className="size-3.5 text-success" />
       {t("verifiedPurchase")}
     </Badge>
+  );
+};
+
+/** Up to four photos: thumbnails with a remove button, and an add button. */
+const PhotoPicker = ({
+  onChange,
+  photos,
+}: {
+  readonly onChange: (photos: string[]) => void;
+  readonly photos: string[];
+}) => {
+  const t = useTranslations("app.reviews.form");
+  const inputId = useId();
+  const upload = useUploadReviewPhoto();
+
+  const add = async (files: FileList | null) => {
+    const room = MAX_REVIEW_PHOTOS - photos.length;
+    const added: string[] = [];
+    for (const file of [...(files ?? [])].slice(0, room)) {
+      // biome-ignore lint/performance/noAwaitInLoops: a few photos, one after another
+      added.push(await upload.mutateAsync(file));
+    }
+    onChange([...photos, ...added]);
+  };
+
+  return (
+    <div className="grid gap-2">
+      <span className="font-medium text-sm">{t("photos")}</span>
+      <p className="text-muted-foreground text-xs">{t("photosHint")}</p>
+      <ul className="flex flex-wrap gap-2">
+        {photos.map((photo) => (
+          <li className="relative size-20" key={photo}>
+            <Image
+              alt={t("photoAlt")}
+              className="rounded-md object-cover"
+              fill
+              sizes="80px"
+              src={reviewImage(photo)}
+            />
+            <Button
+              aria-label={t("removePhoto")}
+              className="absolute end-1 top-1 size-6"
+              onClick={() => onChange(photos.filter((item) => item !== photo))}
+              size="icon"
+              type="button"
+              variant="secondary"
+            >
+              <XIcon className="size-3.5" />
+            </Button>
+          </li>
+        ))}
+        {photos.length < MAX_REVIEW_PHOTOS ? (
+          <li>
+            <label
+              className="flex size-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-md border border-dashed text-muted-foreground text-xs hover:bg-muted"
+              htmlFor={inputId}
+            >
+              <ImagePlusIcon aria-hidden="true" className="size-5" />
+              {upload.isPending ? t("uploading") : t("addPhoto")}
+            </label>
+            <input
+              accept="image/png,image/jpeg,image/webp"
+              className="sr-only"
+              disabled={upload.isPending}
+              id={inputId}
+              multiple
+              onChange={(event) => {
+                add(event.target.files).catch(() => undefined);
+                event.target.value = "";
+              }}
+              type="file"
+            />
+          </li>
+        ) : null}
+      </ul>
+      {upload.isError ? (
+        <p className="text-destructive text-sm" role="alert">
+          {t("photoFailed")}
+        </p>
+      ) : null}
+    </div>
   );
 };
 
@@ -58,6 +150,7 @@ const ReviewForm = ({
   const save = useSaveReview(productId);
   const [rating, setRating] = useState(review?.rating ?? 0);
   const [comment, setComment] = useState(review?.comment ?? "");
+  const [photos, setPhotos] = useState<string[]>(review?.photos ?? []);
   const [missingRating, setMissingRating] = useState(false);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -67,7 +160,7 @@ const ReviewForm = ({
       return;
     }
     save.mutate(
-      { draft: { comment, rating }, reviewId: review?.id ?? null },
+      { draft: { comment, photos, rating }, reviewId: review?.id ?? null },
       { onSuccess: onDone }
     );
   };
@@ -98,6 +191,7 @@ const ReviewForm = ({
           value={comment}
         />
       </div>
+      <PhotoPicker onChange={setPhotos} photos={photos} />
       <div className="flex flex-wrap gap-2">
         <Button disabled={save.isPending} type="submit">
           {save.isPending ? t("saving") : t("submit")}
@@ -197,6 +291,7 @@ const MyReviewPanel = ({ productId }: { readonly productId: string }) => {
       {review.comment ? (
         <p className="whitespace-pre-line text-sm">{review.comment}</p>
       ) : null}
+      <ReviewPhotos label={t("photoAlt")} photos={review.photos ?? []} />
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-muted-foreground text-xs">
           {formatDate(review.created_at, locale)}
