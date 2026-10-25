@@ -34,7 +34,7 @@ test("sign up on The IDEA Pass with an emailed code", async ({ page }) => {
   await clearInbox(signUpUser.email);
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(
-    page.getByText(`We emailed a 6-digit code to ${signUpUser.email}.`)
+    page.getByText(`We emailed an 8-digit code to ${signUpUser.email}.`)
   ).toBeVisible();
   await expectAccessible(page);
   // Filling the last slot submits the code.
@@ -65,11 +65,11 @@ test("sign in on The IDEA Pass with an emailed code and go back", async ({
   await clearInbox(customer.email);
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(
-    page.getByText(`We emailed a 6-digit code to ${customer.email}.`)
+    page.getByText(`We emailed an 8-digit code to ${customer.email}.`)
   ).toBeVisible();
 
   // A wrong code is refused and can be retried.
-  await page.getByLabel("Verification code").fill("000000");
+  await page.getByLabel("Verification code").fill("00000000");
   await expect(
     page.getByText("That code is incorrect or has expired.")
   ).toBeVisible();

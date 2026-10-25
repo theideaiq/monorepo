@@ -127,7 +127,7 @@ const ProductPage = async ({ params }: ProductProps) => {
         <div className="flex flex-col gap-3">
           <CoverImage
             alt={t("image", { name, number: formatNumber(1, locale) })}
-            className="aspect-square"
+            fit="product"
             priority
             sizes="(min-width: 1024px) 50vw, 100vw"
             src={images[0] ?? null}
@@ -141,7 +141,7 @@ const ProductPage = async ({ params }: ProductProps) => {
                       name,
                       number: formatNumber(index + 2, locale),
                     })}
-                    className="aspect-square"
+                    fit="product"
                     sizes="12vw"
                     src={src}
                   />

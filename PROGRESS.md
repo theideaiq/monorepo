@@ -37,7 +37,7 @@ decisions with a date.
 - [ ] **Supabase, email codes (The IDEA Pass sign-in;
       `ARCHITECTURE_AND_INTEGRATIONS.md` 2.7):**
       - Authentication → Sign In / Providers → Email: enabled, Confirm
-        email on, Email OTP length `6`, expiration `600` s.
+        email on, Email OTP length `8` (the website's code box takes 8 digits), expiration `600` s.
       - Authentication → Sign In / Providers → Phone: **disabled**; no test
         phone numbers.
       - Authentication → Emails → SMTP Settings: custom SMTP, host
@@ -345,6 +345,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   webhook); Droid must be an admin that can post in those topics; fill in
   the topic IDs in the back office. Migration
   `20261204000000_telegram_posts.sql`. Next: The IDEA Suite workspace.
+- 2026-10-25: **Fixes: sign-in codes, pictures, rentals.** Production emails
+  8-digit codes but the website's code box took 6, so every code failed;
+  it now takes 8 (local config too). Sign-up still emails a link instead of
+  a code until `confirmation.html` is pasted as the "Confirm signup"
+  template, and links land on Spark until the Site URL is
+  `https://theideaiq.com` (launch checklist). "Find missing pictures"
+  found nothing (its empty-array filter never matched); fixed. Product
+  pictures now show whole in a square tile (no cropping), so covers,
+  posters, box art and photos line up. Rentals no longer show a condition.
 - 2026-10-25: Next, in order: one shared catalogue with stock per copy
   (condition, purpose, location, cost and price); The Post (News, Journal
   and Academy at `/post`, online only); **Bulbs** (1 Bulb = 100 IQD; tiers

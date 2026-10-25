@@ -18,7 +18,9 @@ const CoversPage = async () => {
   const { data: products } = await supabase
     .from("products")
     .select("id, name_en, details, images, product_categories(slug)")
-    .eq("images", [])
+    // An empty array as a Postgres literal (supabase-js sends `[]` as an empty
+    // string, which matches nothing).
+    .filter("images", "eq", "{}")
     .neq("status", "archived")
     .order("created_at", { ascending: false })
     .limit(LIMIT);

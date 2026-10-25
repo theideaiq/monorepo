@@ -47,7 +47,7 @@ export const unknownEmail = "e2e-nobody@theidea.test";
  * email there.
  */
 const MAILPIT_URL = process.env.MAILPIT_URL ?? "http://127.0.0.1:54324";
-const EMAIL_CODE = /\b(\d{6})\b/;
+const EMAIL_CODE = /\b(\d{8})\b/;
 
 const inbox = (email: string) =>
   `${MAILPIT_URL}/api/v1/search?${new URLSearchParams({ query: `to:"${email}"` })}`;

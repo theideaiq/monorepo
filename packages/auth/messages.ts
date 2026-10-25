@@ -32,8 +32,8 @@ export const defaultAuthMessages: AuthMessages = {
   codeLabel: "Verification code",
   continue: "Continue",
   createOrganization: "Create organization",
-  emailCodeSentTo: "We emailed a 6-digit code to {email}.",
-  emailHint: "We'll email you a 6-digit code. No password needed.",
+  emailCodeSentTo: "We emailed an 8-digit code to {email}.",
+  emailHint: "We'll email you an 8-digit code. No password needed.",
   emailLabel: "Email",
   emailPlaceholder: "name@example.com",
   errors: {

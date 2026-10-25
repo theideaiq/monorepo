@@ -809,7 +809,7 @@ In the Supabase dashboard:
    - `<bundle id>://**`, for example `iq.example.app://**` (native deep links)
 2. **Authentication → Sign In / Providers → Email:** enabled, with
    **Confirm email** on (new accounts confirm their address with the code),
-   **Email OTP length** `6` and **Email OTP expiration** `600` seconds
+   **Email OTP length** `8` and **Email OTP expiration** `600` seconds
    (10 minutes). Leave "Secure email change" on.
 3. **Authentication → Sign In / Providers → Phone:** disabled (no SMS plan;
    see "Phone sign-in is switched off" in [The IDEA Pass](#the-idea-pass)).
@@ -1695,7 +1695,7 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 ### 5.7 Go-live checklist
 
 - [ ] Supabase production project linked and migrations pushed (2.6); Auth
-      URLs, email codes (OTP length 6), templates and Resend SMTP
+      URLs, email codes (OTP length 8), templates and Resend SMTP
       configured, phone provider off (2.7).
 - [ ] Four Vercel projects (web, app, api, storybook) with domains and the variables above;
       `WAYL_ENV=live`; no test event codes in Production.
