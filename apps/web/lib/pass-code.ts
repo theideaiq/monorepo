@@ -23,15 +23,22 @@ export const secondsLeft = (time: number) =>
   PASS_CODE_PERIOD_SECONDS -
   (Math.floor(time / 1000) % PASS_CODE_PERIOD_SECONDS);
 
-/** The 6-digit code for a hex secret at a 30-second step. */
-export const passCode = async (secretHex: string, step: number) => {
-  const key = await crypto.subtle.importKey(
+/**
+ * The member's secret as a non-extractable HMAC key: the device can work
+ * out codes with it but no script can read the secret back, so it can be
+ * kept on the device (IndexedDB) without storing the secret in clear text.
+ */
+export const importPassKey = (secretHex: string) =>
+  crypto.subtle.importKey(
     "raw",
     fromHex(secretHex),
     { hash: "SHA-1", name: "HMAC" },
     false,
     ["sign"]
   );
+
+/** The 6-digit code for the card key at a 30-second step. */
+export const passCodeWithKey = async (key: CryptoKey, step: number) => {
   const counter = new DataView(new ArrayBuffer(8));
   counter.setUint32(0, Math.floor(step / 2 ** 32));
   counter.setUint32(4, step % 2 ** 32);
@@ -48,6 +55,10 @@ export const passCode = async (secretHex: string, step: number) => {
     byte(offset + 3);
   return String(binary % 1_000_000).padStart(6, "0");
 };
+
+/** The 6-digit code for a hex secret at a 30-second step. */
+export const passCode = async (secretHex: string, step: number) =>
+  passCodeWithKey(await importPassKey(secretHex), step);
 
 /** What the card's QR code carries, read by `check_pass()` at the counter. */
 export const passPayload = (memberNumber: number, code: string) =>

@@ -9,61 +9,49 @@ import { type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import { encode } from "uqr";
 import {
   formatMemberNumber,
+  importPassKey,
   PASS_CODE_PERIOD_SECONDS,
-  passCode,
   passCodeStep,
+  passCodeWithKey,
   passPayload,
   secondsLeft,
 } from "@/lib/pass-code";
+import { readCard, type StoredCard, saveCard } from "@/lib/pass-key-store";
 import { Guilloche } from "./guilloche";
 
-interface CardSecret {
-  memberNumber: number;
-  secret: string;
-}
-
-const storageKey = (userId: string) => `idea-pass:${userId}`;
-
-const readStored = (userId: string): CardSecret | undefined => {
-  try {
-    const raw = localStorage.getItem(storageKey(userId));
-    return raw ? (JSON.parse(raw) as CardSecret) : undefined;
-  } catch {
-    // Storage blocked (private mode) or a bad value: fetch the card again.
-  }
-};
-
 /**
- * The member's number and card secret: fetched once, then kept on the
- * device so the card (and its code) works offline.
+ * The member's number and card key: from the device when it has them
+ * (works offline), otherwise fetched once and kept as a non-extractable key.
  */
-const useCardSecret = () => {
+const useCard = () => {
   const { supabase, user } = useAuth();
   const userId = user?.id ?? "";
   return useQuery({
     enabled: Boolean(user),
-    initialData: () => (userId ? readStored(userId) : undefined),
-    queryFn: async (): Promise<CardSecret> => {
+    queryFn: async (): Promise<StoredCard> => {
+      const stored = await readCard(userId);
+      if (stored) {
+        return stored;
+      }
       const { data, error } = await supabase.rpc("my_pass_secret");
       const row = data?.[0];
       if (error || !row) {
         throw new Error(error?.message ?? "No card");
       }
-      const card = { memberNumber: row.member_number, secret: row.secret };
-      try {
-        localStorage.setItem(storageKey(userId), JSON.stringify(card));
-      } catch {
-        // Storage can be unavailable (private mode); the card still works.
-      }
+      const card = {
+        key: await importPassKey(row.secret),
+        memberNumber: row.member_number,
+      };
+      await saveCard(userId, card);
       return card;
     },
-    queryKey: ["pass-secret", userId],
+    queryKey: ["pass-card", userId],
     staleTime: Number.POSITIVE_INFINITY,
   });
 };
 
 /** The current code, recomputed when the 30-second step changes. */
-const usePassCode = (secret: string | undefined) => {
+const usePassCode = (key: CryptoKey | undefined) => {
   const [now, setNow] = useState(() => Date.now());
   const [code, setCode] = useState<string | null>(null);
   const step = passCodeStep(now);
@@ -74,11 +62,11 @@ const usePassCode = (secret: string | undefined) => {
   }, []);
 
   useEffect(() => {
-    if (!secret) {
+    if (!key) {
       return;
     }
     let active = true;
-    passCode(secret, step).then((value) => {
+    passCodeWithKey(key, step).then((value) => {
       if (active) {
         setCode(value);
       }
@@ -86,7 +74,7 @@ const usePassCode = (secret: string | undefined) => {
     return () => {
       active = false;
     };
-  }, [secret, step]);
+  }, [key, step]);
 
   return { code, left: secondsLeft(now) };
 };
@@ -169,8 +157,8 @@ interface LiveCardProps {
 export const LiveCard = ({ memberSince, name, plan }: LiveCardProps) => {
   const t = useTranslations("pass.card");
   const locale = useLocale();
-  const card = useCardSecret();
-  const { code, left } = usePassCode(card.data?.secret);
+  const card = useCard();
+  const { code, left } = usePassCode(card.data?.key);
   const ref = useRef<HTMLDivElement>(null);
 
   // Tilt and move the sheen with the pointer (not for reduced motion).

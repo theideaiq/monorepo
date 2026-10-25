@@ -232,7 +232,8 @@ session in the shared cookie.
   number (`profiles.member_number`, from 100001) and a QR code with a
   6-digit code that changes every 30 seconds. The code is TOTP (RFC 6238,
   HMAC-SHA1): `my_pass_secret()` hands the member their own secret once,
-  the device keeps it (`localStorage`) and works the code out itself, so
+  the device keeps it as a non-extractable Web Crypto key in IndexedDB
+  (never the secret in clear text) and works the code out itself, so
   the card works offline and in the iOS/Android apps with no server call.
   The QR code carries `IDEA:<member number>:<code>`; at the counter staff
   scan it into **Customers → Check a Pass**, which calls `check_pass()`
