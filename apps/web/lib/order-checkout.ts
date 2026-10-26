@@ -96,6 +96,73 @@ const requestConfirmation = async (
   }
 };
 
+/** What the RPCs that create an order return (create_order and friends). */
+interface CreatedOrder {
+  guardian_status: string | null;
+  id: string;
+}
+
+/** What placing an order resolved with. */
+export interface PlacedOrder {
+  awaitingGuardian?: boolean;
+  order: PayableOrder;
+  paymentError: unknown;
+  url: string | null;
+}
+
+/**
+ * After an RPC created an order: report the checkout, then wait for the
+ * guardian, confirm a cash (or free) order, or open the payment page.
+ */
+const useFinishOrder = () => {
+  const { supabase } = useAuth();
+  const pay = usePayOrder();
+  const locale = useLocale();
+
+  return async (
+    created: CreatedOrder | null,
+    paymentMethod: PaymentMethod
+  ): Promise<PlacedOrder> => {
+    if (!created) {
+      throw new Error("The order wasn't created");
+    }
+    const order = unwrap(
+      await supabase
+        .from("orders")
+        .select(
+          "id, currency, total, order_items (id, product_id, name_ar, name_en, unit_price, quantity)"
+        )
+        .eq("id", created.id)
+        .single()
+    ) as PayableOrder;
+
+    track("begin_checkout", {
+      currency: order.currency,
+      items: analyticsItems(order, locale),
+      value: order.total,
+    });
+
+    // A teen's order goes to their guardian first; it's paid from the
+    // order page once approved.
+    if (created.guardian_status === "pending") {
+      return { awaitingGuardian: true, order, paymentError: null, url: null };
+    }
+
+    // Cash, or paid in full with Bulbs: nothing to pay online now.
+    if (paymentMethod === "cash_on_delivery" || order.total === 0) {
+      await requestConfirmation(supabase, order.id);
+      return { order, paymentError: null, url: null };
+    }
+
+    try {
+      const { url } = await pay.mutateAsync(order);
+      return { order, paymentError: null, url };
+    } catch (paymentError) {
+      return { order, paymentError, url: null };
+    }
+  };
+};
+
 /**
  * Checkout from the cart: `create_order()` prices the cart and the delivery
  * fee into an order (and empties the cart). Online orders are pending and
@@ -106,8 +173,7 @@ const requestConfirmation = async (
 export const usePlaceOrder = () => {
   const { supabase, user } = useAuth();
   const queryClient = useQueryClient();
-  const pay = usePayOrder();
-  const locale = useLocale();
+  const finish = useFinishOrder();
 
   return useMutation({
     mutationFn: async ({
@@ -116,60 +182,106 @@ export const usePlaceOrder = () => {
       paymentMethod,
       shipping,
       useBulbs,
-    }: PlaceOrder) => {
-      const created = unwrap(
-        await supabase.rpc("create_order", {
-          fulfilment,
-          payment_method: paymentMethod,
-          shipping: { ...shipping },
-          use_bulbs: useBulbs,
-          ...(deliveryZone ? { delivery_zone: deliveryZone } : {}),
-        })
-      );
-      if (!created) {
-        throw new Error("create_order returned no order");
-      }
-      const order = unwrap(
-        await supabase
-          .from("orders")
-          .select(
-            "id, currency, total, order_items (id, product_id, name_ar, name_en, unit_price, quantity)"
-          )
-          .eq("id", created.id)
-          .single()
-      ) as PayableOrder;
-
-      track("begin_checkout", {
-        currency: order.currency,
-        items: analyticsItems(order, locale),
-        value: order.total,
-      });
-
-      // A teen's order goes to their guardian first; it's paid from the
-      // order page once approved.
-      if (created.guardian_status === "pending") {
-        return { awaitingGuardian: true, order, paymentError: null, url: null };
-      }
-
-      // Cash, or paid in full with Bulbs: nothing to pay online now.
-      if (paymentMethod === "cash_on_delivery" || order.total === 0) {
-        await requestConfirmation(supabase, order.id);
-        return { order, paymentError: null, url: null };
-      }
-
-      try {
-        const { url } = await pay.mutateAsync(order);
-        return { order, paymentError: null, url };
-      } catch (paymentError) {
-        return { order, paymentError, url: null };
-      }
-    },
+    }: PlaceOrder) =>
+      finish(
+        unwrap(
+          await supabase.rpc("create_order", {
+            fulfilment,
+            payment_method: paymentMethod,
+            shipping: { ...shipping },
+            use_bulbs: useBulbs,
+            ...(deliveryZone ? { delivery_zone: deliveryZone } : {}),
+          })
+        ),
+        paymentMethod
+      ),
     onSettled: () =>
       Promise.all([
         queryClient.invalidateQueries({
           queryKey: queryKeys.cart(user?.id ?? ""),
         }),
         queryClient.invalidateQueries({ queryKey: ["orders"] }),
+      ]),
+  });
+};
+
+/** What the rent checkout sends to `create_rental_order()`. */
+export interface PlaceRental extends Omit<PlaceOrder, "useBulbs"> {
+  productId: string;
+  variantId: string | null;
+}
+
+/**
+ * Renting one item on its own: `create_rental_order()` makes an order of
+ * the rent and its refundable deposit and holds a copy; it's paid like any
+ * other order.
+ */
+export const usePlaceRental = () => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  const finish = useFinishOrder();
+
+  return useMutation({
+    mutationFn: async ({
+      deliveryZone,
+      fulfilment,
+      paymentMethod,
+      productId,
+      shipping,
+      variantId,
+    }: PlaceRental) =>
+      finish(
+        unwrap(
+          await supabase.rpc("create_rental_order", {
+            fulfilment,
+            payment_method: paymentMethod,
+            rental_product: productId,
+            shipping: { ...shipping },
+            ...(deliveryZone ? { delivery_zone: deliveryZone } : {}),
+            ...(variantId ? { rental_variant: variantId } : {}),
+          })
+        ),
+        paymentMethod
+      ),
+    onSettled: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["orders"] }),
+        queryClient.invalidateQueries({ queryKey: ["rentals"] }),
+        queryClient.invalidateQueries({ queryKey: ["products"] }),
+      ]),
+  });
+};
+
+/**
+ * Keep it: buy the copy of a Plus rental at its used price less the plan's
+ * monthly price (`keep_rental()`), picked up or kept where it is.
+ */
+export const useKeepRental = () => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  const finish = useFinishOrder();
+
+  return useMutation({
+    mutationFn: async ({
+      paymentMethod,
+      rentalId,
+    }: {
+      paymentMethod: PaymentMethod;
+      rentalId: string;
+    }) =>
+      finish(
+        unwrap(
+          await supabase.rpc("keep_rental", {
+            payment_method: paymentMethod,
+            target: rentalId,
+          })
+        ),
+        paymentMethod
+      ),
+    onSettled: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["orders"] }),
+        queryClient.invalidateQueries({ queryKey: ["rentals"] }),
       ]),
   });
 };

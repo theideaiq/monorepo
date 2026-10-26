@@ -5,7 +5,17 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-26: program revision, step 4)
+## Current state (2026-10-26: program revision, step 5a)
+
+- Single-item rent and Keep it (migration `20261221000000_single_rent.sql`):
+  rentable items can be rented on their own from the product page
+  (`/rent/<slug>`) at the category's rate (games 9,750 for 7 days, books
+  3,750 for 14, films 2,750 for 7), with a refundable deposit of half the
+  item's price charged at checkout; late fees are worked out per day and
+  settled at return on Rentals, and after 14 days late the item is charged
+  at its used price. Plus members can keep a rented copy at its used price
+  less one month of their plan. Rates and the deposit are in Finance →
+  Rental rates.
 
 - Ages (migration `20261220000000_ages.sql`): the Pass is from 13 and asks
   for the date of birth at first sign-in; 13–17-year-olds link a guardian
@@ -244,6 +254,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-26: Program revision v1, step 5a: the single-rent deposit is
+  charged at checkout (an order line) and refunded by staff after return,
+  less late fees; late fees are worked out by the database and settled at
+  return, not charged automatically. Step 5 ships as one PR per feature.
 
 - 2026-10-26: Program revision v1, step 4: guardians confirm signed in with
   The IDEA Pass of their own (not a phone code: no SMS provider, and an adult Pass is harder

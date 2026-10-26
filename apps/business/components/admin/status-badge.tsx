@@ -40,6 +40,7 @@ const statusTones: Record<string, Tone> = {
   failed: "danger",
   hiring: "warning",
   incomplete: "warning",
+  kept: "success",
   lead: "neutral",
   open: "warning",
   overdue: "danger",

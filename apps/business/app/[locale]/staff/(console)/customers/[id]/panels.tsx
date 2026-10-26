@@ -1,5 +1,9 @@
 import { localized } from "@repo/commerce";
-import type { OrderStatus, SubscriptionStatus } from "@repo/database";
+import type {
+  OrderStatus,
+  RentalStatus,
+  SubscriptionStatus,
+} from "@repo/database";
 import {
   Table,
   TableBody,
@@ -106,7 +110,7 @@ export const RentalsPanel = async ({
     name_ar: string;
     name_en: string;
     requested_at: string;
-    status: "requested" | "active" | "returned" | "overdue" | "cancelled";
+    status: RentalStatus;
   }[];
 }) => {
   const t = await getTranslations("admin.customers");

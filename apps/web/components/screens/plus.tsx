@@ -1,6 +1,6 @@
 "use client";
 
-import { localized, planName } from "@repo/commerce";
+import { formatPrice, localized, planName } from "@repo/commerce";
 import type { ProductCard } from "@repo/commerce/catalog";
 import type { RentalStatus } from "@repo/database";
 import { Badge } from "@repo/design-system/components/ui/badge";
@@ -19,6 +19,7 @@ import {
   formatDate,
   formatNumber,
 } from "@repo/internationalization/format";
+import { Link, useRouter } from "@repo/internationalization/navigation";
 import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -31,6 +32,7 @@ import {
   reportCompletedCheckout,
 } from "@/lib/checkout-tracking";
 import { toRentalError } from "@/lib/errors";
+import { orderPath, useKeepRental } from "@/lib/order-checkout";
 import {
   isLiveMembership,
   meetsTier,
@@ -44,6 +46,7 @@ import {
   useRequestRental,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
+import { useKeepPrice } from "@/lib/rent";
 import { useProducts } from "@/lib/store-queries";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 
@@ -55,6 +58,7 @@ const RENTAL_BADGE: Record<
 > = {
   active: "default",
   cancelled: "outline",
+  kept: "outline",
   overdue: "destructive",
   requested: "secondary",
   returned: "outline",
@@ -408,10 +412,158 @@ const RentalCatalog = ({
   );
 };
 
-const MyRentals = () => {
+type Rental = NonNullable<ReturnType<typeof useRentals>["data"]>[number];
+
+/** Keep it: buy the rented copy, less the plan's monthly price. */
+const KeepIt = ({ rentalId }: { readonly rentalId: string }) => {
+  const t = useTranslations("app.plus.rentals");
+  const locale = useLocale();
+  const router = useRouter();
+  const price = useKeepPrice(rentalId).data;
+  const keep = useKeepRental();
+
+  if (price === undefined || price === null) {
+    return null;
+  }
+  return (
+    <div className="grid justify-items-end gap-1">
+      <Button
+        disabled={keep.isPending || keep.isSuccess}
+        onClick={() =>
+          keep.mutate(
+            { paymentMethod: "online", rentalId },
+            {
+              onSuccess: ({ order, url }) => {
+                if (!url) {
+                  router.push(orderPath(order.id));
+                }
+              },
+            }
+          )
+        }
+        size="sm"
+        variant="outline"
+      >
+        {keep.isPending
+          ? t("keeping")
+          : t("keep", { price: formatPrice(price, locale) })}
+      </Button>
+      {keep.isError ? (
+        <p className="text-destructive text-xs" role="alert">
+          {keep.error.message.includes("Already being kept")
+            ? t("keepPending")
+            : t("keepFailed")}
+        </p>
+      ) : null}
+    </div>
+  );
+};
+
+/** A single rental's terms, and what was settled at its return. */
+const SingleRentalNote = ({ rental }: { readonly rental: Rental }) => {
+  const t = useTranslations("app.plus.rentals");
+  const locale = useLocale();
+  if (rental.kind !== "single") {
+    return null;
+  }
+  const settled = rental.settled_at !== null;
+  let note = t("single", {
+    deposit: formatPrice(rental.deposit, locale),
+    fee: formatPrice(rental.late_fee, locale),
+  });
+  if (settled && (rental.amount_due ?? 0) > 0) {
+    note = t("amountDue", {
+      amount: formatPrice(rental.amount_due ?? 0, locale),
+    });
+  } else if (settled) {
+    note = t("refundDue", {
+      amount: formatPrice(rental.refund_due ?? 0, locale),
+    });
+  }
+  return (
+    <span className="text-muted-foreground text-xs">
+      {note}
+      {rental.order_id ? (
+        <>
+          {" · "}
+          <Link
+            className="font-medium text-pink-text hover:underline"
+            href={orderPath(rental.order_id)}
+          >
+            {t("viewOrder")}
+          </Link>
+        </>
+      ) : null}
+    </span>
+  );
+};
+
+/** One of the member's rentals: its dates, terms and what can be done. */
+const RentalRow = ({
+  cancel,
+  rental,
+}: {
+  readonly cancel: ReturnType<typeof useCancelRental>;
+  readonly rental: Rental;
+}) => {
   const t = useTranslations("app.plus");
   const tStatus = useTranslations("store.rentalStatus");
   const locale = useLocale();
+  return (
+    <li
+      className="flex flex-wrap items-center justify-between gap-3 p-4"
+      key={rental.id}
+    >
+      <div className="grid min-w-0 gap-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-medium text-sm">
+            {localized(rental, "name", locale)}
+          </span>
+          <Badge variant={RENTAL_BADGE[rental.status]}>
+            {tStatus(rental.status)}
+          </Badge>
+        </div>
+        <span className="text-muted-foreground text-xs">
+          {rental.returned_at
+            ? t("rentals.returnedOn", {
+                date: formatDate(rental.returned_at, locale),
+              })
+            : null}
+          {!rental.returned_at && rental.due_at
+            ? t("rentals.due", {
+                date: formatDate(rental.due_at, locale),
+              })
+            : null}
+          {rental.returned_at || rental.due_at
+            ? null
+            : t("rentals.requestedOn", {
+                date: formatDate(rental.requested_at, locale),
+              })}
+        </span>
+        <SingleRentalNote rental={rental} />
+      </div>
+      {rental.kind === "plus" &&
+      (rental.status === "active" || rental.status === "overdue") ? (
+        <KeepIt rentalId={rental.id} />
+      ) : null}
+      {rental.status === "requested" && rental.kind === "plus" ? (
+        <Button
+          disabled={cancel.isPending}
+          onClick={() => cancel.mutate(rental.id)}
+          size="sm"
+          variant="ghost"
+        >
+          {cancel.isPending && cancel.variables === rental.id
+            ? t("rentals.cancelling")
+            : t("rentals.cancel")}
+        </Button>
+      ) : null}
+    </li>
+  );
+};
+
+const MyRentals = () => {
+  const t = useTranslations("app.plus");
   const rentals = useRentals();
   const cancel = useCancelRental();
 
@@ -428,50 +580,7 @@ const MyRentals = () => {
       {rentals.data?.length ? (
         <ul className="divide-y rounded-lg border">
           {rentals.data.map((rental) => (
-            <li
-              className="flex flex-wrap items-center justify-between gap-3 p-4"
-              key={rental.id}
-            >
-              <div className="grid min-w-0 gap-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-medium text-sm">
-                    {localized(rental, "name", locale)}
-                  </span>
-                  <Badge variant={RENTAL_BADGE[rental.status]}>
-                    {tStatus(rental.status)}
-                  </Badge>
-                </div>
-                <span className="text-muted-foreground text-xs">
-                  {rental.returned_at
-                    ? t("rentals.returnedOn", {
-                        date: formatDate(rental.returned_at, locale),
-                      })
-                    : null}
-                  {!rental.returned_at && rental.due_at
-                    ? t("rentals.due", {
-                        date: formatDate(rental.due_at, locale),
-                      })
-                    : null}
-                  {rental.returned_at || rental.due_at
-                    ? null
-                    : t("rentals.requestedOn", {
-                        date: formatDate(rental.requested_at, locale),
-                      })}
-                </span>
-              </div>
-              {rental.status === "requested" ? (
-                <Button
-                  disabled={cancel.isPending}
-                  onClick={() => cancel.mutate(rental.id)}
-                  size="sm"
-                  variant="ghost"
-                >
-                  {cancel.isPending && cancel.variables === rental.id
-                    ? t("rentals.cancelling")
-                    : t("rentals.cancel")}
-                </Button>
-              ) : null}
-            </li>
+            <RentalRow cancel={cancel} key={rental.id} rental={rental} />
           ))}
         </ul>
       ) : null}

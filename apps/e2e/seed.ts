@@ -77,6 +77,21 @@ export const resetCustomer = async () => {
   check(await db.from("cart_items").delete().eq("user_id", id));
   check(await db.from("wishlist_items").delete().eq("user_id", id));
   check(await db.from("notifications").delete().eq("user_id", id));
+  // An adult, so orders need no guardian; earlier rentals are given back.
+  check(
+    await db
+      .from("profiles")
+      .update({ birthday: "1995-04-20" })
+      .eq("id", id)
+      .is("birthday", null)
+  );
+  check(
+    await db
+      .from("orders")
+      .update({ status: "cancelled" })
+      .eq("user_id", id)
+      .in("status", ["pending", "confirmed"])
+  );
   check(
     await db.from("notifications").insert({
       event: "e2e_notice",

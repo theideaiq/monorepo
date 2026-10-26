@@ -20,6 +20,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { productHref } from "@/components/store/product-card";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
+import { RentCard } from "@/components/store/rent-card";
 import { WishlistButton } from "@/components/store/wishlist-button";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import { MAX_QUANTITY } from "@/lib/cart";
@@ -113,19 +114,79 @@ const ConditionPicker = ({ offers, onPick, value }: ConditionPickerProps) => {
   );
 };
 
-/** Rental items: rented with The IDEA Plus, not bought. */
-const RentPanel = ({ productId }: { readonly productId: string }) => {
+/** Copies free to rent of a version (or of the item, without versions). */
+const rentableCopies = (
+  offers: readonly ProductOffer[],
+  variantId: string | null
+) =>
+  offers
+    .filter(
+      (offer) =>
+        offer.purpose === "rental" &&
+        (variantId === null || offer.variant_id === variantId)
+    )
+    .reduce((sum, offer) => sum + offer.available, 0);
+
+/** Rental items: rented with The IDEA Plus or on their own, not bought. */
+const RentPanel = ({
+  offers,
+  product,
+}: {
+  readonly offers: readonly ProductOffer[];
+  readonly product: ProductDetail;
+}) => {
   const t = useTranslations("app.store.product");
   return (
-    <div className="grid gap-3 rounded-md border p-4">
-      <p className="text-sm">{t("rentalOnly")}</p>
-      <div className="flex flex-wrap gap-3">
-        <Button asChild variant="plus">
-          <Link href="/plus">{t("goToPlus")}</Link>
-        </Button>
-        <WishlistButton productId={productId} withLabel />
+    <div className="grid gap-4">
+      <div className="grid gap-3 rounded-md border p-4">
+        <p className="text-sm">{t("rentalOnly")}</p>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild variant="plus">
+            <Link href="/plus">{t("goToPlus")}</Link>
+          </Button>
+          <WishlistButton productId={product.id} withLabel />
+        </div>
       </div>
+      <RentCard
+        available={rentableCopies(offers, null)}
+        productId={product.id}
+        slug={product.slug}
+        variantId={null}
+      />
     </div>
+  );
+};
+
+/** For sale and for rent: renting on its own, or with The IDEA Plus. */
+const AlsoRent = ({
+  offers,
+  product,
+  variant,
+}: {
+  readonly offers: readonly ProductOffer[];
+  readonly product: ProductDetail;
+  readonly variant: ProductDetail["product_variants"][number] | null;
+}) => {
+  const t = useTranslations("app.store.product");
+  if (!offers.some((offer) => offer.purpose === "rental")) {
+    return null;
+  }
+  const versions = liveVariants(product.product_variants).length > 1;
+  return (
+    <>
+      <RentCard
+        available={rentableCopies(offers, variant?.id ?? null)}
+        productId={product.id}
+        slug={product.slug}
+        variant={variant && versions ? variantSlug(variant) : null}
+        variantId={variant?.id ?? null}
+      />
+      <p className="text-sm">
+        <Link className="font-medium text-plus hover:underline" href="/plus">
+          {t("alsoRent")}
+        </Link>
+      </p>
+    </>
   );
 };
 
@@ -255,7 +316,7 @@ export const PurchasePanel = ({
   }, [deepLinkAdd, loading]);
 
   if (product.kind === "rental") {
-    return <RentPanel productId={product.id} />;
+    return <RentPanel offers={offers} product={product} />;
   }
 
   return (
@@ -326,13 +387,7 @@ export const PurchasePanel = ({
           {t("addFailed")}
         </p>
       ) : null}
-      {offers.some((offer) => offer.purpose === "rental") ? (
-        <p className="text-sm">
-          <Link className="font-medium text-plus hover:underline" href="/plus">
-            {t("alsoRent")}
-          </Link>
-        </p>
-      ) : null}
+      <AlsoRent offers={offers} product={product} variant={chosenVariant} />
     </div>
   );
 };
