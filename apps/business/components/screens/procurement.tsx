@@ -52,8 +52,8 @@ const NewRequestForm = ({ organizationId }: { organizationId: string }) => {
         onSuccess: (request) =>
           router.push(
             request
-              ? `/business/procurement/${request.id}`
-              : "/business/procurement"
+              ? `/procurement/${request.id}`
+              : "/procurement"
           ),
       }
     );
@@ -160,7 +160,7 @@ const RequestList = () => {
               <li key={request.id}>
                 <Link
                   className="flex items-center justify-between gap-4 p-3 text-sm hover:bg-accent"
-                  href={`/business/procurement/${request.id}`}
+                  href={`/procurement/${request.id}`}
                 >
                   <div className="grid gap-0.5">
                     <span className="font-medium">{request.title}</span>

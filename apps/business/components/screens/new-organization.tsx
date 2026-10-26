@@ -20,7 +20,7 @@ export const NewOrganization = () => {
         <CreateOrganizationForm
           onCreated={(organizationId) => {
             select(organizationId);
-            router.push("/business");
+            router.push("/");
           }}
         />
       </div>

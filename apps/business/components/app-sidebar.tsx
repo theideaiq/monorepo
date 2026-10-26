@@ -96,7 +96,7 @@ export const AppSidebar = () => {
               {staff.data ? (
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild tooltip={t("backOffice")}>
-                    <a href={localePath(locale, "/admin")}>
+                    <a href={localePath(locale, "/staff")}>
                       <ShieldIcon />
                       <span>{t("backOffice")}</span>
                     </a>

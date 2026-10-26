@@ -37,7 +37,7 @@ export const InviteAccept = () => {
     onSuccess: async (organizationId) => {
       rememberActiveOrganization(organizationId);
       await queryClient.invalidateQueries({ queryKey: ["memberships"] });
-      router.replace("/business");
+      router.replace("/");
     },
   });
 

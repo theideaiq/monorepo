@@ -149,7 +149,7 @@ const MemberList = () => {
                         remove.mutate(member.userId, {
                           onSuccess: () => {
                             if (self) {
-                              router.replace("/business");
+                              router.replace("/");
                             }
                           },
                         })

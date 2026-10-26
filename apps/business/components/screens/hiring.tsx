@@ -73,7 +73,7 @@ const NewJobForm = ({ organizationId }: { organizationId: string }) => {
       },
       {
         onSuccess: (job) =>
-          router.push(job ? `/business/hiring/${job.id}` : "/business/hiring"),
+          router.push(job ? `/hiring/${job.id}` : "/hiring"),
       }
     );
   };
@@ -215,7 +215,7 @@ const JobList = () => {
                 <li key={job.id}>
                   <Link
                     className="flex items-center justify-between gap-4 p-3 text-sm hover:bg-accent"
-                    href={`/business/hiring/${job.id}`}
+                    href={`/hiring/${job.id}`}
                   >
                     <div className="grid gap-0.5">
                       <span className="font-medium">{job.title}</span>

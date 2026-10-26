@@ -79,7 +79,7 @@ export default defineConfig({
   use: { trace: "retain-on-failure" },
   webServer: [
     {
-      command: `bun run --cwd ../app ${script}${port(app)}`,
+      command: `bun run --cwd ../business ${script}${port(app)}`,
       reuseExistingServer: true,
       timeout: 240_000,
       url: `${app}/robots.txt`,

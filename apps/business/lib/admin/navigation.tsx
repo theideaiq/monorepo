@@ -6,15 +6,15 @@ import {
 } from "@repo/internationalization/navigation";
 import { type ComponentProps, useMemo } from "react";
 
-/** The back office lives under `/{locale}/admin`. */
-export const ADMIN_BASE = "/admin";
+/** The back office lives under `/{locale}/staff`. */
+export const ADMIN_BASE = "/staff";
 
 type Href = string | { pathname?: string | null };
 type RouterHref = Parameters<ReturnType<typeof useLocaleRouter>["push"]>[0];
 
 /**
  * A back-office path ("/orders?status=open") as a Spark path
- * ("/admin/orders?status=open"). Its pages and Server Actions keep
+ * ("/staff/orders?status=open"). Its pages and Server Actions keep
  * writing paths relative to the back office.
  */
 export const adminPath = (path: string) => {

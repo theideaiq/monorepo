@@ -10,7 +10,7 @@ export interface NavItem {
 
 /** The sections of The IDEA Spark for businesses, in sidebar order. */
 export const navItems: NavItem[] = [
-  { href: "/business", icon: BriefcaseBusinessIcon, key: "business" },
+  { href: "/", icon: BriefcaseBusinessIcon, key: "business" },
 ];
 
 /** Whether `pathname` is inside the section at `href`. */

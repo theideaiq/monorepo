@@ -216,11 +216,12 @@ export const describeNotification = (
   };
 };
 
-const SUITE_PATH = /^\/business(?:[/?#]|$)/;
+const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
 
 /**
- * The path to open, or null for a missing or unsafe link. The IDEA Suite's
- * pages (`/business…`) are on The IDEA Spark, so those links are absolute.
+ * The path to open, or null for a missing or unsafe link. Links under
+ * `/business…` are The IDEA Business's pages, on its own site (where they
+ * sit at the root: `/business/invoices` opens `/invoices` there).
  */
 export const notificationHref = (
   link: string | null,
@@ -231,8 +232,8 @@ export const notificationHref = (
   if (!path) {
     return null;
   }
-  return SUITE_PATH.test(path)
-    ? appLink(appUrl, locale, path)
+  return BUSINESS_PATH.test(path)
+    ? appLink(appUrl, locale, path.replace(BUSINESS_PATH, "") || "/")
     : currentAppPath(path);
 };
 

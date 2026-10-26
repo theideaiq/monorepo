@@ -28,7 +28,7 @@ const OrganizationBilling = () => {
   const plans = usePlans("business");
   const subscription = useSubscription(active.id);
   const payments = usePayments(active.id, canManage);
-  const checkout = usePlanCheckout("/business/billing", active.id);
+  const checkout = usePlanCheckout("/billing", active.id);
   // Digital goods can't use a third-party checkout inside the iOS/Android
   // apps (see @repo/payments policy and commerce.allowNativeCheckout).
 

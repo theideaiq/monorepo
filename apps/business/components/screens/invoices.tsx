@@ -59,7 +59,7 @@ const InvoiceList = () => {
                   {order ? (
                     <Link
                       className="text-muted-foreground text-xs underline"
-                      href={`/business/procurement/${order.quotes?.request_id}`}
+                      href={`/procurement/${order.quotes?.request_id}`}
                     >
                       {order.customer_reference
                         ? t("invoices.orderWithReference", {

@@ -13,8 +13,8 @@ export const config = {
 };
 
 // The back office also looks up product covers from the browser.
-// English paths have no locale prefix (/admin), the others do (/ar/admin).
-const ADMIN_PATH = /^(?:\/(?:ar|en))?\/admin(?:\/|$)/;
+// English paths have no locale prefix (/staff), the others do (/ar/staff).
+const ADMIN_PATH = /^(?:\/(?:ar|en))?\/staff(?:\/|$)/;
 const adminOptions = noseconeOptionsWith(catalogLookupCspSources);
 
 /**

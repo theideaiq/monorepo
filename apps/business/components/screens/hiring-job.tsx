@@ -187,7 +187,7 @@ const JobDetail = ({ jobId }: { jobId: string }) => {
     <div className="flex flex-col gap-6">
       <Link
         className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
-        href="/business/hiring"
+        href="/hiring"
       >
         <ArrowLeftIcon className="size-4 rtl:rotate-180" />
         {t("jobs")}

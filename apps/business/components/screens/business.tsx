@@ -82,19 +82,19 @@ const Overview = () => {
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <Tile
-          href="/business/procurement"
+          href="/procurement"
           icon={FileTextIcon}
           label={t("quotesToAnswer")}
           value={formatNumber(data.quotesToAnswer, locale)}
         />
         <Tile
-          href="/business/hiring"
+          href="/hiring"
           icon={UsersIcon}
           label={t("candidatesToReview")}
           value={formatNumber(data.candidatesToReview, locale)}
         />
         <Tile
-          href="/business/procurement"
+          href="/procurement"
           icon={PackageSearchIcon}
           label={t("openRequests")}
           value={formatNumber(data.openRequests, locale)}
@@ -107,13 +107,13 @@ const Overview = () => {
                 })
               : undefined
           }
-          href="/business/invoices"
+          href="/invoices"
           icon={ReceiptIcon}
           label={t("unpaidInvoices")}
           value={formatNumber(data.unpaidInvoices, locale)}
         />
         <Tile
-          href="/business/plus"
+          href="/plus"
           icon={CrownIcon}
           label={t("plusSeats")}
           value={formatNumber(data.plusSeats, locale)}
@@ -121,7 +121,7 @@ const Overview = () => {
       </div>
       <Link
         className="text-muted-foreground text-sm underline"
-        href="/business/billing"
+        href="/billing"
       >
         {plan ? t("plan", { plan: planName(plan, locale) }) : t("noPlan")}
       </Link>

@@ -17,14 +17,14 @@ import { useAuthMessages } from "@/lib/auth-messages";
 import { PendingInvitations } from "./pending-invitations";
 
 const TABS = [
-  { href: "/business", key: "overview" },
-  { href: "/business/procurement", key: "procurement" },
-  { href: "/business/hiring", key: "hiring" },
-  { href: "/business/invoices", key: "invoices" },
-  { href: "/business/plus", key: "plus" },
-  { href: "/business/members", key: "members" },
-  { href: "/business/billing", key: "billing" },
-  { href: "/business/settings", key: "settings" },
+  { href: "/", key: "overview" },
+  { href: "/procurement", key: "procurement" },
+  { href: "/hiring", key: "hiring" },
+  { href: "/invoices", key: "invoices" },
+  { href: "/plus", key: "plus" },
+  { href: "/members", key: "members" },
+  { href: "/billing", key: "billing" },
+  { href: "/settings", key: "settings" },
 ] as const;
 
 /** For people without a business account: what it is, invitations, create. */
@@ -42,7 +42,7 @@ const BusinessIntro = () => {
           <p className="text-muted-foreground">{t("intro.description")}</p>
         </div>
         <Button asChild className="justify-self-start">
-          <Link href="/business/new">
+          <Link href="/new">
             <PlusIcon />
             {t("intro.create")}
           </Link>
@@ -80,7 +80,7 @@ export const BusinessShell = ({
                 <OrganizationSwitcher
                   activeId={active.id}
                   messages={authMessages}
-                  onCreate={() => router.push("/business/new")}
+                  onCreate={() => router.push("/new")}
                   onSelect={select}
                   organizations={organizations}
                 />
@@ -92,7 +92,7 @@ export const BusinessShell = ({
                 {TABS.map((tab) => {
                   const current =
                     pathname === tab.href ||
-                    (tab.href !== "/business" &&
+                    (tab.href !== "/" &&
                       pathname.startsWith(`${tab.href}/`));
                   return (
                     <Link
