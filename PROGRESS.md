@@ -5,6 +5,86 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
+## Current state (2026-10-26: program revision, step 5c)
+
+- Game night kits (migration `20261223000000_game_night_kits.sql`): PS5
+  (49,750 with 4 games), Switch party (39,750) and Retro (24,750) for
+  Thursday evening to Saturday evening, up to 8 weekends ahead, delivered
+  in Baghdad, adults only, Plus Blaze 25% off, with a 100,000 IQD
+  refundable deposit staff can waive after checking ID. Booking at
+  `/kits/<kit>` from `/plus#kits`. **To do:** add each kit in Rentals →
+  Kits when it's ready (none in production yet, so nothing can be booked).
+
+- The IDEA Plus launch (migration `20261222000000_plus_launch.sql`): 60
+  places, then a waitlist (the next person in Baghdad is invited
+  automatically and has 72 hours to join); joining asks for the area in
+  Baghdad (15 areas seeded without delivery days: set them in Rentals →
+  Plus places); Plus rentals have no due dates; Saved is the queue; swaps
+  are booked from Your Plus (home swaps 1/2/4 a month, extra ones 3,000 IQD,
+  counter swaps unlimited) and completed in Rentals → Swaps; annual plans
+  (10 months for 12), pause up to 31 days a year, cancel at the period end,
+  and plan changes from the next renewal.
+
+- Single-item rent and Keep it (migration `20261221000000_single_rent.sql`):
+  rentable items can be rented on their own from the product page
+  (`/rent/<slug>`) at the category's rate (games 9,750 for 7 days, books
+  3,750 for 14, films 2,750 for 7), with a refundable deposit of half the
+  item's price charged at checkout; late fees are worked out per day and
+  settled at return on Rentals, and after 14 days late the item is charged
+  at its used price. Plus members can keep a rented copy at its used price
+  less one month of their plan. Rates and the deposit are in Finance →
+  Rental rates.
+
+- Ages (migration `20261220000000_ages.sql`): the Pass is from 13 and asks
+  for the date of birth at first sign-in; 13–17-year-olds link a guardian
+  signed in with The IDEA Pass who approves each order and The IDEA Plus in
+  Settings; PEGI 18 items are hidden from them; Sell to us and affiliates
+  are 18+. Reviews that earned the photo bonus say so.
+- The 14 public policies at `/legal/<policy>` (terms, privacy, delivery,
+  returns, condition, plus, rewards, sell, club, surveys, business,
+  accessibility, security, copyright) replace the old five, with
+  `/.well-known/security.txt`.
+
+- Catalogue fixes (migration `20261219000000_catalogue_fixes.sql`): six
+  categories (Music, Games, Books, Films, Audio, Tech); prices moved into
+  the bands by format and edition (games mostly 59,750, books 14,750 or
+  19,750, films 29,750, vinyl 54,750–89,750, CDs 19,750–24,750); the two
+  250 IQD prices fixed (A4000 224,750, Frank Ocean – Orange CD 19,750);
+  the drafts with a photo and a copy published, the rest still drafts;
+  one copy of each Switch game moved to rent; condition shown as four
+  plain labels; rental-only items show Rent with "Worth …"; PEGI age
+  ratings on every game.
+
+- Money rules (migration `20261218000000_money_rules.sql`): flat Bulbs (3%
+  for everyone, Plus Glow 4%, Shine 5%, Blaze 6%; half on consoles,
+  laptops and items over 500,000 IQD; spend tiers gone, nobody lost
+  Bulbs); free Baghdad delivery over 150,000 IQD for everyone and on any
+  order for Plus Shine and Blaze; a 14-day return window for Bulbs and
+  affiliate commission; at most 20% of an order given away; no cash on
+  delivery over 500,000 IQD; Plus plans Glow 14,750 (1 item), Shine
+  22,750 (2), Blaze 39,750 (4), seeded inactive; Telegram rooms open,
+  Pass or Plus; the checkout shows the server's price (`checkout_quote`);
+  Finance → Prices checks every copy against a 20% margin floor.
+
+- Products: The IDEA Store (`/`, `/store`), The IDEA Plus (`/plus`), The
+  IDEA Club (`/club`) and The IDEA Pass (`/pass`), plus The IDEA Business
+  (`/business` on the website, the company dashboard at
+  `business.theideaiq.com`) and The IDEA Droid (the Telegram bot). Spark,
+  Suite, Megastore, The IDEA Post, Discover, Academy and Launcher are gone
+  as names.
+- `apps/app` is now `apps/business` (package `business`): company pages at
+  its root, the back office at `/{locale}/staff` (companies at
+  `/staff/companies`). `NEXT_PUBLIC_APP_URL` is The IDEA Business.
+- Website: menu Store · Plus · Club · Pass; `/club/<slug>` replaces
+  `/post/…`; `/pass` has four pages (card, orders, bulbs, settings);
+  `/saved`, `/help`, `/careers` and `/r/<code>` are new addresses; one
+  sign-in page (no `/sign-up`). Old addresses have no redirects; stored
+  notification links are mapped by `currentAppPath`/`businessPath`.
+- Migration `20261217000000_program_revision_names.sql`: Droid FAQ topics
+  general, store, plus, club, business, and `referral_kind(code)`.
+- The Spark Catcher mini-game was removed. Telegram handles change in a
+  later step.
+
 ## Done
 
 - [x] One repository: website, customer app (web + iOS/Android), back office,
@@ -22,6 +102,26 @@ decisions with a date.
 
 ## Launch checklist (needs an owner with access)
 
+- [ ] **Drafts:** about 140 drafts remain (44 with copies but no photo,
+      the rest without copies). Photograph and publish them, or delete
+      them, in the back office (Catalog, status Draft).
+- [ ] **Prices to check:** consoles, accessories, hi-fi and cameras kept
+      their prices (cost plus 10–15% once costs are in); the band moves
+      raised the cheapest vinyl to 54,750 and CDs to 19,750 and capped
+      vinyl at 89,750, so check box sets and singles. Check that the
+      Frank Ocean – Orange CD is an official release before selling it.
+
+- [ ] **Costs:** enter the cost of every copy (back office → the product →
+      copies; all 684 are empty), then fix what Finance → Prices lists.
+- [ ] **Money rules:** set the real Wayl fee rate and our delivery cost on
+      Finance → Bulbs (3% and 5,000 IQD are placeholders).
+- [ ] **Plus launch:** turn on the Glow, Shine and Blaze plans (Catalog →
+      Plans) when The IDEA Plus opens.
+- [x] **Returns policy:** the 14 public policies in
+      `apps/web/content/legal` (returns replaces refund, 14 days; club
+      replaces community and conduct), 2026-10-26. Owner step: have them
+      reviewed under Iraqi law, and confirm Wayl's refund window and fees.
+
 - [ ] **Delivery with Boxy** (ARCHITECTURE_AND_INTEGRATIONS.md 4.5): Boxy
       key and secret on the `api` project (sandbox first), the pick-up
       location, the webhook with its custom header, `CRON_SECRET` as a
@@ -32,7 +132,7 @@ decisions with a date.
       (Authentication → Sign In / Providers → Multi-factor) — staff rights
       need an authenticator-app session. Set the Site URL to
       `https://theideaiq.com` (The IDEA Pass lives on the website) and add
-      `https://theideaiq.com/**` and `https://spark.theideaiq.com/**` to
+      `https://theideaiq.com/**` and `https://business.theideaiq.com/**` to
       the redirect URLs.
 - [ ] **Telegram sign-in:** in @BotFather open the bot → Login Widget, add
       the Allowed URL `https://api.theideaiq.com/auth/telegram/callback`
@@ -54,7 +154,8 @@ decisions with a date.
         signup), `magic_link.html` (Magic Link) and `email_change.html`
         (Change Email Address), with the subjects from `config.toml`.
       - Authentication → Rate Limits: emails per hour to fit the Resend
-        plan; then sign up on `/en/sign-up` and check the code arrives.
+        plan; then sign in on `/sign-in` with a new address and check the
+        code arrives.
 - [ ] **GitHub → Environments → `production`:** `SUPABASE_ACCESS_TOKEN`,
       `SUPABASE_DB_PASSWORD`, `BACKUP_PASSPHRASE`, optional
       `BACKUP_HEARTBEAT_URL`; repository variable `SUPABASE_PROJECT_REF`
@@ -67,21 +168,22 @@ decisions with a date.
       unaffected projects" on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the
       remote cache.
       - `web` (`apps/web`) → `theideaiq.com`
-      - `app` (`apps/app`, The IDEA Spark: the back office and The IDEA
-        Suite) → `spark.theideaiq.com` (DNS)
+      - `app` (root directory `apps/business`, The IDEA Business: the
+        company dashboard and the back office) → `business.theideaiq.com`
+        (DNS)
       - `api` (`apps/api`) → the API host
       - `storybook` (`apps/storybook`, The IDEA Design) →
         `design.theideaiq.com` (DNS), with `NEXT_PUBLIC_SUPABASE_URL` and
         `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 - [ ] **Vercel, retire the old projects:** delete the `admin` and `pass`
-      projects (their apps are now `/admin` in Spark and the Pass pages on
-      the website);
-      redirect any `admin.`/`pass.` DNS to `spark.theideaiq.com` if they
-      were ever published. Remove `NEXT_PUBLIC_PASS_URL` and
+      projects (their apps are now `/staff` in The IDEA Business and the
+      Pass pages on the website);
+      redirect any `admin.`/`pass.`/`spark.` DNS to `business.theideaiq.com`
+      if they were ever published. Remove `NEXT_PUBLIC_PASS_URL` and
       `NEXT_PUBLIC_ADMIN_URL` from every project.
 - [ ] **Vercel, shared URLs:** on every project set
       `NEXT_PUBLIC_WEB_URL=https://theideaiq.com` (every "Sign in" goes to
-      The IDEA Pass there), `NEXT_PUBLIC_APP_URL=https://spark.theideaiq.com`
+      The IDEA Pass there), `NEXT_PUBLIC_APP_URL=https://business.theideaiq.com`
       and `NEXT_PUBLIC_DESIGN_URL`; set
       `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on web, app and
       storybook (production only).
@@ -102,18 +204,18 @@ decisions with a date.
 - [ ] **Domains:** once every subdomain serves HTTPS, submit the apex at
       hstspreload.org (the sites already send the preload header).
 - [ ] **First staff member:** they get The IDEA Pass with their email
-      (`/ar/sign-up`), then in the SQL editor:
+      (`/ar/sign-in`), then in the SQL editor:
       `insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '<their email>';`
       they then link an authenticator app on The IDEA Pass and open
-      `https://spark.theideaiq.com/ar/admin` (or "Open the back office"
-      in My Pass).
+      `https://business.theideaiq.com/ar/staff` (or "Open the back office"
+      on their Pass).
 - [ ] **Brand v1.0 (after the brand pull request ships):** paste the
       three Supabase auth templates again
       (`packages/database/supabase/templates`, now with the pink header;
       the logo loads from `https://theideaiq.com/brand/lockup-on-pink.png`,
       so the website must be deployed first); run `cap:assets` for the new
       icons and splash; switch every social avatar and the Telegram
-      channels (The IDEA Club, The IDEA Post, The IDEA Droid, The IDEA
+      channels (The IDEA Club, The IDEA Droid, The IDEA
       Staff) to the new tiles (`docs/brand/BRAND_GUIDELINES.md`, 13).
 - [ ] **Google Wallet (optional):** an issuer in the Google Pay & Wallet
       Console and a service account added to it; set
@@ -163,11 +265,53 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       (the generated function type can't express it).
 
 - [ ] Brand v1.0 follow-ups: rename The Club / Droid in the legal
-      Markdown documents (legal review); store checked market prices
+      Markdown documents, and the retired names there (Megastore → The
+      IDEA Store, The IDEA Suite → The IDEA Business, the Academy's
+      programs) (legal review); store checked market prices
       (price, date, evidence) so SouqPrice can show. (Poppins removed
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-26: Program revision v1, step 5c (kits): a 100,000 IQD deposit
+  at checkout that staff can waive after checking ID (verified Passes skip
+  it once student verification lands); each physical kit is a unit in the
+  back office and the PS5 kit's games are held from the rental copies;
+  bookings up to 8 weekends ahead.
+
+- 2026-10-26: Program revision v1, step 5b (Plus launch): waitlist places
+  go to the next person automatically (72-hour invites; staff can also
+  invite); swaps are booked by the member (what goes back, what comes next
+  from the queue); joining asks for the area in Baghdad, other governorates
+  wait; annual plans, pause, cancel at period end and plan change at
+  renewal are in. Paying Plus with Bulbs and the 20% student price come
+  later (the student price with student verification, step 5e).
+
+- 2026-10-26: Program revision v1, step 5a: the single-rent deposit is
+  charged at checkout (an order line) and refunded by staff after return,
+  less late fees; late fees are worked out by the database and settled at
+  return, not charged automatically. Step 5 ships as one PR per feature.
+
+- 2026-10-26: Program revision v1, step 4: guardians confirm signed in with
+  The IDEA Pass of their own (not a phone code: no SMS provider, and an adult Pass is harder
+  to fake); the 14 policies are published as final, not marked as drafts.
+
+- 2026-10-26: Program revision v1, step 3 (catalogue): six categories;
+  prices set from the bands directly (no review list), accepting that
+  edition, language and release dates are partly guessed; only drafts with
+  a photo and a copy published, the others kept; the 250 IQD placeholders
+  priced (A4000 224,750; the Orange CD 19,750 by the CD band, not the
+  79,750 first suggested for vinyl); one of each Switch game's three
+  copies moved to rent; conditions as four plain labels without the bulb.
+
+- 2026-10-26: Program revision v1, step 2 (money rules): Bulbs are a flat
+  rate (3%; Plus Glow 4%, Shine 5%, Blaze 6%), half on consoles, laptops
+  and anything over 500,000 IQD; spend tiers and the Plus +1% bonus are
+  gone. Free delivery is per zone (Baghdad over 150,000 IQD; Plus Shine
+  and Blaze on any Baghdad order); other governorates keep their fees.
+  The return window is 14 days. At most 20% of an order is given away;
+  orders over 500,000 IQD are paid online or at pickup. Prices must keep
+  a 20% margin after the payment fee, delivery and the largest discount.
 
 - 2026-10-25: Catalogue reshape (variants, part 3; migration
   `20261216000000`): 604 products became 542 titles, with formats,
@@ -204,8 +348,8 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   product names (The IDEA Pass, The IDEA Plus, …) keep Latin letters.
 - 2026-10-24: The IDEA brand v1.0 (`docs/brand`): Paper ground, Readex
   Pro, pink primary with the yellow bulb, never black in brand blocks.
-  Condition bulbs map stored conditions as new → new, open box and
-  refurbished → like new, used → used.
+  Condition bulbs mapped stored conditions to three bulbs (replaced on
+  2026-10-26 by four plain labels).
 - 2026-10-24: Retired from the back office: the payroll plan
   (`staff_plan`), the cap table (`equity_rounds`, `equity_holders`), fixed
   assets (`fixed_assets`, `fixed_asset_schedule()`) and the own email

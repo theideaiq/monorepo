@@ -51,7 +51,7 @@ begin
 - [EducationUSA: الاستعداد للتقديم](https://educationusa.state.gov)
 - [WES: تقييم الشهادات](https://www.wes.org)
 
-اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap) و[دليل SAT](/post/sat-guide).$ar$,
+اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/club/study-abroad-roadmap) و[دليل SAT](/club/sat-guide).$ar$,
     $en$When you apply to a US university, or any program linked to the US, you'll be asked about your grades, and the term GPA comes up a lot. This guide explains what it means and how to present Iraqi grades correctly and honestly.
 
 ## What is GPA?
@@ -92,7 +92,7 @@ Grades are among the most important parts of your application, and a number that
 - [EducationUSA: getting ready to apply](https://educationusa.state.gov)
 - [WES: credential evaluation](https://www.wes.org)
 
-See also: our [study abroad roadmap](/post/study-abroad-roadmap) and [SAT guide](/post/sat-guide).$en$,
+See also: our [study abroad roadmap](/club/study-abroad-roadmap) and [SAT guide](/club/sat-guide).$en$,
     now() - interval '6 minutes'
   )
   on conflict (slug) do update set

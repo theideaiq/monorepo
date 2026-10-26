@@ -21,7 +21,7 @@ export interface WalletMember {
 interface WalletOptions {
   account: ServiceAccount;
   issuerId: string;
-  /** The website, for the logo and the link back to My Pass. */
+  /** The website, for the logo and the link back to Your Pass. */
   webUrl: string;
 }
 
@@ -58,7 +58,7 @@ export const walletClaims = (
           hexBackgroundColor: "#d81b60",
           id: `${issuerId}.member_${member.memberNumber}`,
           linksModuleData: {
-            uris: [{ description: "My Pass", id: "my_pass", uri: passUrl }],
+            uris: [{ description: "Your Pass", id: "my_pass", uri: passUrl }],
           },
           logo: {
             sourceUri: { uri: new URL("/icon.png", webUrl).toString() },

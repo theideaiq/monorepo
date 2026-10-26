@@ -6,12 +6,16 @@ import { cn } from "@repo/design-system/lib/utils";
 import { localePath } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link, usePathname } from "@repo/internationalization/navigation";
-import { ShoppingCartIcon } from "lucide-react";
+import { HeartIcon, SearchIcon, ShoppingCartIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import type { ReactNode } from "react";
 import { useCartCount } from "@/lib/store-queries";
 
+/** Sign-in and checkout are focused steps: no saved items or cart there. */
+const FOCUSED = /^\/(checkout|sign-in|sign-out|mfa|onboarding|tg)(\/|$)/;
+
 const CartButton = () => {
-  const t = useTranslations("app.nav");
+  const t = useTranslations("web.nav");
   const locale = useLocale();
   const count = useCartCount();
   const label =
@@ -36,14 +40,20 @@ const CartButton = () => {
   );
 };
 
+/** The first letter of the member's name (or email) for their Pass button. */
+const initial = (name: string | undefined, email: string | undefined) =>
+  (name?.trim() || email || "?").charAt(0).toUpperCase();
+
 interface AccountActionsProps {
   readonly className?: string;
   readonly onNavigate?: () => void;
 }
 
 /**
- * The header's The IDEA Pass part: "Sign in" (coming back to this page)
- * when signed out; the cart and My Pass when signed in.
+ * The top bar's end, on every screen: search, saved items (the heart), the
+ * cart, then The IDEA Pass: "Sign in" (coming back to this page) when
+ * signed out, the member's Pass button when signed in (on phones the Pass
+ * tab does that).
  */
 export const AccountActions = ({
   className,
@@ -53,19 +63,34 @@ export const AccountActions = ({
   const { loading, user } = useAuth();
   const locale = useLocale();
   const pathname = usePathname();
+  const focused = FOCUSED.test(pathname);
 
-  if (loading) {
-    return null;
-  }
-  if (!user) {
-    return (
-      <Button asChild className={className}>
+  let account: ReactNode = null;
+  if (user) {
+    account = (
+      <Button
+        asChild
+        className="hidden rounded-full md:inline-flex"
+        size="icon"
+        variant="secondary"
+      >
+        <Link aria-label={t("pass")} href="/pass" onClick={onNavigate}>
+          <span aria-hidden="true" className="font-semibold">
+            {initial(
+              user.user_metadata?.full_name as string | undefined,
+              user.email
+            )}
+          </span>
+        </Link>
+      </Button>
+    );
+  } else if (!loading) {
+    account = (
+      <Button asChild className="ms-1">
         <Link
           href={{
             pathname: "/sign-in",
-            query: {
-              return_to: localePath(locale, pathname),
-            },
+            query: { return_to: localePath(locale, pathname) },
           }}
           onClick={onNavigate}
         >
@@ -74,14 +99,25 @@ export const AccountActions = ({
       </Button>
     );
   }
+
   return (
     <span className={cn("flex items-center gap-1", className)}>
-      <CartButton />
-      <Button asChild>
-        <Link href="/pass" onClick={onNavigate}>
-          {t("myPass")}
-        </Link>
-      </Button>
+      {focused ? null : (
+        <>
+          <Button asChild size="icon" variant="ghost">
+            <Link aria-label={t("search")} href="/store">
+              <SearchIcon className="size-5" />
+            </Link>
+          </Button>
+          <Button asChild size="icon" variant="ghost">
+            <Link aria-label={t("saved")} href="/saved">
+              <HeartIcon className="size-5" />
+            </Link>
+          </Button>
+          <CartButton />
+        </>
+      )}
+      {account}
     </span>
   );
 };

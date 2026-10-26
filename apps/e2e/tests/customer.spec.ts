@@ -5,10 +5,9 @@ import {
   emailedCode,
   product,
   signUpUser,
-  unknownEmail,
 } from "../fixtures";
 import { urls } from "../playwright.config";
-import { accountExists, resetCustomer, resetSignUpUser } from "../seed";
+import { resetCustomer, resetSignUpUser } from "../seed";
 import {
   expectAccessible,
   expectSignedInHome,
@@ -17,19 +16,19 @@ import {
 } from "./helpers";
 
 const WELCOME = /^Welcome to/;
-const NOTIFICATIONS = /^Notifications/;
 const cartReturnTo = `?return_to=${encodeURIComponent("/cart")}`;
 
-test("sign up on The IDEA Pass with an emailed code", async ({ page }) => {
+test("a new email gets The IDEA Pass with an emailed code", async ({
+  page,
+}) => {
   await resetSignUpUser();
-  // The IDEA Pass sign-up is a page of the website.
-  await page.goto(`${urls.web}/sign-up`);
-  await expect(page).toHaveURL(`${urls.web}/sign-up`);
+  // One sign-in page: an address we don't know gets its Pass.
+  await page.goto(`${urls.web}/sign-in`);
+  await expect(page).toHaveURL(`${urls.web}/sign-in`);
   await expect(
-    page.getByRole("heading", { name: "Get The IDEA Pass" })
+    page.getByRole("heading", { name: "Sign in to The IDEA Pass" })
   ).toBeVisible();
   await expectAccessible(page);
-  await page.getByLabel("Full name").fill(signUpUser.name);
   await page.getByLabel("Email").fill(signUpUser.email);
   await clearInbox(signUpUser.email);
   await page.getByRole("button", { name: "Continue" }).click();
@@ -42,16 +41,17 @@ test("sign up on The IDEA Pass with an emailed code", async ({ page }) => {
     .getByLabel("Verification code")
     .fill(await emailedCode(signUpUser.email));
 
-  // New members may be asked to confirm their name and language first.
-  const onboarding = page.getByRole("heading", { name: WELCOME });
-  const bell = page.getByRole("button", { name: NOTIFICATIONS });
-  await expect(onboarding.or(bell)).toBeVisible({ timeout: 15_000 });
-  if (await onboarding.isVisible()) {
-    await expect(page.getByLabel("Full name")).toHaveValue(signUpUser.name);
-    await expectAccessible(page);
-    await page.getByRole("button", { name: "Continue" }).click();
-  }
-  // My Pass greets the new member and shows their email.
+  // Onboarding asks new members for their date of birth (the Pass is for
+  // 13 and over), then their name and language.
+  await expect(page.getByRole("heading", { name: WELCOME })).toBeVisible({
+    timeout: 15_000,
+  });
+  await page.getByLabel("Your date of birth").fill("1995-04-20");
+  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByLabel("Full name").fill(signUpUser.name);
+  await expectAccessible(page);
+  await page.getByRole("button", { name: "Continue" }).click();
+  // Your Pass greets the new member and shows their email.
   await expectSignedInHome(page);
   await expect(page.getByText(signUpUser.email)).toBeVisible();
 });
@@ -77,23 +77,6 @@ test("sign in on The IDEA Pass with an emailed code and go back", async ({
     .getByLabel("Verification code")
     .fill(await emailedCode(customer.email));
   await expect(page).toHaveURL(`${urls.web}/cart`, { timeout: 15_000 });
-});
-
-test("sign-in with an unknown email offers sign-up", async ({ page }) => {
-  await resetSignUpUser();
-  await page.goto(`${urls.web}/sign-in${cartReturnTo}`);
-  await page.getByLabel("Email").fill(unknownEmail);
-  await page.getByRole("button", { name: "Continue" }).click();
-  await expect(
-    page.getByText("There's no The IDEA Pass with this email yet.")
-  ).toBeVisible();
-  await expectAccessible(page);
-  await page
-    .getByRole("link", { name: "Get The IDEA Pass with this email" })
-    .click();
-  await expect(page).toHaveURL(`${urls.web}/sign-up${cartReturnTo}`);
-  // Signing in never creates a Pass.
-  expect(await accountExists(unknownEmail)).toBe(false);
 });
 
 test("the sign-in page is accessible in Arabic", async ({ page }) => {
@@ -131,22 +114,28 @@ test("app-link files are served without a locale redirect", async ({
   }
 });
 
-test("old links open the new pages", async ({ page, request }) => {
-  await page.goto(`${urls.web}/store/product?slug=${product.slug}`);
-  await expect(page).toHaveURL(
-    new RegExp(`/store/${product.slug}\\?slug=${product.slug}$`)
+test("security.txt is served without a locale redirect", async ({
+  request,
+}) => {
+  const response = await request.get(`${urls.web}/.well-known/security.txt`, {
+    maxRedirects: 0,
+  });
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("text/plain");
+  expect(await response.text()).toContain(
+    "Policy: https://theideaiq.com/legal/security"
   );
-  // Links stored before My Pass moved under /pass, and Spark's old pages.
-  for (const [from, to] of [
-    [`${urls.web}/orders/view?id=o1`, "/pass/orders/o1"],
-    [`${urls.web}/support`, "/pass/support"],
-    [`${urls.app}/cart`, `${urls.web}/cart`],
-  ]) {
-    const response = await request.get(from, { maxRedirects: 0 });
-    expect(response.status()).toBeGreaterThanOrEqual(300);
-    expect(response.headers().location).toContain(to);
-  }
 });
+
+const PICKUP = /^Pickup/;
+const JOIN_PLAN = /^Join for /;
+const KIT_PAGE = /\/kits\/retro$/;
+const BAGHDAD = /^Baghdad/;
+const CASH_ON_DELIVERY = /^Cash on delivery/;
+const PAY_AT_PICKUP = /^Pay at pickup/;
+const PLACE_CASH_ORDER = /^Place order · /;
+const RENT_PAGE = /\/rent\/elden-ring-ps5$/;
+const ORDER_PAGE = /\/pass\/orders\/[^/]+$/;
 
 test.describe("a signed-in customer", () => {
   test.beforeEach(async ({ context }) => {
@@ -186,15 +175,88 @@ test.describe("a signed-in customer", () => {
     await expect(page.getByRole("link", { name: "Checkout" })).toBeVisible();
     await expectAccessible(page);
 
-    await page.goto(`${urls.web}/pass/wishlist`);
+    await page.goto(`${urls.web}/saved`);
     await expect(page.getByText(product.name).first()).toBeVisible();
     await expectAccessible(page);
     noErrors();
   });
 
+  test("rents an item on its own and collects it", async ({ page }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/store/elden-ring-ps5`);
+    await expect(page.getByText("Rent it on its own")).toBeVisible();
+    await page.getByRole("link", { exact: true, name: "Rent it" }).click();
+    await expect(page).toHaveURL(RENT_PAGE);
+    await expect(page.getByText("Refundable deposit")).toBeVisible();
+
+    await page.getByRole("radio", { name: PICKUP }).click();
+    await page.getByLabel("Full name").fill(customer.name);
+    await page.getByLabel("Mobile number").fill("07701234567");
+    await page.getByRole("radio", { name: PAY_AT_PICKUP }).click();
+    await expectAccessible(page);
+    await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
+
+    await expect(page).toHaveURL(ORDER_PAGE);
+    await expect(
+      page.getByText("Refundable deposit: Elden Ring (PS5)")
+    ).toBeVisible();
+    noErrors();
+  });
+
+  test("tells The IDEA Plus their area in Baghdad to join", async ({
+    page,
+  }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/plus`);
+    await expect(
+      page.getByText("Join The IDEA Plus", { exact: true })
+    ).toBeVisible();
+    await page.getByRole("combobox", { name: "Area in Baghdad" }).click();
+    await page.getByRole("option", { name: "Karrada" }).click();
+    await page.getByLabel("Mobile number").fill("07701234567");
+    await page.getByLabel("Address").fill("Street 62, near the park");
+    await page.getByRole("button", { exact: true, name: "Save" }).click();
+    await expect(
+      page.getByText("There's a place for you. Choose a plan below.")
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: JOIN_PLAN }).first()
+    ).toBeVisible();
+    await expectAccessible(page);
+    noErrors();
+  });
+
+  test("books a game night kit for a weekend", async ({ page }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/plus#kits`);
+    await page
+      .getByRole("listitem")
+      .filter({ hasText: "Retro night" })
+      .getByRole("link", { name: "Book a weekend" })
+      .click();
+    await expect(page).toHaveURL(KIT_PAGE);
+    await page.getByRole("radio").first().click();
+    await page.getByRole("combobox", { name: "Governorate" }).click();
+    await page.getByRole("option", { name: BAGHDAD }).click();
+    await page.getByLabel("Full name").fill(customer.name);
+    await page.getByLabel("Mobile number").fill("07701234567");
+    await page
+      .getByLabel("Address", { exact: true })
+      .fill("Street 62, Karrada");
+    await page.getByRole("radio", { name: CASH_ON_DELIVERY }).click();
+    await expectAccessible(page);
+    await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
+
+    await expect(page).toHaveURL(ORDER_PAGE);
+    await expect(
+      page.getByText("Refundable deposit: Retro night")
+    ).toBeVisible();
+    noErrors();
+  });
+
   test("opens a support ticket", async ({ page }) => {
     const subject = `Delivery question ${Date.now()}`;
-    await page.goto(`${urls.web}/pass/support/new`);
+    await page.goto(`${urls.web}/help/new`);
     await expect(
       page.getByRole("heading", { name: "New support request" })
     ).toBeVisible();
@@ -204,13 +266,13 @@ test.describe("a signed-in customer", () => {
       .getByLabel("Message")
       .fill("When will my order arrive in Erbil?");
     await page.getByRole("button", { name: "Send request" }).click();
-    await expect(page).toHaveURL(/\/pass\/support\/(?!new$)[^/?]+$/);
+    await expect(page).toHaveURL(/\/help\/(?!new$)[^/?]+$/);
     await expect(page.getByText(subject).first()).toBeVisible();
     await expect(
       page.getByText("When will my order arrive in Erbil?")
     ).toBeVisible();
 
-    await page.goto(`${urls.web}/pass/support`);
+    await page.goto(`${urls.web}/help`);
     await expect(page.getByText(subject)).toBeVisible();
   });
 
@@ -232,7 +294,7 @@ test.describe("a signed-in customer", () => {
 
     await page.getByRole("button", { name: "Sign out" }).click();
     await expect(page).toHaveURL(new RegExp(`^${urls.web}/sign-in`));
-    await page.goto(`${urls.web}/pass/wishlist`);
+    await page.goto(`${urls.web}/saved`);
     await expect(page).toHaveURL(new RegExp(`^${urls.web}/sign-in`));
   });
 });

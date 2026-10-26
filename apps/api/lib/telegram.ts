@@ -38,7 +38,7 @@ export const getDroid = () => {
   }
   droid ??= (async () => {
     const bot = createBot({
-      // "Open the app": My Pass on the website (the apps load the same pages).
+      // "Open the app": Your Pass on the website (the apps load the same pages).
       appUrl: `${env.NEXT_PUBLIC_WEB_URL}/pass`,
       data: createSupabaseData(createAdminClient()),
       logger: log,

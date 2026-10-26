@@ -96,7 +96,7 @@ export const useRentals = () => {
         await supabase
           .from("rentals")
           .select(
-            "id, product_id, name_ar, name_en, status, requested_at, started_at, due_at, returned_at"
+            "id, product_id, name_ar, name_en, status, kind, order_id, swap_id, days, deposit, late_fee, late_charge, damage_charge, refund_due, amount_due, settled_at, requested_at, started_at, due_at, returned_at"
           )
           .eq("user_id", requireUserId(user?.id))
           .order("requested_at", { ascending: false })
@@ -152,7 +152,7 @@ export interface CheckoutPlan {
 
 /**
  * Starts a hosted checkout for a plan: The IDEA Plus (owned by the user) without
- * `organizationId`, a plan of The IDEA Suite with it. Remembers the checkout so
+ * `organizationId`, a plan of The IDEA Business with it. Remembers the checkout so
  * the purchase is reported once paid, then opens the payment page.
  */
 export const usePlanCheckout = (

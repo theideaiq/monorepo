@@ -1,6 +1,6 @@
 "use client";
 
-import { localized, planName } from "@repo/commerce";
+import { formatPrice, localized, planName } from "@repo/commerce";
 import type { ProductCard } from "@repo/commerce/catalog";
 import type { RentalStatus } from "@repo/database";
 import { Badge } from "@repo/design-system/components/ui/badge";
@@ -19,10 +19,14 @@ import {
   formatDate,
   formatNumber,
 } from "@repo/internationalization/format";
+import { Link, useRouter } from "@repo/internationalization/navigation";
 import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { PageHeader } from "@/components/page-header";
+import { AgeAwareError } from "@/components/age-aware-error";
+import { JoinPlus } from "@/components/plus/join-plus";
+import { ManagePlus, Queue, SwapPanel } from "@/components/plus/plus-tools";
+import { SignedInSection } from "@/components/signed-in-section";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { ProductImage } from "@/components/store/product-image";
 import {
@@ -30,6 +34,8 @@ import {
   reportCompletedCheckout,
 } from "@/lib/checkout-tracking";
 import { toRentalError } from "@/lib/errors";
+import { orderPath, useKeepRental } from "@/lib/order-checkout";
+import { plansFor, usePlusStatus } from "@/lib/plus-launch";
 import {
   isLiveMembership,
   meetsTier,
@@ -40,11 +46,12 @@ import {
   useRentalAllowance,
   useRentals,
   useRentalTiers,
-  useRequestRental,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
+import { useKeepPrice } from "@/lib/rent";
 import { useProducts } from "@/lib/store-queries";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
+import { useIsWishlisted, useToggleWishlist } from "@/lib/wishlist-queries";
 
 const POLL_MS = 3000;
 
@@ -54,6 +61,7 @@ const RENTAL_BADGE: Record<
 > = {
   active: "default",
   cancelled: "outline",
+  kept: "outline",
   overdue: "destructive",
   requested: "secondary",
   returned: "outline",
@@ -153,13 +161,33 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
   const locale = useLocale();
   const plans = usePlans("plus");
   const subscription = usePlusSubscription();
-  const checkout = usePlanCheckout("/pass/plus");
+  const checkout = usePlanCheckout("/plus");
   const canSell = useCanSellDigitalGoods();
   const member = isLiveMembership(subscription.data?.status);
+  const canJoin = usePlusStatus().data?.canJoin ?? false;
+  const [billing, setBilling] = useState<"month" | "year">("month");
+  const shown = plansFor(plans.data ?? undefined, billing);
 
   return (
     <section className="grid gap-4">
-      <h2 className="font-semibold text-lg">{t("title")}</h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-semibold text-lg">{t("title")}</h2>
+        <fieldset className="flex gap-1 rounded-md border p-1">
+          <legend className="sr-only">{t("interval")}</legend>
+          {(["month", "year"] as const).map((value) => (
+            <Button
+              aria-pressed={billing === value}
+              key={value}
+              onClick={() => setBilling(value)}
+              size="sm"
+              type="button"
+              variant={billing === value ? "default" : "ghost"}
+            >
+              {t(value === "year" ? "yearly" : "monthly")}
+            </Button>
+          ))}
+        </fieldset>
+      </div>
       {canSell === false ? (
         <p className="rounded-md bg-muted p-4 text-sm">{tBilling("webOnly")}</p>
       ) : null}
@@ -169,7 +197,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
         <p className="text-muted-foreground">{t("empty")}</p>
       ) : null}
       <div className="grid gap-4 md:grid-cols-3">
-        {plans.data?.map((plan) => {
+        {shown.map((plan) => {
           const current = plan.id === subscription.data?.plan_id && member;
           const price = formatCurrency(plan.amount, locale, plan.currency);
           const features =
@@ -212,7 +240,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
                   </ul>
                 ) : null}
               </CardContent>
-              {canSell === true && !member ? (
+              {canSell === true && !member && canJoin ? (
                 <CardFooter>
                   <Button
                     className="w-full"
@@ -232,9 +260,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
         })}
       </div>
       {checkout.isError ? (
-        <p className="text-destructive text-sm" role="alert">
-          {t("failed")}
-        </p>
+        <AgeAwareError error={checkout.error} fallback={t("failed")} />
       ) : null}
     </section>
   );
@@ -256,7 +282,8 @@ const RentalItem = ({
 }) => {
   const t = useTranslations("app.plus");
   const locale = useLocale();
-  const request = useRequestRental();
+  const toggle = useToggleWishlist();
+  const queued = useIsWishlisted(product.id);
   const name = localized(product, "name", locale);
   const available = product.stock_count > 0;
   const noSlots = member && allowance !== undefined && allowance.free <= 0;
@@ -273,8 +300,8 @@ const RentalItem = ({
     hint = neededPlan
       ? t("catalog.upgradeTo", { plan: neededPlan })
       : t("catalog.upgrade");
-  } else if (noSlots) {
-    hint = t("catalog.noSlots");
+  } else if (noSlots && !queued) {
+    hint = t("catalog.queueHint");
   }
 
   return (
@@ -296,29 +323,17 @@ const RentalItem = ({
             })
           : t("catalog.unavailable")}
       </span>
-      {request.isSuccess ? (
-        <p className="text-success text-xs" role="status">
-          {t("catalog.requested")}
-        </p>
-      ) : (
-        <Button
-          disabled={
-            !(member && available) || noSlots || tierTooLow || request.isPending
-          }
-          onClick={() => request.mutate(product.id)}
-          size="sm"
-          variant="outline"
-        >
-          {request.isPending ? t("catalog.requesting") : t("catalog.request")}
-        </Button>
-      )}
-      {hint && available && !request.isSuccess ? (
+      <Button
+        aria-pressed={queued}
+        disabled={!(member && available) || tierTooLow || toggle.isPending}
+        onClick={() => toggle.mutate({ productId: product.id, saved: queued })}
+        size="sm"
+        variant={queued ? "secondary" : "outline"}
+      >
+        {queued ? t("catalog.inQueue") : t("catalog.addToQueue")}
+      </Button>
+      {hint && available ? (
         <span className="text-muted-foreground text-xs">{hint}</span>
-      ) : null}
-      {request.isError ? (
-        <p className="text-destructive text-xs" role="alert">
-          {t(`errors.${toRentalError(request.error)}`)}
-        </p>
       ) : null}
     </li>
   );
@@ -409,10 +424,160 @@ const RentalCatalog = ({
   );
 };
 
-const MyRentals = () => {
+type Rental = NonNullable<ReturnType<typeof useRentals>["data"]>[number];
+
+/** Keep it: buy the rented copy, less the plan's monthly price. */
+const KeepIt = ({ rentalId }: { readonly rentalId: string }) => {
+  const t = useTranslations("app.plus.rentals");
+  const locale = useLocale();
+  const router = useRouter();
+  const price = useKeepPrice(rentalId).data;
+  const keep = useKeepRental();
+
+  if (price === undefined || price === null) {
+    return null;
+  }
+  return (
+    <div className="grid justify-items-end gap-1">
+      <Button
+        disabled={keep.isPending || keep.isSuccess}
+        onClick={() =>
+          keep.mutate(
+            { paymentMethod: "online", rentalId },
+            {
+              onSuccess: ({ order, url }) => {
+                if (!url) {
+                  router.push(orderPath(order.id));
+                }
+              },
+            }
+          )
+        }
+        size="sm"
+        variant="outline"
+      >
+        {keep.isPending
+          ? t("keeping")
+          : t("keep", { price: formatPrice(price, locale) })}
+      </Button>
+      {keep.isError ? (
+        <p className="text-destructive text-xs" role="alert">
+          {keep.error.message.includes("Already being kept")
+            ? t("keepPending")
+            : t("keepFailed")}
+        </p>
+      ) : null}
+    </div>
+  );
+};
+
+/** A single rental's terms, and what was settled at its return. */
+const SingleRentalNote = ({ rental }: { readonly rental: Rental }) => {
+  const t = useTranslations("app.plus.rentals");
+  const locale = useLocale();
+  if (rental.kind !== "single") {
+    return null;
+  }
+  const settled = rental.settled_at !== null;
+  let note = t("single", {
+    deposit: formatPrice(rental.deposit, locale),
+    fee: formatPrice(rental.late_fee, locale),
+  });
+  if (settled && (rental.amount_due ?? 0) > 0) {
+    note = t("amountDue", {
+      amount: formatPrice(rental.amount_due ?? 0, locale),
+    });
+  } else if (settled) {
+    note = t("refundDue", {
+      amount: formatPrice(rental.refund_due ?? 0, locale),
+    });
+  }
+  return (
+    <span className="text-muted-foreground text-xs">
+      {note}
+      {rental.order_id ? (
+        <>
+          {" · "}
+          <Link
+            className="font-medium text-pink-text hover:underline"
+            href={orderPath(rental.order_id)}
+          >
+            {t("viewOrder")}
+          </Link>
+        </>
+      ) : null}
+    </span>
+  );
+};
+
+/** One of the member's rentals: its dates, terms and what can be done. */
+const RentalRow = ({
+  cancel,
+  rental,
+}: {
+  readonly cancel: ReturnType<typeof useCancelRental>;
+  readonly rental: Rental;
+}) => {
   const t = useTranslations("app.plus");
   const tStatus = useTranslations("store.rentalStatus");
   const locale = useLocale();
+  return (
+    <li
+      className="flex flex-wrap items-center justify-between gap-3 p-4"
+      key={rental.id}
+    >
+      <div className="grid min-w-0 gap-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-medium text-sm">
+            {localized(rental, "name", locale)}
+          </span>
+          <Badge variant={RENTAL_BADGE[rental.status]}>
+            {tStatus(rental.status)}
+          </Badge>
+        </div>
+        <span className="text-muted-foreground text-xs">
+          {rental.returned_at
+            ? t("rentals.returnedOn", {
+                date: formatDate(rental.returned_at, locale),
+              })
+            : null}
+          {!rental.returned_at && rental.due_at
+            ? t("rentals.due", {
+                date: formatDate(rental.due_at, locale),
+              })
+            : null}
+          {rental.returned_at || rental.due_at
+            ? null
+            : t("rentals.requestedOn", {
+                date: formatDate(rental.requested_at, locale),
+              })}
+        </span>
+        <SingleRentalNote rental={rental} />
+      </div>
+      {rental.kind === "plus" &&
+      (rental.status === "active" || rental.status === "overdue") ? (
+        <KeepIt rentalId={rental.id} />
+      ) : null}
+      {rental.status === "requested" &&
+      rental.kind === "plus" &&
+      rental.swap_id === null ? (
+        <Button
+          disabled={cancel.isPending}
+          onClick={() => cancel.mutate(rental.id)}
+          size="sm"
+          variant="ghost"
+        >
+          {cancel.isPending && cancel.variables === rental.id
+            ? t("rentals.cancelling")
+            : t("rentals.cancel")}
+        </Button>
+      ) : null}
+    </li>
+  );
+};
+
+const MyRentals = () => {
+  const t = useTranslations("app.plus");
   const rentals = useRentals();
   const cancel = useCancelRental();
 
@@ -429,50 +594,7 @@ const MyRentals = () => {
       {rentals.data?.length ? (
         <ul className="divide-y rounded-lg border">
           {rentals.data.map((rental) => (
-            <li
-              className="flex flex-wrap items-center justify-between gap-3 p-4"
-              key={rental.id}
-            >
-              <div className="grid min-w-0 gap-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-medium text-sm">
-                    {localized(rental, "name", locale)}
-                  </span>
-                  <Badge variant={RENTAL_BADGE[rental.status]}>
-                    {tStatus(rental.status)}
-                  </Badge>
-                </div>
-                <span className="text-muted-foreground text-xs">
-                  {rental.returned_at
-                    ? t("rentals.returnedOn", {
-                        date: formatDate(rental.returned_at, locale),
-                      })
-                    : null}
-                  {!rental.returned_at && rental.due_at
-                    ? t("rentals.due", {
-                        date: formatDate(rental.due_at, locale),
-                      })
-                    : null}
-                  {rental.returned_at || rental.due_at
-                    ? null
-                    : t("rentals.requestedOn", {
-                        date: formatDate(rental.requested_at, locale),
-                      })}
-                </span>
-              </div>
-              {rental.status === "requested" ? (
-                <Button
-                  disabled={cancel.isPending}
-                  onClick={() => cancel.mutate(rental.id)}
-                  size="sm"
-                  variant="ghost"
-                >
-                  {cancel.isPending && cancel.variables === rental.id
-                    ? t("rentals.cancelling")
-                    : t("rentals.cancel")}
-                </Button>
-              ) : null}
-            </li>
+            <RentalRow cancel={cancel} key={rental.id} rental={rental} />
           ))}
         </ul>
       ) : null}
@@ -485,9 +607,26 @@ const MyRentals = () => {
   );
 };
 
-/** The IDEA Plus: membership, plans, the rental catalog and the member's rentals. */
-export const Plus = () => {
+/**
+ * "Your Plus" at the top of /plus: the member's membership, plans, rentals
+ * and the rental catalog to request from; signed out, a way to sign in.
+ */
+export const YourPlus = () => {
   const t = useTranslations("app.plus");
+  return (
+    <SignedInSection
+      id="yours"
+      returnTo="/plus"
+      signedOut={t("signedOut")}
+      signIn={t("signIn")}
+      title={t("title")}
+    >
+      <PlusMember />
+    </SignedInSection>
+  );
+};
+
+const PlusMember = () => {
   const [confirming, setConfirming] = useState(hasPendingCheckout);
   const subscription = usePlusSubscription();
   const allowance = useRentalAllowance();
@@ -510,18 +649,20 @@ export const Plus = () => {
   }, [confirming, payments.data, refetchAllowance, refetchSubscription]);
 
   return (
-    <>
-      <PageHeader title={t("title")} />
-      <div className="flex flex-1 flex-col gap-8">
-        <p className="max-w-2xl text-muted-foreground">{t("description")}</p>
-        <Membership allowance={allowance.data} confirming={confirming} />
-        {/* A membership the company pays for isn't bought here. */}
-        {member && subscription.data?.provider === "company" ? null : (
-          <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
-        )}
-        <MyRentals />
-        <RentalCatalog allowance={allowance.data} member={member} />
-      </div>
-    </>
+    <div className="flex flex-col gap-8">
+      {member ? null : <JoinPlus />}
+      <Membership allowance={allowance.data} confirming={confirming} />
+      {member ? (
+        <>
+          <ManagePlus />
+          <SwapPanel slots={allowance.data?.slots ?? 0} />
+          <Queue />
+        </>
+      ) : (
+        <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
+      )}
+      <MyRentals />
+      <RentalCatalog allowance={allowance.data} member={member} />
+    </div>
   );
 };

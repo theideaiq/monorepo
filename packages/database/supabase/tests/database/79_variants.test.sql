@@ -57,6 +57,8 @@ delete from public.staff;
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000079a1', 'vm@example.iq', '{"full_name":"Member M"}'),
   ('00000000-0000-0000-0000-0000000079a2', 'va@example.iq', '{"full_name":"Admin A"}');
+-- Fixture members are adults (ages: a date of birth is needed to buy).
+update public.profiles set birthday = date '1990-01-01' where birthday is null;
 insert into public.staff (user_id, role) values ('00000000-0000-0000-0000-0000000079a2', 'admin');
 
 insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)

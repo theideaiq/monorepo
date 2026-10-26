@@ -20,6 +20,7 @@ const toSubscription = (row: Tables<"subscriptions">): SubscriptionRecord => ({
   currentPeriodEnd: toDate(row.current_period_end),
   currentPeriodStart: toDate(row.current_period_start),
   id: row.id,
+  nextPlanId: row.next_plan_id,
   organizationId: row.organization_id,
   planId: row.plan_id,
   status: row.status,
@@ -150,7 +151,7 @@ export const createSupabaseBillingRepository = (
       await supabase
         .from("orders")
         .select(
-          "id, number, user_id, status, total, currency, shipping_fee, order_items (name_en, unit_price, quantity, variant:product_variants (label_en))"
+          "id, number, user_id, status, guardian_status, total, currency, shipping_fee, order_items (name_en, unit_price, quantity, variant:product_variants (label_en))"
         )
         .eq("id", orderId)
         .maybeSingle()
@@ -172,6 +173,8 @@ export const createSupabaseBillingRepository = (
       lines.push({ amount: row.shipping_fee, label: "Delivery" });
     }
     return {
+      awaitingGuardian:
+        row.guardian_status === "pending" || row.guardian_status === "declined",
       currency: row.currency,
       id: row.id,
       lines,
@@ -289,6 +292,7 @@ export const createSupabaseBillingRepository = (
       .update({
         current_period_end: update.currentPeriodEnd?.toISOString(),
         current_period_start: update.currentPeriodStart?.toISOString(),
+        next_plan_id: update.nextPlanId,
         plan_id: update.planId,
         status: update.status,
       })

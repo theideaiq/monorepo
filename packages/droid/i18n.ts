@@ -16,21 +16,21 @@ const ar = {
   bulbsPending: "و{pending} في الطريق (تصبح متاحة بعد فترة الإرجاع).",
   bulbsText:
     "لديك {available} Bulbs (بقيمة {worth}) جاهزة للاستخدام عند الدفع.",
-  connect: "اربط حسابك من My Pass",
+  connect: "اربطه من بطاقتك",
   faq: "الأسئلة الشائعة",
   faqEmpty: "لا توجد أسئلة شائعة بعد.",
   faqPickQuestion: "اختر سؤالاً:",
   faqPickTopic: "اختر موضوعاً:",
-  faqTopic_academy: "الأكاديمية",
+  faqTopic_business: "The IDEA Business",
+  faqTopic_club: "The IDEA Club",
   faqTopic_general: "عام",
   faqTopic_plus: "The IDEA Plus",
   faqTopic_store: "المتجر",
-  faqTopic_suite: "The IDEA Suite",
   inlineOpen: "افتح في المتجر",
-  joinNeedsTier:
-    "{chat} لأعضاء {tier} فما فوق. يرتفع مستواك كلما تسوّقت من The IDEA، ويمكنك متابعة تقدّمك في My Pass.",
+  joinNeedsPlus:
+    "{chat} لأعضاء The IDEA Plus. اشترك في Plus ثم اطلب الانضمام مرة أخرى.",
   joinNotLinked:
-    "للانضمام إلى {chat}، اربط Telegram بـ The IDEA Pass أولاً (My Pass ← الإعدادات ← Telegram)، ثم اطلب الانضمام مرة أخرى.",
+    "للانضمام إلى {chat}، اربط Telegram بـ The IDEA Pass أولاً (بطاقتك ← الإعدادات ← Telegram)، ثم اطلب الانضمام مرة أخرى.",
   linkApp: "تطبيق The IDEA",
   linkClub: "The IDEA Club على تيليجرام",
   links: "روابط",
@@ -46,7 +46,7 @@ const ar = {
   newsletterOn: "النشرة الإخبارية: مفعّلة ✓",
   notificationOpen: "افتح",
   notLinked:
-    "اربط Telegram بـ The IDEA Pass لترى طلباتك ورصيدك هنا. افتح My Pass ← الإعدادات ← Telegram.",
+    "اربط Telegram بـ The IDEA Pass لترى طلباتك ورصيدك هنا. افتح بطاقتك ← الإعدادات ← Telegram.",
   orderLine: "#{number} · {status} · {total}",
   orderStatus_cancelled: "ملغى",
   orderStatus_confirmed: "مؤكد",
@@ -83,12 +83,8 @@ const ar = {
   support: "تحدّث معنا",
   supportPrompt: "اكتب رسالتك لفريق الدعم وسنرد عليك في أقرب وقت:",
   supportSent:
-    "وصلت رسالتك. رقم طلب الدعم #{number}، وستجد الرد في My Pass ← الدعم.",
+    "وصلت رسالتك. رقم طلب الدعم #{number}، وستجد الرد في صفحة المساعدة.",
   supportSentTelegram: "وصلت رسالتك إلى فريق الدعم وسنرد عليك هنا قريباً.",
-  tier_beam: "شعاع",
-  tier_blaze: "وهج",
-  tier_glow: "توهّج",
-  tier_shine: "لمعة",
 } as const;
 
 export type MessageKey = keyof typeof ar;
@@ -100,21 +96,21 @@ const en: Record<MessageKey, string> = {
   bulbsPending: "Plus {pending} on the way (usable after the return window).",
   bulbsText:
     "You have {available} Bulbs (worth {worth}) ready to spend at checkout.",
-  connect: "Connect on My Pass",
+  connect: "Connect on Your Pass",
   faq: "FAQ",
   faqEmpty: "There are no FAQs yet.",
   faqPickQuestion: "Pick a question:",
   faqPickTopic: "Pick a topic:",
-  faqTopic_academy: "Academy",
+  faqTopic_business: "The IDEA Business",
+  faqTopic_club: "The IDEA Club",
   faqTopic_general: "General",
   faqTopic_plus: "The IDEA Plus",
   faqTopic_store: "Store",
-  faqTopic_suite: "The IDEA Suite",
   inlineOpen: "Open in the store",
-  joinNeedsTier:
-    "{chat} is for {tier} members and up. Your tier rises as you shop at The IDEA; follow your progress in My Pass.",
+  joinNeedsPlus:
+    "{chat} is for The IDEA Plus members. Join Plus, then ask to join again.",
   joinNotLinked:
-    "To join {chat}, connect Telegram to The IDEA Pass first (My Pass → Settings → Telegram), then ask to join again.",
+    "To join {chat}, connect Telegram to The IDEA Pass first (Your Pass → Settings → Telegram), then ask to join again.",
   linkApp: "The IDEA app",
   linkClub: "The IDEA Club on Telegram",
   links: "Links",
@@ -130,7 +126,7 @@ const en: Record<MessageKey, string> = {
   newsletterOn: "Newsletter: on ✓",
   notificationOpen: "Open",
   notLinked:
-    "Connect Telegram to The IDEA Pass to see your orders and Bulbs here: My Pass → Settings → Telegram.",
+    "Connect Telegram to The IDEA Pass to see your orders and Bulbs here: Your Pass → Settings → Telegram.",
   orderLine: "#{number} · {status} · {total}",
   orderStatus_cancelled: "Cancelled",
   orderStatus_confirmed: "Confirmed",
@@ -168,13 +164,9 @@ const en: Record<MessageKey, string> = {
   support: "Talk to us",
   supportPrompt: "Write your message to our support team and we'll reply soon:",
   supportSent:
-    "Got it. Your support request is #{number}; you'll find the reply in My Pass → Support.",
+    "Got it. Your support request is #{number}; you'll find the reply on Help.",
   supportSentTelegram:
     "Your message reached our support team; we'll reply here soon.",
-  tier_beam: "Beam",
-  tier_blaze: "Blaze",
-  tier_glow: "Glow",
-  tier_shine: "Shine",
 };
 
 const messages: Record<BotLocale, Record<MessageKey, string>> = { ar, en };

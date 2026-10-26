@@ -23,7 +23,7 @@ interface TelegramFinishProps {
   readonly error: TelegramError | null;
   /** The Telegram first name, for a new account's welcome. */
   readonly name: string | null;
-  /** An allowed return_to, or null for My Pass. */
+  /** An allowed return_to, or null for Your Pass. */
   readonly returnTo: string | null;
   /** A new account's ticket, linked once the member is signed in. */
   readonly ticket: string | null;

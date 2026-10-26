@@ -100,21 +100,34 @@ describe("email OTP", () => {
     });
   });
 
-  test("verifies the code", async () => {
-    const verifyOtp = vi
-      .fn()
-      .mockResolvedValue({ data: { user: { id: "user-1" } }, error: null });
+  test("verifies the code and tells a new Pass from a returning one", async () => {
+    const now = Date.parse("2026-10-26T12:00:00Z");
+    const verifyOtp = vi.fn().mockResolvedValue({
+      data: { user: { created_at: "2026-10-26T11:58:00Z", id: "user-1" } },
+      error: null,
+    });
     const result = await verifyEmailOtp(
       clientWith({ verifyOtp }),
       "sara@example.com",
-      "123456"
+      "123456",
+      { now }
     );
 
     expect(result).toEqual({
       email: "sara@example.com",
       ok: true,
-      value: { userId: "user-1" },
+      value: { isNew: true, userId: "user-1" },
     });
+
+    verifyOtp.mockResolvedValue({
+      data: { user: { created_at: "2026-01-02T09:00:00Z", id: "user-1" } },
+      error: null,
+    });
+    expect(
+      await verifyEmailOtp(clientWith({ verifyOtp }), "sara@example.com", "1", {
+        now,
+      })
+    ).toMatchObject({ value: { isNew: false } });
     expect(verifyOtp).toHaveBeenCalledWith({
       email: "sara@example.com",
       token: "123456",

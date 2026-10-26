@@ -43,7 +43,7 @@ begin
 
 ## إرسال الدرجات
 
-- عند التسجيل وحتى **9 أيام بعد الاختبار**، يمكنك اختيار **4 جامعات أو برامج** تُرسل إليها درجاتك مجاناً. اختر أعلى أربع جامعات في [قائمتك](/post/study-abroad-roadmap).
+- عند التسجيل وحتى **9 أيام بعد الاختبار**، يمكنك اختيار **4 جامعات أو برامج** تُرسل إليها درجاتك مجاناً. اختر أعلى أربع جامعات في [قائمتك](/club/study-abroad-roadmap).
 - لإرسال درجاتك إلى جامعات أكثر، تدفع رسماً لكل تقرير؛ تحقق من السعر الحالي على موقع College Board.
 - بعض الجامعات تقبل درجات يُبلّغ عنها الطالب بنفسه عند التقديم، ثم تطلب التقرير الرسمي بعد القبول، وبعضها لا يقبل إلا التقرير الرسمي. تحقق من سياسة كل جامعة.
 
@@ -67,7 +67,7 @@ begin
 - [Bluebook والاختبارات التدريبية](https://bluebook.collegeboard.org)
 - [Khan Academy: التحضير لـSAT](https://www.khanacademy.org/test-prep/sat)
 
-اقرأ أيضاً: [اختبار Duolingo English Test](/post/duolingo-english-test) و[دليل IELTS](/post/ielts-guide).$ar$,
+اقرأ أيضاً: [اختبار Duolingo English Test](/club/duolingo-english-test) و[دليل IELTS](/club/ielts-guide).$ar$,
     $en$The SAT is a standardized test most US universities use in admissions, and some international universities ask for it too, especially branches of American universities such as [NYU Abu Dhabi](https://nyuad.nyu.edu). Its purpose is much like the baccalaureate: it measures how ready you are for university and gives schools a common yardstick to compare applicants. It's run by the [College Board](https://satsuite.collegeboard.org).
 
 **Important:** the test is now **fully digital** (since 2023 outside the US and 2024 inside it). Many older resources online describe the paper test, so make sure what you study is for the digital version.
@@ -100,7 +100,7 @@ Each section is scored from 200 to 800, for a total of **400 to 1600**. Scores u
 
 ## Sending scores
 
-- When you register, and up to **9 days after the test**, you can choose **4 colleges or programs** to receive your scores for free. Pick the top four on [your list](/post/study-abroad-roadmap).
+- When you register, and up to **9 days after the test**, you can choose **4 colleges or programs** to receive your scores for free. Pick the top four on [your list](/club/study-abroad-roadmap).
 - Sending scores to more schools costs a fee per report; check the current price with the College Board.
 - Some universities accept self-reported scores when you apply and ask for the official report after admission; others only accept official reports. Check each school's policy.
 
@@ -124,7 +124,7 @@ Many colleges are test-optional, though some have gone back to requiring scores.
 - [Bluebook and practice tests](https://bluebook.collegeboard.org)
 - [Khan Academy SAT prep](https://www.khanacademy.org/test-prep/sat)
 
-See also: the [Duolingo English Test](/post/duolingo-english-test) and our [IELTS guide](/post/ielts-guide).$en$,
+See also: the [Duolingo English Test](/club/duolingo-english-test) and our [IELTS guide](/club/ielts-guide).$en$,
     now() - interval '7 minutes'
   )
   on conflict (slug) do update set

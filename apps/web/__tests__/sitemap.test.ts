@@ -33,12 +33,14 @@ describe("buildSitemap", () => {
     for (const path of [
       "/store",
       "/plus",
-      "/post",
-      "/post/learn",
-      "/post/events",
+      "/club",
+      "/business",
+      "/help",
+      "/careers",
     ]) {
       expect(staticPaths).toContain(path);
     }
     expect(staticPaths).not.toContain("/pricing");
+    expect(staticPaths).not.toContain("/suite");
   });
 });

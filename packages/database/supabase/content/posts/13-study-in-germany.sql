@@ -26,7 +26,7 @@ begin
 ## اللغة
 
 - **البرامج بالألمانية:** وهي الأغلبية، خصوصاً في البكالوريوس. تطلب عادة مستوى C1 تقريباً، ويُثبت بأحد الاختبارات المعتمدة مثل DSH (المستوى 2 غالباً)، وTestDaF (بدرجة 4 في كل قسم غالباً)، وtelc Deutsch C1 Hochschule، وGoethe-Zertifikat C1. للالتحاق بالكلية التحضيرية يكفي غالباً مستوى B1 أو B2.
-- **البرامج بالإنجليزية:** موجودة، وأكثرها في الماجستير. تطلب IELTS أو TOEFL (اقرأ [دليل IELTS](/post/ielts-guide))، ومن المفيد تعلّم الألمانية مع ذلك للحياة اليومية والعمل.
+- **البرامج بالإنجليزية:** موجودة، وأكثرها في الماجستير. تطلب IELTS أو TOEFL (اقرأ [دليل IELTS](/club/ielts-guide))، ومن المفيد تعلّم الألمانية مع ذلك للحياة اليومية والعمل.
 
 ## المتطلبات العامة للتقديم على البكالوريوس
 
@@ -39,7 +39,7 @@ begin
 
 - **الرسوم الدراسية:** معظم الجامعات الحكومية لا تفرض رسوماً دراسية، وتكتفي برسوم فصلية رمزية نسبياً تشمل غالباً تذكرة المواصلات. بعض الولايات استثناء، مثل بادن-فورتمبيرغ التي تفرض رسوماً على الطلبة من خارج الاتحاد الأوروبي.
 - **إثبات القدرة المالية:** للحصول على التأشيرة ستحتاج عادة إلى فتح **حساب مغلق (Sperrkonto)** تودع فيه مبلغ سنة من المعيشة، وكان نحو 11,904 يورو للسنة في 2025. يتغيّر المبلغ سنوياً، فتحقّق منه على موقع السفارة الألمانية قبل أن تبدأ.
-- **العمل أثناء الدراسة:** يُسمح للطلبة الدوليين بالعمل بدوام جزئي ضمن حدود يحدّدها القانون. اقرأ [كيف تموّل دراستك في الخارج](/post/paying-for-study-abroad).
+- **العمل أثناء الدراسة:** يُسمح للطلبة الدوليين بالعمل بدوام جزئي ضمن حدود يحدّدها القانون. اقرأ [كيف تموّل دراستك في الخارج](/club/paying-for-study-abroad).
 
 ## المنح
 
@@ -77,7 +77,7 @@ begin
 - ابدأ اللغة قبل سنة على الأقل من موعد التقديم.
 - جهّز الترجمات والتصديقات مبكراً، فهي تأخذ وقتاً.
 - خطّط لكل التكاليف، ولا تعتمد على العمل الجزئي وحده.
-- راجع [خطة التقديم على الدراسة في الخارج](/post/study-abroad-roadmap) لترتيب خطواتك.
+- راجع [خطة التقديم على الدراسة في الخارج](/club/study-abroad-roadmap) لترتيب خطواتك.
 
 ## روابط رسمية
 
@@ -102,7 +102,7 @@ In some cases, completing a year or more of university study in Iraq in a relate
 ## Language
 
 - **German-taught programs:** the majority, especially at bachelor's level. They usually ask for around C1, proven by an accepted test such as DSH (usually level 2), TestDaF (usually 4 in every section), telc Deutsch C1 Hochschule or the Goethe-Zertifikat C1. For Studienkolleg, B1 or B2 is usually enough.
-- **English-taught programs:** they exist, mostly at master's level, and ask for IELTS or TOEFL (see our [IELTS guide](/post/ielts-guide)). Learning German is still worth it for daily life and work.
+- **English-taught programs:** they exist, mostly at master's level, and ask for IELTS or TOEFL (see our [IELTS guide](/club/ielts-guide)). Learning German is still worth it for daily life and work.
 
 ## General requirements for a bachelor's application
 
@@ -115,7 +115,7 @@ In some cases, completing a year or more of university study in Iraq in a relate
 
 - **Tuition:** most public universities charge no tuition, only a relatively modest semester fee that often includes a public transport ticket. Some states are exceptions, such as Baden-Württemberg, which charges tuition to students from outside the EU.
 - **Proof of funds:** for the visa you'll usually need a **blocked account (Sperrkonto)** holding a year of living costs; it was about €11,904 a year in 2025. The amount changes yearly, so check it on the German embassy's website before you start.
-- **Working while studying:** international students may work part-time within legal limits. Read [how to pay for studying abroad](/post/paying-for-study-abroad).
+- **Working while studying:** international students may work part-time within legal limits. Read [how to pay for studying abroad](/club/paying-for-study-abroad).
 
 ## Scholarships
 
@@ -153,7 +153,7 @@ After English, German is one of the most useful languages if you're thinking of 
 - Start the language at least a year before you apply.
 - Get translations and certifications done early; they take time.
 - Budget for every cost, and don't rely on part-time work alone.
-- Use our [study abroad roadmap](/post/study-abroad-roadmap) to order your steps.
+- Use our [study abroad roadmap](/club/study-abroad-roadmap) to order your steps.
 
 ## Official links
 

@@ -9,7 +9,7 @@ import { keys } from "./keys";
  * NEXT_PUBLIC_AUTH_COOKIE_DOMAIN is set (one sign-in on The IDEA Pass for
  * every site). (`createBrowserClient` reuses one
  * instance per page.) The Capacitor apps use it too: their WebView loads
- * The IDEA Spark, so the cookie works there as well.
+ * the website, so the cookie works there as well.
  */
 export const createClient = () => {
   const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } =

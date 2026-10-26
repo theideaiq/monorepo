@@ -197,6 +197,12 @@ const OrderNotices = ({
       </p>
     );
   }
+  if (order.guardian_status === "pending" && order.status === "pending") {
+    return <p className={muted}>{t("guardianPending")}</p>;
+  }
+  if (order.guardian_status === "declined") {
+    return <p className={muted}>{t("guardianDeclined")}</p>;
+  }
   switch (order.status) {
     case "pending":
       return watching ? (
@@ -290,6 +296,8 @@ const OrderView = ({
   const pay = usePayOrder();
   const canSell = useCanSellDigitalGoods();
   const pending = order.status === "pending";
+  // A teen's order is paid once their guardian approves it.
+  const payable = pending && order.guardian_status !== "pending";
   const cash = order.payment_method === "cash_on_delivery";
   const cancellable = pending || (cash && order.status === "confirmed");
   const address = order.shipping_address as unknown as ShippingAddress;
@@ -301,7 +309,7 @@ const OrderView = ({
 
       {cancellable ? (
         <div className="flex flex-wrap gap-3">
-          {pending && canSell === true ? (
+          {payable && !cash && canSell === true ? (
             <Button
               disabled={pay.isPending}
               onClick={() => pay.mutate(order, { onSuccess: onPay })}
@@ -505,7 +513,7 @@ export const OrderDetail = ({ orderId }: OrderDetailProps) => {
               <Link
                 className="inline-flex items-center gap-1 text-pink-text text-sm hover:underline sm:ms-auto"
                 href={{
-                  pathname: "/pass/support/new",
+                  pathname: "/help/new",
                   query: { order: data.id, topic: "order" },
                 }}
               >

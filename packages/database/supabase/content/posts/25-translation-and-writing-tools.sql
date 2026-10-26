@@ -47,7 +47,7 @@ begin
 
 لا تكتب مقالة القبول أو البيان الشخصي بالعربية ثم تترجمها آلياً، ولا تدع أداة تكتبها عنك. الجامعات تريد صوتك أنت، والترجمة الآلية تُنتج نصاً بلا روح وقد يحمل أخطاء في المعنى. اكتب بالإنجليزية مباشرة، ثم استخدم أدوات التدقيق للمراجعة فقط، واطلب من شخص تثق به أن يقرأ مسودتك.
 
-اقرأ أيضاً [دليل مقالة Common App](/post/common-app-essay) و[البيان الشخصي لبريطانيا](/post/uk-personal-statement) و[كيف تطوّر إنجليزيتك](/post/improve-your-english).
+اقرأ أيضاً [دليل مقالة Common App](/club/common-app-essay) و[البيان الشخصي لبريطانيا](/club/uk-personal-statement) و[كيف تطوّر إنجليزيتك](/club/improve-your-english).
 
 ## روابط مفيدة
 
@@ -96,7 +96,7 @@ If you're facing a long article, summarizing tools or AI assistants can give you
 
 Don't write your admissions essay or personal statement in Arabic and machine-translate it, and don't let a tool write it for you. Universities want your voice, and machine translation produces flat text that can get the meaning wrong. Write in English from the start, use checkers only to review, and ask someone you trust to read your draft.
 
-See also [the Common App essay](/post/common-app-essay), [the UK personal statement](/post/uk-personal-statement) and [how to improve your English](/post/improve-your-english).
+See also [the Common App essay](/club/common-app-essay), [the UK personal statement](/club/uk-personal-statement) and [how to improve your English](/club/improve-your-english).
 
 ## Useful links
 

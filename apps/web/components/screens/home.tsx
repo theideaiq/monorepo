@@ -142,7 +142,7 @@ const PlusPanel = () => {
 
   return (
     <Panel
-      action={<ViewAll href="/pass/plus" />}
+      action={<ViewAll href="/plus#yours" />}
       icon={<CrownIcon className="size-5 text-plus" />}
       title={t("title")}
     >
@@ -217,7 +217,7 @@ const NextEvents = () => {
 
   return (
     <Panel
-      action={<ViewAll href="/pass/events" />}
+      action={<ViewAll href="/club#yours" />}
       icon={<CalendarDaysIcon className="size-5 text-pink-text" />}
       title={t("title")}
     >
@@ -226,7 +226,7 @@ const NextEvents = () => {
         <div className="grid justify-items-start gap-3">
           <p className="text-muted-foreground text-sm">{t("empty")}</p>
           <Button asChild size="sm" variant="outline">
-            <Link href="/post/events">{t("browse")}</Link>
+            <Link href="/club?show=events">{t("browse")}</Link>
           </Button>
         </div>
       ) : null}
@@ -284,7 +284,7 @@ const Featured = () => {
 };
 
 /**
- * My Pass: a greeting, the membership card (`card`, rendered on the
+ * Your Pass: a greeting, the membership card (`card`, rendered on the
  * server), active orders, Plus membership and rentals, next events and
  * featured products.
  */

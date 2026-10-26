@@ -59,7 +59,7 @@ begin
 يُنصح الطلبة الدوليون بأن يجيبوا ضمن إجاباتهم عن:
 
 - لماذا تريد الدراسة في المملكة المتحدة تحديداً؟
-- مستواك في الإنجليزية، والدورات أو الاختبارات التي أخذتها (مثل [IELTS](/post/ielts-guide)).
+- مستواك في الإنجليزية، والدورات أو الاختبارات التي أخذتها (مثل [IELTS](/club/ielts-guide)).
 - لماذا تريد الدراسة طالباً دولياً بدل الدراسة في بلدك؟
 
 ## نصائح للكتابة
@@ -75,7 +75,7 @@ begin
 - [UCAS: تعبئة طلب البكالوريوس](https://www.ucas.com/applying/applying-to-university/filling-in-your-ucas-application)
 - [UCAS](https://www.ucas.com)
 
-اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap) و[مقالة Common App](/post/common-app-essay).$ar$,
+اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/club/study-abroad-roadmap) و[مقالة Common App](/club/common-app-essay).$ar$,
     $en$To apply for an undergraduate degree in the UK, you submit one application through [UCAS](https://www.ucas.com) that goes to several universities, together with a **personal statement**. Unlike the US Common App essay, which asks for a personal story, the UK statement is direct and centered on your subject: why you want it and what has prepared you for it.
 
 ## The new format: three questions
@@ -124,7 +124,7 @@ Don't just name a skill; give an example that proves it.
 International applicants are advised to address, within their answers:
 
 - Why you want to study in the UK specifically.
-- Your English level and any courses or tests you've taken (such as [IELTS](/post/ielts-guide)).
+- Your English level and any courses or tests you've taken (such as [IELTS](/club/ielts-guide)).
 - Why you want to be an international student rather than study in your own country.
 
 ## Writing tips
@@ -140,7 +140,7 @@ International applicants are advised to address, within their answers:
 - [UCAS: filling in your undergraduate application](https://www.ucas.com/applying/applying-to-university/filling-in-your-ucas-application)
 - [UCAS](https://www.ucas.com)
 
-See also: our [study abroad roadmap](/post/study-abroad-roadmap) and the [Common App essay](/post/common-app-essay).$en$,
+See also: our [study abroad roadmap](/club/study-abroad-roadmap) and the [Common App essay](/club/common-app-essay).$en$,
     now() - interval '5 minutes'
   )
   on conflict (slug) do update set

@@ -96,7 +96,7 @@ On phones scale `display-xl` to 44/48 and `display` to 36/42. Arabic never below
 | `--sidebar-primary` / `-foreground` | `#D81B60` / `#FFFFFF` | same | pink |
 | `--chart-1…5` | pink, yellow, violet, orange, cobalt | dark-theme equivalents | various |
 
-Add every other token from `tokens.css` and expose them in `@theme inline` as `--color-*` (`bg-idea-pink`, `text-pink-text`, `bg-surface-sunken`, `bg-plus`, `bg-business` …). Remove `--academy`, `--launcher` and `--suite` (renamed `--business`) and `--bulb-empty` (renamed `--meter-empty`).
+Add every other token from `tokens.css` and expose them in `@theme inline` as `--color-*` (`bg-idea-pink`, `text-pink-text`, `bg-surface-sunken`, `bg-plus`, `bg-business` …). Remove the spare `--teal` and `--lime` and rename `--bulb-empty` to `--meter-empty`.
 
 Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/font/google` (subsets `latin` and `arabic`, weights 400, 500, 600, 700) as the first `--font-sans` family; keep Cairo as the Arabic fallback; keep Geist Mono. (Poppins, the previous Latin font, was removed on 2026-10-25.)
 
@@ -114,9 +114,9 @@ Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/fo
 | `ConditionLabel` (replaces `ConditionBulb`) | A four-step meter (`logos/condition-*.svg` shape: bars rising left to right, filled steps in `idea-pink`, empty in `meter-empty`) + the word, as a pill with `border-strong`: `new` 4/4 (جديد / New), `open_box` 3/4 (اخو الجديد / Open box), `refurbished` 2/4 (مجدّد / Refurbished), `used` 1/4 (مستعمل / Used). Maps the stored `stock_items.condition` one to one (open box and refurbished are no longer merged). Not shown on rentals; never a bulb icon. The meter does not mirror in RTL. |
 | `BulbsAmount` (new) | The yellow bulb icon + a number + "Bulbs" (with the IQD value in `ink-muted` where useful: "120 Bulbs · 12,000 IQD"). The only meaning-carrying use of the bulb icon in the product UI (condition, plans, status and navigation never use it). The logo, `BulbKicker`, `PinkBand`, `PassCard`, avatars and app icons keep the bulb as the brand mark. |
 | `PlanMark` (new) | "Plus Glow", "Plus Shine" or "Plus Blaze" in `plus` with the item count after a middle dot ("Plus Shine · 2 items at a time"). Used on plan cards, the Pass card badge and product rental buttons. |
-| `Badge` (exists) | Tones: neutral, brand (pink), highlight (yellow), plus, club, business, success, warning, danger (status needs an icon). Remove academy, suite and launcher. |
+| `Badge` (exists) | Tones: neutral, brand (pink), highlight (yellow), plus, club, business, success, warning, danger (status needs an icon). No spare accents. |
 | `PlanCard` | `radius-xl`; `PlanMark` as the title, price per month, the plan's perks and Bulbs rate; Plus Shine is the featured plan (2px `plus` border, violet flag "Most chosen", pink primary button); others outline. |
-| `ProductCard` | Image on `surface-sunken`; badge top-start; 2-line name; `SouqPrice` or price; `ConditionLabel` for copies for sale; age rating for games (from Phase 4, `products.age_rating`); full-width CTA: pink "Buy", or for rental-only items "Rent" with "worth …" in small print. |
+| `ProductCard` | Image on `surface-sunken`; badge top-start; 2-line name; `SouqPrice` or price; `ConditionLabel` for copies for sale; the PEGI rating for games (`products.age_rating`); full-width CTA: pink "Buy", or for rental-only items "Rent" with "worth …" in small print. |
 | `PassCard` (exists) | Pink for everyone with the yellow bulb; badges for the Plus plan (`PlanMark`), Student and Staff; Bulbs balance via `BulbsAmount`. No tier colours. |
 | `TopBar` and `TabBar` | Top bar: logo, search, Saved (heart, with count), Cart (with count), Pass on desktop; hidden on sign-in and checkout. Phone tabs: Store, Plus, Club, Pass. |
 

@@ -322,30 +322,6 @@ export type Database = {
           },
         ];
       };
-      bulb_tiers: {
-        Row: {
-          free_delivery_from: number | null;
-          min_spend: number;
-          rate: number;
-          tier: Database["public"]["Enums"]["bulb_tier"];
-          updated_at: string;
-        };
-        Insert: {
-          free_delivery_from?: number | null;
-          min_spend: number;
-          rate: number;
-          tier: Database["public"]["Enums"]["bulb_tier"];
-          updated_at?: string;
-        };
-        Update: {
-          free_delivery_from?: number | null;
-          min_spend?: number;
-          rate?: number;
-          tier?: Database["public"]["Enums"]["bulb_tier"];
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
       candidates: {
         Row: {
           company_note: string | null;
@@ -546,12 +522,14 @@ export type Database = {
           carrier_province: string | null;
           created_at: string;
           fee: number;
+          free_from: number | null;
           governorate: string | null;
           id: string;
           max_days: number;
           min_days: number;
           name_ar: string;
           name_en: string;
+          plus_free_delivery: boolean;
           position: number;
           updated_at: string;
         };
@@ -560,12 +538,14 @@ export type Database = {
           carrier_province?: string | null;
           created_at?: string;
           fee: number;
+          free_from?: number | null;
           governorate?: string | null;
           id?: string;
           max_days?: number;
           min_days?: number;
           name_ar: string;
           name_en: string;
+          plus_free_delivery?: boolean;
           position?: number;
           updated_at?: string;
         };
@@ -574,12 +554,14 @@ export type Database = {
           carrier_province?: string | null;
           created_at?: string;
           fee?: number;
+          free_from?: number | null;
           governorate?: string | null;
           id?: string;
           max_days?: number;
           min_days?: number;
           name_ar?: string;
           name_en?: string;
+          plus_free_delivery?: boolean;
           position?: number;
           updated_at?: string;
         };
@@ -697,6 +679,54 @@ export type Database = {
           vat_rate?: number;
         };
         Relationships: [];
+      };
+      guardian_links: {
+        Row: {
+          accepted_at: string | null;
+          allows_plus: boolean;
+          code: string;
+          created_at: string;
+          guardian_id: string | null;
+          id: string;
+          status: string;
+          teen_id: string;
+        };
+        Insert: {
+          accepted_at?: string | null;
+          allows_plus?: boolean;
+          code?: string;
+          created_at?: string;
+          guardian_id?: string | null;
+          id?: string;
+          status?: string;
+          teen_id: string;
+        };
+        Update: {
+          accepted_at?: string | null;
+          allows_plus?: boolean;
+          code?: string;
+          created_at?: string;
+          guardian_id?: string | null;
+          id?: string;
+          status?: string;
+          teen_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "guardian_links_guardian_id_fkey";
+            columns: ["guardian_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "guardian_links_teen_id_fkey";
+            columns: ["teen_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       invitations: {
         Row: {
@@ -861,6 +891,216 @@ export type Database = {
           },
         ];
       };
+      kit_booking_games: {
+        Row: {
+          booking_id: string;
+          product_id: string;
+          rental_id: string | null;
+        };
+        Insert: {
+          booking_id: string;
+          product_id: string;
+          rental_id?: string | null;
+        };
+        Update: {
+          booking_id?: string;
+          product_id?: string;
+          rental_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kit_booking_games_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "kit_bookings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_booking_games_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_booking_games_rental_id_fkey";
+            columns: ["rental_id"];
+            isOneToOne: false;
+            referencedRelation: "rentals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      kit_bookings: {
+        Row: {
+          amount_due: number | null;
+          created_at: string;
+          damage_charge: number | null;
+          deposit: number;
+          deposit_waived: boolean;
+          ends_on: string;
+          extra_days: number;
+          id: string;
+          kit_type: string;
+          order_id: string | null;
+          refund_due: number | null;
+          starts_on: string;
+          status: string;
+          unit_id: string;
+          user_id: string | null;
+        };
+        Insert: {
+          amount_due?: number | null;
+          created_at?: string;
+          damage_charge?: number | null;
+          deposit?: number;
+          deposit_waived?: boolean;
+          ends_on: string;
+          extra_days?: number;
+          id?: string;
+          kit_type: string;
+          order_id?: string | null;
+          refund_due?: number | null;
+          starts_on: string;
+          status?: string;
+          unit_id: string;
+          user_id?: string | null;
+        };
+        Update: {
+          amount_due?: number | null;
+          created_at?: string;
+          damage_charge?: number | null;
+          deposit?: number;
+          deposit_waived?: boolean;
+          ends_on?: string;
+          extra_days?: number;
+          id?: string;
+          kit_type?: string;
+          order_id?: string | null;
+          refund_due?: number | null;
+          starts_on?: string;
+          status?: string;
+          unit_id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kit_bookings_kit_type_fkey";
+            columns: ["kit_type"];
+            isOneToOne: false;
+            referencedRelation: "kit_types";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_bookings_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_bookings_unit_id_fkey";
+            columns: ["unit_id"];
+            isOneToOne: false;
+            referencedRelation: "kit_units";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      kit_types: {
+        Row: {
+          active: boolean;
+          deposit: number;
+          description_ar: string;
+          description_en: string;
+          extra_day_price: number;
+          games: number;
+          games_category_id: string | null;
+          id: string;
+          image: string | null;
+          name_ar: string;
+          name_en: string;
+          position: number;
+          price: number;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          deposit?: number;
+          description_ar?: string;
+          description_en?: string;
+          extra_day_price: number;
+          games?: number;
+          games_category_id?: string | null;
+          id: string;
+          image?: string | null;
+          name_ar: string;
+          name_en: string;
+          position?: number;
+          price: number;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          deposit?: number;
+          description_ar?: string;
+          description_en?: string;
+          extra_day_price?: number;
+          games?: number;
+          games_category_id?: string | null;
+          id?: string;
+          image?: string | null;
+          name_ar?: string;
+          name_en?: string;
+          position?: number;
+          price?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kit_types_games_category_id_fkey";
+            columns: ["games_category_id"];
+            isOneToOne: false;
+            referencedRelation: "product_categories";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      kit_units: {
+        Row: {
+          created_at: string;
+          id: string;
+          kit_type: string;
+          label: string;
+          note: string | null;
+          status: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          kit_type: string;
+          label: string;
+          note?: string | null;
+          status?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          kit_type?: string;
+          label?: string;
+          note?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kit_units_kit_type_fkey";
+            columns: ["kit_type"];
+            isOneToOne: false;
+            referencedRelation: "kit_types";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ledger_entries: {
         Row: {
           created_at: string;
@@ -1018,11 +1258,13 @@ export type Database = {
           attributes: NonNullable<Json>;
           condition: Database["public"]["Enums"]["product_condition"] | null;
           id: string;
+          kind: string;
           name_ar: string;
           name_en: string;
           order_id: string;
           product_id: string | null;
           quantity: number;
+          rental_id: string | null;
           unit_price: number;
           variant_id: string | null;
         };
@@ -1030,11 +1272,13 @@ export type Database = {
           attributes?: NonNullable<Json>;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
+          kind?: string;
           name_ar: string;
           name_en: string;
           order_id: string;
           product_id?: string | null;
           quantity: number;
+          rental_id?: string | null;
           unit_price: number;
           variant_id?: string | null;
         };
@@ -1042,11 +1286,13 @@ export type Database = {
           attributes?: NonNullable<Json>;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
+          kind?: string;
           name_ar?: string;
           name_en?: string;
           order_id?: string;
           product_id?: string | null;
           quantity?: number;
+          rental_id?: string | null;
           unit_price?: number;
           variant_id?: string | null;
         };
@@ -1063,6 +1309,13 @@ export type Database = {
             columns: ["product_id"];
             isOneToOne: false;
             referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_rental_id_fkey";
+            columns: ["rental_id"];
+            isOneToOne: false;
+            referencedRelation: "rentals";
             referencedColumns: ["id"];
           },
           {
@@ -1087,7 +1340,9 @@ export type Database = {
           discount: number;
           discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
           id: string;
+          max_bulbs: number | null;
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
@@ -1114,7 +1369,9 @@ export type Database = {
           discount?: number;
           discount_source?: string | null;
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status?: string | null;
           id?: string;
+          max_bulbs?: number | null;
           number?: never;
           paid_at?: string | null;
           payment_method?: Database["public"]["Enums"]["order_payment_method"];
@@ -1141,7 +1398,9 @@ export type Database = {
           discount?: number;
           discount_source?: string | null;
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status?: string | null;
           id?: string;
+          max_bulbs?: number | null;
           number?: never;
           paid_at?: string | null;
           payment_method?: Database["public"]["Enums"]["order_payment_method"];
@@ -1294,11 +1553,14 @@ export type Database = {
           amount: number;
           audience: string;
           billing_interval: Database["public"]["Enums"]["billing_interval"];
+          bulb_rate: number | null;
           created_at: string;
           currency: string;
           description: string | null;
           features_ar: string[];
           features_en: string[];
+          free_delivery: boolean;
+          home_swaps: number | null;
           id: string;
           name: string;
           name_ar: string | null;
@@ -1311,11 +1573,14 @@ export type Database = {
           amount: number;
           audience?: string;
           billing_interval: Database["public"]["Enums"]["billing_interval"];
+          bulb_rate?: number | null;
           created_at?: string;
           currency?: string;
           description?: string | null;
           features_ar?: string[];
           features_en?: string[];
+          free_delivery?: boolean;
+          home_swaps?: number | null;
           id: string;
           name: string;
           name_ar?: string | null;
@@ -1328,11 +1593,14 @@ export type Database = {
           amount?: number;
           audience?: string;
           billing_interval?: Database["public"]["Enums"]["billing_interval"];
+          bulb_rate?: number | null;
           created_at?: string;
           currency?: string;
           description?: string | null;
           features_ar?: string[];
           features_en?: string[];
+          free_delivery?: boolean;
+          home_swaps?: number | null;
           id?: string;
           name?: string;
           name_ar?: string | null;
@@ -1341,6 +1609,100 @@ export type Database = {
           tier?: number | null;
         };
         Relationships: [];
+      };
+      plus_areas: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          id: string;
+          name_ar: string;
+          name_en: string;
+          position: number;
+          weekday: number | null;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          id?: string;
+          name_ar: string;
+          name_en: string;
+          position?: number;
+          weekday?: number | null;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          id?: string;
+          name_ar?: string;
+          name_en?: string;
+          position?: number;
+          weekday?: number | null;
+        };
+        Relationships: [];
+      };
+      plus_homes: {
+        Row: {
+          address: string;
+          area_id: string;
+          phone: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          address: string;
+          area_id: string;
+          phone: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          address?: string;
+          area_id?: string;
+          phone?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_homes_area_id_fkey";
+            columns: ["area_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_areas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plus_pauses: {
+        Row: {
+          ends_at: string;
+          id: string;
+          starts_at: string;
+          subscription_id: string;
+          user_id: string;
+        };
+        Insert: {
+          ends_at: string;
+          id?: string;
+          starts_at?: string;
+          subscription_id: string;
+          user_id: string;
+        };
+        Update: {
+          ends_at?: string;
+          id?: string;
+          starts_at?: string;
+          subscription_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_pauses_subscription_id_fkey";
+            columns: ["subscription_id"];
+            isOneToOne: false;
+            referencedRelation: "subscriptions";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       plus_seats: {
         Row: {
@@ -1399,6 +1761,111 @@ export type Database = {
             columns: ["subscription_id"];
             isOneToOne: true;
             referencedRelation: "subscriptions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plus_swaps: {
+        Row: {
+          area_id: string | null;
+          counted: boolean;
+          created_at: string;
+          done_at: string | null;
+          fee: number;
+          id: string;
+          method: string;
+          order_id: string | null;
+          scheduled_for: string | null;
+          status: string;
+          user_id: string | null;
+        };
+        Insert: {
+          area_id?: string | null;
+          counted?: boolean;
+          created_at?: string;
+          done_at?: string | null;
+          fee?: number;
+          id?: string;
+          method: string;
+          order_id?: string | null;
+          scheduled_for?: string | null;
+          status?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          area_id?: string | null;
+          counted?: boolean;
+          created_at?: string;
+          done_at?: string | null;
+          fee?: number;
+          id?: string;
+          method?: string;
+          order_id?: string | null;
+          scheduled_for?: string | null;
+          status?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_swaps_area_id_fkey";
+            columns: ["area_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_areas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plus_swaps_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plus_waitlist: {
+        Row: {
+          area_id: string | null;
+          created_at: string;
+          governorate: string;
+          invite_expires_at: string | null;
+          invited_at: string | null;
+          plan_id: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          area_id?: string | null;
+          created_at?: string;
+          governorate: string;
+          invite_expires_at?: string | null;
+          invited_at?: string | null;
+          plan_id?: string | null;
+          status?: string;
+          user_id: string;
+        };
+        Update: {
+          area_id?: string | null;
+          created_at?: string;
+          governorate?: string;
+          invite_expires_at?: string | null;
+          invited_at?: string | null;
+          plan_id?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_waitlist_area_id_fkey";
+            columns: ["area_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_areas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plus_waitlist_plan_id_fkey";
+            columns: ["plan_id"];
+            isOneToOne: false;
+            referencedRelation: "plans";
             referencedColumns: ["id"];
           },
         ];
@@ -1671,6 +2138,8 @@ export type Database = {
       };
       products: {
         Row: {
+          age_rating: number | null;
+          bulb_multiplier: number | null;
           category_id: string | null;
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
@@ -1698,6 +2167,8 @@ export type Database = {
           verified: boolean;
         };
         Insert: {
+          age_rating?: number | null;
+          bulb_multiplier?: number | null;
           category_id?: string | null;
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
@@ -1725,6 +2196,8 @@ export type Database = {
           verified?: boolean;
         };
         Update: {
+          age_rating?: number | null;
+          bulb_multiplier?: number | null;
           category_id?: string | null;
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
@@ -2064,61 +2537,150 @@ export type Database = {
           },
         ];
       };
+      rental_rates: {
+        Row: {
+          category_id: string;
+          days: number;
+          late_fee: number;
+          price: number;
+          updated_at: string;
+        };
+        Insert: {
+          category_id: string;
+          days: number;
+          late_fee: number;
+          price: number;
+          updated_at?: string;
+        };
+        Update: {
+          category_id?: string;
+          days?: number;
+          late_fee?: number;
+          price?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rental_rates_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: true;
+            referencedRelation: "product_categories";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       rentals: {
         Row: {
+          amount_due: number | null;
+          damage_charge: number | null;
+          days: number | null;
+          deposit: number;
           due_at: string | null;
           due_reminder_at: string | null;
           id: string;
+          kind: string;
+          late_charge: number | null;
+          late_fee: number;
           name_ar: string;
           name_en: string;
+          order_id: string | null;
           product_id: string | null;
+          refund_due: number | null;
           requested_at: string;
+          return_swap_id: string | null;
           returned_at: string | null;
+          settled_at: string | null;
           staff_note: string | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["rental_status"];
+          swap_id: string | null;
           updated_at: string;
           user_id: string | null;
           variant_id: string | null;
         };
         Insert: {
+          amount_due?: number | null;
+          damage_charge?: number | null;
+          days?: number | null;
+          deposit?: number;
           due_at?: string | null;
           due_reminder_at?: string | null;
           id?: string;
+          kind?: string;
+          late_charge?: number | null;
+          late_fee?: number;
           name_ar: string;
           name_en: string;
+          order_id?: string | null;
           product_id?: string | null;
+          refund_due?: number | null;
           requested_at?: string;
+          return_swap_id?: string | null;
           returned_at?: string | null;
+          settled_at?: string | null;
           staff_note?: string | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["rental_status"];
+          swap_id?: string | null;
           updated_at?: string;
           user_id?: string | null;
           variant_id?: string | null;
         };
         Update: {
+          amount_due?: number | null;
+          damage_charge?: number | null;
+          days?: number | null;
+          deposit?: number;
           due_at?: string | null;
           due_reminder_at?: string | null;
           id?: string;
+          kind?: string;
+          late_charge?: number | null;
+          late_fee?: number;
           name_ar?: string;
           name_en?: string;
+          order_id?: string | null;
           product_id?: string | null;
+          refund_due?: number | null;
           requested_at?: string;
+          return_swap_id?: string | null;
           returned_at?: string | null;
+          settled_at?: string | null;
           staff_note?: string | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["rental_status"];
+          swap_id?: string | null;
           updated_at?: string;
           user_id?: string | null;
           variant_id?: string | null;
         };
         Relationships: [
           {
+            foreignKeyName: "rentals_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "rentals_product_id_fkey";
             columns: ["product_id"];
             isOneToOne: false;
             referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rentals_return_swap_fk";
+            columns: ["return_swap_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_swaps";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rentals_swap_fk";
+            columns: ["swap_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_swaps";
             referencedColumns: ["id"];
           },
           {
@@ -2341,41 +2903,71 @@ export type Database = {
       };
       store_settings: {
         Row: {
-          bulb_plus_bonus: number;
+          bulb_half_from: number;
+          bulb_rate: number;
+          cash_limit: number | null;
           cash_on_delivery_enabled: boolean;
-          free_shipping_threshold: number | null;
+          delivery_cost: number;
+          extra_swap_fee: number;
           id: boolean;
+          max_giveaway_rate: number;
+          min_margin_rate: number;
+          payment_fee_rate: number;
           pickup_address_ar: string | null;
           pickup_address_en: string | null;
           pickup_enabled: boolean;
           pickup_hours_ar: string | null;
           pickup_hours_en: string | null;
+          plus_capacity: number;
+          plus_invite_hours: number;
+          rental_deposit_rate: number;
+          return_days: number;
           shipping_fee: number;
           updated_at: string;
         };
         Insert: {
-          bulb_plus_bonus?: number;
+          bulb_half_from?: number;
+          bulb_rate?: number;
+          cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
-          free_shipping_threshold?: number | null;
+          delivery_cost?: number;
+          extra_swap_fee?: number;
           id?: boolean;
+          max_giveaway_rate?: number;
+          min_margin_rate?: number;
+          payment_fee_rate?: number;
           pickup_address_ar?: string | null;
           pickup_address_en?: string | null;
           pickup_enabled?: boolean;
           pickup_hours_ar?: string | null;
           pickup_hours_en?: string | null;
+          plus_capacity?: number;
+          plus_invite_hours?: number;
+          rental_deposit_rate?: number;
+          return_days?: number;
           shipping_fee?: number;
           updated_at?: string;
         };
         Update: {
-          bulb_plus_bonus?: number;
+          bulb_half_from?: number;
+          bulb_rate?: number;
+          cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
-          free_shipping_threshold?: number | null;
+          delivery_cost?: number;
+          extra_swap_fee?: number;
           id?: boolean;
+          max_giveaway_rate?: number;
+          min_margin_rate?: number;
+          payment_fee_rate?: number;
           pickup_address_ar?: string | null;
           pickup_address_en?: string | null;
           pickup_enabled?: boolean;
           pickup_hours_ar?: string | null;
           pickup_hours_en?: string | null;
+          plus_capacity?: number;
+          plus_invite_hours?: number;
+          rental_deposit_rate?: number;
+          return_days?: number;
           shipping_fee?: number;
           updated_at?: string;
         };
@@ -2478,7 +3070,9 @@ export type Database = {
           current_period_end: string | null;
           current_period_start: string | null;
           id: string;
+          next_plan_id: string | null;
           organization_id: string | null;
+          paused_until: string | null;
           plan_id: string;
           provider: string;
           status: Database["public"]["Enums"]["subscription_status"];
@@ -2492,7 +3086,9 @@ export type Database = {
           current_period_end?: string | null;
           current_period_start?: string | null;
           id?: string;
+          next_plan_id?: string | null;
           organization_id?: string | null;
+          paused_until?: string | null;
           plan_id: string;
           provider: string;
           status?: Database["public"]["Enums"]["subscription_status"];
@@ -2506,7 +3102,9 @@ export type Database = {
           current_period_end?: string | null;
           current_period_start?: string | null;
           id?: string;
+          next_plan_id?: string | null;
           organization_id?: string | null;
+          paused_until?: string | null;
           plan_id?: string;
           provider?: string;
           status?: Database["public"]["Enums"]["subscription_status"];
@@ -2520,6 +3118,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "affiliates";
             referencedColumns: ["user_id"];
+          },
+          {
+            foreignKeyName: "subscriptions_next_plan_id_fkey";
+            columns: ["next_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
           },
           {
             foreignKeyName: "subscriptions_organization_id_fkey";
@@ -2632,7 +3237,6 @@ export type Database = {
           events_topic: number | null;
           id: number;
           join_rule: string;
-          join_tier: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated: boolean;
           news_topic: number | null;
           post_locale: string;
@@ -2645,7 +3249,6 @@ export type Database = {
           events_topic?: number | null;
           id: number;
           join_rule?: string;
-          join_tier?: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated?: boolean;
           news_topic?: number | null;
           post_locale?: string;
@@ -2658,7 +3261,6 @@ export type Database = {
           events_topic?: number | null;
           id?: number;
           join_rule?: string;
-          join_tier?: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated?: boolean;
           news_topic?: number | null;
           post_locale?: string;
@@ -2920,16 +3522,19 @@ export type Database = {
       wishlist_items: {
         Row: {
           created_at: string;
+          position: number;
           product_id: string;
           user_id: string;
         };
         Insert: {
           created_at?: string;
+          position?: number;
           product_id: string;
           user_id?: string;
         };
         Update: {
           created_at?: string;
+          position?: number;
           product_id?: string;
           user_id?: string;
         };
@@ -2963,6 +3568,7 @@ export type Database = {
       };
     };
     Functions: {
+      accept_guardian: { Args: { invite_code: string }; Returns: string };
       accept_invitation: {
         Args: { invitation_token: string };
         Returns: string;
@@ -3038,6 +3644,79 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      book_kit: {
+        Args: {
+          delivery_zone: string;
+          extra_days?: number;
+          games?: string[];
+          kit: string;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          shipping: Json;
+          starts_on: string;
+        };
+        Returns: {
+          affiliate_id: string | null;
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      book_swap: {
+        Args: {
+          method?: string;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          returns: string[];
+          wants: string[];
+        };
+        Returns: {
+          area_id: string | null;
+          counted: boolean;
+          created_at: string;
+          done_at: string | null;
+          fee: number;
+          id: string;
+          method: string;
+          order_id: string | null;
+          scheduled_for: string | null;
+          status: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_swaps";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       bulbs_outstanding: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3047,11 +3726,83 @@ export type Database = {
         }[];
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
+      cancel_plus: {
+        Args: { keep?: boolean };
+        Returns: {
+          affiliate_id: string | null;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       cancel_procurement_request: {
         Args: { request: string };
         Returns: undefined;
       };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
+      cancel_swap: {
+        Args: { target: string };
+        Returns: {
+          area_id: string | null;
+          counted: boolean;
+          created_at: string;
+          done_at: string | null;
+          fee: number;
+          id: string;
+          method: string;
+          order_id: string | null;
+          scheduled_for: string | null;
+          status: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_swaps";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      change_plus_plan: {
+        Args: { plan: string };
+        Returns: {
+          affiliate_id: string | null;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       check_in_rsvp: {
         Args: { event: string; member: string };
         Returns: string;
@@ -3065,6 +3816,16 @@ export type Database = {
           user_id: string;
           valid: boolean;
         }[];
+      };
+      checkout_quote: {
+        Args: {
+          delivery_zone?: string;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
+          governorate?: string;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          use_bulbs?: number;
+        };
+        Returns: Json;
       };
       claim_invite: { Args: { code: string }; Returns: string };
       claim_push_notifications: {
@@ -3127,9 +3888,57 @@ export type Database = {
       };
       close_job_request: { Args: { job: string }; Returns: undefined };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
+      collect_kit: {
+        Args: { damage?: number; target: string };
+        Returns: {
+          amount_due: number | null;
+          created_at: string;
+          damage_charge: number | null;
+          deposit: number;
+          deposit_waived: boolean;
+          ends_on: string;
+          extra_days: number;
+          id: string;
+          kit_type: string;
+          order_id: string | null;
+          refund_due: number | null;
+          starts_on: string;
+          status: string;
+          unit_id: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "kit_bookings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       complete_order_payment: {
         Args: { order_id: string };
         Returns: undefined;
+      };
+      complete_swap: {
+        Args: { target: string };
+        Returns: {
+          area_id: string | null;
+          counted: boolean;
+          created_at: string;
+          done_at: string | null;
+          fee: number;
+          id: string;
+          method: string;
+          order_id: string | null;
+          scheduled_for: string | null;
+          status: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_swaps";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       complete_trade_in: {
         Args: { create_product?: boolean; trade_in: string };
@@ -3155,7 +3964,9 @@ export type Database = {
           discount: number;
           discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
           id: string;
+          max_bulbs: number | null;
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
@@ -3190,6 +4001,51 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "organizations";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      create_rental_order: {
+        Args: {
+          delivery_zone?: string;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          rental_product: string;
+          rental_variant?: string;
+          shipping: Json;
+        };
+        Returns: {
+          affiliate_id: string | null;
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -3258,6 +4114,44 @@ export type Database = {
         };
         Returns: undefined;
       };
+      decide_guardian_order: {
+        Args: { approve: boolean; target: string };
+        Returns: {
+          affiliate_id: string | null;
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       decide_quote: {
         Args: { accept: boolean; quote: string; reference?: string };
         Returns: string;
@@ -3265,10 +4159,122 @@ export type Database = {
       decline_plus_seat: { Args: { seat: string }; Returns: undefined };
       end_plus_seat: { Args: { seat: string }; Returns: undefined };
       event_rsvp_count: { Args: { event: string }; Returns: number };
+      guardian_invite: {
+        Args: { invite_code: string };
+        Returns: {
+          status: string;
+          teen_name: string;
+        }[];
+      };
+      hand_over_kit: {
+        Args: { target: string };
+        Returns: {
+          amount_due: number | null;
+          created_at: string;
+          damage_charge: number | null;
+          deposit: number;
+          deposit_waived: boolean;
+          ends_on: string;
+          extra_days: number;
+          id: string;
+          kit_type: string;
+          order_id: string | null;
+          refund_due: number | null;
+          starts_on: string;
+          status: string;
+          unit_id: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "kit_bookings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       import_products: { Args: { items: Json }; Returns: Json };
+      invite_guardian: { Args: Record<PropertyKey, never>; Returns: string };
+      invite_to_plus: {
+        Args: { member: string };
+        Returns: {
+          area_id: string | null;
+          created_at: string;
+          governorate: string;
+          invite_expires_at: string | null;
+          invited_at: string | null;
+          plan_id: string | null;
+          status: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_waitlist";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       issue_invoice: {
         Args: { days?: number; purchase_order: string };
         Returns: string;
+      };
+      join_plus_waitlist: {
+        Args: { governorate: string; plan: string };
+        Returns: number;
+      };
+      keep_price: { Args: { target: string }; Returns: number };
+      keep_rental: {
+        Args: {
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          target: string;
+        };
+        Returns: {
+          affiliate_id: string | null;
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      kit_weekends: {
+        Args: { kit: string };
+        Returns: {
+          extra_day_price: number;
+          price: number;
+          starts_on: string;
+          units_free: number;
+        }[];
+      };
+      leave_plus_waitlist: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
       };
       ledger_monthly_summary: {
         Args: {
@@ -3326,7 +4332,9 @@ export type Database = {
           discount: number;
           discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
           id: string;
+          max_bulbs: number | null;
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
@@ -3366,8 +4374,6 @@ export type Database = {
           available: number;
           pending: number;
           rate: number;
-          spend: number;
-          tier: Database["public"]["Enums"]["bulb_tier"];
         }[];
       };
       my_affiliate: {
@@ -3398,15 +4404,23 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: {
           available: number;
-          next_min_spend: number;
-          next_tier: Database["public"]["Enums"]["bulb_tier"];
           pending: number;
           rate: number;
-          spend: number;
-          tier: Database["public"]["Enums"]["bulb_tier"];
         }[];
       };
       my_calendar_token: { Args: Record<PropertyKey, never>; Returns: string };
+      my_guardian: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          allows_plus: boolean;
+          code: string;
+          guardian_name: string;
+          has_birthday: boolean;
+          link_id: string;
+          minor: boolean;
+          status: string;
+        }[];
+      };
       my_invites: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3429,6 +4443,25 @@ export type Database = {
           in_use: number;
           slots: number;
           tier: number;
+        }[];
+      };
+      my_swap_terms: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          area_id: string;
+          extra_fee: number;
+          home_swaps: number;
+          home_swaps_used: number;
+          next_date: string;
+        }[];
+      };
+      my_teens: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          allows_plus: boolean;
+          link_id: string;
+          pending_orders: Json;
+          teen_name: string;
         }[];
       };
       my_telegram: {
@@ -3487,6 +4520,31 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      pause_plus: {
+        Args: { days: number };
+        Returns: {
+          affiliate_id: string | null;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       pending_invitations: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3495,6 +4553,20 @@ export type Database = {
           organization_name: string;
           role: Database["public"]["Enums"]["org_role"];
           token: string;
+        }[];
+      };
+      plus_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          can_join: boolean;
+          capacity: number;
+          invite_expires_at: string;
+          join_reason: string;
+          places_free: number;
+          waiting: number;
+          waitlist_governorate: string;
+          waitlist_position: number;
+          waitlist_status: string;
         }[];
       };
       post_journal_entry: {
@@ -3508,6 +4580,23 @@ export type Database = {
           scenario?: Database["public"]["Enums"]["ledger_scenario"];
         };
         Returns: string;
+      };
+      price_check: {
+        Args: { max_rows?: number };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          cost: number;
+          floor_amount: number;
+          margin: number;
+          name_ar: string;
+          name_en: string;
+          price: number;
+          problem: string;
+          product_id: string;
+          product_slug: string;
+          stock_item_id: string;
+          variant_label: string;
+        }[];
       };
       product_offers: {
         Args: { offer_product: string };
@@ -3555,10 +4644,21 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      referral_kind: { Args: { code: string }; Returns: string };
       register_push_device: {
         Args: { device_platform: string; device_token: string };
         Returns: string;
       };
+      rental_quote: {
+        Args: { product: string; variant?: string };
+        Returns: {
+          days: number;
+          deposit: number;
+          late_fee: number;
+          price: number;
+        }[];
+      };
+      reorder_saved: { Args: { products: string[] }; Returns: undefined };
       request_plus_seat: {
         Args: { member: string; org: string; plan: string };
         Returns: string;
@@ -3566,17 +4666,29 @@ export type Database = {
       request_rental: {
         Args: { rental_product: string; rental_variant?: string };
         Returns: {
+          amount_due: number | null;
+          damage_charge: number | null;
+          days: number | null;
+          deposit: number;
           due_at: string | null;
           due_reminder_at: string | null;
           id: string;
+          kind: string;
+          late_charge: number | null;
+          late_fee: number;
           name_ar: string;
           name_en: string;
+          order_id: string | null;
           product_id: string | null;
+          refund_due: number | null;
           requested_at: string;
+          return_swap_id: string | null;
           returned_at: string | null;
+          settled_at: string | null;
           staff_note: string | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["rental_status"];
+          swap_id: string | null;
           updated_at: string;
           user_id: string | null;
           variant_id: string | null;
@@ -3592,6 +4704,31 @@ export type Database = {
         Args: { accept: boolean; trade_in: string };
         Returns: Database["public"]["Enums"]["trade_in_status"];
       };
+      resume_plus: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          affiliate_id: string | null;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       review_queue: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3605,6 +4742,7 @@ export type Database = {
           type: Database["public"]["Enums"]["submission_type"];
         }[];
       };
+      revoke_guardian: { Args: { link: string }; Returns: undefined };
       rotate_calendar_token: {
         Args: Record<PropertyKey, never>;
         Returns: string;
@@ -3614,10 +4752,12 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Record<string, unknown>;
       };
+      run_kit_holds: { Args: Record<PropertyKey, never>; Returns: number };
       run_plus_seat_renewals: {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      run_plus_waitlist: { Args: Record<PropertyKey, never>; Returns: number };
       search_products: {
         Args: {
           search_category?: string;
@@ -3625,6 +4765,8 @@ export type Database = {
           search_term: string;
         };
         Returns: {
+          age_rating: number | null;
+          bulb_multiplier: number | null;
           category_id: string | null;
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
@@ -3667,8 +4809,8 @@ export type Database = {
         Returns: undefined;
       };
       set_affiliate_rates: { Args: { rates: Json }; Returns: undefined };
-      set_bulb_rates: {
-        Args: { multipliers?: Json; plus_bonus: number };
+      set_guardian_plus: {
+        Args: { allow: boolean; link: string };
         Returns: undefined;
       };
       set_invoice_status: {
@@ -3678,6 +4820,30 @@ export type Database = {
         };
         Returns: undefined;
       };
+      set_money_rules: {
+        Args: { multipliers?: Json; rules: Json };
+        Returns: undefined;
+      };
+      set_plus_home: {
+        Args: { address: string; area: string; phone: string };
+        Returns: {
+          address: string;
+          area_id: string;
+          phone: string;
+          updated_at: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_homes";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      set_plus_settings: {
+        Args: { capacity: number; invite_hours: number; swap_fee: number };
+        Returns: undefined;
+      };
       set_purchase_order_status: {
         Args: {
           new_status: Database["public"]["Enums"]["purchase_order_status"];
@@ -3685,6 +4851,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      set_rental_deposit_rate: { Args: { rate: number }; Returns: undefined };
       set_staff_role: {
         Args: {
           new_role: Database["public"]["Enums"]["staff_role"];
@@ -3693,12 +4860,48 @@ export type Database = {
         };
         Returns: undefined;
       };
+      settle_rental: {
+        Args: { damage?: number; target: string };
+        Returns: {
+          amount_due: number | null;
+          damage_charge: number | null;
+          days: number | null;
+          deposit: number;
+          due_at: string | null;
+          due_reminder_at: string | null;
+          id: string;
+          kind: string;
+          late_charge: number | null;
+          late_fee: number;
+          name_ar: string;
+          name_en: string;
+          order_id: string | null;
+          product_id: string | null;
+          refund_due: number | null;
+          requested_at: string;
+          return_swap_id: string | null;
+          returned_at: string | null;
+          settled_at: string | null;
+          staff_note: string | null;
+          started_at: string | null;
+          status: Database["public"]["Enums"]["rental_status"];
+          swap_id: string | null;
+          updated_at: string;
+          user_id: string | null;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "rentals";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       telegram_join_check: {
         Args: { chat: number; member: number };
         Returns: {
           allowed: boolean;
           linked: boolean;
-          needed: Database["public"]["Enums"]["bulb_tier"];
           rule: string;
         }[];
       };
@@ -3710,6 +4913,32 @@ export type Database = {
         }[];
       };
       unlink_telegram: { Args: Record<PropertyKey, never>; Returns: undefined };
+      waive_kit_deposit: {
+        Args: { target: string };
+        Returns: {
+          amount_due: number | null;
+          created_at: string;
+          damage_charge: number | null;
+          deposit: number;
+          deposit_waived: boolean;
+          ends_on: string;
+          extra_days: number;
+          id: string;
+          kit_type: string;
+          order_id: string | null;
+          refund_due: number | null;
+          starts_on: string;
+          status: string;
+          unit_id: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "kit_bookings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       withdraw_trade_in: { Args: { trade_in: string }; Returns: undefined };
     };
     Enums: {
@@ -3727,7 +4956,6 @@ export type Database = {
         | "adjustment"
         | "expiry";
       bulb_status: "pending" | "available" | "void";
-      bulb_tier: "glow" | "shine" | "beam" | "blaze";
       candidate_status:
         | "proposed"
         | "shortlisted"
@@ -3785,7 +5013,8 @@ export type Database = {
         | "active"
         | "returned"
         | "overdue"
-        | "cancelled";
+        | "cancelled"
+        | "kept";
       review_status: "published" | "hidden";
       staff_role:
         | "superadmin"
@@ -3991,7 +5220,6 @@ export const Constants = {
         "expiry",
       ],
       bulb_status: ["pending", "available", "void"],
-      bulb_tier: ["glow", "shine", "beam", "blaze"],
       candidate_status: [
         "proposed",
         "shortlisted",
@@ -4055,6 +5283,7 @@ export const Constants = {
         "returned",
         "overdue",
         "cancelled",
+        "kept",
       ],
       review_status: ["published", "hidden"],
       staff_role: [

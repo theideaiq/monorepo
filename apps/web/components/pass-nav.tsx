@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { isActivePath, navItems } from "./nav-items";
 
 /**
- * The sections of My Pass: a column beside the page from tablet width up,
+ * The sections of Your Pass: a column beside the page from tablet width up,
  * a row that scrolls sideways on phones.
  */
 export const PassNav = () => {

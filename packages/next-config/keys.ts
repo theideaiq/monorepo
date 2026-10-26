@@ -5,7 +5,7 @@ export const keys = () =>
   createEnv({
     client: {
       NEXT_PUBLIC_API_URL: z.url().optional(),
-      // The IDEA Spark: the product, The IDEA Pass and the back office.
+      // The IDEA Business: company pages and the back office.
       NEXT_PUBLIC_APP_URL: z.url(),
       // The IDEA Design: also a host the Pass may send people back to.
       NEXT_PUBLIC_DESIGN_URL: z.url().optional(),

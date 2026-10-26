@@ -5,7 +5,6 @@ import {
   product,
   signUpUser,
   staff,
-  unknownEmail,
 } from "./fixtures";
 
 /**
@@ -77,7 +76,24 @@ export const resetCustomer = async () => {
   const id = await ensureUser(customer.email, customer.name);
   check(await db.from("cart_items").delete().eq("user_id", id));
   check(await db.from("wishlist_items").delete().eq("user_id", id));
+  check(await db.from("plus_homes").delete().eq("user_id", id));
+  check(await db.from("plus_waitlist").delete().eq("user_id", id));
   check(await db.from("notifications").delete().eq("user_id", id));
+  // An adult, so orders need no guardian; earlier rentals are given back.
+  check(
+    await db
+      .from("profiles")
+      .update({ birthday: "1995-04-20" })
+      .eq("id", id)
+      .is("birthday", null)
+  );
+  check(
+    await db
+      .from("orders")
+      .update({ status: "cancelled" })
+      .eq("user_id", id)
+      .in("status", ["pending", "confirmed"])
+  );
   check(
     await db.from("notifications").insert({
       event: "e2e_notice",
@@ -107,22 +123,13 @@ export const resetStaff = async () => {
   }
 };
 
-/**
- * No account yet for the sign-up address (nor for the address that never
- * has one), so signing up creates it.
- */
+/** No Pass yet for the new member's address, so signing in creates it. */
 export const resetSignUpUser = async () => {
-  for (const email of [signUpUser.email, unknownEmail]) {
-    const found = await findUser((u) => u.email === email);
-    if (found) {
-      check(await admin().auth.admin.deleteUser(found.id));
-    }
+  const found = await findUser((u) => u.email === signUpUser.email);
+  if (found) {
+    check(await admin().auth.admin.deleteUser(found.id));
   }
 };
-
-/** Whether an account with this email exists. */
-export const accountExists = async (email: string) =>
-  Boolean(await findUser((u) => u.email === email));
 
 /** An in-stock product of the journeys' own. */
 export const ensureProduct = async () => {

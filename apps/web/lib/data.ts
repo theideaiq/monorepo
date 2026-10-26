@@ -10,10 +10,9 @@ import {
   type ProductOffer,
   productImageUrl,
 } from "@repo/commerce/catalog";
-import type { Tables } from "@repo/database";
+import type { Enums, Tables } from "@repo/database";
 import { log } from "@repo/observability/log";
 import { publicFileUrl } from "@repo/storage";
-import type { PostSection } from "./post";
 import { type Rating, type Review, ratingsById } from "./reviews";
 import { createPublicClient, supabaseUrl } from "./supabase";
 
@@ -229,6 +228,37 @@ export const getPlans = (audience: "business" | "plus") =>
     );
   });
 
+/** Game night kits on offer, for The IDEA Plus page. */
+export const getKitTypes = () =>
+  fallback(
+    "kits",
+    [] as {
+      deposit: number;
+      description_ar: string;
+      description_en: string;
+      extra_day_price: number;
+      id: string;
+      name_ar: string;
+      name_en: string;
+      price: number;
+    }[],
+    async () => {
+      const supabase = createPublicClient();
+      if (!supabase) {
+        return [];
+      }
+      return rows(
+        await supabase
+          .from("kit_types")
+          .select(
+            "id, name_ar, name_en, description_ar, description_en, price, extra_day_price, deposit"
+          )
+          .eq("active", true)
+          .order("position")
+      );
+    }
+  );
+
 // ── Editorial ───────────────────────────────────────────────────────────────
 
 /** Public URL of a cover image in the `editorial` bucket. */
@@ -260,13 +290,14 @@ export type PostSummary = Pick<
   | "updated_at"
 >;
 
-/** Published posts of The IDEA Post, newest first (one section or all). */
+/** Published posts of The IDEA Club, newest first (one section or all). */
 export const getPosts = ({
   limit = 24,
-  section,
+  sections,
 }: {
   limit?: number;
-  section?: PostSection;
+  /** Only these sections (all when missing). */
+  sections?: Enums<"post_section">[];
 } = {}) =>
   fallback("posts", [] as PostSummary[], async () => {
     const supabase = createPublicClient();
@@ -278,8 +309,8 @@ export const getPosts = ({
       .select(POST_SUMMARY)
       .not("published_at", "is", null)
       .lte("published_at", new Date().toISOString());
-    if (section) {
-      query = query.eq("section", section);
+    if (sections) {
+      query = query.in("section", sections);
     }
     return rows(
       await query.order("published_at", { ascending: false }).limit(limit)
@@ -373,4 +404,20 @@ export const getRsvpCount = (eventId: string) =>
     return Number(
       check(await supabase.rpc("event_rsvp_count", { event: eventId }))
     );
+  });
+
+// ── Invites and affiliate links ─────────────────────────────────────────────
+
+/**
+ * What /r/<code> is: an approved affiliate's code, a member's invite code
+ * or neither (null), from `referral_kind()`.
+ */
+export const getReferralKind = (code: string) =>
+  fallback("referral_kind", null as "affiliate" | "invite" | null, async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return null;
+    }
+    const kind = check(await supabase.rpc("referral_kind", { code }));
+    return kind === "affiliate" || kind === "invite" ? kind : null;
   });

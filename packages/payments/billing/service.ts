@@ -259,15 +259,32 @@ export const createBillingService = ({
   ): Promise<RenewalResult> => {
     const end = subscription.currentPeriodEnd ?? current;
 
+    // Cancelled ones end with their paid period; unpaid ones after the grace.
+    if (subscription.cancelAtPeriodEnd && end < current) {
+      await repository.updateSubscription(subscription.id, {
+        status: "canceled",
+      });
+      return { kind: "expired" };
+    }
+
     if (end.getTime() + graceDays * DAY_MS < current.getTime()) {
       await repository.updateSubscription(subscription.id, {
-        status: subscription.cancelAtPeriodEnd ? "canceled" : "expired",
+        status: "expired",
       });
       return { kind: "expired" };
     }
 
     if (subscription.cancelAtPeriodEnd) {
       return { kind: "skipped", pastDue: false };
+    }
+
+    // A plan change chosen by the member applies from this renewal.
+    const planId = subscription.nextPlanId ?? subscription.planId;
+    if (subscription.nextPlanId) {
+      await repository.updateSubscription(subscription.id, {
+        nextPlanId: null,
+        planId,
+      });
     }
 
     const pastDue = end < current && subscription.status === "active";
@@ -279,7 +296,7 @@ export const createBillingService = ({
 
     const [hasPending, plan] = await Promise.all([
       repository.hasPendingPayment(subscription.id),
-      repository.getPlan(subscription.planId),
+      repository.getPlan(planId),
     ]);
     if (hasPending || !plan?.active) {
       return { kind: "skipped", pastDue };
@@ -460,6 +477,9 @@ export const createBillingService = ({
       }
       if (order.status !== "pending") {
         throw new OrderNotPayableError(`Order is ${order.status}`);
+      }
+      if (order.awaitingGuardian) {
+        throw new OrderNotPayableError("Order is waiting for the guardian");
       }
 
       // One open checkout per order, so it can't be paid twice.

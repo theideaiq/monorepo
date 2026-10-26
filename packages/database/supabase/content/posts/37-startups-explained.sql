@@ -41,7 +41,7 @@ begin
 
 ## 3. التسويق: أن يعرفك الناس
 
-مع التنافس الشديد في السوق، صار التسويق ضرورة لإطلاق أي مشروع. اعرف جمهورك جيداً، وابنِ حضوراً واضحاً على وسائل التواصل، واعتمد على [المحتوى](/post/content-writing) و[كتابة الإعلانات](/post/copywriting) لتحكي قصة منتجك. وإن كنت تبيع لشركات أخرى، فاقرأ [دليل تسويق B2B](/post/b2b-marketing).
+مع التنافس الشديد في السوق، صار التسويق ضرورة لإطلاق أي مشروع. اعرف جمهورك جيداً، وابنِ حضوراً واضحاً على وسائل التواصل، واعتمد على [المحتوى](/club/content-writing) و[كتابة الإعلانات](/club/copywriting) لتحكي قصة منتجك. وإن كنت تبيع لشركات أخرى، فاقرأ [دليل تسويق B2B](/club/b2b-marketing).
 
 ## لماذا تفشل أغلب الشركات الناشئة؟
 
@@ -71,9 +71,9 @@ begin
 ## مصادر مفيدة
 
 - [Y Combinator Startup School](https://www.startupschool.org) (مجاني)
-- [تسويق B2B](/post/b2b-marketing)
-- [المهارات الشخصية في العمل](/post/soft-skills)
-- [الحسابات المصرفية في العراق](/post/bank-accounts-in-iraq)
+- [تسويق B2B](/club/b2b-marketing)
+- [المهارات الشخصية في العمل](/club/soft-skills)
+- [الحسابات المصرفية في العراق](/club/bank-accounts-in-iraq)
 - ولتلتقي بروّاد أعمال آخرين: [The IDEA Club](https://t.me/theideaclub)$ar$,
     $en$Whether you're a business veteran or just starting out, you've almost certainly heard the word **startup**. So what does it mean?
 
@@ -105,7 +105,7 @@ A mentor matters just as much: someone who's walked the road before and can save
 
 ## 3. Marketing: getting known
 
-With fierce competition, marketing is essential to launching anything. Know your audience well, build a clear presence on social media, and use [content](/post/content-writing) and [copywriting](/post/copywriting) to tell your product's story. If you sell to other businesses, read [our B2B marketing guide](/post/b2b-marketing).
+With fierce competition, marketing is essential to launching anything. Know your audience well, build a clear presence on social media, and use [content](/club/content-writing) and [copywriting](/club/copywriting) to tell your product's story. If you sell to other businesses, read [our B2B marketing guide](/club/b2b-marketing).
 
 ## Why do most startups fail?
 
@@ -135,9 +135,9 @@ Despite support from NGOs and business incubators, and a market with room for ma
 ## Useful resources
 
 - [Y Combinator Startup School](https://www.startupschool.org) (free)
-- [B2B marketing](/post/b2b-marketing)
-- [Soft skills at work](/post/soft-skills)
-- [Bank accounts in Iraq](/post/bank-accounts-in-iraq)
+- [B2B marketing](/club/b2b-marketing)
+- [Soft skills at work](/club/soft-skills)
+- [Bank accounts in Iraq](/club/bank-accounts-in-iraq)
 - To meet other founders: [The IDEA Club](https://t.me/theideaclub)$en$,
     now() - interval '37 minutes'
   )

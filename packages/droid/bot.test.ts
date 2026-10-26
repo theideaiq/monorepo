@@ -191,7 +191,7 @@ describe("private chats", () => {
   test("links menu has the website, The Club and the app", async () => {
     const { data } = createFakeData();
     const { send, sent } = createTestBot({
-      appUrl: "https://app.theideaiq.com",
+      appUrl: "https://business.theideaiq.com",
       data,
     });
     await send(callback(user(1), "m:links"));
@@ -200,7 +200,7 @@ describe("private chats", () => {
     ).toEqual([
       "https://theideaiq.com/ar",
       "https://t.me/theideaclub",
-      "https://app.theideaiq.com",
+      "https://business.theideaiq.com",
       "m:home",
     ]);
   });
@@ -457,7 +457,7 @@ describe("channel newsletter", () => {
 describe("The Club's join requests", () => {
   const request = (chatId: number, from: ReturnType<typeof user>) => ({
     chat_join_request: {
-      chat: { id: chatId, title: "Beam room", type: "supergroup" as const },
+      chat: { id: chatId, title: "Plus room", type: "supergroup" as const },
       date: NOW_SECONDS,
       from,
       user_chat_id: from.id,
@@ -467,7 +467,7 @@ describe("The Club's join requests", () => {
   test("approves requests that pass the chat's rule", async () => {
     const { data } = createFakeData({
       joins: {
-        "-500:1": { allowed: true, linked: true, needed: "beam", rule: "tier" },
+        "-500:1": { allowed: true, linked: true, rule: "plus" },
       },
     });
     const { send, sent } = createTestBot({ data });
@@ -482,23 +482,18 @@ describe("The Club's join requests", () => {
   test("declines the rest and says how to get in", async () => {
     const { data } = createFakeData({
       joins: {
-        "-500:1": {
-          allowed: false,
-          linked: true,
-          needed: "beam",
-          rule: "tier",
-        },
-        "-500:2": { allowed: false, linked: false, needed: null, rule: "pass" },
+        "-500:1": { allowed: false, linked: true, rule: "plus" },
+        "-500:2": { allowed: false, linked: false, rule: "pass" },
       },
     });
     const { send, sent } = createTestBot({ data });
 
     await send(request(-500, user(1, { language_code: "en" })));
     expect(sent("declineChatJoinRequest")).toHaveLength(1);
-    expect(textOf(sent()[0])).toContain("Beam room is for Beam members and up");
-    expect(buttonsOf(sent()[0])[0]?.url).toBe(
-      "https://theideaiq.com/pass/bulbs"
+    expect(textOf(sent()[0])).toContain(
+      "Plus room is for The IDEA Plus members"
     );
+    expect(buttonsOf(sent()[0])[0]?.url).toBe("https://theideaiq.com/plus");
 
     await send(request(-500, user(2, { language_code: "en" })));
     expect(textOf(sent()[1])).toContain("connect Telegram to The IDEA Pass");

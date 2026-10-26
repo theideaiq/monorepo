@@ -60,6 +60,7 @@ export const createMemoryBillingRepository = (
         currentPeriodEnd: null,
         currentPeriodStart: null,
         id: randomUUID(),
+        nextPlanId: null,
         organizationId: owner.organizationId ?? null,
         planId,
         status: "incomplete",

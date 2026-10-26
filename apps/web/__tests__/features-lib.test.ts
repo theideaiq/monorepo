@@ -127,23 +127,22 @@ describe("notifications", () => {
 
   test("only follows paths on this site", () => {
     expect(notificationHref("/pass/orders/o1")).toBe("/pass/orders/o1");
-    // Links stored before My Pass moved under /pass.
+    // Links stored before Your Pass moved under /pass.
     expect(notificationHref("/orders/o1")).toBe("/pass/orders/o1");
-    expect(notificationHref("/plus?plan=p1")).toBe("/pass/plus?plan=p1");
+    expect(notificationHref("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
+    expect(notificationHref("/sell")).toBe("/pass/orders#sell");
     expect(notificationHref("/events")).toBe("/events");
-    // The IDEA Suite is on The IDEA Spark.
+    // Company pages are on The IDEA Business, at the root of its site.
     expect(
       notificationHref(
         "/business/invoices",
         "ar",
-        "https://spark.theideaiq.com"
+        "https://business.theideaiq.com"
       )
-    ).toBe("https://spark.theideaiq.com/ar/business/invoices");
+    ).toBe("https://business.theideaiq.com/ar/invoices");
     // Links stored while detail pages took a query parameter.
     expect(notificationHref("/orders/view?id=o1")).toBe("/pass/orders/o1");
-    expect(notificationHref("/support/view?id=t%201")).toBe(
-      "/pass/support/t%201"
-    );
+    expect(notificationHref("/support/view?id=t%201")).toBe("/help/t%201");
     expect(notificationHref("/store/product?slug=ps5&add=1")).toBe(
       "/store/ps5?add=1"
     );

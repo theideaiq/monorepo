@@ -53,7 +53,7 @@ export const signIn = async (context: BrowserContext, email: string) => {
   await context.addCookies(await sessionCookies(email, urls.web));
 };
 
-/** My Pass, signed in: the page and its notifications bell. */
+/** Your Pass, signed in: the page and its notifications bell. */
 export const expectSignedInHome = async (page: Page) => {
   await expect(page).toHaveURL(new RegExp(`${urls.web}/pass$`));
   await expect(

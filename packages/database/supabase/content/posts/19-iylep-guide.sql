@@ -64,7 +64,7 @@ begin
 
 لا تنتهي التجربة بالعودة. ستنفّذ مشروعاً مجتمعياً خططت له خلال البرنامج، وتحضر لقاءات للخريجين. والأهم أنك تصبح جزءاً من شبكة خريجي IYLEP، وهي من أقوى شبكات العلاقات وتطوير المهارات في العراق.
 
-إذا كنت تفكّر في الدراسة في الخارج لاحقاً، فهذه التجربة تقوّي ملفك كثيراً. اقرأ أيضاً [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap) و[برامج التبادل الشبابية عبر الإنترنت](/post/youth-exchange-programs).
+إذا كنت تفكّر في الدراسة في الخارج لاحقاً، فهذه التجربة تقوّي ملفك كثيراً. اقرأ أيضاً [خطة التقديم للدراسة في الخارج](/club/study-abroad-roadmap) و[برامج التبادل الشبابية عبر الإنترنت](/club/youth-exchange-programs).
 
 ## روابط رسمية
 
@@ -123,7 +123,7 @@ In the United States the program lasts about four weeks:
 
 The experience doesn't end when you land. You'll carry out the community project you planned during the program and attend alumni gatherings. Most importantly, you join the IYLEP alumni network, one of the strongest networks for connections and growth in Iraq.
 
-If you're thinking about studying abroad later, this experience makes your application much stronger. See also [the study-abroad roadmap](/post/study-abroad-roadmap) and [online youth exchanges](/post/youth-exchange-programs).
+If you're thinking about studying abroad later, this experience makes your application much stronger. See also [the study-abroad roadmap](/club/study-abroad-roadmap) and [online youth exchanges](/club/youth-exchange-programs).
 
 ## Official links
 

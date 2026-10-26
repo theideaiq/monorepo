@@ -15,7 +15,7 @@ begin
 
 ## المنحة أولاً
 
-لا تبنِ خطتك على أنك ستعمل لتدفع الرسوم. ساعات العمل المسموحة للطلبة الدوليين محدودة، والأجر منها يكفي في أفضل الأحوال لجزء من المعيشة، لا للرسوم الجامعية. اجعل هدفك منحة كاملة أو شبه كاملة، إلا إن كانت عائلتك قادرة على تغطية التكاليف. اقرأ [دليل الكشف البنكي وطلبات المنح](/post/bank-statement).
+لا تبنِ خطتك على أنك ستعمل لتدفع الرسوم. ساعات العمل المسموحة للطلبة الدوليين محدودة، والأجر منها يكفي في أفضل الأحوال لجزء من المعيشة، لا للرسوم الجامعية. اجعل هدفك منحة كاملة أو شبه كاملة، إلا إن كانت عائلتك قادرة على تغطية التكاليف. اقرأ [دليل الكشف البنكي وطلبات المنح](/club/bank-statement).
 
 ## قواعد العمل في أشهر الوجهات
 
@@ -37,14 +37,14 @@ begin
 
 ## العمل الحر والتدريس الخصوصي
 
-قد تفكر بالعمل الحر عبر الإنترنت (Freelancing) على منصات مثل Fiverr وUpwork، أو بالتدريس الخصوصي. انتبه: في كثير من البلدان، **العمل المستقل غير مسموح بفيزا الطالب**، حتى لو كان العميل خارج البلد. اسأل مكتب الطلبة الدوليين في جامعتك قبل أن تبدأ. أما قبل السفر، فالعمل الحر من العراق طريقة ممتازة لادّخار المال وبناء الخبرة؛ اقرأ [دليل العمل عن بعد والعمل الحر](/post/remote-work-and-freelancing).
+قد تفكر بالعمل الحر عبر الإنترنت (Freelancing) على منصات مثل Fiverr وUpwork، أو بالتدريس الخصوصي. انتبه: في كثير من البلدان، **العمل المستقل غير مسموح بفيزا الطالب**، حتى لو كان العميل خارج البلد. اسأل مكتب الطلبة الدوليين في جامعتك قبل أن تبدأ. أما قبل السفر، فالعمل الحر من العراق طريقة ممتازة لادّخار المال وبناء الخبرة؛ اقرأ [دليل العمل عن بعد والعمل الحر](/club/remote-work-and-freelancing).
 
 ## كيف تخفّض التكاليف
 
 - قدّم على جامعات تقدّم منحاً سخية للطلبة الدوليين.
-- فكّر في [الكليات المجتمعية](/post/community-colleges) لسنتين ثم الانتقال إلى جامعة.
+- فكّر في [الكليات المجتمعية](/club/community-colleges) لسنتين ثم الانتقال إلى جامعة.
 - قارن تكاليف المعيشة بين المدن، فالفرق كبير.
-- وجهات مثل [ألمانيا](/post/study-in-germany) رسوم جامعاتها الحكومية منخفضة أو معدومة في الغالب، لكن تكاليف المعيشة وإثبات الأموال تبقى مطلوبة.
+- وجهات مثل [ألمانيا](/club/study-in-germany) رسوم جامعاتها الحكومية منخفضة أو معدومة في الغالب، لكن تكاليف المعيشة وإثبات الأموال تبقى مطلوبة.
 
 ## روابط رسمية
 
@@ -53,12 +53,12 @@ begin
 - [كندا: العمل أثناء الدراسة](https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada/work.html)
 - [ألمانيا: DAAD، العمل أثناء الدراسة](https://www.daad.de/en/study-and-research-in-germany/plan-your-studies/costs-of-education-and-living/)
 
-اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap).$ar$,
+اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/club/study-abroad-roadmap).$ar$,
     $en$Most families in Iraq can't pay tuition and living costs abroad, which can reach tens of thousands of dollars a year. That's why we look for scholarships first. Part-time work while you study can help, as long as you know its legal limits well.
 
 ## Scholarships first
 
-Don't build your plan on working to pay tuition. International students can only work limited hours, and the pay covers part of living costs at best, not university fees. Aim for a full or near-full scholarship unless your family can cover the costs. See our guide to [bank statements and financial aid](/post/bank-statement).
+Don't build your plan on working to pay tuition. International students can only work limited hours, and the pay covers part of living costs at best, not university fees. Aim for a full or near-full scholarship unless your family can cover the costs. See our guide to [bank statements and financial aid](/club/bank-statement).
 
 ## Work rules in popular destinations
 
@@ -80,14 +80,14 @@ Working more than you're allowed, or without permission, can lead to your visa b
 
 ## Freelancing and tutoring
 
-You might think of freelancing online on platforms like Fiverr and Upwork, or private tutoring. Be careful: in many countries **self-employment isn't allowed on a student visa**, even if the client is abroad. Ask your international student office before you start. Before you leave, though, freelancing from Iraq is a great way to save money and build experience; see our guide to [remote work and freelancing](/post/remote-work-and-freelancing).
+You might think of freelancing online on platforms like Fiverr and Upwork, or private tutoring. Be careful: in many countries **self-employment isn't allowed on a student visa**, even if the client is abroad. Ask your international student office before you start. Before you leave, though, freelancing from Iraq is a great way to save money and build experience; see our guide to [remote work and freelancing](/club/remote-work-and-freelancing).
 
 ## Cutting costs
 
 - Apply to universities with generous scholarships for international students.
-- Consider [community colleges](/post/community-colleges) for two years, then transfer to a university.
+- Consider [community colleges](/club/community-colleges) for two years, then transfer to a university.
 - Compare living costs between cities; the difference is large.
-- Destinations like [Germany](/post/study-in-germany) charge low or no tuition at most public universities, though living costs and proof of funds still apply.
+- Destinations like [Germany](/club/study-in-germany) charge low or no tuition at most public universities, though living costs and proof of funds still apply.
 
 ## Official links
 
@@ -96,7 +96,7 @@ You might think of freelancing online on platforms like Fiverr and Upwork, or pr
 - [Canada: work while you study](https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada/work.html)
 - [Germany: DAAD, costs and working while studying](https://www.daad.de/en/study-and-research-in-germany/plan-your-studies/costs-of-education-and-living/)
 
-See also: our [study abroad roadmap](/post/study-abroad-roadmap).$en$,
+See also: our [study abroad roadmap](/club/study-abroad-roadmap).$en$,
     now() - interval '9 minutes'
   )
   on conflict (slug) do update set

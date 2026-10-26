@@ -33,13 +33,11 @@ export const customer = {
 };
 /** Holds a staff role; the journey links an authenticator app first. */
 export const staff = { email: "e2e-staff@theidea.test", name: "E2E Staff" };
-/** Signs up through the email form (deleted and re-created each run). */
+/** Gets The IDEA Pass through the email form (deleted and re-created each run). */
 export const signUpUser = {
   email: "e2e-signup@theidea.test",
   name: "E2E Sign-up",
 };
-/** Never has an account: sign-in offers sign-up instead. */
-export const unknownEmail = "e2e-nobody@theidea.test";
 
 /**
  * The local stack's mail catcher (Mailpit; `MAILPIT_URL` from `supabase

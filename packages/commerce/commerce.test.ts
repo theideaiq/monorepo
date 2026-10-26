@@ -1,15 +1,14 @@
 import { describe, expect, test } from "vitest";
 import {
   cartTotals,
-  customerCondition,
   deliveryFee,
   describeAttributes,
   discountPercent,
   governorates,
   localized,
-  orderDiscount,
   planName,
-  showsConditionBulb,
+  showsCondition,
+  toCheckoutQuote,
 } from "./index";
 
 describe("commerce helpers", () => {
@@ -22,114 +21,84 @@ describe("commerce helpers", () => {
     );
   });
 
-  test("mirrors create_order's delivery fee", () => {
-    const settings = { freeShippingThreshold: 100_000, shippingFee: 5000 };
+  test("estimates the cart: lines and the default delivery fee", () => {
+    const settings = { shippingFee: 5000 };
     expect(cartTotals([], settings)).toEqual({
-      bulbsDiscount: 0,
-      bulbsUsed: 0,
       count: 0,
-      discount: 0,
-      discountSource: null,
       shippingFee: 0,
       subtotal: 0,
       total: 0,
     });
-    expect(
-      cartTotals([{ quantity: 2, unitPrice: 20_000 }], settings)
-    ).toMatchObject({ count: 2, shippingFee: 5000, total: 45_000 });
-    expect(
-      cartTotals([{ quantity: 1, unitPrice: 100_000 }], settings)
-    ).toMatchObject({ shippingFee: 0, total: 100_000 });
-  });
-
-  test("delivers free for the member's tier", () => {
-    const settings = { freeShippingThreshold: null, shippingFee: 5000 };
-    const lines = [{ quantity: 1, unitPrice: 40_000 }];
-    const delivery = { fulfilment: "delivery" as const, zoneFee: 5000 };
-    expect(
-      cartTotals(lines, settings, { ...delivery, freeDeliveryFrom: 50_000 })
-    ).toMatchObject({ shippingFee: 5000 });
-    expect(
-      cartTotals(lines, settings, { ...delivery, freeDeliveryFrom: 0 })
-    ).toMatchObject({ shippingFee: 0, total: 40_000 });
-  });
-
-  test("takes 100 IQD off per Bulb, never more than the order", () => {
-    const settings = { freeShippingThreshold: null, shippingFee: 5000 };
-    const lines = [{ quantity: 1, unitPrice: 3000 }];
-    const delivery = { fulfilment: "delivery" as const, zoneFee: 5000 };
-    expect(cartTotals(lines, settings, delivery, 30)).toMatchObject({
-      bulbsDiscount: 3000,
-      bulbsUsed: 30,
-      total: 5000,
-    });
-    expect(cartTotals(lines, settings, delivery, 500)).toMatchObject({
-      bulbsUsed: 80,
-      total: 0,
+    expect(cartTotals([{ quantity: 2, unitPrice: 20_000 }], settings)).toEqual({
+      count: 2,
+      shippingFee: 5000,
+      subtotal: 40_000,
+      total: 45_000,
     });
   });
 
-  test("takes a friend's invite off the first order, capped", () => {
-    const settings = { freeShippingThreshold: null, shippingFee: 5000 };
-    const delivery = { fulfilment: "delivery" as const, zoneFee: 5000 };
+  test("mirrors price_checkout's delivery rules", () => {
+    const settings = { shippingFee: 5000 };
+    const baghdad = {
+      freeFrom: 150_000,
+      fulfilment: "delivery" as const,
+      zoneFee: 5000,
+    };
+    expect(deliveryFee(40_000, settings, baghdad)).toBe(5000);
+    expect(deliveryFee(150_000, settings, baghdad)).toBe(0);
+    expect(deliveryFee(40_000, settings, { ...baghdad, planFree: true })).toBe(
+      0
+    );
     expect(
-      cartTotals([{ quantity: 1, unitPrice: 50_000 }], settings, delivery, 0, {
-        invited: true,
-      })
-    ).toMatchObject({ discount: 5000, total: 50_000 });
-    expect(
-      cartTotals([{ quantity: 1, unitPrice: 400_000 }], settings, delivery, 0, {
-        invited: true,
-      })
-    ).toMatchObject({ discount: 15_000, total: 390_000 });
-  });
-
-  test("takes the larger of an invite and an affiliate's 5%", () => {
-    const settings = { freeShippingThreshold: null, shippingFee: 0 };
-    const lines = (unitPrice: number) => [{ quantity: 1, unitPrice }];
-    expect(
-      cartTotals(lines(100_000), settings, undefined, 0, { affiliate: true })
-    ).toMatchObject({ discount: 5000, discountSource: "affiliate" });
-    expect(
-      cartTotals(lines(100_000), settings, undefined, 0, {
-        affiliate: true,
-        invited: true,
-      })
-    ).toMatchObject({ discount: 10_000, discountSource: "invite" });
-    expect(
-      cartTotals(lines(400_000), settings, undefined, 0, {
-        affiliate: true,
-        invited: true,
-      })
-    ).toMatchObject({ discount: 20_000, discountSource: "affiliate" });
-    expect(orderDiscount(100_000)).toEqual({
-      discount: 0,
-      discountSource: null,
-    });
-  });
-
-  test("prices delivery by zone and makes pickup free", () => {
-    const settings = { freeShippingThreshold: 100_000, shippingFee: 5000 };
-    const lines = [{ quantity: 1, unitPrice: 40_000 }];
-    expect(
-      cartTotals(lines, settings, { fulfilment: "delivery", zoneFee: 9000 })
-    ).toMatchObject({ shippingFee: 9000, total: 49_000 });
-    expect(
-      cartTotals(lines, settings, { fulfilment: "delivery", zoneFee: null })
-    ).toMatchObject({ shippingFee: 5000 });
-    expect(
-      cartTotals(lines, settings, { fulfilment: "pickup", zoneFee: 9000 })
-    ).toMatchObject({ shippingFee: 0, total: 40_000 });
-    expect(
-      deliveryFee(100_000, settings, { fulfilment: "delivery", zoneFee: 9000 })
-    ).toBe(0);
-    expect(
-      deliveryFee(
-        100_000,
-        { freeShippingThreshold: null, shippingFee: 5000 },
-        { fulfilment: "delivery", zoneFee: 9000 }
-      )
+      deliveryFee(40_000, settings, { fulfilment: "delivery", zoneFee: 9000 })
     ).toBe(9000);
+    expect(
+      deliveryFee(40_000, settings, { fulfilment: "delivery", zoneFee: null })
+    ).toBe(5000);
+    expect(
+      deliveryFee(40_000, settings, { fulfilment: "pickup", zoneFee: 9000 })
+    ).toBe(0);
+  });
+
+  test("reads the server's checkout quote", () => {
+    expect(
+      toCheckoutQuote({
+        bulb_rate: 5,
+        bulbs_discount: 0,
+        bulbs_to_earn: 50,
+        bulbs_used: 0,
+        delivery_waived: 5000,
+        discount: 7000,
+        discount_source: "invite",
+        free_delivery: "plan",
+        free_from: 150_000,
+        shipping_fee: 0,
+        subtotal: 100_000,
+        total: 93_000,
+        zone_id: "z1",
+      })
+    ).toEqual({
+      bulbRate: 5,
+      bulbsDiscount: 0,
+      bulbsToEarn: 50,
+      bulbsUsed: 0,
+      deliveryWaived: 5000,
+      discount: 7000,
+      discountSource: "invite",
+      freeDelivery: "plan",
+      freeFrom: 150_000,
+      shippingFee: 0,
+      subtotal: 100_000,
+      total: 93_000,
+      zoneId: "z1",
+    });
+    expect(toCheckoutQuote(null)).toMatchObject({
+      discountSource: null,
+      freeDelivery: null,
+      freeFrom: null,
+      total: 0,
+      zoneId: null,
+    });
   });
 
   test("computes discounts and attribute labels", () => {
@@ -144,19 +113,11 @@ describe("commerce helpers", () => {
     expect(new Set(governorates.map((g) => g.id)).size).toBe(19);
   });
 
-  test("maps stored conditions to the three condition bulbs", () => {
-    expect(customerCondition("new")).toBe("new");
-    expect(customerCondition("open_box")).toBe("like-new");
-    expect(customerCondition("refurbished")).toBe("like-new");
-    expect(customerCondition("used")).toBe("used");
-    expect(showsConditionBulb({ condition: "new", kind: "sale" })).toBe(false);
-    expect(showsConditionBulb({ condition: "new", kind: "rental" })).toBe(
-      false
-    );
-    expect(showsConditionBulb({ condition: "used", kind: "rental" })).toBe(
-      false
-    );
-    expect(showsConditionBulb({ condition: "used", kind: "sale" })).toBe(true);
+  test("shows the condition of items for sale that aren't new", () => {
+    expect(showsCondition({ condition: "new", kind: "sale" })).toBe(false);
+    expect(showsCondition({ condition: "used", kind: "rental" })).toBe(false);
+    expect(showsCondition({ condition: "open_box", kind: "sale" })).toBe(true);
+    expect(showsCondition({ condition: "used", kind: "sale" })).toBe(true);
   });
 });
 

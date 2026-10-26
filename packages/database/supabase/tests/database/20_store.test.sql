@@ -71,6 +71,8 @@ insert into auth.users (id, email, phone, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a4', 'e@example.iq', '9647700000104', '{"full_name":"Editor E"}'),
   ('00000000-0000-0000-0000-0000000000a5', 'p@example.iq', '9647700000105', '{"full_name":"Support P"}'),
   ('00000000-0000-0000-0000-0000000000a6', 'f@example.iq', '9647700000106', '{"full_name":"Finance F"}');
+-- Fixture members are adults (ages: a date of birth is needed to buy).
+update public.profiles set birthday = date '1990-01-01' where birthday is null;
 
 insert into public.staff (user_id, role) values
   ('00000000-0000-0000-0000-0000000000a3', 'superadmin'),
@@ -91,7 +93,8 @@ insert into public.product_variants (id, product_id, label_en, label_ar, attribu
 insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)
 values ('plus-test', 'Plus', 25000, 'month', 'plus', 1, 1);
 
-update public.store_settings set shipping_fee = 5000, free_shipping_threshold = 1000000;
+update public.store_settings set shipping_fee = 5000;
+update public.delivery_zones set free_from = 1000000, plus_free_delivery = false;
 
 -- ── Catalog ─────────────────────────────────────────────────────────────────
 

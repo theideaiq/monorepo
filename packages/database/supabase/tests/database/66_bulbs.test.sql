@@ -51,18 +51,21 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(22);
+select plan(25);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- M is a member, P a Plus member, S support, F finance.
 delete from public.staff;
 truncate public.bulb_entries;
+update public.store_settings set bulb_rate = 3, bulb_half_from = 500000, return_days = 14;
 
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000e1', 'bm@example.iq', '{"full_name":"Member M"}'),
   ('00000000-0000-0000-0000-0000000000e2', 'bp@example.iq', '{"full_name":"Plus P"}'),
   ('00000000-0000-0000-0000-0000000000e3', 'bs@example.iq', '{"full_name":"Support S"}'),
   ('00000000-0000-0000-0000-0000000000e4', 'bf@example.iq', '{"full_name":"Finance F"}');
+-- Fixture members are adults (ages: a date of birth is needed to buy).
+update public.profiles set birthday = date '1990-01-01' where birthday is null;
 
 insert into public.staff (user_id, role) values
   ('00000000-0000-0000-0000-0000000000e3', 'support'),
@@ -72,16 +75,17 @@ insert into public.product_categories (id, slug, name_ar, name_en, bulb_multipli
   ('66000000-0000-0000-0000-0000000000c1', 'bulb-books', 'كتب', 'Books', 1),
   ('66000000-0000-0000-0000-0000000000c2', 'bulb-laptops', 'حواسيب', 'Laptops', 0.5);
 
-insert into public.products (id, slug, name_ar, name_en, price, stock_count, status, kind, category_id) values
-  ('66000000-0000-0000-0000-0000000000a1', 'bulb-book', 'كتاب', 'Book', 100000, 10, 'active', 'sale', '66000000-0000-0000-0000-0000000000c1'),
-  ('66000000-0000-0000-0000-0000000000a2', 'bulb-laptop', 'حاسوب', 'Laptop', 1000000, 10, 'active', 'sale', '66000000-0000-0000-0000-0000000000c2');
+insert into public.products (id, slug, name_ar, name_en, price, stock_count, status, kind, category_id, bulb_multiplier) values
+  ('66000000-0000-0000-0000-0000000000a1', 'bulb-book', 'كتاب', 'Book', 100000, 10, 'active', 'sale', '66000000-0000-0000-0000-0000000000c1', null),
+  ('66000000-0000-0000-0000-0000000000a2', 'bulb-laptop', 'حاسوب', 'Laptop', 1000000, 10, 'active', 'sale', '66000000-0000-0000-0000-0000000000c2', null),
+  ('66000000-0000-0000-0000-0000000000a3', 'bulb-console', 'جهاز', 'Console', 400000, 10, 'active', 'sale', '66000000-0000-0000-0000-0000000000c1', 0.5);
 
-insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)
-values ('plus-bulbs-test', 'Plus Test', 15000, 'month', 'plus', 1, 1);
+insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier, bulb_rate)
+values ('plus-bulbs-test', 'Plus Test', 22750, 'month', 'plus', 2, 2, 5);
 insert into public.subscriptions (user_id, plan_id, status, provider, current_period_start, current_period_end)
 values ('00000000-0000-0000-0000-0000000000e2', 'plus-bulbs-test', 'active', 'wayl', now(), now() + interval '30 days');
 
--- M's order: a book (100,000) and a laptop (1,000,000); P's order: a book.
+-- M's order: a book (100,000) and a laptop (1,000,000); P's orders: a book.
 insert into public.orders (id, user_id, status, subtotal, shipping_fee, total, shipping_address) values
   ('66000000-0000-0000-0000-0000000000b1', '00000000-0000-0000-0000-0000000000e1', 'shipped', 1100000, 5000, 1105000, '{}'),
   ('66000000-0000-0000-0000-0000000000b2', '00000000-0000-0000-0000-0000000000e2', 'shipped', 100000, 0, 100000, '{}'),
@@ -92,25 +96,38 @@ insert into public.order_items (order_id, product_id, name_ar, name_en, unit_pri
   ('66000000-0000-0000-0000-0000000000b2', '66000000-0000-0000-0000-0000000000a1', 'كتاب', 'Book', 100000, 1),
   ('66000000-0000-0000-0000-0000000000b3', '66000000-0000-0000-0000-0000000000a1', 'كتاب', 'Book', 100000, 1);
 
--- ── Tiers ───────────────────────────────────────────────────────────────────
+-- ── Rates ───────────────────────────────────────────────────────────────────
 
-select is(private.bulb_tier_for(0), 'glow'::public.bulb_tier, 'everyone starts at Glow');
-select is(private.bulb_tier_for(250000), 'shine'::public.bulb_tier, 'Shine from 250,000 IQD');
-select is(private.bulb_tier_for(2500000), 'blaze'::public.bulb_tier, 'Blaze from 2,000,000 IQD');
+select is(private.bulb_rate('00000000-0000-0000-0000-0000000000e1'), 3::numeric, 'everyone earns the store rate');
+select is(private.bulb_rate('00000000-0000-0000-0000-0000000000e2'), 5::numeric, 'Plus members earn their plan''s rate');
+select is(
+  private.bulb_multiplier('66000000-0000-0000-0000-0000000000a1', 600000), 0.5,
+  'items over 500,000 IQD earn half'
+);
+select is(
+  private.bulb_multiplier('66000000-0000-0000-0000-0000000000a3', 400000), 0.5,
+  'a product can earn half on its own (consoles)'
+);
+select is(
+  private.bulb_multiplier('66000000-0000-0000-0000-0000000000a2', 1000000), 0.5,
+  'half stays half: a laptop over 500,000 isn''t halved twice'
+);
 
 -- ── Cashback on delivery ────────────────────────────────────────────────────
 
 update public.orders set status = 'delivered' where id = '66000000-0000-0000-0000-0000000000b1';
 
--- 1,105,000 delivered puts M at Beam (5%): book 100,000 × 5% = 50 Bulbs,
--- laptop 1,000,000 × 5% × ½ = 250 Bulbs. Delivery earns nothing.
+-- M earns 3%: book 100,000 × 3% = 30 Bulbs, laptop 1,000,000 × 3% × ½ =
+-- 150 Bulbs. Delivery earns nothing.
 select is(
   (select amount from public.bulb_entries where order_id = '66000000-0000-0000-0000-0000000000b1' and kind = 'purchase'),
-  300, 'a delivered order earns its tier''s cashback, half on laptops'
+  180, 'a delivered order earns the flat rate, half on laptops'
 );
-select is(
-  (select status::text from public.bulb_entries where order_id = '66000000-0000-0000-0000-0000000000b1' and kind = 'purchase'),
-  'pending', 'cashback is pending during the return window'
+select results_eq(
+  $$ select status::text, available_at > now() + interval '13 days' and available_at <= now() + interval '14 days'
+     from public.bulb_entries where order_id = '66000000-0000-0000-0000-0000000000b1' and kind = 'purchase' $$,
+  $$ values ('pending', true) $$,
+  'cashback is pending for the 14-day return window'
 );
 select is(
   (select amount from public.bulb_entries where user_id = '00000000-0000-0000-0000-0000000000e1' and reason = 'first_order'),
@@ -118,10 +135,10 @@ select is(
 );
 
 update public.orders set status = 'delivered' where id = '66000000-0000-0000-0000-0000000000b2';
--- P spent 100,000: Glow 3% + Plus 1% = 4,000 IQD = 40 Bulbs.
+-- P is on a 5% plan: 100,000 × 5% = 5,000 IQD = 50 Bulbs.
 select is(
   (select amount from public.bulb_entries where order_id = '66000000-0000-0000-0000-0000000000b2' and kind = 'purchase'),
-  40, 'Plus members get one point more'
+  50, 'Plus members earn their plan''s rate'
 );
 
 update public.orders set status = 'shipped' where id = '66000000-0000-0000-0000-0000000000b2';
@@ -147,9 +164,9 @@ select is(
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000e1');
 select results_eq(
-  $$ select available, pending, tier::text from public.my_bulbs() $$,
-  $$ values (0::bigint, 320::bigint, 'beam') $$,
-  'members see their pending Bulbs and tier'
+  $$ select available, pending, rate from public.my_bulbs() $$,
+  $$ values (0::bigint, 200::bigint, 3::numeric) $$,
+  'members see their pending Bulbs and rate'
 );
 select throws_ok(
   $$ insert into public.bulb_entries (user_id, amount, kind) values (auth.uid(), 1000, 'adjustment') $$,
@@ -165,7 +182,7 @@ update public.bulb_entries set available_at = now() - interval '1 minute'
 where user_id = '00000000-0000-0000-0000-0000000000e1';
 select is(
   (select available from private.bulb_balance('00000000-0000-0000-0000-0000000000e1')),
-  320::bigint, 'Bulbs become usable when the return window closes'
+  200::bigint, 'Bulbs become usable when the return window closes'
 );
 
 -- ── Trade-ins ───────────────────────────────────────────────────────────────
@@ -191,9 +208,14 @@ select lives_ok(
   $$ select public.adjust_bulbs('00000000-0000-0000-0000-0000000000e1', -30, 'Damaged sleeve goodwill reversal') $$,
   'support adjusts Bulbs with a reason'
 );
-select is(
-  (select available from public.member_bulbs('00000000-0000-0000-0000-0000000000e1')),
-  600::bigint, 'support sees a member''s balance'
+select results_eq(
+  $$ select available, rate from public.member_bulbs('00000000-0000-0000-0000-0000000000e1') $$,
+  $$ values (480::bigint, 3::numeric) $$,
+  'support sees a member''s balance and rate'
+);
+select throws_ok(
+  $$ select public.set_money_rules('{"bulb_rate": 4}') $$,
+  '42501', null, 'only finance sets the money rules'
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000e4', 'aal2');
@@ -202,12 +224,15 @@ select ok(
   'finance sees what members hold'
 );
 select lives_ok(
-  $$ select public.set_bulb_rates(2, '{"66000000-0000-0000-0000-0000000000c1": 1.5}') $$,
-  'finance sets the Plus bonus and category multipliers'
+  $$ select public.set_money_rules('{"bulb_rate": 2.5, "return_days": 10}', '{"66000000-0000-0000-0000-0000000000c1": 1.5}') $$,
+  'finance sets the rate, the return window and category multipliers'
 );
-select is(
-  (select bulb_multiplier from public.product_categories where id = '66000000-0000-0000-0000-0000000000c1'),
-  1.5::numeric(3, 2), 'the multiplier is saved'
+select results_eq(
+  $$ select s.bulb_rate, s.return_days, s.max_giveaway_rate, c.bulb_multiplier
+     from public.store_settings s, public.product_categories c
+     where c.id = '66000000-0000-0000-0000-0000000000c1' $$,
+  $$ values (2.5::numeric(4, 2), 10::smallint, 20::numeric(4, 2), 1.5::numeric(3, 2)) $$,
+  'the rules given are saved and the others kept'
 );
 
 -- ── Expiry ──────────────────────────────────────────────────────────────────

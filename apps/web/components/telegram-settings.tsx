@@ -17,7 +17,7 @@ import {
 } from "@/lib/telegram-login";
 
 /**
- * My Pass → Settings: the linked Telegram account (sign in with it, order
+ * Your Pass → Settings: the linked Telegram account (sign in with it, order
  * updates from the bot) or a button to connect one (10 Bulbs the first
  * time).
  */

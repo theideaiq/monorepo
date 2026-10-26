@@ -1,28 +1,25 @@
 -- Local development seed (runs after migrations on `supabase db reset`).
 -- Prices are in IQD (whole dinars). Production plans and the catalog are
--- managed in the back office (/admin in The IDEA Spark).
+-- managed in the back office (/staff on The IDEA Business).
 
 insert into public.plans
   (id, name, description, amount, currency, billing_interval, audience, rental_slots, tier, features_ar, features_en, position)
 values
-  ('plus-essential', 'Plus Essential', 'One item at a time', 15000, 'IQD', 'month', 'plus', 1, 1,
-    '{"غرض واحد في كل مرة","توصيل داخل بغداد"}', '{"One item at a time","Delivery in Baghdad"}', 1),
-  ('plus-extra', 'Plus Extra', 'Two items at a time', 25000, 'IQD', 'month', 'plus', 2, 2,
-    '{"غرضان في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة"}', '{"Two items at a time","Free delivery","Early access to new releases"}', 2),
-  ('plus-premium', 'Plus Premium', 'Four items at a time', 40000, 'IQD', 'month', 'plus', 4, 3,
-    '{"أربعة أغراض في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة","دعوات لفعاليات النادي"}',
-    '{"Four items at a time","Free delivery","Early access to new releases","Invitations to Club events"}', 3),
-  ('suite-business-monthly', 'The IDEA Suite', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
+  ('business-monthly', 'The IDEA Business', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
     '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
 
+-- The Plus plans come from the migrations, switched off until Plus
+-- launches; locally they're on.
+update public.plans set active = true where audience = 'plus';
+
 insert into public.product_categories (id, slug, name_ar, name_en, position) values
-  ('50000000-0000-0000-0000-000000000001', 'gaming', 'الألعاب', 'Gaming', 1),
-  ('50000000-0000-0000-0000-000000000002', 'laptops', 'الحواسيب', 'Laptops', 2),
-  ('50000000-0000-0000-0000-000000000003', 'phones', 'الهواتف', 'Phones', 3),
-  ('50000000-0000-0000-0000-000000000004', 'books', 'الكتب', 'Books', 4),
-  ('50000000-0000-0000-0000-000000000005', 'music', 'الموسيقى', 'Music', 5),
-  ('50000000-0000-0000-0000-000000000006', 'films', 'الأفلام', 'Films', 6)
+  ('50000000-0000-0000-0000-000000000005', 'music', 'الموسيقى', 'Music', 1),
+  ('50000000-0000-0000-0000-000000000001', 'games', 'الألعاب', 'Games', 2),
+  ('50000000-0000-0000-0000-000000000004', 'books', 'الكتب', 'Books', 3),
+  ('50000000-0000-0000-0000-000000000006', 'films', 'الأفلام', 'Films', 4),
+  ('50000000-0000-0000-0000-000000000003', 'audio', 'الصوتيات', 'Audio', 5),
+  ('50000000-0000-0000-0000-000000000002', 'tech', 'التقنية', 'Tech', 6)
 on conflict (id) do nothing;
 
 insert into public.products
@@ -32,7 +29,7 @@ values
     'بلايستيشن ٥ سليم', 'PlayStation 5 Slim',
     'جهاز بلايستيشن ٥ بإصدار سليم مع يد تحكم DualSense.', 'PlayStation 5 Slim console with a DualSense controller.',
     720000, 780000, 8, true, '{"Storage": "1 TB", "Warranty": "1 year"}'),
-  ('logitech-g502', 'sale', 'active', '50000000-0000-0000-0000-000000000001',
+  ('logitech-g502', 'sale', 'active', '50000000-0000-0000-0000-000000000002',
     'فأرة لوجيتك G502', 'Logitech G502 Mouse',
     'فأرة ألعاب سلكية بمستشعر HERO.', 'Wired gaming mouse with the HERO sensor.',
     120000, 180000, 25, true, '{"DPI": "25,600"}'),
@@ -58,6 +55,10 @@ values
     20000, null, 2, false, '{"Language": "Arabic"}')
 on conflict (slug) do nothing;
 
+-- PEGI age ratings for the games.
+update public.products set age_rating = 16 where slug = 'elden-ring-ps5';
+update public.products set age_rating = 3 where slug = 'ea-fc-26-ps5';
+
 -- The product's default variant becomes the disc edition; the digital one
 -- is a second variant.
 update public.product_variants v set
@@ -77,7 +78,7 @@ on conflict (sku) do nothing;
 
 insert into public.posts (slug, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, published_at) values
   ('welcome-to-the-idea', 'مرحباً بكم في The IDEA', 'Welcome to The IDEA',
-    'متجر وتأجير وأكاديمية وحلول للشركات في حساب واحد.', 'A store, rentals, an academy and business solutions in one account.',
+    'متجر وتأجير ونادٍ وحلول للشركات ببطاقة واحدة.', 'A store, rentals, a club and business solutions with one Pass.',
     'نطلق اليوم منصة The IDEA الجديدة.', 'Today we are launching the new The IDEA platform.', now())
 on conflict (slug) do nothing;
 
@@ -104,7 +105,7 @@ insert into public.chart_of_accounts (code, name, type, category) values
   ('3000', 'Owner''s equity', 'equity', null),
   ('4000', 'Store sales', 'revenue', null),
   ('4100', 'Plus memberships', 'revenue', null),
-  ('4200', 'Suite services', 'revenue', null),
+  ('4200', 'Business services', 'revenue', null),
   ('5000', 'Cost of goods sold', 'expense', 'cogs'),
   ('6000', 'Salaries', 'expense', null),
   ('6100', 'Rent', 'expense', null),
@@ -133,3 +134,20 @@ update public.store_settings set
 
 -- Affiliate commission on media (see the affiliates migration).
 update public.product_categories set affiliate_rate = 8 where slug in ('books', 'music');
+
+-- Single-item rent rates (program revision v1, step 5a).
+insert into public.rental_rates (category_id, price, days, late_fee) values
+  ('50000000-0000-0000-0000-000000000001', 9750, 7, 1750),
+  ('50000000-0000-0000-0000-000000000004', 3750, 14, 500),
+  ('50000000-0000-0000-0000-000000000006', 2750, 7, 500)
+on conflict (category_id) do nothing;
+
+-- Game night kits ready to book locally (production adds them in the back
+-- office when each kit is ready).
+insert into public.kit_units (kit_type, label) values
+  ('ps5', 'PS5 kit 1'), ('ps5', 'PS5 kit 2'),
+  ('switch', 'Switch kit 1'), ('switch', 'Switch kit 2'),
+  ('retro', 'Retro kit 1')
+on conflict do nothing;
+update public.kit_types set games_category_id = (select id from public.product_categories where slug = 'games')
+where id = 'ps5';

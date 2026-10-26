@@ -1,88 +1,124 @@
-## 1. Introduction
+## 1. About these terms
 
-Welcome to The IDEA. These Terms of Service ("Terms") are a legally binding agreement between you, whether personally or on behalf of an entity ("you"), and The IDEA IQ Inc. ("The IDEA", "we", "us" or "our"), based in Baghdad, Iraq.
+These terms are an agreement between you and The IDEA IQ Inc. ("The IDEA", "we", "us"), based in Baghdad, Iraq. They apply to theideaiq.com, The IDEA's iOS and Android apps, The IDEA Droid on Telegram and WhatsApp, and everything we offer through them: The IDEA Store, The IDEA Plus, The IDEA Club, The IDEA Pass and The IDEA Business (together, "the service").
 
-They apply to our website (theideaiq.com), The IDEA app on the web, iOS and Android, our Telegram bot Droid (@TheIdeaDroidBot) and our community rooms, and every service we offer through them: the Megastore, The IDEA Plus, the Academy, The IDEA Suite, The Club, events and the Journal (together, the "Service").
+By using the service you agree to these terms and to the policies that complete them:
 
-By accessing or using the Service you confirm that you have read, understood and agree to be bound by these Terms and by the policies they refer to: the [Privacy policy](/legal/privacy), the [Refund and returns policy](/legal/refund), the [Code of conduct](/legal/conduct) and the [Community guidelines](/legal/community). **If you do not agree, do not use the Service.**
+- [Privacy](/legal/privacy)
+- [Delivery](/legal/delivery)
+- [Returns and refunds](/legal/returns)
+- [Condition and warranty](/legal/condition)
+- [The IDEA Plus](/legal/plus)
+- [Rewards](/legal/rewards) (Bulbs, invites and affiliates)
+- [Sell to us](/legal/sell)
+- [Club rules](/legal/club)
+- [Surveys](/legal/surveys)
+- [The IDEA Business](/legal/business)
+- [Accessibility](/legal/accessibility), [Security](/legal/security) and [Copyright](/legal/copyright)
 
-## 2. Eligibility
+If you do not agree, please do not use the service. Nothing in these terms limits the rights you have under Iraqi law, including the Consumer Protection Law (Law No. 1 of 2010).
 
-The Service is intended for people who are at least 13 years old. People under 13 may not use or register for the Service. If you are a minor where you live, you may use the Service only with the permission and supervision of a parent or guardian, who accepts these Terms on your behalf. Paid services (orders, The IDEA Plus and business plans) require you to be legally able to enter into a contract.
+## 2. Who can use the service
 
-## 3. Your account
+The IDEA Pass is open to anyone aged 13 or over. People under 13 may not have The IDEA Pass. Iraq's age of majority is 18, so some actions need a guardian or are for adults only:
 
-Some features, such as ordering, The IDEA Plus rentals, RSVPs, Journal submissions and The IDEA Suite, require The IDEA Pass (your account). You agree to:
+| Action | Ages 13–17 | 18 and over |
+| --- | --- | --- |
+| The IDEA Pass, browsing, the Club feed and Telegram group, Bulbs | Yes | Yes |
+| Buying and single-item rentals | Yes, once a guardian approves each purchase; cash on delivery is handed to an adult | Yes |
+| The IDEA Plus | Yes, approved by a guardian | Yes |
+| Games rated PEGI 18 and other mature items | No: hidden and not sold | Yes |
+| Game night kits | Booked by an adult | Yes |
+| Events | Yes; under-16s come with an adult | Yes |
+| Sell to us, affiliates, surveys and paid survey rewards | No | Yes |
 
-- provide true, accurate and complete information, and keep it up to date;
-- keep your sign-in details confidential, and accept responsibility for all activity on your account;
-- tell us promptly at [hi@theideaiq.com](mailto:hi@theideaiq.com) if you believe your account has been used without your permission.
+**Guardians.** A guardian is an adult (18 or over) with their own The IDEA Pass. The teen adds the guardian in Pass → Settings, and the guardian approves the link from their own Pass. The guardian then approves each purchase and The IDEA Plus from their own Pass, and accepts these terms for the teen. A guardian can remove the link at any time; the teen's purchases then wait until a guardian is linked again.
 
-**Identity verification.** To prevent fraud, we may ask The IDEA Plus members to confirm their identity (for example with a national ID card or passport) before delivering rented items. We may refuse or cancel a rental if verification fails.
+We ask for a date of birth when you first sign in. Giving a false date of birth breaks these terms.
 
-You can delete your account at any time from the app's settings. We may suspend or close accounts that break these Terms.
+## 3. The IDEA Pass
 
-## 4. Organizations (The IDEA Suite)
+The IDEA Pass is your membership: one per person, free, with your member card, Bulbs, orders and settings.
 
-A company can create an organization in the app, invite members and give them roles. The person who creates an organization or subscribes it to a business plan confirms that they are authorized to act for the company. The company is responsible for the activity of its members within the organization and for paying its plan and orders.
+- **Signing in.** You sign in with a one-time code sent to your email, or with "Continue with Telegram" once your Telegram is linked. There are no passwords. A new email address gets a new Pass.
+- **Keep it yours.** Never share a sign-in code: The IDEA will never ask you for one. Keep your email secure, because whoever controls it can sign in. Tell us at once at [hi@theideaiq.com](mailto:hi@theideaiq.com) if you think someone else has used your Pass.
+- **The card.** Your card shows a QR code that changes every 30 seconds. It is for you; showing someone else's card at our counter or a partner is not allowed.
+- **Accurate details.** Keep your name, email and delivery details true and up to date.
+- **Verified Pass.** For some rentals and cash payments we check your identity (for example with a national ID card or passport). A Pass that passes this check is a "verified Pass". We may refuse a rental if the check fails.
+- **Deleting your Pass.** You can delete your Pass at any time in Pass → Settings. See [Privacy](/legal/privacy) for what happens to your data.
 
-## 5. Orders from the Megastore
+We may suspend or close a Pass that breaks these terms, for example for fraud, abuse of rewards or behaviour that breaks the [Club rules](/legal/club). Where we can, we tell you why first and give you a chance to respond.
 
-- Product pages show the price in Iraqi dinars (IQD), the condition (new, open box, refurbished or used) and availability. We work to keep this information accurate, but errors can happen; if a price or description is wrong, we will contact you and you may cancel the order for a full refund.
-- An order is confirmed only once its payment succeeds. Prices are calculated by our system when you check out, together with any delivery fee, and shown before you pay.
-- We deliver to the 19 governorates of Iraq. Delivery times are estimates.
-- Products are sold by The IDEA. Manufacturer warranties, where they exist, are passed on to you as described on the product page.
+## 4. Orders from The IDEA Store
 
-## 6. The IDEA Plus membership and rentals
+- **Product details.** Every product page shows its price in Iraqi dinars (IQD), its condition (New, Open box, Refurbished or Used; see [Condition and warranty](/legal/condition)), its availability and its details in Arabic. Games show their PEGI age rating.
+- **Prices.** The price you pay is calculated by our system at checkout, with any delivery fee, discount and Bulbs, and shown before you confirm. If a price or description is clearly wrong, we will contact you and you may cancel for a full refund.
+- **When an order is confirmed.** An order paid online is confirmed once the payment succeeds. A cash order is confirmed when you place it and paid on delivery or at pickup.
+- **Receipts.** Every order gets a receipt with the price, date and specifications of what you bought, in Pass → Orders and by email.
+- **Discounts.** At most 20% of an order's value is given away in discounts and rewards combined (invite or affiliate discounts, free delivery and the Bulbs it earns). When more would apply, the discount shrinks first, then the Bulbs earned.
+- **Personal use.** We sell to customers for their own use. We may limit quantities or cancel orders that look like reselling or fraud, with a full refund.
 
-The IDEA Plus is a monthly membership that lets you rent games, books and movies. Each plan allows a set number of items at a time ("rental slots").
+Delivery, pickup and refused deliveries are covered in [Delivery](/legal/delivery); returns and refunds in [Returns and refunds](/legal/returns).
 
-- **Using rentals.** Rented items remain our property. Use them with care and only for personal, non-commercial use. Do not copy, resell, lend or modify them.
-- **Returns.** Return each item in the condition you received it, normal wear excepted, when you are done with it or when your membership ends. Late returns may count against your rental slots until the item is back.
-- **Loss and damage.** You are responsible for items while they are in your possession. If an item is lost, stolen or damaged beyond normal wear, we may charge you a fair replacement or repair cost, which we will explain before charging.
-- **Unreturned items.** If an item is not returned within 14 days of the end of your membership, or within 14 days of our reminder, and you do not respond to us, we may charge its replacement cost and take any lawful steps to recover it.
-- **Cancellation.** You can cancel your membership at any time in the app; it stays active until the end of the period you have paid for. See the [Refund and returns policy](/legal/refund).
+## 5. Payments
 
-## 7. Payments and billing
+- **Online payments** go through our payment partner **Wayl**, which supports cards and local wallets. We never see or store your full card or wallet details.
+- **Cash** on delivery or at pickup is offered on orders up to 500,000 IQD. Larger orders are paid online or at pickup.
+- **Bulbs** can pay for all or part of an order, delivery included (see [Rewards](/legal/rewards)).
+- **The IDEA Plus** is billed monthly (or yearly) through Wayl until you cancel (see [The IDEA Plus](/legal/plus)).
 
-Payments are processed by our payment partner **Wayl**, which supports local payment methods in Iraq. By paying, you authorize us and Wayl to charge the amounts shown to you. Memberships and business plans renew automatically each billing period until you cancel. We never see or store your full card or wallet credentials.
+By paying, you authorise us and Wayl to charge the amount shown to you.
 
-## 8. The Academy, events and the Journal
+## 6. Renting, Plus, rewards and selling to us
 
-- **Academy programs** may have their own agreement, which applies in addition to these Terms.
-- **Events.** An RSVP helps us plan; it does not guarantee a place if an event reaches its capacity. Attendees must follow the [Code of conduct](/legal/conduct).
-- **Journal submissions.** You keep the copyright in the work you submit. You confirm that it is your own original work and that publishing it does not infringe anyone's rights. If your work is accepted, you grant us a non-exclusive, royalty-free licence to publish it in the Journal (in print and digital form, including PDF) and to show it on our website and channels with your name. Editors review submissions without seeing the author's name and their decisions are final.
+- [The IDEA Plus](/legal/plus) covers the membership, single-item rentals, game night kits and deposits.
+- [Rewards](/legal/rewards) covers Bulbs, invites and affiliates.
+- [Sell to us](/legal/sell) covers selling or trading in your items.
 
-## 9. Community spaces and Droid
+Rented items always remain our property.
 
-The Club's rooms on Telegram, comments and other shared spaces are governed by the [Community guidelines](/legal/community). Our moderators keep those rooms safe with Telegram's own tools and may restrict or ban accounts that break the rules. Droid, our Telegram bot, searches the store, answers common questions and, for members who link Telegram to The IDEA Pass, shows their orders and Bulbs.
+## 7. The IDEA Club and what you share
 
-## 10. Intellectual property
+The Club's feed, events, Telegram group and surveys follow the [Club rules](/legal/club) and, for surveys, [Surveys](/legal/surveys). Reviews, photos and work you submit stay yours; you give us a licence to show them as described in [Copyright](/legal/copyright). Reviews must be honest and about a product you bought or rented.
 
-Unless stated otherwise, the Service and its content (software, designs, text, graphics, logos and the "The IDEA" name and marks) belong to us or our licensors and are protected by copyright and trademark law. Game titles, trade names and artwork of third-party products belong to their respective owners. You may not copy, reproduce or exploit our content without our written permission.
+## 8. The IDEA Droid and other services
 
-## 11. Prohibited activities
+The IDEA Droid, our bot on Telegram and "Ask Droid" on the site, searches the store, answers common questions and, once you link Telegram, shows your orders and Bulbs. Its answers are for help only; the order pages and these policies decide. If you turn them on, we also send order updates on WhatsApp and Telegram. Telegram, WhatsApp, Wayl and our couriers are run by other companies under their own terms.
 
-You agree not to:
+## 9. Things you must not do
 
-- deceive, defraud or mislead us or other users, or place orders you do not intend to pay for;
-- interfere with or try to bypass the Service's security, or access accounts or data that are not yours;
-- use bots, scrapers or other automated means to access the Service or collect data, except as we allow;
-- use the Service for anything unlawful, or to harass, abuse or harm others;
-- resell items or rentals obtained through the Service without our permission.
+- deceive or defraud us or others, place orders you do not mean to pay for, or refuse deliveries repeatedly;
+- create more than one Pass to collect rewards or discounts, or invite yourself;
+- copy, resell or lend rented items, or resell items bought from us as a business without our agreement;
+- try to break or bypass the service's security, or reach data that is not yours (report weaknesses as described in [Security](/legal/security));
+- use bots or scrapers on the service, except as we allow;
+- use the service for anything unlawful, or to harass or harm anyone.
 
-## 12. Disclaimer and limitation of liability
+## 10. Our content and marks
 
-We provide the Service "as is" and "as available". To the extent permitted by law, we disclaim all warranties not expressly stated in these Terms. To the extent permitted by law, we are not liable for indirect, incidental or consequential damages arising from your use of the Service, and our total liability for any claim is limited to the amount you paid us for the order, rental or plan concerned. Nothing in these Terms limits rights you have under Iraqi consumer protection law.
+The service and its content (software, designs, text, photos, The IDEA's name and logo, the bulb and The IDEA Droid) belong to us or our licensors. Game, album and film names and artwork belong to their owners and are shown only to identify the products. You may not copy our content without our written permission.
 
-## 13. Changes to these Terms
+## 11. Liability
 
-We may update these Terms from time to time. We will show the date of the latest update at the top of this page and, for significant changes, notify you in the app or by email. If you keep using the Service after a change takes effect, you accept the updated Terms.
+We provide the service with reasonable care and skill. To the extent the law allows:
 
-## 14. Governing law
+- we are not liable for indirect or consequential losses, or for delays caused by events outside our control (such as outages, weather, road closures or courier delays);
+- our total liability for a claim is limited to what you paid us for the order, rental or plan concerned.
 
-These Terms are governed by the laws of the Republic of Iraq, in particular the Civil Code (Law No. 40 of 1951), the Consumer Protection Law (Law No. 1 of 2010) and the Electronic Signature and Electronic Transactions Law (Law No. 78 of 2012). Disputes are subject to the exclusive jurisdiction of the courts of Baghdad, Iraq. Before going to court, please contact us so we can try to resolve the issue together.
+Nothing here limits liability that cannot be limited under Iraqi law, or your rights to a refund, repair or replacement described in our policies.
+
+## 12. Changes
+
+We may change these terms and policies. The date at the top of each page shows its latest version. We will tell you about significant changes on the site or by email before they take effect. If you keep using the service after that, the new version applies.
+
+## 13. Law and disputes
+
+These terms are governed by the laws of the Republic of Iraq, including the Civil Code (Law No. 40 of 1951), the Consumer Protection Law (Law No. 1 of 2010) and the Electronic Signature and Electronic Transactions Law (Law No. 78 of 2012). Please contact us first so we can try to resolve any problem together. Disputes are for the courts of Baghdad, Iraq.
+
+## 14. Language
+
+These terms are published in Arabic and English. Both say the same thing; if they ever differ, the Arabic version applies.
 
 ## Contact us
 
-Questions or complaints about the Service: [hi@theideaiq.com](mailto:hi@theideaiq.com) · The IDEA IQ Inc., Baghdad, Iraq.
+[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or The IDEA Droid on Telegram · The IDEA IQ Inc., Baghdad, Iraq.

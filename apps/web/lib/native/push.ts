@@ -1,5 +1,8 @@
 import type { Database } from "@repo/database";
-import { safeNextPath } from "@repo/internationalization/app-paths";
+import {
+  currentAppPath,
+  safeNextPath,
+} from "@repo/internationalization/app-paths";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { callApi } from "../api";
 import { detectPlatform } from "../platform";
@@ -59,7 +62,7 @@ export const registerPushNotifications = async ({
         const link = safeNextPath(
           (notification.data as { link?: string } | undefined)?.link
         );
-        onOpen(link ?? "/");
+        onOpen(link ? currentAppPath(link) : "/");
       }
     ),
   ]);

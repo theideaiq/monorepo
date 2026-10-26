@@ -37,7 +37,7 @@ begin
 
 القبول في الكلية شبه مضمون غالباً، لكن الفيزا ليست مضمونة. ستحصل من الكلية على وثيقة القبول للفيزا (مثل I-20 في أمريكا أو رسالة القبول في كندا)، ثم تحتاج إلى إقناع السفارة في المقابلة بأن:
 - هدفك الدراسة فعلاً، ولديك خطة أكاديمية واضحة.
-- لديك تمويل كافٍ (اقرأ [دليل الكشف البنكي](/post/bank-statement)).
+- لديك تمويل كافٍ (اقرأ [دليل الكشف البنكي](/club/bank-statement)).
 - لديك روابط ببلدك.
 
 حضّر لمقابلة الفيزا جيداً، وكن صادقاً وواضحاً.
@@ -56,7 +56,7 @@ begin
 - [Scholarships360: منح الكليات المجتمعية](https://scholarships360.org/scholarships/community-college-scholarships/)
 - [كندا: الدراسة في كندا](https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada.html)
 
-اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap) و[تمويل الدراسة والعمل أثناءها](/post/paying-for-study-abroad).$ar$,
+اقرأ أيضاً: [خطة التقديم للدراسة في الخارج](/club/study-abroad-roadmap) و[تمويل الدراسة والعمل أثناءها](/club/paying-for-study-abroad).$ar$,
     $en$If you want to study in North America, the US and Canada offer many paths after secondary school, and community colleges are one of the smartest for students from Iraq.
 
 ## The qualifications on offer
@@ -83,7 +83,7 @@ Mostly public colleges offering shorter, practical programs. They're known for b
 
 Admission is close to guaranteed, but the visa isn't. The college gives you your visa admission document (such as the I-20 in the US or a letter of acceptance in Canada), and then you have to convince the embassy in your interview that:
 - You genuinely intend to study and have a clear academic plan.
-- You have enough funding (see our [bank statement guide](/post/bank-statement)).
+- You have enough funding (see our [bank statement guide](/club/bank-statement)).
 - You have ties to your home country.
 
 Prepare well for the interview, and be honest and clear.
@@ -102,7 +102,7 @@ Community colleges usually have no early application round, and admission is oft
 - [Scholarships360: community college scholarships](https://scholarships360.org/scholarships/community-college-scholarships/)
 - [Canada: study in Canada](https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada.html)
 
-See also: our [study abroad roadmap](/post/study-abroad-roadmap) and [paying for study abroad](/post/paying-for-study-abroad).$en$,
+See also: our [study abroad roadmap](/club/study-abroad-roadmap) and [paying for study abroad](/club/paying-for-study-abroad).$en$,
     now() - interval '10 minutes'
   )
   on conflict (slug) do update set

@@ -24,8 +24,9 @@ vi.mock("@/lib/hosted-checkout", () => ({
 
 const { Checkout } = await import("@/components/screens/checkout");
 const { PurchasePanel } = await import("@/components/store/purchase-panel");
-const { Events } = await import("@/components/screens/events");
-const { Plus } = await import("@/components/screens/plus");
+const { YourEvents } = await import("@/components/screens/events");
+const { YourPlus } = await import("@/components/screens/plus");
+const { RsvpButton } = await import("@/components/rsvp-button");
 const { OrderDetail } = await import("@/components/screens/order-detail");
 const { RequireOnboarding } = await import("@/components/gates");
 const { OrganizationProvider } = await import(
@@ -140,9 +141,30 @@ const CASH_ON_DELIVERY = /Cash on delivery/;
 const PLACE_CASH_ORDER = /Place order/;
 
 describe("checkout", () => {
+  const quote = (overrides: Record<string, unknown> = {}) => ({
+    data: {
+      bulb_rate: 3,
+      bulbs_discount: 0,
+      bulbs_to_earn: 15,
+      bulbs_used: 0,
+      delivery_waived: 0,
+      discount: 0,
+      discount_source: null,
+      free_delivery: null,
+      free_from: 150_000,
+      shipping_fee: 5000,
+      subtotal: 50_000,
+      total: 55_000,
+      zone_id: "zone-baghdad",
+      ...overrides,
+    },
+    error: null,
+  });
+
   const setup = (
     createOrder: { data: unknown; error: unknown },
-    settings: Record<string, unknown> = {}
+    settings: Record<string, unknown> = {},
+    checkoutQuote = quote()
   ) =>
     fakeDb({
       results: {
@@ -176,13 +198,15 @@ describe("checkout", () => {
         "orders.select": { data: [order()], error: null },
         "profiles.select": { data: [profile], error: null },
         "store_settings.select": {
-          data: [
-            { free_shipping_threshold: null, shipping_fee: 5000, ...settings },
-          ],
+          data: [{ cash_limit: 500_000, shipping_fee: 5000, ...settings }],
           error: null,
         },
       },
-      rpcs: { create_order: createOrder, my_bulbs: { data: [], error: null } },
+      rpcs: {
+        checkout_quote: checkoutQuote,
+        create_order: createOrder,
+        my_bulbs: { data: [], error: null },
+      },
     });
 
   const chooseBaghdad = () => {
@@ -255,6 +279,40 @@ describe("checkout", () => {
     expect(sessionStorage.getItem("billing:pending-checkout")).toContain(
       "ref-1"
     );
+  });
+
+  test("shows the server's quote once the zone is chosen", async () => {
+    const db = setup(
+      { data: { id: "o1" }, error: null },
+      {},
+      quote({
+        bulbs_to_earn: 25,
+        delivery_waived: 5000,
+        discount: 2500,
+        discount_source: "invite",
+        free_delivery: "plan",
+        shipping_fee: 0,
+        total: 47_500,
+      })
+    );
+    renderScreen(<Checkout />, db.supabase);
+
+    await screen.findByLabelText("Full name");
+    chooseBaghdad();
+    expect(
+      await screen.findByText("Free delivery with your Plus plan.")
+    ).toBeTruthy();
+    expect(
+      screen.getByText("You'll earn 25 Bulbs once it's delivered.")
+    ).toBeTruthy();
+    expect(
+      db.rpcCalls.find((call) => call.name === "checkout_quote")?.args
+    ).toMatchObject({
+      delivery_zone: "zone-baghdad",
+      fulfilment: "delivery",
+      payment_method: "online",
+      use_bulbs: 0,
+    });
   });
 
   test("places a cash order without opening the payment page", async () => {
@@ -390,11 +448,21 @@ describe("events", () => {
         my_calendar_token: { data: "tok-1", error: null },
       },
     });
-    renderScreen(<Events />, db.supabase);
+    renderScreen(
+      <>
+        <RsvpButton eventId="e1" full={false} />
+        <YourEvents />
+      </>,
+      db.supabase
+    );
 
-    fireEvent.click(await screen.findByRole("button", { name: "RSVP" }));
+    const rsvp = (await screen.findByRole("button", {
+      name: "RSVP",
+    })) as HTMLButtonElement;
+    // Enabled once the member's RSVPs have loaded.
+    await waitFor(() => expect(rsvp.disabled).toBe(false));
+    fireEvent.click(rsvp);
     expect(await screen.findByText("This event is full.")).toBeTruthy();
-    expect(screen.getByText("Going: 12")).toBeTruthy();
     expect(
       ((await screen.findByLabelText("Calendar link")) as HTMLInputElement)
         .value
@@ -474,10 +542,22 @@ describe("The IDEA Plus", () => {
       },
       rpcs: {
         my_rental_allowance: { data: [{ in_use: 0, slots: 0 }], error: null },
+        plus_status: {
+          data: [
+            {
+              can_join: true,
+              capacity: 60,
+              join_reason: "open",
+              places_free: 12,
+              waiting: 0,
+            },
+          ],
+          error: null,
+        },
       },
     });
     const fetchMock = stubApi();
-    renderScreen(<Plus />, db.supabase);
+    renderScreen(<YourPlus />, db.supabase);
 
     expect(await screen.findByText("Up to 2 items at a time")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: JOIN_FOR }));

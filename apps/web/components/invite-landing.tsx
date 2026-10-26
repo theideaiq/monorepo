@@ -58,7 +58,7 @@ export const InviteLanding = ({ code }: { readonly code: string }) => {
         {user ? null : (
           <Button asChild size="lg">
             <Link
-              href={{ pathname: "/sign-up", query: { return_to: "/store" } }}
+              href={{ pathname: "/sign-in", query: { return_to: "/store" } }}
             >
               {t("join")}
             </Link>

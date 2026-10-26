@@ -26,6 +26,8 @@ export interface SubscriptionRecord {
   currentPeriodEnd: Date | null;
   currentPeriodStart: Date | null;
   id: string;
+  /** The plan it switches to at the next renewal (The IDEA Plus). */
+  nextPlanId: string | null;
   organizationId: string | null;
   planId: string;
   status: SubscriptionStatus;
@@ -62,6 +64,8 @@ export interface NewPayment {
 }
 
 export interface OrderRecord {
+  /** A 13–17-year-old's order waiting for (or declined by) their guardian. */
+  awaitingGuardian?: boolean;
   currency: string;
   id: string;
   /** One receipt line per order item (unit price × quantity), then delivery. */
@@ -84,6 +88,8 @@ export interface PaymentUpdate {
 export interface SubscriptionUpdate {
   currentPeriodEnd?: Date;
   currentPeriodStart?: Date;
+  /** Null clears it. */
+  nextPlanId?: string | null;
   planId?: string;
   status?: SubscriptionStatus;
 }

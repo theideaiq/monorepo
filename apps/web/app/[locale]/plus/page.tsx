@@ -1,4 +1,4 @@
-import { planName } from "@repo/commerce";
+import { formatPrice, localized, planName } from "@repo/commerce";
 import { Highlight } from "@repo/design-system/components/brand/highlight";
 import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Badge } from "@repo/design-system/components/ui/badge";
@@ -16,18 +16,18 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Pagination } from "@/components/pagination";
 import { PlanCard } from "@/components/plan-card";
 import { ProductCard } from "@/components/product-card";
+import { YourPlus } from "@/components/screens/plus";
 import { EmptyState, Section } from "@/components/section";
 import { CategoryChips } from "@/components/shop/category-chips";
-import { ShopSwitch } from "@/components/shop/shop-switch";
 import { StoreSearch } from "@/components/shop/store-search";
 import {
   getCategories,
+  getKitTypes,
   getPlans,
   getProducts,
   getRatings,
   getRentalTiers,
 } from "@/lib/data";
-import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import { plansByTier, requiredPlan } from "@/lib/plus";
 import {
@@ -63,9 +63,10 @@ export const generateMetadata = async ({
 };
 
 /**
- * Rent: everything about renting with The IDEA Plus on one page. The rental
- * catalog (search, categories, the plan each item needs) comes first; on
- * the unfiltered first page, how it works, the plans and their tiers follow.
+ * The IDEA Plus: everything about renting on one page. On the unfiltered
+ * first page, "Your Plus" (the member's membership and rentals, or a way to
+ * sign in) comes first; then the rental catalog (search, categories, the
+ * plan each item needs) and how it works, the plans and their tiers.
  */
 const Rent = async ({ params, searchParams }: RentProps) => {
   const { locale } = await params;
@@ -73,9 +74,10 @@ const Rent = async ({ params, searchParams }: RentProps) => {
   const query = parseStoreQuery(await searchParams);
   const t = await getTranslations({ locale, namespace: "web" });
 
-  const [categories, plans, rows] = await Promise.all([
+  const [categories, allPlans, kits, rows] = await Promise.all([
     getCategories("rental"),
     getPlans("plus"),
+    getKitTypes(),
     getProducts({
       category: query.category,
       kind: "rental",
@@ -84,6 +86,8 @@ const Rent = async ({ params, searchParams }: RentProps) => {
       search: query.q,
     }),
   ]);
+  // Monthly plans on the page; the yearly ones are in Your Plus.
+  const plans = allPlans.filter((plan) => plan.billing_interval === "month");
   const products = rows.slice(0, STORE_PAGE_SIZE);
   const ids = products.map((product) => product.id);
   const [ratings, productTiers] = await Promise.all([
@@ -92,13 +96,11 @@ const Rent = async ({ params, searchParams }: RentProps) => {
   ]);
   const tiers = plansByTier(plans);
   const steps = t.raw("plus.how.steps") as Steps;
-  const plusUrl = pagePath(locale, "/pass/plus");
   const browsing = Boolean(query.q || query.category || query.page > 1);
 
   return (
     <>
       <div className="container mx-auto flex flex-col gap-4 px-4 pt-6 pb-2">
-        <ShopSwitch active="rent" locale={locale} />
         <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
           {t("rent.title")} <Highlight>{t("rent.highlight")}</Highlight>
         </h1>
@@ -127,6 +129,12 @@ const Rent = async ({ params, searchParams }: RentProps) => {
           </a>
         )}
       </div>
+
+      {browsing ? null : (
+        <div className="container mx-auto px-4 pt-6">
+          <YourPlus />
+        </div>
+      )}
 
       <section className="container mx-auto px-4 py-6">
         {query.q ? (
@@ -205,7 +213,7 @@ const Rent = async ({ params, searchParams }: RentProps) => {
                 {plans.map((plan, index) => (
                   <PlanCard
                     featured={plans.length >= 3 && index === 1}
-                    href={pagePath(locale, "/pass/plus", { plan: plan.id })}
+                    href="#yours"
                     key={plan.id}
                     locale={locale}
                     plan={plan}
@@ -216,6 +224,45 @@ const Rent = async ({ params, searchParams }: RentProps) => {
               <EmptyState>{t("plus.plans.empty")}</EmptyState>
             )}
           </Section>
+
+          {kits.length > 0 ? (
+            <Section
+              description={t("plus.kits.description")}
+              id="kits"
+              title={t("plus.kits.title")}
+            >
+              <ul className="grid gap-4 md:grid-cols-3">
+                {kits.map((kit) => (
+                  <li
+                    className="flex flex-col gap-3 rounded-lg border p-5"
+                    key={kit.id}
+                  >
+                    <h3 className="font-semibold">
+                      {localized(kit, "name", locale)}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {localized(kit, "description", locale)}
+                    </p>
+                    <p className="font-medium text-sm">
+                      {t("plus.kits.price", {
+                        extra: formatPrice(kit.extra_day_price, locale),
+                        price: formatPrice(kit.price, locale),
+                      })}
+                    </p>
+                    <Button
+                      asChild
+                      className="mt-auto self-start"
+                      variant="outline"
+                    >
+                      <Link href={`/kits/${kit.id}`}>
+                        {t("plus.kits.book")}
+                      </Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          ) : null}
 
           {tiers.length > 1 ? (
             <Section
@@ -247,7 +294,7 @@ const Rent = async ({ params, searchParams }: RentProps) => {
           <PinkBand
             action={
               <Button asChild className="gap-2" size="lg" variant="brand">
-                <a href={plusUrl}>
+                <a href="#yours">
                   {t("plus.cta")}{" "}
                   <MoveRight className="size-4 rtl:rotate-180" />
                 </a>

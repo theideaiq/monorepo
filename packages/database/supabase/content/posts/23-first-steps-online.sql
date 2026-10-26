@@ -38,7 +38,7 @@ Git أداة لإدارة المشاريع تحفظ نسخة من كل تغيي�
 - تعلّم أساسيات Git مجاناً من [The Odin Project](https://www.theodinproject.com).
 - انشر مشاريعك الصغيرة، حتى البسيطة منها. مع الوقت يصبح ملفك على GitHub معرض أعمالك.
 
-لمزيد من الموارد، اقرأ [دليل تطوير المواقع](/post/web-development).
+لمزيد من الموارد، اقرأ [دليل تطوير المواقع](/club/web-development).
 
 ## 4. سيرة ذاتية مرتّبة
 
@@ -63,7 +63,7 @@ Git أداة لإدارة المشاريع تحفظ نسخة من كل تغيي�
 - [Interview Techniques](https://www.coursera.org/learn/interview-techniques)
 - [Interview Preparation](https://www.coursera.org/learn/interview-preparation)
 
-واقرأ أيضاً [المهارات الشخصية في العمل](/post/soft-skills) و[العمل عن بعد والعمل الحر](/post/remote-work-and-freelancing).
+واقرأ أيضاً [المهارات الشخصية في العمل](/club/soft-skills) و[العمل عن بعد والعمل الحر](/club/remote-work-and-freelancing).
 
 ## روابط مفيدة
 
@@ -99,7 +99,7 @@ Git is a tool that tracks every change in your project, and GitHub is a website 
 - Learn the basics of Git for free with [The Odin Project](https://www.theodinproject.com).
 - Publish your small projects, even simple ones. Over time your GitHub becomes your portfolio.
 
-For more resources, read [the web development guide](/post/web-development).
+For more resources, read [the web development guide](/club/web-development).
 
 ## 4. A well-organized CV
 
@@ -124,7 +124,7 @@ Free (or with financial aid) courses on Coursera about career skills, writing a 
 - [Interview Techniques](https://www.coursera.org/learn/interview-techniques)
 - [Interview Preparation](https://www.coursera.org/learn/interview-preparation)
 
-See also [soft skills at work](/post/soft-skills) and [remote work and freelancing](/post/remote-work-and-freelancing).
+See also [soft skills at work](/club/soft-skills) and [remote work and freelancing](/club/remote-work-and-freelancing).
 
 ## Useful links
 

@@ -34,7 +34,11 @@ const order: OrderRecord = {
 
 const setup = (now = new Date("2026-10-03T12:00:00Z")) => {
   const { repository, state } = createMemoryBillingRepository(
-    [plan, { ...plan, active: false, id: "retired" }],
+    [
+      plan,
+      { ...plan, active: false, id: "retired" },
+      { ...plan, amount: 39_750, id: "bigger" },
+    ],
     [order]
   );
   const provider = createMockProvider();
@@ -223,6 +227,54 @@ describe("billing", () => {
     expect([...state.subscriptions.values()][0]?.status).toBe("expired");
   });
 
+  test("a plan change applies from the next renewal", async () => {
+    const { billing, provider, setNow, state } = setup();
+    const { referenceId } = await billing.startCheckout({
+      owner: { userId: "user-1" },
+      planId: "pro-monthly",
+      userId: "user-1",
+    });
+    await billing.handleWebhook(provider.settle(referenceId, "paid"));
+    const [subscription] = [...state.subscriptions.values()];
+    if (subscription) {
+      state.subscriptions.set(subscription.id, {
+        ...subscription,
+        nextPlanId: "bigger",
+      });
+    }
+
+    setNow(new Date("2026-11-01T06:00:00Z"));
+    const { invoices } = await billing.issueRenewals();
+    expect(invoices).toMatchObject([{ amount: 39_750 }]);
+    expect([...state.subscriptions.values()][0]).toMatchObject({
+      nextPlanId: null,
+      planId: "bigger",
+    });
+  });
+
+  test("a cancelled subscription ends with its paid period", async () => {
+    const { billing, provider, setNow, state } = setup();
+    const { referenceId } = await billing.startCheckout({
+      owner: { userId: "user-1" },
+      planId: "pro-monthly",
+      userId: "user-1",
+    });
+    await billing.handleWebhook(provider.settle(referenceId, "paid"));
+    const [subscription] = [...state.subscriptions.values()];
+    if (subscription) {
+      state.subscriptions.set(subscription.id, {
+        ...subscription,
+        cancelAtPeriodEnd: true,
+      });
+    }
+
+    setNow(new Date("2026-11-01T06:00:00Z"));
+    expect(await billing.issueRenewals()).toMatchObject({ invoices: [] });
+    setNow(new Date("2026-11-04T06:00:00Z"));
+    expect(await billing.issueRenewals()).toMatchObject({ expired: 1 });
+    expect([...state.subscriptions.values()][0]?.status).toBe("canceled");
+  });
+
   test("individual users subscribe on their own", async () => {
     const { billing, provider, state } = setup();
     const { referenceId } = await billing.startCheckout({
@@ -261,6 +313,17 @@ describe("billing", () => {
     await billing.handleWebhook(provider.settle(first.referenceId, "paid"));
     expect(state.orders.get("order-1")?.status).toBe("paid");
 
+    await expect(
+      billing.startOrderCheckout({ orderId: "order-1", userId: "user-1" })
+    ).rejects.toThrow(OrderNotPayableError);
+  });
+
+  test("refuses to pay an order waiting for the guardian", async () => {
+    const { billing, state } = setup();
+    const existing = state.orders.get("order-1");
+    if (existing) {
+      state.orders.set("order-1", { ...existing, awaitingGuardian: true });
+    }
     await expect(
       billing.startOrderCheckout({ orderId: "order-1", userId: "user-1" })
     ).rejects.toThrow(OrderNotPayableError);

@@ -1,6 +1,6 @@
 /**
- * Helpers for the iOS/Android apps (Capacitor). Their WebView loads The IDEA
- * Spark itself, so the session is the same cookie as on the web; these only
+ * Helpers for the iOS/Android apps (Capacitor). Their WebView loads the
+ * website itself, so the session is the same cookie as on the web; these only
  * add the app lifecycle and deep links.
  */
 import type { Database } from "@repo/database";

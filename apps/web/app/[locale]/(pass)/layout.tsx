@@ -16,9 +16,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 /**
- * The IDEA Pass sign-in, sign-up and authenticator-app pages, in one
- * centred card under the site header. The session cookie they set is shared
- * with The IDEA Spark and the design site.
+ * The IDEA Pass sign-in and authenticator-app pages, in one centred card
+ * under the site header. The session cookie they set is shared with The
+ * IDEA Business and the design site.
  */
 const PassLayout = ({ children }: PassLayoutProperties) => (
   <main className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-surface p-4">

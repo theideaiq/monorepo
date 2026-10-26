@@ -55,11 +55,11 @@ begin
 
 قبل أن تدفع، فكّر إن كانت هناك طرق أخرى إلى التخصص نفسه:
 
-- منح الجامعات الأمريكية في المنطقة: [دليل الجامعات الأمريكية في المنطقة](/post/american-universities-in-the-region).
-- الدراسة في الخارج بكلفة أقل: [ألمانيا](/post/study-in-germany) و[تركيا](/post/study-in-turkey) و[الكليات المجتمعية](/post/community-colleges).
-- خطة كاملة بخيارات احتياطية: [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap).
+- منح الجامعات الأمريكية في المنطقة: [دليل الجامعات الأمريكية في المنطقة](/club/american-universities-in-the-region).
+- الدراسة في الخارج بكلفة أقل: [ألمانيا](/club/study-in-germany) و[تركيا](/club/study-in-turkey) و[الكليات المجتمعية](/club/community-colleges).
+- خطة كاملة بخيارات احتياطية: [خطة التقديم للدراسة في الخارج](/club/study-abroad-roadmap).
 
-وإذا اخترت الموازي، فاعرف كيف ستُدرَّس وتُقيَّم من [دليل الأنظمة الدراسية](/post/iraqi-university-systems).
+وإذا اخترت الموازي، فاعرف كيف ستُدرَّس وتُقيَّم من [دليل الأنظمة الدراسية](/club/iraqi-university-systems).
 
 ## روابط رسمية
 
@@ -109,11 +109,11 @@ Check current fees in the admission guide before you decide.
 
 Before you pay, consider other routes into the same field:
 
-- Scholarships at American universities in the region: [American universities in the region](/post/american-universities-in-the-region).
-- Cheaper study abroad: [Germany](/post/study-in-germany), [Türkiye](/post/study-in-turkey) and [community colleges](/post/community-colleges).
-- A full plan with fallbacks: [the study-abroad roadmap](/post/study-abroad-roadmap).
+- Scholarships at American universities in the region: [American universities in the region](/club/american-universities-in-the-region).
+- Cheaper study abroad: [Germany](/club/study-in-germany), [Türkiye](/club/study-in-turkey) and [community colleges](/club/community-colleges).
+- A full plan with fallbacks: [the study-abroad roadmap](/club/study-abroad-roadmap).
 
-If you choose parallel, find out how you'll be taught and assessed in [how Iraqi universities teach and grade](/post/iraqi-university-systems).
+If you choose parallel, find out how you'll be taught and assessed in [how Iraqi universities teach and grade](/club/iraqi-university-systems).
 
 ## Official links
 

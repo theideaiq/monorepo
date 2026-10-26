@@ -87,14 +87,14 @@ export const buildPosts = (
     lines: [localized(post, "excerpt", locale)].filter(Boolean),
     photo: editorialUrl(post.cover_image),
     title: localized(post, "title", locale),
-    url: siteUrl(locale, `/post/${post.slug}`),
+    url: siteUrl(locale, `/club/${post.slug}`),
   }));
   const events = sources.events.map((event) => ({
     buttonLabel: t(locale, "postEventOpen"),
     lines: [`${formatDateTime(event.starts_at, locale)} · ${event.location}`],
     photo: editorialUrl(event.cover_image),
     title: localized(event, "title", locale),
-    url: siteUrl(locale, `/post/events/${event.slug}`),
+    url: siteUrl(locale, `/club/${event.slug}`),
   }));
 
   const { products } = sources;

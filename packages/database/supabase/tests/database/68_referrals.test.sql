@@ -62,12 +62,15 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000c2', 'rf@example.iq', '{"full_name":"Friend F"}'),
   ('00000000-0000-0000-0000-0000000000c3', 'rg@example.iq', '{"full_name":"Same Phone G"}'),
   ('00000000-0000-0000-0000-0000000000c4', 'ro@example.iq', '{"full_name":"Old O"}');
+-- Fixture members are adults (ages: a date of birth is needed to buy).
+update public.profiles set birthday = date '1990-01-01' where birthday is null;
 
 insert into public.products (id, slug, name_ar, name_en, price, stock_count, status, kind) values
   ('68000000-0000-0000-0000-000000000001', 'invite-switch', 'سويتش', 'Switch', 200000, 20, 'active', 'sale'),
   ('68000000-0000-0000-0000-000000000002', 'invite-pin', 'دبوس', 'Pin', 50000, 20, 'active', 'sale');
 
-update public.store_settings set free_shipping_threshold = null, cash_on_delivery_enabled = true;
+update public.store_settings set cash_on_delivery_enabled = true;
+update public.delivery_zones set free_from = null, plus_free_delivery = false;
 update public.delivery_zones set active = true, fee = 5000 where governorate = 'baghdad';
 
 -- I once ordered to +9647700000401; O has a paid order.

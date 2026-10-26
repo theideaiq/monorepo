@@ -1,5 +1,5 @@
 /**
- * Links to The IDEA Pass (the sign-in, sign-up, authenticator and "My
+ * Links to The IDEA Pass (the sign-in, authenticator and "My
  * Pass" pages of the website, apps/web), the only sign-in UI on the web,
  * and the check of where it may send people back to afterwards.
  *
@@ -16,7 +16,7 @@ export const DEFAULT_PASS_URL = "http://localhost:3001";
 const TRAILING_SLASH = /\/+$/;
 const LOCALHOST = new Set(["localhost", "127.0.0.1", "[::1]"]);
 
-export type PassPath = "/" | "/mfa" | "/sign-in" | "/sign-out" | "/sign-up";
+export type PassPath = "/" | "/mfa" | "/sign-in" | "/sign-out";
 
 export interface ReturnToOptions {
   /** Also accept localhost on any port (development). */
@@ -45,7 +45,7 @@ const hostOf = (value: string | undefined) => {
 
 /**
  * The hostnames of The IDEA's own sites: the website (with the Pass), The
- * IDEA Spark (business and the back office), the design site and the API.
+ * IDEA Business (company pages and the back office), the design site and the API.
  */
 export const allowedReturnToHosts = () =>
   new Set(
@@ -105,7 +105,7 @@ export const safeReturnTo = (
  * A link to a Pass page, e.g.
  * `passUrl("/sign-in", "https://theideaiq.com/ar/store", "ar")` →
  * `https://theideaiq.com/ar/sign-in?return_to=https%3A%2F%2Ftheideaiq…`
- * (English pages have no prefix: `/sign-in`). `"/"` is My Pass (`/pass`).
+ * (English pages have no prefix: `/sign-in`). `"/"` is Your Pass (`/pass`).
  * Without a locale, the website picks one from the browser.
  */
 export const passUrl = (

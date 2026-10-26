@@ -11,42 +11,67 @@ incidents) is in `docs/platform`.
 - `apps/web` — **theideaiq.com**, everything customers see (Next.js, i18n
   routes under `app/[locale]`), with a `proxy.ts` (locale, session refresh,
   security headers) and the cookie session (`@repo/auth/server`):
-  - the public pages, organised like the phone tabs (Shop, Rent,
-    Discover, Cart, My Pass): Shop is Home, the storefront (search,
-    categories, featured and new products), with `/store` the full catalog
-    and product pages (buying, reviews) and Sell to us; Rent is `/plus`,
-    everything about renting with The IDEA Plus (the rental catalog with
-    categories, then plans and tiers); Discover is The IDEA Post (`/post`:
-    News, Stories, Learn and Events at `/post/events` with RSVP, plus the
-    Club); `/suite` for companies; About & info at `/about` (careers,
-    FAQ, contact, preferences, the version) and legal pages (Markdown in
-    `apps/web/content/legal`). The header menu matches the tabs, and the
-    footer is one slim line on wider screens;
-  - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in`,
-    `/sign-up`, `/mfa`, `/sign-out`, the only sign-in UI on the web. A
-    person's membership *is* The IDEA Pass; never show the word "account".
-    The session cookie is shared with The IDEA Spark and the design site
-    (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`); other apps link here with
-    `passUrl()` from `@repo/auth/pass` (based on `NEXT_PUBLIC_WEB_URL`),
-    which only returns to allowlisted hosts (`isAllowedReturnTo`);
-  - **My Pass** (`app/[locale]/pass`: the membership card, orders, Plus,
-    wishlist, Sell to us, events, submissions, support, settings) and the
-    cart and checkout (`app/[locale]/(checkout)`): client components that
-    query with `useAuth().supabase`; privileged steps go to `apps/api` with
-    the user's token (`callApi` in `apps/web/lib/api.ts`);
+  - the public pages, organised like the menu (Store · Plus · Club · Pass,
+    a bottom tab bar on phones): The IDEA Store is Home (`/`), the
+    storefront (search, categories, featured and new products), with
+    `/store` the full catalog and product pages (buying, reviews); The IDEA
+    Plus is `/plus`, everything about renting (the rental catalog with
+    categories, then plans and tiers), public, with "Your Plus" (joining
+    and the waitlist at `#join`; membership, plan changes, pause and
+    cancel, swaps, the queue and rentals) at `#yours` when signed in; The IDEA
+    Club is `/club`, one feed with chips (`?show=events|news|stories|guides`),
+    "Yours" at `#yours` (your events with the calendar feed, your
+    submissions) and the Telegram rooms card, and `/club/<slug>` is a post
+    or an event (with RSVP); `/business` presents The IDEA Business to
+    companies; `/saved` (saved products); `/help` (FAQ, the contact form at
+    `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
+    and `/help/new`); `/careers`; `/about` (the company, preferences, the
+    version); `/r/<code>` (an invite or affiliate link: the page asks the
+    database `referral_kind(code)` which one it is) and legal pages at
+    `/legal/<policy>` (Markdown in `apps/web/content/legal`). The top bar
+    holds the logo, search, saved (heart, to `/saved`), cart and, on
+    desktop, the Pass avatar (saved and cart are hidden on sign-in and
+    checkout); the desktop header reads Store · Plus · Club, "For
+    business", saved, cart, Pass. The footer lists Store · Plus · Club ·
+    Pass · Business, then About · Careers · Help · Legal. Old addresses
+    have no HTTP redirects; links stored in notifications are mapped to
+    current pages by `currentAppPath`/`businessPath` in
+    `packages/internationalization/app-paths.ts` (used by the website,
+    The IDEA Business, Telegram and push);
+  - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in` (an
+    email code signs in or creates the Pass; there is no sign-up page, and
+    `/onboarding` asks for the name), `/mfa`, `/tg`, `/sign-out`, the only
+    sign-in UI on the web. A person's membership *is* The IDEA Pass; never
+    show the word "account". The session cookie is shared with The IDEA
+    Business and the design site (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`); other
+    apps link here with `passUrl()` from `@repo/auth/pass` (based on
+    `NEXT_PUBLIC_WEB_URL`), which only returns to allowlisted hosts
+    (`isAllowedReturnTo`);
+  - **The IDEA Pass pages** (`app/[locale]/pass`: `/pass` the membership
+    card, `/pass/orders` with Sell to us at `#sell`, `/pass/bulbs` with
+    invites and affiliates at `#invite`, `/pass/settings`) and the cart and
+    checkout (`app/[locale]/(checkout)`): client components that query with
+    `useAuth().supabase`; privileged steps go to `apps/api` with the user's
+    token (`callApi` in `apps/web/lib/api.ts`);
   - The iOS/Android apps are Capacitor shells whose WebView loads the live
     website (`server.url`), so the same cookie session applies there.
-- `apps/app` — **The IDEA Spark** (port 3000, `spark.theideaiq.com`), for
-  staff and businesses only, server-rendered with a `proxy.ts`:
-  - **The IDEA Suite** (`app/[locale]/(business)`: `/business`, members,
-    billing, settings, invitations);
-  - the **back office** under `/{locale}/admin` (`app/[locale]/admin`,
-    `components/admin`, `lib/admin`): staff only, with Server Actions; every
-    query runs as the staff member so RLS applies, and staff rights need an
+- `apps/business` — **The IDEA Business** (package `business`, port 3000,
+  `business.theideaiq.com`), for companies and staff only, server-rendered
+  with a `proxy.ts`:
+  - the company dashboard at its root (`app/[locale]/(business)`: `/`,
+    `/procurement`, `/hiring`, `/invoices`, `/plus`, `/members`,
+    `/billing`, `/settings`, `/new`, `/documents/<kind>/<id>`,
+    invitations);
+  - the staff **back office** under `/{locale}/staff` (`app/[locale]/staff`,
+    `components/admin`, `lib/admin`; the company section is
+    `/staff/companies`): staff only, with Server Actions; every query runs
+    as the staff member so RLS applies, and staff rights need an
     authenticator-app (AAL2) session, enforced by the database too. Its
-    links use `@/lib/admin/navigation` (paths relative to `/admin`).
+    links use `@/lib/admin/navigation` (paths relative to `/staff`); its
+    code keeps the internal name "admin" (`lib/admin`, `components/admin`,
+    the `admin` messages namespace).
   - No sign-in of its own: it sends people to The IDEA Pass on the website
-    with `return_to`, and old customer paths redirect there.
+    with `return_to`.
 - `apps/api` — webhooks (Wayl, Telegram), cron jobs, the calendar feed and
   privileged endpoints, including `app/admin/*` for the back office and the
   website's contact form and status badge. The only app with secrets.
@@ -104,10 +129,10 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   installs and runs scripts; Next.js runs on Node (`next build`, not
   `bun --bun next build`).
 - **Auth:** never authorize with `user_metadata` — users can edit it. In
-  the client components of `apps/web` and `apps/app`, query with
+  the client components of `apps/web` and `apps/business`, query with
   `useAuth().supabase` (the cookie-based browser client) so Row Level
   Security applies; gates like `RequireAuth` are only UX. Their Server
-  Components and Server Actions (The IDEA Pass, My Pass, the back office)
+  Components and Server Actions (The IDEA Pass, its pages, the back office)
   use `@repo/auth/server`. In
   `apps/api`, identify callers with `authenticateRequest` (Bearer token) and
   check their membership/role. The admin client (`@repo/database/admin`)
@@ -115,7 +140,7 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   code. `@repo/auth/server` is for server code only (never a client component).
 - **Database:** schema changes are migrations with RLS policies and tests;
   see Database standards below.
-- **Secrets live only in `apps/api`.** Every other app (web, app,
+- **Secrets live only in `apps/api`.** Every other app (web, business,
   storybook, docs, email) holds public values only: no server-only preset in
   its `env.ts` or `.env.example`, no import of a package module that reads
   one (`@repo/email`, `@repo/rate-limit`, `@repo/security/form`,
@@ -155,8 +180,8 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
 - **Brand name:** always "The IDEA", never a bare "IDEA": The IDEA Pass,
-  The IDEA Plus, The IDEA Suite, The IDEA Design, in English and Arabic copy
-  alike (Latin letters in Arabic text). A user's account is The IDEA Pass.
+  The IDEA Plus, The IDEA Business, The IDEA Design, in English and Arabic copy
+  alike (Latin letters in Arabic text). A person's membership is The IDEA Pass.
   Reword rather than writing "your The IDEA …". The one exception is the
   site's own name on Arabic pages (the logo and the page-title suffix),
   which is ايديا (`localizedName` in `project.json`; `projectName(locale)`
@@ -199,9 +224,10 @@ for any schema change; it also runs the structure and advisor checks.
   variant) and are set on the variants; cart lines, copies and rentals
   always name their variant (a product with one live variant fills it in).
   One title is one product: a title both sold and rented is a `sale`
-  product with copies for rent (`rentable`, derived from its copies; the
-  Rent tab lists rentable products), and categories (Music, Games, Books,
-  Films…) are shared by both tabs.
+  product with copies for rent (`rentable`, derived from its copies; The
+  IDEA Plus lists rentable products), and the six categories (Music, Games,
+  Books, Films, Audio, Tech) are shared by The IDEA Store and The IDEA
+  Plus. Prices end in …4,750 or …9,750.
 - **RLS on every table.** Enable it in the migration that creates the table
   and add policies with pgTAP tests. `00_structure.test.sql` fails when a
   table in `public` or `private` lacks RLS or a primary key, or any RLS

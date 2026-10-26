@@ -97,14 +97,14 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: bun install --frozen-lockfile
-      - run: bunx turbo build --filter=api --filter=app --filter=web --filter=@repo/storybook
+      - run: bunx turbo build --filter=api --filter=business --filter=web --filter=@repo/storybook
       # No secret may reach a browser bundle: the client chunks must not
       # contain the secret-key prefix or a server-only variable name. Every
       # directory must exist, or the check is not checking anything.
       - name: No secrets in client bundles
         run: |
           set -e
-          dirs="apps/app/.next/static apps/web/.next/static apps/api/.next/static apps/storybook/.next/static"
+          dirs="apps/business/.next/static apps/web/.next/static apps/api/.next/static apps/storybook/.next/static"
           for dir in $dirs; do
             test -d "$dir" || { echo "Missing $dir"; exit 1; }
           done
@@ -164,11 +164,11 @@ jobs:
         run: bunx playwright install --with-deps chromium
       # The journeys run against production builds (next start), not the dev
       # servers: faster, and what actually ships.
-      - name: Build the website (with The IDEA Pass), The IDEA Spark and the API against the local stack
+      - name: Build the website (with The IDEA Pass), The IDEA Business and the API against the local stack
         run: |
           eval "$(cd packages/database && bunx supabase status -o env | grep -E '^(API_URL|PUBLISHABLE_KEY)=' | sed 's/^/export /')"
           export NEXT_PUBLIC_SUPABASE_URL="$API_URL" NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="$PUBLISHABLE_KEY"
-          bunx turbo build --filter=app --filter=web --filter=api
+          bunx turbo build --filter=business --filter=web --filter=api
       - name: Journeys (public site, The IDEA Pass sign-up, store, support, back office) and axe checks
         run: |
           eval "$(cd packages/database && bunx supabase status -o env | grep -E '^(API_URL|PUBLISHABLE_KEY|SECRET_KEY|MAILPIT_URL)=' | sed 's/^/export /')"

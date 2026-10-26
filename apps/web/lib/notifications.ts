@@ -5,6 +5,7 @@ import { formatPrice } from "@repo/commerce";
 import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
 import {
+  businessPath,
   currentAppPath,
   safeNextPath,
 } from "@repo/internationalization/app-paths";
@@ -49,6 +50,13 @@ export const NOTIFICATION_EVENTS = [
   "invoice_issued",
   "plus_seat_active",
   "candidate_proposed",
+  "guardian_order_request",
+  "guardian_approved",
+  "guardian_declined",
+  "guardian_linked",
+  "plus_invite",
+  "plus_swap_booked",
+  "plus_swap_done",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -152,7 +160,15 @@ const extraValues: Partial<
     name: text(data.name),
     title: text(data.title),
   }),
+  guardian_approved: (data) => ({ number: text(data.number) }),
+  guardian_declined: (data) => ({ number: text(data.number) }),
+  guardian_linked: (data) => ({ name: text(data.name) }),
+  guardian_order_request: (data) => ({
+    name: text(data.name),
+    number: text(data.number),
+  }),
   invoice_issued: invoiceValues,
+  plus_invite: (data) => ({ hours: text(data.hours) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
   quote_sent: quoteValues,
 };
@@ -216,11 +232,10 @@ export const describeNotification = (
   };
 };
 
-const SUITE_PATH = /^\/business(?:[/?#]|$)/;
-
 /**
- * The path to open, or null for a missing or unsafe link. The IDEA Suite's
- * pages (`/business…`) are on The IDEA Spark, so those links are absolute.
+ * The path to open, or null for a missing or unsafe link. Links under
+ * `/business…` are The IDEA Business's pages, on its own site (where they
+ * sit at the root: `/business/invoices` opens `/invoices` there).
  */
 export const notificationHref = (
   link: string | null,
@@ -231,9 +246,8 @@ export const notificationHref = (
   if (!path) {
     return null;
   }
-  return SUITE_PATH.test(path)
-    ? appLink(appUrl, locale, path)
-    : currentAppPath(path);
+  const business = businessPath(path);
+  return business ? appLink(appUrl, locale, business) : currentAppPath(path);
 };
 
 const NOTIFICATION_COLUMNS =

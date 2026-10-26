@@ -53,8 +53,8 @@ begin
 
 ## خطوات تالية
 
-- خطّط لطلبك كاملاً مع [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap).
-- تقدّم على المملكة المتحدة أيضاً؟ البيان الشخصي هناك مختلف؛ اقرأ [دليل UCAS](/post/uk-personal-statement).
+- خطّط لطلبك كاملاً مع [خطة التقديم للدراسة في الخارج](/club/study-abroad-roadmap).
+- تقدّم على المملكة المتحدة أيضاً؟ البيان الشخصي هناك مختلف؛ اقرأ [دليل UCAS](/club/uk-personal-statement).
 
 ## روابط رسمية
 
@@ -101,8 +101,8 @@ Read successful essays to see how students turn experiences into stories, not to
 
 ## Next steps
 
-- Plan your whole application with our [study abroad roadmap](/post/study-abroad-roadmap).
-- Applying to the UK too? The personal statement there is different; read our [UCAS guide](/post/uk-personal-statement).
+- Plan your whole application with our [study abroad roadmap](/club/study-abroad-roadmap).
+- Applying to the UK too? The personal statement there is different; read our [UCAS guide](/club/uk-personal-statement).
 
 ## Official links
 

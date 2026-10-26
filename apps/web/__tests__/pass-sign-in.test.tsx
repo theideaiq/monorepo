@@ -45,7 +45,12 @@ const setup = ({
   const verifyOtp = vi.fn(async () =>
     verifyError
       ? { data: { user: null }, error: verifyError }
-      : { data: { user: { id: "user-1" } }, error: null }
+      : {
+          data: {
+            user: { created_at: new Date().toISOString(), id: "user-1" },
+          },
+          error: null,
+        }
   );
   const supabase = fakeSupabase();
   Object.assign(supabase.auth, { signInWithOtp, verifyOtp });
@@ -55,7 +60,7 @@ const setup = ({
 describe("The IDEA Pass email sign-in", () => {
   test("checks the address before sending a code", async () => {
     const { signInWithOtp, supabase } = setup();
-    renderWithApp(<PassSignIn mode="sign-in" returnTo={null} />, {
+    renderWithApp(<PassSignIn returnTo={null} />, {
       locale: "en",
       supabase,
     });
@@ -76,60 +81,17 @@ describe("The IDEA Pass email sign-in", () => {
     expect(signInWithOtp).not.toHaveBeenCalled();
   });
 
-  test("signs in existing accounts only and offers sign-up otherwise", async () => {
-    const { signInWithOtp, supabase } = setup({
-      sendError: {
-        code: "otp_disabled",
-        message: "Signups not allowed for otp",
-        status: 422,
-      },
-    });
-    renderWithApp(<PassSignIn mode="sign-in" returnTo="/cart" />, {
+  test("one code signs in or creates the Pass, then goes back", async () => {
+    const { signInWithOtp, supabase, verifyOtp } = setup();
+    renderWithApp(<PassSignIn returnTo="/cart" />, {
       locale: "en",
       supabase,
     });
 
+    // No name to fill in: onboarding asks for it afterwards.
+    expect(screen.queryByLabelText("Full name")).toBeNull();
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: " Sara@Example.com " },
-    });
-    fireEvent.click(screen.getByRole("button", { name: CONTINUE }));
-
-    expect(
-      await screen.findByText("There's no The IDEA Pass with this email yet.")
-    ).toBeTruthy();
-    expect(signInWithOtp).toHaveBeenCalledWith({
-      email: "sara@example.com",
-      options: {
-        captchaToken: undefined,
-        data: { full_name: undefined, locale: "en" },
-        emailRedirectTo: expect.stringMatching(CALLBACK),
-        shouldCreateUser: false,
-      },
-    });
-    const signUp = screen.getByRole("link", {
-      name: "Get The IDEA Pass with this email",
-    });
-    expect(signUp.getAttribute("href")).toBe(
-      `/sign-up?return_to=${encodeURIComponent("/cart")}`
-    );
-  });
-
-  test("signs up with a name and the emailed code", async () => {
-    const { signInWithOtp, supabase, verifyOtp } = setup();
-    renderWithApp(<PassSignIn mode="sign-up" returnTo="/cart" />, {
-      locale: "en",
-      supabase,
-    });
-
-    fireEvent.change(screen.getByLabelText("Email"), {
-      target: { value: "sara@example.com" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: CONTINUE }));
-    expect(await screen.findByText("Enter your name.")).toBeTruthy();
-    expect(signInWithOtp).not.toHaveBeenCalled();
-
-    fireEvent.change(screen.getByLabelText("Full name"), {
-      target: { value: "Sara Ali" },
     });
     fireEvent.click(screen.getByRole("button", { name: CONTINUE }));
 
@@ -140,7 +102,7 @@ describe("The IDEA Pass email sign-in", () => {
       email: "sara@example.com",
       options: {
         captchaToken: undefined,
-        data: { full_name: "Sara Ali", locale: "en" },
+        data: { full_name: undefined, locale: "en" },
         emailRedirectTo: expect.stringMatching(CALLBACK),
         shouldCreateUser: true,
       },
@@ -165,6 +127,7 @@ describe("The IDEA Pass email sign-in", () => {
       type: "email",
     });
     expect(identify).toHaveBeenCalledWith("user-1");
+    // The user row is just created: a new Pass.
     expect(track).toHaveBeenCalledWith("sign_up", { method: "email" });
   });
 
@@ -176,7 +139,7 @@ describe("The IDEA Pass email sign-in", () => {
         status: 403,
       },
     });
-    renderWithApp(<PassSignIn mode="sign-in" returnTo={null} />, {
+    renderWithApp(<PassSignIn returnTo={null} />, {
       locale: "ar",
       supabase,
     });

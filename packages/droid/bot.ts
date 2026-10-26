@@ -11,7 +11,7 @@
  * - Inline mode: `@TheIdeaDroidBot <product>` in any chat shares products.
  * - Groups and channels: the bot records membership in the chats it's an
  *   admin of, approves join requests by each chat's rule (open, linked The
- *   IDEA Pass or a Bulbs tier) and sends new channel posts to newsletter
+ *   IDEA Pass or The IDEA Plus) and sends new channel posts to newsletter
  *   subscribers.
  *   Moderation is left to Telegram's own tools.
  */
@@ -47,7 +47,7 @@ const SEARCH_LIMIT = 5;
 const INLINE_LIMIT = 10;
 const ORDERS_LIMIT = 3;
 const NEWSLETTER_PAGE = 100;
-const FAQ_TOPICS: FaqTopic[] = ["general", "store", "plus", "academy", "suite"];
+const FAQ_TOPICS: FaqTopic[] = ["general", "store", "plus", "club", "business"];
 const FAQ_BUTTON_LENGTH = 60;
 const POST_DEDUPE_SECONDS = 24 * 60 * 60;
 const MENU_CALLBACK = /^m:(\w+)$/;
@@ -330,8 +330,8 @@ const askFor = async (ctx: DroidContext, pending: Pending) => {
 };
 
 /**
- * "Talk to us": a support ticket for members (answered in My Pass →
- * Support), a Telegram request for everyone else (answered here).
+ * "Talk to us": a support ticket for members (answered on Help,
+ * on the website), a Telegram request for everyone else (answered here).
  */
 const submitSupport = async (ctx: DroidContext, rawMessage: string) => {
   if (!ctx.from) {
@@ -514,7 +514,7 @@ const answerInline = async (ctx: DroidContext) => {
 
 /**
  * Approves a join request that passes the chat's rule (open, linked The
- * IDEA Pass, or a Bulbs tier); otherwise declines it and tells the person
+ * IDEA Pass, or The IDEA Plus); otherwise declines it and tells the person
  * how to get in. Chats without a rule are left to their admins.
  */
 const handleJoinRequest = async (ctx: DroidContext) => {
@@ -534,20 +534,15 @@ const handleJoinRequest = async (ctx: DroidContext) => {
   await ctx.api.declineChatJoinRequest(chat.id, from.id);
   const locale = localeOf(from.language_code);
   const title = "title" in chat ? (chat.title ?? "") : "";
-  const needsTier = check.linked && check.needed;
+  const needsPlus = check.linked && check.rule === "plus";
   try {
     await ctx.api.sendMessage(
       request.user_chat_id,
-      needsTier
-        ? t(locale, "joinNeedsTier", {
-            chat: title,
-            tier: t(locale, `tier_${check.needed}` as MessageKey),
-          })
-        : t(locale, "joinNotLinked", { chat: title }),
+      t(locale, needsPlus ? "joinNeedsPlus" : "joinNotLinked", { chat: title }),
       {
         reply_markup: new InlineKeyboard().url(
-          t(locale, needsTier ? "bulbsOpen" : "connect"),
-          `${ctx.droid.siteUrl}${localePath(locale, needsTier ? "/pass/bulbs" : "/pass/settings")}`
+          t(locale, needsPlus ? "plusOpen" : "connect"),
+          `${ctx.droid.siteUrl}${localePath(locale, needsPlus ? "/plus" : "/pass/settings")}`
         ),
       }
     );

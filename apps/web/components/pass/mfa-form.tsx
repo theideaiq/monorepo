@@ -34,7 +34,7 @@ interface Enrollment {
 interface MfaFormProps {
   /** A verified authenticator factor; null means it must be set up first. */
   readonly factorId: string | null;
-  /** An allowed return_to (a path on this site or a URL), or null for My Pass. */
+  /** An allowed return_to (a path on this site or a URL), or null for Your Pass. */
   readonly returnTo: string | null;
 }
 

@@ -7,11 +7,20 @@ import { join } from "node:path";
  * `updated` whenever a document changes.
  */
 export const legalDocuments = [
-  { slug: "terms", updated: "2026-10-24" },
-  { slug: "privacy", updated: "2026-10-24" },
-  { slug: "refund", updated: "2026-10-24" },
-  { slug: "conduct", updated: "2026-10-24" },
-  { slug: "community", updated: "2026-10-24" },
+  { slug: "terms", updated: "2026-10-26" },
+  { slug: "privacy", updated: "2026-10-26" },
+  { slug: "delivery", updated: "2026-10-26" },
+  { slug: "returns", updated: "2026-10-26" },
+  { slug: "condition", updated: "2026-10-26" },
+  { slug: "plus", updated: "2026-10-26" },
+  { slug: "rewards", updated: "2026-10-26" },
+  { slug: "sell", updated: "2026-10-26" },
+  { slug: "club", updated: "2026-10-26" },
+  { slug: "surveys", updated: "2026-10-26" },
+  { slug: "business", updated: "2026-10-26" },
+  { slug: "accessibility", updated: "2026-10-26" },
+  { slug: "security", updated: "2026-10-26" },
+  { slug: "copyright", updated: "2026-10-26" },
 ] as const;
 
 export type LegalSlug = (typeof legalDocuments)[number]["slug"];
@@ -19,11 +28,14 @@ export type LegalSlug = (typeof legalDocuments)[number]["slug"];
 export const isLegalSlug = (value: string): value is LegalSlug =>
   legalDocuments.some((document) => document.slug === value);
 
-const CONTENT_DIRECTORY = join(process.cwd(), "content", "legal");
-
 /** The document's Markdown in the given language (Arabic for other locales). */
 export const readLegalDocument = (slug: LegalSlug, locale: string) =>
   readFile(
-    join(CONTENT_DIRECTORY, `${slug}.${locale === "en" ? "en" : "ar"}.md`),
+    join(
+      process.cwd(),
+      "content",
+      "legal",
+      `${slug}.${locale === "en" ? "en" : "ar"}.md`
+    ),
     "utf8"
   );

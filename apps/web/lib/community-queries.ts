@@ -40,7 +40,7 @@ export const useMyRsvps = () => {
         await supabase
           .from("event_rsvps")
           .select(
-            "event_id, created_at, event:events (id, title_ar, title_en, location, starts_at)"
+            "event_id, created_at, event:events (id, slug, title_ar, title_en, location, starts_at)"
           )
           .eq("user_id", requireUserId(user?.id))
       ),

@@ -50,7 +50,7 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && secretKey))(
 
       const { referenceId } = await billing.startCheckout({
         owner: { organizationId: organization?.id ?? "" },
-        planId: "suite-business-monthly",
+        planId: "business-monthly",
         userId: user.user?.id ?? "",
       });
 

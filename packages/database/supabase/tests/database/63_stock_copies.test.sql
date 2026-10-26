@@ -62,6 +62,8 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000e1', 'su@example.iq', '{"full_name":"Customer U"}'),
   ('00000000-0000-0000-0000-0000000000e2', 'sa@example.iq', '{"full_name":"Admin A"}'),
   ('00000000-0000-0000-0000-0000000000e3', 'sp@example.iq', '{"full_name":"Support P"}');
+-- Fixture members are adults (ages: a date of birth is needed to buy).
+update public.profiles set birthday = date '1990-01-01' where birthday is null;
 
 insert into public.staff (user_id, role) values
   ('00000000-0000-0000-0000-0000000000e2', 'admin'),
@@ -72,9 +74,8 @@ values ('plus-copies', 'Plus', 25000, 'month', 'plus', 2, 3);
 insert into public.subscriptions (user_id, plan_id, status, provider, current_period_start, current_period_end)
 values ('00000000-0000-0000-0000-0000000000e1', 'plus-copies', 'active', 'wayl', now(), now() + interval '30 days');
 
-update public.store_settings set
-  free_shipping_threshold = null,
-  cash_on_delivery_enabled = true;
+update public.store_settings set cash_on_delivery_enabled = true;
+update public.delivery_zones set free_from = null, plus_free_delivery = false;
 update public.delivery_zones set active = true, fee = 5000 where governorate = 'baghdad';
 
 -- A game sold new (three copies) and a record with a variant.

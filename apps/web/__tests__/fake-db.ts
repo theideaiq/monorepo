@@ -111,12 +111,22 @@ export const fakeDb = ({
   const rpc = vi.fn((name: string, args?: unknown) => {
     rpcCalls.push({ args, name });
     const result = rpcs[name];
-    if (!result) {
-      return Promise.resolve({ data: null, error: null });
+    let answer: Result = { data: null, error: null };
+    if (result) {
+      answer = typeof result === "function" ? result(args) : result;
     }
-    return Promise.resolve(
-      typeof result === "function" ? result(args) : result
-    );
+    // `.maybeSingle()` / `.single()` take the first row of a set.
+    const first = () =>
+      Promise.resolve({
+        ...answer,
+        data: Array.isArray(answer.data)
+          ? (answer.data[0] ?? null)
+          : answer.data,
+      });
+    return Object.assign(Promise.resolve(answer), {
+      maybeSingle: first,
+      single: first,
+    });
   });
 
   const supabase = {

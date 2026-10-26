@@ -20,11 +20,20 @@ import { requireUserId, unwrap } from "@/lib/queries";
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
+const TOO_YOUNG = "aged 13 and over";
+
 /**
- * My Pass → Settings: the member's birthday, for 25 Bulbs each year on the
- * day. Set once; support corrects it (the database refuses a change).
+ * Your Pass → Settings (and onboarding): the member's date of birth. The
+ * Pass is for 13 and over, under-18s link a guardian, and it brings 25
+ * Bulbs each year on the day. Set once; support corrects it (the database
+ * refuses a change).
  */
-export const BirthdayCard = () => {
+export const BirthdayCard = ({
+  onSaved,
+}: {
+  /** Called once the date is saved (onboarding moves on). */
+  readonly onSaved?: () => void;
+}) => {
   const t = useTranslations("app.settings.birthday");
   const locale = useLocale();
   const id = useId();
@@ -47,7 +56,13 @@ export const BirthdayCard = () => {
           .eq("id", requireUserId(user?.id))
       );
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey }),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey }),
+        queryClient.invalidateQueries({ queryKey: ["guardian"] }),
+      ]);
+      onSaved?.();
+    },
   });
 
   if (current.isPending || current.isError) {
@@ -101,7 +116,9 @@ export const BirthdayCard = () => {
             </p>
             {save.isError ? (
               <p className="basis-full text-destructive text-sm" role="alert">
-                {t("failed")}
+                {save.error.message.includes(TOO_YOUNG)
+                  ? t("tooYoung")
+                  : t("failed")}
               </p>
             ) : null}
           </form>

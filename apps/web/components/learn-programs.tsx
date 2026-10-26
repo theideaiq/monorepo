@@ -8,11 +8,11 @@ import { getTranslations } from "next-intl/server";
 import { FeatureGrid } from "./feature-grid";
 import { Section } from "./section";
 
-type Programs = Messages["web"]["post"]["learn"]["programs"]["items"];
+type Programs = Messages["web"]["club"]["learn"]["programs"]["items"];
 const programIcons = [Plane, Landmark, Users];
 
 /**
- * Under the Learn section of The IDEA Post: the two tracks (courses and
+ * Under the Learn section of The IDEA Club: the two tracks (courses and
  * cultural exchange), the programs being built and a way to register
  * interest (what was the Academy page).
  */
@@ -21,11 +21,13 @@ export const LearnPrograms = async ({
 }: {
   readonly locale: Locale;
 }) => {
-  const t = await getTranslations({ locale, namespace: "web.post.learn" });
+  const t = await getTranslations({ locale, namespace: "web.club.learn" });
   const programs = t.raw("programs.items") as Programs;
   const register = (
     <Button asChild size="lg" variant="brand">
-      <Link href="/about/contact?topic=academy">{t("cta.button")}</Link>
+      <Link href={{ hash: "contact", pathname: "/help" }}>
+        {t("cta.button")}
+      </Link>
     </Button>
   );
 

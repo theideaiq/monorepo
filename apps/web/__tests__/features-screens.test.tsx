@@ -19,7 +19,7 @@ const { WriteReview } = await import("@/components/store/product-reviews");
 const { Wishlist } = await import("@/components/screens/wishlist");
 const { NewTicket } = await import("@/components/screens/new-ticket");
 const { Ticket } = await import("@/components/screens/ticket");
-const { Plus } = await import("@/components/screens/plus");
+const { YourPlus } = await import("@/components/screens/plus");
 const { NotificationBell } = await import("@/components/notification-bell");
 
 const USER_ID = "user-1";
@@ -309,7 +309,7 @@ describe("support", () => {
       })
     );
     await waitFor(() =>
-      expect(router.replace).toHaveBeenCalledWith("/pass/support/t1")
+      expect(router.replace).toHaveBeenCalledWith("/help/t1")
     );
   });
 
@@ -556,13 +556,15 @@ describe("The IDEA Plus tiers", () => {
         },
       },
     });
-    renderScreen(<Plus />, db.supabase);
+    renderScreen(<YourPlus />, db.supabase);
 
     expect(await screen.findByText("Needs Plus Extra")).toBeTruthy();
     expect(
       await screen.findByText("Upgrade to Plus Extra to rent this item.")
     ).toBeTruthy();
-    const [locked, open] = screen.getAllByRole("button", { name: "Request" });
+    const [locked, open] = screen.getAllByRole("button", {
+      name: "Add to queue",
+    });
     expect((locked as HTMLButtonElement).disabled).toBe(true);
     expect((open as HTMLButtonElement).disabled).toBe(false);
   });

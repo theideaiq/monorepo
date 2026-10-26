@@ -283,7 +283,7 @@ export interface PickupLocation {
 type StoreSettingsRow = Pick<
   Tables<"store_settings">,
   | "cash_on_delivery_enabled"
-  | "free_shipping_threshold"
+  | "cash_limit"
   | "pickup_address_ar"
   | "pickup_address_en"
   | "pickup_enabled"
@@ -301,11 +301,11 @@ export const getStoreSettings = async (supabase: Client) => {
     await supabase
       .from("store_settings")
       .select(
-        "shipping_fee, free_shipping_threshold, pickup_enabled, pickup_address_ar, pickup_address_en, pickup_hours_ar, pickup_hours_en, cash_on_delivery_enabled"
+        "shipping_fee, cash_limit, pickup_enabled, pickup_address_ar, pickup_address_en, pickup_hours_ar, pickup_hours_en, cash_on_delivery_enabled"
       )
       .single()
   ) as Partial<StoreSettingsRow> &
-    Pick<StoreSettingsRow, "free_shipping_threshold" | "shipping_fee">;
+    Pick<StoreSettingsRow, "cash_limit" | "shipping_fee">;
   const hasAddress = Boolean(
     row.pickup_address_ar?.trim() || row.pickup_address_en?.trim()
   );
@@ -319,8 +319,9 @@ export const getStoreSettings = async (supabase: Client) => {
         }
       : null;
   return {
+    /** Above this subtotal, cash only at pickup (null: no limit). */
+    cashLimit: row.cash_limit,
     cashOnDelivery: row.cash_on_delivery_enabled ?? false,
-    freeShippingThreshold: row.free_shipping_threshold,
     pickup,
     shippingFee: row.shipping_fee,
   };
@@ -330,6 +331,7 @@ export type DeliveryZone = Pick<
   Tables<"delivery_zones">,
   | "carrier_province"
   | "fee"
+  | "free_from"
   | "governorate"
   | "id"
   | "max_days"
@@ -346,7 +348,7 @@ export const listDeliveryZones = async (
     await supabase
       .from("delivery_zones")
       .select(
-        "id, governorate, carrier_province, name_ar, name_en, fee, min_days, max_days"
+        "id, governorate, carrier_province, name_ar, name_en, fee, free_from, min_days, max_days"
       )
       .eq("active", true)
       .order("position")

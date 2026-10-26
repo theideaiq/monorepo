@@ -52,10 +52,10 @@ begin
 ## أيّها تختار؟
 
 - إذا كانت كل جامعاتك تقبل Duolingo English Test، فهو غالباً الخيار الأسهل والأرخص.
-- إذا كانت إحدى الجامعات أو جهات الهجرة تشترط IELTS أو TOEFL، فاختر ما يغطي القائمة كلها، حتى لا تدفع مرتين. اقرأ [دليل IELTS](/post/ielts-guide).
+- إذا كانت إحدى الجامعات أو جهات الهجرة تشترط IELTS أو TOEFL، فاختر ما يغطي القائمة كلها، حتى لا تدفع مرتين. اقرأ [دليل IELTS](/club/ielts-guide).
 - بعض المنح والبرامج الحكومية لا تقبل إلا اختبارات معينة؛ اقرأ شروطها بدقة.
 
-وتذكّر أن الاختبار يقيس مستوى لغتك الحقيقي، فاستثمر في اللغة نفسها: [كيف تطوّر إنجليزيتك](/post/improve-your-english)، ثم ضع الاختبار في مكانه من [خطة التقديم على الدراسة في الخارج](/post/study-abroad-roadmap).
+وتذكّر أن الاختبار يقيس مستوى لغتك الحقيقي، فاستثمر في اللغة نفسها: [كيف تطوّر إنجليزيتك](/club/improve-your-english)، ثم ضع الاختبار في مكانه من [خطة التقديم على الدراسة في الخارج](/club/study-abroad-roadmap).
 
 ## روابط رسمية
 
@@ -104,10 +104,10 @@ A note on TOEFL: ETS changed the TOEFL iBT in 2026 and introduced a new 1–6 sc
 ## Which should you choose?
 
 - If every university on your list accepts the Duolingo English Test, it's usually the easiest and cheapest choice.
-- If one university or immigration authority requires IELTS or TOEFL, pick the test that covers your whole list so you don't pay twice. Read our [IELTS guide](/post/ielts-guide).
+- If one university or immigration authority requires IELTS or TOEFL, pick the test that covers your whole list so you don't pay twice. Read our [IELTS guide](/club/ielts-guide).
 - Some scholarships and government programs only accept specific tests; read their requirements carefully.
 
-And remember, the test measures your real English, so invest in the language itself: [how to improve your English](/post/improve-your-english). Then fit the test into your [study abroad roadmap](/post/study-abroad-roadmap).
+And remember, the test measures your real English, so invest in the language itself: [how to improve your English](/club/improve-your-english). Then fit the test into your [study abroad roadmap](/club/study-abroad-roadmap).
 
 ## Official links
 

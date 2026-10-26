@@ -2,7 +2,6 @@ import {
   type CartLine,
   cartTotals,
   type DeliveryChoice,
-  type Promo,
   type StoreSettings,
 } from "@repo/commerce";
 
@@ -99,17 +98,14 @@ export const toCartLine = (item: CartItem): CartLineView => {
 };
 
 /**
- * The cart as shown before checkout: priced lines, the totals (lines that
- * can't be ordered are left out) and whether checkout can go ahead.
+ * The cart as shown before checkout: priced lines, the estimated totals
+ * (lines that can't be ordered are left out) and whether checkout can go
+ * ahead. The checkout shows the server's quote instead.
  */
 export const summarizeCart = (
   items: readonly CartItem[],
   settings: StoreSettings,
-  choice?: DeliveryChoice,
-  /** Bulbs to spend (capped at what the order costs). */
-  bulbs = 0,
-  /** The invite or affiliate discount the member qualifies for. */
-  promo: Promo = {}
+  choice?: DeliveryChoice
 ) => {
   const lines = items.map(toCartLine);
   const orderable = lines.filter((line) => line.buyable);
@@ -121,7 +117,7 @@ export const summarizeCart = (
     canCheckout: orderable.length > 0 && problems.length === 0,
     lines,
     problems: problems.length,
-    totals: cartTotals(orderable, settings, choice, bulbs, promo),
+    totals: cartTotals(orderable, settings, choice),
   };
 };
 
@@ -149,11 +145,14 @@ export const lineProblem = (line: CartLineView): CartLineProblem | null => {
   return null;
 };
 
-/** How much more to spend for free delivery (0 when free or not offered). */
-export const freeShippingRemaining = (
+/**
+ * How much more to spend for free delivery from a zone's threshold (0 when
+ * already free or not offered).
+ */
+export const freeDeliveryRemaining = (
   subtotal: number,
-  settings: StoreSettings
+  freeFrom: number | null | undefined
 ) =>
-  settings.freeShippingThreshold === null || subtotal === 0
+  freeFrom === null || freeFrom === undefined || subtotal === 0
     ? 0
-    : Math.max(settings.freeShippingThreshold - subtotal, 0);
+    : Math.max(freeFrom - subtotal, 0);

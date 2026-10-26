@@ -1,174 +1,193 @@
-import { Highlight } from "@repo/design-system/components/brand/highlight";
-import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Button } from "@repo/design-system/components/ui/button";
-import type { Locale, Messages } from "@repo/internationalization";
+import type { Locale } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
-import {
-  ArrowUpRight,
-  BookOpen,
-  Bot,
-  Briefcase,
-  Clapperboard,
-  Gamepad2,
-  LifeBuoy,
-  Megaphone,
-  MessageCircleQuestion,
-  Music,
-  Palette,
-  Search,
-  Send,
-  ShieldCheck,
-  Trophy,
-} from "lucide-react";
+import { Send } from "lucide-react";
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { FeatureGrid } from "@/components/feature-grid";
+import { ClubYours } from "@/components/club/club-yours";
+import { FeedChips } from "@/components/club/feed-chips";
+import { EventCard, PostCard } from "@/components/editorial-cards";
+import { LearnPrograms } from "@/components/learn-programs";
 import { PageHero } from "@/components/page-hero";
-import { Section } from "@/components/section";
-import { SPARK_CATCHER_PATH, telegram } from "@/lib/links";
-import { staticPageMetadata } from "@/lib/metadata";
+import { PostSubmit } from "@/components/post-submit";
+import { EmptyState, Section } from "@/components/section";
+import { Rail } from "@/components/shop/rail";
+import {
+  type ClubFilter,
+  filterPath,
+  isClubFilter,
+  sectionOf,
+} from "@/lib/club";
+import { getEvents, getPosts } from "@/lib/data";
+import { telegram } from "@/lib/links";
+import { localizedMetadata } from "@/lib/metadata";
 
 interface ClubProps {
   params: Promise<{ locale: Locale }>;
+  searchParams: Promise<{ show?: string }>;
 }
 
-type Rooms = Messages["web"]["club"]["rooms"];
-type DroidFeatures = Messages["web"]["club"]["droid"]["features"]["items"];
+/** The rooms, as on Telegram (topics of The IDEA Club group). */
+const rooms = [
+  "stage",
+  "lounge",
+  "arcade",
+  "vibe",
+  "library",
+  "studio",
+  "office",
+] as const;
 
-/** The eight rooms, in the order of `web.club.rooms`. */
-const roomIcons = [
-  Megaphone,
-  Music,
-  BookOpen,
-  Clapperboard,
-  Gamepad2,
-  Trophy,
-  Palette,
-  Briefcase,
-];
-/** The Droid's features, in the order of `web.club.droid.features.items`. */
-const droidIcons = [ShieldCheck, MessageCircleQuestion, Search, Bot, LifeBuoy];
-// The bento layout: wide tiles for the first and fourth rooms.
-const WIDE = new Set([0, 3]);
-
-export const generateMetadata = staticPageMetadata("club", "/club");
-
-const Club = async ({ params }: ClubProps) => {
+export const generateMetadata = async ({
+  params,
+}: ClubProps): Promise<Metadata> => {
   const { locale } = await params;
-  setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: "web.club" });
-  const rooms = t.raw("rooms") as Rooms;
-  const droidFeatures = t.raw("droid.features.items") as DroidFeatures;
-  const external = { rel: "noopener noreferrer", target: "_blank" } as const;
+  const t = await getTranslations({ locale, namespace: "web.club.meta" });
+  return localizedMetadata(locale, "/club", {
+    description: t("description"),
+    title: t("title"),
+  });
+};
 
+/** The IDEA Club on Telegram: the rooms and the way in. */
+const TelegramCard = async ({ locale }: { readonly locale: Locale }) => {
+  const t = await getTranslations({ locale, namespace: "web.club.telegram" });
   return (
-    <>
-      <PageHero
-        highlight={t("highlight")}
-        subtitle={t("subtitle")}
-        title={t("title")}
-      >
-        <Button asChild className="gap-2" size="lg">
-          <a href={telegram.club} {...external}>
-            <Send className="size-4" />
-            {t("join")}
-          </a>
-        </Button>
-      </PageHero>
-
-      <Section title={t("roomsTitle")}>
-        <ul className="grid gap-4 md:grid-cols-4">
-          {rooms.map((room, index) => {
-            const Icon = roomIcons[index] ?? Megaphone;
-            return (
-              <li
-                className={WIDE.has(index) ? "md:col-span-2" : undefined}
-                key={room.title}
-              >
-                <a
-                  className="group flex h-full flex-col gap-4 rounded-lg border bg-card p-6 shadow-1 transition-colors hover:border-club"
-                  href={telegram.club}
-                  {...external}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="flex size-11 items-center justify-center rounded-lg bg-club text-on-accent-warm">
-                      <Icon aria-hidden="true" className="size-5" />
-                    </span>
-                    <ArrowUpRight className="size-5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 rtl:-scale-x-100" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h3 className="font-bold text-xl">{room.title}</h3>
-                    <p className="text-muted-foreground text-sm">
-                      {room.description}
-                    </p>
-                  </div>
-                </a>
-              </li>
-            );
-          })}
+    <section className="flex flex-col gap-4 rounded-lg border bg-surface-raised p-6 shadow-1 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-2">
+        <h2 className="font-semibold text-lg">{t("title")}</h2>
+        <p className="max-w-2xl text-muted-foreground text-sm">
+          {t("description")}
+        </p>
+        <ul className="flex flex-wrap gap-1.5">
+          {rooms.map((room) => (
+            <li
+              className="rounded-full bg-muted px-2.5 py-0.5 text-muted-foreground text-xs"
+              key={room}
+            >
+              {t(`rooms.${room}`)}
+            </li>
+          ))}
         </ul>
-        <p className="mt-6 text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-xs">
           {t("guidelines")}{" "}
-          <Link className="text-pink-text underline" href="/legal/community">
+          <Link className="text-pink-text underline" href="/legal/club">
             {t("guidelinesLink")}
           </Link>
         </p>
-      </Section>
+      </div>
+      <Button asChild className="shrink-0 gap-2">
+        <a href={telegram.club} rel="noopener noreferrer" target="_blank">
+          <Send className="size-4" />
+          {t("join")}
+        </a>
+      </Button>
+    </section>
+  );
+};
 
-      <Section id="droid" title={t("droid.title")}>
-        <div className="flex flex-col gap-8">
-          <div className="flex flex-col items-start gap-4">
-            <p className="max-w-2xl text-lg text-muted-foreground">
-              {t("droid.subtitle")}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button asChild className="gap-2" size="lg">
-                <a href={telegram.bot} {...external}>
-                  <Send className="size-4" />
-                  {t("droid.open")}
-                </a>
-              </Button>
-              <Button asChild className="gap-2" size="lg" variant="outline">
-                <a href={SPARK_CATCHER_PATH}>
-                  <Gamepad2 aria-hidden="true" />
-                  {t("droid.game.play")}
-                </a>
-              </Button>
-            </div>
-            <p className="text-muted-foreground text-sm">
-              {t("droid.badge")} · {t("droid.game.description")}
-            </p>
-          </div>
-          <FeatureGrid
-            className="lg:grid-cols-3"
-            items={droidFeatures.map((feature, index) => ({
-              ...feature,
-              icon: droidIcons[index],
-            }))}
-          />
-          <p className="text-muted-foreground text-sm">
-            {t("droid.privacy")}{" "}
-            <Link className="text-pink-text underline" href="/legal/privacy">
-              {t("droid.privacyLink")}
-            </Link>
-          </p>
+/** Events: upcoming first, then past ones. */
+const EventsFeed = async ({ locale }: { readonly locale: Locale }) => {
+  const t = await getTranslations({ locale, namespace: "web.club" });
+  const [upcoming, past] = await Promise.all([
+    getEvents({ limit: 48 }),
+    getEvents({ limit: 12, past: true }),
+  ]);
+  return (
+    <>
+      {upcoming.length > 0 ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {upcoming.map((event) => (
+            <EventCard event={event} key={event.id} locale={locale} />
+          ))}
         </div>
-      </Section>
+      ) : (
+        <EmptyState>{t("noEvents")}</EmptyState>
+      )}
+      {past.length > 0 ? (
+        <div className="flex flex-col gap-4">
+          <h2 className="font-semibold text-xl">{t("pastEvents")}</h2>
+          <div className="grid gap-6 opacity-80 sm:grid-cols-2 lg:grid-cols-3">
+            {past.map((event) => (
+              <EventCard event={event} key={event.id} locale={locale} />
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </>
+  );
+};
 
-      <PinkBand
-        action={
-          <Button asChild size="lg" variant="brand">
-            <a href={telegram.club} {...external}>
-              {t("cta.button")}
-            </a>
-          </Button>
-        }
-        description={t("cta.description")}
-        title={
-          <>
-            {t("cta.title")} <Highlight>{t("cta.highlight")}</Highlight>
-          </>
-        }
-      />
+/** Stories, news or guides (or all of them), newest first. */
+const PostsFeed = async ({
+  filter,
+  locale,
+}: {
+  readonly filter?: Exclude<ClubFilter, "events">;
+  readonly locale: Locale;
+}) => {
+  const t = await getTranslations({ locale, namespace: "web.club" });
+  const posts = await getPosts({
+    limit: 60,
+    sections: filter
+      ? [
+          sectionOf(filter),
+          ...(filter === "stories" ? ["members" as const] : []),
+        ]
+      : undefined,
+  });
+  return posts.length > 0 ? (
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => (
+        <PostCard key={post.id} locale={locale} post={post} />
+      ))}
+    </div>
+  ) : (
+    <EmptyState>{t("empty")}</EmptyState>
+  );
+};
+
+/**
+ * The IDEA Club: one feed of events, news, stories and guides, filtered by
+ * chips, with the Telegram rooms at the top and, for signed-in members,
+ * their own events and submissions.
+ */
+const Club = async ({ params, searchParams }: ClubProps) => {
+  const [{ locale }, { show }] = await Promise.all([params, searchParams]);
+  setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: "web" });
+  const filter = isClubFilter(show) ? show : undefined;
+  const upcoming = filter ? [] : await getEvents({ limit: 6 });
+
+  return (
+    <>
+      <PageHero subtitle={t("club.description")} title={t("club.title")} />
+      <Section className="flex flex-col gap-8">
+        <TelegramCard locale={locale} />
+        <ClubYours />
+        <FeedChips current={filter} locale={locale} />
+        {filter === "events" ? (
+          <EventsFeed locale={locale} />
+        ) : (
+          <PostsFeed filter={filter} locale={locale} />
+        )}
+      </Section>
+      {upcoming.length > 0 ? (
+        <Rail
+          action={{ href: filterPath("events"), label: t("ui.viewAll") }}
+          title={t("home.events.title")}
+        >
+          {upcoming.map((event) => (
+            <EventCard event={event} key={event.id} locale={locale} />
+          ))}
+        </Rail>
+      ) : null}
+      {filter === "guides" ? <LearnPrograms locale={locale} /> : null}
+      {!filter || filter === "stories" ? (
+        <Section>
+          <PostSubmit locale={locale} />
+        </Section>
+      ) : null}
     </>
   );
 };

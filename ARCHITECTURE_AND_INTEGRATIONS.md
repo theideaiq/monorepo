@@ -24,8 +24,8 @@ form.
 ```mermaid
 flowchart LR
   subgraph Clients
-    W["apps/web: theideaiq.com<br/>site · The IDEA Pass · My Pass · checkout"]
-    A["apps/app: The IDEA Spark<br/>back office · The IDEA Suite"]
+    W["apps/web: theideaiq.com<br/>site · The IDEA Pass · checkout"]
+    A["apps/business: The IDEA Business<br/>companies · back office"]
     N["iOS / Android shell<br/>(WebView loads the website)"]
   end
   subgraph Server["Vercel"]
@@ -53,8 +53,8 @@ flowchart LR
 
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
-| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (home, Megastore catalog and product pages, The IDEA Plus, Suite, Club, The IDEA Post, events, legal in `apps/web/content/legal`, contact), **The IDEA Pass** (sign-in, sign-up, authenticator app) and **My Pass** (`/pass`: orders, Plus, wishlist, Sell to us, events, submissions, support, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
-| `apps/app` | 3000 | **The IDEA Spark** (`spark.theideaiq.com`), for staff and businesses: the **back office** under `/{locale}/admin` and **The IDEA Suite** under `/{locale}/business` (see [The IDEA Spark](#the-idea-spark)). No sign-in of its own: it sends people to The IDEA Pass on the website. | Vercel |
+| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (The IDEA Store: home, catalog and product pages; The IDEA Plus; The IDEA Club: posts and events; `/business` for companies; saved products; help and contact; careers; legal in `apps/web/content/legal`), **The IDEA Pass** (sign-in, authenticator app, and its pages at `/pass`: the card, orders and Sell to us, Bulbs and invites, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
+| `apps/business` | 3000 | **The IDEA Business** (`business.theideaiq.com`), for companies and staff: the company dashboard at its root and the staff **back office** under `/{locale}/staff` (see [The IDEA Business](#the-idea-business)). No sign-in of its own: it sends people to The IDEA Pass on the website. | Vercel |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, push notifications, the back office's privileged steps (`app/admin/*`), the website's contact form and status badge. Route handlers only. | Vercel |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
 | `apps/storybook` | 6006 | **The IDEA Design**: the staff-only design site with every UI component and email template (see [The IDEA Design](#the-idea-design)). | Vercel (`design.theideaiq.com`) |
@@ -101,9 +101,9 @@ load on every page (never inside the iOS/Android apps).
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Public pages | Shop: `/{locale}`, `/store`, `/store/<slug>`; Rent: `/plus` (rental catalog, plans, tiers); Discover: `/post` (The IDEA Post: `/post/news`, `/post/stories`, `/post/learn`, events at `/post/events` and `/post/events/<slug>`, posts at `/post/<slug>`), `/club`; `/suite`; About & info: `/about`, `/about/faq`, `/about/contact`, `/about/careers`; `/legal/…` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
-| The IDEA Pass | `/{locale}/sign-in`, `/sign-up`, `/mfa`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
-| My Pass | `/{locale}/pass` (the membership card and a summary), `/pass/orders`, `/pass/orders/<id>`, `/pass/plus`, `/pass/wishlist`, `/pass/sell`, `/pass/affiliate` (Invite & earn), `/pass/support`, `/pass/support/<id>`, `/pass/settings`; `/pass/events` and `/pass/submissions` open from My Pass's home and The IDEA Post | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
+| Public pages | The IDEA Store: `/{locale}`, `/store`, `/store/<slug>`; The IDEA Plus: `/plus` (rental catalog, plans, tiers; "Your Plus" at `#yours` when signed in: membership, plans, rentals, rental requests); The IDEA Club: `/club` (one feed with chips, `?show=events\|news\|stories\|guides`; "Yours" at `#yours`: your events with the calendar feed and your submissions; the Telegram rooms card) and `/club/<slug>` (a post or an event); `/business`; `/saved`; `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
+| The IDEA Pass (sign-in) | `/{locale}/sign-in`, `/mfa`, `/tg`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
+| The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders, then Sell to us at `#sell`), `/pass/orders/<id>`, `/pass/bulbs` (Bulbs, then invites and affiliates at `#invite`), `/pass/settings` | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
 | Cart and checkout | `/{locale}/cart`, `/checkout` | `app/[locale]/(checkout)` |
 
 - **Session.** The browser client (`@repo/auth/client`) and the server
@@ -112,28 +112,35 @@ load on every page (never inside the iOS/Android apps).
   Components and Server Actions read a valid token. Every query runs as
   the signed-in user with the publishable key, so RLS applies. The
   iOS/Android shell loads the same pages, so the same cookie applies there.
-  The header shows "Sign in" (coming back to the same page) or the cart
-  and "My Pass".
-- **The IDEA Post.** One publication at `/post` (News, Journal and the
-  Academy page merged; online only), the Discover tab. Posts have a
-  section (`news`, `stories` for features and members' work, `learn` for
-  guides; the old `members` value is refused since
-  `20261207000000_post_restructure.sql`), and events are The Post's fifth
-  tab at `/post/events`. Posts have an
-  optional byline (empty means The IDEA); `/post/<section>` lists one
-  section and `/post/<slug>` is a post (the database keeps slugs off the
-  section names). Members submit work from My Pass; editors review it
-  blind in the back office (Editorial → Submissions) and, once it is
-  accepted, **Create the post** opens a draft in Stories with the
-  member's name as the byline (`posts.submission_id`; only accepted
-  submissions, once each). The Learn page also carries the Academy's
-  programs and its "register your interest" link. Migration
+- **Navigation.** The menu is Store · Plus · Club · Pass (a bottom tab
+  bar on phones). The top bar holds the logo, search, saved (a heart, to
+  `/saved`), the cart and, on desktop, the Pass avatar ("Sign in", coming
+  back to the same page, when signed out); saved and the cart are hidden
+  on sign-in and checkout. The desktop header reads Store · Plus · Club,
+  "For business", saved, cart, Pass. The footer lists Store · Plus · Club
+  · Pass · Business, then About · Careers · Help · Legal.
+- **The IDEA Club.** One feed at `/club` of events, news, stories and
+  guides (online only), filtered by chips (`?show=events|news|stories|guides`).
+  Posts have a section (`news`, `stories` for features and members' work,
+  `learn` for guides; the old `members` value is refused since
+  `20261207000000_post_restructure.sql`). Posts have an optional byline
+  (empty means The IDEA), and `/club/<slug>` is a post or an event (the
+  database keeps slugs off the section names). Members submit work from
+  the Club; editors review it blind in the back office (Editorial →
+  Submissions) and, once it is accepted, **Create the post** opens a
+  draft in Stories with the member's name as the byline
+  (`posts.submission_id`; only accepted submissions, once each). The
+  guides view also carries the learning programs and their "register
+  your interest" link (to `/help#contact`). Migration
   `20261127000000_the_post.sql` retired the PDF journal issues.
-- **Old links.** Pages that moved into My Pass (`/orders`, `/support`,
-  `/sell`, `/settings`, `/submissions`, `/wishlist`) and the static-export
+- **Old links.** Old addresses (`/post/…`, `/suite`, `/about/faq`,
+  `/about/contact`, `/about/careers`, `/pass/wishlist`, `/pass/support`,
+  `/i/<code>`, `/a/<code>`, …) have no HTTP redirects. Links stored in
+  older shapes (notifications, push, Telegram), including the static-export
   detail links (`/store/product?slug=…`, `/orders/view?id=…`,
-  `/support/view?id=…`) redirect (`next.config.ts`); stored notification
-  links are mapped (`currentAppPath`).
+  `/support/view?id=…`), are mapped to the current page by
+  `currentAppPath` (and `businessPath` for The IDEA Business) in
+  `packages/internationalization/app-paths.ts`.
 - **Locale.** English, the default, has no prefix (`/store`); Arabic is
   `/ar/store` (next-intl `localePrefix: "as-needed"`). `proxy.ts` sends
   visitors to their language (cookie, then `Accept-Language`, then
@@ -142,28 +149,32 @@ load on every page (never inside the iOS/Android apps).
   `@repo/internationalization/navigation`, and build any other path with
   `localePath(locale, path)` from `@repo/internationalization` (never
   `` `/${locale}…` `` by hand). `/.well-known` (app links) is left alone.
-- **Indexing.** The Pass, My Pass, the cart and checkout send `noindex`
+- **Indexing.** The IDEA Pass and its pages, saved products, the cart and
+  checkout send `noindex`
   (metadata and `X-Robots-Tag`).
 
-### The IDEA Spark
+### The IDEA Business
 
-`apps/app` (port 3000, `spark.theideaiq.com`) is for staff and businesses.
-Messages come from the `app`, `admin` and `billing` namespaces. `/{locale}`
-sends staff to the back office and everyone else to The IDEA Suite.
+`apps/business` (package `business`, port 3000, `business.theideaiq.com`)
+is for companies and staff. Messages come from the `app`, `admin` and
+`billing` namespaces. The company dashboard is at its root; the staff back
+office is under `/{locale}/staff`.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| The IDEA Suite | `/{locale}/business` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/business/procurement` (requests and quotes, `/business/procurement/<id>`), `/business/hiring` (jobs and candidates, `/business/hiring/<id>`), `/business/invoices`, `/business/plus` (The IDEA Plus for the team), `/documents/<quote|order|invoice>/<id>` (printable), `/business/members`, `/business/billing`, `/business/settings`, `/business/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
-| Back office | `/{locale}/admin/…`: the dashboard (an inbox of what's waiting, then the numbers), the counter, search (`/admin/search`), then sections grouped by Today, Sales (orders, rentals, trade-ins, customers and CRM), Catalog (catalog, reviews), Community (editorial, Telegram, affiliates), Companies (The IDEA Suite), Money (finance), Help (support) and Team (staff, audit log) | `app/[locale]/admin`, `components/admin`, `lib/admin` |
+| Company dashboard | `/{locale}` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/procurement` (requests and quotes, `/procurement/<id>`), `/hiring` (jobs and candidates, `/hiring/<id>`), `/invoices`, `/plus` (The IDEA Plus for the team), `/documents/<quote\|order\|invoice>/<id>` (printable), `/members`, `/billing`, `/settings`, `/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
+| Back office | `/{locale}/staff/…`: the dashboard (an inbox of what's waiting, then the numbers), the counter, search (`/staff/search`), then sections grouped by Today, Sales (orders, rentals, trade-ins, customers and CRM), Catalog (catalog, reviews), Community (editorial, Telegram, affiliates), Companies (`/staff/companies`), Money (finance), Help (support) and Team (staff, audit log) | `app/[locale]/staff`, `components/admin`, `lib/admin` |
 
-- **Sign-in.** Spark has none of its own: signed-out visitors go to The
-  IDEA Pass on the website (`passUrl` from `@repo/auth/pass`) with
-  `return_to` set to the Spark page, and the shared cookie on
-  `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` signs them in here too. Old customer
-  paths (`/cart`, `/orders/…`, `/sign-in`, …) redirect to the website.
-- **Procurement (The IDEA Suite).** A company's owners and admins send a
+- **Sign-in.** The IDEA Business has none of its own: signed-out visitors
+  go to The IDEA Pass on the website (`passUrl` from `@repo/auth/pass`)
+  with `return_to` set to the page, and the shared cookie on
+  `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` signs them in here too. Old paths
+  (`/business/…`, `/admin/…`) have no redirects; stored notification links
+  under `/business…` open the page at the root here (`/business/invoices`
+  → `/invoices`, `businessPath` in `packages/internationalization/app-paths.ts`).
+- **Procurement.** A company's owners and admins send a
   request (what they need, an optional budget and date). Support answers in
-  Back office → The IDEA Suite with one or more quotes (priced lines) and
+  Back office → Companies with one or more quotes (priced lines) and
   sends them; the company's owners and admins get a `quote_sent`
   notification and accept one (with their own PO reference; the others are
   withdrawn) or decline. An accepted quote becomes a purchase order;
@@ -175,10 +186,10 @@ sends staff to the back office and everyone else to The IDEA Suite.
   RPCs (`send_quote`, `decide_quote`, `cancel_procurement_request`,
   `set_purchase_order_status`, `issue_invoice`, `set_invoice_status`),
   migration `20261206000000_suite_procurement.sql`. The website's
-  notification bell opens `/business…` links on The IDEA Spark.
-- **Hiring (The IDEA Suite).** Owners and admins post a job request (role,
+  notification bell opens company links on The IDEA Business.
+- **Hiring.** Owners and admins post a job request (role,
   details, location, contract, salary range, how many people). Support
-  proposes vetted candidates in Back office → The IDEA Suite → Hiring
+  proposes vetted candidates in Back office → Companies → Hiring
   (name, headline, summary and a PDF CV uploaded to the private
   `candidates` bucket under `<organization id>/…`); the company's owners
   and admins get a `candidate_proposed` notification and shortlist,
@@ -194,8 +205,8 @@ sends staff to the back office and everyone else to The IDEA Suite.
   (Arabic and English alike, which PDF libraries render poorly). Company
   members and support/finance staff can open them (RLS).
 - **The IDEA Plus for a company's team.** Owners and admins ask for a
-  monthly Plus plan for a member (Business → The IDEA Plus); finance
-  approves it in Back office → The IDEA Suite → The IDEA Plus seats, which
+  monthly Plus plan for a member (The IDEA Business → The IDEA Plus); finance
+  approves it in Back office → Companies → The IDEA Plus seats, which
   gives the member a Plus subscription (provider `company`, so rentals and
   tiers work as usual; the Wayl renewals skip it) and invoices the company
   for the first month. `GET /cron/plus-seats` (daily, 06:15 UTC) extends
@@ -210,9 +221,9 @@ sends staff to the back office and everyone else to The IDEA Suite.
   trade-ins, submissions, Telegram requests, affiliate applications,
   procurement requests to quote, jobs without candidates, Plus seats to
   approve and overdue company invoices, each for the roles that handle
-  them (`lib/admin/inbox.ts`). The sidebar's search (`/admin/search`)
+  them (`lib/admin/inbox.ts`). The sidebar's search (`/staff/search`)
   looks up order, ticket, request and job numbers, members by name or Pass
-  number, and products. The counter (`/admin/counter`, support) checks a
+  number, and products. The counter (`/staff/counter`, support) checks a
   member's The IDEA Pass with the camera (where the browser has
   BarcodeDetector), a USB scanner or by typing, then shows their Bulbs,
   Plus and open rentals and checks them in at events around now
@@ -222,39 +233,36 @@ sends staff to the back office and everyone else to The IDEA Suite.
 
 ### The IDEA Pass
 
-The Pass is the only sign-in and sign-up UI on the web, for customers and
+The Pass is the only sign-in UI on the web, for customers and
 staff alike, and what a person's membership is called (the word "account"
 is never shown). Its pages are part of the website (ar/en, RTL) and hold
 no secrets: they sign people in with the publishable key and leave the
 session in the shared cookie.
 
-- **Routes.** `/{locale}/sign-in?return_to=…`, `/{locale}/sign-up?return_to=…`
-  (a 6-digit code by email, `@repo/auth/components/email-otp-form`),
+- **Routes.** `/{locale}/sign-in?return_to=…` (a 6-digit code by email,
+  `@repo/auth/components/email-otp-form`; it signs in or creates the Pass,
+  and there is no separate sign-up page),
   `/{locale}/mfa?return_to=…` (link or enter the authenticator app, which
   raises the session to AAL2), `/{locale}/sign-out?return_to=…` and
-  `/{locale}/pass` (My Pass: the membership card with name, email, the
-  phone number of members from the phone sign-in days, authenticator
-  status, the back office for staff and sign-out, then orders, Plus and
-  events). Other apps link to them with `passUrl(path, returnTo, locale)`
-  from `@repo/auth/pass`, which builds URLs on `NEXT_PUBLIC_WEB_URL`
-  (`"/"` is My Pass).
+  `/{locale}/pass` (the membership card; with `/pass/orders`,
+  `/pass/bulbs` and `/pass/settings`). Other apps link to them with
+  `passUrl(path, returnTo, locale)` from `@repo/auth/pass`, which builds
+  URLs on `NEXT_PUBLIC_WEB_URL` (`"/"` is `/pass`).
 - **Sign-in method: an email code** (decision 2026-10-24; no SMS plan). No
   passwords and no magic links: links open outside the iOS/Android shell,
   so the session would land in the wrong browser. `EmailOtpForm` asks for
-  the email (and the name on sign-up), calls
+  the email, calls
   `signInWithOtp({ email, options: { shouldCreateUser, data: { full_name, locale } } })`,
   then takes the 6-digit code and calls
   `verifyOtp({ email, token, type: "email" })` (`sendEmailOtp` and
-  `verifyEmailOtp` in `@repo/auth/otp`). Sign-up passes
-  `shouldCreateUser: true`; Supabase then sends its **Confirm signup**
-  email, and the code both confirms the address and signs in. Sign-in
-  passes `shouldCreateUser: false`, so an unknown address never creates an
-  account: the form says there is no account with this email and links to
-  sign-up (keeping `return_to`). Existing accounts get the **Magic Link**
-  email, whose template shows only the code. Codes have 6 digits and last
+  `verifyEmailOtp` in `@repo/auth/otp`). The sign-in page passes
+  `shouldCreateUser: true`: a new address gets its Pass (Supabase sends its
+  **Confirm signup** email, and the code both confirms the address and
+  signs in; `/onboarding` then asks for the name), and an address we know
+  gets the **Magic Link** email, whose template shows only the code. Codes have 6 digits and last
   10 minutes; the form allows a resend after 60 s and changing the
   address, and translates the errors (invalid email, wrong code, expired
-  code, too many attempts, no account). The templates are in
+  code, too many attempts). The templates are in
   `packages/database/supabase/templates/` (one email in Arabic and English,
   branded The IDEA Pass, the code in large type); production uses the same
   files (2.7).
@@ -273,24 +281,24 @@ session in the shared cookie.
   (`authCookieOptions()` in `packages/auth/cookies.ts`) write the
   `@supabase/ssr` cookie (`sb-<project ref>-auth-token`, chunked `.0`, `.1`,
   possibly `base64-` prefixed) for the whole domain, so `theideaiq.com`,
-  `spark.` and `design.` read the same session. Set the same value on web,
-  app and storybook; leave it unset locally and on previews (host-only
+  `business.` and `design.` read the same session. Set the same value on web,
+  app (The IDEA Business) and storybook; leave it unset locally and on previews (host-only
   cookie; on localhost cookies are shared across ports anyway).
 - **return_to.** A path on the website (`/cart`, `/ar/cart`) is kept as is. An
   absolute URL must be http(s) on the host of `NEXT_PUBLIC_WEB_URL`,
   `_APP_URL`, `_DESIGN_URL` or `_API_URL` (plus localhost in development,
   `isAllowedReturnTo`); anything else falls back to the website
   (`safeReturnTo`). The older `?next=/cart` still works. Without a
-  destination, sign-in and the authenticator step go to My Pass. After signing
+  destination, sign-in and the authenticator step go to `/pass`. After signing
   in the browser does a full navigation, so the next page reads the cookie.
-- **Sign-out.** The buttons (My Pass, the authenticator step) remove this
+- **Sign-out.** The buttons (Pass settings, the authenticator step) remove this
   device's push registration and then call a Server Action. The back
   office links to `/sign-out` on the website, which signs out only on
   navigations from The IDEA's own sites (`Sec-Fetch-Site: same-site` or
-  `same-origin`); a link from anywhere else lands on My Pass instead.
-- **Gates.** On the website `RequireAuth` (My Pass, the cart, checkout)
-  sends signed-out visitors to `/{locale}/sign-in?return_to=<the page>`;
-  Spark's gates send them to the same page with an absolute `return_to`.
+  `same-origin`); a link from anywhere else lands on `/pass` instead.
+- **Gates.** On the website `RequireAuth` (the Pass pages, the cart,
+  checkout) sends signed-out visitors to `/{locale}/sign-in?return_to=<the page>`;
+  The IDEA Business's gates send them to the same page with an absolute `return_to`.
 - **Later: OAuth consent.** Signing in to third-party apps with The IDEA
   Pass can use Supabase Auth's OAuth 2.1 server (Authentication → OAuth
   Server): Supabase sends people to an authorization page (for example
@@ -298,7 +306,7 @@ session in the shared cookie.
   scopes and calls `supabase.auth.oauth.approveAuthorization` or
   `denyAuthorization`. Add it under `apps/web/app/[locale]/(pass)`;
   the sign-in redirect with return_to already brings people back to it.
-- **The card.** My Pass opens with the membership card
+- **The card.** `/pass` opens with the membership card
   (`apps/web/components/pass`): an ID-1 card with guilloché drawn from
   formulas, a sheen that follows the pointer, the member's name and
   number (`profiles.member_number`, from 100001) and a QR code with a
@@ -314,23 +322,26 @@ session in the shared cookie.
 - **Bulbs.** The IDEA Pass rewards (migration `20261128000000_bulbs.sql`):
   1 Bulb = 100 IQD. Every movement is a row in `bulb_entries`, written only
   by triggers and SECURITY DEFINER functions (no insert, update or delete
-  policy). A delivered order earns its tier's cashback on the items (not
-  delivery), times the category's `bulb_multiplier` (laptops 0.5), plus
-  `store_settings.bulb_plus_bonus` for Plus members, and a one-time
-  20-Bulb first-order bonus; both stay `pending` for 7 days (the return
-  window) and count as usable once `available_at` passes, and a cancelled
-  or refunded order voids them. A completed trade-in earns 10, and a
-  store-credit payout is paid in Bulbs at 120% of the offer. The tier
-  (`bulb_tiers`: Glow, Shine 250,000, Beam 750,000, Blaze 2,000,000 IQD of
-  delivered orders in 12 months) sets the rate and the card's colour.
-  Members read `my_bulbs()` (My Pass → Bulbs, `/pass/bulbs`); support
+  policy). A delivered order earns a flat rate on the items (not
+  delivery): `store_settings.bulb_rate` (3%) for everyone, or the member's
+  Plus plan `plans.bulb_rate` (Glow 4%, Shine 5%, Blaze 6%), times the
+  category's or product's `bulb_multiplier` (consoles and laptops 0.5)
+  and at most half on any item over `store_settings.bulb_half_from`
+  (500,000 IQD), plus a one-time 20-Bulb first-order bonus; both stay
+  `pending` through the return window (`store_settings.return_days`, 14
+  days, read by `private.return_window()`), count as usable once
+  `available_at` passes, and a cancelled or refunded order voids them. A completed trade-in earns 10, and a
+  store-credit payout is paid in Bulbs at 120% of the offer. There are no
+  spend tiers (migration `20261218000000_money_rules.sql` removed them):
+  the card is pink for everyone, with a special finish for Plus members.
+  Members read `my_bulbs()` (`/pass/bulbs`); support
   sees and adjusts a member's Bulbs with a reason on the customer page
   (`member_bulbs`, `adjust_bulbs`, audited); finance sees what members hold
-  and edits the tiers, the Plus bonus and the multipliers (Finance → Bulbs,
-  `bulbs_outstanding`, `set_bulb_rates`). `GET /cron/bulbs` (daily, 03:30
+  and edits the money rules and the category multipliers (Finance → Bulbs,
+  `bulbs_outstanding`, `set_money_rules`). `GET /cron/bulbs` (daily, 03:30
   UTC) runs `run_bulb_expiry()`: a reminder after 11 months without
   activity and expiry at 12.
-- **Spending Bulbs and tier delivery** (migration
+- **Spending Bulbs** (migration
   `20261129000000_bulbs_checkout.sql`). `create_order(…, use_bulbs)` takes
   up to the whole order (delivery included) in Bulbs at 100 IQD each,
   from what is usable now (a per-member advisory lock serialises
@@ -339,14 +350,36 @@ session in the shared cookie.
   (`complete_order_payment`, no hosted checkout; the confirmation email
   goes through `POST /orders/confirmation`). Cancelling or refunding
   voids the redemption (the Bulbs come back), and cashback is earned only
-  on the share paid in money. `bulb_tiers.free_delivery_from` gives tiers
-  free delivery (Shine from 50,000 IQD, Beam and Blaze always), mirrored
-  for the checkout total by `deliveryFee()`/`cartTotals()` in
-  `@repo/commerce`. Plus payments can't take Bulbs yet.
+  on the share paid in money. Plus payments can't take Bulbs yet.
+- **Money rules and the checkout quote** (migration
+  `20261218000000_money_rules.sql`). One function,
+  `private.price_checkout()`, prices an order for both `create_order()`
+  and the checkout page (`checkout_quote()`, which the website shows
+  instead of working the total out itself): the zone's fee, free delivery
+  in a zone over `delivery_zones.free_from` (Baghdad 150,000 IQD) or on
+  any order for a Plus plan with `free_delivery` in a zone with
+  `plus_free_delivery` (Shine and Blaze in Baghdad), the invite or
+  affiliate discount, then Bulbs. The total giveaway on an order (delivery
+  waived, discount, affiliate commission and the Bulbs it will earn) is
+  capped at `store_settings.max_giveaway_rate` (20%) of the items: the
+  discount shrinks first, then `orders.max_bulbs` caps the cashback. Cash
+  on delivery is refused over `store_settings.cash_limit` (500,000 IQD;
+  those orders are paid online or at pickup). Every copy has a cost
+  (`stock_items.cost`); `price_check()` (Finance → Prices) lists sale
+  copies with no cost or priced under the floor: cost plus the payment
+  fee (`payment_fee_rate`), our delivery cost (`delivery_cost`) and the
+  largest giveaway, with at least `min_margin_rate` (20%) left. Finance
+  edits all of these on Finance → Bulbs (`set_money_rules`).
+- **Plus plans** (same migration). Glow 14,750 IQD (1 item), Shine 22,750
+  (2) and Blaze 39,750 (4) are seeded inactive in production; staff turn
+  them on at launch (Catalog → Plans), where each plan's Bulbs rate and
+  free delivery are edited too. Telegram rooms are open, for Pass holders
+  (`pass`) or for Plus members (`plus`).
 - **Invite friends** (migration `20261130000000_referrals.sql`). Every
   member has `profiles.invite_code` (read through `my_invites()`; the
   column isn't granted to clients) and shares
-  `theideaiq.com/i/<code>`. The page remembers the code on the device
+  `theideaiq.com/r/<code>` (the page asks `referral_kind(code)` whether
+  it is an invite or an affiliate code). The page remembers the code on the device
   (`lib/invites.ts`, 30 days) and `InviteClaimer` calls `claim_invite()`
   once the visitor is signed in: new members only (no paid or confirmed
   order), one inviter each, never themselves (`referrals`). Their first
@@ -356,11 +389,11 @@ session in the shared cookie.
   earns 50 Bulbs, pending through the return window and voided by a
   refund, at most 20 a month, and none when the friend's order shares a
   phone number or address with the inviter's own orders. The invite card
-  is on My Pass → Bulbs.
+  is on `/pass/bulbs#invite`.
 - **Affiliates** (migration `20261201000000_affiliates.sql`). Members
-  apply on My Pass → Affiliate (`apply_affiliate()`); marketing approves
+  apply on `/pass/bulbs#invite` (`apply_affiliate()`); marketing approves
   them in the back office with a code (`decide_affiliate()`, which also
-  notifies them). The link `theideaiq.com/a/<code>` is remembered on the
+  notifies them). The link `theideaiq.com/r/<code>` is remembered on the
   device until sign-in (`lib/affiliates.ts`, `AffiliateToucher`) and, like
   the code typed at checkout, recorded by `touch_affiliate()` in
   `affiliate_attributions` (the last link or code wins; a code typed at
@@ -370,7 +403,7 @@ session in the shared cookie.
   and the affiliate's, mirrored by `orderDiscount()` in `@repo/commerce`.
   A delivered order earns the category's `affiliate_rate` (8% vinyl, CDs
   and books, 3% otherwise; Back office → Affiliates, finance) on the price
-  after the discount, held 7 days for returns; nothing when the order
+  after the discount, held through the return window (14 days); nothing when the order
   shares a phone number or address with the affiliate. A new Plus member's
   first membership (attributed on its first payments,
   `subscriptions.affiliate_id`) earns 20% of the first 3 monthly payments
@@ -404,7 +437,7 @@ session in the shared cookie.
   with an email code there (receipts and recovery) and
   `POST /auth/telegram/link` links it with `link_telegram()` (service
   only: one account per member, never someone else's; 10 Bulbs the first
-  time). From My Pass → Settings the flow runs with `mode=link`, so it
+  time). From `/pass/settings` the flow runs with `mode=link`, so it
   always links to the signed-in member and never switches accounts;
   `unlink_telegram()` disconnects. `GET /auth/telegram/available` tells the
   website whether to show the buttons.
@@ -422,10 +455,12 @@ session in the shared cookie.
   `frame-ancestors` for `web.telegram.org`, no `X-Frame-Options`).
 - **Droid** (`packages/droid`, webhook `apps/api/app/telegram/webhook`).
   A menu in private chats: Track my order and My Bulbs for members who
-  linked Telegram (`telegram_members.user_id`; others get a link to My Pass
-  → Settings), store search, Talk to us (a support ticket in My Pass →
-  Support for members, a Telegram request in the back office otherwise),
-  The IDEA Plus, FAQ, links and the newsletter. Inline mode
+  linked Telegram (`telegram_members.user_id`; others get a link to
+  `/pass/settings`), store search, Talk to us (a support ticket in `/help`
+  for members, a Telegram request in the back office otherwise),
+  The IDEA Plus, FAQ (topics `general`, `store`, `plus`, `club` and
+  `business`, migration `20261217000000_program_revision_names.sql`),
+  links and the newsletter. Inline mode
   (`@TheIdeaDroidBot <product>` in any chat) shares products. In groups and
   channels it records membership and sends new channel posts to newsletter
   subscribers; moderation (word filters, spam, flood muting, network-wide
@@ -446,7 +481,7 @@ session in the shared cookie.
   each chat can name a forum topic for news (`news_topic`), events
   (`events_topic`) and new arrivals (`arrivals_topic`); 0 is the chat
   itself (General, or a channel), empty is off, and `post_locale` picks the
-  language. Triggers queue a post of The IDEA Post when it's published, a
+  language. Triggers queue a post of The IDEA Club when it's published, a
   published upcoming event, and a product added in the last two weeks when
   it goes on sale or for rent (`telegram_posts`). A Supabase Database
   Webhook on inserts into `telegram_posts` calls
@@ -467,7 +502,7 @@ session in the shared cookie.
 
 ### The back office
 
-`/{locale}/admin` in The IDEA Spark, for staff: catalog, orders, rentals,
+`/{locale}/staff` in The IDEA Business, for staff: catalog, orders, rentals,
 customers and CRM, finance (ledger, scenarios, payments and financial
 settings), editorial, reviews, support, Telegram, staff and the audit log.
 Newsletters are not sent from here but from Resend Broadcasts (4.3); the
@@ -475,9 +510,9 @@ payroll plan, cap table, fixed assets and the own email campaigns were
 retired on 2026-10-24 and their data kept in the `archive` schema.
 
 - **Gate** (`lib/admin/session.ts`, in the console layout and again in
-  every page and Server Action): signed out → `/{locale}/sign-in?return_to=/{locale}/admin`;
-  staff on AAL1 → `/{locale}/mfa?return_to=/{locale}/admin`; signed in
-  without a `staff` row → `/{locale}/admin/no-access`. Each section checks
+  every page and Server Action): signed out → `/{locale}/sign-in?return_to=/{locale}/staff`;
+  staff on AAL1 → `/{locale}/mfa?return_to=/{locale}/staff`; signed in
+  without a `staff` row → `/{locale}/staff/no-access`. Each section checks
   the role's access (`lib/admin/roles.ts`); the database grants staff rights
   only to AAL2 sessions (enable **Authentication → Multi-Factor → TOTP**;
   it is on in the local stack).
@@ -485,9 +520,9 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
   session and role, validate with zod and run as the staff member, so RLS
   applies. Privileged steps (staff lookup) call
   `apps/api/app/admin/*` with the staff member's token (`lib/admin/api.ts`).
-  No secret lives in Spark or the website (`bun run check:secrets`).
+  No secret lives in The IDEA Business or the website (`bun run check:secrets`).
 - **Links** use `@/lib/admin/navigation`, whose `Link`, `redirect`,
-  `useRouter` and `usePathname` take paths relative to `/admin`.
+  `useRouter` and `usePathname` take paths relative to `/staff`.
 - Grant the first superadmin with SQL, finding the account by its email
   (`insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '…'`).
 
@@ -498,10 +533,10 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
    user can read and write. Client-side checks such as `RequireAuth` or
    `canManage` only decide what to *show*.
 2. **Secrets live in `apps/api` and Supabase, never in `apps/web` or
-   `apps/app`.** Anything a browser or the iOS/Android shell loads can be
+   `apps/business`.** Anything a browser or the iOS/Android shell loads can be
    extracted, so they only have `NEXT_PUBLIC_*` variables. When they need a
    privileged action, they call `apps/api` with `callApi()`
-   (`apps/web/lib/api.ts`, `apps/app/lib/api.ts`), which sends the user's
+   (`apps/web/lib/api.ts`, `apps/business/lib/api.ts`), which sends the user's
    access token as `Authorization: Bearer …` and the client platform as
    `x-client-platform`. The API verifies the token (`authenticateRequest`),
    checks the caller's role in the organization (`apps/api/lib/membership.ts`)
@@ -527,8 +562,8 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
 | Flow | Path |
 | --- | --- |
 | Sign in | The IDEA Pass on the website: email → `supabase.auth.signInWithOtp` → email with a 6-digit code (Resend SMTP) → code → `verifyOtp` (`type: "email"`) → session in the shared cookie (the browser's, or the WebView's in the apps). |
-| Read or write data | Screen → TanStack Query hook (`apps/web/lib/queries.ts`, `apps/app/lib/queries.ts`) → `supabase.from(…)` with the user's JWT → RLS policies. |
-| Create an organization | The IDEA Spark, Business → New → `rpc("create_organization")`, which inserts the organization and the caller's `owner` membership in one transaction. |
+| Read or write data | Screen → TanStack Query hook (`apps/web/lib/queries.ts`, `apps/business/lib/queries.ts`) → `supabase.from(…)` with the user's JWT → RLS policies. |
+| Create an organization | The IDEA Business → New (`/new`) → `rpc("create_organization")`, which inserts the organization and the caller's `owner` membership in one transaction. |
 | Privileged action | Screen → `callApi(supabase, "/checkout", …)` → `apps/api` verifies the token and role → admin client or third-party API. |
 | Payment | `/checkout` → Wayl payment link → customer pays on Wayl → signed webhook → `/webhooks/payments` → payment and subscription updated → purchase reported to analytics. |
 
@@ -537,7 +572,7 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
 See [The website](#the-website): the proxy adds the locale, and
 `app/[locale]/layout.tsx` is the root layout (server-rendered `lang` and
 `dir`). Unknown paths render the localized 404 (`[...rest]`). Inside
-`apps/web` and `apps/app`, link with `Link` and `useRouter` from
+`apps/web` and `apps/business`, link with `Link` and `useRouter` from
 `@repo/internationalization/navigation` so URLs keep their language prefix.
 
 ---
@@ -581,7 +616,7 @@ that organization instead (`accept_invitation`). Invitation links
 
 Later, users create more organizations from the sidebar's organization switcher
 (`/[locale]/organizations/new`). The active organization is remembered per
-device (`apps/app/lib/active-organization.ts`); it is a UI preference, not a
+device (`apps/business/lib/active-organization.ts`); it is a UI preference, not a
 permission. Roles are `owner`, `admin` and `member`:
 
 | Action | owner | admin | member |
@@ -662,7 +697,10 @@ Current schema:
 | `…_pending_invitations.sql` | `pending_invitations()` RPC for onboarding |
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
-| `…_commerce.sql` | Megastore catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
+| `…_commerce.sql` | The IDEA Store's catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
+| `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
+| `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
+| `…_single_rent.sql` | Single-item rent: `rental_rates`, `rental_quote()`, `create_rental_order()` (rent + deposit lines), `settle_rental()`, `set_rental_deposit_rate()`; Keep it: `keep_price()`, `keep_rental()`; `rentals.kind`, `order_items.kind`, rental status `kept` |
 | `…_plus.sql` | The IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
 | `…_editorial.sql` | `posts`, `events` + `event_rsvps` (capacity, closed after start), `submissions` + staff-only `submission_reviews`; `review_queue()` hides authors until a decision (blind review) |
 | `…_back_office.sql` | `crm_contacts`, `marketing_segments`, `marketing_campaigns` (opted-in customers only: `profiles.marketing_opt_in`), double-entry ledger (`chart_of_accounts`, `ledger_entries`, `ledger_lines`, `post_journal_entry()`, `ledger_monthly_summary()`), `staff_plan`, `equity_rounds`, `equity_holders` |
@@ -872,7 +910,7 @@ In the Supabase dashboard:
    (`https://theideaiq.com`, where The IDEA Pass lives). Add these
    **Redirect URLs**:
    - `https://theideaiq.com/**` (the website, with The IDEA Pass)
-   - `https://spark.theideaiq.com/**` (The IDEA Spark)
+   - `https://business.theideaiq.com/**` (The IDEA Business)
    - `capacitor://localhost/**` (iOS app)
    - `https://localhost/**` (Android app)
    - `<bundle id>://**`, for example `iq.example.app://**` (native deep links)
@@ -902,7 +940,7 @@ In the Supabase dashboard:
    - **Change Email Address** ← `email_change.html`, subject
      `تأكيد البريد الإلكتروني · Confirm your email for The IDEA Pass`.
    Each shows `{{ .Token }}` and no link. Send yourself a code from
-   `/sign-up` to check it arrives from hi@theideaiq.com.
+   `/sign-in` with a new address to check it arrives from hi@theideaiq.com.
 6. **Rate limits.** Under **Authentication → Rate Limits**, set the emails
    per hour to what Resend's plan allows (for example 100) and keep the
    per-address interval at 60 s (the form's resend cooldown).
@@ -911,8 +949,8 @@ In the Supabase dashboard:
 
 | Where | Client | RLS |
 | --- | --- | --- |
-| `apps/web` and `apps/app` client components (browser and the apps' WebView) | `useAuth().supabase` (from `getSupabase()`) | applies |
-| `apps/web` and `apps/app` Server Components and Server Actions (The IDEA Pass, My Pass, the back office) | `@repo/auth/server` | applies |
+| `apps/web` and `apps/business` client components (browser and the apps' WebView) | `useAuth().supabase` (from `getSupabase()`) | applies |
+| `apps/web` and `apps/business` Server Components and Server Actions (The IDEA Pass and its pages, the back office) | `@repo/auth/server` | applies |
 | `apps/web` public pages (catalog, editorial) | the anonymous publishable-key client | applies |
 | `apps/api` endpoints called by users | verify with `authenticateRequest`, check `membershipRole`, then the admin client for the privileged step | bypassed: check access yourself |
 | Webhooks, cron jobs | `@repo/database/admin` | bypassed |
@@ -1161,8 +1199,8 @@ and `https://theideaiq.com/.well-known/assetlinks.json` both return 200
 with JSON.
 
 - **iOS:** Xcode → App target → Signing & Capabilities → **Associated
-  Domains**: `applinks:spark.theideaiq.com` and
-  `webcredentials:spark.theideaiq.com` (password autofill).
+  Domains**: `applinks:theideaiq.com` and
+  `webcredentials:theideaiq.com` (password autofill).
 - **Android:** in `android/app/src/main/AndroidManifest.xml`, inside the
   main `<activity>`:
 
@@ -1171,7 +1209,7 @@ with JSON.
     <action android:name="android.intent.action.VIEW" />
     <category android:name="android.intent.category.DEFAULT" />
     <category android:name="android.intent.category.BROWSABLE" />
-    <data android:scheme="https" android:host="spark.theideaiq.com" />
+    <data android:scheme="https" android:host="theideaiq.com" />
   </intent-filter>
   ```
 
@@ -1288,7 +1326,7 @@ it and its passwords in the password manager; enable Play App Signing) →
 ```
 
 `<AnalyticsProvider>` is rendered once in the root layouts of `apps/web` and
-`apps/app`. Code never calls `gtag`, `fbq` or `ttq` directly. It calls
+`apps/business`. Code never calls `gtag`, `fbq` or `ttq` directly. It calls
 
 ```ts
 import { track } from "@repo/analytics/client";
@@ -1310,8 +1348,8 @@ cannot appear on the site without a code review.
 | `track()` event | GA4 | Meta | TikTok | Fired from |
 | --- | --- | --- | --- | --- |
 | page view (automatic) | `page_view` | `PageView` | page | every navigation, web and app |
-| `sign_up` | `sign_up` | `CompleteRegistration` | `CompleteRegistration` | app: code verified on the sign-up page |
-| `login` | `login` | — | — | app: code verified on the sign-in page |
+| `sign_up` | `sign_up` | `CompleteRegistration` | `CompleteRegistration` | app: code verified on the sign-in page for a new Pass |
+| `login` | `login` | — | — | app: code verified on the sign-in page for an existing Pass |
 | `search` | `search` | `Search` | `Search` | app: header search |
 | `begin_checkout` | `begin_checkout` | `InitiateCheckout` | `InitiateCheckout` | app: billing, "Pay" clicked |
 | `purchase` | `purchase` | `Purchase` | `Purchase` | app: billing, after returning from a paid checkout. **Also** server-side from the payment webhook (Meta and TikTok). |
@@ -1371,12 +1409,148 @@ outside this template.
 
 | Destination | How |
 | --- | --- |
-| GA4 | Open the site with the Google Tag Assistant extension connected, then **GA4 → Admin → DebugView**. Click through sign-up, search, checkout. Realtime reports confirm production traffic. |
+| GA4 | Open the site with the Google Tag Assistant extension connected, then **GA4 → Admin → DebugView**. Click through sign-in, search, checkout. Realtime reports confirm production traffic. |
 | Meta (browser) | Meta Pixel Helper extension: each event should show once, with an event id on `Purchase`. |
 | Meta (server) | Set `META_TEST_EVENT_CODE` in `apps/api` (from **Events Manager → Test events**), make a test payment and watch the event arrive. In **Overview**, the `Purchase` row should show browser and server events *deduplicated*. Remove the test code afterwards. |
 | TikTok | TikTok Pixel Helper for the browser, `TIKTOK_TEST_EVENT_CODE` with **Events Manager → Test events** for the server. Remove the test code afterwards. |
 
 ### 4.2 Wayl payments
+
+#### Ages and guardians
+
+The IDEA Pass is open from 13 (migration `20261220000000_ages.sql`).
+Onboarding asks for the date of birth first (`profiles.birthday`, set once;
+the database refuses anyone under 13), and it's needed to buy. For
+13–17-year-olds:
+
+- **A guardian with The IDEA Pass of their own.** The teen gets an invite code in
+  Settings (`invite_guardian()`), shares the link
+  (`/pass/settings?guardian=<code>#guardian`), and an adult (18 or over,
+  checked from their own date of birth) accepts it (`guardian_invite()`,
+  `accept_guardian()`; `guardian_links`). Either side can end the link.
+- **Orders wait for the guardian.** `create_order()` marks a teen's order
+  `guardian_status = 'pending'` and notifies the guardian; nothing is paid,
+  confirmed or shipped before (a trigger, and the billing service refuses
+  to open the payment page). The guardian approves or declines it in
+  Settings (`my_teens()`, `decide_guardian_order()`): an approved cash
+  order is confirmed, an online one is paid by the teen from the order
+  page; a declined one is cancelled.
+- **The IDEA Plus** needs the guardian's yes once (`set_guardian_plus()`;
+  `POST /checkout` answers `guardian_required` otherwise).
+- **PEGI 18** products (`products.age_rating`) are hidden from under-18
+  Passes by the products policy and refused by `create_order()`.
+- **18+ only:** Sell to us (trade-ins) and affiliates (triggers).
+- Reviews from verified buyers with a photo say they earned 5 Bulbs.
+
+#### Single-item rent and Keep it
+
+Anyone with The IDEA Pass can rent one rentable item on its own, without
+The IDEA Plus (migration `20261221000000_single_rent.sql`):
+
+- **Rates by category** (`rental_rates`, Finance → Rental rates): games
+  9,750 IQD for 7 days, books 3,750 for 14, films 2,750 for 7, each with a
+  fee per day late. `rental_quote(product)` gives the price, days, late fee
+  and deposit; the product page shows them (`components/store/rent-card.tsx`).
+- **The order.** `/rent/<slug>` (`components/screens/rent-checkout.tsx`)
+  calls `create_rental_order()`: an order of two lines, the rent and a
+  refundable deposit (`store_settings.rental_deposit_rate`, 50% of the
+  item's price), plus delivery (free in Baghdad on Plus plans that include
+  it) or pickup, paid online or in cash like any order. It holds a copy and
+  creates a `rentals` row with `kind = 'single'`. The rental starts when
+  the order is delivered and is due after the rate's days; it can't start
+  before the order is paid or confirmed. No Bulbs are earned or spent.
+- **Return and settlement.** Staff mark it returned, then settle it on
+  Rentals (`settle_rental(damage)`, support): late days × the late fee and
+  any damage come out of the deposit, giving `refund_due` (paid back in
+  Wayl or at the counter, outside the app) or `amount_due`. 14 days late
+  and not back, it's kept at its used price (`status = 'kept'`).
+- **Keep it** (Plus rentals): the member buys the copy they have at its
+  used price less one month of their plan (`keep_price()`,
+  `keep_rental()`), from "Your rentals" on `/plus`. Once paid, the rental
+  ends as `kept` and the copy is sold to them.
+
+#### The IDEA Plus launch (places, waitlist, swaps)
+
+The IDEA Plus starts in Baghdad with a set number of places (migration
+`20261222000000_plus_launch.sql`):
+
+- **Places and the waitlist.** `store_settings.plus_capacity` (60) members;
+  `plus_status()` tells `/plus` how many places are free and whether the
+  caller can join (`member`, `invited`, `open`) or not (`full`,
+  `needs_home`, `outside_baghdad`). `POST /checkout` refuses a new Plus
+  member without a place (`plus_full`, `plus_needs_home`, …). Beyond the
+  places people join `plus_waitlist` (first come, first served, by
+  governorate). When a place opens (a member leaves, or support raises the
+  places) the next person in Baghdad is invited for `plus_invite_hours`
+  (72) with a `plus_invite` notification; expired invites pass on (the
+  daily `/cron/rentals` calls `run_plus_waitlist()`). Support can invite
+  anyone (Rentals → Plus places).
+- **Homes in Baghdad.** Joining asks for the member's area (`plus_areas`,
+  each with a delivery weekday, edited in Rentals → Plus places) and
+  address (`set_plus_home()` → `plus_homes`). People elsewhere wait for
+  their governorate.
+- **No due dates.** Plus rentals are kept as long as the member likes;
+  only single-item rents have due dates and late fees.
+- **The queue** is Saved (`wishlist_items.position`, `reorder_saved()`):
+  the rental catalog's "Add to queue" saves an item.
+- **Swaps.** `book_swap(returns, wants, method)` takes back what the
+  member returns and holds copies of what comes next, within the plan's
+  slots, at home on the area's next delivery day or at the counter. The
+  first delivery is free; after that home swaps count against
+  `plans.home_swaps` (1/2/4 a month) and an extra one costs
+  `store_settings.extra_swap_fee` (3,000 IQD) as an order line
+  (`kind = 'swap'`). Counter swaps are unlimited. Staff complete or cancel
+  swaps in Rentals → Swaps (`complete_swap()`, `cancel_swap()`).
+- **Plan options.** Annual plans (`plus-glow-year`, … : 10 months' price for
+  12); `pause_plus(days)` up to 31 days in 12 months (no swaps, the paid
+  period moves on by the pause; `resume_plus()` gives unused days back);
+  `cancel_plus()` ends Plus with the paid period (billing marks it
+  `canceled` at the period end and invoices nothing more);
+  `change_plus_plan()` sets `subscriptions.next_plan_id`, applied at the
+  next renewal by the billing service.
+
+#### Game night kits
+
+Weekend rentals of a console set (migration
+`20261223000000_game_night_kits.sql`): `kit_types` (PS5 49,750 IQD with
+4 games of the member's choice, Switch party 39,750, Retro 24,750; extra
+days 19,750 / 14,750 / 9,750; a 100,000 IQD refundable deposit) and
+`kit_units`, one per physical kit (added in Rentals → Kits once it's ready;
+no units, no bookings).
+
+- **Booking** at `/kits/<kit>` (linked from `/plus#kits`):
+  `kit_weekends(kit)` lists the next 8 Thursdays with free units and the
+  caller's price (Plus Blaze 25% off); `book_kit()` books Thursday evening
+  to Saturday evening plus up to 3 extra days, for adults only, delivered
+  in Baghdad: an order of the kit line (`kind = 'kit'`) and the deposit,
+  paid online or in cash. No Bulbs.
+- **Games**: the PS5 kit's chosen games (`kit_booking_games`) are held as
+  `rentals.kind = 'kit'` two days before the weekend (`run_kit_holds()`,
+  daily in `/cron/rentals`).
+- **Staff** (Rentals → Kits): waive the deposit for someone whose ID was
+  checked (`waive_kit_deposit()`, before payment), hand over once paid
+  (`hand_over_kit()`: the games go with it), collect with any damage
+  (`collect_kit()`: `refund_due` / `amount_due`, refunded outside the app).
+  Cancelling the order cancels the booking.
+
+#### Categories, prices and conditions (the catalogue)
+
+The store has six categories, each a filter on `/store`: Music, Games,
+Books, Films, Audio and Tech (migration `20261219000000_catalogue_fixes.sql`;
+cameras, gadgets, laptops and phones are in Tech). Prices follow the
+program revision's bands and always end in …4,750 or …9,750: games by age
+(released in the last 6 months 99,750, up to 2 years 79,750, older 59,750),
+books by language (Arabic paperbacks 14,750, others 19,750), Blu-ray films
+29,750 (4K 44,750), vinyl 54,750 to 89,750 (coloured editions from 69,750),
+CDs 19,750 (new releases 24,750; signed and multi-disc editions as priced);
+open box at most 75% of new, used by wear. Consoles, accessories, hi-fi
+and cameras are priced from cost. Finance → Prices checks every price
+against the margin floor once costs are in. A copy's condition is one of
+four plain labels (New, Open box, Refurbished, Used), shown for items for
+sale that aren't new; the bulb belongs only to Bulbs. Rental-only items
+show "Rent with The IDEA Plus" with "Worth …" in small print instead of a
+sale price. Games carry a PEGI age rating (`products.age_rating`: 3, 7,
+12, 16 or 18), shown on the product page and set in the product form.
 
 #### Stock per copy (the shared catalogue)
 
@@ -1600,7 +1774,7 @@ Set it up once:
 
 ### 4.4 WhatsApp order updates
 
-Customers who turn on **WhatsApp updates** in My Pass → Settings (a number
+Customers who turn on **WhatsApp updates** in Pass settings (`/pass/settings`) (a number
 and `profiles.whatsapp_opt_in`) get template messages from the WhatsApp
 Cloud API for four notification events. `apps/api` sends them from the
 notifications webhook and the `/cron/push` catch-up (`lib/whatsapp`); each
@@ -1624,7 +1798,7 @@ until both `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
 | `order_confirmed` | name, order number | `Hi {{1}}, your The IDEA order {{2}} is confirmed. We'll let you know when it's on its way.` | `مرحباً {{1}}، تم تأكيد طلبك {{2}} من The IDEA. سنخبرك عند خروجه للتوصيل.` |
 | `order_shipped` | name, order number, tracking | `Hi {{1}}, your order {{2}} is on its way. Tracking: {{3}}.` | `مرحباً {{1}}، طلبك {{2}} في الطريق إليك. رقم التتبع: {{3}}.` |
 | `rental_due_soon` | name, item, due date | `Hi {{1}}, a reminder that {{2}} from The IDEA Plus is due back on {{3}}.` | `مرحباً {{1}}، تذكير بأن موعد إرجاع {{2}} من The IDEA Plus هو {{3}}.` |
-| `trade_in_offer` | name, request number, item, offer | `Hi {{1}}, we made an offer on your request {{2}} ({{3}}): {{4}}. Open My Pass on theideaiq.com to accept or decline.` | `مرحباً {{1}}، قدّمنا عرضاً على طلبك {{2}} ({{3}}): {{4}}. افتح بطاقتك على theideaiq.com لقبوله أو رفضه.` |
+| `trade_in_offer` | name, request number, item, offer | `Hi {{1}}, we made an offer on your request {{2}} ({{3}}): {{4}}. Open your Pass on theideaiq.com to accept or decline.` | `مرحباً {{1}}، قدّمنا عرضاً على طلبك {{2}} ({{3}}): {{4}}. افتح بطاقتك على theideaiq.com لقبوله أو رفضه.` |
 
 ### 4.5 Delivery with Boxy
 
@@ -1643,7 +1817,7 @@ Boxy bills The IDEA. Store pickup stays as it is.
   orders: Boxy collects the order total; orders paid online: nothing),
   asks for a pick-up, records the parcel in `shipments` and marks the order
   shipped with its tracking code and page (the customer is notified and
-  sees **Track your parcel** in My Pass). The panel prints the label,
+  sees **Track your parcel** in `/pass/orders`). The panel prints the label,
   refreshes the status and cancels the parcel before it is collected.
 - **Following:** Boxy's webhooks (only up to "in transit") and the sync job
   (`/cron/boxy`: daily on Vercel and every 15 minutes from
@@ -1681,8 +1855,8 @@ Create four Vercel projects from the same repository:
 
 | Project | Root Directory | Domain | Notes |
 | --- | --- | --- | --- |
-| web | `apps/web` | `theideaiq.com` | The website: public pages, The IDEA Pass, My Pass, cart and checkout; the iOS/Android apps load it |
-| app | `apps/app` | `spark.theideaiq.com` | The IDEA Spark: the back office and The IDEA Suite |
+| web | `apps/web` | `theideaiq.com` | The website: public pages, The IDEA Pass and its pages, cart and checkout; the iOS/Android apps load it |
+| app | `apps/business` | `business.theideaiq.com` | The IDEA Business: the company dashboard and the staff back office |
 | api | `apps/api` | `api.theideaiq.com` | Cron jobs are defined in `apps/api/vercel.json` |
 | storybook | `apps/storybook` | `design.theideaiq.com` | The IDEA Design; `vercel.json` sets `bun run build` (Storybook, then Next.js). Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`. No Vercel Authentication: the proxy is the gate. |
 
@@ -1731,12 +1905,12 @@ and Better Stack are configured on `api`, not here.
 | Variable | Need | Notes |
 | --- | --- | --- |
 | `NEXT_PUBLIC_WEB_URL` | Build | This site's URL, `https://theideaiq.com`; also the API's CORS origin for the contact form |
-| `NEXT_PUBLIC_APP_URL` | Build | The IDEA Spark, `https://spark.theideaiq.com`, for The IDEA Suite and back-office links |
-| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so The IDEA Spark and the design site read the session The IDEA Pass writes; unset on previews |
+| `NEXT_PUBLIC_APP_URL` | Build | The IDEA Business, `https://business.theideaiq.com`, for company and back-office links |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so The IDEA Business and the design site read the session The IDEA Pass writes; unset on previews |
 | `NEXT_PUBLIC_DESIGN_URL` | Optional | The IDEA Design, an allowed return_to host |
 | `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, The IDEA Post and events (read anonymously, under Row Level Security). Without them those sections show empty states. |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, The IDEA Club's posts and events (read anonymously, under Row Level Security). Without them those sections show empty states. |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID`, `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_TIKTOK_PIXEL_ID` | Optional | See 4.1 |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | Product analytics |
 | `NEXT_PUBLIC_SENTRY_DSN` | Optional | Error reporting |
@@ -1746,15 +1920,15 @@ Remove `RESEND_*`, `ARCJET_KEY`, `UPSTASH_*` and `BETTERSTACK_*` from this
 project if they are still set. Page-level bot protection for the site is
 Vercel's Firewall (Bot Protection / Attack Challenge Mode), not Arcjet.
 
-### 5.4 `app` (apps/app)
+### 5.4 `app` (apps/business)
 
-The IDEA Spark: the back office and The IDEA Suite. Every variable here is
+The IDEA Business: the company dashboard and the staff back office. Every variable here is
 public (it may end up in the browser). **Never add a secret to this
 project.**
 
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Build | This app's URL, `https://spark.theideaiq.com`; The IDEA Pass sends people back to it |
+| `NEXT_PUBLIC_APP_URL` | Build | This app's URL, `https://business.theideaiq.com`; The IDEA Pass sends people back to it |
 | `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so the website and the design site read the session; unset on previews |
 | `NEXT_PUBLIC_DESIGN_URL` | Optional | The IDEA Design, an allowed return_to host |
 | `NEXT_PUBLIC_WEB_URL` | Build | The website, where The IDEA Pass sign-in lives |
@@ -1830,8 +2004,8 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Build, on every project | `https://spark.theideaiq.com`; every "Sign in" links to The IDEA Pass there (`passUrl`; defaults to `http://localhost:3000`) |
+| `NEXT_PUBLIC_APP_URL` | Build, on every project | The IDEA Business, `https://business.theideaiq.com`; an allowed return_to host (`isAllowedReturnTo`) |
 | `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature, on every project that reads the session (app, storybook, web) | `.theideaiq.com`; unset on previews |
 | `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_DESIGN_URL`, `NEXT_PUBLIC_API_URL` | Feature (app) | The other allowed return_to hosts |
 
-Supabase's redirect URLs include `https://spark.theideaiq.com/**`.
+Supabase's redirect URLs include `https://business.theideaiq.com/**`.

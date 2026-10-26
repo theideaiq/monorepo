@@ -77,9 +77,9 @@ begin
 ## كيف تستعد؟
 
 - ابدأ بالأنشطة التطوعية والمجتمعية من الآن، فهي جزء أساسي من التقييم.
-- طوّر إنجليزيتك، خصوصاً الكتابة والمحادثة: [كيف تطوّر إنجليزيتك](/post/improve-your-english).
-- تدرّب على كتابة المقالات الشخصية؛ الأفكار نفسها تفيدك لاحقاً في [مقالة Common App](/post/common-app-essay).
-- اطّلع على [برامج التبادل الشبابية](/post/youth-exchange-programs) و[برنامج IYLEP](/post/iylep-guide)، فهي تبني سجلّك وخبرتك.
+- طوّر إنجليزيتك، خصوصاً الكتابة والمحادثة: [كيف تطوّر إنجليزيتك](/club/improve-your-english).
+- تدرّب على كتابة المقالات الشخصية؛ الأفكار نفسها تفيدك لاحقاً في [مقالة Common App](/club/common-app-essay).
+- اطّلع على [برامج التبادل الشبابية](/club/youth-exchange-programs) و[برنامج IYLEP](/club/iylep-guide)، فهي تبني سجلّك وخبرتك.
 
 ## روابط رسمية
 
@@ -153,9 +153,9 @@ UWC graduates stand out to universities. One of the best-known opportunities is 
 ## How to prepare
 
 - Start volunteering and community work now; it's a key part of the assessment.
-- Build your English, especially writing and speaking: [how to improve your English](/post/improve-your-english).
-- Practice writing personal essays; the same skills help later with the [Common App essay](/post/common-app-essay).
-- Look at [online youth exchange programs](/post/youth-exchange-programs) and [IYLEP](/post/iylep-guide); they build your record and experience.
+- Build your English, especially writing and speaking: [how to improve your English](/club/improve-your-english).
+- Practice writing personal essays; the same skills help later with the [Common App essay](/club/common-app-essay).
+- Look at [online youth exchange programs](/club/youth-exchange-programs) and [IYLEP](/club/iylep-guide); they build your record and experience.
 
 ## Official links
 

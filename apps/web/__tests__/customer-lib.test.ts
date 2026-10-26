@@ -12,7 +12,7 @@ import {
   type CartItem,
   cartCount,
   clampQuantity,
-  freeShippingRemaining,
+  freeDeliveryRemaining,
   lineProblem,
   summarizeCart,
   toCartLine,
@@ -60,7 +60,7 @@ const item = (overrides: Partial<CartItem> = {}): CartItem => ({
   ...overrides,
 });
 
-const settings = { freeShippingThreshold: 100_000, shippingFee: 5000 };
+const settings = { shippingFee: 5000 };
 
 describe("cart", () => {
   test("a used copy of a new product is priced and counted from its offer", () => {
@@ -102,11 +102,7 @@ describe("cart", () => {
   test("totals the orderable lines with delivery", () => {
     const summary = summarizeCart([item()], settings);
     expect(summary.totals).toEqual({
-      bulbsDiscount: 0,
-      bulbsUsed: 0,
       count: 2,
-      discount: 0,
-      discountSource: null,
       shippingFee: 5000,
       subtotal: 20_000,
       total: 25_000,
@@ -136,13 +132,11 @@ describe("cart", () => {
     expect(clampQuantity(4, 2)).toBe(2);
   });
 
-  test("says how far free delivery is", () => {
-    expect(freeShippingRemaining(60_000, settings)).toBe(40_000);
-    expect(freeShippingRemaining(120_000, settings)).toBe(0);
-    expect(freeShippingRemaining(0, settings)).toBe(0);
-    expect(
-      freeShippingRemaining(1, { freeShippingThreshold: null, shippingFee: 1 })
-    ).toBe(0);
+  test("says how far a zone's free delivery is", () => {
+    expect(freeDeliveryRemaining(60_000, 150_000)).toBe(90_000);
+    expect(freeDeliveryRemaining(160_000, 150_000)).toBe(0);
+    expect(freeDeliveryRemaining(0, 150_000)).toBe(0);
+    expect(freeDeliveryRemaining(1, null)).toBe(0);
   });
 });
 

@@ -12,7 +12,17 @@ import { isCurrentItem, navigationItems } from "@/lib/navigation";
 import { AccountActions } from "./account-actions";
 import { LanguageSwitcher } from "./language-switcher";
 
-/** The site's header: the logo, the same sections as the phone tabs, and the Pass. */
+/** Links in the phone menu after the sections. */
+const moreLinks = [
+  { href: "/business", id: "business" },
+  { href: "/about", id: "about" },
+  { href: "/help", id: "help" },
+] as const;
+
+/**
+ * The site's header: the logo, the same sections as the phone tabs, "For
+ * business", then search, saved items, the cart and The IDEA Pass.
+ */
 export const Header = () => {
   const t = useTranslations("web.nav");
   const common = useTranslations("common");
@@ -58,12 +68,18 @@ export const Header = () => {
           </ul>
         </nav>
 
-        <div className="ms-auto flex items-center gap-2">
-          <div className="hidden items-center gap-1 md:flex">
+        <div className="ms-auto flex items-center gap-1">
+          <Link
+            className="hidden rounded-md px-3 py-2 font-medium text-muted-foreground text-sm transition-colors hover:bg-muted hover:text-foreground lg:block"
+            href="/business"
+          >
+            {t("business")}
+          </Link>
+          <div className="hidden items-center gap-1 xl:flex">
             <LanguageSwitcher />
             <ModeToggle labels={themeLabels} />
           </div>
-          <AccountActions className="hidden sm:flex" />
+          <AccountActions />
           <Button
             aria-expanded={isOpen}
             aria-label={isOpen ? common("closeMenu") : common("openMenu")}
@@ -94,10 +110,22 @@ export const Header = () => {
                 </li>
               ))}
             </ul>
+            <ul className="mt-4 flex flex-col gap-1 border-t pt-4">
+              {moreLinks.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    className="block py-1 text-muted-foreground"
+                    href={item.href}
+                    onClick={close}
+                  >
+                    {t(item.id)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
             <div className="mt-6 flex flex-wrap items-center gap-2 border-t pt-4">
               <LanguageSwitcher />
               <ModeToggle labels={themeLabels} />
-              <AccountActions className="ms-auto" onNavigate={close} />
             </div>
           </nav>
         ) : null}

@@ -44,29 +44,12 @@ export const discountPercent = (
 
 type ProductCondition = "new" | "open_box" | "refurbished" | "used";
 
-/** The condition customers see, as a condition bulb (brand v1.0). */
-export type CustomerCondition = "like-new" | "new" | "used";
-
-const CUSTOMER_CONDITIONS: Record<ProductCondition, CustomerCondition> = {
-  new: "new",
-  open_box: "like-new",
-  refurbished: "like-new",
-  used: "used",
-};
-
 /**
- * Maps a product's stored condition to the three conditions customers see:
- * new, like new (open box or refurbished) or used.
+ * Anything for sale that isn't new shows its condition (Open box,
+ * Refurbished or Used). Rentals don't: the member borrows a copy and gives
+ * it back, so its grade isn't theirs to weigh.
  */
-export const customerCondition = (condition: ProductCondition) =>
-  CUSTOMER_CONDITIONS[condition];
-
-/**
- * Anything for sale that isn't new shows its condition bulb. Rentals don't:
- * the member borrows a copy and gives it back, so its grade isn't theirs to
- * weigh.
- */
-export const showsConditionBulb = (product: {
+export const showsCondition = (product: {
   readonly condition: ProductCondition;
   readonly kind: string;
 }) => product.kind !== "rental" && product.condition !== "new";
@@ -175,7 +158,6 @@ export interface CartLine {
 }
 
 export interface StoreSettings {
-  freeShippingThreshold: number | null;
   /** The fee the cart shows before a delivery zone is chosen. */
   shippingFee: number;
 }
@@ -186,14 +168,13 @@ export type Fulfilment = "delivery" | "pickup";
 /** How an order is paid (`orders.payment_method`). */
 export type PaymentMethod = "cash_on_delivery" | "online";
 
-/** Pickup or delivery, and the chosen zone's fee for delivery. */
+/** Pickup or delivery, and the chosen zone's rules for delivery. */
 export interface DeliveryChoice {
-  /**
-   * The member's tier perk: the subtotal from which delivery is free (0 for
-   * always), or null without one.
-   */
-  freeDeliveryFrom?: number | null;
+  /** The zone's subtotal from which delivery is free for everyone. */
+  freeFrom?: number | null;
   fulfilment: Fulfilment;
+  /** The member's plan delivers free to this zone. */
+  planFree?: boolean;
   /** The delivery zone's fee; the store's default fee when none is chosen. */
   zoneFee?: number | null;
 }
@@ -202,49 +183,15 @@ export interface DeliveryChoice {
 export const BULB_VALUE_IQD = 100;
 
 /** A friend's invite: 10% off the first order, at most 15,000 IQD. */
-export const INVITE_DISCOUNT_RATE = 0.1;
 export const INVITE_DISCOUNT_CAP = 15_000;
-
-/** The invite discount on a subtotal, mirroring `create_order()`. */
-export const inviteDiscount = (subtotal: number) =>
-  Math.min(Math.floor(subtotal * INVITE_DISCOUNT_RATE), INVITE_DISCOUNT_CAP);
-
-/** An affiliate's link or code: 5% off, no cap. */
-export const AFFILIATE_DISCOUNT_RATE = 0.05;
 
 /** What takes money off an order (`orders.discount_source`). */
 export type DiscountSource = "affiliate" | "invite";
 
-/** The discounts a member's next order qualifies for. */
-export interface Promo {
-  /** An affiliate's link or code in the past 30 days. */
-  affiliate?: boolean;
-  /** The member's first order through a friend's invite. */
-  invited?: boolean;
-}
-
 /**
- * The order's one discount, mirroring `create_order()`: the larger of the
- * invite and the affiliate's 5%, the invite on a tie.
- */
-export const orderDiscount = (
-  subtotal: number,
-  promo: Promo = {}
-): { discount: number; discountSource: DiscountSource | null } => {
-  const invite = promo.invited ? inviteDiscount(subtotal) : 0;
-  const affiliate = promo.affiliate
-    ? Math.floor(subtotal * AFFILIATE_DISCOUNT_RATE)
-    : 0;
-  if (affiliate > invite) {
-    return { discount: affiliate, discountSource: "affiliate" };
-  }
-  return { discount: invite, discountSource: invite > 0 ? "invite" : null };
-};
-
-/**
- * The delivery fee, mirroring `create_order()`: pickup is free; delivery
- * costs the zone's fee unless the subtotal reaches the free-delivery
- * threshold or the member's tier delivers free.
+ * The delivery fee, mirroring `price_checkout()`: pickup is free; delivery
+ * costs the zone's fee unless the subtotal reaches the zone's free-delivery
+ * threshold or the member's plan delivers free there.
  */
 export const deliveryFee = (
   subtotal: number,
@@ -254,16 +201,10 @@ export const deliveryFee = (
   if (subtotal === 0 || choice?.fulfilment === "pickup") {
     return 0;
   }
+  const freeFrom = choice?.freeFrom;
   if (
-    settings.freeShippingThreshold !== null &&
-    subtotal >= settings.freeShippingThreshold
-  ) {
-    return 0;
-  }
-  if (
-    choice?.freeDeliveryFrom !== null &&
-    choice?.freeDeliveryFrom !== undefined &&
-    subtotal >= choice.freeDeliveryFrom
+    (freeFrom !== null && freeFrom !== undefined && subtotal >= freeFrom) ||
+    choice?.planFree
   ) {
     return 0;
   }
@@ -271,42 +212,78 @@ export const deliveryFee = (
 };
 
 /**
- * The totals the customer will be charged, mirroring `create_order()` in the
- * database (which is authoritative: it re-prices every line from the catalog
- * and takes the fee from the delivery zone).
+ * The cart's estimate: the lines and delivery. The checkout shows the
+ * server's quote (`checkout_quote()`), which adds the discount, the Bulbs
+ * spent and the giveaway cap.
  */
 export const cartTotals = (
   lines: CartLine[],
   settings: StoreSettings,
-  choice?: DeliveryChoice,
-  /** Bulbs the member wants to spend (capped at what the order costs). */
-  bulbs = 0,
-  /** The invite or affiliate discount the member qualifies for. */
-  promo: Promo = {}
+  choice?: DeliveryChoice
 ) => {
   const subtotal = lines.reduce(
     (sum, line) => sum + line.unitPrice * line.quantity,
     0
   );
   const shippingFee = deliveryFee(subtotal, settings, choice);
-  const { discount, discountSource } = orderDiscount(subtotal, promo);
-  const bulbsUsed = Math.max(
-    0,
-    Math.min(
-      Math.floor(bulbs),
-      Math.floor((subtotal + shippingFee - discount) / BULB_VALUE_IQD)
-    )
-  );
-  const bulbsDiscount = bulbsUsed * BULB_VALUE_IQD;
   return {
-    bulbsDiscount,
-    bulbsUsed,
     count: lines.reduce((sum, line) => sum + line.quantity, 0),
-    discount,
-    discountSource,
     shippingFee,
     subtotal,
-    total: subtotal + shippingFee - discount - bulbsDiscount,
+    total: subtotal + shippingFee,
+  };
+};
+
+/** Why delivery is free on a quote: the zone's threshold or the plan. */
+export type FreeDeliveryReason = "plan" | "threshold";
+
+/** The checkout priced by the server (`checkout_quote()`), in IQD. */
+export interface CheckoutQuote {
+  /** The Bulbs rate the order earns at, in percent. */
+  bulbRate: number;
+  bulbsDiscount: number;
+  /** Cashback the order will earn once delivered (after the cap). */
+  bulbsToEarn: number;
+  bulbsUsed: number;
+  /** Delivery the order doesn't pay (the zone's fee when it's free). */
+  deliveryWaived: number;
+  discount: number;
+  discountSource: DiscountSource | null;
+  freeDelivery: FreeDeliveryReason | null;
+  /** The zone's free-delivery threshold, for "add X for free delivery". */
+  freeFrom: number | null;
+  shippingFee: number;
+  subtotal: number;
+  total: number;
+  zoneId: string | null;
+}
+
+const toNumber = (value: unknown) =>
+  typeof value === "number" ? value : Number(value ?? 0) || 0;
+
+/** Reads `checkout_quote()`'s JSON. */
+export const toCheckoutQuote = (json: unknown): CheckoutQuote => {
+  const row = (json ?? {}) as Record<string, unknown>;
+  const source = row.discount_source;
+  const free = row.free_delivery;
+  return {
+    bulbRate: toNumber(row.bulb_rate),
+    bulbsDiscount: toNumber(row.bulbs_discount),
+    bulbsToEarn: toNumber(row.bulbs_to_earn),
+    bulbsUsed: toNumber(row.bulbs_used),
+    deliveryWaived: toNumber(row.delivery_waived),
+    discount: toNumber(row.discount),
+    discountSource:
+      source === "affiliate" || source === "invite" ? source : null,
+    freeDelivery: free === "plan" || free === "threshold" ? free : null,
+    freeFrom:
+      row.free_from === null || row.free_from === undefined
+        ? null
+        : toNumber(row.free_from),
+    shippingFee: toNumber(row.shipping_fee),
+    subtotal: toNumber(row.subtotal),
+    total: toNumber(row.total),
+    zoneId: typeof row.zone_id === "string" ? row.zone_id : null,
   };
 };
 
