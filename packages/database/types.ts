@@ -322,30 +322,6 @@ export type Database = {
           },
         ];
       };
-      bulb_tiers: {
-        Row: {
-          free_delivery_from: number | null;
-          min_spend: number;
-          rate: number;
-          tier: Database["public"]["Enums"]["bulb_tier"];
-          updated_at: string;
-        };
-        Insert: {
-          free_delivery_from?: number | null;
-          min_spend: number;
-          rate: number;
-          tier: Database["public"]["Enums"]["bulb_tier"];
-          updated_at?: string;
-        };
-        Update: {
-          free_delivery_from?: number | null;
-          min_spend?: number;
-          rate?: number;
-          tier?: Database["public"]["Enums"]["bulb_tier"];
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
       candidates: {
         Row: {
           company_note: string | null;
@@ -546,12 +522,14 @@ export type Database = {
           carrier_province: string | null;
           created_at: string;
           fee: number;
+          free_from: number | null;
           governorate: string | null;
           id: string;
           max_days: number;
           min_days: number;
           name_ar: string;
           name_en: string;
+          plus_free_delivery: boolean;
           position: number;
           updated_at: string;
         };
@@ -560,12 +538,14 @@ export type Database = {
           carrier_province?: string | null;
           created_at?: string;
           fee: number;
+          free_from?: number | null;
           governorate?: string | null;
           id?: string;
           max_days?: number;
           min_days?: number;
           name_ar: string;
           name_en: string;
+          plus_free_delivery?: boolean;
           position?: number;
           updated_at?: string;
         };
@@ -574,12 +554,14 @@ export type Database = {
           carrier_province?: string | null;
           created_at?: string;
           fee?: number;
+          free_from?: number | null;
           governorate?: string | null;
           id?: string;
           max_days?: number;
           min_days?: number;
           name_ar?: string;
           name_en?: string;
+          plus_free_delivery?: boolean;
           position?: number;
           updated_at?: string;
         };
@@ -1088,6 +1070,7 @@ export type Database = {
           discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
+          max_bulbs: number | null;
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
@@ -1115,6 +1098,7 @@ export type Database = {
           discount_source?: string | null;
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           id?: string;
+          max_bulbs?: number | null;
           number?: never;
           paid_at?: string | null;
           payment_method?: Database["public"]["Enums"]["order_payment_method"];
@@ -1142,6 +1126,7 @@ export type Database = {
           discount_source?: string | null;
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           id?: string;
+          max_bulbs?: number | null;
           number?: never;
           paid_at?: string | null;
           payment_method?: Database["public"]["Enums"]["order_payment_method"];
@@ -1294,11 +1279,13 @@ export type Database = {
           amount: number;
           audience: string;
           billing_interval: Database["public"]["Enums"]["billing_interval"];
+          bulb_rate: number | null;
           created_at: string;
           currency: string;
           description: string | null;
           features_ar: string[];
           features_en: string[];
+          free_delivery: boolean;
           id: string;
           name: string;
           name_ar: string | null;
@@ -1311,11 +1298,13 @@ export type Database = {
           amount: number;
           audience?: string;
           billing_interval: Database["public"]["Enums"]["billing_interval"];
+          bulb_rate?: number | null;
           created_at?: string;
           currency?: string;
           description?: string | null;
           features_ar?: string[];
           features_en?: string[];
+          free_delivery?: boolean;
           id: string;
           name: string;
           name_ar?: string | null;
@@ -1328,11 +1317,13 @@ export type Database = {
           amount?: number;
           audience?: string;
           billing_interval?: Database["public"]["Enums"]["billing_interval"];
+          bulb_rate?: number | null;
           created_at?: string;
           currency?: string;
           description?: string | null;
           features_ar?: string[];
           features_en?: string[];
+          free_delivery?: boolean;
           id?: string;
           name?: string;
           name_ar?: string | null;
@@ -1671,6 +1662,7 @@ export type Database = {
       };
       products: {
         Row: {
+          bulb_multiplier: number | null;
           category_id: string | null;
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
@@ -1698,6 +1690,7 @@ export type Database = {
           verified: boolean;
         };
         Insert: {
+          bulb_multiplier?: number | null;
           category_id?: string | null;
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
@@ -1725,6 +1718,7 @@ export type Database = {
           verified?: boolean;
         };
         Update: {
+          bulb_multiplier?: number | null;
           category_id?: string | null;
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
@@ -2341,41 +2335,59 @@ export type Database = {
       };
       store_settings: {
         Row: {
-          bulb_plus_bonus: number;
+          bulb_half_from: number;
+          bulb_rate: number;
+          cash_limit: number | null;
           cash_on_delivery_enabled: boolean;
-          free_shipping_threshold: number | null;
+          delivery_cost: number;
           id: boolean;
+          max_giveaway_rate: number;
+          min_margin_rate: number;
+          payment_fee_rate: number;
           pickup_address_ar: string | null;
           pickup_address_en: string | null;
           pickup_enabled: boolean;
           pickup_hours_ar: string | null;
           pickup_hours_en: string | null;
+          return_days: number;
           shipping_fee: number;
           updated_at: string;
         };
         Insert: {
-          bulb_plus_bonus?: number;
+          bulb_half_from?: number;
+          bulb_rate?: number;
+          cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
-          free_shipping_threshold?: number | null;
+          delivery_cost?: number;
           id?: boolean;
+          max_giveaway_rate?: number;
+          min_margin_rate?: number;
+          payment_fee_rate?: number;
           pickup_address_ar?: string | null;
           pickup_address_en?: string | null;
           pickup_enabled?: boolean;
           pickup_hours_ar?: string | null;
           pickup_hours_en?: string | null;
+          return_days?: number;
           shipping_fee?: number;
           updated_at?: string;
         };
         Update: {
-          bulb_plus_bonus?: number;
+          bulb_half_from?: number;
+          bulb_rate?: number;
+          cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
-          free_shipping_threshold?: number | null;
+          delivery_cost?: number;
           id?: boolean;
+          max_giveaway_rate?: number;
+          min_margin_rate?: number;
+          payment_fee_rate?: number;
           pickup_address_ar?: string | null;
           pickup_address_en?: string | null;
           pickup_enabled?: boolean;
           pickup_hours_ar?: string | null;
           pickup_hours_en?: string | null;
+          return_days?: number;
           shipping_fee?: number;
           updated_at?: string;
         };
@@ -2632,7 +2644,6 @@ export type Database = {
           events_topic: number | null;
           id: number;
           join_rule: string;
-          join_tier: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated: boolean;
           news_topic: number | null;
           post_locale: string;
@@ -2645,7 +2656,6 @@ export type Database = {
           events_topic?: number | null;
           id: number;
           join_rule?: string;
-          join_tier?: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated?: boolean;
           news_topic?: number | null;
           post_locale?: string;
@@ -2658,7 +2668,6 @@ export type Database = {
           events_topic?: number | null;
           id?: number;
           join_rule?: string;
-          join_tier?: Database["public"]["Enums"]["bulb_tier"] | null;
           moderated?: boolean;
           news_topic?: number | null;
           post_locale?: string;
@@ -3066,6 +3075,16 @@ export type Database = {
           valid: boolean;
         }[];
       };
+      checkout_quote: {
+        Args: {
+          delivery_zone?: string;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
+          governorate?: string;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          use_bulbs?: number;
+        };
+        Returns: Json;
+      };
       claim_invite: { Args: { code: string }; Returns: string };
       claim_push_notifications: {
         Args: {
@@ -3156,6 +3175,7 @@ export type Database = {
           discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
+          max_bulbs: number | null;
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
@@ -3327,6 +3347,7 @@ export type Database = {
           discount_source: string | null;
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           id: string;
+          max_bulbs: number | null;
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
@@ -3366,8 +3387,6 @@ export type Database = {
           available: number;
           pending: number;
           rate: number;
-          spend: number;
-          tier: Database["public"]["Enums"]["bulb_tier"];
         }[];
       };
       my_affiliate: {
@@ -3398,12 +3417,8 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: {
           available: number;
-          next_min_spend: number;
-          next_tier: Database["public"]["Enums"]["bulb_tier"];
           pending: number;
           rate: number;
-          spend: number;
-          tier: Database["public"]["Enums"]["bulb_tier"];
         }[];
       };
       my_calendar_token: { Args: Record<PropertyKey, never>; Returns: string };
@@ -3508,6 +3523,23 @@ export type Database = {
           scenario?: Database["public"]["Enums"]["ledger_scenario"];
         };
         Returns: string;
+      };
+      price_check: {
+        Args: { max_rows?: number };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          cost: number;
+          floor_amount: number;
+          margin: number;
+          name_ar: string;
+          name_en: string;
+          price: number;
+          problem: string;
+          product_id: string;
+          product_slug: string;
+          stock_item_id: string;
+          variant_label: string;
+        }[];
       };
       product_offers: {
         Args: { offer_product: string };
@@ -3626,6 +3658,7 @@ export type Database = {
           search_term: string;
         };
         Returns: {
+          bulb_multiplier: number | null;
           category_id: string | null;
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
@@ -3668,15 +3701,15 @@ export type Database = {
         Returns: undefined;
       };
       set_affiliate_rates: { Args: { rates: Json }; Returns: undefined };
-      set_bulb_rates: {
-        Args: { multipliers?: Json; plus_bonus: number };
-        Returns: undefined;
-      };
       set_invoice_status: {
         Args: {
           invoice: string;
           new_status: Database["public"]["Enums"]["invoice_status"];
         };
+        Returns: undefined;
+      };
+      set_money_rules: {
+        Args: { multipliers?: Json; rules: Json };
         Returns: undefined;
       };
       set_purchase_order_status: {
@@ -3699,7 +3732,6 @@ export type Database = {
         Returns: {
           allowed: boolean;
           linked: boolean;
-          needed: Database["public"]["Enums"]["bulb_tier"];
           rule: string;
         }[];
       };
@@ -3728,7 +3760,6 @@ export type Database = {
         | "adjustment"
         | "expiry";
       bulb_status: "pending" | "available" | "void";
-      bulb_tier: "glow" | "shine" | "beam" | "blaze";
       candidate_status:
         | "proposed"
         | "shortlisted"
@@ -3992,7 +4023,6 @@ export const Constants = {
         "expiry",
       ],
       bulb_status: ["pending", "available", "void"],
-      bulb_tier: ["glow", "shine", "beam", "blaze"],
       candidate_status: [
         "proposed",
         "shortlisted",

@@ -28,7 +28,7 @@ import { ProductImage } from "@/components/store/product-image";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
 import {
   type CartLineView,
-  freeShippingRemaining,
+  freeDeliveryRemaining,
   isOtherCondition,
   lineProblem,
   MAX_QUANTITY,
@@ -36,6 +36,7 @@ import {
 } from "@/lib/cart";
 import {
   useCart,
+  useDeliveryZones,
   useStoreSettings,
   useUpdateCartLine,
 } from "@/lib/store-queries";
@@ -130,15 +131,18 @@ export const Cart = () => {
   const locale = useLocale();
   const cart = useCart();
   const settings = useStoreSettings();
+  // Delivery in Baghdad is free from a threshold; the cart says how close.
+  const baghdad = useDeliveryZones().data?.find(
+    (zone) => zone.governorate === "baghdad"
+  );
 
   const loading = cart.isPending || settings.isPending;
   const failed = cart.isError || settings.isError;
   const summary =
     cart.data && settings.data ? summarizeCart(cart.data, settings.data) : null;
-  const remaining =
-    summary && settings.data
-      ? freeShippingRemaining(summary.totals.subtotal, settings.data)
-      : 0;
+  const remaining = summary
+    ? freeDeliveryRemaining(summary.totals.subtotal, baghdad?.free_from)
+    : 0;
 
   return (
     <>

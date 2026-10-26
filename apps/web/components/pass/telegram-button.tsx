@@ -15,7 +15,7 @@ export const TelegramButton = ({
   returnTo,
 }: {
   readonly label?: string;
-  /** Connect to the signed-in member (My Pass) rather than sign in. */
+  /** Connect to the signed-in member (Your Pass) rather than sign in. */
   readonly link?: boolean;
   readonly returnTo?: string | null;
 }) => {

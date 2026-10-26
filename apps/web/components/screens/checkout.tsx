@@ -3,11 +3,11 @@
 import { useAuth } from "@repo/auth/provider";
 import {
   BULB_VALUE_IQD,
+  type CheckoutQuote,
   type Fulfilment,
   formatPrice,
   localized,
   type PaymentMethod,
-  type Promo,
   variantName,
 } from "@repo/commerce";
 import type { DeliveryZone, PickupLocation } from "@repo/commerce/catalog";
@@ -52,15 +52,17 @@ import {
   validateAddress,
 } from "@/lib/address";
 import { useAffiliateReferrer } from "@/lib/affiliates";
-import { useBulbTiers, useMyBulbs } from "@/lib/bulbs-queries";
-import { summarizeCart } from "@/lib/cart";
+import { useMyBulbs } from "@/lib/bulbs-queries";
+import { freeDeliveryRemaining, summarizeCart } from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
 import { useInviteDiscount } from "@/lib/invites";
 import { orderPath, usePlaceOrder } from "@/lib/order-checkout";
 import { isNativeApp } from "@/lib/platform";
 import { useProfile } from "@/lib/queries";
 import {
+  type QuoteRequest,
   useCart,
+  useCheckoutQuote,
   useDeliveryAreas,
   useDeliveryZones,
   useStoreSettings,
@@ -516,9 +518,9 @@ interface SummaryCardProps {
   readonly busy: boolean;
   readonly cash: boolean;
   readonly error: CheckoutError | null;
-  /** Delivery is free thanks to the member's tier. */
-  readonly freeDelivery: boolean;
   readonly method: Fulfilment;
+  /** The server's quote, once a zone (or pickup) is chosen. */
+  readonly quote: CheckoutQuote | null;
   readonly summary: ReturnType<typeof summarizeCart>;
 }
 
@@ -527,13 +529,18 @@ const SummaryCard = ({
   busy,
   cash,
   error,
-  freeDelivery,
   method,
+  quote,
   summary,
 }: SummaryCardProps) => {
   const t = useTranslations("app.checkout");
   const locale = useLocale() as Locale;
-  const amount = formatPrice(summary.totals.total, locale);
+  const totals = quote ?? summary.totals;
+  const amount = formatPrice(totals.total, locale);
+  const toFree =
+    quote && quote.shippingFee > 0
+      ? freeDeliveryRemaining(quote.subtotal, quote.freeFrom)
+      : 0;
   const cashNote = method === "pickup" ? "pickupCashNote" : "cashNote";
 
   return (
@@ -570,9 +577,21 @@ const SummaryCard = ({
               </li>
             ))}
         </ul>
-        <OrderSummary {...summary.totals} />
-        {freeDelivery ? (
-          <p className="text-muted-foreground text-xs">{t("tierDelivery")}</p>
+        <OrderSummary {...totals} />
+        {quote?.freeDelivery === "plan" ? (
+          <p className="text-muted-foreground text-xs">{t("planDelivery")}</p>
+        ) : null}
+        {toFree > 0 ? (
+          <p className="text-muted-foreground text-xs">
+            {t("freeDeliveryNudge", { amount: formatPrice(toFree, locale) })}
+          </p>
+        ) : null}
+        {quote && quote.bulbsToEarn > 0 ? (
+          <p className="text-muted-foreground text-xs">
+            {t("bulbsToEarn", {
+              bulbs: formatNumber(quote.bulbsToEarn, locale),
+            })}
+          </p>
         ) : null}
         {error ? (
           <p className="text-destructive text-sm" role="alert">
@@ -597,81 +616,37 @@ const SummaryCard = ({
   );
 };
 
-/** What the member can spend now and their tier's free-delivery perk. */
-const useCheckoutBulbs = () => {
-  const bulbs = useMyBulbs();
-  const tiers = useBulbTiers();
-  return {
-    availableBulbs: Math.max(0, bulbs.data?.available ?? 0),
-    freeDeliveryFrom:
-      tiers.data?.find((row) => row.tier === bulbs.data?.tier)
-        ?.free_delivery_from ?? null,
-  };
-};
-
 /**
- * The cart priced for the chosen delivery, the member's tier and the Bulbs
- * they spend: whether the tier made delivery free and whether Bulbs pay the
- * whole order (then nothing is left to pay, online or in cash).
+ * What to ask the server to price: nothing until delivery has a zone (or a
+ * governorate) or pickup is chosen, and nothing for a cart that can't be
+ * ordered.
  */
-const planCheckout = ({
-  bulbs,
-  cart,
-  freeDeliveryFrom,
+const quoteRequestFor = ({
+  canCheckout,
+  governorate,
   method,
-  promo,
-  settings,
-  zoneFee,
+  paymentMethod,
+  useBulbs,
+  zoneId,
 }: {
-  bulbs: number;
-  /** The invite or affiliate discount the member qualifies for. */
-  promo: Promo;
-  cart: Parameters<typeof summarizeCart>[0] | undefined;
-  freeDeliveryFrom: number | null;
+  canCheckout: boolean;
+  governorate: string;
   method: Fulfilment;
-  settings: Parameters<typeof summarizeCart>[1] | undefined;
-  zoneFee: number | undefined;
-}) => {
-  const summary =
-    cart && settings
-      ? summarizeCart(
-          cart,
-          settings,
-          { freeDeliveryFrom, fulfilment: method, zoneFee },
-          bulbs,
-          promo
-        )
-      : null;
+  paymentMethod: PaymentMethod;
+  useBulbs: number;
+  zoneId: string | undefined;
+}): QuoteRequest | null => {
+  if (!canCheckout || (method === "delivery" && !zoneId && !governorate)) {
+    return null;
+  }
   return {
-    paidWithBulbs: summary?.totals.total === 0,
-    summary,
-    tierFreeDelivery: isTierFreeDelivery({
-      fee: zoneFee ?? settings?.shippingFee,
-      freeDeliveryFrom,
-      method,
-      totals: summary?.totals,
-    }),
+    fulfilment: method,
+    governorate: method === "delivery" && !zoneId ? governorate : null,
+    paymentMethod,
+    useBulbs,
+    zoneId: method === "delivery" ? zoneId : null,
   };
 };
-
-/** Whether the member's tier made delivery free (the store's own threshold aside). */
-const isTierFreeDelivery = ({
-  fee,
-  freeDeliveryFrom,
-  method,
-  totals,
-}: {
-  fee: number | undefined;
-  freeDeliveryFrom: number | null;
-  method: Fulfilment;
-  totals?: { shippingFee: number; subtotal: number };
-}) =>
-  totals !== undefined &&
-  method === "delivery" &&
-  freeDeliveryFrom !== null &&
-  totals.subtotal >= freeDeliveryFrom &&
-  totals.shippingFee === 0 &&
-  (fee ?? 0) > 0;
 
 /**
  * What the customer can choose (pickup and cash only when the store offers
@@ -682,24 +657,37 @@ const resolveChoices = ({
   fulfilment,
   payment,
   settings,
+  subtotal,
   zones,
 }: {
   address: AddressForm;
   fulfilment: Fulfilment;
   payment: PaymentMethod;
   settings:
-    | { cashOnDelivery: boolean; pickup: PickupLocation | null }
+    | {
+        cashLimit: number | null;
+        cashOnDelivery: boolean;
+        pickup: PickupLocation | null;
+      }
     | undefined;
+  /** The cart's subtotal: delivery above the cash limit is paid online. */
+  subtotal: number;
   zones: DeliveryZone[] | undefined;
 }) => {
   const zoneList = zones ?? [];
   const pickup = settings?.pickup ?? null;
-  const cashOffered = settings?.cashOnDelivery ?? false;
+  const method = (pickup ? fulfilment : "delivery") as Fulfilment;
+  const overLimit =
+    method === "delivery" &&
+    settings?.cashLimit !== null &&
+    settings?.cashLimit !== undefined &&
+    subtotal > settings.cashLimit;
+  const cashOffered = (settings?.cashOnDelivery ?? false) && !overLimit;
   const paymentMethod: PaymentMethod = cashOffered ? payment : "online";
   return {
     cash: paymentMethod === "cash_on_delivery",
     cashOffered,
-    method: (pickup ? fulfilment : "delivery") as Fulfilment,
+    method,
     paymentMethod,
     pickup,
     zone: zoneList.find(({ id }) => id === address.zoneId),
@@ -715,6 +703,84 @@ const useCheckoutAreas = (
   const province =
     method === "delivery" ? (zone?.carrier_province ?? null) : null;
   return useDeliveryAreas(province).data ?? [];
+};
+
+/**
+ * The customer's choices and the order's price: a local estimate, then the
+ * server's quote (`checkout_quote`), which applies delivery, discounts, the
+ * giveaway cap and Bulbs.
+ */
+const useCheckoutPricing = ({
+  address,
+  cart,
+  fulfilment,
+  payment,
+  settings,
+  useBulbs,
+  zones,
+}: {
+  address: AddressForm;
+  cart: ReturnType<typeof useCart>;
+  fulfilment: Fulfilment;
+  payment: PaymentMethod;
+  settings: ReturnType<typeof useStoreSettings>;
+  useBulbs: boolean;
+  zones: ReturnType<typeof useDeliveryZones>;
+}) => {
+  const bulbs = useMyBulbs();
+  const availableBulbs = Math.max(0, bulbs.data?.available ?? 0);
+  // A new invite or affiliate code re-prices the order.
+  const invited = useInviteDiscount().data === true;
+  const affiliate = useAffiliateReferrer().data ?? null;
+
+  const estimate =
+    cart.data && settings.data ? summarizeCart(cart.data, settings.data) : null;
+  const choices = resolveChoices({
+    address,
+    fulfilment,
+    payment,
+    settings: settings.data,
+    subtotal: estimate?.totals.subtotal ?? 0,
+    zones: zones.data,
+  });
+  const { method, paymentMethod, zone } = choices;
+
+  const areas = useCheckoutAreas(method, zone);
+
+  const summary =
+    cart.data && settings.data
+      ? summarizeCart(cart.data, settings.data, {
+          freeFrom: zone?.free_from,
+          fulfilment: method,
+          zoneFee: zone?.fee,
+        })
+      : null;
+  const quote = useCheckoutQuote(
+    quoteRequestFor({
+      canCheckout: summary?.canCheckout ?? false,
+      governorate: address.governorate,
+      method,
+      paymentMethod,
+      useBulbs: useBulbs ? availableBulbs : 0,
+      zoneId: zone?.id,
+    }),
+    [cart.dataUpdatedAt, invited, affiliate]
+  ).data;
+  // Bulbs pay the whole order: nothing is left to pay, online or in cash.
+  const paidWithBulbs = Boolean(
+    quote && quote.bulbsUsed > 0 && quote.total === 0
+  );
+  return {
+    ...choices,
+    areas,
+    availableBulbs,
+    // Nothing is paid in cash when Bulbs cover the order.
+    cash: choices.cash && !paidWithBulbs,
+    paidWithBulbs,
+    paymentOffered: choices.cashOffered && !paidWithBulbs,
+    quote,
+    summary,
+  };
 };
 
 /**
@@ -738,9 +804,6 @@ export const Checkout = () => {
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [useBulbs, setUseBulbs] = useState(false);
-  const { availableBulbs, freeDeliveryFrom } = useCheckoutBulbs();
-  const invited = useInviteDiscount().data === true;
-  const affiliate = Boolean(useAffiliateReferrer().data);
 
   // The form starts from the account: its phone number and name.
   const address: AddressForm = form ?? {
@@ -751,25 +814,27 @@ export const Checkout = () => {
   const set = (field: keyof AddressForm) => (value: string) =>
     setForm({ ...address, [field]: value });
 
-  const { cash, cashOffered, method, paymentMethod, pickup, zone, zoneList } =
-    resolveChoices({
-      address,
-      fulfilment,
-      payment,
-      settings: settings.data,
-      zones: zones.data,
-    });
-
-  const areas = useCheckoutAreas(method, zone);
-
-  const { paidWithBulbs, summary, tierFreeDelivery } = planCheckout({
-    bulbs: useBulbs ? availableBulbs : 0,
-    cart: cart.data,
-    freeDeliveryFrom,
+  const {
+    areas,
+    availableBulbs,
+    cash,
     method,
-    promo: { affiliate, invited },
-    settings: settings.data,
-    zoneFee: zone?.fee,
+    paidWithBulbs,
+    paymentOffered,
+    paymentMethod,
+    pickup,
+    quote,
+    summary,
+    zone,
+    zoneList,
+  } = useCheckoutPricing({
+    address,
+    cart,
+    fulfilment,
+    payment,
+    settings,
+    useBulbs,
+    zones,
   });
   const busy = place.isPending || place.isSuccess;
 
@@ -790,7 +855,7 @@ export const Checkout = () => {
       fulfilment: method,
       paymentMethod: paidWithBulbs ? ("online" as const) : paymentMethod,
       shipping: result.shipping,
-      useBulbs: summary?.totals.bulbsUsed ?? 0,
+      useBulbs: quote?.bulbsUsed ?? 0,
     };
     place.mutate(request, {
       onError: (mutationError) => setError(toCheckoutError(mutationError)),
@@ -889,9 +954,9 @@ export const Checkout = () => {
                 busy={busy}
                 onChange={setUseBulbs}
                 use={useBulbs}
-                using={summary.totals.bulbsUsed}
+                using={quote?.bulbsUsed ?? 0}
               />
-              {cashOffered && !paidWithBulbs ? (
+              {paymentOffered ? (
                 <PaymentCard
                   busy={busy}
                   method={method}
@@ -903,10 +968,10 @@ export const Checkout = () => {
 
             <SummaryCard
               busy={busy}
-              cash={cash && !paidWithBulbs}
+              cash={cash}
               error={error}
-              freeDelivery={tierFreeDelivery}
               method={method}
+              quote={quote ?? null}
               summary={summary}
             />
           </form>

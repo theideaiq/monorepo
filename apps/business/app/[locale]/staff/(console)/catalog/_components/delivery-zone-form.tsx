@@ -12,7 +12,11 @@ interface DeliveryZoneFormProps {
   readonly zone?: Tables<"delivery_zones">;
 }
 
-/** One delivery zone: names, fee, delivery time and whether it's offered. */
+/**
+ * One delivery zone: names, fee, when delivery is free (from a subtotal for
+ * everyone, or for Plus plans with free delivery), delivery time and
+ * whether it's offered.
+ */
 export const DeliveryZoneForm = ({
   disabled = false,
   zone,
@@ -62,6 +66,15 @@ export const DeliveryZoneForm = ({
           wrapperClassName="w-28"
         />
         <TextField
+          defaultValue={zone?.free_from ?? ""}
+          dir="ltr"
+          disabled={disabled}
+          inputMode="numeric"
+          label={tZones("freeFrom")}
+          name="freeFrom"
+          wrapperClassName="w-32"
+        />
+        <TextField
           defaultValue={zone?.min_days ?? 1}
           dir="ltr"
           disabled={disabled}
@@ -94,6 +107,13 @@ export const DeliveryZoneForm = ({
           disabled={disabled}
           label={tZones("active")}
           name="active"
+        />
+        <CheckboxField
+          className="pb-2"
+          defaultChecked={zone?.plus_free_delivery ?? false}
+          disabled={disabled}
+          label={tZones("plusFree")}
+          name="plusFreeDelivery"
         />
         {disabled ? null : (
           <SubmitButton variant={zone ? "secondary" : "default"}>

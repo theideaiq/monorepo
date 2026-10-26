@@ -64,18 +64,20 @@ insert into public.telegram_members (id, user_id) values
   (8002, '00000000-0000-0000-0000-0000000000f2'),
   (8003, null);
 
--- F1 spent 800,000 IQD in the last year: Beam.
-insert into public.orders (user_id, status, subtotal, shipping_fee, total, shipping_address, created_at) values
-  ('00000000-0000-0000-0000-0000000000f1', 'delivered', 800000, 0, 800000, '{}', now() - interval '1 month');
+-- F1 is a Plus member.
+insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)
+values ('plus-club-test', 'Plus Test', 14750, 'month', 'plus', 1, 1);
+insert into public.subscriptions (user_id, plan_id, status, provider, current_period_start, current_period_end)
+values ('00000000-0000-0000-0000-0000000000f1', 'plus-club-test', 'active', 'wayl', now(), now() + interval '30 days');
 
-insert into public.telegram_chats (id, title, join_rule, join_tier) values
-  (-9001, 'Lobby', 'open', null),
-  (-9002, 'Members', 'pass', null),
-  (-9003, 'Beam room', 'tier', 'beam');
+insert into public.telegram_chats (id, title, join_rule) values
+  (-9001, 'Lobby', 'open'),
+  (-9002, 'Members', 'pass'),
+  (-9003, 'Plus room', 'plus');
 
 select throws_ok(
   $$ insert into public.telegram_chats (id, title, join_rule) values (-9004, 'Bad', 'tier') $$,
-  '23514', null, 'a tier room needs its tier'
+  '23514', null, 'Bulbs tiers are no longer a join rule'
 );
 
 select is((select allowed from public.telegram_join_check(-9001, 8003)), true, 'anyone joins an open room');
@@ -85,8 +87,8 @@ select results_eq(
   'a members room needs a linked The IDEA Pass'
 );
 select is((select allowed from public.telegram_join_check(-9002, 8002)), true, 'linked members join a members room');
-select is((select allowed from public.telegram_join_check(-9003, 8002)), false, 'a Glow member can''t join a Beam room');
-select is((select allowed from public.telegram_join_check(-9003, 8001)), true, 'a Beam member can');
+select is((select allowed from public.telegram_join_check(-9003, 8002)), false, 'a member without Plus can''t join a Plus room');
+select is((select allowed from public.telegram_join_check(-9003, 8001)), true, 'a Plus member can');
 select is_empty($$ select * from public.telegram_join_check(-1, 8001) $$, 'unknown chats have no rule');
 
 -- Notifications go to linked members once.

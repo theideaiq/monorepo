@@ -12,7 +12,6 @@ import { saveStoreSettings } from "../actions";
 
 export interface StoreSettingsValues {
   cash_on_delivery_enabled: boolean;
-  free_shipping_threshold: number | null;
   pickup_address_ar: string | null;
   pickup_address_en: string | null;
   pickup_enabled: boolean;
@@ -42,14 +41,6 @@ export const StoreSettingsForm = ({
             inputMode="numeric"
             label={t("shippingFee")}
             name="shippingFee"
-          />
-          <TextField
-            defaultValue={settings.free_shipping_threshold ?? ""}
-            dir="ltr"
-            hint={t("thresholdHint")}
-            inputMode="numeric"
-            label={t("threshold")}
-            name="freeShippingThreshold"
           />
         </FieldGrid>
         <CheckboxField

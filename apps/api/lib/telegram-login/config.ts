@@ -12,7 +12,7 @@ export const LOGIN_TTL_SECONDS = 600;
 
 export interface LoginState {
   locale: "ar" | "en";
-  /** Connecting from My Pass: always link, never switch members. */
+  /** Connecting from Your Pass: always link, never switch members. */
   mode: "link" | "sign-in";
   returnTo: string | null;
   state: string;

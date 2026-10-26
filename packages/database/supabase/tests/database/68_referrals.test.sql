@@ -67,7 +67,8 @@ insert into public.products (id, slug, name_ar, name_en, price, stock_count, sta
   ('68000000-0000-0000-0000-000000000001', 'invite-switch', 'سويتش', 'Switch', 200000, 20, 'active', 'sale'),
   ('68000000-0000-0000-0000-000000000002', 'invite-pin', 'دبوس', 'Pin', 50000, 20, 'active', 'sale');
 
-update public.store_settings set free_shipping_threshold = null, cash_on_delivery_enabled = true;
+update public.store_settings set cash_on_delivery_enabled = true;
+update public.delivery_zones set free_from = null, plus_free_delivery = false;
 update public.delivery_zones set active = true, fee = 5000 where governorate = 'baghdad';
 
 -- I once ordered to +9647700000401; O has a paid order.

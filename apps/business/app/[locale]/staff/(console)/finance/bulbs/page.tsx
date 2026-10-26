@@ -4,8 +4,8 @@ import { PageBody, PageHeader, Panel } from "@/components/admin/page";
 import { StatCard } from "@/components/admin/stat-card";
 import { formatters } from "@/lib/admin/format";
 import { requireSection } from "@/lib/admin/session";
-import { BulbRatesForm } from "../_components/bulb-rates-form";
 import { FinanceTabs } from "../_components/finance-tabs";
+import { MoneyRulesForm } from "../_components/money-rules-form";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.finance.tabs");
@@ -13,31 +13,30 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 /**
- * Bulbs for finance: what members hold (what The IDEA owes) and the rates:
- * each tier's spend and cashback, the Plus bonus and category multipliers.
+ * Bulbs and the money rules for finance: what members hold (what The IDEA
+ * owes), then the rules: the Bulbs rate, half rate and multipliers (Plus
+ * plans set their own rate in Catalog → Plans), the return window, the
+ * giveaway cap, the cash limit and what the price check counts.
  */
 const BulbsPage = async () => {
   const { canWrite, supabase } = await requireSection("finance");
   const locale = await getLocale();
   const t = await getTranslations("admin.finance");
   const format = formatters(locale);
-  const [
-    { data: outstanding },
-    { data: tiers },
-    { data: settings },
-    { data: categories },
-  ] = await Promise.all([
-    supabase.rpc("bulbs_outstanding"),
-    supabase
-      .from("bulb_tiers")
-      .select("tier, min_spend, rate, free_delivery_from")
-      .order("min_spend"),
-    supabase.from("store_settings").select("bulb_plus_bonus").maybeSingle(),
-    supabase
-      .from("product_categories")
-      .select("id, name_ar, name_en, bulb_multiplier")
-      .order("position"),
-  ]);
+  const [{ data: outstanding }, { data: settings }, { data: categories }] =
+    await Promise.all([
+      supabase.rpc("bulbs_outstanding"),
+      supabase
+        .from("store_settings")
+        .select(
+          "bulb_rate, bulb_half_from, return_days, max_giveaway_rate, cash_limit, payment_fee_rate, delivery_cost, min_margin_rate"
+        )
+        .maybeSingle(),
+      supabase
+        .from("product_categories")
+        .select("id, name_ar, name_en, bulb_multiplier")
+        .order("position"),
+    ]);
   const held = outstanding?.[0];
 
   return (
@@ -60,14 +59,21 @@ const BulbsPage = async () => {
             value={format.money(held?.value_iqd ?? 0)}
           />
         </div>
-        <Panel description={t("bulbs.ratesHint")} title={t("bulbs.rates")}>
-          <BulbRatesForm
-            categories={categories ?? []}
-            disabled={!canWrite}
-            plusBonus={Number(settings?.bulb_plus_bonus ?? 1)}
-            tiers={tiers ?? []}
-          />
-        </Panel>
+        {settings ? (
+          <Panel description={t("rules.hint")} title={t("rules.title")}>
+            <MoneyRulesForm
+              categories={categories ?? []}
+              disabled={!canWrite}
+              rules={{
+                ...settings,
+                bulb_rate: Number(settings.bulb_rate),
+                max_giveaway_rate: Number(settings.max_giveaway_rate),
+                min_margin_rate: Number(settings.min_margin_rate),
+                payment_fee_rate: Number(settings.payment_fee_rate),
+              }}
+            />
+          </Panel>
+        ) : null}
       </PageBody>
     </>
   );

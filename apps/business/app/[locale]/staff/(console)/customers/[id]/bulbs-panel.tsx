@@ -5,7 +5,7 @@ import type { ServerClient } from "@/lib/admin/session";
 import { BulbsAdjustForm } from "./bulbs-adjust-form";
 
 /**
- * The member's Bulbs: what they can use and what's pending, their tier,
+ * The member's Bulbs: what they can use and what's pending, their rate,
  * the latest movements and an adjustment with a reason. Only for staff who
  * may change customers (support and admins); marketing doesn't see Bulbs.
  */
@@ -48,13 +48,8 @@ export const BulbsPanel = async ({
           <dd className="text-end tabular-nums">
             {format.number(bulbs.pending)}
           </dd>
-          <dt className="text-muted-foreground">{t("tier")}</dt>
-          <dd className="text-end">
-            {tBulbs(`tiers.${bulbs.tier}.name`)} ·{" "}
-            {format.number(Number(bulbs.rate))}%
-          </dd>
-          <dt className="text-muted-foreground">{t("spend")}</dt>
-          <dd className="text-end tabular-nums">{format.money(bulbs.spend)}</dd>
+          <dt className="text-muted-foreground">{t("rate")}</dt>
+          <dd className="text-end">{format.number(Number(bulbs.rate))}%</dd>
         </dl>
       ) : null}
       {(entries ?? []).length > 0 ? (

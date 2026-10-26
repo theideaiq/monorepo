@@ -1,12 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import {
-  ActionFailure,
-  affected,
-  check,
-  staffAction,
-} from "@/lib/admin/action";
+import { affected, check, staffAction } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
 import {
   checkbox,
@@ -50,10 +45,7 @@ export const saveChat = staffAction(
     eventsTopic: topic,
     id: z.string().trim().regex(CHAT_ID),
     isNew: checkbox,
-    joinRule: choice(["open", "pass", "tier"] as const),
-    joinTier: z
-      .enum(["", "glow", "shine", "beam", "blaze"])
-      .transform((value) => value || null),
+    joinRule: choice(["open", "pass", "plus"] as const),
     newsTopic: topic,
     postLocale: choice(["ar", "en"] as const),
     title: text(200),
@@ -62,15 +54,10 @@ export const saveChat = staffAction(
     ),
   }),
   async ({ input, supabase }) => {
-    if ((input.joinRule === "tier") !== (input.joinTier !== null)) {
-      // A tier room names its tier; the other rules don't.
-      throw new ActionFailure("invalid");
-    }
     const row = {
       arrivals_topic: input.arrivalsTopic,
       events_topic: input.eventsTopic,
       join_rule: input.joinRule,
-      join_tier: input.joinTier,
       news_topic: input.newsTopic,
       post_locale: input.postLocale,
       title: input.title,

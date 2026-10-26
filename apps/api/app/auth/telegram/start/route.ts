@@ -13,7 +13,7 @@ import { authorizeUrl, randomToken, seal } from "@/lib/telegram-login/oidc";
 /**
  * Starts "Continue with Telegram": keeps the state, the PKCE verifier and
  * where to go next in a short-lived cookie, then sends the browser to
- * Telegram. `mode=link` (My Pass → Settings) always ends in a link ticket. `return_to` is checked by the website when it's used.
+ * Telegram. `mode=link` (Your Pass → Settings) always ends in a link ticket. `return_to` is checked by the website when it's used.
  */
 export const GET = (request: NextRequest) => {
   const params = request.nextUrl.searchParams;

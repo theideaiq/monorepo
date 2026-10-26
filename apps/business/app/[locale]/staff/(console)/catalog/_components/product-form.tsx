@@ -180,6 +180,14 @@ export const ProductForm = ({
               }))}
             />
             <TextField
+              defaultValue={product?.bulb_multiplier ?? ""}
+              dir="ltr"
+              hint={t("fields.bulbMultiplierHint")}
+              inputMode="decimal"
+              label={t("fields.bulbMultiplier")}
+              name="bulbMultiplier"
+            />
+            <TextField
               defaultValue={product?.seller ?? "The IDEA"}
               hint={t("fields.sellerHint")}
               label={t("fields.seller")}

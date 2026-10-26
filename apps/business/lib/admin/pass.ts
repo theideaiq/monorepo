@@ -4,7 +4,7 @@ import { localePath } from "@repo/internationalization";
 const TRAILING_SLASH = /\/+$/;
 
 /** The back office's home in `locale` (a path on The IDEA Business). */
-export const adminHome = (locale: string) => localePath(locale, "/admin");
+export const adminHome = (locale: string) => localePath(locale, "/staff");
 
 /**
  * A Pass page on the website (sign-in, the authenticator app, sign-out)

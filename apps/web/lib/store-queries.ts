@@ -3,6 +3,11 @@
 import { track } from "@repo/analytics/client";
 import { useAuth } from "@repo/auth/provider";
 import {
+  type Fulfilment,
+  type PaymentMethod,
+  toCheckoutQuote,
+} from "@repo/commerce";
+import {
   getProductBySlug,
   getProductOffers,
   getStoreSettings,
@@ -83,6 +88,48 @@ export const useDeliveryZones = () => {
     queryFn: () => listDeliveryZones(supabase),
     queryKey: queryKeys.deliveryZones,
     staleTime: 5 * 60_000,
+  });
+};
+
+/** What the checkout asks the server to price. */
+export interface QuoteRequest {
+  fulfilment: Fulfilment;
+  /** A governorate id when there's no zone to choose. */
+  governorate?: string | null;
+  paymentMethod: PaymentMethod;
+  useBulbs: number;
+  zoneId?: string | null;
+}
+
+/**
+ * The checkout priced by the server (`checkout_quote()`): delivery, the
+ * discount under the giveaway cap, the Bulbs spent and earned. `version`
+ * re-asks when the cart or a discount changes; null waits for a zone.
+ */
+export const useCheckoutQuote = (
+  request: QuoteRequest | null,
+  version: readonly unknown[]
+) => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user) && request !== null,
+    placeholderData: keepPreviousData,
+    queryFn: async () => {
+      const ask = request as QuoteRequest;
+      return toCheckoutQuote(
+        unwrap(
+          await supabase.rpc("checkout_quote", {
+            delivery_zone: ask.zoneId || undefined,
+            fulfilment: ask.fulfilment,
+            governorate: ask.governorate || undefined,
+            payment_method: ask.paymentMethod,
+            use_bulbs: ask.useBulbs,
+          })
+        )
+      );
+    },
+    queryKey: ["checkout-quote", user?.id ?? "", request, ...version],
+    retry: false,
   });
 };
 

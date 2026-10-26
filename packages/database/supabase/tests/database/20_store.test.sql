@@ -91,7 +91,8 @@ insert into public.product_variants (id, product_id, label_en, label_ar, attribu
 insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)
 values ('plus-test', 'Plus', 25000, 'month', 'plus', 1, 1);
 
-update public.store_settings set shipping_fee = 5000, free_shipping_threshold = 1000000;
+update public.store_settings set shipping_fee = 5000;
+update public.delivery_zones set free_from = 1000000, plus_free_delivery = false;
 
 -- ── Catalog ─────────────────────────────────────────────────────────────────
 

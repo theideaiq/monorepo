@@ -322,23 +322,26 @@ session in the shared cookie.
 - **Bulbs.** The IDEA Pass rewards (migration `20261128000000_bulbs.sql`):
   1 Bulb = 100 IQD. Every movement is a row in `bulb_entries`, written only
   by triggers and SECURITY DEFINER functions (no insert, update or delete
-  policy). A delivered order earns its tier's cashback on the items (not
-  delivery), times the category's `bulb_multiplier` (laptops 0.5), plus
-  `store_settings.bulb_plus_bonus` for Plus members, and a one-time
-  20-Bulb first-order bonus; both stay `pending` for 7 days (the return
-  window) and count as usable once `available_at` passes, and a cancelled
-  or refunded order voids them. A completed trade-in earns 10, and a
-  store-credit payout is paid in Bulbs at 120% of the offer. The tier
-  (`bulb_tiers`: Glow, Shine 250,000, Beam 750,000, Blaze 2,000,000 IQD of
-  delivered orders in 12 months) sets the rate and the card's colour.
+  policy). A delivered order earns a flat rate on the items (not
+  delivery): `store_settings.bulb_rate` (3%) for everyone, or the member's
+  Plus plan `plans.bulb_rate` (Glow 4%, Shine 5%, Blaze 6%), times the
+  category's or product's `bulb_multiplier` (consoles and laptops 0.5)
+  and at most half on any item over `store_settings.bulb_half_from`
+  (500,000 IQD), plus a one-time 20-Bulb first-order bonus; both stay
+  `pending` through the return window (`store_settings.return_days`, 14
+  days, read by `private.return_window()`), count as usable once
+  `available_at` passes, and a cancelled or refunded order voids them. A completed trade-in earns 10, and a
+  store-credit payout is paid in Bulbs at 120% of the offer. There are no
+  spend tiers (migration `20261218000000_money_rules.sql` removed them):
+  the card is pink for everyone, with a special finish for Plus members.
   Members read `my_bulbs()` (`/pass/bulbs`); support
   sees and adjusts a member's Bulbs with a reason on the customer page
   (`member_bulbs`, `adjust_bulbs`, audited); finance sees what members hold
-  and edits the tiers, the Plus bonus and the multipliers (Finance → Bulbs,
-  `bulbs_outstanding`, `set_bulb_rates`). `GET /cron/bulbs` (daily, 03:30
+  and edits the money rules and the category multipliers (Finance → Bulbs,
+  `bulbs_outstanding`, `set_money_rules`). `GET /cron/bulbs` (daily, 03:30
   UTC) runs `run_bulb_expiry()`: a reminder after 11 months without
   activity and expiry at 12.
-- **Spending Bulbs and tier delivery** (migration
+- **Spending Bulbs** (migration
   `20261129000000_bulbs_checkout.sql`). `create_order(…, use_bulbs)` takes
   up to the whole order (delivery included) in Bulbs at 100 IQD each,
   from what is usable now (a per-member advisory lock serialises
@@ -347,10 +350,31 @@ session in the shared cookie.
   (`complete_order_payment`, no hosted checkout; the confirmation email
   goes through `POST /orders/confirmation`). Cancelling or refunding
   voids the redemption (the Bulbs come back), and cashback is earned only
-  on the share paid in money. `bulb_tiers.free_delivery_from` gives tiers
-  free delivery (Shine from 50,000 IQD, Beam and Blaze always), mirrored
-  for the checkout total by `deliveryFee()`/`cartTotals()` in
-  `@repo/commerce`. Plus payments can't take Bulbs yet.
+  on the share paid in money. Plus payments can't take Bulbs yet.
+- **Money rules and the checkout quote** (migration
+  `20261218000000_money_rules.sql`). One function,
+  `private.price_checkout()`, prices an order for both `create_order()`
+  and the checkout page (`checkout_quote()`, which the website shows
+  instead of working the total out itself): the zone's fee, free delivery
+  in a zone over `delivery_zones.free_from` (Baghdad 150,000 IQD) or on
+  any order for a Plus plan with `free_delivery` in a zone with
+  `plus_free_delivery` (Shine and Blaze in Baghdad), the invite or
+  affiliate discount, then Bulbs. The total giveaway on an order (delivery
+  waived, discount, affiliate commission and the Bulbs it will earn) is
+  capped at `store_settings.max_giveaway_rate` (20%) of the items: the
+  discount shrinks first, then `orders.max_bulbs` caps the cashback. Cash
+  on delivery is refused over `store_settings.cash_limit` (500,000 IQD;
+  those orders are paid online or at pickup). Every copy has a cost
+  (`stock_items.cost`); `price_check()` (Finance → Prices) lists sale
+  copies with no cost or priced under the floor: cost plus the payment
+  fee (`payment_fee_rate`), our delivery cost (`delivery_cost`) and the
+  largest giveaway, with at least `min_margin_rate` (20%) left. Finance
+  edits all of these on Finance → Bulbs (`set_money_rules`).
+- **Plus plans** (same migration). Glow 14,750 IQD (1 item), Shine 22,750
+  (2) and Blaze 39,750 (4) are seeded inactive in production; staff turn
+  them on at launch (Catalog → Plans), where each plan's Bulbs rate and
+  free delivery are edited too. Telegram rooms are open, for Pass holders
+  (`pass`) or for Plus members (`plus`).
 - **Invite friends** (migration `20261130000000_referrals.sql`). Every
   member has `profiles.invite_code` (read through `my_invites()`; the
   column isn't granted to clients) and shares
@@ -379,7 +403,7 @@ session in the shared cookie.
   and the affiliate's, mirrored by `orderDiscount()` in `@repo/commerce`.
   A delivered order earns the category's `affiliate_rate` (8% vinyl, CDs
   and books, 3% otherwise; Back office → Affiliates, finance) on the price
-  after the discount, held 7 days for returns; nothing when the order
+  after the discount, held through the return window (14 days); nothing when the order
   shares a phone number or address with the affiliate. A new Plus member's
   first membership (attributed on its first payments,
   `subscriptions.affiliate_id`) earns 20% of the first 3 monthly payments

@@ -17,7 +17,7 @@ const first = (value: string | string[] | undefined) =>
  *   the design site…), kept; any other URL is replaced with the website
  *   (never an open redirect);
  * - the older `next` (a path without its locale) also works;
- * - null when none was given (go on to My Pass).
+ * - null when none was given (go on to Your Pass).
  */
 export const readReturnTo = async (
   searchParams: SearchParams,

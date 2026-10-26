@@ -10,7 +10,7 @@ import { checkFile } from "@repo/storage";
 
 /**
  * "Sell to us": the rules of a trade-in request, shared by the customer
- * form (My Pass) and its tests. The database checks the same things
+ * form (Your Pass) and its tests. The database checks the same things
  * (migration 20261120000300_trade_ins.sql).
  */
 

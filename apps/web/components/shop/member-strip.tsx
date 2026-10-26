@@ -13,12 +13,11 @@ const chip =
   "inline-flex shrink-0 items-center gap-2 rounded-full border bg-card px-4 py-2 text-sm transition-colors hover:bg-muted";
 
 /**
- * The only part of My Pass on the storefront: the member's Bulbs and any
+ * The only part of Your Pass on the storefront: the member's Bulbs and any
  * order on its way; for guests, a nudge to get The IDEA Pass.
  */
 export const MemberStrip = () => {
   const t = useTranslations("web.home.member");
-  const tiers = useTranslations("app.bulbs.tiers");
   const locale = useLocale();
   const { loading, user } = useAuth();
   const bulbs = useMyBulbs();
@@ -44,7 +43,6 @@ export const MemberStrip = () => {
           <LightbulbIcon aria-hidden="true" className="size-4 text-pink-text" />
           {t("bulbs", {
             available: formatNumber(bulbs.data.available, locale),
-            tier: tiers(`${bulbs.data.tier}.name`),
           })}
         </Link>
       ) : null}

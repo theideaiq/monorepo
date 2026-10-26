@@ -105,7 +105,7 @@ export const safeReturnTo = (
  * A link to a Pass page, e.g.
  * `passUrl("/sign-in", "https://theideaiq.com/ar/store", "ar")` →
  * `https://theideaiq.com/ar/sign-in?return_to=https%3A%2F%2Ftheideaiq…`
- * (English pages have no prefix: `/sign-in`). `"/"` is My Pass (`/pass`).
+ * (English pages have no prefix: `/sign-in`). `"/"` is Your Pass (`/pass`).
  * Without a locale, the website picks one from the browser.
  */
 export const passUrl = (

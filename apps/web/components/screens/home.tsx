@@ -284,7 +284,7 @@ const Featured = () => {
 };
 
 /**
- * My Pass: a greeting, the membership card (`card`, rendered on the
+ * Your Pass: a greeting, the membership card (`card`, rendered on the
  * server), active orders, Plus membership and rentals, next events and
  * featured products.
  */

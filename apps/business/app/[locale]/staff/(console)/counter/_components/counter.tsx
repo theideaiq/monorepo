@@ -117,7 +117,6 @@ const MemberCard = ({
   readonly member: CounterMember;
 }) => {
   const t = useTranslations("admin.counter");
-  const tTier = useTranslations("app.bulbs.tiers");
   const format = formatters(useLocale() as Locale);
   const [checkedIn, setCheckedIn] = useState<Set<string>>(new Set());
 
@@ -155,7 +154,7 @@ const MemberCard = ({
           <dt className="text-muted-foreground">{t("bulbs")}</dt>
           <dd className="text-end tabular-nums">
             {member.bulbs
-              ? `${format.number(member.bulbs.available)} · ${tTier(`${member.bulbs.tier as "glow"}.name`)}`
+              ? `${format.number(member.bulbs.available)} · ${format.number(member.bulbs.rate)}%`
               : "—"}
           </dd>
           <dt className="text-muted-foreground">{t("plus")}</dt>

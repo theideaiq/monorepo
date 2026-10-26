@@ -44,7 +44,7 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
   // Lets pages under this layout render statically.
   setRequestLocale(locale);
   const dir = getDirection(locale);
-  // Texts the client components use: shared, The IDEA Pass and My Pass,
+  // Texts the client components use: shared, The IDEA Pass and Your Pass,
   // the store and the marketing pages.
   const { app, auth, billing, common, pass, store, web } = await getMessages();
 

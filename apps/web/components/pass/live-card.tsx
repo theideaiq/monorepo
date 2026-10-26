@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
 import { type PointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import { encode } from "uqr";
-import { type BulbTier, tierCardBackground } from "@/lib/bulbs";
+import { cardBackground } from "@/lib/bulbs";
 import {
   formatMemberNumber,
   importPassKey,
@@ -147,12 +147,11 @@ interface LiveCardProps {
   /** "Member since …", already formatted. */
   readonly memberSince: string | null;
   readonly name: string;
-  /** The member's The IDEA Plus plan, when they have one. */
+  /**
+   * The member's The IDEA Plus plan, when they have one: shown on the card,
+   * which gets the Plus finish.
+   */
   readonly plan: string | null;
-  /** The member's tier: the card changes colour with it. */
-  readonly tier: BulbTier;
-  /** The tier's name, in the page's language. */
-  readonly tierName: string;
 }
 
 /**
@@ -160,13 +159,7 @@ interface LiveCardProps {
  * pointer, the member's name and number, and a QR code with a 6-digit code
  * that changes every 30 seconds (shown at the counter, checked there).
  */
-export const LiveCard = ({
-  memberSince,
-  name,
-  plan,
-  tier,
-  tierName,
-}: LiveCardProps) => {
+export const LiveCard = ({ memberSince, name, plan }: LiveCardProps) => {
   const t = useTranslations("pass.card");
   const locale = useLocale();
   const card = useCard();
@@ -208,7 +201,10 @@ export const LiveCard = ({
           ref={ref}
         >
           <div
-            className={cn("absolute inset-0 -z-10", tierCardBackground[tier])}
+            className={cn(
+              "absolute inset-0 -z-10",
+              cardBackground(Boolean(plan))
+            )}
           />
           <Guilloche className="absolute inset-0 -z-10 size-full text-white/40" />
           <div className="pass-sheen pointer-events-none absolute inset-0" />
@@ -222,7 +218,7 @@ export const LiveCard = ({
               />
               <div className="grid min-w-0 gap-1">
                 <p className="text-[0.625rem] text-white/75 uppercase tracking-[0.2em] sm:text-xs">
-                  {[tierName, plan].filter(Boolean).join(" · ")}
+                  {plan ?? t("member")}
                 </p>
                 <p className="truncate font-semibold text-lg leading-tight sm:text-3xl">
                   {name}
