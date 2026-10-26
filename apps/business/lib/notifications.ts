@@ -1,12 +1,18 @@
 "use client";
 
+import { passOrigin } from "@repo/auth/pass";
 import { useAuth } from "@repo/auth/provider";
 import { formatPrice } from "@repo/commerce";
 import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
+import { localePath } from "@repo/internationalization";
+import {
+  businessPath,
+  currentAppPath,
+  safeNextPath,
+} from "@repo/internationalization/app-paths";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { currentAppPath, safeNextPath } from "./navigation";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /**
@@ -212,10 +218,20 @@ export const describeNotification = (
   };
 };
 
-/** The app path to open, or null for a missing or unsafe link. */
-export const notificationHref = (link: string | null) => {
+/**
+ * Where a notification opens, or null for a missing or unsafe link: a page
+ * of this site for links under `/business…` (`/business/invoices` →
+ * `/invoices`), else the page on the website (an absolute URL).
+ */
+export const notificationHref = (link: string | null, locale = "en") => {
   const path = safeNextPath(link);
-  return path ? currentAppPath(path) : null;
+  if (!path) {
+    return null;
+  }
+  return (
+    businessPath(path) ??
+    new URL(localePath(locale, currentAppPath(path)), passOrigin()).href
+  );
 };
 
 const NOTIFICATION_COLUMNS =

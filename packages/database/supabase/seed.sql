@@ -1,6 +1,6 @@
 -- Local development seed (runs after migrations on `supabase db reset`).
 -- Prices are in IQD (whole dinars). Production plans and the catalog are
--- managed in the back office (/admin in The IDEA Spark).
+-- managed in the back office (/staff on The IDEA Business).
 
 insert into public.plans
   (id, name, description, amount, currency, billing_interval, audience, rental_slots, tier, features_ar, features_en, position)
@@ -12,7 +12,7 @@ values
   ('plus-premium', 'Plus Premium', 'Four items at a time', 40000, 'IQD', 'month', 'plus', 4, 3,
     '{"أربعة أغراض في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة","دعوات لفعاليات النادي"}',
     '{"Four items at a time","Free delivery","Early access to new releases","Invitations to Club events"}', 3),
-  ('suite-business-monthly', 'The IDEA Suite', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
+  ('business-monthly', 'The IDEA Business', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
     '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
 
@@ -77,7 +77,7 @@ on conflict (sku) do nothing;
 
 insert into public.posts (slug, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, published_at) values
   ('welcome-to-the-idea', 'مرحباً بكم في The IDEA', 'Welcome to The IDEA',
-    'متجر وتأجير وأكاديمية وحلول للشركات في حساب واحد.', 'A store, rentals, an academy and business solutions in one account.',
+    'متجر وتأجير ونادٍ وحلول للشركات ببطاقة واحدة.', 'A store, rentals, a club and business solutions with one Pass.',
     'نطلق اليوم منصة The IDEA الجديدة.', 'Today we are launching the new The IDEA platform.', now())
 on conflict (slug) do nothing;
 
@@ -104,7 +104,7 @@ insert into public.chart_of_accounts (code, name, type, category) values
   ('3000', 'Owner''s equity', 'equity', null),
   ('4000', 'Store sales', 'revenue', null),
   ('4100', 'Plus memberships', 'revenue', null),
-  ('4200', 'Suite services', 'revenue', null),
+  ('4200', 'Business services', 'revenue', null),
   ('5000', 'Cost of goods sold', 'expense', 'cogs'),
   ('6000', 'Salaries', 'expense', null),
   ('6100', 'Rent', 'expense', null),

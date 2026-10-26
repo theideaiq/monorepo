@@ -68,7 +68,7 @@ export const AppSidebar = () => {
           href="/"
           onClick={closeOnMobile}
         >
-          <BrandLogo line="Spark" />
+          <BrandLogo line="Business" />
         </Link>
       </SidebarHeader>
       <SidebarContent>

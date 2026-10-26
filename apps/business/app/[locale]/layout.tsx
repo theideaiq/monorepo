@@ -38,7 +38,7 @@ export const viewport: Viewport = {
 };
 
 /**
- * The root layout of The IDEA Spark (the back office and The IDEA Suite):
+ * The root layout of The IDEA Business (the back office and The IDEA Business):
  * the language comes from the URL (the proxy adds it), so <html lang dir>
  * are right on the server.
  */

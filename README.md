@@ -4,14 +4,14 @@ The IDEA IQ Inc.'s production monorepo: the whole of The IDEA — the
 digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
 (LTR), local payments through Wayl, and native iOS and Android apps.
 
-| Product line | What it is | Where |
+| Product | What it is | Where |
 | --- | --- | --- |
-| Megastore | Gaming, tech, books and lifestyle, delivered across Iraq | `apps/web` (catalog), `apps/app` (cart, checkout, orders) |
-| The IDEA Plus | Monthly membership to rent games, books and movies | `apps/web/plus`, `apps/app/plus` |
-| The IDEA Suite | Procurement and recruitment for companies (business accounts) | `apps/web/suite`, `apps/app/business` |
-| The Club | Community rooms on Telegram | `apps/web/club` |
-| The IDEA Post and events | The IDEA Post at `/post` (News, Stories, Members' work, Learn), events with RSVPs and member submissions | `apps/web`, `apps/app` (customer area and back office) |
-| Droid | Telegram bot: orders and Bulbs for linked members, support, FAQ, product search (also inline) | `packages/droid`, `apps/api/app/telegram` |
+| The IDEA Store | Gaming, tech, books and lifestyle, delivered across Iraq (`/`, `/store`) | `apps/web` (catalog, cart, checkout) |
+| The IDEA Plus | Monthly membership to rent games, books and movies (`/plus`) | `apps/web/app/[locale]/plus` |
+| The IDEA Club | Posts, events with RSVPs, member submissions and the Telegram rooms (`/club`) | `apps/web/app/[locale]/club` |
+| The IDEA Pass | A person's membership: sign-in, the card, orders, Bulbs and settings (`/pass`) | `apps/web` |
+| The IDEA Business | Procurement, hiring and team Plus for companies: `/business` on the website, the company dashboard at business.theideaiq.com | `apps/web/app/[locale]/business`, `apps/business` |
+| The IDEA Droid | Telegram bot: orders and Bulbs for linked members, support, FAQ, product search (also inline) | `packages/droid`, `apps/api/app/telegram` |
 
 Built on the shaheenfarjo/monorepo template (initialized with `bun run init`:
 physical-goods commerce, rate-limit and AI modules). It replaces the earlier
@@ -27,7 +27,7 @@ theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
 | Auth & database | Supabase (Postgres, Row Level Security, email one-time codes) |
 | Payments | Provider-agnostic `@repo/payments` with Wayl (ZainCash, FIB, Qi Card, cards) |
 | Localization | Arabic + English, RTL-aware design system, `Asia/Baghdad` dates, IQD |
-| Mobile | Capacitor (iOS + Android) shells that load The IDEA Spark (`apps/app`) |
+| Mobile | Capacitor (iOS + Android) shells that load the website (`apps/web`) |
 | Analytics | GA4, Meta Pixel, TikTok Pixel, server-side conversions |
 | Hosting | Vercel (apps) + Cloudflare (DNS, Turnstile, R2) |
 | Quality | Biome via Ultracite, TypeScript strict, Vitest, GitHub Actions |
@@ -36,9 +36,10 @@ theideaiq/monorepo, theideaiq/mono (editorial portal) and theideaiq/droid
 
 ```
 apps/
-  web/        Public website: store catalog, Plus, Suite, Club, The IDEA Post, events (port 3001)
-  app/        The IDEA Spark (spark.theideaiq.com): customer app, The IDEA Pass (sign-in) and the
-              back office under /admin; web + iOS/Android via Capacitor (port 3000)
+  web/        theideaiq.com: The IDEA Store, Plus, Club, The IDEA Pass (sign-in and its pages),
+              cart and checkout; loaded by the iOS/Android apps via Capacitor (port 3001)
+  business/   The IDEA Business (business.theideaiq.com): the company dashboard at its root and
+              the staff back office under /staff (port 3000)
   api/        Checkout, payment webhooks, cron, Telegram webhook, calendar feed, back-office endpoints (port 3002)
   docs/       Mintlify documentation (port 3004)
   storybook/  The IDEA Design: staff-only UI and email review, design.theideaiq.com (port 6006)
@@ -66,8 +67,8 @@ bun run dev       # starts every app
 
 Each app reads its environment from `.env.local` (copy the app's
 `.env.example`). Without credentials the apps still start; integrations whose
-keys are missing are disabled. Staff sign in to the back office (`/admin` in The IDEA
-Spark) with an email code and an authenticator app; grant the first superadmin with SQL (see
+keys are missing are disabled. Staff sign in to the back office (`/staff` in The IDEA
+Business) with an email code and an authenticator app; grant the first superadmin with SQL (see
 `ARCHITECTURE_AND_INTEGRATIONS.md`).
 
 ## Common scripts

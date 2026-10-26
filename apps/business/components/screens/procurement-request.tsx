@@ -58,7 +58,7 @@ const Confirm = ({
   onConfirm: () => void;
   title: string;
 }) => {
-  const t = useTranslations("app.suite.request");
+  const t = useTranslations("app.company.request");
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -90,7 +90,7 @@ const QuoteActions = ({
   quote: Quote;
   requestId: string;
 }) => {
-  const t = useTranslations("app.suite.request");
+  const t = useTranslations("app.company.request");
   const id = useId();
   const { active } = useActiveOrganization();
   const decide = useDecideQuote(active.id, requestId);
@@ -147,7 +147,7 @@ const QuoteCard = ({
   quote: Quote;
   requestId: string;
 }) => {
-  const t = useTranslations("app.suite");
+  const t = useTranslations("app.company");
   const locale = useLocale();
   const total = quote.quote_lines.reduce(
     (sum, line) => sum + line.quantity * line.unit_price,
@@ -245,7 +245,7 @@ const QuoteCard = ({
 };
 
 const RequestDetail = ({ requestId }: { requestId: string }) => {
-  const t = useTranslations("app.suite");
+  const t = useTranslations("app.company");
   const locale = useLocale();
   const { active, canManage } = useActiveOrganization();
   const request = useProcurementRequest(requestId);

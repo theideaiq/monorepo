@@ -95,10 +95,12 @@ export const NotificationBell = () => {
     if (!notification.read_at) {
       markRead.mutate([notification.id]);
     }
-    const href = notificationHref(notification.link);
+    const href = notificationHref(notification.link, locale);
     setOpen(false);
-    if (href) {
+    if (href?.startsWith("/")) {
       router.push(href);
+    } else if (href) {
+      window.location.assign(href);
     }
   };
 

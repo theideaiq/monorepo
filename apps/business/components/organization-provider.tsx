@@ -26,7 +26,7 @@ const OrganizationContext = createContext<OrganizationContextValue | null>(
 );
 
 /**
- * Loads the user's organizations (business accounts, The IDEA Suite) and picks
+ * Loads the user's organizations (business accounts, The IDEA Business) and picks
  * the active one: the last one used, if the user is still a member.
  * Organizations are optional: customers without one use the rest of the
  * app normally, and the Business section offers to create or join one.

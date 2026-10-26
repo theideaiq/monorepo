@@ -23,7 +23,7 @@ const getServerRenderClient = () => {
 /**
  * The browser's Supabase client: the cookie-based client from @repo/auth,
  * in web browsers and in the iOS/Android apps alike (their WebView loads
- * The IDEA Spark, so the same session cookie applies). Every query runs as
+ * The IDEA Business, so the same session cookie applies). Every query runs as
  * the signed-in user, so Row Level Security applies.
  */
 export const getSupabase = () => {

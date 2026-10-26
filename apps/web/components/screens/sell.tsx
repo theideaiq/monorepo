@@ -33,7 +33,6 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   useMyTradeIns,
@@ -464,18 +463,21 @@ const MyRequests = () => {
   );
 };
 
-/** Sell to us: offer The IDEA an item for cash or store credit. */
+/**
+ * Sell to us, under the orders on Your Pass → Orders: offer The IDEA an
+ * item for cash or store credit, and the offers made so far.
+ */
 export const Sell = () => {
   const t = useTranslations("app.sell");
 
   return (
-    <>
-      <PageHeader title={t("title")} />
-      <div className="flex max-w-3xl flex-1 flex-col gap-8">
+    <section className="flex max-w-3xl scroll-mt-24 flex-col gap-8" id="sell">
+      <div className="grid gap-1">
+        <h2 className="font-semibold text-xl">{t("title")}</h2>
         <p className="text-muted-foreground">{t("description")}</p>
-        <SellForm />
-        <MyRequests />
       </div>
-    </>
+      <SellForm />
+      <MyRequests />
+    </section>
   );
 };

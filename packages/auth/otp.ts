@@ -248,7 +248,7 @@ export const verifyEmailOtp = async (
     now = Date.now(),
     sentAt,
   }: VerifyEmailOtpOptions = {}
-): Promise<EmailOtpResult<{ userId: string }>> => {
+): Promise<EmailOtpResult<{ isNew: boolean; userId: string }>> => {
   const { data, error } = await supabase.auth.verifyOtp({
     email,
     token,
@@ -268,5 +268,8 @@ export const verifyEmailOtp = async (
     return { code: "unknown", message: "Verification failed.", ok: false };
   }
 
-  return { email, ok: true, value: { userId: data.user.id } };
+  // A Pass created by the code just sent: its row is no older than the code.
+  const createdAt = Date.parse(data.user.created_at ?? "");
+  const isNew = now - createdAt <= expiresInSeconds * 1000;
+  return { email, ok: true, value: { isNew, userId: data.user.id } };
 };

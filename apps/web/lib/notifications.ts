@@ -5,6 +5,7 @@ import { formatPrice } from "@repo/commerce";
 import type { Enums, Json } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
 import {
+  businessPath,
   currentAppPath,
   safeNextPath,
 } from "@repo/internationalization/app-paths";
@@ -216,8 +217,6 @@ export const describeNotification = (
   };
 };
 
-const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
-
 /**
  * The path to open, or null for a missing or unsafe link. Links under
  * `/business…` are The IDEA Business's pages, on its own site (where they
@@ -232,9 +231,8 @@ export const notificationHref = (
   if (!path) {
     return null;
   }
-  return BUSINESS_PATH.test(path)
-    ? appLink(appUrl, locale, path.replace(BUSINESS_PATH, "") || "/")
-    : currentAppPath(path);
+  const business = businessPath(path);
+  return business ? appLink(appUrl, locale, business) : currentAppPath(path);
 };
 
 const NOTIFICATION_COLUMNS =

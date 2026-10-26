@@ -4,7 +4,7 @@ import { SectionSpinner } from "@/components/states";
 import { titleFrom } from "@/lib/metadata";
 
 export const generateMetadata = titleFrom((t) =>
-  t("app.suite.procurement.title")
+  t("app.company.procurement.title")
 );
 
 interface ProcurementRequestPageProps {

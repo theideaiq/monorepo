@@ -33,11 +33,11 @@ begin
 
 ### حسابات الشركات
 
-إذا كنت صاحب مشروع أو شركة، فالحساب المصرفي جزء أساسي من عملك. العلاقة الجيدة مع مصرفك تساعدك على تحسين سجلّك الائتماني، والحصول على قروض لتطوير شركتك، وفتح حسابات رواتب لموظفيك. (اقرأ أيضاً [ما هي الشركة الناشئة؟](/post/startups-explained))
+إذا كنت صاحب مشروع أو شركة، فالحساب المصرفي جزء أساسي من عملك. العلاقة الجيدة مع مصرفك تساعدك على تحسين سجلّك الائتماني، والحصول على قروض لتطوير شركتك، وفتح حسابات رواتب لموظفيك. (اقرأ أيضاً [ما هي الشركة الناشئة؟](/club/startups-explained))
 
 ### المحافظ والتطبيقات الإلكترونية
 
-غيّرت الخدمات الرقمية طريقة تعاملنا مع المال. في العراق تنتشر المحافظ الإلكترونية وتطبيقات المصارف، مثل **ZainCash** وتطبيقات **Qi Card** و**FIB** (المصرف العراقي الأول)، وتتيح الدفع والتحويل من الهاتف. أما الخدمات العالمية مثل PayPal وPayoneer فيختلف توفّرها في العراق، فتحقّق مما يعمل فعلاً قبل الاعتماد عليه (انظر [العمل عن بعد والعمل الحر](/post/remote-work-and-freelancing)).
+غيّرت الخدمات الرقمية طريقة تعاملنا مع المال. في العراق تنتشر المحافظ الإلكترونية وتطبيقات المصارف، مثل **ZainCash** وتطبيقات **Qi Card** و**FIB** (المصرف العراقي الأول)، وتتيح الدفع والتحويل من الهاتف. أما الخدمات العالمية مثل PayPal وPayoneer فيختلف توفّرها في العراق، فتحقّق مما يعمل فعلاً قبل الاعتماد عليه (انظر [العمل عن بعد والعمل الحر](/club/remote-work-and-freelancing)).
 
 ## ماذا تحتاج لفتح حساب؟
 
@@ -58,13 +58,13 @@ begin
 - أمان أكبر لأموالك.
 - بناء سجلّ مالي يفيدك لاحقاً.
 
-**نصيحة لمن يخطّط للدراسة في الخارج:** كثير من الجامعات وطلبات التأشيرة تطلب [كشفاً مصرفياً](/post/bank-statement) يثبت قدرتك أو قدرة من يموّلك على تغطية التكاليف. افتح الحساب مبكراً، قبل التقديم بفترة كافية، ودع فيه حركة مالية منتظمة، حتى لا يبدو أنه فُتح لغرض التقديم فقط. وراجع [خطة التقديم خطوة بخطوة](/post/study-abroad-roadmap).
+**نصيحة لمن يخطّط للدراسة في الخارج:** كثير من الجامعات وطلبات التأشيرة تطلب [كشفاً مصرفياً](/club/bank-statement) يثبت قدرتك أو قدرة من يموّلك على تغطية التكاليف. افتح الحساب مبكراً، قبل التقديم بفترة كافية، ودع فيه حركة مالية منتظمة، حتى لا يبدو أنه فُتح لغرض التقديم فقط. وراجع [خطة التقديم خطوة بخطوة](/club/study-abroad-roadmap).
 
 ## مصادر مفيدة
 
 - [البنك المركزي العراقي](https://cbi.iq)
-- [الكشف المصرفي للتقديم على الجامعات](/post/bank-statement)
-- [العمل عن بعد والعمل الحر](/post/remote-work-and-freelancing)
+- [الكشف المصرفي للتقديم على الجامعات](/club/bank-statement)
+- [العمل عن بعد والعمل الحر](/club/remote-work-and-freelancing)
 - وإن كانت لديك أسئلة عن تجارب الآخرين مع المصارف: [The IDEA Club](https://t.me/theideaclub)$ar$,
     $en$Having a bank account today is a necessity, not a luxury. It gives you more control over your money, makes deposits, withdrawals and transfers easy, and keeps your money safe from loss or theft. It matters even more if you work remotely or plan to study abroad.
 
@@ -88,11 +88,11 @@ For anyone interested in investing: used to buy and sell stocks and bonds on the
 
 ### Business accounts
 
-If you run a project or company, banking is a core part of your work. A good relationship with your bank helps you build your credit record, get loans to grow, and open salary accounts for your staff. (See also [what is a startup?](/post/startups-explained))
+If you run a project or company, banking is a core part of your work. A good relationship with your bank helps you build your credit record, get loans to grow, and open salary accounts for your staff. (See also [what is a startup?](/club/startups-explained))
 
 ### E-wallets and banking apps
 
-Digital services have changed how we handle money. In Iraq, e-wallets and banking apps such as **ZainCash**, **Qi Card** apps and **FIB** (First Iraqi Bank) let you pay and transfer from your phone. Global services like PayPal and Payoneer vary in what they offer in Iraq, so check what actually works before you rely on one (see [remote work and freelancing](/post/remote-work-and-freelancing)).
+Digital services have changed how we handle money. In Iraq, e-wallets and banking apps such as **ZainCash**, **Qi Card** apps and **FIB** (First Iraqi Bank) let you pay and transfer from your phone. Global services like PayPal and Payoneer vary in what they offer in Iraq, so check what actually works before you rely on one (see [remote work and freelancing](/club/remote-work-and-freelancing)).
 
 ## What you need to open an account
 
@@ -113,13 +113,13 @@ Many banks now let you start the process online in their app, then collect your 
 - Keep your money safer.
 - Build a financial record that helps you later.
 
-**A tip if you plan to study abroad:** many universities and visa applications ask for a [bank statement](/post/bank-statement) showing that you, or whoever funds you, can cover the costs. Open the account early, well before you apply, and keep regular activity in it, so it doesn't look like it was opened just for the application. See [our step-by-step application plan](/post/study-abroad-roadmap).
+**A tip if you plan to study abroad:** many universities and visa applications ask for a [bank statement](/club/bank-statement) showing that you, or whoever funds you, can cover the costs. Open the account early, well before you apply, and keep regular activity in it, so it doesn't look like it was opened just for the application. See [our step-by-step application plan](/club/study-abroad-roadmap).
 
 ## Useful resources
 
 - [Central Bank of Iraq](https://cbi.iq)
-- [Bank statements for university applications](/post/bank-statement)
-- [Remote work and freelancing](/post/remote-work-and-freelancing)
+- [Bank statements for university applications](/club/bank-statement)
+- [Remote work and freelancing](/club/remote-work-and-freelancing)
 - To ask others about their experience with banks: [The IDEA Club](https://t.me/theideaclub)$en$,
     now() - interval '39 minutes'
   )

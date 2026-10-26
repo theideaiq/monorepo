@@ -42,7 +42,7 @@ const CandidateCard = ({
   readonly candidate: Candidate;
   readonly jobId: string;
 }) => {
-  const t = useTranslations("app.suite.hiring");
+  const t = useTranslations("app.company.hiring");
   const id = useId();
   const locale = useLocale();
   const { active } = useActiveOrganization();
@@ -142,7 +142,7 @@ const CandidateCard = ({
 };
 
 const JobDetail = ({ jobId }: { jobId: string }) => {
-  const t = useTranslations("app.suite.hiring");
+  const t = useTranslations("app.company.hiring");
   const locale = useLocale();
   const { active, canManage } = useActiveOrganization();
   const job = useJobRequest(jobId);

@@ -16,35 +16,83 @@ export const safeNextPath = (value: string | null | undefined) =>
 const LEGACY_DETAIL_PAGES: Record<string, [string, string]> = {
   "/orders/view": ["/pass/orders", "id"],
   "/store/product": ["/store", "slug"],
-  "/support/view": ["/pass/support", "id"],
+  "/support/view": ["/help", "id"],
 };
 
-/** Sections of The IDEA Pass that links stored before it moved still name
- * without their `/pass` prefix (notifications, emails, Telegram). */
-const PASS_SECTIONS = ["/orders", "/plus", "/sell", "/settings", "/support"];
+/**
+ * Pages that moved, as [old path, current path, anchor on the current
+ * page]. An old path also covers the pages under it (`/pass/support/7` →
+ * `/help/7`); the anchor is only added for the page itself.
+ */
+const MOVED: readonly (readonly [string, string, string?])[] = [
+  ["/orders", "/pass/orders"],
+  ["/settings", "/pass/settings"],
+  ["/sell", "/pass/orders", "#sell"],
+  ["/pass/sell", "/pass/orders", "#sell"],
+  ["/support", "/help"],
+  ["/pass/support", "/help"],
+  ["/pass/plus", "/plus", "#yours"],
+  ["/pass/affiliate", "/pass/bulbs", "#invite"],
+  ["/pass/wishlist", "/saved"],
+  ["/pass/events", "/club", "#yours"],
+  ["/pass/submissions", "/club", "#yours"],
+  ["/post/events", "/club"],
+  ["/post", "/club"],
+  ["/suite", "/business"],
+  ["/about/careers", "/careers"],
+  ["/about/faq", "/help"],
+  ["/about/contact", "/help", "#contact"],
+  ["/i", "/r"],
+  ["/a", "/r"],
+];
 
-const inPass = (pathname: string) =>
-  PASS_SECTIONS.some(
-    (section) => pathname === section || pathname.startsWith(`${section}/`)
-  )
-    ? `/pass${pathname}`
-    : pathname;
+/** Sections of /post that were pages and are now filters of /club. */
+const POST_SECTIONS = new Set(["/post/news", "/post/stories", "/post/learn"]);
+
+const moved = (pathname: string): [string, string] | null => {
+  if (POST_SECTIONS.has(pathname)) {
+    return ["/club", ""];
+  }
+  for (const [from, to, anchor = ""] of MOVED) {
+    if (pathname === from) {
+      return [to, anchor];
+    }
+    if (pathname.startsWith(`${from}/`)) {
+      return [`${to}${pathname.slice(from.length)}`, ""];
+    }
+  }
+  return null;
+};
 
 /**
- * Detail pages took a query parameter while the app was a static export
- * (`/orders/view?id=…`) and The IDEA Pass sections had no `/pass` prefix;
- * links stored with those shapes (notifications) open the page's current
- * URL (`/pass/orders/…`). Other paths are returned unchanged.
+ * Links stored in older shapes (notifications, emails, Telegram) open the
+ * page's current URL: detail pages that took a query parameter while the
+ * app was a static export (`/orders/view?id=…` → `/pass/orders/…`), and
+ * pages that moved (`/pass/support/…` → `/help/…`, `/sell` →
+ * `/pass/orders#sell`). Other paths are returned unchanged.
  */
 export const currentAppPath = (path: string) => {
   const url = new URL(path, "http://site.invalid");
   const legacy = LEGACY_DETAIL_PAGES[url.pathname];
   const value = legacy ? url.searchParams.get(legacy[1]) : null;
-  if (!(legacy && value)) {
-    const moved = inPass(url.pathname);
-    return moved === url.pathname ? path : `${moved}${url.search}${url.hash}`;
+  if (legacy && value) {
+    url.searchParams.delete(legacy[1]);
+    const query = url.searchParams.toString();
+    return `${legacy[0]}/${encodeURIComponent(value)}${query ? `?${query}` : ""}`;
   }
-  url.searchParams.delete(legacy[1]);
-  const query = url.searchParams.toString();
-  return `${legacy[0]}/${encodeURIComponent(value)}${query ? `?${query}` : ""}`;
+  const current = moved(url.pathname);
+  if (!current) {
+    return path;
+  }
+  return `${current[0]}${url.search}${url.hash || current[1]}`;
 };
+
+const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
+
+/**
+ * The page of The IDEA Business a stored link names: links under
+ * `/business…` are its pages, which sit at the root of its own site
+ * (`/business/invoices` → `/invoices`); null for the website's pages.
+ */
+export const businessPath = (path: string) =>
+  BUSINESS_PATH.test(path) ? path.replace(BUSINESS_PATH, "") || "/" : null;

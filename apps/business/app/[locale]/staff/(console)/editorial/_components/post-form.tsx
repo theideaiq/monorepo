@@ -25,7 +25,7 @@ interface PostFormProps {
 }
 
 /**
- * A bilingual post of The IDEA Post (its section and byline, Markdown
+ * A bilingual post of The IDEA Club (its section and byline, Markdown
  * bodies and a cover image).
  */
 export const PostForm = ({

@@ -1,4 +1,4 @@
--- The Post: sections, bylines and members' work from accepted submissions.
+-- The IDEA Club: sections, bylines and members' work from accepted submissions.
 begin;
 -- <preamble>
 -- Shared pgTAP preamble. Each test file includes a copy between the preamble

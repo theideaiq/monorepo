@@ -1,5 +1,5 @@
 /**
- * Links to The IDEA Pass (the sign-in, sign-up, authenticator and "My
+ * Links to The IDEA Pass (the sign-in, authenticator and "My
  * Pass" pages of the website, apps/web), the only sign-in UI on the web,
  * and the check of where it may send people back to afterwards.
  *
@@ -16,7 +16,7 @@ export const DEFAULT_PASS_URL = "http://localhost:3001";
 const TRAILING_SLASH = /\/+$/;
 const LOCALHOST = new Set(["localhost", "127.0.0.1", "[::1]"]);
 
-export type PassPath = "/" | "/mfa" | "/sign-in" | "/sign-out" | "/sign-up";
+export type PassPath = "/" | "/mfa" | "/sign-in" | "/sign-out";
 
 export interface ReturnToOptions {
   /** Also accept localhost on any port (development). */
@@ -45,7 +45,7 @@ const hostOf = (value: string | undefined) => {
 
 /**
  * The hostnames of The IDEA's own sites: the website (with the Pass), The
- * IDEA Spark (business and the back office), the design site and the API.
+ * IDEA Business (company pages and the back office), the design site and the API.
  */
 export const allowedReturnToHosts = () =>
   new Set(

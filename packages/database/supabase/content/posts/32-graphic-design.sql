@@ -90,8 +90,8 @@ begin
 - انشر أفضل أعمالك فقط على **Behance** و**Dribbble**، وعلى حسابات مخصّصة في Instagram.
 - احذف الأعمال القديمة الضعيفة كلما تطوّرت.
 - شارك في المسابقات والتحديات التصميمية.
-- ابدأ العمل الحرّ على منصات مثل Fiverr وUpwork وخمسات، واقرأ دليلنا عن [العمل عن بعد والعمل الحر](/post/remote-work-and-freelancing).
-- وإن أحببت تصميم المواقع تحديداً، فاقرأ [تطوير المواقع](/post/web-development).
+- ابدأ العمل الحرّ على منصات مثل Fiverr وUpwork وخمسات، واقرأ دليلنا عن [العمل عن بعد والعمل الحر](/club/remote-work-and-freelancing).
+- وإن أحببت تصميم المواقع تحديداً، فاقرأ [تطوير المواقع](/club/web-development).
 
 ## مصادر للتعلّم
 
@@ -182,8 +182,8 @@ Design depends heavily on your creative vision and on teaching yourself, which i
 - Publish only your best work on **Behance** and **Dribbble**, and on dedicated Instagram profiles.
 - Remove older, weaker pieces as you improve.
 - Enter design competitions and challenges.
-- Start freelancing on platforms like Fiverr, Upwork and Khamsat, and read our guide to [remote work and freelancing](/post/remote-work-and-freelancing).
-- If you're drawn to designing websites, read [web development](/post/web-development).
+- Start freelancing on platforms like Fiverr, Upwork and Khamsat, and read our guide to [remote work and freelancing](/club/remote-work-and-freelancing).
+- If you're drawn to designing websites, read [web development](/club/web-development).
 
 ## Where to learn
 

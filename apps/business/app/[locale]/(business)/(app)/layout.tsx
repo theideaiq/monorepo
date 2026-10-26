@@ -12,7 +12,7 @@ interface AppLayoutProps {
 }
 
 /**
- * The IDEA Spark for businesses (The IDEA Suite): requires a session (from
+ * The IDEA Business for businesses (The IDEA Business): requires a session (from
  * The IDEA Pass on the website). The Business screens ask for an
  * organization.
  */

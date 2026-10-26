@@ -12,7 +12,6 @@ import { EmptyState } from "@/components/section";
 import { CategoryChips } from "@/components/shop/category-chips";
 import { MemberStrip } from "@/components/shop/member-strip";
 import { Rail } from "@/components/shop/rail";
-import { ShopSwitch } from "@/components/shop/shop-switch";
 import { StoreSearch } from "@/components/shop/store-search";
 import {
   getCategories,
@@ -46,7 +45,7 @@ export const generateMetadata = async ({
 
 /**
  * Home is the storefront: search, categories, what's featured and new,
- * a way into rentals, then events and The IDEA Post. The company's own
+ * a way into rentals, then events and The IDEA Club. The company's own
  * pages are under /about.
  */
 const Home = async ({ params }: HomeProps) => {
@@ -75,7 +74,6 @@ const Home = async ({ params }: HomeProps) => {
   return (
     <>
       <div className="container mx-auto flex flex-col gap-4 px-4 pt-6 pb-2">
-        <ShopSwitch active="buy" locale={locale} />
         <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
           {t("home.title")}
         </h1>
@@ -139,7 +137,7 @@ const Home = async ({ params }: HomeProps) => {
 
       {events.length > 0 ? (
         <Rail
-          action={{ href: "/post/events", label: t("ui.viewAll") }}
+          action={{ href: "/club?show=events", label: t("ui.viewAll") }}
           title={t("home.events.title")}
         >
           {events.map((event) => (
@@ -150,7 +148,7 @@ const Home = async ({ params }: HomeProps) => {
 
       {posts.length > 0 ? (
         <Rail
-          action={{ href: "/post", label: t("ui.viewAll") }}
+          action={{ href: "/club", label: t("ui.viewAll") }}
           title={t("home.news.title")}
         >
           {posts.map((post) => (
@@ -163,7 +161,7 @@ const Home = async ({ params }: HomeProps) => {
         <PinkBand
           action={
             <Button asChild className="gap-2" size="lg" variant="brand">
-              <a href={pagePath(locale, "/pass/sell")}>
+              <a href={pagePath(locale, "/pass/orders#sell")}>
                 <HandCoins aria-hidden="true" />
                 {t("store.sell.cta")}
               </a>

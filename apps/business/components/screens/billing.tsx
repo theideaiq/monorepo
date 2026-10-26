@@ -20,7 +20,7 @@ import { reportCompletedCheckout } from "@/lib/checkout-tracking";
 import { usePlanCheckout } from "@/lib/plus-queries";
 import { usePayments, usePlans, useSubscription } from "@/lib/queries";
 
-/** The active organization's The IDEA Suite plan (`audience = 'business'`). */
+/** The active organization's The IDEA Business plan (`audience = 'business'`). */
 const OrganizationBilling = () => {
   const t = useTranslations("billing");
   const locale = useLocale();

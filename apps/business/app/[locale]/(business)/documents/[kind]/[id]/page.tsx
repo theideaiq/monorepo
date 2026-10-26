@@ -6,7 +6,9 @@ import { FullPageSpinner } from "@/components/states";
 import { isDocumentKind } from "@/lib/documents";
 import { titleFrom } from "@/lib/metadata";
 
-export const generateMetadata = titleFrom((t) => t("app.suite.document.title"));
+export const generateMetadata = titleFrom((t) =>
+  t("app.company.document.title")
+);
 
 interface DocumentPageProps {
   readonly params: Promise<{ id: string; kind: string }>;

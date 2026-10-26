@@ -71,13 +71,13 @@ const contact = {
   ar: {
     email: "sara.ahmed@example.com",
     message:
-      "مرحباً، نرغب بحجز قاعة في The IDEA Suite لورشة عمل لعشرين شخصاً. هل يمكن إرسال الأسعار والأوقات المتاحة؟",
+      "مرحباً، نرغب بحجز قاعة في The IDEA لورشة عمل لعشرين شخصاً. هل يمكن إرسال الأسعار والأوقات المتاحة؟",
     name: "سارة أحمد",
   },
   en: {
     email: "omar.hassan@example.com",
     message:
-      "Hello, we'd like to book a room at The IDEA Suite for a workshop of twenty people. Could you send prices and available times?",
+      "Hello, we'd like to book a room at The IDEA for a workshop of twenty people. Could you send prices and available times?",
     name: "Omar Hassan",
   },
 } as const;
@@ -91,7 +91,7 @@ export const Contact = email((lang) => ({
       name={contact[lang].name}
     />
   ),
-  subject: `Contact form (suite): ${contact[lang].name}`,
+  subject: `Contact form (business): ${contact[lang].name}`,
 }));
 
 const order = (lang: Lang): OrderConfirmationProps => {

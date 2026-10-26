@@ -12,18 +12,14 @@ export type BrandLogoVariant =
 
 /** A line of The IDEA, set after the wordmark in a line lock-up. */
 export type Line =
-  | "Academy"
+  | "Business"
   | "Club"
   | "Design"
   | "Droid"
-  | "Launcher"
-  | "Megastore"
   | "Pass"
   | "Plus"
-  | "Post"
-  | "Spark"
   | "Staff"
-  | "Suite";
+  | "Store";
 
 interface BrandLogoProps {
   readonly className?: string;
@@ -64,7 +60,7 @@ const arabicName = project.localizedName?.ar;
  * On Arabic pages (`lang="ar"`) the name alone is the Arabic one from
  * `project.json`, chosen in CSS so this works in server and client
  * components; a line lock-up keeps the Latin product name ("The IDEA
- * Spark"), set left-to-right.
+ * Business"), set left-to-right.
  */
 export const BrandLogo = ({
   className,

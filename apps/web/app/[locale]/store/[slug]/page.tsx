@@ -230,7 +230,7 @@ const ProductPage = async ({ params }: ProductProps) => {
             )}
             <Link
               className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-              href="/pass/sell"
+              href="/pass/orders#sell"
             >
               <HandCoins aria-hidden="true" className="size-4" />
               {t("sellToUs")}

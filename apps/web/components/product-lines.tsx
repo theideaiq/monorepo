@@ -2,23 +2,23 @@ import type { Locale } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
 import {
   Building2,
-  Gamepad2,
+  IdCard,
   MoveRight,
-  Newspaper,
+  Repeat,
   ShoppingBag,
-  Users,
+  UsersRound,
 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 const lines = [
-  { href: "/store", icon: ShoppingBag, id: "megastore" },
-  { href: "/plus", icon: Gamepad2, id: "plus" },
-  { href: "/suite", icon: Building2, id: "suite" },
-  { href: "/club", icon: Users, id: "club" },
-  { href: "/post", icon: Newspaper, id: "post" },
+  { href: "/store", icon: ShoppingBag, id: "store" },
+  { href: "/plus", icon: Repeat, id: "plus" },
+  { href: "/club", icon: UsersRound, id: "club" },
+  { href: "/pass", icon: IdCard, id: "pass" },
+  { href: "/business", icon: Building2, id: "business" },
 ] as const;
 
-/** The five product lines of the ecosystem, each linking to its page. */
+/** The IDEA's four products and The IDEA Business, each linking to its page. */
 export const ProductLines = async ({ locale }: { readonly locale: Locale }) => {
   const t = await getTranslations({ locale });
 

@@ -11,7 +11,7 @@ begin
     $en$The complete guide to IELTS$en$,
     $ar$ما هو IELTS، والفرق بين الأكاديمي والعام، وأقسام الاختبار وتوقيتها، وكيف تسجّل وتستعد.$ar$,
     $en$What IELTS is, Academic vs General Training, the four sections and their timings, and how to book and prepare.$en$,
-    $ar$إذا كنت تخطّط للدراسة في جامعة خارج العراق أو للتقديم على وظيفة أو هجرة في بلد ناطق بالإنجليزية، فستحتاج غالباً إلى إثبات مستواك في اللغة. واختبار IELTS من أشهر الطرق لذلك، إلى جانب TOEFL و[Duolingo English Test](/post/duolingo-english-test).
+    $ar$إذا كنت تخطّط للدراسة في جامعة خارج العراق أو للتقديم على وظيفة أو هجرة في بلد ناطق بالإنجليزية، فستحتاج غالباً إلى إثبات مستواك في اللغة. واختبار IELTS من أشهر الطرق لذلك، إلى جانب TOEFL و[Duolingo English Test](/club/duolingo-english-test).
 
 ## ما هو IELTS؟
 
@@ -69,11 +69,11 @@ IELTS اختصار لـ International English Language Testing System، وهو �
 - **تدرّب بتوقيت حقيقي:** المشكلة الأكبر لدى كثيرين هي الوقت، خصوصاً في القراءة والكتابة.
 - **اكتب كثيراً واطلب تصحيحاً:** في الكتابة يُقيّم الممتحن الإجابة على المهمة، وترابط الأفكار، وثراء المفردات، ودقة القواعد.
 - **تحدّث بالإنجليزية يومياً:** سجّل صوتك وأنت تجيب عن أسئلة الجزء الثاني، ثم استمع وصحّح.
-- **دورة أم دراسة ذاتية؟** إذا كان مستواك جيداً، فالدراسة الذاتية بالمصادر الرسمية تكفي غالباً. وإن كنت تحتاج إلى أساس أقوى، فابدأ بتطوير لغتك عموماً قبل التركيز على الاختبار؛ اقرأ دليلنا [كيف تطوّر إنجليزيتك](/post/improve-your-english).
+- **دورة أم دراسة ذاتية؟** إذا كان مستواك جيداً، فالدراسة الذاتية بالمصادر الرسمية تكفي غالباً. وإن كنت تحتاج إلى أساس أقوى، فابدأ بتطوير لغتك عموماً قبل التركيز على الاختبار؛ اقرأ دليلنا [كيف تطوّر إنجليزيتك](/club/improve-your-english).
 
 ## أيّ اختبار تختار؟
 
-قبل أن تحجز، تأكد من أن الجامعات التي تستهدفها تقبل IELTS، وقارنه بالبدائل. يقبل كثير من الجامعات اليوم TOEFL وDuolingo English Test أيضاً، ولكلٍّ منها مزاياه؛ قارن بينها في [دليل Duolingo English Test](/post/duolingo-english-test)، وابنِ خطتك العامة بمساعدة [خطة التقديم على الدراسة في الخارج](/post/study-abroad-roadmap).
+قبل أن تحجز، تأكد من أن الجامعات التي تستهدفها تقبل IELTS، وقارنه بالبدائل. يقبل كثير من الجامعات اليوم TOEFL وDuolingo English Test أيضاً، ولكلٍّ منها مزاياه؛ قارن بينها في [دليل Duolingo English Test](/club/duolingo-english-test)، وابنِ خطتك العامة بمساعدة [خطة التقديم على الدراسة في الخارج](/club/study-abroad-roadmap).
 
 ## روابط رسمية
 
@@ -81,7 +81,7 @@ IELTS اختصار لـ International English Language Testing System، وهو �
 - [البحث عن مركز اختبار](https://ielts.org/test-centres)
 - [مواد تحضير مجانية من British Council](https://takeielts.britishcouncil.org/take-ielts/prepare)
 - [IELTS من IDP](https://ielts.idp.com)$ar$,
-    $en$If you plan to study at a university outside Iraq, or to apply for work or immigration in an English-speaking country, you'll usually need to prove your English. IELTS is one of the most common ways to do that, alongside TOEFL and the [Duolingo English Test](/post/duolingo-english-test).
+    $en$If you plan to study at a university outside Iraq, or to apply for work or immigration in an English-speaking country, you'll usually need to prove your English. IELTS is one of the most common ways to do that, alongside TOEFL and the [Duolingo English Test](/club/duolingo-english-test).
 
 ## What is IELTS?
 
@@ -139,11 +139,11 @@ You can take the test again whenever there's an available date; there's no limit
 - **Practice under real timing:** time is the biggest problem for most candidates, especially in reading and writing.
 - **Write a lot and get feedback:** writing is assessed on task response, coherence, vocabulary range and grammatical accuracy.
 - **Speak English every day:** record yourself answering Part 2 questions, then listen back and improve.
-- **Course or self-study?** If your English is already good, self-study with official materials is usually enough. If you need a stronger base, work on your English in general before focusing on the test; see our guide [how to improve your English](/post/improve-your-english).
+- **Course or self-study?** If your English is already good, self-study with official materials is usually enough. If you need a stronger base, work on your English in general before focusing on the test; see our guide [how to improve your English](/club/improve-your-english).
 
 ## Which test should you take?
 
-Before you book, make sure the universities you're targeting accept IELTS, and compare it with the alternatives. Many universities now accept TOEFL and the Duolingo English Test too, and each has its advantages; compare them in our [Duolingo English Test guide](/post/duolingo-english-test), and build your overall plan with our [study abroad roadmap](/post/study-abroad-roadmap).
+Before you book, make sure the universities you're targeting accept IELTS, and compare it with the alternatives. Many universities now accept TOEFL and the Duolingo English Test too, and each has its advantages; compare them in our [Duolingo English Test guide](/club/duolingo-english-test), and build your overall plan with our [study abroad roadmap](/club/study-abroad-roadmap).
 
 ## Official links
 

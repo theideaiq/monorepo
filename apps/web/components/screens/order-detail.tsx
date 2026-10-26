@@ -505,7 +505,7 @@ export const OrderDetail = ({ orderId }: OrderDetailProps) => {
               <Link
                 className="inline-flex items-center gap-1 text-pink-text text-sm hover:underline sm:ms-auto"
                 href={{
-                  pathname: "/pass/support/new",
+                  pathname: "/help/new",
                   query: { order: data.id, topic: "order" },
                 }}
               >

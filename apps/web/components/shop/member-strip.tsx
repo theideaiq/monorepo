@@ -29,7 +29,7 @@ export const MemberStrip = () => {
   }
   if (!user) {
     return (
-      <Link className={chip} href="/sign-up">
+      <Link className={chip} href="/sign-in">
         <LightbulbIcon aria-hidden="true" className="size-4 text-pink-text" />
         {t("guest")}
       </Link>

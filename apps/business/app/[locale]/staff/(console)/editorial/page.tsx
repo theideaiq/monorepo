@@ -28,7 +28,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return { title: t("title") };
 };
 
-/** The IDEA Post: drafts, scheduled and published posts in every section. */
+/** The IDEA Club: drafts, scheduled and published posts in every section. */
 const PostsPage = async ({
   searchParams,
 }: {

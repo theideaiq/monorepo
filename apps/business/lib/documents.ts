@@ -1,4 +1,4 @@
-/** The printable documents of The IDEA Suite, at /documents/<kind>/<id>. */
+/** The printable documents of The IDEA Business, at /documents/<kind>/<id>. */
 export const documentKinds = ["quote", "order", "invoice"] as const;
 export type DocumentKind = (typeof documentKinds)[number];
 

@@ -54,7 +54,7 @@ const BusinessIntro = () => {
 };
 
 /**
- * The Business (The IDEA Suite) section: the organization switcher and tabs
+ * The Business (The IDEA Business) section: the organization switcher and tabs
  * around a screen that needs an active organization. Without one, it shows
  * the introduction instead.
  */
@@ -92,8 +92,7 @@ export const BusinessShell = ({
                 {TABS.map((tab) => {
                   const current =
                     pathname === tab.href ||
-                    (tab.href !== "/" &&
-                      pathname.startsWith(`${tab.href}/`));
+                    (tab.href !== "/" && pathname.startsWith(`${tab.href}/`));
                   return (
                     <Link
                       aria-current={current ? "page" : undefined}

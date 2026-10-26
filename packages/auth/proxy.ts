@@ -10,7 +10,7 @@ export interface UpdateSessionOptions {
   signInPath?: string | null;
 }
 
-const defaultPublicPaths = ["/sign-in", "/sign-up", "/auth"];
+const defaultPublicPaths = ["/sign-in", "/auth"];
 
 /**
  * Refreshes the Supabase session cookies on every request and, unless the

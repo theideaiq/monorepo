@@ -32,7 +32,7 @@ interface Hit {
 const search = async (
   supabase: ServerClient,
   can: Record<
-    "catalog" | "customers" | "orders" | "suite" | "support",
+    "catalog" | "customers" | "orders" | "companies" | "support",
     boolean
   >,
   q: string
@@ -77,14 +77,14 @@ const search = async (
           .or(numberOr("subject"))
           .limit(LIMIT)
       ),
-      when(can.suite && searchable, () =>
+      when(can.companies && searchable, () =>
         supabase
           .from("procurement_requests")
           .select("id, number, title, organizations (name)")
           .or(numberOr("title"))
           .limit(LIMIT)
       ),
-      when(can.suite && searchable, () =>
+      when(can.companies && searchable, () =>
         supabase
           .from("job_requests")
           .select("id, number, title, organizations (name)")
@@ -111,9 +111,9 @@ const SearchPage = async ({
     .slice(0, 120);
   const can = {
     catalog: canRead(staff.role, "catalog"),
+    companies: canRead(staff.role, "companies"),
     customers: canRead(staff.role, "customers"),
     orders: canRead(staff.role, "orders"),
-    suite: canRead(staff.role, "suite"),
     support: canRead(staff.role, "support"),
   };
 
@@ -162,7 +162,7 @@ const SearchPage = async ({
         {
           hits: (found.requests.data ?? []).map((row) => ({
             detail: row.organizations?.name,
-            href: `/suite/${row.id}`,
+            href: `/companies/${row.id}`,
             id: row.id,
             label: `${t("request", { number: String(row.number) })} · ${row.title}`,
           })),
@@ -172,7 +172,7 @@ const SearchPage = async ({
         {
           hits: (found.jobs.data ?? []).map((row) => ({
             detail: row.organizations?.name,
-            href: `/suite/hiring/${row.id}`,
+            href: `/companies/hiring/${row.id}`,
             id: row.id,
             label: `${t("job", { number: String(row.number) })} · ${row.title}`,
           })),

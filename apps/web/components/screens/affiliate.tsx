@@ -19,7 +19,6 @@ import { CheckIcon, CopyIcon, Share2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { InviteCard } from "@/components/invite-card";
-import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   AFFILIATE_MIN_PAYOUT,
@@ -102,7 +101,7 @@ const ApplyForm = ({
 const LinkCard = ({ code }: { readonly code: string }) => {
   const t = useTranslations("app.affiliate");
   const [copied, setCopied] = useState(false);
-  const link = `${window.location.origin}/a/${code}`;
+  const link = `${window.location.origin}/r/${code}`;
   const canShare = typeof navigator !== "undefined" && "share" in navigator;
 
   const copy = async () => {
@@ -374,10 +373,10 @@ const Stage = ({ mine }: { readonly mine: Mine | null }) => {
 };
 
 /**
- * My Pass → Affiliate: apply, then the link and code, earnings, payout
- * details and the commission history.
+ * Invite & earn, under the Bulbs on Your Pass → Bulbs: invite friends, then
+ * the affiliate program for creators (apply, then the link and code,
+ * earnings, payout details and the commission history).
  */
-/** Invite & earn: invite friends, then the affiliate program for creators. */
 export const Affiliate = () => {
   const t = useTranslations("app.affiliate");
   const mine = useMyAffiliate();
@@ -390,14 +389,14 @@ export const Affiliate = () => {
   }
 
   return (
-    <div className="grid gap-6">
-      <PageHeader title={t("title")} />
+    <section className="grid scroll-mt-24 gap-6" id="invite">
+      <h2 className="font-semibold text-xl">{t("title")}</h2>
       <InviteCard />
       <section className="grid gap-4">
         <h2 className="font-semibold text-lg">{t("programTitle")}</h2>
         <p className="text-muted-foreground">{t("description")}</p>
         <Stage mine={mine.data} />
       </section>
-    </div>
+    </section>
   );
 };

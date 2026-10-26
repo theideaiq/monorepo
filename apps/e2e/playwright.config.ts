@@ -3,8 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * End-to-end journeys against a local Supabase stack and the three Next.js
- * apps: the website (with The IDEA Pass, My Pass, the cart and checkout),
- * The IDEA Spark (the back office and business) and the API, which both call
+ * apps: the website (with The IDEA Pass, Your Pass, the cart and checkout),
+ * The IDEA Business (company pages and the back office) and the API, which both call
  * (CI: .github/workflows/ci.yml, job "e2e"). Locally: `bun run
  * db:start`, then `bun run --cwd apps/e2e e2e`; the servers are started here
  * unless already running. E2E_START=start runs the built apps (`next start`,

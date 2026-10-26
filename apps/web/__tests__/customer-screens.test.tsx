@@ -24,8 +24,9 @@ vi.mock("@/lib/hosted-checkout", () => ({
 
 const { Checkout } = await import("@/components/screens/checkout");
 const { PurchasePanel } = await import("@/components/store/purchase-panel");
-const { Events } = await import("@/components/screens/events");
-const { Plus } = await import("@/components/screens/plus");
+const { YourEvents } = await import("@/components/screens/events");
+const { YourPlus } = await import("@/components/screens/plus");
+const { RsvpButton } = await import("@/components/rsvp-button");
 const { OrderDetail } = await import("@/components/screens/order-detail");
 const { RequireOnboarding } = await import("@/components/gates");
 const { OrganizationProvider } = await import(
@@ -390,11 +391,21 @@ describe("events", () => {
         my_calendar_token: { data: "tok-1", error: null },
       },
     });
-    renderScreen(<Events />, db.supabase);
+    renderScreen(
+      <>
+        <RsvpButton eventId="e1" full={false} />
+        <YourEvents />
+      </>,
+      db.supabase
+    );
 
-    fireEvent.click(await screen.findByRole("button", { name: "RSVP" }));
+    const rsvp = (await screen.findByRole("button", {
+      name: "RSVP",
+    })) as HTMLButtonElement;
+    // Enabled once the member's RSVPs have loaded.
+    await waitFor(() => expect(rsvp.disabled).toBe(false));
+    fireEvent.click(rsvp);
     expect(await screen.findByText("This event is full.")).toBeTruthy();
-    expect(screen.getByText("Going: 12")).toBeTruthy();
     expect(
       ((await screen.findByLabelText("Calendar link")) as HTMLInputElement)
         .value
@@ -477,7 +488,7 @@ describe("The IDEA Plus", () => {
       },
     });
     const fetchMock = stubApi();
-    renderScreen(<Plus />, db.supabase);
+    renderScreen(<YourPlus />, db.supabase);
 
     expect(await screen.findByText("Up to 2 items at a time")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: JOIN_FOR }));

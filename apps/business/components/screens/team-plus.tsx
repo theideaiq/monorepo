@@ -35,7 +35,7 @@ const OPEN = new Set(["requested", "active"]);
 
 /** Owners and admins: The IDEA Plus for a member, on a monthly plan. */
 const RequestSeat = ({ taken }: { readonly taken: ReadonlySet<string> }) => {
-  const t = useTranslations("app.suite.plus");
+  const t = useTranslations("app.company.plus");
   const id = useId();
   const locale = useLocale();
   const { active } = useActiveOrganization();
@@ -143,7 +143,7 @@ const SeatRow = ({
   readonly onEnd: () => void;
   readonly seat: Seat;
 }) => {
-  const t = useTranslations("app.suite.plus");
+  const t = useTranslations("app.company.plus");
   const locale = useLocale();
   const until = seat.subscriptions?.current_period_end;
   const details = [
@@ -184,7 +184,7 @@ const SeatRow = ({
 };
 
 const Seats = () => {
-  const t = useTranslations("app.suite.plus");
+  const t = useTranslations("app.company.plus");
   const { active, canManage } = useActiveOrganization();
   const seats = usePlusSeats(active.id, true);
   const members = useMembers(active.id);

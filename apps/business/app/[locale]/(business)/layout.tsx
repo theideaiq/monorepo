@@ -6,7 +6,7 @@ interface BusinessLayoutProps {
 }
 
 /**
- * The business pages (The IDEA Suite, invitations): analytics and the ad
+ * The business pages (The IDEA Business, invitations): analytics and the ad
  * pixels, as on the website. The back office loads none.
  */
 const BusinessLayout = ({ children }: BusinessLayoutProps) => (

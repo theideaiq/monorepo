@@ -182,7 +182,7 @@ export const Ticket = ({ ticketId }: TicketProps) => {
       <div className="flex max-w-3xl flex-1 flex-col gap-6">
         <Link
           className="inline-flex items-center gap-1 self-start text-muted-foreground text-sm hover:text-foreground"
-          href="/pass/support"
+          href="/help"
         >
           <ArrowLeftIcon className="size-4 rtl:rotate-180" />
           {t("view.back")}

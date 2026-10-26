@@ -29,7 +29,7 @@ const NON_DIGITS = /\D/g;
 
 /** Owners and admins: what the company needs, with a budget and a date. */
 const NewRequestForm = ({ organizationId }: { organizationId: string }) => {
-  const t = useTranslations("app.suite.procurement");
+  const t = useTranslations("app.company.procurement");
   const id = useId();
   const router = useRouter();
   const create = useCreateProcurementRequest(organizationId);
@@ -50,11 +50,7 @@ const NewRequestForm = ({ organizationId }: { organizationId: string }) => {
       },
       {
         onSuccess: (request) =>
-          router.push(
-            request
-              ? `/procurement/${request.id}`
-              : "/procurement"
-          ),
+          router.push(request ? `/procurement/${request.id}` : "/procurement"),
       }
     );
   };
@@ -128,7 +124,7 @@ const NewRequestForm = ({ organizationId }: { organizationId: string }) => {
 };
 
 const RequestList = () => {
-  const t = useTranslations("app.suite");
+  const t = useTranslations("app.company");
   const locale = useLocale();
   const { active, canManage } = useActiveOrganization();
   const requests = useProcurementRequests(active.id);

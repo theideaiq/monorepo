@@ -11,7 +11,7 @@ import { useInvoices } from "@/lib/procurement-queries";
 
 /** The company's invoices for its purchase orders. */
 const InvoiceList = () => {
-  const t = useTranslations("app.suite");
+  const t = useTranslations("app.company");
   const locale = useLocale();
   const { active } = useActiveOrganization();
   const invoices = useInvoices(active.id);

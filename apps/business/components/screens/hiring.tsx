@@ -46,7 +46,7 @@ const amount = (value: string) => {
 
 /** Owners and admins: the role, where, the contract, salary and how many. */
 const NewJobForm = ({ organizationId }: { organizationId: string }) => {
-  const t = useTranslations("app.suite.hiring");
+  const t = useTranslations("app.company.hiring");
   const id = useId();
   const router = useRouter();
   const create = useCreateJob(organizationId);
@@ -72,8 +72,7 @@ const NewJobForm = ({ organizationId }: { organizationId: string }) => {
         title,
       },
       {
-        onSuccess: (job) =>
-          router.push(job ? `/hiring/${job.id}` : "/hiring"),
+        onSuccess: (job) => router.push(job ? `/hiring/${job.id}` : "/hiring"),
       }
     );
   };
@@ -185,7 +184,7 @@ const NewJobForm = ({ organizationId }: { organizationId: string }) => {
 };
 
 const JobList = () => {
-  const t = useTranslations("app.suite.hiring");
+  const t = useTranslations("app.company.hiring");
   const locale = useLocale();
   const { active, canManage } = useActiveOrganization();
   const jobs = useJobRequests(active.id);

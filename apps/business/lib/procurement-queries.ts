@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { requireUserId, unwrap } from "./queries";
 
 /**
- * The IDEA Suite procurement for the active company, through RLS: every
+ * The IDEA Business procurement for the active company, through RLS: every
  * member sees its requests, sent quotes, purchase orders and invoices;
  * owners and admins send requests and answer quotes.
  */
@@ -165,7 +165,7 @@ export const useInvoices = (organizationId: string) => {
 };
 
 /** What needs the company's attention, for the Overview. */
-export const useSuiteOverview = (organizationId: string) => {
+export const useCompanyOverview = (organizationId: string) => {
   const { supabase } = useAuth();
   return useQuery({
     queryFn: async () => {
@@ -219,6 +219,6 @@ export const useSuiteOverview = (organizationId: string) => {
         unpaidTotal: unpaid.reduce((sum, row) => sum + row.amount, 0),
       };
     },
-    queryKey: ["suite-overview", organizationId] as const,
+    queryKey: ["company-overview", organizationId] as const,
   });
 };

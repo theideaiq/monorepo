@@ -164,7 +164,7 @@ jobs:
         run: bunx playwright install --with-deps chromium
       # The journeys run against production builds (next start), not the dev
       # servers: faster, and what actually ships.
-      - name: Build the website (with The IDEA Pass), The IDEA Spark and the API against the local stack
+      - name: Build the website (with The IDEA Pass), The IDEA Business and the API against the local stack
         run: |
           eval "$(cd packages/database && bunx supabase status -o env | grep -E '^(API_URL|PUBLISHABLE_KEY)=' | sed 's/^/export /')"
           export NEXT_PUBLIC_SUPABASE_URL="$API_URL" NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="$PUBLISHABLE_KEY"

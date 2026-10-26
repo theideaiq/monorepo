@@ -67,9 +67,9 @@ begin
 
 ## الفرق بينها وبين كتابة المحتوى
 
-كتابة المقالات والمدوّنات ليست عمل كاتب الإعلانات بالأساس، بل عمل **كاتب المحتوى (Content Writer)**. الإعلان يريد فعلاً سريعاً، أما المحتوى فيبني علاقة طويلة مع الجمهور. اقرأ عنه في دليل [كتابة المحتوى](/post/content-writing).
+كتابة المقالات والمدوّنات ليست عمل كاتب الإعلانات بالأساس، بل عمل **كاتب المحتوى (Content Writer)**. الإعلان يريد فعلاً سريعاً، أما المحتوى فيبني علاقة طويلة مع الجمهور. اقرأ عنه في دليل [كتابة المحتوى](/club/content-writing).
 
-وإذا أردت أن تعمل كاتباً حراً لعملاء من أنحاء العالم، فاقرأ دليل [العمل عن بعد والعمل الحر](/post/remote-work-and-freelancing). ولأن الإعلان يرافقه تصميم غالباً، فمعرفة أساسيات [التصميم الجرافيكي](/post/graphic-design) ستفيدك في التنسيق مع المصمّمين.
+وإذا أردت أن تعمل كاتباً حراً لعملاء من أنحاء العالم، فاقرأ دليل [العمل عن بعد والعمل الحر](/club/remote-work-and-freelancing). ولأن الإعلان يرافقه تصميم غالباً، فمعرفة أساسيات [التصميم الجرافيكي](/club/graphic-design) ستفيدك في التنسيق مع المصمّمين.
 
 ## مصادر للتعلّم
 
@@ -144,9 +144,9 @@ You describe a product, its benefits and features, write what makes it stand out
 
 ## How it differs from content writing
 
-Writing articles and blog posts isn't a copywriter's core job; it's a **content writer's**. Ads aim for a quick action, while content builds a long-term relationship with an audience. Read more in our guide to [content writing](/post/content-writing).
+Writing articles and blog posts isn't a copywriter's core job; it's a **content writer's**. Ads aim for a quick action, while content builds a long-term relationship with an audience. Read more in our guide to [content writing](/club/content-writing).
 
-If you want to freelance for clients around the world, read our guide to [remote work and freelancing](/post/remote-work-and-freelancing). And since ads usually come with design, knowing the basics of [graphic design](/post/graphic-design) will help you work with designers.
+If you want to freelance for clients around the world, read our guide to [remote work and freelancing](/club/remote-work-and-freelancing). And since ads usually come with design, knowing the basics of [graphic design](/club/graphic-design) will help you work with designers.
 
 ## Where to learn
 

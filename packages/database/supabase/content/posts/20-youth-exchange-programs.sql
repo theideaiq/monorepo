@@ -11,7 +11,7 @@ begin
     $en$Online youth exchanges: TED, LoT and SYE$en$,
     $ar$ثلاثة برامج مجانية تطوّر قيادتك وإنجليزيتك وتعرّفك على شباب من حول العالم، من بيتك.$ar$,
     $en$Three free programs that build your leadership and English and connect you with young people worldwide, from home.$en$,
-    $ar$لا تحتاج جواز سفر لتعيش تجربة تبادل ثقافي. هناك برامج مجانية عبر الإنترنت تجمع طلبة من العراق ودول أخرى، تتعلم فيها القيادة والعمل المجتمعي، وتمارس الإنجليزية مع أقرانك. وهي أيضاً خطوة ممتازة قبل التقديم على برامج أكبر مثل [IYLEP](/post/iylep-guide) أو الدراسة في الخارج.
+    $ar$لا تحتاج جواز سفر لتعيش تجربة تبادل ثقافي. هناك برامج مجانية عبر الإنترنت تجمع طلبة من العراق ودول أخرى، تتعلم فيها القيادة والعمل المجتمعي، وتمارس الإنجليزية مع أقرانك. وهي أيضاً خطوة ممتازة قبل التقديم على برامج أكبر مثل [IYLEP](/club/iylep-guide) أو الدراسة في الخارج.
 
 المواعيد والشروط في هذه البرامج تتغير من سنة لأخرى، فتحقق دائماً من الموقع الرسمي لكل برنامج.
 
@@ -47,9 +47,9 @@ begin
 ## كيف تختار؟
 
 - إذا كنت تريد تجربة قيادية ومشروعاً مجتمعياً: TED أو LoT.
-- إذا كنت في سنتك الأخيرة وتخطط للجامعة في الخارج: SYE، مع [خطة التقديم للدراسة في الخارج](/post/study-abroad-roadmap).
+- إذا كنت في سنتك الأخيرة وتخطط للجامعة في الخارج: SYE، مع [خطة التقديم للدراسة في الخارج](/club/study-abroad-roadmap).
 
-ولا تنسَ أن تضيف كل برنامج تُكمله إلى سيرتك الذاتية وملفك على LinkedIn، كما شرحنا في [خطواتك الأولى على الإنترنت](/post/first-steps-online).
+ولا تنسَ أن تضيف كل برنامج تُكمله إلى سيرتك الذاتية وملفك على LinkedIn، كما شرحنا في [خطواتك الأولى على الإنترنت](/club/first-steps-online).
 
 ## روابط رسمية
 
@@ -57,7 +57,7 @@ begin
 - [Leaders of Tomorrow](https://lotep.org)
 - [Syrian Youth Empowerment](https://syempowerment.org)
 - [The IDEA Club](https://t.me/theideaclub) لمعرفة مواعيد فتح التقديم$ar$,
-    $en$You don't need a passport to have an exchange experience. Free online programs bring together students from Iraq and other countries to learn leadership and community work and practice English with their peers. They're also a great step before applying to bigger programs like [IYLEP](/post/iylep-guide) or studying abroad.
+    $en$You don't need a passport to have an exchange experience. Free online programs bring together students from Iraq and other countries to learn leadership and community work and practice English with their peers. They're also a great step before applying to bigger programs like [IYLEP](/club/iylep-guide) or studying abroad.
 
 Dates and requirements change from year to year, so always check each program's official website.
 
@@ -93,9 +93,9 @@ A nonprofit that helps high school students in regions affected by instability a
 ## Which one is for you?
 
 - For leadership and a community project: TED or LoT.
-- If you're in your final year and aiming for university abroad: SYE, alongside [the study-abroad roadmap](/post/study-abroad-roadmap).
+- If you're in your final year and aiming for university abroad: SYE, alongside [the study-abroad roadmap](/club/study-abroad-roadmap).
 
-Add every program you complete to your CV and LinkedIn profile, as we explain in [your first steps online](/post/first-steps-online).
+Add every program you complete to your CV and LinkedIn profile, as we explain in [your first steps online](/club/first-steps-online).
 
 ## Official links
 

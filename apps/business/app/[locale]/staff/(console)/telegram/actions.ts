@@ -107,7 +107,7 @@ export const deleteChat = staffAction(
   }
 );
 
-const topics = ["general", "store", "plus", "academy", "suite"] as const;
+const topics = ["general", "store", "plus", "club", "business"] as const;
 
 export const saveFaq = staffAction(
   "telegram",

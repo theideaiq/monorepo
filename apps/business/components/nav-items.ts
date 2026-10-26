@@ -8,7 +8,7 @@ export interface NavItem {
   key: NavKey;
 }
 
-/** The sections of The IDEA Spark for businesses, in sidebar order. */
+/** The sections of The IDEA Business for companies, in sidebar order. */
 export const navItems: NavItem[] = [
   { href: "/", icon: BriefcaseBusinessIcon, key: "business" },
 ];

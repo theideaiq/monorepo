@@ -1,34 +1,25 @@
 /**
- * The site's menu, matching the phone tabs: Shop, Rent and Discover, then
- * The IDEA Suite for companies and About & info. Labels come from
- * `web.nav.<id>`.
+ * The site's menu, matching the phone tabs: Store, Plus and the Club (The
+ * IDEA Pass sits at the end of the header). Labels come from `web.nav.<id>`.
  */
 
 export interface NavigationItem {
   href: string;
-  id: "about" | "discover" | "rent" | "shop" | "suite";
+  id: "club" | "plus" | "store";
 }
 
 export const navigationItems: NavigationItem[] = [
-  { href: "/", id: "shop" },
-  { href: "/plus", id: "rent" },
-  { href: "/post", id: "discover" },
-  { href: "/suite", id: "suite" },
-  { href: "/about", id: "about" },
+  { href: "/", id: "store" },
+  { href: "/plus", id: "plus" },
+  { href: "/club", id: "club" },
 ];
 
+/** Whether `pathname` is the page at `path` or one below it. */
+export const isWithin = (pathname: string, path: string) =>
+  pathname === path || pathname.startsWith(`${path}/`);
+
 /** Whether `pathname` is the item's page or one below it. */
-export const isCurrentItem = (pathname: string, item: NavigationItem) => {
-  const below = (path: string) =>
-    pathname === path || pathname.startsWith(`${path}/`);
-  switch (item.id) {
-    case "shop":
-      return pathname === "/" || below("/store");
-    case "discover":
-      return below("/post") || below("/club");
-    case "about":
-      return below("/about") || below("/legal");
-    default:
-      return below(item.href);
-  }
-};
+export const isCurrentItem = (pathname: string, item: NavigationItem) =>
+  item.id === "store"
+    ? pathname === "/" || isWithin(pathname, "/store")
+    : isWithin(pathname, item.href);

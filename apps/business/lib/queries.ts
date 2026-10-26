@@ -112,7 +112,7 @@ export const usePendingInvitations = () => {
   });
 };
 
-/** Active plans for one product line: business (The IDEA Suite) or Plus. */
+/** Active plans for one product line: business (The IDEA Business) or Plus. */
 export const usePlans = (audience: "business" | "plus") => {
   const { supabase } = useAuth();
   return useQuery({

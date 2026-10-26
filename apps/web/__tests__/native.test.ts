@@ -166,7 +166,7 @@ describe("registerPushNotifications", () => {
     const tap = plugin.listeners.get("pushNotificationActionPerformed");
     tap?.({ notification: { data: { link: "/orders/view?id=1" } } });
     tap?.({ notification: { data: { link: "https://evil.example" } } });
-    expect(onOpen.mock.calls).toEqual([["/orders/view?id=1"], ["/"]]);
+    expect(onOpen.mock.calls).toEqual([["/pass/orders/1"], ["/"]]);
 
     await unregisterPushNotifications(supabase);
     expect(fetchMock.mock.calls[1][0]).toBe(

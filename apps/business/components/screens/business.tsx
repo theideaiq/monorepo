@@ -19,7 +19,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { useSuiteOverview } from "@/lib/procurement-queries";
+import { useCompanyOverview } from "@/lib/procurement-queries";
 import { usePlans, useSubscription } from "@/lib/queries";
 
 const Tile = ({
@@ -61,7 +61,7 @@ const Overview = () => {
   const t = useTranslations("app.business.overview");
   const locale = useLocale();
   const { active } = useActiveOrganization();
-  const overview = useSuiteOverview(active.id);
+  const overview = useCompanyOverview(active.id);
   const plans = usePlans("business");
   const subscription = useSubscription(active.id);
   const plan = plans.data?.find((row) => row.id === subscription.data?.plan_id);
@@ -119,10 +119,7 @@ const Overview = () => {
           value={formatNumber(data.plusSeats, locale)}
         />
       </div>
-      <Link
-        className="text-muted-foreground text-sm underline"
-        href="/billing"
-      >
+      <Link className="text-muted-foreground text-sm underline" href="/billing">
         {plan ? t("plan", { plan: planName(plan, locale) }) : t("noPlan")}
       </Link>
     </div>

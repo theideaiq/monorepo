@@ -2,6 +2,7 @@ import type { Database } from "@repo/database";
 import { type DroidBot, notifyMember } from "@repo/droid";
 import { localePath } from "@repo/internationalization";
 import {
+  businessPath,
   currentAppPath,
   safeNextPath,
 } from "@repo/internationalization/app-paths";
@@ -15,13 +16,20 @@ export interface TelegramSummary {
   sent: number;
 }
 
-/** Where a notification opens on the website, in the member's language. */
+/**
+ * Where a notification opens, in the member's language: a page of The IDEA
+ * Business on its site (`/business/invoices` → `/invoices` there), anything
+ * else on the website.
+ */
 export const notificationUrl = (link: string | null, locale: "ar" | "en") => {
   const path = safeNextPath(link);
-  return new URL(
-    localePath(locale, path ? currentAppPath(path) : "/pass"),
-    env.NEXT_PUBLIC_WEB_URL
-  ).toString();
+  const business = path ? businessPath(path) : null;
+  return business
+    ? new URL(localePath(locale, business), env.NEXT_PUBLIC_APP_URL).toString()
+    : new URL(
+        localePath(locale, path ? currentAppPath(path) : "/pass"),
+        env.NEXT_PUBLIC_WEB_URL
+      ).toString();
 };
 
 /**

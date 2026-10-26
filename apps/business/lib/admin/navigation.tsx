@@ -13,7 +13,7 @@ type Href = string | { pathname?: string | null };
 type RouterHref = Parameters<ReturnType<typeof useLocaleRouter>["push"]>[0];
 
 /**
- * A back-office path ("/orders?status=open") as a Spark path
+ * A back-office path ("/orders?status=open") as a path on this site
  * ("/staff/orders?status=open"). Its pages and Server Actions keep
  * writing paths relative to the back office.
  */

@@ -54,10 +54,10 @@ begin
 - **التخصص:** ليست كل التخصصات متوفرة في كل جامعة، والطب تحديداً محدود.
 - **الاعتماد والاعتراف:** تأكد من اعتراف وزارة التعليم العالي العراقية بالجامعة والتخصص، ومن الاعتماد الأكاديمي للجامعة.
 - **التكلفة الكاملة:** الرسوم والسكن والمعيشة، وما تغطيه المنح المتاحة.
-- **اللغة:** الدراسة كلها بالإنجليزية، وكثير منها يطلب TOEFL أو IELTS أو Duolingo English Test. اقرأ [دليل IELTS](/post/ielts-guide) و[دليل Duolingo English Test](/post/duolingo-english-test).
-- **التقديم:** كثير منها يطلب مقالة شخصية تشبه [مقالة Common App](/post/common-app-essay)، وكشف درجات مع [المعدل التراكمي](/post/gpa-for-us-applications).
+- **اللغة:** الدراسة كلها بالإنجليزية، وكثير منها يطلب TOEFL أو IELTS أو Duolingo English Test. اقرأ [دليل IELTS](/club/ielts-guide) و[دليل Duolingo English Test](/club/duolingo-english-test).
+- **التقديم:** كثير منها يطلب مقالة شخصية تشبه [مقالة Common App](/club/common-app-essay)، وكشف درجات مع [المعدل التراكمي](/club/gpa-for-us-applications).
 
-ضع هذه الجامعات ضمن قائمة متوازنة كما في [خطة التقديم على الدراسة في الخارج](/post/study-abroad-roadmap).
+ضع هذه الجامعات ضمن قائمة متوازنة كما في [خطة التقديم على الدراسة في الخارج](/club/study-abroad-roadmap).
 
 ## روابط رسمية
 
@@ -117,10 +117,10 @@ Dates, detailed requirements and partner universities change from cycle to cycle
 - **Program:** not every major is available everywhere, and medicine in particular is limited.
 - **Accreditation and recognition:** make sure Iraq's Ministry of Higher Education recognizes the university and program, and check the university's academic accreditation.
 - **Full cost:** tuition, housing and living, and what available scholarships cover.
-- **Language:** everything is taught in English, and many ask for TOEFL, IELTS or the Duolingo English Test. See our [IELTS guide](/post/ielts-guide) and [Duolingo English Test guide](/post/duolingo-english-test).
-- **Applying:** many ask for a personal essay similar to the [Common App essay](/post/common-app-essay), and a transcript with your [GPA](/post/gpa-for-us-applications).
+- **Language:** everything is taught in English, and many ask for TOEFL, IELTS or the Duolingo English Test. See our [IELTS guide](/club/ielts-guide) and [Duolingo English Test guide](/club/duolingo-english-test).
+- **Applying:** many ask for a personal essay similar to the [Common App essay](/club/common-app-essay), and a transcript with your [GPA](/club/gpa-for-us-applications).
 
-Put these universities on a balanced list, as in our [study abroad roadmap](/post/study-abroad-roadmap).
+Put these universities on a balanced list, as in our [study abroad roadmap](/club/study-abroad-roadmap).
 
 ## Official links
 

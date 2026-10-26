@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { requireUserId, unwrap } from "./queries";
 
 /**
- * The IDEA Suite hiring for the active company, through RLS: every member
+ * The IDEA Business hiring for the active company, through RLS: every member
  * sees its jobs and the candidates The IDEA proposes; owners and admins post
  * jobs and shortlist, reject or hire.
  */

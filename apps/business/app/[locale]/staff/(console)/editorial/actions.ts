@@ -303,7 +303,7 @@ export const decideSubmission = staffAction(
 );
 
 /**
- * Publishes an accepted submission in The IDEA Post: a draft in Members'
+ * Publishes an accepted submission in The IDEA Club: a draft in Members'
  * work with the member's name as the byline, opened in the post editor for
  * the editors to translate, shape and schedule.
  */

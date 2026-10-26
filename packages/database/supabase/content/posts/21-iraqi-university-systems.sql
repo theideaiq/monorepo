@@ -43,13 +43,13 @@ begin
 - تضع الأسئلةَ لجنةٌ وليس أستاذ المادة وحده، لذلك عليك أن تدرس كل شيء، لا ما ركّز عليه الأستاذ فقط.
 - في بعض الكليات يأتي امتحان شامل بعد المراحل الأولى، ثم تغلب على السنوات الأخيرة الدراسة السريرية والتدريب العملي، يليها امتحان شامل آخر.
 
-هذا النظام قريب من طريقة التعليم الطبي في دول كثيرة، ويحتاج انضباطاً ذاتياً عالياً. وإذا كنت تفكر بممارسة الطب خارج العراق لاحقاً، فاقرأ [دليل USMLE](/post/usmle-guide).
+هذا النظام قريب من طريقة التعليم الطبي في دول كثيرة، ويحتاج انضباطاً ذاتياً عالياً. وإذا كنت تفكر بممارسة الطب خارج العراق لاحقاً، فاقرأ [دليل USMLE](/club/usmle-guide).
 
 ## نصائح لأي نظام
 
 - اسأل طلبة المرحلة الأعلى عن طريقة الامتحانات في كليتك تحديداً، فالتفاصيل تختلف من كلية لأخرى.
-- استخدم تقنيات الدراسة الفعّالة في [كيف تتعلم أسرع](/post/learn-faster)، ونظّم وقتك بخطوات [إدارة الوقت](/post/time-management).
-- إذا كنت تقارن بين القبول المركزي والموازي، فاقرأ [دليل التعليم الموازي](/post/parallel-admission).
+- استخدم تقنيات الدراسة الفعّالة في [كيف تتعلم أسرع](/club/learn-faster)، ونظّم وقتك بخطوات [إدارة الوقت](/club/time-management).
+- إذا كنت تقارن بين القبول المركزي والموازي، فاقرأ [دليل التعليم الموازي](/club/parallel-admission).
 
 ## روابط مفيدة
 
@@ -87,13 +87,13 @@ Used by some medical colleges, and very different from the other two:
 - Questions are set by a committee rather than one teacher, so you need to study everything, not just what a lecturer emphasized.
 - In some colleges a comprehensive exam follows the early years, then the final years are mostly clinical training, followed by another comprehensive exam.
 
-This system is close to how medicine is taught in many countries and demands strong self-discipline. If you're thinking about practicing medicine outside Iraq one day, read [the USMLE guide](/post/usmle-guide).
+This system is close to how medicine is taught in many countries and demands strong self-discipline. If you're thinking about practicing medicine outside Iraq one day, read [the USMLE guide](/club/usmle-guide).
 
 ## Tips for any system
 
 - Ask older students how exams work in your college specifically; details vary from college to college.
-- Use the techniques in [learn faster](/post/learn-faster) and plan your weeks with [time management](/post/time-management).
-- If you're weighing central against parallel admission, read [the parallel admission guide](/post/parallel-admission).
+- Use the techniques in [learn faster](/club/learn-faster) and plan your weeks with [time management](/club/time-management).
+- If you're weighing central against parallel admission, read [the parallel admission guide](/club/parallel-admission).
 
 ## Useful links
 

@@ -38,13 +38,13 @@ const head = { count: "exact", head: true } as const;
 
 const hrefs: Record<InboxItem, string> = {
   affiliates: "/affiliates",
-  invoices: "/suite/invoices",
-  jobs: "/suite/hiring",
+  invoices: "/companies/invoices",
+  jobs: "/companies/hiring",
   orders: "/orders?status=awaiting",
   overdueRentals: "/rentals?view=overdue",
-  procurement: "/suite",
+  procurement: "/companies",
   rentalRequests: "/rentals",
-  seats: "/suite/seats",
+  seats: "/companies/seats",
   submissions: "/editorial/submissions",
   telegram: "/telegram",
   tickets: "/support?status=open",
@@ -110,23 +110,23 @@ export const loadInbox = async (
         .select("user_id", head)
         .eq("status", "applied")
     ),
-    counted(can("suite"), () =>
+    counted(can("companies"), () =>
       supabase
         .from("procurement_requests")
         .select("id", head)
         .eq("status", "submitted")
     ),
-    can("suite")
+    can("companies")
       ? supabase
           .from("job_requests")
           .select("id, candidates (status)")
           .eq("status", "open")
           .limit(200)
       : null,
-    counted(can("suite") && finance, () =>
+    counted(can("companies") && finance, () =>
       supabase.from("plus_seats").select("id", head).eq("status", "requested")
     ),
-    counted(can("suite") && finance, () =>
+    counted(can("companies") && finance, () =>
       supabase
         .from("invoices")
         .select("id", head)

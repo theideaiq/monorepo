@@ -17,7 +17,7 @@ export const sections = [
   "support",
   "tradeIns",
   "reviews",
-  "suite",
+  "companies",
   "finance",
   "editorial",
   "telegram",
@@ -32,6 +32,7 @@ export const sectionHref: Record<Section, string> = {
   affiliates: "/affiliates",
   audit: "/audit",
   catalog: "/catalog",
+  companies: "/companies",
   counter: "/counter",
   customers: "/customers",
   dashboard: "/",
@@ -41,7 +42,6 @@ export const sectionHref: Record<Section, string> = {
   rentals: "/rentals",
   reviews: "/reviews",
   staff: "/staff",
-  suite: "/suite",
   support: "/support",
   telegram: "/telegram",
   tradeIns: "/trade-ins",
@@ -73,15 +73,16 @@ const roleAccess: Record<StaffRole, AccessMap> = {
   // which of the two each step needs).
   finance: {
     affiliates: "write",
+    // Finance invoices purchase orders; support handles the rest.
+    companies: "write",
     dashboard: "read",
     finance: "write",
     orders: "read",
-    // Finance invoices purchase orders; support handles the rest.
-    suite: "write",
   },
   marketing: { affiliates: "write", customers: "read", dashboard: "read" },
   superadmin: everything(),
   support: {
+    companies: "write",
     // The counter: checking Pass cards, Bulbs and rentals in person.
     counter: "write",
     customers: "write",
@@ -89,7 +90,6 @@ const roleAccess: Record<StaffRole, AccessMap> = {
     orders: "write",
     rentals: "write",
     reviews: "write",
-    suite: "write",
     support: "write",
     telegram: "write",
     tradeIns: "write",
@@ -116,7 +116,7 @@ export const sectionGroups = [
   { id: "sales", sections: ["orders", "rentals", "tradeIns", "customers"] },
   { id: "catalog", sections: ["catalog", "reviews"] },
   { id: "community", sections: ["editorial", "telegram", "affiliates"] },
-  { id: "companies", sections: ["suite"] },
+  { id: "companies", sections: ["companies"] },
   { id: "money", sections: ["finance"] },
   { id: "help", sections: ["support"] },
   { id: "team", sections: ["staff", "audit"] },

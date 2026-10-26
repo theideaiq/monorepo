@@ -89,7 +89,7 @@ describe("rental tiers", () => {
         { audience: "plus", name: "Gold monthly", tier: 2 },
         { audience: "plus", name: "Silver", tier: 1 },
         { audience: "plus", name: "Gold yearly", tier: 2 },
-        { audience: "business", name: "Suite", tier: 5 },
+        { audience: "business", name: "Business", tier: 5 },
         { audience: "plus", name: "Legacy", tier: null },
       ])
     ).toEqual([

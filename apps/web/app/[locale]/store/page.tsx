@@ -237,7 +237,7 @@ const Store = async ({ params, searchParams }: StoreProps) => {
       <PinkBand
         action={
           <Button asChild className="gap-2" size="lg" variant="brand">
-            <a href={pagePath(locale, "/pass/sell")}>
+            <a href={pagePath(locale, "/pass/orders#sell")}>
               <HandCoins aria-hidden="true" />
               {t("store.sell.cta")}
             </a>

@@ -142,7 +142,7 @@ export const ChatForm = ({
   );
 };
 
-const topics = ["general", "store", "plus", "academy", "suite"] as const;
+const topics = ["general", "store", "plus", "club", "business"] as const;
 
 /** A question and answer the bot offers in private chats. */
 export const FaqForm = ({

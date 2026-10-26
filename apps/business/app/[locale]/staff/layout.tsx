@@ -18,7 +18,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 /**
- * The back office (`/{locale}/admin`), for staff at AAL2: its client
+ * The back office (`/{locale}/staff`), for staff at AAL2: its client
  * components get the back-office texts. It loads no analytics.
  */
 const AdminLayout = async ({ children }: AdminLayoutProperties) => {

@@ -191,7 +191,7 @@ describe("private chats", () => {
   test("links menu has the website, The Club and the app", async () => {
     const { data } = createFakeData();
     const { send, sent } = createTestBot({
-      appUrl: "https://app.theideaiq.com",
+      appUrl: "https://business.theideaiq.com",
       data,
     });
     await send(callback(user(1), "m:links"));
@@ -200,7 +200,7 @@ describe("private chats", () => {
     ).toEqual([
       "https://theideaiq.com/ar",
       "https://t.me/theideaclub",
-      "https://app.theideaiq.com",
+      "https://business.theideaiq.com",
       "m:home",
     ]);
   });

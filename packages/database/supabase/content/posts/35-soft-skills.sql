@@ -50,11 +50,11 @@ begin
 - التزم بهدفك واعمل عليه الآن، ولا تنتظر "اللحظة المناسبة".
 - تحدّث مع نفسك بإيجابية.
 
-وتساعدك [إدارة الوقت](/post/time-management) و[طرق التعلّم الفعّالة](/post/learn-faster) على تحويل هذا الدافع إلى إنجاز.
+وتساعدك [إدارة الوقت](/club/time-management) و[طرق التعلّم الفعّالة](/club/learn-faster) على تحويل هذا الدافع إلى إنجاز.
 
 ## كيف تُظهرها في سيرتك ومقابلاتك
 
-لا يكفي أن تكتب "مهارات تواصل ممتازة" في سيرتك الذاتية. اذكر مثالاً: نشاط قدته، أو مشروع نسّقته، أو مشكلة حللتها مع فريقك. وفي المقابلة، احكِ القصة باختصار: الموقف، وما فعلته، والنتيجة. ولبناء حضورك المهني ابدأ من [خطواتك الأولى على الإنترنت](/post/first-steps-online).
+لا يكفي أن تكتب "مهارات تواصل ممتازة" في سيرتك الذاتية. اذكر مثالاً: نشاط قدته، أو مشروع نسّقته، أو مشكلة حللتها مع فريقك. وفي المقابلة، احكِ القصة باختصار: الموقف، وما فعلته، والنتيجة. ولبناء حضورك المهني ابدأ من [خطواتك الأولى على الإنترنت](/club/first-steps-online).
 
 ## مصادر مفيدة
 
@@ -105,11 +105,11 @@ Self-motivation means creating your own drive to finish your work or studies, an
 - Commit to your goal and work on it now instead of waiting for "the right moment."
 - Talk to yourself positively.
 
-[Time management](/post/time-management) and [effective learning techniques](/post/learn-faster) help turn that drive into results.
+[Time management](/club/time-management) and [effective learning techniques](/club/learn-faster) help turn that drive into results.
 
 ## Showing them on your CV and in interviews
 
-Writing "excellent communication skills" on your CV isn't enough. Give an example: an activity you led, a project you coordinated, a problem you solved with your team. In interviews, tell the story briefly: the situation, what you did and the result. To build your professional presence, start with [your first steps online](/post/first-steps-online).
+Writing "excellent communication skills" on your CV isn't enough. Give an example: an activity you led, a project you coordinated, a problem you solved with your team. In interviews, tell the story briefly: the situation, what you did and the result. To build your professional presence, start with [your first steps online](/club/first-steps-online).
 
 ## Useful resources
 

@@ -181,7 +181,7 @@ const useDocument = (kind: DocumentKind, id: string) => {
   const { supabase } = useAuth();
   return useQuery({
     queryFn: () => loaders[kind](supabase, id),
-    queryKey: ["suite-document", kind, id] as const,
+    queryKey: ["company-document", kind, id] as const,
   });
 };
 
@@ -196,8 +196,8 @@ export const DocumentView = ({
   readonly id: string;
   readonly kind: DocumentKind;
 }) => {
-  const t = useTranslations("app.suite.document");
-  const tStatus = useTranslations("app.suite.status");
+  const t = useTranslations("app.company.document");
+  const tStatus = useTranslations("app.company.status");
   const locale = useLocale();
   const factText = (fact: Fact) => {
     switch (fact.key) {

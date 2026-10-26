@@ -33,10 +33,10 @@ The engineering companion to `BRAND_GUIDELINES.md`: tokens, how they map onto `t
 | `border` | `#E4DFD0` | `#2C2D35` | Decorative dividers |
 | `border-strong` | `#8A8C95` | `#6B6D78` | Control borders (3:1+) |
 | `focus-ring` | `#0F1014` | `#F4CF08` | Focus outline |
-| `plus` / `academy` / `suite` | `#5B3BE8` / `#0B7A6E` / `#1F4FD6` | `#A99BFF` / `#4FD1C0` / `#7FA2FF` | Product accents; text `on-accent` |
-| `club` / `launcher` | `#FF6A2B` / `#7BC43A` | `#FF7A40` / `#9BE15D` | Product accents (fill only); text `on-accent-warm` |
-| `on-accent` | `#FFFFFF` | `#0F1014` | Text on plus, academy, suite |
-| `on-accent-warm` | `#0F1014` | `#0F1014` | Text on club, launcher |
+| `plus` / `teal` / `business` | `#5B3BE8` / `#0B7A6E` / `#1F4FD6` | `#A99BFF` / `#4FD1C0` / `#7FA2FF` | Accents (The IDEA Plus, spare, The IDEA Business); text `on-accent` |
+| `club` / `lime` | `#FF6A2B` / `#7BC43A` | `#FF7A40` / `#9BE15D` | Accents (The IDEA Club, spare; fill only); text `on-accent-warm` |
+| `on-accent` | `#FFFFFF` | `#0F1014` | Text on plus, teal, business |
+| `on-accent-warm` | `#0F1014` | `#0F1014` | Text on club, lime |
 | `bulb-empty` | `#D9DCE6` | `#3A3C46` | Unlit part of condition bulbs |
 | `success` | `#127A4B` | `#4ADE9A` | With icon and word |
 | `warning` | `#9A6700` | `#F5B83D` | With icon and word |
@@ -92,7 +92,7 @@ On phones scale `display-xl` to 44/48 and `display` to 36/42. Arabic never below
 | `--success` | `#127A4B` | `#4ADE9A` | green |
 | `--brand` / `--brand-foreground` | `#F4CF08` / `#0F1014` | same | unchanged |
 | `--sidebar-primary` / `-foreground` | `#D81B60` / `#FFFFFF` | same | pink |
-| `--chart-1…5` | pink, yellow, violet, teal, cobalt | dark-theme equivalents | various |
+| `--chart-1…5` | pink, yellow, violet (`plus`), `teal`, cobalt (`business`) | dark-theme equivalents | various |
 
 Add every other token from `tokens.css` and expose them in `@theme inline` as `--color-*` (`bg-idea-pink`, `text-pink-text`, `bg-surface-sunken`, `bg-plus` …).
 
@@ -102,7 +102,7 @@ Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/fo
 
 | Component | Spec |
 | --- | --- |
-| `BrandLogo` (exists) | Props `variant: 'on-light' \| 'on-pink' \| 'on-yellow' \| 'on-dark'` and `line?: Line`. On light and yellow: pink bulb and pink wordmark; on pink and dark: yellow bulb and white wordmark. Readex Pro 700, −1% tracking. Never black. English always `dir="ltr"`. |
+| `BrandLogo` (exists) | Props `variant: 'on-light' \| 'on-pink' \| 'on-yellow' \| 'on-dark'` and `line?: Line` (Business, Club, Design, Droid, Pass, Plus, Staff, Store). On light and yellow: pink bulb and pink wordmark; on pink and dark: yellow bulb and white wordmark. Readex Pro 700, −1% tracking. Never black. English always `dir="ltr"`. |
 | `Button` (exists) | `default` = pink / white; `brand` (new) = yellow / dark text, for use on pink grounds; `outline` = transparent + `border-strong`; `ghost`; `plus` = violet / white (only "Rent with The IDEA Plus"); `destructive` = danger. Heights 36 / 44 / 52, `radius-md`, 2px focus ring offset 2px. |
 | `Highlight` (new) | Yellow swipe with dark text on paper and dark; inside pink grounds the words turn yellow, no swipe. One per headline. |
 | `BulbKicker` (new) | Small bulb (20–28px) centred above a headline: yellow on pink and dark, pink on paper and yellow. |
@@ -110,7 +110,7 @@ Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/fo
 | `NameTile` (new) | Circle (or `shape="square"` at 22%) with one Readex Pro 700 word: `public` = white on pink; `internal` = pink on yellow; no word = yellow bulb on pink. Sizes 32–128. |
 | `SouqPrice` (new) | Market line small and struck ("بالسوگ بـ 150,000" / "In the market"), then ours large and bold ("يمنا بـ 99,750 دينار عراقي" / "With us … IQD"); the number in `pink-text` on paper, yellow on pink at 24px+. Renders the market line only when `marketPrice` and a `checkedAt` within 7 days exist. |
 | `ConditionBulb` (new) | Bulb + word: `new` (full yellow, جديد / New), `like-new` (unlit `bulb-empty`, اخو الجديد / Like new), `used` (bottom half yellow, مستعمل / Used). Maps stock grades: sealed → new, A → like-new, B/C → used; never shown for X. Letter grades stay in the back office. |
-| `Badge` (exists) | Tones: neutral, brand (pink), highlight (yellow), plus, academy, suite, club, launcher, success, warning, danger (status needs an icon). |
+| `Badge` (exists) | Tones: neutral, brand (pink), highlight (yellow), plus, business, club, success, warning, danger (status needs an icon). |
 | `PlanCard` | `radius-xl`; featured: 2px `plus` border, violet flag, pink primary button; others outline. |
 | `ProductCard` | Image on `surface-sunken`; badge top-start; 2-line name; `SouqPrice` or price; `ConditionBulb` for used and rental; full-width CTA (pink, or violet "Rent with The IDEA Plus"). |
 
@@ -121,7 +121,7 @@ Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/fo
 - Social avatar: `logos/avatar-the-idea.svg`. Name tiles: `logos/tile-*.svg`.
 - Email templates (`packages/email`, Supabase auth templates): pink header with `lockup-on-pink.svg`, paper body, pink button.
 - Open Graph template: pink ground, yellow bulb kicker, white title with one yellow word.
-- Community names in copy and messages files: The IDEA Club, The IDEA Post, The IDEA Droid, The IDEA Staff.
+- Product and community names in copy and messages files: The IDEA Store, The IDEA Plus, The IDEA Club, The IDEA Pass, The IDEA Business, The IDEA Droid, The IDEA Staff.
 - Brand line in messages: "اعلگها" (ar) / "Switch on." (en).
 
 ## 6. Quality gates

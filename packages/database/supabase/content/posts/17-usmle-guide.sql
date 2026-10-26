@@ -60,8 +60,8 @@ Internal Medicine، Obstetrics and Gynecology، Pediatrics، Preventive Medicine
 - ابدأ مبكراً، وادرس بانتظام بدل الدراسة المكثفة في الأسابيع الأخيرة.
 - اجعل بنك الأسئلة محور دراستك، واقرأ شرح كل إجابة، الصحيحة والخاطئة.
 - كوّن مجموعة دراسة مع زملاء يستهدفون الاختبار نفسه.
-- اهتم بلغتك الإنجليزية؛ الأسئلة طويلة وتعتمد على قراءة سريعة ودقيقة. اقرأ [كيف تطوّر إنجليزيتك](/post/improve-your-english).
-- نظّم وقتك بين الكلية والتحضير: [إدارة الوقت](/post/time-management).
+- اهتم بلغتك الإنجليزية؛ الأسئلة طويلة وتعتمد على قراءة سريعة ودقيقة. اقرأ [كيف تطوّر إنجليزيتك](/club/improve-your-english).
+- نظّم وقتك بين الكلية والتحضير: [إدارة الوقت](/club/time-management).
 
 ## روابط رسمية
 
@@ -118,8 +118,8 @@ Each step is expensive, and there are also ECFMG registration fees and a surchar
 - Start early and study steadily instead of cramming in the final weeks.
 - Make a question bank the core of your study, and read the explanation for every answer, right and wrong.
 - Form a study group with classmates aiming for the same exam.
-- Work on your English; questions are long and reward fast, accurate reading. See [how to improve your English](/post/improve-your-english).
-- Balance medical school and exam prep: [time management](/post/time-management).
+- Work on your English; questions are long and reward fast, accurate reading. See [how to improve your English](/club/improve-your-english).
+- Balance medical school and exam prep: [time management](/club/time-management).
 
 ## Official links
 

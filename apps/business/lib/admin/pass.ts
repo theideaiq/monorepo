@@ -3,7 +3,7 @@ import { localePath } from "@repo/internationalization";
 
 const TRAILING_SLASH = /\/+$/;
 
-/** The back office's home in `locale` (a path in The IDEA Spark). */
+/** The back office's home in `locale` (a path on The IDEA Business). */
 export const adminHome = (locale: string) => localePath(locale, "/admin");
 
 /**

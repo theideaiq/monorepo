@@ -33,7 +33,7 @@ describe("role → sections", () => {
       "dashboard",
       "orders",
       "affiliates",
-      "suite",
+      "companies",
       "finance",
     ]);
     expect(accessTo("finance", "orders")).toBe("read");
@@ -63,7 +63,7 @@ describe("role → sections", () => {
       "support",
       "tradeIns",
       "reviews",
-      "suite",
+      "companies",
       "telegram",
     ]);
     expect(canWrite("support", "support")).toBe(true);

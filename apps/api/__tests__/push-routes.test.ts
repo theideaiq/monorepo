@@ -13,7 +13,7 @@ const deliverTelegram = vi.fn();
 vi.mock("@/env", () => ({
   env: {
     CRON_SECRET: CRON,
-    NEXT_PUBLIC_APP_URL: "https://spark.theideaiq.com",
+    NEXT_PUBLIC_APP_URL: "https://business.theideaiq.com",
     NEXT_PUBLIC_WEB_URL: "https://theideaiq.com",
     PUSH_WEBHOOK_SECRET: SECRET,
   },
@@ -59,7 +59,7 @@ const post = (path: string, body: unknown, authorization?: string) =>
     body: JSON.stringify(body),
     headers: {
       "Content-Type": "application/json",
-      Origin: "https://spark.theideaiq.com",
+      Origin: "https://business.theideaiq.com",
       ...(authorization ? { Authorization: authorization } : {}),
     },
     method: "POST",
@@ -238,13 +238,13 @@ describe("POST /push/register and /push/unregister", () => {
     expect(response.status).toBe(400);
   });
 
-  test("registers the device as the caller, with CORS for Spark", async () => {
+  test("registers the device as the caller, with CORS for The IDEA Business", async () => {
     const response = await register.POST(
       post("/push/register", { platform: "android", token: TOKEN })
     );
     expect(response.status).toBe(200);
     expect(response.headers.get("access-control-allow-origin")).toBe(
-      "https://spark.theideaiq.com"
+      "https://business.theideaiq.com"
     );
     expect(rpc).toHaveBeenCalledWith("register_push_device", {
       device_platform: "android",

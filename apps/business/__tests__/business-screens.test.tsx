@@ -60,7 +60,7 @@ describe("business", () => {
     );
 
     expect(
-      await screen.findByText("Bring your company to The IDEA Suite")
+      await screen.findByText("Bring your company to The IDEA Business")
     ).toBeTruthy();
     expect(
       screen.getByRole("link", { name: "Create a business account" })
