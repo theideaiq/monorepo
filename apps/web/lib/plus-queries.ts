@@ -96,7 +96,7 @@ export const useRentals = () => {
         await supabase
           .from("rentals")
           .select(
-            "id, product_id, name_ar, name_en, status, requested_at, started_at, due_at, returned_at"
+            "id, product_id, name_ar, name_en, status, kind, order_id, days, deposit, late_fee, late_charge, damage_charge, refund_due, amount_due, settled_at, requested_at, started_at, due_at, returned_at"
           )
           .eq("user_id", requireUserId(user?.id))
           .order("requested_at", { ascending: false })

@@ -1048,11 +1048,13 @@ export type Database = {
           attributes: NonNullable<Json>;
           condition: Database["public"]["Enums"]["product_condition"] | null;
           id: string;
+          kind: string;
           name_ar: string;
           name_en: string;
           order_id: string;
           product_id: string | null;
           quantity: number;
+          rental_id: string | null;
           unit_price: number;
           variant_id: string | null;
         };
@@ -1060,11 +1062,13 @@ export type Database = {
           attributes?: NonNullable<Json>;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
+          kind?: string;
           name_ar: string;
           name_en: string;
           order_id: string;
           product_id?: string | null;
           quantity: number;
+          rental_id?: string | null;
           unit_price: number;
           variant_id?: string | null;
         };
@@ -1072,11 +1076,13 @@ export type Database = {
           attributes?: NonNullable<Json>;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
+          kind?: string;
           name_ar?: string;
           name_en?: string;
           order_id?: string;
           product_id?: string | null;
           quantity?: number;
+          rental_id?: string | null;
           unit_price?: number;
           variant_id?: string | null;
         };
@@ -1093,6 +1099,13 @@ export type Database = {
             columns: ["product_id"];
             isOneToOne: false;
             referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_rental_id_fkey";
+            columns: ["rental_id"];
+            isOneToOne: false;
+            referencedRelation: "rentals";
             referencedColumns: ["id"];
           },
           {
@@ -2112,16 +2125,58 @@ export type Database = {
           },
         ];
       };
+      rental_rates: {
+        Row: {
+          category_id: string;
+          days: number;
+          late_fee: number;
+          price: number;
+          updated_at: string;
+        };
+        Insert: {
+          category_id: string;
+          days: number;
+          late_fee: number;
+          price: number;
+          updated_at?: string;
+        };
+        Update: {
+          category_id?: string;
+          days?: number;
+          late_fee?: number;
+          price?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rental_rates_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: true;
+            referencedRelation: "product_categories";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       rentals: {
         Row: {
+          amount_due: number | null;
+          damage_charge: number | null;
+          days: number | null;
+          deposit: number;
           due_at: string | null;
           due_reminder_at: string | null;
           id: string;
+          kind: string;
+          late_charge: number | null;
+          late_fee: number;
           name_ar: string;
           name_en: string;
+          order_id: string | null;
           product_id: string | null;
+          refund_due: number | null;
           requested_at: string;
           returned_at: string | null;
+          settled_at: string | null;
           staff_note: string | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["rental_status"];
@@ -2130,14 +2185,24 @@ export type Database = {
           variant_id: string | null;
         };
         Insert: {
+          amount_due?: number | null;
+          damage_charge?: number | null;
+          days?: number | null;
+          deposit?: number;
           due_at?: string | null;
           due_reminder_at?: string | null;
           id?: string;
+          kind?: string;
+          late_charge?: number | null;
+          late_fee?: number;
           name_ar: string;
           name_en: string;
+          order_id?: string | null;
           product_id?: string | null;
+          refund_due?: number | null;
           requested_at?: string;
           returned_at?: string | null;
+          settled_at?: string | null;
           staff_note?: string | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["rental_status"];
@@ -2146,14 +2211,24 @@ export type Database = {
           variant_id?: string | null;
         };
         Update: {
+          amount_due?: number | null;
+          damage_charge?: number | null;
+          days?: number | null;
+          deposit?: number;
           due_at?: string | null;
           due_reminder_at?: string | null;
           id?: string;
+          kind?: string;
+          late_charge?: number | null;
+          late_fee?: number;
           name_ar?: string;
           name_en?: string;
+          order_id?: string | null;
           product_id?: string | null;
+          refund_due?: number | null;
           requested_at?: string;
           returned_at?: string | null;
+          settled_at?: string | null;
           staff_note?: string | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["rental_status"];
@@ -2162,6 +2237,13 @@ export type Database = {
           variant_id?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "rentals_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "rentals_product_id_fkey";
             columns: ["product_id"];
@@ -2403,6 +2485,7 @@ export type Database = {
           pickup_enabled: boolean;
           pickup_hours_ar: string | null;
           pickup_hours_en: string | null;
+          rental_deposit_rate: number;
           return_days: number;
           shipping_fee: number;
           updated_at: string;
@@ -2422,6 +2505,7 @@ export type Database = {
           pickup_enabled?: boolean;
           pickup_hours_ar?: string | null;
           pickup_hours_en?: string | null;
+          rental_deposit_rate?: number;
           return_days?: number;
           shipping_fee?: number;
           updated_at?: string;
@@ -2441,6 +2525,7 @@ export type Database = {
           pickup_enabled?: boolean;
           pickup_hours_ar?: string | null;
           pickup_hours_en?: string | null;
+          rental_deposit_rate?: number;
           return_days?: number;
           shipping_fee?: number;
           updated_at?: string;
@@ -3270,6 +3355,51 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      create_rental_order: {
+        Args: {
+          delivery_zone?: string;
+          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          rental_product: string;
+          rental_variant?: string;
+          shipping: Json;
+        };
+        Returns: {
+          affiliate_id: string | null;
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       create_support_ticket: {
         Args: {
           ticket_body: string;
@@ -3391,6 +3521,48 @@ export type Database = {
       issue_invoice: {
         Args: { days?: number; purchase_order: string };
         Returns: string;
+      };
+      keep_price: { Args: { target: string }; Returns: number };
+      keep_rental: {
+        Args: {
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          target: string;
+        };
+        Returns: {
+          affiliate_id: string | null;
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       ledger_monthly_summary: {
         Args: {
@@ -3716,6 +3888,15 @@ export type Database = {
         Args: { device_platform: string; device_token: string };
         Returns: string;
       };
+      rental_quote: {
+        Args: { product: string; variant?: string };
+        Returns: {
+          days: number;
+          deposit: number;
+          late_fee: number;
+          price: number;
+        }[];
+      };
       request_plus_seat: {
         Args: { member: string; org: string; plan: string };
         Returns: string;
@@ -3723,14 +3904,24 @@ export type Database = {
       request_rental: {
         Args: { rental_product: string; rental_variant?: string };
         Returns: {
+          amount_due: number | null;
+          damage_charge: number | null;
+          days: number | null;
+          deposit: number;
           due_at: string | null;
           due_reminder_at: string | null;
           id: string;
+          kind: string;
+          late_charge: number | null;
+          late_fee: number;
           name_ar: string;
           name_en: string;
+          order_id: string | null;
           product_id: string | null;
+          refund_due: number | null;
           requested_at: string;
           returned_at: string | null;
+          settled_at: string | null;
           staff_note: string | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["rental_status"];
@@ -3849,6 +4040,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      set_rental_deposit_rate: { Args: { rate: number }; Returns: undefined };
       set_staff_role: {
         Args: {
           new_role: Database["public"]["Enums"]["staff_role"];
@@ -3856,6 +4048,41 @@ export type Database = {
           target: string;
         };
         Returns: undefined;
+      };
+      settle_rental: {
+        Args: { damage?: number; target: string };
+        Returns: {
+          amount_due: number | null;
+          damage_charge: number | null;
+          days: number | null;
+          deposit: number;
+          due_at: string | null;
+          due_reminder_at: string | null;
+          id: string;
+          kind: string;
+          late_charge: number | null;
+          late_fee: number;
+          name_ar: string;
+          name_en: string;
+          order_id: string | null;
+          product_id: string | null;
+          refund_due: number | null;
+          requested_at: string;
+          returned_at: string | null;
+          settled_at: string | null;
+          staff_note: string | null;
+          started_at: string | null;
+          status: Database["public"]["Enums"]["rental_status"];
+          updated_at: string;
+          user_id: string | null;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "rentals";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       telegram_join_check: {
         Args: { chat: number; member: number };
@@ -3947,7 +4174,8 @@ export type Database = {
         | "active"
         | "returned"
         | "overdue"
-        | "cancelled";
+        | "cancelled"
+        | "kept";
       review_status: "published" | "hidden";
       staff_role:
         | "superadmin"
@@ -4216,6 +4444,7 @@ export const Constants = {
         "returned",
         "overdue",
         "cancelled",
+        "kept",
       ],
       review_status: ["published", "hidden"],
       staff_role: [

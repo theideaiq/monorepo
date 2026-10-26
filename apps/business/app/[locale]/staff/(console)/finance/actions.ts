@@ -194,3 +194,62 @@ export const saveMoneyRules = staffAction(
     return success();
   }
 );
+
+// ── Single-item rent ────────────────────────────────────────────────────────
+
+/**
+ * Single-item rent rates by category (fields `price:<id>`, `days:<id>` and
+ * `lateFee:<id>`; an empty price stops renting that category on its own)
+ * and the refundable deposit, in percent of the item's price.
+ */
+export const saveRentalRates = staffAction(
+  "finance",
+  z.object({ depositRate: decimalIn(0, 100) }).catchall(z.string()),
+  async ({ input, supabase }) => {
+    const rows: {
+      category_id: string;
+      days: number;
+      late_fee: number;
+      price: number;
+    }[] = [];
+    const removed: string[] = [];
+    for (const [key, value] of Object.entries(input)) {
+      if (!key.startsWith("price:")) {
+        continue;
+      }
+      const category = key.slice("price:".length);
+      if (!String(value).trim()) {
+        removed.push(category);
+        continue;
+      }
+      const price = int(1, 10_000_000).safeParse(value);
+      const days = int(1, 60).safeParse(input[`days:${category}`]);
+      const lateFee = int(0, 10_000_000).safeParse(
+        input[`lateFee:${category}`]
+      );
+      if (!(price.success && days.success && lateFee.success)) {
+        throw new ActionFailure("invalid");
+      }
+      rows.push({
+        category_id: category,
+        days: days.data,
+        late_fee: lateFee.data,
+        price: price.data,
+      });
+    }
+    if (rows.length > 0) {
+      check(await supabase.from("rental_rates").upsert(rows));
+    }
+    if (removed.length > 0) {
+      check(
+        await supabase.from("rental_rates").delete().in("category_id", removed)
+      );
+    }
+    check(
+      await supabase.rpc("set_rental_deposit_rate", {
+        rate: Number(input.depositRate),
+      })
+    );
+    return success();
+  }
+);

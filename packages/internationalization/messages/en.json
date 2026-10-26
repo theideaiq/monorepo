@@ -910,13 +910,21 @@
         "details": "Specifications",
         "about": "About this product",
         "condition": "Condition",
-        "rentalOnly": "This item is rented with The IDEA Plus.",
+        "rentalOnly": "This item is for rent: with The IDEA Plus, or on its own.",
         "goToPlus": "Go to The IDEA Plus",
         "addFailed": "We couldn't add this to your cart. Please try again.",
         "soldBy": "Sold by {seller}",
         "verifiedSeller": "Verified seller",
         "left": "{count} left",
-        "alsoRent": "Also for rent with The IDEA Plus"
+        "alsoRent": "Also for rent with The IDEA Plus",
+        "rent": {
+          "title": "Rent it on its own",
+          "price": "{price} for {days}",
+          "deposit": "Deposit {deposit}, refunded when you return it",
+          "lateFee": "{fee} a day if it's late; after {days} late it's charged at its used price",
+          "cta": "Rent it",
+          "rentedOut": "All copies are rented out right now."
+        }
       }
     },
     "cart": {
@@ -995,7 +1003,8 @@
         "notEnoughBulbs": "You don't have that many Bulbs any more. Check the amount and try again.",
         "guardianRequired": "Under 18, your orders need a guardian. Link one in Settings.",
         "needsBirthday": "Add your date of birth in Settings first.",
-        "notForMinors": "Something in your cart is rated 18+. Remove it to continue."
+        "notForMinors": "Something in your cart is rated 18+. Remove it to continue.",
+        "rentedOut": "All copies are rented out right now. Try again later."
       },
       "fulfilment": {
         "title": "Delivery or pickup",
@@ -1139,7 +1148,15 @@
         "due": "Due on {date}",
         "returnedOn": "Returned on {date}",
         "cancel": "Cancel request",
-        "cancelling": "Cancelling…"
+        "cancelling": "Cancelling…",
+        "keep": "Keep it for {price}",
+        "keeping": "Opening the payment page…",
+        "keepPending": "You've already asked to keep this. Pay from the order.",
+        "keepFailed": "We couldn't start that. Please try again.",
+        "single": "Rented on its own · deposit {deposit} · {fee} a day late",
+        "refundDue": "Settled: {amount} of your deposit comes back to you",
+        "amountDue": "Settled: {amount} to pay at the counter",
+        "viewOrder": "Order"
       },
       "errors": {
         "noSlots": "All your rental slots are in use. Return an item first.",
@@ -1956,6 +1973,21 @@
       "adultsOnly": "This is for members aged 18 and over.",
       "needsBirthday": "Add your date of birth in Settings first.",
       "guardianRequired": "Under 18, your guardian needs to allow The IDEA Plus first, in Settings."
+    },
+    "rent": {
+      "title": "Rent an item",
+      "back": "Back to the item",
+      "rent": "Rent for {days}",
+      "deposit": "Refundable deposit",
+      "delivery": "Delivery",
+      "total": "Total",
+      "depositNote": "We refund the deposit when you return the item, less any late fees or damage.",
+      "lateNote": "Late returns cost {fee} a day. After {days} late, the item is yours at its used price.",
+      "plusDelivery": "Delivery is free in Baghdad with The IDEA Plus plans that include it; your order shows the final total.",
+      "paymentFailed": "Your rental is booked, but we couldn't open the payment page. Pay from the order.",
+      "viewOrder": "View order",
+      "notRentable": "This item can't be rented on its own.",
+      "days": "{count, plural, one {{n} day} other {{n} days}}"
     }
   },
   "store": {
@@ -1991,7 +2023,8 @@
       "active": "With you",
       "returned": "Returned",
       "overdue": "Overdue",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "kept": "Kept"
     },
     "submissionStatus": {
       "pending": "Received",
@@ -2864,7 +2897,12 @@
       "cancelConfirm": "Cancel this rental request?",
       "cancelDescription": "The copy goes back into stock and the member's slot is freed.",
       "changeDue": "Change due date",
-      "markReturned": "Mark returned"
+      "markReturned": "Mark returned",
+      "damage": "Damage (IQD)",
+      "settle": "Settle",
+      "single": "Rented on its own · deposit {deposit}",
+      "order": "Order",
+      "settled": "Settled: late fees {late} · refund {refund} · owed {due}"
     },
     "customers": {
       "title": "Customers",
@@ -2980,7 +3018,8 @@
         "payments": "Payments",
         "settings": "Settings",
         "bulbs": "Bulbs",
-        "prices": "Prices"
+        "prices": "Prices",
+        "rentals": "Rental rates"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -3123,6 +3162,16 @@
         "floor": "Floor",
         "noCost": "No cost",
         "belowFloor": "Below the floor"
+      },
+      "rentals": {
+        "title": "Single-item rent",
+        "hint": "What renting one item on its own costs, by category. Late fees come out of the deposit at return; after 14 days late the item is charged at its used price.",
+        "depositRate": "Deposit (%)",
+        "depositRateHint": "Of the item's price, refunded at return.",
+        "price": "Price (IQD)",
+        "priceHint": "Empty: not rented on its own.",
+        "days": "Days",
+        "lateFee": "Late fee per day (IQD)"
       }
     },
     "editorial": {

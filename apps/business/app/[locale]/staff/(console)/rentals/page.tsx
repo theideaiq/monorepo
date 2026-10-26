@@ -1,4 +1,5 @@
 import { localized } from "@repo/commerce";
+import type { Tables } from "@repo/database";
 import {
   Table,
   TableBody,
@@ -33,7 +34,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const views = {
   active: ["active", "overdue"],
-  history: ["returned", "cancelled"],
+  history: ["returned", "cancelled", "kept"],
   overdue: ["overdue"],
   requests: ["requested"],
 } as const;
@@ -42,10 +43,82 @@ type View = keyof typeof views;
 
 const LOAN_DAYS = 14;
 
+/** Days late after which an unreturned single-item rent is kept. */
+const KEEP_AFTER_LATE_DAYS = 14;
+const DAY_MS = 86_400_000;
+
+/**
+ * A single-item rent can be settled once it's back, or once it's 14 days
+ * late (then it's kept at its used price).
+ */
+const canSettle = (rental: {
+  due_at: string | null;
+  kind: string;
+  settled_at: string | null;
+  status: string;
+}) => {
+  if (rental.kind !== "single" || rental.settled_at) {
+    return false;
+  }
+  if (rental.status === "returned") {
+    return true;
+  }
+  return (
+    rental.due_at !== null &&
+    (rental.status === "active" || rental.status === "overdue") &&
+    Date.now() - new Date(rental.due_at).getTime() >=
+      KEEP_AFTER_LATE_DAYS * DAY_MS
+  );
+};
+
 const addDays = (day: string, days: number) => {
   const date = new Date(`${day}T12:00:00Z`);
   date.setUTCDate(date.getUTCDate() + days);
   return date.toISOString().slice(0, 10);
+};
+
+type Rental = Tables<"rentals">;
+
+/** A single-item rent's deposit and order, and what was settled. */
+const RentalTerms = ({
+  format,
+  rental,
+  t,
+}: {
+  readonly format: ReturnType<typeof formatters>;
+  readonly rental: Rental;
+  readonly t: Awaited<ReturnType<typeof getTranslations<"admin.rentals">>>;
+}) => {
+  if (rental.kind !== "single") {
+    return null;
+  }
+  return (
+    <>
+      <span className="block text-muted-foreground text-xs">
+        {t("single", { deposit: format.money(rental.deposit) })}
+        {rental.order_id ? (
+          <>
+            {" · "}
+            <MaybeLink
+              className="hover:underline"
+              href={`/orders/${rental.order_id}`}
+            >
+              {t("order")}
+            </MaybeLink>
+          </>
+        ) : null}
+      </span>
+      {rental.settled_at ? (
+        <span className="block text-muted-foreground text-xs">
+          {t("settled", {
+            due: format.money(rental.amount_due ?? 0),
+            late: format.money(rental.late_charge ?? 0),
+            refund: format.money(rental.refund_due ?? 0),
+          })}
+        </span>
+      ) : null}
+    </>
+  );
 };
 
 /** The IDEA Plus rentals: requests to deliver, items out, returns. */
@@ -81,7 +154,7 @@ const RentalsPage = async ({
   const linkCustomers = canRead(staff.role, "customers");
   const memberName = (userId: string | null) =>
     userId ? (names.get(userId) ?? t("unnamed")) : t("deleted");
-  const showActions = canWrite && view !== "history";
+  const showActions = canWrite;
   const defaultDue = addDays(todayInBaghdad(), LOAN_DAYS);
 
   return (
@@ -127,6 +200,7 @@ const RentalsPage = async ({
                         >
                           {localized(rental, "name", locale)}
                         </MaybeLink>
+                        <RentalTerms format={format} rental={rental} t={t} />
                         {rental.staff_note ? (
                           <span className="block text-muted-foreground text-xs">
                             {rental.staff_note}
@@ -165,6 +239,8 @@ const RentalsPage = async ({
                             defaultDue={defaultDue}
                             due={toBaghdadInput(rental.due_at).slice(0, 10)}
                             id={rental.id}
+                            settle={canSettle(rental)}
+                            single={rental.kind === "single"}
                             status={rental.status}
                           />
                         </TableCell>

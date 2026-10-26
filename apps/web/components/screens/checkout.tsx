@@ -198,7 +198,7 @@ interface OptionCardProps<T extends string> {
 }
 
 /** Delivery to an address, or pickup from the store. */
-const FulfilmentCard = ({
+export const FulfilmentCard = ({
   busy,
   method,
   onChange,
@@ -230,7 +230,7 @@ const FulfilmentCard = ({
 };
 
 /** Online through Wayl, or cash to the courier or at the counter. */
-const PaymentCard = ({
+export const PaymentCard = ({
   busy,
   method,
   onChange,
@@ -277,7 +277,7 @@ interface ContactCardProps {
 }
 
 /** The recipient, and the delivery address and zone (or the store's counter). */
-const ContactCard = ({
+export const ContactCard = ({
   address,
   areas,
   busy,
@@ -652,7 +652,7 @@ const quoteRequestFor = ({
  * What the customer can choose (pickup and cash only when the store offers
  * them) and what they chose, falling back to delivery and online payment.
  */
-const resolveChoices = ({
+export const resolveChoices = ({
   address,
   fulfilment,
   payment,
@@ -696,7 +696,7 @@ const resolveChoices = ({
 };
 
 /** The courier's areas the address needs (delivery to a known zone). */
-const useCheckoutAreas = (
+export const useCheckoutAreas = (
   method: Fulfilment,
   zone: DeliveryZone | undefined
 ): string[] => {

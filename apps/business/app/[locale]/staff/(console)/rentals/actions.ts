@@ -1,9 +1,9 @@
 "use server";
 
 import { z } from "zod";
-import { affected, staffAction } from "@/lib/admin/action";
+import { affected, check, staffAction } from "@/lib/admin/action";
 import { fromBaghdadInput } from "@/lib/admin/dates";
-import { date, optionalText, uuid } from "@/lib/admin/forms";
+import { date, int, optionalText, uuid } from "@/lib/admin/forms";
 
 /** A due date (YYYY-MM-DD) as the end of that day in Baghdad. */
 const dueAt = (day: string) => fromBaghdadInput(`${day}T23:59`) as string;
@@ -82,6 +82,24 @@ export const changeDueDate = staffAction(
         .eq("id", input.id)
         .in("status", ["active", "overdue"])
         .select("id")
+    );
+  }
+);
+
+/**
+ * Settles a single-item rent once it's back: late fees and any damage come
+ * out of the deposit (or, 14 days late and not back, it's kept at its used
+ * price). The refund itself is paid outside the app.
+ */
+export const settleRental = staffAction(
+  "rentals",
+  z.object({ damage: int(0, 100_000_000), id: uuid }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("settle_rental", {
+        damage: input.damage,
+        target: input.id,
+      })
     );
   }
 );

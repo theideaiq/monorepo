@@ -66,6 +66,7 @@ export type CheckoutError =
   | "outOfStock"
   | "payment"
   | "pickupUnavailable"
+  | "rentedOut"
   | "suspended"
   | "unavailable"
   | "unknown"
@@ -120,6 +121,12 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
   }
   if (message.includes("Not available under 18")) {
     return "notForMinors";
+  }
+  if (
+    message.includes("All copies are rented out") ||
+    message.includes("Item not available")
+  ) {
+    return "rentedOut";
   }
   return "unknown";
 };

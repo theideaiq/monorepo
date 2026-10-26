@@ -698,6 +698,7 @@ Current schema:
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | The IDEA Store's catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
+| `…_single_rent.sql` | Single-item rent: `rental_rates`, `rental_quote()`, `create_rental_order()` (rent + deposit lines), `settle_rental()`, `set_rental_deposit_rate()`; Keep it: `keep_price()`, `keep_rental()`; `rentals.kind`, `order_items.kind`, rental status `kept` |
 | `…_plus.sql` | The IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
 | `…_editorial.sql` | `posts`, `events` + `event_rsvps` (capacity, closed after start), `submissions` + staff-only `submission_reviews`; `review_queue()` hides authors until a decision (blind review) |
 | `…_back_office.sql` | `crm_contacts`, `marketing_segments`, `marketing_campaigns` (opted-in customers only: `profiles.marketing_opt_in`), double-entry ledger (`chart_of_accounts`, `ledger_entries`, `ledger_lines`, `post_journal_entry()`, `ledger_monthly_summary()`), `staff_plan`, `equity_rounds`, `equity_holders` |
@@ -1438,6 +1439,33 @@ the database refuses anyone under 13), and it's needed to buy. For
   Passes by the products policy and refused by `create_order()`.
 - **18+ only:** Sell to us (trade-ins) and affiliates (triggers).
 - Reviews from verified buyers with a photo say they earned 5 Bulbs.
+
+#### Single-item rent and Keep it
+
+Anyone with The IDEA Pass can rent one rentable item on its own, without
+The IDEA Plus (migration `20261221000000_single_rent.sql`):
+
+- **Rates by category** (`rental_rates`, Finance → Rental rates): games
+  9,750 IQD for 7 days, books 3,750 for 14, films 2,750 for 7, each with a
+  fee per day late. `rental_quote(product)` gives the price, days, late fee
+  and deposit; the product page shows them (`components/store/rent-card.tsx`).
+- **The order.** `/rent/<slug>` (`components/screens/rent-checkout.tsx`)
+  calls `create_rental_order()`: an order of two lines, the rent and a
+  refundable deposit (`store_settings.rental_deposit_rate`, 50% of the
+  item's price), plus delivery (free in Baghdad on Plus plans that include
+  it) or pickup, paid online or in cash like any order. It holds a copy and
+  creates a `rentals` row with `kind = 'single'`. The rental starts when
+  the order is delivered and is due after the rate's days; it can't start
+  before the order is paid or confirmed. No Bulbs are earned or spent.
+- **Return and settlement.** Staff mark it returned, then settle it on
+  Rentals (`settle_rental(damage)`, support): late days × the late fee and
+  any damage come out of the deposit, giving `refund_due` (paid back in
+  Wayl or at the counter, outside the app) or `amount_due`. 14 days late
+  and not back, it's kept at its used price (`status = 'kept'`).
+- **Keep it** (Plus rentals): the member buys the copy they have at its
+  used price less one month of their plan (`keep_price()`,
+  `keep_rental()`), from "Your rentals" on `/plus`. Once paid, the rental
+  ends as `kept` and the copy is sold to them.
 
 #### Categories, prices and conditions (the catalogue)
 

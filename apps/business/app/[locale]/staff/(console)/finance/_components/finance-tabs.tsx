@@ -13,6 +13,7 @@ export const FinanceTabs = async () => {
         { href: "/finance/payments", label: t("payments") },
         { href: "/finance/bulbs", label: t("bulbs") },
         { href: "/finance/prices", label: t("prices") },
+        { href: "/finance/rentals", label: t("rentals") },
         { href: "/finance/settings", label: t("settings") },
       ]}
     />

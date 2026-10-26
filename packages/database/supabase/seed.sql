@@ -134,3 +134,10 @@ update public.store_settings set
 
 -- Affiliate commission on media (see the affiliates migration).
 update public.product_categories set affiliate_rate = 8 where slug in ('books', 'music');
+
+-- Single-item rent rates (program revision v1, step 5a).
+insert into public.rental_rates (category_id, price, days, late_fee) values
+  ('50000000-0000-0000-0000-000000000001', 9750, 7, 1750),
+  ('50000000-0000-0000-0000-000000000004', 3750, 14, 500),
+  ('50000000-0000-0000-0000-000000000006', 2750, 7, 500)
+on conflict (category_id) do nothing;

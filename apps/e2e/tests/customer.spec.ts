@@ -127,6 +127,12 @@ test("security.txt is served without a locale redirect", async ({
   );
 });
 
+const PICKUP = /^Pickup/;
+const PAY_AT_PICKUP = /^Pay at pickup/;
+const PLACE_CASH_ORDER = /^Place order · /;
+const RENT_PAGE = /\/rent\/elden-ring-ps5$/;
+const ORDER_PAGE = /\/pass\/orders\/[^/]+$/;
+
 test.describe("a signed-in customer", () => {
   test.beforeEach(async ({ context }) => {
     await resetCustomer();
@@ -168,6 +174,28 @@ test.describe("a signed-in customer", () => {
     await page.goto(`${urls.web}/saved`);
     await expect(page.getByText(product.name).first()).toBeVisible();
     await expectAccessible(page);
+    noErrors();
+  });
+
+  test("rents an item on its own and collects it", async ({ page }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/store/elden-ring-ps5`);
+    await expect(page.getByText("Rent it on its own")).toBeVisible();
+    await page.getByRole("link", { exact: true, name: "Rent it" }).click();
+    await expect(page).toHaveURL(RENT_PAGE);
+    await expect(page.getByText("Refundable deposit")).toBeVisible();
+
+    await page.getByRole("radio", { name: PICKUP }).click();
+    await page.getByLabel("Full name").fill(customer.name);
+    await page.getByLabel("Mobile number").fill("07701234567");
+    await page.getByRole("radio", { name: PAY_AT_PICKUP }).click();
+    await expectAccessible(page);
+    await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
+
+    await expect(page).toHaveURL(ORDER_PAGE);
+    await expect(
+      page.getByText("Refundable deposit: Elden Ring (PS5)")
+    ).toBeVisible();
     noErrors();
   });
 
