@@ -26,7 +26,7 @@ E. **Surveys in the Club:** free surveys (answer one, earn one response credit) 
 
 ## Not code (owner tasks; keep them in PROGRESS.md)
 
-Check that the Vercel project for The IDEA Business points at `apps/business` with the `business.theideaiq.com` domain (the preview project still reported `apps/app`); enter cost prices for every copy; finish or delete the remaining drafts; add each game night kit and the Plus delivery days in the back office; rename the Telegram chats and claim the usernames; send the 14 policies for legal review.
+Enter cost prices for every copy; finish or delete the remaining drafts; add each game night kit and the Plus delivery days in the back office; rename the Telegram chats and claim the usernames; send the 14 policies for legal review.
 
 ## Checks for every phase
 
