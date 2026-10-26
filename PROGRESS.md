@@ -5,7 +5,17 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-26: program revision, step 3)
+## Current state (2026-10-26: program revision, step 4)
+
+- Ages (migration `20261220000000_ages.sql`): the Pass is from 13 and asks
+  for the date of birth at first sign-in; 13–17-year-olds link a guardian
+  signed in with The IDEA Pass who approves each order and The IDEA Plus in
+  Settings; PEGI 18 items are hidden from them; Sell to us and affiliates
+  are 18+. Reviews that earned the photo bonus say so.
+- The 14 public policies at `/legal/<policy>` (terms, privacy, delivery,
+  returns, condition, plus, rewards, sell, club, surveys, business,
+  accessibility, security, copyright) replace the old five, with
+  `/.well-known/security.txt`.
 
 - Catalogue fixes (migration `20261219000000_catalogue_fixes.sql`): six
   categories (Music, Games, Books, Films, Audio, Tech); prices moved into
@@ -79,8 +89,10 @@ decisions with a date.
       Finance → Bulbs (3% and 5,000 IQD are placeholders).
 - [ ] **Plus launch:** turn on the Glow, Shine and Blaze plans (Catalog →
       Plans) when The IDEA Plus opens.
-- [ ] **Returns policy:** the refund policy (`apps/web/content/legal`)
-      still says 7 days; it becomes 14 days with the policies in step 4.
+- [x] **Returns policy:** the 14 public policies in
+      `apps/web/content/legal` (returns replaces refund, 14 days; club
+      replaces community and conduct), 2026-10-26. Owner step: have them
+      reviewed under Iraqi law, and confirm Wayl's refund window and fees.
 
 - [ ] **Delivery with Boxy** (ARCHITECTURE_AND_INTEGRATIONS.md 4.5): Boxy
       key and secret on the `api` project (sandbox first), the pick-up
@@ -232,6 +244,10 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-26: Program revision v1, step 4: guardians confirm signed in with
+  The IDEA Pass of their own (not a phone code: no SMS provider, and an adult Pass is harder
+  to fake); the 14 policies are published as final, not marked as drafts.
 
 - 2026-10-26: Program revision v1, step 3 (catalogue): six categories;
   prices set from the bands directly (no review list), accepting that

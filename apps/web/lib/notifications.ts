@@ -50,6 +50,10 @@ export const NOTIFICATION_EVENTS = [
   "invoice_issued",
   "plus_seat_active",
   "candidate_proposed",
+  "guardian_order_request",
+  "guardian_approved",
+  "guardian_declined",
+  "guardian_linked",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -152,6 +156,13 @@ const extraValues: Partial<
   candidate_proposed: (data) => ({
     name: text(data.name),
     title: text(data.title),
+  }),
+  guardian_approved: (data) => ({ number: text(data.number) }),
+  guardian_declined: (data) => ({ number: text(data.number) }),
+  guardian_linked: (data) => ({ name: text(data.name) }),
+  guardian_order_request: (data) => ({
+    name: text(data.name),
+    number: text(data.number),
   }),
   invoice_issued: invoiceValues,
   plus_seat_active: (data) => ({ plan: text(data.plan) }),

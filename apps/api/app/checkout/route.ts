@@ -96,6 +96,16 @@ export const POST = async (request: Request) => {
     return json({ error: "forbidden" }, 403);
   }
 
+  // 13–17-year-olds join The IDEA Plus once their guardian allows it.
+  if (plan.audience === "plus") {
+    const { data: guardian } = await session.supabase
+      .rpc("my_guardian")
+      .maybeSingle();
+    if (guardian?.minor && !guardian.allows_plus) {
+      return json({ error: "guardian_required" }, 403);
+    }
+  }
+
   // Browser checkouts keep the context needed to report the purchase to ad
   // platforms later; nothing is stored unless conversions are configured.
   const metadata =

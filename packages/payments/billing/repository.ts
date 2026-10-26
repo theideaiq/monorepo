@@ -62,6 +62,8 @@ export interface NewPayment {
 }
 
 export interface OrderRecord {
+  /** A 13–17-year-old's order waiting for (or declined by) their guardian. */
+  awaitingGuardian?: boolean;
   currency: string;
   id: string;
   /** One receipt line per order item (unit price × quantity), then delivery. */

@@ -266,6 +266,17 @@ describe("billing", () => {
     ).rejects.toThrow(OrderNotPayableError);
   });
 
+  test("refuses to pay an order waiting for the guardian", async () => {
+    const { billing, state } = setup();
+    const existing = state.orders.get("order-1");
+    if (existing) {
+      state.orders.set("order-1", { ...existing, awaitingGuardian: true });
+    }
+    await expect(
+      billing.startOrderCheckout({ orderId: "order-1", userId: "user-1" })
+    ).rejects.toThrow(OrderNotPayableError);
+  });
+
   test("refuses to pay someone else's order", async () => {
     const { billing } = setup();
     await expect(

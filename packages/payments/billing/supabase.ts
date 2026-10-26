@@ -150,7 +150,7 @@ export const createSupabaseBillingRepository = (
       await supabase
         .from("orders")
         .select(
-          "id, number, user_id, status, total, currency, shipping_fee, order_items (name_en, unit_price, quantity, variant:product_variants (label_en))"
+          "id, number, user_id, status, guardian_status, total, currency, shipping_fee, order_items (name_en, unit_price, quantity, variant:product_variants (label_en))"
         )
         .eq("id", orderId)
         .maybeSingle()
@@ -172,6 +172,8 @@ export const createSupabaseBillingRepository = (
       lines.push({ amount: row.shipping_fee, label: "Delivery" });
     }
     return {
+      awaitingGuardian:
+        row.guardian_status === "pending" || row.guardian_status === "declined",
       currency: row.currency,
       id: row.id,
       lines,

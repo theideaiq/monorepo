@@ -62,6 +62,8 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000c2', 'rf@example.iq', '{"full_name":"Friend F"}'),
   ('00000000-0000-0000-0000-0000000000c3', 'rg@example.iq', '{"full_name":"Same Phone G"}'),
   ('00000000-0000-0000-0000-0000000000c4', 'ro@example.iq', '{"full_name":"Old O"}');
+-- Fixture members are adults (ages: a date of birth is needed to buy).
+update public.profiles set birthday = date '1990-01-01' where birthday is null;
 
 insert into public.products (id, slug, name_ar, name_en, price, stock_count, status, kind) values
   ('68000000-0000-0000-0000-000000000001', 'invite-switch', 'سويتش', 'Switch', 200000, 20, 'active', 'sale'),

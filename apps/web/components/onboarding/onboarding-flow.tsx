@@ -10,8 +10,10 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 import { DeleteAccountDialog } from "@/components/account/delete-account";
+import { BirthdayCard } from "@/components/birthday-settings";
 import { ProfileForm } from "@/components/profile-form";
 import { ErrorState, FullPageSpinner } from "@/components/states";
+import { useMyGuardian } from "@/lib/guardian";
 import { needsOnboarding } from "@/lib/onboarding";
 import { useMemberships, useProfile } from "@/lib/queries";
 
@@ -30,6 +32,8 @@ export const OnboardingFlow = () => {
   );
   const memberships = useMemberships();
   const profile = useProfile();
+  // The date of birth comes first: the Pass is for 13 and over.
+  const age = useMyGuardian();
   const finishing = useRef(false);
 
   const done =
@@ -70,7 +74,9 @@ export const OnboardingFlow = () => {
         <p className="text-muted-foreground">{t("description")}</p>
       </div>
 
-      <section className="grid gap-4">
+      {age.data && !age.data.has_birthday ? <BirthdayCard /> : null}
+
+      <section className="grid gap-4" hidden={!age.data?.has_birthday}>
         <div className="grid gap-1">
           <h2 className="font-medium text-lg">{t("profile.title")}</h2>
           <p className="text-muted-foreground text-sm">

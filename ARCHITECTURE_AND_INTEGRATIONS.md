@@ -1413,6 +1413,32 @@ outside this template.
 
 ### 4.2 Wayl payments
 
+#### Ages and guardians
+
+The IDEA Pass is open from 13 (migration `20261220000000_ages.sql`).
+Onboarding asks for the date of birth first (`profiles.birthday`, set once;
+the database refuses anyone under 13), and it's needed to buy. For
+13–17-year-olds:
+
+- **A guardian with The IDEA Pass of their own.** The teen gets an invite code in
+  Settings (`invite_guardian()`), shares the link
+  (`/pass/settings?guardian=<code>#guardian`), and an adult (18 or over,
+  checked from their own date of birth) accepts it (`guardian_invite()`,
+  `accept_guardian()`; `guardian_links`). Either side can end the link.
+- **Orders wait for the guardian.** `create_order()` marks a teen's order
+  `guardian_status = 'pending'` and notifies the guardian; nothing is paid,
+  confirmed or shipped before (a trigger, and the billing service refuses
+  to open the payment page). The guardian approves or declines it in
+  Settings (`my_teens()`, `decide_guardian_order()`): an approved cash
+  order is confirmed, an online one is paid by the teen from the order
+  page; a declined one is cancelled.
+- **The IDEA Plus** needs the guardian's yes once (`set_guardian_plus()`;
+  `POST /checkout` answers `guardian_required` otherwise).
+- **PEGI 18** products (`products.age_rating`) are hidden from under-18
+  Passes by the products policy and refused by `create_order()`.
+- **18+ only:** Sell to us (trade-ins) and affiliates (triggers).
+- Reviews from verified buyers with a photo say they earned 5 Bulbs.
+
 #### Categories, prices and conditions (the catalogue)
 
 The store has six categories, each a filter on `/store`: Music, Games,

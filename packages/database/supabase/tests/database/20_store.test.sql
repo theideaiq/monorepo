@@ -71,6 +71,8 @@ insert into auth.users (id, email, phone, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000a4', 'e@example.iq', '9647700000104', '{"full_name":"Editor E"}'),
   ('00000000-0000-0000-0000-0000000000a5', 'p@example.iq', '9647700000105', '{"full_name":"Support P"}'),
   ('00000000-0000-0000-0000-0000000000a6', 'f@example.iq', '9647700000106', '{"full_name":"Finance F"}');
+-- Fixture members are adults (ages: a date of birth is needed to buy).
+update public.profiles set birthday = date '1990-01-01' where birthday is null;
 
 insert into public.staff (user_id, role) values
   ('00000000-0000-0000-0000-0000000000a3', 'superadmin'),

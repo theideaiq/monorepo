@@ -62,6 +62,8 @@ insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-0000000000f7', 'cu@example.iq', '{"full_name":"Customer U"}'),
   ('00000000-0000-0000-0000-0000000000f8', 'cr@example.iq', '{"full_name":"Customer R"}'),
   ('00000000-0000-0000-0000-0000000000f9', 'cq@example.iq', '{"full_name":"Customer Q"}');
+-- Fixture members are adults (ages: a date of birth is needed to buy).
+update public.profiles set birthday = date '1990-01-01' where birthday is null;
 
 insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier, bulb_rate, free_delivery)
 values ('plus-free-test', 'Plus Test', 22750, 'month', 'plus', 2, 2, 5, true);
