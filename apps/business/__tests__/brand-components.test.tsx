@@ -1,7 +1,3 @@
-import {
-  ConditionBulb,
-  conditionFromGrade,
-} from "@repo/design-system/components/brand/condition-bulb";
 import { NameTile } from "@repo/design-system/components/brand/name-tile";
 import {
   isMarketPriceFresh,
@@ -37,24 +33,6 @@ describe("SouqPrice", () => {
     render(<SouqPrice labels={labels} marketPrice="150,000" price="99,750" />);
     expect(screen.queryByText("150,000")).toBeNull();
     expect(screen.getByText("99,750")).toBeTruthy();
-  });
-});
-
-describe("ConditionBulb", () => {
-  test("maps grades and keeps retired items hidden", () => {
-    expect(conditionFromGrade("sealed")).toBe("new");
-    expect(conditionFromGrade("A")).toBe("like-new");
-    expect(conditionFromGrade("b")).toBe("used");
-    expect(conditionFromGrade("C")).toBe("used");
-    expect(conditionFromGrade("X")).toBeNull();
-  });
-
-  test("always shows the word beside the bulb", () => {
-    const { container } = render(
-      <ConditionBulb condition="used" label="Used" />
-    );
-    expect(screen.getByText("Used")).toBeTruthy();
-    expect(container.querySelectorAll("path")).toHaveLength(2);
   });
 });
 

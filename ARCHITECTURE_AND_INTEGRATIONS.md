@@ -1413,6 +1413,25 @@ outside this template.
 
 ### 4.2 Wayl payments
 
+#### Categories, prices and conditions (the catalogue)
+
+The store has six categories, each a filter on `/store`: Music, Games,
+Books, Films, Audio and Tech (migration `20261219000000_catalogue_fixes.sql`;
+cameras, gadgets, laptops and phones are in Tech). Prices follow the
+program revision's bands and always end in …4,750 or …9,750: games by age
+(released in the last 6 months 99,750, up to 2 years 79,750, older 59,750),
+books by language (Arabic paperbacks 14,750, others 19,750), Blu-ray films
+29,750 (4K 44,750), vinyl 54,750 to 89,750 (coloured editions from 69,750),
+CDs 19,750 (new releases 24,750; signed and multi-disc editions as priced);
+open box at most 75% of new, used by wear. Consoles, accessories, hi-fi
+and cameras are priced from cost. Finance → Prices checks every price
+against the margin floor once costs are in. A copy's condition is one of
+four plain labels (New, Open box, Refurbished, Used), shown for items for
+sale that aren't new; the bulb belongs only to Bulbs. Rental-only items
+show "Rent with The IDEA Plus" with "Worth …" in small print instead of a
+sale price. Games carry a PEGI age rating (`products.age_rating`: 3, 7,
+12, 16 or 18), shown on the product page and set in the product form.
+
 #### Stock per copy (the shared catalogue)
 
 One product is one real thing (a game, an album, a console); every

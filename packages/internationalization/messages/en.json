@@ -1881,7 +1881,8 @@
     "price": {
       "free": "Free",
       "from": "From {price}",
-      "save": "Save {percent}%"
+      "save": "Save {percent}%",
+      "worth": "Worth {price}"
     },
     "condition": {
       "new": "New",
@@ -2068,11 +2069,6 @@
       },
       "fallbackBody": "Open to see the details."
     },
-    "conditionBulb": {
-      "like-new": "Like new",
-      "new": "New",
-      "used": "Used"
-    },
     "card": {
       "buy": "Buy",
       "rent": "Rent with The IDEA Plus"
@@ -2136,7 +2132,9 @@
       "club": "The IDEA Club",
       "pass": "The IDEA Pass",
       "business": "The IDEA Business"
-    }
+    },
+    "rentOnly": "Rent with The IDEA Plus",
+    "ageRating": "Age rating: PEGI {rating}"
   },
   "admin": {
     "meta": {
@@ -2362,7 +2360,9 @@
         "tierOption": "Tier {tier}: {names}",
         "unknownTier": "No plan at this tier",
         "bulbMultiplier": "Bulbs multiplier",
-        "bulbMultiplierHint": "0.5 earns half the rate (consoles). Empty for the category's."
+        "bulbMultiplierHint": "0.5 earns half the rate (consoles). Empty for the category's.",
+        "ageRating": "Age rating (PEGI)",
+        "ageRatingHint": "Shown on the product page; PEGI 18 items will be hidden from under-18 Passes."
       },
       "variants": {
         "title": "Variants",

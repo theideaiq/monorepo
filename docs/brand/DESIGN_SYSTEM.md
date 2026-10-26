@@ -37,7 +37,7 @@ The engineering companion to `BRAND_GUIDELINES.md`: tokens, how they map onto `t
 | `club` / `lime` | `#FF6A2B` / `#7BC43A` | `#FF7A40` / `#9BE15D` | Accents (The IDEA Club, spare; fill only); text `on-accent-warm` |
 | `on-accent` | `#FFFFFF` | `#0F1014` | Text on plus, teal, business |
 | `on-accent-warm` | `#0F1014` | `#0F1014` | Text on club, lime |
-| `bulb-empty` | `#D9DCE6` | `#3A3C46` | Unlit part of condition bulbs |
+| `bulb-empty` | `#D9DCE6` | `#3A3C46` | Unlit part of a bulb |
 | `success` | `#127A4B` | `#4ADE9A` | With icon and word |
 | `warning` | `#9A6700` | `#F5B83D` | With icon and word |
 | `danger` | `#B3261E` | `#FFB4A9` | With alert icon and word (similar lightness to pink) |
@@ -109,10 +109,10 @@ Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/fo
 | `PinkBand` (new) | Full-width pink band, yellow bulb kicker, white headline with one yellow Highlight, yellow `brand` button. Once per page. |
 | `NameTile` (new) | Circle (or `shape="square"` at 22%) with one Readex Pro 700 word: `public` = white on pink; `internal` = pink on yellow; no word = yellow bulb on pink. Sizes 32–128. |
 | `SouqPrice` (new) | Market line small and struck ("بالسوگ بـ 150,000" / "In the market"), then ours large and bold ("يمنا بـ 99,750 دينار عراقي" / "With us … IQD"); the number in `pink-text` on paper, yellow on pink at 24px+. Renders the market line only when `marketPrice` and a `checkedAt` within 7 days exist. |
-| `ConditionBulb` (new) | Bulb + word: `new` (full yellow, جديد / New), `like-new` (unlit `bulb-empty`, اخو الجديد / Like new), `used` (bottom half yellow, مستعمل / Used). Maps stock grades: sealed → new, A → like-new, B/C → used; never shown for X. Letter grades stay in the back office. |
+| Condition label | Four plain labels: New, Open box, Refurbished, Used (`Badge` outline; shown for items for sale that aren't new). The bulb belongs only to Bulbs (program revision v1). |
 | `Badge` (exists) | Tones: neutral, brand (pink), highlight (yellow), plus, business, club, success, warning, danger (status needs an icon). |
 | `PlanCard` | `radius-xl`; featured: 2px `plus` border, violet flag, pink primary button; others outline. |
-| `ProductCard` | Image on `surface-sunken`; badge top-start; 2-line name; `SouqPrice` or price; `ConditionBulb` for used and rental; full-width CTA (pink, or violet "Rent with The IDEA Plus"). |
+| `ProductCard` | Image on `surface-sunken`; badge top-start; 2-line name; `SouqPrice` or price (rental-only items: "Rent" with "Worth …" in small print); the condition label for used items; full-width CTA (pink, or violet "Rent with The IDEA Plus"). |
 
 ## 5. Assets and naming
 

@@ -179,6 +179,19 @@ export const ProductForm = ({
                 value,
               }))}
             />
+            <SelectField
+              defaultValue={String(product?.age_rating ?? "")}
+              hint={t("fields.ageRatingHint")}
+              label={t("fields.ageRating")}
+              name="ageRating"
+              options={[
+                { label: tCommon("none"), value: "" },
+                ...["3", "7", "12", "16", "18"].map((value) => ({
+                  label: `PEGI ${value}`,
+                  value,
+                })),
+              ]}
+            />
             <TextField
               defaultValue={product?.bulb_multiplier ?? ""}
               dir="ltr"

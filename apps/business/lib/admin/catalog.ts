@@ -26,8 +26,15 @@ const catalogImages = (max: number) =>
     .transform((values) => (values ?? []).map((v) => v.trim()).filter(Boolean))
     .pipe(z.array(z.string().refine(isCatalogImage)).max(max));
 
+/** PEGI age ratings; empty for none. */
+const AGE_RATINGS = [3, 7, 12, 16, 18] as const;
+
 export const productSchema = z
   .object({
+    ageRating: optionalInt(3, 18).refine(
+      (value) =>
+        value === null || (AGE_RATINGS as readonly number[]).includes(value)
+    ),
     /** Bulbs earned as a multiple of the rate (0.5 for consoles); empty for the category's. */
     bulbMultiplier: optionalDecimal(0).refine(
       (value) => value === null || value <= 5

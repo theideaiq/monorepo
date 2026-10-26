@@ -14,7 +14,7 @@ import { getTranslations } from "next-intl/server";
 import { imageUrl, type ProductCard as Product } from "@/lib/data";
 import { formatRating, type Rating } from "@/lib/reviews";
 import { CoverImage } from "./cover-image";
-import { ProductConditionBulb } from "./product-condition-bulb";
+import { ProductCondition } from "./product-condition";
 import { Stars } from "./stars";
 import { VariantChips } from "./store/variant-chips";
 
@@ -34,7 +34,7 @@ interface ProductCardProps {
 /**
  * A product tile linking to its page on this site: the image on a sunken
  * ground, badges top-start, a 2-line name, the versions it comes in, the
- * price ("from" across versions), the condition bulb for used items, and
+ * price ("from" across versions), the condition of used items, and
  * a full-width call to action (violet for rentals).
  */
 export const ProductCard = async ({
@@ -101,7 +101,12 @@ export const ProductCard = async ({
           </p>
         ) : null}
         {rental ? (
-          <p className="text-muted-foreground text-sm">{t("kind.rental")}</p>
+          <p className="grid text-sm">
+            <span className="font-medium">{t("rentOnly")}</span>
+            <span className="text-muted-foreground text-xs tabular-nums">
+              {t("price.worth", { price: formatPrice(product.price, locale) })}
+            </span>
+          </p>
         ) : (
           <p className="flex flex-wrap items-baseline gap-2">
             <span className="font-mono font-semibold tabular-nums">
@@ -125,7 +130,7 @@ export const ProductCard = async ({
         >
           {stockLabel(t, product.stock_count, locale)}
         </p>
-        <ProductConditionBulb locale={locale} product={product} />
+        <ProductCondition locale={locale} product={product} />
       </div>
       <span
         className={cn(

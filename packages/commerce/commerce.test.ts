@@ -1,14 +1,13 @@
 import { describe, expect, test } from "vitest";
 import {
   cartTotals,
-  customerCondition,
   deliveryFee,
   describeAttributes,
   discountPercent,
   governorates,
   localized,
   planName,
-  showsConditionBulb,
+  showsCondition,
   toCheckoutQuote,
 } from "./index";
 
@@ -114,19 +113,11 @@ describe("commerce helpers", () => {
     expect(new Set(governorates.map((g) => g.id)).size).toBe(19);
   });
 
-  test("maps stored conditions to the three condition bulbs", () => {
-    expect(customerCondition("new")).toBe("new");
-    expect(customerCondition("open_box")).toBe("like-new");
-    expect(customerCondition("refurbished")).toBe("like-new");
-    expect(customerCondition("used")).toBe("used");
-    expect(showsConditionBulb({ condition: "new", kind: "sale" })).toBe(false);
-    expect(showsConditionBulb({ condition: "new", kind: "rental" })).toBe(
-      false
-    );
-    expect(showsConditionBulb({ condition: "used", kind: "rental" })).toBe(
-      false
-    );
-    expect(showsConditionBulb({ condition: "used", kind: "sale" })).toBe(true);
+  test("shows the condition of items for sale that aren't new", () => {
+    expect(showsCondition({ condition: "new", kind: "sale" })).toBe(false);
+    expect(showsCondition({ condition: "used", kind: "rental" })).toBe(false);
+    expect(showsCondition({ condition: "open_box", kind: "sale" })).toBe(true);
+    expect(showsCondition({ condition: "used", kind: "sale" })).toBe(true);
   });
 });
 
