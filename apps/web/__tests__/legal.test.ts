@@ -1,7 +1,15 @@
+import { dirname } from "node:path";
 import ar from "@repo/internationalization/messages/ar.json";
 import en from "@repo/internationalization/messages/en.json";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { isLegalSlug, legalDocuments, readLegalDocument } from "@/lib/legal";
+
+// The documents are read from the app's folder (Next runs there); the
+// coverage run starts at the repository root.
+const APP_DIRECTORY = dirname(import.meta.dirname);
+beforeEach(() => {
+  vi.spyOn(process, "cwd").mockReturnValue(APP_DIRECTORY);
+});
 
 const LEGAL_LINK = /\]\(\/legal\/([\w-]+)\)/g;
 const BARE_NAME = /(?<!The )IDEA/;

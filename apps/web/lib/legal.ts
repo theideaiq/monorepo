@@ -28,11 +28,14 @@ export type LegalSlug = (typeof legalDocuments)[number]["slug"];
 export const isLegalSlug = (value: string): value is LegalSlug =>
   legalDocuments.some((document) => document.slug === value);
 
-const CONTENT_DIRECTORY = join(process.cwd(), "content", "legal");
-
 /** The document's Markdown in the given language (Arabic for other locales). */
 export const readLegalDocument = (slug: LegalSlug, locale: string) =>
   readFile(
-    join(CONTENT_DIRECTORY, `${slug}.${locale === "en" ? "en" : "ar"}.md`),
+    join(
+      process.cwd(),
+      "content",
+      "legal",
+      `${slug}.${locale === "en" ? "en" : "ar"}.md`
+    ),
     "utf8"
   );
