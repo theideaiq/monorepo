@@ -22,7 +22,7 @@ const body = z.object({
 const platforms = new Set<Platform>(["web", "ios", "android"]);
 
 /**
- * Only redirect back to the website (My Pass, where orders live), never to
+ * Only redirect back to the website (Your Pass, where orders live), never to
  * arbitrary sites.
  */
 const safeRedirect = (redirectUrl: string | undefined, orderId: string) => {

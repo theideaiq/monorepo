@@ -15,7 +15,6 @@ export {
 } from "./bot";
 export {
   type BulbBalance,
-  type BulbTier,
   createSupabaseData,
   type DroidData,
   type FaqEntry,

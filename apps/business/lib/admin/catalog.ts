@@ -5,6 +5,7 @@ import {
   checkbox,
   int,
   lines,
+  optionalDecimal,
   optionalInt,
   optionalText,
   optionalUuid,
@@ -27,6 +28,10 @@ const catalogImages = (max: number) =>
 
 export const productSchema = z
   .object({
+    /** Bulbs earned as a multiple of the rate (0.5 for consoles); empty for the category's. */
+    bulbMultiplier: optionalDecimal(0).refine(
+      (value) => value === null || value <= 5
+    ),
     categoryId: optionalUuid,
     compareAtPrice: optionalInt(0),
     condition: z.enum(Enums.product_condition),
@@ -61,9 +66,13 @@ export const planSchema = z
     amount: int(0),
     audience: z.enum(["business", "plus"]),
     billingInterval: z.enum(Enums.billing_interval),
+    /** The Plus plan's Bulbs rate in percent; empty for the store's. */
+    bulbRate: optionalDecimal(0).refine((rate) => rate === null || rate <= 50),
     description: optionalText(500),
     featuresAr: lines(20, 200),
     featuresEn: lines(20, 200),
+    /** Free delivery in zones that offer it to Plus plans. */
+    freeDelivery: checkbox,
     id: slug.max(64),
     isNew: checkbox,
     name: text(120),
@@ -81,6 +90,8 @@ export const planSchema = z
   })
   .transform((plan) => ({
     ...plan,
+    bulbRate: plan.audience === "plus" ? plan.bulbRate : null,
+    freeDelivery: plan.audience === "plus" && plan.freeDelivery,
     rentalSlots: plan.audience === "plus" ? plan.rentalSlots : null,
     tier: plan.audience === "plus" ? plan.tier : null,
   }));

@@ -9,7 +9,7 @@ import { scannedPass } from "@/lib/admin/pass-code";
 
 /** What the counter shows for a checked The IDEA Pass. */
 export interface CounterMember {
-  bulbs: { available: number; pending: number; tier: string } | null;
+  bulbs: { available: number; pending: number; rate: number } | null;
   memberNumber: number | null;
   memberSince: string | null;
   name: string | null;
@@ -91,7 +91,7 @@ export const lookupMember = staffAction(
       ? {
           available: Number(summary.available),
           pending: Number(summary.pending),
-          tier: summary.tier,
+          rate: Number(summary.rate),
         }
       : null;
     member.plus = plus.data

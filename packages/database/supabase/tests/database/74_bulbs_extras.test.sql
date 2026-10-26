@@ -74,13 +74,13 @@ insert into public.orders (id, user_id, status, subtotal, shipping_fee, total, s
 insert into public.order_items (order_id, product_id, name_ar, name_en, unit_price, quantity) values
   ('74000000-0000-0000-0000-0000000000b1', '74000000-0000-0000-0000-0000000000a1', 'كتاب', 'Book', 100000, 1);
 
-insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier)
-values ('plus-extras-test', 'Plus Test', 15000, 'month', 'plus', 1, 1);
+insert into public.plans (id, name, amount, billing_interval, audience, rental_slots, tier, bulb_rate)
+values ('plus-extras-test', 'Plus Test', 15000, 'month', 'plus', 1, 1, 4);
 insert into public.subscriptions (id, user_id, plan_id, status, provider, current_period_start, current_period_end)
 values ('74000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000007e2', 'plus-extras-test', 'active', 'wayl', now(), now() + interval '30 days');
 
 -- ── Plus payments ───────────────────────────────────────────────────────────
--- P is Glow (3%) and a Plus member (+1%): 4% of 15,000 IQD = 600 IQD = 6 Bulbs.
+-- P's plan earns 4%: 4% of 15,000 IQD = 600 IQD = 6 Bulbs.
 insert into public.payments (id, user_id, subscription_id, reference_id, provider, amount, status, paid_at)
 values ('74000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-0000000007e2',
   '74000000-0000-0000-0000-0000000000c1', 'extras-plus-1', 'wayl', 15000, 'paid', now());

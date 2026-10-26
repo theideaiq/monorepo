@@ -72,9 +72,8 @@ values ('plus-copies', 'Plus', 25000, 'month', 'plus', 2, 3);
 insert into public.subscriptions (user_id, plan_id, status, provider, current_period_start, current_period_end)
 values ('00000000-0000-0000-0000-0000000000e1', 'plus-copies', 'active', 'wayl', now(), now() + interval '30 days');
 
-update public.store_settings set
-  free_shipping_threshold = null,
-  cash_on_delivery_enabled = true;
+update public.store_settings set cash_on_delivery_enabled = true;
+update public.delivery_zones set free_from = null, plus_free_delivery = false;
 update public.delivery_zones set active = true, fee = 5000 where governorate = 'baghdad';
 
 -- A game sold new (three copies) and a record with a variant.

@@ -48,12 +48,9 @@ export interface JoinCheck {
   allowed: boolean;
   /** Whether the Telegram account is linked to The IDEA Pass. */
   linked: boolean;
-  /** The tier a `tier` room needs. */
-  needed: BulbTier | null;
+  /** open, pass (linked The IDEA Pass) or plus (and a live Plus membership). */
   rule: string;
 }
-
-export type BulbTier = "beam" | "blaze" | "glow" | "shine";
 
 /** A member's Bulbs: usable now, and still in the return window. */
 export interface BulbBalance {
@@ -64,7 +61,7 @@ export interface BulbBalance {
 export interface DroidData {
   /** A support request from someone who hasn't linked The IDEA Pass. */
   createRequest: (memberId: number, message: string) => Promise<void>;
-  /** A support ticket for a member (My Pass → Support); its number. */
+  /** A support ticket for a member (on Help); its number. */
   createTicket: (userId: string, message: string) => Promise<number>;
   getBulbs: (userId: string) => Promise<BulbBalance>;
   /** The chat, or null when the bot never registered it. */
@@ -212,7 +209,6 @@ export const createSupabaseData = (
       ? {
           allowed: row.allowed,
           linked: row.linked,
-          needed: row.needed,
           rule: row.rule,
         }
       : null;

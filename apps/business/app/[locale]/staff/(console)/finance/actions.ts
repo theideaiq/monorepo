@@ -142,48 +142,32 @@ export const saveFinancialSettings = staffAction(
   }
 );
 
-// ── Bulbs ───────────────────────────────────────────────────────────────────
-
-const tierFields = Object.fromEntries(
-  (["glow", "shine", "beam", "blaze"] as const).flatMap((tier) => [
-    [`${tier}Min`, int(0, 1_000_000_000)],
-    [`${tier}Rate`, decimalIn(0, 50)],
-    [`${tier}FreeDelivery`, optionalInt(0, 1_000_000_000)],
-  ])
-);
+// ── Money rules ─────────────────────────────────────────────────────────────
 
 /**
- * Bulbs rates: each tier's 12-month spend, cashback and free delivery (from
- * a subtotal; empty for none, 0 for always), the Plus bonus and the
+ * The money rules: the Bulbs rate for every Pass holder (Plus plans set
+ * their own), the price above which items earn half, the return window,
+ * the giveaway cap per order, the cash-on-delivery limit (empty for none),
+ * the price check's payment fee, delivery cost and margin floor, and the
  * category multipliers (fields named `multiplier:<category id>`).
  */
-export const saveBulbRates = staffAction(
+export const saveMoneyRules = staffAction(
   "finance",
-  z.object({ ...tierFields, plusBonus: decimalIn(0, 20) }).catchall(z.string()),
+  z
+    .object({
+      bulbHalfFrom: int(1, 1_000_000_000),
+      bulbRate: decimalIn(0, 50),
+      cashLimit: optionalInt(1, 1_000_000_000),
+      deliveryCost: int(0, 1_000_000),
+      maxGiveawayRate: decimalIn(0, 100),
+      minMarginRate: decimalIn(0, 100),
+      paymentFeeRate: decimalIn(0, 20),
+      returnDays: int(1, 60),
+    })
+    .catchall(z.string()),
   async ({ input, supabase }) => {
-    const values = input as Record<string, unknown>;
-    if (Number(values.glowMin) !== 0) {
-      // Glow is every member's tier.
-      throw new ActionFailure("invalid");
-    }
-    const updates = await Promise.all(
-      (["glow", "shine", "beam", "blaze"] as const).map((tier) =>
-        supabase
-          .from("bulb_tiers")
-          .update({
-            free_delivery_from: values[`${tier}FreeDelivery`] as number | null,
-            min_spend: Number(values[`${tier}Min`]),
-            rate: Number(values[`${tier}Rate`]),
-          })
-          .eq("tier", tier)
-          .select("tier")
-      )
-    );
-    for (const result of updates) {
-      affected(result);
-    }
     const multipliers: Record<string, number> = {};
-    for (const [key, value] of Object.entries(values)) {
+    for (const [key, value] of Object.entries(input)) {
       if (key.startsWith("multiplier:")) {
         const parsed = decimalIn(0, 5).safeParse(value);
         if (!parsed.success) {
@@ -193,9 +177,18 @@ export const saveBulbRates = staffAction(
       }
     }
     check(
-      await supabase.rpc("set_bulb_rates", {
+      await supabase.rpc("set_money_rules", {
         multipliers,
-        plus_bonus: Number(values.plusBonus),
+        rules: {
+          bulb_half_from: input.bulbHalfFrom,
+          bulb_rate: input.bulbRate,
+          cash_limit: input.cashLimit,
+          delivery_cost: input.deliveryCost,
+          max_giveaway_rate: input.maxGiveawayRate,
+          min_margin_rate: input.minMarginRate,
+          payment_fee_rate: input.paymentFeeRate,
+          return_days: input.returnDays,
+        },
       })
     );
     return success();

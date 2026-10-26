@@ -33,7 +33,7 @@ export const useTelegramAvailable = () =>
 export const telegramStartUrl = (
   locale: string,
   returnTo?: string | null,
-  /** Connecting from My Pass: link to this member, never sign in as another. */
+  /** Connecting from Your Pass: link to this member, never sign in as another. */
   link = false
 ) => {
   const url = new URL(`${env.NEXT_PUBLIC_API_URL}/auth/telegram/start`);

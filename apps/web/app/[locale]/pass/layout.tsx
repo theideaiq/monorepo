@@ -19,7 +19,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 /**
- * My Pass: the signed-in customer's own pages (orders, The IDEA Plus,
+ * Your Pass: the signed-in customer's own pages (orders, The IDEA Plus,
  * wishlist, Sell to us, events, submissions, support, settings). Requires a
  * session and a finished onboarding; the data is protected by RLS.
  */

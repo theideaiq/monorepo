@@ -10,12 +10,10 @@ import {
   HandCoinsIcon,
   LightbulbIcon,
   type LucideIcon,
-  SparklesIcon,
   TruckIcon,
 } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { env } from "@/env";
-import { type BulbTier, tierPerks } from "@/lib/bulbs";
 import { appLink } from "@/lib/links";
 import type { PassSession } from "@/lib/pass/session";
 import { LiveCard } from "./live-card";
@@ -78,16 +76,15 @@ const Perks = ({
 );
 
 /**
- * The top of My Pass: the live card (with the code that changes every 30
+ * The top of Your Pass: the live card (with the code that changes every 30
  * seconds), Google Wallet, the member's perks, their details, the
  * authenticator app, sign-out and, for staff, the back office.
  */
 export const PassCard = async ({ session }: PassCardProps) => {
-  const [locale, t, card, tBulbs] = await Promise.all([
+  const [locale, t, card] = await Promise.all([
     getLocale(),
     getTranslations("pass.home"),
     getTranslations("pass.card"),
-    getTranslations("app.bulbs"),
   ]);
   // Everyone reads their own rows (RLS); staff see a link to the back office.
   const [
@@ -95,7 +92,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
     { data: staff },
     { data: subscription },
     { data: bulbRows },
-    { data: tierRows },
+    { data: baghdad },
   ] = await Promise.all([
     session.supabase
       .from("profiles")
@@ -110,7 +107,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
     session.supabase
       .from("subscriptions")
       .select(
-        "status, plan:plans!inner (name, name_ar, rental_slots, audience)"
+        "status, plan:plans!inner (name, name_ar, rental_slots, audience, free_delivery)"
       )
       .eq("user_id", session.user.id)
       .eq("plan.audience", "plus")
@@ -118,21 +115,25 @@ export const PassCard = async ({ session }: PassCardProps) => {
       .limit(1)
       .maybeSingle(),
     session.supabase.rpc("my_bulbs"),
-    session.supabase.from("bulb_tiers").select("tier, free_delivery_from"),
+    session.supabase
+      .from("delivery_zones")
+      .select("free_from")
+      .eq("governorate", "baghdad")
+      .eq("active", true)
+      .maybeSingle(),
   ]);
   const name = profile?.full_name?.trim();
   const phone = session.user.phone ? formatPhone(session.user.phone) : null;
   const plan = subscription?.plan ?? null;
   const bulbs = bulbRows?.[0] ?? null;
-  const tier: BulbTier = bulbs?.tier ?? "glow";
-  const freeDeliveryFrom =
-    tierRows?.find((row) => row.tier === tier)?.free_delivery_from ?? null;
-  const deliveryPerk =
-    freeDeliveryFrom === null
-      ? card("perks.delivery")
-      : tBulbs(freeDeliveryFrom === 0 ? "freeDelivery" : "freeDeliveryFrom", {
-          amount: formatPrice(freeDeliveryFrom, locale),
-        });
+  let deliveryPerk = card("perks.delivery");
+  if (plan?.free_delivery) {
+    deliveryPerk = card("perks.freeDelivery");
+  } else if (baghdad?.free_from) {
+    deliveryPerk = card("perks.freeDeliveryFrom", {
+      amount: formatPrice(baghdad.free_from, locale),
+    });
+  }
 
   const perks: Perk[] = [
     plan
@@ -169,10 +170,6 @@ export const PassCard = async ({ session }: PassCardProps) => {
         }),
       }),
     },
-    ...tierPerks[tier].map((perk) => ({
-      icon: SparklesIcon,
-      text: tBulbs(`perks.${perk}`),
-    })),
   ];
 
   return (
@@ -189,8 +186,6 @@ export const PassCard = async ({ session }: PassCardProps) => {
             }
             name={name || t("noName")}
             plan={plan ? planName(plan, locale) : null}
-            tier={tier}
-            tierName={tBulbs(`tiers.${tier}.name`)}
           />
           <WalletButton />
         </div>

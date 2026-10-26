@@ -5,16 +5,13 @@
 insert into public.plans
   (id, name, description, amount, currency, billing_interval, audience, rental_slots, tier, features_ar, features_en, position)
 values
-  ('plus-essential', 'Plus Essential', 'One item at a time', 15000, 'IQD', 'month', 'plus', 1, 1,
-    '{"غرض واحد في كل مرة","توصيل داخل بغداد"}', '{"One item at a time","Delivery in Baghdad"}', 1),
-  ('plus-extra', 'Plus Extra', 'Two items at a time', 25000, 'IQD', 'month', 'plus', 2, 2,
-    '{"غرضان في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة"}', '{"Two items at a time","Free delivery","Early access to new releases"}', 2),
-  ('plus-premium', 'Plus Premium', 'Four items at a time', 40000, 'IQD', 'month', 'plus', 4, 3,
-    '{"أربعة أغراض في كل مرة","توصيل مجاني","حجز مبكر للإصدارات الجديدة","دعوات لفعاليات النادي"}',
-    '{"Four items at a time","Free delivery","Early access to new releases","Invitations to Club events"}', 3),
   ('business-monthly', 'The IDEA Business', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
     '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
+
+-- The Plus plans come from the migrations, switched off until Plus
+-- launches; locally they're on.
+update public.plans set active = true where audience = 'plus';
 
 insert into public.product_categories (id, slug, name_ar, name_en, position) values
   ('50000000-0000-0000-0000-000000000001', 'gaming', 'الألعاب', 'Gaming', 1),

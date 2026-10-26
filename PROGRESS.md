@@ -5,7 +5,18 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-26: program revision, step 1)
+## Current state (2026-10-26: program revision, step 2)
+
+- Money rules (migration `20261218000000_money_rules.sql`): flat Bulbs (3%
+  for everyone, Plus Glow 4%, Shine 5%, Blaze 6%; half on consoles,
+  laptops and items over 500,000 IQD; spend tiers gone, nobody lost
+  Bulbs); free Baghdad delivery over 150,000 IQD for everyone and on any
+  order for Plus Shine and Blaze; a 14-day return window for Bulbs and
+  affiliate commission; at most 20% of an order given away; no cash on
+  delivery over 500,000 IQD; Plus plans Glow 14,750 (1 item), Shine
+  22,750 (2), Blaze 39,750 (4), seeded inactive; Telegram rooms open,
+  Pass or Plus; the checkout shows the server's price (`checkout_quote`);
+  Finance → Prices checks every copy against a 20% margin floor.
 
 - Products: The IDEA Store (`/`, `/store`), The IDEA Plus (`/plus`), The
   IDEA Club (`/club`) and The IDEA Pass (`/pass`), plus The IDEA Business
@@ -42,6 +53,15 @@ decisions with a date.
       and nightly backup workflows; platform runbooks.
 
 ## Launch checklist (needs an owner with access)
+
+- [ ] **Costs:** enter the cost of every copy (back office → the product →
+      copies; all 684 are empty), then fix what Finance → Prices lists.
+- [ ] **Money rules:** set the real Wayl fee rate and our delivery cost on
+      Finance → Bulbs (3% and 5,000 IQD are placeholders).
+- [ ] **Plus launch:** turn on the Glow, Shine and Blaze plans (Catalog →
+      Plans) when The IDEA Plus opens.
+- [ ] **Returns policy:** the refund policy (`apps/web/content/legal`)
+      still says 7 days; it becomes 14 days with the policies in step 4.
 
 - [ ] **Delivery with Boxy** (ARCHITECTURE_AND_INTEGRATIONS.md 4.5): Boxy
       key and secret on the `api` project (sandbox first), the pick-up
@@ -193,6 +213,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-26: Program revision v1, step 2 (money rules): Bulbs are a flat
+  rate (3%; Plus Glow 4%, Shine 5%, Blaze 6%), half on consoles, laptops
+  and anything over 500,000 IQD; spend tiers and the Plus +1% bonus are
+  gone. Free delivery is per zone (Baghdad over 150,000 IQD; Plus Shine
+  and Blaze on any Baghdad order); other governorates keep their fees.
+  The return window is 14 days. At most 20% of an order is given away;
+  orders over 500,000 IQD are paid online or at pickup. Prices must keep
+  a 20% margin after the payment fee, delivery and the largest discount.
 
 - 2026-10-25: Catalogue reshape (variants, part 3; migration
   `20261216000000`): 604 products became 542 titles, with formats,

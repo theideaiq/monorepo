@@ -77,13 +77,13 @@ insert into public.products (id, slug, name_ar, name_en, price, stock_count, sta
 
 update public.store_settings set
   shipping_fee = 5000,
-  free_shipping_threshold = 300000,
   pickup_enabled = false,
   pickup_address_ar = null,
   pickup_address_en = null,
   cash_on_delivery_enabled = true;
 
-update public.delivery_zones set active = true, fee = 5000 where governorate = 'baghdad';
+update public.delivery_zones set free_from = null, plus_free_delivery = false;
+update public.delivery_zones set active = true, fee = 5000, free_from = 300000 where governorate = 'baghdad';
 
 -- ── Zones: who reads and edits them ─────────────────────────────────────────
 
@@ -176,13 +176,13 @@ select results_eq(
 insert into public.cart_items (product_id, quantity) values ('60000000-0000-0000-0000-000000000001', 3);
 select lives_ok(
   $$ select public.create_order(
-       '{"full_name":"U","phone":"+9647700000201","governorate":"basra","address":"Ashar"}'
+       '{"full_name":"U","phone":"+9647700000201","governorate":"baghdad","address":"Karrada"}'
      ) $$,
   'a large order'
 );
 select is(
   (select shipping_fee from public.orders order by number desc limit 1), 0::bigint,
-  'the free-delivery threshold still applies to delivery'
+  'the zone''s free-delivery threshold applies'
 );
 
 insert into public.cart_items (product_id, quantity) values ('60000000-0000-0000-0000-000000000001', 1);

@@ -26,7 +26,6 @@ export const ChatForm = ({
 }) => {
   const t = useTranslations("admin.telegram.chats");
   const tCommon = useTranslations("admin.common");
-  const tTier = useTranslations("app.bulbs.tiers");
 
   return (
     <div className="flex flex-wrap items-end gap-3 rounded-md border p-3">
@@ -77,25 +76,11 @@ export const ChatForm = ({
           disabled={disabled}
           label={t("joinRule")}
           name="joinRule"
-          options={(["open", "pass", "tier"] as const).map((value) => ({
+          options={(["open", "pass", "plus"] as const).map((value) => ({
             label: t(`joinRules.${value}`),
             value,
           }))}
           wrapperClassName="w-44"
-        />
-        <SelectField
-          defaultValue={chat?.join_tier ?? ""}
-          disabled={disabled}
-          label={t("joinTier")}
-          name="joinTier"
-          options={[
-            { label: t("joinTierNone"), value: "" },
-            ...(["glow", "shine", "beam", "blaze"] as const).map((value) => ({
-              label: tTier(`${value}.name`),
-              value,
-            })),
-          ]}
-          wrapperClassName="w-36"
         />
         {(["news", "events", "arrivals"] as const).map((kind) => (
           <TextField

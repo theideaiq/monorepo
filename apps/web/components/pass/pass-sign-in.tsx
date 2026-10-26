@@ -8,7 +8,7 @@ import { useLocale } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
 
 interface PassSignInProps {
-  /** An allowed return_to (a path on this site or a URL), or null for My Pass. */
+  /** An allowed return_to (a path on this site or a URL), or null for Your Pass. */
   readonly returnTo: string | null;
 }
 

@@ -15,8 +15,8 @@ export const queryKeys = {
   affiliateReferrer: (userId: string) =>
     ["affiliate-referrer", userId] as const,
   bulbEntries: (userId: string) => ["bulbs", userId, "entries"] as const,
+  bulbRules: ["bulb-rules"] as const,
   bulbs: (userId: string) => ["bulbs", userId] as const,
-  bulbTiers: ["bulb-tiers"] as const,
   calendarToken: (userId: string) => ["calendar-token", userId] as const,
   cart: (userId: string) => ["cart", userId] as const,
   categories: (kind: string) => ["categories", kind] as const,

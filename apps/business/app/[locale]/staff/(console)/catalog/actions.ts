@@ -24,6 +24,7 @@ export const saveProduct = staffAction(
   productSchema,
   async ({ input, supabase }) => {
     const row = {
+      bulb_multiplier: input.bulbMultiplier,
       category_id: input.categoryId,
       compare_at_price: input.compareAtPrice,
       condition: input.condition,
@@ -188,7 +189,6 @@ export const saveStoreSettings = staffAction(
   "catalog",
   z.object({
     cashOnDelivery: checkbox,
-    freeShippingThreshold: optionalInt(0),
     pickupAddressAr: optionalText(500),
     pickupAddressEn: optionalText(500),
     pickupEnabled: checkbox,
@@ -202,7 +202,6 @@ export const saveStoreSettings = staffAction(
         .from("store_settings")
         .update({
           cash_on_delivery_enabled: input.cashOnDelivery,
-          free_shipping_threshold: input.freeShippingThreshold,
           pickup_address_ar: input.pickupAddressAr,
           pickup_address_en: input.pickupAddressEn,
           pickup_enabled: input.pickupEnabled,
@@ -226,9 +225,11 @@ export const savePlan = staffAction(
       amount: input.amount,
       audience: input.audience,
       billing_interval: input.billingInterval,
+      bulb_rate: input.bulbRate,
       description: input.description,
       features_ar: input.featuresAr,
       features_en: input.featuresEn,
+      free_delivery: input.freeDelivery,
       name: input.name,
       name_ar: input.nameAr,
       position: input.position,
@@ -256,6 +257,7 @@ export const saveDeliveryZone = staffAction(
     .object({
       active: checkbox,
       fee: int(0),
+      freeFrom: optionalInt(0),
       governorate: optionalText(64).refine(
         (value) => value === null || GOVERNORATE_ID.test(value)
       ),
@@ -264,6 +266,7 @@ export const saveDeliveryZone = staffAction(
       minDays: int(0, 60),
       nameAr: text(120),
       nameEn: text(120),
+      plusFreeDelivery: checkbox,
       position: int(0),
     })
     .refine((zone) => zone.maxDays >= zone.minDays, { path: ["maxDays"] }),
@@ -271,11 +274,13 @@ export const saveDeliveryZone = staffAction(
     const row = {
       active: input.active,
       fee: input.fee,
+      free_from: input.freeFrom,
       governorate: input.governorate,
       max_days: input.maxDays,
       min_days: input.minDays,
       name_ar: input.nameAr,
       name_en: input.nameEn,
+      plus_free_delivery: input.plusFreeDelivery,
       position: input.position,
     };
     check(

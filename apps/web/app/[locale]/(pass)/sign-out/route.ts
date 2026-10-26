@@ -15,7 +15,7 @@ const OWN_SITES = new Set(["same-origin", "same-site"]);
  * cookie, so every site) and goes on to `return_to` (a path on this site
  * or an allowed host), else to the sign-in. Links from other sites can't
  * sign anyone out: without a same-site `Sec-Fetch-Site` header the visitor
- * lands on My Pass, which has its own sign-out button.
+ * lands on Your Pass, which has its own sign-out button.
  */
 export const GET = async (request: NextRequest, { params }: Context) => {
   const { locale } = await params;

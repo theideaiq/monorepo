@@ -100,6 +100,16 @@ export const PlanForm = ({ disabled = false, plan }: PlanFormProps) => {
             ) : null}
             {audience === "plus" ? (
               <TextField
+                defaultValue={plan?.bulb_rate ?? ""}
+                dir="ltr"
+                hint={t("bulbRateHint")}
+                inputMode="decimal"
+                label={t("bulbRate")}
+                name="bulbRate"
+              />
+            ) : null}
+            {audience === "plus" ? (
+              <TextField
                 defaultValue={plan?.tier ?? ""}
                 dir="ltr"
                 hint={t("tierHint")}
@@ -143,6 +153,14 @@ export const PlanForm = ({ disabled = false, plan }: PlanFormProps) => {
               rows={6}
             />
           </FieldGrid>
+          {audience === "plus" ? (
+            <CheckboxField
+              defaultChecked={plan?.free_delivery ?? false}
+              hint={t("freeDeliveryHint")}
+              label={t("freeDelivery")}
+              name="freeDelivery"
+            />
+          ) : null}
           <CheckboxField
             defaultChecked={plan?.active ?? true}
             hint={t("activeHint")}

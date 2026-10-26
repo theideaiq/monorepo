@@ -210,7 +210,7 @@
       },
       "member": {
         "guest": "Earn Bulbs on every order with The IDEA Pass",
-        "bulbs": "{available} Bulbs · {tier}",
+        "bulbs": "{available} Bulbs",
         "orders": "Orders on the way: {count}"
       },
       "featured": {
@@ -897,7 +897,7 @@
       "subtotal": "Subtotal",
       "shipping": "Delivery",
       "total": "Total",
-      "freeShippingHint": "Add {amount} more for free delivery.",
+      "freeShippingHint": "Add {amount} more for free delivery in Baghdad.",
       "checkout": "Checkout",
       "unavailable": "No longer available. Remove it to continue.",
       "notEnoughStock": "Only {count} available. Lower the quantity to continue.",
@@ -990,7 +990,6 @@
         "use": "Use my Bulbs on this order",
         "using": "Using {bulbs} Bulbs: {amount} off"
       },
-      "tierDelivery": "Free delivery with your tier.",
       "affiliate": {
         "title": "Have a code?",
         "description": "A creator's code takes 5% off.",
@@ -998,7 +997,10 @@
         "label": "Affiliate code",
         "apply": "Apply",
         "invalid": "That code isn't active."
-      }
+      },
+      "planDelivery": "Free delivery with your Plus plan.",
+      "freeDeliveryNudge": "Add {amount} more for free delivery.",
+      "bulbsToEarn": "You'll earn {bulbs} Bulbs once it's delivered."
     },
     "orders": {
       "title": "Orders",
@@ -1571,27 +1573,16 @@
       "available": "Bulbs you can use",
       "worth": "Worth {amount}",
       "pending": "{bulbs} more on the way (after the return window)",
-      "rate": "{rate}% back in Bulbs",
-      "progressLabel": "Progress to the next tier",
-      "toNext": "Spend {amount} more to reach {tier}.",
-      "topTier": "You're at the top tier.",
-      "spend": "Spent in the last 12 months: {amount}",
-      "tiersTitle": "Tiers",
-      "from": "From {amount} a year",
-      "everyone": "Every member",
+      "rate": "You earn {rate}% back in Bulbs",
+      "everyone": "Every Pass holder",
       "cashback": "{rate}% back in Bulbs",
-      "perks": {
-        "club": "The members-only Club room",
-        "priority": "First in line for events and rare items",
-        "support": "Quick-reply support"
-      },
       "rules": {
         "value": "1 Bulb is worth 100 IQD.",
-        "plus": "The IDEA Plus members earn 1% more on every tier.",
-        "pending": "Bulbs from an order are usable 7 days after delivery; a cancelled or refunded order takes them back.",
+        "pending": "Bulbs from an order are usable {days} days after delivery (the return window); a cancelled or refunded order takes them back.",
         "tradeIn": "Sell to us for store credit and it's paid in Bulbs, with 20% more than the cash offer.",
         "expiry": "Bulbs don't expire while you're active; after 12 months without any activity they do, and we remind you a month before.",
-        "spend": "Spend Bulbs at checkout: they pay up to the whole order, delivery included. A cancelled order gives them back."
+        "spend": "Spend Bulbs at checkout: they pay up to the whole order, delivery included. A cancelled order gives them back.",
+        "half": "Consoles, laptops and items over {amount} earn half the rate."
       },
       "historyTitle": "History",
       "empty": "No Bulbs yet. Your first order earns cashback and a 20-Bulb welcome bonus.",
@@ -1612,22 +1603,7 @@
         "invite": "Invite bonus",
         "telegram": "Telegram bonus"
       },
-      "tiers": {
-        "glow": {
-          "name": "Glow"
-        },
-        "shine": {
-          "name": "Shine"
-        },
-        "beam": {
-          "name": "Beam"
-        },
-        "blaze": {
-          "name": "Blaze"
-        }
-      },
-      "freeDelivery": "Free delivery on every order",
-      "freeDeliveryFrom": "Free delivery from {amount}"
+      "earnTitle": "How you earn"
     },
     "friends": {
       "title": "Invite friends",
@@ -2384,7 +2360,9 @@
         "rentalTierHint": "Members on a lower The IDEA Plus plan can't rent this item.",
         "anyPlan": "Any The IDEA Plus plan",
         "tierOption": "Tier {tier}: {names}",
-        "unknownTier": "No plan at this tier"
+        "unknownTier": "No plan at this tier",
+        "bulbMultiplier": "Bulbs multiplier",
+        "bulbMultiplierHint": "0.5 earns half the rate (consoles). Empty for the category's."
       },
       "variants": {
         "title": "Variants",
@@ -2412,8 +2390,6 @@
         "description": "Applied to every new order.",
         "shippingFee": "Delivery fee (IQD)",
         "shippingFeeHint": "Shown in the cart before the customer chooses a governorate. Orders use the zone's fee.",
-        "threshold": "Free delivery from (IQD)",
-        "thresholdHint": "Orders with at least this subtotal ship free. Empty: never free.",
         "cashOnDelivery": "Offer cash payment",
         "cashOnDeliveryHint": "Cash on delivery, and pay at pickup. Not third-party checkout, so it is offered in the iOS and Android apps too.",
         "pickup": {
@@ -2427,7 +2403,7 @@
         },
         "zones": {
           "title": "Delivery zones",
-          "description": "Each zone has its own fee. The free-delivery threshold applies to all of them; inactive zones aren't offered at checkout.",
+          "description": "Each zone has its own fee and its own free delivery: from a subtotal for everyone, and on any order for Plus plans with free delivery. Inactive zones aren't offered at checkout.",
           "new": "New zone",
           "fee": "Fee (IQD)",
           "minDays": "From (days)",
@@ -2435,7 +2411,9 @@
           "governorate": "Governorate id",
           "governorateHint": "For example baghdad. Empty for an area that isn't a whole governorate.",
           "active": "Offered",
-          "deleteDescription": "Past orders keep their fee. To stop offering a zone for now, untick Offered instead."
+          "deleteDescription": "Past orders keep their fee. To stop offering a zone for now, untick Offered instead.",
+          "freeFrom": "Free from (IQD)",
+          "plusFree": "Free for Plus plans with free delivery"
         }
       },
       "plans": {
@@ -2468,7 +2446,11 @@
         "inactive": "Hidden",
         "activeHint": "Unavailable plans are hidden from new customers; current subscribers keep them.",
         "tier": "Tier",
-        "tierHint": "1 to 10; higher plans unlock items that need a higher tier. Required for The IDEA Plus."
+        "tierHint": "1 to 10; higher plans unlock items that need a higher tier. Required for The IDEA Plus.",
+        "bulbRate": "Bulbs back (%)",
+        "bulbRateHint": "What members on this plan earn on purchases. Empty for the store's rate.",
+        "freeDelivery": "Free Store delivery",
+        "freeDeliveryHint": "In zones that deliver free to Plus plans (Baghdad), on any order."
       },
       "ratings": {
         "title": "Customer rating",
@@ -2871,12 +2853,11 @@
         "title": "Bulbs",
         "available": "Usable",
         "pending": "Pending",
-        "tier": "Tier",
-        "spend": "Spent in 12 months",
         "amount": "Bulbs to add or take away",
         "amountHint": "Negative to take away, e.g. -50.",
         "reason": "Reason",
-        "adjust": "Adjust Bulbs"
+        "adjust": "Adjust Bulbs",
+        "rate": "Rate"
       },
       "support": {
         "title": "Support tickets",
@@ -2896,7 +2877,8 @@
         "accounts": "Chart of accounts",
         "payments": "Payments",
         "settings": "Settings",
-        "bulbs": "Bulbs"
+        "bulbs": "Bulbs",
+        "prices": "Prices"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -3004,18 +2986,41 @@
         "available": "Usable Bulbs held",
         "pending": "Pending Bulbs",
         "value": "What members hold",
-        "valueHint": "Usable and pending Bulbs at 100 IQD each.",
-        "rates": "Rates",
-        "ratesHint": "The 12-month spend that reaches each tier and its cashback, in percent. Changes apply to orders delivered from now on.",
-        "minSpend": "{tier}: from (IQD a year)",
-        "rate": "{tier}: cashback (%)",
-        "glowHint": "Every member starts at this tier.",
-        "plusBonus": "The IDEA Plus bonus (percentage points)",
-        "plusBonusHint": "Added to the tier's cashback for Plus members.",
+        "valueHint": "Usable and pending Bulbs at 100 IQD each."
+      },
+      "rules": {
+        "title": "Money rules",
+        "hint": "Changes apply to orders placed or delivered from now on. Plus plans set their own Bulbs rate and free delivery in Catalog → Plans; zones set when delivery is free in Catalog → Settings.",
+        "bulbRate": "Bulbs back for every Pass holder (%)",
+        "bulbRateHint": "Plus members earn their plan's rate instead.",
+        "bulbHalfFrom": "Half rate above (IQD)",
+        "bulbHalfFromHint": "Items priced above this earn half the rate.",
+        "returnDays": "Return window (days)",
+        "returnDaysHint": "Order and invite Bulbs and affiliate commissions wait this long after delivery.",
+        "maxGiveawayRate": "Most an order gives away (%)",
+        "maxGiveawayRateHint": "Discount, free delivery, affiliate commission and Bulbs together, as a share of the subtotal. The discount shrinks first, then the Bulbs.",
+        "cashLimit": "Cash on delivery up to (IQD)",
+        "cashLimitHint": "Larger orders are paid online or at pickup. Empty for no limit.",
+        "priceCheck": "Price check",
+        "priceCheckHint": "A price passes when it leaves at least the margin after the copy's cost, the payment fee, one delivery and the most an order gives away.",
+        "paymentFeeRate": "Online payment fee (%)",
+        "deliveryCost": "What a delivery costs us (IQD)",
+        "minMarginRate": "Margin floor (%)",
         "multipliers": "Category multipliers",
-        "multipliersHint": "1 earns the full rate, 0.5 half (for low-margin items like laptops), 0 nothing.",
-        "freeDelivery": "{tier}: free delivery from (IQD)",
-        "freeDeliveryHint": "Empty for none, 0 for every order."
+        "multipliersHint": "1 earns the full rate, 0.5 half (laptops), 0 nothing. A product can set its own (consoles earn half)."
+      },
+      "prices": {
+        "description": "Copies for sale with no cost, or whose price leaves less than the margin floor after the cost, the payment fee, a delivery and the most an order gives away. Worst first; enter costs on each product's copies.",
+        "summary": "{below} below the floor, {missing} without a cost",
+        "empty": "Every copy for sale has a cost and passes the floor.",
+        "product": "Product",
+        "problem": "Check",
+        "price": "Price",
+        "cost": "Cost",
+        "margin": "Left after costs",
+        "floor": "Floor",
+        "noCost": "No cost",
+        "belowFloor": "Below the floor"
       }
     },
     "editorial": {
@@ -3184,7 +3189,7 @@
         "reopen": "Reopen"
       },
       "chats": {
-        "description": "Groups and channels The IDEA Droid is an admin of. With join requests on in Telegram, Droid lets people in by each chat's rule (anyone, members who linked The IDEA Pass, or a Bulbs tier and up) and tells the others how to qualify. It also records who joins and sends new channel posts to newsletter subscribers. Droid can also post The IDEA Club's news, upcoming events and new arrivals to a forum topic of each chat (the topic ID is the number at the end of a link to a message in it).",
+        "description": "Groups and channels The IDEA Droid is an admin of. With join requests on in Telegram, Droid lets people in by each chat's rule (anyone, members who linked The IDEA Pass, or The IDEA Plus members) and tells the others how to qualify. It also records who joins and sends new channel posts to newsletter subscribers. Droid can also post The IDEA Club's news, upcoming events and new arrivals to a forum topic of each chat (the topic ID is the number at the end of a link to a message in it).",
         "empty": "No groups yet. Add the bot to a group as an administrator, then add the group here.",
         "new": "Add a group",
         "id": "Chat ID",
@@ -3195,10 +3200,8 @@
         "joinRules": {
           "open": "Anyone",
           "pass": "The IDEA Pass members",
-          "tier": "From a Bulbs tier"
+          "plus": "The IDEA Plus members"
         },
-        "joinTier": "Tier",
-        "joinTierNone": "—",
         "topics": {
           "news": "News topic",
           "events": "Events topic",
@@ -3744,7 +3747,9 @@
         "delivery": "Every order and delivery, tracked here",
         "events": "Events and meetups, RSVP in a tap",
         "sell": "Sell or trade in what you no longer use",
-        "bulbs": "{bulbs} Bulbs, {rate}% back on every order"
+        "bulbs": "{bulbs} Bulbs, {rate}% back on every order",
+        "freeDelivery": "Free Store delivery in Baghdad on every order",
+        "freeDeliveryFrom": "Free delivery in Baghdad from {amount}"
       }
     },
     "signOut": {

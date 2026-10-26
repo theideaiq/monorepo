@@ -27,7 +27,7 @@ nextConfig.images = {
 };
 
 nextConfig.headers = async () => [
-  // The IDEA Pass and My Pass: never indexed.
+  // The IDEA Pass and Your Pass: never indexed.
   ...[
     "mfa",
     "pass/:path*",

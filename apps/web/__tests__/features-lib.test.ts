@@ -127,7 +127,7 @@ describe("notifications", () => {
 
   test("only follows paths on this site", () => {
     expect(notificationHref("/pass/orders/o1")).toBe("/pass/orders/o1");
-    // Links stored before My Pass moved under /pass.
+    // Links stored before Your Pass moved under /pass.
     expect(notificationHref("/orders/o1")).toBe("/pass/orders/o1");
     expect(notificationHref("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
     expect(notificationHref("/sell")).toBe("/pass/orders#sell");

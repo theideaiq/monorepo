@@ -21,7 +21,7 @@ import { requireUserId, unwrap } from "@/lib/queries";
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
- * My Pass → Settings: the member's birthday, for 25 Bulbs each year on the
+ * Your Pass → Settings: the member's birthday, for 25 Bulbs each year on the
  * day. Set once; support corrects it (the database refuses a change).
  */
 export const BirthdayCard = () => {
