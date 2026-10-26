@@ -1,4 +1,6 @@
-# The IDEA — Design System v1.0 (implementation spec)
+# The IDEA — Design System v1.1 (implementation spec)
+
+v1.1 (26 October 2026): product names and accents follow the Program Revision (Store, Plus, Club, Pass, Business); condition meters replace condition bulbs; the bulb icon is reserved for Bulbs; Academy, Launcher and Suite accents are gone.
 
 The engineering companion to `BRAND_GUIDELINES.md`: tokens, how they map onto `theideaiq/monorepo`, the components to build or restyle, and the checks every screen must pass. `tokens.json` is the source of truth; `tokens.css` holds the same values as CSS variables.
 
@@ -33,11 +35,11 @@ The engineering companion to `BRAND_GUIDELINES.md`: tokens, how they map onto `t
 | `border` | `#E4DFD0` | `#2C2D35` | Decorative dividers |
 | `border-strong` | `#8A8C95` | `#6B6D78` | Control borders (3:1+) |
 | `focus-ring` | `#0F1014` | `#F4CF08` | Focus outline |
-| `plus` / `academy` / `suite` | `#5B3BE8` / `#0B7A6E` / `#1F4FD6` | `#A99BFF` / `#4FD1C0` / `#7FA2FF` | Product accents; text `on-accent` |
-| `club` / `launcher` | `#FF6A2B` / `#7BC43A` | `#FF7A40` / `#9BE15D` | Product accents (fill only); text `on-accent-warm` |
-| `on-accent` | `#FFFFFF` | `#0F1014` | Text on plus, academy, suite |
-| `on-accent-warm` | `#0F1014` | `#0F1014` | Text on club, launcher |
-| `bulb-empty` | `#D9DCE6` | `#3A3C46` | Unlit part of condition bulbs |
+| `plus` / `business` | `#5B3BE8` / `#1F4FD6` | `#A99BFF` / `#7FA2FF` | The IDEA Plus and The IDEA Business accents (business is also the info colour); text `on-accent` |
+| `club` | `#FF6A2B` | `#FF7A40` | The IDEA Club accent (fill only); text `on-accent-warm` |
+| `on-accent` | `#FFFFFF` | `#0F1014` | Text on plus and business |
+| `on-accent-warm` | `#0F1014` | `#0F1014` | Text on club |
+| `meter-empty` | `#D9DCE6` | `#3A3C46` | Empty steps of the condition meter |
 | `success` | `#127A4B` | `#4ADE9A` | With icon and word |
 | `warning` | `#9A6700` | `#F5B83D` | With icon and word |
 | `danger` | `#B3261E` | `#FFB4A9` | With alert icon and word (similar lightness to pink) |
@@ -92,9 +94,9 @@ On phones scale `display-xl` to 44/48 and `display` to 36/42. Arabic never below
 | `--success` | `#127A4B` | `#4ADE9A` | green |
 | `--brand` / `--brand-foreground` | `#F4CF08` / `#0F1014` | same | unchanged |
 | `--sidebar-primary` / `-foreground` | `#D81B60` / `#FFFFFF` | same | pink |
-| `--chart-1…5` | pink, yellow, violet, teal, cobalt | dark-theme equivalents | various |
+| `--chart-1…5` | pink, yellow, violet, orange, cobalt | dark-theme equivalents | various |
 
-Add every other token from `tokens.css` and expose them in `@theme inline` as `--color-*` (`bg-idea-pink`, `text-pink-text`, `bg-surface-sunken`, `bg-plus` …).
+Add every other token from `tokens.css` and expose them in `@theme inline` as `--color-*` (`bg-idea-pink`, `text-pink-text`, `bg-surface-sunken`, `bg-plus`, `bg-business` …). Remove `--academy`, `--launcher` and `--suite` (renamed `--business`) and `--bulb-empty` (renamed `--meter-empty`).
 
 Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/font/google` (subsets `latin` and `arabic`, weights 400, 500, 600, 700) as the first `--font-sans` family; keep Cairo as the Arabic fallback; keep Geist Mono. (Poppins, the previous Latin font, was removed on 2026-10-25.)
 
@@ -107,28 +109,33 @@ Fonts (`packages/design-system/lib/fonts.ts`): load **Readex Pro** with `next/fo
 | `Highlight` (new) | Yellow swipe with dark text on paper and dark; inside pink grounds the words turn yellow, no swipe. One per headline. |
 | `BulbKicker` (new) | Small bulb (20–28px) centred above a headline: yellow on pink and dark, pink on paper and yellow. |
 | `PinkBand` (new) | Full-width pink band, yellow bulb kicker, white headline with one yellow Highlight, yellow `brand` button. Once per page. |
-| `NameTile` (new) | Circle (or `shape="square"` at 22%) with one Readex Pro 700 word: `public` = white on pink; `internal` = pink on yellow; no word = yellow bulb on pink. Sizes 32–128. |
+| `NameTile` | Circle (or `shape="square"` at 22%) with one Readex Pro 700 word: `public` = white on pink (Club, Plus); `internal` = pink on yellow (Staff); no word = yellow bulb on pink. Sizes 32–128. The Droid uses his own face, not a tile. |
 | `SouqPrice` (new) | Market line small and struck ("بالسوگ بـ 150,000" / "In the market"), then ours large and bold ("يمنا بـ 99,750 دينار عراقي" / "With us … IQD"); the number in `pink-text` on paper, yellow on pink at 24px+. Renders the market line only when `marketPrice` and a `checkedAt` within 7 days exist. |
-| `ConditionBulb` (new) | Bulb + word: `new` (full yellow, جديد / New), `like-new` (unlit `bulb-empty`, اخو الجديد / Like new), `used` (bottom half yellow, مستعمل / Used). Maps stock grades: sealed → new, A → like-new, B/C → used; never shown for X. Letter grades stay in the back office. |
-| `Badge` (exists) | Tones: neutral, brand (pink), highlight (yellow), plus, academy, suite, club, launcher, success, warning, danger (status needs an icon). |
-| `PlanCard` | `radius-xl`; featured: 2px `plus` border, violet flag, pink primary button; others outline. |
-| `ProductCard` | Image on `surface-sunken`; badge top-start; 2-line name; `SouqPrice` or price; `ConditionBulb` for used and rental; full-width CTA (pink, or violet "Rent with The IDEA Plus"). |
+| `ConditionLabel` (replaces `ConditionBulb`) | A four-step meter (`logos/condition-*.svg` shape: bars rising left to right, filled steps in `idea-pink`, empty in `meter-empty`) + the word, as a pill with `border-strong`: `new` 4/4 (جديد / New), `open_box` 3/4 (اخو الجديد / Open box), `refurbished` 2/4 (مجدّد / Refurbished), `used` 1/4 (مستعمل / Used). Maps the stored `stock_items.condition` one to one (open box and refurbished are no longer merged). Not shown on rentals; never a bulb icon. The meter does not mirror in RTL. |
+| `BulbsAmount` (new) | The yellow bulb icon + a number + "Bulbs" (with the IQD value in `ink-muted` where useful: "120 Bulbs · 12,000 IQD"). The only place the bulb icon appears in the product UI. |
+| `PlanMark` (new) | "Plus Glow", "Plus Shine" or "Plus Blaze" in `plus` with the item count after a middle dot ("Plus Shine · 2 items at a time"). Used on plan cards, the Pass card badge and product rental buttons. |
+| `Badge` (exists) | Tones: neutral, brand (pink), highlight (yellow), plus, club, business, success, warning, danger (status needs an icon). Remove academy, suite and launcher. |
+| `PlanCard` | `radius-xl`; `PlanMark` as the title, price per month, the plan's perks and Bulbs rate; Plus Shine is the featured plan (2px `plus` border, violet flag "Most chosen", pink primary button); others outline. |
+| `ProductCard` | Image on `surface-sunken`; badge top-start; 2-line name; `SouqPrice` or price; `ConditionLabel` for copies for sale; age rating for games; full-width CTA: pink "Buy", or for rental-only items "Rent" with "worth …" in small print. |
+| `PassCard` (exists) | Pink for everyone with the yellow bulb; badges for the Plus plan (`PlanMark`), Student and Staff; Bulbs balance via `BulbsAmount`. No tier colours. |
+| `TopBar` and `TabBar` | Top bar: logo, search, Saved (heart, with count), Cart (with count), Pass on desktop; hidden on sign-in and checkout. Phone tabs: Store, Plus, Club, Pass. |
 
 ## 5. Assets and naming
 
 - Favicon, app icons, Capacitor splash: `logos/app-icon.svg` (yellow bulb on pink). Splash: pink background, yellow bulb centred.
 - `theme-color`: `#D81B60`.
-- Social avatar: `logos/avatar-the-idea.svg`. Name tiles: `logos/tile-*.svg`.
+- Social avatar and Telegram channel: `logos/avatar-the-idea.svg`. Name tiles: `logos/tile-club.svg`, `tile-plus.svg`, `tile-staff.svg`. The Droid: `logos/droid-avatar.png` (bot profile photo) and `droid-hero.png`.
 - Email templates (`packages/email`, Supabase auth templates): pink header with `lockup-on-pink.svg`, paper body, pink button.
 - Open Graph template: pink ground, yellow bulb kicker, white title with one yellow word.
-- Community names in copy and messages files: The IDEA Club, The IDEA Post, The IDEA Droid, The IDEA Staff.
+- Names in copy and messages files: The IDEA Store, The IDEA Plus (Plus Glow, Plus Shine, Plus Blaze), The IDEA Club, The IDEA Pass, The IDEA Business, The IDEA Droid. Never Megastore, Suite, Spark, The IDEA Post, Discover, Academy, Launcher or Bulbs tier names.
 - Brand line in messages: "اعلگها" (ar) / "Switch on." (en).
 
 ## 6. Quality gates
 
 - [ ] Arabic (RTL) and English (LTR), Paper and Dark themes all checked
 - [ ] No raw hex in components; tokens only
-- [ ] No black (`ink`) in any logo, tile, band or brand block
+- [ ] No black (`ink`) in any logo, tile, band, brand block or the Droid
+- [ ] The bulb icon appears only for Bulbs; condition always as `ConditionLabel`
 - [ ] Contrast: text 4.5:1 (3:1 at 24px+), controls and focus 3:1, both themes
 - [ ] Yellow never as text on paper; small text on pink is white
 - [ ] `bun run check:rtl` and `bun run check:i18n` pass
