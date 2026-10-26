@@ -461,6 +461,9 @@ export const createBillingService = ({
       if (order.status !== "pending") {
         throw new OrderNotPayableError(`Order is ${order.status}`);
       }
+      if (order.awaitingGuardian) {
+        throw new OrderNotPayableError("Order is waiting for the guardian");
+      }
 
       // One open checkout per order, so it can't be paid twice.
       const pending = await repository.getPendingOrderPayment(order.id);

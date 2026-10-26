@@ -71,7 +71,7 @@ const TelegramCard = async ({ locale }: { readonly locale: Locale }) => {
         </ul>
         <p className="text-muted-foreground text-xs">
           {t("guidelines")}{" "}
-          <Link className="text-pink-text underline" href="/legal/community">
+          <Link className="text-pink-text underline" href="/legal/club">
             {t("guidelinesLink")}
           </Link>
         </p>

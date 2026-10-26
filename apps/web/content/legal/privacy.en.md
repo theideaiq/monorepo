@@ -1,87 +1,100 @@
-The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy explains what personal data we collect when you use our website, The IDEA app (web, iOS and Android), our Telegram bot Droid (@TheIdeaDroidBot) and our community rooms (together, the "Service"), why we collect it, who we share it with and the choices you have.
+The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy explains what personal data we collect when you use theideaiq.com, The IDEA's iOS and Android apps, The IDEA Droid on Telegram and WhatsApp, and our counter and events (together, "the service"); why we collect it; who we share it with; how long we keep it; and the choices you have.
 
-## 1. Data we collect
+## 1. What we collect
 
-### Data you give us
+### What you give us
 
-- **Account details:** your name, email address, phone number, language and, if you choose, a profile photo.
-- **Delivery details:** your address and governorate, and the phone number our delivery team uses to reach you.
-- **Orders and memberships:** what you order or rent, your plan on The IDEA Plus, rental history and returns.
-- **Identity verification:** for The IDEA Plus rentals we may ask to see a national ID card or passport to prevent fraud. We record that verification took place and keep a copy only if you agree to it or the law requires it.
-- **Organizations (The IDEA Suite):** your company's name and details, the members you invite and their roles.
-- **Content you submit:** Journal submissions (text, images and files), RSVPs to events, messages you send to us through the contact form, by email or to Droid.
+- **The IDEA Pass:** your name, email address, date of birth, language and theme, and, if you add them, a photo, a phone number and your birthday for birthday Bulbs. Your Pass has a member number.
+- **Guardians:** for members aged 13 to 17, the link to their guardian's Pass and the guardian's approvals.
+- **Delivery:** your addresses, governorate and area, and the phone number the courier uses.
+- **Orders and rentals:** what you buy, rent or return, The IDEA Plus plan, your rental queue (Saved), swaps, game night kits, deposits and receipts.
+- **Verification:** to give you a verified Pass we may check a national ID card or passport; we record that the check took place. For Student verification we check a university email or a student card photo; the documents are deleted after review and we keep only the result (for example "student at a university until June 2027").
+- **Bulbs, invites and affiliates:** your Bulbs history, invite code, who invited you, and, for affiliates, your code, commissions and payout details (ZainCash, FIB, Qi or bank transfer details).
+- **Sell to us:** the photos and descriptions you send, our offers and your decisions.
+- **The IDEA Club:** event RSVPs and check-ins, submissions, reviews and their photos, and survey answers and surveys you create.
+- **Support:** your messages through Help, email, Ask Droid or The IDEA Droid.
+- **The IDEA Business:** company details, members and roles, quotes, orders and invoices, and candidates' CVs shared for hiring.
 
-### Data collected automatically
+### What we collect automatically
 
-- **Usage and device data:** IP address, browser and device type, operating system, pages and screens viewed, and the date and time of your visits.
-- **Error and performance data:** technical information about crashes and errors, so we can fix them.
+- **Device and usage data:** IP address, browser and device type, pages viewed, and when.
+- **Error and performance data**, so we can find and fix problems.
+- **The card:** your device keeps the secret that makes your card's changing code, so the card works offline. When the counter or a partner scans your card, we record the check.
+- **Push notifications:** a device token, if you allow notifications in our apps.
 
-### Data from Telegram
+### What other services send us
 
-When you talk to Droid or join a room it helps run, Telegram shares with us your Telegram user ID, name, username and language. We also record your membership status in those rooms (for example if you were banned), the support requests you send to our team through Droid and, if you link it, which The IDEA Pass your Telegram account belongs to, so that Droid can show you your orders and Bulbs and sign you in with Telegram.
+- **Telegram:** when you use The IDEA Droid or our Telegram chats, or "Continue with Telegram", Telegram shares your Telegram user ID, name, username and language. We record which Pass it is linked to and whether you are in our chats.
+- **WhatsApp:** if you turn on WhatsApp updates, your number and that you agreed to them.
+- **Wayl:** the payment status, amount and reference. Never your full card or wallet details.
+- **Boxy,** our courier: the delivery status of your parcel.
+- **Google Wallet:** if you add your card to it.
 
-### Payment data
+## 2. Why we use it
 
-Payments are processed by our payment partner **Wayl**. We receive the payment status, amount and a reference for your order or subscription. We never receive or store your full card or wallet credentials.
+- to run the service: your Pass and card, orders, delivery, rentals, The IDEA Plus, Bulbs, Sell to us, the Club, surveys and The IDEA Business;
+- to apply the age rules: a guardian's approval for under-18s, and hiding PEGI 18 items from under-18 Passes;
+- to take payments and keep the financial records the law requires;
+- to help you when you ask for support;
+- to keep the service safe: prevent fraud and abuse of rewards (for example the same phone or address on an inviter's and a friend's orders), moderate the Club and enforce our [Terms](/legal/terms);
+- to understand how the service is used and improve it;
+- to send you order updates by email, push, Telegram or WhatsApp, as you choose;
+- with your consent where required, to send news and to measure our advertising.
 
-## 2. How we use your data
+## 3. Cookies, analytics and ad pixels
 
-- To provide the Service: create your account, process and deliver orders, manage The IDEA Plus rentals and returns, run organizations and business plans, and handle event RSVPs and Journal submissions.
-- To take payments and keep financial records, as the law requires.
-- To provide customer support and answer your messages.
-- To keep the Service and our community safe: prevent fraud, moderate our rooms and enforce our [Terms](/legal/terms) and [Community guidelines](/legal/community).
-- To understand how the Service is used and improve it.
-- With your consent where required, to measure our advertising and send you news about The IDEA. You can opt out of marketing messages at any time.
-- To meet our obligations under Iraqi law, including the Consumer Protection Law (Law No. 1 of 2010).
+The website uses cookies and similar technologies to keep you signed in, remember your language and theme, and protect the service. We use product analytics and error monitoring to improve it. On the website we also use the advertising tools of Google (Google Analytics), Meta and TikTok to measure visits and campaigns; when you buy, we tell them about the purchase so they can count it once. Ad pixels never load inside our iOS and Android apps. You can block or delete cookies in your browser; some features may then stop working.
 
-## 3. Cookies and analytics
-
-Our website uses cookies and similar technologies to keep you signed in, remember your language and theme, and protect the Service. With your consent where required, we also use analytics and advertising tools (such as Google Analytics, Meta and TikTok) to understand visits and measure our campaigns. Advertising pixels are not loaded inside our iOS and Android apps. You can block or delete cookies in your browser settings; some features may then stop working.
-
-## 4. Who we share data with
+## 4. Who we share it with
 
 We do **not** sell your personal data. We share it only as needed with:
 
-- **Service providers** who process data for us: hosting and database (Supabase), payments (Wayl), email delivery (Resend), error monitoring and logging, analytics, and our delivery partners (only what is needed to deliver your order or rental).
-- **Telegram,** when you use Droid or our rooms, under Telegram's own privacy policy.
-- **Authorities,** when the law requires it, or when necessary to protect the rights, property or safety of The IDEA, our users or the public (for example to investigate fraud or unreturned rentals).
-- **Your organization:** if you are a member of an organization on The IDEA Suite, its administrators can see your name, email and role in that organization.
+- **service providers** who process it for us: hosting and database (Supabase, Vercel), payments (Wayl), delivery (Boxy, and only what it needs to deliver), email (Resend), push notifications (Google Firebase), messaging (Telegram, WhatsApp by Meta), analytics, advertising measurement, error monitoring and security;
+- **people you choose:** your guardian (your link, and what they approve) or the teen you are guardian for; the company in The IDEA Business you belong to (your name, email and role there); survey creators (your answers, anonymous where the survey says so; see [Surveys](/legal/surveys)); a partner who scans your card (only that your card is valid and which perk applies);
+- **authorities,** when the law requires it, or to protect the rights, property or safety of The IDEA, our members or the public.
 
-## 5. International transfers
+## 5. Transfers outside Iraq
 
-Some of our service providers store or process data on servers outside Iraq. When we transfer data, we work with providers that protect it with appropriate security measures. By using the Service you understand that your data may be processed outside your country.
+Some providers store or process data outside Iraq. We choose providers that protect it with appropriate security.
 
-## 6. How long we keep data
+## 6. How long we keep it
 
-We keep personal data only as long as needed for the purposes above. Account data is kept while your account is open. When you delete your account, we delete or anonymize your personal data, except records we must keep by law (such as invoices and payment records) or to resolve disputes, which we keep for as long as the law requires.
+- Your Pass data, while your Pass is open.
+- Orders, payments, invoices and receipts, for as long as the law requires.
+- Student verification documents, until they are reviewed; then only the result.
+- Sell to us photos, while the request is open and for a short time after, in case of questions.
+- Survey answers, for as long as the creator needs them for that survey and its export.
+- Device and error data, for a limited time.
 
-## 7. Your rights
+When you delete your Pass, we delete or anonymise your personal data, except what we must keep by law (such as invoices and payment records) or to settle an open dispute.
 
-You can see and update most of your data in the app. You can also ask us to:
+## 7. Deleting your Pass
 
-- give you a copy of your personal data;
-- correct inaccurate data;
-- delete your data or your account;
-- stop using your data for marketing, or object to or restrict certain processing.
+Open **Pass → Settings → Delete your Pass** on the website or in the app, or write to us. If you alone own a company on The IDEA Business, you first make another member an owner or delete the company. Deleting your Pass removes your profile, photo, Bulbs and card; it cannot be undone. Unused Bulbs are lost (see [Rewards](/legal/rewards)), and any rented items must still be returned.
 
-Write to [hi@theideaiq.com](mailto:hi@theideaiq.com) from the email linked to your account. If you live in a country with its own data-protection law (for example the EU's GDPR), you also have the rights that law gives you, including the right to complain to your local regulator.
+## 8. Your rights
 
-## 8. Security
+You can see and change most of your data in Pass → Settings. You can also ask us to:
 
-We protect your data with encryption in transit, access controls that limit each person and organization to their own data, and limited staff access. No system is perfectly secure; if a breach affects you, we will tell you as the law requires.
+- give you a copy of your data;
+- correct it;
+- delete it, or your Pass;
+- stop using it for marketing, or limit or object to certain uses.
 
-## 9. Children
+Write to [hi@theideaiq.com](mailto:hi@theideaiq.com) from the email your Pass uses. You can stop marketing emails with the link in each one, and order updates on WhatsApp or Telegram in Pass → Settings. If you live in a country with its own data-protection law, you also have the rights it gives you.
 
-The Service is not directed to children under 13 and we do not knowingly collect their personal data. If you believe a child under 13 has given us personal data, contact us and we will delete it.
+## 9. Security
 
-## 10. Changes to this policy
+We protect your data with encryption in transit, access rules that limit each member and company to their own data, and limited staff access, with an extra sign-in step for staff. No system is perfectly safe; if a breach affects you, we will tell you as the law requires. To report a weakness, see [Security](/legal/security).
 
-We may update this policy. We will show the date of the latest update at the top of this page and tell you about significant changes in the app or by email.
+## 10. Teenagers and children
 
-## 11. Governing law
+The IDEA Pass is for people aged 13 and over; we do not knowingly collect data from children under 13. For members aged 13 to 17, a guardian approves purchases and The IDEA Plus. If you think a child under 13 has given us data, contact us and we will delete it.
 
-This policy is governed by the laws of the Republic of Iraq, including the Consumer Protection Law (Law No. 1 of 2010) and the Electronic Signature and Electronic Transactions Law (Law No. 78 of 2012). Disputes are subject to the courts of Baghdad, Iraq.
+## 11. Changes
+
+We may update this policy. The date at the top shows its latest version, and we will tell you about significant changes on the site or by email.
 
 ## Contact us
 
-Questions about privacy or your data: [hi@theideaiq.com](mailto:hi@theideaiq.com) · The IDEA IQ Inc., Baghdad, Iraq.
+Privacy questions and requests: [hi@theideaiq.com](mailto:hi@theideaiq.com) · The IDEA IQ Inc., Baghdad, Iraq.

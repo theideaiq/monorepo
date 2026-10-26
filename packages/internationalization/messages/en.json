@@ -289,7 +289,8 @@
         "verified": "Verified purchase",
         "anonymous": "A customer",
         "latest": "Latest reviews",
-        "photoAlt": "Photo from {name}'s review"
+        "photoAlt": "Photo from {name}'s review",
+        "photoBonus": "This reviewer earned 5 Bulbs for adding a photo."
       },
       "sell": {
         "title": "Sell to us",
@@ -551,24 +552,60 @@
       "lastUpdated": "Last updated: {date}",
       "documents": {
         "terms": {
-          "title": "Terms of service",
-          "description": "The terms that apply when you use The IDEA's websites, apps and services."
+          "title": "Terms of use",
+          "description": "The terms for The IDEA Pass, orders, payments and everything The IDEA offers, including the age rules."
         },
         "privacy": {
           "title": "Privacy policy",
-          "description": "What personal data The IDEA collects, why, and the choices you have."
+          "description": "What personal data The IDEA collects, why, who it is shared with, and how to delete The IDEA Pass."
         },
-        "refund": {
-          "title": "Refund and returns policy",
-          "description": "How returns, refunds, cancellations and The IDEA Plus rental returns work."
+        "delivery": {
+          "title": "Delivery",
+          "description": "Delivery fees, times, the courier, store pickup, cash on delivery and refused deliveries."
         },
-        "conduct": {
-          "title": "Code of conduct",
-          "description": "How we expect everyone to behave at The IDEA's events, programs and spaces."
+        "returns": {
+          "title": "Returns and refunds",
+          "description": "The 14-day return window, faulty items, and refunds to the original payment or as Bulbs."
         },
-        "community": {
-          "title": "Community guidelines",
-          "description": "The rules for The IDEA Club's rooms on Telegram, comments and member submissions."
+        "condition": {
+          "title": "Condition and warranty",
+          "description": "What New, Open box, Refurbished and Used mean, how items are checked and the warranty each comes with."
+        },
+        "plus": {
+          "title": "The IDEA Plus",
+          "description": "Plans, billing, swaps, pausing and cancelling, Keep it, single-item rent, game night kits and deposits."
+        },
+        "rewards": {
+          "title": "Rewards",
+          "description": "How Bulbs are earned, unlocked, spent and expire, and the rules for invites and affiliates."
+        },
+        "sell": {
+          "title": "Sell to us",
+          "description": "Who can sell to The IDEA, proof of ownership, offers, payment and what happens to declined items."
+        },
+        "club": {
+          "title": "Club rules",
+          "description": "How to take part in The IDEA Club: rooms, events, photos, behaviour, reporting and moderation."
+        },
+        "surveys": {
+          "title": "Surveys",
+          "description": "The rules for survey creators and the terms for respondents, including consent, anonymity and rewards."
+        },
+        "business": {
+          "title": "The IDEA Business",
+          "description": "Quotes, purchase orders, invoices, hiring, The IDEA Plus for teams and partner perks."
+        },
+        "accessibility": {
+          "title": "Accessibility",
+          "description": "How The IDEA works to be usable by everyone, and how to report a barrier."
+        },
+        "security": {
+          "title": "Security",
+          "description": "How to report a security weakness in The IDEA's services, and what to expect from us."
+        },
+        "copyright": {
+          "title": "Copyright",
+          "description": "Who owns what, members' content, product artwork and how to send a takedown request."
         }
       }
     },
@@ -699,7 +736,7 @@
         "description": "Seven rooms for music, games, books, films, making things and work, looked after by The IDEA Droid.",
         "join": "Join on Telegram",
         "guidelines": "Before you join, read",
-        "guidelinesLink": "our community guidelines",
+        "guidelinesLink": "the Club rules",
         "rooms": {
           "stage": "The Stage",
           "lounge": "The Lounge",
@@ -955,7 +992,10 @@
         "cashUnavailable": "Cash payment isn't available right now. Choose to pay online.",
         "pickupUnavailable": "Pickup from the store isn't available right now. Choose delivery.",
         "zoneUnavailable": "We can't deliver to this governorate right now. Choose another, or pick up from the store.",
-        "notEnoughBulbs": "You don't have that many Bulbs any more. Check the amount and try again."
+        "notEnoughBulbs": "You don't have that many Bulbs any more. Check the amount and try again.",
+        "guardianRequired": "Under 18, your orders need a guardian. Link one in Settings.",
+        "needsBirthday": "Add your date of birth in Settings first.",
+        "notForMinors": "Something in your cart is rated 18+. Remove it to continue."
       },
       "fulfilment": {
         "title": "Delivery or pickup",
@@ -1048,7 +1088,9 @@
         "confirmedNotice": "Your order is confirmed. Have {amount} ready in cash for the courier.",
         "confirmedPickupNotice": "Your order is confirmed. We'll call you when it's ready; pay {amount} at the store.",
         "readyNotice": "Your order is ready. Collect it from the store during opening hours.",
-        "cancelCashDescription": "The order is cancelled. This can't be undone."
+        "cancelCashDescription": "The order is cancelled. This can't be undone.",
+        "guardianPending": "This order is waiting for your guardian's approval. You'll pay once they approve it.",
+        "guardianDeclined": "Your guardian declined this order, so it was cancelled."
       }
     },
     "plus": {
@@ -1361,13 +1403,47 @@
         "failed": "We couldn't disconnect Telegram. Try again."
       },
       "birthday": {
-        "title": "Birthday",
-        "description": "Tell us your birthday and we'll give you 25 Bulbs every year on the day.",
-        "label": "Your birthday",
+        "title": "Date of birth",
+        "description": "The IDEA Pass is for people aged 13 and over, and under-18s link a guardian. You'll also get 25 Bulbs every year on your birthday.",
+        "label": "Your date of birth",
         "save": "Save",
         "once": "You can set it once. To change it later, contact support.",
         "locked": "To change it, contact support.",
-        "failed": "Your birthday couldn't be saved. Try again."
+        "failed": "Your date of birth couldn't be saved. Try again.",
+        "tooYoung": "The IDEA Pass is for people aged 13 and over."
+      },
+      "guardian": {
+        "title": "Guardian",
+        "teenDescription": "Under 18, a guardian approves your orders and The IDEA Plus. Your guardian signs in with The IDEA Pass too.",
+        "adultDescription": "Guardians approve the orders of teens aged 13 to 17, signed in with The IDEA Pass.",
+        "needsBirthday": "Add your date of birth first.",
+        "invite": "Invite a guardian",
+        "newCode": "New code",
+        "inviteHelp": "Send this link to your parent or guardian. They sign in with The IDEA Pass and accept it.",
+        "code": "Code: {code}",
+        "copy": "Copy the link",
+        "copied": "Copied",
+        "waiting": "Waiting for your guardian to accept.",
+        "linked": "Your guardian: {name}",
+        "plusAllowed": "The IDEA Plus: allowed",
+        "plusNotAllowed": "The IDEA Plus: your guardian hasn't allowed it yet",
+        "remove": "Remove",
+        "acceptTitle": "Be a guardian",
+        "codeLabel": "Invite code",
+        "check": "Check",
+        "inviteFrom": "{name} asked you to be their guardian.",
+        "inviteUsed": "This invite has already been used or replaced.",
+        "accept": "Accept",
+        "teens": "Teens you look after",
+        "allowPlus": "Allow The IDEA Plus",
+        "noPending": "No orders waiting.",
+        "order": "Order #{number} · {items} · {total}",
+        "items": "{count, plural, one {{n} item} other {{n} items}}",
+        "approve": "Approve",
+        "decline": "Decline",
+        "failed": "That didn't work. Try again.",
+        "tooYoung": "A guardian must be 18 or over.",
+        "expired": "This invite has expired. Ask for a new code."
       }
     },
     "errors": {
@@ -1875,6 +1951,11 @@
           "error": "The job couldn't be posted. Check the salary range and try again."
         }
       }
+    },
+    "ages": {
+      "adultsOnly": "This is for members aged 18 and over.",
+      "needsBirthday": "Add your date of birth in Settings first.",
+      "guardianRequired": "Under 18, your guardian needs to allow The IDEA Plus first, in Settings."
     }
   },
   "store": {
@@ -2056,6 +2137,22 @@
         "candidate_proposed": {
           "title": "New candidate",
           "body": "{name} for {title}. Open it to review."
+        },
+        "guardian_order_request": {
+          "title": "An order to approve",
+          "body": "{name} placed order #{number}. Approve or decline it in Settings."
+        },
+        "guardian_approved": {
+          "title": "Your guardian approved your order",
+          "body": "Order #{number} is approved. Open it to pay."
+        },
+        "guardian_declined": {
+          "title": "Your guardian declined your order",
+          "body": "Order #{number} was cancelled."
+        },
+        "guardian_linked": {
+          "title": "Your guardian is linked",
+          "body": "{name} is now your guardian on The IDEA Pass."
         }
       },
       "kinds": {
@@ -2731,6 +2828,11 @@
         "cancel": "Cancel parcel",
         "cancelConfirm": "Cancel this parcel with Boxy?",
         "cancelHint": "The order goes back to processing, ready to send again."
+      },
+      "guardian": {
+        "pending": "Waiting for the guardian",
+        "approved": "Approved by the guardian",
+        "declined": "Declined by the guardian"
       }
     },
     "rentals": {

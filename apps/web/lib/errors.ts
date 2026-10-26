@@ -57,6 +57,9 @@ export const toInvitationError = (error: unknown): InvitationError => {
 export type CheckoutError =
   | "cartEmpty"
   | "cashUnavailable"
+  | "guardianRequired"
+  | "needsBirthday"
+  | "notForMinors"
   | "invalidAddress"
   | "notEnoughBulbs"
   | "notPayable"
@@ -108,6 +111,15 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
   }
   if (message.includes("Cash payment is not available")) {
     return "cashUnavailable";
+  }
+  if (message.includes("A guardian must approve")) {
+    return "guardianRequired";
+  }
+  if (message.includes("Add your date of birth")) {
+    return "needsBirthday";
+  }
+  if (message.includes("Not available under 18")) {
+    return "notForMinors";
   }
   return "unknown";
 };
@@ -190,4 +202,24 @@ export const toReviewError = (error: unknown): ReviewError => {
     return "suspended";
   }
   return "unknown";
+};
+
+export type AgeError = "adultsOnly" | "guardianRequired" | "needsBirthday";
+
+/**
+ * The age rules' refusals (the ages migration and POST /checkout): 18+
+ * actions, a missing date of birth, a teen without their guardian's yes.
+ */
+export const toAgeError = (error: unknown): AgeError | null => {
+  if (apiCodeOf(error) === "guardian_required") {
+    return "guardianRequired";
+  }
+  const message = messageOf(error);
+  if (message.includes("18 or over")) {
+    return "adultsOnly";
+  }
+  if (message.includes("Add your date of birth")) {
+    return "needsBirthday";
+  }
+  return null;
 };

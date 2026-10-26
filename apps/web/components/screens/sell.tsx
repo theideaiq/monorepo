@@ -33,6 +33,7 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
+import { AgeAwareError } from "@/components/age-aware-error";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   useMyTradeIns,
@@ -266,9 +267,7 @@ const SellForm = () => {
             </p>
           ) : null}
           {submit.isError ? (
-            <p className="text-destructive text-sm" role="alert">
-              {t("form.failed")}
-            </p>
+            <AgeAwareError error={submit.error} fallback={t("form.failed")} />
           ) : null}
           {submitted ? (
             <p className="text-sm text-success" role="status">

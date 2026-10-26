@@ -41,10 +41,13 @@ test("a new email gets The IDEA Pass with an emailed code", async ({
     .getByLabel("Verification code")
     .fill(await emailedCode(signUpUser.email));
 
-  // Onboarding asks new members for their name and language first.
+  // Onboarding asks new members for their date of birth (the Pass is for
+  // 13 and over), then their name and language.
   await expect(page.getByRole("heading", { name: WELCOME })).toBeVisible({
     timeout: 15_000,
   });
+  await page.getByLabel("Your date of birth").fill("1995-04-20");
+  await page.getByRole("button", { name: "Save" }).click();
   await page.getByLabel("Full name").fill(signUpUser.name);
   await expectAccessible(page);
   await page.getByRole("button", { name: "Continue" }).click();
@@ -109,6 +112,19 @@ test("app-link files are served without a locale redirect", async ({
     expect(response.status()).toBe(200);
     expect(response.headers()["content-type"]).toContain("json");
   }
+});
+
+test("security.txt is served without a locale redirect", async ({
+  request,
+}) => {
+  const response = await request.get(`${urls.web}/.well-known/security.txt`, {
+    maxRedirects: 0,
+  });
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("text/plain");
+  expect(await response.text()).toContain(
+    "Policy: https://theideaiq.com/legal/security"
+  );
 });
 
 test.describe("a signed-in customer", () => {

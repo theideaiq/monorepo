@@ -145,6 +145,12 @@ export const usePlaceOrder = () => {
         value: order.total,
       });
 
+      // A teen's order goes to their guardian first; it's paid from the
+      // order page once approved.
+      if (created.guardian_status === "pending") {
+        return { awaitingGuardian: true, order, paymentError: null, url: null };
+      }
+
       // Cash, or paid in full with Bulbs: nothing to pay online now.
       if (paymentMethod === "cash_on_delivery" || order.total === 0) {
         await requestConfirmation(supabase, order.id);

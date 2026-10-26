@@ -18,6 +18,7 @@ import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { CheckIcon, CopyIcon, Share2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
+import { AgeAwareError } from "@/components/age-aware-error";
 import { InviteCard } from "@/components/invite-card";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -86,9 +87,7 @@ const ApplyForm = ({
         />
       </div>
       {apply.isError ? (
-        <p className="text-destructive text-sm" role="alert">
-          {t("apply.failed")}
-        </p>
+        <AgeAwareError error={apply.error} fallback={t("apply.failed")} />
       ) : null}
       <Button className="justify-self-start" disabled={apply.isPending}>
         {t("apply.submit")}

@@ -162,6 +162,13 @@ export const ProductReviews = async ({
                   })}
                   photos={review.photos ?? []}
                 />
+                {/* Verified buyers earn Bulbs for a photo; say so. */}
+                {review.verified_purchase &&
+                (review.photos?.length ?? 0) > 0 ? (
+                  <p className="text-muted-foreground text-xs">
+                    {t("photoBonus")}
+                  </p>
+                ) : null}
               </li>
             ))}
           </ul>

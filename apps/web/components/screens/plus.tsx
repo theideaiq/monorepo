@@ -22,6 +22,7 @@ import {
 import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { AgeAwareError } from "@/components/age-aware-error";
 import { SignedInSection } from "@/components/signed-in-section";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { ProductImage } from "@/components/store/product-image";
@@ -232,9 +233,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
         })}
       </div>
       {checkout.isError ? (
-        <p className="text-destructive text-sm" role="alert">
-          {t("failed")}
-        </p>
+        <AgeAwareError error={checkout.error} fallback={t("failed")} />
       ) : null}
     </section>
   );

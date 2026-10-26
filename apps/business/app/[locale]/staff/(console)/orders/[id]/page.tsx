@@ -1,5 +1,6 @@
 import { localized, variantName } from "@repo/commerce";
 import type { OrderStatus, Tables } from "@repo/database";
+import { Badge } from "@repo/design-system/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -234,6 +235,19 @@ const MovesPanel = async ({
   );
 };
 
+/** A 13–17-year-old's order: where their guardian's approval stands. */
+const GuardianBadge = async ({
+  status,
+}: {
+  readonly status: string | null;
+}) => {
+  if (status !== "approved" && status !== "declined" && status !== "pending") {
+    return null;
+  }
+  const t = await getTranslations("admin.orders.guardian");
+  return <Badge variant="outline">{t(status)}</Badge>;
+};
+
 const OrderPage = async ({ params }: OrderPageProps) => {
   const { id } = await params;
   if (!isUuid(id)) {
@@ -289,8 +303,10 @@ const OrderPage = async ({ params }: OrderPageProps) => {
     cash: order.payment_method === "cash_on_delivery",
     paid: order.paid_at !== null,
   };
-  const moves = canWrite ? nextOrderStatuses(order.status, unpaid) : [];
-  const collectCash = canWrite && canCollectCash(order.status, unpaid);
+  // A teen's order moves once their guardian approves it.
+  const movable = canWrite && order.guardian_status !== "pending";
+  const moves = movable ? nextOrderStatuses(order.status, unpaid) : [];
+  const collectCash = movable && canCollectCash(order.status, unpaid);
 
   const customerHref =
     order.user_id && canRead(staff.role, "customers")
@@ -307,6 +323,7 @@ const OrderPage = async ({ params }: OrderPageProps) => {
         <StatusBadge status={order.status}>
           {tStore(`orderStatus.${order.status}`)}
         </StatusBadge>
+        <GuardianBadge status={order.guardian_status} />
       </PageHeader>
       <PageBody className="lg:grid-cols-[1fr_22rem]">
         <div className="grid content-start gap-6">
