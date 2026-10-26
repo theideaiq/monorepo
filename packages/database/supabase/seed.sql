@@ -141,3 +141,13 @@ insert into public.rental_rates (category_id, price, days, late_fee) values
   ('50000000-0000-0000-0000-000000000004', 3750, 14, 500),
   ('50000000-0000-0000-0000-000000000006', 2750, 7, 500)
 on conflict (category_id) do nothing;
+
+-- Game night kits ready to book locally (production adds them in the back
+-- office when each kit is ready).
+insert into public.kit_units (kit_type, label) values
+  ('ps5', 'PS5 kit 1'), ('ps5', 'PS5 kit 2'),
+  ('switch', 'Switch kit 1'), ('switch', 'Switch kit 2'),
+  ('retro', 'Retro kit 1')
+on conflict do nothing;
+update public.kit_types set games_category_id = (select id from public.product_categories where slug = 'games')
+where id = 'ps5';

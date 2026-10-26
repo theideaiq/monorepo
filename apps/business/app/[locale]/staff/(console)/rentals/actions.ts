@@ -206,3 +206,91 @@ export const updatePlusArea = staffAction(
     );
   }
 );
+
+// ── Game night kits ────────────────────────────────────────────────────────
+
+/** Waives a kit's deposit for someone whose ID was checked (before payment). */
+export const waiveKitDeposit = staffAction(
+  "rentals",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("waive_kit_deposit", { target: input.id }));
+  }
+);
+
+/** The kit and its games go out with the rider. */
+export const handOverKit = staffAction(
+  "rentals",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("hand_over_kit", { target: input.id }));
+  }
+);
+
+/** The kit is back; damage (if any) comes out of the deposit. */
+export const collectKit = staffAction(
+  "rentals",
+  z.object({ damage: int(0, 100_000_000), id: uuid }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("collect_kit", {
+        damage: input.damage,
+        target: input.id,
+      })
+    );
+  }
+);
+
+/** Adds a kit unit once the physical kit is ready. */
+export const addKitUnit = staffAction(
+  "rentals",
+  z.object({ kit: text(40), label: text(60) }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase
+        .from("kit_units")
+        .insert({ kit_type: input.kit, label: input.label })
+    );
+  }
+);
+
+/** Sends a kit unit to repair, back to service, or retires it. */
+export const setKitUnitStatus = staffAction(
+  "rentals",
+  z.object({ id: uuid, status: z.enum(["active", "repair", "retired"]) }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("kit_units")
+        .update({ status: input.status })
+        .eq("id", input.id)
+        .select("id")
+    );
+  }
+);
+
+/** A kit's weekend and extra-day prices, deposit and whether it's offered. */
+export const saveKitType = staffAction(
+  "rentals",
+  z.object({
+    active: checkbox,
+    deposit: int(0, 10_000_000),
+    extraDayPrice: int(0, 10_000_000),
+    id: text(40),
+    price: int(1, 10_000_000),
+  }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("kit_types")
+        .update({
+          active: input.active,
+          deposit: input.deposit,
+          extra_day_price: input.extraDayPrice,
+          price: input.price,
+        })
+        .eq("id", input.id)
+        .select("id")
+    );
+  }
+);

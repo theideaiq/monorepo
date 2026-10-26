@@ -1,4 +1,4 @@
-import { planName } from "@repo/commerce";
+import { formatPrice, localized, planName } from "@repo/commerce";
 import { Highlight } from "@repo/design-system/components/brand/highlight";
 import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Badge } from "@repo/design-system/components/ui/badge";
@@ -22,6 +22,7 @@ import { CategoryChips } from "@/components/shop/category-chips";
 import { StoreSearch } from "@/components/shop/store-search";
 import {
   getCategories,
+  getKitTypes,
   getPlans,
   getProducts,
   getRatings,
@@ -73,9 +74,10 @@ const Rent = async ({ params, searchParams }: RentProps) => {
   const query = parseStoreQuery(await searchParams);
   const t = await getTranslations({ locale, namespace: "web" });
 
-  const [categories, plans, rows] = await Promise.all([
+  const [categories, allPlans, kits, rows] = await Promise.all([
     getCategories("rental"),
     getPlans("plus"),
+    getKitTypes(),
     getProducts({
       category: query.category,
       kind: "rental",
@@ -84,6 +86,8 @@ const Rent = async ({ params, searchParams }: RentProps) => {
       search: query.q,
     }),
   ]);
+  // Monthly plans on the page; the yearly ones are in Your Plus.
+  const plans = allPlans.filter((plan) => plan.billing_interval === "month");
   const products = rows.slice(0, STORE_PAGE_SIZE);
   const ids = products.map((product) => product.id);
   const [ratings, productTiers] = await Promise.all([
@@ -220,6 +224,45 @@ const Rent = async ({ params, searchParams }: RentProps) => {
               <EmptyState>{t("plus.plans.empty")}</EmptyState>
             )}
           </Section>
+
+          {kits.length > 0 ? (
+            <Section
+              description={t("plus.kits.description")}
+              id="kits"
+              title={t("plus.kits.title")}
+            >
+              <ul className="grid gap-4 md:grid-cols-3">
+                {kits.map((kit) => (
+                  <li
+                    className="flex flex-col gap-3 rounded-lg border p-5"
+                    key={kit.id}
+                  >
+                    <h3 className="font-semibold">
+                      {localized(kit, "name", locale)}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {localized(kit, "description", locale)}
+                    </p>
+                    <p className="font-medium text-sm">
+                      {t("plus.kits.price", {
+                        extra: formatPrice(kit.extra_day_price, locale),
+                        price: formatPrice(kit.price, locale),
+                      })}
+                    </p>
+                    <Button
+                      asChild
+                      className="mt-auto self-start"
+                      variant="outline"
+                    >
+                      <Link href={`/kits/${kit.id}`}>
+                        {t("plus.kits.book")}
+                      </Link>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          ) : null}
 
           {tiers.length > 1 ? (
             <Section

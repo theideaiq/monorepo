@@ -5,7 +5,15 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-26: program revision, step 5b)
+## Current state (2026-10-26: program revision, step 5c)
+
+- Game night kits (migration `20261223000000_game_night_kits.sql`): PS5
+  (49,750 with 4 games), Switch party (39,750) and Retro (24,750) for
+  Thursday evening to Saturday evening, up to 8 weekends ahead, delivered
+  in Baghdad, adults only, Plus Blaze 25% off, with a 100,000 IQD
+  refundable deposit staff can waive after checking ID. Booking at
+  `/kits/<kit>` from `/plus#kits`. **To do:** add each kit in Rentals →
+  Kits when it's ready (none in production yet, so nothing can be booked).
 
 - The IDEA Plus launch (migration `20261222000000_plus_launch.sql`): 60
   places, then a waitlist (the next person in Baghdad is invited
@@ -264,6 +272,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-26: Program revision v1, step 5c (kits): a 100,000 IQD deposit
+  at checkout that staff can waive after checking ID (verified Passes skip
+  it once student verification lands); each physical kit is a unit in the
+  back office and the PS5 kit's games are held from the rental copies;
+  bookings up to 8 weekends ahead.
 
 - 2026-10-26: Program revision v1, step 5b (Plus launch): waitlist places
   go to the next person automatically (72-hour invites; staff can also

@@ -698,6 +698,7 @@ Current schema:
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | The IDEA Store's catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
+| `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
 | `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
 | `…_single_rent.sql` | Single-item rent: `rental_rates`, `rental_quote()`, `create_rental_order()` (rent + deposit lines), `settle_rental()`, `set_rental_deposit_rate()`; Keep it: `keep_price()`, `keep_rental()`; `rentals.kind`, `order_items.kind`, rental status `kept` |
 | `…_plus.sql` | The IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
@@ -1507,6 +1508,30 @@ The IDEA Plus starts in Baghdad with a set number of places (migration
   `canceled` at the period end and invoices nothing more);
   `change_plus_plan()` sets `subscriptions.next_plan_id`, applied at the
   next renewal by the billing service.
+
+#### Game night kits
+
+Weekend rentals of a console set (migration
+`20261223000000_game_night_kits.sql`): `kit_types` (PS5 49,750 IQD with
+4 games of the member's choice, Switch party 39,750, Retro 24,750; extra
+days 19,750 / 14,750 / 9,750; a 100,000 IQD refundable deposit) and
+`kit_units`, one per physical kit (added in Rentals → Kits once it's ready;
+no units, no bookings).
+
+- **Booking** at `/kits/<kit>` (linked from `/plus#kits`):
+  `kit_weekends(kit)` lists the next 8 Thursdays with free units and the
+  caller's price (Plus Blaze 25% off); `book_kit()` books Thursday evening
+  to Saturday evening plus up to 3 extra days, for adults only, delivered
+  in Baghdad: an order of the kit line (`kind = 'kit'`) and the deposit,
+  paid online or in cash. No Bulbs.
+- **Games**: the PS5 kit's chosen games (`kit_booking_games`) are held as
+  `rentals.kind = 'kit'` two days before the weekend (`run_kit_holds()`,
+  daily in `/cron/rentals`).
+- **Staff** (Rentals → Kits): waive the deposit for someone whose ID was
+  checked (`waive_kit_deposit()`, before payment), hand over once paid
+  (`hand_over_kit()`: the games go with it), collect with any damage
+  (`collect_kit()`: `refund_due` / `amount_due`, refunded outside the app).
+  Cancelling the order cancels the booking.
 
 #### Categories, prices and conditions (the catalogue)
 

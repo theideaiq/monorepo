@@ -332,7 +332,7 @@
       },
       "plans": {
         "choose": "Choose {plan}",
-        "description": "Billed monthly through Wayl. Cancel any time from Your Pass.",
+        "description": "Billed monthly through Wayl, or yearly: pay 10 months, get 12. Pause or cancel any time from Your Plus.",
         "empty": "Plans will be announced soon.",
         "featured": "Recommended",
         "perMonth": "per month",
@@ -352,6 +352,12 @@
         "description": "Most of the catalog is open to every plan. Some items, such as new releases and collector's editions, need a higher plan; they are marked with the plan they need. Every plan includes everything the plans below it can rent.",
         "entry": "Every item without a plan mark.",
         "higher": "Also the items marked “{plan}”."
+      },
+      "kits": {
+        "title": "Game night kits",
+        "description": "A console and controllers for the weekend, Thursday evening to Saturday evening, delivered and collected in Baghdad. Plus Blaze members get 25% off.",
+        "price": "{price} a weekend · {extra} an extra day",
+        "book": "Book a weekend"
       }
     },
     "about": {
@@ -1004,7 +1010,12 @@
         "guardianRequired": "Under 18, your orders need a guardian. Link one in Settings.",
         "needsBirthday": "Add your date of birth in Settings first.",
         "notForMinors": "Something in your cart is rated 18+. Remove it to continue.",
-        "rentedOut": "All copies are rented out right now. Try again later."
+        "rentedOut": "All copies are rented out right now. Try again later.",
+        "kitsFull": "Every kit is booked that weekend. Choose another.",
+        "adultsOnly": "Kits are booked by adults (18 or over).",
+        "baghdadOnly": "Kits are delivered in Baghdad only.",
+        "pickWeekend": "Choose one of the coming weekends.",
+        "pickGames": "Choose the kit's games."
       },
       "fulfilment": {
         "title": "Delivery or pickup",
@@ -2089,6 +2100,28 @@
       "viewOrder": "View order",
       "notRentable": "This item can't be rented on its own.",
       "days": "{count, plural, one {{n} day} other {{n} days}}"
+    },
+    "kits": {
+      "title": "Game night kit",
+      "back": "Back to The IDEA Plus",
+      "notFound": "This kit isn't available.",
+      "when": "Which weekend",
+      "whenHelp": "We bring it on Thursday evening and collect it on Saturday evening.",
+      "weekend": "{from} to {to}",
+      "free": "{n} free",
+      "booked": "Booked",
+      "extraDays": "Extra days after Saturday",
+      "games": "Choose {n} games",
+      "chosen": "{n} of {count} chosen",
+      "searchGames": "Search the games",
+      "weekendPrice": "The weekend",
+      "extraDaysPrice": "Extra days ({n})",
+      "deposit": "Refundable deposit",
+      "delivery": "Delivery and collection",
+      "included": "Included",
+      "total": "Total",
+      "depositNote": "We refund the deposit after collection, less any damage. Show your ID at the door.",
+      "adultsNote": "Kits are booked by adults (18 or over)."
     }
   },
   "store": {
@@ -2989,7 +3022,8 @@
         "overdue": "Overdue",
         "history": "History",
         "swaps": "Swaps",
-        "plus": "Plus places"
+        "plus": "Plus places",
+        "kits": "Kits"
       },
       "empty": {
         "requests": "No requests waiting to be delivered.",
@@ -3065,6 +3099,47 @@
         "capacityHint": "About 60 while there are 168 copies to lend.",
         "inviteHours": "Invite open for (hours)",
         "swapFee": "Extra home swap (IQD)"
+      },
+      "kits": {
+        "title": "Game night kits",
+        "bookings": "Weekends booked",
+        "bookingsHint": "Hand a kit over once it's paid (or cash is confirmed); its games are held two days before. Collect it with any damage, which comes out of the deposit.",
+        "empty": "No kits booked.",
+        "weekend": "Weekend",
+        "gamesColumn": "Games",
+        "notHeld": "not held yet",
+        "status": {
+          "booked": "Booked",
+          "out": "Out"
+        },
+        "depositUnpaid": "Deposit {amount}: not paid yet",
+        "depositPaid": "Deposit {amount}: paid",
+        "depositWaived": "Deposit waived (ID checked)",
+        "waive": "Waive deposit",
+        "waiveConfirm": "Waive the deposit?",
+        "waiveDescription": "Only for someone whose ID you've checked. The order's total drops by the deposit.",
+        "handOver": "Handed over",
+        "collect": "Collected",
+        "damage": "Damage (IQD)",
+        "unitsTitle": "Kits",
+        "unitsHint": "Each physical kit; a weekend booking takes one. Add a kit once it's ready.",
+        "noUnits": "No kits yet: add one to open bookings.",
+        "kit": "Kit",
+        "unitLabel": "Label",
+        "addUnit": "Add kit",
+        "unitStatus": "Status",
+        "set": "Set",
+        "units": {
+          "active": "In service",
+          "repair": "In repair",
+          "retired": "Retired"
+        },
+        "prices": "Prices",
+        "pricesHint": "Plus Blaze members get 25% off the weekend and extra days.",
+        "price": "Weekend (IQD)",
+        "extraDayPrice": "Extra day (IQD)",
+        "depositField": "Deposit (IQD)",
+        "offered": "Offered"
       }
     },
     "customers": {
