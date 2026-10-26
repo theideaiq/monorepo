@@ -62,7 +62,7 @@ export const redirect = ({
 }: Parameters<typeof localeRedirect>[0]): never =>
   localeRedirect({ href: adminHref(href), locale });
 
-/** The back-office path of the current page (without `/admin`). */
+/** The back-office path of the current page (without `/staff`). */
 export const usePathname = () => stripAdmin(useLocalePathname());
 
 /** The locale-aware router, for back-office paths. */

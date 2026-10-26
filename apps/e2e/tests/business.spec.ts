@@ -4,8 +4,8 @@ import { urls } from "../playwright.config";
 import { resetCompany } from "../seed";
 import { expectAccessible } from "./helpers";
 
-const REQUEST_PATH = /\/business\/procurement\/([0-9a-f-]{36})$/;
-const JOB_PATH = /\/business\/hiring\/([0-9a-f-]{36})$/;
+const REQUEST_PATH = /\/procurement\/([0-9a-f-]{36})$/;
+const JOB_PATH = /\/hiring\/([0-9a-f-]{36})$/;
 
 test("a company sends a procurement request and accepts the quote", async ({
   context,
@@ -14,7 +14,7 @@ test("a company sends a procurement request and accepts the quote", async ({
   await resetCompany();
   await context.addCookies(await sessionCookies(customer.email, urls.app));
 
-  await page.goto(`${urls.app}/business/procurement`);
+  await page.goto(`${urls.app}/procurement`);
   await page.getByLabel("What do you need?").fill("12 laptops");
   await page.getByLabel("Budget (IQD, optional)").fill("9000000");
   await page.getByRole("button", { name: "Send request" }).click();
@@ -66,7 +66,7 @@ test("a company sends a procurement request and accepts the quote", async ({
   ).toBeVisible();
   await expectAccessible(page);
 
-  await page.goto(`${urls.app}/business`);
+  await page.goto(urls.app);
   await expect(page.getByText("Quotes to answer")).toBeVisible();
   await page.getByRole("link", { exact: true, name: "Invoices" }).click();
   await expect(page.getByText("No invoices yet.")).toBeVisible();
@@ -84,7 +84,7 @@ test("a company posts a job and hires a proposed candidate", async ({
   await resetCompany();
   await context.addCookies(await sessionCookies(customer.email, urls.app));
 
-  await page.goto(`${urls.app}/business/hiring`);
+  await page.goto(`${urls.app}/hiring`);
   await page.getByLabel("Role").fill("Accountant");
   await page.getByLabel("Location").fill("Baghdad");
   await page.getByRole("button", { name: "Post the job" }).click();

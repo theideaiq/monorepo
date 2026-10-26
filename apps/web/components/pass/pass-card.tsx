@@ -223,7 +223,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
         <div className="grid content-start gap-2 md:w-56">
           {staff ? (
             <Button asChild variant="outline">
-              <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale)}>
+              <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/staff")}>
                 {t("backOffice")}
                 <ExternalLinkIcon className="rtl:-scale-x-100" />
               </a>
