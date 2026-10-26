@@ -76,6 +76,8 @@ export const resetCustomer = async () => {
   const id = await ensureUser(customer.email, customer.name);
   check(await db.from("cart_items").delete().eq("user_id", id));
   check(await db.from("wishlist_items").delete().eq("user_id", id));
+  check(await db.from("plus_homes").delete().eq("user_id", id));
+  check(await db.from("plus_waitlist").delete().eq("user_id", id));
   check(await db.from("notifications").delete().eq("user_id", id));
   // An adult, so orders need no guardian; earlier rentals are given back.
   check(

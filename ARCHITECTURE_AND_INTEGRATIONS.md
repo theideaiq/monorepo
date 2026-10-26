@@ -698,6 +698,7 @@ Current schema:
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | The IDEA Store's catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
+| `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
 | `…_single_rent.sql` | Single-item rent: `rental_rates`, `rental_quote()`, `create_rental_order()` (rent + deposit lines), `settle_rental()`, `set_rental_deposit_rate()`; Keep it: `keep_price()`, `keep_rental()`; `rentals.kind`, `order_items.kind`, rental status `kept` |
 | `…_plus.sql` | The IDEA Plus `rentals`: `request_rental()` within the member's slots, `cancel_rental()`, `my_rental_allowance()`, `mark_overdue_rentals()` (daily cron); a trigger keeps stock and dates consistent |
 | `…_editorial.sql` | `posts`, `events` + `event_rsvps` (capacity, closed after start), `submissions` + staff-only `submission_reviews`; `review_queue()` hides authors until a decision (blind review) |
@@ -1466,6 +1467,46 @@ The IDEA Plus (migration `20261221000000_single_rent.sql`):
   used price less one month of their plan (`keep_price()`,
   `keep_rental()`), from "Your rentals" on `/plus`. Once paid, the rental
   ends as `kept` and the copy is sold to them.
+
+#### The IDEA Plus launch (places, waitlist, swaps)
+
+The IDEA Plus starts in Baghdad with a set number of places (migration
+`20261222000000_plus_launch.sql`):
+
+- **Places and the waitlist.** `store_settings.plus_capacity` (60) members;
+  `plus_status()` tells `/plus` how many places are free and whether the
+  caller can join (`member`, `invited`, `open`) or not (`full`,
+  `needs_home`, `outside_baghdad`). `POST /checkout` refuses a new Plus
+  member without a place (`plus_full`, `plus_needs_home`, …). Beyond the
+  places people join `plus_waitlist` (first come, first served, by
+  governorate). When a place opens (a member leaves, or support raises the
+  places) the next person in Baghdad is invited for `plus_invite_hours`
+  (72) with a `plus_invite` notification; expired invites pass on (the
+  daily `/cron/rentals` calls `run_plus_waitlist()`). Support can invite
+  anyone (Rentals → Plus places).
+- **Homes in Baghdad.** Joining asks for the member's area (`plus_areas`,
+  each with a delivery weekday, edited in Rentals → Plus places) and
+  address (`set_plus_home()` → `plus_homes`). People elsewhere wait for
+  their governorate.
+- **No due dates.** Plus rentals are kept as long as the member likes;
+  only single-item rents have due dates and late fees.
+- **The queue** is Saved (`wishlist_items.position`, `reorder_saved()`):
+  the rental catalog's "Add to queue" saves an item.
+- **Swaps.** `book_swap(returns, wants, method)` takes back what the
+  member returns and holds copies of what comes next, within the plan's
+  slots, at home on the area's next delivery day or at the counter. The
+  first delivery is free; after that home swaps count against
+  `plans.home_swaps` (1/2/4 a month) and an extra one costs
+  `store_settings.extra_swap_fee` (3,000 IQD) as an order line
+  (`kind = 'swap'`). Counter swaps are unlimited. Staff complete or cancel
+  swaps in Rentals → Swaps (`complete_swap()`, `cancel_swap()`).
+- **Plan options.** Annual plans (`plus-glow-year`, … : 10 months' price for
+  12); `pause_plus(days)` up to 31 days in 12 months (no swaps, the paid
+  period moves on by the pause; `resume_plus()` gives unused days back);
+  `cancel_plus()` ends Plus with the paid period (billing marks it
+  `canceled` at the period end and invoices nothing more);
+  `change_plus_plan()` sets `subscriptions.next_plan_id`, applied at the
+  next renewal by the billing service.
 
 #### Categories, prices and conditions (the catalogue)
 

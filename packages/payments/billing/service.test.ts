@@ -34,7 +34,11 @@ const order: OrderRecord = {
 
 const setup = (now = new Date("2026-10-03T12:00:00Z")) => {
   const { repository, state } = createMemoryBillingRepository(
-    [plan, { ...plan, active: false, id: "retired" }],
+    [
+      plan,
+      { ...plan, active: false, id: "retired" },
+      { ...plan, amount: 39_750, id: "bigger" },
+    ],
     [order]
   );
   const provider = createMockProvider();
@@ -221,6 +225,54 @@ describe("billing", () => {
     setNow(new Date("2026-11-20T00:00:00Z"));
     expect(await billing.issueRenewals()).toMatchObject({ expired: 1 });
     expect([...state.subscriptions.values()][0]?.status).toBe("expired");
+  });
+
+  test("a plan change applies from the next renewal", async () => {
+    const { billing, provider, setNow, state } = setup();
+    const { referenceId } = await billing.startCheckout({
+      owner: { userId: "user-1" },
+      planId: "pro-monthly",
+      userId: "user-1",
+    });
+    await billing.handleWebhook(provider.settle(referenceId, "paid"));
+    const [subscription] = [...state.subscriptions.values()];
+    if (subscription) {
+      state.subscriptions.set(subscription.id, {
+        ...subscription,
+        nextPlanId: "bigger",
+      });
+    }
+
+    setNow(new Date("2026-11-01T06:00:00Z"));
+    const { invoices } = await billing.issueRenewals();
+    expect(invoices).toMatchObject([{ amount: 39_750 }]);
+    expect([...state.subscriptions.values()][0]).toMatchObject({
+      nextPlanId: null,
+      planId: "bigger",
+    });
+  });
+
+  test("a cancelled subscription ends with its paid period", async () => {
+    const { billing, provider, setNow, state } = setup();
+    const { referenceId } = await billing.startCheckout({
+      owner: { userId: "user-1" },
+      planId: "pro-monthly",
+      userId: "user-1",
+    });
+    await billing.handleWebhook(provider.settle(referenceId, "paid"));
+    const [subscription] = [...state.subscriptions.values()];
+    if (subscription) {
+      state.subscriptions.set(subscription.id, {
+        ...subscription,
+        cancelAtPeriodEnd: true,
+      });
+    }
+
+    setNow(new Date("2026-11-01T06:00:00Z"));
+    expect(await billing.issueRenewals()).toMatchObject({ invoices: [] });
+    setNow(new Date("2026-11-04T06:00:00Z"));
+    expect(await billing.issueRenewals()).toMatchObject({ expired: 1 });
+    expect([...state.subscriptions.values()][0]?.status).toBe("canceled");
   });
 
   test("individual users subscribe on their own", async () => {

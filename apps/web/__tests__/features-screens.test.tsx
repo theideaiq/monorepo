@@ -562,7 +562,9 @@ describe("The IDEA Plus tiers", () => {
     expect(
       await screen.findByText("Upgrade to Plus Extra to rent this item.")
     ).toBeTruthy();
-    const [locked, open] = screen.getAllByRole("button", { name: "Request" });
+    const [locked, open] = screen.getAllByRole("button", {
+      name: "Add to queue",
+    });
     expect((locked as HTMLButtonElement).disabled).toBe(true);
     expect((open as HTMLButtonElement).disabled).toBe(false);
   });

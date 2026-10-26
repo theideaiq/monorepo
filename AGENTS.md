@@ -16,8 +16,9 @@ incidents) is in `docs/platform`.
     storefront (search, categories, featured and new products), with
     `/store` the full catalog and product pages (buying, reviews); The IDEA
     Plus is `/plus`, everything about renting (the rental catalog with
-    categories, then plans and tiers), public, with "Your Plus" (membership,
-    plans, rentals, rental requests) at `#yours` when signed in; The IDEA
+    categories, then plans and tiers), public, with "Your Plus" (joining
+    and the waitlist at `#join`; membership, plan changes, pause and
+    cancel, swaps, the queue and rentals) at `#yours` when signed in; The IDEA
     Club is `/club`, one feed with chips (`?show=events|news|stories|guides`),
     "Yours" at `#yours` (your events with the calendar feed, your
     submissions) and the Telegram rooms card, and `/club/<slug>` is a post

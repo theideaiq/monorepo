@@ -1350,6 +1350,7 @@ export type Database = {
           features_ar: string[];
           features_en: string[];
           free_delivery: boolean;
+          home_swaps: number | null;
           id: string;
           name: string;
           name_ar: string | null;
@@ -1369,6 +1370,7 @@ export type Database = {
           features_ar?: string[];
           features_en?: string[];
           free_delivery?: boolean;
+          home_swaps?: number | null;
           id: string;
           name: string;
           name_ar?: string | null;
@@ -1388,6 +1390,7 @@ export type Database = {
           features_ar?: string[];
           features_en?: string[];
           free_delivery?: boolean;
+          home_swaps?: number | null;
           id?: string;
           name?: string;
           name_ar?: string | null;
@@ -1396,6 +1399,100 @@ export type Database = {
           tier?: number | null;
         };
         Relationships: [];
+      };
+      plus_areas: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          id: string;
+          name_ar: string;
+          name_en: string;
+          position: number;
+          weekday: number | null;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          id?: string;
+          name_ar: string;
+          name_en: string;
+          position?: number;
+          weekday?: number | null;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          id?: string;
+          name_ar?: string;
+          name_en?: string;
+          position?: number;
+          weekday?: number | null;
+        };
+        Relationships: [];
+      };
+      plus_homes: {
+        Row: {
+          address: string;
+          area_id: string;
+          phone: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          address: string;
+          area_id: string;
+          phone: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          address?: string;
+          area_id?: string;
+          phone?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_homes_area_id_fkey";
+            columns: ["area_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_areas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plus_pauses: {
+        Row: {
+          ends_at: string;
+          id: string;
+          starts_at: string;
+          subscription_id: string;
+          user_id: string;
+        };
+        Insert: {
+          ends_at: string;
+          id?: string;
+          starts_at?: string;
+          subscription_id: string;
+          user_id: string;
+        };
+        Update: {
+          ends_at?: string;
+          id?: string;
+          starts_at?: string;
+          subscription_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_pauses_subscription_id_fkey";
+            columns: ["subscription_id"];
+            isOneToOne: false;
+            referencedRelation: "subscriptions";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       plus_seats: {
         Row: {
@@ -1454,6 +1551,111 @@ export type Database = {
             columns: ["subscription_id"];
             isOneToOne: true;
             referencedRelation: "subscriptions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plus_swaps: {
+        Row: {
+          area_id: string | null;
+          counted: boolean;
+          created_at: string;
+          done_at: string | null;
+          fee: number;
+          id: string;
+          method: string;
+          order_id: string | null;
+          scheduled_for: string | null;
+          status: string;
+          user_id: string | null;
+        };
+        Insert: {
+          area_id?: string | null;
+          counted?: boolean;
+          created_at?: string;
+          done_at?: string | null;
+          fee?: number;
+          id?: string;
+          method: string;
+          order_id?: string | null;
+          scheduled_for?: string | null;
+          status?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          area_id?: string | null;
+          counted?: boolean;
+          created_at?: string;
+          done_at?: string | null;
+          fee?: number;
+          id?: string;
+          method?: string;
+          order_id?: string | null;
+          scheduled_for?: string | null;
+          status?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_swaps_area_id_fkey";
+            columns: ["area_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_areas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plus_swaps_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plus_waitlist: {
+        Row: {
+          area_id: string | null;
+          created_at: string;
+          governorate: string;
+          invite_expires_at: string | null;
+          invited_at: string | null;
+          plan_id: string | null;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          area_id?: string | null;
+          created_at?: string;
+          governorate: string;
+          invite_expires_at?: string | null;
+          invited_at?: string | null;
+          plan_id?: string | null;
+          status?: string;
+          user_id: string;
+        };
+        Update: {
+          area_id?: string | null;
+          created_at?: string;
+          governorate?: string;
+          invite_expires_at?: string | null;
+          invited_at?: string | null;
+          plan_id?: string | null;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_waitlist_area_id_fkey";
+            columns: ["area_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_areas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plus_waitlist_plan_id_fkey";
+            columns: ["plan_id"];
+            isOneToOne: false;
+            referencedRelation: "plans";
             referencedColumns: ["id"];
           },
         ];
@@ -2175,11 +2377,13 @@ export type Database = {
           product_id: string | null;
           refund_due: number | null;
           requested_at: string;
+          return_swap_id: string | null;
           returned_at: string | null;
           settled_at: string | null;
           staff_note: string | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["rental_status"];
+          swap_id: string | null;
           updated_at: string;
           user_id: string | null;
           variant_id: string | null;
@@ -2201,11 +2405,13 @@ export type Database = {
           product_id?: string | null;
           refund_due?: number | null;
           requested_at?: string;
+          return_swap_id?: string | null;
           returned_at?: string | null;
           settled_at?: string | null;
           staff_note?: string | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["rental_status"];
+          swap_id?: string | null;
           updated_at?: string;
           user_id?: string | null;
           variant_id?: string | null;
@@ -2227,11 +2433,13 @@ export type Database = {
           product_id?: string | null;
           refund_due?: number | null;
           requested_at?: string;
+          return_swap_id?: string | null;
           returned_at?: string | null;
           settled_at?: string | null;
           staff_note?: string | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["rental_status"];
+          swap_id?: string | null;
           updated_at?: string;
           user_id?: string | null;
           variant_id?: string | null;
@@ -2249,6 +2457,20 @@ export type Database = {
             columns: ["product_id"];
             isOneToOne: false;
             referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rentals_return_swap_fk";
+            columns: ["return_swap_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_swaps";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "rentals_swap_fk";
+            columns: ["swap_id"];
+            isOneToOne: false;
+            referencedRelation: "plus_swaps";
             referencedColumns: ["id"];
           },
           {
@@ -2476,6 +2698,7 @@ export type Database = {
           cash_limit: number | null;
           cash_on_delivery_enabled: boolean;
           delivery_cost: number;
+          extra_swap_fee: number;
           id: boolean;
           max_giveaway_rate: number;
           min_margin_rate: number;
@@ -2485,6 +2708,8 @@ export type Database = {
           pickup_enabled: boolean;
           pickup_hours_ar: string | null;
           pickup_hours_en: string | null;
+          plus_capacity: number;
+          plus_invite_hours: number;
           rental_deposit_rate: number;
           return_days: number;
           shipping_fee: number;
@@ -2496,6 +2721,7 @@ export type Database = {
           cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
           delivery_cost?: number;
+          extra_swap_fee?: number;
           id?: boolean;
           max_giveaway_rate?: number;
           min_margin_rate?: number;
@@ -2505,6 +2731,8 @@ export type Database = {
           pickup_enabled?: boolean;
           pickup_hours_ar?: string | null;
           pickup_hours_en?: string | null;
+          plus_capacity?: number;
+          plus_invite_hours?: number;
           rental_deposit_rate?: number;
           return_days?: number;
           shipping_fee?: number;
@@ -2516,6 +2744,7 @@ export type Database = {
           cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
           delivery_cost?: number;
+          extra_swap_fee?: number;
           id?: boolean;
           max_giveaway_rate?: number;
           min_margin_rate?: number;
@@ -2525,6 +2754,8 @@ export type Database = {
           pickup_enabled?: boolean;
           pickup_hours_ar?: string | null;
           pickup_hours_en?: string | null;
+          plus_capacity?: number;
+          plus_invite_hours?: number;
           rental_deposit_rate?: number;
           return_days?: number;
           shipping_fee?: number;
@@ -2629,7 +2860,9 @@ export type Database = {
           current_period_end: string | null;
           current_period_start: string | null;
           id: string;
+          next_plan_id: string | null;
           organization_id: string | null;
+          paused_until: string | null;
           plan_id: string;
           provider: string;
           status: Database["public"]["Enums"]["subscription_status"];
@@ -2643,7 +2876,9 @@ export type Database = {
           current_period_end?: string | null;
           current_period_start?: string | null;
           id?: string;
+          next_plan_id?: string | null;
           organization_id?: string | null;
+          paused_until?: string | null;
           plan_id: string;
           provider: string;
           status?: Database["public"]["Enums"]["subscription_status"];
@@ -2657,7 +2892,9 @@ export type Database = {
           current_period_end?: string | null;
           current_period_start?: string | null;
           id?: string;
+          next_plan_id?: string | null;
           organization_id?: string | null;
+          paused_until?: string | null;
           plan_id?: string;
           provider?: string;
           status?: Database["public"]["Enums"]["subscription_status"];
@@ -2671,6 +2908,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "affiliates";
             referencedColumns: ["user_id"];
+          },
+          {
+            foreignKeyName: "subscriptions_next_plan_id_fkey";
+            columns: ["next_plan_id"];
+            isOneToOne: false;
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
           },
           {
             foreignKeyName: "subscriptions_organization_id_fkey";
@@ -3068,16 +3312,19 @@ export type Database = {
       wishlist_items: {
         Row: {
           created_at: string;
+          position: number;
           product_id: string;
           user_id: string;
         };
         Insert: {
           created_at?: string;
+          position?: number;
           product_id: string;
           user_id?: string;
         };
         Update: {
           created_at?: string;
+          position?: number;
           product_id?: string;
           user_id?: string;
         };
@@ -3187,6 +3434,33 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      book_swap: {
+        Args: {
+          method?: string;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          returns: string[];
+          wants: string[];
+        };
+        Returns: {
+          area_id: string | null;
+          counted: boolean;
+          created_at: string;
+          done_at: string | null;
+          fee: number;
+          id: string;
+          method: string;
+          order_id: string | null;
+          scheduled_for: string | null;
+          status: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_swaps";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       bulbs_outstanding: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3196,11 +3470,83 @@ export type Database = {
         }[];
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
+      cancel_plus: {
+        Args: { keep?: boolean };
+        Returns: {
+          affiliate_id: string | null;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       cancel_procurement_request: {
         Args: { request: string };
         Returns: undefined;
       };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
+      cancel_swap: {
+        Args: { target: string };
+        Returns: {
+          area_id: string | null;
+          counted: boolean;
+          created_at: string;
+          done_at: string | null;
+          fee: number;
+          id: string;
+          method: string;
+          order_id: string | null;
+          scheduled_for: string | null;
+          status: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_swaps";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      change_plus_plan: {
+        Args: { plan: string };
+        Returns: {
+          affiliate_id: string | null;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       check_in_rsvp: {
         Args: { event: string; member: string };
         Returns: string;
@@ -3289,6 +3635,28 @@ export type Database = {
       complete_order_payment: {
         Args: { order_id: string };
         Returns: undefined;
+      };
+      complete_swap: {
+        Args: { target: string };
+        Returns: {
+          area_id: string | null;
+          counted: boolean;
+          created_at: string;
+          done_at: string | null;
+          fee: number;
+          id: string;
+          method: string;
+          order_id: string | null;
+          scheduled_for: string | null;
+          status: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_swaps";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       complete_trade_in: {
         Args: { create_product?: boolean; trade_in: string };
@@ -3518,9 +3886,32 @@ export type Database = {
       };
       import_products: { Args: { items: Json }; Returns: Json };
       invite_guardian: { Args: Record<PropertyKey, never>; Returns: string };
+      invite_to_plus: {
+        Args: { member: string };
+        Returns: {
+          area_id: string | null;
+          created_at: string;
+          governorate: string;
+          invite_expires_at: string | null;
+          invited_at: string | null;
+          plan_id: string | null;
+          status: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_waitlist";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       issue_invoice: {
         Args: { days?: number; purchase_order: string };
         Returns: string;
+      };
+      join_plus_waitlist: {
+        Args: { governorate: string; plan: string };
+        Returns: number;
       };
       keep_price: { Args: { target: string }; Returns: number };
       keep_rental: {
@@ -3563,6 +3954,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      leave_plus_waitlist: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
       };
       ledger_monthly_summary: {
         Args: {
@@ -3733,6 +4128,16 @@ export type Database = {
           tier: number;
         }[];
       };
+      my_swap_terms: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          area_id: string;
+          extra_fee: number;
+          home_swaps: number;
+          home_swaps_used: number;
+          next_date: string;
+        }[];
+      };
       my_teens: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3798,6 +4203,31 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      pause_plus: {
+        Args: { days: number };
+        Returns: {
+          affiliate_id: string | null;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       pending_invitations: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -3806,6 +4236,20 @@ export type Database = {
           organization_name: string;
           role: Database["public"]["Enums"]["org_role"];
           token: string;
+        }[];
+      };
+      plus_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          can_join: boolean;
+          capacity: number;
+          invite_expires_at: string;
+          join_reason: string;
+          places_free: number;
+          waiting: number;
+          waitlist_governorate: string;
+          waitlist_position: number;
+          waitlist_status: string;
         }[];
       };
       post_journal_entry: {
@@ -3897,6 +4341,7 @@ export type Database = {
           price: number;
         }[];
       };
+      reorder_saved: { Args: { products: string[] }; Returns: undefined };
       request_plus_seat: {
         Args: { member: string; org: string; plan: string };
         Returns: string;
@@ -3920,11 +4365,13 @@ export type Database = {
           product_id: string | null;
           refund_due: number | null;
           requested_at: string;
+          return_swap_id: string | null;
           returned_at: string | null;
           settled_at: string | null;
           staff_note: string | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["rental_status"];
+          swap_id: string | null;
           updated_at: string;
           user_id: string | null;
           variant_id: string | null;
@@ -3939,6 +4386,31 @@ export type Database = {
       respond_to_trade_in_offer: {
         Args: { accept: boolean; trade_in: string };
         Returns: Database["public"]["Enums"]["trade_in_status"];
+      };
+      resume_plus: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          affiliate_id: string | null;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       review_queue: {
         Args: Record<PropertyKey, never>;
@@ -3967,6 +4439,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      run_plus_waitlist: { Args: Record<PropertyKey, never>; Returns: number };
       search_products: {
         Args: {
           search_category?: string;
@@ -4033,6 +4506,26 @@ export type Database = {
         Args: { multipliers?: Json; rules: Json };
         Returns: undefined;
       };
+      set_plus_home: {
+        Args: { address: string; area: string; phone: string };
+        Returns: {
+          address: string;
+          area_id: string;
+          phone: string;
+          updated_at: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_homes";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      set_plus_settings: {
+        Args: { capacity: number; invite_hours: number; swap_fee: number };
+        Returns: undefined;
+      };
       set_purchase_order_status: {
         Args: {
           new_status: Database["public"]["Enums"]["purchase_order_status"];
@@ -4068,11 +4561,13 @@ export type Database = {
           product_id: string | null;
           refund_due: number | null;
           requested_at: string;
+          return_swap_id: string | null;
           returned_at: string | null;
           settled_at: string | null;
           staff_note: string | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["rental_status"];
+          swap_id: string | null;
           updated_at: string;
           user_id: string | null;
           variant_id: string | null;

@@ -73,7 +73,7 @@ const loadStats = async (supabase: ServerClient, can: Access) => {
     countIf(can.members, () =>
       supabase
         .from("subscriptions")
-        .select("id, plans!inner(audience)", head)
+        .select("id, plans!subscriptions_plan_id_fkey!inner(audience)", head)
         .eq("plans.audience", "plus")
         .in("status", ["active", "past_due"])
     ),

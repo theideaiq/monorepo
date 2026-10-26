@@ -1122,11 +1122,14 @@
         "current": "Your plan",
         "subscribe": "Join for {amount}",
         "redirecting": "Opening the payment page…",
-        "failed": "We couldn't start the payment. Please try again."
+        "failed": "We couldn't start the payment. Please try again.",
+        "interval": "Billing",
+        "monthly": "Monthly",
+        "yearly": "Yearly · pay 10 months, get 12"
       },
       "catalog": {
         "title": "Rental catalog",
-        "description": "Request an item and we'll arrange delivery.",
+        "description": "Add items to your queue; your next swap brings the top ones.",
         "search": "Search the rental catalog",
         "empty": "No rental items here yet.",
         "available": "{count} available",
@@ -1139,7 +1142,10 @@
         "needsPlan": "Needs {plan}",
         "needsHigherPlan": "Needs a higher plan",
         "upgradeTo": "Upgrade to {plan} to rent this item.",
-        "upgrade": "Upgrade your plan to rent this item."
+        "upgrade": "Upgrade your plan to rent this item.",
+        "addToQueue": "Add to queue",
+        "inQueue": "In your queue",
+        "queueHint": "Your slots are full: queue it for your next swap."
       },
       "rentals": {
         "title": "Your rentals",
@@ -1167,7 +1173,102 @@
         "needsTier": "This item needs a higher plan. Upgrade your membership to rent it."
       },
       "signedOut": "Sign in to subscribe, see your rentals and request items.",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "join": {
+        "title": "Join The IDEA Plus",
+        "description": "Plus starts in Baghdad with a limited number of places, so every member gets their items on time.",
+        "placesLeft": "{count, plural, one {One place left} other {{n} places left}}",
+        "full": "Plus is full right now; {waiting} waiting.",
+        "fullHelp": "Join the waitlist: when a place opens, the next person is invited and has 72 hours to join.",
+        "baghdadFirst": "Plus is in Baghdad for now. Tell us your area so we can bring your items on its delivery day.",
+        "notBaghdad": "I don't live in Baghdad",
+        "area": "Area in Baghdad",
+        "areaPlaceholder": "Choose your area",
+        "day": "Delivery day: {day}",
+        "dayLater": "We'll tell you the delivery day for this area.",
+        "phone": "Mobile number",
+        "address": "Address",
+        "homeInvalid": "Choose your area and enter your address and a valid mobile number.",
+        "saveHome": "Save",
+        "saving": "Saving…",
+        "governorate": "Governorate",
+        "joinWaitlist": "Join the waitlist",
+        "failed": "We couldn't do that. Please try again.",
+        "invited": "A place is yours until {until}. Choose a plan below to join.",
+        "waiting": "You're number {position} on the waitlist. We'll let you know when a place opens.",
+        "waitingOutside": "You're number {position} on the waitlist for {governorate}. We'll let you know when Plus comes there.",
+        "leave": "Leave the waitlist",
+        "choosePlan": "There's a place for you. Choose a plan below."
+      },
+      "weekdays": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday"
+      },
+      "queue": {
+        "title": "Your queue",
+        "description": "What you'd like next, in order. It's your Saved list.",
+        "empty": "Your queue is empty. Add items from the rental catalog.",
+        "up": "Move {name} up",
+        "down": "Move {name} down",
+        "remove": "Remove {name}"
+      },
+      "swap": {
+        "title": "Book a swap",
+        "goesBack": "Going back",
+        "comesNext": "Coming next (room for {n})",
+        "queueEmpty": "Add items to your queue first.",
+        "method": "Where",
+        "home": "At home",
+        "counter": "At the counter",
+        "counterFree": "Swaps at the counter are unlimited.",
+        "firstFree": "Your first delivery is included.",
+        "included": "{count, plural, one {One home swap left this month.} other {{n} home swaps left this month.}}",
+        "extra": "This month's home swaps are used: this one costs {fee}.",
+        "nextDate": "Next delivery day: {date}.",
+        "tooMany": "Choose up to {n} items.",
+        "book": "Book the swap",
+        "booking": "Booking…",
+        "booked": "Your swap is booked",
+        "onDate": "We'll come on {date}.",
+        "dateSoon": "We'll tell you the day soon.",
+        "atCounter": "Bring your items to the counter whenever you like.",
+        "payExtra": "Pay {fee} for the extra swap",
+        "cancel": "Cancel the swap",
+        "errors": {
+          "noSlots": "That's more items than your plan holds.",
+          "needsTier": "One of these needs a higher plan.",
+          "unavailable": "One of these is rented out. Choose another.",
+          "swapBooked": "You already have a swap booked.",
+          "paused": "Plus is paused. Resume it to swap.",
+          "ending": "Plus ends at the end of this period, so only returns are possible.",
+          "needsHome": "Add your area and address first.",
+          "noPauseDays": "You don't have that many pause days left this year.",
+          "notForMinors": "One of these is rated 18+.",
+          "failed": "We couldn't do that. Please try again."
+        }
+      },
+      "manage": {
+        "title": "Your plan",
+        "changePlan": "Change plan",
+        "monthly": "{plan} · {price} a month",
+        "yearly": "{plan} · {price} a year",
+        "changeHelp": "A new plan starts at your next renewal.",
+        "changesOn": "Changes to {plan} on {date}.",
+        "pauseDays": "Pause for (days)",
+        "pause": "Pause",
+        "pauseHelp": "Up to 31 days a year. Your paid period moves on by the same days; no swaps meanwhile.",
+        "pausedUntil": "Paused until {date}.",
+        "resume": "Resume now",
+        "cancelHelp": "Cancel any time; Plus ends with your paid period.",
+        "endsOn": "Plus ends on {date}. Return your items by then.",
+        "cancel": "Cancel Plus",
+        "keep": "Keep Plus"
+      }
     },
     "events": {
       "title": "Events",
@@ -2186,6 +2287,18 @@
         "guardian_linked": {
           "title": "Your guardian is linked",
           "body": "{name} is now your guardian on The IDEA Pass."
+        },
+        "plus_invite": {
+          "title": "A place in The IDEA Plus",
+          "body": "A place is yours for {hours} hours. Choose a plan to join."
+        },
+        "plus_swap_booked": {
+          "title": "Swap booked",
+          "body": "We'll bring your next items and take the others back."
+        },
+        "plus_swap_done": {
+          "title": "Swap done",
+          "body": "Your new items are with you. Enjoy!"
         }
       },
       "kinds": {
@@ -2874,7 +2987,9 @@
         "requests": "Requests",
         "active": "Out with members",
         "overdue": "Overdue",
-        "history": "History"
+        "history": "History",
+        "swaps": "Swaps",
+        "plus": "Plus places"
       },
       "empty": {
         "requests": "No requests waiting to be delivered.",
@@ -2902,7 +3017,55 @@
       "settle": "Settle",
       "single": "Rented on its own · deposit {deposit}",
       "order": "Order",
-      "settled": "Settled: late fees {late} · refund {refund} · owed {due}"
+      "settled": "Settled: late fees {late} · refund {refund} · owed {due}",
+      "inSwap": "In a swap",
+      "noDue": "No due date",
+      "swaps": {
+        "title": "Plus swaps",
+        "empty": "No swaps booked.",
+        "when": "When",
+        "back": "Going back",
+        "next": "Coming next",
+        "counter": "At the counter",
+        "noDay": "Area has no day yet",
+        "feeUnpaid": "Extra swap {fee}: not paid yet",
+        "feePaid": "Extra swap {fee}: paid",
+        "done": "Done",
+        "cancel": "Cancel",
+        "cancelConfirm": "Cancel this swap?",
+        "cancelDescription": "The copies held for it go back into stock; what the member has stays with them."
+      },
+      "plus": {
+        "title": "Plus places",
+        "taken": "Members",
+        "free": "Places free",
+        "waiting": "Waiting",
+        "waitlist": "Waitlist",
+        "waitlistHint": "First come, first served. When a place opens, the next person in Baghdad is invited automatically; you can also invite anyone now.",
+        "waitlistEmpty": "Nobody is waiting.",
+        "where": "Where",
+        "since": "Since",
+        "invitedUntil": "Invited until {date}",
+        "status": {
+          "waiting": "Waiting",
+          "expired": "Invite expired"
+        },
+        "invite": "Invite",
+        "areas": "Areas of Baghdad",
+        "areasHint": "Members choose their area when they join; home swaps go on its delivery day.",
+        "nameEn": "Name (English)",
+        "nameAr": "Name (Arabic)",
+        "day": "Delivery day",
+        "noDay": "Not set",
+        "offered": "Offered",
+        "addArea": "Add area",
+        "settings": "Settings",
+        "settingsHint": "Raising the places invites the next people on the waitlist straight away.",
+        "capacity": "Places",
+        "capacityHint": "About 60 while there are 168 copies to lend.",
+        "inviteHours": "Invite open for (hours)",
+        "swapFee": "Extra home swap (IQD)"
+      }
     },
     "customers": {
       "title": "Customers",

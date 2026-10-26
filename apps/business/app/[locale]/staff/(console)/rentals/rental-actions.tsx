@@ -24,6 +24,8 @@ interface RentalActionsProps {
   /** Rented on its own: cancelled with its order, not here. */
   readonly single: boolean;
   readonly status: RentalStatus;
+  /** Booked in a Plus swap: delivered from Swaps, not here. */
+  readonly swap: boolean;
 }
 
 /** Settle a single-item rent: damage (if any) comes out of the deposit. */
@@ -54,11 +56,16 @@ export const RentalActions = ({
   settle,
   single,
   status,
+  swap,
 }: RentalActionsProps) => {
   const t = useTranslations("admin.rentals");
 
   if (status === "returned") {
     return settle ? <SettleForm id={id} /> : null;
+  }
+
+  if (status === "requested" && swap) {
+    return <span className="text-muted-foreground text-xs">{t("inSwap")}</span>;
   }
 
   if (status === "requested") {
@@ -96,20 +103,25 @@ export const RentalActions = ({
   if (status === "active" || status === "overdue") {
     return (
       <div className="flex flex-wrap items-center justify-end gap-2">
-        <ActionForm action={changeDueDate} className="flex items-center gap-2">
-          <input name="id" type="hidden" value={id} />
-          <Input
-            aria-label={t("dueDate")}
-            className="w-auto"
-            defaultValue={due}
-            name="due"
-            required
-            type="date"
-          />
-          <SubmitButton size="sm" variant="outline">
-            {t("changeDue")}
-          </SubmitButton>
-        </ActionForm>
+        {single ? (
+          <ActionForm
+            action={changeDueDate}
+            className="flex items-center gap-2"
+          >
+            <input name="id" type="hidden" value={id} />
+            <Input
+              aria-label={t("dueDate")}
+              className="w-auto"
+              defaultValue={due}
+              name="due"
+              required
+              type="date"
+            />
+            <SubmitButton size="sm" variant="outline">
+              {t("changeDue")}
+            </SubmitButton>
+          </ActionForm>
+        ) : null}
         <ActionButton action={returnRental} fields={{ id }} variant="default">
           {t("markReturned")}
         </ActionButton>
