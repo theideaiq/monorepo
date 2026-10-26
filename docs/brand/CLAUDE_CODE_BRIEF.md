@@ -16,6 +16,7 @@ Work through the phases in order, **one pull request per phase**, each green on 
    - Keep the brand-name rule in `AGENTS.md`; update its examples (The IDEA Pass, The IDEA Plus, The IDEA Business, The IDEA Design).
 2. **The business app.**
    - Rename `apps/app` to `apps/business` (workspace name, Turborepo, Vercel ignore script, CI, Knip).
+   - **Owner handoff before merging:** the Vercel project for this app has its Root Directory set to `apps/app` (`ARCHITECTURE_AND_INTEGRATIONS.md`, section 5.1). Say in the pull request that the owner must change it to `apps/business` (and add the `business.theideaiq.com` domain) at merge time, or the next deployment fails; update section 5.1 in the same pull request.
    - Production host `business.theideaiq.com` instead of `spark.theideaiq.com`: update `NEXT_PUBLIC_APP_URL` defaults, `isAllowedReturnTo`, docs and every `.env.example`.
    - Move the back office from `/[locale]/admin` to `/[locale]/staff` (`@/lib/admin/navigation`, links, tests). The company workspace stays at `/business`.
 3. **Website routes (apps/web).** Exactly this set; delete the old ones:
@@ -33,7 +34,7 @@ Work through the phases in order, **one pull request per phase**, each green on 
    | `/about`, `/careers`, `/help` (FAQ, contact, Ask Droid, your tickets) | `/about/careers`, `/about/faq`, `/about/contact`, `/pass/support` |
    | `/legal/[slug]`, `/r/[code]` (invites and affiliates, resolved server-side) | `/i/[code]`, `/a/[code]` |
 
-   Keep `/mfa` (staff), `/onboarding`, `/tg`, `/auth/callback`. Rename the Post's database section values only if needed (`news`, `stories`, `learn` → shown as News, Stories, Guides).
+   Keep `/sign-out` (the shared sign-out used by the business app and the design site), `/mfa` (staff), `/onboarding`, `/tg`, `/auth/callback`. Rename the Post's database section values only if needed (`news`, `stories`, `learn` → shown as News, Stories, Guides).
 4. **Navigation.**
    - Phone tabs: **Store · Plus · Club · Pass**.
    - Top bar on every screen except sign-in and checkout: logo, search, **Saved** (heart, count), **Cart** (count), Pass on desktop.
@@ -46,8 +47,8 @@ Work through the phases in order, **one pull request per phase**, each green on 
 
 1. **Tokens** (`packages/design-system/styles/globals.css`): rename `--suite` to `--business` and `--bulb-empty` to `--meter-empty`; delete `--academy` and `--launcher`; charts 1–5 = pink, yellow, violet, orange, cobalt. Match `docs/brand/tokens.css`.
 2. **`ConditionLabel` replaces `ConditionBulb`** (DESIGN_SYSTEM.md section 4): the four-step meter plus the word, mapping `new`, `open_box`, `refurbished`, `used` one to one. Remove the merged "like new" mapping and `apps/web/components/product-condition-bulb.tsx`.
-3. **New:** `BulbsAmount` (the only use of the bulb icon in the UI) and `PlanMark` ("Plus Shine · 2 items at a time").
-4. **Update:** `Badge` tones (drop academy, suite, launcher; add business); `NameTile` (Club, Plus, Staff only); `PlanCard` (PlanMark title, Shine featured); `ProductCard` (ConditionLabel, age rating, Rent-only items show "worth …"); `PassCard` (pink for everyone, plan, Student and Staff badges; no tier colours).
+3. **New:** `BulbsAmount` (the only use of the bulb as a meaning-carrying UI icon; the logo, `BulbKicker`, `PinkBand`, `PassCard` and the app icon keep the bulb as brand) and `PlanMark` ("Plus Shine · 2 items at a time").
+4. **Update:** `Badge` tones (drop academy, suite, launcher; add business); `NameTile` (Club, Plus, Staff only); `PlanCard` (PlanMark title, Shine featured); `ProductCard` (ConditionLabel, Rent-only items show "worth …"; the age rating is added in Phase 4 with `products.age_rating`); `PassCard` (pink for everyone, plan, Student and Staff badges; no tier colours).
 5. **Assets:** copy `docs/brand/logos/condition-*.svg`, `droid-avatar.png` and `droid-hero.png` where used; remove `tile-post.svg`, `tile-droid.svg` and `condition-like-new.svg`. Use the Droid on empty states, 404 and error pages, and "Ask Droid" in Help (never in checkout, receipts, legal or Business).
 6. Storybook stories for every changed component, both themes and both directions.
 
@@ -65,7 +66,7 @@ Work through the phases in order, **one pull request per phase**, each green on 
 
 1. Date of birth asked once at first sign-in (onboarding); the Pass is open from **13**.
 2. **13–17:** a guardian link in Settings (guardian's phone confirmed by a one-time code). Purchases, single rentals and Plus need the guardian's confirmation once; cash orders are handed to an adult.
-3. **18+ only:** games rated PEGI 18 (add `age_rating` to products and show it on game pages; hide 18-rated items from under-18 Passes), Sell to us, affiliates, surveys and survey rewards, booking game night kits.
+3. **18+ only:** games rated PEGI 18 (add `age_rating` to products and show it on game pages; hide 18-rated items from under-18 Passes; show the rating on `ProductCard` too), Sell to us, affiliates, surveys and survey rewards, booking game night kits.
 4. Events: under-16s attend with an adult (shown on the event page).
 
 ## Phase 5 — New features (one pull request each, in this order)
@@ -84,4 +85,4 @@ Enter cost prices for every copy; publish or delete the 169 draft products; fix 
 
 ## Checks for every phase
 
-`bun run check`, `typecheck`, `test`, `check:rtl`, `check:i18n`, `check:placeholders`, `check:unused`, `boundaries`, `db:test` for schema changes, every build, and the Playwright + axe journeys. Each pull request includes screenshots of the changed screens in Arabic and English, light and dark. No raw hex in components; no black in logos, tiles, the Droid or brand blocks; the bulb icon only for Bulbs.
+`bun run check`, `typecheck`, `test`, `check:rtl`, `check:i18n`, `check:placeholders`, `check:unused`, `boundaries`, `db:test` for schema changes, every build, and the Playwright + axe journeys. Each pull request includes screenshots of the changed screens in Arabic and English, light and dark. No raw hex in components; no black in logos, tiles, the Droid or brand blocks; the bulb as a UI icon only for Bulbs (logo and brand devices excepted).

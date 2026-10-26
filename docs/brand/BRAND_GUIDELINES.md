@@ -204,7 +204,7 @@ Never set Arabic below 14px; never letter-space, italicise or fake-bold Arabic; 
 1. **The bulb kicker.** A small yellow bulb (pink on paper) centred above every post headline, slide title and receipt header.
 2. **The Highlight.** One or two headline words on a yellow swipe with dark text; on pink grounds, the words simply turn yellow. One per headline.
 3. **The souq price.** First the market price, small and struck through: "بالسوگ بـ 150,000". Then ours, large and bold: "يمنا بـ 99,750 دينار عراقي". Show a market price only if we checked it in the market in the last 7 days and keep the evidence (screenshot or receipt) for 12 months; consumer law can treat comparison prices as advertising claims.
-4. **Bulbs.** Our points: 1 Bulb = 100 IQD. The small yellow bulb icon is reserved for Bulbs and nothing else (not condition, not plans). Everyone earns 3% back; Plus Glow 4%, Shine 5%, Blaze 6%. There are no spend tiers and no tier colours.
+4. **Bulbs.** Our points: 1 Bulb = 100 IQD. As a small UI icon, the bulb is reserved for Bulbs and nothing else (not condition, not plans); the logo, kickers, bands and the Pass card keep it as the brand mark. Everyone earns 3% back; Plus Glow 4%, Shine 5%, Blaze 6%. There are no spend tiers and no tier colours.
 5. **Condition labels.** Every copy for sale shows one plain label with a small four-step meter (never a bulb). Letter grades stay internal.
 
    | Meter | Arabic | English | Means |
@@ -250,7 +250,7 @@ Captions: Arabic first, English after a line break when needed; end with the act
 - **Personal pages:** `/plus` and `/club` become personal when signed in (your rentals and queue; your tickets and surveys). Your Pass has four pages: the card, Orders, Bulbs, Settings.
 - Two themes: Paper (light) and Dark, following the system setting.
 - The primary button is pink with white text; on pink panels it is yellow with dark text.
-- Icons: Lucide, 1.75px stroke, rounded joins, `currentColor`; directional icons flip in RTL. The bulb icon only for Bulbs.
+- Icons: Lucide, 1.75px stroke, rounded joins, `currentColor`; directional icons flip in RTL. As a UI icon the bulb means Bulbs only (the logo and brand devices keep it).
 - Motion: things "switch on" — a fade with scale 0.96 → 1 in 120–240ms, no bounce; reduced motion means opacity only.
 - Every text and control meets WCAG 2.2 AA in both themes. Games show their age rating.
 
