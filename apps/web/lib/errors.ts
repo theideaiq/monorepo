@@ -67,6 +67,11 @@ export type CheckoutError =
   | "payment"
   | "pickupUnavailable"
   | "rentedOut"
+  | "kitsFull"
+  | "adultsOnly"
+  | "baghdadOnly"
+  | "pickWeekend"
+  | "pickGames"
   | "suspended"
   | "unavailable"
   | "unknown"
@@ -128,8 +133,20 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
   ) {
     return "rentedOut";
   }
-  return "unknown";
+  return toKitError(message);
 };
+
+/** The game night kit refusals (book_kit). */
+const KIT_ERRORS: [string, CheckoutError][] = [
+  ["All kits are booked", "kitsFull"],
+  ["18 or over", "adultsOnly"],
+  ["Baghdad only", "baghdadOnly"],
+  ["coming weekends", "pickWeekend"],
+  ["kit's games", "pickGames"],
+];
+
+const toKitError = (message: string): CheckoutError =>
+  KIT_ERRORS.find(([text]) => message.includes(text))?.[1] ?? "unknown";
 
 export type RentalError =
   | "needsTier"

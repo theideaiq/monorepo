@@ -129,6 +129,9 @@ test("security.txt is served without a locale redirect", async ({
 
 const PICKUP = /^Pickup/;
 const JOIN_PLAN = /^Join for /;
+const KIT_PAGE = /\/kits\/retro$/;
+const BAGHDAD = /^Baghdad/;
+const CASH_ON_DELIVERY = /^Cash on delivery/;
 const PAY_AT_PICKUP = /^Pay at pickup/;
 const PLACE_CASH_ORDER = /^Place order · /;
 const RENT_PAGE = /\/rent\/elden-ring-ps5$/;
@@ -220,6 +223,34 @@ test.describe("a signed-in customer", () => {
       page.getByRole("button", { name: JOIN_PLAN }).first()
     ).toBeVisible();
     await expectAccessible(page);
+    noErrors();
+  });
+
+  test("books a game night kit for a weekend", async ({ page }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/plus#kits`);
+    await page
+      .getByRole("listitem")
+      .filter({ hasText: "Retro night" })
+      .getByRole("link", { name: "Book a weekend" })
+      .click();
+    await expect(page).toHaveURL(KIT_PAGE);
+    await page.getByRole("radio").first().click();
+    await page.getByRole("combobox", { name: "Governorate" }).click();
+    await page.getByRole("option", { name: BAGHDAD }).click();
+    await page.getByLabel("Full name").fill(customer.name);
+    await page.getByLabel("Mobile number").fill("07701234567");
+    await page
+      .getByLabel("Address", { exact: true })
+      .fill("Street 62, Karrada");
+    await page.getByRole("radio", { name: CASH_ON_DELIVERY }).click();
+    await expectAccessible(page);
+    await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
+
+    await expect(page).toHaveURL(ORDER_PAGE);
+    await expect(
+      page.getByText("Refundable deposit: Retro night")
+    ).toBeVisible();
     noErrors();
   });
 

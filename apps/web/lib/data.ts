@@ -228,6 +228,37 @@ export const getPlans = (audience: "business" | "plus") =>
     );
   });
 
+/** Game night kits on offer, for The IDEA Plus page. */
+export const getKitTypes = () =>
+  fallback(
+    "kits",
+    [] as {
+      deposit: number;
+      description_ar: string;
+      description_en: string;
+      extra_day_price: number;
+      id: string;
+      name_ar: string;
+      name_en: string;
+      price: number;
+    }[],
+    async () => {
+      const supabase = createPublicClient();
+      if (!supabase) {
+        return [];
+      }
+      return rows(
+        await supabase
+          .from("kit_types")
+          .select(
+            "id, name_ar, name_en, description_ar, description_en, price, extra_day_price, deposit"
+          )
+          .eq("active", true)
+          .order("position")
+      );
+    }
+  );
+
 // ── Editorial ───────────────────────────────────────────────────────────────
 
 /** Public URL of a cover image in the `editorial` bucket. */

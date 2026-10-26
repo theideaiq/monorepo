@@ -14,7 +14,7 @@ export type RentalView = keyof typeof RENTAL_VIEWS;
  * waitlist, areas and settings. `active` is the list view on /rentals.
  */
 export const rentalTabs = (
-  label: (key: `views.${RentalView | "plus" | "swaps"}`) => string,
+  label: (key: `views.${RentalView | "kits" | "plus" | "swaps"}`) => string,
   active: RentalView | null
 ): SectionTab[] => [
   ...(Object.keys(RENTAL_VIEWS) as RentalView[]).map((key) => ({
@@ -24,4 +24,5 @@ export const rentalTabs = (
   })),
   { href: "/rentals/swaps", label: label("views.swaps") },
   { href: "/rentals/plus", label: label("views.plus") },
+  { href: "/rentals/kits", label: label("views.kits") },
 ];

@@ -891,6 +891,216 @@ export type Database = {
           },
         ];
       };
+      kit_booking_games: {
+        Row: {
+          booking_id: string;
+          product_id: string;
+          rental_id: string | null;
+        };
+        Insert: {
+          booking_id: string;
+          product_id: string;
+          rental_id?: string | null;
+        };
+        Update: {
+          booking_id?: string;
+          product_id?: string;
+          rental_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kit_booking_games_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "kit_bookings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_booking_games_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_booking_games_rental_id_fkey";
+            columns: ["rental_id"];
+            isOneToOne: false;
+            referencedRelation: "rentals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      kit_bookings: {
+        Row: {
+          amount_due: number | null;
+          created_at: string;
+          damage_charge: number | null;
+          deposit: number;
+          deposit_waived: boolean;
+          ends_on: string;
+          extra_days: number;
+          id: string;
+          kit_type: string;
+          order_id: string | null;
+          refund_due: number | null;
+          starts_on: string;
+          status: string;
+          unit_id: string;
+          user_id: string | null;
+        };
+        Insert: {
+          amount_due?: number | null;
+          created_at?: string;
+          damage_charge?: number | null;
+          deposit?: number;
+          deposit_waived?: boolean;
+          ends_on: string;
+          extra_days?: number;
+          id?: string;
+          kit_type: string;
+          order_id?: string | null;
+          refund_due?: number | null;
+          starts_on: string;
+          status?: string;
+          unit_id: string;
+          user_id?: string | null;
+        };
+        Update: {
+          amount_due?: number | null;
+          created_at?: string;
+          damage_charge?: number | null;
+          deposit?: number;
+          deposit_waived?: boolean;
+          ends_on?: string;
+          extra_days?: number;
+          id?: string;
+          kit_type?: string;
+          order_id?: string | null;
+          refund_due?: number | null;
+          starts_on?: string;
+          status?: string;
+          unit_id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kit_bookings_kit_type_fkey";
+            columns: ["kit_type"];
+            isOneToOne: false;
+            referencedRelation: "kit_types";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_bookings_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_bookings_unit_id_fkey";
+            columns: ["unit_id"];
+            isOneToOne: false;
+            referencedRelation: "kit_units";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      kit_types: {
+        Row: {
+          active: boolean;
+          deposit: number;
+          description_ar: string;
+          description_en: string;
+          extra_day_price: number;
+          games: number;
+          games_category_id: string | null;
+          id: string;
+          image: string | null;
+          name_ar: string;
+          name_en: string;
+          position: number;
+          price: number;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          deposit?: number;
+          description_ar?: string;
+          description_en?: string;
+          extra_day_price: number;
+          games?: number;
+          games_category_id?: string | null;
+          id: string;
+          image?: string | null;
+          name_ar: string;
+          name_en: string;
+          position?: number;
+          price: number;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          deposit?: number;
+          description_ar?: string;
+          description_en?: string;
+          extra_day_price?: number;
+          games?: number;
+          games_category_id?: string | null;
+          id?: string;
+          image?: string | null;
+          name_ar?: string;
+          name_en?: string;
+          position?: number;
+          price?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kit_types_games_category_id_fkey";
+            columns: ["games_category_id"];
+            isOneToOne: false;
+            referencedRelation: "product_categories";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      kit_units: {
+        Row: {
+          created_at: string;
+          id: string;
+          kit_type: string;
+          label: string;
+          note: string | null;
+          status: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          kit_type: string;
+          label: string;
+          note?: string | null;
+          status?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          kit_type?: string;
+          label?: string;
+          note?: string | null;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kit_units_kit_type_fkey";
+            columns: ["kit_type"];
+            isOneToOne: false;
+            referencedRelation: "kit_types";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       ledger_entries: {
         Row: {
           created_at: string;
@@ -3434,6 +3644,52 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      book_kit: {
+        Args: {
+          delivery_zone: string;
+          extra_days?: number;
+          games?: string[];
+          kit: string;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          shipping: Json;
+          starts_on: string;
+        };
+        Returns: {
+          affiliate_id: string | null;
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       book_swap: {
         Args: {
           method?: string;
@@ -3632,6 +3888,32 @@ export type Database = {
       };
       close_job_request: { Args: { job: string }; Returns: undefined };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
+      collect_kit: {
+        Args: { damage?: number; target: string };
+        Returns: {
+          amount_due: number | null;
+          created_at: string;
+          damage_charge: number | null;
+          deposit: number;
+          deposit_waived: boolean;
+          ends_on: string;
+          extra_days: number;
+          id: string;
+          kit_type: string;
+          order_id: string | null;
+          refund_due: number | null;
+          starts_on: string;
+          status: string;
+          unit_id: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "kit_bookings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       complete_order_payment: {
         Args: { order_id: string };
         Returns: undefined;
@@ -3884,6 +4166,32 @@ export type Database = {
           teen_name: string;
         }[];
       };
+      hand_over_kit: {
+        Args: { target: string };
+        Returns: {
+          amount_due: number | null;
+          created_at: string;
+          damage_charge: number | null;
+          deposit: number;
+          deposit_waived: boolean;
+          ends_on: string;
+          extra_days: number;
+          id: string;
+          kit_type: string;
+          order_id: string | null;
+          refund_due: number | null;
+          starts_on: string;
+          status: string;
+          unit_id: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "kit_bookings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       import_products: { Args: { items: Json }; Returns: Json };
       invite_guardian: { Args: Record<PropertyKey, never>; Returns: string };
       invite_to_plus: {
@@ -3954,6 +4262,15 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      kit_weekends: {
+        Args: { kit: string };
+        Returns: {
+          extra_day_price: number;
+          price: number;
+          starts_on: string;
+          units_free: number;
+        }[];
       };
       leave_plus_waitlist: {
         Args: Record<PropertyKey, never>;
@@ -4435,6 +4752,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Record<string, unknown>;
       };
+      run_kit_holds: { Args: Record<PropertyKey, never>; Returns: number };
       run_plus_seat_renewals: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -4595,6 +4913,32 @@ export type Database = {
         }[];
       };
       unlink_telegram: { Args: Record<PropertyKey, never>; Returns: undefined };
+      waive_kit_deposit: {
+        Args: { target: string };
+        Returns: {
+          amount_due: number | null;
+          created_at: string;
+          damage_charge: number | null;
+          deposit: number;
+          deposit_waived: boolean;
+          ends_on: string;
+          extra_days: number;
+          id: string;
+          kit_type: string;
+          order_id: string | null;
+          refund_due: number | null;
+          starts_on: string;
+          status: string;
+          unit_id: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "kit_bookings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       withdraw_trade_in: { Args: { trade_in: string }; Returns: undefined };
     };
     Enums: {

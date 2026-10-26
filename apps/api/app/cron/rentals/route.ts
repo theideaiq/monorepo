@@ -33,9 +33,16 @@ export const GET = async (request: Request): Promise<Response> => {
     if (waitlistError) {
       throw new Error(waitlistError.message);
     }
+    // Games for kits whose weekend starts within two days.
+    const { data: kitGames, error: kitError } =
+      await admin.rpc("run_kit_holds");
+    if (kitError) {
+      throw new Error(kitError.message);
+    }
     return NextResponse.json({
       dueSoon: reminded ?? 0,
       invited: invited ?? 0,
+      kitGames: kitGames ?? 0,
       ok: true,
       overdue: overdue ?? 0,
     });
