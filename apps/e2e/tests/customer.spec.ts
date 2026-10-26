@@ -206,7 +206,7 @@ test.describe("a signed-in customer", () => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/plus`);
     await expect(
-      page.getByRole("heading", { name: "Join The IDEA Plus" })
+      page.getByText("Join The IDEA Plus", { exact: true })
     ).toBeVisible();
     await page.getByRole("combobox", { name: "Area in Baghdad" }).click();
     await page.getByRole("option", { name: "Karrada" }).click();
