@@ -7,8 +7,8 @@ import { cn } from "@repo/design-system/lib/utils";
 import { Link } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { Rating } from "@/lib/review-queries";
-import { Price } from "./price";
-import { ProductConditionBulb } from "./product-condition-bulb";
+import { Price, RentOnly } from "./price";
+import { ProductCondition } from "./product-condition";
 import { ProductImage } from "./product-image";
 import { RatingSummary } from "./stars";
 import { StockBadge } from "./stock-badge";
@@ -27,7 +27,7 @@ export const productHref = (slug: string) =>
 /**
  * A catalog tile linking to the product page, with a wishlist heart: the
  * image on a sunken ground, a 2-line name, the versions it comes in, the
- * price ("from" across versions, with any saving), the condition bulb for
+ * price ("from" across versions, with any saving), the condition of
  * used items, and a full-width call to action (violet for rentals).
  */
 export const ProductCard = ({ product, rating }: ProductCardProps) => {
@@ -52,15 +52,19 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
         <div className="grid flex-1 content-start gap-1 px-1">
           <span className="line-clamp-2 font-medium text-sm">{name}</span>
           <VariantChips locale={locale} variants={product.variants} />
-          <Price
-            className="text-sm"
-            compareAtPrice={product.compare_at_price}
-            from={hasPriceRange(product.variants)}
-            price={product.price}
-          />
+          {rental ? (
+            <RentOnly price={product.price} />
+          ) : (
+            <Price
+              className="text-sm"
+              compareAtPrice={product.compare_at_price}
+              from={hasPriceRange(product.variants)}
+              price={product.price}
+            />
+          )}
           {rating ? <RatingSummary rating={rating} /> : null}
           <StockBadge count={product.stock_count} />
-          <ProductConditionBulb product={product} />
+          <ProductCondition product={product} />
         </div>
         <span
           className={cn(

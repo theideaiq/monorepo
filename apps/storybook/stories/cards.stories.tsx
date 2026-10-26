@@ -1,5 +1,4 @@
 import { Bulb } from "@repo/design-system/components/brand/bulb";
-import { ConditionBulb } from "@repo/design-system/components/brand/condition-bulb";
 import { SouqPrice } from "@repo/design-system/components/brand/souq-price";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
@@ -37,7 +36,10 @@ const ProductTile = ({ rental }: { rental?: boolean }) => (
       {rental ? "Elden Ring (PS5)" : "PlayStation 5 Slim"}
     </h3>
     {rental ? (
-      <ConditionBulb condition="like-new" label="Like new" />
+      <p className="grid text-sm">
+        <span className="font-medium">Rent with The IDEA Plus</span>
+        <span className="text-muted-foreground text-xs">Worth 59,750 IQD</span>
+      </p>
     ) : (
       <SouqPrice
         checkedAt="2026-10-22T09:00:00Z"

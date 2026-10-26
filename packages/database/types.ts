@@ -1662,6 +1662,7 @@ export type Database = {
       };
       products: {
         Row: {
+          age_rating: number | null;
           bulb_multiplier: number | null;
           category_id: string | null;
           compare_at_price: number | null;
@@ -1690,6 +1691,7 @@ export type Database = {
           verified: boolean;
         };
         Insert: {
+          age_rating?: number | null;
           bulb_multiplier?: number | null;
           category_id?: string | null;
           compare_at_price?: number | null;
@@ -1718,6 +1720,7 @@ export type Database = {
           verified?: boolean;
         };
         Update: {
+          age_rating?: number | null;
           bulb_multiplier?: number | null;
           category_id?: string | null;
           compare_at_price?: number | null;
@@ -3658,6 +3661,7 @@ export type Database = {
           search_term: string;
         };
         Returns: {
+          age_rating: number | null;
           bulb_multiplier: number | null;
           category_id: string | null;
           compare_at_price: number | null;

@@ -18,7 +18,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { CoverImage } from "@/components/cover-image";
 import { stockLabel } from "@/components/product-card";
-import { ProductConditionBulb } from "@/components/product-condition-bulb";
+import { ProductCondition } from "@/components/product-condition";
 import {
   ProductReviews,
   RatingLink,
@@ -163,8 +163,15 @@ const ProductPage = async ({ params }: ProductProps) => {
                   {localized(product.category, "name", locale)}
                 </Badge>
               ) : null}
+              {product.age_rating ? (
+                <Badge variant="outline">
+                  {store("ageRating", {
+                    rating: formatNumber(product.age_rating, locale),
+                  })}
+                </Badge>
+              ) : null}
             </div>
-            <ProductConditionBulb locale={locale} product={product} />
+            <ProductCondition locale={locale} product={product} />
             <h1 className="font-bold text-3xl tracking-tight md:text-4xl">
               {name}
             </h1>
@@ -174,7 +181,13 @@ const ProductPage = async ({ params }: ProductProps) => {
               verified={product.verified}
             />
             {rating ? <RatingLink locale={locale} rating={rating} /> : null}
-            {rental ? null : (
+            {rental ? (
+              <p className="text-muted-foreground text-sm tabular-nums">
+                {store("price.worth", {
+                  price: formatPrice(product.price, locale),
+                })}
+              </p>
+            ) : (
               <p className="flex flex-wrap items-baseline gap-3">
                 <span className="font-bold text-2xl">
                   {priceRange

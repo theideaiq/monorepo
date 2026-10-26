@@ -1881,7 +1881,8 @@
     "price": {
       "free": "مجاني",
       "from": "ابتداءً من {price}",
-      "save": "وفّر {percent}٪"
+      "save": "وفّر {percent}٪",
+      "worth": "قيمته {price}"
     },
     "condition": {
       "new": "جديد",
@@ -2068,11 +2069,6 @@
       },
       "fallbackBody": "افتحه لمعرفة التفاصيل."
     },
-    "conditionBulb": {
-      "like-new": "اخو الجديد",
-      "new": "جديد",
-      "used": "مستعمل"
-    },
     "card": {
       "buy": "اشترِ",
       "rent": "استأجر مع The IDEA Plus"
@@ -2136,7 +2132,9 @@
       "club": "The IDEA Club",
       "pass": "The IDEA Pass",
       "business": "The IDEA Business"
-    }
+    },
+    "rentOnly": "للإيجار مع The IDEA Plus",
+    "ageRating": "التصنيف العمري: PEGI {rating}"
   },
   "admin": {
     "meta": {
@@ -2362,7 +2360,9 @@
         "tierOption": "المستوى {tier}: {names}",
         "unknownTier": "لا توجد خطة بهذا المستوى",
         "bulbMultiplier": "مضاعِف Bulbs",
-        "bulbMultiplierHint": "0.5 يكسب نصف النسبة (أجهزة الألعاب). فارغ لمضاعِف الفئة."
+        "bulbMultiplierHint": "0.5 يكسب نصف النسبة (أجهزة الألعاب). فارغ لمضاعِف الفئة.",
+        "ageRating": "التصنيف العمري (PEGI)",
+        "ageRatingHint": "يظهر في صفحة المنتج؛ ستُخفى منتجات PEGI 18 عن حاملي البطاقات دون 18 عامًا."
       },
       "variants": {
         "title": "الخيارات",

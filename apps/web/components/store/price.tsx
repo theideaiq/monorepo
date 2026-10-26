@@ -44,3 +44,26 @@ export const Price = ({
     </span>
   );
 };
+
+/**
+ * A rental-only item: rented with The IDEA Plus, not sold, so it shows
+ * "Rent" with what the item is worth in small print.
+ */
+export const RentOnly = ({
+  className,
+  price,
+}: {
+  readonly className?: string;
+  readonly price: number;
+}) => {
+  const t = useTranslations("store");
+  const locale = useLocale();
+  return (
+    <span className={cn("grid text-sm", className)}>
+      <span className="font-medium">{t("rentOnly")}</span>
+      <span className="text-muted-foreground text-xs tabular-nums">
+        {t("price.worth", { price: formatPrice(price, locale) })}
+      </span>
+    </span>
+  );
+};

@@ -5,7 +5,17 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-26: program revision, step 2)
+## Current state (2026-10-26: program revision, step 3)
+
+- Catalogue fixes (migration `20261219000000_catalogue_fixes.sql`): six
+  categories (Music, Games, Books, Films, Audio, Tech); prices moved into
+  the bands by format and edition (games mostly 59,750, books 14,750 or
+  19,750, films 29,750, vinyl 54,750–89,750, CDs 19,750–24,750); the two
+  250 IQD prices fixed (A4000 224,750, Frank Ocean – Orange CD 19,750);
+  the drafts with a photo and a copy published, the rest still drafts;
+  one copy of each Switch game moved to rent; condition shown as four
+  plain labels; rental-only items show Rent with "Worth …"; PEGI age
+  ratings on every game.
 
 - Money rules (migration `20261218000000_money_rules.sql`): flat Bulbs (3%
   for everyone, Plus Glow 4%, Shine 5%, Blaze 6%; half on consoles,
@@ -53,6 +63,15 @@ decisions with a date.
       and nightly backup workflows; platform runbooks.
 
 ## Launch checklist (needs an owner with access)
+
+- [ ] **Drafts:** about 140 drafts remain (44 with copies but no photo,
+      the rest without copies). Photograph and publish them, or delete
+      them, in the back office (Catalog, status Draft).
+- [ ] **Prices to check:** consoles, accessories, hi-fi and cameras kept
+      their prices (cost plus 10–15% once costs are in); the band moves
+      raised the cheapest vinyl to 54,750 and CDs to 19,750 and capped
+      vinyl at 89,750, so check box sets and singles. Check that the
+      Frank Ocean – Orange CD is an official release before selling it.
 
 - [ ] **Costs:** enter the cost of every copy (back office → the product →
       copies; all 684 are empty), then fix what Finance → Prices lists.
@@ -214,6 +233,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-26: Program revision v1, step 3 (catalogue): six categories;
+  prices set from the bands directly (no review list), accepting that
+  edition, language and release dates are partly guessed; only drafts with
+  a photo and a copy published, the others kept; the 250 IQD placeholders
+  priced (A4000 224,750; the Orange CD 19,750 by the CD band, not the
+  79,750 first suggested for vinyl); one of each Switch game's three
+  copies moved to rent; conditions as four plain labels without the bulb.
+
 - 2026-10-26: Program revision v1, step 2 (money rules): Bulbs are a flat
   rate (3%; Plus Glow 4%, Shine 5%, Blaze 6%), half on consoles, laptops
   and anything over 500,000 IQD; spend tiers and the Plus +1% bonus are
@@ -258,8 +285,8 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   product names (The IDEA Pass, The IDEA Plus, …) keep Latin letters.
 - 2026-10-24: The IDEA brand v1.0 (`docs/brand`): Paper ground, Readex
   Pro, pink primary with the yellow bulb, never black in brand blocks.
-  Condition bulbs map stored conditions as new → new, open box and
-  refurbished → like new, used → used.
+  Condition bulbs mapped stored conditions to three bulbs (replaced on
+  2026-10-26 by four plain labels).
 - 2026-10-24: Retired from the back office: the payroll plan
   (`staff_plan`), the cap table (`equity_rounds`, `equity_holders`), fixed
   assets (`fixed_assets`, `fixed_asset_schedule()`) and the own email

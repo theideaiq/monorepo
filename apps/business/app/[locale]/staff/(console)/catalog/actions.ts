@@ -24,6 +24,7 @@ export const saveProduct = staffAction(
   productSchema,
   async ({ input, supabase }) => {
     const row = {
+      age_rating: input.ageRating,
       bulb_multiplier: input.bulbMultiplier,
       category_id: input.categoryId,
       compare_at_price: input.compareAtPrice,

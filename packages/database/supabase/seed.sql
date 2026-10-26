@@ -14,12 +14,12 @@ on conflict (id) do nothing;
 update public.plans set active = true where audience = 'plus';
 
 insert into public.product_categories (id, slug, name_ar, name_en, position) values
-  ('50000000-0000-0000-0000-000000000001', 'gaming', 'الألعاب', 'Gaming', 1),
-  ('50000000-0000-0000-0000-000000000002', 'laptops', 'الحواسيب', 'Laptops', 2),
-  ('50000000-0000-0000-0000-000000000003', 'phones', 'الهواتف', 'Phones', 3),
-  ('50000000-0000-0000-0000-000000000004', 'books', 'الكتب', 'Books', 4),
-  ('50000000-0000-0000-0000-000000000005', 'music', 'الموسيقى', 'Music', 5),
-  ('50000000-0000-0000-0000-000000000006', 'films', 'الأفلام', 'Films', 6)
+  ('50000000-0000-0000-0000-000000000005', 'music', 'الموسيقى', 'Music', 1),
+  ('50000000-0000-0000-0000-000000000001', 'games', 'الألعاب', 'Games', 2),
+  ('50000000-0000-0000-0000-000000000004', 'books', 'الكتب', 'Books', 3),
+  ('50000000-0000-0000-0000-000000000006', 'films', 'الأفلام', 'Films', 4),
+  ('50000000-0000-0000-0000-000000000003', 'audio', 'الصوتيات', 'Audio', 5),
+  ('50000000-0000-0000-0000-000000000002', 'tech', 'التقنية', 'Tech', 6)
 on conflict (id) do nothing;
 
 insert into public.products
@@ -29,7 +29,7 @@ values
     'بلايستيشن ٥ سليم', 'PlayStation 5 Slim',
     'جهاز بلايستيشن ٥ بإصدار سليم مع يد تحكم DualSense.', 'PlayStation 5 Slim console with a DualSense controller.',
     720000, 780000, 8, true, '{"Storage": "1 TB", "Warranty": "1 year"}'),
-  ('logitech-g502', 'sale', 'active', '50000000-0000-0000-0000-000000000001',
+  ('logitech-g502', 'sale', 'active', '50000000-0000-0000-0000-000000000002',
     'فأرة لوجيتك G502', 'Logitech G502 Mouse',
     'فأرة ألعاب سلكية بمستشعر HERO.', 'Wired gaming mouse with the HERO sensor.',
     120000, 180000, 25, true, '{"DPI": "25,600"}'),
@@ -54,6 +54,10 @@ values
     'رواية غابرييل غارسيا ماركيز.', 'The novel by Gabriel García Márquez.',
     20000, null, 2, false, '{"Language": "Arabic"}')
 on conflict (slug) do nothing;
+
+-- PEGI age ratings for the games.
+update public.products set age_rating = 16 where slug = 'elden-ring-ps5';
+update public.products set age_rating = 3 where slug = 'ea-fc-26-ps5';
 
 -- The product's default variant becomes the disc edition; the digital one
 -- is a second variant.
