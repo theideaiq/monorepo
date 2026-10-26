@@ -542,6 +542,18 @@ describe("The IDEA Plus", () => {
       },
       rpcs: {
         my_rental_allowance: { data: [{ in_use: 0, slots: 0 }], error: null },
+        plus_status: {
+          data: [
+            {
+              can_join: true,
+              capacity: 60,
+              join_reason: "open",
+              places_free: 12,
+              waiting: 0,
+            },
+          ],
+          error: null,
+        },
       },
     });
     const fetchMock = stubApi();

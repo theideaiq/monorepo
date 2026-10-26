@@ -27,8 +27,15 @@ export const GET = async (request: Request): Promise<Response> => {
     if (reminderError) {
       throw new Error(reminderError.message);
     }
+    // Expired Plus invites pass to the next person on the waitlist.
+    const { data: invited, error: waitlistError } =
+      await admin.rpc("run_plus_waitlist");
+    if (waitlistError) {
+      throw new Error(waitlistError.message);
+    }
     return NextResponse.json({
       dueSoon: reminded ?? 0,
+      invited: invited ?? 0,
       ok: true,
       overdue: overdue ?? 0,
     });

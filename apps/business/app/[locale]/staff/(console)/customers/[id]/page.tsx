@@ -75,7 +75,7 @@ const loadCustomer = async (
       ? supabase
           .from("subscriptions")
           .select(
-            "id, status, current_period_end, cancel_at_period_end, plans(name, audience, rental_slots)"
+            "id, status, current_period_end, cancel_at_period_end, plans!subscriptions_plan_id_fkey(name, audience, rental_slots)"
           )
           .eq("user_id", id)
           .order("created_at", { ascending: false })

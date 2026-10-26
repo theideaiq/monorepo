@@ -104,6 +104,15 @@ export const POST = async (request: Request) => {
     if (guardian?.minor && !guardian.allows_plus) {
       return json({ error: "guardian_required" }, 403);
     }
+
+    // Plus has a set number of places: joining needs a free one (or an
+    // invite from the waitlist) and a home in Baghdad.
+    const { data: status } = await session.supabase
+      .rpc("plus_status")
+      .maybeSingle();
+    if (!status?.can_join) {
+      return json({ error: `plus_${status?.join_reason ?? "full"}` }, 403);
+    }
   }
 
   // Browser checkouts keep the context needed to report the purchase to ad

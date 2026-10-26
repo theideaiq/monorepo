@@ -54,6 +54,9 @@ export const NOTIFICATION_EVENTS = [
   "guardian_approved",
   "guardian_declined",
   "guardian_linked",
+  "plus_invite",
+  "plus_swap_booked",
+  "plus_swap_done",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -165,6 +168,7 @@ const extraValues: Partial<
     number: text(data.number),
   }),
   invoice_issued: invoiceValues,
+  plus_invite: (data) => ({ hours: text(data.hours) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
   quote_sent: quoteValues,
 };

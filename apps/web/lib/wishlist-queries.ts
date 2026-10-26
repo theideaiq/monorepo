@@ -11,6 +11,8 @@ import { useAddToCart } from "./store-queries";
 
 export interface WishlistItem {
   created_at: string;
+  /** The member's order; for Plus members the first rentable item is next. */
+  position: number;
   product:
     | (ProductCard & {
         status: string;
@@ -19,7 +21,7 @@ export interface WishlistItem {
   product_id: string;
 }
 
-const WISHLIST_COLUMNS = `product_id, created_at, product:products (${PRODUCT_CARD_COLUMNS}, status)`;
+const WISHLIST_COLUMNS = `product_id, created_at, position, product:products (${PRODUCT_CARD_COLUMNS}, status)`;
 
 export const useWishlist = () => {
   const { supabase, user } = useAuth();
@@ -31,7 +33,7 @@ export const useWishlist = () => {
           .from("wishlist_items")
           .select(WISHLIST_COLUMNS)
           .eq("user_id", requireUserId(user?.id))
-          .order("created_at", { ascending: false })
+          .order("position")
       ) as unknown as WishlistItem[],
     queryKey: queryKeys.wishlist(user?.id ?? ""),
   });
@@ -69,6 +71,41 @@ export const useToggleWishlist = () => {
               .from("wishlist_items")
               .insert({ product_id: productId, user_id: userId }))
       );
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: key }),
+  });
+};
+
+/** Puts Saved in a new order (the first is next in the Plus queue). */
+export const useReorderSaved = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  const key = queryKeys.wishlist(user?.id ?? "");
+
+  return useMutation<
+    unknown,
+    Error,
+    string[],
+    { previous: WishlistItem[] | undefined }
+  >({
+    mutationFn: async (productIds: string[]) =>
+      unwrap(await supabase.rpc("reorder_saved", { products: productIds })),
+    onError: (_error, _ids, context) =>
+      queryClient.setQueryData(key, context?.previous),
+    onMutate: async (productIds) => {
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData<WishlistItem[]>(key);
+      if (previous) {
+        const order = new Map(productIds.map((id, index) => [id, index]));
+        queryClient.setQueryData(
+          key,
+          [...previous].sort(
+            (a, b) =>
+              (order.get(a.product_id) ?? 0) - (order.get(b.product_id) ?? 0)
+          )
+        );
+      }
+      return { previous };
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: key }),
   });

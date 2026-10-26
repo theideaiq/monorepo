@@ -5,7 +5,17 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-26: program revision, step 5a)
+## Current state (2026-10-26: program revision, step 5b)
+
+- The IDEA Plus launch (migration `20261222000000_plus_launch.sql`): 60
+  places, then a waitlist (the next person in Baghdad is invited
+  automatically and has 72 hours to join); joining asks for the area in
+  Baghdad (15 areas seeded without delivery days: set them in Rentals →
+  Plus places); Plus rentals have no due dates; Saved is the queue; swaps
+  are booked from Your Plus (home swaps 1/2/4 a month, extra ones 3,000 IQD,
+  counter swaps unlimited) and completed in Rentals → Swaps; annual plans
+  (10 months for 12), pause up to 31 days a year, cancel at the period end,
+  and plan changes from the next renewal.
 
 - Single-item rent and Keep it (migration `20261221000000_single_rent.sql`):
   rentable items can be rented on their own from the product page
@@ -254,6 +264,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-26: Program revision v1, step 5b (Plus launch): waitlist places
+  go to the next person automatically (72-hour invites; staff can also
+  invite); swaps are booked by the member (what goes back, what comes next
+  from the queue); joining asks for the area in Baghdad, other governorates
+  wait; annual plans, pause, cancel at period end and plan change at
+  renewal are in. Paying Plus with Bulbs and the 20% student price come
+  later (the student price with student verification, step 5e).
 
 - 2026-10-26: Program revision v1, step 5a: the single-rent deposit is
   charged at checkout (an order line) and refunded by staff after return,

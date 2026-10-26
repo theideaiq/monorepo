@@ -26,6 +26,8 @@ export interface SubscriptionRecord {
   currentPeriodEnd: Date | null;
   currentPeriodStart: Date | null;
   id: string;
+  /** The plan it switches to at the next renewal (The IDEA Plus). */
+  nextPlanId: string | null;
   organizationId: string | null;
   planId: string;
   status: SubscriptionStatus;
@@ -86,6 +88,8 @@ export interface PaymentUpdate {
 export interface SubscriptionUpdate {
   currentPeriodEnd?: Date;
   currentPeriodStart?: Date;
+  /** Null clears it. */
+  nextPlanId?: string | null;
   planId?: string;
   status?: SubscriptionStatus;
 }

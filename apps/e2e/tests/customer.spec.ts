@@ -128,6 +128,7 @@ test("security.txt is served without a locale redirect", async ({
 });
 
 const PICKUP = /^Pickup/;
+const JOIN_PLAN = /^Join for /;
 const PAY_AT_PICKUP = /^Pay at pickup/;
 const PLACE_CASH_ORDER = /^Place order · /;
 const RENT_PAGE = /\/rent\/elden-ring-ps5$/;
@@ -196,6 +197,29 @@ test.describe("a signed-in customer", () => {
     await expect(
       page.getByText("Refundable deposit: Elden Ring (PS5)")
     ).toBeVisible();
+    noErrors();
+  });
+
+  test("tells The IDEA Plus their area in Baghdad to join", async ({
+    page,
+  }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/plus`);
+    await expect(
+      page.getByText("Join The IDEA Plus", { exact: true })
+    ).toBeVisible();
+    await page.getByRole("combobox", { name: "Area in Baghdad" }).click();
+    await page.getByRole("option", { name: "Karrada" }).click();
+    await page.getByLabel("Mobile number").fill("07701234567");
+    await page.getByLabel("Address").fill("Street 62, near the park");
+    await page.getByRole("button", { exact: true, name: "Save" }).click();
+    await expect(
+      page.getByText("There's a place for you. Choose a plan below.")
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: JOIN_PLAN }).first()
+    ).toBeVisible();
+    await expectAccessible(page);
     noErrors();
   });
 

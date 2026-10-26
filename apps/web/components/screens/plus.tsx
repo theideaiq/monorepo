@@ -24,6 +24,8 @@ import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { AgeAwareError } from "@/components/age-aware-error";
+import { JoinPlus } from "@/components/plus/join-plus";
+import { ManagePlus, Queue, SwapPanel } from "@/components/plus/plus-tools";
 import { SignedInSection } from "@/components/signed-in-section";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { ProductImage } from "@/components/store/product-image";
@@ -33,6 +35,7 @@ import {
 } from "@/lib/checkout-tracking";
 import { toRentalError } from "@/lib/errors";
 import { orderPath, useKeepRental } from "@/lib/order-checkout";
+import { plansFor, usePlusStatus } from "@/lib/plus-launch";
 import {
   isLiveMembership,
   meetsTier,
@@ -43,12 +46,12 @@ import {
   useRentalAllowance,
   useRentals,
   useRentalTiers,
-  useRequestRental,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
 import { useKeepPrice } from "@/lib/rent";
 import { useProducts } from "@/lib/store-queries";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
+import { useIsWishlisted, useToggleWishlist } from "@/lib/wishlist-queries";
 
 const POLL_MS = 3000;
 
@@ -161,10 +164,30 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
   const checkout = usePlanCheckout("/plus");
   const canSell = useCanSellDigitalGoods();
   const member = isLiveMembership(subscription.data?.status);
+  const canJoin = usePlusStatus().data?.canJoin ?? false;
+  const [billing, setBilling] = useState<"month" | "year">("month");
+  const shown = plansFor(plans.data ?? undefined, billing);
 
   return (
     <section className="grid gap-4">
-      <h2 className="font-semibold text-lg">{t("title")}</h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-semibold text-lg">{t("title")}</h2>
+        <fieldset className="flex gap-1 rounded-md border p-1">
+          <legend className="sr-only">{t("interval")}</legend>
+          {(["month", "year"] as const).map((value) => (
+            <Button
+              aria-pressed={billing === value}
+              key={value}
+              onClick={() => setBilling(value)}
+              size="sm"
+              type="button"
+              variant={billing === value ? "default" : "ghost"}
+            >
+              {t(value === "year" ? "yearly" : "monthly")}
+            </Button>
+          ))}
+        </fieldset>
+      </div>
       {canSell === false ? (
         <p className="rounded-md bg-muted p-4 text-sm">{tBilling("webOnly")}</p>
       ) : null}
@@ -174,7 +197,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
         <p className="text-muted-foreground">{t("empty")}</p>
       ) : null}
       <div className="grid gap-4 md:grid-cols-3">
-        {plans.data?.map((plan) => {
+        {shown.map((plan) => {
           const current = plan.id === subscription.data?.plan_id && member;
           const price = formatCurrency(plan.amount, locale, plan.currency);
           const features =
@@ -217,7 +240,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
                   </ul>
                 ) : null}
               </CardContent>
-              {canSell === true && !member ? (
+              {canSell === true && !member && canJoin ? (
                 <CardFooter>
                   <Button
                     className="w-full"
@@ -259,7 +282,8 @@ const RentalItem = ({
 }) => {
   const t = useTranslations("app.plus");
   const locale = useLocale();
-  const request = useRequestRental();
+  const toggle = useToggleWishlist();
+  const queued = useIsWishlisted(product.id);
   const name = localized(product, "name", locale);
   const available = product.stock_count > 0;
   const noSlots = member && allowance !== undefined && allowance.free <= 0;
@@ -276,8 +300,8 @@ const RentalItem = ({
     hint = neededPlan
       ? t("catalog.upgradeTo", { plan: neededPlan })
       : t("catalog.upgrade");
-  } else if (noSlots) {
-    hint = t("catalog.noSlots");
+  } else if (noSlots && !queued) {
+    hint = t("catalog.queueHint");
   }
 
   return (
@@ -299,29 +323,17 @@ const RentalItem = ({
             })
           : t("catalog.unavailable")}
       </span>
-      {request.isSuccess ? (
-        <p className="text-success text-xs" role="status">
-          {t("catalog.requested")}
-        </p>
-      ) : (
-        <Button
-          disabled={
-            !(member && available) || noSlots || tierTooLow || request.isPending
-          }
-          onClick={() => request.mutate(product.id)}
-          size="sm"
-          variant="outline"
-        >
-          {request.isPending ? t("catalog.requesting") : t("catalog.request")}
-        </Button>
-      )}
-      {hint && available && !request.isSuccess ? (
+      <Button
+        aria-pressed={queued}
+        disabled={!(member && available) || tierTooLow || toggle.isPending}
+        onClick={() => toggle.mutate({ productId: product.id, saved: queued })}
+        size="sm"
+        variant={queued ? "secondary" : "outline"}
+      >
+        {queued ? t("catalog.inQueue") : t("catalog.addToQueue")}
+      </Button>
+      {hint && available ? (
         <span className="text-muted-foreground text-xs">{hint}</span>
-      ) : null}
-      {request.isError ? (
-        <p className="text-destructive text-xs" role="alert">
-          {t(`errors.${toRentalError(request.error)}`)}
-        </p>
       ) : null}
     </li>
   );
@@ -546,7 +558,9 @@ const RentalRow = ({
       (rental.status === "active" || rental.status === "overdue") ? (
         <KeepIt rentalId={rental.id} />
       ) : null}
-      {rental.status === "requested" && rental.kind === "plus" ? (
+      {rental.status === "requested" &&
+      rental.kind === "plus" &&
+      rental.swap_id === null ? (
         <Button
           disabled={cancel.isPending}
           onClick={() => cancel.mutate(rental.id)}
@@ -636,9 +650,15 @@ const PlusMember = () => {
 
   return (
     <div className="flex flex-col gap-8">
+      {member ? null : <JoinPlus />}
       <Membership allowance={allowance.data} confirming={confirming} />
-      {/* A membership the company pays for isn't bought here. */}
-      {member && subscription.data?.provider === "company" ? null : (
+      {member ? (
+        <>
+          <ManagePlus />
+          <SwapPanel slots={allowance.data?.slots ?? 0} />
+          <Queue />
+        </>
+      ) : (
         <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
       )}
       <MyRentals />

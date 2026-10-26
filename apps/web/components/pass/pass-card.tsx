@@ -107,7 +107,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
     session.supabase
       .from("subscriptions")
       .select(
-        "status, plan:plans!inner (name, name_ar, rental_slots, audience, free_delivery)"
+        "status, plan:plans!subscriptions_plan_id_fkey!inner (name, name_ar, rental_slots, audience, free_delivery)"
       )
       .eq("user_id", session.user.id)
       .eq("plan.audience", "plus")

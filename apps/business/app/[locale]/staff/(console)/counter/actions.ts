@@ -64,7 +64,9 @@ export const lookupMember = staffAction(
       supabase.rpc("member_bulbs", { member: userId }),
       supabase
         .from("subscriptions")
-        .select("current_period_end, plans!inner (name, audience)")
+        .select(
+          "current_period_end, plans!subscriptions_plan_id_fkey!inner (name, audience)"
+        )
         .eq("user_id", userId)
         .eq("plans.audience", "plus")
         .in("status", ["active", "past_due"])

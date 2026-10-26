@@ -26,20 +26,16 @@ import { profileNames } from "@/lib/admin/profiles";
 import { canRead } from "@/lib/admin/roles";
 import { requireSection } from "@/lib/admin/session";
 import { RentalActions } from "./rental-actions";
+import { RENTAL_VIEWS, type RentalView, rentalTabs } from "./tabs";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.rentals");
   return { title: t("title") };
 };
 
-const views = {
-  active: ["active", "overdue"],
-  history: ["returned", "cancelled", "kept"],
-  overdue: ["overdue"],
-  requests: ["requested"],
-} as const;
+const views = RENTAL_VIEWS;
 
-type View = keyof typeof views;
+type View = RentalView;
 
 const LOAN_DAYS = 14;
 
@@ -160,13 +156,7 @@ const RentalsPage = async ({
   return (
     <>
       <PageHeader title={t("title")} />
-      <SectionTabs
-        tabs={(Object.keys(views) as View[]).map((key) => ({
-          active: key === view,
-          href: key === "requests" ? "/rentals" : `/rentals?view=${key}`,
-          label: t(`views.${key}`),
-        }))}
-      />
+      <SectionTabs tabs={rentalTabs(t, view)} />
       <PageBody>
         {(rentals ?? []).length === 0 ? (
           <EmptyState title={t(`empty.${view}`)} />
@@ -226,7 +216,13 @@ const RentalsPage = async ({
                           ? t("returnedOn", {
                               date: format.date(rental.returned_at),
                             })
-                          : format.date(rental.due_at)}
+                          : null}
+                        {rental.status !== "returned" && rental.kind === "plus"
+                          ? t("noDue")
+                          : null}
+                        {rental.status !== "returned" && rental.kind !== "plus"
+                          ? format.date(rental.due_at)
+                          : null}
                       </TableCell>
                       <TableCell>
                         <StatusBadge status={rental.status}>
@@ -242,6 +238,7 @@ const RentalsPage = async ({
                             settle={canSettle(rental)}
                             single={rental.kind === "single"}
                             status={rental.status}
+                            swap={rental.swap_id !== null}
                           />
                         </TableCell>
                       ) : null}

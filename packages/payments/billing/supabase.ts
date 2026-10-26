@@ -20,6 +20,7 @@ const toSubscription = (row: Tables<"subscriptions">): SubscriptionRecord => ({
   currentPeriodEnd: toDate(row.current_period_end),
   currentPeriodStart: toDate(row.current_period_start),
   id: row.id,
+  nextPlanId: row.next_plan_id,
   organizationId: row.organization_id,
   planId: row.plan_id,
   status: row.status,
@@ -291,6 +292,7 @@ export const createSupabaseBillingRepository = (
       .update({
         current_period_end: update.currentPeriodEnd?.toISOString(),
         current_period_start: update.currentPeriodStart?.toISOString(),
+        next_plan_id: update.nextPlanId,
         plan_id: update.planId,
         status: update.status,
       })
