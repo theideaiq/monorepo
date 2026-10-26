@@ -35,7 +35,7 @@ export type FaqEntry = Pick<
   "answer_ar" | "answer_en" | "id" | "question_ar" | "question_en" | "topic"
 >;
 
-export type FaqTopic = "academy" | "general" | "plus" | "store" | "suite";
+export type FaqTopic = "business" | "club" | "general" | "plus" | "store";
 
 /** One of a member's orders, for "Track my order". */
 export type OrderSummary = Pick<

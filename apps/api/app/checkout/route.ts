@@ -27,12 +27,12 @@ const platforms = new Set<Platform>(["web", "ios", "android"]);
 
 /**
  * Only redirect back to our own sites, never to arbitrary ones: the website
- * for The IDEA Plus (My Pass), The IDEA Spark for business plans.
+ * for The IDEA Plus, The IDEA Business for business plans.
  */
 const safeRedirect = (redirectUrl: string | undefined, business: boolean) => {
   const home = business
-    ? new URL("/business/billing", env.NEXT_PUBLIC_APP_URL)
-    : new URL("/pass/plus", env.NEXT_PUBLIC_WEB_URL);
+    ? new URL("/billing", env.NEXT_PUBLIC_APP_URL)
+    : new URL("/plus", env.NEXT_PUBLIC_WEB_URL);
   if (!redirectUrl) {
     return home.toString();
   }
@@ -43,7 +43,7 @@ export const OPTIONS = preflight;
 
 /**
  * Starts a checkout for a plan: a business plan for an organization the
- * caller manages, or The IDEA Plus for the caller. Called by the website, The IDEA Spark and the native apps
+ * caller manages, or The IDEA Plus for the caller. Called by the website, The IDEA Business and the native apps
  * with `Authorization: Bearer <Supabase access token>`.
  */
 export const POST = async (request: Request) => {

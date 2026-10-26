@@ -22,7 +22,7 @@ import {
 import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { PageHeader } from "@/components/page-header";
+import { SignedInSection } from "@/components/signed-in-section";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { ProductImage } from "@/components/store/product-image";
 import {
@@ -153,7 +153,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
   const locale = useLocale();
   const plans = usePlans("plus");
   const subscription = usePlusSubscription();
-  const checkout = usePlanCheckout("/pass/plus");
+  const checkout = usePlanCheckout("/plus");
   const canSell = useCanSellDigitalGoods();
   const member = isLiveMembership(subscription.data?.status);
 
@@ -485,9 +485,26 @@ const MyRentals = () => {
   );
 };
 
-/** The IDEA Plus: membership, plans, the rental catalog and the member's rentals. */
-export const Plus = () => {
+/**
+ * "Your Plus" at the top of /plus: the member's membership, plans, rentals
+ * and the rental catalog to request from; signed out, a way to sign in.
+ */
+export const YourPlus = () => {
   const t = useTranslations("app.plus");
+  return (
+    <SignedInSection
+      id="yours"
+      returnTo="/plus"
+      signedOut={t("signedOut")}
+      signIn={t("signIn")}
+      title={t("title")}
+    >
+      <PlusMember />
+    </SignedInSection>
+  );
+};
+
+const PlusMember = () => {
   const [confirming, setConfirming] = useState(hasPendingCheckout);
   const subscription = usePlusSubscription();
   const allowance = useRentalAllowance();
@@ -510,18 +527,14 @@ export const Plus = () => {
   }, [confirming, payments.data, refetchAllowance, refetchSubscription]);
 
   return (
-    <>
-      <PageHeader title={t("title")} />
-      <div className="flex flex-1 flex-col gap-8">
-        <p className="max-w-2xl text-muted-foreground">{t("description")}</p>
-        <Membership allowance={allowance.data} confirming={confirming} />
-        {/* A membership the company pays for isn't bought here. */}
-        {member && subscription.data?.provider === "company" ? null : (
-          <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
-        )}
-        <MyRentals />
-        <RentalCatalog allowance={allowance.data} member={member} />
-      </div>
-    </>
+    <div className="flex flex-col gap-8">
+      <Membership allowance={allowance.data} confirming={confirming} />
+      {/* A membership the company pays for isn't bought here. */}
+      {member && subscription.data?.provider === "company" ? null : (
+        <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
+      )}
+      <MyRentals />
+      <RentalCatalog allowance={allowance.data} member={member} />
+    </div>
   );
 };

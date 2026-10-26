@@ -7,12 +7,14 @@ import { PassSignIn } from "./pass-sign-in";
 import { TelegramButton } from "./telegram-button";
 
 interface AuthPageProps {
-  readonly mode: "sign-in" | "sign-up";
   readonly searchParams: SearchParams;
 }
 
-/** The sign-in and sign-up pages; signed-in visitors go straight on. */
-export const AuthPage = async ({ mode, searchParams }: AuthPageProps) => {
+/**
+ * The sign-in page, which also gives new visitors their Pass; signed-in
+ * visitors go straight on.
+ */
+export const AuthPage = async ({ searchParams }: AuthPageProps) => {
   const locale = await getLocale();
   const [returnTo, session, params] = await Promise.all([
     readReturnTo(searchParams, locale),
@@ -25,19 +27,18 @@ export const AuthPage = async ({ mode, searchParams }: AuthPageProps) => {
   }
 
   const t = await getTranslations("pass");
-  const key = mode === "sign-up" ? "signUp" : "signIn";
   const host = hostOf(returnTo);
   // Set by the app after an account is deleted.
-  const deleted = mode === "sign-in" && params.notice === "deleted";
+  const deleted = params.notice === "deleted";
 
   return (
     <div className="grid gap-6">
       <div className="grid gap-1 text-center">
         <h1 className="font-semibold text-2xl tracking-tight">
-          {t(`${key}.title`)}
+          {t("signIn.title")}
         </h1>
         <p className="text-muted-foreground text-sm">
-          {t(`${key}.description`)}
+          {t("signIn.description")}
         </p>
         {host ? (
           <p className="text-muted-foreground text-xs">
@@ -53,7 +54,7 @@ export const AuthPage = async ({ mode, searchParams }: AuthPageProps) => {
           {t("signIn.deleted")}
         </p>
       ) : null}
-      <PassSignIn mode={mode} returnTo={returnTo} />
+      <PassSignIn returnTo={returnTo} />
       <TelegramButton returnTo={returnTo} />
     </div>
   );

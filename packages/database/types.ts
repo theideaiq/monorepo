@@ -3555,6 +3555,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      referral_kind: { Args: { code: string }; Returns: string };
       register_push_device: {
         Args: { device_platform: string; device_token: string };
         Returns: string;

@@ -31,7 +31,7 @@ begin
 
 ## إلى أين الآن
 
-أصبحت The IDEA Post اليوم جزءاً من The IDEA على موقعنا: الأخبار والقصص وأعمال الأعضاء وقسم **تعلّم** الذي جمعنا فيه الأدلّة القديمة بعد تحديثها. يمكنك أن تبدأ من [صفحة الأدلّة](/post/the-post-guides)، وأن تنضم إلى [The IDEA Club](https://t.me/theideaclub) لتسأل وتشارك، وأن [ترسل لنا](/pass/submissions) مقالتك أو قصيدتك أو عملك الفني لننشره في أعمال الأعضاء.
+أصبحت The IDEA Post اليوم جزءاً من The IDEA على موقعنا: الأخبار والقصص وأعمال الأعضاء وقسم **تعلّم** الذي جمعنا فيه الأدلّة القديمة بعد تحديثها. يمكنك أن تبدأ من [صفحة الأدلّة](/club/the-post-guides)، وأن تنضم إلى [The IDEA Club](https://t.me/theideaclub) لتسأل وتشارك، وأن [ترسل لنا](/club#yours) مقالتك أو قصيدتك أو عملك الفني لننشره في أعمال الأعضاء.
 
 شكراً لكل من قرأ وسأل وشارك. الرحلة ما زالت في بدايتها.$ar$,
     $en$It started with a question we heard every day: "Where do I start?" Secondary-school students who wanted to study abroad but didn't know what the SAT was, graduates who heard about exchange programs but had no one to explain how to apply, and young people teaching themselves programming or design without a map.
@@ -54,7 +54,7 @@ We also showed up where young people meet in Baghdad. The IDEA Post sponsored th
 
 ## Where we are now
 
-The IDEA Post is now part of The IDEA on our website: news, stories, members' work, and a **Learn** section where we gathered the old guides, brought up to date. Start with [the guides](/post/the-post-guides), join [The IDEA Club](https://t.me/theideaclub) to ask and share, and [send us](/pass/submissions) your essay, poem or artwork to be considered for Members' work.
+The IDEA Post is now part of The IDEA on our website: news, stories, members' work, and a **Learn** section where we gathered the old guides, brought up to date. Start with [the guides](/club/the-post-guides), join [The IDEA Club](https://t.me/theideaclub) to ask and share, and [send us](/club#yours) your essay, poem or artwork to be considered for Members' work.
 
 Thank you to everyone who read, asked and shared. The journey is only beginning.$en$,
     now() - interval '2 minutes'

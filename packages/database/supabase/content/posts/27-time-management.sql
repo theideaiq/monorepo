@@ -41,7 +41,7 @@ begin
 
 المهمة بلا موعد نهائي تتمدد بلا نهاية، وتفتح الباب للتسويف. حدّد لكل مهمة وقتاً تنتهي فيه.
 
-وجرّب طريقة بومودورو: اعمل 25 دقيقة، ثم استرح 5 دقائق، وكرّر ذلك 3 أو 4 مرات، ثم خذ استراحة أطول من 20 إلى 30 دقيقة. تقلل هذه الطريقة الملل والرغبة في التأجيل. ولمزيد من طرق الدراسة الفعّالة، اقرأ [كيف تتعلّم أسرع](/post/learn-faster).
+وجرّب طريقة بومودورو: اعمل 25 دقيقة، ثم استرح 5 دقائق، وكرّر ذلك 3 أو 4 مرات، ثم خذ استراحة أطول من 20 إلى 30 دقيقة. تقلل هذه الطريقة الملل والرغبة في التأجيل. ولمزيد من طرق الدراسة الفعّالة، اقرأ [كيف تتعلّم أسرع](/club/learn-faster).
 
 ## 5. اترك وقتاً للراحة
 
@@ -62,11 +62,11 @@ begin
 
 ## الخلاصة
 
-إدارة الوقت مهارة تُكتسب بالتدريب، لا موهبة يولد بها البعض. ابدأ بخطوة واحدة هذا الأسبوع، وأضف غيرها تدريجياً. ولتعرف المزيد عن المهارات التي يطلبها سوق العمل، اقرأ [المهارات الشخصية في العمل](/post/soft-skills).
+إدارة الوقت مهارة تُكتسب بالتدريب، لا موهبة يولد بها البعض. ابدأ بخطوة واحدة هذا الأسبوع، وأضف غيرها تدريجياً. ولتعرف المزيد عن المهارات التي يطلبها سوق العمل، اقرأ [المهارات الشخصية في العمل](/club/soft-skills).
 
 ## روابط مفيدة
 
-- [كيف تتعلّم أسرع](/post/learn-faster)
+- [كيف تتعلّم أسرع](/club/learn-faster)
 - [The IDEA Club](https://t.me/theideaclub) لتجد من يشاركك أهدافك$ar$,
     $en$How many times have you wanted to learn something new or start an activity, then stopped because there was "no time"? You'll never get more than 24 hours in a day, but how you organize them makes the difference. Here are six tips to help you make the most of your time.
 
@@ -98,7 +98,7 @@ A list moves tasks out of your head and onto paper, so you're less scattered, an
 
 A task without a deadline expands forever and invites procrastination. Set an end time for each task.
 
-Try the Pomodoro technique: work for 25 minutes, rest for 5, repeat 3 or 4 times, then take a longer break of 20 to 30 minutes. It cuts down boredom and the urge to put things off. For more study techniques, read [how to learn faster](/post/learn-faster).
+Try the Pomodoro technique: work for 25 minutes, rest for 5, repeat 3 or 4 times, then take a longer break of 20 to 30 minutes. It cuts down boredom and the urge to put things off. For more study techniques, read [how to learn faster](/club/learn-faster).
 
 ## 5. Leave time to rest
 
@@ -119,11 +119,11 @@ Try leaving your phone in another room, turning on focus mode or silencing notif
 
 ## The bottom line
 
-Time management is a skill you build with practice, not a talent some people are born with. Start with one step this week and add others gradually. To learn more about the skills employers look for, read [soft skills at work](/post/soft-skills).
+Time management is a skill you build with practice, not a talent some people are born with. Start with one step this week and add others gradually. To learn more about the skills employers look for, read [soft skills at work](/club/soft-skills).
 
 ## Useful links
 
-- [How to learn faster](/post/learn-faster)
+- [How to learn faster](/club/learn-faster)
 - [The IDEA Club](https://t.me/theideaclub) to find people who share your goals$en$,
     now() - interval '27 minutes'
   )

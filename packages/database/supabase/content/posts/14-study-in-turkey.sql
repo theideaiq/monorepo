@@ -23,14 +23,14 @@ begin
 ## اختبارات القبول: YÖS وSAT
 
 - **YÖS:** اختبار قبول الطلبة الأجانب في تركيا. كانت كل جامعة تنظّم اختبارها الخاص، ثم بدأ مركز القياس التركي ÖSYM بتنظيم اختبار مركزي موحّد باسم TR-YÖS. القواعد تغيّرت في السنوات الأخيرة، فتحقّق من الاختبار الذي تقبله كل جامعة تريدها.
-- **SAT:** تقبله جامعات تركية كثيرة بديلاً عن YÖS، لكن بعض الجامعات والتخصصات (خصوصاً الطبية والهندسية) قد لا تقبله أو تطلب درجة مرتفعة. اقرأ [دليل SAT](/post/sat-guide).
+- **SAT:** تقبله جامعات تركية كثيرة بديلاً عن YÖS، لكن بعض الجامعات والتخصصات (خصوصاً الطبية والهندسية) قد لا تقبله أو تطلب درجة مرتفعة. اقرأ [دليل SAT](/club/sat-guide).
 
 وبعض الجامعات تقبل الطلبة بمعدل الإعدادية وحده لبعض التخصصات.
 
 ## لغة الدراسة
 
 - **بالتركية:** تحتاج إلى شهادة لغة تركية مثل TÖMER أو ما تحدّده الجامعة، أو تدرس سنة تحضيرية للغة. الدراسة بالتركية أرخص غالباً من التخصص نفسه بالإنجليزية.
-- **بالإنجليزية:** تحتاج إلى TOEFL أو IELTS أو ما تقبله الجامعة (اقرأ [دليل IELTS](/post/ielts-guide))، أو تجتاز اختبار اللغة الخاص بالجامعة أو سنتها التحضيرية.
+- **بالإنجليزية:** تحتاج إلى TOEFL أو IELTS أو ما تقبله الجامعة (اقرأ [دليل IELTS](/club/ielts-guide))، أو تجتاز اختبار اللغة الخاص بالجامعة أو سنتها التحضيرية.
 
 ## مواعيد التقديم
 
@@ -53,7 +53,7 @@ begin
 
 - اسأل طلاباً عراقيين يدرسون في تركيا عن تجربتهم مع الجامعة والسكن.
 - قارن التكلفة الكاملة: الرسوم والسكن والمعيشة، وليس الرسوم وحدها.
-- لا تكتفِ بوجهة واحدة؛ ضع تركيا ضمن قائمة متنوعة كما في [خطة التقديم على الدراسة في الخارج](/post/study-abroad-roadmap).
+- لا تكتفِ بوجهة واحدة؛ ضع تركيا ضمن قائمة متنوعة كما في [خطة التقديم على الدراسة في الخارج](/club/study-abroad-roadmap).
 
 ## روابط رسمية
 
@@ -73,14 +73,14 @@ Fees vary widely: from a few hundred dollars a year at some public universities 
 ## Admission tests: YÖS and the SAT
 
 - **YÖS:** the admission exam for international students in Türkiye. Each university used to run its own; Türkiye's measurement center ÖSYM then began running a central exam called TR-YÖS. The rules have changed in recent years, so check which test each university on your list accepts.
-- **SAT:** many Turkish universities accept it instead of YÖS, but some universities and programs (especially medicine and engineering) may not, or may ask for a high score. Read our [SAT guide](/post/sat-guide).
+- **SAT:** many Turkish universities accept it instead of YÖS, but some universities and programs (especially medicine and engineering) may not, or may ask for a high score. Read our [SAT guide](/club/sat-guide).
 
 Some universities admit students on their secondary-school grades alone for certain programs.
 
 ## Language of study
 
 - **Turkish:** you'll need a Turkish language certificate such as TÖMER, or whatever the university specifies, or a preparatory language year. Studying in Turkish is usually cheaper than the same program in English.
-- **English:** you'll need TOEFL, IELTS or another test the university accepts (see our [IELTS guide](/post/ielts-guide)), or you can pass the university's own English exam or preparatory year.
+- **English:** you'll need TOEFL, IELTS or another test the university accepts (see our [IELTS guide](/club/ielts-guide)), or you can pass the university's own English exam or preparatory year.
 
 ## Intakes
 
@@ -103,7 +103,7 @@ Start building your record of activities and drafting your answers early; compet
 
 - Ask Iraqi students already studying in Türkiye about their university and housing.
 - Compare the full cost: tuition, housing and living, not tuition alone.
-- Don't rely on one destination; put Türkiye on a varied list, as in our [study abroad roadmap](/post/study-abroad-roadmap).
+- Don't rely on one destination; put Türkiye on a varied list, as in our [study abroad roadmap](/club/study-abroad-roadmap).
 
 ## Official links
 

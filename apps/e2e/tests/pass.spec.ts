@@ -9,9 +9,9 @@ const returnTo = (path: string) => `?return_to=${encodeURIComponent(path)}`;
 
 test.describe("The IDEA Pass", () => {
   test("is branded and accessible in both languages", async ({ page }) => {
-    await page.goto(`${urls.web}/sign-up`);
+    await page.goto(`${urls.web}/sign-in`);
     await expect(page).toHaveTitle(/The IDEA Pass/);
-    await expect(page.getByLabel("Full name")).toBeVisible();
+    await expect(page.getByLabel("Email")).toBeVisible();
     await expectAccessible(page);
 
     await page.goto(`${urls.web}/ar/sign-in`);
@@ -29,7 +29,7 @@ test.describe("The IDEA Pass", () => {
     ).toHaveAttribute("href", `/sign-in${returnTo("/store")}`);
   });
 
-  test("signed out, My Pass asks to sign in", async ({ page }) => {
+  test("signed out, Your Pass asks to sign in", async ({ page }) => {
     await page.goto(`${urls.web}/pass`);
     await expect(page).toHaveURL(`${urls.web}/sign-in${returnTo("/pass")}`);
   });
@@ -40,10 +40,10 @@ test.describe("The IDEA Pass", () => {
       await signIn(context, customer.email);
     });
 
-    test("shows My Pass and signs out everywhere", async ({ page }) => {
+    test("shows Your Pass and signs out everywhere", async ({ page }) => {
       await page.goto(`${urls.web}/pass`);
       await expect(
-        page.getByRole("heading", { level: 1, name: "My Pass" })
+        page.getByRole("heading", { level: 1, name: "Your Pass" })
       ).toBeVisible();
       await expect(page.getByText(customer.name).first()).toBeVisible();
       // Customers have no back office.
@@ -54,20 +54,20 @@ test.describe("The IDEA Pass", () => {
 
       await page.getByRole("button", { name: "Sign out" }).click();
       await expect(page).toHaveURL(`${urls.web}/sign-in`);
-      // The shared session is gone for The IDEA Spark too.
-      await page.goto(`${urls.app}/business`);
+      // The shared session is gone for The IDEA Business too.
+      await page.goto(`${urls.app}/invoices`);
       await expect(page).toHaveURL(
         new RegExp(`^${urls.web}/sign-in\\?return_to=`)
       );
     });
 
     test("sends you on to allowed sites only", async ({ page }) => {
-      await page.goto(`${urls.web}/sign-in${returnTo("/pass/wishlist")}`);
-      await expect(page).toHaveURL(`${urls.web}/pass/wishlist`);
+      await page.goto(`${urls.web}/sign-in${returnTo("/saved")}`);
+      await expect(page).toHaveURL(`${urls.web}/saved`);
 
-      // Another site of The IDEA (here The IDEA Spark) is allowed too.
-      await page.goto(`${urls.web}/sign-in${returnTo(`${urls.app}/business`)}`);
-      await expect(page).toHaveURL(`${urls.app}/business`);
+      // Another site of The IDEA (here The IDEA Business) is allowed too.
+      await page.goto(`${urls.web}/sign-in${returnTo(`${urls.app}/invoices`)}`);
+      await expect(page).toHaveURL(`${urls.app}/invoices`);
 
       // Anywhere else falls back to the website.
       await page.goto(`${urls.web}/sign-in${returnTo("https://example.com/")}`);
@@ -77,11 +77,11 @@ test.describe("The IDEA Pass", () => {
     test("a sign-out link from another site doesn't sign you out", async ({
       page,
     }) => {
-      // A direct navigation (no same-site Sec-Fetch-Site) lands on My Pass.
+      // A direct navigation (no same-site Sec-Fetch-Site) lands on Your Pass.
       await page.goto(`${urls.web}/sign-out`);
       await expect(page).toHaveURL(`${urls.web}/pass`);
       await expect(
-        page.getByRole("heading", { level: 1, name: "My Pass" })
+        page.getByRole("heading", { level: 1, name: "Your Pass" })
       ).toBeVisible();
     });
   });

@@ -52,7 +52,7 @@ begin
 
 ## هل أحتاج شهادة جامعية؟
 
-لا. هذا من أجمل ما في المجال: يمكنك تعلّمه ذاتياً والحصول على عمل بمشاريع تثبت مهارتك. ما يهمّ أصحاب العمل غالباً هو ما تستطيع بناءه. ابنِ مشاريع حقيقية، وارفعها على GitHub، واجمعها في معرض أعمال (Portfolio). وإن لم تكن قد أنشأت حساباً على GitHub بعد، فابدأ من [خطواتك الأولى على الإنترنت](/post/first-steps-online).
+لا. هذا من أجمل ما في المجال: يمكنك تعلّمه ذاتياً والحصول على عمل بمشاريع تثبت مهارتك. ما يهمّ أصحاب العمل غالباً هو ما تستطيع بناءه. ابنِ مشاريع حقيقية، وارفعها على GitHub، واجمعها في معرض أعمال (Portfolio). وإن لم تكن قد أنشأت حساباً على GitHub بعد، فابدأ من [خطواتك الأولى على الإنترنت](/club/first-steps-online).
 
 ## خطة مقترحة للبداية
 
@@ -61,9 +61,9 @@ begin
 3. تعلّم Git وGitHub لإدارة مشاريعك.
 4. اختر إطار واجهة أمامية واحداً (React مثلاً) وابنِ به مشروعين.
 5. انتقل إلى الواجهة الخلفية: لغة واحدة وإطارها، وقاعدة بيانات وSQL.
-6. انشر مشاريعك على الإنترنت، واستعن بخدمات [الحوسبة السحابية](/post/cloud-computing).
+6. انشر مشاريعك على الإنترنت، واستعن بخدمات [الحوسبة السحابية](/club/cloud-computing).
 
-وإن أردت الانتقال لاحقاً إلى العمل الحر، فاقرأ دليل [العمل عن بعد](/post/remote-work-and-freelancing).
+وإن أردت الانتقال لاحقاً إلى العمل الحر، فاقرأ دليل [العمل عن بعد](/club/remote-work-and-freelancing).
 
 ## مستودعات GitHub تستحق المتابعة
 
@@ -131,7 +131,7 @@ Paper posters and old-style ads are no longer enough. Every business, large or n
 
 ## Do I need a degree?
 
-No, and that's one of the best things about the field. You can teach yourself and get hired on the strength of what you've built. Employers usually care most about what you can make. Build real projects, push them to GitHub and collect them in a portfolio. If you don't have a GitHub profile yet, start with [your first steps online](/post/first-steps-online).
+No, and that's one of the best things about the field. You can teach yourself and get hired on the strength of what you've built. Employers usually care most about what you can make. Build real projects, push them to GitHub and collect them in a portfolio. If you don't have a GitHub profile yet, start with [your first steps online](/club/first-steps-online).
 
 ## A suggested path
 
@@ -140,9 +140,9 @@ No, and that's one of the best things about the field. You can teach yourself an
 3. Learn Git and GitHub to manage your projects.
 4. Pick one front-end framework (React, for example) and build two projects with it.
 5. Move to the back end: one language and its framework, plus a database and SQL.
-6. Deploy your projects online, using [cloud services](/post/cloud-computing).
+6. Deploy your projects online, using [cloud services](/club/cloud-computing).
 
-When you're ready to take on client work, read our guide to [remote work and freelancing](/post/remote-work-and-freelancing).
+When you're ready to take on client work, read our guide to [remote work and freelancing](/club/remote-work-and-freelancing).
 
 ## GitHub repositories worth following
 

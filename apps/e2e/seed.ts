@@ -5,7 +5,6 @@ import {
   product,
   signUpUser,
   staff,
-  unknownEmail,
 } from "./fixtures";
 
 /**
@@ -107,22 +106,13 @@ export const resetStaff = async () => {
   }
 };
 
-/**
- * No account yet for the sign-up address (nor for the address that never
- * has one), so signing up creates it.
- */
+/** No Pass yet for the new member's address, so signing in creates it. */
 export const resetSignUpUser = async () => {
-  for (const email of [signUpUser.email, unknownEmail]) {
-    const found = await findUser((u) => u.email === email);
-    if (found) {
-      check(await admin().auth.admin.deleteUser(found.id));
-    }
+  const found = await findUser((u) => u.email === signUpUser.email);
+  if (found) {
+    check(await admin().auth.admin.deleteUser(found.id));
   }
 };
-
-/** Whether an account with this email exists. */
-export const accountExists = async (email: string) =>
-  Boolean(await findUser((u) => u.email === email));
 
 /** An in-stock product of the journeys' own. */
 export const ensureProduct = async () => {

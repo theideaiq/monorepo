@@ -43,12 +43,10 @@ describe("parseStoreQuery", () => {
 });
 
 describe("links", () => {
-  it("builds locale-prefixed paths here and URLs on The IDEA Spark", () => {
-    expect(pagePath("ar", "/pass/plus", { plan: "p1" })).toBe(
-      "/ar/pass/plus?plan=p1"
-    );
-    expect(appLink("https://spark.theideaiq.com/", "en", "/business")).toBe(
-      "https://spark.theideaiq.com/business"
+  it("builds locale-prefixed paths here and URLs on The IDEA Business", () => {
+    expect(pagePath("ar", "/plus", { plan: "p1" })).toBe("/ar/plus?plan=p1");
+    expect(appLink("https://business.theideaiq.com/", "en", "/invoices")).toBe(
+      "https://business.theideaiq.com/invoices"
     );
   });
 });

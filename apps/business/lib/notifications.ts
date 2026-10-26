@@ -1,0 +1,298 @@
+"use client";
+
+import { passOrigin } from "@repo/auth/pass";
+import { useAuth } from "@repo/auth/provider";
+import { formatPrice } from "@repo/commerce";
+import type { Enums, Json } from "@repo/database";
+import type { Locale } from "@repo/internationalization";
+import { localePath } from "@repo/internationalization";
+import {
+  businessPath,
+  currentAppPath,
+  safeNextPath,
+} from "@repo/internationalization/app-paths";
+import { formatDate, formatNumber } from "@repo/internationalization/format";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { queryKeys, requireUserId, unwrap } from "./queries";
+
+/**
+ * In-app notifications, written by database triggers. Each row carries an
+ * `event` key and its `data`; the text comes from the viewer's translations
+ * (`store.notifications`), so a notification reads in their language.
+ */
+
+export type NotificationKind = Enums<"notification_kind">;
+
+/**
+ * Every event the triggers emit (see the customer_features, trade_ins,
+ * whatsapp, bulbs and affiliates migrations).
+ */
+export const NOTIFICATION_EVENTS = [
+  "order_paid",
+  "order_processing",
+  "order_shipped",
+  "order_delivered",
+  "order_cancelled",
+  "order_refunded",
+  "rental_active",
+  "rental_overdue",
+  "rental_returned",
+  "rental_cancelled",
+  "rental_due_soon",
+  "support_reply",
+  "trade_in_offer",
+  "trade_in_rejected",
+  "trade_in_completed",
+  "bulbs_expiring",
+  "bulbs_birthday",
+  "affiliate_approved",
+  "affiliate_paid",
+  "quote_sent",
+  "invoice_issued",
+  "plus_seat_active",
+  "candidate_proposed",
+] as const;
+
+export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
+
+export const isKnownEvent = (event: string): event is NotificationEvent =>
+  NOTIFICATION_EVENTS.includes(event as NotificationEvent);
+
+export interface NotificationRow {
+  created_at: string;
+  data: Json;
+  event: string;
+  id: string;
+  kind: NotificationKind;
+  link: string | null;
+  read_at: string | null;
+}
+
+/** Message keys under `store.notifications`, with their values. */
+export interface NotificationText {
+  body: `events.${NotificationEvent}.body` | "fallbackBody";
+  title: `events.${NotificationEvent}.title` | `kinds.${NotificationKind}`;
+  values: Record<string, string>;
+}
+
+const asRecord = (data: Json): Record<string, Json | undefined> =>
+  data && typeof data === "object" && !Array.isArray(data) ? data : {};
+
+const text = (value: Json | undefined) =>
+  typeof value === "string" || typeof value === "number" ? String(value) : "";
+
+/** The Bulbs and the expiry date of a `bulbs_expiring` reminder. */
+const bulbsExpiringValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const bulbs = Number(text(data.bulbs));
+  const expires = text(data.expires_at);
+  return {
+    bulbs: Number.isFinite(bulbs) ? formatNumber(bulbs, locale) : "",
+    date: expires ? formatDate(expires, locale) : "",
+  };
+};
+
+/** An affiliate's code (approved) or payout amount and Bulbs (paid). */
+const affiliateValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const amount = Number(text(data.amount));
+  const bulbs = Number(text(data.bulbs));
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    bulbs: Number.isFinite(bulbs) ? formatNumber(bulbs, locale) : "",
+    code: text(data.code),
+    hasBulbs: text(data.bulbs) ? "yes" : "no",
+  };
+};
+
+/** A quote's number, request title and total (`quote_sent`). */
+const quoteValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const total = Number(text(data.total));
+  return {
+    number: text(data.number),
+    title: text(data.title),
+    total: Number.isFinite(total) ? formatPrice(total, locale) : "",
+  };
+};
+
+/** An invoice's number, amount and due date (`invoice_issued`). */
+const invoiceValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const amount = Number(text(data.amount));
+  const due = text(data.due_on);
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    date: due ? formatDate(due, locale) : "",
+    number: text(data.number),
+  };
+};
+
+/** Events whose data needs formatting beyond the common fields. */
+const extraValues: Partial<
+  Record<
+    NotificationEvent,
+    (
+      data: Record<string, Json | undefined>,
+      locale: Locale
+    ) => Record<string, string>
+  >
+> = {
+  affiliate_approved: affiliateValues,
+  affiliate_paid: affiliateValues,
+  bulbs_birthday: bulbsExpiringValues,
+  bulbs_expiring: bulbsExpiringValues,
+  candidate_proposed: (data) => ({
+    name: text(data.name),
+    title: text(data.title),
+  }),
+  invoice_issued: invoiceValues,
+  plus_seat_active: (data) => ({ plan: text(data.plan) }),
+  quote_sent: quoteValues,
+};
+
+/**
+ * Which messages render a notification, with its data formatted for them
+ * (numbers as text, dates in Baghdad time). Unknown events fall back to a
+ * title for their kind and a generic line.
+ */
+export const describeNotification = (
+  notification: Pick<NotificationRow, "data" | "event" | "kind">,
+  locale: Locale
+): NotificationText => {
+  const data = asRecord(notification.data);
+  const { event } = notification;
+
+  if (!isKnownEvent(event)) {
+    return {
+      body: "fallbackBody",
+      title: `kinds.${notification.kind}`,
+      values: {},
+    };
+  }
+
+  const values: Record<string, string> = {};
+  if (
+    event.startsWith("order_") ||
+    event.startsWith("trade_in_") ||
+    event === "support_reply"
+  ) {
+    values.number = text(data.number);
+  }
+  if (event === "order_shipped") {
+    values.tracking = text(data.tracking);
+    values.hasTracking = values.tracking ? "yes" : "no";
+  }
+  if (event === "support_reply") {
+    values.subject = text(data.subject);
+  }
+  if (event.startsWith("trade_in_")) {
+    values.title = text(data.title);
+  }
+  if (event === "trade_in_offer") {
+    const amount = Number(text(data.amount));
+    values.amount = Number.isFinite(amount) ? formatPrice(amount, locale) : "";
+  }
+  Object.assign(values, extraValues[event]?.(data, locale));
+  if (event.startsWith("rental_")) {
+    const english = text(data.name_en);
+    const arabic = text(data.name_ar);
+    values.name = (locale === "en" ? english : arabic) || english || arabic;
+    const due = text(data.due_at);
+    values.due = due ? formatDate(due, locale) : "";
+    values.hasDue = values.due ? "yes" : "no";
+  }
+
+  return {
+    body: `events.${event}.body` as const,
+    title: `events.${event}.title` as const,
+    values,
+  };
+};
+
+/**
+ * Where a notification opens, or null for a missing or unsafe link: a page
+ * of this site for links under `/business…` (`/business/invoices` →
+ * `/invoices`), else the page on the website (an absolute URL).
+ */
+export const notificationHref = (link: string | null, locale = "en") => {
+  const path = safeNextPath(link);
+  if (!path) {
+    return null;
+  }
+  return (
+    businessPath(path) ??
+    new URL(localePath(locale, currentAppPath(path)), passOrigin()).href
+  );
+};
+
+const NOTIFICATION_COLUMNS =
+  "id, kind, event, data, link, read_at, created_at" as const;
+const POLL_MS = 60_000;
+
+export const useNotifications = (enabled = true) => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user) && enabled,
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("notifications")
+          .select(NOTIFICATION_COLUMNS)
+          .eq("user_id", requireUserId(user?.id))
+          .order("created_at", { ascending: false })
+          .limit(20)
+      ) as NotificationRow[],
+    queryKey: queryKeys.notifications(user?.id ?? ""),
+    refetchOnWindowFocus: true,
+  });
+};
+
+/** Unread notifications, counted by the database; polled every minute. */
+export const useUnreadCount = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", requireUserId(user?.id))
+        .is("read_at", null);
+      if (error) {
+        throw error;
+      }
+      return count ?? 0;
+    },
+    queryKey: queryKeys.unreadNotifications(user?.id ?? ""),
+    refetchInterval: POLL_MS,
+    refetchOnWindowFocus: true,
+  });
+};
+
+/** mark_notifications_read(): some notifications, or all without ids. */
+export const useMarkNotificationsRead = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (ids?: string[]) =>
+      unwrap(
+        await supabase.rpc(
+          "mark_notifications_read",
+          ids ? { notification_ids: ids } : {}
+        )
+      ),
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.notifications(user?.id ?? ""),
+      }),
+  });
+};

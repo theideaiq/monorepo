@@ -1,0 +1,42 @@
+import { describe, expect, test } from "vitest";
+import { businessPath, currentAppPath, safeNextPath } from "./app-paths";
+
+describe("currentAppPath", () => {
+  test("opens detail pages stored with a query parameter at their URL", () => {
+    expect(currentAppPath("/orders/view?id=o%201&x=1")).toBe(
+      "/pass/orders/o%201?x=1"
+    );
+    expect(currentAppPath("/support/view?id=t1")).toBe("/help/t1");
+  });
+
+  test("opens pages that moved at their current address", () => {
+    expect(currentAppPath("/sell")).toBe("/pass/orders#sell");
+    expect(currentAppPath("/pass/affiliate")).toBe("/pass/bulbs#invite");
+    expect(currentAppPath("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
+    expect(currentAppPath("/pass/support/t1")).toBe("/help/t1");
+    expect(currentAppPath("/pass/wishlist")).toBe("/saved");
+    expect(currentAppPath("/post/events/quiz-night")).toBe("/club/quiz-night");
+    expect(currentAppPath("/post/stories")).toBe("/club");
+    expect(currentAppPath("/suite")).toBe("/business");
+    expect(currentAppPath("/i/SARA1")).toBe("/r/SARA1");
+    expect(currentAppPath("/orders")).toBe("/pass/orders");
+  });
+
+  test("leaves current pages alone", () => {
+    for (const path of ["/pass/bulbs", "/plus", "/club/x", "/store/ps5"]) {
+      expect(currentAppPath(path)).toBe(path);
+    }
+  });
+});
+
+test("businessPath strips The IDEA Business's prefix", () => {
+  expect(businessPath("/business/invoices")).toBe("/invoices");
+  expect(businessPath("/business")).toBe("/");
+  expect(businessPath("/businesses")).toBeNull();
+  expect(businessPath("/pass")).toBeNull();
+});
+
+test("safeNextPath refuses other sites", () => {
+  expect(safeNextPath("//evil.example")).toBeNull();
+  expect(safeNextPath("/pass")).toBe("/pass");
+});

@@ -71,7 +71,7 @@ begin
 
 ## هل تحتاج الإنجليزية لاختبار قبول؟
 
-إذا كان هدفك IELTS أو TOEFL أو Duolingo English Test، فحدّد مستواك أولاً، ثم استخدم مصادر التحضير الرسمية للاختبار. اقرأ [دليل IELTS](/post/ielts-guide) و[دليل Duolingo English Test](/post/duolingo-english-test)، واستعن بـ[أدوات الترجمة والكتابة](/post/translation-and-writing-tools) لتحسين كتابتك.
+إذا كان هدفك IELTS أو TOEFL أو Duolingo English Test، فحدّد مستواك أولاً، ثم استخدم مصادر التحضير الرسمية للاختبار. اقرأ [دليل IELTS](/club/ielts-guide) و[دليل Duolingo English Test](/club/duolingo-english-test)، واستعن بـ[أدوات الترجمة والكتابة](/club/translation-and-writing-tools) لتحسين كتابتك.
 
 ## روابط مفيدة
 
@@ -140,7 +140,7 @@ plus sections for vocabulary and grammar.
 
 ## Need English for an admissions test?
 
-If your goal is IELTS, TOEFL or the Duolingo English Test, find your level first, then use the test's official prep materials. Read [the IELTS guide](/post/ielts-guide) and [the Duolingo English Test guide](/post/duolingo-english-test), and use [translation and writing tools](/post/translation-and-writing-tools) to polish your writing.
+If your goal is IELTS, TOEFL or the Duolingo English Test, find your level first, then use the test's official prep materials. Read [the IELTS guide](/club/ielts-guide) and [the Duolingo English Test guide](/club/duolingo-english-test), and use [translation and writing tools](/club/translation-and-writing-tools) to polish your writing.
 
 ## Useful links
 

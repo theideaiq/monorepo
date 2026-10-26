@@ -56,12 +56,12 @@ begin
 
 ## ابدأ الآن
 
-لا تنتظر اللحظة المثالية. اختر طريقة واحدة من هذه الطرق وجرّبها اليوم. ولتنظيم يومك كله، اقرأ [دليل إدارة الوقت](/post/time-management).
+لا تنتظر اللحظة المثالية. اختر طريقة واحدة من هذه الطرق وجرّبها اليوم. ولتنظيم يومك كله، اقرأ [دليل إدارة الوقت](/club/time-management).
 
 ## روابط مفيدة
 
 - [The IDEA Club](https://t.me/theideaclub) لتشارك ما تتعلمه وتناقشه
-- [كيف تطوّر إنجليزيتك](/post/improve-your-english)$ar$,
+- [كيف تطوّر إنجليزيتك](/club/improve-your-english)$ar$,
     $en$Learning is a journey that lasts your whole life, whether you're studying for exams or picking up a new skill. Knowing **how** to learn matters as much as **what** you learn. Here are five proven techniques that make learning faster and easier and help it stick.
 
 ## 1. Explain it to someone else
@@ -107,12 +107,12 @@ Spread your review over several days instead of cramming everything into the las
 
 ## Start now
 
-Don't wait for the perfect moment. Pick one of these techniques and try it today. To organize your whole day, read [the time management guide](/post/time-management).
+Don't wait for the perfect moment. Pick one of these techniques and try it today. To organize your whole day, read [the time management guide](/club/time-management).
 
 ## Useful links
 
 - [The IDEA Club](https://t.me/theideaclub) to share and discuss what you're learning
-- [How to improve your English](/post/improve-your-english)$en$,
+- [How to improve your English](/club/improve-your-english)$en$,
     now() - interval '26 minutes'
   )
   on conflict (slug) do update set

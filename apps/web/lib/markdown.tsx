@@ -1,4 +1,5 @@
 import { localePath, withoutLocalePrefix } from "@repo/internationalization";
+import { currentAppPath } from "@repo/internationalization/app-paths";
 import type {
   Heading,
   Nodes,
@@ -237,14 +238,16 @@ const renderNode = (
 /**
  * Site-relative links ("/legal/terms") get the reader's language prefix
  * ("/ar/legal/terms"; none for English), so they don't bounce through a
- * locale redirect. Links that already name a language are kept.
+ * locale redirect, and links to pages that moved open their current
+ * address (`/post/<slug>` → `/club/<slug>`). Links that already name a
+ * language are kept.
  */
 export const localizeHref = (href: string, locale?: string) =>
   locale &&
   href.startsWith("/") &&
   !href.startsWith("//") &&
   withoutLocalePrefix(href) === href
-    ? localePath(locale, href)
+    ? localePath(locale, currentAppPath(href))
     : href;
 
 const localizeLinks = (node: Nodes, locale: string) => {

@@ -5,7 +5,7 @@ const WEB = "https://theideaiq.com";
 
 vi.mock("@/env", () => ({
   env: {
-    NEXT_PUBLIC_APP_URL: "https://app.theideaiq.com",
+    NEXT_PUBLIC_APP_URL: "https://business.theideaiq.com",
     NEXT_PUBLIC_WEB_URL: WEB,
     RESEND_FROM: undefined,
   },
@@ -176,7 +176,7 @@ describe("POST /contact", () => {
 
     const fromApp = await OPTIONS(
       new Request("http://localhost/contact", {
-        headers: { origin: "https://app.theideaiq.com" },
+        headers: { origin: "https://business.theideaiq.com" },
         method: "OPTIONS",
       })
     );

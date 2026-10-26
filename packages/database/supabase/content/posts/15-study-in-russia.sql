@@ -44,7 +44,7 @@ begin
 - اسأل طلاباً عراقيين في الجامعة نفسها عن السكن والتدريس واللغة.
 - احذر من الوسطاء الذين يطلبون مبالغ كبيرة مقابل "قبول مضمون"؛ تعامل مع الجامعة مباشرة أو مع جهات موثوقة.
 - خطّط للطقس البارد، فهو جزء حقيقي من التجربة.
-- قارن روسيا مع وجهات أخرى في [خطة التقديم على الدراسة في الخارج](/post/study-abroad-roadmap)، مثل [ألمانيا](/post/study-in-germany) و[تركيا](/post/study-in-turkey).
+- قارن روسيا مع وجهات أخرى في [خطة التقديم على الدراسة في الخارج](/club/study-abroad-roadmap)، مثل [ألمانيا](/club/study-in-germany) و[تركيا](/club/study-in-turkey).
 
 ## روابط رسمية
 
@@ -84,7 +84,7 @@ Every year the Russian government offers a number of free study places to intern
 - Ask Iraqi students at the same university about housing, teaching and language.
 - Beware of agents charging large sums for "guaranteed admission"; deal with the university directly or with trusted bodies.
 - Plan for the cold; it's a real part of the experience.
-- Compare Russia with other destinations in our [study abroad roadmap](/post/study-abroad-roadmap), such as [Germany](/post/study-in-germany) and [Türkiye](/post/study-in-turkey).
+- Compare Russia with other destinations in our [study abroad roadmap](/club/study-abroad-roadmap), such as [Germany](/club/study-in-germany) and [Türkiye](/club/study-in-turkey).
 
 ## Official links
 

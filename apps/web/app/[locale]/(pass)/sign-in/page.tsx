@@ -13,7 +13,7 @@ interface SignInPageProps {
 }
 
 const SignInPage = ({ searchParams }: SignInPageProps) => (
-  <AuthPage mode="sign-in" searchParams={searchParams} />
+  <AuthPage searchParams={searchParams} />
 );
 
 export default SignInPage;

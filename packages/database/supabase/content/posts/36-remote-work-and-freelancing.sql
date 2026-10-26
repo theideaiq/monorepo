@@ -20,17 +20,17 @@ begin
 - **أنت مسؤول عن وقتك:** غالباً تُكلَّف بمهمة وموعد تسليم، وتنظّم وقتك بنفسك.
 - **المهارة قبل الشهادة:** كثير من الوظائف عن بعد تهتم بما تستطيع فعله أكثر من شهادتك الجامعية.
 
-لكن الحرية تعني مسؤولية: الالتزام بالمواعيد، والتواصل الجيد، و[إدارة الوقت](/post/time-management) هي ما يميّز المحترف.
+لكن الحرية تعني مسؤولية: الالتزام بالمواعيد، والتواصل الجيد، و[إدارة الوقت](/club/time-management) هي ما يميّز المحترف.
 
 ## الخطوة 1: اختر مهارة وطوّرها
 
 ابدأ بمهارة واحدة مطلوبة وتعمّق فيها، مثل:
 
-- [تطوير المواقع](/post/web-development) والبرمجيات.
-- [التصميم الجرافيكي](/post/graphic-design) والموشن جرافيك.
-- [كتابة الإعلانات](/post/copywriting) و[كتابة المحتوى](/post/content-writing) والترجمة.
+- [تطوير المواقع](/club/web-development) والبرمجيات.
+- [التصميم الجرافيكي](/club/graphic-design) والموشن جرافيك.
+- [كتابة الإعلانات](/club/copywriting) و[كتابة المحتوى](/club/content-writing) والترجمة.
 - التسويق الرقمي وإدارة حسابات وسائل التواصل.
-- المحاسبة و[تحليل البيانات](/post/data-science).
+- المحاسبة و[تحليل البيانات](/club/data-science).
 - الرسم والفن الرقمي.
 
 ## الخطوة 2: ابنِ معرض أعمال (Portfolio)
@@ -38,7 +38,7 @@ begin
 العميل يريد أن يرى ما تستطيع فعله قبل أن يدفع، لذلك معرض الأعمال أهم من السيرة الذاتية في هذا المجال. أنشئ حسابات على المنصات التي تناسب مجالك:
 
 - **للفنانين والمصمّمين:** ArtStation وBehance وDribbble، إضافة إلى صفحة أعمال على Instagram.
-- **للمبرمجين:** GitHub (اقرأ [خطواتك الأولى على الإنترنت](/post/first-steps-online)).
+- **للمبرمجين:** GitHub (اقرأ [خطواتك الأولى على الإنترنت](/club/first-steps-online)).
 - **للكتّاب:** مدوّنة على WordPress أو Medium.
 - **للجميع:** صفحة LinkedIn مرتّبة، وموقع شخصي إن استطعت.
 
@@ -65,7 +65,7 @@ begin
 
 ## الخطوة 5: استلم أجرك
 
-المنصات الكبيرة تتيح سحب الأرباح بطرق مختلفة، منها **Payoneer** والتحويل المصرفي المباشر حسب المنصة. أما PayPal فاستقبال الأموال به من العراق محدود أو غير متاح، لذلك **تحقّق من خدمات الدفع التي تعمل في العراق** قبل قبول أي عمل، واعرف رسومها ومدة توثيق الحساب. وتحتاج غالباً حساباً مصرفياً محلياً لسحب أموالك (اقرأ [دليل الحسابات المصرفية في العراق](/post/bank-accounts-in-iraq)).
+المنصات الكبيرة تتيح سحب الأرباح بطرق مختلفة، منها **Payoneer** والتحويل المصرفي المباشر حسب المنصة. أما PayPal فاستقبال الأموال به من العراق محدود أو غير متاح، لذلك **تحقّق من خدمات الدفع التي تعمل في العراق** قبل قبول أي عمل، واعرف رسومها ومدة توثيق الحساب. وتحتاج غالباً حساباً مصرفياً محلياً لسحب أموالك (اقرأ [دليل الحسابات المصرفية في العراق](/club/bank-accounts-in-iraq)).
 
 ## احمِ نفسك
 
@@ -80,7 +80,7 @@ begin
 - [خمسات](https://khamsat.com) و[مستقل](https://mostaql.com)
 - [Behance](https://www.behance.net) و[ArtStation](https://www.artstation.com) و[Dribbble](https://dribbble.com)
 - [Payoneer](https://www.payoneer.com)
-- [المهارات الشخصية في العمل](/post/soft-skills)
+- [المهارات الشخصية في العمل](/club/soft-skills)
 - ولتتعرّف على من سبقوك في العمل الحر: [The IDEA Club](https://t.me/theideaclub)$ar$,
     $en$Don't have five years of experience? That's fine. Remote work lets you work for companies and individuals around the world from home, with no daily commute or fixed office. It spread fast during the COVID-19 pandemic and is now a main career path for many people, or a second source of income.
 
@@ -91,17 +91,17 @@ begin
 - **You own your time:** you usually get a task and a deadline, and plan your hours yourself.
 - **Skills before degrees:** many remote roles care more about what you can do than about your diploma.
 
-But freedom means responsibility: meeting deadlines, communicating well and [managing your time](/post/time-management) are what set professionals apart.
+But freedom means responsibility: meeting deadlines, communicating well and [managing your time](/club/time-management) are what set professionals apart.
 
 ## Step 1: Pick a skill and get good at it
 
 Start with one in-demand skill and go deep, for example:
 
-- [Web](/post/web-development) and software development.
-- [Graphic design](/post/graphic-design) and motion graphics.
-- [Copywriting](/post/copywriting), [content writing](/post/content-writing) and translation.
+- [Web](/club/web-development) and software development.
+- [Graphic design](/club/graphic-design) and motion graphics.
+- [Copywriting](/club/copywriting), [content writing](/club/content-writing) and translation.
 - Digital marketing and social media management.
-- Accounting and [data analysis](/post/data-science).
+- Accounting and [data analysis](/club/data-science).
 - Illustration and digital art.
 
 ## Step 2: Build a portfolio
@@ -109,7 +109,7 @@ Start with one in-demand skill and go deep, for example:
 Clients want to see what you can do before they pay, so in this world a portfolio matters more than a CV. Create profiles on the platforms that fit your field:
 
 - **Artists and designers:** ArtStation, Behance and Dribbble, plus a work-focused Instagram.
-- **Developers:** GitHub (see [your first steps online](/post/first-steps-online)).
+- **Developers:** GitHub (see [your first steps online](/club/first-steps-online)).
 - **Writers:** a blog on WordPress or Medium.
 - **Everyone:** a tidy LinkedIn profile, and a personal website if you can.
 
@@ -136,7 +136,7 @@ Pricing depends on your field, the hours a job takes and your level. Look at wha
 
 ## Step 5: Get paid
 
-The big platforms offer several withdrawal methods, including **Payoneer** and, on some platforms, direct bank transfer. Receiving money through PayPal from Iraq is limited or unavailable, so **check which payment services work in Iraq** before you accept a job, along with their fees and how long verification takes. You'll usually need a local bank account to withdraw your money (see [our guide to bank accounts in Iraq](/post/bank-accounts-in-iraq)).
+The big platforms offer several withdrawal methods, including **Payoneer** and, on some platforms, direct bank transfer. Receiving money through PayPal from Iraq is limited or unavailable, so **check which payment services work in Iraq** before you accept a job, along with their fees and how long verification takes. You'll usually need a local bank account to withdraw your money (see [our guide to bank accounts in Iraq](/club/bank-accounts-in-iraq)).
 
 ## Protect yourself
 
@@ -151,7 +151,7 @@ The big platforms offer several withdrawal methods, including **Payoneer** and, 
 - [Khamsat](https://khamsat.com) and [Mostaql](https://mostaql.com)
 - [Behance](https://www.behance.net), [ArtStation](https://www.artstation.com) and [Dribbble](https://dribbble.com)
 - [Payoneer](https://www.payoneer.com)
-- [Soft skills at work](/post/soft-skills)
+- [Soft skills at work](/club/soft-skills)
 - To meet people who've been freelancing for years: [The IDEA Club](https://t.me/theideaclub)$en$,
     now() - interval '36 minutes'
   )

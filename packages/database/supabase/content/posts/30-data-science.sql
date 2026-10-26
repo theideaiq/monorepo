@@ -34,7 +34,7 @@ begin
 - **التعلّم الآلي:** فهم الخوارزميات الأساسية ومتى تستخدم كلاً منها.
 - **مهارات التواصل:** تحويل الأرقام إلى قصة يفهمها أصحاب القرار مهارة لا تقل أهمية عن التحليل نفسه.
 
-نصيحة: الدورات المتفرّقة وحدها قد تترك فجوات كبيرة. اتبع برنامجاً منظّماً (Structured Program) يأخذك من الأساسيات إلى المشاريع، ولا تحاول تعلّم كل شيء دفعة واحدة. وإن أردت أن تتعلّم أسرع، فاقرأ [تقنيات التعلّم الفعّال](/post/learn-faster).
+نصيحة: الدورات المتفرّقة وحدها قد تترك فجوات كبيرة. اتبع برنامجاً منظّماً (Structured Program) يأخذك من الأساسيات إلى المشاريع، ولا تحاول تعلّم كل شيء دفعة واحدة. وإن أردت أن تتعلّم أسرع، فاقرأ [تقنيات التعلّم الفعّال](/club/learn-faster).
 
 ## طبّق ما تتعلّمه
 
@@ -64,7 +64,7 @@ begin
 - Introduction to Machine Learning with Python
 - Data Science and Big Data Analytics
 
-ولأن البيانات تُخزَّن وتُعالَج غالباً في السحابة، اقرأ أيضاً دليل [الحوسبة السحابية](/post/cloud-computing).$ar$,
+ولأن البيانات تُخزَّن وتُعالَج غالباً في السحابة، اقرأ أيضاً دليل [الحوسبة السحابية](/club/cloud-computing).$ar$,
     $en$Data science covers extracting, cleaning, analyzing, visualizing and managing data so organizations can make evidence-based decisions. It works with structured data (like database tables) and unstructured data (like text and images), and it draws on statistics, mathematics and computer science.
 
 You'll find it everywhere: Google Search, Gmail's spam filter, spell check, streaming recommendations, and in healthcare, logistics, finance and cybersecurity. That's why it's one of the most in-demand and best-paid fields.
@@ -88,7 +88,7 @@ The field is broad, so you'll be building yourself up in several directions:
 - **Machine learning:** the core algorithms and when to use each.
 - **Communication:** turning numbers into a story decision-makers understand matters as much as the analysis itself.
 
-A tip: scattered courses alone can leave big gaps. Follow a structured program that takes you from the basics to real projects, and don't try to learn everything at once. To learn faster, read our guide to [effective learning techniques](/post/learn-faster).
+A tip: scattered courses alone can leave big gaps. Follow a structured program that takes you from the basics to real projects, and don't try to learn everything at once. To learn faster, read our guide to [effective learning techniques](/club/learn-faster).
 
 ## Put it into practice
 
@@ -118,7 +118,7 @@ Projects are the best proof of skill: analyze a real dataset, enter Kaggle compe
 - Introduction to Machine Learning with Python
 - Data Science and Big Data Analytics
 
-Since data is usually stored and processed in the cloud, read our guide to [cloud computing](/post/cloud-computing) too.$en$,
+Since data is usually stored and processed in the cloud, read our guide to [cloud computing](/club/cloud-computing) too.$en$,
     now() - interval '30 minutes'
   )
   on conflict (slug) do update set

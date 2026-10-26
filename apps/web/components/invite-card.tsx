@@ -24,7 +24,7 @@ export const InviteCard = () => {
   if (!code) {
     return null;
   }
-  const link = `${window.location.origin}/i/${code}`;
+  const link = `${window.location.origin}/r/${code}`;
   const canShare = typeof navigator !== "undefined" && "share" in navigator;
 
   const copy = async () => {

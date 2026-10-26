@@ -47,7 +47,7 @@ begin
 
 - أدِر صفحاتك على وسائل التواصل باحتراف، و**LinkedIn** تحديداً هو المنصة الأهم للوصول إلى أصحاب القرار في الشركات.
 - استخدم إعلانات مستهدفة بدقة.
-- انشر [محتوى](/post/content-writing) مفيداً يثبت خبرتك: دراسات حالة، وأدلة، ونتائج حقيقية.
+- انشر [محتوى](/club/content-writing) مفيداً يثبت خبرتك: دراسات حالة، وأدلة، ونتائج حقيقية.
 
 ### 5. تواصل مع العملاء مباشرة
 
@@ -68,8 +68,8 @@ begin
 - [Shopify](https://www.shopify.com) و[BigCommerce](https://www.bigcommerce.com)
 - [Oracle NetSuite SuiteCommerce](https://www.netsuite.com/portal/products/suitecommerce.shtml)
 - [LinkedIn Marketing Solutions](https://business.linkedin.com/marketing-solutions)
-- [ما هي الشركة الناشئة؟](/post/startups-explained)
-- [كتابة الإعلانات](/post/copywriting)
+- [ما هي الشركة الناشئة؟](/club/startups-explained)
+- [كتابة الإعلانات](/club/copywriting)
 - وللنقاش مع أصحاب المشاريع: [The IDEA Club](https://t.me/theideaclub)$ar$,
     $en$## What is B2B?
 
@@ -107,7 +107,7 @@ Create a website or platform that presents your services clearly, with contact d
 
 - Run your social media pages professionally; **LinkedIn** in particular is the key platform for reaching decision-makers in companies.
 - Use tightly targeted ads.
-- Publish useful [content](/post/content-writing) that proves your expertise: case studies, guides and real results.
+- Publish useful [content](/club/content-writing) that proves your expertise: case studies, guides and real results.
 
 ### 5. Reach out directly
 
@@ -128,8 +128,8 @@ Don't disappear after the deal. Follow up on customer satisfaction, analyze the 
 - [Shopify](https://www.shopify.com) and [BigCommerce](https://www.bigcommerce.com)
 - [Oracle NetSuite SuiteCommerce](https://www.netsuite.com/portal/products/suitecommerce.shtml)
 - [LinkedIn Marketing Solutions](https://business.linkedin.com/marketing-solutions)
-- [What is a startup?](/post/startups-explained)
-- [Copywriting](/post/copywriting)
+- [What is a startup?](/club/startups-explained)
+- [Copywriting](/club/copywriting)
 - To talk with other business owners: [The IDEA Club](https://t.me/theideaclub)$en$,
     now() - interval '38 minutes'
   )

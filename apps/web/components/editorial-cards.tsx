@@ -4,14 +4,14 @@ import { formatDate, formatDateTime } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { CalendarDays, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { clubItemPath, filterOf } from "@/lib/club";
 import { type EventRow, editorialUrl, type PostSummary } from "@/lib/data";
-import { eventPath, postPath, sectionOf } from "@/lib/post";
 import { CoverImage } from "./cover-image";
 
 const cardClass =
   "group flex w-full flex-col gap-3 rounded-lg border bg-card p-3 transition-shadow hover:shadow-md";
 
-/** A post of The IDEA Post: cover, section, date, title and excerpt. */
+/** A post of The IDEA Club: cover, section, date, title and excerpt. */
 export const PostCard = async ({
   locale,
   post,
@@ -19,17 +19,17 @@ export const PostCard = async ({
   readonly locale: Locale;
   readonly post: PostSummary;
 }) => {
-  const t = await getTranslations({ locale, namespace: "web.post" });
+  const t = await getTranslations({ locale, namespace: "web.club" });
   const title = localized(post, "title", locale);
   const excerpt = localized(post, "excerpt", locale);
 
   return (
-    <Link className={cardClass} href={postPath(post.slug)}>
+    <Link className={cardClass} href={clubItemPath(post.slug)}>
       <CoverImage alt={title} src={editorialUrl(post.cover_image)} />
       <div className="flex flex-col gap-2 px-1 pb-1">
         <p className="flex flex-wrap items-center gap-x-2 text-muted-foreground text-xs">
           <span className="font-medium text-pink-text">
-            {t(`sections.${sectionOf(post.section)}.title`)}
+            {t(`chips.${filterOf(post.section)}`)}
           </span>
           {post.published_at ? (
             <time dateTime={post.published_at}>
@@ -65,7 +65,7 @@ export const EventCard = ({
   const title = localized(event, "title", locale);
 
   return (
-    <Link className={cardClass} href={eventPath(event.slug)}>
+    <Link className={cardClass} href={clubItemPath(event.slug)}>
       <CoverImage alt={title} src={editorialUrl(event.cover_image)} />
       <div className="flex flex-col gap-2 px-1 pb-1">
         <h3 className="font-semibold text-lg leading-snug group-hover:text-pink-text">

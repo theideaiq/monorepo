@@ -80,7 +80,7 @@ const Perks = ({
 /**
  * The top of My Pass: the live card (with the code that changes every 30
  * seconds), Google Wallet, the member's perks, their details, the
- * authenticator app, sign-out and, for staff, The IDEA Spark.
+ * authenticator app, sign-out and, for staff, the back office.
  */
 export const PassCard = async ({ session }: PassCardProps) => {
   const [locale, t, card, tBulbs] = await Promise.all([
@@ -137,7 +137,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
   const perks: Perk[] = [
     plan
       ? {
-          href: "/pass/plus",
+          href: "/plus#yours",
           icon: CrownIcon,
           text:
             plan.rental_slots === null
@@ -150,11 +150,15 @@ export const PassCard = async ({ session }: PassCardProps) => {
       : { href: "/plus", icon: CrownIcon, text: card("perks.joinPlus") },
     { icon: TruckIcon, text: deliveryPerk },
     {
-      href: "/post/events",
+      href: "/club?show=events",
       icon: CalendarDaysIcon,
       text: card("perks.events"),
     },
-    { href: "/pass/sell", icon: HandCoinsIcon, text: card("perks.sell") },
+    {
+      href: "/pass/orders#sell",
+      icon: HandCoinsIcon,
+      text: card("perks.sell"),
+    },
     {
       href: "/pass/bulbs",
       icon: LightbulbIcon,

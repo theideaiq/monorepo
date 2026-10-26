@@ -8,7 +8,6 @@ import {
   CircleHelp,
   Headphones,
   Lightbulb,
-  Mail,
   MoveRight,
   ShieldCheck,
   Target,
@@ -35,10 +34,9 @@ const valueIcons = [Truck, Wallet, ShieldCheck, Headphones];
 
 /** The company's other pages. */
 const more = [
-  { href: "/about/faq", icon: CircleHelp, id: "faq" },
-  { href: "/about/contact", icon: Mail, id: "contact" },
-  { href: "/about/careers", icon: Briefcase, id: "careers" },
-  { href: "/suite", icon: Building2, id: "suite" },
+  { href: "/help", icon: CircleHelp, id: "help" },
+  { href: "/careers", icon: Briefcase, id: "careers" },
+  { href: "/business", icon: Building2, id: "business" },
   { href: "/club", icon: Users, id: "club" },
 ] as const;
 

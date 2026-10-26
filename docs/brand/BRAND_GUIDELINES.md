@@ -6,16 +6,16 @@ The live, browsable version with tokens and component previews is **The IDEA Des
 
 ---
 
-The IDEA is Iraq's everyday-life brand for the curious: one account, The IDEA Pass, that opens shopping, renting, learning, community and opportunity. It behaves like a clever, warm Baghdadi friend who knows where to get everything. It owns one colour pair (**The IDEA Pink** with the **yellow bulb**), one mark (the bulb), one line (**اعلگها / Switch on.**) and one promise: the price, the date and the condition you were told, every time.
+The IDEA is Iraq's everyday-life brand for the curious: one membership, The IDEA Pass, that opens shopping, renting, learning and community. It behaves like a clever, warm Baghdadi friend who knows where to get everything. It owns one colour pair (**The IDEA Pink** with the **yellow bulb**), one mark (the bulb), one line (**اعلگها / Switch on.**) and one promise: the price, the date and the condition you were told, every time.
 
-Use these rules for everything that carries the name: The IDEA Spark (app), theideaiq.com, social, Telegram, packaging, the Plus mailer, signage, decks and documents.
+Use these rules for everything that carries the name: theideaiq.com and its apps, The IDEA Business (business.theideaiq.com), social, Telegram, packaging, the Plus mailer, signage, decks and documents.
 
 ## 1. Brand platform
 
 | | |
 | --- | --- |
 | Purpose | Switch on the curious Iraqi. |
-| Positioning | For young Iraqis who want the world's best games, books, tech and learning without the hassle, The IDEA is the one account that brings it to your door, on your side, at a fair price. Unlike marketplaces and resellers, we show the souq price beside ours and keep our promises on price, date and condition. |
+| Positioning | For young Iraqis who want the world's best games, books, tech and learning without the hassle, The IDEA is the one membership that brings it to your door, on your side, at a fair price. Unlike marketplaces and resellers, we show the souq price beside ours and keep our promises on price, date and condition. |
 | Personality | Bright, warm, quick, on your side, proudly Iraqi. Never loud for its own sake, smug, corporate, political or sectarian. |
 | Brand line | **اعلگها** (Iraqi Arabic: “switch it on”) · English **Switch on.** |
 | Formal descriptor | Innovation for every aspect of life. |
@@ -28,19 +28,17 @@ A branded house: always **The IDEA** + one plain word, for products and communit
 
 | Name | What it is | Accent | Line it speaks |
 | --- | --- | --- | --- |
-| The IDEA | Masterbrand, The IDEA Pass (account), The IDEA Spark (app) | The IDEA Pink + Bulb Yellow | اعلگها / Switch on. |
-| The IDEA Megastore | Gaming, tech, books and lifestyle, delivered across Iraq | The IDEA Pink | Everything worth having, at your door. |
-| The IDEA Plus | Monthly membership to rent games, books and films | Plus Violet | Play it. Read it. Swap it. |
-| The IDEA Academy | Courses and cultural exchange | Academy Teal | Learn the world. Bring it home. |
-| The IDEA Suite | Procurement and recruitment for companies | Suite Cobalt | Your company, fully equipped. |
-| The IDEA Launcher | Startup pipeline and partnerships | Launcher Lime | Build it here. |
-| The IDEA Club | Telegram community rooms and events | Club Orange | Find your people. |
-| The IDEA Post | Telegram news channel | The IDEA Pink | — |
-| The IDEA Droid | The Telegram bot | The IDEA Pink | — |
+| The IDEA | Masterbrand | The IDEA Pink + Bulb Yellow | اعلگها / Switch on. |
+| The IDEA Store | Gaming, tech, books and lifestyle, delivered across Iraq (`/`, `/store`) | The IDEA Pink | Everything worth having, at your door. |
+| The IDEA Plus | Monthly membership to rent games, books and films (`/plus`) | Plus Violet | Play it. Read it. Swap it. |
+| The IDEA Club | Posts, events, guides and the Telegram community rooms (`/club`) | Club Orange | Find your people. |
+| The IDEA Pass | A person's membership: sign-in, the card, orders, Bulbs (`/pass`) | The IDEA Pink + Bulb Yellow | — |
+| The IDEA Business | Procurement, hiring and team Plus for companies (`/business`; the dashboard at business.theideaiq.com) | Business Cobalt | Your company, fully equipped. |
+| The IDEA Droid | The Telegram bot and mascot | The IDEA Pink | — |
 | The IDEA Staff | Internal staff group | Bulb Yellow | — |
 
 - Write **The IDEA** with *IDEA* in capitals, every time, in English and Arabic copy (Latin letters inside Arabic text). Never "Idea", "IDEA" alone, "the idea" or "your The IDEA…" — reword.
-- One accent per surface: a Plus page uses violet beside pink and yellow, never teal too. The home page and The IDEA Pass use pink and yellow only.
+- One accent per surface: a Plus page uses violet beside pink and yellow, never orange too. The home page and The IDEA Pass use pink and yellow only.
 - Accents are for tags, chips, plan cards and section bands. The primary action is The IDEA Pink on every line, so "the pink button" always means "do the thing".
 
 ## 3. Voice and copy
@@ -97,12 +95,12 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 
 | Tile | Ground | Word |
 | --- | --- | --- |
-| The IDEA Club, Post, Droid; The IDEA Plus | The IDEA Pink | White "Club", "Post", "Droid", "Plus" |
+| The IDEA Club, Droid; The IDEA Plus | The IDEA Pink | White "Club", "Droid", "Plus" |
 | The IDEA Staff (internal) | Bulb Yellow | Pink "Staff" |
 
 Instagram highlight rings follow the same rule: a pink circle with one white Arabic word.
 
-**The bulb character** (the smiling bulb with eyes) is the mascot for social, The IDEA Club, stickers, events, empty states and error pages. It never replaces the logo or appears on invoices, legal pages, Suite material or checkout.
+**The bulb character** (the smiling bulb with eyes) is the mascot for social, The IDEA Club, stickers, events, empty states and error pages. It never replaces the logo or appears on invoices, legal pages, The IDEA Business material or checkout.
 
 ## 5. Colour
 
@@ -116,8 +114,8 @@ Pink leads, yellow lights it up, paper keeps it warm, and each product adds one 
 | Paper | `#FBF8EF` | Light page ground |
 | White | `#FFFFFF` | Text on pink, cards |
 | Ink (text only) | `#0F1014` | Body text and headings; never in logos or brand blocks |
-| Plus Violet · Academy Teal · Suite Cobalt | `#5B3BE8` · `#0B7A6E` · `#1F4FD6` | Product accents (white text) |
-| Club Orange · Launcher Lime | `#FF6A2B` · `#7BC43A` | Product accents, fill only (dark text) |
+| Plus Violet · Business Cobalt · Teal | `#5B3BE8` · `#1F4FD6` · `#0B7A6E` | Accents (white text); Teal has no product of its own |
+| Club Orange · Lime | `#FF6A2B` · `#7BC43A` | Accents, fill only (dark text); Lime has no product of its own |
 
 Print: the screen values above are the reference. Ask the printer to match them to Pantone spot colours from a physical proof before any packaging run (Bulb Yellow is close to Pantone 7405 C).
 
@@ -174,7 +172,7 @@ Never set Arabic below 14px; never letter-space, italicise or fake-bold Arabic; 
 
 - **Products:** cut-out, front-on or three-quarter, centred; on pink for posts and promos, on paper in the product. Soft even light, no props. Rental and used items show their condition bulb.
 - **People:** real Iraqis in real places — Mutanabbi Street, a Karrada café, a campus, a Basra living room. Natural light, candid moments. No stock handshakes.
-- **Illustration:** one flat vector style built from the radius scale and the rays — solid shapes, at most three palette colours plus skin tones, no gradients or 3D, no clip-art. Commission a core set of 30 (exams, travel, study, events, Eid, Ramadan, deadlines, jobs, countries) so The IDEA Post never mixes styles.
+- **Illustration:** one flat vector style built from the radius scale and the rays — solid shapes, at most three palette colours plus skin tones, no gradients or 3D, no clip-art. Commission a core set of 30 (exams, travel, study, events, Eid, Ramadan, deadlines, jobs, countries) so The IDEA Club never mixes styles.
 - **Third-party marks and game art** appear only to describe genuine products.
 
 ## 10. Social templates
@@ -182,7 +180,7 @@ Never set Arabic below 14px; never letter-space, italicise or fake-bold Arabic; 
 | Template | Size | Ground | Layout |
 | --- | --- | --- | --- |
 | Product post | 1080 × 1350 | Pink | Bulb kicker · Arabic kicker word in yellow (عملاق, كاميرا) · model name in white or yellow · cut-out product · souq price block |
-| The IDEA Post update | 1080 × 1080 | Pink or yellow, alternating | One flat illustration or one huge word or number in the opposite brand colour; details in the caption |
+| The IDEA Club update | 1080 × 1080 | Pink or yellow, alternating | One flat illustration or one huge word or number in the opposite brand colour; details in the caption |
 | Story | 1080 × 1920 | Pink | Bulb kicker · headline · one image · one sticker or link · 250px safe zones |
 | Announcement or job | 1080 × 1350 | Yellow | Pink headline, dark details, a name tile tag |
 | Plus post | 1080 × 1350 | Pink with violet accents | Cover art · condition bulb · "Rent with The IDEA Plus" |
@@ -201,15 +199,15 @@ Captions: Arabic first, English after a line break when needed; end with the act
 
 - **Store fascia and pop-ups:** the Pink Band with the yellow bulb and white wordmark.
 - **Shelf price strips:** yellow, with the souq price above ours.
-- **Packaging:** pink boxes with a yellow bulb for Megastore; the Pink Mailer for Plus; kraft with a pink bulb for books.
+- **Packaging:** pink boxes with a yellow bulb for The IDEA Store; the Pink Mailer for Plus; kraft with a pink bulb for books.
 - **Riders and staff:** pink tee or jacket, yellow bulb on the chest, "اعلگها" across the back.
 - **Events:** yellow rays on pink backdrops; one product accent per event.
 
 ## 13. Before launch
 
 - [ ] Trademark search and filing for THE IDEA, the bulb and the Arabic rendering (Legal & Risk tab of the Company Foundations binder)
-- [ ] Rename the Telegram channels to The IDEA Club, The IDEA Post, The IDEA Droid and The IDEA Staff, and update their tiles
-- [ ] Switch every social avatar and the app icon on one day; announce the refresh in The IDEA Post
+- [ ] Rename the Telegram channels to The IDEA Club, The IDEA Droid and The IDEA Staff, and update their tiles (the handles change in a later step)
+- [ ] Switch every social avatar and the app icon on one day; announce the refresh in The IDEA Club
 - [ ] Commission the 30-piece illustration set
 - [ ] Print proofs of the pink and yellow before any packaging run
 

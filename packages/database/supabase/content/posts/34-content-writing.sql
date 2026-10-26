@@ -19,7 +19,7 @@ begin
 
 ## الفرق بينها وبين كتابة الإعلانات
 
-[كتابة الإعلانات (Copywriting)](/post/copywriting) هدفها البيع المباشر: كلمات قليلة تدفع القارئ إلى فعل محدد الآن. أما كتابة المحتوى فهدفها بناء علاقة طويلة مع الجمهور: تعلّمه وتفيده وتسلّيه، فيعود إليك ويثق بعلامتك حين يقرّر الشراء لاحقاً. الأولى تبيع اليوم، والثانية تبني الثقة التي تجعل البيع ممكناً غداً.
+[كتابة الإعلانات (Copywriting)](/club/copywriting) هدفها البيع المباشر: كلمات قليلة تدفع القارئ إلى فعل محدد الآن. أما كتابة المحتوى فهدفها بناء علاقة طويلة مع الجمهور: تعلّمه وتفيده وتسلّيه، فيعود إليك ويثق بعلامتك حين يقرّر الشراء لاحقاً. الأولى تبيع اليوم، والثانية تبني الثقة التي تجعل البيع ممكناً غداً.
 
 ## أشكال المحتوى
 
@@ -53,7 +53,7 @@ begin
 - كتابة سليمة لغوياً وإملائياً.
 - القدرة على مراجعة نصّك وتدقيقه بعين ناقدة.
 - التخطيط الجيد حتى يوصل المحتوى رسالة العلامة التجارية.
-- إدارة الوقت للعمل على أكثر من مهمة في وقت واحد (اقرأ [دليل إدارة الوقت](/post/time-management)).
+- إدارة الوقت للعمل على أكثر من مهمة في وقت واحد (اقرأ [دليل إدارة الوقت](/club/time-management)).
 - فهم أساسيات تحسين محركات البحث (SEO).
 
 ## أدوات تساعدك
@@ -65,9 +65,9 @@ begin
 
 ## مصادر مفيدة
 
-- [كتابة الإعلانات (Copywriting)](/post/copywriting)
-- [المهارات الشخصية في العمل](/post/soft-skills)
-- [العمل عن بعد والعمل الحر](/post/remote-work-and-freelancing)
+- [كتابة الإعلانات (Copywriting)](/club/copywriting)
+- [المهارات الشخصية في العمل](/club/soft-skills)
+- [العمل عن بعد والعمل الحر](/club/remote-work-and-freelancing)
 - [Google Keyword Planner](https://ads.google.com/home/tools/keyword-planner/)
 - [Google Workspace](https://workspace.google.com)
 - [LanguageTool](https://languagetool.org)
@@ -80,7 +80,7 @@ Content writing is writing everything that represents a brand and speaks to its 
 
 ## How it differs from copywriting
 
-[Copywriting](/post/copywriting) aims to sell directly: a few words that push the reader to take a specific action now. Content writing aims to build a long-term relationship with the audience: it teaches, helps and entertains, so people come back and trust the brand when they decide to buy later. Copywriting sells today; content writing builds the trust that makes tomorrow's sale possible.
+[Copywriting](/club/copywriting) aims to sell directly: a few words that push the reader to take a specific action now. Content writing aims to build a long-term relationship with the audience: it teaches, helps and entertains, so people come back and trust the brand when they decide to buy later. Copywriting sells today; content writing builds the trust that makes tomorrow's sale possible.
 
 ## Types of content
 
@@ -114,7 +114,7 @@ Publish at the right time, then follow how people react: comments, questions and
 - Clean grammar and spelling.
 - The ability to review and edit your own work critically.
 - Good planning, so the content carries the brand's message.
-- Time management to juggle several tasks at once (see [our time management guide](/post/time-management)).
+- Time management to juggle several tasks at once (see [our time management guide](/club/time-management)).
 - A grasp of search engine optimization (SEO) basics.
 
 ## Tools that help
@@ -126,9 +126,9 @@ Publish at the right time, then follow how people react: comments, questions and
 
 ## Useful resources
 
-- [Copywriting](/post/copywriting)
-- [Soft skills at work](/post/soft-skills)
-- [Remote work and freelancing](/post/remote-work-and-freelancing)
+- [Copywriting](/club/copywriting)
+- [Soft skills at work](/club/soft-skills)
+- [Remote work and freelancing](/club/remote-work-and-freelancing)
 - [Google Keyword Planner](https://ads.google.com/home/tools/keyword-planner/)
 - [Google Workspace](https://workspace.google.com)
 - [LanguageTool](https://languagetool.org)

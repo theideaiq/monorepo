@@ -16,9 +16,9 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Pagination } from "@/components/pagination";
 import { PlanCard } from "@/components/plan-card";
 import { ProductCard } from "@/components/product-card";
+import { YourPlus } from "@/components/screens/plus";
 import { EmptyState, Section } from "@/components/section";
 import { CategoryChips } from "@/components/shop/category-chips";
-import { ShopSwitch } from "@/components/shop/shop-switch";
 import { StoreSearch } from "@/components/shop/store-search";
 import {
   getCategories,
@@ -27,7 +27,6 @@ import {
   getRatings,
   getRentalTiers,
 } from "@/lib/data";
-import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import { plansByTier, requiredPlan } from "@/lib/plus";
 import {
@@ -63,9 +62,10 @@ export const generateMetadata = async ({
 };
 
 /**
- * Rent: everything about renting with The IDEA Plus on one page. The rental
- * catalog (search, categories, the plan each item needs) comes first; on
- * the unfiltered first page, how it works, the plans and their tiers follow.
+ * The IDEA Plus: everything about renting on one page. On the unfiltered
+ * first page, "Your Plus" (the member's membership and rentals, or a way to
+ * sign in) comes first; then the rental catalog (search, categories, the
+ * plan each item needs) and how it works, the plans and their tiers.
  */
 const Rent = async ({ params, searchParams }: RentProps) => {
   const { locale } = await params;
@@ -92,13 +92,11 @@ const Rent = async ({ params, searchParams }: RentProps) => {
   ]);
   const tiers = plansByTier(plans);
   const steps = t.raw("plus.how.steps") as Steps;
-  const plusUrl = pagePath(locale, "/pass/plus");
   const browsing = Boolean(query.q || query.category || query.page > 1);
 
   return (
     <>
       <div className="container mx-auto flex flex-col gap-4 px-4 pt-6 pb-2">
-        <ShopSwitch active="rent" locale={locale} />
         <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
           {t("rent.title")} <Highlight>{t("rent.highlight")}</Highlight>
         </h1>
@@ -127,6 +125,12 @@ const Rent = async ({ params, searchParams }: RentProps) => {
           </a>
         )}
       </div>
+
+      {browsing ? null : (
+        <div className="container mx-auto px-4 pt-6">
+          <YourPlus />
+        </div>
+      )}
 
       <section className="container mx-auto px-4 py-6">
         {query.q ? (
@@ -205,7 +209,7 @@ const Rent = async ({ params, searchParams }: RentProps) => {
                 {plans.map((plan, index) => (
                   <PlanCard
                     featured={plans.length >= 3 && index === 1}
-                    href={pagePath(locale, "/pass/plus", { plan: plan.id })}
+                    href="#yours"
                     key={plan.id}
                     locale={locale}
                     plan={plan}
@@ -247,7 +251,7 @@ const Rent = async ({ params, searchParams }: RentProps) => {
           <PinkBand
             action={
               <Button asChild className="gap-2" size="lg" variant="brand">
-                <a href={plusUrl}>
+                <a href="#yours">
                   {t("plus.cta")}{" "}
                   <MoveRight className="size-4 rtl:rotate-180" />
                 </a>

@@ -106,7 +106,7 @@
       "canceled": "Canceled",
       "expired": "Expired"
     },
-    "title": "The IDEA Suite plan",
+    "title": "The IDEA Business plan",
     "description": "Your company's plan and payments.",
     "currentPlan": "Current plan",
     "noPlan": "Your company doesn't have a plan yet.",
@@ -135,38 +135,28 @@
   "web": {
     "nav": {
       "home": "Home",
-      "store": "Megastore",
-      "plus": "The IDEA Plus",
-      "suite": "For companies",
-      "club": "The IDEA Club",
-      "post": "The IDEA Post",
-      "events": "Events",
-      "about": "About & info",
+      "store": "Store",
+      "plus": "Plus",
+      "club": "Club",
+      "about": "About",
       "careers": "Careers",
-      "faq": "FAQ",
-      "contact": "Contact",
       "signIn": "Sign in",
-      "descriptions": {
-        "store": "Gaming, tech, books and lifestyle, delivered across Iraq.",
-        "plus": "A monthly membership to rent games, books and movies.",
-        "suite": "Procurement and recruitment for companies.",
-        "club": "Our Telegram rooms and The IDEA Droid.",
-        "post": "News, stories, guides and events from The IDEA.",
-        "events": "Meetups, launches and community nights."
-      },
-      "myPass": "My Pass",
       "label": "Main",
-      "shop": "Shop",
-      "rent": "Rent",
-      "discover": "Discover"
+      "pass": "Pass",
+      "business": "For business",
+      "help": "Help",
+      "legal": "Legal",
+      "search": "Search",
+      "saved": "Saved",
+      "cart": "Cart",
+      "cartCount": "{count} in cart"
     },
     "tabs": {
       "label": "Main",
-      "shop": "Shop",
-      "rent": "Rent",
-      "discover": "Discover",
-      "cart": "Cart",
-      "pass": "My Pass"
+      "pass": "Pass",
+      "store": "Store",
+      "plus": "Plus",
+      "club": "Club"
     },
     "footer": {
       "tagline": "Baghdad's digital ecosystem: shopping, rentals, learning, community and services for companies, with one Pass.",
@@ -174,7 +164,9 @@
       "email": "Email",
       "telegram": "Telegram",
       "copyright": "© {year} The IDEA IQ Inc. All rights reserved.",
-      "trademarks": "Game titles, trade names, trademarks and artwork shown on this site belong to their respective owners."
+      "trademarks": "Game titles, trade names, trademarks and artwork shown on this site belong to their respective owners.",
+      "products": "Products",
+      "company": "Company"
     },
     "ui": {
       "viewAll": "View all",
@@ -189,17 +181,17 @@
     "appCta": {
       "title": "One Pass for",
       "highlight": "everything at The IDEA",
-      "description": "Shop the Megastore, manage your rentals with The IDEA Plus, RSVP to events and submit your work, all with The IDEA Pass.",
-      "button": "Open My Pass",
+      "description": "Shop the store, rent with The IDEA Plus, RSVP to events and submit your work, all with The IDEA Pass.",
+      "button": "Open Your Pass",
       "signIn": "Sign in"
     },
     "home": {
       "meta": {
         "title": "Iraq's digital ecosystem",
-        "description": "Shop, rent, learn and connect with The IDEA: the Megastore, The IDEA Plus rentals, The IDEA Post, The IDEA Suite for companies and The IDEA Club. Based in Baghdad, serving all of Iraq."
+        "description": "Shop, rent and connect with The IDEA: the store, The IDEA Plus rentals, The IDEA Club, The IDEA Pass and The IDEA Business for companies. Based in Baghdad, serving all of Iraq."
       },
       "news": {
-        "title": "From The IDEA Post",
+        "title": "From The IDEA Club",
         "empty": "Nothing published yet."
       },
       "events": {
@@ -226,11 +218,6 @@
         "empty": "New products are on their way. Check back soon."
       }
     },
-    "shop": {
-      "label": "Buy or rent",
-      "buy": "Buy",
-      "rent": "Rent"
-    },
     "rent": {
       "title": "Rent",
       "highlight": "with The IDEA Plus",
@@ -241,10 +228,10 @@
     },
     "store": {
       "meta": {
-        "title": "Megastore",
-        "description": "Gaming, tech, books and lifestyle products with delivery across Iraq. Browse the catalog of The IDEA Megastore."
+        "title": "The IDEA Store",
+        "description": "Gaming, tech, books and lifestyle products with delivery across Iraq. Browse The IDEA Store."
       },
-      "title": "The Megastore",
+      "title": "The Store",
       "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order here and pay through Wayl or cash on delivery.",
       "searchLabel": "Search the store",
       "searchPlaceholder": "Search products…",
@@ -285,7 +272,7 @@
         "seller": "Sold by {seller}",
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
-        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from My Pass.",
+        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass.",
         "sellToUs": "Have one? Sell it to us"
       },
       "rating": {
@@ -344,7 +331,7 @@
       },
       "plans": {
         "choose": "Choose {plan}",
-        "description": "Billed monthly through Wayl. Cancel any time from My Pass.",
+        "description": "Billed monthly through Wayl. Cancel any time from Your Pass.",
         "empty": "Plans will be announced soon.",
         "featured": "Recommended",
         "perMonth": "per month",
@@ -354,7 +341,7 @@
       },
       "catalog": {
         "title": "From the rental catalog",
-        "description": "A preview of what you can rent. The full catalog is in the Megastore.",
+        "description": "A preview of what you can rent. The full catalog is in the store.",
         "browse": "Browse the full catalog",
         "empty": "The rental catalog is being stocked.",
         "needsPlan": "{plan} and above"
@@ -364,146 +351,6 @@
         "description": "Most of the catalog is open to every plan. Some items, such as new releases and collector's editions, need a higher plan; they are marked with the plan they need. Every plan includes everything the plans below it can rent.",
         "entry": "Every item without a plan mark.",
         "higher": "Also the items marked “{plan}”."
-      }
-    },
-    "suite": {
-      "meta": {
-        "title": "The IDEA Suite — procurement and recruitment for companies",
-        "description": "The IDEA Suite gives companies in Iraq one place for procurement and recruitment, with a business plan, purchase orders and monthly invoicing."
-      },
-      "badge": "For companies",
-      "title": "The IDEA Suite",
-      "subtitle": "Corporate solutions for procurement and recruitment. Equip your team and find talent, with one business account.",
-      "services": {
-        "title": "What we do for companies",
-        "items": [
-          {
-            "title": "Procurement",
-            "description": "Source tech, equipment and supplies for your company from the Megastore and our partners, with purchase orders."
-          },
-          {
-            "title": "Recruitment",
-            "description": "Tell us who you're looking for and we help you find and screen candidates."
-          },
-          {
-            "title": "Team workspaces",
-            "description": "Your company is an organization in The IDEA Spark: invite colleagues and give each one the right role."
-          },
-          {
-            "title": "Monthly invoicing",
-            "description": "Business plans are billed monthly through Wayl, with invoices for your records."
-          }
-        ]
-      },
-      "how": {
-        "title": "Getting started",
-        "steps": [
-          "Create your company's organization in The IDEA Spark.",
-          "Choose a business plan and invite your team.",
-          "Contact us with your first procurement or hiring request."
-        ]
-      },
-      "plans": {
-        "title": "Business plans",
-        "empty": "Contact us for a business plan tailored to your company."
-      },
-      "cta": {
-        "title": "Talk to",
-        "highlight": "our team",
-        "description": "Tell us about your company and what you need.",
-        "contact": "Contact sales",
-        "app": "Set up your organization"
-      }
-    },
-    "club": {
-      "meta": {
-        "title": "The IDEA Club — our community on Telegram",
-        "description": "The IDEA Club is a digital clubhouse on Telegram for innovators, artists, gamers and thinkers, looked after by The IDEA Droid, our bot. Pick your rooms and join the conversation."
-      },
-      "title": "Welcome to",
-      "highlight": "The IDEA Club.",
-      "subtitle": "More than a group chat: a digital clubhouse for innovators, artists, gamers and thinkers. Pick your rooms and join the conversation.",
-      "join": "Join on Telegram",
-      "roomsTitle": "The rooms",
-      "rooms": [
-        {
-          "title": "The Stage",
-          "description": "Announcements and big news"
-        },
-        {
-          "title": "Vibe Check",
-          "description": "Music sharing and playlists"
-        },
-        {
-          "title": "The Library",
-          "description": "What are you reading?"
-        },
-        {
-          "title": "Screening Room",
-          "description": "Cinema and TV discussions"
-        },
-        {
-          "title": "The Arcade",
-          "description": "Gaming and esports"
-        },
-        {
-          "title": "The Arena",
-          "description": "Sports talk and debates"
-        },
-        {
-          "title": "Creative Studio",
-          "description": "Arts and design showcase"
-        },
-        {
-          "title": "The Office",
-          "description": "Work and networking"
-        }
-      ],
-      "guidelines": "Before you join, read our community guidelines.",
-      "guidelinesLink": "Community guidelines",
-      "cta": {
-        "title": "Ready to",
-        "highlight": "jump in?",
-        "description": "Don't miss the next big idea or late-night gaming session.",
-        "button": "Open Telegram"
-      },
-      "droid": {
-        "badge": "@TheIdeaDroidBot",
-        "title": "Meet The IDEA Droid",
-        "subtitle": "Our Telegram bot keeps The IDEA Club's rooms friendly, answers your questions and helps you find what you're looking for.",
-        "open": "Open in Telegram",
-        "features": {
-          "title": "What The IDEA Droid does",
-          "items": [
-            {
-              "title": "Community moderation",
-              "description": "Helps keep The IDEA Club's rooms safe and on topic, following our community guidelines."
-            },
-            {
-              "title": "Answers to common questions",
-              "description": "Ask about the store, The IDEA Plus, the Academy or The IDEA Suite in a private chat."
-            },
-            {
-              "title": "Product search",
-              "description": "Search the Megastore from Telegram and open products on the website."
-            },
-            {
-              "title": "AI assistant",
-              "description": "Ask in Arabic or English. Answers are generated automatically, so double-check anything important with our team."
-            },
-            {
-              "title": "Talk to the team",
-              "description": "Send a support message or an unban request, and our staff will review it."
-            }
-          ]
-        },
-        "game": {
-          "title": "Spark Catcher",
-          "description": "Our mini-game: catch the falling light bulbs, dodge the bugs and keep your energy up. Best played inside Telegram, but it works in your browser too.",
-          "play": "Play Spark Catcher"
-        },
-        "privacy": "The IDEA Droid stores your Telegram ID, name, username and language so it can moderate and answer you. See our privacy policy for details.",
-        "privacyLink": "Privacy policy"
       }
     },
     "about": {
@@ -552,19 +399,18 @@
         ]
       },
       "lines": {
-        "megastore": "Iraq's destination for gaming, tech, books and lifestyle, delivered to all 19 governorates.",
         "plus": "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done.",
-        "post": "News, stories, members' writing and art, and guides to learn something new.",
-        "suite": "Procurement and recruitment for companies, with a business plan and monthly invoicing.",
-        "club": "Community rooms on Telegram for gamers, readers, artists and thinkers."
+        "club": "Events, news, stories and guides, and our rooms on Telegram for gamers, readers, artists and thinkers.",
+        "store": "Gaming, tech, books, music and films, new and pre-owned, delivered to all 19 governorates.",
+        "pass": "One membership card for everything at The IDEA: orders, Bulbs, events and more.",
+        "business": "Procurement and recruitment for companies, with a business plan and monthly invoicing."
       },
       "more": {
         "title": "More about The IDEA",
-        "suite": "The IDEA Suite for companies",
         "careers": "Careers",
-        "faq": "FAQ",
-        "contact": "Contact us",
-        "club": "The IDEA Club"
+        "club": "The IDEA Club",
+        "help": "Help and contact",
+        "business": "The IDEA Business for companies"
       }
     },
     "careers": {
@@ -599,16 +445,11 @@
       }
     },
     "faq": {
-      "meta": {
-        "title": "Frequently asked questions",
-        "description": "Answers about ordering from the Megastore, The IDEA Plus rentals, payments, delivery and The IDEA Pass."
-      },
       "title": "Frequently asked questions",
       "description": "Can't find your answer? Contact us or ask The IDEA Droid on Telegram.",
-      "contact": "Contact us",
       "groups": [
         {
-          "title": "Megastore",
+          "title": "Store",
           "items": [
             {
               "question": "How do I place an order?",
@@ -624,7 +465,7 @@
             },
             {
               "question": "Can I return an item?",
-              "answer": "Yes, under the conditions in our refund and returns policy. Contact us from your order in My Pass or by email."
+              "answer": "Yes, under the conditions in our refund and returns policy. Contact us from your order in Your Pass or by email."
             }
           ]
         },
@@ -636,12 +477,12 @@
               "answer": "You subscribe to a monthly plan. Each plan lets you keep a number of items at a time. Request a game, book or movie, we deliver it, and when you're done you return it and request the next one."
             },
             {
-              "question": "Can I buy from the Megastore without a membership?",
-              "answer": "Absolutely. The Megastore is open to everyone; The IDEA Plus is only needed for rentals."
+              "question": "Can I buy from the store without a membership?",
+              "answer": "Absolutely. The store is open to everyone; The IDEA Plus is only needed for rentals."
             },
             {
               "question": "How do I cancel?",
-              "answer": "You can cancel your membership from My Pass. It stays active until the end of the period you paid for. Please return any rented items."
+              "answer": "You can cancel your membership from Your Pass. It stays active until the end of the period you paid for. Please return any rented items."
             }
           ]
         },
@@ -650,54 +491,40 @@
           "items": [
             {
               "question": "Do I need to sign up separately for each service?",
-              "answer": "No. One The IDEA Pass works across the store, The IDEA Plus, events, The Post and The IDEA Suite."
+              "answer": "No. One The IDEA Pass works across the store, The IDEA Plus, The IDEA Club and The IDEA Business."
             },
             {
               "question": "How do I delete The IDEA Pass?",
-              "answer": "You can delete it from the settings in My Pass. Some records, such as invoices, are kept as the law requires."
+              "answer": "You can delete it from the settings in Your Pass. Some records, such as invoices, are kept as the law requires."
             },
             {
               "question": "How do I get help with an order or a rental?",
-              "answer": "Sign in and open a support ticket from Support in My Pass. You can follow our replies there. Without The IDEA Pass, email hi@theideaiq.com or use the contact form."
+              "answer": "Sign in and open a support ticket from Help. You can follow our replies there. Without The IDEA Pass, email hi@theideaiq.com or use the contact form."
             }
           ]
         }
-      ],
-      "support": {
-        "title": "Need help with an order or a rental?",
-        "description": "If you have The IDEA Pass, sign in and open a support ticket. You can follow our replies and add details there, and we'll notify you when we answer.",
-        "cta": "Open a support ticket"
-      }
+      ]
     },
     "contact": {
-      "meta": {
-        "title": "Contact us",
-        "description": "Questions about an order, The IDEA Plus, the Academy or The IDEA Suite? Write to The IDEA team."
-      },
       "title": "Get in touch",
       "description": "We're here to help. Send us a message, email us or reach us on Telegram.",
       "details": {
         "email": "Email",
         "emailNote": "For any question; we reply in Arabic or English.",
-        "telegram": "Telegram",
-        "telegramNote": "Chat with The IDEA Droid, our bot, or join The IDEA Club.",
         "location": "Location",
-        "address": "Baghdad, Iraq",
-        "support": "Support tickets",
-        "supportNote": "Signed in? Open a ticket in My Pass to get help with an order, a rental or The IDEA Plus, and follow our replies there.",
-        "supportCta": "Open a support ticket"
+        "address": "Baghdad, Iraq"
       },
       "form": {
         "title": "Send us a message",
         "topic": "Topic",
         "topics": {
           "general": "General question",
-          "store": "Megastore order",
+          "store": "Store order",
           "plus": "The IDEA Plus",
-          "academy": "Academy",
-          "suite": "The IDEA Suite (companies)",
           "careers": "Careers",
-          "press": "Press and partnerships"
+          "press": "Press and partnerships",
+          "club": "The IDEA Club",
+          "business": "The IDEA Business (companies)"
         },
         "name": "Full name",
         "email": "Email",
@@ -744,80 +571,6 @@
           "description": "The rules for The IDEA Club's rooms on Telegram, comments and member submissions."
         }
       }
-    },
-    "post": {
-      "meta": {
-        "title": "The IDEA Post",
-        "description": "News, stories, members' work, guides and events from The IDEA."
-      },
-      "title": "The IDEA Post",
-      "description": "News from The IDEA, stories from our community and members' own work, guides to learn something new, and events.",
-      "all": "Everything",
-      "empty": "Nothing published here yet. Check back soon.",
-      "byline": "By {name}",
-      "theIdea": "The IDEA",
-      "back": "Back to {section}",
-      "sections": {
-        "news": {
-          "title": "News",
-          "description": "Announcements and launches from across The IDEA."
-        },
-        "stories": {
-          "title": "Stories",
-          "description": "Features, interviews and members' own writing and art, chosen through blind review."
-        },
-        "members": {
-          "title": "Members' work",
-          "description": "Essays, poetry, fiction, theatre and art by members, chosen through blind review."
-        },
-        "learn": {
-          "title": "Learn",
-          "description": "Guides and courses, and the cultural-exchange programs we're building."
-        }
-      },
-      "submit": {
-        "title": "Submit your work",
-        "description": "Members can submit essays, poetry, fiction, theatre or visual art from My Pass. Editors review every submission without seeing the author's name, and accepted work is published here.",
-        "button": "Submit your work"
-      },
-      "learn": {
-        "status": "We're preparing the first courses and programs. Tell us what you'd like to learn and we'll let you know when enrolment opens.",
-        "tracks": {
-          "title": "Two tracks",
-          "learn": {
-            "title": "Learning",
-            "description": "Practical courses in technology, business, languages and the arts, taught in Arabic and English."
-          },
-          "exchange": {
-            "title": "Cultural exchange",
-            "description": "Programs that build understanding and lasting connections between Iraq and the global community."
-          }
-        },
-        "programs": {
-          "title": "Programs we're building",
-          "items": [
-            {
-              "title": "Student exchange",
-              "description": "Study periods abroad with partner universities and institutions."
-            },
-            {
-              "title": "Heritage Reborn",
-              "description": "A collaborative residency for artists, historians and developers to bring Iraq's ancient history to life with digital tools."
-            },
-            {
-              "title": "The Majlis Dialogue",
-              "description": "Open conversations that connect Iraqi entrepreneurs and students with mentors and thinkers from around the world."
-            }
-          ]
-        },
-        "cta": {
-          "title": "Interested?",
-          "description": "Send us a message with the program or subject you're interested in.",
-          "button": "Register your interest"
-        }
-      },
-      "events": "Events",
-      "club": "Join the Club"
     },
     "events": {
       "meta": {
@@ -866,11 +619,158 @@
       "app": "This app",
       "versionLine": "Version {version} · build {build}",
       "appVersion": "App {version}"
+    },
+    "help": {
+      "meta": {
+        "title": "Help",
+        "description": "Your support tickets, answers to common questions, The IDEA Droid and how to reach us."
+      },
+      "title": "Help",
+      "description": "Ask about an order, a rental or The IDEA Plus. Open a ticket, ask The IDEA Droid or write to us.",
+      "droid": {
+        "title": "Ask Droid",
+        "description": "Our bot answers on Telegram: your orders, Bulbs and common questions."
+      }
+    },
+    "club": {
+      "submit": {
+        "title": "Submit your work",
+        "description": "Members can submit essays, poetry, fiction, theatre or visual art from Yours on this page. Editors review every submission without seeing the author's name, and accepted work is published in Stories.",
+        "button": "Submit your work"
+      },
+      "learn": {
+        "status": "We're preparing the first courses and programs. Tell us what you'd like to learn and we'll let you know when enrolment opens.",
+        "tracks": {
+          "title": "Two tracks",
+          "learn": {
+            "title": "Learning",
+            "description": "Practical courses in technology, business, languages and the arts, taught in Arabic and English."
+          },
+          "exchange": {
+            "title": "Cultural exchange",
+            "description": "Programs that build understanding and lasting connections between Iraq and the global community."
+          }
+        },
+        "programs": {
+          "title": "Programs we're building",
+          "items": [
+            {
+              "title": "Student exchange",
+              "description": "Study periods abroad with partner universities and institutions."
+            },
+            {
+              "title": "Heritage Reborn",
+              "description": "A collaborative residency for artists, historians and developers to bring Iraq's ancient history to life with digital tools."
+            },
+            {
+              "title": "The Majlis Dialogue",
+              "description": "Open conversations that connect Iraqi entrepreneurs and students with mentors and thinkers from around the world."
+            }
+          ]
+        },
+        "cta": {
+          "title": "Interested?",
+          "description": "Send us a message with the program or subject you're interested in.",
+          "button": "Register your interest"
+        }
+      },
+      "empty": "Nothing published here yet. Check back soon.",
+      "byline": "By {name}",
+      "theIdea": "The IDEA",
+      "meta": {
+        "title": "The IDEA Club — events, news, stories and guides",
+        "description": "Events, news, stories and guides from The IDEA and its members, and our rooms on Telegram."
+      },
+      "title": "The IDEA Club",
+      "description": "Events, news, stories and guides from The IDEA and its members, and our rooms on Telegram.",
+      "chips": {
+        "label": "Show",
+        "all": "Everything",
+        "events": "Events",
+        "news": "News",
+        "stories": "Stories",
+        "guides": "Guides"
+      },
+      "noEvents": "No upcoming events right now. Check back soon.",
+      "pastEvents": "Past events",
+      "back": "Back to {section}",
+      "telegram": {
+        "title": "The IDEA Club on Telegram",
+        "description": "Seven rooms for music, games, books, films, making things and work, looked after by The IDEA Droid.",
+        "join": "Join on Telegram",
+        "guidelines": "Before you join, read",
+        "guidelinesLink": "our community guidelines",
+        "rooms": {
+          "stage": "The Stage",
+          "lounge": "The Lounge",
+          "arcade": "The Arcade",
+          "vibe": "Vibe Check",
+          "library": "The Library",
+          "studio": "The Studio",
+          "office": "The Office"
+        }
+      },
+      "yours": {
+        "title": "Yours",
+        "events": "Your events",
+        "submissions": "Your submissions",
+        "signedOut": "Sign in to see the events you're going to and to submit your work.",
+        "signIn": "Sign in"
+      }
+    },
+    "business": {
+      "meta": {
+        "title": "The IDEA Business — procurement and recruitment for companies",
+        "description": "The IDEA Business gives companies in Iraq one place for procurement and recruitment, with a business plan, purchase orders and monthly invoicing."
+      },
+      "badge": "For companies",
+      "title": "The IDEA Business",
+      "subtitle": "Corporate solutions for procurement and recruitment. Equip your team and find talent, with one business account.",
+      "services": {
+        "title": "What we do for companies",
+        "items": [
+          {
+            "title": "Procurement",
+            "description": "Source tech, equipment and supplies for your company from The IDEA Store and our partners, with purchase orders."
+          },
+          {
+            "title": "Recruitment",
+            "description": "Tell us who you're looking for and we help you find and screen candidates."
+          },
+          {
+            "title": "Team workspaces",
+            "description": "Your company gets its own dashboard on The IDEA Business: invite colleagues and give each one the right role."
+          },
+          {
+            "title": "Monthly invoicing",
+            "description": "Business plans are billed monthly through Wayl, with invoices for your records."
+          }
+        ]
+      },
+      "how": {
+        "title": "Getting started",
+        "steps": [
+          "Create your company's dashboard on The IDEA Business.",
+          "Choose a business plan and invite your team.",
+          "Contact us with your first procurement or hiring request."
+        ]
+      },
+      "plans": {
+        "title": "Business plans",
+        "empty": "Contact us for a business plan tailored to your company."
+      },
+      "cta": {
+        "title": "Talk to",
+        "highlight": "our team",
+        "description": "Tell us about your company and what you need.",
+        "contact": "Contact sales",
+        "app": "Set up your organization"
+      }
     }
   },
   "app": {
     "meta": {
-      "title": "The IDEA Spark",
+      "title": "The IDEA Business",
       "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place."
     },
     "nav": {
@@ -888,7 +788,7 @@
       "wishlist": "Wishlist",
       "support": "Support",
       "sell": "Sell to us",
-      "pass": "My Pass",
+      "pass": "Your Pass",
       "bulbs": "Bulbs",
       "backOffice": "Back office",
       "affiliate": "Invite & earn",
@@ -1150,8 +1050,7 @@
       }
     },
     "plus": {
-      "title": "The IDEA Plus",
-      "description": "Rent games, books and movies. We deliver them and pick them up when you're done.",
+      "title": "Your Plus",
       "membership": {
         "title": "Your membership",
         "none": "You're not a member yet. Choose a plan below.",
@@ -1205,7 +1104,9 @@
         "unavailable": "This item isn't available right now.",
         "unknown": "Something went wrong. Please try again.",
         "needsTier": "This item needs a higher plan. Upgrade your membership to rent it."
-      }
+      },
+      "signedOut": "Sign in to subscribe, see your rentals and request items.",
+      "signIn": "Sign in"
     },
     "events": {
       "title": "Events",
@@ -1241,7 +1142,7 @@
     },
     "submissions": {
       "title": "Submissions",
-      "description": "Send your writing or visual art to The IDEA Post. Editors review every submission without seeing the author's name.",
+      "description": "Send your writing or visual art to The IDEA Club. Editors review every submission without seeing the author's name.",
       "form": {
         "title": "Submit your work",
         "workTitle": "Title",
@@ -1279,9 +1180,9 @@
     },
     "business": {
       "title": "Business",
-      "description": "The IDEA Suite: procurement and recruitment for companies.",
+      "description": "The IDEA Business: procurement and recruitment for companies.",
       "intro": {
-        "title": "Bring your company to The IDEA Suite",
+        "title": "Bring your company to The IDEA Business",
         "description": "Create a business account for your team, or join one you've been invited to.",
         "create": "Create a business account"
       },
@@ -1343,8 +1244,8 @@
         "unpaidInvoices": "Unpaid invoices",
         "unpaidTotal": "{total} due",
         "plusSeats": "Members with The IDEA Plus",
-        "plan": "The IDEA Suite plan: {plan}",
-        "noPlan": "No The IDEA Suite plan yet. See plans",
+        "plan": "The IDEA Business plan: {plan}",
+        "noPlan": "No The IDEA Business plan yet. See plans",
         "candidatesToReview": "Candidates to review"
       }
     },
@@ -1363,7 +1264,7 @@
       },
       "organization": {
         "title": "Create a business account",
-        "description": "A business account holds your team, projects and The IDEA Suite plan.",
+        "description": "A business account holds your team, projects and The IDEA Business plan.",
         "name": "Company name",
         "namePlaceholder": "e.g. Al-Rafidain Trading",
         "slug": "Address",
@@ -1521,7 +1422,7 @@
       "signInToWrite": "Sign in to write a review"
     },
     "wishlist": {
-      "title": "Wishlist",
+      "title": "Saved",
       "description": "Products you saved for later.",
       "add": "Save to wishlist",
       "remove": "Remove from wishlist",
@@ -1541,7 +1442,7 @@
       }
     },
     "support": {
-      "title": "Support",
+      "title": "Your support tickets",
       "description": "Questions about an order, a rental or The IDEA Pass? We're here to help.",
       "newTicket": "New request",
       "number": "Ticket #{number}",
@@ -1593,7 +1494,8 @@
         "submit": "Send request",
         "sending": "Sending…"
       },
-      "openTicket": "View ticket"
+      "openTicket": "View ticket",
+      "signedOut": "Sign in with The IDEA Pass to open a ticket and follow our replies."
     },
     "notifications": {
       "title": "Notifications",
@@ -1802,7 +1704,7 @@
       "bulbsCredited": "{bulbs} Bulbs",
       "programTitle": "Affiliate program"
     },
-    "suite": {
+    "company": {
       "status": {
         "request": {
           "submitted": "Submitted",
@@ -2050,15 +1952,8 @@
       "other": "Other"
     },
     "kind": {
-      "sale": "Megastore",
+      "sale": "Store",
       "rental": "The IDEA Plus"
-    },
-    "lines": {
-      "megastore": "Megastore",
-      "plus": "The IDEA Plus",
-      "post": "The IDEA Post",
-      "suite": "The IDEA Suite",
-      "club": "The IDEA Club"
     },
     "ticketStatus": {
       "open": "Open",
@@ -2159,7 +2054,7 @@
         },
         "affiliate_approved": {
           "title": "You're an affiliate",
-          "body": "Your code is {code}. Share your link from My Pass and earn on every delivered order."
+          "body": "Your code is {code}. Share your link from Your Pass and earn on every delivered order."
         },
         "affiliate_paid": {
           "title": "Affiliate payout sent",
@@ -2258,6 +2153,13 @@
     "whatsapp": {
       "customer": "there",
       "noTracking": "we'll send it soon"
+    },
+    "lines": {
+      "store": "The IDEA Store",
+      "plus": "The IDEA Plus",
+      "club": "The IDEA Club",
+      "pass": "The IDEA Pass",
+      "business": "The IDEA Business"
     }
   },
   "admin": {
@@ -2284,8 +2186,8 @@
       "reviews": "Reviews",
       "tradeIns": "Trade-ins",
       "affiliates": "Affiliates",
-      "suite": "The IDEA Suite",
-      "counter": "Counter"
+      "counter": "Counter",
+      "companies": "Companies"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -2457,7 +2359,7 @@
         "slug": "Slug",
         "slugHint": "The web address: lower-case letters, numbers and dashes, e.g. ps5-slim.",
         "kind": "Line",
-        "kindHint": "Megastore items are sold; The IDEA Plus items are rented to members.",
+        "kindHint": "Store items are sold; The IDEA Plus items are rented to members.",
         "status": "Status",
         "statusHint": "Only live products appear in the store.",
         "category": "Category",
@@ -2548,7 +2450,7 @@
         "audience": "Product line",
         "audiences": {
           "plus": "The IDEA Plus (members)",
-          "business": "The IDEA Suite (businesses)"
+          "business": "The IDEA Business (companies)"
         },
         "amount": "Price (IQD)",
         "amountHint": "Charged each billing period.",
@@ -2982,7 +2884,7 @@
         "openTitle": "Open a ticket for this customer",
         "subject": "Subject",
         "message": "Message to the customer",
-        "messageHint": "They see it in My Pass and get a notification; the ticket waits on their reply.",
+        "messageHint": "They see it in Your Pass and get a notification; the ticket waits on their reply.",
         "open": "Open ticket"
       }
     },
@@ -3119,7 +3021,7 @@
     "editorial": {
       "title": "Editorial",
       "tabs": {
-        "posts": "The IDEA Post",
+        "posts": "Club posts",
         "events": "Events",
         "submissions": "Submissions"
       },
@@ -3245,7 +3147,7 @@
         "decisionNote": "Note to the author",
         "decisionNoteHint": "Shown to the author with the decision.",
         "saveDecision": "Save decision",
-        "publish": "The IDEA Post",
+        "publish": "The IDEA Club",
         "publishHint": "Accepted work is published in Members' work. This creates a draft with the member's name as the byline.",
         "createPost": "Create the post",
         "openPost": "Open the post"
@@ -3282,7 +3184,7 @@
         "reopen": "Reopen"
       },
       "chats": {
-        "description": "Groups and channels The IDEA Droid is an admin of. With join requests on in Telegram, Droid lets people in by each chat's rule (anyone, members who linked The IDEA Pass, or a Bulbs tier and up) and tells the others how to qualify. It also records who joins and sends new channel posts to newsletter subscribers. Droid can also post The IDEA Post's news, upcoming events and new arrivals to a forum topic of each chat (the topic ID is the number at the end of a link to a message in it).",
+        "description": "Groups and channels The IDEA Droid is an admin of. With join requests on in Telegram, Droid lets people in by each chat's rule (anyone, members who linked The IDEA Pass, or a Bulbs tier and up) and tells the others how to qualify. It also records who joins and sends new channel posts to newsletter subscribers. Droid can also post The IDEA Club's news, upcoming events and new arrivals to a forum topic of each chat (the topic ID is the number at the end of a link to a message in it).",
         "empty": "No groups yet. Add the bot to a group as an administrator, then add the group here.",
         "new": "Add a group",
         "id": "Chat ID",
@@ -3328,10 +3230,10 @@
         "topic": "Topic",
         "topics": {
           "general": "General",
-          "store": "Megastore",
+          "store": "Store",
           "plus": "The IDEA Plus",
-          "academy": "Academy",
-          "suite": "The IDEA Suite"
+          "club": "The IDEA Club",
+          "business": "The IDEA Business"
         },
         "questionAr": "Question (Arabic)",
         "questionEn": "Question (English)",
@@ -3574,7 +3476,7 @@
         "rejected": "Reject",
         "suspended": "Suspend"
       },
-      "codeHint": "4 to 20 letters and digits. Followers type it at checkout; their link is theideaiq.com/a/ followed by the code.",
+      "codeHint": "4 to 20 letters and digits. Followers type it at checkout; their link is theideaiq.com/r/ followed by the code.",
       "note": "Note to the member",
       "noteHint": "Shown to them when an application is rejected.",
       "balance": "Balance",
@@ -3609,8 +3511,75 @@
       },
       "saveDecision": "Save decision"
     },
-    "suite": {
-      "title": "The IDEA Suite",
+    "navGroups": {
+      "today": "Today",
+      "sales": "Sales",
+      "catalog": "Catalog",
+      "community": "Community",
+      "companies": "Companies",
+      "money": "Money",
+      "help": "Help",
+      "team": "Team"
+    },
+    "search": {
+      "title": "Search",
+      "label": "Search the back office",
+      "placeholder": "Search…",
+      "hint": "Order, ticket, request and job numbers, members by name or Pass number, products, ticket subjects.",
+      "for": "Results for \"{query}\"",
+      "empty": "Nothing found.",
+      "orders": "Orders",
+      "order": "Order #{number}",
+      "members": "Members",
+      "unnamed": "Unnamed member",
+      "products": "Products",
+      "tickets": "Support tickets",
+      "ticket": "Ticket #{number}",
+      "requests": "Procurement requests",
+      "request": "Request #{number}",
+      "jobs": "Jobs",
+      "job": "Job #{number}"
+    },
+    "counter": {
+      "title": "Counter",
+      "check": "Check a The IDEA Pass",
+      "description": "Scan the card's QR code (camera or scanner), or type the member number and the 6-digit code.",
+      "camera": "Scan with the camera",
+      "stopCamera": "Stop the camera",
+      "cameraError": "The camera isn't available. Use a scanner or type the code.",
+      "scanned": "Scanned code or member number",
+      "code": "Code",
+      "codeHint": "The 6 digits on the card",
+      "submit": "Check",
+      "valid": "Valid",
+      "invalid": "Not valid",
+      "expired": "The code has changed. Ask the member to refresh their card.",
+      "unknown": "No member with that number.",
+      "unnamed": "Unnamed member",
+      "number": "Member number",
+      "since": "Member since",
+      "bulbs": "Bulbs",
+      "plus": "The IDEA Plus",
+      "noPlus": "Not a member",
+      "openMember": "Open the member's page",
+      "rentals": "Rentals",
+      "noRentals": "No open rentals.",
+      "due": "Due {date}",
+      "openRentals": "Open rentals",
+      "events": "Events today",
+      "noEvents": "No RSVPs for events around now.",
+      "checkIn": "Check in",
+      "checkedIn": "Checked in",
+      "rentalStatus": {
+        "requested": "Requested",
+        "active": "Active",
+        "overdue": "Overdue",
+        "returned": "Returned",
+        "cancelled": "Cancelled"
+      }
+    },
+    "companies": {
+      "title": "Companies",
       "count": "{count} requests",
       "status": "Status",
       "views": {
@@ -3726,73 +3695,6 @@
         "uploadError": "The CV couldn't be uploaded. PDF only, up to 10 MB.",
         "uploaded": "CV uploaded."
       }
-    },
-    "navGroups": {
-      "today": "Today",
-      "sales": "Sales",
-      "catalog": "Catalog",
-      "community": "Community",
-      "companies": "Companies",
-      "money": "Money",
-      "help": "Help",
-      "team": "Team"
-    },
-    "search": {
-      "title": "Search",
-      "label": "Search the back office",
-      "placeholder": "Search…",
-      "hint": "Order, ticket, request and job numbers, members by name or Pass number, products, ticket subjects.",
-      "for": "Results for \"{query}\"",
-      "empty": "Nothing found.",
-      "orders": "Orders",
-      "order": "Order #{number}",
-      "members": "Members",
-      "unnamed": "Unnamed member",
-      "products": "Products",
-      "tickets": "Support tickets",
-      "ticket": "Ticket #{number}",
-      "requests": "Procurement requests",
-      "request": "Request #{number}",
-      "jobs": "Jobs",
-      "job": "Job #{number}"
-    },
-    "counter": {
-      "title": "Counter",
-      "check": "Check a The IDEA Pass",
-      "description": "Scan the card's QR code (camera or scanner), or type the member number and the 6-digit code.",
-      "camera": "Scan with the camera",
-      "stopCamera": "Stop the camera",
-      "cameraError": "The camera isn't available. Use a scanner or type the code.",
-      "scanned": "Scanned code or member number",
-      "code": "Code",
-      "codeHint": "The 6 digits on the card",
-      "submit": "Check",
-      "valid": "Valid",
-      "invalid": "Not valid",
-      "expired": "The code has changed. Ask the member to refresh their card.",
-      "unknown": "No member with that number.",
-      "unnamed": "Unnamed member",
-      "number": "Member number",
-      "since": "Member since",
-      "bulbs": "Bulbs",
-      "plus": "The IDEA Plus",
-      "noPlus": "Not a member",
-      "openMember": "Open the member's page",
-      "rentals": "Rentals",
-      "noRentals": "No open rentals.",
-      "due": "Due {date}",
-      "openRentals": "Open rentals",
-      "events": "Events today",
-      "noEvents": "No RSVPs for events around now.",
-      "checkIn": "Check in",
-      "checkedIn": "Checked in",
-      "rentalStatus": {
-        "requested": "Requested",
-        "active": "Active",
-        "overdue": "Overdue",
-        "returned": "Returned",
-        "cancelled": "Cancelled"
-      }
     }
   },
   "design": {
@@ -3810,20 +3712,11 @@
     "continueTo": "You'll continue to {host}.",
     "signIn": {
       "title": "Sign in to The IDEA Pass",
-      "description": "Use your email. One Pass for the store, The IDEA Plus and everything at The IDEA.",
-      "noAccount": "New to The IDEA?",
-      "signUpLink": "Get The IDEA Pass",
-      "deleted": "Your Pass has been deleted.",
-      "noAccountSignUp": "Get The IDEA Pass with this email"
-    },
-    "signUp": {
-      "title": "Get The IDEA Pass",
-      "description": "Sign up with your email. One Pass for everything at The IDEA.",
-      "haveAccount": "Already have The IDEA Pass?",
-      "signInLink": "Sign in"
+      "description": "Enter your email and we'll send you a code. New to The IDEA? The same code gets you your Pass.",
+      "deleted": "Your Pass has been deleted."
     },
     "home": {
-      "title": "My Pass",
+      "title": "Your Pass",
       "description": "Your membership card for everything at The IDEA: orders, The IDEA Plus, events and more.",
       "nameLabel": "Name",
       "noName": "Not set yet",

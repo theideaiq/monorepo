@@ -17,7 +17,7 @@ const event = {
   startsAt: new Date("2026-11-20T16:30:00Z"),
   title: "Game night: FC 26",
   updatedAt: new Date("2026-11-01T08:00:00.123Z"),
-  url: "https://theideaiq.com/en/post/events/game-night",
+  url: "https://theideaiq.com/en/club/game-night",
 };
 
 describe("ICS builder", () => {

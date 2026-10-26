@@ -1,11 +1,11 @@
-name: Import The IDEA Post content
+name: Import The IDEA Club content
 
 # Loads the articles in packages/database/supabase/content/posts into the
 # production database, one post per file, in order. Data only, never schema;
 # every file upserts its post by slug (keeping the publication date and cover
 # image) and marks its Telegram news item as sent, so an import doesn't flood
 # The IDEA Club. Running it again overwrites the text of those posts.
-# Run it by hand: Actions → "Import The IDEA Post content" → Run.
+# Run it by hand: Actions → "Import The IDEA Club content" → Run.
 # Uses the same `production` environment secrets as migrate.yml.
 
 on:

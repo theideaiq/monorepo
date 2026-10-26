@@ -5,6 +5,27 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
+## Current state (2026-10-26: program revision, step 1)
+
+- Products: The IDEA Store (`/`, `/store`), The IDEA Plus (`/plus`), The
+  IDEA Club (`/club`) and The IDEA Pass (`/pass`), plus The IDEA Business
+  (`/business` on the website, the company dashboard at
+  `business.theideaiq.com`) and The IDEA Droid (the Telegram bot). Spark,
+  Suite, Megastore, The IDEA Post, Discover, Academy and Launcher are gone
+  as names.
+- `apps/app` is now `apps/business` (package `business`): company pages at
+  its root, the back office at `/{locale}/staff` (companies at
+  `/staff/companies`). `NEXT_PUBLIC_APP_URL` is The IDEA Business.
+- Website: menu Store · Plus · Club · Pass; `/club/<slug>` replaces
+  `/post/…`; `/pass` has four pages (card, orders, bulbs, settings);
+  `/saved`, `/help`, `/careers` and `/r/<code>` are new addresses; one
+  sign-in page (no `/sign-up`). Old addresses have no redirects; stored
+  notification links are mapped by `currentAppPath`/`businessPath`.
+- Migration `20261217000000_program_revision_names.sql`: Droid FAQ topics
+  general, store, plus, club, business, and `referral_kind(code)`.
+- The Spark Catcher mini-game was removed. Telegram handles change in a
+  later step.
+
 ## Done
 
 - [x] One repository: website, customer app (web + iOS/Android), back office,
@@ -32,7 +53,7 @@ decisions with a date.
       (Authentication → Sign In / Providers → Multi-factor) — staff rights
       need an authenticator-app session. Set the Site URL to
       `https://theideaiq.com` (The IDEA Pass lives on the website) and add
-      `https://theideaiq.com/**` and `https://spark.theideaiq.com/**` to
+      `https://theideaiq.com/**` and `https://business.theideaiq.com/**` to
       the redirect URLs.
 - [ ] **Telegram sign-in:** in @BotFather open the bot → Login Widget, add
       the Allowed URL `https://api.theideaiq.com/auth/telegram/callback`
@@ -54,7 +75,8 @@ decisions with a date.
         signup), `magic_link.html` (Magic Link) and `email_change.html`
         (Change Email Address), with the subjects from `config.toml`.
       - Authentication → Rate Limits: emails per hour to fit the Resend
-        plan; then sign up on `/en/sign-up` and check the code arrives.
+        plan; then sign in on `/sign-in` with a new address and check the
+        code arrives.
 - [ ] **GitHub → Environments → `production`:** `SUPABASE_ACCESS_TOKEN`,
       `SUPABASE_DB_PASSWORD`, `BACKUP_PASSPHRASE`, optional
       `BACKUP_HEARTBEAT_URL`; repository variable `SUPABASE_PROJECT_REF`
@@ -67,21 +89,22 @@ decisions with a date.
       unaffected projects" on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the
       remote cache.
       - `web` (`apps/web`) → `theideaiq.com`
-      - `app` (`apps/app`, The IDEA Spark: the back office and The IDEA
-        Suite) → `spark.theideaiq.com` (DNS)
+      - `app` (root directory `apps/business`, The IDEA Business: the
+        company dashboard and the back office) → `business.theideaiq.com`
+        (DNS)
       - `api` (`apps/api`) → the API host
       - `storybook` (`apps/storybook`, The IDEA Design) →
         `design.theideaiq.com` (DNS), with `NEXT_PUBLIC_SUPABASE_URL` and
         `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 - [ ] **Vercel, retire the old projects:** delete the `admin` and `pass`
-      projects (their apps are now `/admin` in Spark and the Pass pages on
-      the website);
-      redirect any `admin.`/`pass.` DNS to `spark.theideaiq.com` if they
-      were ever published. Remove `NEXT_PUBLIC_PASS_URL` and
+      projects (their apps are now `/staff` in The IDEA Business and the
+      Pass pages on the website);
+      redirect any `admin.`/`pass.`/`spark.` DNS to `business.theideaiq.com`
+      if they were ever published. Remove `NEXT_PUBLIC_PASS_URL` and
       `NEXT_PUBLIC_ADMIN_URL` from every project.
 - [ ] **Vercel, shared URLs:** on every project set
       `NEXT_PUBLIC_WEB_URL=https://theideaiq.com` (every "Sign in" goes to
-      The IDEA Pass there), `NEXT_PUBLIC_APP_URL=https://spark.theideaiq.com`
+      The IDEA Pass there), `NEXT_PUBLIC_APP_URL=https://business.theideaiq.com`
       and `NEXT_PUBLIC_DESIGN_URL`; set
       `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on web, app and
       storybook (production only).
@@ -102,18 +125,18 @@ decisions with a date.
 - [ ] **Domains:** once every subdomain serves HTTPS, submit the apex at
       hstspreload.org (the sites already send the preload header).
 - [ ] **First staff member:** they get The IDEA Pass with their email
-      (`/ar/sign-up`), then in the SQL editor:
+      (`/ar/sign-in`), then in the SQL editor:
       `insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '<their email>';`
       they then link an authenticator app on The IDEA Pass and open
-      `https://spark.theideaiq.com/ar/admin` (or "Open the back office"
-      in My Pass).
+      `https://business.theideaiq.com/ar/staff` (or "Open the back office"
+      on their Pass).
 - [ ] **Brand v1.0 (after the brand pull request ships):** paste the
       three Supabase auth templates again
       (`packages/database/supabase/templates`, now with the pink header;
       the logo loads from `https://theideaiq.com/brand/lockup-on-pink.png`,
       so the website must be deployed first); run `cap:assets` for the new
       icons and splash; switch every social avatar and the Telegram
-      channels (The IDEA Club, The IDEA Post, The IDEA Droid, The IDEA
+      channels (The IDEA Club, The IDEA Droid, The IDEA
       Staff) to the new tiles (`docs/brand/BRAND_GUIDELINES.md`, 13).
 - [ ] **Google Wallet (optional):** an issuer in the Google Pay & Wallet
       Console and a service account added to it; set
@@ -163,7 +186,9 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       (the generated function type can't express it).
 
 - [ ] Brand v1.0 follow-ups: rename The Club / Droid in the legal
-      Markdown documents (legal review); store checked market prices
+      Markdown documents, and the retired names there (Megastore → The
+      IDEA Store, The IDEA Suite → The IDEA Business, the Academy's
+      programs) (legal review); store checked market prices
       (price, date, evidence) so SouqPrice can show. (Poppins removed
       2026-10-25.)
 

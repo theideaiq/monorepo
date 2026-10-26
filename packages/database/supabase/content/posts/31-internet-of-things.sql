@@ -48,8 +48,8 @@ begin
 1. تعلّم أساسيات البرمجة، خصوصاً **Python** و**C/C++**.
 2. اشترِ لوحة تطوير بسيطة مثل **Arduino** أو **Raspberry Pi** أو **ESP32**، وابدأ بمشاريع صغيرة: مصباح تتحكّم به من الهاتف، أو محطة طقس.
 3. تعلّم أساسيات الشبكات وبروتوكولات الاتصال مثل MQTT وHTTP.
-4. تعرّف على منصات السحابة التي تستقبل بيانات الأجهزة، واقرأ دليل [الحوسبة السحابية](/post/cloud-computing).
-5. حلّل البيانات التي تجمعها، وهنا يفيدك [علم البيانات](/post/data-science).
+4. تعرّف على منصات السحابة التي تستقبل بيانات الأجهزة، واقرأ دليل [الحوسبة السحابية](/club/cloud-computing).
+5. حلّل البيانات التي تجمعها، وهنا يفيدك [علم البيانات](/club/data-science).
 
 المجال مفتوح، وستجد شروحات كثيرة على YouTube لكل خطوة.
 
@@ -99,8 +99,8 @@ Every connected device is a potential way in for attackers. Default passwords, o
 1. Learn programming basics, especially **Python** and **C/C++**.
 2. Get a simple development board such as an **Arduino**, **Raspberry Pi** or **ESP32**, and start with small projects: a light you control from your phone, or a weather station.
 3. Learn networking basics and protocols such as MQTT and HTTP.
-4. Get to know the cloud platforms that receive device data, and read our guide to [cloud computing](/post/cloud-computing).
-5. Analyze the data you collect; that's where [data science](/post/data-science) helps.
+4. Get to know the cloud platforms that receive device data, and read our guide to [cloud computing](/club/cloud-computing).
+5. Analyze the data you collect; that's where [data science](/club/data-science) helps.
 
 The field is open, and you'll find plenty of YouTube tutorials for every step.
 

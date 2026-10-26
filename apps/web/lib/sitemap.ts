@@ -6,17 +6,11 @@ export const staticPaths = [
   "",
   "/store",
   "/plus",
-  "/suite",
   "/club",
-  "/post",
-  "/post/news",
-  "/post/stories",
-  "/post/learn",
-  "/post/events",
+  "/business",
   "/about",
-  "/about/careers",
-  "/about/faq",
-  "/about/contact",
+  "/careers",
+  "/help",
 ] as const;
 
 export interface SitemapPage {

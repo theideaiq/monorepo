@@ -13,18 +13,14 @@ const meta = {
       control: "select",
       options: [
         undefined,
-        "Academy",
+        "Business",
         "Club",
         "Design",
         "Droid",
-        "Launcher",
-        "Megastore",
         "Pass",
         "Plus",
-        "Post",
-        "Spark",
         "Staff",
-        "Suite",
+        "Store",
       ],
     },
     variant: {
@@ -47,7 +43,7 @@ export const Auto: Story = { args: { className: "text-2xl" } };
 
 /** A line lock-up: the line word in weight 600 after The IDEA. */
 export const LineLockup: Story = {
-  args: { className: "text-2xl", line: "Spark" },
+  args: { className: "text-2xl", line: "Business" },
 };
 
 /** Each ground with its colours. */

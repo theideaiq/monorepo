@@ -61,7 +61,8 @@ interface EmailOtpFormProps {
    */
   readonly noAccount?: (email: string) => ReactNode;
   /** Called after sign-in instead of navigating to `redirectTo`. */
-  readonly onSignedIn?: (userId: string) => void;
+  /** `isNew`: the code created the Pass (a sign-up). */
+  readonly onSignedIn?: (userId: string, isNew: boolean) => void;
   readonly redirectTo?: string;
   /** false: sign in to existing accounts only (no sign-up). */
   readonly shouldCreateUser?: boolean;
@@ -170,7 +171,7 @@ export const EmailOtpForm = ({
     }
 
     if (onSignedIn) {
-      onSignedIn(result.value.userId);
+      onSignedIn(result.value.userId, result.value.isNew);
       return;
     }
 

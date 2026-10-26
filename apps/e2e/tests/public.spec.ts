@@ -7,11 +7,12 @@ const pages = [
   { name: "home", path: "" },
   { name: "store", path: "/store" },
   { name: "product page", path: `/store/${product.slug}` },
-  { name: "Rent", path: "/plus" },
-  { name: "Discover", path: "/post" },
-  { name: "events", path: "/post/events" },
+  { name: "Plus", path: "/plus" },
+  { name: "Club", path: "/club" },
+  { name: "Club events", path: "/club?show=events" },
+  { name: "Business", path: "/business" },
   { name: "About", path: "/about" },
-  { name: "FAQ", path: "/about/faq" },
+  { name: "Help", path: "/help" },
 ];
 
 test.describe("public site", () => {
@@ -55,18 +56,18 @@ test.describe("public site", () => {
       await page.goto(`${urls.web}/`);
       const tabs = page.getByRole("navigation", { name: "Main" });
       await expect(tabs).toBeVisible();
-      await expect(tabs.getByRole("link", { name: "Shop" })).toHaveAttribute(
+      await expect(tabs.getByRole("link", { name: "Store" })).toHaveAttribute(
         "aria-current",
         "page"
       );
-      await tabs.getByRole("link", { name: "Rent" }).click();
+      await tabs.getByRole("link", { name: "Plus" }).click();
       await expect(page).toHaveURL(/\/plus$/);
-      await expect(tabs.getByRole("link", { name: "Rent" })).toHaveAttribute(
+      await expect(tabs.getByRole("link", { name: "Plus" })).toHaveAttribute(
         "aria-current",
         "page"
       );
-      await tabs.getByRole("link", { name: "Discover" }).click();
-      await expect(page).toHaveURL(/\/post$/);
+      await tabs.getByRole("link", { name: "Club" }).click();
+      await expect(page).toHaveURL(/\/club$/);
       await expectAccessible(page);
     });
   });

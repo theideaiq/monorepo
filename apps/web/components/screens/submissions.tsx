@@ -26,7 +26,6 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { formatDate } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   canWithdraw,
@@ -284,18 +283,15 @@ const MySubmissions = () => {
   );
 };
 
-/** Journal submissions: send work, follow decisions, withdraw. */
-export const Submissions = () => {
+/** The member's submissions (Club → Yours): send work, follow decisions, withdraw. */
+export const YourSubmissions = () => {
   const t = useTranslations("app.submissions");
 
   return (
-    <>
-      <PageHeader title={t("title")} />
-      <div className="flex max-w-3xl flex-1 flex-col gap-8">
-        <p className="text-muted-foreground">{t("description")}</p>
-        <SubmitForm />
-        <MySubmissions />
-      </div>
-    </>
+    <div className="flex max-w-3xl flex-col gap-8">
+      <p className="text-muted-foreground">{t("description")}</p>
+      <SubmitForm />
+      <MySubmissions />
+    </div>
   );
 };

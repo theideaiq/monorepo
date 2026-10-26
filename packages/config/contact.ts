@@ -10,8 +10,8 @@ export const contactTopics = [
   "general",
   "store",
   "plus",
-  "academy",
-  "suite",
+  "club",
+  "business",
   "careers",
   "press",
 ] as const;

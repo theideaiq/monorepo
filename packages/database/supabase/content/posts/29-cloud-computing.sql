@@ -46,14 +46,14 @@ begin
 
 ## لماذا تتعلّمها؟
 
-تكاد كل شركة تقنية اليوم تعتمد على السحابة، ومعظم المواقع والتطبيقات التي تستخدمها تعمل عليها. لذلك يكثر الطلب على مهندسي السحابة ومديري الأنظمة ومهندسي DevOps، وكثير من هذه الوظائف متاح عن بعد. وحتى لو كنت مطوّراً أو [عالم بيانات](/post/data-science)، ستحتاج أساسيات السحابة لنشر مشاريعك.
+تكاد كل شركة تقنية اليوم تعتمد على السحابة، ومعظم المواقع والتطبيقات التي تستخدمها تعمل عليها. لذلك يكثر الطلب على مهندسي السحابة ومديري الأنظمة ومهندسي DevOps، وكثير من هذه الوظائف متاح عن بعد. وحتى لو كنت مطوّراً أو [عالم بيانات](/club/data-science)، ستحتاج أساسيات السحابة لنشر مشاريعك.
 
 ## كيف تبدأ؟
 
 1. **تعلّم الأساسيات:** الشبكات، ونظام Linux، وسطر الأوامر.
 2. **جرّب مجاناً:** تقدّم AWS وAzure وGoogle Cloud طبقات مجانية (Free Tier) أو أرصدة تجريبية للمبتدئين. انتبه لحدودها وراقب استهلاكك حتى لا تُفاجأ بفاتورة.
 3. **احصل على شهادة تأسيسية:** مثل **AWS Certified Cloud Practitioner** أو **Microsoft Azure Fundamentals (AZ-900)** أو **Google Cloud Digital Leader**. هذه الشهادات تثبت فهمك الأساسي وتُضاف بقوّة إلى سيرتك الذاتية.
-4. **ابنِ مشاريع:** انشر موقعاً، وأعدّ قاعدة بيانات، وجرّب الخدمات المُدارة. إن كنت جديداً على بناء المواقع فابدأ بـ [تطوير المواقع](/post/web-development).
+4. **ابنِ مشاريع:** انشر موقعاً، وأعدّ قاعدة بيانات، وجرّب الخدمات المُدارة. إن كنت جديداً على بناء المواقع فابدأ بـ [تطوير المواقع](/club/web-development).
 5. **تخصّص:** بعد التأسيس، اختر مساراً مثل هندسة الحلول أو DevOps أو أمن السحابة، وتقدّم لشهاداته المتقدّمة.
 
 ## مصادر للتعلّم
@@ -99,14 +99,14 @@ Together these layers are often called the **cloud computing stack**, because ea
 
 ## Why learn it?
 
-Nearly every tech company runs on the cloud, and so do most of the sites and apps you use. That keeps demand high for cloud engineers, systems administrators and DevOps engineers, and many of these roles are remote. Even as a developer or [data scientist](/post/data-science), you'll need cloud basics to deploy your work.
+Nearly every tech company runs on the cloud, and so do most of the sites and apps you use. That keeps demand high for cloud engineers, systems administrators and DevOps engineers, and many of these roles are remote. Even as a developer or [data scientist](/club/data-science), you'll need cloud basics to deploy your work.
 
 ## How to start
 
 1. **Learn the foundations:** networking, Linux and the command line.
 2. **Experiment for free:** AWS, Azure and Google Cloud all offer free tiers or trial credits for beginners. Learn the limits and watch your usage so a bill doesn't surprise you.
 3. **Earn a foundational certification:** such as **AWS Certified Cloud Practitioner**, **Microsoft Azure Fundamentals (AZ-900)** or **Google Cloud Digital Leader**. They prove your grasp of the basics and stand out on a CV.
-4. **Build projects:** deploy a website, set up a database and try managed services. If you're new to building sites, start with [web development](/post/web-development).
+4. **Build projects:** deploy a website, set up a database and try managed services. If you're new to building sites, start with [web development](/club/web-development).
 5. **Specialize:** once you have the foundations, choose a path such as solutions architecture, DevOps or cloud security, and work toward its advanced certifications.
 
 ## Where to learn
