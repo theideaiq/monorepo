@@ -33,13 +33,13 @@ The engineering companion to `BRAND_GUIDELINES.md`: tokens, how they map onto `t
 | `border` | `#E4DFD0` | `#2C2D35` | Decorative dividers |
 | `border-strong` | `#8A8C95` | `#6B6D78` | Control borders (3:1+) |
 | `focus-ring` | `#0F1014` | `#F4CF08` | Focus outline |
-| `plus` / `teal` / `business` | `#5B3BE8` / `#0B7A6E` / `#1F4FD6` | `#A99BFF` / `#4FD1C0` / `#7FA2FF` | Accents (The IDEA Plus, spare, The IDEA Business); text `on-accent` |
-| `club` / `lime` | `#FF6A2B` / `#7BC43A` | `#FF7A40` / `#9BE15D` | Accents (The IDEA Club, spare; fill only); text `on-accent-warm` |
-| `on-accent` | `#FFFFFF` | `#0F1014` | Text on plus, teal, business |
-| `on-accent-warm` | `#0F1014` | `#0F1014` | Text on club, lime |
+| `plus` / `business` | `#5B3BE8` / `#1F4FD6` | `#A99BFF` / `#7FA2FF` | Accents (The IDEA Plus, The IDEA Business); text `on-accent` |
+| `club` | `#FF6A2B` | `#FF7A40` | Accent (The IDEA Club; fill only); text `on-accent-warm` |
+| `on-accent` | `#FFFFFF` | `#0F1014` | Text on plus, business |
+| `on-accent-warm` | `#0F1014` | `#0F1014` | Text on club |
 | `bulb-empty` | `#D9DCE6` | `#3A3C46` | Unlit part of a bulb |
 | `success` | `#127A4B` | `#4ADE9A` | With icon and word |
-| `warning` | `#9A6700` | `#F5B83D` | With icon and word |
+| `warning` | `#865A00` | `#F5B83D` | With icon and word |
 | `danger` | `#B3261E` | `#FFB4A9` | With alert icon and word (similar lightness to pink) |
 | `on-status` | `#FFFFFF` | `#0F1014` | Text on success / danger |
 
@@ -92,7 +92,7 @@ On phones scale `display-xl` to 44/48 and `display` to 36/42. Arabic never below
 | `--success` | `#127A4B` | `#4ADE9A` | green |
 | `--brand` / `--brand-foreground` | `#F4CF08` / `#0F1014` | same | unchanged |
 | `--sidebar-primary` / `-foreground` | `#D81B60` / `#FFFFFF` | same | pink |
-| `--chart-1…5` | pink, yellow, violet (`plus`), `teal`, cobalt (`business`) | dark-theme equivalents | various |
+| `--chart-1…5` | pink, yellow, violet (`plus`), Club Orange (`club`), cobalt (`business`) | dark-theme equivalents | various |
 
 Add every other token from `tokens.css` and expose them in `@theme inline` as `--color-*` (`bg-idea-pink`, `text-pink-text`, `bg-surface-sunken`, `bg-plus` …).
 

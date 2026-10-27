@@ -114,8 +114,8 @@ Pink leads, yellow lights it up, paper keeps it warm, and each product adds one 
 | Paper | `#FBF8EF` | Light page ground |
 | White | `#FFFFFF` | Text on pink, cards |
 | Ink (text only) | `#0F1014` | Body text and headings; never in logos or brand blocks |
-| Plus Violet · Business Cobalt · Teal | `#5B3BE8` · `#1F4FD6` · `#0B7A6E` | Accents (white text); Teal has no product of its own |
-| Club Orange · Lime | `#FF6A2B` · `#7BC43A` | Accents, fill only (dark text); Lime has no product of its own |
+| Plus Violet · Business Cobalt | `#5B3BE8` · `#1F4FD6` | Accents (white text) |
+| Club Orange | `#FF6A2B` | Accent, fill only (dark text) |
 
 Print: the screen values above are the reference. Ask the printer to match them to Pantone spot colours from a physical proof before any packaging run (Bulb Yellow is close to Pantone 7405 C).
 

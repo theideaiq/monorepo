@@ -33,7 +33,7 @@
   --on-accent: #ffffff;
   --on-accent-warm: #0f1014;
   --bulb-empty: #d9dce6;
-  --warning: #9a6700;
+  --warning: #865a00;
   --danger: #b3261e;
   --on-status: #ffffff;
   /* tokens.css calls these --shadow-1/2; renamed so they don't collide
