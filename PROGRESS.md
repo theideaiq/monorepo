@@ -253,7 +253,7 @@ decisions with a date.
 - [ ] **Vercel, shared URLs:** on every project set
       `NEXT_PUBLIC_WEB_URL=https://theideaiq.com` (every "Sign in" goes to
       The IDEA Pass there), `NEXT_PUBLIC_APP_URL=https://business.theideaiq.com`
-      and `NEXT_PUBLIC_DESIGN_URL`; set
+      and `NEXT_PUBLIC_STAFF_URL`; set
       `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on web, app and
       storybook (production only).
 - [ ] **Vercel, secrets only in `api`:** remove `RESEND_*`, `ARCJET_KEY`,

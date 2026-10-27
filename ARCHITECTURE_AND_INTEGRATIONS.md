@@ -88,7 +88,7 @@ Responses are `Cache-Control: private, no-store` and `noindex`. Environment:
 503, fail closed) and `NEXT_PUBLIC_WEB_URL` (defaults to
 `http://localhost:3001` in development, `https://theideaiq.com`
 otherwise). Other apps link to it with
-`NEXT_PUBLIC_DESIGN_URL` (`@repo/next-config/keys`). Emails are reviewed
+`NEXT_PUBLIC_STAFF_URL` (`@repo/next-config/keys`). Emails are reviewed
 under **The IDEA Design → Emails**, rendered with `@react-email/components`
 exactly as Resend sends them; add a story there with every new template.
 
@@ -2054,7 +2054,7 @@ and Better Stack are configured on `api`, not here.
 | `NEXT_PUBLIC_WEB_URL` | Build | This site's URL, `https://theideaiq.com`; also the API's CORS origin for the contact form |
 | `NEXT_PUBLIC_APP_URL` | Build | The IDEA Business, `https://business.theideaiq.com`, for company and back-office links |
 | `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so The IDEA Business and the design site read the session The IDEA Pass writes; unset on previews |
-| `NEXT_PUBLIC_DESIGN_URL` | Optional | The IDEA Design, an allowed return_to host |
+| `NEXT_PUBLIC_STAFF_URL` | Optional | The IDEA Design, an allowed return_to host |
 | `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, The IDEA Club's posts and events (read anonymously, under Row Level Security). Without them those sections show empty states. |
@@ -2077,7 +2077,7 @@ project.**
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Build | This app's URL, `https://business.theideaiq.com`; The IDEA Pass sends people back to it |
 | `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so the website and the design site read the session; unset on previews |
-| `NEXT_PUBLIC_DESIGN_URL` | Optional | The IDEA Design, an allowed return_to host |
+| `NEXT_PUBLIC_STAFF_URL` | Optional | The IDEA Design, an allowed return_to host |
 | `NEXT_PUBLIC_WEB_URL` | Build | The website, where The IDEA Pass sign-in lives |
 | `NEXT_PUBLIC_SUPABASE_URL` | Feature (the app can't sign in without it) | `https://<project-ref>.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature (same) | `sb_publishable_…` |
@@ -2153,6 +2153,6 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL` | Build, on every project | The IDEA Business, `https://business.theideaiq.com`; an allowed return_to host (`isAllowedReturnTo`) |
 | `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature, on every project that reads the session (app, storybook, web) | `.theideaiq.com`; unset on previews |
-| `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_DESIGN_URL`, `NEXT_PUBLIC_API_URL` | Feature (app) | The other allowed return_to hosts |
+| `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_STAFF_URL`, `NEXT_PUBLIC_API_URL` | Feature (app) | The other allowed return_to hosts |
 
 Supabase's redirect URLs include `https://business.theideaiq.com/**`.
