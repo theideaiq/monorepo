@@ -1,8 +1,14 @@
 "use server";
 
 import { z } from "zod";
-import { affected, check, staffAction } from "@/lib/admin/action";
-import { success } from "@/lib/admin/action-state";
+import {
+  ActionFailure,
+  affected,
+  check,
+  staffAction,
+} from "@/lib/admin/action";
+import { type ActionError, success } from "@/lib/admin/action-state";
+import { callApi } from "@/lib/admin/api";
 import {
   checkbox,
   choice,
@@ -137,5 +143,31 @@ export const deleteFaq = staffAction(
   async ({ input, supabase }) => {
     check(await supabase.from("telegram_faq").delete().eq("id", input.id));
     return success("deleted");
+  }
+);
+
+const BOT_ERRORS: Record<string, ActionError> = {
+  forbidden: "forbidden",
+  mfa_required: "forbidden",
+  telegram_failed: "telegramFailed",
+  unavailable: "apiUnavailable",
+  webhook_secret_missing: "telegramSecretMissing",
+};
+
+/**
+ * Sets Droid up again (apps/api holds the bot token): the webhook, the
+ * commands, the Mini App button and the descriptions. Admins only.
+ */
+export const setUpTelegramBot = staffAction(
+  "telegram",
+  z.object({}),
+  async ({ supabase }) => {
+    const result = await callApi(supabase, "/admin/telegram", {
+      action: "setup",
+    });
+    if (!result.ok) {
+      throw new ActionFailure(BOT_ERRORS[result.error] ?? "unknown");
+    }
+    return success();
   }
 );

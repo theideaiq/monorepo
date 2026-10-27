@@ -4,6 +4,7 @@ import {
   type TelegramError,
   TelegramFinish,
 } from "@/components/pass/telegram-finish";
+import { env } from "@/env";
 import { readReturnTo, type SearchParams } from "@/lib/pass/return-to";
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -47,6 +48,7 @@ const TelegramPage = async ({
         returnTo={returnTo}
         ticket={text(params.ticket)}
         tokenHash={text(params.token_hash)}
+        turnstileSiteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
       />
     </div>
   );

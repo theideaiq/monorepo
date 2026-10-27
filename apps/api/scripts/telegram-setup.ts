@@ -1,7 +1,8 @@
 #!/usr/bin/env bun
 /**
- * Points Droid's Telegram webhook at this API, publishes its commands and
- * sets the menu button that opens the website as a Mini App (/tg).
+ * Points Droid's Telegram webhook at this API, publishes its commands,
+ * sets the menu button that opens the website as a Mini App (/tg) and the
+ * bot's descriptions. The back office does the same (Telegram → Bot).
  *
  *   bun run --cwd apps/api telegram:setup
  *
@@ -10,11 +11,12 @@
  *
  *   bun run --cwd apps/api telegram:setup https://api.theideaiq.com
  */
-import { ALLOWED_UPDATES, DROID_COMMANDS } from "@repo/droid";
+import { setUpBot, telegramApi } from "../lib/telegram-setup";
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
 const base = process.argv[2] ?? process.env.NEXT_PUBLIC_API_URL;
+const site = process.env.NEXT_PUBLIC_WEB_URL ?? "https://theideaiq.com";
 
 if (!(token && secret && base)) {
   console.error(
@@ -23,65 +25,12 @@ if (!(token && secret && base)) {
   process.exit(1);
 }
 
-const call = async (method: string, body: Record<string, unknown>) => {
-  const response = await fetch(
-    `https://api.telegram.org/bot${token}/${method}`,
-    {
-      body: JSON.stringify(body),
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    }
-  );
-  const result = (await response.json()) as {
-    description?: string;
-    ok: boolean;
-  };
-  if (!result.ok) {
-    throw new Error(
-      `${method} failed: ${result.description ?? response.status}`
-    );
-  }
-  console.log(`✓ ${method}`);
-  return result;
-};
-
-const url = new URL("/telegram/webhook", base).toString();
-
-await call("setWebhook", {
-  allowed_updates: ALLOWED_UPDATES,
-  drop_pending_updates: false,
-  secret_token: secret,
-  url,
+const { done, webhook } = await setUpBot(telegramApi(token), {
+  apiUrl: base,
+  secret,
+  webUrl: site,
 });
-
-for (const [locale, commands] of Object.entries(DROID_COMMANDS)) {
-  // Arabic is the default list; English for English Telegram apps.
-  const language = locale === "ar" ? {} : { language_code: locale };
-  // biome-ignore lint/performance/noAwaitInLoops: a handful of calls, in order
-  await call("setMyCommands", {
-    commands: commands.private,
-    scope: { type: "all_private_chats" },
-    ...language,
-  });
-  await call("setMyCommands", {
-    commands: commands.admins,
-    scope: { type: "all_chat_administrators" },
-    ...language,
-  });
+for (const step of done) {
+  console.log(`✓ ${step}`);
 }
-
-// The menu button beside the message box opens the website as a Mini App.
-const site = process.env.NEXT_PUBLIC_WEB_URL;
-if (site) {
-  await call("setChatMenuButton", {
-    menu_button: {
-      text: "The IDEA",
-      type: "web_app",
-      web_app: { url: new URL("/tg", site).toString() },
-    },
-  });
-} else {
-  console.warn("Set NEXT_PUBLIC_WEB_URL to add the Mini App menu button.");
-}
-
-console.log(`Webhook set to ${url}`);
+console.log(`Webhook set to ${webhook}`);
