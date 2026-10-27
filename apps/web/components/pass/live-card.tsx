@@ -144,6 +144,8 @@ const CountdownRing = ({ left }: { readonly left: number }) => {
 };
 
 interface LiveCardProps {
+  /** Badges shown on the card (Student, Staff), already translated. */
+  readonly badges?: readonly string[];
   /** "Member since …", already formatted. */
   readonly memberSince: string | null;
   readonly name: string;
@@ -159,7 +161,12 @@ interface LiveCardProps {
  * pointer, the member's name and number, and a QR code with a 6-digit code
  * that changes every 30 seconds (shown at the counter, checked there).
  */
-export const LiveCard = ({ memberSince, name, plan }: LiveCardProps) => {
+export const LiveCard = ({
+  badges = [],
+  memberSince,
+  name,
+  plan,
+}: LiveCardProps) => {
   const t = useTranslations("pass.card");
   const locale = useLocale();
   const card = useCard();
@@ -217,8 +224,16 @@ export const LiveCard = ({ memberSince, name, plan }: LiveCardProps) => {
                 variant="on-pink"
               />
               <div className="grid min-w-0 gap-1">
-                <p className="text-[0.625rem] text-white/75 uppercase tracking-[0.2em] sm:text-xs">
+                <p className="flex flex-wrap items-center gap-1.5 text-[0.625rem] text-white/75 uppercase tracking-[0.2em] sm:text-xs">
                   {plan ?? t("member")}
+                  {badges.map((badge) => (
+                    <span
+                      className="rounded-full bg-white/20 px-1.5 py-0.5 text-white tracking-normal"
+                      key={badge}
+                    >
+                      {badge}
+                    </span>
+                  ))}
                 </p>
                 <p className="truncate font-semibold text-lg leading-tight sm:text-3xl">
                   {name}

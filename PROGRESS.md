@@ -5,7 +5,20 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-27: program revision, step 5d)
+## Current state (2026-10-27: program revision, step 5e)
+
+- Students and partner perks (migration
+  `20261225000000_students_and_perks.sql`): members verify as students
+  with a university email (an emailed code) or a student card photo that
+  support reviews in Customers → Students; the badge lasts until 30 June
+  and brings Plus at 20% off (monthly), no deposits for rent and kits,
+  and student perks. Partners are organizations in The IDEA Business with
+  perks (Companies → Perks); their team checks Pass cards and records
+  uses (once a day) in The IDEA Business → Perks. **To do:** check the
+  universities' email domains in Customers → Students (seeded from public
+  information); add the first partners (an organization each, invited
+  from The IDEA Business) and their perks; emails need `RESEND_FROM` and
+  `RESEND_TOKEN` on the API.
 
 - Boxes (migration `20261224000000_boxes.sql`): Store products built from
   parts, in stock while their parts are, priced 10–15% below them. Vinyl
@@ -280,6 +293,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-27: Program revision v1, step 5e (students and perks): partners
+  check cards from their Business dashboard and record each use; a
+  verified Student badge is the "verified Pass" that skips the rent and
+  kit deposits; AUIB plus Baghdad's main universities are listed at
+  launch; one use per perk per person per day.
 
 - 2026-10-27: Program revision v1, step 5d (boxes): a box is built from
   parts (fixed products plus slots staff fill), in stock while its parts

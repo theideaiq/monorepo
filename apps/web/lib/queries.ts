@@ -150,6 +150,7 @@ export const usePlans = (audience: "business" | "plus") => {
           )
           .eq("active", true)
           .eq("audience", audience)
+          .is("student_of", null)
           .order("position")
           .order("amount")
       ),

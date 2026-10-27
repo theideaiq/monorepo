@@ -189,7 +189,14 @@ const CustomersPage = async ({
       <PageHeader
         description={t("count", { count: format.number(count ?? 0) })}
         title={t("title")}
-      />
+      >
+        <Link
+          className="font-medium text-sm hover:underline"
+          href="/customers/students"
+        >
+          {t("studentsLink")}
+        </Link>
+      </PageHeader>
       <PageBody>
         {canWrite ? <CheckPass /> : null}
         <FilterBar>

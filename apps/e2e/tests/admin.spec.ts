@@ -107,6 +107,16 @@ test.describe("back office", () => {
     ).toBeVisible();
     await expectAccessible(page);
 
+    // Students (card reviews, universities) and partner perks.
+    await page.goto(`${urls.app}/staff/customers/students`);
+    await expect(
+      page.getByRole("heading", { name: "Student cards to review" })
+    ).toBeVisible();
+    await expectAccessible(page);
+    await page.goto(`${urls.app}/staff/companies/perks`);
+    await expect(page.getByRole("heading", { name: "New perk" })).toBeVisible();
+    await expectAccessible(page);
+
     // Your Pass links staff to the back office.
     await page.goto(`${urls.web}/pass`);
     await page.getByRole("link", { name: "Open the back office" }).click();

@@ -12,6 +12,7 @@ export const CompaniesTabs = async () => {
         { href: "/companies/orders", label: t("orders") },
         { href: "/companies/invoices", label: t("invoices") },
         { href: "/companies/seats", label: t("seats") },
+        { href: "/companies/perks", label: t("perks") },
       ]}
     />
   );

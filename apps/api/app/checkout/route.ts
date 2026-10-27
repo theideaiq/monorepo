@@ -39,6 +39,36 @@ const safeRedirect = (redirectUrl: string | undefined, business: boolean) => {
   return new URL(redirectUrl).origin === home.origin ? redirectUrl : undefined;
 };
 
+type Session = NonNullable<Awaited<ReturnType<typeof authenticateRequest>>>;
+
+/** Why the caller can't check out The IDEA Plus (or null when they can). */
+const plusJoinError = async (
+  supabase: Session["supabase"],
+  studentOf: string | null
+) => {
+  // 13–17-year-olds join The IDEA Plus once their guardian allows it.
+  const { data: guardian } = await supabase.rpc("my_guardian").maybeSingle();
+  if (guardian?.minor && !guardian.allows_plus) {
+    return "guardian_required";
+  }
+
+  // Plus has a set number of places: joining needs a free one (or an
+  // invite from the waitlist) and a home in Baghdad.
+  const { data: status } = await supabase.rpc("plus_status").maybeSingle();
+  if (!status?.can_join) {
+    return `plus_${status?.join_reason ?? "full"}`;
+  }
+
+  // The student price is for verified students only.
+  if (studentOf) {
+    const { data: student } = await supabase.rpc("my_student").maybeSingle();
+    if (!student?.verified) {
+      return "student_required";
+    }
+  }
+  return null;
+};
+
 export const OPTIONS = preflight;
 
 /**
@@ -81,7 +111,7 @@ export const POST = async (request: Request) => {
 
   const { data: plan } = await session.supabase
     .from("plans")
-    .select("audience")
+    .select("audience, student_of")
     .eq("id", planId)
     .eq("active", true)
     .maybeSingle();
@@ -96,22 +126,10 @@ export const POST = async (request: Request) => {
     return json({ error: "forbidden" }, 403);
   }
 
-  // 13–17-year-olds join The IDEA Plus once their guardian allows it.
   if (plan.audience === "plus") {
-    const { data: guardian } = await session.supabase
-      .rpc("my_guardian")
-      .maybeSingle();
-    if (guardian?.minor && !guardian.allows_plus) {
-      return json({ error: "guardian_required" }, 403);
-    }
-
-    // Plus has a set number of places: joining needs a free one (or an
-    // invite from the waitlist) and a home in Baghdad.
-    const { data: status } = await session.supabase
-      .rpc("plus_status")
-      .maybeSingle();
-    if (!status?.can_join) {
-      return json({ error: `plus_${status?.join_reason ?? "full"}` }, 403);
+    const blocked = await plusJoinError(session.supabase, plan.student_of);
+    if (blocked) {
+      return json({ error: blocked }, 403);
     }
   }
 

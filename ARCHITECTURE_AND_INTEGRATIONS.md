@@ -698,6 +698,7 @@ Current schema:
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | The IDEA Store's catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
+| `…_students_and_perks.sql` | Students: `universities` (email domains), `student_badges` (university and valid until 30 June), `student_requests` (emailed codes, card photos in the private `student-cards` bucket); `issue_student_code()` (API only), `confirm_student_email()`, `request_student_review()`, `review_student_card()`, `my_student()`; student prices (`plans.student_of`, `run_student_expiry()`); no deposits for students (`rental_quote()`, `book_kit()`). Perks: `perks`, `perk_redemptions` (once a day), `partner_check()`, `redeem_perk()`, `perk_stats()`, `my_partners()` |
 | `…_boxes.sql` | Boxes: `boxes`, `box_parts` (fixed product versions or slots filled from a category and format), `box_themes`; a box's stock comes from its parts (`private.box_stock()`, recounted with the parts' copies), an active box costs 10–15% less than its parts (`private.box_value()`); `cart_items.box_theme_id` and `order_items.box_theme_id`; orders take the fixed parts' copies, `pack_box()` the picked ones; `box_slot_copies()` |
 | `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
 | `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
@@ -1561,6 +1562,35 @@ picked copies are worth together at least.
   (3 books worth 63,000; 54,750); Eid, Ramadan nights and Back to
   university start as drafts, switched on in Catalogue → Boxes for their
   season.
+
+#### Students and partner perks
+
+Migration `20261225000000_students_and_perks.sql`.
+
+- **Verifying** (Pass → Settings): the member picks their university
+  (`universities`, each with its email domains; subdomains count) and
+  either types their university email, to which the API emails an
+  8-digit code (`POST /pass/student-code` → `issue_student_code()`, 5 a
+  day, 15 minutes, one address per Pass), confirmed with
+  `confirm_student_email()`; or uploads a photo of their student card
+  (`student-cards` bucket, `<user id>/…`) for support to review in
+  Customers → Students (`review_student_card()`; the photo is deleted
+  after the decision). Only "student at X until <date>" is kept
+  (`student_badges`); the address is kept hashed so it can't verify a
+  second Pass.
+- **The badge** lasts until 30 June of the academic year and is shown on
+  the card. It brings the Plus student price (`plans.student_of`: the
+  monthly plans at 20% off, …750 endings; checkout requires the badge and
+  `run_student_expiry()`, daily in `/cron/rentals`, moves members whose
+  badge ended to the full price at the next renewal), no deposit for
+  single-item rent and kits, and student perks.
+- **Perks** (`perks`): each belongs to a partner, an organization in The
+  IDEA Business, and is open to every Pass, to students or to Plus
+  members. Support adds them in Companies → Perks. Your Pass lists them;
+  the partner's team checks a card in The IDEA Business → Perks
+  (`partner_check()`: first name, member number, badges and which perks
+  apply) and records a use (`redeem_perk()`, once a day per person and
+  perk, Baghdad time), with monthly counts (`perk_stats()`).
 
 #### Categories, prices and conditions (the catalogue)
 

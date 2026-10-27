@@ -69,6 +69,7 @@ export const useBulbRules = () => {
           .select("id, name, name_ar, bulb_rate, amount")
           .eq("active", true)
           .eq("audience", "plus")
+          .is("student_of", null)
           .not("bulb_rate", "is", null)
           .order("amount"),
       ]);

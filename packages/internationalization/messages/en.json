@@ -1145,7 +1145,9 @@
         "failed": "We couldn't start the payment. Please try again.",
         "interval": "Billing",
         "monthly": "Monthly",
-        "yearly": "Yearly · pay 10 months, get 12"
+        "yearly": "Yearly · pay 10 months, get 12",
+        "studentPrice": "Student price",
+        "studentOffer": "Students: {price} a month. Verify in Settings."
       },
       "catalog": {
         "title": "Rental catalog",
@@ -1383,7 +1385,8 @@
         "invoices": "Invoices",
         "overview": "Overview",
         "plus": "The IDEA Plus",
-        "hiring": "Hiring"
+        "hiring": "Hiring",
+        "perks": "Perks"
       },
       "members": {
         "title": "Members",
@@ -1582,6 +1585,37 @@
         "failed": "That didn't work. Try again.",
         "tooYoung": "A guardian must be 18 or over.",
         "expired": "This invite has expired. Ask for a new code."
+      },
+      "student": {
+        "title": "Student verification",
+        "description": "Verify with your university email or a photo of your student card. Students get The IDEA Plus at 20% off, rent and book kits without a deposit, and student perks. The badge lasts until the end of the academic year.",
+        "university": "University",
+        "chooseUniversity": "Choose your university",
+        "how": "How to verify",
+        "byEmail": "University email",
+        "byCard": "Student card photo",
+        "email": "Your university email",
+        "sendCode": "Email me a code",
+        "codeSent": "We emailed an 8-digit code to {email}. It works for 15 minutes.",
+        "code": "Code",
+        "confirm": "Verify",
+        "changeEmail": "Use another email",
+        "photo": "Photo of your student card",
+        "photoNote": "Your name, university and the academic year must be readable. We delete the photo once we've checked it.",
+        "sendPhoto": "Send for review",
+        "verified": "Verified student at {university} until {date}.",
+        "waiting": "Your student card is waiting for review. We'll let you know.",
+        "ended": "Your student badge ended on {date}. Verify again for this year.",
+        "rejected": "We couldn't verify your card: {reason}",
+        "errors": {
+          "not_university": "Use an email address from your university.",
+          "email_taken": "This email has already verified another The IDEA Pass.",
+          "too_many": "Too many codes today. Try again tomorrow.",
+          "email_unavailable": "We couldn't send the email right now. Try again later.",
+          "failed": "Something went wrong. Try again.",
+          "wrongCode": "That code isn't right.",
+          "expiredCode": "The code has expired. Ask for a new one."
+        }
       }
     },
     "errors": {
@@ -2088,6 +2122,35 @@
           "send": "Post the job",
           "error": "The job couldn't be posted. Check the salary range and try again."
         }
+      },
+      "perks": {
+        "title": "Perks",
+        "notPartner": "This organization doesn't offer perks on The IDEA Pass yet. Contact The IDEA to become a partner.",
+        "checkTitle": "Check a card",
+        "checkDescription": "Scan the QR code on the customer's The IDEA Pass, or type their member number and the 6-digit code under it.",
+        "card": "Scanned code or member number",
+        "code": "6-digit code",
+        "check": "Check",
+        "invalidCard": "This card isn't valid. Ask them to open their Pass again: the code changes every 30 seconds.",
+        "student": "Student",
+        "plus": "Plus",
+        "redeem": "Give the perk",
+        "usedToday": "Used today",
+        "only": {
+          "students": "For verified students",
+          "plus": "For Plus members",
+          "everyone": "For everyone"
+        },
+        "errors": {
+          "usedToday": "They've already used this perk today.",
+          "notOpen": "This perk isn't open to them.",
+          "invalidCard": "The code has changed. Check the card again.",
+          "failed": "Something went wrong. Try again."
+        },
+        "statsTitle": "Uses by month",
+        "statsDescription": "How often your perks were used in the last 12 months.",
+        "noUses": "No uses yet.",
+        "uses": "{uses} uses · {people} people"
       }
     },
     "ages": {
@@ -2130,7 +2193,8 @@
       "included": "Included",
       "total": "Total",
       "depositNote": "We refund the deposit after collection, less any damage. Show your ID at the door.",
-      "adultsNote": "Kits are booked by adults (18 or over)."
+      "adultsNote": "Kits are booked by adults (18 or over).",
+      "noDepositNote": "Verified students book without a deposit."
     }
   },
   "store": {
@@ -2341,6 +2405,14 @@
         "plus_swap_done": {
           "title": "Swap done",
           "body": "Your new items are with you. Enjoy!"
+        },
+        "student_verified": {
+          "title": "You're verified as a student",
+          "body": "Your student badge lasts until {date}."
+        },
+        "student_rejected": {
+          "title": "We couldn't verify your student card",
+          "body": "Open Settings to see why and try again."
         }
       },
       "kinds": {
@@ -3312,6 +3384,31 @@
         "message": "Message to the customer",
         "messageHint": "They see it in Your Pass and get a notification; the ticket waits on their reply.",
         "open": "Open ticket"
+      },
+      "studentsLink": "Students",
+      "students": {
+        "title": "Students",
+        "back": "Customers",
+        "verified": "{count} verified students",
+        "review": "Student cards to review",
+        "reviewDescription": "Check the name, the university and the academic year. The photo is deleted once you approve or reject it.",
+        "empty": "No student cards waiting.",
+        "photoAlt": "Student card photo",
+        "noPhoto": "The photo can't be shown.",
+        "unnamed": "No name",
+        "until": "Student until",
+        "approve": "Approve",
+        "reason": "Why it can't be accepted",
+        "reject": "Reject",
+        "universities": "Universities",
+        "universitiesDescription": "Students verify with an email on one of these domains (subdomains count).",
+        "id": "Short name (Latin)",
+        "nameAr": "Name (Arabic)",
+        "nameEn": "Name (English)",
+        "domains": "Email domains",
+        "domainsHint": "Separated by commas, e.g. auib.edu.iq",
+        "listed": "Listed",
+        "add": "Add university"
       }
     },
     "finance": {
@@ -4060,7 +4157,8 @@
         "orders": "Purchase orders",
         "invoices": "Invoices",
         "seats": "The IDEA Plus seats",
-        "hiring": "Hiring"
+        "hiring": "Hiring",
+        "perks": "Perks"
       },
       "quotes": {
         "number": "Quote #{number}",
@@ -4153,6 +4251,46 @@
         "uploading": "Uploading…",
         "uploadError": "The CV couldn't be uploaded. PDF only, up to 10 MB.",
         "uploaded": "CV uploaded."
+      },
+      "perks": {
+        "title": "Partner perks",
+        "empty": "No perks yet.",
+        "partner": "Partner",
+        "perk": "Perk",
+        "audience": "Open to",
+        "thisMonth": "Uses this month",
+        "stopped": "Stopped",
+        "stop": "Stop offering",
+        "offerAgain": "Offer again",
+        "new": "New perk",
+        "newDescription": "The partner needs an organization in The IDEA Business: its team checks cards from Perks there.",
+        "organization": "Organization",
+        "organizationHint": "The partner's organization in The IDEA Business.",
+        "partnerName": "Name customers see",
+        "kind": "Type",
+        "titleAr": "Perk (Arabic)",
+        "titleEn": "Perk (English)",
+        "detailsAr": "Details (Arabic)",
+        "detailsEn": "Details (English)",
+        "areaAr": "Area (Arabic)",
+        "areaEn": "Area (English)",
+        "add": "Add perk",
+        "kinds": {
+          "cafe": "Café",
+          "books": "Bookshop",
+          "print": "Print and copy",
+          "gaming": "Gaming lounge",
+          "cinema": "Cinema",
+          "music": "Music shop",
+          "repair": "Phone and laptop repair",
+          "courses": "Courses",
+          "other": "Other"
+        },
+        "audiences": {
+          "everyone": "Everyone with a Pass",
+          "students": "Verified students",
+          "plus": "Plus members"
+        }
       }
     }
   },
@@ -4205,7 +4343,13 @@
         "sell": "Sell or trade in what you no longer use",
         "bulbs": "{bulbs} Bulbs, {rate}% back on every order",
         "freeDelivery": "Free Store delivery in Baghdad on every order",
-        "freeDeliveryFrom": "Free delivery in Baghdad from {amount}"
+        "freeDeliveryFrom": "Free delivery in Baghdad from {amount}",
+        "student": "Verified student until {date}",
+        "verifyStudent": "Verify as a student: The IDEA Plus at 20% off, no deposits and student perks"
+      },
+      "badges": {
+        "student": "Student",
+        "staff": "Staff"
       }
     },
     "signOut": {
@@ -4253,6 +4397,16 @@
         "browse": "Browse the store",
         "suspended": "This Pass is suspended. Contact support."
       }
+    },
+    "partnerPerks": {
+      "title": "Partner perks",
+      "description": "Show your card at the counter: the partner scans it to give you the perk, once a day.",
+      "audience": {
+        "students": "Students",
+        "plus": "Plus"
+      },
+      "verifyToUse": "Verify as a student to use it",
+      "joinToUse": "Join The IDEA Plus to use it"
     }
   }
 }

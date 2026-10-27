@@ -50,6 +50,8 @@ import {
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
 import { useKeepPrice } from "@/lib/rent";
 import { useProducts } from "@/lib/store-queries";
+import { useMyStudent, useStudentPlans } from "@/lib/student-queries";
+import { studentChoice } from "@/lib/students";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 import { useIsWishlisted, useToggleWishlist } from "@/lib/wishlist-queries";
 
@@ -155,6 +157,34 @@ const Membership = ({
   );
 };
 
+/** The student price under a plan: theirs, or how to get it. */
+const StudentPrice = ({
+  isStudent,
+  studentPlan,
+}: {
+  readonly isStudent: boolean;
+  readonly studentPlan: { amount: number; currency: string } | undefined;
+}) => {
+  const t = useTranslations("app.plus.plans");
+  const locale = useLocale();
+  if (!studentPlan) {
+    return null;
+  }
+  if (isStudent) {
+    return <Badge className="w-fit">{t("studentPrice")}</Badge>;
+  }
+  return (
+    <Link
+      className="text-pink-text text-xs hover:underline"
+      href="/pass/settings#student"
+    >
+      {t("studentOffer", {
+        price: formatCurrency(studentPlan.amount, locale, studentPlan.currency),
+      })}
+    </Link>
+  );
+};
+
 const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
   const t = useTranslations("app.plus.plans");
   const tBilling = useTranslations("billing");
@@ -167,6 +197,8 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
   const canJoin = usePlusStatus().data?.canJoin ?? false;
   const [billing, setBilling] = useState<"month" | "year">("month");
   const shown = plansFor(plans.data ?? undefined, billing);
+  const studentPlans = useStudentPlans();
+  const isStudent = useMyStudent().data?.verified ?? false;
 
   return (
     <section className="grid gap-4">
@@ -197,8 +229,14 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
         <p className="text-muted-foreground">{t("empty")}</p>
       ) : null}
       <div className="grid gap-4 md:grid-cols-3">
-        {shown.map((plan) => {
-          const current = plan.id === subscription.data?.plan_id && member;
+        {shown.map((listed) => {
+          // Verified students check out at the student price.
+          const { ids, plan, studentPlan } = studentChoice(
+            listed,
+            studentPlans.data,
+            isStudent
+          );
+          const current = member && ids.includes(subscription.data?.plan_id);
           const price = formatCurrency(plan.amount, locale, plan.currency);
           const features =
             locale === "en" ? plan.features_en : plan.features_ar;
@@ -220,6 +258,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
                     ? tBilling("perYear")
                     : tBilling("perMonth")}
                 </CardDescription>
+                <StudentPrice isStudent={isStudent} studentPlan={studentPlan} />
               </CardHeader>
               <CardContent className="grid flex-1 content-start gap-2 text-sm">
                 {plan.rental_slots ? (

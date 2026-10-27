@@ -39,12 +39,19 @@ export const GET = async (request: Request): Promise<Response> => {
     if (kitError) {
       throw new Error(kitError.message);
     }
+    // Student prices whose badge has ended go to the full price at renewal.
+    const { data: studentPlans, error: studentError } =
+      await admin.rpc("run_student_expiry");
+    if (studentError) {
+      throw new Error(studentError.message);
+    }
     return NextResponse.json({
       dueSoon: reminded ?? 0,
       invited: invited ?? 0,
       kitGames: kitGames ?? 0,
       ok: true,
       overdue: overdue ?? 0,
+      studentPlans: studentPlans ?? 0,
     });
   } catch (error) {
     log.error(`Rentals job failed: ${parseError(error)}`);
