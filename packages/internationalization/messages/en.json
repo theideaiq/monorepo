@@ -1026,7 +1026,6 @@
       "plus": "The IDEA Plus",
       "events": "Events",
       "submissions": "Submissions",
-      "business": "Partners",
       "settings": "Settings",
       "more": "More",
       "cartCount": "{count} in cart",
@@ -1035,7 +1034,12 @@
       "pass": "Your Pass",
       "bulbs": "Bulbs",
       "about": "About & info",
-      "saved": "Saved"
+      "saved": "Saved",
+      "home": "Home",
+      "perks": "Perks",
+      "bulk_buying": "Bulk buying",
+      "developers": "Developers",
+      "organization": "Organization"
     },
     "roles": {
       "owner": "Owner",
@@ -1559,12 +1563,13 @@
         "members": "Members",
         "billing": "Plan",
         "settings": "Settings",
-        "procurement": "Procurement",
+        "procurement": "Bulk buying",
         "invoices": "Invoices",
         "overview": "Overview",
         "plus": "The IDEA Plus",
         "perks": "Perks",
-        "developers": "Developers"
+        "developers": "Developers",
+        "details": "Details"
       },
       "members": {
         "title": "Members",
@@ -1609,6 +1614,33 @@
         "plusSeats": "Members with The IDEA Plus",
         "plan": "The IDEA Partners plan: {plan}",
         "noPlan": "No The IDEA Partners plan yet. See plans"
+      },
+      "organization": {
+        "title": "Organization"
+      },
+      "sections": {
+        "title": "Add to your organization",
+        "description": "Switch on what your organization does with The IDEA. You can turn sections off again in Organization.",
+        "add": "Add",
+        "remove": "Remove",
+        "failed": "That didn't save. Please try again.",
+        "managersOnly": "Owners and admins add sections.",
+        "settingsTitle": "Sections",
+        "settingsDescription": "The sections your organization uses in The IDEA Partners.",
+        "off": "{section} isn't switched on for {organization}.",
+        "offManage": "Add it from Home.",
+        "offAsk": "Ask an owner or admin to add it.",
+        "perks": {
+          "description": "Offer perks to The IDEA Pass members and check their cards at your counter."
+        },
+        "bulk_buying": {
+          "description": "Ask The IDEA for quotes on what your organization needs, with monthly invoices."
+        },
+        "developers": {
+          "description": "Let people sign in to your website or app with The IDEA Pass."
+        },
+        "addSection": "Add {section}",
+        "removeSection": "Remove {section}"
       }
     },
     "onboarding": {
@@ -2063,7 +2095,7 @@
         }
       },
       "procurement": {
-        "title": "Procurement",
+        "title": "Bulk buying",
         "description": "Tell us what your company needs. We send you a quote, you accept it, and it becomes a purchase order with a monthly invoice.",
         "managersOnly": "Owners and admins send requests and answer quotes.",
         "requests": "Requests",
@@ -2624,20 +2656,20 @@
       "description": "This Pass doesn't have a staff role. If you work at The IDEA, ask a superadmin to grant you access, then sign in again."
     },
     "nav": {
-      "dashboard": "Dashboard",
+      "dashboard": "Inbox",
       "catalog": "Catalog",
-      "orders": "Orders",
-      "rentals": "Rentals",
+      "orders": "Orders and delivery",
+      "rentals": "Rentals and Plus",
       "customers": "Customers",
       "finance": "Finance",
-      "editorial": "Editorial",
+      "editorial": "Club",
       "telegram": "Telegram",
-      "staff": "Staff",
+      "staff": "Settings",
       "audit": "Audit log",
       "support": "Support",
       "reviews": "Reviews",
-      "counter": "Counter",
-      "companies": "Companies"
+      "counter": "The IDEA Space",
+      "companies": "Partners"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -2749,7 +2781,7 @@
       "remove": "Remove row"
     },
     "dashboard": {
-      "title": "Dashboard",
+      "title": "Inbox",
       "greeting": "Welcome back, {name}.",
       "fulfilment": "Orders to fulfil",
       "fulfilmentHint": "Paid or being prepared",
@@ -2773,7 +2805,7 @@
           "overdueRentals": "Overdue rentals",
           "submissions": "Submissions to review",
           "telegram": "Telegram requests",
-          "procurement": "New procurement requests to quote",
+          "procurement": "New bulk-buying requests to quote",
           "seats": "The IDEA Plus seats to approve",
           "invoices": "Overdue company invoices",
           "surveys": "Surveys to review",
@@ -3718,7 +3750,7 @@
       }
     },
     "editorial": {
-      "title": "Editorial",
+      "title": "Club",
       "tabs": {
         "posts": "Club posts",
         "events": "Events",
@@ -4116,16 +4148,6 @@
       "unhide": "Publish",
       "deleteDescription": "The review is removed for good. To take it off the store but keep it, hide it instead."
     },
-    "navGroups": {
-      "today": "Today",
-      "sales": "Sales",
-      "catalog": "Catalog",
-      "community": "Community",
-      "companies": "Companies",
-      "money": "Money",
-      "help": "Help",
-      "team": "Team"
-    },
     "search": {
       "title": "Search",
       "label": "Search Staff",
@@ -4140,11 +4162,11 @@
       "products": "Products",
       "tickets": "Support tickets",
       "ticket": "Ticket #{number}",
-      "requests": "Procurement requests",
+      "requests": "Bulk-buying requests",
       "request": "Request #{number}"
     },
     "counter": {
-      "title": "Counter",
+      "title": "The IDEA Space",
       "check": "Check a The IDEA Pass",
       "description": "Scan the card's QR code (camera or scanner), or type the member number and the 6-digit code.",
       "camera": "Scan with the camera",
@@ -4182,7 +4204,7 @@
       }
     },
     "companies": {
-      "title": "Companies",
+      "title": "Partners",
       "count": "{count} requests",
       "status": "Status",
       "views": {

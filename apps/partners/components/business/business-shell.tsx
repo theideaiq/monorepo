@@ -1,32 +1,23 @@
 "use client";
 
-import { OrganizationSwitcher } from "@repo/auth/components/organization-switcher";
+import type { OrganizationFeature } from "@repo/auth/organizations";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
-import {
-  Link,
-  usePathname,
-  useRouter,
-} from "@repo/internationalization/navigation";
+import { Link, usePathname } from "@repo/internationalization/navigation";
 import { BriefcaseBusinessIcon, PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { useOrganization } from "@/components/organization-provider";
 import { PageHeader } from "@/components/page-header";
-import { useAuthMessages } from "@/lib/auth-messages";
-import { useMyPartners } from "@/lib/perk-queries";
 import { PendingInvitations } from "./pending-invitations";
 
-const TABS = [
-  { href: "/", key: "overview" },
-  { href: "/procurement", key: "procurement" },
-  { href: "/invoices", key: "invoices" },
-  { href: "/plus", key: "plus" },
-  { href: "/members", key: "members" },
-  { href: "/perks", key: "perks" },
-  { href: "/developers", key: "developers" },
-  { href: "/billing", key: "billing" },
-  { href: "/settings", key: "settings" },
+/** The pages of Organization, as tabs. */
+const ORGANIZATION_TABS = [
+  { href: "/organization", key: "details" },
+  { href: "/organization/members", key: "members" },
+  { href: "/organization/plus", key: "plus" },
+  { href: "/organization/billing", key: "billing" },
+  { href: "/organization/invoices", key: "invoices" },
 ] as const;
 
 /** For people without a business account: what it is, invitations, create. */
@@ -55,84 +46,111 @@ const BusinessIntro = () => {
   );
 };
 
+const OrganizationTabs = () => {
+  const t = useTranslations("app.business");
+  const pathname = usePathname();
+  return (
+    <nav
+      aria-label={t("organization.title")}
+      className="-mx-4 flex gap-1 overflow-x-auto px-4 sm:mx-0 sm:px-0"
+    >
+      {ORGANIZATION_TABS.map((tab) => {
+        const current = pathname === tab.href;
+        return (
+          <Link
+            aria-current={current ? "page" : undefined}
+            className={cn(
+              "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors",
+              current
+                ? "bg-accent font-medium text-accent-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+            href={tab.href}
+            key={tab.key}
+          >
+            {t(`tabs.${tab.key}`)}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+};
+
+/** A section the organization hasn't switched on. */
+const SectionOff = ({ feature }: { readonly feature: OrganizationFeature }) => {
+  const t = useTranslations("app");
+  const { active, canManage } = useOrganization();
+  return (
+    <div className="grid max-w-xl gap-2">
+      <p>
+        {t("business.sections.off", {
+          organization: active?.name ?? "",
+          section: t(`nav.${feature}`),
+        })}
+      </p>
+      {canManage ? (
+        <Link className="text-sm underline" href="/">
+          {t("business.sections.offManage")}
+        </Link>
+      ) : (
+        <p className="text-muted-foreground text-sm">
+          {t("business.sections.offAsk")}
+        </p>
+      )}
+    </div>
+  );
+};
+
+interface BusinessShellProps {
+  readonly children: ReactNode;
+  /** The section the screen belongs to, when organizations add it. */
+  readonly feature?: OrganizationFeature;
+  /** Organization's pages show its tabs. */
+  readonly organization?: boolean;
+}
+
 /**
- * The IDEA Partners section: the organization switcher and tabs
- * around a screen that needs an active organization. Without one, it shows
- * the introduction instead.
+ * A screen of The IDEA Partners that needs an active organization (chosen
+ * in the sidebar). Without one, it shows the introduction instead; in a
+ * section the organization hasn't added, it says so.
  */
 export const BusinessShell = ({
   children,
-}: {
-  readonly children: ReactNode;
-}) => {
-  const t = useTranslations("app.business");
-  const router = useRouter();
-  const pathname = usePathname();
-  const authMessages = useAuthMessages();
-  const { active, organizations, select } = useOrganization();
-  const canManage = active?.role === "owner" || active?.role === "admin";
-  // Partners (organizations with perks) check Pass cards from Perks.
-  const partners = useMyPartners();
+  feature,
+  organization = false,
+}: BusinessShellProps) => {
+  const t = useTranslations("app");
+  const { active } = useOrganization();
+  let title = t("business.title");
+  if (feature) {
+    title = t(`nav.${feature}`);
+  } else if (organization) {
+    title = t("nav.organization");
+  }
+
+  let content: ReactNode;
+  if (!active) {
+    content = (
+      <>
+        <p className="text-muted-foreground">{t("business.description")}</p>
+        <BusinessIntro />
+      </>
+    );
+  } else if (feature && !active.features.includes(feature)) {
+    content = <SectionOff feature={feature} />;
+  } else {
+    content = (
+      <>
+        {organization ? <OrganizationTabs /> : null}
+        {children}
+      </>
+    );
+  }
 
   return (
     <>
-      <PageHeader title={t("title")} />
-      <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
-        {active ? (
-          <>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="w-full sm:w-64">
-                <OrganizationSwitcher
-                  activeId={active.id}
-                  messages={authMessages}
-                  onCreate={() => router.push("/new")}
-                  onSelect={select}
-                  organizations={organizations}
-                />
-              </div>
-              <nav
-                aria-label={t("title")}
-                className="-mx-4 flex gap-1 overflow-x-auto px-4 sm:mx-0 sm:px-0"
-              >
-                {TABS.filter((tab) => {
-                  if (tab.key === "perks") {
-                    return partners.data?.some(
-                      (row) => row.organization_id === active.id
-                    );
-                  }
-                  // Owners and admins manage the company's Pass apps.
-                  return tab.key !== "developers" || canManage;
-                }).map((tab) => {
-                  const current =
-                    pathname === tab.href ||
-                    (tab.href !== "/" && pathname.startsWith(`${tab.href}/`));
-                  return (
-                    <Link
-                      aria-current={current ? "page" : undefined}
-                      className={cn(
-                        "shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors",
-                        current
-                          ? "bg-accent font-medium text-accent-foreground"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                      href={tab.href}
-                      key={tab.key}
-                    >
-                      {t(`tabs.${tab.key}`)}
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
-            {children}
-          </>
-        ) : (
-          <>
-            <p className="text-muted-foreground">{t("description")}</p>
-            <BusinessIntro />
-          </>
-        )}
-      </div>
+      <PageHeader title={title} />
+      <div className="flex flex-1 flex-col gap-6 p-4 pt-0">{content}</div>
     </>
   );
 };

@@ -175,7 +175,7 @@ namespaces.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Organization dashboard | `/{locale}` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/procurement` (requests and quotes, `/procurement/<id>`), `/invoices`, `/plus` (The IDEA Plus for the team), `/perks`, `/developers`, `/documents/<quote\|order\|invoice>/<id>` (printable), `/members`, `/billing`, `/settings`, `/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
+| Organization dashboard | The sidebar: the organization switcher, then Home · Perks · Bulk buying · Developers · Organization (Perks, Bulk buying and Developers once the organization adds them from Home, `organizations.features`; Developers for owners and admins). `/{locale}` Home (unpaid invoices, Plus members, quotes and requests with Bulk buying, plan, "Add to your organization"), `/perks`, `/bulk-buying` (requests and quotes, `/bulk-buying/<id>`), `/developers`, `/organization` (details and Sections, then the tabs `/organization/members`, `/organization/plus` (The IDEA Plus for the team), `/organization/billing`, `/organization/invoices`), `/documents/<quote\|order\|invoice>/<id>` (printable), `/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business`, `components/nav-items.ts` |
 
 - **Sign-in.** The IDEA Partners has none of its own: signed-out visitors
   go to The IDEA Pass on the website (`passUrl` from `@repo/auth/pass`)
@@ -487,7 +487,7 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Console | `/{locale}`: the dashboard (an inbox of what's waiting, then the numbers), the counter (`/counter`), search (`/search`), then sections grouped by Today, Sales (`/orders`, `/rentals`, `/customers` and CRM), Catalog (`/catalog`, `/reviews`), Community (`/editorial`, `/telegram`), Companies (`/companies`), Money (`/finance`), Help (`/support`) and Team (`/staff`, `/audit`) | `app/[locale]/(console)`, `components/admin`, `lib/admin` |
+| Console | One menu (`menu` in `lib/admin/roles.ts`), each entry shown when the role can read one of its sections and opening the first: Inbox (`/{locale}`, what's waiting, then the numbers; Support `/support` under it) · Catalog (`/catalog`; Reviews `/catalog/reviews`) · Orders and delivery (`/orders`) · Rentals and Plus (`/rentals`) · Customers (`/customers` and CRM) · Club (`/club` posts, events and submissions; Telegram `/club/telegram`) · Partners (`/partners`) · The IDEA Space (`/space`, the counter) · Finance (`/finance`) · Settings (`/settings` staff; Audit log `/settings/audit`); search (`/search`) from the sidebar | `app/[locale]/(console)`, `components/admin`, `lib/admin` |
 | No access | `/{locale}/no-access` | `app/[locale]/(auth)` |
 | The IDEA Design | `/design` | `.storybook`, `stories/`, `assets/`, `lib/design-proxy.ts`, `lib/design-gate.ts` |
 
@@ -515,7 +515,7 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
   seats to approve and overdue company invoices, each for the roles that handle
   them (`lib/admin/inbox.ts`). The sidebar's search (`/search`)
   looks up order, ticket and request numbers, members by name or Pass
-  number, and products. The counter (`/counter`, support) checks a
+  number, and products. The counter (The IDEA Space, `/space`, support) checks a
   member's The IDEA Pass with the camera (where the browser has
   BarcodeDetector), a USB scanner or by typing (`scannedPass` from
   `@repo/auth/pass-code`, shared with The IDEA Partners), then shows

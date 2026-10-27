@@ -1273,6 +1273,7 @@ export type Database = {
         Row: {
           created_at: string;
           created_by: string | null;
+          features: string[];
           id: string;
           name: string;
           slug: string;
@@ -1281,6 +1282,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           created_by?: string | null;
+          features?: string[];
           id?: string;
           name: string;
           slug: string;
@@ -1289,6 +1291,7 @@ export type Database = {
         Update: {
           created_at?: string;
           created_by?: string | null;
+          features?: string[];
           id?: string;
           name?: string;
           slug?: string;
@@ -4697,6 +4700,7 @@ export type Database = {
         Returns: {
           created_at: string;
           created_by: string | null;
+          features: string[];
           id: string;
           name: string;
           slug: string;

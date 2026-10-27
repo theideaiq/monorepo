@@ -239,7 +239,7 @@ const Seats = () => {
 
 /** /business/plus: The IDEA Plus the company pays for its members. */
 export const TeamPlus = () => (
-  <BusinessShell>
+  <BusinessShell organization>
     <Seats />
   </BusinessShell>
 );

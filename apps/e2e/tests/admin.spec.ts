@@ -73,9 +73,7 @@ test.describe("Staff", () => {
 
     await page.getByLabel("6-digit code").fill(totp(await secret.innerText()));
     await expect(page).toHaveURL(new RegExp(`^${urls.staff}/$`));
-    await expect(
-      page.getByRole("heading", { name: "Dashboard" })
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Inbox" })).toBeVisible();
     await expectAccessible(page);
     await expect(
       page.getByRole("heading", { name: "Waiting on you" })
@@ -88,7 +86,7 @@ test.describe("Staff", () => {
     await expect(page.getByRole("heading", { name: "Search" })).toBeVisible();
     await expectAccessible(page);
 
-    await page.getByRole("link", { name: "Counter" }).click();
+    await page.getByRole("link", { name: "The IDEA Space" }).click();
     await page
       .getByLabel("Scanned code or member number")
       .fill("IDEA:1:000000");
@@ -112,7 +110,7 @@ test.describe("Staff", () => {
       page.getByRole("heading", { name: "Student cards to review" })
     ).toBeVisible();
     await expectAccessible(page);
-    await page.goto(`${urls.staff}/companies/perks`);
+    await page.goto(`${urls.staff}/partners/perks`);
     await expect(page.getByRole("heading", { name: "New perk" })).toBeVisible();
     await expectAccessible(page);
 

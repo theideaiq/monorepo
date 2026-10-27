@@ -1026,7 +1026,6 @@
       "plus": "The IDEA Plus",
       "events": "الفعاليات",
       "submissions": "المشاركات",
-      "business": "الشركاء",
       "settings": "الإعدادات",
       "more": "المزيد",
       "cartCount": "في السلة: {count}",
@@ -1035,7 +1034,12 @@
       "pass": "بطاقتك",
       "bulbs": "Bulbs",
       "about": "من نحن ومعلومات",
-      "saved": "المحفوظات"
+      "saved": "المحفوظات",
+      "home": "الرئيسية",
+      "perks": "العروض",
+      "bulk_buying": "الشراء بالجملة",
+      "developers": "المطوّرون",
+      "organization": "المؤسسة"
     },
     "roles": {
       "owner": "مالك",
@@ -1559,12 +1563,13 @@
         "members": "الأعضاء",
         "billing": "الباقة",
         "settings": "الإعدادات",
-        "procurement": "المشتريات",
+        "procurement": "الشراء بالجملة",
         "invoices": "الفواتير",
         "overview": "نظرة عامة",
         "plus": "The IDEA Plus",
         "perks": "العروض",
-        "developers": "المطوّرون"
+        "developers": "المطوّرون",
+        "details": "التفاصيل"
       },
       "members": {
         "title": "الأعضاء",
@@ -1609,6 +1614,33 @@
         "plusSeats": "أعضاء لديهم The IDEA Plus",
         "plan": "باقة The IDEA Partners: {plan}",
         "noPlan": "لا توجد باقة The IDEA Partners بعد. اطّلع على الباقات"
+      },
+      "organization": {
+        "title": "المؤسسة"
+      },
+      "sections": {
+        "title": "أضف إلى مؤسستك",
+        "description": "فعّل ما تعمل به مؤسستك مع The IDEA. يمكنك إيقاف الأقسام مجددًا من قسم المؤسسة.",
+        "add": "إضافة",
+        "remove": "إزالة",
+        "failed": "لم يُحفظ ذلك. يُرجى المحاولة مرة أخرى.",
+        "managersOnly": "يضيف المالكون والمشرفون الأقسام.",
+        "settingsTitle": "الأقسام",
+        "settingsDescription": "الأقسام التي تستخدمها مؤسستك في The IDEA Partners.",
+        "off": "قسم {section} غير مفعّل لـ {organization}.",
+        "offManage": "أضفه من الصفحة الرئيسية.",
+        "offAsk": "اطلب من أحد المالكين أو المشرفين إضافته.",
+        "perks": {
+          "description": "قدّم عروضًا لأعضاء The IDEA Pass وتحقّق من بطاقاتهم عند الاستقبال."
+        },
+        "bulk_buying": {
+          "description": "اطلب من The IDEA عروض أسعار لما تحتاجه مؤسستك، مع فواتير شهرية."
+        },
+        "developers": {
+          "description": "اسمح للناس بتسجيل الدخول إلى موقعك أو تطبيقك باستخدام The IDEA Pass."
+        },
+        "addSection": "إضافة {section}",
+        "removeSection": "إزالة {section}"
       }
     },
     "onboarding": {
@@ -2063,7 +2095,7 @@
         }
       },
       "procurement": {
-        "title": "المشتريات",
+        "title": "الشراء بالجملة",
         "description": "أخبرنا بما تحتاجه شركتك. نرسل لك عرض سعر، وعند قبوله يصبح أمر شراء بفاتورة شهرية.",
         "managersOnly": "يرسل المالكون والمسؤولون الطلبات ويردّون على عروض الأسعار.",
         "requests": "الطلبات",
@@ -2624,20 +2656,20 @@
       "description": "لا تملك هذه البطاقة دورًا في فريق العمل. إن كنت من موظفي The IDEA فاطلب من أحد المشرفين العامّين منحك الصلاحية، ثم سجّل الدخول من جديد."
     },
     "nav": {
-      "dashboard": "الرئيسية",
+      "dashboard": "الوارد",
       "catalog": "الكتالوج",
-      "orders": "الطلبات",
-      "rentals": "الإعارات",
+      "orders": "الطلبات والتوصيل",
+      "rentals": "الإعارات وThe IDEA Plus",
       "customers": "العملاء",
       "finance": "المالية",
-      "editorial": "التحرير",
+      "editorial": "النادي",
       "telegram": "تيليجرام",
-      "staff": "فريق العمل",
+      "staff": "الإعدادات",
       "audit": "سجلّ التدقيق",
       "support": "الدعم",
       "reviews": "التقييمات",
-      "counter": "الكاونتر",
-      "companies": "الشركات"
+      "counter": "The IDEA Space",
+      "companies": "الشركاء"
     },
     "roles": {
       "superadmin": "مشرف عام",
@@ -2749,7 +2781,7 @@
       "remove": "حذف الصف"
     },
     "dashboard": {
-      "title": "الرئيسية",
+      "title": "الوارد",
       "greeting": "أهلًا بعودتك يا {name}.",
       "fulfilment": "طلبات بانتظار التجهيز",
       "fulfilmentHint": "مدفوعة أو قيد التحضير",
@@ -2773,7 +2805,7 @@
           "overdueRentals": "استئجارات متأخرة",
           "submissions": "مشاركات للمراجعة",
           "telegram": "طلبات تيليجرام",
-          "procurement": "طلبات شراء جديدة للتسعير",
+          "procurement": "طلبات شراء بالجملة جديدة للتسعير",
           "seats": "مقاعد The IDEA Plus للموافقة",
           "invoices": "فواتير شركات متأخرة",
           "surveys": "استبيانات للمراجعة",
@@ -3718,7 +3750,7 @@
       }
     },
     "editorial": {
-      "title": "التحرير",
+      "title": "النادي",
       "tabs": {
         "posts": "منشورات النادي",
         "events": "الفعاليات",
@@ -4116,16 +4148,6 @@
       "unhide": "نشر",
       "deleteDescription": "سيُحذف التقييم نهائيًا. لإزالته من المتجر مع الاحتفاظ به، أخفِه بدلًا من ذلك."
     },
-    "navGroups": {
-      "today": "اليوم",
-      "sales": "المبيعات",
-      "catalog": "الكتالوج",
-      "community": "المجتمع",
-      "companies": "الشركات",
-      "money": "المالية",
-      "help": "المساعدة",
-      "team": "الفريق"
-    },
     "search": {
       "title": "بحث",
       "label": "ابحث في أدوات فريق العمل",
@@ -4140,11 +4162,11 @@
       "products": "المنتجات",
       "tickets": "تذاكر الدعم",
       "ticket": "التذكرة #{number}",
-      "requests": "طلبات الشراء",
+      "requests": "طلبات الشراء بالجملة",
       "request": "الطلب #{number}"
     },
     "counter": {
-      "title": "الكاونتر",
+      "title": "The IDEA Space",
       "check": "تحقق من The IDEA Pass",
       "description": "امسح رمز QR على البطاقة (بالكاميرا أو الماسح)، أو اكتب رقم العضو والرمز المكوّن من 6 أرقام.",
       "camera": "امسح بالكاميرا",
@@ -4182,7 +4204,7 @@
       }
     },
     "companies": {
-      "title": "الشركات",
+      "title": "الشركاء",
       "count": "{count} طلبات",
       "status": "الحالة",
       "views": {

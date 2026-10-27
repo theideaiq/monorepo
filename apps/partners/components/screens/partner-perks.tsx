@@ -249,7 +249,7 @@ const PerksForPartner = () => {
  * counts.
  */
 export const PartnerPerks = () => (
-  <BusinessShell>
+  <BusinessShell feature="perks">
     <PerksForPartner />
   </BusinessShell>
 );

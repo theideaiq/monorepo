@@ -4,7 +4,23 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 /** Cookie remembering the active organization for server-rendered apps. */
 export const ACTIVE_ORGANIZATION_COOKIE = "active_org";
 
+/**
+ * Sections of The IDEA Partners an organization switches on from Home
+ * (`organizations.features`); Home and Organization are always there.
+ */
+export const organizationFeatures = [
+  "perks",
+  "bulk_buying",
+  "developers",
+] as const;
+
+export type OrganizationFeature = (typeof organizationFeatures)[number];
+
+const isOrganizationFeature = (value: string): value is OrganizationFeature =>
+  (organizationFeatures as readonly string[]).includes(value);
+
 export interface OrganizationMembership {
+  features: OrganizationFeature[];
   id: string;
   name: string;
   role: OrgRole;
@@ -18,7 +34,7 @@ export const listMemberships = async (
 ): Promise<OrganizationMembership[]> => {
   const { data, error } = await supabase
     .from("memberships")
-    .select("role, organization:organizations (id, name, slug)")
+    .select("role, organization:organizations (id, name, slug, features)")
     .eq("user_id", userId)
     .order("created_at");
 
@@ -27,7 +43,15 @@ export const listMemberships = async (
   }
 
   return data.flatMap(({ organization, role }) =>
-    organization ? [{ ...organization, role }] : []
+    organization
+      ? [
+          {
+            ...organization,
+            features: organization.features.filter(isOrganizationFeature),
+            role,
+          },
+        ]
+      : []
   );
 };
 

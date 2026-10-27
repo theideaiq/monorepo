@@ -4,16 +4,22 @@ import { urls } from "../playwright.config";
 import { resetCompany } from "../seed";
 import { expectAccessible } from "./helpers";
 
-const REQUEST_PATH = /\/procurement\/([0-9a-f-]{36})$/;
+const REQUEST_PATH = /\/bulk-buying\/([0-9a-f-]{36})$/;
 
-test("a company sends a procurement request and accepts the quote", async ({
+test("a company adds Bulk buying, sends a request and accepts the quote", async ({
   context,
   page,
 }) => {
   await resetCompany();
   await context.addCookies(await sessionCookies(customer.email, urls.app));
 
-  await page.goto(`${urls.app}/procurement`);
+  // A new organization starts with Home and Organization; it adds sections.
+  await page.goto(urls.app);
+  await expect(page.getByRole("link", { name: "Bulk buying" })).toHaveCount(0);
+  await expectAccessible(page);
+  await page.getByRole("button", { name: "Add Bulk buying" }).click();
+  await page.getByRole("link", { exact: true, name: "Bulk buying" }).click();
+  await expect(page).toHaveURL(/\/bulk-buying$/);
   await page.getByLabel("What do you need?").fill("12 laptops");
   await page.getByLabel("Budget (IQD, optional)").fill("9000000");
   await page.getByRole("button", { name: "Send request" }).click();
@@ -67,6 +73,8 @@ test("a company sends a procurement request and accepts the quote", async ({
 
   await page.goto(urls.app);
   await expect(page.getByText("Quotes to answer")).toBeVisible();
+  await page.getByRole("link", { exact: true, name: "Organization" }).click();
+  await expect(page.getByText("Sections", { exact: true })).toBeVisible();
   await page.getByRole("link", { exact: true, name: "Invoices" }).click();
   await expect(page.getByText("No invoices yet.")).toBeVisible();
   await page.getByRole("link", { exact: true, name: "The IDEA Plus" }).click();
@@ -83,10 +91,13 @@ test("a company verifies its domain and registers a Pass app", async ({
   const organizationId = await resetCompany();
   await context.addCookies(await sessionCookies(customer.email, urls.app));
 
-  await page.goto(`${urls.app}/developers`);
+  await page.goto(urls.app);
+  await page.getByRole("button", { name: "Add Developers" }).click();
+  await page.getByRole("link", { exact: true, name: "Developers" }).click();
+  await expect(page).toHaveURL(/\/developers$/);
   await expect(
     page.getByText("Verify a domain first, then register your app.")
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
   await page.getByLabel("Domain", { exact: true }).fill("E2E-Company.example");
   await page.getByRole("button", { exact: true, name: "Add" }).click();
   await expect(

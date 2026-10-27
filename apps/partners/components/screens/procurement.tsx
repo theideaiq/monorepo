@@ -50,7 +50,7 @@ const NewRequestForm = ({ organizationId }: { organizationId: string }) => {
       },
       {
         onSuccess: (request) =>
-          router.push(request ? `/procurement/${request.id}` : "/procurement"),
+          router.push(request ? `/bulk-buying/${request.id}` : "/bulk-buying"),
       }
     );
   };
@@ -156,7 +156,7 @@ const RequestList = () => {
               <li key={request.id}>
                 <Link
                   className="flex items-center justify-between gap-4 p-3 text-sm hover:bg-accent"
-                  href={`/procurement/${request.id}`}
+                  href={`/bulk-buying/${request.id}`}
                 >
                   <div className="grid gap-0.5">
                     <span className="font-medium">{request.title}</span>
@@ -188,7 +188,7 @@ const RequestList = () => {
 };
 
 export const Procurement = () => (
-  <BusinessShell>
+  <BusinessShell feature="bulk_buying">
     <RequestList />
   </BusinessShell>
 );

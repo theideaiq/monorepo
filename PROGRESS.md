@@ -372,6 +372,32 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Program Revision v2, item 4: Partners and Staff menus.
+  - **Partners:** a sidebar with the organization switcher at the top,
+    then Home · Perks · Bulk buying · Developers · Organization (the bell
+    stays in the top bar). An organization switches sections on with
+    "Add" on Home and off in Organization → Sections (owners and admins;
+    `organizations.features`, migration `20270103000000`). Organizations
+    already using Perks, Bulk buying or Developers keep them, and staff
+    adding a perk switches Perks on. Developers stays for owners and
+    admins. Selling, Supply and Opportunities join the list when Stages
+    2–5 build them.
+  - **Renames, no redirects:** Procurement is Bulk buying (`/bulk-buying`);
+    Members, The IDEA Plus, Plan, Invoices and the settings are tabs of
+    Organization (`/organization/…`). Links already stored in
+    notifications (`/business/procurement/…`, `/business/invoices`) open
+    the new pages through `businessPath`.
+  - **Staff:** one menu, Inbox (with Support) · Catalog (with Reviews) ·
+    Orders and delivery · Rentals and Plus · Customers · Club (with
+    Telegram) · Partners · The IDEA Space (the counter) · Finance ·
+    Settings (staff, with the audit log). Pages moved with it:
+    `/companies` → `/partners`, `/counter` → `/space`, `/editorial` →
+    `/club`, `/telegram` → `/club/telegram`, `/reviews` →
+    `/catalog/reviews`, `/staff` → `/settings`, `/audit` →
+    `/settings/audit`. Each entry opens the first part the role can read
+    (support's Club opens Telegram). Sellers and payouts comes with
+    selling.
+
 - 2026-10-27: The live Pass card on partner sites (requested by AUIB
   Society of Arts and Letters). `/pass/embed?client_id=…` shows only the
   live card (QR, code, countdown) for the member who allowed the site in
