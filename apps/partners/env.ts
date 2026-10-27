@@ -5,8 +5,8 @@ import { keys as core } from "@repo/next-config/keys";
 import { keys as observability } from "@repo/observability/keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 
-// The IDEA Partners holds public values only (NEXT_PUBLIC_*): the customer app,
-// The IDEA Pass and Staff run every query as the signed-in user
+// The IDEA Partners holds public values only (NEXT_PUBLIC_*): every page
+// runs its queries as the signed-in user
 // with the publishable key (RLS). Secrets live in apps/api, which this app
 // calls with the user's token. Client components never import this file.
 const presets = envPresets(auth(), analytics(), core(), observability());

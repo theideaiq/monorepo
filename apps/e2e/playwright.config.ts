@@ -48,7 +48,7 @@ process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??=
 
 const app = process.env.E2E_APP_URL ?? "http://localhost:3000";
 const web = process.env.E2E_WEB_URL ?? "http://localhost:3001";
-// Staff: The IDEA Partners on its own host, a forwarded port locally.
+// Staff (apps/staff) on port 3003, so the localhost session cookie applies.
 const staff = process.env.E2E_STAFF_URL ?? "http://localhost:3003";
 // The IDEA Pass is part of the website (NEXT_PUBLIC_WEB_URL); it sends
 // people back to these hosts.
@@ -88,7 +88,7 @@ export default defineConfig({
       url: `${app}/robots.txt`,
     },
     {
-      command: "bun run --cwd ../partners staff",
+      command: `bun run --cwd ../staff ${script}`,
       reuseExistingServer: true,
       timeout: 240_000,
       url: `${staff}/robots.txt`,

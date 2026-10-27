@@ -11,7 +11,8 @@
     "./request": "./request.ts",
     "./routing": "./routing.ts",
     "./messages/*": "./messages/*",
-    "./app-paths": "./app-paths.ts"
+    "./app-paths": "./app-paths.ts",
+    "./controls": "./controls.tsx"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
@@ -21,6 +22,8 @@
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
     "@repo/config": "workspace:*",
+    "@repo/design-system": "workspace:*",
+    "lucide-react": "^1.41.0",
     "next-intl": "^4.14.9",
     "react": "19.3.0"
   },

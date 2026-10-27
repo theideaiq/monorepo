@@ -1,10 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "include": [
-    "files",
-    "dependencies",
-    "unlisted"
-  ],
+  "include": ["files", "dependencies", "unlisted"],
   "ignoreDependencies": [
     "import-in-the-middle",
     "require-in-the-middle",
@@ -15,31 +11,14 @@
   ],
   "workspaces": {
     ".": {
-      "entry": [
-        "scripts/*.ts",
-        "scripts/*.mjs"
-      ],
-      "ignoreDependencies": [
-        "@repo/typescript-config"
-      ]
+      "entry": ["scripts/*.ts", "scripts/*.mjs"],
+      "ignoreDependencies": ["@repo/typescript-config"]
     },
     "apps/api": {
-      "entry": [
-        "scripts/*.{js,mjs,ts}"
-      ]
-    },
-    "apps/partners": {
-      "entry": [
-        "scripts/*.mjs"
-      ],
-      "ignoreDependencies": [
-        "@repo/storybook"
-      ]
+      "entry": ["scripts/*.{js,mjs,ts}"]
     },
     "apps/web": {
-      "entry": [
-        "lib/native/*.ts"
-      ],
+      "entry": ["lib/native/*.ts"],
       "ignoreDependencies": [
         "@capacitor/android",
         "@capacitor/ios",
@@ -48,10 +27,7 @@
       ]
     },
     "packages/email": {
-      "ignoreDependencies": [
-        "react-dom",
-        "@types/react-dom"
-      ]
+      "ignoreDependencies": ["react-dom", "@types/react-dom"]
     }
   },
   "ignore": [

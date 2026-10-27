@@ -1,5 +1,6 @@
 "use client";
 
+import { scannedPass } from "@repo/auth/pass-code";
 import { localized } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
@@ -18,7 +19,6 @@ import { type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { scannedPass } from "@/lib/admin/pass-code";
 import {
   type CheckedCard,
   redeemError,

@@ -12,15 +12,14 @@ import { env } from "@/env";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 /**
- * The IDEA Partners (partners.theideaiq.com): partners' pages at the root,
- * and Staff on its own host (staff.theideaiq.com, routed by `proxy.ts`)
- * with the design site at /design. Customers use the website. Security
- * headers come from `proxy.ts`.
+ * The IDEA Partners (partners.theideaiq.com): the pages organizations use.
+ * Customers use the website; The IDEA's team uses Staff (apps/staff).
+ * Security headers come from `proxy.ts`.
  */
 let nextConfig: NextConfig = {
   ...withLogging(config),
   async headers() {
-    // Partner pages and Staff: never indexed.
+    // Partner pages: never indexed.
     return [
       {
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],

@@ -17,15 +17,17 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@repo/design-system/components/ui/sidebar";
+import {
+  LanguageSwitcher,
+  ThemeToggle,
+} from "@repo/internationalization/controls";
 import { Link, usePathname } from "@repo/internationalization/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { ExternalLinkIcon, IdCardIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
 import { useProfile } from "@/lib/queries";
-import { LanguageSwitcher } from "./language-switcher";
 import { isActivePath, navItems } from "./nav-items";
-import { ThemeToggle } from "./theme-toggle";
 
 export const AppSidebar = () => {
   const t = useTranslations("app.nav");

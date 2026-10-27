@@ -98,14 +98,14 @@ jobs:
         with:
           node-version-file: .nvmrc
       - run: bun install --frozen-lockfile
-      - run: bunx turbo build --filter=api --filter=partners --filter=web
+      - run: bunx turbo build --filter=api --filter=partners --filter=staff --filter=web
       # No secret may reach a browser bundle: the client chunks must not
       # contain the secret-key prefix or a server-only variable name. Every
       # directory must exist, or the check is not checking anything.
       - name: No secrets in client bundles
         run: |
           set -e
-          dirs="apps/partners/.next/static apps/web/.next/static apps/api/.next/static apps/partners/public/design"
+          dirs="apps/partners/.next/static apps/staff/.next/static apps/staff/public/design apps/web/.next/static apps/api/.next/static"
           for dir in $dirs; do
             test -d "$dir" || { echo "Missing $dir"; exit 1; }
           done
@@ -169,7 +169,7 @@ jobs:
         run: |
           eval "$(cd packages/database && bunx supabase status -o env | grep -E '^(API_URL|PUBLISHABLE_KEY)=' | sed 's/^/export /')"
           export NEXT_PUBLIC_SUPABASE_URL="$API_URL" NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="$PUBLISHABLE_KEY"
-          bunx turbo build --filter=partners --filter=web --filter=api
+          bunx turbo build --filter=partners --filter=staff --filter=web --filter=api
       - name: Journeys (public site, The IDEA Pass sign-up, store, support, Staff) and axe checks
         run: |
           eval "$(cd packages/database && bunx supabase status -o env | grep -E '^(API_URL|PUBLISHABLE_KEY|SECRET_KEY|MAILPIT_URL)=' | sed 's/^/export /')"

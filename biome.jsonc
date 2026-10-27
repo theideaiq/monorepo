@@ -30,8 +30,8 @@
       "!apps/docs/**/*.svg",
       "!apps/e2e/test-results",
       "!apps/e2e/playwright-report",
-      // Storybook's build output, served by apps/storybook.
-      "!apps/storybook/public"
+      // Storybook's build output, served by apps/staff at /design.
+      "!apps/staff/public/design"
     ]
   },
   "overrides": [

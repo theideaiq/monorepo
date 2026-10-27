@@ -16,6 +16,8 @@ import { extname, join, relative } from "node:path";
 const ROOTS = [
   "apps/partners/app",
   "apps/partners/components",
+  "apps/staff/app",
+  "apps/staff/components",
   "apps/web/app",
   "apps/web/components",
 ];
