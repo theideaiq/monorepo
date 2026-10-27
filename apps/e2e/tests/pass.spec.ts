@@ -95,6 +95,13 @@ test.describe("The IDEA Pass", () => {
       expect(back.searchParams.get("code")).toMatch(/^[0-9a-f]{64}$/);
       expect(back.searchParams.get("state")).toBe("e2e-state");
 
+      // Coming back, the member isn't asked again.
+      await page.goto(authorizeUrl());
+      await page.waitForURL(/\/e2e-partner\/callback\?/);
+      expect(new URL(page.url()).searchParams.get("code")).toMatch(
+        /^[0-9a-f]{64}$/
+      );
+
       // Settings lists it; disconnecting removes it.
       await page.goto(`${urls.web}/pass/settings`);
       const sites = page.locator("#sites");

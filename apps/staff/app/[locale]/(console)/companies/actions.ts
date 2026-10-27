@@ -262,6 +262,7 @@ const PASS_ANSWERS = [
   "birthdate",
   "address",
   "card",
+  "card_embed",
   "offline_access",
 ] as const;
 
@@ -285,6 +286,7 @@ export const addPassPartner = staffAction(
     adult: checkbox,
     birthdate: checkbox,
     card: checkbox,
+    card_embed: checkbox,
     email: checkbox,
     membership: checkbox,
     name: text(80),
@@ -378,6 +380,7 @@ export const setPassPartnerAnswers = staffAction(
     adult: checkbox,
     birthdate: checkbox,
     card: checkbox,
+    card_embed: checkbox,
     email: checkbox,
     id: z.string().regex(/^pass_[a-z0-9]{24}$/),
     membership: checkbox,

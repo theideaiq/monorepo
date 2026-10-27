@@ -1363,6 +1363,41 @@ export type Database = {
           },
         ];
       };
+      pass_card_embeds: {
+        Row: {
+          client_id: string;
+          created_at: string;
+          expires_at: string;
+          last_shown_at: string | null;
+          token_hash: string;
+          user_id: string;
+        };
+        Insert: {
+          client_id: string;
+          created_at?: string;
+          expires_at?: string;
+          last_shown_at?: string | null;
+          token_hash: string;
+          user_id: string;
+        };
+        Update: {
+          client_id?: string;
+          created_at?: string;
+          expires_at?: string;
+          last_shown_at?: string | null;
+          token_hash?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_card_embeds_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+        ];
+      };
       pass_client_assertions: {
         Row: {
           client_id: string;
@@ -4799,6 +4834,7 @@ export type Database = {
       };
       decline_plus_seat: { Args: { seat: string }; Returns: undefined };
       disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
+      end_pass_card_embed: { Args: { client: string }; Returns: undefined };
       end_plus_seat: { Args: { seat: string }; Returns: undefined };
       end_previous_pass_secret: {
         Args: { client: string };
@@ -5217,6 +5253,17 @@ export type Database = {
       pass_card_check: {
         Args: { client: string; scanned: string };
         Returns: Json;
+      };
+      pass_card_embed: {
+        Args: { client: string; token: string };
+        Returns: Json;
+      };
+      pass_card_embed_site: {
+        Args: { client: string };
+        Returns: {
+          name: string;
+          origins: string[];
+        }[];
       };
       pass_claims: {
         Args: { client: string; member: string; scopes: string[] };
@@ -5781,6 +5828,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      start_pass_card_embed: { Args: { client: string }; Returns: string };
       start_survey: {
         Args: { target: string };
         Returns: {

@@ -372,6 +372,24 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-27: The live Pass card on partner sites (requested by AUIB
+  Society of Arts and Letters). `/pass/embed?client_id=…` shows only the
+  live card (QR, code, countdown) for the member who allowed the site in
+  that browser; only the app's verified domains may frame it
+  (`frame-ancestors`). It's the `card_embed` answer in Developers:
+  reviewed like the sensitive answers, open in testing. No session or
+  card secret ever enters the frame: a popup on theideaiq.com hands it a
+  revocable token (hash stored, 90 days from last use) and the codes are
+  computed in the database. Members see and stop these sites in Pass →
+  Settings; disconnecting a site stops it too. No new OpenID scope.
+
+- 2026-10-27: Sign in with The IDEA Pass remembers consent. A member who
+  already shared everything a site asks for (`pass_connections.scopes`)
+  goes straight back to it signed in; the consent screen shows the first
+  time, when the site asks for something new, or with `prompt=consent`
+  (`login` too). `prompt=none` returns `consent_required` instead of
+  showing it. Disconnecting a site in Settings asks again next time.
+
 - 2026-10-27: Program Revision v2, item 3: navigation without repeats on
   the website. Each place has one way in:
   - **Top bar.** Phones: logo · search · bell · cart (the tabs carry
