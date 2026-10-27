@@ -5,7 +5,18 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-27: program revision, step 5f)
+## Current state (2026-10-27: program revision, step 5f; Sign in with The IDEA Pass)
+
+- Sign in with The IDEA Pass (migration `20261227000000_pass_sign_in.sql`):
+  partner sites sign people in through our own OpenID Connect provider
+  (`<API URL>/oidc`); the consent screen is `/oauth/authorize`, and people
+  manage sites in Pass → Settings → Connected sites. Partner apps check
+  Pass card QR codes (`/oidc/card/check`) and, with consent, show the
+  person's card (`/oidc/card`, without the scannable code). **To do:** set
+  `PASS_OIDC_SIGNING_KEY` on the API (`bun run --cwd apps/api oidc:key`),
+  register auibsal.org in Companies → Sign in with the Pass and send its
+  developers the client id and secret; an outside security review before a
+  second partner. Partner guide: `docs/platform/pass-sign-in.md`.
 
 - Surveys (migration `20261226000000_surveys.sql`): verified students
   create surveys in Club → Yours → Surveys, free (give to get, 10
@@ -303,6 +314,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-27: Sign in with The IDEA Pass is built now, piloted with
+  auibsal.org only. Partners may ask for name and email and yes/no
+  answers (verified student with university and end date, 18 or over,
+  The IDEA Plus member), with consent each time. It runs on our own
+  OpenID Connect provider in apps/api: Supabase Auth's OAuth server
+  (beta) was tested and rejected, because its tokens let a partner change
+  the person's password. Partners also check Pass card QR codes from
+  their own apps (showing the card is the consent; every check is listed
+  for the holder) and may show the person's card, without its code.
 
 - 2026-10-27: Program revision v1, step 5f (surveys): three kinds, free
   give-to-get, Bulbs-rewarded and cash-rewarded; any verified student

@@ -1782,6 +1782,16 @@
           "saved": "Saved.",
           "failed": "It couldn't be saved. Try again."
         }
+      },
+      "sites": {
+        "title": "Connected sites",
+        "description": "Sites you signed in to with The IDEA Pass, and partners that checked your card. Disconnecting a site stops what it learns; it asks again next time.",
+        "since": "Connected on {date}",
+        "disconnect": "Disconnect",
+        "failed": "It couldn't be disconnected. Try again.",
+        "checks": "Checks of your card",
+        "checked": "{site} checked your card on {date}",
+        "aSite": "A partner"
       }
     },
     "errors": {
@@ -4365,7 +4375,8 @@
         "invoices": "Invoices",
         "seats": "The IDEA Plus seats",
         "hiring": "Hiring",
-        "perks": "Perks"
+        "perks": "Perks",
+        "signIn": "Sign in with the Pass"
       },
       "quotes": {
         "number": "Quote #{number}",
@@ -4498,6 +4509,38 @@
           "students": "Verified students",
           "plus": "Plus members"
         }
+      },
+      "signIn": {
+        "title": "Sign in with The IDEA Pass",
+        "description": "Partner sites people sign in to with their Pass. Each sees only what the person allows, each time.",
+        "empty": "No partner sites yet.",
+        "off": "Off",
+        "connected": "{count} people connected · added {date}",
+        "addTitle": "Add a partner site",
+        "addDescription": "Its developers get a client id and a secret (shown once), and the discovery address https://api.theideaiq.com/oidc/.well-known/openid-configuration.",
+        "name": "Site name (shown on the consent screen)",
+        "website": "Website",
+        "organization": "Organization in The IDEA Business",
+        "organizationHint": "Optional: the partner's organization.",
+        "noOrganization": "None",
+        "redirectUris": "Return addresses",
+        "redirectUrisHint": "One per line, exact (https, or http://localhost for development).",
+        "answers": "What it may ask",
+        "answerNames": {
+          "profile": "Name",
+          "email": "Email",
+          "student": "Verified student",
+          "adult": "18 or over",
+          "plus": "The IDEA Plus member",
+          "card": "Show the Pass card"
+        },
+        "add": "Add site",
+        "once": "Copy these now: the secret isn't shown again. Send it to the partner's developers privately.",
+        "clientId": "Client id",
+        "secret": "Client secret",
+        "rotate": "New secret",
+        "turnOff": "Turn off",
+        "turnOn": "Turn on"
       }
     }
   },
@@ -4614,6 +4657,28 @@
       },
       "verifyToUse": "Verify as a student to use it",
       "joinToUse": "Join The IDEA Plus to use it"
+    },
+    "authorize": {
+      "meta": "Sign in with The IDEA Pass",
+      "title": "{site} wants you to sign in with The IDEA Pass",
+      "shares": "If you continue, it learns:",
+      "scopes": {
+        "openid": "That it's you (an id only this site sees)",
+        "profile": "Your name",
+        "email": "Your email address",
+        "student": "Whether you're a verified student, at which university and until when",
+        "adult": "Whether you're 18 or over",
+        "plus": "Whether you're a The IDEA Plus member",
+        "card": "Your Pass card, to show on their site (without its scannable code)"
+      },
+      "never": "It never sees your orders, address, birthday or anything else. You can disconnect it at any time in Settings.",
+      "manage": "Connected sites",
+      "allow": "Continue",
+      "deny": "Don't allow",
+      "failed": "Something went wrong. Try again.",
+      "unknownTitle": "This site can't use The IDEA Pass",
+      "unknown": "The link that brought you here isn't from a site we know. Nothing was shared.",
+      "home": "Go to The IDEA"
     }
   }
 }

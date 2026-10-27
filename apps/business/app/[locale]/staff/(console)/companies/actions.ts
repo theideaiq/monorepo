@@ -1,9 +1,19 @@
 "use server";
 
+import { createHash, randomBytes } from "node:crypto";
 import { z } from "zod";
 import { affected, check, staffAction } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
-import { int, optionalDate, optionalText, text, uuid } from "@/lib/admin/forms";
+import {
+  checkbox,
+  int,
+  lines,
+  optionalDate,
+  optionalText,
+  optionalUuid,
+  text,
+  uuid,
+} from "@/lib/admin/forms";
 
 /**
  * The IDEA Business procurement, run as the staff member: support writes and
@@ -284,6 +294,95 @@ export const setPerkActive = staffAction(
         .update({ active: input.active === "true" })
         .eq("id", input.id)
         .select("id")
+    );
+    return success();
+  }
+);
+
+const PASS_ANSWERS = [
+  "profile",
+  "email",
+  "student",
+  "adult",
+  "plus",
+  "card",
+] as const;
+
+/** A new client secret for a partner site, and its stored hash. */
+const newSecret = () => {
+  const secret = randomBytes(32).toString("base64url");
+  return {
+    hash: createHash("sha256").update(secret, "utf8").digest("hex"),
+    secret,
+  };
+};
+
+/**
+ * Registers a partner site for Sign in with The IDEA Pass: returns its
+ * client id and secret, shown once (only the secret's hash is kept).
+ */
+export const addPassPartner = staffAction(
+  "companies",
+  z.object({
+    adult: checkbox,
+    card: checkbox,
+    email: checkbox,
+    name: text(80),
+    organization: optionalUuid,
+    plus: checkbox,
+    profile: checkbox,
+    redirectUris: lines(10, 300).pipe(z.array(z.url()).min(1)),
+    student: checkbox,
+    website: z.url().startsWith("https://"),
+  }),
+  async ({ input, supabase }) => {
+    const clientId = `pass_${randomBytes(12).toString("hex")}`;
+    const { hash, secret } = newSecret();
+    check(
+      await supabase.from("pass_partners").insert({
+        answers: PASS_ANSWERS.filter((answer) => input[answer]),
+        client_id: clientId,
+        name: input.name,
+        organization_id: input.organization,
+        redirect_uris: input.redirectUris,
+        secret_hash: hash,
+        website: input.website,
+      })
+    );
+    return success("saved", { data: { clientId, secret } });
+  }
+);
+
+/** A new client secret (the old one stops working at once). */
+export const rotatePassPartnerSecret = staffAction(
+  "companies",
+  z.object({ id: z.string().regex(/^pass_[a-z0-9]{24}$/) }),
+  async ({ input, supabase }) => {
+    const { hash, secret } = newSecret();
+    affected(
+      await supabase
+        .from("pass_partners")
+        .update({ secret_hash: hash })
+        .eq("client_id", input.id)
+        .select("client_id")
+    );
+    return success("saved", { data: { clientId: input.id, secret } });
+  }
+);
+
+export const setPassPartnerActive = staffAction(
+  "companies",
+  z.object({
+    active: z.enum(["true", "false"]),
+    id: z.string().regex(/^pass_[a-z0-9]{24}$/),
+  }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("pass_partners")
+        .update({ active: input.active === "true" })
+        .eq("client_id", input.id)
+        .select("client_id")
     );
     return success();
   }

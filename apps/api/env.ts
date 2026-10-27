@@ -13,6 +13,7 @@ import { keys as security } from "@repo/security/keys";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { keys as boxy } from "./lib/boxy/keys";
+import { keys as oidc } from "./lib/oidc/keys";
 import { keys as whatsapp } from "./lib/whatsapp/keys";
 
 const presets = envPresets(
@@ -24,6 +25,7 @@ const presets = envPresets(
   droid(),
   email(),
   observability(),
+  oidc(),
   payments(),
   rateLimit(),
   security(),
