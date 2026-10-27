@@ -1,6 +1,6 @@
 "use client";
 
-import { localized } from "@repo/commerce";
+import { governorates, localized } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
@@ -25,6 +25,7 @@ import {
   useUniversities,
 } from "@/lib/student-queries";
 import { confirmError, studentCodeError } from "@/lib/students";
+import { useSetStudentProfile, useStudentProfile } from "@/lib/survey-queries";
 
 const day = (value: string, locale: Locale) =>
   formatCalendarDate(new Date(`${value}T12:00:00`), locale);
@@ -157,6 +158,110 @@ const CardForm = ({ university }: { readonly university: string }) => {
   );
 };
 
+const YEARS = [1, 2, 3, 4, 5, 6, 7] as const;
+
+/** Optional: major, year of study and governorate, for survey targeting. */
+const ProfileForm = ({
+  initial,
+}: {
+  readonly initial: {
+    governorate: string | null;
+    major: string | null;
+    study_year: number | null;
+  } | null;
+}) => {
+  const t = useTranslations("app.settings.student.profile");
+  const locale = useLocale();
+  const id = useId();
+  const save = useSetStudentProfile();
+  const [major, setMajor] = useState(initial?.major ?? "");
+  const [year, setYear] = useState(
+    initial?.study_year ? String(initial.study_year) : ""
+  );
+  const [governorate, setGovernorate] = useState(initial?.governorate ?? "");
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    save.mutate({ governorate, major, year: year ? Number(year) : null });
+  };
+
+  return (
+    <form className="grid gap-3 border-t pt-4" onSubmit={submit}>
+      <div>
+        <p className="font-medium text-sm">{t("title")}</p>
+        <p className="text-muted-foreground text-xs">{t("description")}</p>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-2">
+          <Label htmlFor={`${id}-major`}>{t("major")}</Label>
+          <Input
+            id={`${id}-major`}
+            maxLength={80}
+            onChange={(event) => setMajor(event.target.value)}
+            value={major}
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor={`${id}-year`}>{t("year")}</Label>
+          <select
+            className={selectClassName}
+            id={`${id}-year`}
+            onChange={(event) => setYear(event.target.value)}
+            value={year}
+          >
+            <option value="">{t("notSaid")}</option>
+            {YEARS.map((value) => (
+              <option key={value} value={value}>
+                {t("yearN", { n: String(value) })}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor={`${id}-governorate`}>{t("governorate")}</Label>
+          <select
+            className={selectClassName}
+            id={`${id}-governorate`}
+            onChange={(event) => setGovernorate(event.target.value)}
+            value={governorate}
+          >
+            <option value="">{t("notSaid")}</option>
+            {governorates.map((row) => (
+              <option key={row.id} value={row.id}>
+                {locale === "en" ? row.en : row.ar}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <Button disabled={save.isPending} size="sm" type="submit">
+          {t("save")}
+        </Button>
+        {save.isSuccess ? (
+          <span className="text-muted-foreground text-sm" role="status">
+            {t("saved")}
+          </span>
+        ) : null}
+        {save.isError ? (
+          <span className="text-destructive text-sm" role="alert">
+            {t("failed")}
+          </span>
+        ) : null}
+      </div>
+    </form>
+  );
+};
+
+/** The profile form once the saved values are in. */
+const StudentProfile = () => {
+  const profile = useStudentProfile();
+  if (!profile.isSuccess) {
+    return null;
+  }
+  return <ProfileForm initial={profile.data} />;
+};
+
 /** Choose the university, then verify by email or with the card. */
 const VerifyForms = () => {
   const t = useTranslations("app.settings.student");
@@ -236,12 +341,15 @@ export const StudentCard = () => {
   let body = <VerifyForms />;
   if (student?.verified && student.valid_until) {
     body = (
-      <p className="text-sm">
-        {t("verified", {
-          date: day(student.valid_until, locale),
-          university: universityName(student.university_id),
-        })}
-      </p>
+      <>
+        <p className="text-sm">
+          {t("verified", {
+            date: day(student.valid_until, locale),
+            university: universityName(student.university_id),
+          })}
+        </p>
+        <StudentProfile />
+      </>
     );
   } else if (student?.pending === "card") {
     body = <p className="text-sm">{t("waiting")}</p>;

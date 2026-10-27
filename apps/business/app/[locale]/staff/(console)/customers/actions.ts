@@ -233,3 +233,22 @@ export const saveUniversity = staffAction(
     return success();
   }
 );
+
+export const reviewSurvey = staffAction(
+  "customers",
+  z.object({
+    approve: z.enum(["true", "false"]),
+    id: uuid,
+    note: optionalText(1000),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("review_survey", {
+        approve: input.approve === "true",
+        note: input.note ?? undefined,
+        target: input.id,
+      })
+    );
+    return success();
+  }
+);

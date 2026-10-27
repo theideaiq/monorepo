@@ -3189,6 +3189,8 @@ export type Database = {
           rental_deposit_rate: number;
           return_days: number;
           shipping_fee: number;
+          survey_fee_rate: number;
+          survey_welcome_credits: number;
           updated_at: string;
         };
         Insert: {
@@ -3212,6 +3214,8 @@ export type Database = {
           rental_deposit_rate?: number;
           return_days?: number;
           shipping_fee?: number;
+          survey_fee_rate?: number;
+          survey_welcome_credits?: number;
           updated_at?: string;
         };
         Update: {
@@ -3235,6 +3239,8 @@ export type Database = {
           rental_deposit_rate?: number;
           return_days?: number;
           shipping_fee?: number;
+          survey_fee_rate?: number;
+          survey_welcome_credits?: number;
           updated_at?: string;
         };
         Relationships: [];
@@ -3242,7 +3248,10 @@ export type Database = {
       student_badges: {
         Row: {
           email_hash: string | null;
+          governorate: string | null;
+          major: string | null;
           method: string;
+          study_year: number | null;
           university_id: string;
           user_id: string;
           valid_until: string;
@@ -3250,7 +3259,10 @@ export type Database = {
         };
         Insert: {
           email_hash?: string | null;
+          governorate?: string | null;
+          major?: string | null;
           method: string;
+          study_year?: number | null;
           university_id: string;
           user_id: string;
           valid_until: string;
@@ -3258,7 +3270,10 @@ export type Database = {
         };
         Update: {
           email_hash?: string | null;
+          governorate?: string | null;
+          major?: string | null;
           method?: string;
+          study_year?: number | null;
           university_id?: string;
           user_id?: string;
           valid_until?: string;
@@ -3583,6 +3598,290 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "support_tickets_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      survey_answers: {
+        Row: {
+          question_id: string;
+          response_id: string;
+          value: NonNullable<Json>;
+        };
+        Insert: {
+          question_id: string;
+          response_id: string;
+          value: NonNullable<Json>;
+        };
+        Update: {
+          question_id?: string;
+          response_id?: string;
+          value?: NonNullable<Json>;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "survey_answers_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "survey_questions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "survey_answers_response_id_fkey";
+            columns: ["response_id"];
+            isOneToOne: false;
+            referencedRelation: "survey_responses";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      survey_credits: {
+        Row: {
+          amount: number;
+          created_at: string;
+          id: string;
+          reason: string;
+          response_id: string | null;
+          survey_id: string | null;
+          user_id: string;
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          id?: string;
+          reason: string;
+          response_id?: string | null;
+          survey_id?: string | null;
+          user_id: string;
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          id?: string;
+          reason?: string;
+          response_id?: string | null;
+          survey_id?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "survey_credits_response_id_fkey";
+            columns: ["response_id"];
+            isOneToOne: false;
+            referencedRelation: "survey_responses";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "survey_credits_survey_id_fkey";
+            columns: ["survey_id"];
+            isOneToOne: false;
+            referencedRelation: "surveys";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      survey_questions: {
+        Row: {
+          attention_answer: string | null;
+          id: string;
+          kind: string;
+          options: string[];
+          position: number;
+          prompt: string;
+          required: boolean;
+          survey_id: string;
+        };
+        Insert: {
+          attention_answer?: string | null;
+          id?: string;
+          kind: string;
+          options?: string[];
+          position?: number;
+          prompt: string;
+          required?: boolean;
+          survey_id: string;
+        };
+        Update: {
+          attention_answer?: string | null;
+          id?: string;
+          kind?: string;
+          options?: string[];
+          position?: number;
+          prompt?: string;
+          required?: boolean;
+          survey_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "survey_questions_survey_id_fkey";
+            columns: ["survey_id"];
+            isOneToOne: false;
+            referencedRelation: "surveys";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      survey_reports: {
+        Row: {
+          created_at: string;
+          reason: string;
+          survey_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          reason: string;
+          survey_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          reason?: string;
+          survey_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "survey_reports_survey_id_fkey";
+            columns: ["survey_id"];
+            isOneToOne: false;
+            referencedRelation: "surveys";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      survey_responses: {
+        Row: {
+          counted: boolean | null;
+          id: string;
+          started_at: string;
+          submitted_at: string | null;
+          survey_id: string;
+          user_id: string | null;
+        };
+        Insert: {
+          counted?: boolean | null;
+          id?: string;
+          started_at?: string;
+          submitted_at?: string | null;
+          survey_id: string;
+          user_id?: string | null;
+        };
+        Update: {
+          counted?: boolean | null;
+          id?: string;
+          started_at?: string;
+          submitted_at?: string | null;
+          survey_id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "survey_responses_survey_id_fkey";
+            columns: ["survey_id"];
+            isOneToOne: false;
+            referencedRelation: "surveys";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      surveys: {
+        Row: {
+          closed_at: string | null;
+          closes_at: string | null;
+          consent: string;
+          created_at: string;
+          creator_id: string | null;
+          description: string;
+          ethics_reference: string | null;
+          flags: string[];
+          governorates: string[];
+          held: number;
+          id: string;
+          kind: string;
+          language: string;
+          majors: string[];
+          min_seconds: number;
+          opened_at: string | null;
+          order_id: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          reward: number;
+          status: string;
+          students_only: boolean;
+          title: string;
+          universities: string[];
+          updated_at: string;
+          wanted: number;
+          years: number[];
+        };
+        Insert: {
+          closed_at?: string | null;
+          closes_at?: string | null;
+          consent?: string;
+          created_at?: string;
+          creator_id?: string | null;
+          description?: string;
+          ethics_reference?: string | null;
+          flags?: string[];
+          governorates?: string[];
+          held?: number;
+          id?: string;
+          kind?: string;
+          language?: string;
+          majors?: string[];
+          min_seconds?: number;
+          opened_at?: string | null;
+          order_id?: string | null;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          reward?: number;
+          status?: string;
+          students_only?: boolean;
+          title: string;
+          universities?: string[];
+          updated_at?: string;
+          wanted?: number;
+          years?: number[];
+        };
+        Update: {
+          closed_at?: string | null;
+          closes_at?: string | null;
+          consent?: string;
+          created_at?: string;
+          creator_id?: string | null;
+          description?: string;
+          ethics_reference?: string | null;
+          flags?: string[];
+          governorates?: string[];
+          held?: number;
+          id?: string;
+          kind?: string;
+          language?: string;
+          majors?: string[];
+          min_seconds?: number;
+          opened_at?: string | null;
+          order_id?: string | null;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          reward?: number;
+          status?: string;
+          students_only?: boolean;
+          title?: string;
+          universities?: string[];
+          updated_at?: string;
+          wanted?: number;
+          years?: number[];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "surveys_order_id_fkey";
             columns: ["order_id"];
             isOneToOne: false;
             referencedRelation: "orders";
@@ -4286,6 +4585,45 @@ export type Database = {
       };
       close_job_request: { Args: { job: string }; Returns: undefined };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
+      close_survey: {
+        Args: { target: string };
+        Returns: {
+          closed_at: string | null;
+          closes_at: string | null;
+          consent: string;
+          created_at: string;
+          creator_id: string | null;
+          description: string;
+          ethics_reference: string | null;
+          flags: string[];
+          governorates: string[];
+          held: number;
+          id: string;
+          kind: string;
+          language: string;
+          majors: string[];
+          min_seconds: number;
+          opened_at: string | null;
+          order_id: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          reward: number;
+          status: string;
+          students_only: boolean;
+          title: string;
+          universities: string[];
+          updated_at: string;
+          wanted: number;
+          years: number[];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "surveys";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       collect_kit: {
         Args: { damage?: number; target: string };
         Returns: {
@@ -4346,7 +4684,10 @@ export type Database = {
         Args: { code: string };
         Returns: {
           email_hash: string | null;
+          governorate: string | null;
+          major: string | null;
           method: string;
+          study_year: number | null;
           university_id: string;
           user_id: string;
           valid_until: string;
@@ -4882,6 +5223,7 @@ export type Database = {
           verified: boolean;
         }[];
       };
+      my_survey_credits: { Args: Record<PropertyKey, never>; Returns: number };
       my_swap_terms: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -5093,6 +5435,45 @@ export type Database = {
           verified_purchase: boolean;
         }[];
       };
+      publish_survey: {
+        Args: { target: string };
+        Returns: {
+          closed_at: string | null;
+          closes_at: string | null;
+          consent: string;
+          created_at: string;
+          creator_id: string | null;
+          description: string;
+          ethics_reference: string | null;
+          flags: string[];
+          governorates: string[];
+          held: number;
+          id: string;
+          kind: string;
+          language: string;
+          majors: string[];
+          min_seconds: number;
+          opened_at: string | null;
+          order_id: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          reward: number;
+          status: string;
+          students_only: boolean;
+          title: string;
+          universities: string[];
+          updated_at: string;
+          wanted: number;
+          years: number[];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "surveys";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       queue_due_telegram_posts: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -5149,6 +5530,10 @@ export type Database = {
         }[];
       };
       reorder_saved: { Args: { products: string[] }; Returns: undefined };
+      report_survey: {
+        Args: { reason: string; target: string };
+        Returns: undefined;
+      };
       request_plus_seat: {
         Args: { member: string; org: string; plan: string };
         Returns: string;
@@ -5266,6 +5651,45 @@ export type Database = {
         };
         Returns: string;
       };
+      review_survey: {
+        Args: { approve: boolean; note?: string; target: string };
+        Returns: {
+          closed_at: string | null;
+          closes_at: string | null;
+          consent: string;
+          created_at: string;
+          creator_id: string | null;
+          description: string;
+          ethics_reference: string | null;
+          flags: string[];
+          governorates: string[];
+          held: number;
+          id: string;
+          kind: string;
+          language: string;
+          majors: string[];
+          min_seconds: number;
+          opened_at: string | null;
+          order_id: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          reward: number;
+          status: string;
+          students_only: boolean;
+          title: string;
+          universities: string[];
+          updated_at: string;
+          wanted: number;
+          years: number[];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "surveys";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       revoke_guardian: { Args: { link: string }; Returns: undefined };
       rotate_calendar_token: {
         Args: Record<PropertyKey, never>;
@@ -5283,6 +5707,45 @@ export type Database = {
       };
       run_plus_waitlist: { Args: Record<PropertyKey, never>; Returns: number };
       run_student_expiry: { Args: Record<PropertyKey, never>; Returns: number };
+      save_survey: {
+        Args: { body: Json };
+        Returns: {
+          closed_at: string | null;
+          closes_at: string | null;
+          consent: string;
+          created_at: string;
+          creator_id: string | null;
+          description: string;
+          ethics_reference: string | null;
+          flags: string[];
+          governorates: string[];
+          held: number;
+          id: string;
+          kind: string;
+          language: string;
+          majors: string[];
+          min_seconds: number;
+          opened_at: string | null;
+          order_id: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          reward: number;
+          status: string;
+          students_only: boolean;
+          title: string;
+          universities: string[];
+          updated_at: string;
+          wanted: number;
+          years: number[];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "surveys";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       search_products: {
         Args: {
           search_category?: string;
@@ -5385,6 +5848,26 @@ export type Database = {
         };
         Returns: undefined;
       };
+      set_student_profile: {
+        Args: { governorate: string; major: string; study_year: number };
+        Returns: {
+          email_hash: string | null;
+          governorate: string | null;
+          major: string | null;
+          method: string;
+          study_year: number | null;
+          university_id: string;
+          user_id: string;
+          valid_until: string;
+          verified_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "student_badges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       settle_rental: {
         Args: { damage?: number; target: string };
         Returns: {
@@ -5420,6 +5903,88 @@ export type Database = {
           to: "rentals";
           isOneToOne: true;
           isSetofReturn: false;
+        };
+      };
+      start_survey: {
+        Args: { target: string };
+        Returns: {
+          counted: boolean | null;
+          id: string;
+          started_at: string;
+          submitted_at: string | null;
+          survey_id: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "survey_responses";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      submit_survey: {
+        Args: { answers: Json; target: string };
+        Returns: {
+          counted: boolean | null;
+          id: string;
+          started_at: string;
+          submitted_at: string | null;
+          survey_id: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "survey_responses";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      survey_results: {
+        Args: { target: string };
+        Returns: {
+          answers: Json;
+          counted: boolean;
+          response_id: string;
+          submitted_at: string;
+        }[];
+      };
+      surveys_for_me: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          closed_at: string | null;
+          closes_at: string | null;
+          consent: string;
+          created_at: string;
+          creator_id: string | null;
+          description: string;
+          ethics_reference: string | null;
+          flags: string[];
+          governorates: string[];
+          held: number;
+          id: string;
+          kind: string;
+          language: string;
+          majors: string[];
+          min_seconds: number;
+          opened_at: string | null;
+          order_id: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          reward: number;
+          status: string;
+          students_only: boolean;
+          title: string;
+          universities: string[];
+          updated_at: string;
+          wanted: number;
+          years: number[];
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "surveys";
+          isOneToOne: false;
+          isSetofReturn: true;
         };
       };
       telegram_join_check: {

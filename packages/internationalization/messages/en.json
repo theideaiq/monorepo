@@ -766,8 +766,162 @@
         "title": "Yours",
         "events": "Your events",
         "submissions": "Your submissions",
-        "signedOut": "Sign in to see the events you're going to and to submit your work.",
-        "signIn": "Sign in"
+        "signedOut": "Sign in to see the events you're going to, answer surveys and submit your work.",
+        "signIn": "Sign in",
+        "surveys": "Surveys"
+      },
+      "surveys": {
+        "title": "Survey",
+        "back": "Back to The IDEA Club",
+        "studentsCreate": "Verified students can create surveys.",
+        "verify": "Verify as a student",
+        "answer": {
+          "optional": "Optional",
+          "scaleLow": "1 = not at all",
+          "scaleHigh": "5 = very much",
+          "required": "Please answer this question.",
+          "closed": "This survey isn't open any more.",
+          "thanks": "Thank you",
+          "thanksReward": "Your answers count: {bulbs} Bulbs are on your Pass.",
+          "thanksCredit": "Your answers count, and you earned a response credit for your own surveys.",
+          "notCounted": "Your answers were sent, but they don't count: they were too quick or missed a check question.",
+          "sending": "Sending…",
+          "submit": "Send my answers",
+          "consent": "Before you start",
+          "ethics": "Ethics approval: {reference}",
+          "anonymous": "{n} questions. The creator sees your answers, never who gave them.",
+          "terms": "Survey terms",
+          "yours": "This is your survey.",
+          "results": "See the answers",
+          "agree": "I agree, start"
+        },
+        "report": {
+          "open": "Report this survey",
+          "reason": "What's wrong with it?",
+          "send": "Send the report",
+          "cancel": "Cancel",
+          "sent": "Thank you. Our team will look at this survey.",
+          "failed": "The report couldn't be sent. Try again."
+        },
+        "errors": {
+          "questions": "A survey needs 1 to 60 questions.",
+          "consent": "Write the consent text (at least 20 characters) before publishing.",
+          "required": "Answer every required question.",
+          "options": "Choice questions need at least 2 options, and the check answer must be one of them.",
+          "invalid": "Some answers aren't valid. Check them and try again.",
+          "bulbs": "You don't have enough Bulbs for the rewards. Lower the number of responses or choose another kind.",
+          "notStudent": "Only verified students can create surveys.",
+          "notOpen": "This survey isn't open to you.",
+          "answered": "You already answered this survey.",
+          "failed": "Something went wrong. Try again."
+        },
+        "builder": {
+          "newTitle": "New survey",
+          "editTitle": "Edit the survey",
+          "notDraft": "Only drafts can be edited.",
+          "about": "About the survey",
+          "title": "Title",
+          "description": "Description",
+          "consent": "Consent text",
+          "consentNote": "Who you are, what the survey is for, how long it takes and how the answers are used. People read it before they start.",
+          "language": "Language of the survey",
+          "arabic": "Arabic",
+          "english": "English",
+          "ethics": "Ethics approval (optional)",
+          "ethicsNote": "The reference from your university's ethics committee, if you have one.",
+          "questions": "Questions",
+          "question": "Question {n}",
+          "moveUp": "Move up",
+          "moveDown": "Move down",
+          "remove": "Remove the question",
+          "prompt": "Question",
+          "kind": "Type",
+          "kinds": {
+            "single": "One choice",
+            "multiple": "Several choices",
+            "scale": "Scale of 1 to 5",
+            "text": "Written answer",
+            "number": "Number"
+          },
+          "options": "Options",
+          "optionsNote": "One option per line.",
+          "required": "Required",
+          "attention": "Check question: the right answer is",
+          "noAttention": "Not a check question",
+          "addQuestion": "Add a question",
+          "who": "Who can answer",
+          "studentsOnly": "Verified students only",
+          "universities": "Universities",
+          "years": "Year of study",
+          "year": "Year {n}",
+          "governorates": "Governorates",
+          "majors": "Majors",
+          "majorsNote": "Separated by commas, as students write them on their badge.",
+          "targetNote": "Leave a list empty to include everyone. Any choice here limits the survey to verified students who match it.",
+          "rewards": "Rewards",
+          "surveyKinds": {
+            "free": "Give to get (free)",
+            "bulbs": "Rewarded with my Bulbs",
+            "cash": "Rewarded, paid in IQD"
+          },
+          "freeNote": "Each response uses one of your credits. You earn a credit for every survey you answer, and you start with 10.",
+          "bulbsNote": "Each counted response earns {bulbs} Bulbs. {cost} Bulbs (with the 10% fee) are held when the survey opens; what isn't used comes back when it closes.",
+          "cashNote": "Each counted response earns {bulbs} Bulbs. You pay {cost} (with the 10% fee) and the survey opens once it's paid.",
+          "wanted": "Responses wanted",
+          "minSeconds": "Minimum time (seconds)",
+          "minSecondsNote": "Answers sent faster than this don't count.",
+          "reviewNote": "Surveys open straight away. Questions on sensitive topics (religion, politics, health, money, identity or contact details) wait for our team's review first.",
+          "rules": "Survey rules",
+          "publish": "Publish",
+          "saveDraft": "Save the draft",
+          "saved": "Saved.",
+          "incomplete": "Add a title (at least 3 characters) and write every question."
+        },
+        "manage": {
+          "title": "Your survey",
+          "notFound": "Survey not found.",
+          "draft": "This survey is a draft.",
+          "edit": "Edit and publish",
+          "review": "Our team is reviewing this survey. We'll let you know when it opens.",
+          "awaitingPayment": "The survey opens once the rewards are paid.",
+          "pay": "Pay now",
+          "rejected": "This survey can't be published.",
+          "rejectedWith": "This survey can't be published: {note}",
+          "open": "The survey is open.",
+          "link": "Open its page to share it",
+          "closed": "The survey is closed.",
+          "close": "Close the survey",
+          "counted": "Counted responses",
+          "ofWanted": "{n} of {wanted}",
+          "all": "All responses",
+          "opened": "Opened",
+          "export": "Download the answers",
+          "exportNote": "Every response, without who gave it. For SPSS, keep responses.csv next to the syntax file.",
+          "csv": "CSV",
+          "excel": "Excel",
+          "spss": "SPSS syntax",
+          "answered": "{n} answers (counted responses)",
+          "average": "Average: {n}"
+        },
+        "yours": {
+          "toAnswer": "Surveys for you",
+          "noneToAnswer": "No surveys for you right now.",
+          "reward": "+{bulbs} Bulbs",
+          "giveToGet": "Give to get",
+          "created": "Your surveys",
+          "new": "New survey",
+          "credits": "Response credits: {n}",
+          "noneCreated": "You haven't created a survey yet.",
+          "responses": "{n} responses",
+          "status": {
+            "draft": "Draft",
+            "review": "In review",
+            "awaiting_payment": "Awaiting payment",
+            "open": "Open",
+            "closed": "Closed",
+            "rejected": "Not published"
+          }
+        }
       }
     },
     "business": {
@@ -1615,6 +1769,18 @@
           "failed": "Something went wrong. Try again.",
           "wrongCode": "That code isn't right.",
           "expiredCode": "The code has expired. Ask for a new one."
+        },
+        "profile": {
+          "title": "For surveys (optional)",
+          "description": "Surveys can be aimed at a major, year of study or governorate. We never show these to survey creators.",
+          "major": "Major",
+          "year": "Year of study",
+          "yearN": "Year {n}",
+          "governorate": "Governorate",
+          "notSaid": "Not said",
+          "save": "Save",
+          "saved": "Saved.",
+          "failed": "It couldn't be saved. Try again."
         }
       }
     },
@@ -2413,6 +2579,14 @@
         "student_rejected": {
           "title": "We couldn't verify your student card",
           "body": "Open Settings to see why and try again."
+        },
+        "survey_approved": {
+          "title": "Your survey is approved",
+          "body": "\"{title}\" passed our review."
+        },
+        "survey_rejected": {
+          "title": "Your survey wasn't approved",
+          "body": "Open \"{title}\" in The IDEA Club to see why."
         }
       },
       "kinds": {
@@ -2657,7 +2831,8 @@
           "procurement": "New procurement requests to quote",
           "jobs": "Open jobs with no candidates yet",
           "seats": "The IDEA Plus seats to approve",
-          "invoices": "Overdue company invoices"
+          "invoices": "Overdue company invoices",
+          "surveys": "Surveys to review"
         }
       }
     },
@@ -3409,6 +3584,38 @@
         "domainsHint": "Separated by commas, e.g. auib.edu.iq",
         "listed": "Listed",
         "add": "Add university"
+      },
+      "surveysLink": "Surveys",
+      "surveys": {
+        "title": "Surveys to review",
+        "back": "Customers",
+        "description": "Surveys the checker flagged for sensitive topics and surveys people reported. Approving opens the survey (or reopens it); rejecting closes it and refunds unused rewards.",
+        "review": "Waiting for review",
+        "empty": "No surveys waiting.",
+        "unnamed": "No name",
+        "kinds": {
+          "free": "Give to get",
+          "bulbs": "Rewarded in Bulbs",
+          "cash": "Rewarded, paid in IQD"
+        },
+        "wanted": "{count} responses wanted",
+        "wasOpen": "was open",
+        "flags": {
+          "religion": "Religion or sect",
+          "politics": "Politics",
+          "health": "Health",
+          "sex": "Sex",
+          "money": "Income or money",
+          "identity": "Identity numbers",
+          "contact": "Contact details",
+          "reported": "Reported"
+        },
+        "consent": "Consent text",
+        "ethics": "Ethics approval: {reference}",
+        "reports": "Reports",
+        "note": "Note to the creator",
+        "approve": "Approve",
+        "reject": "Reject"
       }
     },
     "finance": {

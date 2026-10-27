@@ -18,6 +18,7 @@ export const inboxItems = [
   "overdueRentals",
   "tradeIns",
   "submissions",
+  "surveys",
   "telegram",
   "affiliates",
   "procurement",
@@ -46,6 +47,7 @@ const hrefs: Record<InboxItem, string> = {
   rentalRequests: "/rentals",
   seats: "/companies/seats",
   submissions: "/editorial/submissions",
+  surveys: "/customers/surveys",
   telegram: "/telegram",
   tickets: "/support?status=open",
   tradeIns: "/trade-ins",
@@ -77,6 +79,7 @@ export const loadInbox = async (
     openJobs,
     seats,
     invoices,
+    surveys,
   ] = await Promise.all([
     counted(can("support"), () =>
       supabase
@@ -133,6 +136,9 @@ export const loadInbox = async (
         .eq("status", "issued")
         .lt("due_on", today)
     ),
+    counted(can("customers"), () =>
+      supabase.from("surveys").select("id", head).eq("status", "review")
+    ),
   ]);
 
   const counts: Record<InboxItem, number> = {
@@ -151,6 +157,7 @@ export const loadInbox = async (
     submissions: (queue?.data ?? []).filter(
       (row) => row.status === "pending" || row.status === "under_review"
     ).length,
+    surveys,
     telegram,
     tickets,
     tradeIns,
