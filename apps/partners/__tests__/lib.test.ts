@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { ApiError, callApi } from "@/lib/api";
+import { developerError } from "@/lib/developer-queries";
 import { toInvitationError, toOrganizationError } from "@/lib/errors";
 import { safeNextPath } from "@/lib/navigation";
 import { isValidSlug, suggestSlug } from "@/lib/slug";
@@ -39,6 +40,26 @@ describe("database errors", () => {
     expect(toOrganizationError(new Error("offline"))).toBe("unknown");
     expect(toInvitationError({ code: "P0002" })).toBe("expired");
     expect(toInvitationError({ code: "42501" })).toBe("wrongAccount");
+  });
+});
+
+describe("developer errors", () => {
+  test("a bad domain name reads as one; other checks don't", () => {
+    expect(
+      developerError({
+        code: "23514",
+        message:
+          'new row for relation "pass_partner_domains" violates check constraint',
+      })
+    ).toBe("invalidDomain");
+    expect(
+      developerError({
+        code: "23514",
+        message:
+          'new row for relation "pass_partners" violates check constraint "pass_partners_requested_answers_check"',
+      })
+    ).toBe("unknown");
+    expect(developerError({ message: "Too many apps" })).toBe("tooManyApps");
   });
 });
 
