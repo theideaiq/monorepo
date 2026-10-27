@@ -12,10 +12,16 @@ import type { JWK } from "jose";
 export const PASS_SCOPES = [
   "profile",
   "email",
+  "membership",
   "student",
+  "student_email",
   "adult",
   "plus",
+  "phone",
+  "birthdate",
+  "address",
   "card",
+  "offline_access",
 ] as const;
 
 export type PassScope = (typeof PASS_SCOPES)[number];

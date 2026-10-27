@@ -16,15 +16,22 @@ import {
   addPassPartner,
   rotatePassPartnerSecret,
   setPassPartnerActive,
+  setPassPartnerAnswers,
 } from "../actions";
 
 const ANSWERS = [
   "profile",
   "email",
+  "membership",
   "student",
+  "student_email",
   "adult",
   "plus",
+  "phone",
+  "birthdate",
+  "address",
   "card",
+  "offline_access",
 ] as const;
 
 interface Credentials {
@@ -141,5 +148,38 @@ export const PartnerActions = ({
       </div>
       {made ? <ShowOnce credentials={made} /> : null}
     </div>
+  );
+};
+
+/** Change what a partner may ask. */
+export const PartnerAnswersForm = ({
+  answers,
+  id,
+}: {
+  readonly answers: readonly string[];
+  readonly id: string;
+}) => {
+  const t = useTranslations("admin.companies.signIn");
+  const tCommon = useTranslations("admin.common");
+  return (
+    <ActionForm action={setPassPartnerAnswers} className="grid gap-3">
+      <input name="id" type="hidden" value={id} />
+      <fieldset className="flex flex-wrap gap-4">
+        <legend className="mb-2 font-medium text-sm">{t("answers")}</legend>
+        {ANSWERS.map((answer) => (
+          <CheckboxField
+            defaultChecked={answers.includes(answer)}
+            key={answer}
+            label={t(`answerNames.${answer}`)}
+            name={answer}
+          />
+        ))}
+      </fieldset>
+      <div>
+        <SubmitButton size="sm" variant="outline">
+          {tCommon("save")}
+        </SubmitButton>
+      </div>
+    </ActionForm>
   );
 };

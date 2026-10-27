@@ -701,6 +701,7 @@ Current schema:
 | `…_students_and_perks.sql` | Students: `universities` (email domains), `student_badges` (university and valid until 30 June), `student_requests` (emailed codes, card photos in the private `student-cards` bucket); `issue_student_code()` (API only), `confirm_student_email()`, `request_student_review()`, `review_student_card()`, `my_student()`; student prices (`plans.student_of`, `run_student_expiry()`); no deposits for students (`rental_quote()`, `book_kit()`). Perks: `perks`, `perk_redemptions` (once a day), `partner_check()`, `redeem_perk()`, `perk_stats()`, `my_partners()` |
 | `…_surveys.sql` | Surveys: `surveys` (free, Bulbs or cash rewarded; targeting by university, major, year and governorate), `survey_questions`, `survey_responses`, `survey_answers`, `survey_credits` (give to get), `survey_reports`; the student profile on `student_badges` (`set_student_profile()`); `save_survey()`, `publish_survey()` (the sensitive-topic checker, `survey_flags()`), `start_survey()`, `submit_survey()`, `surveys_for_me()`, `my_survey_credits()`, `report_survey()`, `survey_results()`, `close_survey()`, `review_survey()`; cash surveys open when their order is paid |
 | `…_pass_sign_in.sql` | Sign in with The IDEA Pass: `pass_card_checks`, `pass_card_check()` and `pass_card()` (partner card checks and the card image), `pass_partners` (OpenID Connect clients: return addresses, allowed scopes, the secret's hash), `pass_connections` (who shared what with which site; a per-site `subject`), `pass_sign_in_codes` and `pass_access_tokens` (hashes, the API only); `approve_pass_sign_in()` (the consent screen), `pass_claims()` (service role), `disconnect_pass_partner()` |
+| `…_pass_scopes.sql` | Every partner scope (`membership`, `student_email`, `phone`, `birthdate`, `address`, `offline_access`; picture and plan); `student_badges.university_email` (kept when verified by email); `pass_refresh_tokens` (rotating, 90 days) |
 | `…_boxes.sql` | Boxes: `boxes`, `box_parts` (fixed product versions or slots filled from a category and format), `box_themes`; a box's stock comes from its parts (`private.box_stock()`, recounted with the parts' copies), an active box costs 10–15% less than its parts (`private.box_value()`); `cart_items.box_theme_id` and `order_items.box_theme_id`; orders take the fixed parts' copies, `pack_box()` the picked ones; `box_slot_copies()` |
 | `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
 | `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
@@ -1611,7 +1612,12 @@ Migration `20261227000000_pass_sign_in.sql`; the partner guide is
   `PASS_OIDC_SIGNING_KEY`, and an opaque access token for userinfo) and
   userinfo.
 - **Answers, not data.** Scopes are `openid`, `profile`, `email`,
-  `student`, `adult` and `plus` (`pass_claims()`); `sub` is per site.
+  `membership`, `student`, `student_email`, `adult`, `plus`, `phone`,
+  `birthdate`, `address`, `card` and `offline_access` (`pass_claims()`,
+  migration `20261228000000_pass_scopes.sql`); `sub` is per site. Staff
+  choose what each partner may ask; the person unticks anything on the
+  consent screen; sensitive scopes are marked. `offline_access` adds
+  rotating refresh tokens (`pass_refresh_tokens`, 90 days).
   Partners are registered in the back office (Companies → Sign in with the
   Pass), which shows the client secret once and keeps its SHA-256.
 - **Connected sites** (Pass → Settings) lists them; disconnecting ends the

@@ -1781,7 +1781,9 @@
           "save": "Save",
           "saved": "Saved.",
           "failed": "It couldn't be saved. Try again."
-        }
+        },
+        "emailOnFile": "University email on file: {email}. Partner sites see it only when you allow them.",
+        "addEmail": "Add your university email to share it with partner sites that ask (only when you allow them)."
       },
       "sites": {
         "title": "Connected sites",
@@ -4532,7 +4534,13 @@
           "student": "Verified student",
           "adult": "18 or over",
           "plus": "The IDEA Plus member",
-          "card": "Show the Pass card"
+          "card": "Show the Pass card",
+          "membership": "Member number",
+          "student_email": "University email (sensitive)",
+          "phone": "WhatsApp number (sensitive)",
+          "birthdate": "Date of birth (sensitive)",
+          "address": "Delivery address (sensitive)",
+          "offline_access": "Stay updated: refresh tokens (sensitive)"
         },
         "add": "Add site",
         "once": "Copy these now: the secret isn't shown again. Send it to the partner's developers privately.",
@@ -4540,7 +4548,8 @@
         "secret": "Client secret",
         "rotate": "New secret",
         "turnOff": "Turn off",
-        "turnOn": "Turn on"
+        "turnOn": "Turn on",
+        "editAnswers": "Change what it may ask"
       }
     }
   },
@@ -4661,24 +4670,32 @@
     "authorize": {
       "meta": "Sign in with The IDEA Pass",
       "title": "{site} wants you to sign in with The IDEA Pass",
-      "shares": "If you continue, it learns:",
+      "shares": "If you continue, it learns (untick anything you don't want to share):",
       "scopes": {
         "openid": "That it's you (an id only this site sees)",
-        "profile": "Your name",
+        "profile": "Your name, language and profile picture",
         "email": "Your email address",
         "student": "Whether you're a verified student, at which university and until when",
         "adult": "Whether you're 18 or over",
-        "plus": "Whether you're a The IDEA Plus member",
-        "card": "Your Pass card, to show on their site (without its scannable code)"
+        "plus": "Whether you're a The IDEA Plus member, and your plan",
+        "card": "Your Pass card, to show on their site (without its scannable code)",
+        "membership": "Your member number and since when you've had the Pass",
+        "student_email": "Your verified university email",
+        "phone": "Your WhatsApp number",
+        "birthdate": "Your date of birth",
+        "address": "Your latest delivery address",
+        "offline_access": "Keep these up to date after you leave (for example, whether you're still a student) until you disconnect it"
       },
-      "never": "It never sees your orders, address, birthday or anything else. You can disconnect it at any time in Settings.",
+      "never": "It never sees anything you didn't tick, your orders or your payments. You can disconnect it at any time in Settings.",
       "manage": "Connected sites",
       "allow": "Continue",
       "deny": "Don't allow",
       "failed": "Something went wrong. Try again.",
       "unknownTitle": "This site can't use The IDEA Pass",
       "unknown": "The link that brought you here isn't from a site we know. Nothing was shared.",
-      "home": "Go to The IDEA"
+      "home": "Go to The IDEA",
+      "sensitive": "Sensitive",
+      "noStudentEmail": "Not on file yet: confirm your university email in Settings to share it."
     }
   }
 }

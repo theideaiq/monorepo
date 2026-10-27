@@ -36,11 +36,12 @@ Discovery: `https://api.theideaiq.com/oidc/.well-known/openid-configuration`
 - `response_type=code`, PKCE `S256` required, `state` and `nonce`
   recommended, `ui_locales=ar` or `en` picks the consent screen's language.
 - The token endpoint takes `client_secret_basic` (default) or
-  `client_secret_post`, and `grant_type=authorization_code` only. A code
+  `client_secret_post`, with `grant_type=authorization_code` or
+  `refresh_token`. A code
   lasts 5 minutes and works once (a failed attempt uses it up).
 - The response has an `id_token` (1 hour), an `access_token` (1 hour, for
-  userinfo only) and `scope`. There are no refresh tokens: the partner
-  keeps its own session after sign-in.
+  userinfo and the card), `scope` and, with `offline_access`, a
+  `refresh_token`.
 - The return address gets `code`, `state` and `iss`, or `error`
   (`access_denied` when the person says no, `invalid_scope`,
   `invalid_request`). An unknown client or return address is never sent
@@ -48,21 +49,36 @@ Discovery: `https://api.theideaiq.com/oidc/.well-known/openid-configuration`
 
 ## Scopes and claims
 
-`openid` is required. The others are only those the site was registered for.
+`openid` is required. A site can ask only for the scopes staff turned on
+for it (Companies → Sign in with the Pass), and the person can untick any
+of them on the consent screen: the token response's `scope` lists what
+was actually shared, and claims for anything else are simply absent.
+Sensitive scopes are marked on the consent screen and off by default.
 
-| Scope | Claims |
-| --- | --- |
-| `openid` | `sub`: the person's id **at this site** (each site gets its own) |
-| `profile` | `name`, `given_name`, `family_name`, `locale` (`ar` or `en`) |
-| `email` | `email`, `email_verified` |
-| `student` | `student`: `{ "verified": true, "university": "auib", "until": "2027-06-30" }`, or `{ "verified": false }` |
-| `adult` | `adult`: `true` when 18 or over |
-| `plus` | `plus`: `true` with an active The IDEA Plus membership |
-| `card` | No claim: lets the access token fetch the person's card (below) |
+| Scope | Claims | |
+| --- | --- | --- |
+| `openid` | `sub`: the person's id **at this site** (each site gets its own) | |
+| `profile` | `name`, `given_name`, `family_name`, `locale` (`ar` or `en`), `picture` | |
+| `email` | `email`, `email_verified` (the Pass email) | |
+| `membership` | `member_number`, `member_since` | |
+| `student` | `student`: `{ "verified": true, "university": "auib", "until": "2027-06-30" }`, or `{ "verified": false }` | |
+| `student_email` | `student_email`, `student_email_verified`: the university email the badge was verified with (absent for card-photo badges, or until the student confirms it in Settings) | sensitive |
+| `adult` | `adult`: `true` when 18 or over | |
+| `plus` | `plus`, and `plus_plan` (the plan's name) for members | |
+| `phone` | `phone_number` (the WhatsApp number from Settings, `+9647…`), `phone_number_verified: false` | sensitive |
+| `birthdate` | `birthdate` (`YYYY-MM-DD`) | sensitive |
+| `address` | `address` (OpenID Connect address: `formatted`, `street_address`, `locality`, `region`, `country`), from the latest delivery | sensitive |
+| `card` | No claim: lets the access token fetch the person's card (below) | |
+| `offline_access` | No claim: the token response adds a `refresh_token` | sensitive |
 
 The ID token has the claims as they were at sign-in; userinfo works them
-out again (a badge that ended reads `verified: false`). Nothing else is
-ever shared: no birthday, phone, address, university email or orders.
+out again (a badge that ended reads `verified: false`). Nothing is shared
+that the person didn't tick, and never orders or payments.
+
+**Refresh tokens** (`offline_access`): `grant_type=refresh_token` with the
+client secret returns a new access token, ID token and refresh token. Each
+refresh token works once (use the new one each time) and lasts 90 days;
+disconnecting the site in Settings ends them.
 
 Universities use the ids in Customers → Students (`auib`, `uobaghdad`,
 `mustansiriyah`, `uotechnology`, `nahrain`, `aliraqia`, `mansour`,

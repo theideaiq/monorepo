@@ -302,10 +302,16 @@ export const setPerkActive = staffAction(
 const PASS_ANSWERS = [
   "profile",
   "email",
+  "membership",
   "student",
+  "student_email",
   "adult",
   "plus",
+  "phone",
+  "birthdate",
+  "address",
   "card",
+  "offline_access",
 ] as const;
 
 /** A new client secret for a partner site, and its stored hash. */
@@ -324,15 +330,21 @@ const newSecret = () => {
 export const addPassPartner = staffAction(
   "companies",
   z.object({
+    address: checkbox,
     adult: checkbox,
+    birthdate: checkbox,
     card: checkbox,
     email: checkbox,
+    membership: checkbox,
     name: text(80),
+    offline_access: checkbox,
     organization: optionalUuid,
+    phone: checkbox,
     plus: checkbox,
     profile: checkbox,
     redirectUris: lines(10, 300).pipe(z.array(z.url()).min(1)),
     student: checkbox,
+    student_email: checkbox,
     website: z.url().startsWith("https://"),
   }),
   async ({ input, supabase }) => {
@@ -381,6 +393,36 @@ export const setPassPartnerActive = staffAction(
       await supabase
         .from("pass_partners")
         .update({ active: input.active === "true" })
+        .eq("client_id", input.id)
+        .select("client_id")
+    );
+    return success();
+  }
+);
+
+/** What an existing partner may ask (people still choose, each time). */
+export const setPassPartnerAnswers = staffAction(
+  "companies",
+  z.object({
+    address: checkbox,
+    adult: checkbox,
+    birthdate: checkbox,
+    card: checkbox,
+    email: checkbox,
+    id: z.string().regex(/^pass_[a-z0-9]{24}$/),
+    membership: checkbox,
+    offline_access: checkbox,
+    phone: checkbox,
+    plus: checkbox,
+    profile: checkbox,
+    student: checkbox,
+    student_email: checkbox,
+  }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("pass_partners")
+        .update({ answers: PASS_ANSWERS.filter((answer) => input[answer]) })
         .eq("client_id", input.id)
         .select("client_id")
     );

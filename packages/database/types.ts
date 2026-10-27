@@ -1766,6 +1766,41 @@ export type Database = {
           },
         ];
       };
+      pass_refresh_tokens: {
+        Row: {
+          client_id: string;
+          created_at: string;
+          expires_at: string;
+          scopes: string[];
+          token_hash: string;
+          user_id: string;
+        };
+        Insert: {
+          client_id: string;
+          created_at?: string;
+          expires_at?: string;
+          scopes: string[];
+          token_hash: string;
+          user_id: string;
+        };
+        Update: {
+          client_id?: string;
+          created_at?: string;
+          expires_at?: string;
+          scopes?: string[];
+          token_hash?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_refresh_tokens_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+        ];
+      };
       pass_sign_in_codes: {
         Row: {
           client_id: string;
@@ -3448,6 +3483,7 @@ export type Database = {
           major: string | null;
           method: string;
           study_year: number | null;
+          university_email: string | null;
           university_id: string;
           user_id: string;
           valid_until: string;
@@ -3459,6 +3495,7 @@ export type Database = {
           major?: string | null;
           method: string;
           study_year?: number | null;
+          university_email?: string | null;
           university_id: string;
           user_id: string;
           valid_until: string;
@@ -3470,6 +3507,7 @@ export type Database = {
           major?: string | null;
           method?: string;
           study_year?: number | null;
+          university_email?: string | null;
           university_id?: string;
           user_id?: string;
           valid_until?: string;
@@ -4894,6 +4932,7 @@ export type Database = {
           major: string | null;
           method: string;
           study_year: number | null;
+          university_email: string | null;
           university_id: string;
           user_id: string;
           valid_until: string;
@@ -6072,6 +6111,7 @@ export type Database = {
           major: string | null;
           method: string;
           study_year: number | null;
+          university_email: string | null;
           university_id: string;
           user_id: string;
           valid_until: string;

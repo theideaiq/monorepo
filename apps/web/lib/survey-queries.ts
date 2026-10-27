@@ -212,7 +212,7 @@ export const useStudentProfile = () => {
       unwrap(
         await supabase
           .from("student_badges")
-          .select("major, study_year, governorate")
+          .select("major, study_year, governorate, university_email")
           .eq("user_id", requireUserId(user?.id))
           .maybeSingle()
       ),

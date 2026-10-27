@@ -253,13 +253,49 @@ const ProfileForm = ({
   );
 };
 
-/** The profile form once the saved values are in. */
-const StudentProfile = () => {
+/**
+ * The university email on file (shared only with partner sites the
+ * student allows), or a way to add it: badges from card photos, or from
+ * before emails were kept, have none.
+ */
+const UniversityEmail = ({
+  email,
+  university,
+}: {
+  readonly email: string | null | undefined;
+  readonly university: string;
+}) => {
+  const t = useTranslations("app.settings.student");
+  if (email) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        {t("emailOnFile", { email })}
+      </p>
+    );
+  }
+  return (
+    <div className="grid gap-2 border-t pt-4">
+      <p className="text-muted-foreground text-sm">{t("addEmail")}</p>
+      <EmailForm university={university} />
+    </div>
+  );
+};
+
+/** The profile form and the university email, once the saved values are in. */
+const StudentProfile = ({ university }: { readonly university: string }) => {
   const profile = useStudentProfile();
   if (!profile.isSuccess) {
     return null;
   }
-  return <ProfileForm initial={profile.data} />;
+  return (
+    <>
+      <UniversityEmail
+        email={profile.data?.university_email}
+        university={university}
+      />
+      <ProfileForm initial={profile.data} />
+    </>
+  );
 };
 
 /** Choose the university, then verify by email or with the card. */
@@ -348,7 +384,7 @@ export const StudentCard = () => {
             university: universityName(student.university_id),
           })}
         </p>
-        <StudentProfile />
+        <StudentProfile university={student.university_id ?? ""} />
       </>
     );
   } else if (student?.pending === "card") {
