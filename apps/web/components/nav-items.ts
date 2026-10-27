@@ -1,4 +1,5 @@
 import {
+  HeartIcon,
   IdCardIcon,
   LightbulbIcon,
   type LucideIcon,
@@ -6,7 +7,7 @@ import {
   Settings2Icon,
 } from "lucide-react";
 
-export type NavKey = "bulbs" | "orders" | "pass" | "settings";
+export type NavKey = "bulbs" | "orders" | "pass" | "saved" | "settings";
 
 export interface NavItem {
   href: string;
@@ -15,13 +16,14 @@ export interface NavItem {
 }
 
 /**
- * Your Pass, in four pages: the card, orders, Bulbs (with invites) and
- * settings. Plus, saved items, support and the
- * member's events live on /plus, /saved, /help and /club.
+ * Your Pass, in five pages: the card, orders, saved items, Bulbs (with
+ * invites) and settings. Plus, support and the member's events live on
+ * /plus, /help and /club.
  */
 export const navItems: NavItem[] = [
   { href: "/pass", icon: IdCardIcon, key: "pass" },
   { href: "/pass/orders", icon: PackageIcon, key: "orders" },
+  { href: "/pass/saved", icon: HeartIcon, key: "saved" },
   { href: "/pass/bulbs", icon: LightbulbIcon, key: "bulbs" },
   { href: "/pass/settings", icon: Settings2Icon, key: "settings" },
 ];

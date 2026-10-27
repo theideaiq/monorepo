@@ -1,5 +1,5 @@
 import { Highlight } from "@repo/design-system/components/brand/highlight";
-import { type Locale, localePath } from "@repo/internationalization";
+import type { Locale } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
 import { MoveRight } from "lucide-react";
 import type { Metadata } from "next";
@@ -10,7 +10,6 @@ import { EmptyState } from "@/components/section";
 import { CategoryChips } from "@/components/shop/category-chips";
 import { MemberStrip } from "@/components/shop/member-strip";
 import { Rail } from "@/components/shop/rail";
-import { StoreSearch } from "@/components/shop/store-search";
 import {
   getCategories,
   getEvents,
@@ -41,7 +40,7 @@ export const generateMetadata = async ({
 };
 
 /**
- * Home is the storefront: search, categories, what's featured and new,
+ * Home is the storefront: categories, what's featured and new,
  * a way into rentals, then events and The IDEA Club. The company's own
  * pages are under /about.
  */
@@ -74,12 +73,6 @@ const Home = async ({ params }: HomeProps) => {
         <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
           {t("home.title")}
         </h1>
-        <StoreSearch
-          action={localePath(locale, "/store")}
-          id="home-search"
-          label={t("store.searchLabel")}
-          placeholder={t("store.searchPlaceholder")}
-        />
         <CategoryChips
           categories={categories}
           hrefFor={(slug) => `/store?category=${encodeURIComponent(slug)}`}

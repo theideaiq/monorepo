@@ -1,10 +1,8 @@
 import { localized } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
-import { Input } from "@repo/design-system/components/ui/input";
 import { cn } from "@repo/design-system/lib/utils";
 import type { Locale } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
-import { Search } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/page-hero";
@@ -98,7 +96,7 @@ const Store = async ({ params, searchParams }: StoreProps) => {
       <Section>
         <form
           action=""
-          className="mb-6 flex flex-col gap-3 md:flex-row md:items-end"
+          className="mb-6 flex flex-wrap items-end justify-end gap-3"
           method="get"
         >
           {query.category ? (
@@ -107,26 +105,7 @@ const Store = async ({ params, searchParams }: StoreProps) => {
           {query.format ? (
             <input name="format" type="hidden" value={query.format} />
           ) : null}
-          <div className="flex flex-1 flex-col gap-1 text-sm">
-            <label className="sr-only" htmlFor="store-search">
-              {t("store.searchLabel")}
-            </label>
-            <div className="relative">
-              <Search
-                aria-hidden="true"
-                className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-              />
-              <Input
-                className="ps-9"
-                defaultValue={query.q}
-                id="store-search"
-                maxLength={100}
-                name="q"
-                placeholder={t("store.searchPlaceholder")}
-                type="search"
-              />
-            </div>
-          </div>
+          {query.q ? <input name="q" type="hidden" value={query.q} /> : null}
           <div className="flex flex-col gap-1 text-sm">
             <label className="text-muted-foreground" htmlFor="store-sort">
               {t("store.sortLabel")}
@@ -144,7 +123,9 @@ const Store = async ({ params, searchParams }: StoreProps) => {
               ))}
             </select>
           </div>
-          <Button type="submit">{t("store.search")}</Button>
+          <Button type="submit" variant="outline">
+            {t("store.sortApply")}
+          </Button>
         </form>
 
         <nav

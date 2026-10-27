@@ -13,7 +13,7 @@ incidents) is in `docs/platform`.
   security headers) and the cookie session (`@repo/auth/server`):
   - the public pages, organised like the menu (Store · Plus · Club · Pass,
     a bottom tab bar on phones): The IDEA Store is Home (`/`), the
-    storefront (search, categories, featured and new products), with
+    storefront (categories, featured and new products), with
     `/store` the full catalog and product pages (buying, reviews); The IDEA
     Plus is `/plus`, everything about renting (the rental catalog with
     categories, then plans and tiers), public, with "Your Plus" (joining
@@ -23,16 +23,23 @@ incidents) is in `docs/platform`.
     "Yours" at `#yours` (your events with the calendar feed, your
     submissions) and the Telegram rooms card, and `/club/<slug>` is a post
     or an event (with RSVP); `/partners` ("For partners") presents The
-    IDEA Partners to organizations; `/saved` (saved products); `/help`
+    IDEA Partners to organizations; `/search` (the one search: products
+    to buy and rent, events and posts); `/help`
     (FAQ, the contact form at `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
-    and `/help/new`); `/careers`; `/about` (the company, preferences, the
+    and `/help/new`); `/careers`; `/about` (the company, the
     version); `/r/<code>` (a member's invite link: 10% off a new member's
     first order) and legal pages at `/legal/<policy>` (Markdown in
-    `apps/web/content/legal`). The top bar holds the logo, search, saved
-    (heart, to `/saved`), cart and, on desktop, the Pass avatar (saved and
-    cart are hidden on sign-in and checkout); the desktop header reads Store · Plus · Club, "For
-    partners", saved, cart, Pass. The footer lists Store · Plus · Club ·
-    Pass · For partners, then About · Careers · Help · Legal. Old addresses
+    `apps/web/content/legal`). Each place has one way in. Phones: the top
+    bar holds the logo, search, the bell and the cart; the tabs Store ·
+    Plus · Club · Pass. Wider screens: logo · Store · Plus · Club · search
+    · bell · cart · Pass avatar ("Sign in" when signed out). The bell
+    shows only when signed in and only in the top bar; the cart shows on
+    the Store and Plus screens and anywhere while it holds items; search,
+    bell and cart are hidden on sign-in and checkout. Saved items are in
+    Your Pass (`/pass/saved`; the heart is only on products). The footer,
+    on every screen, lists For partners · About · Careers · Help · Legal,
+    the language and theme switches and the Telegram link; Store, Plus,
+    Club and Pass are never repeated there. Old addresses
     have no HTTP redirects; links stored in notifications are mapped to
     current pages by `currentAppPath`/`businessPath` in
     `packages/internationalization/app-paths.ts` (used by the website,

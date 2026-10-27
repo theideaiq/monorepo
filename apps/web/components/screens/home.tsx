@@ -21,7 +21,6 @@ import type { ReactNode } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { OrderStatusBadge } from "@/components/store/order-status-badge";
-import { ProductCard } from "@/components/store/product-card";
 import { upcomingRsvps, useMyRsvps } from "@/lib/community-queries";
 import { orderPath } from "@/lib/order-checkout";
 import { isActiveOrder } from "@/lib/orders";
@@ -31,8 +30,7 @@ import {
   useRentals,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusSubscription, useProfile } from "@/lib/queries";
-import { useProductRatings } from "@/lib/review-queries";
-import { useOrders, useProducts } from "@/lib/store-queries";
+import { useOrders } from "@/lib/store-queries";
 
 const WHITESPACE = /\s+/;
 
@@ -248,45 +246,10 @@ const NextEvents = () => {
   );
 };
 
-const Featured = () => {
-  const t = useTranslations("app.home.featured");
-  const tCommon = useTranslations("app.common");
-  const products = useProducts({ featured: true, kind: "sale", limit: 8 });
-  const ratings = useProductRatings(
-    products.data?.map((product) => product.id) ?? []
-  );
-
-  return (
-    <section className="grid gap-4">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="font-semibold text-lg">{t("title")}</h2>
-        <Button asChild size="sm" variant="ghost">
-          <Link href="/store">{tCommon("viewAll")}</Link>
-        </Button>
-      </div>
-      {products.isPending ? <SectionSpinner /> : null}
-      {products.data?.length === 0 ? (
-        <p className="text-muted-foreground text-sm">{t("empty")}</p>
-      ) : null}
-      {products.data?.length ? (
-        <ul className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-4">
-          {products.data.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              rating={ratings.data?.get(product.id)}
-            />
-          ))}
-        </ul>
-      ) : null}
-    </section>
-  );
-};
-
 /**
  * Your Pass: a greeting, the membership card (`card`, rendered on the
- * server), active orders, Plus membership and rentals, next events and
- * featured products.
+ * server, with the Bulbs balance), then what's on the way: active orders,
+ * Plus rentals and the next events. The Store has its own tab.
  */
 export const Home = ({ card }: { readonly card?: ReactNode }) => {
   const t = useTranslations("app.home");
@@ -312,7 +275,6 @@ export const Home = ({ card }: { readonly card?: ReactNode }) => {
           <PlusPanel />
           <NextEvents />
         </div>
-        <Featured />
       </div>
     </>
   );

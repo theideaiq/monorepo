@@ -3,11 +3,7 @@ import { Highlight } from "@repo/design-system/components/brand/highlight";
 import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
-import {
-  type Locale,
-  localePath,
-  type Messages,
-} from "@repo/internationalization";
+import type { Locale, Messages } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { MoveRight } from "lucide-react";
@@ -19,7 +15,6 @@ import { ProductCard } from "@/components/product-card";
 import { YourPlus } from "@/components/screens/plus";
 import { EmptyState, Section } from "@/components/section";
 import { CategoryChips } from "@/components/shop/category-chips";
-import { StoreSearch } from "@/components/shop/store-search";
 import {
   getCategories,
   getKitTypes,
@@ -104,13 +99,6 @@ const Rent = async ({ params, searchParams }: RentProps) => {
         <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
           {t("rent.title")} <Highlight>{t("rent.highlight")}</Highlight>
         </h1>
-        <StoreSearch
-          action={localePath(locale, "/plus")}
-          defaultValue={query.q}
-          id="rent-search"
-          label={t("rent.searchLabel")}
-          placeholder={t("rent.searchPlaceholder")}
-        />
         <CategoryChips
           categories={categories}
           hrefFor={(slug) =>

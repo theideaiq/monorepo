@@ -27,7 +27,7 @@ const isActive = (pathname: string, tab: (typeof tabs)[number]) =>
 
 /**
  * The app's tabs along the bottom of the screen on phones: Store, Plus,
- * Club and Pass (saved items and the cart are in the top bar). Wider
+ * Club and Pass (search, the bell and the cart are in the top bar). Wider
  * screens keep the header's menu.
  */
 export const TabBar = () => {

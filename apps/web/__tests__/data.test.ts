@@ -49,7 +49,8 @@ vi.mock("@repo/observability/log", () => ({
   log: { error: vi.fn() },
 }));
 
-const { getRatings, getRentals, getReviews } = await import("@/lib/data");
+const { getEvents, getPosts, getRatings, getRentals, getReviews, titleSearch } =
+  await import("@/lib/data");
 
 beforeEach(() => {
   state.calls = [];
@@ -131,5 +132,38 @@ describe("getRentals", () => {
       method: "eq",
     });
     expect(state.calls).toContainEqual({ args: [4], method: "limit" });
+  });
+});
+
+describe("titleSearch", () => {
+  it("matches the Arabic or English title", () => {
+    expect(titleSearch("  quiz ")).toBe(
+      "title_ar.ilike.*quiz*,title_en.ilike.*quiz*"
+    );
+  });
+
+  it("drops characters that would change the filter", () => {
+    expect(titleSearch('a,b)or(x.eq.1"%_*')).toBe(
+      "title_ar.ilike.*a b or x.eq.1*,title_en.ilike.*a b or x.eq.1*"
+    );
+    expect(titleSearch(" ,%() ")).toBeNull();
+    expect(titleSearch(undefined)).toBeNull();
+  });
+});
+
+describe("posts and events search", () => {
+  it("filters posts and events by title", async () => {
+    await getPosts({ search: "night" });
+    await getEvents({ search: "night" });
+    const filters = state.calls.filter((call) => call.method === "or");
+    expect(filters).toHaveLength(2);
+    expect(filters[0]?.args[0]).toBe(
+      "title_ar.ilike.*night*,title_en.ilike.*night*"
+    );
+  });
+
+  it("adds no filter without a term", async () => {
+    await getPosts();
+    expect(state.calls.some((call) => call.method === "or")).toBe(false);
   });
 });

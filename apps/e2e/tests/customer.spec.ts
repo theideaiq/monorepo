@@ -226,7 +226,13 @@ test.describe("a signed-in customer", () => {
     await expect(page.getByRole("link", { name: "Checkout" })).toBeVisible();
     await expectAccessible(page);
 
-    await page.goto(`${urls.web}/saved`);
+    // Saved items live in Your Pass.
+    await page.goto(`${urls.web}/pass`);
+    await page
+      .getByRole("navigation", { name: "Navigation" })
+      .getByRole("link", { name: "Saved" })
+      .click();
+    await expect(page).toHaveURL(`${urls.web}/pass/saved`);
     await expect(page.getByText(product.name).first()).toBeVisible();
     await expectAccessible(page);
     noErrors();
@@ -375,7 +381,8 @@ test.describe("a signed-in customer", () => {
 
   test("sees the notification bell, then signs out", async ({ page }) => {
     await page.goto(`${urls.web}/pass`);
-    const bell = page.getByRole("button", {
+    // The bell is in the top bar only.
+    const bell = page.getByRole("banner").getByRole("button", {
       name: "Notifications, 1 unread",
     });
     await expect(bell).toBeVisible();
@@ -391,7 +398,7 @@ test.describe("a signed-in customer", () => {
 
     await page.getByRole("button", { name: "Sign out" }).click();
     await expect(page).toHaveURL(new RegExp(`^${urls.web}/sign-in`));
-    await page.goto(`${urls.web}/saved`);
+    await page.goto(`${urls.web}/pass/saved`);
     await expect(page).toHaveURL(new RegExp(`^${urls.web}/sign-in`));
   });
 });

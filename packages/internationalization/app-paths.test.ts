@@ -12,7 +12,7 @@ describe("currentAppPath", () => {
   test("opens pages that moved at their current address", () => {
     expect(currentAppPath("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
     expect(currentAppPath("/pass/support/t1")).toBe("/help/t1");
-    expect(currentAppPath("/pass/wishlist")).toBe("/saved");
+    expect(currentAppPath("/pass/wishlist")).toBe("/pass/saved");
     expect(currentAppPath("/post/events/quiz-night")).toBe("/club/quiz-night");
     expect(currentAppPath("/post/stories")).toBe("/club");
     expect(currentAppPath("/suite")).toBe("/business");
