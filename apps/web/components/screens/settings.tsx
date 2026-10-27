@@ -20,6 +20,7 @@ import { useTheme } from "next-themes";
 import { Suspense, useId } from "react";
 import { DeleteAccountCard } from "@/components/account/delete-account";
 import { BirthdayCard } from "@/components/birthday-settings";
+import { ConnectedSites } from "@/components/connected-sites";
 import { GuardianCard } from "@/components/guardian-settings";
 import { PageHeader } from "@/components/page-header";
 import { ProfileForm } from "@/components/profile-form";
@@ -128,6 +129,7 @@ export const Settings = () => {
         </Card>
         <BirthdayCard />
         <StudentCard />
+        <ConnectedSites />
         <Suspense>
           <GuardianCard />
         </Suspense>

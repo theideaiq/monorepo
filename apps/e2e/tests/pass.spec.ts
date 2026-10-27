@@ -1,8 +1,44 @@
 import { expect, test } from "@playwright/test";
-import { customer } from "../fixtures";
+import { admin, customer } from "../fixtures";
 import { urls } from "../playwright.config";
 import { resetCustomer } from "../seed";
 import { expectAccessible, signIn } from "./helpers";
+
+/** A partner site for Sign in with The IDEA Pass (its return address is the website). */
+const partner = {
+  clientId: "pass_e2e000000000000000000000",
+  name: "E2E Partner",
+  redirect: `${urls.web}/e2e-partner/callback`,
+};
+
+const seedPartner = async () => {
+  const { error } = await admin()
+    .from("pass_partners")
+    .upsert({
+      active: true,
+      answers: ["profile", "email", "student"],
+      client_id: partner.clientId,
+      name: partner.name,
+      redirect_uris: [partner.redirect],
+      secret_hash: "0".repeat(64),
+      website: "https://partner.example",
+    });
+  if (error) {
+    throw error;
+  }
+};
+
+const authorizeUrl = (redirect = partner.redirect) =>
+  `${urls.web}/oauth/authorize?${new URLSearchParams({
+    client_id: partner.clientId,
+    code_challenge: "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM",
+    code_challenge_method: "S256",
+    nonce: "e2e-nonce",
+    redirect_uri: redirect,
+    response_type: "code",
+    scope: "openid profile student",
+    state: "e2e-state",
+  })}`;
 
 /** `?return_to=…` as the website writes it (a path or URL, encoded). */
 const returnTo = (path: string) => `?return_to=${encodeURIComponent(path)}`;
@@ -38,6 +74,44 @@ test.describe("The IDEA Pass", () => {
     test.beforeEach(async ({ context }) => {
       await resetCustomer();
       await signIn(context, customer.email);
+    });
+
+    test("a partner site asks first, then gets a code", async ({ page }) => {
+      await seedPartner();
+      await page.goto(authorizeUrl());
+      await expect(
+        page.getByRole("heading", {
+          name: `${partner.name} wants you to sign in with The IDEA Pass`,
+        })
+      ).toBeVisible();
+      await expect(page.getByText("Your name")).toBeVisible();
+      await expect(page.getByText(/verified student/)).toBeVisible();
+      await expect(page.getByText("Your email address")).toHaveCount(0);
+      await expectAccessible(page);
+
+      await page.getByRole("button", { name: "Continue" }).click();
+      await page.waitForURL(/\/e2e-partner\/callback\?/);
+      const back = new URL(page.url());
+      expect(back.searchParams.get("code")).toMatch(/^[0-9a-f]{64}$/);
+      expect(back.searchParams.get("state")).toBe("e2e-state");
+
+      // Settings lists it; disconnecting removes it.
+      await page.goto(`${urls.web}/pass/settings`);
+      const sites = page.locator("#sites");
+      await expect(sites.getByText(partner.name)).toBeVisible();
+      await sites.getByRole("button", { name: "Disconnect" }).click();
+      await expect(page.locator("#sites")).toHaveCount(0);
+    });
+
+    test("an unknown return address gets nothing", async ({ page }) => {
+      await seedPartner();
+      await page.goto(authorizeUrl("https://evil.example/callback"));
+      await expect(
+        page.getByRole("heading", {
+          name: "This site can't use The IDEA Pass",
+        })
+      ).toBeVisible();
+      await expect(page).toHaveURL(/\/oauth\/authorize\?/);
     });
 
     test("shows Your Pass and signs out everywhere", async ({ page }) => {

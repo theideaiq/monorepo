@@ -1617,6 +1617,170 @@ export type Database = {
         };
         Relationships: [];
       };
+      pass_access_tokens: {
+        Row: {
+          client_id: string;
+          created_at: string;
+          expires_at: string;
+          scopes: string[];
+          token_hash: string;
+          user_id: string;
+        };
+        Insert: {
+          client_id: string;
+          created_at?: string;
+          expires_at: string;
+          scopes: string[];
+          token_hash: string;
+          user_id: string;
+        };
+        Update: {
+          client_id?: string;
+          created_at?: string;
+          expires_at?: string;
+          scopes?: string[];
+          token_hash?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_access_tokens_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+        ];
+      };
+      pass_connections: {
+        Row: {
+          client_id: string;
+          granted_at: string;
+          last_used_at: string | null;
+          scopes: string[];
+          subject: string;
+          user_id: string;
+        };
+        Insert: {
+          client_id: string;
+          granted_at?: string;
+          last_used_at?: string | null;
+          scopes?: string[];
+          subject?: string;
+          user_id: string;
+        };
+        Update: {
+          client_id?: string;
+          granted_at?: string;
+          last_used_at?: string | null;
+          scopes?: string[];
+          subject?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_connections_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+        ];
+      };
+      pass_partners: {
+        Row: {
+          active: boolean;
+          answers: string[];
+          client_id: string;
+          created_at: string;
+          name: string;
+          organization_id: string | null;
+          redirect_uris: string[];
+          secret_hash: string;
+          updated_at: string;
+          website: string;
+        };
+        Insert: {
+          active?: boolean;
+          answers?: string[];
+          client_id: string;
+          created_at?: string;
+          name: string;
+          organization_id?: string | null;
+          redirect_uris: string[];
+          secret_hash: string;
+          updated_at?: string;
+          website: string;
+        };
+        Update: {
+          active?: boolean;
+          answers?: string[];
+          client_id?: string;
+          created_at?: string;
+          name?: string;
+          organization_id?: string | null;
+          redirect_uris?: string[];
+          secret_hash?: string;
+          updated_at?: string;
+          website?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_partners_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      pass_sign_in_codes: {
+        Row: {
+          client_id: string;
+          code_challenge: string;
+          code_hash: string;
+          created_at: string;
+          expires_at: string;
+          nonce: string | null;
+          redirect_uri: string;
+          scopes: string[];
+          used_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          client_id: string;
+          code_challenge: string;
+          code_hash: string;
+          created_at?: string;
+          expires_at?: string;
+          nonce?: string | null;
+          redirect_uri: string;
+          scopes: string[];
+          used_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          client_id?: string;
+          code_challenge?: string;
+          code_hash?: string;
+          created_at?: string;
+          expires_at?: string;
+          nonce?: string | null;
+          redirect_uri?: string;
+          scopes?: string[];
+          used_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_sign_in_codes_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+        ];
+      };
       payments: {
         Row: {
           amount: number;
@@ -4333,6 +4497,16 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      approve_pass_sign_in: {
+        Args: {
+          client: string;
+          code_challenge: string;
+          nonce?: string;
+          redirect_uri: string;
+          scopes: string[];
+        };
+        Returns: string;
+      };
       book_kit: {
         Args: {
           delivery_zone: string;
@@ -4913,6 +5087,7 @@ export type Database = {
         Returns: string;
       };
       decline_plus_seat: { Args: { seat: string }; Returns: undefined };
+      disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
       end_plus_seat: { Args: { seat: string }; Returns: undefined };
       event_rsvp_count: { Args: { event: string }; Returns: number };
       guardian_invite: {
@@ -5326,6 +5501,10 @@ export type Database = {
         };
       };
       partner_check: { Args: { org: string; scanned: string }; Returns: Json };
+      pass_claims: {
+        Args: { client: string; member: string; scopes: string[] };
+        Returns: Json;
+      };
       pause_plus: {
         Args: { days: number };
         Returns: {

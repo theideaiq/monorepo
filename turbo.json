@@ -53,6 +53,7 @@
     "CRON_SECRET",
     "FCM_SERVICE_ACCOUNT",
     "GOOGLE_WALLET_*",
+    "PASS_OIDC_*",
     "TELEGRAM_LOGIN_*",
     "PUSH_WEBHOOK_SECRET",
     "META_*",

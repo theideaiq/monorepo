@@ -8,3 +8,4 @@ these pages cover operating it.
 - [Releases and migrations](releases.md)
 - [Backups and restore](backups.md)
 - [When something breaks](incidents.md)
+- [Sign in with The IDEA Pass (partner sites)](pass-sign-in.md)
