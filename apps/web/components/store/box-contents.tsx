@@ -4,7 +4,6 @@ import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { PackageOpen } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { productHref } from "@/components/store/product-card";
 import { type Box, boxParts, isSlot, partName } from "@/lib/boxes";
 
 /** What a box holds: its fixed products, then what staff pick for it. */
@@ -38,7 +37,7 @@ export const BoxContents = async ({
             {part.product ? (
               <Link
                 className="font-medium hover:underline"
-                href={productHref(part.product.slug)}
+                href={`/store/${encodeURIComponent(part.product.slug)}`}
               >
                 {partName(part, locale)}
               </Link>
