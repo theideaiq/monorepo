@@ -9,192 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      affiliate_attributions: {
-        Row: {
-          affiliate_id: string;
-          member_id: string;
-          touched_at: string;
-          via: string;
-        };
-        Insert: {
-          affiliate_id: string;
-          member_id: string;
-          touched_at?: string;
-          via: string;
-        };
-        Update: {
-          affiliate_id?: string;
-          member_id?: string;
-          touched_at?: string;
-          via?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "affiliate_attributions_affiliate_id_fkey";
-            columns: ["affiliate_id"];
-            isOneToOne: false;
-            referencedRelation: "affiliates";
-            referencedColumns: ["user_id"];
-          },
-        ];
-      };
-      affiliate_commissions: {
-        Row: {
-          affiliate_id: string;
-          amount: number;
-          available_at: string;
-          created_at: string;
-          id: string;
-          kind: Database["public"]["Enums"]["affiliate_commission_kind"];
-          order_id: string | null;
-          payment_id: string | null;
-          payout_id: string | null;
-          status: Database["public"]["Enums"]["affiliate_commission_status"];
-        };
-        Insert: {
-          affiliate_id: string;
-          amount: number;
-          available_at?: string;
-          created_at?: string;
-          id?: string;
-          kind: Database["public"]["Enums"]["affiliate_commission_kind"];
-          order_id?: string | null;
-          payment_id?: string | null;
-          payout_id?: string | null;
-          status?: Database["public"]["Enums"]["affiliate_commission_status"];
-        };
-        Update: {
-          affiliate_id?: string;
-          amount?: number;
-          available_at?: string;
-          created_at?: string;
-          id?: string;
-          kind?: Database["public"]["Enums"]["affiliate_commission_kind"];
-          order_id?: string | null;
-          payment_id?: string | null;
-          payout_id?: string | null;
-          status?: Database["public"]["Enums"]["affiliate_commission_status"];
-        };
-        Relationships: [
-          {
-            foreignKeyName: "affiliate_commissions_affiliate_id_fkey";
-            columns: ["affiliate_id"];
-            isOneToOne: false;
-            referencedRelation: "affiliates";
-            referencedColumns: ["user_id"];
-          },
-          {
-            foreignKeyName: "affiliate_commissions_order_id_fkey";
-            columns: ["order_id"];
-            isOneToOne: false;
-            referencedRelation: "orders";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "affiliate_commissions_payment_id_fkey";
-            columns: ["payment_id"];
-            isOneToOne: false;
-            referencedRelation: "payments";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "affiliate_commissions_payout_id_fkey";
-            columns: ["payout_id"];
-            isOneToOne: false;
-            referencedRelation: "affiliate_payouts";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      affiliate_payouts: {
-        Row: {
-          account: string | null;
-          affiliate_id: string;
-          amount: number;
-          bulbs: number | null;
-          created_at: string;
-          id: string;
-          method: Database["public"]["Enums"]["affiliate_payout_method"];
-          paid_by: string | null;
-          reference: string | null;
-        };
-        Insert: {
-          account?: string | null;
-          affiliate_id: string;
-          amount: number;
-          bulbs?: number | null;
-          created_at?: string;
-          id?: string;
-          method: Database["public"]["Enums"]["affiliate_payout_method"];
-          paid_by?: string | null;
-          reference?: string | null;
-        };
-        Update: {
-          account?: string | null;
-          affiliate_id?: string;
-          amount?: number;
-          bulbs?: number | null;
-          created_at?: string;
-          id?: string;
-          method?: Database["public"]["Enums"]["affiliate_payout_method"];
-          paid_by?: string | null;
-          reference?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "affiliate_payouts_affiliate_id_fkey";
-            columns: ["affiliate_id"];
-            isOneToOne: false;
-            referencedRelation: "affiliates";
-            referencedColumns: ["user_id"];
-          },
-        ];
-      };
-      affiliates: {
-        Row: {
-          channel: string | null;
-          code: string | null;
-          created_at: string;
-          decided_at: string | null;
-          decided_by: string | null;
-          payout_account: string | null;
-          payout_method: Database["public"]["Enums"]["affiliate_payout_method"];
-          pitch: string;
-          staff_note: string | null;
-          status: Database["public"]["Enums"]["affiliate_status"];
-          updated_at: string;
-          user_id: string;
-        };
-        Insert: {
-          channel?: string | null;
-          code?: string | null;
-          created_at?: string;
-          decided_at?: string | null;
-          decided_by?: string | null;
-          payout_account?: string | null;
-          payout_method?: Database["public"]["Enums"]["affiliate_payout_method"];
-          pitch: string;
-          staff_note?: string | null;
-          status?: Database["public"]["Enums"]["affiliate_status"];
-          updated_at?: string;
-          user_id: string;
-        };
-        Update: {
-          channel?: string | null;
-          code?: string | null;
-          created_at?: string;
-          decided_at?: string | null;
-          decided_by?: string | null;
-          payout_account?: string | null;
-          payout_method?: Database["public"]["Enums"]["affiliate_payout_method"];
-          pitch?: string;
-          staff_note?: string | null;
-          status?: Database["public"]["Enums"]["affiliate_status"];
-          updated_at?: string;
-          user_id?: string;
-        };
-        Relationships: [];
-      };
       audit_logs: {
         Row: {
           action: string;
@@ -372,7 +186,6 @@ export type Database = {
           reason: string | null;
           review_id: string | null;
           status: Database["public"]["Enums"]["bulb_status"];
-          trade_in_id: string | null;
           user_id: string;
         };
         Insert: {
@@ -389,7 +202,6 @@ export type Database = {
           reason?: string | null;
           review_id?: string | null;
           status?: Database["public"]["Enums"]["bulb_status"];
-          trade_in_id?: string | null;
           user_id: string;
         };
         Update: {
@@ -406,7 +218,6 @@ export type Database = {
           reason?: string | null;
           review_id?: string | null;
           status?: Database["public"]["Enums"]["bulb_status"];
-          trade_in_id?: string | null;
           user_id?: string;
         };
         Relationships: [
@@ -443,69 +254,6 @@ export type Database = {
             columns: ["review_id"];
             isOneToOne: false;
             referencedRelation: "product_reviews";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "bulb_entries_trade_in_id_fkey";
-            columns: ["trade_in_id"];
-            isOneToOne: false;
-            referencedRelation: "trade_ins";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      candidates: {
-        Row: {
-          company_note: string | null;
-          created_at: string;
-          cv_path: string | null;
-          decided_at: string | null;
-          decided_by: string | null;
-          full_name: string;
-          headline: string | null;
-          id: string;
-          job_request_id: string;
-          proposed_by: string | null;
-          status: Database["public"]["Enums"]["candidate_status"];
-          summary: string | null;
-          updated_at: string;
-        };
-        Insert: {
-          company_note?: string | null;
-          created_at?: string;
-          cv_path?: string | null;
-          decided_at?: string | null;
-          decided_by?: string | null;
-          full_name: string;
-          headline?: string | null;
-          id?: string;
-          job_request_id: string;
-          proposed_by?: string | null;
-          status?: Database["public"]["Enums"]["candidate_status"];
-          summary?: string | null;
-          updated_at?: string;
-        };
-        Update: {
-          company_note?: string | null;
-          created_at?: string;
-          cv_path?: string | null;
-          decided_at?: string | null;
-          decided_by?: string | null;
-          full_name?: string;
-          headline?: string | null;
-          id?: string;
-          job_request_id?: string;
-          proposed_by?: string | null;
-          status?: Database["public"]["Enums"]["candidate_status"];
-          summary?: string | null;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "candidates_job_request_id_fkey";
-            columns: ["job_request_id"];
-            isOneToOne: false;
-            referencedRelation: "job_requests";
             referencedColumns: ["id"];
           },
         ];
@@ -974,65 +722,6 @@ export type Database = {
           },
         ];
       };
-      job_requests: {
-        Row: {
-          created_at: string;
-          created_by: string | null;
-          description: string | null;
-          employment_type: Database["public"]["Enums"]["employment_type"];
-          id: string;
-          location: string | null;
-          number: number;
-          openings: number;
-          organization_id: string;
-          salary_max: number | null;
-          salary_min: number | null;
-          status: Database["public"]["Enums"]["job_status"];
-          title: string;
-          updated_at: string;
-        };
-        Insert: {
-          created_at?: string;
-          created_by?: string | null;
-          description?: string | null;
-          employment_type?: Database["public"]["Enums"]["employment_type"];
-          id?: string;
-          location?: string | null;
-          number?: never;
-          openings?: number;
-          organization_id: string;
-          salary_max?: number | null;
-          salary_min?: number | null;
-          status?: Database["public"]["Enums"]["job_status"];
-          title: string;
-          updated_at?: string;
-        };
-        Update: {
-          created_at?: string;
-          created_by?: string | null;
-          description?: string | null;
-          employment_type?: Database["public"]["Enums"]["employment_type"];
-          id?: string;
-          location?: string | null;
-          number?: never;
-          openings?: number;
-          organization_id?: string;
-          salary_max?: number | null;
-          salary_min?: number | null;
-          status?: Database["public"]["Enums"]["job_status"];
-          title?: string;
-          updated_at?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "job_requests_organization_id_fkey";
-            columns: ["organization_id"];
-            isOneToOne: false;
-            referencedRelation: "organizations";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       kit_booking_games: {
         Row: {
           booking_id: string;
@@ -1487,7 +1176,6 @@ export type Database = {
       };
       orders: {
         Row: {
-          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -1516,7 +1204,6 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
-          affiliate_id?: string | null;
           bulbs_discount?: number;
           bulbs_used?: number;
           cash_collected_by?: string | null;
@@ -1545,7 +1232,6 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
-          affiliate_id?: string | null;
           bulbs_discount?: number;
           bulbs_used?: number;
           cash_collected_by?: string | null;
@@ -1574,13 +1260,6 @@ export type Database = {
           user_id?: string | null;
         };
         Relationships: [
-          {
-            foreignKeyName: "orders_affiliate_id_fkey";
-            columns: ["affiliate_id"];
-            isOneToOne: false;
-            referencedRelation: "affiliates";
-            referencedColumns: ["user_id"];
-          },
           {
             foreignKeyName: "orders_delivery_zone_id_fkey";
             columns: ["delivery_zone_id"];
@@ -2590,8 +2269,6 @@ export type Database = {
       };
       product_categories: {
         Row: {
-          affiliate_rate: number;
-          bulb_multiplier: number;
           created_at: string;
           id: string;
           name_ar: string;
@@ -2600,8 +2277,6 @@ export type Database = {
           slug: string;
         };
         Insert: {
-          affiliate_rate?: number;
-          bulb_multiplier?: number;
           created_at?: string;
           id?: string;
           name_ar: string;
@@ -2610,8 +2285,6 @@ export type Database = {
           slug: string;
         };
         Update: {
-          affiliate_rate?: number;
-          bulb_multiplier?: number;
           created_at?: string;
           id?: string;
           name_ar?: string;
@@ -2739,7 +2412,6 @@ export type Database = {
       products: {
         Row: {
           age_rating: number | null;
-          bulb_multiplier: number | null;
           category_id: string | null;
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
@@ -2768,7 +2440,6 @@ export type Database = {
         };
         Insert: {
           age_rating?: number | null;
-          bulb_multiplier?: number | null;
           category_id?: string | null;
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
@@ -2797,7 +2468,6 @@ export type Database = {
         };
         Update: {
           age_rating?: number | null;
-          bulb_multiplier?: number | null;
           category_id?: string | null;
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
@@ -3421,7 +3091,6 @@ export type Database = {
           rental_id: string | null;
           serial: string | null;
           status: Database["public"]["Enums"]["stock_status"];
-          trade_in_id: string | null;
           updated_at: string;
           variant_id: string;
         };
@@ -3440,7 +3109,6 @@ export type Database = {
           rental_id?: string | null;
           serial?: string | null;
           status?: Database["public"]["Enums"]["stock_status"];
-          trade_in_id?: string | null;
           updated_at?: string;
           variant_id: string;
         };
@@ -3459,7 +3127,6 @@ export type Database = {
           rental_id?: string | null;
           serial?: string | null;
           status?: Database["public"]["Enums"]["stock_status"];
-          trade_in_id?: string | null;
           updated_at?: string;
           variant_id?: string;
         };
@@ -3492,18 +3159,10 @@ export type Database = {
             referencedRelation: "rentals";
             referencedColumns: ["id"];
           },
-          {
-            foreignKeyName: "stock_items_trade_in_id_fkey";
-            columns: ["trade_in_id"];
-            isOneToOne: false;
-            referencedRelation: "trade_ins";
-            referencedColumns: ["id"];
-          },
         ];
       };
       store_settings: {
         Row: {
-          bulb_half_from: number;
           bulb_rate: number;
           cash_limit: number | null;
           cash_on_delivery_enabled: boolean;
@@ -3528,7 +3187,6 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
-          bulb_half_from?: number;
           bulb_rate?: number;
           cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
@@ -3553,7 +3211,6 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
-          bulb_half_from?: number;
           bulb_rate?: number;
           cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
@@ -3776,7 +3433,6 @@ export type Database = {
       };
       subscriptions: {
         Row: {
-          affiliate_id: string | null;
           cancel_at_period_end: boolean;
           created_at: string;
           current_period_end: string | null;
@@ -3792,7 +3448,6 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
-          affiliate_id?: string | null;
           cancel_at_period_end?: boolean;
           created_at?: string;
           current_period_end?: string | null;
@@ -3808,7 +3463,6 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
-          affiliate_id?: string | null;
           cancel_at_period_end?: boolean;
           created_at?: string;
           current_period_end?: string | null;
@@ -3824,13 +3478,6 @@ export type Database = {
           user_id?: string | null;
         };
         Relationships: [
-          {
-            foreignKeyName: "subscriptions_affiliate_id_fkey";
-            columns: ["affiliate_id"];
-            isOneToOne: false;
-            referencedRelation: "affiliates";
-            referencedColumns: ["user_id"];
-          },
           {
             foreignKeyName: "subscriptions_next_plan_id_fkey";
             columns: ["next_plan_id"];
@@ -4405,86 +4052,6 @@ export type Database = {
           },
         ];
       };
-      trade_ins: {
-        Row: {
-          asking_price: number | null;
-          category: Database["public"]["Enums"]["trade_in_category"];
-          closed_at: string | null;
-          condition: Database["public"]["Enums"]["trade_in_condition"];
-          contact_phone: string;
-          created_at: string;
-          description: string | null;
-          id: string;
-          number: number;
-          offer_amount: number | null;
-          offer_note: string | null;
-          offered_at: string | null;
-          payout: Database["public"]["Enums"]["trade_in_payout"];
-          photos: string[];
-          product_id: string | null;
-          responded_at: string | null;
-          reviewed_by: string | null;
-          status: Database["public"]["Enums"]["trade_in_status"];
-          title: string;
-          updated_at: string;
-          user_id: string;
-        };
-        Insert: {
-          asking_price?: number | null;
-          category: Database["public"]["Enums"]["trade_in_category"];
-          closed_at?: string | null;
-          condition: Database["public"]["Enums"]["trade_in_condition"];
-          contact_phone: string;
-          created_at?: string;
-          description?: string | null;
-          id?: string;
-          number?: never;
-          offer_amount?: number | null;
-          offer_note?: string | null;
-          offered_at?: string | null;
-          payout?: Database["public"]["Enums"]["trade_in_payout"];
-          photos?: string[];
-          product_id?: string | null;
-          responded_at?: string | null;
-          reviewed_by?: string | null;
-          status?: Database["public"]["Enums"]["trade_in_status"];
-          title: string;
-          updated_at?: string;
-          user_id?: string;
-        };
-        Update: {
-          asking_price?: number | null;
-          category?: Database["public"]["Enums"]["trade_in_category"];
-          closed_at?: string | null;
-          condition?: Database["public"]["Enums"]["trade_in_condition"];
-          contact_phone?: string;
-          created_at?: string;
-          description?: string | null;
-          id?: string;
-          number?: never;
-          offer_amount?: number | null;
-          offer_note?: string | null;
-          offered_at?: string | null;
-          payout?: Database["public"]["Enums"]["trade_in_payout"];
-          photos?: string[];
-          product_id?: string | null;
-          responded_at?: string | null;
-          reviewed_by?: string | null;
-          status?: Database["public"]["Enums"]["trade_in_status"];
-          title?: string;
-          updated_at?: string;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "trade_ins_product_id_fkey";
-            columns: ["product_id"];
-            isOneToOne: false;
-            referencedRelation: "products";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       universities: {
         Row: {
           active: boolean;
@@ -4647,44 +4214,11 @@ export type Database = {
           reason: string | null;
           review_id: string | null;
           status: Database["public"]["Enums"]["bulb_status"];
-          trade_in_id: string | null;
           user_id: string;
         };
         SetofOptions: {
           from: "*";
           to: "bulb_entries";
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
-      };
-      affiliate_balances: {
-        Args: Record<PropertyKey, never>;
-        Returns: {
-          affiliate_id: string;
-          available: number;
-          paid: number;
-          pending: number;
-        }[];
-      };
-      apply_affiliate: {
-        Args: { channel?: string; pitch: string };
-        Returns: {
-          channel: string | null;
-          code: string | null;
-          created_at: string;
-          decided_at: string | null;
-          decided_by: string | null;
-          payout_account: string | null;
-          payout_method: Database["public"]["Enums"]["affiliate_payout_method"];
-          pitch: string;
-          staff_note: string | null;
-          status: Database["public"]["Enums"]["affiliate_status"];
-          updated_at: string;
-          user_id: string;
-        };
-        SetofOptions: {
-          from: "*";
-          to: "affiliates";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -4710,7 +4244,6 @@ export type Database = {
           starts_on: string;
         };
         Returns: {
-          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -4792,7 +4325,6 @@ export type Database = {
       cancel_plus: {
         Args: { keep?: boolean };
         Returns: {
-          affiliate_id: string | null;
           cancel_at_period_end: boolean;
           created_at: string;
           current_period_end: string | null;
@@ -4844,7 +4376,6 @@ export type Database = {
       change_plus_plan: {
         Args: { plan: string };
         Returns: {
-          affiliate_id: string | null;
           cancel_at_period_end: boolean;
           created_at: string;
           current_period_end: string | null;
@@ -4970,7 +4501,6 @@ export type Database = {
           user_id: string;
         }[];
       };
-      close_job_request: { Args: { job: string }; Returns: undefined };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
       close_survey: {
         Args: { target: string };
@@ -5063,10 +4593,6 @@ export type Database = {
           isSetofReturn: false;
         };
       };
-      complete_trade_in: {
-        Args: { create_product?: boolean; trade_in: string };
-        Returns: string;
-      };
       confirm_student_email: {
         Args: { code: string };
         Returns: {
@@ -5097,7 +4623,6 @@ export type Database = {
           use_bulbs?: number;
         };
         Returns: {
-          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -5169,7 +4694,6 @@ export type Database = {
           shipping: Json;
         };
         Returns: {
-          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -5232,46 +4756,9 @@ export type Database = {
           isSetofReturn: false;
         };
       };
-      decide_affiliate: {
-        Args: {
-          code?: string;
-          decision: Database["public"]["Enums"]["affiliate_status"];
-          member: string;
-          note?: string;
-        };
-        Returns: {
-          channel: string | null;
-          code: string | null;
-          created_at: string;
-          decided_at: string | null;
-          decided_by: string | null;
-          payout_account: string | null;
-          payout_method: Database["public"]["Enums"]["affiliate_payout_method"];
-          pitch: string;
-          staff_note: string | null;
-          status: Database["public"]["Enums"]["affiliate_status"];
-          updated_at: string;
-          user_id: string;
-        };
-        SetofOptions: {
-          from: "*";
-          to: "affiliates";
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
-      };
-      decide_candidate: {
-        Args: {
-          candidate: string;
-          decision: Database["public"]["Enums"]["candidate_status"];
-          note?: string;
-        };
-        Returns: undefined;
-      };
       decide_guardian_order: {
         Args: { approve: boolean; target: string };
         Returns: {
-          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -5391,7 +4878,6 @@ export type Database = {
           target: string;
         };
         Returns: {
-          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -5465,8 +4951,6 @@ export type Database = {
       listed_categories: {
         Args: { for_rent?: boolean };
         Returns: {
-          affiliate_rate: number;
-          bulb_multiplier: number;
           created_at: string;
           id: string;
           name_ar: string;
@@ -5484,7 +4968,6 @@ export type Database = {
       mark_cash_collected: {
         Args: { order_id: string };
         Returns: {
-          affiliate_id: string | null;
           bulbs_discount: number;
           bulbs_used: number;
           cash_collected_by: string | null;
@@ -5537,29 +5020,6 @@ export type Database = {
           available: number;
           pending: number;
           rate: number;
-        }[];
-      };
-      my_affiliate: {
-        Args: Record<PropertyKey, never>;
-        Returns: {
-          available: number;
-          code: string;
-          orders: number;
-          paid: number;
-          payout_account: string;
-          payout_method: Database["public"]["Enums"]["affiliate_payout_method"];
-          pending: number;
-          plus_members: number;
-          status: Database["public"]["Enums"]["affiliate_status"];
-        }[];
-      };
-      my_affiliate_referrer: {
-        Args: Record<PropertyKey, never>;
-        Returns: {
-          code: string;
-          expires_at: string;
-          name: string;
-          via: string;
         }[];
       };
       my_birthday: { Args: Record<PropertyKey, never>; Returns: string };
@@ -5765,7 +5225,6 @@ export type Database = {
       pause_plus: {
         Args: { days: number };
         Returns: {
-          affiliate_id: string | null;
           cancel_at_period_end: boolean;
           created_at: string;
           current_period_end: string | null;
@@ -5914,26 +5373,6 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
-      record_affiliate_payout: {
-        Args: { affiliate: string; reference?: string };
-        Returns: {
-          account: string | null;
-          affiliate_id: string;
-          amount: number;
-          bulbs: number | null;
-          created_at: string;
-          id: string;
-          method: Database["public"]["Enums"]["affiliate_payout_method"];
-          paid_by: string | null;
-          reference: string | null;
-        };
-        SetofOptions: {
-          from: "*";
-          to: "affiliate_payouts";
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
-      };
       redeem_perk: {
         Args: { perk: string; scanned: string };
         Returns: {
@@ -6037,14 +5476,9 @@ export type Database = {
           isSetofReturn: false;
         };
       };
-      respond_to_trade_in_offer: {
-        Args: { accept: boolean; trade_in: string };
-        Returns: Database["public"]["Enums"]["trade_in_status"];
-      };
       resume_plus: {
         Args: Record<PropertyKey, never>;
         Returns: {
-          affiliate_id: string | null;
           cancel_at_period_end: boolean;
           created_at: string;
           current_period_end: string | null;
@@ -6199,7 +5633,6 @@ export type Database = {
         };
         Returns: {
           age_rating: number | null;
-          bulb_multiplier: number | null;
           category_id: string | null;
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
@@ -6234,14 +5667,6 @@ export type Database = {
         };
       };
       send_quote: { Args: { quote: string }; Returns: undefined };
-      set_affiliate_payout: {
-        Args: {
-          account?: string;
-          method: Database["public"]["Enums"]["affiliate_payout_method"];
-        };
-        Returns: undefined;
-      };
-      set_affiliate_rates: { Args: { rates: Json }; Returns: undefined };
       set_guardian_plus: {
         Args: { allow: boolean; link: string };
         Returns: undefined;
@@ -6253,10 +5678,7 @@ export type Database = {
         };
         Returns: undefined;
       };
-      set_money_rules: {
-        Args: { multipliers?: Json; rules: Json };
-        Returns: undefined;
-      };
+      set_money_rules: { Args: { rules: Json }; Returns: undefined };
       set_pass_app_keys: {
         Args: { client: string; jwks: Json };
         Returns: undefined;
@@ -6453,13 +5875,6 @@ export type Database = {
           rule: string;
         }[];
       };
-      touch_affiliate: {
-        Args: { affiliate_code: string; via?: string };
-        Returns: {
-          code: string;
-          name: string;
-        }[];
-      };
       unlink_telegram: { Args: Record<PropertyKey, never>; Returns: undefined };
       update_pass_app: {
         Args: {
@@ -6497,14 +5912,9 @@ export type Database = {
           isSetofReturn: false;
         };
       };
-      withdraw_trade_in: { Args: { trade_in: string }; Returns: undefined };
     };
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
-      affiliate_commission_kind: "order" | "plus" | "clawback";
-      affiliate_commission_status: "pending" | "void" | "paid";
-      affiliate_payout_method: "zaincash" | "fib" | "qi" | "bank" | "bulbs";
-      affiliate_status: "applied" | "approved" | "rejected" | "suspended";
       billing_interval: "month" | "year";
       bulb_kind:
         | "purchase"
@@ -6514,16 +5924,8 @@ export type Database = {
         | "adjustment"
         | "expiry";
       bulb_status: "pending" | "available" | "void";
-      candidate_status:
-        | "proposed"
-        | "shortlisted"
-        | "rejected"
-        | "hired"
-        | "withdrawn";
       crm_status: "lead" | "customer" | "vip" | "churned";
-      employment_type: "full_time" | "part_time" | "contract" | "internship";
       invoice_status: "issued" | "paid" | "void";
-      job_status: "open" | "filled" | "closed";
       ledger_scenario: "actual" | "forecast" | "budget";
       notification_kind:
         | "order"
@@ -6615,24 +6017,6 @@ export type Database = {
       ticket_priority: "low" | "normal" | "high" | "urgent";
       ticket_status: "open" | "pending" | "resolved" | "closed";
       ticket_topic: "order" | "rental" | "plus" | "account" | "other";
-      trade_in_category:
-        | "vinyl"
-        | "cd_cassette"
-        | "game"
-        | "book"
-        | "console_tech"
-        | "other";
-      trade_in_condition: "sealed" | "like_new" | "good" | "fair" | "poor";
-      trade_in_payout: "cash" | "store_credit";
-      trade_in_status:
-        | "submitted"
-        | "reviewing"
-        | "offer_made"
-        | "accepted"
-        | "declined"
-        | "completed"
-        | "rejected"
-        | "withdrawn";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -6764,10 +6148,6 @@ export const Constants = {
   public: {
     Enums: {
       account_type: ["asset", "liability", "equity", "revenue", "expense"],
-      affiliate_commission_kind: ["order", "plus", "clawback"],
-      affiliate_commission_status: ["pending", "void", "paid"],
-      affiliate_payout_method: ["zaincash", "fib", "qi", "bank", "bulbs"],
-      affiliate_status: ["applied", "approved", "rejected", "suspended"],
       billing_interval: ["month", "year"],
       bulb_kind: [
         "purchase",
@@ -6778,17 +6158,8 @@ export const Constants = {
         "expiry",
       ],
       bulb_status: ["pending", "available", "void"],
-      candidate_status: [
-        "proposed",
-        "shortlisted",
-        "rejected",
-        "hired",
-        "withdrawn",
-      ],
       crm_status: ["lead", "customer", "vip", "churned"],
-      employment_type: ["full_time", "part_time", "contract", "internship"],
       invoice_status: ["issued", "paid", "void"],
-      job_status: ["open", "filled", "closed"],
       ledger_scenario: ["actual", "forecast", "budget"],
       notification_kind: [
         "order",
@@ -6890,26 +6261,6 @@ export const Constants = {
       ticket_priority: ["low", "normal", "high", "urgent"],
       ticket_status: ["open", "pending", "resolved", "closed"],
       ticket_topic: ["order", "rental", "plus", "account", "other"],
-      trade_in_category: [
-        "vinyl",
-        "cd_cassette",
-        "game",
-        "book",
-        "console_tech",
-        "other",
-      ],
-      trade_in_condition: ["sealed", "like_new", "good", "fair", "poor"],
-      trade_in_payout: ["cash", "store_credit"],
-      trade_in_status: [
-        "submitted",
-        "reviewing",
-        "offer_made",
-        "accepted",
-        "declined",
-        "completed",
-        "rejected",
-        "withdrawn",
-      ],
     },
   },
 } as const;

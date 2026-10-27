@@ -169,49 +169,38 @@ export const useCompanyOverview = (organizationId: string) => {
   const { supabase } = useAuth();
   return useQuery({
     queryFn: async () => {
-      const [requests, quotes, invoices, seats, candidates] = await Promise.all(
-        [
-          supabase
-            .from("procurement_requests")
-            .select("id", { count: "exact", head: true })
-            .eq("organization_id", organizationId)
-            .in("status", ["submitted", "quoted"]),
-          supabase
-            .from("quotes")
-            .select("id, procurement_requests!inner (organization_id)", {
-              count: "exact",
-              head: true,
-            })
-            .eq("status", "sent")
-            .eq("procurement_requests.organization_id", organizationId),
-          supabase
-            .from("invoices")
-            .select("amount")
-            .eq("organization_id", organizationId)
-            .eq("status", "issued"),
-          supabase
-            .from("plus_seats")
-            .select("id", { count: "exact", head: true })
-            .eq("organization_id", organizationId)
-            .eq("status", "active"),
-          supabase
-            .from("candidates")
-            .select("id, job_requests!inner (organization_id)", {
-              count: "exact",
-              head: true,
-            })
-            .eq("status", "proposed")
-            .eq("job_requests.organization_id", organizationId),
-        ]
-      );
+      const [requests, quotes, invoices, seats] = await Promise.all([
+        supabase
+          .from("procurement_requests")
+          .select("id", { count: "exact", head: true })
+          .eq("organization_id", organizationId)
+          .in("status", ["submitted", "quoted"]),
+        supabase
+          .from("quotes")
+          .select("id, procurement_requests!inner (organization_id)", {
+            count: "exact",
+            head: true,
+          })
+          .eq("status", "sent")
+          .eq("procurement_requests.organization_id", organizationId),
+        supabase
+          .from("invoices")
+          .select("amount")
+          .eq("organization_id", organizationId)
+          .eq("status", "issued"),
+        supabase
+          .from("plus_seats")
+          .select("id", { count: "exact", head: true })
+          .eq("organization_id", organizationId)
+          .eq("status", "active"),
+      ]);
       const unpaid = unwrap(invoices) ?? [];
-      for (const result of [requests, quotes, seats, candidates]) {
+      for (const result of [requests, quotes, seats]) {
         if (result.error) {
           throw result.error;
         }
       }
       return {
-        candidatesToReview: candidates.count ?? 0,
         openRequests: requests.count ?? 0,
         plusSeats: seats.count ?? 0,
         quotesToAnswer: quotes.count ?? 0,

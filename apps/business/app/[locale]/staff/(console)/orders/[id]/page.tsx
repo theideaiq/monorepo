@@ -50,7 +50,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 type Translate = Awaited<ReturnType<typeof getTranslations>>;
 
-/** Subtotal, delivery, the invite or affiliate discount, Bulbs and total. */
+/** Subtotal, delivery, the invite discount, Bulbs and total. */
 const OrderTotals = ({
   format,
   order,
@@ -75,13 +75,7 @@ const OrderTotals = ({
     </TableRow>
     {order.discount > 0 ? (
       <TableRow>
-        <TableCell colSpan={3}>
-          {t(
-            order.discount_source === "affiliate"
-              ? "discounts.affiliate"
-              : "discounts.invite"
-          )}
-        </TableCell>
+        <TableCell colSpan={3}>{t("discounts.invite")}</TableCell>
         <TableCell className="text-end tabular-nums" dir="ltr">
           −{format.money(order.discount)}
         </TableCell>

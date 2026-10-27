@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(23);
+select plan(25);
 
 -- A is a customer, S is support.
 truncate public.products, public.orders cascade;
@@ -59,9 +59,12 @@ delete from public.staff;
 
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-000000000901', 'buyer@example.iq', '{"full_name":"Buyer A"}'),
-  ('00000000-0000-0000-0000-000000000902', 'support@example.iq', '{"full_name":"Support S"}');
+  ('00000000-0000-0000-0000-000000000902', 'support@example.iq', '{"full_name":"Support S"}'),
+  ('00000000-0000-0000-0000-000000000903', 'admin@example.iq', '{"full_name":"Admin A"}');
 update public.profiles set birthday = date '1990-01-01' where birthday is null;
-insert into public.staff (user_id, role) values ('00000000-0000-0000-0000-000000000902', 'support');
+insert into public.staff (user_id, role) values
+  ('00000000-0000-0000-0000-000000000902', 'support'),
+  ('00000000-0000-0000-0000-000000000903', 'admin');
 update public.store_settings set cash_on_delivery_enabled = true, cash_limit = null;
 update public.delivery_zones set active = true, fee = 5000 where governorate = 'baghdad';
 
@@ -254,6 +257,23 @@ select is(
    where s.order_item_id = (select id from box_item) and s.status = 'sold'),
   5,
   'the packed box holds its five copies'
+);
+
+-- ── Winding down (program revision v2) ──
+select pg_temp.login_as('00000000-0000-0000-0000-000000000903', 'aal2');
+select throws_ok(
+  $$ insert into public.boxes (product_id, min_value)
+     values ('90000000-0000-0000-0000-000000000001', 100000) $$,
+  '42501', null,
+  'no new boxes are made, even by admins'
+);
+select pg_temp.reset_role();
+update public.products set stock_count = 0
+where id in ('90000000-0000-0000-0000-000000000011', '90000000-0000-0000-0000-000000000012',
+  '90000000-0000-0000-0000-000000000013', '90000000-0000-0000-0000-000000000014');
+select is(
+  (select status::text from public.products where id = '90000000-0000-0000-0000-000000000099'),
+  'archived', 'a box leaves the store once its parts sell out'
 );
 
 select * from finish();

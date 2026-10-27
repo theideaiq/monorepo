@@ -50,7 +50,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(7);
+select plan(5);
 
 -- ── FAQ topics ─────────────────────────────────────────────────────────────
 
@@ -71,18 +71,12 @@ insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-0000000083a1', 'r1@example.iq'),
   ('00000000-0000-0000-0000-0000000083a2', 'r2@example.iq');
 update public.profiles set invite_code = 'friend83' where id = '00000000-0000-0000-0000-0000000083a1';
-insert into public.affiliates (user_id, code, status, pitch) values
-  ('00000000-0000-0000-0000-0000000083a2', 'CREATOR83', 'approved', 'My channel');
 
 select pg_temp.login_anon();
 select is(public.referral_kind('friend83'), 'invite', 'a member''s invite code');
 select is(public.referral_kind(' FRIEND83 '), 'invite', 'retyped in capitals');
-select is(public.referral_kind('creator83'), 'affiliate', 'an approved affiliate''s code');
 select is(public.referral_kind('nobody'), null, 'an unknown code');
 select pg_temp.reset_role();
-
-update public.affiliates set status = 'suspended' where code = 'CREATOR83';
-select is(public.referral_kind('CREATOR83'), null, 'a suspended affiliate''s link is no longer one');
 
 select * from finish();
 rollback;

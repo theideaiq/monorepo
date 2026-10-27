@@ -1,4 +1,3 @@
-import { formatPrice } from "@repo/commerce";
 import type { Json } from "@repo/database";
 import { formatDate } from "@repo/internationalization/format";
 import ar from "@repo/internationalization/messages/ar.json" with {
@@ -38,7 +37,6 @@ export const templateForEvent: Record<string, WhatsAppTemplate> = {
   order_paid: "order_confirmed",
   order_shipped: "order_shipped",
   rental_due_soon: "rental_due_soon",
-  trade_in_offer: "trade_in_offer",
 };
 
 /** Arabic and English have templates; other languages use the fallback. */
@@ -52,14 +50,6 @@ const asRecord = (data: Json): Record<string, Json | undefined> =>
 
 const text = (value: Json | undefined) =>
   typeof value === "string" || typeof value === "number" ? String(value) : "";
-
-const numberOf = (value: Json | undefined) => {
-  if (value === undefined || value === null || text(value) === "") {
-    return null;
-  }
-  const parsed = typeof value === "number" ? value : Number(text(value));
-  return Number.isFinite(parsed) ? parsed : null;
-};
 
 /**
  * The template message for a notification, or null when the event has no
@@ -101,19 +91,6 @@ export const templateMessage = (
         return null;
       }
       parameters = [name, item, formatDate(due, language)];
-      break;
-    }
-    case "trade_in_offer": {
-      const amount = numberOf(data.amount);
-      if (amount === null) {
-        return null;
-      }
-      parameters = [
-        name,
-        `#${number}`,
-        text(data.title),
-        formatPrice(amount, language),
-      ];
       break;
     }
     default:

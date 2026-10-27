@@ -16,7 +16,7 @@ const BARE_NAME = /(?<!The )IDEA/;
 const ARABIC_INDIC_DIGITS = /[٠-٩]/;
 
 describe("legal documents", () => {
-  it("lists the fourteen policies in order", () => {
+  it("lists the thirteen policies in order", () => {
     expect(legalDocuments.map(({ slug }) => slug)).toEqual([
       "terms",
       "privacy",
@@ -25,7 +25,6 @@ describe("legal documents", () => {
       "condition",
       "plus",
       "rewards",
-      "sell",
       "club",
       "surveys",
       "business",

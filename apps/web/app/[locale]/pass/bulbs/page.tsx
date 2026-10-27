@@ -1,17 +1,19 @@
 import { Suspense } from "react";
-import { Affiliate } from "@/components/screens/affiliate";
+import { InviteCard } from "@/components/invite-card";
 import { Bulbs } from "@/components/screens/bulbs";
 import { SectionSpinner } from "@/components/states";
 import { titleFrom } from "@/lib/app-metadata";
 
 export const generateMetadata = titleFrom((t) => t("app.bulbs.title"));
 
-/** Your Pass → Bulbs: balance and history, then invites and affiliates. */
+/** Your Pass → Bulbs: balance and history, then the member's invite link. */
 const BulbsPage = () => (
   <Suspense fallback={<SectionSpinner />}>
     <div className="flex flex-col gap-10">
       <Bulbs />
-      <Affiliate />
+      <section className="scroll-mt-24" id="invite">
+        <InviteCard />
+      </section>
     </div>
   </Suspense>
 );

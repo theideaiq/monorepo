@@ -35,10 +35,6 @@ export const productSchema = z
       (value) =>
         value === null || (AGE_RATINGS as readonly number[]).includes(value)
     ),
-    /** Bulbs earned as a multiple of the rate (0.5 for consoles); empty for the category's. */
-    bulbMultiplier: optionalDecimal(0).refine(
-      (value) => value === null || value <= 5
-    ),
     categoryId: optionalUuid,
     compareAtPrice: optionalInt(0),
     condition: z.enum(Enums.product_condition),

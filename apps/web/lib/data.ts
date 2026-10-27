@@ -426,18 +426,18 @@ export const getRsvpCount = (eventId: string) =>
     );
   });
 
-// ── Invites and affiliate links ─────────────────────────────────────────────
+// ── Invites ─────────────────────────────────────────────────────────────────
 
 /**
- * What /r/<code> is: an approved affiliate's code, a member's invite code
- * or neither (null), from `referral_kind()`.
+ * What /r/<code> is: a member's invite code or nothing (null), from
+ * `referral_kind()`.
  */
 export const getReferralKind = (code: string) =>
-  fallback("referral_kind", null as "affiliate" | "invite" | null, async () => {
+  fallback("referral_kind", null as "invite" | null, async () => {
     const supabase = createPublicClient();
     if (!supabase) {
       return null;
     }
     const kind = check(await supabase.rpc("referral_kind", { code }));
-    return kind === "affiliate" || kind === "invite" ? kind : null;
+    return kind === "invite" ? kind : null;
   });

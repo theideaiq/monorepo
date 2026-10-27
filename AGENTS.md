@@ -26,12 +26,11 @@ incidents) is in `docs/platform`.
     companies; `/saved` (saved products); `/help` (FAQ, the contact form at
     `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
     and `/help/new`); `/careers`; `/about` (the company, preferences, the
-    version); `/r/<code>` (an invite or affiliate link: the page asks the
-    database `referral_kind(code)` which one it is) and legal pages at
-    `/legal/<policy>` (Markdown in `apps/web/content/legal`). The top bar
-    holds the logo, search, saved (heart, to `/saved`), cart and, on
-    desktop, the Pass avatar (saved and cart are hidden on sign-in and
-    checkout); the desktop header reads Store · Plus · Club, "For
+    version); `/r/<code>` (a member's invite link: 10% off a new member's
+    first order) and legal pages at `/legal/<policy>` (Markdown in
+    `apps/web/content/legal`). The top bar holds the logo, search, saved
+    (heart, to `/saved`), cart and, on desktop, the Pass avatar (saved and
+    cart are hidden on sign-in and checkout); the desktop header reads Store · Plus · Club, "For
     business", saved, cart, Pass. The footer lists Store · Plus · Club ·
     Pass · Business, then About · Careers · Help · Legal. Old addresses
     have no HTTP redirects; links stored in notifications are mapped to
@@ -48,9 +47,8 @@ incidents) is in `docs/platform`.
     `NEXT_PUBLIC_WEB_URL`), which only returns to allowlisted hosts
     (`isAllowedReturnTo`);
   - **The IDEA Pass pages** (`app/[locale]/pass`: `/pass` the membership
-    card, `/pass/orders` with Sell to us at `#sell`, `/pass/bulbs` with
-    invites and affiliates at `#invite`, `/pass/settings`) and the cart and
-    checkout (`app/[locale]/(checkout)`): client components that query with
+    card, `/pass/orders`, `/pass/bulbs` with invites at `#invite`,
+    `/pass/settings`) and the cart and checkout (`app/[locale]/(checkout)`): client components that query with
     `useAuth().supabase`; privileged steps go to `apps/api` with the user's
     token (`callApi` in `apps/web/lib/api.ts`);
   - The iOS/Android apps are Capacitor shells whose WebView loads the live
@@ -59,9 +57,8 @@ incidents) is in `docs/platform`.
   `business.theideaiq.com`), for companies and staff only, server-rendered
   with a `proxy.ts`:
   - the company dashboard at its root (`app/[locale]/(business)`: `/`,
-    `/procurement`, `/hiring`, `/invoices`, `/plus`, `/members`,
-    `/billing`, `/settings`, `/new`, `/documents/<kind>/<id>`,
-    invitations);
+    `/procurement`, `/invoices`, `/plus`, `/members`, `/billing`,
+    `/settings`, `/new`, `/documents/<kind>/<id>`, invitations);
   - the staff **back office** under `/{locale}/staff` (`app/[locale]/staff`,
     `components/admin`, `lib/admin`; the company section is
     `/staff/companies`): staff only, with Server Actions; every query runs

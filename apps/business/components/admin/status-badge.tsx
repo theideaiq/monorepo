@@ -39,7 +39,6 @@ const statusTones: Record<string, Tone> = {
   draft: "neutral",
   expired: "neutral",
   failed: "danger",
-  hiring: "warning",
   incomplete: "warning",
   kept: "success",
   lead: "neutral",

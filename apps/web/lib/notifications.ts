@@ -23,8 +23,8 @@ import { queryKeys, requireUserId, unwrap } from "./queries";
 export type NotificationKind = Enums<"notification_kind">;
 
 /**
- * Every event the triggers emit (see the customer_features, trade_ins,
- * whatsapp, bulbs and affiliates migrations).
+ * Every event the triggers emit (see the customer_features, whatsapp and
+ * bulbs migrations, and the later ones).
  */
 export const NOTIFICATION_EVENTS = [
   "order_paid",
@@ -39,17 +39,11 @@ export const NOTIFICATION_EVENTS = [
   "rental_cancelled",
   "rental_due_soon",
   "support_reply",
-  "trade_in_offer",
-  "trade_in_rejected",
-  "trade_in_completed",
   "bulbs_expiring",
   "bulbs_birthday",
-  "affiliate_approved",
-  "affiliate_paid",
   "quote_sent",
   "invoice_issued",
   "plus_seat_active",
-  "candidate_proposed",
   "pass_app_approved",
   "pass_app_declined",
   "guardian_order_request",
@@ -106,21 +100,6 @@ const bulbsExpiringValues = (
   };
 };
 
-/** An affiliate's code (approved) or payout amount and Bulbs (paid). */
-const affiliateValues = (
-  data: Record<string, Json | undefined>,
-  locale: Locale
-) => {
-  const amount = Number(text(data.amount));
-  const bulbs = Number(text(data.bulbs));
-  return {
-    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
-    bulbs: Number.isFinite(bulbs) ? formatNumber(bulbs, locale) : "",
-    code: text(data.code),
-    hasBulbs: text(data.bulbs) ? "yes" : "no",
-  };
-};
-
 /** A quote's number, request title and total (`quote_sent`). */
 const quoteValues = (
   data: Record<string, Json | undefined>,
@@ -158,14 +137,8 @@ const extraValues: Partial<
     ) => Record<string, string>
   >
 > = {
-  affiliate_approved: affiliateValues,
-  affiliate_paid: affiliateValues,
   bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
-  candidate_proposed: (data) => ({
-    name: text(data.name),
-    title: text(data.title),
-  }),
   guardian_approved: (data) => ({ number: text(data.number) }),
   guardian_declined: (data) => ({ number: text(data.number) }),
   guardian_linked: (data) => ({ name: text(data.name) }),
@@ -208,11 +181,7 @@ export const describeNotification = (
   }
 
   const values: Record<string, string> = {};
-  if (
-    event.startsWith("order_") ||
-    event.startsWith("trade_in_") ||
-    event === "support_reply"
-  ) {
+  if (event.startsWith("order_") || event === "support_reply") {
     values.number = text(data.number);
   }
   if (event === "order_shipped") {
@@ -221,13 +190,6 @@ export const describeNotification = (
   }
   if (event === "support_reply") {
     values.subject = text(data.subject);
-  }
-  if (event.startsWith("trade_in_")) {
-    values.title = text(data.title);
-  }
-  if (event === "trade_in_offer") {
-    const amount = Number(text(data.amount));
-    values.amount = Number.isFinite(amount) ? formatPrice(amount, locale) : "";
   }
   Object.assign(values, extraValues[event]?.(data, locale));
   if (event.startsWith("rental_")) {

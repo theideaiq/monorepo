@@ -24,7 +24,3 @@ export type RentalStatus = import("./types").Enums<"rental_status">;
 export type ProductKind = import("./types").Enums<"product_kind">;
 export type SubmissionStatus = import("./types").Enums<"submission_status">;
 export type SubmissionType = import("./types").Enums<"submission_type">;
-export type TradeInCategory = import("./types").Enums<"trade_in_category">;
-export type TradeInCondition = import("./types").Enums<"trade_in_condition">;
-export type TradeInPayout = import("./types").Enums<"trade_in_payout">;
-export type TradeInStatus = import("./types").Enums<"trade_in_status">;

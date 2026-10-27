@@ -9,9 +9,9 @@ Where offered, The IDEA Club lets members create surveys and answer other people
 ## 2. Two kinds of survey
 
 1. **Free (give to get).** Each survey you answer gives you one response credit for your own survey. Nobody is paid.
-2. **Rewarded.** The creator pays for each response, in Bulbs or money. Respondents earn 2 to 10 Bulbs, by the survey's length; The IDEA keeps a small fee, shown to the creator before the survey goes live.
+2. **Rewarded.** The creator buys the rewards from The IDEA as Bulbs, paid in IQD. Respondents earn 2 to 10 Bulbs, by the survey's length, and are rewarded only in Bulbs; The IDEA keeps a small fee, shown to the creator before the survey goes live.
 
-A survey is one kind or the other, so nobody is paid twice.
+A survey is one kind or the other, so nobody is rewarded twice.
 
 ## 3. Rules for creators
 
@@ -24,7 +24,7 @@ A survey is one kind or the other, so nobody is paid twice.
 - **Respect anonymity:** if a survey is anonymous, don't try to identify anyone, and don't combine answers with other data to do so.
 - **Use answers only** for the purpose you stated. Keep exported answers (Excel, SPSS or CSV) secure and delete them when you no longer need them.
 
-We may review a survey before it goes live, and refuse or remove one that breaks these rules. A creator who breaks them may lose survey access and, for a rewarded survey, any unspent payment that broke the rules.
+We may review a survey before it goes live, and refuse or remove one that breaks these rules. A creator who breaks them may lose survey access and, for a rewarded survey, any unspent Bulbs bought for a survey that broke the rules.
 
 ## 4. Terms for respondents
 

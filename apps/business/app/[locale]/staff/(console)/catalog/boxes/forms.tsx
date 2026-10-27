@@ -5,7 +5,6 @@ import { ActionButton } from "@/components/admin/action-button";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import { FieldGrid, SelectField, TextField } from "@/components/admin/fields";
 import {
-  addBox,
   addBoxProduct,
   addBoxSlot,
   addBoxTheme,
@@ -16,28 +15,6 @@ import {
 } from "../actions";
 
 const SEASONS = ["", "eid", "ramadan", "university"] as const;
-
-/** Makes an existing sale product (by its slug) a box. */
-export const AddBoxForm = () => {
-  const t = useTranslations("admin.catalog.boxes");
-  return (
-    <ActionForm action={addBox} className="rounded-md border p-3">
-      <FieldGrid columns={3}>
-        <TextField dir="ltr" label={t("productSlug")} name="slug" required />
-        <TextField
-          defaultValue="0"
-          dir="ltr"
-          inputMode="numeric"
-          label={t("minValue")}
-          name="minValue"
-        />
-        <div className="flex items-end">
-          <SubmitButton size="sm">{t("add")}</SubmitButton>
-        </div>
-      </FieldGrid>
-    </ActionForm>
-  );
-};
 
 /** What the picked copies are worth at least, and the season. */
 export const BoxSettingsForm = ({

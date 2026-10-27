@@ -186,55 +186,6 @@ export const endSeat = staffAction(
   }
 );
 
-/** Support proposes a candidate (with their CV, already uploaded) for a job. */
-export const proposeCandidate = staffAction(
-  "companies",
-  z.object({
-    cvPath: optionalText(500),
-    fullName: text(120),
-    headline: optionalText(200),
-    jobId: uuid,
-    summary: optionalText(4000),
-  }),
-  async ({ input, staff, supabase }) => {
-    check(
-      await supabase.from("candidates").insert({
-        cv_path: input.cvPath,
-        full_name: input.fullName,
-        headline: input.headline,
-        job_request_id: input.jobId,
-        proposed_by: staff.userId,
-        summary: input.summary,
-      })
-    );
-    return success();
-  }
-);
-
-export const withdrawCandidate = staffAction(
-  "companies",
-  z.object({ candidateId: uuid }),
-  async ({ input, supabase }) => {
-    affected(
-      await supabase
-        .from("candidates")
-        .update({ status: "withdrawn" })
-        .eq("id", input.candidateId)
-        .select("id")
-    );
-    return success();
-  }
-);
-
-export const closeJob = staffAction(
-  "companies",
-  z.object({ jobId: uuid }),
-  async ({ input, supabase }) => {
-    check(await supabase.rpc("close_job_request", { job: input.jobId }));
-    return success();
-  }
-);
-
 // ── Partner perks ────────────────────────────────────────────────────────
 
 const PERK_KINDS = [

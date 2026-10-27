@@ -146,41 +146,25 @@ export const saveFinancialSettings = staffAction(
 
 /**
  * The money rules: the Bulbs rate for every Pass holder (Plus plans set
- * their own), the price above which items earn half, the return window,
- * the giveaway cap per order, the cash-on-delivery limit (empty for none),
- * the price check's payment fee, delivery cost and margin floor, and the
- * category multipliers (fields named `multiplier:<category id>`).
+ * their own), the return window, the giveaway cap per order, the
+ * cash-on-delivery limit (empty for none), and the price check's payment
+ * fee, delivery cost and margin floor.
  */
 export const saveMoneyRules = staffAction(
   "finance",
-  z
-    .object({
-      bulbHalfFrom: int(1, 1_000_000_000),
-      bulbRate: decimalIn(0, 50),
-      cashLimit: optionalInt(1, 1_000_000_000),
-      deliveryCost: int(0, 1_000_000),
-      maxGiveawayRate: decimalIn(0, 100),
-      minMarginRate: decimalIn(0, 100),
-      paymentFeeRate: decimalIn(0, 20),
-      returnDays: int(1, 60),
-    })
-    .catchall(z.string()),
+  z.object({
+    bulbRate: decimalIn(0, 50),
+    cashLimit: optionalInt(1, 1_000_000_000),
+    deliveryCost: int(0, 1_000_000),
+    maxGiveawayRate: decimalIn(0, 100),
+    minMarginRate: decimalIn(0, 100),
+    paymentFeeRate: decimalIn(0, 20),
+    returnDays: int(1, 60),
+  }),
   async ({ input, supabase }) => {
-    const multipliers: Record<string, number> = {};
-    for (const [key, value] of Object.entries(input)) {
-      if (key.startsWith("multiplier:")) {
-        const parsed = decimalIn(0, 5).safeParse(value);
-        if (!parsed.success) {
-          throw new ActionFailure("invalid");
-        }
-        multipliers[key.slice("multiplier:".length)] = parsed.data;
-      }
-    }
     check(
       await supabase.rpc("set_money_rules", {
-        multipliers,
         rules: {
-          bulb_half_from: input.bulbHalfFrom,
           bulb_rate: input.bulbRate,
           cash_limit: input.cashLimit,
           delivery_cost: input.deliveryCost,

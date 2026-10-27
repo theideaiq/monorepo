@@ -28,10 +28,8 @@
   --border-strong: #8a8c95;
   --focus-ring: #0f1014;
   --plus: #5b3be8;
-  --teal: #0b7a6e;
   --business: #1f4fd6;
   --club: #ff6a2b;
-  --lime: #7bc43a;
   --on-accent: #ffffff;
   --on-accent-warm: #0f1014;
   --bulb-empty: #d9dce6;
@@ -76,7 +74,7 @@
   --chart-1: var(--idea-pink);
   --chart-2: var(--bulb-yellow);
   --chart-3: var(--plus);
-  --chart-4: var(--teal);
+  --chart-4: var(--club);
   --chart-5: var(--business);
   --radius: 0.625rem;
   --sidebar: var(--surface-raised);
@@ -106,10 +104,8 @@
   --border-strong: #6b6d78;
   --focus-ring: #f4cf08;
   --plus: #a99bff;
-  --teal: #4fd1c0;
   --business: #7fa2ff;
   --club: #ff7a40;
-  --lime: #9be15d;
   --on-accent: #0f1014;
   --bulb-empty: #3a3c46;
   --warning: #f5b83d;
@@ -179,10 +175,8 @@
   --color-border-strong: var(--border-strong);
   --color-focus-ring: var(--focus-ring);
   --color-plus: var(--plus);
-  --color-teal: var(--teal);
   --color-business: var(--business);
   --color-club: var(--club);
-  --color-lime: var(--lime);
   --color-on-accent: var(--on-accent);
   --color-on-accent-warm: var(--on-accent-warm);
   --color-bulb-empty: var(--bulb-empty);

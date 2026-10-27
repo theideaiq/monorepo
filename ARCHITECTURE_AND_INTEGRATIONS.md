@@ -53,7 +53,7 @@ flowchart LR
 
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
-| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (The IDEA Store: home, catalog and product pages; The IDEA Plus; The IDEA Club: posts and events; `/business` for companies; saved products; help and contact; careers; legal in `apps/web/content/legal`), **The IDEA Pass** (sign-in, authenticator app, and its pages at `/pass`: the card, orders and Sell to us, Bulbs and invites, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
+| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (The IDEA Store: home, catalog and product pages; The IDEA Plus; The IDEA Club: posts and events; `/business` for companies; saved products; help and contact; careers; legal in `apps/web/content/legal`), **The IDEA Pass** (sign-in, authenticator app, and its pages at `/pass`: the card, orders, Bulbs and invites, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
 | `apps/business` | 3000 | **The IDEA Business** (`business.theideaiq.com`), for companies and staff: the company dashboard at its root and the staff **back office** under `/{locale}/staff` (see [The IDEA Business](#the-idea-business)). No sign-in of its own: it sends people to The IDEA Pass on the website. | Vercel |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, push notifications, the back office's privileged steps (`app/admin/*`), the website's contact form and status badge. Route handlers only. | Vercel |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
@@ -103,7 +103,7 @@ load on every page (never inside the iOS/Android apps).
 | --- | --- | --- |
 | Public pages | The IDEA Store: `/{locale}`, `/store`, `/store/<slug>`; The IDEA Plus: `/plus` (rental catalog, plans, tiers; "Your Plus" at `#yours` when signed in: membership, plans, rentals, rental requests); The IDEA Club: `/club` (one feed with chips, `?show=events\|news\|stories\|guides`; "Yours" at `#yours`: your events with the calendar feed and your submissions; the Telegram rooms card) and `/club/<slug>` (a post or an event); `/business`; `/saved`; `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
 | The IDEA Pass (sign-in) | `/{locale}/sign-in`, `/mfa`, `/tg`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
-| The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders, then Sell to us at `#sell`), `/pass/orders/<id>`, `/pass/bulbs` (Bulbs, then invites and affiliates at `#invite`), `/pass/settings` | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
+| The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders), `/pass/orders/<id>`, `/pass/bulbs` (Bulbs, then invites at `#invite`), `/pass/settings` | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
 | Cart and checkout | `/{locale}/cart`, `/checkout` | `app/[locale]/(checkout)` |
 
 - **Session.** The browser client (`@repo/auth/client`) and the server
@@ -162,8 +162,8 @@ office is under `/{locale}/staff`.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Company dashboard | `/{locale}` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/procurement` (requests and quotes, `/procurement/<id>`), `/hiring` (jobs and candidates, `/hiring/<id>`), `/invoices`, `/plus` (The IDEA Plus for the team), `/documents/<quote\|order\|invoice>/<id>` (printable), `/members`, `/billing`, `/settings`, `/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
-| Back office | `/{locale}/staff/…`: the dashboard (an inbox of what's waiting, then the numbers), the counter, search (`/staff/search`), then sections grouped by Today, Sales (orders, rentals, trade-ins, customers and CRM), Catalog (catalog, reviews), Community (editorial, Telegram, affiliates), Companies (`/staff/companies`), Money (finance), Help (support) and Team (staff, audit log) | `app/[locale]/staff`, `components/admin`, `lib/admin` |
+| Company dashboard | `/{locale}` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/procurement` (requests and quotes, `/procurement/<id>`), `/invoices`, `/plus` (The IDEA Plus for the team), `/documents/<quote\|order\|invoice>/<id>` (printable), `/members`, `/billing`, `/settings`, `/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
+| Back office | `/{locale}/staff/…`: the dashboard (an inbox of what's waiting, then the numbers), the counter, search (`/staff/search`), then sections grouped by Today, Sales (orders, rentals, customers and CRM), Catalog (catalog, reviews), Community (editorial, Telegram), Companies (`/staff/companies`), Money (finance), Help (support) and Team (staff, audit log) | `app/[locale]/staff`, `components/admin`, `lib/admin` |
 
 - **Sign-in.** The IDEA Business has none of its own: signed-out visitors
   go to The IDEA Pass on the website (`passUrl` from `@repo/auth/pass`)
@@ -187,18 +187,6 @@ office is under `/{locale}/staff`.
   `set_purchase_order_status`, `issue_invoice`, `set_invoice_status`),
   migration `20261206000000_suite_procurement.sql`. The website's
   notification bell opens company links on The IDEA Business.
-- **Hiring.** Owners and admins post a job request (role,
-  details, location, contract, salary range, how many people). Support
-  proposes vetted candidates in Back office → Companies → Hiring
-  (name, headline, summary and a PDF CV uploaded to the private
-  `candidates` bucket under `<organization id>/…`); the company's owners
-  and admins get a `candidate_proposed` notification and shortlist,
-  reject or hire, with an optional note. Hiring as many as asked fills the
-  job; owners, admins or support can close it. Every member of the company
-  sees its jobs and candidates (withdrawn ones stay with staff) and opens
-  CVs through short-lived signed links. Tables `job_requests`,
-  `candidates`; RPCs `decide_candidate`, `close_job_request`; migration
-  `20261209000000_suite_hiring.sql`.
 - **Printable documents.** `/documents/quote/<id>`, `/documents/order/<id>`
   and `/documents/invoice/<id>` lay a quote, purchase order or invoice out
   for paper; the browser's print dialog prints it or saves it as a PDF
@@ -217,12 +205,11 @@ office is under `/{locale}/staff`.
   `decline_plus_seat`, `end_plus_seat`, `run_plus_seat_renewals`; migration
   `20261208000000_team_plus.sql`.
 - **Back office tools.** The dashboard opens on "Waiting on you": unassigned
-  tickets, orders to prepare, rental requests and overdue rentals, new
-  trade-ins, submissions, Telegram requests, affiliate applications,
-  procurement requests to quote, jobs without candidates, Plus seats to
-  approve and overdue company invoices, each for the roles that handle
+  tickets, orders to prepare, rental requests and overdue rentals,
+  submissions, Telegram requests, procurement requests to quote, Plus
+  seats to approve and overdue company invoices, each for the roles that handle
   them (`lib/admin/inbox.ts`). The sidebar's search (`/staff/search`)
-  looks up order, ticket, request and job numbers, members by name or Pass
+  looks up order, ticket and request numbers, members by name or Pass
   number, and products. The counter (`/staff/counter`, support) checks a
   member's The IDEA Pass with the camera (where the browser has
   BarcodeDetector), a USB scanner or by typing, then shows their Bulbs,
@@ -322,23 +309,19 @@ session in the shared cookie.
 - **Bulbs.** The IDEA Pass rewards (migration `20261128000000_bulbs.sql`):
   1 Bulb = 100 IQD. Every movement is a row in `bulb_entries`, written only
   by triggers and SECURITY DEFINER functions (no insert, update or delete
-  policy). A delivered order earns a flat rate on the items (not
+  policy). A delivered order earns a flat rate on the item subtotal (not
   delivery): `store_settings.bulb_rate` (3%) for everyone, or the member's
-  Plus plan `plans.bulb_rate` (Glow 4%, Shine 5%, Blaze 6%), times the
-  category's or product's `bulb_multiplier` (consoles and laptops 0.5)
-  and at most half on any item over `store_settings.bulb_half_from`
-  (500,000 IQD), plus a one-time 20-Bulb first-order bonus; both stay
+  Plus plan `plans.bulb_rate` (Glow 4%, Shine 5%, Blaze 6%), plus a one-time 20-Bulb first-order bonus; both stay
   `pending` through the return window (`store_settings.return_days`, 14
   days, read by `private.return_window()`), count as usable once
-  `available_at` passes, and a cancelled or refunded order voids them. A completed trade-in earns 10, and a
-  store-credit payout is paid in Bulbs at 120% of the offer. There are no
-  spend tiers (migration `20261218000000_money_rules.sql` removed them):
+  `available_at` passes, and a cancelled or refunded order voids them.
+  There are no spend tiers (migration `20261218000000_money_rules.sql` removed them):
   the card is pink for everyone, with a special finish for Plus members.
   Members read `my_bulbs()` (`/pass/bulbs`); support
   sees and adjusts a member's Bulbs with a reason on the customer page
   (`member_bulbs`, `adjust_bulbs`, audited); finance sees what members hold
-  and edits the money rules and the category multipliers (Finance → Bulbs,
-  `bulbs_outstanding`, `set_money_rules`). `GET /cron/bulbs` (daily, 03:30
+  and edits the money rules (Finance → Bulbs, `bulbs_outstanding`,
+  `set_money_rules(rules jsonb)`). `GET /cron/bulbs` (daily, 03:30
   UTC) runs `run_bulb_expiry()`: a reminder after 11 months without
   activity and expiry at 12.
 - **Spending Bulbs** (migration
@@ -358,9 +341,9 @@ session in the shared cookie.
   instead of working the total out itself): the zone's fee, free delivery
   in a zone over `delivery_zones.free_from` (Baghdad 150,000 IQD) or on
   any order for a Plus plan with `free_delivery` in a zone with
-  `plus_free_delivery` (Shine and Blaze in Baghdad), the invite or
-  affiliate discount, then Bulbs. The total giveaway on an order (delivery
-  waived, discount, affiliate commission and the Bulbs it will earn) is
+  `plus_free_delivery` (Shine and Blaze in Baghdad), the invite
+  discount, then Bulbs. The total giveaway on an order (delivery
+  waived, discount and the Bulbs it will earn) is
   capped at `store_settings.max_giveaway_rate` (20%) of the items: the
   discount shrinks first, then `orders.max_bulbs` caps the cashback. Cash
   on delivery is refused over `store_settings.cash_limit` (500,000 IQD;
@@ -378,8 +361,7 @@ session in the shared cookie.
 - **Invite friends** (migration `20261130000000_referrals.sql`). Every
   member has `profiles.invite_code` (read through `my_invites()`; the
   column isn't granted to clients) and shares
-  `theideaiq.com/r/<code>` (the page asks `referral_kind(code)` whether
-  it is an invite or an affiliate code). The page remembers the code on the device
+  `theideaiq.com/r/<code>`. The page remembers the code on the device
   (`lib/invites.ts`, 30 days) and `InviteClaimer` calls `claim_invite()`
   once the visitor is signed in: new members only (no paid or confirmed
   order), one inviter each, never themselves (`referrals`). Their first
@@ -390,28 +372,6 @@ session in the shared cookie.
   refund, at most 20 a month, and none when the friend's order shares a
   phone number or address with the inviter's own orders. The invite card
   is on `/pass/bulbs#invite`.
-- **Affiliates** (migration `20261201000000_affiliates.sql`). Members
-  apply on `/pass/bulbs#invite` (`apply_affiliate()`); marketing approves
-  them in the back office with a code (`decide_affiliate()`, which also
-  notifies them). The link `theideaiq.com/r/<code>` is remembered on the
-  device until sign-in (`lib/affiliates.ts`, `AffiliateToucher`) and, like
-  the code typed at checkout, recorded by `touch_affiliate()` in
-  `affiliate_attributions` (the last link or code wins; a code typed at
-  checkout replaces a link). For 30 days the member's orders get 5% off
-  (`orders.discount`, `discount_source = 'affiliate'`,
-  `orders.affiliate_id`); one discount per order, the larger of the invite
-  and the affiliate's, mirrored by `orderDiscount()` in `@repo/commerce`.
-  A delivered order earns the category's `affiliate_rate` (8% vinyl, CDs
-  and books, 3% otherwise; Back office → Affiliates, finance) on the price
-  after the discount, held through the return window (14 days); nothing when the order
-  shares a phone number or address with the affiliate. A new Plus member's
-  first membership (attributed on its first payments,
-  `subscriptions.affiliate_id`) earns 20% of the first 3 monthly payments
-  or a quarter of a yearly one. Refunds void unpaid commissions and claw
-  back paid ones from the next payout (`affiliate_commissions`). Finance
-  records a payout of everything ready from 25,000 IQD
-  (`record_affiliate_payout()`): by ZainCash, FIB, Qi or bank transfer with
-  its reference, or as Bulbs worth 20% more, credited at once.
 - **More Bulbs** (migration `20261205000000_bulbs_extras.sql`). The IDEA
   Plus payments earn cashback at the member's rate when paid
   (`bulbs_on_payment`, voided on refund); `run_birthday_bulbs()` (daily
@@ -705,11 +665,11 @@ Current schema:
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | The IDEA Store's catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
 | `…_students_and_perks.sql` | Students: `universities` (email domains), `student_badges` (university and valid until 30 June), `student_requests` (emailed codes, card photos in the private `student-cards` bucket); `issue_student_code()` (API only), `confirm_student_email()`, `request_student_review()`, `review_student_card()`, `my_student()`; student prices (`plans.student_of`, `run_student_expiry()`); no deposits for students (`rental_quote()`, `book_kit()`). Perks: `perks`, `perk_redemptions` (once a day), `partner_check()`, `redeem_perk()`, `perk_stats()`, `my_partners()` |
-| `…_surveys.sql` | Surveys: `surveys` (free, Bulbs or cash rewarded; targeting by university, major, year and governorate), `survey_questions`, `survey_responses`, `survey_answers`, `survey_credits` (give to get), `survey_reports`; the student profile on `student_badges` (`set_student_profile()`); `save_survey()`, `publish_survey()` (the sensitive-topic checker, `survey_flags()`), `start_survey()`, `submit_survey()`, `surveys_for_me()`, `my_survey_credits()`, `report_survey()`, `survey_results()`, `close_survey()`, `review_survey()`; cash surveys open when their order is paid |
+| `…_surveys.sql` | Surveys: `surveys` (free or Bulbs rewarded, the Bulbs from the creator's balance or bought with IQD; targeting by university, major, year and governorate), `survey_questions`, `survey_responses`, `survey_answers`, `survey_credits` (give to get), `survey_reports`; the student profile on `student_badges` (`set_student_profile()`); `save_survey()`, `publish_survey()` (the sensitive-topic checker, `survey_flags()`), `start_survey()`, `submit_survey()`, `surveys_for_me()`, `my_survey_credits()`, `report_survey()`, `survey_results()`, `close_survey()`, `review_survey()`; a survey whose Bulbs are bought with IQD opens when its order is paid |
 | `…_pass_sign_in.sql` | Sign in with The IDEA Pass: `pass_card_checks`, `pass_card_check()` and `pass_card()` (partner card checks and the card image), `pass_partners` (OpenID Connect clients: return addresses, allowed scopes, the secret's hash), `pass_connections` (who shared what with which site; a per-site `subject`), `pass_sign_in_codes` and `pass_access_tokens` (hashes, the API only); `approve_pass_sign_in()` (the consent screen), `pass_claims()` (service role), `disconnect_pass_partner()` |
 | `…_pass_scopes.sql` | Every partner scope (`membership`, `student_email`, `phone`, `birthdate`, `address`, `offline_access`; picture and plan); `student_badges.university_email` (kept when verified by email); `pass_refresh_tokens` (rotating, 90 days) |
 | `…_pass_developers.sql` | Partner self-service: `pass_partner_domains` (verified by the API), `pass_partners` gains `mode` (testing or live), `requested_answers`/`approved_answers` (`answers` derived by trigger), `enabled`/`suspended_at` (`active` derived), the previous secret for 24 hours and `public_jwks`; `pass_client_assertions` (one-use `jti`s, the API only); `add_pass_domain()`, `remove_pass_domain()`, `create_pass_app()`, `update_pass_app()`, `set_pass_app_state()`, `rotate_pass_app_secret()`, `end_previous_pass_secret()`, `set_pass_app_keys()`, `pass_apps()`; staff `review_pass_app()` and `suspend_pass_app()`; testing apps sign in and check cards of their company's members only |
-| `…_boxes.sql` | Boxes: `boxes`, `box_parts` (fixed product versions or slots filled from a category and format), `box_themes`; a box's stock comes from its parts (`private.box_stock()`, recounted with the parts' copies), an active box costs 10–15% less than its parts (`private.box_value()`); `cart_items.box_theme_id` and `order_items.box_theme_id`; orders take the fixed parts' copies, `pack_box()` the picked ones; `box_slot_copies()` |
+| `…_boxes.sql` | Boxes: `boxes`, `box_parts` (fixed product versions or slots filled from a category and format), `box_themes`; a box's stock comes from its parts (`private.box_stock()`, recounted with the parts' copies), an active box costs 10–15% less than its parts (`private.box_value()`); `cart_items.box_theme_id` and `order_items.box_theme_id`; orders take the fixed parts' copies, `pack_box()` the picked ones; `box_slot_copies()`. No new boxes can be created; `sync_box_stock` archives a box when its parts sell out |
 | `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
 | `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
 | `…_single_rent.sql` | Single-item rent: `rental_rates`, `rental_quote()`, `create_rental_order()` (rent + deposit lines), `settle_rental()`, `set_rental_deposit_rate()`; Keep it: `keep_price()`, `keep_rental()`; `rentals.kind`, `order_items.kind`, rental status `kept` |
@@ -972,7 +932,7 @@ In the Supabase dashboard:
    deploy; only then, in Supabase → **Authentication → Attack Protection**,
    enable CAPTCHA protection with provider Turnstile and the **secret key**.
    (Turned on before the site sends tokens, every sign-in fails.)
-8. **Sign in with Google, Apple, Microsoft, Facebook and LinkedIn.** Every
+8. **Sign in with Google and Apple.** Every
    provider sends people back to Supabase's callback,
    `https://mzqpquaghjogbfhiufjv.supabase.co/auth/v1/callback`, then to the
    website's `/auth/callback` (or the apps' `com.theideaiq.app://auth/callback`,
@@ -993,24 +953,9 @@ In the Supabase dashboard:
      .p8 once). In Supabase → Providers → **Apple**: the Services ID as the
      client ID and the secret generated from the key (Team ID, Key ID,
      .p8). The secret expires after 6 months: put a reminder to renew it.
-   - **Microsoft:** Azure portal → Microsoft Entra ID → App registrations →
-     New registration, "Accounts in any organizational directory and
-     personal Microsoft accounts", redirect URI (Web) the callback above;
-     Certificates & secrets → a client secret (note its expiry). In
-     Supabase → Providers → **Azure**: the application (client) ID, the
-     secret and the URL `https://login.microsoftonline.com/common`.
-   - **Facebook:** Meta for Developers → Create app (Consumer) → add
-     Facebook Login → Valid OAuth Redirect URIs: the callback above;
-     permissions `email` and `public_profile`; complete business
-     verification and switch the app to Live. In Supabase → Providers →
-     **Facebook**: the App ID and App secret.
-   - **LinkedIn:** LinkedIn Developers → Create app (company page The IDEA)
-     → Products: "Sign In with LinkedIn using OpenID Connect" → Auth:
-     authorized redirect URL the callback above. In Supabase → Providers →
-     **LinkedIn (OIDC)**: the client ID and secret.
    Then list the providers that are on, in button order, in
    `NEXT_PUBLIC_AUTH_PROVIDERS` on the website's Vercel project (for
-   example `google,apple,azure,facebook,linkedin_oidc`) and deploy; a
+   example `google,apple`) and deploy; a
    provider missing from the list shows no button. An address that
    already has a Pass is linked to it when the provider says it's
    verified.
@@ -1509,7 +1454,6 @@ the database refuses anyone under 13), and it's needed to buy. For
   `POST /checkout` answers `guardian_required` otherwise).
 - **PEGI 18** products (`products.age_rating`) are hidden from under-18
   Passes by the products policy and refused by `create_order()`.
-- **18+ only:** Sell to us (trade-ins) and affiliates (triggers).
 - Reviews from verified buyers with a photo say they earned 5 Bulbs.
 
 #### Single-item rent and Keep it
@@ -1605,8 +1549,11 @@ no units, no bookings).
 
 #### Boxes
 
-Store products built from parts (migration `20261224000000_boxes.sql`). A
-box is a normal sale product with a `boxes` row: `box_parts` are fixed
+Store products built from parts (migration `20261224000000_boxes.sql`).
+The existing boxes sell until they sell out: no new box can be created
+(RLS refuses it), and `sync_box_stock` archives a box once its parts sell
+out. Catalogue → Boxes and Orders → Boxes to pack stay while any box is
+left. A box is a normal sale product with a `boxes` row: `box_parts` are fixed
 product versions (a turntable, a cleaning kit) or slots staff fill when
 packing (3 records from Music in Vinyl), and `min_value` is what the
 picked copies are worth together at least.
@@ -1625,11 +1572,6 @@ picked copies are worth together at least.
   copies; staff pick the slots' copies in Orders → Boxes to pack
   (`pack_box()` checks the slots, the formats and the value, and sets
   `packed_at`). Cancelling returns every copy.
-- **Boxes at launch**: Vinyl starter (AT-LP60X, cleaning kit, 3 records;
-  379,750), Mystery vinyl (3 records worth 180,000; 154,750) and Reading
-  (3 books worth 63,000; 54,750); Eid, Ramadan nights and Back to
-  university start as drafts, switched on in Catalogue → Boxes for their
-  season.
 
 #### Students and partner perks
 
@@ -1718,9 +1660,10 @@ Migration `20261226000000_surveys.sql`; the pilot starts at AUIB.
   else's free survey earns one; new creators start with 10), **Bulbs**
   (2–10 Bulbs a response by length, plus a 10% fee, held from the
   creator's balance when it opens; the unused part comes back when it
-  closes) or **cash** (the same in IQD, 100 IQD a Bulb, through an order
-  paid with the hosted checkout; the survey opens when the order is
-  paid). `save_survey()` saves drafts; `publish_survey()` opens the
+  closes) or **cash** (the creator buys the same Bulbs rewards from The
+  IDEA with IQD, 100 IQD a Bulb, through an order paid with the hosted
+  checkout; the survey opens when the order is paid). Respondents always
+  earn Bulbs, never IQD. `save_survey()` saves drafts; `publish_survey()` opens the
   survey unless `survey_flags()` finds a sensitive topic (religion or
   sect, politics, health, sex, money, identity numbers, contact details,
   in Arabic and English), in which case it waits for support in
@@ -1782,13 +1725,11 @@ available copies by variant, condition and purpose, with the lowest price.
   order gives them back.
 - **Rentals hold a copy**: any product with copies for rent can be rented,
   not only rental items, and a returned or cancelled rental frees it.
-- **Trade-ins** completed into a product become one used copy that cost the
-  offer, linked to the request.
 - **One product per title**: the album on vinyl, CD and cassette is one
   product with a variant per format; a title sold and rented is one shop
   product with copies for rent (`products.rentable`, kept from its copies),
   listed on the Rent tab too. The product page offers each version new or
-  used, rent with Plus and "Sell to us".
+  used, and rent with Plus.
 - **Categories** have no kind: the shop lists those with products for sale
   and the Rent tab those with rentable products (`listed_categories`).
 - **Back office**: Catalog → product → **Copies** adds copies and edits or
@@ -1996,7 +1937,7 @@ until both `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
 2. Business settings → System users → add one with
    `whatsapp_business_messaging`, generate a permanent token, and set it as
    `WHATSAPP_ACCESS_TOKEN` on the `api` Vercel project.
-3. WhatsApp Manager → Message templates: create the four templates below,
+3. WhatsApp Manager → Message templates: create the three templates below,
    category **Utility**, in Arabic (`ar`) and English (`en`), with exactly
    these names and variables, and wait for approval.
 
@@ -2005,7 +1946,6 @@ until both `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
 | `order_confirmed` | name, order number | `Hi {{1}}, your The IDEA order {{2}} is confirmed. We'll let you know when it's on its way.` | `مرحباً {{1}}، تم تأكيد طلبك {{2}} من The IDEA. سنخبرك عند خروجه للتوصيل.` |
 | `order_shipped` | name, order number, tracking | `Hi {{1}}, your order {{2}} is on its way. Tracking: {{3}}.` | `مرحباً {{1}}، طلبك {{2}} في الطريق إليك. رقم التتبع: {{3}}.` |
 | `rental_due_soon` | name, item, due date | `Hi {{1}}, a reminder that {{2}} from The IDEA Plus is due back on {{3}}.` | `مرحباً {{1}}، تذكير بأن موعد إرجاع {{2}} من The IDEA Plus هو {{3}}.` |
-| `trade_in_offer` | name, request number, item, offer | `Hi {{1}}, we made an offer on your request {{2}} ({{3}}): {{4}}. Open your Pass on theideaiq.com to accept or decline.` | `مرحباً {{1}}، قدّمنا عرضاً على طلبك {{2}} ({{3}}): {{4}}. افتح بطاقتك على theideaiq.com لقبوله أو رفضه.` |
 
 ### 4.5 Delivery with Boxy
 

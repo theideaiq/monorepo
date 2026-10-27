@@ -1,9 +1,7 @@
 import { Highlight } from "@repo/design-system/components/brand/highlight";
-import { PinkBand } from "@repo/design-system/components/brand/pink-band";
-import { Button } from "@repo/design-system/components/ui/button";
 import { type Locale, localePath } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
-import { HandCoins, MoveRight } from "lucide-react";
+import { MoveRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { EventCard, PostCard } from "@/components/editorial-cards";
@@ -20,7 +18,6 @@ import {
   getProducts,
   getRatings,
 } from "@/lib/data";
-import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
 export const revalidate = 300;
@@ -156,21 +153,6 @@ const Home = async ({ params }: HomeProps) => {
           ))}
         </Rail>
       ) : null}
-
-      <div className="pt-8">
-        <PinkBand
-          action={
-            <Button asChild className="gap-2" size="lg" variant="brand">
-              <a href={pagePath(locale, "/pass/orders#sell")}>
-                <HandCoins aria-hidden="true" />
-                {t("store.sell.cta")}
-              </a>
-            </Button>
-          }
-          description={t("store.sell.description")}
-          title={<Highlight>{t("store.sell.title")}</Highlight>}
-        />
-      </div>
     </>
   );
 };

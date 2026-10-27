@@ -27,12 +27,9 @@ const LEGACY_DETAIL_PAGES: Record<string, [string, string]> = {
 const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/orders", "/pass/orders"],
   ["/settings", "/pass/settings"],
-  ["/sell", "/pass/orders", "#sell"],
-  ["/pass/sell", "/pass/orders", "#sell"],
   ["/support", "/help"],
   ["/pass/support", "/help"],
   ["/pass/plus", "/plus", "#yours"],
-  ["/pass/affiliate", "/pass/bulbs", "#invite"],
   ["/pass/wishlist", "/saved"],
   ["/pass/events", "/club", "#yours"],
   ["/pass/submissions", "/club", "#yours"],
@@ -68,8 +65,8 @@ const moved = (pathname: string): [string, string] | null => {
  * Links stored in older shapes (notifications, emails, Telegram) open the
  * page's current URL: detail pages that took a query parameter while the
  * app was a static export (`/orders/view?id=…` → `/pass/orders/…`), and
- * pages that moved (`/pass/support/…` → `/help/…`, `/sell` →
- * `/pass/orders#sell`). Other paths are returned unchanged.
+ * pages that moved (`/pass/support/…` → `/help/…`, `/pass/plus` →
+ * `/plus#yours`). Other paths are returned unchanged.
  */
 export const currentAppPath = (path: string) => {
   const url = new URL(path, "http://site.invalid");

@@ -10,8 +10,6 @@ describe("currentAppPath", () => {
   });
 
   test("opens pages that moved at their current address", () => {
-    expect(currentAppPath("/sell")).toBe("/pass/orders#sell");
-    expect(currentAppPath("/pass/affiliate")).toBe("/pass/bulbs#invite");
     expect(currentAppPath("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
     expect(currentAppPath("/pass/support/t1")).toBe("/help/t1");
     expect(currentAppPath("/pass/wishlist")).toBe("/saved");

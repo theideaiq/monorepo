@@ -16,14 +16,11 @@ export const inboxItems = [
   "orders",
   "rentalRequests",
   "overdueRentals",
-  "tradeIns",
   "submissions",
   "surveys",
   "passApps",
   "telegram",
-  "affiliates",
   "procurement",
-  "jobs",
   "seats",
   "invoices",
 ] as const;
@@ -39,9 +36,7 @@ export interface InboxEntry {
 const head = { count: "exact", head: true } as const;
 
 const hrefs: Record<InboxItem, string> = {
-  affiliates: "/affiliates",
   invoices: "/companies/invoices",
-  jobs: "/companies/hiring",
   orders: "/orders?status=awaiting",
   overdueRentals: "/rentals?view=overdue",
   passApps: "/companies/sign-in",
@@ -52,7 +47,6 @@ const hrefs: Record<InboxItem, string> = {
   surveys: "/customers/surveys",
   telegram: "/telegram",
   tickets: "/support?status=open",
-  tradeIns: "/trade-ins",
 };
 
 export const loadInbox = async (
@@ -73,12 +67,9 @@ export const loadInbox = async (
     orders,
     rentalRequests,
     overdueRentals,
-    tradeIns,
     queue,
     telegram,
-    affiliates,
     procurement,
-    openJobs,
     seats,
     invoices,
     surveys,
@@ -103,18 +94,9 @@ export const loadInbox = async (
     counted(can("rentals"), () =>
       supabase.from("rentals").select("id", head).eq("status", "overdue")
     ),
-    counted(can("tradeIns"), () =>
-      supabase.from("trade_ins").select("id", head).eq("status", "submitted")
-    ),
     can("editorial") ? supabase.rpc("review_queue") : null,
     counted(can("telegram"), () =>
       supabase.from("telegram_requests").select("id", head).eq("status", "open")
-    ),
-    counted(can("affiliates"), () =>
-      supabase
-        .from("affiliates")
-        .select("user_id", head)
-        .eq("status", "applied")
     ),
     counted(can("companies"), () =>
       supabase
@@ -122,13 +104,6 @@ export const loadInbox = async (
         .select("id", head)
         .eq("status", "submitted")
     ),
-    can("companies")
-      ? supabase
-          .from("job_requests")
-          .select("id, candidates (status)")
-          .eq("status", "open")
-          .limit(200)
-      : null,
     counted(can("companies") && finance, () =>
       supabase.from("plus_seats").select("id", head).eq("status", "requested")
     ),
@@ -151,13 +126,7 @@ export const loadInbox = async (
   ]);
 
   const counts: Record<InboxItem, number> = {
-    affiliates,
     invoices,
-    // Open jobs nobody has been proposed for yet.
-    jobs: (openJobs?.data ?? []).filter(
-      (job) =>
-        !job.candidates.some((candidate) => candidate.status !== "withdrawn")
-    ).length,
     orders,
     overdueRentals,
     passApps,
@@ -170,7 +139,6 @@ export const loadInbox = async (
     surveys,
     telegram,
     tickets,
-    tradeIns,
   };
 
   return inboxItems

@@ -9,7 +9,6 @@ import {
   CrownIcon,
   ExternalLinkIcon,
   GraduationCapIcon,
-  HandCoinsIcon,
   LightbulbIcon,
   type LucideIcon,
   TruckIcon,
@@ -192,11 +191,6 @@ export const PassCard = async ({ session }: PassCardProps) => {
       href: "/club?show=events",
       icon: CalendarDaysIcon,
       text: card("perks.events"),
-    },
-    {
-      href: "/pass/orders#sell",
-      icon: HandCoinsIcon,
-      text: card("perks.sell"),
     },
     {
       href: "/pass/bulbs",

@@ -6,10 +6,9 @@ const clientWith = (auth: Record<string, unknown>) =>
 
 describe("social sign-in", () => {
   test("only known providers, in the order given", () => {
-    expect(enabledProviders(" apple, google ,twitter,,azure")).toEqual([
+    expect(enabledProviders(" apple, twitter,,azure, google ")).toEqual([
       "apple",
       "google",
-      "azure",
     ]);
     expect(enabledProviders(undefined)).toEqual([]);
   });
@@ -56,7 +55,7 @@ describe("social sign-in", () => {
     const linkIdentity = vi
       .fn()
       .mockResolvedValue({ data: { url: "u" }, error: null });
-    await startSocialSignIn(clientWith({ linkIdentity }), "linkedin_oidc", {
+    await startSocialSignIn(clientWith({ linkIdentity }), "apple", {
       link: true,
       redirectTo: "https://theideaiq.com/auth/callback",
     });

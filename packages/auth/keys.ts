@@ -9,7 +9,7 @@ export const keys = () =>
       // locally and on previews (host-only cookie).
       NEXT_PUBLIC_AUTH_COOKIE_DOMAIN: z.string().startsWith(".").optional(),
       // Sign-in providers turned on in Supabase, in button order, e.g.
-      // "google,apple,azure,facebook,linkedin_oidc".
+      // "google,apple".
       NEXT_PUBLIC_AUTH_PROVIDERS: z.string().optional(),
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z
         .string()

@@ -11,7 +11,7 @@ import { localePath } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { JsonLd } from "@repo/seo/json-ld";
-import { HandCoins, MoveLeft, Truck } from "lucide-react";
+import { MoveLeft, Truck } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -244,13 +244,6 @@ const ProductPage = async ({ params }: ProductProps) => {
                 {t("delivery")}
               </p>
             )}
-            <Link
-              className="flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-              href="/pass/orders#sell"
-            >
-              <HandCoins aria-hidden="true" className="size-4" />
-              {t("sellToUs")}
-            </Link>
           </div>
 
           <BoxContents box={box} locale={locale} />

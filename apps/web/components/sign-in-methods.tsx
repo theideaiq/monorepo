@@ -20,10 +20,7 @@ import { isNativeApp } from "@/lib/platform";
 
 const NAMES: Record<string, string> = {
   apple: "Apple",
-  azure: "Microsoft",
-  facebook: "Facebook",
   google: "Google",
-  linkedin_oidc: "LinkedIn",
   telegram: "Telegram",
 };
 

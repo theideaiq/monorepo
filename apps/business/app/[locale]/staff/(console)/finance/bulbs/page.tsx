@@ -14,7 +14,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 /**
  * Bulbs and the money rules for finance: what members hold (what The IDEA
- * owes), then the rules: the Bulbs rate, half rate and multipliers (Plus
+ * owes), then the rules: the Bulbs rate (Plus
  * plans set their own rate in Catalog → Plans), the return window, the
  * giveaway cap, the cash limit and what the price check counts.
  */
@@ -23,20 +23,15 @@ const BulbsPage = async () => {
   const locale = await getLocale();
   const t = await getTranslations("admin.finance");
   const format = formatters(locale);
-  const [{ data: outstanding }, { data: settings }, { data: categories }] =
-    await Promise.all([
-      supabase.rpc("bulbs_outstanding"),
-      supabase
-        .from("store_settings")
-        .select(
-          "bulb_rate, bulb_half_from, return_days, max_giveaway_rate, cash_limit, payment_fee_rate, delivery_cost, min_margin_rate"
-        )
-        .maybeSingle(),
-      supabase
-        .from("product_categories")
-        .select("id, name_ar, name_en, bulb_multiplier")
-        .order("position"),
-    ]);
+  const [{ data: outstanding }, { data: settings }] = await Promise.all([
+    supabase.rpc("bulbs_outstanding"),
+    supabase
+      .from("store_settings")
+      .select(
+        "bulb_rate, return_days, max_giveaway_rate, cash_limit, payment_fee_rate, delivery_cost, min_margin_rate"
+      )
+      .maybeSingle(),
+  ]);
   const held = outstanding?.[0];
 
   return (
@@ -62,7 +57,6 @@ const BulbsPage = async () => {
         {settings ? (
           <Panel description={t("rules.hint")} title={t("rules.title")}>
             <MoneyRulesForm
-              categories={categories ?? []}
               disabled={!canWrite}
               rules={{
                 ...settings,

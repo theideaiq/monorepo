@@ -9,11 +9,10 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 - **Delivery:** your addresses, governorate and area, and the phone number the courier uses.
 - **Orders and rentals:** what you buy, rent or return, The IDEA Plus plan, your rental queue (Saved), swaps, game night kits, deposits and receipts.
 - **Verification:** to give you a verified Pass we may check a national ID card or passport; we record that the check took place. For Student verification we check a university email or a student card photo; the documents are deleted after review and we keep only the result (for example "student at a university until June 2027").
-- **Bulbs, invites and affiliates:** your Bulbs history, invite code, who invited you, and, for affiliates, your code, commissions and payout details (ZainCash, FIB, Qi or bank transfer details).
-- **Sell to us:** the photos and descriptions you send, our offers and your decisions.
+- **Bulbs and invites:** your Bulbs history, invite code and who invited you.
 - **The IDEA Club:** event RSVPs and check-ins, submissions, reviews and their photos, and survey answers and surveys you create.
 - **Support:** your messages through Help, email, Ask Droid or The IDEA Droid.
-- **The IDEA Business:** company details, members and roles, quotes, orders and invoices, and candidates' CVs shared for hiring.
+- **The IDEA Business:** company details, members and roles, quotes, orders and invoices.
 
 ### What we collect automatically
 
@@ -24,6 +23,7 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 
 ### What other services send us
 
+- **Google and Apple:** if you sign in with them, your name and email address.
 - **Telegram:** when you use The IDEA Droid or our Telegram chats, or "Continue with Telegram", Telegram shares your Telegram user ID, name, username and language. We record which Pass it is linked to and whether you are in our chats.
 - **WhatsApp:** if you turn on WhatsApp updates, your number and that you agreed to them.
 - **Wayl:** the payment status, amount and reference. Never your full card or wallet details.
@@ -32,7 +32,7 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 
 ## 2. Why we use it
 
-- to run the service: your Pass and card, orders, delivery, rentals, The IDEA Plus, Bulbs, Sell to us, the Club, surveys and The IDEA Business;
+- to run the service: your Pass and card, orders, delivery, rentals, The IDEA Plus, Bulbs, the Club, surveys and The IDEA Business;
 - to apply the age rules: a guardian's approval for under-18s, and hiding PEGI 18 items from under-18 Passes;
 - to take payments and keep the financial records the law requires;
 - to help you when you ask for support;
@@ -62,7 +62,6 @@ Some providers store or process data outside Iraq. We choose providers that prot
 - Your Pass data, while your Pass is open.
 - Orders, payments, invoices and receipts, for as long as the law requires.
 - Student verification documents, until they are reviewed; then only the result.
-- Sell to us photos, while the request is open and for a short time after, in case of questions.
 - Survey answers, for as long as the creator needs them for that survey and its export.
 - Device and error data, for a limited time.
 

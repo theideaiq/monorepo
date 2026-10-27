@@ -222,54 +222,6 @@ export const getSubmissionFileUrl = async (
   return data.signedUrl;
 };
 
-/** Uploads a candidate's CV (support) into the hiring company's folder. */
-export const uploadCandidateCv = (
-  supabase: Client,
-  organizationId: string,
-  file: File
-) => {
-  assertAllowed("candidates", file);
-  return upload(
-    supabase,
-    buckets.candidates.id,
-    objectPath(organizationId, file.name),
-    file
-  );
-};
-
-/** A time-limited link to a candidate's CV (the company or support). */
-export const getCandidateCvUrl = async (
-  supabase: Client,
-  path: string,
-  expiresIn = 60 * 10
-) => {
-  const { data, error } = await supabase.storage
-    .from(buckets.candidates.id)
-    .createSignedUrl(path, expiresIn);
-  if (error || !data) {
-    throw new StorageError(
-      "not_found",
-      `No signed URL for ${path}: ${error?.message ?? "no data"}`
-    );
-  }
-  return data.signedUrl;
-};
-
-/** Uploads a photo for one of the signed-in user's "Sell to us" requests. */
-export const uploadTradeInPhoto = (
-  supabase: Client,
-  userId: string,
-  file: File
-) => {
-  assertAllowed("tradeIns", file);
-  return upload(
-    supabase,
-    buckets.tradeIns.id,
-    objectPath(userId, file.name),
-    file
-  );
-};
-
 /** Uploads a photo for a product review, under the author's folder. */
 export const uploadReviewPhoto = (
   supabase: Client,
@@ -283,33 +235,6 @@ export const uploadReviewPhoto = (
     objectPath(userId, file.name),
     file
   );
-};
-
-/**
- * Time-limited links to trade-in photos (their owner or support), in the
- * order given; a photo that can't be signed is null.
- */
-export const getTradeInPhotoUrls = async (
-  supabase: Client,
-  paths: string[],
-  expiresIn = 60 * 60
-): Promise<(string | null)[]> => {
-  if (paths.length === 0) {
-    return [];
-  }
-  const { data, error } = await supabase.storage
-    .from(buckets.tradeIns.id)
-    .createSignedUrls(paths, expiresIn);
-  if (error || !data) {
-    throw new StorageError(
-      "not_found",
-      `No signed URLs: ${error?.message ?? "no data"}`
-    );
-  }
-  const byPath = new Map(
-    data.map((entry) => [entry.path, entry.error ? null : entry.signedUrl])
-  );
-  return paths.map((path) => byPath.get(path) ?? null);
 };
 
 /** Uploads a photo of the signed-in student's card, for review. */

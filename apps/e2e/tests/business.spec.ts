@@ -5,7 +5,6 @@ import { resetCompany } from "../seed";
 import { expectAccessible } from "./helpers";
 
 const REQUEST_PATH = /\/procurement\/([0-9a-f-]{36})$/;
-const JOB_PATH = /\/hiring\/([0-9a-f-]{36})$/;
 
 test("a company sends a procurement request and accepts the quote", async ({
   context,
@@ -74,37 +73,6 @@ test("a company sends a procurement request and accepts the quote", async ({
   await expect(
     page.getByText("No one has The IDEA Plus through your company yet.")
   ).toBeVisible();
-  await expectAccessible(page);
-});
-
-test("a company posts a job and hires a proposed candidate", async ({
-  context,
-  page,
-}) => {
-  await resetCompany();
-  await context.addCookies(await sessionCookies(customer.email, urls.app));
-
-  await page.goto(`${urls.app}/hiring`);
-  await page.getByLabel("Role").fill("Accountant");
-  await page.getByLabel("Location").fill("Baghdad");
-  await page.getByRole("button", { name: "Post the job" }).click();
-  await expect(page).toHaveURL(JOB_PATH);
-  await expect(page.getByText("We're looking for candidates.")).toBeVisible();
-
-  // The candidate support proposes (the back office's form is covered by pgTAP).
-  const jobId = JOB_PATH.exec(page.url())?.[1] ?? "";
-  const { error } = await admin().from("candidates").insert({
-    full_name: "Sara Ali",
-    headline: "Chartered accountant",
-    job_request_id: jobId,
-  });
-  expect(error).toBeNull();
-
-  await page.reload();
-  await expect(page.getByText("Sara Ali")).toBeVisible();
-  await page.getByRole("button", { name: "Hire" }).click();
-  await expect(page.getByText("Hired")).toBeVisible();
-  await expect(page.getByText("Filled")).toBeVisible();
   await expectAccessible(page);
 });
 

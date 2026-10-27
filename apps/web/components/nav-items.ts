@@ -15,8 +15,8 @@ export interface NavItem {
 }
 
 /**
- * Your Pass, in four pages: the card, orders (with Sell to us), Bulbs (with
- * invites and affiliates) and settings. Plus, saved items, support and the
+ * Your Pass, in four pages: the card, orders, Bulbs (with invites) and
+ * settings. Plus, saved items, support and the
  * member's events live on /plus, /saved, /help and /club.
  */
 export const navItems: NavItem[] = [
