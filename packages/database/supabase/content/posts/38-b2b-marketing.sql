@@ -70,7 +70,7 @@ begin
 - [LinkedIn Marketing Solutions](https://business.linkedin.com/marketing-solutions)
 - [ما هي الشركة الناشئة؟](/club/startups-explained)
 - [كتابة الإعلانات](/club/copywriting)
-- وللنقاش مع أصحاب المشاريع: [The IDEA Club](https://t.me/theideaclub)$ar$,
+- وللنقاش مع أصحاب المشاريع: [The IDEA Club](https://t.me/theideaiq_club)$ar$,
     $en$## What is B2B?
 
 **B2B** stands for business to business: trade **from one company to another**. Think of a computer maker buying processors from Intel for its laptops, or a phone maker buying screens from Samsung.
@@ -130,7 +130,7 @@ Don't disappear after the deal. Follow up on customer satisfaction, analyze the 
 - [LinkedIn Marketing Solutions](https://business.linkedin.com/marketing-solutions)
 - [What is a startup?](/club/startups-explained)
 - [Copywriting](/club/copywriting)
-- To talk with other business owners: [The IDEA Club](https://t.me/theideaclub)$en$,
+- To talk with other business owners: [The IDEA Club](https://t.me/theideaiq_club)$en$,
     now() - interval '38 minutes'
   )
   on conflict (slug) do update set

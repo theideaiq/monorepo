@@ -56,7 +56,7 @@ begin
 - [World Learning](https://www.worldlearning.org)
 - [Leaders of Tomorrow](https://lotep.org)
 - [Syrian Youth Empowerment](https://syempowerment.org)
-- [The IDEA Club](https://t.me/theideaclub) لمعرفة مواعيد فتح التقديم$ar$,
+- [The IDEA Club](https://t.me/theideaiq_club) لمعرفة مواعيد فتح التقديم$ar$,
     $en$You don't need a passport to have an exchange experience. Free online programs bring together students from Iraq and other countries to learn leadership and community work and practice English with their peers. They're also a great step before applying to bigger programs like [IYLEP](/club/iylep-guide) or studying abroad.
 
 Dates and requirements change from year to year, so always check each program's official website.
@@ -102,7 +102,7 @@ Add every program you complete to your CV and LinkedIn profile, as we explain in
 - [World Learning](https://www.worldlearning.org)
 - [Leaders of Tomorrow](https://lotep.org)
 - [Syrian Youth Empowerment](https://syempowerment.org)
-- [The IDEA Club](https://t.me/theideaclub) to hear when applications open$en$,
+- [The IDEA Club](https://t.me/theideaiq_club) to hear when applications open$en$,
     now() - interval '20 minutes'
   )
   on conflict (slug) do update set

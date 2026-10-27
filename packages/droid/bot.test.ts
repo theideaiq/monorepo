@@ -34,7 +34,7 @@ const member = (
 });
 
 const moderatedChats = () => [
-  { id: GROUP, moderated: true, title: "The Club", username: "theideaclub" },
+  { id: GROUP, moderated: true, title: "The Club", username: "theideaiq_club" },
   { id: OTHER_GROUP, moderated: true, title: "Gaming", username: null },
 ];
 
@@ -199,7 +199,7 @@ describe("private chats", () => {
       buttonsOf(sent("editMessageText")[0]).map((b) => b.url ?? b.callback_data)
     ).toEqual([
       "https://theideaiq.com/ar",
-      "https://t.me/theideaclub",
+      "https://t.me/theideaiq_club",
       "https://business.theideaiq.com",
       "m:home",
     ]);

@@ -65,7 +65,7 @@ begin
 - [البنك المركزي العراقي](https://cbi.iq)
 - [الكشف المصرفي للتقديم على الجامعات](/club/bank-statement)
 - [العمل عن بعد والعمل الحر](/club/remote-work-and-freelancing)
-- وإن كانت لديك أسئلة عن تجارب الآخرين مع المصارف: [The IDEA Club](https://t.me/theideaclub)$ar$,
+- وإن كانت لديك أسئلة عن تجارب الآخرين مع المصارف: [The IDEA Club](https://t.me/theideaiq_club)$ar$,
     $en$Having a bank account today is a necessity, not a luxury. It gives you more control over your money, makes deposits, withdrawals and transfers easy, and keeps your money safe from loss or theft. It matters even more if you work remotely or plan to study abroad.
 
 ## Types of accounts
@@ -120,7 +120,7 @@ Many banks now let you start the process online in their app, then collect your 
 - [Central Bank of Iraq](https://cbi.iq)
 - [Bank statements for university applications](/club/bank-statement)
 - [Remote work and freelancing](/club/remote-work-and-freelancing)
-- To ask others about their experience with banks: [The IDEA Club](https://t.me/theideaclub)$en$,
+- To ask others about their experience with banks: [The IDEA Club](https://t.me/theideaiq_club)$en$,
     now() - interval '39 minutes'
   )
   on conflict (slug) do update set

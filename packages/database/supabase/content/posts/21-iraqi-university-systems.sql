@@ -54,7 +54,7 @@ begin
 ## روابط مفيدة
 
 - [وزارة التعليم العالي والبحث العلمي](https://mohesr.gov.iq)
-- [The IDEA Club](https://t.me/theideaclub) لتسأل طلبة يدرسون في كليتك$ar$,
+- [The IDEA Club](https://t.me/theideaiq_club) لتسأل طلبة يدرسون في كليتك$ar$,
     $en$When you start university in Iraq, you'll study under one of three systems. Knowing yours in advance helps you plan your time and understand how your marks are calculated. One caution: if you later want to transfer to a college with a different system, you may have to start again from first year, so ask about transfer rules before you decide.
 
 ## The annual system
@@ -98,7 +98,7 @@ This system is close to how medicine is taught in many countries and demands str
 ## Useful links
 
 - [Ministry of Higher Education and Scientific Research](https://mohesr.gov.iq)
-- [The IDEA Club](https://t.me/theideaclub) to ask students at your college$en$,
+- [The IDEA Club](https://t.me/theideaiq_club) to ask students at your college$en$,
     now() - interval '21 minutes'
   )
   on conflict (slug) do update set

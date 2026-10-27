@@ -71,7 +71,7 @@ begin
 - [Google Keyword Planner](https://ads.google.com/home/tools/keyword-planner/)
 - [Google Workspace](https://workspace.google.com)
 - [LanguageTool](https://languagetool.org)
-- وللنقاش مع كتّاب آخرين: [The IDEA Club](https://t.me/theideaclub)$ar$,
+- وللنقاش مع كتّاب آخرين: [The IDEA Club](https://t.me/theideaiq_club)$ar$,
     $en$Every video you watch starts with a script, and every post, article or podcast episode starts as a written idea. That's where the **content writer** comes in: the person who turns a brand's vision and voice into content people read and trust.
 
 ## What is content writing?
@@ -132,7 +132,7 @@ Publish at the right time, then follow how people react: comments, questions and
 - [Google Keyword Planner](https://ads.google.com/home/tools/keyword-planner/)
 - [Google Workspace](https://workspace.google.com)
 - [LanguageTool](https://languagetool.org)
-- To talk shop with other writers: [The IDEA Club](https://t.me/theideaclub)$en$,
+- To talk shop with other writers: [The IDEA Club](https://t.me/theideaiq_club)$en$,
     now() - interval '34 minutes'
   )
   on conflict (slug) do update set

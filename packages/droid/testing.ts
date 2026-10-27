@@ -25,7 +25,7 @@ export const BOT_INFO = {
   id: 999,
   is_bot: true,
   supports_inline_queries: false,
-  username: "TheIdeaDroidBot",
+  username: "theideaiq_bot",
 } as UserFromGetMe;
 
 export const NOW = 1_800_000_000_000;

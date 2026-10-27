@@ -32,7 +32,7 @@ export const appLink = (
   );
 
 export const telegram = {
-  bot: "https://t.me/TheIdeaDroidBot",
-  botHandle: "@TheIdeaDroidBot",
-  club: "https://t.me/theideaclub",
+  bot: "https://t.me/theideaiq_bot",
+  botHandle: "@theideaiq_bot",
+  club: "https://t.me/theideaiq_club",
 } as const;

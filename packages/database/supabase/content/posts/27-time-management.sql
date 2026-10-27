@@ -67,7 +67,7 @@ begin
 ## روابط مفيدة
 
 - [كيف تتعلّم أسرع](/club/learn-faster)
-- [The IDEA Club](https://t.me/theideaclub) لتجد من يشاركك أهدافك$ar$,
+- [The IDEA Club](https://t.me/theideaiq_club) لتجد من يشاركك أهدافك$ar$,
     $en$How many times have you wanted to learn something new or start an activity, then stopped because there was "no time"? You'll never get more than 24 hours in a day, but how you organize them makes the difference. Here are six tips to help you make the most of your time.
 
 ## 1. Know where your time goes
@@ -124,7 +124,7 @@ Time management is a skill you build with practice, not a talent some people are
 ## Useful links
 
 - [How to learn faster](/club/learn-faster)
-- [The IDEA Club](https://t.me/theideaclub) to find people who share your goals$en$,
+- [The IDEA Club](https://t.me/theideaiq_club) to find people who share your goals$en$,
     now() - interval '27 minutes'
   )
   on conflict (slug) do update set

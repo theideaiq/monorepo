@@ -22,7 +22,7 @@ begin
 3. عندما تتعثر، فهذا مكان الفجوة في فهمك. ارجع إلى المصدر وسدّها.
 4. أعِد الشرح حتى يصبح واضحاً وبسيطاً.
 
-اشرح لأصدقائك، أو سجّل نفسك، أو شارك ما تعلّمته مع مجتمع [The IDEA Club](https://t.me/theideaclub)؛ تفيد نفسك وغيرك في الوقت نفسه.
+اشرح لأصدقائك، أو سجّل نفسك، أو شارك ما تعلّمته مع مجتمع [The IDEA Club](https://t.me/theideaiq_club)؛ تفيد نفسك وغيرك في الوقت نفسه.
 
 ## 2. قسّم المعلومات إلى أجزاء
 
@@ -60,7 +60,7 @@ begin
 
 ## روابط مفيدة
 
-- [The IDEA Club](https://t.me/theideaclub) لتشارك ما تتعلمه وتناقشه
+- [The IDEA Club](https://t.me/theideaiq_club) لتشارك ما تتعلمه وتناقشه
 - [كيف تطوّر إنجليزيتك](/club/improve-your-english)$ar$,
     $en$Learning is a journey that lasts your whole life, whether you're studying for exams or picking up a new skill. Knowing **how** to learn matters as much as **what** you learn. Here are five proven techniques that make learning faster and easier and help it stick.
 
@@ -73,7 +73,7 @@ One of the strongest ways to lock in an idea is to explain it. Notice how teache
 3. Where you get stuck, that's the gap in your understanding. Go back to the source and fill it.
 4. Explain it again until it's clear and simple.
 
-Explain it to friends, record yourself, or share what you learned with the community at [The IDEA Club](https://t.me/theideaclub); you help yourself and others at the same time.
+Explain it to friends, record yourself, or share what you learned with the community at [The IDEA Club](https://t.me/theideaiq_club); you help yourself and others at the same time.
 
 ## 2. Break it into chunks
 
@@ -111,7 +111,7 @@ Don't wait for the perfect moment. Pick one of these techniques and try it today
 
 ## Useful links
 
-- [The IDEA Club](https://t.me/theideaclub) to share and discuss what you're learning
+- [The IDEA Club](https://t.me/theideaiq_club) to share and discuss what you're learning
 - [How to improve your English](/club/improve-your-english)$en$,
     now() - interval '26 minutes'
   )

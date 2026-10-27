@@ -89,7 +89,7 @@ begin
 - [MDN Web Docs](https://developer.mozilla.org): المرجع الأهم لـ HTML وCSS وJavaScript.
 - [roadmap.sh](https://roadmap.sh): خرائط طريق تفاعلية لكل تخصص.
 
-ولتسأل وتتعرّف على مطوّرين آخرين، انضم إلى [The IDEA Club](https://t.me/theideaclub).$ar$,
+ولتسأل وتتعرّف على مطوّرين آخرين، انضم إلى [The IDEA Club](https://t.me/theideaiq_club).$ar$,
     $en$Web development is one of the most in-demand areas of programming, and one of the easiest to break into on your own. It covers building, designing and maintaining websites and web apps, from simple informational sites to fully interactive applications.
 
 ## The iceberg: front end and back end
@@ -168,7 +168,7 @@ When you're ready to take on client work, read our guide to [remote work and fre
 - [MDN Web Docs](https://developer.mozilla.org): the go-to reference for HTML, CSS and JavaScript.
 - [roadmap.sh](https://roadmap.sh): interactive roadmaps for every specialty.
 
-To ask questions and meet other developers, join [The IDEA Club](https://t.me/theideaclub).$en$,
+To ask questions and meet other developers, join [The IDEA Club](https://t.me/theideaiq_club).$en$,
     now() - interval '28 minutes'
   )
   on conflict (slug) do update set

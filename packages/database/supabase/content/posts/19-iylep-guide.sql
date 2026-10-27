@@ -69,7 +69,7 @@ begin
 ## روابط رسمية
 
 - [صفحة برنامج IYLEP على موقع World Learning](https://www.worldlearning.org/program/iraqi-young-leaders-exchange-program/)
-- [The IDEA Club على تيليجرام](https://t.me/theideaclub) لمعرفة موعد فتح التقديم أولاً بأول$ar$,
+- [The IDEA Club على تيليجرام](https://t.me/theideaiq_club) لمعرفة موعد فتح التقديم أولاً بأول$ar$,
     $en$The Iraqi Young Leaders Exchange Program (IYLEP) is one of the best-known cultural exchanges in Iraq. It is funded by the US Embassy in Baghdad and the State Department's Bureau of Educational and Cultural Affairs, and run by World Learning.
 
 ## What the program covers
@@ -128,7 +128,7 @@ If you're thinking about studying abroad later, this experience makes your appli
 ## Official links
 
 - [IYLEP on the World Learning website](https://www.worldlearning.org/program/iraqi-young-leaders-exchange-program/)
-- [The IDEA Club on Telegram](https://t.me/theideaclub) to hear when applications open$en$,
+- [The IDEA Club on Telegram](https://t.me/theideaiq_club) to hear when applications open$en$,
     now() - interval '19 minutes'
   )
   on conflict (slug) do update set

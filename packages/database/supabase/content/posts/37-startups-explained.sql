@@ -74,7 +74,7 @@ begin
 - [تسويق B2B](/club/b2b-marketing)
 - [المهارات الشخصية في العمل](/club/soft-skills)
 - [الحسابات المصرفية في العراق](/club/bank-accounts-in-iraq)
-- ولتلتقي بروّاد أعمال آخرين: [The IDEA Club](https://t.me/theideaclub)$ar$,
+- ولتلتقي بروّاد أعمال آخرين: [The IDEA Club](https://t.me/theideaiq_club)$ar$,
     $en$Whether you're a business veteran or just starting out, you've almost certainly heard the word **startup**. So what does it mean?
 
 ## What is a startup?
@@ -138,7 +138,7 @@ Despite support from NGOs and business incubators, and a market with room for ma
 - [B2B marketing](/club/b2b-marketing)
 - [Soft skills at work](/club/soft-skills)
 - [Bank accounts in Iraq](/club/bank-accounts-in-iraq)
-- To meet other founders: [The IDEA Club](https://t.me/theideaclub)$en$,
+- To meet other founders: [The IDEA Club](https://t.me/theideaiq_club)$en$,
     now() - interval '37 minutes'
   )
   on conflict (slug) do update set

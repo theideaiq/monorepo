@@ -104,8 +104,8 @@ describe("safeUrl", () => {
 
 describe("localizeHref", () => {
   it("leaves external and already localized links alone", () => {
-    expect(localizeHref("https://t.me/theideaclub", "ar")).toBe(
-      "https://t.me/theideaclub"
+    expect(localizeHref("https://t.me/theideaiq_club", "ar")).toBe(
+      "https://t.me/theideaiq_club"
     );
     expect(localizeHref("/ar/store", "en")).toBe("/ar/store");
     expect(localizeHref("/store", undefined)).toBe("/store");

@@ -61,7 +61,7 @@ begin
 - [منصة إدراك](https://www.edraak.org): دورات عربية مجانية، ابحث فيها عن إنترنت الأشياء.
 - [Arduino Docs](https://docs.arduino.cc) و[Raspberry Pi Learn](https://www.raspberrypi.com/documentation/): مراجع رسمية ومشاريع للمبتدئين.
 
-ولتشارك مشاريعك وتسأل، انضم إلى [The IDEA Club](https://t.me/theideaclub).$ar$,
+ولتشارك مشاريعك وتسأل، انضم إلى [The IDEA Club](https://t.me/theideaiq_club).$ar$,
     $en$You've probably heard of the **Internet of Things**, or **IoT**. It has become one of the important fields of the future and a sought-after skill, because it spans programming, electronics, networking, cloud computing and data science.
 
 ## What is the Internet of Things?
@@ -112,7 +112,7 @@ The field is open, and you'll find plenty of YouTube tutorials for every step.
 - [Edraak](https://www.edraak.org): free Arabic courses; search for Internet of Things.
 - [Arduino Docs](https://docs.arduino.cc) and [Raspberry Pi documentation](https://www.raspberrypi.com/documentation/): official references and beginner projects.
 
-To share your projects and ask questions, join [The IDEA Club](https://t.me/theideaclub).$en$,
+To share your projects and ask questions, join [The IDEA Club](https://t.me/theideaiq_club).$en$,
     now() - interval '31 minutes'
   )
   on conflict (slug) do update set
