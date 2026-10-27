@@ -57,6 +57,13 @@ const setup = ({
   return { signInWithOtp, supabase, verifyOtp };
 };
 
+const USE_CODE =
+  /^(Email me a code instead|أرسلوا لي رمزًا بالبريد بدلًا من ذلك)$/;
+
+/** The password form shows first; these tests use the emailed code. */
+const useCode = () =>
+  fireEvent.click(screen.getByRole("button", { name: USE_CODE }));
+
 describe("The IDEA Pass email sign-in", () => {
   test("checks the address before sending a code", async () => {
     const { signInWithOtp, supabase } = setup();
@@ -64,6 +71,7 @@ describe("The IDEA Pass email sign-in", () => {
       locale: "en",
       supabase,
     });
+    useCode();
 
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "not-an-email" },
@@ -87,6 +95,7 @@ describe("The IDEA Pass email sign-in", () => {
       locale: "en",
       supabase,
     });
+    useCode();
 
     // No name to fill in: onboarding asks for it afterwards.
     expect(screen.queryByLabelText("Full name")).toBeNull();
@@ -143,6 +152,7 @@ describe("The IDEA Pass email sign-in", () => {
       locale: "ar",
       supabase,
     });
+    useCode();
 
     fireEvent.change(screen.getByLabelText("البريد الإلكتروني"), {
       target: { value: "sara@example.com" },

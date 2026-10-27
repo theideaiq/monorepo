@@ -94,7 +94,52 @@
     "emailHint": "We'll email you an 8-digit code. No password needed.",
     "emailLabel": "Email",
     "emailPlaceholder": "name@example.com",
-    "nameRequired": "Enter your name."
+    "nameRequired": "Enter your name.",
+    "password": {
+      "signIn": "Sign in",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "newPassword": "New password",
+      "passwordHint": "At least 8 characters, with letters and digits.",
+      "fullNameLabel": "Full name",
+      "forgot": "Forgot your password?",
+      "forgotHint": "We'll email you a code to set a new password.",
+      "useCode": "Email me a code instead",
+      "usePassword": "Sign in with a password",
+      "newHere": "New to The IDEA?",
+      "haveOne": "Already have The IDEA Pass?",
+      "createPass": "Get The IDEA Pass",
+      "signUpTitle": "Get The IDEA Pass: your name, email and a password. We'll email you one code to confirm it's you.",
+      "resetTitle": "Reset your password",
+      "sendCode": "Send the code",
+      "codeLabel": "Code from the email",
+      "codeSentTo": "We emailed an 8-digit code to {email}.",
+      "codeHint": "Can't find it? Check your spam folder.",
+      "confirm": "Confirm",
+      "setPassword": "Set the password and sign in",
+      "resetDone": "Your password is set.",
+      "back": "Back to sign in",
+      "working": "Please wait…",
+      "errors": {
+        "wrong_password": "That email and password don't match. Try again, or reset your password.",
+        "weak_password": "Use at least 8 characters, with letters and digits.",
+        "pwned_password": "This password has appeared in a data leak elsewhere. Choose a different one.",
+        "already_registered": "This email already has The IDEA Pass. Sign in, or reset your password.",
+        "unconfirmed": "Confirm your email first: sign in with a code instead and we'll confirm it.",
+        "reauthentication_needed": "For your security, confirm it's you with the code we just emailed.",
+        "name_required": "Enter your name.",
+        "captcha_failed": "Please complete the security check and try again.",
+        "delivery_failed": "We couldn't send the code. Please try again shortly.",
+        "expired_code": "That code has expired. Send a new one.",
+        "invalid_code": "That code is incorrect or has expired.",
+        "invalid_email": "Enter a valid email address, e.g. name@example.com.",
+        "invalid_phone": "Enter a valid mobile number.",
+        "no_account": "There's no Pass with this email yet.",
+        "rate_limited": "Too many attempts. Please wait a moment and try again.",
+        "signups_disabled": "New sign-ups are currently closed.",
+        "unknown": "Something went wrong. Please try again."
+      }
+    }
   },
   "billing": {
     "pay": "Pay {amount}",
@@ -1795,6 +1840,17 @@
         "checks": "Checks of your card",
         "checked": "{site} checked your card on {date}",
         "aSite": "A partner"
+      },
+      "password": {
+        "title": "Password",
+        "description": "Sign in with your email and a password, or with a code we email you. Set or change your password here.",
+        "label": "New password",
+        "hint": "At least 8 characters, with letters and digits.",
+        "codeLabel": "Code from the email",
+        "codeSent": "For your security, enter the code we just emailed to {email}.",
+        "save": "Save password",
+        "saving": "Saving…",
+        "saved": "Your password is saved. Next time, sign in with your email and this password."
       }
     },
     "errors": {

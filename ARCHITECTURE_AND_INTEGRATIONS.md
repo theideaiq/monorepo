@@ -921,9 +921,14 @@ In the Supabase dashboard:
    - `https://localhost/**` (Android app)
    - `<bundle id>://**`, for example `iq.example.app://**` (native deep links)
 2. **Authentication → Sign In / Providers → Email:** enabled, with
-   **Confirm email** on (new accounts confirm their address with the code),
+   **Confirm email** on (new Passes confirm their address with the code),
    **Email OTP length** `8` and **Email OTP expiration** `600` seconds
-   (10 minutes). Leave "Secure email change" on.
+   (10 minutes). Leave "Secure email change" on, and turn **Secure password
+   change** on (a password change on a session older than a day asks for
+   an emailed code). Passwords are the default way in (an emailed code
+   stays as the other): set **Minimum password length** `8` and
+   **Password requirements** "Letters and digits", and turn on **Leaked
+   password protection** (HaveIBeenPwned; the advisor flags it while off).
 3. **Authentication → Sign In / Providers → Phone:** disabled (no SMS plan;
    see "Phone sign-in is switched off" in [The IDEA Pass](#the-idea-pass)).
    Remove any test phone numbers.
@@ -944,12 +949,23 @@ In the Supabase dashboard:
    - **Magic Link** ← `magic_link.html`, subject
      `رمز الدخول إلى The IDEA Pass · Sign-in code for The IDEA Pass: {{ .Token }}`;
    - **Change Email Address** ← `email_change.html`, subject
-     `تأكيد البريد الإلكتروني · Confirm your email for The IDEA Pass`.
+     `تأكيد البريد الإلكتروني · Confirm your email for The IDEA Pass`;
+   - **Reset Password** ← `recovery.html`, subject
+     `إعادة تعيين كلمة المرور · The IDEA Pass: reset your password with {{ .Token }}`;
+   - **Reauthentication** ← `reauthentication.html`, subject
+     `تأكيد هويتك · Confirm it's you on The IDEA Pass: {{ .Token }}`.
    Each shows `{{ .Token }}` and no link. Send yourself a code from
    `/sign-in` with a new address to check it arrives from hi@theideaiq.com.
 6. **Rate limits.** Under **Authentication → Rate Limits**, set the emails
    per hour to what Resend's plan allows (for example 100) and keep the
    per-address interval at 60 s (the form's resend cooldown).
+7. **Cloudflare Turnstile** (the security check on the sign-in forms).
+   In Cloudflare → Turnstile, add a widget for `theideaiq.com` (mode
+   "Invisible" or "Managed"). Put its **site key** in
+   `NEXT_PUBLIC_TURNSTILE_SITE_KEY` on the website's Vercel project and
+   deploy; only then, in Supabase → **Authentication → Attack Protection**,
+   enable CAPTCHA protection with provider Turnstile and the **secret key**.
+   (Turned on before the site sends tokens, every sign-in fails.)
 
 ### 2.8 Which client to use where
 

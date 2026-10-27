@@ -7,6 +7,16 @@ decisions with a date.
 
 ## Current state (2026-10-27: program revision, step 5f; Sign in with The IDEA Pass)
 
+- Passwords are the default way into The IDEA Pass: email and password
+  (getting a Pass takes one emailed code; a forgotten password is reset
+  with another code; Settings → Password sets or changes it), with "Email
+  me a code instead" kept. Cloudflare Turnstile protects the forms once
+  configured. **To do (owner, ARCHITECTURE_AND_INTEGRATIONS.md 2.7):** the
+  password policy, secure password change and leaked password protection
+  in Supabase; paste the Reset Password and Reauthentication templates;
+  then the Turnstile site key on Vercel, deploy, and the secret key in
+  Supabase.
+
 - Partner self-service (migration `20261229000000_pass_developers.sql`):
   companies register their own Sign in with The IDEA Pass apps in The IDEA
   Business → Developers (verify a domain, register, test with their own

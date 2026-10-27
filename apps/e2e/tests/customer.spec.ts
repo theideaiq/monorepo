@@ -18,28 +18,37 @@ import {
 const WELCOME = /^Welcome to/;
 const cartReturnTo = `?return_to=${encodeURIComponent("/cart")}`;
 
-test("a new email gets The IDEA Pass with an emailed code", async ({
+const SIGN_UP_PASSWORD = "Baghdad-2026";
+
+test("a new email gets The IDEA Pass with a password and one code", async ({
   page,
 }) => {
   await resetSignUpUser();
-  // One sign-in page: an address we don't know gets its Pass.
   await page.goto(`${urls.web}/sign-in`);
   await expect(page).toHaveURL(`${urls.web}/sign-in`);
   await expect(
     page.getByRole("heading", { name: "Sign in to The IDEA Pass" })
   ).toBeVisible();
   await expectAccessible(page);
+  await page.getByRole("button", { name: "Get The IDEA Pass" }).click();
+  await page.getByLabel("Full name").fill(signUpUser.name);
   await page.getByLabel("Email").fill(signUpUser.email);
+  // A weak password can't be sent.
+  await page.getByLabel("Password").fill("short");
+  await expect(
+    page.getByRole("button", { name: "Get The IDEA Pass" })
+  ).toBeDisabled();
+  await page.getByLabel("Password").fill(SIGN_UP_PASSWORD);
   await clearInbox(signUpUser.email);
-  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "Get The IDEA Pass" }).click();
   await expect(
     page.getByText(`We emailed an 8-digit code to ${signUpUser.email}.`)
   ).toBeVisible();
   await expectAccessible(page);
-  // Filling the last slot submits the code.
   await page
-    .getByLabel("Verification code")
+    .getByLabel("Code from the email")
     .fill(await emailedCode(signUpUser.email));
+  await page.getByRole("button", { name: "Confirm" }).click();
 
   // Onboarding asks new members for their date of birth (the Pass is for
   // 13 and over), then their name and language.
@@ -54,6 +63,46 @@ test("a new email gets The IDEA Pass with an emailed code", async ({
   // Your Pass greets the new member and shows their email.
   await expectSignedInHome(page);
   await expect(page.getByText(signUpUser.email)).toBeVisible();
+
+  // Signed out, a forgotten password is reset with an emailed code.
+  await page.context().clearCookies();
+  await page.goto(`${urls.web}/sign-in`);
+  await page.getByLabel("Email").fill(signUpUser.email);
+  await page.getByLabel("Password").fill("wrong-password-1");
+  await page.getByRole("button", { exact: true, name: "Sign in" }).click();
+  await expect(
+    page.getByText("That email and password don't match.", { exact: false })
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Forgot your password?" }).click();
+  await page.getByLabel("Email").fill(signUpUser.email);
+  await clearInbox(signUpUser.email);
+  await page.getByRole("button", { name: "Send the code" }).click();
+  await page
+    .getByLabel("Code from the email")
+    .fill(await emailedCode(signUpUser.email));
+  await page.getByLabel("New password").fill(`${SIGN_UP_PASSWORD}x`);
+  await expectAccessible(page);
+  await page
+    .getByRole("button", { name: "Set the password and sign in" })
+    .click();
+  await expectSignedInHome(page);
+
+  // Settings changes it (a recent sign-in needs no code).
+  await page.goto(`${urls.web}/pass/settings`);
+  await page.getByLabel("New password").fill(`${SIGN_UP_PASSWORD}y`);
+  await page.getByRole("button", { name: "Save password" }).click();
+  await expect(
+    page.getByText("Your password is saved.", { exact: false })
+  ).toBeVisible();
+  await expectAccessible(page);
+
+  // And the new password signs in.
+  await page.context().clearCookies();
+  await page.goto(`${urls.web}/sign-in`);
+  await page.getByLabel("Email").fill(signUpUser.email);
+  await page.getByLabel("Password").fill(`${SIGN_UP_PASSWORD}y`);
+  await page.getByRole("button", { exact: true, name: "Sign in" }).click();
+  await expectSignedInHome(page);
 });
 
 test("sign in on The IDEA Pass with an emailed code and go back", async ({
@@ -61,6 +110,7 @@ test("sign in on The IDEA Pass with an emailed code and go back", async ({
 }) => {
   await resetCustomer();
   await page.goto(`${urls.web}/sign-in${cartReturnTo}`);
+  await page.getByRole("button", { name: "Email me a code instead" }).click();
   await page.getByLabel("Email").fill(customer.email);
   await clearInbox(customer.email);
   await page.getByRole("button", { name: "Continue" }).click();

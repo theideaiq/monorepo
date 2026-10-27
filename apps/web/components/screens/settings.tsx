@@ -23,6 +23,7 @@ import { BirthdayCard } from "@/components/birthday-settings";
 import { ConnectedSites } from "@/components/connected-sites";
 import { GuardianCard } from "@/components/guardian-settings";
 import { PageHeader } from "@/components/page-header";
+import { PasswordSettingsCard } from "@/components/password-settings";
 import { ProfileForm } from "@/components/profile-form";
 import { SectionSpinner } from "@/components/states";
 import { StudentCard } from "@/components/student-settings";
@@ -127,6 +128,7 @@ export const Settings = () => {
             )}
           </CardContent>
         </Card>
+        <PasswordSettingsCard />
         <BirthdayCard />
         <StudentCard />
         <ConnectedSites />

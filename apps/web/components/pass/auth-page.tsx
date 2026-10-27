@@ -1,6 +1,7 @@
 import { localePath } from "@repo/internationalization";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
+import { env } from "@/env";
 import { hostOf, readReturnTo, type SearchParams } from "@/lib/pass/return-to";
 import { getPassSession } from "@/lib/pass/session";
 import { PassSignIn } from "./pass-sign-in";
@@ -54,7 +55,10 @@ export const AuthPage = async ({ searchParams }: AuthPageProps) => {
           {t("signIn.deleted")}
         </p>
       ) : null}
-      <PassSignIn returnTo={returnTo} />
+      <PassSignIn
+        returnTo={returnTo}
+        turnstileSiteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+      />
       <TelegramButton returnTo={returnTo} />
     </div>
   );
