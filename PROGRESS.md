@@ -372,6 +372,35 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-27: Program Revision v2, item 3: navigation without repeats on
+  the website. Each place has one way in:
+  - **Top bar.** Phones: logo · search · bell · cart (the tabs carry
+    Store · Plus · Club · Pass). Wider screens: logo · Store · Plus · Club
+    · search · bell · cart · Pass avatar. "For business", the header's
+    language and theme switches, the phone menu and the heart are gone.
+  - **Bell** only in the top bar and only when signed in; page titles of
+    Your Pass no longer carry it.
+  - **Cart** on the Store and Plus screens, and anywhere while it holds
+    items; hidden on sign-in and checkout.
+  - **Saved** moved from `/saved` to Your Pass → Saved (`/pass/saved`), no
+    redirect; the heart stays on products and the Plus queue reads the
+    same list. Pass reads Pass (card with the Bulbs balance, orders,
+    rentals and events on the way; the featured products left, the Store
+    has its tab) · Orders · Saved · Bulbs · Settings.
+  - **Preferences** left About: members change language and theme in
+    Settings, visitors in the footer.
+  - **Footer**, now on every screen: For partners · About · Careers · Help
+    · Legal, language and theme, Telegram, copyright and version; Store,
+    Plus, Club and Pass are no longer repeated there.
+  - **One search** at `/search?q=`: products for sale and to rent
+    (`search_products`), Club events and posts by title. The search boxes
+    on the Store home, `/store` and Plus are gone; `/store?q=` and
+    `/plus?q=` remain as the "All results" lists.
+  - Deferred to their items: Selling in Your Pass (Stage 4), the
+    footer's Developers link (item 5, docs at api.theideaiq.com), Visit
+    The IDEA Space (item 15) and opportunities in search (when they
+    exist).
+
 - 2026-10-27: Program Revision v2, item 2: The IDEA Partners and Staff.
   Two apps, two hosts:
   - **The IDEA Business is renamed The IDEA Partners.** `apps/business` is

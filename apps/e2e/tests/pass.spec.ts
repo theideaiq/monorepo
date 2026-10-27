@@ -136,8 +136,8 @@ test.describe("The IDEA Pass", () => {
     });
 
     test("sends you on to allowed sites only", async ({ page }) => {
-      await page.goto(`${urls.web}/sign-in${returnTo("/saved")}`);
-      await expect(page).toHaveURL(`${urls.web}/saved`);
+      await page.goto(`${urls.web}/sign-in${returnTo("/pass/saved")}`);
+      await expect(page).toHaveURL(`${urls.web}/pass/saved`);
 
       // Another site of The IDEA (here The IDEA Partners) is allowed too.
       await page.goto(`${urls.web}/sign-in${returnTo(`${urls.app}/invoices`)}`);

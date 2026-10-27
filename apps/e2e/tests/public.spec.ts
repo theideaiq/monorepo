@@ -13,6 +13,10 @@ const pages = [
   { name: "Partners", path: "/partners" },
   { name: "About", path: "/about" },
   { name: "Help", path: "/help" },
+  {
+    name: "search",
+    path: `/search?${new URLSearchParams({ q: product.name })}`,
+  },
 ];
 
 test.describe("public site", () => {
@@ -70,6 +74,55 @@ test.describe("public site", () => {
       await expect(page).toHaveURL(/\/club$/);
       await expectAccessible(page);
     });
+  });
+
+  test("each place has one way in: top bar, tabs and footer", async ({
+    page,
+  }) => {
+    await page.goto(`${urls.web}/about`);
+    const header = page.getByRole("banner");
+    // Signed out on a page outside the Store and Plus, with an empty cart:
+    // search and Sign in only (no saved items, bell, cart or business link).
+    await expect(header.getByRole("link", { name: "Search" })).toBeVisible();
+    await expect(header.getByRole("link", { name: "Sign in" })).toBeVisible();
+    await expect(header.getByRole("link", { name: "Saved" })).toHaveCount(0);
+    await expect(header.getByRole("link", { name: "Cart" })).toHaveCount(0);
+    await expect(
+      header.getByRole("link", { name: "For partners" })
+    ).toHaveCount(0);
+    await expect(
+      header.getByRole("button", { name: /^Notifications/ })
+    ).toHaveCount(0);
+
+    const footer = page.getByRole("contentinfo");
+    for (const name of ["For partners", "About", "Careers", "Help", "Legal"]) {
+      await expect(footer.getByRole("link", { name })).toBeVisible();
+    }
+    for (const name of ["Store", "Plus", "Club", "Pass"]) {
+      await expect(footer.getByRole("link", { exact: true, name })).toHaveCount(
+        0
+      );
+    }
+    await expect(
+      footer.getByRole("button", { name: "Switch language" })
+    ).toBeVisible();
+
+    // The cart shows on the Store and Plus screens.
+    await page.goto(`${urls.web}/store`);
+    await expect(header.getByRole("link", { name: "Cart" })).toBeVisible();
+
+    // One search for products, posts and events.
+    await header.getByRole("link", { name: "Search" }).click();
+    await expect(page).toHaveURL(/\/search$/);
+    await page.getByRole("searchbox").fill(product.name);
+    await page.getByRole("button", { exact: true, name: "Search" }).click();
+    await expect(page).toHaveURL(/\/search\?q=/);
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Products" })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: product.name }).first()
+    ).toBeVisible();
   });
 
   test("the catalog links to the product page", async ({ page }) => {

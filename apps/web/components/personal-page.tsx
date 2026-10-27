@@ -4,7 +4,7 @@ import { OrganizationProvider } from "./organization-provider";
 
 /**
  * A page of the signed-in member's own outside The IDEA Pass's pages
- * (saved items, a support ticket): requires a session and a finished
+ * (a support ticket, a survey): requires a session and a finished
  * onboarding. The data is protected by RLS, not by this.
  */
 export const PersonalPage = ({

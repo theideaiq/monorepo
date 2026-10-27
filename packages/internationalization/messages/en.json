@@ -197,7 +197,6 @@
       "help": "Help",
       "legal": "Legal",
       "search": "Search",
-      "saved": "Saved",
       "cart": "Cart",
       "cartCount": "{count} in cart"
     },
@@ -215,7 +214,6 @@
       "telegram": "Telegram",
       "copyright": "© {year} The IDEA IQ Inc. All rights reserved.",
       "trademarks": "Game titles, trade names, trademarks and artwork shown on this site belong to their respective owners.",
-      "products": "Products",
       "company": "Company"
     },
     "ui": {
@@ -271,8 +269,6 @@
     "rent": {
       "title": "Rent",
       "highlight": "with The IDEA Plus",
-      "searchLabel": "Search the rentals",
-      "searchPlaceholder": "Search games, books and movies to rent…",
       "plans": "See The IDEA Plus plans",
       "empty": "Nothing to rent matches that yet."
     },
@@ -283,9 +279,6 @@
       },
       "title": "The Store",
       "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order here and pay through Wayl or cash on delivery.",
-      "searchLabel": "Search the store",
-      "searchPlaceholder": "Search products…",
-      "search": "Search",
       "categories": "Categories",
       "allCategories": "All",
       "formatsLabel": "Formats",
@@ -349,7 +342,8 @@
         "latest": "Latest reviews",
         "photoAlt": "Photo from {name}'s review",
         "photoBonus": "This reviewer earned 5 Bulbs for adding a photo."
-      }
+      },
+      "sortApply": "Sort"
     },
     "plus": {
       "meta": {
@@ -695,7 +689,6 @@
       "shop": "Shop the store"
     },
     "info": {
-      "preferences": "Language and theme",
       "contact": "Contact",
       "telegram": "The IDEA Club on Telegram",
       "legal": "Terms and policies",
@@ -1003,6 +996,21 @@
         "contact": "Contact us",
         "app": "Set up your organization"
       }
+    },
+    "search": {
+      "title": "Search",
+      "description": "Products to buy or rent, events and posts of The IDEA Club, in Arabic or English.",
+      "label": "Search The IDEA",
+      "placeholder": "Search products, events and posts…",
+      "submit": "Search",
+      "results": "Results for “{query}”",
+      "empty": "Nothing matches your search. Try another word, in Arabic or English.",
+      "products": "Products",
+      "rentals": "To rent with The IDEA Plus",
+      "events": "Events",
+      "posts": "Posts",
+      "allProducts": "All results in the Store",
+      "allRentals": "All results in Plus"
     }
   },
   "app": {
@@ -1026,7 +1034,8 @@
       "support": "Support",
       "pass": "Your Pass",
       "bulbs": "Bulbs",
-      "about": "About & info"
+      "about": "About & info",
+      "saved": "Saved"
     },
     "roles": {
       "owner": "Owner",
@@ -1069,10 +1078,6 @@
         "title": "Your next events",
         "empty": "You haven't RSVP'd to any upcoming event.",
         "browse": "See upcoming events"
-      },
-      "featured": {
-        "title": "Featured in the store",
-        "empty": "New products are on their way."
       }
     },
     "store": {

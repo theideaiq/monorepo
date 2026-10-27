@@ -30,7 +30,7 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/support", "/help"],
   ["/pass/support", "/help"],
   ["/pass/plus", "/plus", "#yours"],
-  ["/pass/wishlist", "/saved"],
+  ["/pass/wishlist", "/pass/saved"],
   ["/pass/events", "/club", "#yours"],
   ["/pass/submissions", "/club", "#yours"],
   ["/post/events", "/club"],

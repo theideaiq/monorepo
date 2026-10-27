@@ -107,9 +107,9 @@ load on every page (never inside the iOS/Android apps).
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Public pages | The IDEA Store: `/{locale}`, `/store`, `/store/<slug>`; The IDEA Plus: `/plus` (rental catalog, plans, tiers; "Your Plus" at `#yours` when signed in: membership, plans, rentals, rental requests); The IDEA Club: `/club` (one feed with chips, `?show=events\|news\|stories\|guides`; "Yours" at `#yours`: your events with the calendar feed and your submissions; the Telegram rooms card) and `/club/<slug>` (a post or an event); `/partners` ("For partners"); `/saved`; `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
+| Public pages | The IDEA Store: `/{locale}`, `/store`, `/store/<slug>`; The IDEA Plus: `/plus` (rental catalog, plans, tiers; "Your Plus" at `#yours` when signed in: membership, plans, rentals, rental requests); The IDEA Club: `/club` (one feed with chips, `?show=events\|news\|stories\|guides`; "Yours" at `#yours`: your events with the calendar feed and your submissions; the Telegram rooms card) and `/club/<slug>` (a post or an event); `/partners` ("For partners"); `/search` (products to buy and rent, events and posts); `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
 | The IDEA Pass (sign-in) | `/{locale}/sign-in`, `/mfa`, `/tg`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
-| The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders), `/pass/orders/<id>`, `/pass/bulbs` (Bulbs, then invites at `#invite`), `/pass/settings` | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
+| The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders), `/pass/orders/<id>`, `/pass/saved` (saved items), `/pass/bulbs` (Bulbs, then invites at `#invite`), `/pass/settings` (with language and theme) | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
 | Cart and checkout | `/{locale}/cart`, `/checkout` | `app/[locale]/(checkout)` |
 
 - **Session.** The browser client (`@repo/auth/client`) and the server
@@ -118,13 +118,20 @@ load on every page (never inside the iOS/Android apps).
   Components and Server Actions read a valid token. Every query runs as
   the signed-in user with the publishable key, so RLS applies. The
   iOS/Android shell loads the same pages, so the same cookie applies there.
-- **Navigation.** The menu is Store · Plus · Club · Pass (a bottom tab
-  bar on phones). The top bar holds the logo, search, saved (a heart, to
-  `/saved`), the cart and, on desktop, the Pass avatar ("Sign in", coming
-  back to the same page, when signed out); saved and the cart are hidden
-  on sign-in and checkout. The desktop header reads Store · Plus · Club,
-  "For partners", saved, cart, Pass. The footer lists Store · Plus · Club
-  · Pass · For partners, then About · Careers · Help · Legal.
+- **Navigation.** Each place has one way in. The menu is Store · Plus ·
+  Club · Pass (a bottom tab bar on phones). Phones: the top bar holds the
+  logo, search (`/search`), the bell and the cart. Wider screens: logo ·
+  Store · Plus · Club · search · bell · cart · Pass avatar ("Sign in",
+  coming back to the same page, when signed out). The bell shows only
+  when signed in (not in page titles); the cart shows on the Store and
+  Plus screens and anywhere while it holds items; search, bell and cart
+  are hidden on sign-in and checkout. Saved items live in Your Pass
+  (`/pass/saved`; the heart is only on product pages, and the Plus queue
+  reads the same list). The footer, on every screen, lists For partners ·
+  About · Careers · Help · Legal, the language and theme switches (for
+  signed-out visitors; members also have them in Settings) and the
+  Telegram link. The one search (`/search?q=`) covers products for sale
+  and to rent (`search_products`) and the titles of Club events and posts.
 - **The IDEA Club.** One feed at `/club` of events, news, stories and
   guides (online only), filtered by chips (`?show=events|news|stories|guides`).
   Posts have a section (`news`, `stories` for features and members' work,

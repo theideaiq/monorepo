@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AppCta } from "@/components/app-cta";
-import { AppPreferences, NativeAppVersion } from "@/components/app-preferences";
+import { NativeAppVersion } from "@/components/app-version";
 import { FeatureGrid } from "@/components/feature-grid";
 import { PageHero } from "@/components/page-hero";
 import { ProductLines } from "@/components/product-lines";
@@ -98,10 +98,6 @@ const About = async ({ params }: AboutProps) => {
           </ul>
         </nav>
         <div className="flex flex-col gap-5 rounded-lg border bg-card p-5 text-sm">
-          <div className="flex flex-col gap-2">
-            <h2 className="font-semibold">{info("preferences")}</h2>
-            <AppPreferences />
-          </div>
           <div className="flex flex-col gap-1">
             <h2 className="font-semibold">{info("contact")}</h2>
             <a

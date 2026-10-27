@@ -52,6 +52,19 @@ const rows = <T>(result: {
   error: { message: string } | null;
 }): T[] => check(result) ?? [];
 
+/**
+ * An `or` filter matching `term` in the Arabic or English title, or null
+ * for an empty term. Characters with a meaning in PostgREST filters (`,`
+ * `(` `)` `"` `\\` `:`) and in LIKE patterns (`%` `_` `*`) are dropped.
+ */
+export const titleSearch = (term: string | undefined) => {
+  const clean = term
+    ?.replace(/[,()"\\:%_*]/g, " ")
+    .trim()
+    .slice(0, 100);
+  return clean ? `title_ar.ilike.*${clean}*,title_en.ilike.*${clean}*` : null;
+};
+
 // ── Catalog ─────────────────────────────────────────────────────────────────
 
 export type {
@@ -313,9 +326,12 @@ export type PostSummary = Pick<
 /** Published posts of The IDEA Club, newest first (one section or all). */
 export const getPosts = ({
   limit = 24,
+  search,
   sections,
 }: {
   limit?: number;
+  /** Only posts with this in their title. */
+  search?: string;
   /** Only these sections (all when missing). */
   sections?: Enums<"post_section">[];
 } = {}) =>
@@ -331,6 +347,10 @@ export const getPosts = ({
       .lte("published_at", new Date().toISOString());
     if (sections) {
       query = query.in("section", sections);
+    }
+    const titled = titleSearch(search);
+    if (titled) {
+      query = query.or(titled);
     }
     return rows(
       await query.order("published_at", { ascending: false }).limit(limit)
@@ -377,9 +397,12 @@ export type EventRow = Pick<
 export const getEvents = ({
   limit = 24,
   past = false,
+  search,
 }: {
   limit?: number;
   past?: boolean;
+  /** Only events with this in their title. */
+  search?: string;
 } = {}) =>
   fallback("events", [] as EventRow[], async () => {
     const supabase = createPublicClient();
@@ -387,10 +410,14 @@ export const getEvents = ({
       return [];
     }
     const now = new Date().toISOString();
-    const query = supabase
+    let query = supabase
       .from("events")
       .select(EVENT_COLUMNS)
       .eq("published", true);
+    const titled = titleSearch(search);
+    if (titled) {
+      query = query.or(titled);
+    }
     return rows(
       await (past
         ? query.lt("starts_at", now).order("starts_at", { ascending: false })
