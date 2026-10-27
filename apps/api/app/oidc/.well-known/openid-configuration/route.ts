@@ -56,7 +56,9 @@ export const GET = async () => {
       token_endpoint_auth_methods_supported: [
         "client_secret_basic",
         "client_secret_post",
+        "private_key_jwt",
       ],
+      token_endpoint_auth_signing_alg_values_supported: ["ES256", "RS256"],
       ui_locales_supported: ["ar", "en"],
       userinfo_endpoint: `${iss}/userinfo`,
     },

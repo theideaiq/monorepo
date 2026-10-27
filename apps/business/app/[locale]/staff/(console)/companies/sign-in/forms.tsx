@@ -14,6 +14,7 @@ import {
 import type { ActionState } from "@/lib/admin/action-state";
 import {
   addPassPartner,
+  reviewPassApp,
   rotatePassPartnerSecret,
   setPassPartnerActive,
   setPassPartnerAnswers,
@@ -178,6 +179,27 @@ export const PartnerAnswersForm = ({
       <div>
         <SubmitButton size="sm" variant="outline">
           {tCommon("save")}
+        </SubmitButton>
+      </div>
+    </ActionForm>
+  );
+};
+
+/** Approve or decline the sensitive answers an app asks for. */
+export const PartnerReviewForm = ({ id }: { readonly id: string }) => {
+  const t = useTranslations("admin.companies.signIn");
+  return (
+    <ActionForm action={reviewPassApp} className="grid gap-3">
+      <input name="id" type="hidden" value={id} />
+      <p className="font-medium text-sm">{t("reviewTitle")}</p>
+      <p className="text-muted-foreground text-xs">{t("reviewHint")}</p>
+      <TextField label={t("note")} name="note" />
+      <div className="flex flex-wrap gap-2">
+        <SubmitButton name="approve" size="sm" value="true">
+          {t("approve")}
+        </SubmitButton>
+        <SubmitButton name="approve" size="sm" value="false" variant="outline">
+          {t("decline")}
         </SubmitButton>
       </div>
     </ActionForm>

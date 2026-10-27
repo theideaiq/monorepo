@@ -15,7 +15,7 @@ export const usePassPartner = (clientId: string) => {
       unwrap(
         await supabase
           .from("pass_partners")
-          .select("client_id, name, website, redirect_uris, answers")
+          .select("client_id, name, website, redirect_uris, answers, mode")
           .eq("client_id", clientId)
           .eq("active", true)
           .maybeSingle()

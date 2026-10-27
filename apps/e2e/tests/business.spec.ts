@@ -107,3 +107,57 @@ test("a company posts a job and hires a proposed candidate", async ({
   await expect(page.getByText("Filled")).toBeVisible();
   await expectAccessible(page);
 });
+
+test("a company verifies its domain and registers a Pass app", async ({
+  context,
+  page,
+}) => {
+  const organizationId = await resetCompany();
+  await context.addCookies(await sessionCookies(customer.email, urls.app));
+
+  await page.goto(`${urls.app}/developers`);
+  await expect(
+    page.getByText("Verify a domain first, then register your app.")
+  ).toBeVisible();
+  await page.getByLabel("Domain", { exact: true }).fill("E2E-Company.example");
+  await page.getByRole("button", { exact: true, name: "Add" }).click();
+  await expect(
+    page.getByText("e2e-company.example", { exact: true })
+  ).toBeVisible();
+  await expect(page.getByText("Not verified yet")).toBeVisible();
+  await expect(
+    page.getByText("_theidea-pass.e2e-company.example")
+  ).toBeVisible();
+  await expectAccessible(page);
+
+  // The API checks DNS and the file; here the domain is marked verified.
+  await admin()
+    .from("pass_partner_domains")
+    .update({ verified_at: new Date().toISOString() })
+    .eq("organization_id", organizationId);
+  await page.reload();
+  await expect(page.getByText("Verified", { exact: true })).toBeVisible();
+
+  await page.getByText("Register an app").click();
+  await page
+    .getByLabel("Name (shown when people sign in)")
+    .fill("E2E Books");
+  await page.getByLabel("Website").fill("https://e2e-company.example");
+  await page
+    .getByLabel("Return addresses")
+    .fill("https://app.e2e-company.example/cb\nhttp://localhost:4000/cb");
+  await page.getByLabel("Verified student (yes or no)").check();
+  await page.getByRole("button", { exact: true, name: "Register" }).click();
+  await expect(
+    page.getByText(
+      "Copy these now: the secret isn't shown again. Keep it on your server only."
+    )
+  ).toBeVisible();
+  await expect(page.getByText("E2E Books", { exact: true })).toBeVisible();
+  await expect(page.getByText("Testing", { exact: true })).toBeVisible();
+  await expectAccessible(page);
+
+  await page.goto(`${urls.app}/ar/developers`);
+  await expect(page.getByText("E2E Books", { exact: true })).toBeVisible();
+  await expectAccessible(page);
+});

@@ -389,12 +389,31 @@ export const setPassPartnerActive = staffAction(
     id: z.string().regex(/^pass_[a-z0-9]{24}$/),
   }),
   async ({ input, supabase }) => {
-    affected(
-      await supabase
-        .from("pass_partners")
-        .update({ active: input.active === "true" })
-        .eq("client_id", input.id)
-        .select("client_id")
+    check(
+      await supabase.rpc("suspend_pass_app", {
+        client: input.id,
+        suspend: input.active === "false",
+      })
+    );
+    return success();
+  }
+);
+
+/** Approves or declines an app's sensitive answers (the company hears). */
+export const reviewPassApp = staffAction(
+  "companies",
+  z.object({
+    approve: z.enum(["true", "false"]),
+    id: z.string().regex(/^pass_[a-z0-9]{24}$/),
+    note: z.string().trim().max(500).optional(),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("review_pass_app", {
+        approve: input.approve === "true",
+        client: input.id,
+        note: input.note || undefined,
+      })
     );
     return success();
   }

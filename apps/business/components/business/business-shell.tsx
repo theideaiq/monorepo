@@ -25,6 +25,7 @@ const TABS = [
   { href: "/plus", key: "plus" },
   { href: "/members", key: "members" },
   { href: "/perks", key: "perks" },
+  { href: "/developers", key: "developers" },
   { href: "/billing", key: "billing" },
   { href: "/settings", key: "settings" },
 ] as const;
@@ -70,6 +71,7 @@ export const BusinessShell = ({
   const pathname = usePathname();
   const authMessages = useAuthMessages();
   const { active, organizations, select } = useOrganization();
+  const canManage = active?.role === "owner" || active?.role === "admin";
   // Partners (organizations with perks) check Pass cards from Perks.
   const partners = useMyPartners();
 
@@ -93,13 +95,15 @@ export const BusinessShell = ({
                 aria-label={t("title")}
                 className="-mx-4 flex gap-1 overflow-x-auto px-4 sm:mx-0 sm:px-0"
               >
-                {TABS.filter(
-                  (tab) =>
-                    tab.key !== "perks" ||
-                    partners.data?.some(
+                {TABS.filter((tab) => {
+                  if (tab.key === "perks") {
+                    return partners.data?.some(
                       (row) => row.organization_id === active.id
-                    )
-                ).map((tab) => {
+                    );
+                  }
+                  // Owners and admins manage the company's Pass apps.
+                  return tab.key !== "developers" || canManage;
+                }).map((tab) => {
                   const current =
                     pathname === tab.href ||
                     (tab.href !== "/" && pathname.startsWith(`${tab.href}/`));

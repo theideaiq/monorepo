@@ -702,6 +702,7 @@ Current schema:
 | `…_surveys.sql` | Surveys: `surveys` (free, Bulbs or cash rewarded; targeting by university, major, year and governorate), `survey_questions`, `survey_responses`, `survey_answers`, `survey_credits` (give to get), `survey_reports`; the student profile on `student_badges` (`set_student_profile()`); `save_survey()`, `publish_survey()` (the sensitive-topic checker, `survey_flags()`), `start_survey()`, `submit_survey()`, `surveys_for_me()`, `my_survey_credits()`, `report_survey()`, `survey_results()`, `close_survey()`, `review_survey()`; cash surveys open when their order is paid |
 | `…_pass_sign_in.sql` | Sign in with The IDEA Pass: `pass_card_checks`, `pass_card_check()` and `pass_card()` (partner card checks and the card image), `pass_partners` (OpenID Connect clients: return addresses, allowed scopes, the secret's hash), `pass_connections` (who shared what with which site; a per-site `subject`), `pass_sign_in_codes` and `pass_access_tokens` (hashes, the API only); `approve_pass_sign_in()` (the consent screen), `pass_claims()` (service role), `disconnect_pass_partner()` |
 | `…_pass_scopes.sql` | Every partner scope (`membership`, `student_email`, `phone`, `birthdate`, `address`, `offline_access`; picture and plan); `student_badges.university_email` (kept when verified by email); `pass_refresh_tokens` (rotating, 90 days) |
+| `…_pass_developers.sql` | Partner self-service: `pass_partner_domains` (verified by the API), `pass_partners` gains `mode` (testing or live), `requested_answers`/`approved_answers` (`answers` derived by trigger), `enabled`/`suspended_at` (`active` derived), the previous secret for 24 hours and `public_jwks`; `pass_client_assertions` (one-use `jti`s, the API only); `add_pass_domain()`, `remove_pass_domain()`, `create_pass_app()`, `update_pass_app()`, `set_pass_app_state()`, `rotate_pass_app_secret()`, `end_previous_pass_secret()`, `set_pass_app_keys()`, `pass_apps()`; staff `review_pass_app()` and `suspend_pass_app()`; testing apps sign in and check cards of their company's members only |
 | `…_boxes.sql` | Boxes: `boxes`, `box_parts` (fixed product versions or slots filled from a category and format), `box_themes`; a box's stock comes from its parts (`private.box_stock()`, recounted with the parts' copies), an active box costs 10–15% less than its parts (`private.box_value()`); `cart_items.box_theme_id` and `order_items.box_theme_id`; orders take the fixed parts' copies, `pack_box()` the picked ones; `box_slot_copies()` |
 | `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
 | `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
@@ -1618,8 +1619,15 @@ Migration `20261227000000_pass_sign_in.sql`; the partner guide is
   choose what each partner may ask; the person unticks anything on the
   consent screen; sensitive scopes are marked. `offline_access` adds
   rotating refresh tokens (`pass_refresh_tokens`, 90 days).
-  Partners are registered in the back office (Companies → Sign in with the
-  Pass), which shows the client secret once and keeps its SHA-256.
+  Companies register their own apps in The IDEA Business → Developers
+  (migration `20261229000000_pass_developers.sql`): they verify a domain
+  (DNS TXT record or a file, checked by the API's
+  `POST /pass/domains/verify`), register apps whose website and https
+  return addresses are on it, test them with their own members, then go
+  live; the sensitive answers wait for staff review (Companies → Sign in
+  with the Pass, and the inbox). Secrets are shown once (SHA-256 kept),
+  rotate with 24 hours' grace, or are replaced by `private_key_jwt` with
+  uploaded public keys. Staff can still register a partner themselves.
 - **Connected sites** (Pass → Settings) lists them; disconnecting ends the
   site's tokens and the next sign-in asks again.
 - **Cards.** With the `card` scope, `GET /oidc/card` returns the person's
