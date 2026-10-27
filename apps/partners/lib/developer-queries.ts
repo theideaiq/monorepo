@@ -249,8 +249,8 @@ export const developerError = (error: unknown): DeveloperError => {
       return key;
     }
   }
-  // The domain's own check (a real domain name).
-  if (code === "23514") {
+  // The domain's own check (a real domain name); other checks are unknown.
+  if (code === "23514" && message.includes("pass_partner_domains")) {
     return "invalidDomain";
   }
   return "unknown";
