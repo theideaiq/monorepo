@@ -164,9 +164,11 @@ Frame it:
 - **Only your verified domains may frame it** (and their subdomains, over
   https): the page sends `Content-Security-Policy: frame-ancestors` built
   from them, so any other site gets nothing. Add
-  `frame-src https://theideaiq.com` to your own CSP. If your page sends
-  `Cross-Origin-Opener-Policy: same-origin`, use
-  `same-origin-allow-popups` so the member's sign-in window works.
+  `frame-src https://theideaiq.com` to your own CSP. **The page with the
+  frame must not send `Cross-Origin-Opener-Policy: same-origin`**: the
+  browser then cuts the sign-in window off from the frame (the window says
+  "press again" and the card never arrives). Send
+  `same-origin-allow-popups`, or no such header, on that page.
 - **Signing in.** Browsers keep The IDEA's cookie out of other sites'
   frames, so the frame shows a **Show my Pass card** button. It opens a
   small window on theideaiq.com where the member (signed in, or after

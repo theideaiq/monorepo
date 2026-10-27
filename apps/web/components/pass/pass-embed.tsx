@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@repo/design-system/components/ui/button";
-import type { Locale } from "@repo/internationalization";
+import { type Locale, localePath } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -149,7 +149,7 @@ export const PassEmbed = ({
 
   const connect = () => {
     const url = new URL(
-      `${locale === "ar" ? "/ar" : ""}/pass/embed/connect`,
+      localePath(locale, "/pass/embed/connect"),
       window.location.origin
     );
     url.searchParams.set("client_id", clientId);
@@ -202,12 +202,20 @@ export const PassEmbed = ({
         <div className="aspect-[856/540] w-full animate-pulse rounded-2xl bg-muted" />
       ) : null}
       {token ? null : (
-        <div className="grid justify-items-center gap-2 rounded-2xl border bg-card p-5 text-center">
+        <div className="grid justify-items-center gap-2 py-2 text-center">
           <p className="text-sm">{t("intro", { site })}</p>
           <Button onClick={connect}>{t("show")}</Button>
           {blocked ? (
             <p className="text-muted-foreground text-xs" role="alert">
-              {t("popupBlocked")}
+              {t("popupBlocked")}{" "}
+              <a
+                className="underline underline-offset-2"
+                href={localePath(locale, "/pass")}
+                rel="noopener"
+                target="_blank"
+              >
+                {t("openCard")}
+              </a>
             </p>
           ) : null}
         </div>

@@ -6,6 +6,7 @@ import {
   isEmbedConnectPath,
   isEmbedPath,
   isEmbedRequestPath,
+  isEmbedSignIn,
   isEmbedTokenMessage,
   originAllowed,
 } from "@/lib/pass-embed";
@@ -69,5 +70,16 @@ describe("the live card embed", () => {
       height: 312,
       type: "idea-pass-card",
     });
+  });
+});
+
+describe("signing in inside the connect popup", () => {
+  it("keeps the popup's link only for the embed", () => {
+    const back = "/pass/embed/connect?client_id=pass_0123456789abcdef01234567";
+    expect(isEmbedSignIn("/sign-in", back)).toBe(true);
+    expect(isEmbedSignIn("/ar/mfa", `/ar${back}`)).toBe(true);
+    expect(isEmbedSignIn("/sign-in", "/pass")).toBe(false);
+    expect(isEmbedSignIn("/sign-in", null)).toBe(false);
+    expect(isEmbedSignIn("/pass", back)).toBe(false);
   });
 });
