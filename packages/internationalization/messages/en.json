@@ -2931,7 +2931,7 @@
       "boxPacked": "This box is already packed.",
       "boxStock": "There isn't enough stock of the box's parts.",
       "telegramFailed": "Telegram refused the request. Check the bot token and try again.",
-      "telegramSecretMissing": "Set TELEGRAM_WEBHOOK_SECRET on the API first."
+      "telegramSecretMissing": "The API has no webhook secret yet. Set it on Vercel first (see Telegram → Bot)."
     },
     "notices": {
       "saved": "Saved",
@@ -4234,9 +4234,9 @@
         "ownerTitle": "Owner steps",
         "ownerDescription": "Done once on Vercel (API project), then here.",
         "owner": {
-          "token": "Create the bot with @BotFather and set TELEGRAM_BOT_TOKEN.",
-          "secret": "Set TELEGRAM_WEBHOOK_SECRET to a long random value (openssl rand -hex 32).",
-          "login": "In @BotFather, open the bot's Login Widget, add the Allowed URL https://api.theideaiq.com/auth/telegram/callback, and set TELEGRAM_LOGIN_CLIENT_ID and TELEGRAM_LOGIN_CLIENT_SECRET.",
+          "token": "Create the bot with @BotFather and set {token}.",
+          "secret": "Set {secret} to a long random value (openssl rand -hex 32).",
+          "login": "In @BotFather, open the bot's Login Widget, add the Allowed URL {url}, and set {id} and {clientSecret}.",
           "setup": "Redeploy the API, then press Set up now on this page."
         }
       }

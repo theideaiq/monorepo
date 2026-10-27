@@ -140,9 +140,15 @@ const BotPage = async () => {
         ) : null}
         <Panel description={t("ownerDescription")} title={t("ownerTitle")}>
           <ol className="grid list-decimal gap-1 ps-5 text-sm">
-            <li>{t("owner.token")}</li>
-            <li>{t("owner.secret")}</li>
-            <li>{t("owner.login")}</li>
+            <li>{t("owner.token", { token: "TELEGRAM_BOT_TOKEN" })}</li>
+            <li>{t("owner.secret", { secret: "TELEGRAM_WEBHOOK_SECRET" })}</li>
+            <li>
+              {t("owner.login", {
+                clientSecret: "TELEGRAM_LOGIN_CLIENT_SECRET",
+                id: "TELEGRAM_LOGIN_CLIENT_ID",
+                url: "https://api.theideaiq.com/auth/telegram/callback",
+              })}
+            </li>
             <li>{t("owner.setup")}</li>
           </ol>
         </Panel>

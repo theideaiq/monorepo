@@ -2931,7 +2931,7 @@
       "boxPacked": "هذا الصندوق مُجهَّز بالفعل.",
       "boxStock": "لا يوجد مخزون كافٍ من أجزاء الصندوق.",
       "telegramFailed": "رفض Telegram الطلب. تحقّق من رمز البوت وأعد المحاولة.",
-      "telegramSecretMissing": "اضبط TELEGRAM_WEBHOOK_SECRET على الـ API أولًا."
+      "telegramSecretMissing": "لا يملك الـ API سرّ الـ webhook بعد. اضبطه على Vercel أولًا (راجع Telegram ← البوت)."
     },
     "notices": {
       "saved": "تم الحفظ",
@@ -4234,9 +4234,9 @@
         "ownerTitle": "خطوات المالك",
         "ownerDescription": "تُنفَّذ مرة واحدة على Vercel (مشروع الـ API)، ثم هنا.",
         "owner": {
-          "token": "أنشئ البوت عبر @BotFather واضبط TELEGRAM_BOT_TOKEN.",
-          "secret": "اضبط TELEGRAM_WEBHOOK_SECRET بقيمة عشوائية طويلة (openssl rand -hex 32).",
-          "login": "في @BotFather افتح Login Widget الخاص بالبوت، وأضف العنوان المسموح https://api.theideaiq.com/auth/telegram/callback، واضبط TELEGRAM_LOGIN_CLIENT_ID وTELEGRAM_LOGIN_CLIENT_SECRET.",
+          "token": "أنشئ البوت عبر @BotFather واضبط {token}.",
+          "secret": "اضبط {secret} بقيمة عشوائية طويلة (openssl rand -hex 32).",
+          "login": "في @BotFather افتح Login Widget الخاص بالبوت، وأضف العنوان المسموح {url}، واضبط {id} و{clientSecret}.",
           "setup": "أعد نشر الـ API، ثم اضغط الإعداد الآن في هذه الصفحة."
         }
       }
