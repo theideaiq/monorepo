@@ -81,7 +81,7 @@ begin
 - [Behance](https://www.behance.net) و[ArtStation](https://www.artstation.com) و[Dribbble](https://dribbble.com)
 - [Payoneer](https://www.payoneer.com)
 - [المهارات الشخصية في العمل](/club/soft-skills)
-- ولتتعرّف على من سبقوك في العمل الحر: [The IDEA Club](https://t.me/theideaclub)$ar$,
+- ولتتعرّف على من سبقوك في العمل الحر: [The IDEA Club](https://t.me/theideaiq_club)$ar$,
     $en$Don't have five years of experience? That's fine. Remote work lets you work for companies and individuals around the world from home, with no daily commute or fixed office. It spread fast during the COVID-19 pandemic and is now a main career path for many people, or a second source of income.
 
 ## Why work remotely?
@@ -152,7 +152,7 @@ The big platforms offer several withdrawal methods, including **Payoneer** and, 
 - [Behance](https://www.behance.net), [ArtStation](https://www.artstation.com) and [Dribbble](https://dribbble.com)
 - [Payoneer](https://www.payoneer.com)
 - [Soft skills at work](/club/soft-skills)
-- To meet people who've been freelancing for years: [The IDEA Club](https://t.me/theideaclub)$en$,
+- To meet people who've been freelancing for years: [The IDEA Club](https://t.me/theideaiq_club)$en$,
     now() - interval '36 minutes'
   )
   on conflict (slug) do update set

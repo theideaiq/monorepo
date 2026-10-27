@@ -349,6 +349,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-27: Program revision v1, step 6 (Telegram names): the channel
+  is "The IDEA • ايديا" @theideaiq, the group "The IDEA Club" @theideaiq_club
+  with seven rooms (The Stage, The Lounge, The Arcade, Vibe Check, The
+  Library, The Studio, The Office) and the bot "The IDEA Droid"
+  @theideaiq_bot. The old @theideaclub and @TheIdeaDroidBot addresses no
+  longer exist, so links in the code, the content files and the 20
+  published posts (migration `20261231000000_telegram_handles.sql`) moved
+  to the new ones.
 - 2026-10-27: Sign in with The IDEA Pass is built now, piloted with
   auibsal.org only. Partners may ask for name and email and yes/no
   answers (verified student with university and end date, 18 or over,

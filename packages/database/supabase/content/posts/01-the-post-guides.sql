@@ -28,7 +28,7 @@ begin
 
 المواعيد والرسوم وشروط القبول تتغيّر كل سنة، لذلك ينتهي كل دليل بروابط المصادر الرسمية. تحقّق منها دائماً قبل أن تقدّم. وإذا وجدت معلومة قديمة أو خاطئة، [راسلنا](/help#contact) ونصحّحها.
 
-وللنقاش وطرح الأسئلة ومشاركة الفرص الجديدة أولاً بأول، انضم إلى [The IDEA Club](https://t.me/theideaclub) على تيليجرام.$ar$,
+وللنقاش وطرح الأسئلة ومشاركة الفرص الجديدة أولاً بأول، انضم إلى [The IDEA Club](https://t.me/theideaiq_club) على تيليجرام.$ar$,
     $en$The IDEA Post started as a Telegram channel collecting opportunities and advice for students in Iraq: how to write an admissions essay, when to apply to exchange programs, which English test to take, and how to start a career in tech, design or writing.
 
 Today those guides move to the **Learn** section of The IDEA Post on our website. We didn't just copy them across. We reviewed every guide, updated what has changed (such as the digital SAT and UCAS's new personal statement format), removed opportunities that have closed, and merged overlapping topics into single guides.
@@ -46,7 +46,7 @@ Today those guides move to the **Learn** section of The IDEA Post on our website
 
 Deadlines, fees and admission requirements change every year, so every guide ends with links to the official sources. Always check them before you apply. If you spot something outdated or wrong, [tell us](/help#contact) and we'll fix it.
 
-To ask questions, discuss and hear about new opportunities first, join [The IDEA Club](https://t.me/theideaclub) on Telegram.$en$,
+To ask questions, discuss and hear about new opportunities first, join [The IDEA Club](https://t.me/theideaiq_club) on Telegram.$en$,
     now() - interval '1 minute'
   )
   on conflict (slug) do update set

@@ -63,7 +63,7 @@ begin
 - [Google Cloud Skills Boost](https://www.cloudskillsboost.google): مختبرات ودورات Google Cloud.
 - [Google Cloud](https://cloud.google.com) و[AWS](https://aws.amazon.com) و[Azure](https://azure.microsoft.com): المواقع الرسمية وتفاصيل الطبقات المجانية.
 
-ولتتعرّف على من يعملون في المجال، انضم إلى [The IDEA Club](https://t.me/theideaclub).$ar$,
+ولتتعرّف على من يعملون في المجال، انضم إلى [The IDEA Club](https://t.me/theideaiq_club).$ar$,
     $en$Cloud computing is one of the most important areas of IT today. Microsoft, Amazon, Google and IBM each word the definition differently, but they agree on the core idea: **delivering computing resources and services over the internet**.
 
 Those resources include servers, storage, databases, networking, software and raw processing power. Instead of buying and running hardware yourself, you rent it from a provider and manage it online.
@@ -116,7 +116,7 @@ Nearly every tech company runs on the cloud, and so do most of the sites and app
 - [Google Cloud Skills Boost](https://www.cloudskillsboost.google): Google Cloud labs and courses.
 - [Google Cloud](https://cloud.google.com), [AWS](https://aws.amazon.com) and [Azure](https://azure.microsoft.com): the official sites, with free tier details.
 
-To meet people working in the field, join [The IDEA Club](https://t.me/theideaclub).$en$,
+To meet people working in the field, join [The IDEA Club](https://t.me/theideaiq_club).$en$,
     now() - interval '29 minutes'
   )
   on conflict (slug) do update set

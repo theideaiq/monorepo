@@ -102,7 +102,7 @@ begin
 - [Figma Learn](https://help.figma.com/hc/en-us/categories/360002051613): دروس Figma الرسمية.
 - قناة مصطفى مكرم على YouTube: شروحات عربية في التصميم.
 
-ولتعرض أعمالك وتتعرّف على مصمّمين آخرين، انضم إلى [The IDEA Club](https://t.me/theideaclub).$ar$,
+ولتعرض أعمالك وتتعرّف على مصمّمين آخرين، انضم إلى [The IDEA Club](https://t.me/theideaiq_club).$ar$,
     $en$Signs, ads, book covers and logos: why do some catch your eye while others feel dull? The answer is **graphic design**.
 
 Graphic design is the art of planning and presenting ideas and messages with shapes, images and text. Its goal is to communicate clearly with an audience and to make ordinary things more attractive and noticeable. Businesses use it for promotion and advertising, and websites use it to present complex information simply.
@@ -194,7 +194,7 @@ Design depends heavily on your creative vision and on teaching yourself, which i
 - [Figma Learn](https://help.figma.com/hc/en-us/categories/360002051613): official Figma lessons.
 - Mustafa Makram on YouTube: design tutorials in Arabic.
 
-To show your work and meet other designers, join [The IDEA Club](https://t.me/theideaclub).$en$,
+To show your work and meet other designers, join [The IDEA Club](https://t.me/theideaiq_club).$en$,
     now() - interval '32 minutes'
   )
   on conflict (slug) do update set

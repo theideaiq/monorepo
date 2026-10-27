@@ -48,7 +48,7 @@ begin
 - تحدّث مع متحدثين أصليين عبر تطبيقات مثل HelloTalk، أو مع مدرّسين عبر منصات مثل Cambly.
 - سجّل رسائل صوتية تتحدث فيها عن موضوع تختاره، ثم استمع إليها.
 - **تحدّث مع نفسك:** اختر موضوعاً، وابحث عن مفرداته، وحضّر أفكارك، ثم أجرِ "محادثة" كاملة مع نفسك بصوت مسموع.
-- انضم إلى مجموعات المحادثة، ومنها مجتمع [The IDEA Club](https://t.me/theideaclub).
+- انضم إلى مجموعات المحادثة، ومنها مجتمع [The IDEA Club](https://t.me/theideaiq_club).
 
 ### الأفلام والمسلسلات والأغاني
 
@@ -117,7 +117,7 @@ Learn at least the 2,000 most common English words. Learn 10 to 20 new words a d
 - Talk with native speakers on apps like HelloTalk, or with tutors on platforms like Cambly.
 - Record voice notes about a topic you choose, then listen back.
 - **Talk to yourself:** pick a topic, look up its vocabulary, prepare your ideas, then hold a full "conversation" with yourself out loud.
-- Join conversation groups, including the community at [The IDEA Club](https://t.me/theideaclub).
+- Join conversation groups, including the community at [The IDEA Club](https://t.me/theideaiq_club).
 
 ### Films, series and songs
 

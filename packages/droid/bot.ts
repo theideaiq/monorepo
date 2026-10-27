@@ -1,5 +1,5 @@
 /**
- * Droid, The IDEA's Telegram bot (@TheIdeaDroidBot).
+ * Droid, The IDEA's Telegram bot (@theideaiq_bot).
  *
  * `createBot` builds a grammY bot from injected dependencies (database
  * access and a key-value store), so it runs the same in the webhook route
@@ -8,7 +8,7 @@
  * - Private chats: a menu. Members who linked Telegram to The IDEA Pass
  *   track their orders, see their Bulbs and open support tickets; everyone
  *   can search the store, read the FAQ and the newsletter.
- * - Inline mode: `@TheIdeaDroidBot <product>` in any chat shares products.
+ * - Inline mode: `@theideaiq_bot <product>` in any chat shares products.
  * - Groups and channels: the bot records membership in the chats it's an
  *   admin of, approves join requests by each chat's rule (open, linked The
  *   IDEA Pass or The IDEA Plus) and sends new channel posts to newsletter
@@ -36,7 +36,7 @@ import { escapeHtml, productHtml, summarizeProduct } from "./products";
 import type { KeyValueStore } from "./store";
 
 export const SITE_URL = "https://theideaiq.com";
-export const CLUB_URL = "https://t.me/theideaclub";
+export const CLUB_URL = "https://t.me/theideaiq_club";
 /** Updates older than this are dropped (the bot was down or redeployed). */
 export const STALE_UPDATE_SECONDS = 5 * 60;
 
@@ -476,7 +476,7 @@ const toggleNewsletter = async (ctx: DroidContext) => {
   );
 };
 
-/** `@TheIdeaDroidBot <product>` in any chat: products to share. */
+/** `@theideaiq_bot <product>` in any chat: products to share. */
 const answerInline = async (ctx: DroidContext) => {
   const query = ctx.inlineQuery?.query.trim().slice(0, 100) ?? "";
   if (!query) {

@@ -65,7 +65,7 @@ begin
 - [Google Digital Garage](https://learndigital.withgoogle.com/digitalgarage)
 - [LinkedIn Learning](https://www.linkedin.com/learning)
 - [إدراك](https://www.edraak.org) (دورات بالعربية)
-- ولتتدرّب على التواصل مع مجتمع حقيقي: [The IDEA Club](https://t.me/theideaclub)$ar$,
+- ولتتدرّب على التواصل مع مجتمع حقيقي: [The IDEA Club](https://t.me/theideaiq_club)$ar$,
     $en$## Hard skills and soft skills
 
 **Hard skills** are the job-specific knowledge: programming for a software developer, accounting for an accountant, design for a designer. They qualify you for the interview.
@@ -120,7 +120,7 @@ Soft skills courses are available on many platforms, many of them free or with f
 - [Google Digital Garage](https://learndigital.withgoogle.com/digitalgarage)
 - [LinkedIn Learning](https://www.linkedin.com/learning)
 - [Edraak](https://www.edraak.org) (courses in Arabic)
-- To practice communicating with a real community: [The IDEA Club](https://t.me/theideaclub)$en$,
+- To practice communicating with a real community: [The IDEA Club](https://t.me/theideaiq_club)$en$,
     now() - interval '35 minutes'
   )
   on conflict (slug) do update set

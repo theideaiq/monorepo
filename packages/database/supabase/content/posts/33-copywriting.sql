@@ -87,7 +87,7 @@ begin
 - Dan Lok
 - Alex Cattoni
 
-ولتشارك كتاباتك وتأخذ آراء الآخرين، انضم إلى [The IDEA Club](https://t.me/theideaclub).$ar$,
+ولتشارك كتاباتك وتأخذ آراء الآخرين، انضم إلى [The IDEA Club](https://t.me/theideaiq_club).$ar$,
     $en$Writing is one of the most important skills in any business. With words you can sell, market and persuade, and change how a customer sees a product or service. As the job market evolves, and with a clear shortage of professional writers in Iraq, writing has become a serious career option.
 
 One of the most important branches of professional writing is **copywriting**.
@@ -164,7 +164,7 @@ If you want to freelance for clients around the world, read our guide to [remote
 - Dan Lok
 - Alex Cattoni
 
-To share your writing and get feedback, join [The IDEA Club](https://t.me/theideaclub).$en$,
+To share your writing and get feedback, join [The IDEA Club](https://t.me/theideaiq_club).$en$,
     now() - interval '33 minutes'
   )
   on conflict (slug) do update set

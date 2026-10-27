@@ -72,7 +72,7 @@ begin
 - [UCAS](https://www.ucas.com)
 - [EducationUSA](https://educationusa.state.gov)
 
-لديك سؤال؟ اطرحه في [The IDEA Club](https://t.me/theideaclub).$ar$,
+لديك سؤال؟ اطرحه في [The IDEA Club](https://t.me/theideaiq_club).$ar$,
     $en$Studying abroad is within reach for students in Iraq, but it takes planning that starts months before any deadline. This guide brings the key advice together: building your university list, preparing documents, and having a clear backup plan.
 
 ## 1. Start your tests early
@@ -134,7 +134,7 @@ You'll apply widely and many schools will say no. That's normal. A rejection doe
 - [UCAS](https://www.ucas.com)
 - [EducationUSA](https://educationusa.state.gov)
 
-Got a question? Ask it in [The IDEA Club](https://t.me/theideaclub).$en$,
+Got a question? Ask it in [The IDEA Club](https://t.me/theideaiq_club).$en$,
     now() - interval '3 minutes'
   )
   on conflict (slug) do update set

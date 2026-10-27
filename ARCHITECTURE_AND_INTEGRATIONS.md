@@ -461,7 +461,7 @@ session in the shared cookie.
   The IDEA Plus, FAQ (topics `general`, `store`, `plus`, `club` and
   `business`, migration `20261217000000_program_revision_names.sql`),
   links and the newsletter. Inline mode
-  (`@TheIdeaDroidBot <product>` in any chat) shares products. In groups and
+  (`@theideaiq_bot <product>` in any chat) shares products. In groups and
   channels it records membership and sends new channel posts to newsletter
   subscribers; moderation (word filters, spam, flood muting, network-wide
   bans, unban requests) and the AI assistant were removed in favour of

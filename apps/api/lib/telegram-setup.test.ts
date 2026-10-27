@@ -41,7 +41,7 @@ describe("Droid's setup", () => {
         type: "web_app",
         web_app: { url: "https://theideaiq.com/tg" },
       },
-      getMe: { username: "TheIDEADroidBot" },
+      getMe: { username: "theideaiq_bot" },
       getMyCommands: [{ command: "start" }, { command: "help" }],
       getMyDescription: { description: "…" },
       getWebhookInfo: {
@@ -60,7 +60,7 @@ describe("Droid's setup", () => {
       description: true,
       menu: "https://theideaiq.com/tg",
       pending: 3,
-      username: "TheIDEADroidBot",
+      username: "theideaiq_bot",
       webhook: { matches: false, url: "https://old.example/telegram/webhook" },
     });
     expect(status.lastError?.message).toContain("401");
