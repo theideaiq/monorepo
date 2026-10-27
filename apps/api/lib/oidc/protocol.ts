@@ -1,5 +1,11 @@
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
-import type { JWK } from "jose";
+import {
+  createLocalJWKSet,
+  decodeJwt,
+  type JSONWebKeySet,
+  type JWK,
+  jwtVerify,
+} from "jose";
 
 /**
  * The protocol parts of The IDEA Pass's OpenID Connect provider that need
@@ -77,6 +83,90 @@ export const clientCredentials = (
   const clientId = form.get("client_id");
   const secret = form.get("client_secret");
   return clientId && secret ? { clientId, secret } : null;
+};
+
+/** The current secret, or the previous one for 24 hours after a rotation. */
+export const secretMatches = (
+  partner: {
+    previous_secret_hash: string | null;
+    previous_secret_until: string | null;
+    secret_hash: string;
+  },
+  secret: string,
+  now = Date.now()
+) => {
+  const digest = sha256Hex(secret);
+  if (sameDigest(partner.secret_hash, digest)) {
+    return true;
+  }
+  return Boolean(
+    partner.previous_secret_hash &&
+      partner.previous_secret_until &&
+      Date.parse(partner.previous_secret_until) > now &&
+      sameDigest(partner.previous_secret_hash, digest)
+  );
+};
+
+const ASSERTION_TYPE = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
+const CLIENT_ID = /^pass_[a-z0-9]{24}$/;
+
+/**
+ * A `private_key_jwt` client assertion and the client it names (its `iss`),
+ * unverified; null when the request doesn't use one.
+ */
+export const clientAssertion = (form: URLSearchParams) => {
+  const assertion = form.get("client_assertion");
+  if (form.get("client_assertion_type") !== ASSERTION_TYPE || !assertion) {
+    return null;
+  }
+  try {
+    const { iss } = decodeJwt(assertion);
+    const formId = form.get("client_id");
+    if (!(iss && CLIENT_ID.test(iss)) || (formId && formId !== iss)) {
+      return null;
+    }
+    return { assertion, clientId: iss };
+  } catch {
+    return null;
+  }
+};
+
+/** Client assertions live at most 5 minutes. */
+const ASSERTION_SECONDS = 300;
+
+/**
+ * Verifies a client assertion with the partner's public keys: signed by
+ * one of them (ES256 or RS256), issued by and about the partner, for this
+ * provider, short-lived and with a `jti` (used once, by the caller).
+ */
+export const verifyClientAssertion = async (
+  assertion: string,
+  clientId: string,
+  jwks: JSONWebKeySet,
+  issuerUrl: string
+) => {
+  try {
+    const { payload } = await jwtVerify(assertion, createLocalJWKSet(jwks), {
+      algorithms: ["ES256", "RS256"],
+      audience: [issuerUrl, `${issuerUrl}/token`, `${issuerUrl}/card/check`],
+      clockTolerance: 30,
+      issuer: clientId,
+      subject: clientId,
+    });
+    const now = Math.floor(Date.now() / 1000);
+    if (
+      typeof payload.jti !== "string" ||
+      payload.jti.length < 8 ||
+      payload.jti.length > 200 ||
+      typeof payload.exp !== "number" ||
+      payload.exp - now > ASSERTION_SECONDS
+    ) {
+      return null;
+    }
+    return { expiresAt: new Date(payload.exp * 1000), jti: payload.jti };
+  } catch {
+    return null;
+  }
 };
 
 /** An OAuth error response body (RFC 6749 §5.2). */

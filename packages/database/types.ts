@@ -1684,6 +1684,32 @@ export type Database = {
           },
         ];
       };
+      pass_client_assertions: {
+        Row: {
+          client_id: string;
+          expires_at: string;
+          jti: string;
+        };
+        Insert: {
+          client_id: string;
+          expires_at: string;
+          jti: string;
+        };
+        Update: {
+          client_id?: string;
+          expires_at?: string;
+          jti?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_client_assertions_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+        ];
+      };
       pass_connections: {
         Row: {
           client_id: string;
@@ -1719,40 +1745,117 @@ export type Database = {
           },
         ];
       };
+      pass_partner_domains: {
+        Row: {
+          checked_at: string | null;
+          created_at: string;
+          created_by: string | null;
+          domain: string;
+          id: string;
+          organization_id: string;
+          token: string;
+          verified_at: string | null;
+        };
+        Insert: {
+          checked_at?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          domain: string;
+          id?: string;
+          organization_id: string;
+          token?: string;
+          verified_at?: string | null;
+        };
+        Update: {
+          checked_at?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          domain?: string;
+          id?: string;
+          organization_id?: string;
+          token?: string;
+          verified_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_partner_domains_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       pass_partners: {
         Row: {
           active: boolean;
           answers: string[];
+          approved_answers: string[];
           client_id: string;
           created_at: string;
+          created_by: string | null;
+          enabled: boolean;
+          mode: string;
           name: string;
           organization_id: string | null;
+          previous_secret_hash: string | null;
+          previous_secret_until: string | null;
+          public_jwks: Json | null;
           redirect_uris: string[];
+          requested_answers: string[];
+          review_note: string | null;
+          review_status: string | null;
+          reviewed_at: string | null;
           secret_hash: string;
+          suspended_at: string | null;
           updated_at: string;
           website: string;
         };
         Insert: {
           active?: boolean;
           answers?: string[];
+          approved_answers?: string[];
           client_id: string;
           created_at?: string;
+          created_by?: string | null;
+          enabled?: boolean;
+          mode?: string;
           name: string;
           organization_id?: string | null;
+          previous_secret_hash?: string | null;
+          previous_secret_until?: string | null;
+          public_jwks?: Json | null;
           redirect_uris: string[];
+          requested_answers?: string[];
+          review_note?: string | null;
+          review_status?: string | null;
+          reviewed_at?: string | null;
           secret_hash: string;
+          suspended_at?: string | null;
           updated_at?: string;
           website: string;
         };
         Update: {
           active?: boolean;
           answers?: string[];
+          approved_answers?: string[];
           client_id?: string;
           created_at?: string;
+          created_by?: string | null;
+          enabled?: boolean;
+          mode?: string;
           name?: string;
           organization_id?: string | null;
+          previous_secret_hash?: string | null;
+          previous_secret_until?: string | null;
+          public_jwks?: Json | null;
           redirect_uris?: string[];
+          requested_answers?: string[];
+          review_note?: string | null;
+          review_status?: string | null;
+          reviewed_at?: string | null;
           secret_hash?: string;
+          suspended_at?: string | null;
           updated_at?: string;
           website?: string;
         };
@@ -4509,6 +4612,25 @@ export type Database = {
         Args: { days?: number; seat: string };
         Returns: string;
       };
+      add_pass_domain: {
+        Args: { name: string; org: string };
+        Returns: {
+          checked_at: string | null;
+          created_at: string;
+          created_by: string | null;
+          domain: string;
+          id: string;
+          organization_id: string;
+          token: string;
+          verified_at: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "pass_partner_domains";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       adjust_bulbs: {
         Args: { bulbs: number; member: string; why: string };
         Returns: {
@@ -5006,6 +5128,16 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      create_pass_app: {
+        Args: {
+          answers: string[];
+          name: string;
+          org: string;
+          redirect_uris: string[];
+          website: string;
+        };
+        Returns: Json;
+      };
       create_rental_order: {
         Args: {
           delivery_zone?: string;
@@ -5160,6 +5292,10 @@ export type Database = {
       decline_plus_seat: { Args: { seat: string }; Returns: undefined };
       disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
       end_plus_seat: { Args: { seat: string }; Returns: undefined };
+      end_previous_pass_secret: {
+        Args: { client: string };
+        Returns: undefined;
+      };
       event_rsvp_count: { Args: { event: string }; Returns: number };
       guardian_invite: {
         Args: { invite_code: string };
@@ -5572,6 +5708,30 @@ export type Database = {
         };
       };
       partner_check: { Args: { org: string; scanned: string }; Returns: Json };
+      pass_apps: {
+        Args: { org?: string };
+        Returns: {
+          answers: string[];
+          card_checks_30d: number;
+          client_id: string;
+          connections: number;
+          created_at: string;
+          enabled: boolean;
+          has_keys: boolean;
+          mode: string;
+          name: string;
+          organization_id: string;
+          organization_name: string;
+          previous_secret_until: string;
+          redirect_uris: string[];
+          requested_answers: string[];
+          review_note: string;
+          review_status: string;
+          sign_ins_30d: number;
+          suspended: boolean;
+          website: string;
+        }[];
+      };
       pass_card: { Args: { member: string }; Returns: Json };
       pass_card_check: {
         Args: { client: string; scanned: string };
@@ -5775,6 +5935,7 @@ export type Database = {
         Args: { device_platform: string; device_token: string };
         Returns: string;
       };
+      remove_pass_domain: { Args: { target: string }; Returns: undefined };
       rental_quote: {
         Args: { product: string; variant?: string };
         Returns: {
@@ -5884,6 +6045,10 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      review_pass_app: {
+        Args: { approve: boolean; client: string; note?: string };
+        Returns: undefined;
+      };
       review_queue: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -5948,6 +6113,10 @@ export type Database = {
       revoke_guardian: { Args: { link: string }; Returns: undefined };
       rotate_calendar_token: {
         Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
+      rotate_pass_app_secret: {
+        Args: { client: string; keep_previous?: boolean };
         Returns: string;
       };
       run_birthday_bulbs: { Args: Record<PropertyKey, never>; Returns: number };
@@ -6065,6 +6234,14 @@ export type Database = {
       };
       set_money_rules: {
         Args: { multipliers?: Json; rules: Json };
+        Returns: undefined;
+      };
+      set_pass_app_keys: {
+        Args: { client: string; jwks: Json };
+        Returns: undefined;
+      };
+      set_pass_app_state: {
+        Args: { client: string; enabled: boolean; live: boolean };
         Returns: undefined;
       };
       set_plus_home: {
@@ -6243,6 +6420,10 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      suspend_pass_app: {
+        Args: { client: string; suspend: boolean };
+        Returns: undefined;
+      };
       telegram_join_check: {
         Args: { chat: number; member: number };
         Returns: {
@@ -6259,6 +6440,16 @@ export type Database = {
         }[];
       };
       unlink_telegram: { Args: Record<PropertyKey, never>; Returns: undefined };
+      update_pass_app: {
+        Args: {
+          answers: string[];
+          client: string;
+          name: string;
+          redirect_uris: string[];
+          website: string;
+        };
+        Returns: undefined;
+      };
       waive_kit_deposit: {
         Args: { target: string };
         Returns: {

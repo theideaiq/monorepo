@@ -22,6 +22,29 @@ const scannedCode = (body: string, contentType: string | null) => {
   return new URLSearchParams(body).get("code")?.trim() ?? null;
 };
 
+const CREDENTIAL_FIELDS = [
+  "client_id",
+  "client_secret",
+  "client_assertion_type",
+  "client_assertion",
+] as const;
+
+/** Client credentials sent in a JSON body, as form fields. */
+const jsonCredentials = (body: string) => {
+  const form = new URLSearchParams();
+  try {
+    const parsed = JSON.parse(body) as Record<string, unknown>;
+    for (const field of CREDENTIAL_FIELDS) {
+      if (typeof parsed[field] === "string") {
+        form.set(field, parsed[field]);
+      }
+    }
+  } catch {
+    // Not JSON: no credentials in the body.
+  }
+  return form;
+};
+
 /**
  * A partner's app checks a scanned The IDEA Pass card (its QR code reads
  * `IDEA:<member number>:<code>`, the code changing every 30 seconds):
@@ -32,11 +55,9 @@ const scannedCode = (body: string, contentType: string | null) => {
  */
 export const POST = async (request: Request) => {
   const body = await request.text().catch(() => "");
-  const form = new URLSearchParams(
-    request.headers.get("content-type")?.includes("application/json")
-      ? ""
-      : body
-  );
+  const form = request.headers.get("content-type")?.includes("application/json")
+    ? jsonCredentials(body)
+    : new URLSearchParams(body);
   const partner = await authenticatePartner(request, form);
   if (!partner) {
     return reply(oauthError("invalid_client"), 401, {

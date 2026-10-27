@@ -1540,7 +1540,8 @@
         "overview": "Overview",
         "plus": "The IDEA Plus",
         "hiring": "Hiring",
-        "perks": "Perks"
+        "perks": "Perks",
+        "developers": "Developers"
       },
       "members": {
         "title": "Members",
@@ -2329,6 +2330,118 @@
         "statsDescription": "How often your perks were used in the last 12 months.",
         "noUses": "No uses yet.",
         "uses": "{uses} uses · {people} people"
+      },
+      "developers": {
+        "title": "Sign in with The IDEA Pass",
+        "description": "Let people sign in to your website or app with their The IDEA Pass, and learn only what they allow: their name, email, whether they're a verified student, 18 or over, a The IDEA Plus member, and more.",
+        "adminsOnly": "Only the company's owners and admins manage its Pass apps.",
+        "steps": {
+          "domain": "Verify your domain with a DNS record or a file.",
+          "app": "Register your app: you get a client id and a secret (shown once).",
+          "test": "Test it: while in testing, only your company's members can sign in.",
+          "live": "Go live. The basic answers work at once; we review the sensitive ones within two working days."
+        },
+        "guide": {
+          "title": "For your developers",
+          "flow": "It's standard OpenID Connect: the authorization code flow with PKCE (S256). Send people to the authorization address from the discovery document; they come back to your return address with a code, which your server exchanges at the token endpoint.",
+          "auth": "Your server authenticates with the client secret (HTTP Basic or form fields) or, with keys below, a signed client assertion (private_key_jwt, ES256 or RS256, at most 5 minutes, a new jti each time). Never put the secret in a browser or a mobile app.",
+          "scopes": "Ask for openid plus the answers your app is registered for. People can untick any of them; the token response's scope lists what they shared. Each person has a different sub at each app.",
+          "card": "With the card answer, your server can fetch the person's card image (GET /oidc/card). To check a scanned Pass card at a door, POST its code to /oidc/card/check with your credentials.",
+          "keys": "After a new secret, the previous one keeps working for 24 hours so you can switch without downtime, unless you stop it."
+        },
+        "discovery": "Discovery",
+        "once": "Copy these now: the secret isn't shown again. Keep it on your server only.",
+        "clientId": "Client id",
+        "secret": "Client secret",
+        "domains": {
+          "title": "Domains",
+          "description": "Your apps' website and https return addresses must be on a domain you've verified (or under it).",
+          "add": "Domain",
+          "addButton": "Add",
+          "verified": "Verified",
+          "notVerified": "Not verified yet",
+          "how": "Publish one of these, then check:",
+          "txt": "A DNS TXT record:",
+          "file": "Or a file:",
+          "check": "Check now",
+          "checking": "Checking…",
+          "notFound": "Not found yet. DNS changes can take a few minutes.",
+          "remove": "Remove"
+        },
+        "apps": {
+          "title": "Apps",
+          "description": "Each app has its own client id, secret, return addresses and answers.",
+          "verifyFirst": "Verify a domain first, then register your app.",
+          "new": "Register an app",
+          "create": "Register",
+          "name": "Name (shown when people sign in)",
+          "website": "Website",
+          "redirectUris": "Return addresses",
+          "redirectUrisHint": "One per line, exact. https on your verified domains; http://localhost:port/… for development.",
+          "answers": "What it asks",
+          "answersHint": "Ask only what you need. Answers marked for review work in testing; once live, they wait for our approval.",
+          "reviewed": "Reviewed",
+          "testing": "Testing",
+          "live": "Live",
+          "off": "Off",
+          "suspended": "Suspended by The IDEA",
+          "pending": "In review",
+          "declined": "Not approved",
+          "asks": "Asks now: {answers}",
+          "waiting": "Waiting for our review: {answers}",
+          "testingAll": "In testing it can ask everything; once live, these wait for our review: {answers}",
+          "note": "Our note: {note}",
+          "numbers": "{connected} people connected · {signIns} signed in and {checks} card checks in the last 30 days",
+          "goLive": "Go live",
+          "backToTesting": "Back to testing",
+          "turnOff": "Turn off",
+          "turnOn": "Turn on",
+          "edit": "Name, addresses and answers",
+          "save": "Save",
+          "saved": "Saved."
+        },
+        "secrets": {
+          "title": "Secret and keys",
+          "rotate": "New secret",
+          "keepPrevious": "Keep the previous secret working for 24 hours",
+          "previousUntil": "The previous secret works until {date}.",
+          "endPrevious": "Stop it now"
+        },
+        "keys": {
+          "label": "Public keys (private_key_jwt)",
+          "hint": "Optional: a JWK set with up to 5 public keys (EC P-256 or RSA 2048+). Your server signs client assertions with the private key, which never leaves it.",
+          "save": "Save keys",
+          "remove": "Remove keys",
+          "saved": "Keys saved: the app can authenticate with private_key_jwt."
+        },
+        "answers": {
+          "profile": "Name and picture",
+          "email": "Email",
+          "membership": "Member number",
+          "student": "Verified student (yes or no)",
+          "student_email": "University email",
+          "adult": "18 or over (yes or no)",
+          "plus": "The IDEA Plus member",
+          "phone": "WhatsApp number",
+          "birthdate": "Date of birth",
+          "address": "Delivery address",
+          "card": "The Pass card",
+          "offline_access": "Stay updated (refresh tokens)"
+        },
+        "errors": {
+          "redirectNotVerified": "A return address isn't on a verified domain.",
+          "websiteNotVerified": "The website must be https on a verified domain.",
+          "invalidRedirect": "Check the return addresses: https, or http://localhost, up to 10, each up to 300 characters.",
+          "domainInUse": "An app still uses this domain.",
+          "domainNotAllowed": "This domain can't be used.",
+          "invalidDomain": "Enter a domain name, such as example.com.",
+          "invalidKeys": "Paste a JWK set of public keys (an object with a keys list), without private parts.",
+          "tooManyApps": "A company can have up to 10 apps.",
+          "tooManyDomains": "A company can have up to 10 domains.",
+          "tooSoon": "Wait a few seconds before checking again.",
+          "notAllowed": "Only the company's owners and admins can do this.",
+          "unknown": "Something went wrong. Please try again."
+        }
       }
     },
     "ages": {
@@ -2599,6 +2712,14 @@
         "survey_rejected": {
           "title": "Your survey wasn't approved",
           "body": "Open \"{title}\" in The IDEA Club to see why."
+        },
+        "pass_app_approved": {
+          "title": "Your app was approved",
+          "body": "{name} can now ask for the answers it requested."
+        },
+        "pass_app_declined": {
+          "title": "Your app's request wasn't approved",
+          "body": "{name} keeps working with the basic answers. Open it to see our note."
         }
       },
       "kinds": {
@@ -2844,7 +2965,8 @@
           "jobs": "Open jobs with no candidates yet",
           "seats": "The IDEA Plus seats to approve",
           "invoices": "Overdue company invoices",
-          "surveys": "Surveys to review"
+          "surveys": "Surveys to review",
+          "passApps": "Pass apps to review"
         }
       }
     },
@@ -4514,9 +4636,8 @@
       },
       "signIn": {
         "title": "Sign in with The IDEA Pass",
-        "description": "Partner sites people sign in to with their Pass. Each sees only what the person allows, each time.",
+        "description": "Partner apps people sign in to with their Pass. Companies register their own in The IDEA Business → Developers; you review the sensitive answers they ask for. Each person sees only what they allow, each time.",
         "empty": "No partner sites yet.",
-        "off": "Off",
         "connected": "{count} people connected · added {date}",
         "addTitle": "Add a partner site",
         "addDescription": "Its developers get a client id and a secret (shown once), and the discovery address https://api.theideaiq.com/oidc/.well-known/openid-configuration.",
@@ -4547,9 +4668,23 @@
         "clientId": "Client id",
         "secret": "Client secret",
         "rotate": "New secret",
-        "turnOff": "Turn off",
-        "turnOn": "Turn on",
-        "editAnswers": "Change what it may ask"
+        "turnOff": "Suspend",
+        "turnOn": "Lift the suspension",
+        "editAnswers": "Change what it may ask",
+        "company": "Company: {name}",
+        "testing": "Testing",
+        "live": "Live",
+        "suspended": "Suspended",
+        "companyOff": "Turned off by the company",
+        "pending": "Waiting for review",
+        "declined": "Declined",
+        "asks": "Asks now: {answers}",
+        "requested": "Wants: {answers}",
+        "reviewTitle": "Review the sensitive answers",
+        "reviewHint": "Approve when the company has a clear reason to need each sensitive answer (check its website and privacy policy). Declining keeps the app running with the basic answers.",
+        "note": "Note to the company (optional)",
+        "approve": "Approve",
+        "decline": "Decline"
       }
     }
   },
@@ -4695,7 +4830,9 @@
       "unknown": "The link that brought you here isn't from a site we know. Nothing was shared.",
       "home": "Go to The IDEA",
       "sensitive": "Sensitive",
-      "noStudentEmail": "Not on file yet: confirm your university email in Settings to share it."
+      "noStudentEmail": "Not on file yet: confirm your university email in Settings to share it.",
+      "testing": "This site is still being tested by its company: only the company's members can sign in for now.",
+      "testingOnly": "This site is in testing, so only its company's members can sign in for now."
     }
   }
 }

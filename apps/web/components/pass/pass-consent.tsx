@@ -53,7 +53,7 @@ const Consent = ({
   request,
 }: {
   readonly issuer: string;
-  readonly partner: { name: string; website: string };
+  readonly partner: { mode: string; name: string; website: string };
   readonly request: AuthorizeRequest;
 }) => {
   const t = useTranslations("pass.authorize");
@@ -99,6 +99,11 @@ const Consent = ({
         <p className="text-muted-foreground text-sm" dir="ltr">
           {hostOf(partner.website)}
         </p>
+        {partner.mode === "testing" ? (
+          <p className="rounded-md bg-muted px-3 py-2 text-muted-foreground text-xs">
+            {t("testing")}
+          </p>
+        ) : null}
       </div>
       <div className="grid gap-2">
         <p className="font-medium text-sm">{t("shares")}</p>
@@ -154,7 +159,9 @@ const Consent = ({
       </div>
       {approve.isError ? (
         <p className="text-destructive text-sm" role="alert">
-          {t("failed")}
+          {approve.error.message.includes("in testing")
+            ? t("testingOnly")
+            : t("failed")}
         </p>
       ) : null}
     </div>

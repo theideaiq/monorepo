@@ -7,19 +7,43 @@ every time, and can disconnect a site in Pass → Settings → Connected sites.
 
 ## Getting a client
 
-Staff register the site in the back office: Companies → Sign in with the
-Pass → Add a partner site. That needs:
+**Companies register their own apps** in The IDEA Business → Developers
+(owners and admins):
 
-- the site's name (shown on the consent screen) and website;
-- its exact return addresses (https; `http://localhost:<port>/…` for
-  development), for example `https://auibsal.org/auth/pass` and
-  `https://auibsal.org/ar/auth/pass`;
-- what it may ask (see Scopes).
+1. **Verify a domain.** Add it, then publish the token we show, either as
+   a DNS TXT record `_theidea-pass.<domain>` with the value
+   `theidea-pass-verification=<token>`, or as a file at
+   `https://<domain>/.well-known/theidea-pass-verification.txt` holding the
+   token. "Check now" asks the API (`POST /pass/domains/verify`), which
+   looks for the record, then the file (no redirects, 5 seconds, at most
+   every 10 seconds). theideaiq.com and shared hosting domains can't be
+   used; a domain an app still uses can't be removed.
+2. **Register the app:** its name (shown on the consent screen), website
+   and exact return addresses. The website and every https return address
+   must be on a verified domain (or under it); `http://localhost:<port>/…`
+   is allowed for development. The page shows the **client id** (`pass_…`)
+   and **client secret** once; only its hash is kept.
+3. **Test it.** A new app is in testing: only the company's own members
+   can sign in (and only their cards pass card checks), and it can ask for
+   every answer it registered.
+4. **Go live.** Everyone can sign in. The basic answers work at once; the
+   sensitive ones (`student_email`, `phone`, `birthdate`, `address`,
+   `offline_access`) wait for staff review and aren't asked until approved.
+   Asking for a new sensitive answer later goes back to review; approved
+   ones keep working. Withdrawing an approval also stops it for earlier
+   grants and refresh tokens.
 
-The page shows the **client id** (`pass_…`) and **client secret** once.
-Send the secret to the partner's developers privately; they keep it on
-their server (never in a browser or an app). "New secret" replaces it at
-once.
+Companies can rotate the secret (the previous one keeps working 24 hours,
+or stops at once if they choose), stop the previous secret early, upload
+public keys for `private_key_jwt` instead, turn the app off, and see the
+people connected and the last 30 days' sign-ins and card checks. Up to 10
+domains and 10 apps per company.
+
+**Staff** see every app in the back office (Companies → Sign in with the
+Pass), approve or decline the sensitive answers (the company's owners and
+admins are notified, with the note), and can suspend any app. Apps waiting
+for review show in the inbox. Staff can still register an app for a
+partner themselves: what staff set is approved, and it's live at once.
 
 ## Endpoints
 
@@ -35,9 +59,9 @@ Discovery: `https://api.theideaiq.com/oidc/.well-known/openid-configuration`
 
 - `response_type=code`, PKCE `S256` required, `state` and `nonce`
   recommended, `ui_locales=ar` or `en` picks the consent screen's language.
-- The token endpoint takes `client_secret_basic` (default) or
-  `client_secret_post`, with `grant_type=authorization_code` or
-  `refresh_token`. A code
+- The token endpoint takes `client_secret_basic` (default),
+  `client_secret_post` or `private_key_jwt`, with
+  `grant_type=authorization_code` or `refresh_token`. A code
   lasts 5 minutes and works once (a failed attempt uses it up).
 - The response has an `id_token` (1 hour), an `access_token` (1 hour, for
   userinfo and the card), `scope` and, with `offline_access`, a
@@ -47,10 +71,21 @@ Discovery: `https://api.theideaiq.com/oidc/.well-known/openid-configuration`
   `invalid_request`). An unknown client or return address is never sent
   anything.
 
+### `private_key_jwt`
+
+With public keys uploaded (a JWK set of up to 5 EC P-256 or RSA 2048+
+keys), the partner's server signs a client assertion instead of sending
+the secret: `client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer`
+and `client_assertion=<JWT>`, the JWT signed with ES256 or RS256, `iss`
+and `sub` the client id, `aud` the issuer or the endpoint
+(`…/oidc/token`, `…/oidc/card/check`), at most 5 minutes from `iat` to
+`exp`, and a fresh `jti` each time (each is accepted once). The card check
+accepts the same fields in its JSON body.
+
 ## Scopes and claims
 
-`openid` is required. A site can ask only for the scopes staff turned on
-for it (Companies → Sign in with the Pass), and the person can untick any
+`openid` is required. A site can ask only for the scopes it registered
+(and, when live, that are approved), and the person can untick any
 of them on the consent screen: the token response's `scope` lists what
 was actually shared, and claims for anything else are simply absent.
 Sensitive scopes are marked on the consent screen and off by default.
@@ -139,8 +174,8 @@ The answer is `{ "valid": false }`, or:
    the output as `PASS_OIDC_SIGNING_KEY` on the API project (Vercel →
    theideaiq-api → Settings → Environment Variables, Production). Until
    then the `/oidc` endpoints answer 503.
-2. Register the partner (above) and send its developers the client id,
-   secret and discovery address.
+2. Partners register themselves (above); staff review the sensitive
+   answers they ask for.
 
 Rotating the key: set a new `PASS_OIDC_SIGNING_KEY`; ID tokens issued
 before stop verifying (they last an hour anyway).

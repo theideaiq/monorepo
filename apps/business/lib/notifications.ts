@@ -51,6 +51,8 @@ export const NOTIFICATION_EVENTS = [
   "invoice_issued",
   "plus_seat_active",
   "candidate_proposed",
+  "pass_app_approved",
+  "pass_app_declined",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -155,6 +157,8 @@ const extraValues: Partial<
     title: text(data.title),
   }),
   invoice_issued: invoiceValues,
+  pass_app_approved: (data) => ({ name: text(data.name) }),
+  pass_app_declined: (data) => ({ name: text(data.name) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
   quote_sent: quoteValues,
 };

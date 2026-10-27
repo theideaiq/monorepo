@@ -7,16 +7,26 @@ decisions with a date.
 
 ## Current state (2026-10-27: program revision, step 5f; Sign in with The IDEA Pass)
 
+- Partner self-service (migration `20261229000000_pass_developers.sql`):
+  companies register their own Sign in with The IDEA Pass apps in The IDEA
+  Business → Developers (verify a domain, register, test with their own
+  members, go live). Sensitive answers (university email, phone, date of
+  birth, address, refresh tokens) wait for staff review in Companies →
+  Sign in with the Pass (and the inbox); staff can suspend any app. Secrets
+  rotate with 24 hours' grace; `private_key_jwt` with uploaded keys.
+  **To do:** auibsal.org registers through Developers (invite SAL's
+  developer to a SAL company in The IDEA Business), then review its
+  `student_email` request.
+
 - Sign in with The IDEA Pass (migration `20261227000000_pass_sign_in.sql`):
   partner sites sign people in through our own OpenID Connect provider
   (`<API URL>/oidc`); the consent screen is `/oauth/authorize`, and people
   manage sites in Pass → Settings → Connected sites. Partner apps check
   Pass card QR codes (`/oidc/card/check`) and, with consent, show the
-  person's card (`/oidc/card`, without the scannable code). **To do:** set
-  `PASS_OIDC_SIGNING_KEY` on the API (`bun run --cwd apps/api oidc:key`),
-  register auibsal.org in Companies → Sign in with the Pass and send its
-  developers the client id and secret; an outside security review before a
-  second partner. Partner guide: `docs/platform/pass-sign-in.md`.
+  person's card (`/oidc/card`, without the scannable code).
+  `PASS_OIDC_SIGNING_KEY` is set on the API (production and preview have
+  separate keys). **To do:** an outside security review before a second
+  partner. Partner guide: `docs/platform/pass-sign-in.md`.
 
 - Surveys (migration `20261226000000_surveys.sql`): verified students
   create surveys in Club → Yours → Surveys, free (give to get, 10
