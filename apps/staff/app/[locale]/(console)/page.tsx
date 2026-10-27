@@ -227,7 +227,7 @@ const DashboardPage = async () => {
     },
     {
       attention: stats.submissions > 0,
-      href: "/editorial/submissions",
+      href: "/club/submissions",
       icon: BookOpenIcon,
       label: t("submissions"),
       show: can.editorial,
@@ -242,7 +242,7 @@ const DashboardPage = async () => {
     },
     {
       attention: stats.requests > 0,
-      href: "/telegram",
+      href: "/club/telegram",
       icon: SendIcon,
       label: t("telegramRequests"),
       show: can.telegram,

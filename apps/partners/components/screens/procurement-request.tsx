@@ -227,7 +227,7 @@ const QuoteCard = ({
               {t("request.printOrder")}
             </Link>
             {invoice ? (
-              <Link className="underline" href="/invoices">
+              <Link className="underline" href="/organization/invoices">
                 {t("request.invoice", {
                   number: String(invoice.number),
                   status: t(`status.invoice.${invoice.status}`),
@@ -267,7 +267,7 @@ const RequestDetail = ({ requestId }: { requestId: string }) => {
     <div className="flex flex-col gap-6">
       <Link
         className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
-        href="/procurement"
+        href="/bulk-buying"
       >
         <ArrowLeftIcon className="size-4 rtl:rotate-180" />
         {t("procurement.requests")}
@@ -327,7 +327,7 @@ const RequestDetail = ({ requestId }: { requestId: string }) => {
 };
 
 export const ProcurementRequest = ({ requestId }: { requestId: string }) => (
-  <BusinessShell>
+  <BusinessShell feature="bulk_buying">
     <RequestDetail requestId={requestId} />
   </BusinessShell>
 );

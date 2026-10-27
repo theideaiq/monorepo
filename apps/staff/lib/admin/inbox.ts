@@ -36,16 +36,16 @@ export interface InboxEntry {
 const head = { count: "exact", head: true } as const;
 
 const hrefs: Record<InboxItem, string> = {
-  invoices: "/companies/invoices",
+  invoices: "/partners/invoices",
   orders: "/orders?status=awaiting",
   overdueRentals: "/rentals?view=overdue",
-  passApps: "/companies/sign-in",
-  procurement: "/companies",
+  passApps: "/partners/sign-in",
+  procurement: "/partners",
   rentalRequests: "/rentals",
-  seats: "/companies/seats",
-  submissions: "/editorial/submissions",
+  seats: "/partners/seats",
+  submissions: "/club/submissions",
   surveys: "/customers/surveys",
-  telegram: "/telegram",
+  telegram: "/club/telegram",
   tickets: "/support?status=open",
 };
 

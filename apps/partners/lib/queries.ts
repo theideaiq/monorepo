@@ -1,8 +1,12 @@
 "use client";
 
-import { listMemberships } from "@repo/auth/organizations";
+import {
+  listMemberships,
+  type OrganizationFeature,
+  type OrganizationMembership,
+} from "@repo/auth/organizations";
 import { useAuth } from "@repo/auth/provider";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 /**
  * Data hooks. Every query runs with the signed-in user's session, so Row
@@ -211,5 +215,35 @@ export const usePlusPayments = (refetchInterval?: number | false) => {
       ),
     queryKey: queryKeys.plusPayments(user?.id ?? ""),
     refetchInterval,
+  });
+};
+
+/** Switches a section of The IDEA Partners on or off (owners and admins). */
+export const useSetOrganizationFeature = (
+  organization: OrganizationMembership
+) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      feature,
+      on,
+    }: {
+      feature: OrganizationFeature;
+      on: boolean;
+    }) => {
+      const features = on
+        ? [...organization.features, feature]
+        : organization.features.filter((item) => item !== feature);
+      const { error } = await supabase
+        .from("organizations")
+        .update({ features })
+        .eq("id", organization.id);
+      if (error) {
+        throw error;
+      }
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["memberships"] }),
   });
 };

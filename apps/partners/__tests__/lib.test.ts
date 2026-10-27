@@ -1,4 +1,6 @@
+import type { OrganizationFeature } from "@repo/auth/organizations";
 import { describe, expect, test, vi } from "vitest";
+import { visibleNavItems } from "@/components/nav-items";
 import { ApiError, callApi } from "@/lib/api";
 import { developerError } from "@/lib/developer-queries";
 import { toInvitationError, toOrganizationError } from "@/lib/errors";
@@ -106,5 +108,39 @@ describe("callApi", () => {
     await expect(
       callApi(fakeSupabase(), "/checkout", {})
     ).rejects.toBeInstanceOf(ApiError);
+  });
+});
+
+describe("visibleNavItems", () => {
+  const org = (
+    role: "admin" | "member" | "owner",
+    features: OrganizationFeature[]
+  ) => ({ features, id: "o", name: "Org", role, slug: "org" });
+  const keys = (items: { key: string }[]) => items.map((item) => item.key);
+
+  test("shows Home and Organization, plus the sections switched on", () => {
+    expect(keys(visibleNavItems(org("owner", [])))).toEqual([
+      "home",
+      "organization",
+    ]);
+    expect(
+      keys(
+        visibleNavItems(org("owner", ["developers", "perks", "bulk_buying"]))
+      )
+    ).toEqual(["home", "perks", "bulk_buying", "developers", "organization"]);
+  });
+
+  test("keeps Developers for owners and admins", () => {
+    expect(keys(visibleNavItems(org("member", ["developers"])))).toEqual([
+      "home",
+      "organization",
+    ]);
+    expect(keys(visibleNavItems(org("admin", ["developers"])))).toContain(
+      "developers"
+    );
+  });
+
+  test("shows only Home without an organization", () => {
+    expect(keys(visibleNavItems(null))).toEqual(["home"]);
   });
 });

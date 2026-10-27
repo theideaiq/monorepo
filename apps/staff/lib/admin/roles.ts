@@ -27,20 +27,20 @@ export type Section = (typeof sections)[number];
 
 /** Where each section lives in the console (paths without the locale). */
 export const sectionHref: Record<Section, string> = {
-  audit: "/audit",
+  audit: "/settings/audit",
   catalog: "/catalog",
-  companies: "/companies",
-  counter: "/counter",
+  companies: "/partners",
+  counter: "/space",
   customers: "/customers",
   dashboard: "/",
-  editorial: "/editorial",
+  editorial: "/club",
   finance: "/finance",
   orders: "/orders",
   rentals: "/rentals",
-  reviews: "/reviews",
-  staff: "/staff",
+  reviews: "/catalog/reviews",
+  staff: "/settings",
   support: "/support",
-  telegram: "/telegram",
+  telegram: "/club/telegram",
 };
 export type AccessLevel = "read" | "write";
 
@@ -102,28 +102,44 @@ export const canWrite = (
   section: Section
 ) => accessTo(role, section) === "write";
 
-/** The navigation's groups, in order; empty groups are hidden. */
-export const sectionGroups = [
-  { id: "today", sections: ["dashboard", "counter"] },
-  { id: "sales", sections: ["orders", "rentals", "customers"] },
+/**
+ * The menu, in order: each entry opens its first section the role can
+ * read; the others it can read are listed under it. Entries with nothing
+ * the role can read are hidden. Sellers and payouts joins when selling
+ * ships.
+ */
+export const menu = [
+  { id: "inbox", sections: ["dashboard", "support"] },
   { id: "catalog", sections: ["catalog", "reviews"] },
-  { id: "community", sections: ["editorial", "telegram"] },
-  { id: "companies", sections: ["companies"] },
-  { id: "money", sections: ["finance"] },
-  { id: "help", sections: ["support"] },
-  { id: "team", sections: ["staff", "audit"] },
+  { id: "orders", sections: ["orders"] },
+  { id: "rentals", sections: ["rentals"] },
+  { id: "customers", sections: ["customers"] },
+  { id: "club", sections: ["editorial", "telegram"] },
+  { id: "partners", sections: ["companies"] },
+  { id: "space", sections: ["counter"] },
+  { id: "finance", sections: ["finance"] },
+  { id: "settings", sections: ["staff", "audit"] },
 ] as const satisfies readonly { id: string; sections: readonly Section[] }[];
 
-export type SectionGroup = (typeof sectionGroups)[number]["id"];
+export type MenuId = (typeof menu)[number]["id"];
 
-/** The groups the role can use, each with only its visible sections. */
-export const visibleGroups = (role: StaffRole | null | undefined) =>
-  sectionGroups
-    .map((group) => ({
-      id: group.id,
-      sections: group.sections.filter((section) => canRead(role, section)),
+export interface MenuEntry {
+  id: MenuId;
+  /** The section whose name the entry shows (Club for editorial). */
+  label: Section;
+  /** The sections the role can read, the entry's own page first. */
+  sections: Section[];
+}
+
+/** The menu entries the role can use, each with only its readable sections. */
+export const visibleMenu = (role: StaffRole | null | undefined): MenuEntry[] =>
+  menu
+    .map((entry) => ({
+      id: entry.id,
+      label: entry.sections[0],
+      sections: entry.sections.filter((section) => canRead(role, section)),
     }))
-    .filter((group) => group.sections.length > 0);
+    .filter((entry) => entry.sections.length > 0);
 
 /** Sections shown in the navigation, in order. */
 export const visibleSections = (role: StaffRole | null | undefined) =>

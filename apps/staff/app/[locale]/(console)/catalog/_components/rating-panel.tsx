@@ -24,7 +24,9 @@ export const RatingPanel = async ({
       actions={
         showReviews ? (
           <Button asChild size="sm" variant="outline">
-            <Link href={`/reviews?product=${productId}`}>{t("manage")}</Link>
+            <Link href={`/catalog/reviews?product=${productId}`}>
+              {t("manage")}
+            </Link>
           </Button>
         ) : null
       }

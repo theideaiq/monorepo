@@ -31,7 +31,7 @@ const platforms = new Set<Platform>(["web", "ios", "android"]);
  */
 const safeRedirect = (redirectUrl: string | undefined, business: boolean) => {
   const home = business
-    ? new URL("/billing", env.NEXT_PUBLIC_APP_URL)
+    ? new URL("/organization/billing", env.NEXT_PUBLIC_APP_URL)
     : new URL("/plus", env.NEXT_PUBLIC_WEB_URL);
   if (!redirectUrl) {
     return home.toString();

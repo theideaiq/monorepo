@@ -1,5 +1,6 @@
 "use client";
 
+import { organizationFeatures } from "@repo/auth/organizations";
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -17,6 +18,7 @@ import { type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { type OrganizationError, toOrganizationError } from "@/lib/errors";
+import { useSetOrganizationFeature } from "@/lib/queries";
 import { isValidSlug } from "@/lib/slug";
 
 const OrganizationSettings = () => {
@@ -122,14 +124,86 @@ const OrganizationSettings = () => {
   );
 };
 
+/** The sections the organization uses, each with Add or Remove. */
+const Sections = () => {
+  const t = useTranslations("app");
+  const { active, canManage } = useActiveOrganization();
+  const setFeature = useSetOrganizationFeature(active);
+
+  return (
+    <Card className="max-w-2xl">
+      <CardHeader>
+        <CardTitle>{t("business.sections.settingsTitle")}</CardTitle>
+        <CardDescription>
+          {t("business.sections.settingsDescription")}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-3">
+        <ul className="grid divide-y">
+          {organizationFeatures.map((feature) => {
+            const on = active.features.includes(feature);
+            const section = t(`nav.${feature}`);
+            return (
+              <li
+                className="flex items-center justify-between gap-4 py-3"
+                key={feature}
+              >
+                <span className="grid gap-0.5">
+                  <span className="font-medium">{section}</span>
+                  <span className="text-muted-foreground text-sm">
+                    {t(`business.sections.${feature}.description`)}
+                  </span>
+                </span>
+                {canManage ? (
+                  <Button
+                    aria-label={t(
+                      on
+                        ? "business.sections.removeSection"
+                        : "business.sections.addSection",
+                      { section }
+                    )}
+                    disabled={setFeature.isPending}
+                    onClick={() => setFeature.mutate({ feature, on: !on })}
+                    size="sm"
+                    variant={on ? "ghost" : "outline"}
+                  >
+                    {t(
+                      on ? "business.sections.remove" : "business.sections.add"
+                    )}
+                  </Button>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+        {canManage ? null : (
+          <p className="text-muted-foreground text-sm">
+            {t("business.sections.managersOnly")}
+          </p>
+        )}
+        {setFeature.isError ? (
+          <p className="text-destructive text-sm" role="alert">
+            {t("business.sections.failed")}
+          </p>
+        ) : null}
+      </CardContent>
+    </Card>
+  );
+};
+
 const KeyedSettings = () => {
   const { active } = useActiveOrganization();
   // Switching organization starts the form over.
-  return <OrganizationSettings key={active.id} />;
+  return (
+    <div className="grid gap-6">
+      <OrganizationSettings key={active.id} />
+      <Sections />
+    </div>
+  );
 };
 
 export const BusinessSettings = () => (
-  <BusinessShell>
+  <BusinessShell organization>
     <KeyedSettings />
   </BusinessShell>
 );

@@ -86,10 +86,33 @@ export const currentAppPath = (path: string) => {
 
 const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
 
+/** Pages of The IDEA Partners that moved, as [old path, current path]. */
+const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
+  ["/procurement", "/bulk-buying"],
+  ["/invoices", "/organization/invoices"],
+  ["/members", "/organization/members"],
+  ["/plus", "/organization/plus"],
+  ["/billing", "/organization/billing"],
+  ["/settings", "/organization"],
+];
+
 /**
  * The page of The IDEA Partners a stored link names: links under
- * `/business…` are its pages, which sit at the root of its own site
- * (`/business/invoices` → `/invoices`); null for the website's pages.
+ * `/business…` are its pages, which sit at the root of its own site, at
+ * their current address (`/business/invoices` → `/organization/invoices`,
+ * `/business/procurement/7` → `/bulk-buying/7`); null for the website's
+ * pages.
  */
-export const businessPath = (path: string) =>
-  BUSINESS_PATH.test(path) ? path.replace(BUSINESS_PATH, "") || "/" : null;
+export const businessPath = (path: string) => {
+  if (!BUSINESS_PATH.test(path)) {
+    return null;
+  }
+  const page = path.replace(BUSINESS_PATH, "") || "/";
+  const url = new URL(page, "http://site.invalid");
+  for (const [from, to] of PARTNERS_MOVED) {
+    if (url.pathname === from || url.pathname.startsWith(`${from}/`)) {
+      return `${to}${page.slice(from.length)}`;
+    }
+  }
+  return page;
+};

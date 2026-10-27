@@ -65,18 +65,27 @@ incidents) is in `docs/platform`.
 - `apps/partners` — **The IDEA Partners** (package `partners`, port 3000,
   `partners.theideaiq.com`), the organization dashboard, server-rendered
   with a `proxy.ts` (locale, session refresh, security headers): its pages
-  are at the root (`app/[locale]/(business)`: `/`, `/procurement`,
-  `/invoices`, `/plus`, `/perks`, `/developers`, `/members`, `/billing`,
-  `/settings`, `/new`, `/documents/<kind>/<id>`, invitations). It holds no
-  Staff code. No sign-in of its own: it sends people to The IDEA Pass on
-  the website with `return_to`.
+  are at the root (`app/[locale]/(business)`): Home `/`, Perks `/perks`,
+  Bulk buying `/bulk-buying`, Developers `/developers` and Organization
+  `/organization` (with `/organization/members`, `/organization/plus`,
+  `/organization/billing`, `/organization/invoices`), plus `/new`, `/documents/<kind>/<id>` and invitations. The
+  sidebar holds the organization switcher and these sections; Perks, Bulk
+  buying and Developers appear once the organization adds them from Home
+  (`organizations.features`, `components/nav-items.ts`), and the bell is
+  only in the top bar. Selling, Supply and Opportunities join the list
+  when they ship. It holds no Staff code. No sign-in of its own: it sends
+  people to The IDEA Pass on the website with `return_to`.
 - `apps/staff` — **Staff** (package `staff`, port 3003,
   `staff.theideaiq.com`), everything The IDEA's team uses, server-rendered
   with a `proxy.ts`:
-  - the console at its root (`app/[locale]/(console)`: the dashboard `/`,
-    `/orders`, `/catalog`, `/rentals`, `/customers`, `/support`,
-    `/reviews`, `/companies`, `/finance`, `/editorial`, `/telegram`,
-    `/counter`, `/search`, `/staff`, `/audit`, …) and `/no-access`
+  - the console at its root (`app/[locale]/(console)`), one menu
+    (`menu` in `lib/admin/roles.ts`): Inbox `/` (with `/support`) ·
+    Catalog `/catalog` (with `/catalog/reviews`) · Orders and delivery
+    `/orders` · Rentals and Plus `/rentals` · Customers `/customers` ·
+    Club `/club` (with `/club/telegram`) · Partners `/partners` · The IDEA
+    Space `/space` (the counter) · Finance `/finance` · Settings
+    `/settings` (with `/settings/audit`), and `/search`; Sellers and
+    payouts joins when selling ships. Then `/no-access`
     (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:
     staff only, with Server Actions; every query runs as the staff member
     so RLS applies, and staff rights need an authenticator-app (AAL2)

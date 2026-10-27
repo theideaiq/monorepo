@@ -347,7 +347,7 @@ const Invitations = () => {
 };
 
 export const BusinessMembers = () => (
-  <BusinessShell>
+  <BusinessShell organization>
     <div className="grid max-w-3xl gap-6">
       <MemberList />
       <Invitations />

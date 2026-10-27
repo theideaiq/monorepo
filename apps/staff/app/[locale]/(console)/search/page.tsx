@@ -154,7 +154,7 @@ const SearchPage = async ({
         {
           hits: (found.requests.data ?? []).map((row) => ({
             detail: row.organizations?.name,
-            href: `/companies/${row.id}`,
+            href: `/partners/${row.id}`,
             id: row.id,
             label: `${t("request", { number: String(row.number) })} · ${row.title}`,
           })),

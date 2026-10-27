@@ -1,6 +1,7 @@
 "use client";
 
 import { resetIdentity } from "@repo/analytics/client";
+import { OrganizationSwitcher } from "@repo/auth/components/organization-switcher";
 import { UserMenu } from "@repo/auth/components/user-menu";
 import { passUrl } from "@repo/auth/pass";
 import { BrandLogo } from "@repo/design-system/components/brand-logo";
@@ -21,19 +22,26 @@ import {
   LanguageSwitcher,
   ThemeToggle,
 } from "@repo/internationalization/controls";
-import { Link, usePathname } from "@repo/internationalization/navigation";
+import {
+  Link,
+  usePathname,
+  useRouter,
+} from "@repo/internationalization/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { ExternalLinkIcon, IdCardIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
 import { useProfile } from "@/lib/queries";
-import { isActivePath, navItems } from "./nav-items";
+import { isActivePath, visibleNavItems } from "./nav-items";
+import { useOrganization } from "./organization-provider";
 
 export const AppSidebar = () => {
   const t = useTranslations("app.nav");
   const tMeta = useTranslations("app.meta");
   const locale = useLocale();
   const pathname = usePathname();
+  const router = useRouter();
+  const { active, organizations, select } = useOrganization();
   const queryClient = useQueryClient();
   const authMessages = useAuthMessages();
   const { isMobile, setOpenMobile } = useSidebar();
@@ -54,15 +62,31 @@ export const AppSidebar = () => {
           href="/"
           onClick={closeOnMobile}
         >
-          <BrandLogo line="Business" />
+          <BrandLogo line="Partners" />
         </Link>
+        {active ? (
+          <OrganizationSwitcher
+            activeId={active.id}
+            messages={authMessages}
+            onCreate={() => {
+              closeOnMobile();
+              router.push("/new");
+            }}
+            onSelect={(organizationId) => {
+              select(organizationId);
+              closeOnMobile();
+              router.push("/");
+            }}
+            organizations={organizations}
+          />
+        ) : null}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>{t("label")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => {
+              {visibleNavItems(active).map((item) => {
                 const title = t(item.key);
                 return (
                   <SidebarMenuItem key={item.key}>

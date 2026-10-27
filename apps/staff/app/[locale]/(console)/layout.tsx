@@ -5,7 +5,7 @@ import {
 import { cookies } from "next/headers";
 import type { ReactNode } from "react";
 import { AppSidebar } from "@/components/admin/app-sidebar";
-import { visibleGroups } from "@/lib/admin/roles";
+import { visibleMenu } from "@/lib/admin/roles";
 import { requireStaff } from "@/lib/admin/session";
 
 interface ConsoleLayoutProps {
@@ -25,7 +25,7 @@ const ConsoleLayout = async ({ children }: ConsoleLayoutProps) => {
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar
-        groups={visibleGroups(staff.role)}
+        menu={visibleMenu(staff.role)}
         name={staff.name}
         role={staff.role}
       />

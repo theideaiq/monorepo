@@ -28,10 +28,19 @@ describe("currentAppPath", () => {
 });
 
 test("businessPath strips The IDEA Partners's prefix", () => {
-  expect(businessPath("/business/invoices")).toBe("/invoices");
+  expect(businessPath("/business/developers")).toBe("/developers");
+  expect(businessPath("/business/perks?x=1")).toBe("/perks?x=1");
   expect(businessPath("/business")).toBe("/");
   expect(businessPath("/businesses")).toBeNull();
   expect(businessPath("/pass")).toBeNull();
+});
+
+test("businessPath opens moved pages at their current address", () => {
+  expect(businessPath("/business/invoices")).toBe("/organization/invoices");
+  expect(businessPath("/business/procurement/r1")).toBe("/bulk-buying/r1");
+  expect(businessPath("/business/procurement?x=1")).toBe("/bulk-buying?x=1");
+  expect(businessPath("/business/settings")).toBe("/organization");
+  expect(businessPath("/business/plus-other")).toBe("/plus-other");
 });
 
 test("safeNextPath refuses other sites", () => {

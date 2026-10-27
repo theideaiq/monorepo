@@ -752,7 +752,7 @@ const KeyedDevelopers = ({ apiUrl }: Urls) => {
  * Pass apps (domains, apps, secrets and keys).
  */
 export const Developers = ({ apiUrl }: Urls) => (
-  <BusinessShell>
+  <BusinessShell feature="developers">
     <KeyedDevelopers apiUrl={apiUrl} />
   </BusinessShell>
 );
