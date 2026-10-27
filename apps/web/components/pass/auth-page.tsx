@@ -1,3 +1,4 @@
+import { enabledProviders } from "@repo/auth/social";
 import { localePath } from "@repo/internationalization";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -5,6 +6,7 @@ import { env } from "@/env";
 import { hostOf, readReturnTo, type SearchParams } from "@/lib/pass/return-to";
 import { getPassSession } from "@/lib/pass/session";
 import { PassSignIn } from "./pass-sign-in";
+import { SocialButtons } from "./social-buttons";
 import { TelegramButton } from "./telegram-button";
 
 interface AuthPageProps {
@@ -58,6 +60,10 @@ export const AuthPage = async ({ searchParams }: AuthPageProps) => {
       <PassSignIn
         returnTo={returnTo}
         turnstileSiteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+      />
+      <SocialButtons
+        providers={enabledProviders(env.NEXT_PUBLIC_AUTH_PROVIDERS)}
+        returnTo={returnTo}
       />
       <TelegramButton returnTo={returnTo} />
     </div>
