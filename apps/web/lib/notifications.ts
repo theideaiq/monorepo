@@ -59,6 +59,8 @@ export const NOTIFICATION_EVENTS = [
   "plus_swap_done",
   "student_verified",
   "student_rejected",
+  "survey_approved",
+  "survey_rejected",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -177,6 +179,8 @@ const extraValues: Partial<
     const until = text(data.until);
     return { date: until ? formatDate(`${until}T12:00:00`, locale) : "" };
   },
+  survey_approved: (data) => ({ title: text(data.title) }),
+  survey_rejected: (data) => ({ title: text(data.title) }),
 };
 
 /**

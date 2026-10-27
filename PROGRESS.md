@@ -5,7 +5,17 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-27: program revision, step 5e)
+## Current state (2026-10-27: program revision, step 5f)
+
+- Surveys (migration `20261226000000_surveys.sql`): verified students
+  create surveys in Club → Yours → Surveys, free (give to get, 10
+  credits to start), rewarded in Bulbs from their balance, or rewarded
+  and paid in IQD; anyone 18+ with a Pass answers the ones aimed at them.
+  Surveys open at once unless the checker flags a sensitive topic or
+  someone reports one; those wait in Customers → Surveys. Creators
+  download the answers (CSV, Excel, SPSS). **To do:** announce the pilot
+  at AUIB; students add their major, year and governorate in Settings
+  for targeting.
 
 - Students and partner perks (migration
   `20261225000000_students_and_perks.sql`): members verify as students
@@ -293,6 +303,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-27: Program revision v1, step 5f (surveys): three kinds, free
+  give-to-get, Bulbs-rewarded and cash-rewarded; any verified student
+  can create surveys; only flagged (sensitive topics) and reported
+  surveys are reviewed, the rest open straight away; major, year of study
+  and governorate are asked once, optionally, and kept on the student
+  badge.
 
 - 2026-10-27: Program revision v1, step 5e (students and perks): partners
   check cards from their Business dashboard and record each use; a

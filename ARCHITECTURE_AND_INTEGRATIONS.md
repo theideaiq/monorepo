@@ -699,6 +699,7 @@ Current schema:
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | The IDEA Store's catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
 | `…_students_and_perks.sql` | Students: `universities` (email domains), `student_badges` (university and valid until 30 June), `student_requests` (emailed codes, card photos in the private `student-cards` bucket); `issue_student_code()` (API only), `confirm_student_email()`, `request_student_review()`, `review_student_card()`, `my_student()`; student prices (`plans.student_of`, `run_student_expiry()`); no deposits for students (`rental_quote()`, `book_kit()`). Perks: `perks`, `perk_redemptions` (once a day), `partner_check()`, `redeem_perk()`, `perk_stats()`, `my_partners()` |
+| `…_surveys.sql` | Surveys: `surveys` (free, Bulbs or cash rewarded; targeting by university, major, year and governorate), `survey_questions`, `survey_responses`, `survey_answers`, `survey_credits` (give to get), `survey_reports`; the student profile on `student_badges` (`set_student_profile()`); `save_survey()`, `publish_survey()` (the sensitive-topic checker, `survey_flags()`), `start_survey()`, `submit_survey()`, `surveys_for_me()`, `my_survey_credits()`, `report_survey()`, `survey_results()`, `close_survey()`, `review_survey()`; cash surveys open when their order is paid |
 | `…_boxes.sql` | Boxes: `boxes`, `box_parts` (fixed product versions or slots filled from a category and format), `box_themes`; a box's stock comes from its parts (`private.box_stock()`, recounted with the parts' copies), an active box costs 10–15% less than its parts (`private.box_value()`); `cart_items.box_theme_id` and `order_items.box_theme_id`; orders take the fixed parts' copies, `pack_box()` the picked ones; `box_slot_copies()` |
 | `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
 | `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
@@ -1591,6 +1592,43 @@ Migration `20261225000000_students_and_perks.sql`.
   (`partner_check()`: first name, member number, badges and which perks
   apply) and records a use (`redeem_perk()`, once a day per person and
   perk, Baghdad time), with monthly counts (`perk_stats()`).
+
+#### Surveys (The IDEA Club)
+
+Migration `20261226000000_surveys.sql`; the pilot starts at AUIB.
+
+- **Creating** (Club → Yours → Surveys, `/club/surveys/new`): verified
+  students write a survey (title, consent text, questions of five kinds:
+  one choice, several choices, a 1–5 scale, a written answer or a
+  number; optional check questions with the answer a careful respondent
+  picks), aim it (students only, universities, majors, years of study,
+  governorates; any of these limits it to verified students who match)
+  and choose how responses are rewarded: **free** (give to get: each
+  counted response uses one of the creator's credits; answering someone
+  else's free survey earns one; new creators start with 10), **Bulbs**
+  (2–10 Bulbs a response by length, plus a 10% fee, held from the
+  creator's balance when it opens; the unused part comes back when it
+  closes) or **cash** (the same in IQD, 100 IQD a Bulb, through an order
+  paid with the hosted checkout; the survey opens when the order is
+  paid). `save_survey()` saves drafts; `publish_survey()` opens the
+  survey unless `survey_flags()` finds a sensitive topic (religion or
+  sect, politics, health, sex, money, identity numbers, contact details,
+  in Arabic and English), in which case it waits for support in
+  Customers → Surveys (`review_survey()`, which notifies the creator).
+- **Answering** (`/club/surveys/<id>`, 18+ with a Pass): the consent
+  first; `start_survey()` starts the clock and `submit_survey()` checks
+  the answers. A response counts (and is rewarded) when it took the
+  survey's minimum time and passed its check questions; a survey closes
+  when it has the responses it wanted (or a free one runs out of
+  credits). Anyone can report a survey (`report_survey()`), which sends
+  it back to review.
+- **Results** (`/club/surveys/<id>/results`): `survey_results()` gives the
+  creator every response without who gave it, summarised per question
+  and exported as CSV (UTF-8 with a byte-order mark), Excel (XML
+  Spreadsheet 2003) or SPSS syntax that reads the CSV.
+- **The student profile** (Pass → Settings → Student verification):
+  major, year of study and governorate, optional, used only for
+  targeting.
 
 #### Categories, prices and conditions (the catalogue)
 

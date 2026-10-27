@@ -196,6 +196,12 @@ const CustomersPage = async ({
         >
           {t("studentsLink")}
         </Link>
+        <Link
+          className="font-medium text-sm hover:underline"
+          href="/customers/surveys"
+        >
+          {t("surveysLink")}
+        </Link>
       </PageHeader>
       <PageBody>
         {canWrite ? <CheckPass /> : null}
