@@ -1,14 +1,11 @@
 "use client";
 
-import { localized } from "@repo/commerce";
-import type { Locale } from "@repo/internationalization";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import { FieldGrid, TextField } from "@/components/admin/fields";
 import { saveMoneyRules } from "../actions";
 
 export interface MoneyRules {
-  bulb_half_from: number;
   bulb_rate: number;
   cash_limit: number | null;
   delivery_cost: number;
@@ -19,28 +16,17 @@ export interface MoneyRules {
 }
 
 interface MoneyRulesFormProps {
-  readonly categories: {
-    bulb_multiplier: number;
-    id: string;
-    name_ar: string;
-    name_en: string;
-  }[];
   readonly disabled: boolean;
   readonly rules: MoneyRules;
 }
 
 /**
- * The money rules: Bulbs (rate, half rate, multipliers), the return window,
+ * The money rules: the Bulbs rate, the return window,
  * the giveaway cap and cash limit, and what the price check counts.
  */
-export const MoneyRulesForm = ({
-  categories,
-  disabled,
-  rules,
-}: MoneyRulesFormProps) => {
+export const MoneyRulesForm = ({ disabled, rules }: MoneyRulesFormProps) => {
   const t = useTranslations("admin.finance.rules");
   const tCommon = useTranslations("admin.common");
-  const locale = useLocale() as Locale;
 
   return (
     <ActionForm action={saveMoneyRules}>
@@ -53,14 +39,6 @@ export const MoneyRulesForm = ({
             inputMode="decimal"
             label={t("bulbRate")}
             name="bulbRate"
-          />
-          <TextField
-            defaultValue={rules.bulb_half_from}
-            dir="ltr"
-            hint={t("bulbHalfFromHint")}
-            inputMode="numeric"
-            label={t("bulbHalfFrom")}
-            name="bulbHalfFrom"
           />
           <TextField
             defaultValue={rules.return_days}
@@ -112,24 +90,6 @@ export const MoneyRulesForm = ({
               label={t("minMarginRate")}
               name="minMarginRate"
             />
-          </FieldGrid>
-        </div>
-        <div className="grid gap-3">
-          <p className="font-medium text-sm">{t("multipliers")}</p>
-          <p className="text-muted-foreground text-sm">
-            {t("multipliersHint")}
-          </p>
-          <FieldGrid columns={3}>
-            {categories.map((category) => (
-              <TextField
-                defaultValue={category.bulb_multiplier}
-                dir="ltr"
-                inputMode="decimal"
-                key={category.id}
-                label={localized(category, "name", locale)}
-                name={`multiplier:${category.id}`}
-              />
-            ))}
           </FieldGrid>
         </div>
         {disabled ? null : (

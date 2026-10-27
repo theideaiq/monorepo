@@ -16,7 +16,7 @@ export interface WhatsAppSummary {
 
 /**
  * Sends WhatsApp template messages for new notifications (order confirmed
- * and shipped, rental due soon, trade-in offer) to customers who opted in.
+ * and shipped, rental due soon) to customers who opted in.
  *
  * `claim_whatsapp_notifications` marks the rows in the same statement that
  * returns them, so the database webhook and the catch-up cron never send

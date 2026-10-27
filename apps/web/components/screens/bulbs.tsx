@@ -166,16 +166,10 @@ export const Bulbs = () => {
           <li>{t("rules.value")}</li>
           <li>{t("rules.spend")}</li>
           <li>
-            {t("rules.half", {
-              amount: formatPrice(rules.data.halfFrom, locale),
-            })}
-          </li>
-          <li>
             {t("rules.pending", {
               days: formatNumber(rules.data.returnDays, locale),
             })}
           </li>
-          <li>{t("rules.tradeIn")}</li>
           <li>{t("rules.expiry")}</li>
         </ul>
       </section>

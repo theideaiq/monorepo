@@ -52,8 +52,8 @@ export const useBulbEntries = () => {
 };
 
 /**
- * How Bulbs are earned (public): the store's rate, the price above which
- * items earn half, the return window, and each Plus plan's rate.
+ * How Bulbs are earned (public): the store's rate, the return window and
+ * each Plus plan's rate.
  */
 export const useBulbRules = () => {
   const { supabase } = useAuth();
@@ -62,7 +62,7 @@ export const useBulbRules = () => {
       const [settings, plans] = await Promise.all([
         supabase
           .from("store_settings")
-          .select("bulb_rate, bulb_half_from, return_days")
+          .select("bulb_rate, return_days")
           .single(),
         supabase
           .from("plans")
@@ -78,7 +78,6 @@ export const useBulbRules = () => {
         throw new Error("Store settings are missing");
       }
       return {
-        halfFrom: row.bulb_half_from,
         plans: unwrap(plans) ?? [],
         rate: Number(row.bulb_rate),
         returnDays: row.return_days,

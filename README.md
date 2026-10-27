@@ -10,7 +10,7 @@ digital ecosystem for Iraq — in one repository. Arabic (RTL) first and English
 | The IDEA Plus | Monthly membership to rent games, books and movies (`/plus`) | `apps/web/app/[locale]/plus` |
 | The IDEA Club | Posts, events with RSVPs, member submissions and the Telegram rooms (`/club`) | `apps/web/app/[locale]/club` |
 | The IDEA Pass | A person's membership: sign-in, the card, orders, Bulbs and settings (`/pass`) | `apps/web` |
-| The IDEA Business | Procurement, hiring and team Plus for companies: `/business` on the website, the company dashboard at business.theideaiq.com | `apps/web/app/[locale]/business`, `apps/business` |
+| The IDEA Business | Procurement and team Plus for companies: `/business` on the website, the company dashboard at business.theideaiq.com | `apps/web/app/[locale]/business`, `apps/business` |
 | The IDEA Droid | Telegram bot: orders and Bulbs for linked members, support, FAQ, product search (also inline) | `packages/droid`, `apps/api/app/telegram` |
 
 Built on the shaheenfarjo/monorepo template (initialized with `bun run init`:

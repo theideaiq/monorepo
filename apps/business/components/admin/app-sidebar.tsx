@@ -19,13 +19,11 @@ import {
 import {
   BookOpenIcon,
   BriefcaseBusinessIcon,
-  HandCoinsIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
   LifeBuoyIcon,
   LogOutIcon,
   type LucideIcon,
-  MegaphoneIcon,
   PackageIcon,
   RepeatIcon,
   ScanLineIcon,
@@ -49,7 +47,6 @@ import {
 import { AdminSearch } from "./admin-search";
 
 const icons: Record<Section, LucideIcon> = {
-  affiliates: MegaphoneIcon,
   audit: ScrollTextIcon,
   catalog: PackageIcon,
   companies: BriefcaseBusinessIcon,
@@ -64,7 +61,6 @@ const icons: Record<Section, LucideIcon> = {
   staff: ShieldCheckIcon,
   support: LifeBuoyIcon,
   telegram: SendIcon,
-  tradeIns: HandCoinsIcon,
 };
 
 interface AppSidebarProps {

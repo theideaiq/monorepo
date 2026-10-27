@@ -16,10 +16,7 @@ import { isNativeApp } from "@/lib/platform";
 /** The providers' own names (brands, not translated). */
 const NAMES: Record<SocialProvider, string> = {
   apple: "Apple",
-  azure: "Microsoft",
-  facebook: "Facebook",
   google: "Google",
-  linkedin_oidc: "LinkedIn",
 };
 
 /** Where the provider sends people back: the callback page, or the app. */

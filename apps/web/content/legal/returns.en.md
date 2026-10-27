@@ -40,7 +40,7 @@ Once a return is approved, we refund the price of the item, and the delivery fee
 - **Paid in cash:** we refund you in cash or by transfer, as agreed with you.
 - **As Bulbs, if you choose:** instead of money, you can take the refund as Bulbs (1 Bulb = 100 IQD), usable right away.
 - **Bulbs you spent** on the order come back as Bulbs.
-- **Bulbs the order earned** are cancelled, and so are any invite or affiliate rewards on it (see [Rewards](/legal/rewards)).
+- **Bulbs the order earned** are cancelled, and so are any invite rewards on it (see [Rewards](/legal/rewards)).
 
 We aim to send refunds within 10 business days of approving them.
 

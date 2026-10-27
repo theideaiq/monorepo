@@ -13,9 +13,7 @@ export const sections = [
   "orders",
   "rentals",
   "customers",
-  "affiliates",
   "support",
-  "tradeIns",
   "reviews",
   "companies",
   "finance",
@@ -29,7 +27,6 @@ export type Section = (typeof sections)[number];
 
 /** Where each section lives in the console (paths without the locale). */
 export const sectionHref: Record<Section, string> = {
-  affiliates: "/affiliates",
   audit: "/audit",
   catalog: "/catalog",
   companies: "/companies",
@@ -44,7 +41,6 @@ export const sectionHref: Record<Section, string> = {
   staff: "/staff",
   support: "/support",
   telegram: "/telegram",
-  tradeIns: "/trade-ins",
 };
 export type AccessLevel = "read" | "write";
 
@@ -69,17 +65,14 @@ const everything = (exclude: Section[] = []): AccessMap =>
 const roleAccess: Record<StaffRole, AccessMap> = {
   admin: everything(["staff"]),
   editor: { dashboard: "read", editorial: "write" },
-  // Finance pays affiliates; marketing approves them (the database checks
-  // which of the two each step needs).
   finance: {
-    affiliates: "write",
     // Finance invoices purchase orders; support handles the rest.
     companies: "write",
     dashboard: "read",
     finance: "write",
     orders: "read",
   },
-  marketing: { affiliates: "write", customers: "read", dashboard: "read" },
+  marketing: { customers: "read", dashboard: "read" },
   superadmin: everything(),
   support: {
     companies: "write",
@@ -92,7 +85,6 @@ const roleAccess: Record<StaffRole, AccessMap> = {
     reviews: "write",
     support: "write",
     telegram: "write",
-    tradeIns: "write",
   },
 };
 
@@ -113,9 +105,9 @@ export const canWrite = (
 /** The navigation's groups, in order; empty groups are hidden. */
 export const sectionGroups = [
   { id: "today", sections: ["dashboard", "counter"] },
-  { id: "sales", sections: ["orders", "rentals", "tradeIns", "customers"] },
+  { id: "sales", sections: ["orders", "rentals", "customers"] },
   { id: "catalog", sections: ["catalog", "reviews"] },
-  { id: "community", sections: ["editorial", "telegram", "affiliates"] },
+  { id: "community", sections: ["editorial", "telegram"] },
   { id: "companies", sections: ["companies"] },
   { id: "money", sections: ["finance"] },
   { id: "help", sections: ["support"] },

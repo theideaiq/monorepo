@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(28);
+select plan(25);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- U is a customer with The IDEA Plus, A an admin, P a support agent.
@@ -250,36 +250,6 @@ update public.rentals set status = 'cancelled';
 select is(
   (select status::text from public.stock_items where purpose = 'rental'),
   'available', 'a cancelled rental frees its copy'
-);
-
--- ── Trade-ins become used copies ────────────────────────────────────────────
-
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000e1');
-insert into public.trade_ins (category, title, condition, photos, contact_phone)
-values (
-  'game', 'Chrono Trigger', 'good',
-  array['00000000-0000-0000-0000-0000000000e1/cart.jpg'], '+9647701234567'
-);
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000e3', 'aal2');
-update public.trade_ins set status = 'offer_made', offer_amount = 45000
-where id = (select id from public.trade_ins where title = 'Chrono Trigger');
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000e1');
-select lives_ok(
-  $$ select public.respond_to_trade_in_offer((select id from public.trade_ins where title = 'Chrono Trigger'), true) $$,
-  'the customer accepts the offer'
-);
-
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000e3', 'aal2');
-select lives_ok(
-  $$ select public.complete_trade_in((select id from public.trade_ins where title = 'Chrono Trigger'), true) $$,
-  'support completes a trade-in into a draft product'
-);
-select pg_temp.reset_role();
-select results_eq(
-  $$ select condition::text, cost, status::text from public.stock_items
-     where trade_in_id = (select id from public.trade_ins where title = 'Chrono Trigger') $$,
-  $$ values ('used', 45000::bigint, 'available') $$,
-  'the item becomes one used copy that cost the offer'
 );
 
 select * from finish();

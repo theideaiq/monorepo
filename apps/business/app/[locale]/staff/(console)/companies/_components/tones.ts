@@ -37,17 +37,3 @@ export const seatTone: Record<Enums["plus_seat_status"], Tone> = {
   ended: "neutral",
   requested: "danger",
 };
-
-export const jobTone: Record<Enums["job_status"], Tone> = {
-  closed: "neutral",
-  filled: "success",
-  open: "info",
-};
-
-export const candidateTone: Record<Enums["candidate_status"], Tone> = {
-  hired: "success",
-  proposed: "warning",
-  rejected: "neutral",
-  shortlisted: "info",
-  withdrawn: "neutral",
-};

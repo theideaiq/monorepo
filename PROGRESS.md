@@ -110,10 +110,9 @@ decisions with a date.
 - Ages (migration `20261220000000_ages.sql`): the Pass is from 13 and asks
   for the date of birth at first sign-in; 13–17-year-olds link a guardian
   signed in with The IDEA Pass who approves each order and The IDEA Plus in
-  Settings; PEGI 18 items are hidden from them; Sell to us and affiliates
-  are 18+. Reviews that earned the photo bonus say so.
-- The 14 public policies at `/legal/<policy>` (terms, privacy, delivery,
-  returns, condition, plus, rewards, sell, club, surveys, business,
+  Settings; PEGI 18 items are hidden from them. Reviews that earned the photo bonus say so.
+- The 13 public policies at `/legal/<policy>` (terms, privacy, delivery,
+  returns, condition, plus, rewards, club, surveys, business,
   accessibility, security, copyright) replace the old five, with
   `/.well-known/security.txt`.
 
@@ -128,11 +127,9 @@ decisions with a date.
   ratings on every game.
 
 - Money rules (migration `20261218000000_money_rules.sql`): flat Bulbs (3%
-  for everyone, Plus Glow 4%, Shine 5%, Blaze 6%; half on consoles,
-  laptops and items over 500,000 IQD; spend tiers gone, nobody lost
+  for everyone, Plus Glow 4%, Shine 5%, Blaze 6%; spend tiers gone, nobody lost
   Bulbs); free Baghdad delivery over 150,000 IQD for everyone and on any
-  order for Plus Shine and Blaze; a 14-day return window for Bulbs and
-  affiliate commission; at most 20% of an order given away; no cash on
+  order for Plus Shine and Blaze; a 14-day return window for Bulbs; at most 20% of an order given away; no cash on
   delivery over 500,000 IQD; Plus plans Glow 14,750 (1 item), Shine
   22,750 (2), Blaze 39,750 (4), seeded inactive; Telegram rooms open,
   Pass or Plus; the checkout shows the server's price (`checkout_quote`);
@@ -358,6 +355,42 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-27: Program Revision v2, item 1: what v2 drops (migration
+  `20270101000000_v2_removals.sql`). There are no customers yet, so the
+  tables were dropped outright, with no redirects or aliases:
+  - Sell to us (trade-ins): `/pass/orders#sell`, Staff → Trade-ins,
+    `trade_ins`, the `trade-ins` bucket, the WhatsApp `trade_in_offer`
+    template, the 10 Bulbs for a completed trade-in and trade-in copies.
+  - Affiliates: `/r/<code>` is a member's invite only (10% off the first
+    order, at most 15,000 IQD) and `/pass/bulbs#invite` keeps only the
+    invite card; Back office → Affiliates, `affiliates`,
+    `affiliate_attributions`, `affiliate_commissions`, `payouts`,
+    `orders.affiliate_id`, `subscriptions.affiliate_id`,
+    `product_categories.affiliate_rate`, `AffiliateToucher` and the code
+    at checkout are gone; `orders.discount_source` is only `'invite'`.
+  - Boxes: no new boxes (RLS refuses them; `add_launch_boxes()` is
+    dropped). The existing ones sell until their parts sell out, when
+    `sync_box_stock` archives them; Catalog → Boxes and Orders → Boxes to
+    pack stay while any are left.
+  - Hiring: The IDEA Business's `/hiring`, Back office → Companies →
+    Hiring, `job_requests`, `candidates`, the `candidates` bucket, the
+    `candidate_proposed` notification, `decide_candidate` and
+    `close_job_request`. The IDEA Business is procurement and team Plus.
+  - IQD-paid surveys: respondents earn Bulbs only; the "cash" kind is
+    relabelled as Bulbs rewards the creator buys from The IDEA with IQD.
+  - Microsoft, Facebook and LinkedIn sign-in: the options are email and
+    password (with "email me a code"), Google, Apple and Telegram, with
+    instant student verification for university Google accounts.
+  - The Teal and Lime design tokens; `--chart-4` is Club Orange.
+  - The half-rate Bulbs rule (`store_settings.bulb_half_from`) and every
+    per-product and per-category `bulb_multiplier`: Bulbs are a flat rate
+    (the store's, or the Plus plan's) on the item subtotal;
+    `set_money_rules(rules jsonb)` takes one argument and Finance → Bulbs
+    edits only the money rules.
+
+  `'trade_in'` stays as an unused label in the `notification_kind` and
+  `bulb_kind` enums, since Postgres can't drop enum labels.
 
 - 2026-10-27: The bare domain is primary on every site (theideaiq.com,
   auibsal.org); `www` redirects to it with a 308. Vercel's dashboard

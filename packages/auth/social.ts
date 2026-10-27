@@ -2,31 +2,21 @@ import type { Database } from "@repo/database";
 import type { Provider, SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Signing in to The IDEA Pass with Google, Apple, Microsoft, Facebook or
- * LinkedIn (Supabase Auth's OAuth providers, PKCE). An address that
+ * Signing in to The IDEA Pass with Google or Apple (Supabase Auth's OAuth
+ * providers, PKCE). An address that
  * already has a Pass is linked to it when the provider says the address is
  * verified. Each provider shows only once it's set up in Supabase and named
  * in NEXT_PUBLIC_AUTH_PROVIDERS.
  */
 
-export const SOCIAL_PROVIDERS = [
-  "google",
-  "apple",
-  "azure",
-  "facebook",
-  "linkedin_oidc",
-] as const;
+export const SOCIAL_PROVIDERS = ["google", "apple"] as const;
 
 export type SocialProvider = (typeof SOCIAL_PROVIDERS)[number];
 
 /** What each provider is asked for: the email and the name, no more. */
 const SCOPES: Record<SocialProvider, string | undefined> = {
   apple: "name email",
-  // Microsoft: the email needs `email`; `openid profile` give the name.
-  azure: "openid email profile",
-  facebook: "email public_profile",
   google: undefined,
-  linkedin_oidc: "openid profile email",
 };
 
 /** The providers turned on (a comma-separated list, in the order given). */

@@ -12,7 +12,6 @@ export const whatsappTemplates = [
   "order_confirmed",
   "order_shipped",
   "rental_due_soon",
-  "trade_in_offer",
 ] as const;
 
 export type WhatsAppTemplate = (typeof whatsappTemplates)[number];

@@ -9,8 +9,7 @@ By using the service you agree to these terms and to the policies that complete 
 - [Returns and refunds](/legal/returns)
 - [Condition and warranty](/legal/condition)
 - [The IDEA Plus](/legal/plus)
-- [Rewards](/legal/rewards) (Bulbs, invites and affiliates)
-- [Sell to us](/legal/sell)
+- [Rewards](/legal/rewards) (Bulbs and invites)
 - [Club rules](/legal/club)
 - [Surveys](/legal/surveys)
 - [The IDEA Business](/legal/business)
@@ -30,7 +29,7 @@ The IDEA Pass is open to anyone aged 13 or over. People under 13 may not have Th
 | Games rated PEGI 18 and other mature items | No: hidden and not sold | Yes |
 | Game night kits | Booked by an adult | Yes |
 | Events | Yes; under-16s come with an adult | Yes |
-| Sell to us, affiliates, surveys and paid survey rewards | No | Yes |
+| Surveys, including rewarded surveys | No | Yes |
 
 **Guardians.** A guardian is an adult (18 or over) with their own The IDEA Pass. The teen adds the guardian in Pass → Settings, and the guardian approves the link from their own Pass. The guardian then approves each purchase and The IDEA Plus from their own Pass, and accepts these terms for the teen. A guardian can remove the link at any time; the teen's purchases then wait until a guardian is linked again.
 
@@ -40,8 +39,8 @@ We ask for a date of birth when you first sign in. Giving a false date of birth 
 
 The IDEA Pass is your membership: one per person, free, with your member card, Bulbs, orders and settings.
 
-- **Signing in.** You sign in with a one-time code sent to your email, or with "Continue with Telegram" once your Telegram is linked. There are no passwords. A new email address gets a new Pass.
-- **Keep it yours.** Never share a sign-in code: The IDEA will never ask you for one. Keep your email secure, because whoever controls it can sign in. Tell us at once at [hi@theideaiq.com](mailto:hi@theideaiq.com) if you think someone else has used your Pass.
+- **Signing in.** You sign in with your email and password, with a one-time code sent to your email ("Email me a code"), or with Google, Apple or Telegram. A new email address gets a new Pass.
+- **Keep it yours.** Never share your password or a sign-in code: The IDEA will never ask you for them. Keep your email secure, because whoever controls it can sign in. Tell us at once at [hi@theideaiq.com](mailto:hi@theideaiq.com) if you think someone else has used your Pass.
 - **The card.** Your card shows a QR code that changes every 30 seconds. It is for you; showing someone else's card at our counter or a partner is not allowed.
 - **Accurate details.** Keep your name, email and delivery details true and up to date.
 - **Verified Pass.** For some rentals and cash payments we check your identity (for example with a national ID card or passport). A Pass that passes this check is a "verified Pass". We may refuse a rental if the check fails.
@@ -55,7 +54,7 @@ We may suspend or close a Pass that breaks these terms, for example for fraud, a
 - **Prices.** The price you pay is calculated by our system at checkout, with any delivery fee, discount and Bulbs, and shown before you confirm. If a price or description is clearly wrong, we will contact you and you may cancel for a full refund.
 - **When an order is confirmed.** An order paid online is confirmed once the payment succeeds. A cash order is confirmed when you place it and paid on delivery or at pickup.
 - **Receipts.** Every order gets a receipt with the price, date and specifications of what you bought, in Pass → Orders and by email.
-- **Discounts.** At most 20% of an order's value is given away in discounts and rewards combined (invite or affiliate discounts, free delivery and the Bulbs it earns). When more would apply, the discount shrinks first, then the Bulbs earned.
+- **Discounts.** At most 20% of an order's value is given away in discounts and rewards combined (invite discounts, free delivery and the Bulbs it earns). When more would apply, the discount shrinks first, then the Bulbs earned.
 - **Personal use.** We sell to customers for their own use. We may limit quantities or cancel orders that look like reselling or fraud, with a full refund.
 
 Delivery, pickup and refused deliveries are covered in [Delivery](/legal/delivery); returns and refunds in [Returns and refunds](/legal/returns).
@@ -69,11 +68,10 @@ Delivery, pickup and refused deliveries are covered in [Delivery](/legal/deliver
 
 By paying, you authorise us and Wayl to charge the amount shown to you.
 
-## 6. Renting, Plus, rewards and selling to us
+## 6. Renting, Plus and rewards
 
 - [The IDEA Plus](/legal/plus) covers the membership, single-item rentals, game night kits and deposits.
-- [Rewards](/legal/rewards) covers Bulbs, invites and affiliates.
-- [Sell to us](/legal/sell) covers selling or trading in your items.
+- [Rewards](/legal/rewards) covers Bulbs and invites.
 
 Rented items always remain our property.
 

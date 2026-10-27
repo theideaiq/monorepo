@@ -46,14 +46,13 @@ describe("deleteAccount", () => {
     expect(deleteUser).not.toHaveBeenCalled();
   });
 
-  test("removes the avatar and trade-in folders, then the user", async () => {
+  test("removes the avatar folder, then the user", async () => {
     const { admin, bucket, deleteUser } = fakeAdmin();
 
     await expect(
       deleteAccount({ admin, user: fakeUser([]) }, USER_ID)
-    ).resolves.toEqual({ removedFiles: 2, status: "deleted" });
+    ).resolves.toEqual({ removedFiles: 1, status: "deleted" });
     expect(admin.storage.from).toHaveBeenCalledWith("avatars");
-    expect(admin.storage.from).toHaveBeenCalledWith("trade-ins");
     expect(bucket.remove).toHaveBeenCalledWith([`${USER_ID}/me.png`]);
     expect(deleteUser).toHaveBeenCalledWith(USER_ID);
   });

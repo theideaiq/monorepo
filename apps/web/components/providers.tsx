@@ -4,7 +4,6 @@ import { AuthProvider } from "@repo/auth/provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type ReactNode, useState } from "react";
 import { getSupabase } from "@/lib/browser-supabase";
-import { AffiliateToucher } from "./affiliate-toucher";
 import { InviteClaimer } from "./invite-claimer";
 import { NativeBridge } from "./native-bridge";
 
@@ -32,7 +31,6 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
       <AuthProvider client={supabase}>
         <NativeBridge />
         <InviteClaimer />
-        <AffiliateToucher />
         {children}
       </AuthProvider>
     </QueryClientProvider>

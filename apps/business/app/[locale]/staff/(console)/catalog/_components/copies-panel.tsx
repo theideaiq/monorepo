@@ -132,9 +132,6 @@ const CopyRow = ({ copy, disabled, ...defaults }: CopyRowProps) => {
         <span className="text-muted-foreground">
           {format.date(copy.acquired_at)}
         </span>
-        {copy.trade_in_id ? (
-          <Badge variant="outline">{t("copies.fromTradeIn")}</Badge>
-        ) : null}
       </div>
       <ActionForm action={saveCopy}>
         <input name="id" type="hidden" value={copy.id} />

@@ -30,7 +30,6 @@ export const saveProduct = staffAction(
   async ({ input, supabase }) => {
     const row = {
       age_rating: input.ageRating,
-      bulb_multiplier: input.bulbMultiplier,
       category_id: input.categoryId,
       compare_at_price: input.compareAtPrice,
       condition: input.condition,
@@ -389,30 +388,6 @@ export const deleteCopy = staffAction(
 );
 
 // ── Boxes ────────────────────────────────────────────────────────────────
-
-/** Makes a sale product a box (it starts as a draft until it has parts). */
-export const addBox = staffAction(
-  "catalog",
-  z.object({ minValue: int(0, 100_000_000), slug }),
-  async ({ input, supabase }) => {
-    const { data: product } = check(
-      await supabase
-        .from("products")
-        .select("id")
-        .eq("slug", input.slug)
-        .maybeSingle()
-    );
-    if (!product) {
-      throw new ActionFailure("notFound");
-    }
-    check(
-      await supabase
-        .from("boxes")
-        .insert({ min_value: input.minValue, product_id: product.id })
-    );
-    return success();
-  }
-);
 
 /** What the picked copies are worth at least, and the box's season. */
 export const saveBox = staffAction(

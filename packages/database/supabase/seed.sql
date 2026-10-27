@@ -132,8 +132,6 @@ update public.store_settings set
   pickup_hours_ar = 'السبت إلى الخميس، ١٠ صباحاً – ٩ مساءً',
   pickup_hours_en = 'Saturday to Thursday, 10 am – 9 pm';
 
--- Affiliate commission on media (see the affiliates migration).
-update public.product_categories set affiliate_rate = 8 where slug in ('books', 'music');
 
 -- Single-item rent rates (program revision v1, step 5a).
 insert into public.rental_rates (category_id, price, days, late_fee) values
@@ -178,4 +176,28 @@ on conflict (slug) do nothing;
 update public.product_variants v set attributes = '{"Format": "Vinyl"}'
 from public.products p
 where p.id = v.product_id and p.slug in ('kind-of-blue', 'rumours');
-select private.add_launch_boxes();
+
+-- The reading box (made by the boxes migration) with its pick slot and
+-- themes, live for the end-to-end journeys. No new boxes are made since
+-- program revision v2; production sells the ones left until their parts
+-- run out.
+update public.products
+set category_id = (select id from public.product_categories where slug = 'books')
+where slug = 'reading-box';
+insert into public.box_parts (box_id, category_id, quantity, position)
+select p.id, p.category_id, 3, 11
+from public.products p
+where p.slug = 'reading-box'
+  and not exists (select 1 from public.box_parts bp where bp.box_id = p.id);
+insert into public.box_themes (box_id, name_ar, name_en, position)
+select p.id, t.name_ar, t.name_en, t.position
+from public.products p, (values
+  ('روايات', 'Novels', 1),
+  ('أدب عربي', 'Arabic literature', 2),
+  ('أفكار وتاريخ', 'Ideas and history', 3),
+  ('فاجئني', 'Surprise me', 4)
+) as t (name_ar, name_en, position)
+where p.slug = 'reading-box'
+  and not exists (select 1 from public.box_themes bt where bt.box_id = p.id);
+update public.products set status = 'active'
+where slug = 'reading-box' and private.box_price_ok(id);

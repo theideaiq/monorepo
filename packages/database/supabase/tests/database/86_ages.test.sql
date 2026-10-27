@@ -50,7 +50,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(24);
+select plan(23);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 -- T is 15, G (T's guardian) is 40, Y is 16, K is 12 (no birthday yet).
@@ -223,12 +223,6 @@ select throws_ok(
 );
 
 -- ── 18+ actions ─────────────────────────────────────────────────────────────
-
-select throws_ok(
-  $$ select public.apply_affiliate('My channel') $$,
-  '23514', 'You need to be 18 or over',
-  'affiliates are 18+'
-);
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000862');
 select lives_ok(

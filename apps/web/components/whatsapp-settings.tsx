@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPhone } from "@repo/auth/phone";
+import { formatPhone, isIraqiMobile, normalizePhone } from "@repo/auth/phone";
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -18,7 +18,12 @@ import { useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { SectionSpinner } from "@/components/states";
 import { queryKeys, requireUserId, unwrap } from "@/lib/queries";
-import { contactPhone } from "@/lib/trade-ins";
+
+/** An Iraqi mobile number in E.164 (+964…), or null. */
+const contactPhone = (value: string) => {
+  const e164 = normalizePhone(value);
+  return e164 && isIraqiMobile(e164) ? e164 : null;
+};
 
 interface WhatsAppSettings {
   optIn: boolean;

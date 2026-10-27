@@ -1,12 +1,10 @@
 import { localized } from "@repo/commerce";
-import { Highlight } from "@repo/design-system/components/brand/highlight";
-import { PinkBand } from "@repo/design-system/components/brand/pink-band";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Input } from "@repo/design-system/components/ui/input";
 import { cn } from "@repo/design-system/lib/utils";
 import type { Locale } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
-import { HandCoins, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/page-hero";
@@ -14,7 +12,6 @@ import { Pagination } from "@/components/pagination";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
 import { getCategories, getFormats, getProducts, getRatings } from "@/lib/data";
-import { pagePath } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import {
   parseStoreQuery,
@@ -233,19 +230,6 @@ const Store = async ({ params, searchParams }: StoreProps) => {
           page={query.page}
         />
       </Section>
-
-      <PinkBand
-        action={
-          <Button asChild className="gap-2" size="lg" variant="brand">
-            <a href={pagePath(locale, "/pass/orders#sell")}>
-              <HandCoins aria-hidden="true" />
-              {t("store.sell.cta")}
-            </a>
-          </Button>
-        }
-        description={t("store.sell.description")}
-        title={<Highlight>{t("store.sell.title")}</Highlight>}
-      />
     </>
   );
 };

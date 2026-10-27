@@ -42,7 +42,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { AffiliateCodeCard } from "@/components/store/affiliate-code-card";
 import { OrderSummary } from "@/components/store/order-summary";
 import {
   type AddressField,
@@ -51,7 +50,6 @@ import {
   emptyAddress,
   validateAddress,
 } from "@/lib/address";
-import { useAffiliateReferrer } from "@/lib/affiliates";
 import { useMyBulbs } from "@/lib/bulbs-queries";
 import { freeDeliveryRemaining, summarizeCart } from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
@@ -729,9 +727,8 @@ const useCheckoutPricing = ({
 }) => {
   const bulbs = useMyBulbs();
   const availableBulbs = Math.max(0, bulbs.data?.available ?? 0);
-  // A new invite or affiliate code re-prices the order.
+  // A new invite re-prices the order.
   const invited = useInviteDiscount().data === true;
-  const affiliate = useAffiliateReferrer().data ?? null;
 
   const estimate =
     cart.data && settings.data ? summarizeCart(cart.data, settings.data) : null;
@@ -764,7 +761,7 @@ const useCheckoutPricing = ({
       useBulbs: useBulbs ? availableBulbs : 0,
       zoneId: zone?.id,
     }),
-    [cart.dataUpdatedAt, invited, affiliate]
+    [cart.dataUpdatedAt, invited]
   ).data;
   // Bulbs pay the whole order: nothing is left to pay, online or in cash.
   const paidWithBulbs = Boolean(
@@ -948,7 +945,6 @@ export const Checkout = () => {
                 zone={zone}
                 zones={zoneList}
               />
-              <AffiliateCodeCard busy={busy} />
               <BulbsCard
                 available={availableBulbs}
                 busy={busy}

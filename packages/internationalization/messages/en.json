@@ -323,7 +323,6 @@
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
         "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass.",
-        "sellToUs": "Have one? Sell it to us",
         "box": {
           "inside": "What's inside",
           "count": "{count} ×",
@@ -350,11 +349,6 @@
         "latest": "Latest reviews",
         "photoAlt": "Photo from {name}'s review",
         "photoBonus": "This reviewer earned 5 Bulbs for adding a photo."
-      },
-      "sell": {
-        "title": "Sell to us",
-        "description": "Records, CDs, games, books or tech you no longer need? Send us photos and we'll make you an offer in cash or store credit.",
-        "cta": "Get an offer"
       }
     },
     "plus": {
@@ -642,11 +636,7 @@
         },
         "rewards": {
           "title": "Rewards",
-          "description": "How Bulbs are earned, unlocked, spent and expire, and the rules for invites and affiliates."
-        },
-        "sell": {
-          "title": "Sell to us",
-          "description": "Who can sell to The IDEA, proof of ownership, offers, payment and what happens to declined items."
+          "description": "How Bulbs are earned, unlocked, spent and expire, and the rules for invites."
         },
         "club": {
           "title": "Club rules",
@@ -702,15 +692,6 @@
       "claimedBy": "{name} invited you: 10% off your first order (up to {cap}).",
       "notEligible": "This invite is for new members only. You can still shop and earn Bulbs.",
       "join": "Join with The IDEA Pass",
-      "shop": "Shop the store"
-    },
-    "affiliateLink": {
-      "title": "5% off at The IDEA",
-      "description": "A creator's link to The IDEA: 5% off your orders for 30 days.",
-      "offer": "Sign in with The IDEA Pass and your orders in the next 30 days get 5% off.",
-      "from": "{name}'s link: your orders in the next 30 days get 5% off.",
-      "invalid": "This link isn't active. You can still shop and earn Bulbs.",
-      "signIn": "Sign in with The IDEA Pass",
       "shop": "Shop the store"
     },
     "info": {
@@ -912,11 +893,11 @@
           "surveyKinds": {
             "free": "Give to get (free)",
             "bulbs": "Rewarded with my Bulbs",
-            "cash": "Rewarded, paid in IQD"
+            "cash": "Bulbs reward, bought from The IDEA"
           },
           "freeNote": "Each response uses one of your credits. You earn a credit for every survey you answer, and you start with 10.",
           "bulbsNote": "Each counted response earns {bulbs} Bulbs. {cost} Bulbs (with the 10% fee) are held when the survey opens; what isn't used comes back when it closes.",
-          "cashNote": "Each counted response earns {bulbs} Bulbs. You pay {cost} (with the 10% fee) and the survey opens once it's paid.",
+          "cashNote": "Respondents earn Bulbs only: {bulbs} Bulbs for each counted response. You buy them from The IDEA for {cost} (with the 10% fee) and the survey opens once it's paid.",
           "wanted": "Responses wanted",
           "minSeconds": "Minimum time (seconds)",
           "minSecondsNote": "Answers sent faster than this don't count.",
@@ -1043,11 +1024,9 @@
       "cartCount": "{count} in cart",
       "wishlist": "Wishlist",
       "support": "Support",
-      "sell": "Sell to us",
       "pass": "Your Pass",
       "bulbs": "Bulbs",
       "backOffice": "Back office",
-      "affiliate": "Invite & earn",
       "about": "About & info"
     },
     "roles": {
@@ -1169,8 +1148,7 @@
       "problems": "Fix the items marked below to check out.",
       "updateFailed": "We couldn't update your cart. Please try again.",
       "bulbs": "Bulbs ({bulbs})",
-      "discount": "Friend's invite",
-      "affiliateDiscount": "Affiliate discount"
+      "discount": "Friend's invite"
     },
     "checkout": {
       "title": "Checkout",
@@ -1262,14 +1240,6 @@
         "available": "You have {bulbs} Bulbs ({amount}).",
         "use": "Use my Bulbs on this order",
         "using": "Using {bulbs} Bulbs: {amount} off"
-      },
-      "affiliate": {
-        "title": "Have a code?",
-        "description": "A creator's code takes 5% off.",
-        "applied": "Code {code} from {name}: 5% off this order.",
-        "label": "Affiliate code",
-        "apply": "Apply",
-        "invalid": "That code isn't active."
       },
       "planDelivery": "Free delivery with your Plus plan.",
       "freeDeliveryNudge": "Add {amount} more for free delivery.",
@@ -1589,7 +1559,6 @@
         "invoices": "Invoices",
         "overview": "Overview",
         "plus": "The IDEA Plus",
-        "hiring": "Hiring",
         "perks": "Perks",
         "developers": "Developers"
       },
@@ -1635,8 +1604,7 @@
         "unpaidTotal": "{total} due",
         "plusSeats": "Members with The IDEA Plus",
         "plan": "The IDEA Business plan: {plan}",
-        "noPlan": "No The IDEA Business plan yet. See plans",
-        "candidatesToReview": "Candidates to review"
+        "noPlan": "No The IDEA Business plan yet. See plans"
       }
     },
     "onboarding": {
@@ -1728,11 +1696,11 @@
       },
       "whatsapp": {
         "title": "WhatsApp updates",
-        "description": "Get order, rental and trade-in updates on WhatsApp.",
+        "description": "Get order and rental updates on WhatsApp.",
         "phone": "WhatsApp number",
         "phonePlaceholder": "0770 123 4567",
         "optIn": "Send me updates on WhatsApp",
-        "optInHint": "Order confirmations, shipping, rental reminders and trade-in offers. Turn it off any time.",
+        "optInHint": "Order confirmations, shipping and rental reminders. Turn it off any time.",
         "problems": {
           "phone": "Enter a valid mobile number.",
           "phoneRequired": "Add your WhatsApp number to turn updates on."
@@ -2015,55 +1983,6 @@
         "copied": "Link copied"
       }
     },
-    "sell": {
-      "title": "Sell to us",
-      "description": "Have records, CDs, games, books or tech you no longer need? Tell us about them and we'll make you an offer in cash or store credit.",
-      "form": {
-        "title": "What are you selling?",
-        "description": "Add clear photos and an honest condition; we reply within a few days.",
-        "category": "Category",
-        "condition": "Condition",
-        "itemTitle": "Title",
-        "itemTitlePlaceholder": "Artist and album, game, book or model",
-        "itemDescription": "Details",
-        "itemDescriptionPlaceholder": "Edition, year, what's included, any marks or faults",
-        "askingPrice": "Your asking price (IQD)",
-        "askingPriceHint": "Optional. Leave it empty and we'll suggest a price.",
-        "phone": "Mobile number",
-        "phonePlaceholder": "0770 123 4567",
-        "phoneHint": "We call or message you about the offer.",
-        "payout": "Paid in",
-        "photos": "Photos",
-        "photosChosen": "{count} of {max} photos chosen.",
-        "photosHint": "Up to {max} photos (JPEG, PNG or WebP).",
-        "failed": "We couldn't send your request. Please try again.",
-        "submitted": "Thanks! We received your request and will get back to you.",
-        "submitting": "Sending…",
-        "submit": "Send for an offer"
-      },
-      "problems": {
-        "title": "Enter what you're selling.",
-        "phone": "Enter a valid mobile number.",
-        "askingPrice": "Enter the price as a whole number in IQD.",
-        "tooManyPhotos": "Choose up to {max} photos.",
-        "photoTooLarge": "Each photo must be smaller than the size limit.",
-        "photoType": "Photos must be JPEG, PNG or WebP."
-      },
-      "list": {
-        "title": "Your requests",
-        "empty": "You haven't sent anything yet.",
-        "photo": "Photo {number}",
-        "meta": "#{number} · {category} · {date}",
-        "asking": "Asking {price}",
-        "offer": "Our offer: {amount}",
-        "note": "Note from The IDEA",
-        "accept": "Accept the offer",
-        "decline": "Decline",
-        "withdraw": "Withdraw",
-        "withdrawing": "Withdrawing…",
-        "actionFailed": "That didn't work. Refresh and try again."
-      }
-    },
     "bulbs": {
       "title": "Bulbs",
       "available": "Bulbs you can use",
@@ -2075,10 +1994,8 @@
       "rules": {
         "value": "1 Bulb is worth 100 IQD.",
         "pending": "Bulbs from an order are usable {days} days after delivery (the return window); a cancelled or refunded order takes them back.",
-        "tradeIn": "Sell to us for store credit and it's paid in Bulbs, with 20% more than the cash offer.",
         "expiry": "Bulbs don't expire while you're active; after 12 months without any activity they do, and we remind you a month before.",
-        "spend": "Spend Bulbs at checkout: they pay up to the whole order, delivery included. A cancelled order gives them back.",
-        "half": "Consoles, laptops and items over {amount} earn half the rate."
+        "spend": "Spend Bulbs at checkout: they pay up to the whole order, delivery included. A cancelled order gives them back."
       },
       "historyTitle": "History",
       "empty": "No Bulbs yet. Your first order earns cashback and a 20-Bulb welcome bonus.",
@@ -2109,72 +2026,6 @@
       "share": "Share",
       "shareText": "Join The IDEA with my invite and get 10% off your first order.",
       "stats": "{invited} invited · {rewarded} rewarded"
-    },
-    "affiliate": {
-      "title": "Invite & earn",
-      "description": "Share The IDEA with your followers: they get 5% off, you earn on every delivered order.",
-      "apply": {
-        "title": "Become an affiliate",
-        "terms": "Earn 8% on vinyl, CDs and books, 3% on tech and consoles, and 20% of a new Plus member's first 3 months. Payouts are monthly from IQD 25,000, by ZainCash, FIB, Qi, bank transfer, or as Bulbs worth 20% more.",
-        "pitch": "Where will you share it?",
-        "pitchPlaceholder": "Your audience, your platform, how often you post…",
-        "channel": "Link to your page (optional)",
-        "submit": "Apply",
-        "failed": "We couldn't send your application. Try again.",
-        "channelPlaceholder": "instagram.com/…"
-      },
-      "reviewing": "Thanks for applying. Our team is reviewing your application and will let you know.",
-      "rejected": "Your application wasn't approved this time.",
-      "suspended": "Your affiliate link is paused. Contact support to find out more.",
-      "link": {
-        "title": "Your link and code",
-        "description": "Followers who use your link or type your code at checkout get 5% off for 30 days. The last link or code they used counts.",
-        "copy": "Copy",
-        "copied": "Copied",
-        "share": "Share",
-        "code": "Checkout code:"
-      },
-      "shareText": "Get 5% off at The IDEA with my code {code}.",
-      "balance": {
-        "ready": "Ready to pay",
-        "holding": "In the return window",
-        "paid": "Paid so far",
-        "summary": "{orders} orders · {plus} Plus members. Paid monthly once you reach {minimum}."
-      },
-      "payout": {
-        "title": "How you're paid",
-        "method": "Payout method",
-        "bulbsBonus": "Bulbs payouts are worth 20% more, credited at once.",
-        "wallet": "Wallet phone number",
-        "iban": "IBAN",
-        "save": "Save",
-        "saved": "Saved",
-        "failed": "We couldn't save that. Check the details and try again."
-      },
-      "methods": {
-        "bulbs": "Bulbs (+20%)",
-        "zaincash": "ZainCash",
-        "fib": "FIB",
-        "qi": "Qi Card",
-        "bank": "Bank transfer"
-      },
-      "commissions": "Commissions",
-      "noCommissions": "No commissions yet. Share your link to get started.",
-      "payouts": "Payouts",
-      "kinds": {
-        "order": "Order delivered",
-        "plus": "Plus membership",
-        "clawback": "Returned order"
-      },
-      "states": {
-        "holding": "Pending",
-        "ready": "Ready",
-        "paid": "Paid",
-        "void": "Voided"
-      },
-      "readyFrom": "ready from {date}",
-      "bulbsCredited": "{bulbs} Bulbs",
-      "programTitle": "Affiliate program"
     },
     "company": {
       "status": {
@@ -2309,66 +2160,6 @@
           "quote": "Quote #{number}",
           "order": "Purchase order #{number}",
           "invoice": "Invoice #{number}"
-        }
-      },
-      "hiring": {
-        "title": "Hiring",
-        "description": "Tell us who you're looking for. We find and vet candidates and send them to you; you shortlist, reject or hire.",
-        "managersOnly": "Owners and admins post jobs and decide on candidates.",
-        "jobs": "Jobs",
-        "empty": "No jobs yet.",
-        "number": "Job #{number}",
-        "toReview": "{count} to review",
-        "notFound": "This job isn't in this company.",
-        "awaiting": "We're looking for candidates. You'll get a notification for each one.",
-        "proposedOn": "proposed {date}",
-        "cv": "Open CV",
-        "note": "Note for The IDEA (optional)",
-        "notePlaceholder": "For example: interview on Sunday",
-        "shortlist": "Shortlist",
-        "hire": "Hire",
-        "reject": "Reject",
-        "decideError": "That didn't work. The job may already be filled or closed.",
-        "yourNote": "Your note: {note}",
-        "close": "Close this job",
-        "openings": "{count} to hire",
-        "salary": "{min} – {max} a month",
-        "salaryFrom": "From {min} a month",
-        "salaryUpTo": "Up to {max} a month",
-        "types": {
-          "full_time": "Full time",
-          "part_time": "Part time",
-          "contract": "Contract",
-          "internship": "Internship"
-        },
-        "status": {
-          "job": {
-            "open": "Open",
-            "filled": "Filled",
-            "closed": "Closed"
-          },
-          "candidate": {
-            "proposed": "New",
-            "shortlisted": "Shortlisted",
-            "rejected": "Rejected",
-            "hired": "Hired",
-            "withdrawn": "Withdrawn"
-          }
-        },
-        "new": {
-          "title": "New job",
-          "description": "Any role, from one hire to a team.",
-          "role": "Role",
-          "rolePlaceholder": "For example: Accountant",
-          "details": "Details",
-          "detailsPlaceholder": "Responsibilities, experience, languages, working hours…",
-          "location": "Location",
-          "type": "Contract",
-          "salaryMin": "Salary from (IQD a month, optional)",
-          "salaryMax": "Salary up to (IQD a month, optional)",
-          "openings": "How many people",
-          "send": "Post the job",
-          "error": "The job couldn't be posted. Check the salary range and try again."
         }
       },
       "perks": {
@@ -2690,18 +2481,6 @@
           "title": "Ready for pickup",
           "body": "Order #{number} is ready to collect from the store."
         },
-        "trade_in_offer": {
-          "title": "We made you an offer",
-          "body": "Our offer for request #{number}, {title}: {amount}. Open it to accept or decline."
-        },
-        "trade_in_rejected": {
-          "title": "About your item",
-          "body": "We can't take {title} this time. See the note in your request."
-        },
-        "trade_in_completed": {
-          "title": "Trade-in completed",
-          "body": "Thank you! The trade-in of {title} is complete."
-        },
         "rental_due_soon": {
           "title": "Rental due soon",
           "body": "{name} is due back{hasDue, select, yes { on {due}} other {}}."
@@ -2709,14 +2488,6 @@
         "bulbs_expiring": {
           "title": "Your Bulbs expire soon",
           "body": "Your {bulbs} Bulbs expire on {date}. Any order or activity keeps them."
-        },
-        "affiliate_approved": {
-          "title": "You're an affiliate",
-          "body": "Your code is {code}. Share your link from Your Pass and earn on every delivered order."
-        },
-        "affiliate_paid": {
-          "title": "Affiliate payout sent",
-          "body": "{hasBulbs, select, yes {We've added {bulbs} Bulbs for your {amount} in commissions.} other {We've sent {amount} in commissions.}}"
         },
         "bulbs_birthday": {
           "title": "Happy birthday from The IDEA",
@@ -2733,10 +2504,6 @@
         "plus_seat_active": {
           "title": "The IDEA Plus from your company",
           "body": "Your company gave you The IDEA Plus ({plan}). Start renting."
-        },
-        "candidate_proposed": {
-          "title": "New candidate",
-          "body": "{name} for {title}. Open it to review."
         },
         "guardian_order_request": {
           "title": "An order to approve",
@@ -2824,37 +2591,6 @@
       "cash_on_delivery": "Cash on delivery",
       "cash_at_pickup": "Pay at pickup"
     },
-    "tradeIn": {
-      "category": {
-        "vinyl": "Vinyl record",
-        "cd_cassette": "CD or cassette",
-        "game": "Video game",
-        "book": "Book",
-        "console_tech": "Console or tech",
-        "other": "Something else"
-      },
-      "condition": {
-        "sealed": "Sealed",
-        "like_new": "Like new",
-        "good": "Good",
-        "fair": "Fair",
-        "poor": "Worn"
-      },
-      "payout": {
-        "cash": "Cash",
-        "store_credit": "Store credit"
-      },
-      "status": {
-        "submitted": "Received",
-        "reviewing": "Being reviewed",
-        "offer_made": "Offer made",
-        "accepted": "Offer accepted",
-        "declined": "Offer declined",
-        "completed": "Completed",
-        "rejected": "Not accepted",
-        "withdrawn": "Withdrawn"
-      }
-    },
     "whatsapp": {
       "customer": "there",
       "noTracking": "we'll send it soon"
@@ -2891,8 +2627,6 @@
       "audit": "Audit log",
       "support": "Support",
       "reviews": "Reviews",
-      "tradeIns": "Trade-ins",
-      "affiliates": "Affiliates",
       "counter": "Counter",
       "companies": "Companies"
     },
@@ -3028,12 +2762,9 @@
           "orders": "Orders to prepare or ship",
           "rentalRequests": "Rental requests",
           "overdueRentals": "Overdue rentals",
-          "tradeIns": "New \"Sell to us\" requests",
           "submissions": "Submissions to review",
           "telegram": "Telegram requests",
-          "affiliates": "Affiliate applications",
           "procurement": "New procurement requests to quote",
-          "jobs": "Open jobs with no candidates yet",
           "seats": "The IDEA Plus seats to approve",
           "invoices": "Overdue company invoices",
           "surveys": "Surveys to review",
@@ -3103,8 +2834,6 @@
         "anyPlan": "Any The IDEA Plus plan",
         "tierOption": "Tier {tier}: {names}",
         "unknownTier": "No plan at this tier",
-        "bulbMultiplier": "Bulbs multiplier",
-        "bulbMultiplierHint": "0.5 earns half the rate (consoles). Empty for the category's.",
         "ageRating": "Age rating (PEGI)",
         "ageRatingHint": "Shown on the product page; PEGI 18 items will be hidden from under-18 Passes."
       },
@@ -3360,7 +3089,6 @@
         "note": "Note",
         "empty": "No copies yet.",
         "summary": "{available} available of {total}",
-        "fromTradeIn": "From a trade-in",
         "purposes": {
           "sale": "For sale",
           "rental": "For rent (Plus)",
@@ -3376,14 +3104,11 @@
         }
       },
       "boxes": {
-        "description": "Store products built from parts: in stock while their parts are, packed to the theme the customer picks.",
-        "empty": "No boxes yet.",
-        "new": "New box",
-        "newDescription": "Create the product first (for sale, as a draft), then make it a box here by its slug.",
+        "description": "The boxes still on sale, each in stock while its parts are and packed to the theme the customer picks. No new boxes are made; a box leaves the store when its parts sell out.",
+        "empty": "No boxes left.",
         "productSlug": "Product slug",
         "minValue": "Picked items worth at least (IQD)",
         "minValueHint": "What the copies staff pick must be worth together, per box.",
-        "add": "Make it a box",
         "season": "Season",
         "seasons": {
           "none": "All year",
@@ -3483,8 +3208,7 @@
       },
       "bulbs": "Paid with {bulbs} Bulbs",
       "discounts": {
-        "invite": "Friend's invite",
-        "affiliate": "Affiliate code"
+        "invite": "Friend's invite"
       },
       "boxy": {
         "title": "Delivery with Boxy",
@@ -3801,7 +3525,7 @@
         "kinds": {
           "free": "Give to get",
           "bulbs": "Rewarded in Bulbs",
-          "cash": "Rewarded, paid in IQD"
+          "cash": "Bulbs reward, bought with IQD"
         },
         "wanted": "{count} responses wanted",
         "wasOpen": "was open",
@@ -3948,21 +3672,17 @@
         "hint": "Changes apply to orders placed or delivered from now on. Plus plans set their own Bulbs rate and free delivery in Catalog → Plans; zones set when delivery is free in Catalog → Settings.",
         "bulbRate": "Bulbs back for every Pass holder (%)",
         "bulbRateHint": "Plus members earn their plan's rate instead.",
-        "bulbHalfFrom": "Half rate above (IQD)",
-        "bulbHalfFromHint": "Items priced above this earn half the rate.",
         "returnDays": "Return window (days)",
-        "returnDaysHint": "Order and invite Bulbs and affiliate commissions wait this long after delivery.",
+        "returnDaysHint": "Order and invite Bulbs wait this long after delivery.",
         "maxGiveawayRate": "Most an order gives away (%)",
-        "maxGiveawayRateHint": "Discount, free delivery, affiliate commission and Bulbs together, as a share of the subtotal. The discount shrinks first, then the Bulbs.",
+        "maxGiveawayRateHint": "Discount, free delivery and Bulbs together, as a share of the subtotal. The discount shrinks first, then the Bulbs.",
         "cashLimit": "Cash on delivery up to (IQD)",
         "cashLimitHint": "Larger orders are paid online or at pickup. Empty for no limit.",
         "priceCheck": "Price check",
         "priceCheckHint": "A price passes when it leaves at least the margin after the copy's cost, the payment fee, one delivery and the most an order gives away.",
         "paymentFeeRate": "Online payment fee (%)",
         "deliveryCost": "What a delivery costs us (IQD)",
-        "minMarginRate": "Margin floor (%)",
-        "multipliers": "Category multipliers",
-        "multipliersHint": "1 earns the full rate, 0.5 half (laptops), 0 nothing. A product can set its own (consoles earn half)."
+        "minMarginRate": "Margin floor (%)"
       },
       "prices": {
         "description": "Copies for sale with no cost, or whose price leaves less than the margin floor after the cost, the payment fee, a delivery and the most an order gives away. Worst first; enter costs on each product's copies.",
@@ -4387,130 +4107,6 @@
       "unhide": "Publish",
       "deleteDescription": "The review is removed for good. To take it off the store but keep it, hide it instead."
     },
-    "tradeIns": {
-      "title": "Trade-ins",
-      "detail": "Trade-in",
-      "count": "Total: {count}",
-      "search": "Request number or title",
-      "status": "Status",
-      "views": {
-        "open": "Open (waiting on us or the customer)",
-        "waiting": "Waiting on us",
-        "all": "All requests"
-      },
-      "category": "Category",
-      "anyCategory": "All categories",
-      "empty": "No requests match.",
-      "request": "Request",
-      "customer": "Customer",
-      "asking": "Asking",
-      "offer": "Offer",
-      "received": "Received",
-      "number": "#{number}",
-      "photoCount": "{count} photos",
-      "unnamedCustomer": "Customer",
-      "receivedOn": "Received {date}",
-      "item": "Item",
-      "condition": "Condition",
-      "payout": "Paid in",
-      "noAskingPrice": "No price given",
-      "photos": "Photos",
-      "noPhotos": "No photos.",
-      "photoAlt": "Photo {number}",
-      "photoMissing": "This photo couldn't be loaded.",
-      "details": "Details",
-      "phone": "Phone",
-      "noOffer": "No offer yet.",
-      "offeredAt": "Offered",
-      "reviewedBy": "Reviewed by",
-      "unnamedStaff": "Staff",
-      "product": "Product",
-      "draftProduct": "Draft product created from this request",
-      "noteToCustomer": "Note to the customer",
-      "manage": "Review",
-      "settled": "This request is closed.",
-      "reviewHint": "Let the customer know you're looking at it.",
-      "markReviewing": "Start review",
-      "amountHint": "Whole dinars. The customer is notified and can accept or decline.",
-      "amount": "Offer (IQD)",
-      "offerNoteHint": "Optional: why this price, how to bring the item in.",
-      "makeOffer": "Make offer",
-      "reviseOffer": "Revise offer",
-      "completeHint": "Once you have the item and the customer is paid.",
-      "createProductHint": "Adds a draft product with the title, condition and photos, to price and publish later.",
-      "createProduct": "Create a draft product",
-      "complete": "Mark completed",
-      "rejectHint": "If you can't take the item. The customer sees the reason.",
-      "rejectReason": "Reason",
-      "reject": "Decline the item"
-    },
-    "affiliates": {
-      "title": "Affiliates",
-      "detail": "Affiliate",
-      "count": "{count} affiliates",
-      "empty": "No affiliates here.",
-      "status": "Status",
-      "member": "Member",
-      "code": "Code",
-      "ready": "Ready to pay",
-      "holding": "In the return window",
-      "paid": "Paid",
-      "applied": "Applied",
-      "unnamed": "Unnamed member",
-      "appliedOn": "Applied {date}",
-      "statuses": {
-        "applied": "Applications",
-        "approved": "Approved",
-        "rejected": "Rejected",
-        "suspended": "Suspended",
-        "all": "All"
-      },
-      "application": "Application",
-      "pitch": "Where they'll share",
-      "channel": "Page",
-      "decidedBy": "Decided by",
-      "decide": "Decision",
-      "decision": "Decision",
-      "decisions": {
-        "approved": "Approve",
-        "rejected": "Reject",
-        "suspended": "Suspend"
-      },
-      "codeHint": "4 to 20 letters and digits. Followers type it at checkout; their link is theideaiq.com/r/ followed by the code.",
-      "note": "Note to the member",
-      "noteHint": "Shown to them when an application is rejected.",
-      "balance": "Balance",
-      "payoutMethod": "Paid by",
-      "reference": "Transfer reference",
-      "referenceHint": "The ZainCash, FIB, Qi or bank reference of the transfer you've sent.",
-      "payBulbsHint": "Paid as Bulbs, with 20% more value, credited at once.",
-      "recordPayout": "Record payout of everything ready",
-      "payoutRule": "Payouts are monthly, from {minimum} ready to pay.",
-      "commissions": "Commissions",
-      "noCommissions": "No commissions yet.",
-      "payouts": "Payouts",
-      "kind": "Kind",
-      "amount": "Amount",
-      "date": "Date",
-      "method": "Method",
-      "bulbsCredited": "{bulbs} Bulbs",
-      "kinds": {
-        "order": "Order delivered",
-        "plus": "Plus membership",
-        "clawback": "Clawback"
-      },
-      "states": {
-        "holding": "In the return window",
-        "ready": "Ready",
-        "paid": "Paid",
-        "void": "Voided"
-      },
-      "rates": {
-        "title": "Commission rates",
-        "hint": "Percent of the price after the follower's 5% discount, by category. Finance sets them."
-      },
-      "saveDecision": "Save decision"
-    },
     "navGroups": {
       "today": "Today",
       "sales": "Sales",
@@ -4536,9 +4132,7 @@
       "tickets": "Support tickets",
       "ticket": "Ticket #{number}",
       "requests": "Procurement requests",
-      "request": "Request #{number}",
-      "jobs": "Jobs",
-      "job": "Job #{number}"
+      "request": "Request #{number}"
     },
     "counter": {
       "title": "Counter",
@@ -4601,7 +4195,6 @@
         "orders": "Purchase orders",
         "invoices": "Invoices",
         "seats": "The IDEA Plus seats",
-        "hiring": "Hiring",
         "perks": "Perks",
         "signIn": "Sign in with the Pass"
       },
@@ -4667,35 +4260,6 @@
         "due": "Due",
         "markPaid": "Mark paid",
         "void": "Void"
-      },
-      "hiring": {
-        "title": "Hiring",
-        "description": "Companies' job requests. Propose vetted candidates with their CV; the company shortlists, rejects or hires.",
-        "empty": "No jobs yet.",
-        "job": "Job",
-        "number": "Job #{number}",
-        "company": "Company",
-        "status": "Status",
-        "candidates": "Candidates",
-        "posted": "Posted",
-        "noCandidates": "No candidates proposed yet.",
-        "openCv": "Open CV",
-        "companyNote": "The company's note: {note}",
-        "withdraw": "Withdraw",
-        "propose": "Propose a candidate",
-        "details": "Details",
-        "type": "Contract",
-        "location": "Location",
-        "salary": "Salary (a month)",
-        "openings": "To hire",
-        "close": "Close the job",
-        "fullName": "Full name",
-        "headline": "Headline",
-        "summary": "Summary",
-        "cv": "CV (PDF)",
-        "uploading": "Uploading…",
-        "uploadError": "The CV couldn't be uploaded. PDF only, up to 10 MB.",
-        "uploaded": "CV uploaded."
       },
       "perks": {
         "title": "Partner perks",
@@ -4837,7 +4401,6 @@
         "joinPlus": "Join The IDEA Plus to rent games and more",
         "delivery": "Every order and delivery, tracked here",
         "events": "Events and meetups, RSVP in a tap",
-        "sell": "Sell or trade in what you no longer use",
         "bulbs": "{bulbs} Bulbs, {rate}% back on every order",
         "freeDelivery": "Free Store delivery in Baghdad on every order",
         "freeDeliveryFrom": "Free delivery in Baghdad from {amount}",

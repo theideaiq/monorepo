@@ -47,53 +47,45 @@ const search = async (
     allowed ? query() : Promise.resolve({ data: null });
   const searchable = Boolean(term);
 
-  const [orders, members, products, tickets, requests, jobs] =
-    await Promise.all([
-      when(can.orders && number !== null, () =>
-        supabase
-          .from("orders")
-          .select("id, number, status, total")
-          .eq("number", number ?? 0)
-          .limit(LIMIT)
-      ),
-      when(can.customers && searchable, () =>
-        supabase
-          .from("profiles")
-          .select("id, full_name, member_number")
-          .or(number ? `member_number.eq.${number}` : `full_name.ilike.${like}`)
-          .limit(LIMIT)
-      ),
-      when(can.catalog && searchable, () =>
-        supabase
-          .from("products")
-          .select("id, name_en, name_ar, kind")
-          .or(`name_en.ilike.${like},name_ar.ilike.${like},slug.ilike.${like}`)
-          .limit(LIMIT)
-      ),
-      when(can.support && searchable, () =>
-        supabase
-          .from("support_tickets")
-          .select("id, number, subject, status")
-          .or(numberOr("subject"))
-          .limit(LIMIT)
-      ),
-      when(can.companies && searchable, () =>
-        supabase
-          .from("procurement_requests")
-          .select("id, number, title, organizations (name)")
-          .or(numberOr("title"))
-          .limit(LIMIT)
-      ),
-      when(can.companies && searchable, () =>
-        supabase
-          .from("job_requests")
-          .select("id, number, title, organizations (name)")
-          .or(numberOr("title"))
-          .limit(LIMIT)
-      ),
-    ]);
+  const [orders, members, products, tickets, requests] = await Promise.all([
+    when(can.orders && number !== null, () =>
+      supabase
+        .from("orders")
+        .select("id, number, status, total")
+        .eq("number", number ?? 0)
+        .limit(LIMIT)
+    ),
+    when(can.customers && searchable, () =>
+      supabase
+        .from("profiles")
+        .select("id, full_name, member_number")
+        .or(number ? `member_number.eq.${number}` : `full_name.ilike.${like}`)
+        .limit(LIMIT)
+    ),
+    when(can.catalog && searchable, () =>
+      supabase
+        .from("products")
+        .select("id, name_en, name_ar, kind")
+        .or(`name_en.ilike.${like},name_ar.ilike.${like},slug.ilike.${like}`)
+        .limit(LIMIT)
+    ),
+    when(can.support && searchable, () =>
+      supabase
+        .from("support_tickets")
+        .select("id, number, subject, status")
+        .or(numberOr("subject"))
+        .limit(LIMIT)
+    ),
+    when(can.companies && searchable, () =>
+      supabase
+        .from("procurement_requests")
+        .select("id, number, title, organizations (name)")
+        .or(numberOr("title"))
+        .limit(LIMIT)
+    ),
+  ]);
 
-  return { jobs, members, orders, products, requests, tickets };
+  return { members, orders, products, requests, tickets };
 };
 
 /** Search across the back office, grouped by section. */
@@ -168,16 +160,6 @@ const SearchPage = async ({
           })),
           id: "requests",
           title: t("requests"),
-        },
-        {
-          hits: (found.jobs.data ?? []).map((row) => ({
-            detail: row.organizations?.name,
-            href: `/companies/hiring/${row.id}`,
-            id: row.id,
-            label: `${t("job", { number: String(row.number) })} · ${row.title}`,
-          })),
-          id: "jobs",
-          title: t("jobs"),
         },
       ].filter((group) => group.hits.length > 0)
     : [];

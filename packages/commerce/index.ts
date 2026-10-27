@@ -186,7 +186,7 @@ export const BULB_VALUE_IQD = 100;
 export const INVITE_DISCOUNT_CAP = 15_000;
 
 /** What takes money off an order (`orders.discount_source`). */
-export type DiscountSource = "affiliate" | "invite";
+export type DiscountSource = "invite";
 
 /**
  * The delivery fee, mirroring `price_checkout()`: pickup is free; delivery
@@ -273,8 +273,7 @@ export const toCheckoutQuote = (json: unknown): CheckoutQuote => {
     bulbsUsed: toNumber(row.bulbs_used),
     deliveryWaived: toNumber(row.delivery_waived),
     discount: toNumber(row.discount),
-    discountSource:
-      source === "affiliate" || source === "invite" ? source : null,
+    discountSource: source === "invite" ? source : null,
     freeDelivery: free === "plan" || free === "threshold" ? free : null,
     freeFrom:
       row.free_from === null || row.free_from === undefined

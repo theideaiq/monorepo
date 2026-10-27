@@ -19,7 +19,6 @@ import { formatters } from "@/lib/admin/format";
 import { requireSection } from "@/lib/admin/session";
 import { CatalogTabs } from "../_components/catalog-tabs";
 import {
-  AddBoxForm,
   AddPartForms,
   AddThemeForm,
   BoxSettingsForm,
@@ -195,9 +194,10 @@ const BoxPanel = ({
 };
 
 /**
- * Boxes: Store products built from parts. Each lists its fixed products and
- * the slots staff fill when packing, the themes customers pick, and its
- * price against the parts (10–15% below to go on sale).
+ * Boxes: Store products built from parts, sold until their parts run out
+ * (no new boxes are made). Each lists its fixed products and the slots
+ * staff fill when packing, the themes customers pick, and its price against
+ * the parts (10–15% below to go on sale).
  */
 const BoxesPage = async () => {
   const { canWrite, supabase } = await requireSection("catalog");
@@ -235,11 +235,6 @@ const BoxesPage = async () => {
             t={t}
           />
         ))}
-        {canWrite ? (
-          <Panel description={t("newDescription")} title={t("new")}>
-            <AddBoxForm />
-          </Panel>
-        ) : null}
       </PageBody>
     </>
   );

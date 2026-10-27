@@ -13,7 +13,6 @@ import {
   type LucideIcon,
   PackageSearchIcon,
   ReceiptIcon,
-  UsersIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { BusinessShell } from "@/components/business/business-shell";
@@ -56,7 +55,7 @@ const Tile = ({
   </Link>
 );
 
-/** What needs the company's attention: quotes, candidates, requests, invoices, Plus, plan. */
+/** What needs the company's attention: quotes, requests, invoices, Plus, plan. */
 const Overview = () => {
   const t = useTranslations("app.business.overview");
   const locale = useLocale();
@@ -86,12 +85,6 @@ const Overview = () => {
           icon={FileTextIcon}
           label={t("quotesToAnswer")}
           value={formatNumber(data.quotesToAnswer, locale)}
-        />
-        <Tile
-          href="/hiring"
-          icon={UsersIcon}
-          label={t("candidatesToReview")}
-          value={formatNumber(data.candidatesToReview, locale)}
         />
         <Tile
           href="/procurement"

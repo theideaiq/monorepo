@@ -12,7 +12,7 @@ describe("ages", () => {
       "needsBirthday"
     );
     expect(toAgeError(apiError("guardian_required"))).toBe("guardianRequired");
-    expect(toAgeError(dbError("Too many open trade-in requests"))).toBeNull();
+    expect(toAgeError(dbError("Not enough stock"))).toBeNull();
   });
 
   test("checkout explains a teen's missing guardian and PEGI 18 items", () => {

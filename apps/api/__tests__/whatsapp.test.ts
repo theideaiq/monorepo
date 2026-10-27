@@ -204,23 +204,6 @@ describe("templateMessage", () => {
     expect(result?.parameters[2]).toContain("2026");
   });
 
-  test("trade-in offer: request number, item and amount", () => {
-    const result = templateMessage(
-      notification({
-        data: { amount: 25_000, number: 5001, title: "Kind of Blue" },
-        event: "trade_in_offer",
-      }),
-      "ar"
-    );
-    expect(result?.template).toBe("trade_in_offer");
-    expect(result?.parameters.slice(0, 3)).toEqual([
-      "Uday",
-      "#5001",
-      "Kind of Blue",
-    ]);
-    expect(result?.parameters[3]).toContain("25,000");
-  });
-
   test("Kurdish uses the fallback language", () => {
     expect(templateLanguage("ckb", "ar")).toBe("ar");
     expect(templateLanguage("ckb", "en")).toBe("en");
@@ -235,12 +218,6 @@ describe("templateMessage", () => {
       templateMessage(notification({ data: { number: 1 }, phone: null }), "ar")
     ).toBeNull();
     expect(templateMessage(notification({ data: {} }), "ar")).toBeNull();
-    expect(
-      templateMessage(
-        notification({ data: { number: 5001 }, event: "trade_in_offer" }),
-        "ar"
-      )
-    ).toBeNull();
   });
 });
 
