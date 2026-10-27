@@ -53,6 +53,7 @@ import {
   useProducts,
   useStoreSettings,
 } from "@/lib/store-queries";
+import { useMyStudent } from "@/lib/student-queries";
 
 type Weekend = ReturnType<typeof useKitWeekends>["data"] extends
   | (infer W)[]
@@ -283,7 +284,7 @@ const KitSummary = ({
           </div>
         </dl>
         <ul className="grid gap-1 text-muted-foreground text-xs">
-          <li>{t("depositNote")}</li>
+          <li>{deposit > 0 ? t("depositNote") : t("noDepositNote")}</li>
           <li>{t("adultsNote")}</li>
         </ul>
         {error ? (
@@ -345,6 +346,8 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
   const { user } = useAuth();
   const data = useKitData(kit);
   const place = usePlaceKit();
+  // Verified students book without the deposit (book_kit() waives it).
+  const isStudent = useMyStudent().data?.verified ?? false;
   const [startsOn, setStartsOn] = useState<string | null>(null);
   const [extraDays, setExtraDays] = useState(0);
   const [games, setGames] = useState<string[]>([]);
@@ -471,7 +474,7 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
             <KitSummary
               busy={busy}
               cash={cash}
-              deposit={type.deposit}
+              deposit={isStudent ? 0 : type.deposit}
               error={error}
               extraDays={extraDays}
               name={localized(type, "name", locale)}

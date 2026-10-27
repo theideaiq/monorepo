@@ -57,6 +57,8 @@ export const NOTIFICATION_EVENTS = [
   "plus_invite",
   "plus_swap_booked",
   "plus_swap_done",
+  "student_verified",
+  "student_rejected",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -171,6 +173,10 @@ const extraValues: Partial<
   plus_invite: (data) => ({ hours: text(data.hours) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
   quote_sent: quoteValues,
+  student_verified: (data, locale) => {
+    const until = text(data.until);
+    return { date: until ? formatDate(`${until}T12:00:00`, locale) : "" };
+  },
 };
 
 /**

@@ -224,3 +224,67 @@ export const closeJob = staffAction(
     return success();
   }
 );
+
+// ── Partner perks ────────────────────────────────────────────────────────
+
+const PERK_KINDS = [
+  "cafe",
+  "books",
+  "print",
+  "gaming",
+  "cinema",
+  "music",
+  "repair",
+  "courses",
+  "other",
+] as const;
+
+/** Adds a perk a partner (an organization in The IDEA Business) offers. */
+export const addPerk = staffAction(
+  "companies",
+  z.object({
+    areaAr: optionalText(120),
+    areaEn: optionalText(120),
+    audience: z.enum(["everyone", "students", "plus"]),
+    detailsAr: optionalText(1000),
+    detailsEn: optionalText(1000),
+    kind: z.enum(PERK_KINDS),
+    organization: uuid,
+    partnerName: text(120),
+    titleAr: text(120),
+    titleEn: text(120),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.from("perks").insert({
+        area_ar: input.areaAr ?? "",
+        area_en: input.areaEn ?? "",
+        audience: input.audience,
+        details_ar: input.detailsAr ?? "",
+        details_en: input.detailsEn ?? "",
+        kind: input.kind,
+        organization_id: input.organization,
+        partner_name: input.partnerName,
+        title_ar: input.titleAr,
+        title_en: input.titleEn,
+      })
+    );
+    return success();
+  }
+);
+
+/** Offers a perk again, or stops offering it. */
+export const setPerkActive = staffAction(
+  "companies",
+  z.object({ active: z.enum(["true", "false"]), id: uuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("perks")
+        .update({ active: input.active === "true" })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success();
+  }
+);

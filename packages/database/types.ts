@@ -1705,6 +1705,103 @@ export type Database = {
           },
         ];
       };
+      perk_redemptions: {
+        Row: {
+          created_at: string;
+          id: string;
+          perk_id: string;
+          redeemed_by: string | null;
+          redeemed_on: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          perk_id: string;
+          redeemed_by?: string | null;
+          redeemed_on?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          perk_id?: string;
+          redeemed_by?: string | null;
+          redeemed_on?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "perk_redemptions_perk_id_fkey";
+            columns: ["perk_id"];
+            isOneToOne: false;
+            referencedRelation: "perks";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      perks: {
+        Row: {
+          active: boolean;
+          area_ar: string;
+          area_en: string;
+          audience: string;
+          created_at: string;
+          details_ar: string;
+          details_en: string;
+          id: string;
+          kind: string;
+          organization_id: string;
+          partner_name: string;
+          position: number;
+          title_ar: string;
+          title_en: string;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          area_ar?: string;
+          area_en?: string;
+          audience?: string;
+          created_at?: string;
+          details_ar?: string;
+          details_en?: string;
+          id?: string;
+          kind?: string;
+          organization_id: string;
+          partner_name: string;
+          position?: number;
+          title_ar: string;
+          title_en: string;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          area_ar?: string;
+          area_en?: string;
+          audience?: string;
+          created_at?: string;
+          details_ar?: string;
+          details_en?: string;
+          id?: string;
+          kind?: string;
+          organization_id?: string;
+          partner_name?: string;
+          position?: number;
+          title_ar?: string;
+          title_en?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "perks_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       plans: {
         Row: {
           active: boolean;
@@ -1724,6 +1821,7 @@ export type Database = {
           name_ar: string | null;
           position: number;
           rental_slots: number | null;
+          student_of: string | null;
           tier: number | null;
         };
         Insert: {
@@ -1744,6 +1842,7 @@ export type Database = {
           name_ar?: string | null;
           position?: number;
           rental_slots?: number | null;
+          student_of?: string | null;
           tier?: number | null;
         };
         Update: {
@@ -1764,9 +1863,18 @@ export type Database = {
           name_ar?: string | null;
           position?: number;
           rental_slots?: number | null;
+          student_of?: string | null;
           tier?: number | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "plans_student_of_fkey";
+            columns: ["student_of"];
+            isOneToOne: false;
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       plus_areas: {
         Row: {
@@ -3131,6 +3239,100 @@ export type Database = {
         };
         Relationships: [];
       };
+      student_badges: {
+        Row: {
+          email_hash: string | null;
+          method: string;
+          university_id: string;
+          user_id: string;
+          valid_until: string;
+          verified_at: string;
+        };
+        Insert: {
+          email_hash?: string | null;
+          method: string;
+          university_id: string;
+          user_id: string;
+          valid_until: string;
+          verified_at?: string;
+        };
+        Update: {
+          email_hash?: string | null;
+          method?: string;
+          university_id?: string;
+          user_id?: string;
+          valid_until?: string;
+          verified_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "student_badges_university_id_fkey";
+            columns: ["university_id"];
+            isOneToOne: false;
+            referencedRelation: "universities";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      student_requests: {
+        Row: {
+          attempts: number;
+          card_path: string | null;
+          code_expires_at: string | null;
+          code_hash: string | null;
+          created_at: string;
+          email: string | null;
+          id: string;
+          method: string;
+          reject_reason: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          university_id: string;
+          user_id: string;
+        };
+        Insert: {
+          attempts?: number;
+          card_path?: string | null;
+          code_expires_at?: string | null;
+          code_hash?: string | null;
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          method: string;
+          reject_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          university_id: string;
+          user_id: string;
+        };
+        Update: {
+          attempts?: number;
+          card_path?: string | null;
+          code_expires_at?: string | null;
+          code_hash?: string | null;
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          method?: string;
+          reject_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          university_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "student_requests_university_id_fkey";
+            columns: ["university_id"];
+            isOneToOne: false;
+            referencedRelation: "universities";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       submission_reviews: {
         Row: {
           archive_worthy: boolean | null;
@@ -3647,6 +3849,36 @@ export type Database = {
           },
         ];
       };
+      universities: {
+        Row: {
+          active: boolean;
+          domains: string[];
+          id: string;
+          name_ar: string;
+          name_en: string;
+          position: number;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          domains?: string[];
+          id: string;
+          name_ar: string;
+          name_en: string;
+          position?: number;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          domains?: string[];
+          id?: string;
+          name_ar?: string;
+          name_en?: string;
+          position?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       webhook_events: {
         Row: {
           event_key: string;
@@ -4110,6 +4342,23 @@ export type Database = {
         Args: { create_product?: boolean; trade_in: string };
         Returns: string;
       };
+      confirm_student_email: {
+        Args: { code: string };
+        Returns: {
+          email_hash: string | null;
+          method: string;
+          university_id: string;
+          user_id: string;
+          valid_until: string;
+          verified_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "student_badges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       create_order: {
         Args: {
           delivery_zone?: string;
@@ -4383,6 +4632,10 @@ export type Database = {
         Args: { days?: number; purchase_order: string };
         Returns: string;
       };
+      issue_student_code: {
+        Args: { address: string; member: string; university: string };
+        Returns: string;
+      };
       join_plus_waitlist: {
         Args: { governorate: string; plan: string };
         Returns: number;
@@ -4596,6 +4849,13 @@ export type Database = {
           rewarded_this_month: number;
         }[];
       };
+      my_partners: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          name: string;
+          organization_id: string;
+        }[];
+      };
       my_pass_secret: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -4609,6 +4869,17 @@ export type Database = {
           in_use: number;
           slots: number;
           tier: number;
+        }[];
+      };
+      my_student: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          method: string;
+          pending: string;
+          rejected_reason: string;
+          university_id: string;
+          valid_until: string;
+          verified: boolean;
         }[];
       };
       my_swap_terms: {
@@ -4712,6 +4983,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      partner_check: { Args: { org: string; scanned: string }; Returns: Json };
       pause_plus: {
         Args: { days: number };
         Returns: {
@@ -4745,6 +5017,15 @@ export type Database = {
           organization_name: string;
           role: Database["public"]["Enums"]["org_role"];
           token: string;
+        }[];
+      };
+      perk_stats: {
+        Args: { org: string };
+        Returns: {
+          month: string;
+          people: number;
+          perk_id: string;
+          uses: number;
         }[];
       };
       plus_status: {
@@ -4836,6 +5117,23 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      redeem_perk: {
+        Args: { perk: string; scanned: string };
+        Returns: {
+          created_at: string;
+          id: string;
+          perk_id: string;
+          redeemed_by: string | null;
+          redeemed_on: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "perk_redemptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       referral_kind: { Args: { code: string }; Returns: string };
       register_push_device: {
         Args: { device_platform: string; device_token: string };
@@ -4892,6 +5190,31 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      request_student_review: {
+        Args: { photo: string; university: string };
+        Returns: {
+          attempts: number;
+          card_path: string | null;
+          code_expires_at: string | null;
+          code_hash: string | null;
+          created_at: string;
+          email: string | null;
+          id: string;
+          method: string;
+          reject_reason: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          university_id: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "student_requests";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       respond_to_trade_in_offer: {
         Args: { accept: boolean; trade_in: string };
         Returns: Database["public"]["Enums"]["trade_in_status"];
@@ -4934,6 +5257,15 @@ export type Database = {
           type: Database["public"]["Enums"]["submission_type"];
         }[];
       };
+      review_student_card: {
+        Args: {
+          approve: boolean;
+          reason?: string;
+          target: string;
+          until?: string;
+        };
+        Returns: string;
+      };
       revoke_guardian: { Args: { link: string }; Returns: undefined };
       rotate_calendar_token: {
         Args: Record<PropertyKey, never>;
@@ -4950,6 +5282,7 @@ export type Database = {
         Returns: number;
       };
       run_plus_waitlist: { Args: Record<PropertyKey, never>; Returns: number };
+      run_student_expiry: { Args: Record<PropertyKey, never>; Returns: number };
       search_products: {
         Args: {
           search_category?: string;

@@ -312,6 +312,39 @@ export const getTradeInPhotoUrls = async (
   return paths.map((path) => byPath.get(path) ?? null);
 };
 
+/** Uploads a photo of the signed-in student's card, for review. */
+export const uploadStudentCard = (
+  supabase: Client,
+  userId: string,
+  file: File
+) => {
+  assertAllowed("studentCards", file);
+  return upload(
+    supabase,
+    buckets.studentCards.id,
+    objectPath(userId, file.name),
+    file
+  );
+};
+
+/** A time-limited link to a student card photo (its owner or support). */
+export const getStudentCardUrl = async (
+  supabase: Client,
+  path: string,
+  expiresIn = 10 * 60
+) => {
+  const { data, error } = await supabase.storage
+    .from(buckets.studentCards.id)
+    .createSignedUrl(path, expiresIn);
+  if (error || !data) {
+    throw new StorageError(
+      "not_found",
+      `No signed URL: ${error?.message ?? "no data"}`
+    );
+  }
+  return data.signedUrl;
+};
+
 /** Deletes files the user is allowed to delete. */
 export const removeFiles = async (
   supabase: Client,

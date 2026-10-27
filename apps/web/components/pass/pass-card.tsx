@@ -1,12 +1,14 @@
 import { formatPhone } from "@repo/auth/phone";
 import { formatPrice, planName } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
+import type { Locale } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import {
   CalendarDaysIcon,
   CrownIcon,
   ExternalLinkIcon,
+  GraduationCapIcon,
   HandCoinsIcon,
   LightbulbIcon,
   type LucideIcon,
@@ -17,6 +19,7 @@ import { env } from "@/env";
 import { appLink } from "@/lib/links";
 import type { PassSession } from "@/lib/pass/session";
 import { LiveCard } from "./live-card";
+import { PartnerPerks } from "./partner-perks";
 import { SignOutButton } from "./sign-out-button";
 import { WalletButton } from "./wallet-button";
 
@@ -75,6 +78,29 @@ const Perks = ({
   </section>
 );
 
+type CardText = Awaited<ReturnType<typeof getTranslations<"pass.card">>>;
+
+/** Verified until a date, or how to verify (Settings). */
+const studentPerk = (
+  student: { valid_until: string | null; verified: boolean } | null,
+  card: CardText,
+  locale: Locale
+): Perk => ({
+  href: "/pass/settings#student",
+  icon: GraduationCapIcon,
+  text: student?.verified
+    ? card("perks.student", {
+        date: formatDate(student.valid_until ?? "", locale),
+      })
+    : card("perks.verifyStudent"),
+});
+
+/** The badges on the card (the Plus plan shows on its own). */
+const cardBadges = (student: boolean, staff: boolean, card: CardText) => [
+  ...(student ? [card("badges.student")] : []),
+  ...(staff ? [card("badges.staff")] : []),
+];
+
 /**
  * The top of Your Pass: the live card (with the code that changes every 30
  * seconds), Google Wallet, the member's perks, their details, the
@@ -93,6 +119,8 @@ export const PassCard = async ({ session }: PassCardProps) => {
     { data: subscription },
     { data: bulbRows },
     { data: baghdad },
+    { data: student },
+    { data: offers },
   ] = await Promise.all([
     session.supabase
       .from("profiles")
@@ -121,6 +149,15 @@ export const PassCard = async ({ session }: PassCardProps) => {
       .eq("governorate", "baghdad")
       .eq("active", true)
       .maybeSingle(),
+    session.supabase.rpc("my_student").maybeSingle(),
+    session.supabase
+      .from("perks")
+      .select(
+        "id, partner_name, title_ar, title_en, details_ar, details_en, area_ar, area_en, audience"
+      )
+      .eq("active", true)
+      .order("position")
+      .order("created_at"),
   ]);
   const name = profile?.full_name?.trim();
   const phone = session.user.phone ? formatPhone(session.user.phone) : null;
@@ -150,6 +187,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
         }
       : { href: "/plus", icon: CrownIcon, text: card("perks.joinPlus") },
     { icon: TruckIcon, text: deliveryPerk },
+    studentPerk(student, card, locale),
     {
       href: "/club?show=events",
       icon: CalendarDaysIcon,
@@ -177,6 +215,11 @@ export const PassCard = async ({ session }: PassCardProps) => {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,28rem)_1fr]">
         <div className="grid content-start gap-3">
           <LiveCard
+            badges={cardBadges(
+              Boolean(student?.verified),
+              Boolean(staff),
+              card
+            )}
             memberSince={
               profile
                 ? t("memberSince", {
@@ -191,6 +234,11 @@ export const PassCard = async ({ session }: PassCardProps) => {
         </div>
         <Perks perks={perks} title={card("perks.title")} />
       </div>
+      <PartnerPerks
+        badges={{ plus: Boolean(plan), student: Boolean(student?.verified) }}
+        locale={locale}
+        perks={offers ?? []}
+      />
       <div className="grid gap-4 border-t pt-4 md:grid-cols-[1fr_auto]">
         <dl className="grid content-start gap-2 text-sm">
           {session.user.email ? (

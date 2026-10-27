@@ -1,5 +1,6 @@
 "use server";
 
+import { buckets, removeFiles } from "@repo/storage";
 import { z } from "zod";
 import {
   ActionFailure,
@@ -9,7 +10,14 @@ import {
 } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
 import { crmContactSchema, markContactedSchema } from "@/lib/admin/crm";
-import { checkbox, uuid } from "@/lib/admin/forms";
+import {
+  checkbox,
+  optionalDate,
+  optionalText,
+  slug,
+  text,
+  uuid,
+} from "@/lib/admin/forms";
 import { scannedPass } from "@/lib/admin/pass-code";
 
 export const saveCrmContact = staffAction(
@@ -134,6 +142,93 @@ export const adjustBulbs = staffAction(
         member: input.userId,
         why: input.reason,
       })
+    );
+    return success();
+  }
+);
+
+// ── Students ─────────────────────────────────────────────────────────────
+
+/**
+ * Approves (until the end of the academic year, or an earlier date the card
+ * shows) or rejects a student card, then deletes the photo: only the
+ * outcome is kept.
+ */
+export const reviewStudentCard = staffAction(
+  "customers",
+  z.object({
+    approve: z.enum(["true", "false"]),
+    id: uuid,
+    reason: optionalText(500),
+    until: optionalDate,
+  }),
+  async ({ input, supabase }) => {
+    const { data: path } = check(
+      await supabase.rpc("review_student_card", {
+        approve: input.approve === "true",
+        reason: input.reason ?? undefined,
+        target: input.id,
+        until: input.until ?? undefined,
+      })
+    );
+    if (path) {
+      await removeFiles(supabase, buckets.studentCards.id, [path]);
+    }
+    return success();
+  }
+);
+
+const DOMAIN_SEPARATOR = /[\s,،]+/;
+const LEADING_AT = /^@/;
+const DOMAIN = /^[a-z0-9.-]+\.[a-z]{2,}$/;
+
+const universityFields = {
+  domains: z
+    .string()
+    .trim()
+    .transform((value) =>
+      value
+        .split(DOMAIN_SEPARATOR)
+        .map((domain) => domain.trim().toLowerCase().replace(LEADING_AT, ""))
+        .filter(Boolean)
+    )
+    .pipe(z.array(z.string().regex(DOMAIN)).max(10)),
+  nameAr: text(160),
+  nameEn: text(160),
+};
+
+export const addUniversity = staffAction(
+  "customers",
+  z.object({ ...universityFields, id: slug }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.from("universities").insert({
+        domains: input.domains,
+        id: input.id,
+        name_ar: input.nameAr,
+        name_en: input.nameEn,
+        position: 100,
+      })
+    );
+    return success();
+  }
+);
+
+export const saveUniversity = staffAction(
+  "customers",
+  z.object({ ...universityFields, active: checkbox, id: text(40) }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("universities")
+        .update({
+          active: input.active,
+          domains: input.domains,
+          name_ar: input.nameAr,
+          name_en: input.nameEn,
+        })
+        .eq("id", input.id)
+        .select("id")
     );
     return success();
   }

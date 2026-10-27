@@ -136,6 +136,7 @@ const PAY_AT_PICKUP = /^Pay at pickup/;
 const PLACE_CASH_ORDER = /^Place order · /;
 const RENT_PAGE = /\/rent\/elden-ring-ps5$/;
 const ORDER_PAGE = /\/pass\/orders\/[^/]+$/;
+const STUDENT_NUDGE = /^Verify as a student/;
 
 test.describe("a signed-in customer", () => {
   test.beforeEach(async ({ context }) => {
@@ -281,6 +282,21 @@ test.describe("a signed-in customer", () => {
 
     await expect(page).toHaveURL(ORDER_PAGE);
     await expect(page.getByText("Theme: Novels")).toBeVisible();
+    noErrors();
+  });
+
+  test("finds student verification in Settings", async ({ page }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/pass`);
+    await page.getByRole("link", { name: STUDENT_NUDGE }).first().click();
+    await expect(page).toHaveURL(/\/pass\/settings#student$/);
+    await expect(page.getByText("Student verification")).toBeVisible();
+    await page.getByLabel("University", { exact: true }).selectOption("auib");
+    await expect(
+      page.getByRole("button", { name: "University email" })
+    ).toBeVisible();
+    await expect(page.getByLabel("Your university email")).toBeVisible();
+    await expectAccessible(page);
     noErrors();
   });
 

@@ -54,6 +54,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       .from("plans")
       .select("name, audience, tier")
       .eq("audience", "plus")
+      .is("student_of", null)
       .order("position"),
     supabase
       .from("product_reviews")

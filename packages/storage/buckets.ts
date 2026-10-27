@@ -49,6 +49,16 @@ export const buckets = {
     mimeTypes: ["image/png", "image/jpeg", "image/webp"],
     public: true,
   },
+  /**
+   * Student card photos under "<user id>/…": the student uploads one,
+   * support reads it and deletes it after review.
+   */
+  studentCards: {
+    id: "student-cards",
+    maxBytes: 5 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp"],
+    public: false,
+  },
   /** Submitted work under "<author id>/…"; the author and editors read it. */
   submissions: {
     id: "submissions",
