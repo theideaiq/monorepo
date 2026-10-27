@@ -186,10 +186,13 @@ enable_anonymous_sign_ins = false
 # Allow/disallow testing manual linking of accounts
 enable_manual_linking = false
 # Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.
-minimum_password_length = 6
+# The IDEA Pass: at least 8 characters with letters and digits (production:
+# Authentication → Providers → Email, the same policy, plus leaked password
+# protection).
+minimum_password_length = 8
 # Passwords that do not meet the following requirements will be rejected as weak. Supported values
 # are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
-password_requirements = ""
+password_requirements = "letters_digits"
 
 # Configure passkey sign-ins.
 # [auth.passkey]
@@ -227,11 +230,12 @@ web3 = 30
 # secret = "env(SUPABASE_AUTH_CAPTCHA_SECRET)"
 
 [auth.email]
-# The IDEA Pass signs people in with a 6-digit code sent by email
-# (signInWithOtp + verifyOtp type "email"); no passwords and no magic links
-# (links break inside the iOS/Android shell). The templates below show the
-# code only. Production: the same settings and templates in the dashboard
-# (ARCHITECTURE_AND_INTEGRATIONS.md, 2.7).
+# The IDEA Pass signs people in with an email and password (signUp needs
+# one emailed code; a forgotten password is reset with another), or with
+# an 8-digit code alone (signInWithOtp + verifyOtp type "email"). No magic
+# links (they break inside the iOS/Android shell): every template below
+# shows the code only. Production: the same settings and templates in the
+# dashboard (ARCHITECTURE_AND_INTEGRATIONS.md, 2.7).
 enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
@@ -240,7 +244,7 @@ double_confirm_changes = true
 # email (verifyOtp type "email" accepts it), as in production.
 enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
-secure_password_change = false
+secure_password_change = true
 # Minimum time between two emails to the same address. Production keeps the
 # default 60s, which matches the form's resend cooldown; locally the journeys
 # and integration tests send codes back to back.
@@ -275,7 +279,17 @@ content_path = "./supabase/templates/confirmation.html"
 subject = "رمز الدخول إلى The IDEA Pass · Sign-in code for The IDEA Pass: {{ .Token }}"
 content_path = "./supabase/templates/magic_link.html"
 
-# Changing the account's email: the code confirms the new address.
+# Forgotten password: the code (verifyOtp type "recovery"), then the new one.
+[auth.email.template.recovery]
+subject = "إعادة تعيين كلمة المرور · The IDEA Pass: reset your password with {{ .Token }}"
+content_path = "./supabase/templates/recovery.html"
+
+# Changing the password on an older session: the code confirms it's them.
+[auth.email.template.reauthentication]
+subject = "تأكيد هويتك · Confirm it's you on The IDEA Pass: {{ .Token }}"
+content_path = "./supabase/templates/reauthentication.html"
+
+# Changing the email: the code confirms the new address.
 [auth.email.template.email_change]
 subject = "تأكيد البريد الإلكتروني · Confirm your email for The IDEA Pass"
 content_path = "./supabase/templates/email_change.html"

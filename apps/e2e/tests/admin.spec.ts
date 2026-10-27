@@ -55,6 +55,7 @@ test.describe("back office", () => {
     // Staff sign in with an email code like everyone else…
     await page.goto(`${urls.app}/staff`);
     await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
+    await page.getByRole("button", { name: "Email me a code instead" }).click();
     await page.getByLabel("Email").fill(staff.email);
     await clearInbox(staff.email);
     await page.getByRole("button", { name: "Continue" }).click();

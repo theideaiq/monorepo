@@ -1,0 +1,133 @@
+<!doctype html>
+<!--
+  The IDEA Pass: Reset password: Supabase "Reset Password" email. Code only (verifyOtp type "recovery"), then the new password is set.
+  Local stack: referenced from ../config.toml. Production: paste this file
+  into Supabase → Authentication → Emails (the template of the same name).
+-->
+<html dir="rtl" lang="ar">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="light only" name="color-scheme">
+    <title>The IDEA Pass</title>
+  </head>
+  <body
+    style="margin:0;padding:0;background-color:#fbf8ef;font-family:'Readex Pro',Cairo,-apple-system,BlinkMacSystemFont,'Segoe UI',Tahoma,Arial,sans-serif;color:#0f1014;"
+  >
+    <table
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="background-color:#fbf8ef;"
+      width="100%"
+    >
+      <tr>
+        <td align="center" style="padding:24px 12px;">
+          <table
+            cellpadding="0"
+            cellspacing="0"
+            role="presentation"
+            style="max-width:480px;background-color:#ffffff;border-radius:16px;overflow:hidden;"
+            width="100%"
+          >
+            <tr>
+              <td
+                dir="ltr"
+                style="background-color:#d81b60;padding:20px 24px;text-align:center;"
+              >
+                <img
+                  alt="The IDEA"
+                  height="40"
+                  src="https://theideaiq.com/brand/lockup-on-pink.png"
+                  style="display:inline-block;border:0;height:40px;width:142px;vertical-align:middle;"
+                  width="142"
+                >
+                <span
+                  style="display:inline-block;margin-left:0;color:#ffffff;font-size:22px;font-weight:600;vertical-align:middle;"
+                  >Pass</span
+                >
+              </td>
+            </tr>
+            <tr>
+              <td
+                dir="rtl"
+                lang="ar"
+                style="padding:28px 24px 8px;text-align:right;"
+              >
+                <h1 style="margin:0 0 12px;font-size:20px;line-height:1.4;">
+                  إعادة تعيين كلمة المرور
+                </h1>
+                <p style="margin:0;font-size:15px;line-height:1.7;">
+                  أدخل هذا الرمز في صفحة The IDEA Pass لتعيين كلمة مرور جديدة:
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" dir="ltr" style="padding:20px 24px;">
+                <div
+                  id="otp"
+                  style="display:inline-block;padding:16px 24px;border-radius:10px;background-color:#f2eee2;border:2px solid #d81b60;font-family:'SFMono-Regular',Menlo,Consolas,monospace;font-size:36px;font-weight:700;letter-spacing:10px;color:#0f1014;"
+                >
+                  {{ .Token }}
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td
+                dir="rtl"
+                lang="ar"
+                style="padding:0 24px 20px;text-align:right;"
+              >
+                <p
+                  style="margin:0;font-size:13px;line-height:1.7;color:#5b5d66;"
+                >
+                  ينتهي الرمز خلال 10 دقائق. لا تشاركه مع أحد، فلن يطلبه منك
+                  فريق The IDEA أبداً. إن لم تطلب هذا الرمز فتجاهل هذه الرسالة.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 24px;">
+                <hr style="border:none;border-top:1px solid #e4dfd0;margin:0;">
+              </td>
+            </tr>
+            <tr>
+              <td
+                dir="ltr"
+                lang="en"
+                style="padding:20px 24px 8px;text-align:left;"
+              >
+                <h2 style="margin:0 0 12px;font-size:18px;line-height:1.4;">
+                  Reset your password
+                </h2>
+                <p style="margin:0 0 12px;font-size:15px;line-height:1.6;">
+                  Enter this code on The IDEA Pass to set a new password:
+                  <strong
+                    style="font-family:'SFMono-Regular',Menlo,Consolas,monospace;font-size:17px;letter-spacing:2px;"
+                    >{{ .Token }}</strong
+                  >
+                </p>
+                <p
+                  style="margin:0;font-size:13px;line-height:1.6;color:#5b5d66;"
+                >
+                  The code expires in 10 minutes. Don't share it with anyone;
+                  The IDEA will never ask you for it. If you didn't ask for this
+                  code, you can ignore this email.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                dir="ltr"
+                style="padding:20px 24px 24px;text-align:center;font-size:12px;color:#5b5d66;"
+              >
+                The IDEA Pass · theideaiq.com ·
+                <span dir="rtl" lang="ar">ايديا</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
