@@ -206,9 +206,9 @@ decisions with a date.
       `https://theideaiq.com` (The IDEA Pass lives on the website) and add
       `https://theideaiq.com/**` and `https://business.theideaiq.com/**` to
       the redirect URLs.
-- [ ] **Telegram sign-in:** in @BotFather open the bot → Login Widget, add
-      the Allowed URL `https://api.theideaiq.com/auth/telegram/callback`
-      (and the website origin `https://theideaiq.com`), then set
+- [x] **Telegram sign-in** (done 2026-10-27): in @BotFather open the bot →
+      Login Widget, add the Redirect URI
+      `https://api.theideaiq.com/auth/telegram/callback`, then set
       `TELEGRAM_LOGIN_CLIENT_ID` and `TELEGRAM_LOGIN_CLIENT_SECRET` on the
       Vercel api project. "Continue with Telegram" appears once they're set.
 - [ ] **Supabase, email codes (The IDEA Pass sign-in;
@@ -272,13 +272,23 @@ decisions with a date.
       Send newsletters from Resend Broadcasts to that segment only.
 - [ ] **Wayl:** production keys and the webhook URL
       (`/webhooks/payments` on the API host).
-- [ ] **Telegram:** on the API project set `TELEGRAM_BOT_TOKEN`,
+- [x] **Telegram** (done 2026-10-27): on the API project set `TELEGRAM_BOT_TOKEN`,
       `TELEGRAM_WEBHOOK_SECRET` and, for sign-in, `TELEGRAM_LOGIN_CLIENT_ID`
       and `TELEGRAM_LOGIN_CLIENT_SECRET` (Login Widget Allowed URL
       `https://api.theideaiq.com/auth/telegram/callback`); redeploy, then
       Back office → Telegram → Bot → Set up now.
+- [x] **Primary domain:** `theideaiq.com` serves the website and
+      `www.theideaiq.com` redirects to it (308), as on auibsal.org; every
+      setting (`NEXT_PUBLIC_WEB_URL`, Supabase, Google, Telegram, The IDEA
+      Pass for partners, app links) uses the bare domain. The API and The
+      IDEA Pass accept both in case a redirect flips again.
 - [ ] **Domains:** once every subdomain serves HTTPS, submit the apex at
       hstspreload.org (the sites already send the preload header).
+- [ ] **Sign-in providers:** Google is on (`NEXT_PUBLIC_AUTH_PROVIDERS=google`
+      on the website). Add `apple`, `azure`, `facebook`, `linkedin_oidc`
+      there as each is turned on in Supabase (ARCHITECTURE 2.7 step 8).
+- [ ] **Leaked password protection:** Supabase → Authentication → Attack
+      Protection (the security advisor still flags it).
 - [ ] **First staff member:** they get The IDEA Pass with their email
       (`/ar/sign-in`), then in the SQL editor:
       `insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '<their email>';`
@@ -349,6 +359,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-27: The bare domain is primary on every site (theideaiq.com,
+  auibsal.org); `www` redirects to it with a 308. Vercel's dashboard
+  suggests the opposite, for DNS reasons that don't apply with
+  Cloudflare's CNAME flattening, and every setting already used the bare
+  domain. Passwords follow Supabase's strictest rule (lowercase,
+  uppercase, digit and symbol; `packages/auth/password.ts` checks the
+  same).
 - 2026-10-27: Program revision v1, step 6 (Telegram names): the channel
   is "The IDEA • ايديا" @theideaiq, the group "The IDEA Club" @theideaiq_club
   with seven rooms (The Stage, The Lounge, The Arcade, Vibe Check, The
