@@ -38,6 +38,9 @@ export interface CartVariant {
 
 /** A `cart_items` row with its product and variant. */
 export interface CartItem {
+  /** A box's picked theme (staff pack the box to it). */
+  box_theme?: { name_ar: string; name_en: string } | null;
+  box_theme_id?: string | null;
   /** The condition asked for; null is the product's own (its main listing). */
   condition: Condition | null;
   id: string;

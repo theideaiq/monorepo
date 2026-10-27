@@ -24,9 +24,11 @@ import {
   RatingLink,
   SellerLine,
 } from "@/components/product-reviews";
+import { BoxContents } from "@/components/store/box-contents";
 import { WriteReview } from "@/components/store/product-reviews";
 import { PurchasePanel } from "@/components/store/purchase-panel";
 import {
+  getBox,
   getOffers,
   getPlans,
   getProduct,
@@ -84,13 +86,14 @@ const ProductPage = async ({ params }: ProductProps) => {
     notFound();
   }
 
-  const [t, store, ratings, reviews, plan, offers] = await Promise.all([
+  const [t, store, ratings, reviews, plan, offers, box] = await Promise.all([
     getTranslations({ locale, namespace: "web.store.product" }),
     getTranslations({ locale, namespace: "store" }),
     getRatings([product.id]),
     getReviews(product.id, REVIEWS_SHOWN),
     rentalPlan(product),
     getOffers(product.id),
+    getBox(product.id),
   ]);
   const rating = ratings[product.id] ?? null;
   const name = localized(product, "name", locale);
@@ -223,7 +226,7 @@ const ProductPage = async ({ params }: ProductProps) => {
 
           <div className="flex flex-col gap-2">
             <Suspense>
-              <PurchasePanel offers={offers} product={product} />
+              <PurchasePanel box={box} offers={offers} product={product} />
             </Suspense>
             {plan ? (
               <div className="flex flex-col gap-1 rounded-md border border-brand/60 bg-brand/10 p-3 text-sm">
@@ -249,6 +252,8 @@ const ProductPage = async ({ params }: ProductProps) => {
               {t("sellToUs")}
             </Link>
           </div>
+
+          <BoxContents box={box} locale={locale} />
 
           {description ? (
             <section className="flex flex-col gap-3">

@@ -13,6 +13,7 @@ import {
 import type { Enums, Tables } from "@repo/database";
 import { log } from "@repo/observability/log";
 import { publicFileUrl } from "@repo/storage";
+import { BOX_COLUMNS, type Box } from "./boxes";
 import { type Rating, type Review, ratingsById } from "./reviews";
 import { createPublicClient, supabaseUrl } from "./supabase";
 
@@ -226,6 +227,24 @@ export const getPlans = (audience: "business" | "plus") =>
         .eq("audience", audience)
         .order("position")
     );
+  });
+
+/** A box's parts and themes, when the product is a box. */
+export const getBox = (productId: string) =>
+  fallback("box", null as Box | null, async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return null;
+    }
+    const { data, error } = await supabase
+      .from("boxes")
+      .select(BOX_COLUMNS)
+      .eq("product_id", productId)
+      .maybeSingle();
+    if (error) {
+      throw error;
+    }
+    return data as unknown as Box | null;
   });
 
 /** Game night kits on offer, for The IDEA Plus page. */

@@ -21,6 +21,12 @@ export type ActionError =
   | "carrierNotConfigured"
   | "notCancellable"
   | "apiUnavailable"
+  | "boxPrice"
+  | "boxParts"
+  | "boxPicks"
+  | "boxValue"
+  | "boxPacked"
+  | "boxStock"
   | "unknown";
 
 export type ActionNotice = "saved" | "deleted" | "sent" | "posted";
@@ -58,6 +64,21 @@ interface DatabaseError {
   message?: string;
 }
 
+/** Box rules (pricing against the parts, packing). */
+const BOX_ERRORS: [string, ActionError][] = [
+  ["less than its parts", "boxPrice"],
+  ["needs its parts", "boxParts"],
+  ["doesn't fit the box", "boxPicks"],
+  ["copies for the box", "boxPicks"],
+  ["worth less than the box", "boxValue"],
+  ["already packed", "boxPacked"],
+  ["stock for the box", "boxStock"],
+  ["stock comes from its parts", "boxStock"],
+];
+
+const boxError = (message: string) =>
+  BOX_ERRORS.find(([text]) => message.includes(text))?.[1];
+
 /** Maps a Postgres/PostgREST error to a message key. */
 export const databaseError = (error: DatabaseError): ActionError => {
   const message = error.message ?? "";
@@ -78,6 +99,10 @@ export const databaseError = (error: DatabaseError): ActionError => {
   }
   if (message.includes("set its price and stock on each variant")) {
     return "variantPricing";
+  }
+  const box = boxError(message);
+  if (box) {
+    return box;
   }
   switch (error.code) {
     case "23505":
