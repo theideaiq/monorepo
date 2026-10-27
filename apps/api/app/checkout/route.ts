@@ -11,7 +11,7 @@ import { getBilling } from "@repo/payments/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/env";
-import { corsHeaders, preflight } from "@/lib/cors";
+import { corsHeaders, preflight, webOrigins } from "@/lib/cors";
 import { isManager, membershipRole } from "@/lib/membership";
 
 const body = z.object({
@@ -36,7 +36,9 @@ const safeRedirect = (redirectUrl: string | undefined, business: boolean) => {
   if (!redirectUrl) {
     return home.toString();
   }
-  return new URL(redirectUrl).origin === home.origin ? redirectUrl : undefined;
+  const { origin } = new URL(redirectUrl);
+  const allowed = business ? origin === home.origin : webOrigins().has(origin);
+  return allowed ? redirectUrl : undefined;
 };
 
 type Session = NonNullable<Awaited<ReturnType<typeof authenticateRequest>>>;

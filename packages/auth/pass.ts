@@ -47,8 +47,8 @@ const hostOf = (value: string | undefined) => {
  * The hostnames of The IDEA's own sites: the website (with the Pass), The
  * IDEA Business (company pages and the back office), the design site and the API.
  */
-export const allowedReturnToHosts = () =>
-  new Set(
+export const allowedReturnToHosts = () => {
+  const hosts = new Set(
     [
       process.env.NEXT_PUBLIC_WEB_URL,
       process.env.NEXT_PUBLIC_APP_URL,
@@ -58,6 +58,13 @@ export const allowedReturnToHosts = () =>
       .map(hostOf)
       .filter((host): host is string => Boolean(host))
   );
+  // The website answers on its bare domain and on www; allow both.
+  const web = hostOf(process.env.NEXT_PUBLIC_WEB_URL);
+  if (web) {
+    hosts.add(web.startsWith("www.") ? web.slice("www.".length) : `www.${web}`);
+  }
+  return hosts;
+};
 
 /**
  * Whether `url` is an absolute http(s) URL on one of The IDEA's hosts, so
