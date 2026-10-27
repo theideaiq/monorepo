@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { customer } from "../fixtures";
+import { customer, PASSWORD } from "../fixtures";
 import { urls } from "../playwright.config";
 import { embedPartner, resetCustomer, seedEmbedPartner } from "../seed";
 import { signIn } from "./helpers";
@@ -32,9 +32,20 @@ test.describe("the live card on a partner's site", () => {
   test.beforeEach(async ({ context }) => {
     await resetCustomer();
     await seedEmbedPartner();
-    await signIn(context, customer.email);
     await context.route(`${embedPartner.origin}/**`, (route) =>
-      route.fulfill({ body: partnerPage, contentType: "text/html" })
+      route.fulfill({
+        body: partnerPage,
+        contentType: "text/html",
+        // What the partner docs ask for; /strict is what cuts it off.
+        headers: {
+          "Cross-Origin-Opener-Policy": route
+            .request()
+            .url()
+            .endsWith("/strict")
+            ? "same-origin"
+            : "same-origin-allow-popups",
+        },
+      })
     );
   });
 
@@ -54,9 +65,52 @@ test.describe("the live card on a partner's site", () => {
     );
   });
 
-  test("the member allows it once, then sees the live code", async ({
+  test("signed out, the member signs in inside the window", async ({
     page,
   }) => {
+    await page.goto(`${embedPartner.origin}/members`);
+    const [popup] = await Promise.all([
+      page.waitForEvent("popup"),
+      page
+        .frameLocator("iframe")
+        .getByRole("button", { name: "Show my Pass card" })
+        .click(),
+    ]);
+    await popup.getByLabel("Email").fill(customer.email);
+    await popup.getByLabel("Password").fill(PASSWORD);
+    await popup.getByRole("button", { exact: true, name: "Sign in" }).click();
+    await popup.getByRole("button", { name: "Show my card" }).click();
+    await popup.waitForEvent("close");
+    await expect(
+      page.frameLocator("iframe").getByText(/^\d{3} \d{3}$/)
+    ).toBeVisible();
+  });
+
+  test("a page that cuts its pop-ups off can't receive the card", async ({
+    context,
+    page,
+  }) => {
+    await signIn(context, customer.email);
+    await page.goto(`${embedPartner.origin}/strict`);
+    // Cut off from its opener, the window is just another page here.
+    const [popup] = await Promise.all([
+      context.waitForEvent("page"),
+      page
+        .frameLocator("iframe")
+        .getByRole("button", { name: "Show my Pass card" })
+        .click(),
+    ]);
+    // Cross-Origin-Opener-Policy: same-origin on the partner's page.
+    await expect(
+      popup.getByText(/press .Show my Pass card. again/)
+    ).toBeVisible();
+  });
+
+  test("the member allows it once, then sees the live code", async ({
+    context,
+    page,
+  }) => {
+    await signIn(context, customer.email);
     await page.goto(`${embedPartner.origin}/members`);
     const frame = page.frameLocator("iframe");
 

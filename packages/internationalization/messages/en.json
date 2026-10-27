@@ -4515,7 +4515,7 @@
       "unavailable": "This site can't show The IDEA Pass card.",
       "intro": "Show your live The IDEA Pass card here, with the code {site} checks at the door.",
       "show": "Show my Pass card",
-      "popupBlocked": "Your browser blocked the window. Allow pop-ups for this site, then try again.",
+      "popupBlocked": "The window couldn't open or connect back to this page.",
       "forget": "Not you? Remove it from this browser",
       "connect": {
         "meta": "Show your Pass card",
@@ -4527,7 +4527,8 @@
         "again": "You're signed in. Go back to {site} and press “Show my Pass card” again.",
         "notAllowed": "This site can't show your Pass card yet.",
         "failed": "That didn't work. Please try again."
-      }
+      },
+      "openCard": "Open your live card"
     }
   }
 }

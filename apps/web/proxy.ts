@@ -11,6 +11,7 @@ import {
   embedClientId,
   isEmbedConnectPath,
   isEmbedRequestPath,
+  isEmbedSignIn,
 } from "@/lib/pass-embed";
 
 export const config = {
@@ -25,6 +26,12 @@ export const config = {
 // The website is also the Droid's Mini App (/tg, then the store, cart and
 // checkout), which Telegram Web shows in a frame.
 const options = noseconeOptionsWith(telegramMiniAppCspSources);
+
+/** The popup's pages keep their opener (the frame waiting for its token). */
+const keepOpener = {
+  ...noseconeOptions,
+  crossOriginOpenerPolicy: { policy: "unsafe-none" as const },
+};
 
 /**
  * The origins that may frame an app's live card (its verified domains), or
@@ -60,10 +67,7 @@ const embedOrigins = async (clientId: string | null) => {
  */
 const embedOptions = async (request: NextRequest) => {
   if (isEmbedConnectPath(request.nextUrl.pathname)) {
-    return {
-      ...noseconeOptions,
-      crossOriginOpenerPolicy: { policy: "unsafe-none" as const },
-    };
+    return keepOpener;
   }
   const origins = await embedOrigins(
     embedClientId(request.nextUrl.searchParams.get("client_id"))
@@ -82,8 +86,12 @@ const embedOptions = async (request: NextRequest) => {
  */
 export default async function proxy(request: NextRequest) {
   const response = internationalizationMiddleware(request);
-  const headers = isEmbedRequestPath(request.nextUrl.pathname)
-    ? await embedOptions(request)
-    : options;
+  const { pathname, searchParams } = request.nextUrl;
+  let headers = options;
+  if (isEmbedRequestPath(pathname)) {
+    headers = await embedOptions(request);
+  } else if (isEmbedSignIn(pathname, searchParams.get("return_to"))) {
+    headers = keepOpener;
+  }
   return withSecurityHeaders(await refreshSession(request, response), headers);
 }

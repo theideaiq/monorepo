@@ -7,6 +7,8 @@
 const EMBED_PATH = /^\/pass\/embed(\/|$)/;
 const EMBED_REQUEST_PATH = /^(\/ar)?\/pass\/embed(\/|$)/;
 const EMBED_CONNECT_PATH = /^(\/ar)?\/pass\/embed\/connect\/?$/;
+const SIGN_IN_PATH = /^(\/ar)?\/(sign-in|mfa|onboarding)(\/|$)/;
+const CONNECT_RETURN = /^(\/ar)?\/pass\/embed\/connect([/?]|$)/;
 const WILDCARD_ORIGIN = /^https:\/\/\*\.(.+)$/;
 const TOKEN = /^[0-9a-f]{64}$/;
 
@@ -20,6 +22,13 @@ export const isEmbedRequestPath = (pathname: string) =>
 /** The popup that connects a frame (no framing, keeps its opener). */
 export const isEmbedConnectPath = (pathname: string) =>
   EMBED_CONNECT_PATH.test(pathname);
+
+/**
+ * A sign-in step inside the connect popup (`return_to` is the popup): it
+ * must keep the popup's link to the frame that opened it, like the popup.
+ */
+export const isEmbedSignIn = (pathname: string, returnTo: string | null) =>
+  SIGN_IN_PATH.test(pathname) && CONNECT_RETURN.test(returnTo ?? "");
 
 const CLIENT_ID = /^pass_[a-z0-9]{24}$/;
 
