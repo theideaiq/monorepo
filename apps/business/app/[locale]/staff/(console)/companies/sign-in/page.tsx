@@ -9,7 +9,7 @@ import {
 import { formatters } from "@/lib/admin/format";
 import { requireSection } from "@/lib/admin/session";
 import { CompaniesTabs } from "../_components/companies-tabs";
-import { AddPartnerForm, PartnerActions } from "./forms";
+import { AddPartnerForm, PartnerActions, PartnerAnswersForm } from "./forms";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.companies.signIn");
@@ -90,6 +90,19 @@ const SignInPartnersPage = async () => {
                   active={partner.active}
                   id={partner.client_id}
                 />
+              ) : null}
+              {canWrite ? (
+                <details className="basis-full">
+                  <summary className="cursor-pointer text-sm">
+                    {t("editAnswers")}
+                  </summary>
+                  <div className="pt-3">
+                    <PartnerAnswersForm
+                      answers={partner.answers}
+                      id={partner.client_id}
+                    />
+                  </div>
+                </details>
               ) : null}
             </div>
           ))}

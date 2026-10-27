@@ -7,11 +7,26 @@
 export const PASS_SCOPES = [
   "profile",
   "email",
+  "membership",
   "student",
+  "student_email",
   "adult",
   "plus",
+  "phone",
+  "birthdate",
+  "address",
   "card",
+  "offline_access",
 ] as const;
+
+/** Scopes staff turn on for a partner only when it needs them; marked on the consent screen. */
+export const SENSITIVE_SCOPES: readonly PassScope[] = [
+  "student_email",
+  "phone",
+  "birthdate",
+  "address",
+  "offline_access",
+];
 
 export type PassScope = (typeof PASS_SCOPES)[number];
 

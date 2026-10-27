@@ -16,11 +16,13 @@ import {
   askedFor,
   parseAuthorizeRequest,
   returnUrl,
+  SENSITIVE_SCOPES,
 } from "@/lib/pass-sign-in";
 import {
   useApprovePassSignIn,
   usePassPartner,
 } from "@/lib/pass-sign-in-queries";
+import { useStudentProfile } from "@/lib/survey-queries";
 
 const hostOf = (url: string) => {
   try {
@@ -56,8 +58,17 @@ const Consent = ({
 }) => {
   const t = useTranslations("pass.authorize");
   const approve = useApprovePassSignIn();
+  const profile = useStudentProfile();
+  const universityEmail = profile.data?.university_email;
   const [leaving, setLeaving] = useState(false);
   const asked = askedFor(request.scopes);
+  // Everything asked is shared unless the person unticks it; signing in
+  // itself (openid) always is.
+  const [chosen, setChosen] = useState<string[]>(asked);
+  const toggle = (scope: string, on: boolean) =>
+    setChosen((current) =>
+      on ? [...current, scope] : current.filter((item) => item !== scope)
+    );
 
   const leave = (result: { code: string } | { error: string }) => {
     setLeaving(true);
@@ -70,7 +81,7 @@ const Consent = ({
         codeChallenge: request.codeChallenge,
         nonce: request.nonce,
         redirectUri: request.redirectUri,
-        scopes: request.scopes,
+        scopes: ["openid", ...asked.filter((scope) => chosen.includes(scope))],
       },
       { onSuccess: (code) => (code ? leave({ code }) : undefined) }
     );
@@ -97,12 +108,28 @@ const Consent = ({
             {t("scopes.openid")}
           </li>
           {asked.map((scope) => (
-            <li className="flex gap-2" key={scope}>
-              <CheckIcon
-                aria-hidden="true"
-                className="mt-0.5 size-4 shrink-0"
-              />
-              {t(`scopes.${scope}`)}
+            <li key={scope}>
+              <label className="flex items-start gap-2">
+                <input
+                  checked={chosen.includes(scope)}
+                  className="mt-0.5 size-4 shrink-0 accent-primary"
+                  onChange={(event) => toggle(scope, event.target.checked)}
+                  type="checkbox"
+                />
+                <span>
+                  {t(`scopes.${scope}`)}
+                  {SENSITIVE_SCOPES.includes(scope) ? (
+                    <span className="ms-2 rounded-full bg-muted px-1.5 py-0.5 text-muted-foreground text-xs">
+                      {t("sensitive")}
+                    </span>
+                  ) : null}
+                  {scope === "student_email" && !universityEmail ? (
+                    <span className="block text-muted-foreground text-xs">
+                      {t("noStudentEmail")}
+                    </span>
+                  ) : null}
+                </span>
+              </label>
             </li>
           ))}
         </ul>
