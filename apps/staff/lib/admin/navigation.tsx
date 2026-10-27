@@ -1,7 +1,7 @@
 /**
- * Navigation inside Staff. Staff answers at the root of its own host
- * (staff.theideaiq.com/orders; `proxy.ts` maps it to `app/[locale]/staff`),
- * so its paths are the locale-aware ones as written ("/orders?status=open").
+ * Navigation inside Staff. Its pages sit at the root of the app
+ * (staff.theideaiq.com/orders), so its paths are the locale-aware ones as
+ * written ("/orders?status=open").
  */
 export {
   Link,

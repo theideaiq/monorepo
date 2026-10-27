@@ -1,8 +1,8 @@
-The IDEA Business serves companies, universities and other organisations: buying, The IDEA Plus for their teams and partner perks for The IDEA Pass holders. It runs at business.theideaiq.com and is described on [/business](/business). These terms apply alongside our [Terms](/legal/terms). A signed agreement between your organisation and The IDEA takes precedence over them where the two differ.
+The IDEA Partners serves companies, universities and other organisations: buying, The IDEA Plus for their teams and partner perks for The IDEA Pass holders. It runs at partners.theideaiq.com and is described on [/partners](/partners). These terms apply alongside our [Terms](/legal/terms). A signed agreement between your organisation and The IDEA takes precedence over them where the two differ.
 
 ## 1. Your organisation
 
-- A person creates the organisation with their own The IDEA Pass and confirms that they may act for it. The organisation is responsible for its members' activity in The IDEA Business and for paying its quotes, orders, invoices and seats.
+- A person creates the organisation with their own The IDEA Pass and confirms that they may act for it. The organisation is responsible for its members' activity in The IDEA Partners and for paying its quotes, orders, invoices and seats.
 - **Roles:** owners and admins manage the organisation, its members and requests; members see its requests, quotes, orders and invoices. An organisation must always have an owner.
 - Keep your company details and billing contacts up to date.
 
@@ -24,10 +24,10 @@ Goods are covered by [Condition and warranty](/legal/condition) and, unless your
 
 ## 4. Partner perks
 
-Businesses can offer a perk (a discount or a free extra) to The IDEA Pass holders: everyone, verified Students or Plus members.
+Partners can offer a perk (a discount or a free extra) to The IDEA Pass holders: everyone, verified Students or Plus members.
 
 - You set the perk and its conditions with us; we list it on The IDEA Pass and in the Club feed.
-- Honour the perk for any valid card, as listed. Check cards by scanning them in your dashboard on The IDEA Business; the scan shows only whether the card is valid and the perk applies, not the member's personal details.
+- Honour the perk for any valid card, as listed. Check cards by scanning them in your dashboard on The IDEA Partners; the scan shows only whether the card is valid and the perk applies, not the member's personal details.
 - You see a monthly count of redemptions. Don't record, copy or use members' details from a card for anything else.
 - Either side can end a perk with notice; we remove it from the listing.
 
@@ -41,7 +41,7 @@ Each side keeps the other's non-public information (prices in quotes and documen
 
 ## 7. Ending
 
-Your organisation can stop using The IDEA Business at any time; open purchase orders, invoices and seats must still be settled. An owner can delete the organisation from its settings once nothing is left open. We may suspend an organisation that breaks these terms or doesn't pay.
+Your organisation can stop using The IDEA Partners at any time; open purchase orders, invoices and seats must still be settled. An owner can delete the organisation from its settings once nothing is left open. We may suspend an organisation that breaks these terms or doesn't pay.
 
 ## Contact us
 

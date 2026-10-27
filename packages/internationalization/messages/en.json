@@ -4417,7 +4417,7 @@
     "mfa": {
       "title": "Authenticator app",
       "enrollTitle": "Set up your authenticator app",
-      "enrollDescription": "Protect your Pass with a second step. Link an authenticator app once; you'll enter its code when a site asks for it. Staff need it for the back office.",
+      "enrollDescription": "Protect your Pass with a second step. Link an authenticator app once; you'll enter its code when a site asks for it. The IDEA's team needs it to open Staff.",
       "challengeTitle": "Enter your authenticator code",
       "challengeDescription": "Open your authenticator app and enter the 6-digit code for The IDEA.",
       "stepInstall": "Install an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…).",

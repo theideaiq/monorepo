@@ -25,7 +25,8 @@ form.
 flowchart LR
   subgraph Clients
     W["apps/web: theideaiq.com<br/>site · The IDEA Pass · checkout"]
-    A["apps/business: The IDEA Business<br/>companies · back office"]
+    A["apps/partners: The IDEA Partners<br/>organizations"]
+    S["apps/staff: Staff<br/>The IDEA's team · The IDEA Design"]
     N["iOS / Android shell<br/>(WebView loads the website)"]
   end
   subgraph Server["Vercel"]
@@ -40,8 +41,8 @@ flowchart LR
   ADS["GA4 · Meta · TikTok"]
 
   N -- "server.url" --> W
-  W & A -- "supabase-js / @supabase/ssr, user's JWT" --> AUTH & DB & ST
-  W & A -- "Bearer token" --> API
+  W & A & S -- "supabase-js / @supabase/ssr, user's JWT" --> AUTH & DB & ST
+  W & A & S -- "Bearer token" --> API
   API -- "secret key (bypasses RLS)" --> DB
   API -- "payment links" --> WAYL
   WAYL -- "signed webhook" --> API
@@ -53,19 +54,25 @@ flowchart LR
 
 | App | Port | What it is | How it is deployed |
 | --- | --- | --- | --- |
-| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (The IDEA Store: home, catalog and product pages; The IDEA Plus; The IDEA Club: posts and events; `/business` for companies; saved products; help and contact; careers; legal in `apps/web/content/legal`), **The IDEA Pass** (sign-in, authenticator app, and its pages at `/pass`: the card, orders, Bulbs and invites, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
-| `apps/business` | 3000 | **The IDEA Business** (`business.theideaiq.com`), for companies and staff: the company dashboard at its root and the staff **back office** under `/{locale}/staff` (see [The IDEA Business](#the-idea-business)). No sign-in of its own: it sends people to The IDEA Pass on the website. | Vercel |
-| `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, push notifications, the back office's privileged steps (`app/admin/*`), the website's contact form and status badge. Route handlers only. | Vercel |
+| `apps/web` | 3001 | **theideaiq.com**, everything customers see (see [The website](#the-website)): the public pages (The IDEA Store: home, catalog and product pages; The IDEA Plus; The IDEA Club: posts and events; `/partners` for organizations; saved products; help and contact; careers; legal in `apps/web/content/legal`), **The IDEA Pass** (sign-in, authenticator app, and its pages at `/pass`: the card, orders, Bulbs and invites, settings), the cart and checkout. Public pages are Server Components with ISR; the signed-in parts are client components. Its `proxy.ts` adds the locale, refreshes the cookie session and sets the security headers. | Vercel; the iOS/Android apps load it in a WebView (section 3) |
+| `apps/partners` | 3000 | **The IDEA Partners** (`partners.theideaiq.com`), the organization dashboard at its root (see [The IDEA Partners](#the-idea-partners)). No sign-in of its own: it sends people to The IDEA Pass on the website. | Vercel (`theideaiq-partners`) |
+| `apps/staff` | 3003 | **Staff** (`staff.theideaiq.com`), everything The IDEA's team uses, at its root (see [Staff](#staff)), and **The IDEA Design** at `/design` (see [The IDEA Design](#the-idea-design)). No sign-in of its own: it sends people to The IDEA Pass on the website. Storybook dev runs on port 6006. | Vercel (`theideaiq-staff`) |
+| `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, push notifications, Staff's privileged steps (`app/admin/*`), the website's contact form and status badge. Route handlers only. | Vercel |
 | `apps/docs` | 3004 | Mintlify documentation site. | Mintlify |
-| `apps/storybook` | 6006 | **The IDEA Design**: the staff-only design site with every UI component and email template (see [The IDEA Design](#the-idea-design)). | Vercel (`design.theideaiq.com`) |
 
 ### The IDEA Design
 
-`apps/storybook` is the one place to review UI and email. `bun run dev`
-there is plain Storybook on port 6006 (no gate). `bun run build` runs
-`storybook build -o public` and then `next build`: the Next.js shell has
-no pages of its own and serves the static build, with `proxy.ts` in front
-of every path (the manager, the iframe and every asset):
+The design site lives in `apps/staff` and is the one place to review UI
+and email: the Storybook source and configuration are
+`apps/staff/.storybook`, `stories/` and `assets/`.
+`bun run --cwd apps/staff storybook` is plain Storybook on port 6006 (no
+gate). `bun run build` in `apps/staff` runs
+`storybook build -o public/design` (production builds add
+`<base href="/design/">` to the manager and the preview) and then
+`next build`, so `staff.theideaiq.com/design` serves the static build.
+Staff's `proxy.ts` sends every `/design…` path (the manager, the iframe
+and every asset) through `designResponse` (`lib/design-proxy.ts`) and its
+staff check (`lib/design-gate.ts`); `/design` serves `index.html`:
 
 1. It reads the Supabase session cookie that The IDEA Pass writes
    (`sb-<project ref>-auth-token`, whole or chunked, `base64-` or plain),
@@ -80,15 +87,14 @@ of every path (the manager, the iframe and every asset):
    read their own row). No row: a plain bilingual 403 page. A row but an
    `aal1` token: redirect to Pass `/{locale}/mfa`, since staff rights need an
    authenticator app. Tokens issued to third-party apps (`client_id`) are
-   refused.
+   refused. The 403 page links to Pass sign-out, to try another Pass.
 
-The locale comes from `NEXT_LOCALE`, then `Accept-Language`, then Arabic.
+The locale comes from `NEXT_LOCALE`, then `Accept-Language`, then English.
 Responses are `Cache-Control: private, no-store` and `noindex`. Environment:
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (unset =
 503, fail closed) and `NEXT_PUBLIC_WEB_URL` (defaults to
 `http://localhost:3001` in development, `https://theideaiq.com`
-otherwise). Other apps link to it with
-`NEXT_PUBLIC_STAFF_URL` (`@repo/next-config/keys`). Emails are reviewed
+otherwise). Emails are reviewed
 under **The IDEA Design → Emails**, rendered with `@react-email/components`
 exactly as Resend sends them; add a story there with every new template.
 
@@ -101,7 +107,7 @@ load on every page (never inside the iOS/Android apps).
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Public pages | The IDEA Store: `/{locale}`, `/store`, `/store/<slug>`; The IDEA Plus: `/plus` (rental catalog, plans, tiers; "Your Plus" at `#yours` when signed in: membership, plans, rentals, rental requests); The IDEA Club: `/club` (one feed with chips, `?show=events\|news\|stories\|guides`; "Yours" at `#yours`: your events with the calendar feed and your submissions; the Telegram rooms card) and `/club/<slug>` (a post or an event); `/business`; `/saved`; `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
+| Public pages | The IDEA Store: `/{locale}`, `/store`, `/store/<slug>`; The IDEA Plus: `/plus` (rental catalog, plans, tiers; "Your Plus" at `#yours` when signed in: membership, plans, rentals, rental requests); The IDEA Club: `/club` (one feed with chips, `?show=events\|news\|stories\|guides`; "Yours" at `#yours`: your events with the calendar feed and your submissions; the Telegram rooms card) and `/club/<slug>` (a post or an event); `/partners` ("For partners"); `/saved`; `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
 | The IDEA Pass (sign-in) | `/{locale}/sign-in`, `/mfa`, `/tg`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
 | The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders), `/pass/orders/<id>`, `/pass/bulbs` (Bulbs, then invites at `#invite`), `/pass/settings` | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
 | Cart and checkout | `/{locale}/cart`, `/checkout` | `app/[locale]/(checkout)` |
@@ -117,8 +123,8 @@ load on every page (never inside the iOS/Android apps).
   `/saved`), the cart and, on desktop, the Pass avatar ("Sign in", coming
   back to the same page, when signed out); saved and the cart are hidden
   on sign-in and checkout. The desktop header reads Store · Plus · Club,
-  "For business", saved, cart, Pass. The footer lists Store · Plus · Club
-  · Pass · Business, then About · Careers · Help · Legal.
+  "For partners", saved, cart, Pass. The footer lists Store · Plus · Club
+  · Pass · For partners, then About · Careers · Help · Legal.
 - **The IDEA Club.** One feed at `/club` of events, news, stories and
   guides (online only), filtered by chips (`?show=events|news|stories|guides`).
   Posts have a section (`news`, `stories` for features and members' work,
@@ -126,7 +132,7 @@ load on every page (never inside the iOS/Android apps).
   `20261207000000_post_restructure.sql`). Posts have an optional byline
   (empty means The IDEA), and `/club/<slug>` is a post or an event (the
   database keeps slugs off the section names). Members submit work from
-  the Club; editors review it blind in the back office (Editorial →
+  the Club; editors review it blind in Staff (Editorial →
   Submissions) and, once it is accepted, **Create the post** opens a
   draft in Stories with the member's name as the byline
   (`posts.submission_id`; only accepted submissions, once each). The
@@ -139,7 +145,7 @@ load on every page (never inside the iOS/Android apps).
   older shapes (notifications, push, Telegram), including the static-export
   detail links (`/store/product?slug=…`, `/orders/view?id=…`,
   `/support/view?id=…`), are mapped to the current page by
-  `currentAppPath` (and `businessPath` for The IDEA Business) in
+  `currentAppPath` (and `businessPath` for The IDEA Partners) in
   `packages/internationalization/app-paths.ts`.
 - **Locale.** English, the default, has no prefix (`/store`); Arabic is
   `/ar/store` (next-intl `localePrefix: "as-needed"`). `proxy.ts` sends
@@ -153,28 +159,28 @@ load on every page (never inside the iOS/Android apps).
   checkout send `noindex`
   (metadata and `X-Robots-Tag`).
 
-### The IDEA Business
+### The IDEA Partners
 
-`apps/business` (package `business`, port 3000, `business.theideaiq.com`)
-is for companies and staff. Messages come from the `app`, `admin` and
-`billing` namespaces. The company dashboard is at its root; the staff back
-office is under `/{locale}/staff`.
+`apps/partners` (package `partners`, port 3000, `partners.theideaiq.com`)
+is the organization dashboard, at its root. It holds no Staff code.
+Messages come from the `app`, `auth`, `billing`, `common` and `store`
+namespaces.
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Company dashboard | `/{locale}` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/procurement` (requests and quotes, `/procurement/<id>`), `/invoices`, `/plus` (The IDEA Plus for the team), `/documents/<quote\|order\|invoice>/<id>` (printable), `/members`, `/billing`, `/settings`, `/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
-| Back office | `/{locale}/staff/…`: the dashboard (an inbox of what's waiting, then the numbers), the counter, search (`/staff/search`), then sections grouped by Today, Sales (orders, rentals, customers and CRM), Catalog (catalog, reviews), Community (editorial, Telegram), Companies (`/staff/companies`), Money (finance), Help (support) and Team (staff, audit log) | `app/[locale]/staff`, `components/admin`, `lib/admin` |
+| Organization dashboard | `/{locale}` (Overview: quotes to answer, open requests, unpaid invoices, Plus members, plan), `/procurement` (requests and quotes, `/procurement/<id>`), `/invoices`, `/plus` (The IDEA Plus for the team), `/perks`, `/developers`, `/documents/<quote\|order\|invoice>/<id>` (printable), `/members`, `/billing`, `/settings`, `/new`, `/invite` | `app/[locale]/(business)`, `components/screens`, `components/business` |
 
-- **Sign-in.** The IDEA Business has none of its own: signed-out visitors
+- **Sign-in.** The IDEA Partners has none of its own: signed-out visitors
   go to The IDEA Pass on the website (`passUrl` from `@repo/auth/pass`)
   with `return_to` set to the page, and the shared cookie on
   `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` signs them in here too. Old paths
-  (`/business/…`, `/admin/…`) have no redirects; stored notification links
+  (`/business/…`, `/admin/…`) and the old host `business.theideaiq.com`
+  have no redirects; stored notification links
   under `/business…` open the page at the root here (`/business/invoices`
   → `/invoices`, `businessPath` in `packages/internationalization/app-paths.ts`).
 - **Procurement.** A company's owners and admins send a
   request (what they need, an optional budget and date). Support answers in
-  Back office → Companies with one or more quotes (priced lines) and
+  Staff → Companies with one or more quotes (priced lines) and
   sends them; the company's owners and admins get a `quote_sent`
   notification and accept one (with their own PO reference; the others are
   withdrawn) or decline. An accepted quote becomes a purchase order;
@@ -186,15 +192,15 @@ office is under `/{locale}/staff`.
   RPCs (`send_quote`, `decide_quote`, `cancel_procurement_request`,
   `set_purchase_order_status`, `issue_invoice`, `set_invoice_status`),
   migration `20261206000000_suite_procurement.sql`. The website's
-  notification bell opens company links on The IDEA Business.
+  notification bell opens company links on The IDEA Partners.
 - **Printable documents.** `/documents/quote/<id>`, `/documents/order/<id>`
   and `/documents/invoice/<id>` lay a quote, purchase order or invoice out
   for paper; the browser's print dialog prints it or saves it as a PDF
   (Arabic and English alike, which PDF libraries render poorly). Company
   members and support/finance staff can open them (RLS).
 - **The IDEA Plus for a company's team.** Owners and admins ask for a
-  monthly Plus plan for a member (The IDEA Business → The IDEA Plus); finance
-  approves it in Back office → Companies → The IDEA Plus seats, which
+  monthly Plus plan for a member (The IDEA Partners → The IDEA Plus); finance
+  approves it in Staff → Companies → The IDEA Plus seats, which
   gives the member a Plus subscription (provider `company`, so rentals and
   tiers work as usual; the Wayl renewals skip it) and invoices the company
   for the first month. `GET /cron/plus-seats` (daily, 06:15 UTC) extends
@@ -204,18 +210,6 @@ office is under `/{locale}/staff`.
   order. Table `plus_seats`; RPCs `request_plus_seat`, `activate_plus_seat`,
   `decline_plus_seat`, `end_plus_seat`, `run_plus_seat_renewals`; migration
   `20261208000000_team_plus.sql`.
-- **Back office tools.** The dashboard opens on "Waiting on you": unassigned
-  tickets, orders to prepare, rental requests and overdue rentals,
-  submissions, Telegram requests, procurement requests to quote, Plus
-  seats to approve and overdue company invoices, each for the roles that handle
-  them (`lib/admin/inbox.ts`). The sidebar's search (`/staff/search`)
-  looks up order, ticket and request numbers, members by name or Pass
-  number, and products. The counter (`/staff/counter`, support) checks a
-  member's The IDEA Pass with the camera (where the browser has
-  BarcodeDetector), a USB scanner or by typing, then shows their Bulbs,
-  Plus and open rentals and checks them in at events around now
-  (`check_in_rsvp`, now open to support too; migration
-  `20261210000000_counter.sql`).
 - **Indexing.** Every page sends `noindex`.
 
 ### The IDEA Pass
@@ -253,8 +247,8 @@ session in the shared cookie.
   `packages/database/supabase/templates/` (one email in Arabic and English,
   branded The IDEA Pass, the code in large type); production uses the same
   files (2.7).
-- **Staff** sign in the same way; the back office and the database still
-  require the authenticator-app step (AAL2) afterwards.
+- **Staff** sign in the same way; Staff (`apps/staff`) and the database
+  still require the authenticator-app step (AAL2) afterwards.
 - **Phone sign-in is switched off, not removed.** The phone provider is
   disabled (`[auth.sms]` in `config.toml`, and in production). The phone
   helpers stay: `@repo/auth/phone` (normalizing and formatting Iraqi
@@ -268,24 +262,27 @@ session in the shared cookie.
   (`authCookieOptions()` in `packages/auth/cookies.ts`) write the
   `@supabase/ssr` cookie (`sb-<project ref>-auth-token`, chunked `.0`, `.1`,
   possibly `base64-` prefixed) for the whole domain, so `theideaiq.com`,
-  `business.` and `design.` read the same session. Set the same value on web,
-  app (The IDEA Business) and storybook; leave it unset locally and on previews (host-only
-  cookie; on localhost cookies are shared across ports anyway).
+  `partners.` and `staff.` read the same session. Set the same value on
+  the web, partners and staff projects; leave it unset locally and on
+  previews (host-only cookie; on localhost cookies are shared across ports
+  anyway, so Staff on localhost:3003 reads the website's session).
 - **return_to.** A path on the website (`/cart`, `/ar/cart`) is kept as is. An
   absolute URL must be http(s) on the host of `NEXT_PUBLIC_WEB_URL`,
-  `_APP_URL`, `_DESIGN_URL` or `_API_URL` (plus localhost in development,
-  `isAllowedReturnTo`); anything else falls back to the website
+  `_APP_URL` (The IDEA Partners), `_STAFF_URL` (Staff) or `_API_URL` (plus
+  localhost in development, `isAllowedReturnTo`); anything else falls back to the website
   (`safeReturnTo`). The older `?next=/cart` still works. Without a
   destination, sign-in and the authenticator step go to `/pass`. After signing
   in the browser does a full navigation, so the next page reads the cookie.
 - **Sign-out.** The buttons (Pass settings, the authenticator step) remove this
-  device's push registration and then call a Server Action. The back
-  office links to `/sign-out` on the website, which signs out only on
+  device's push registration and then call a Server Action. Staff links
+  to `/sign-out` on the website, which signs out only on
   navigations from The IDEA's own sites (`Sec-Fetch-Site: same-site` or
   `same-origin`); a link from anywhere else lands on `/pass` instead.
 - **Gates.** On the website `RequireAuth` (the Pass pages, the cart,
   checkout) sends signed-out visitors to `/{locale}/sign-in?return_to=<the page>`;
-  The IDEA Business's gates send them to the same page with an absolute `return_to`.
+  The IDEA Partners' gates send them to the same page with an absolute
+  `return_to`, and Staff sends them there with `return_to` set to its home
+  page (`NEXT_PUBLIC_STAFF_URL`).
 - **Later: OAuth consent.** Signing in to third-party apps with The IDEA
   Pass can use Supabase Auth's OAuth 2.1 server (Authentication → OAuth
   Server): Supabase sends people to an authorization page (for example
@@ -417,7 +414,7 @@ session in the shared cookie.
   A menu in private chats: Track my order and My Bulbs for members who
   linked Telegram (`telegram_members.user_id`; others get a link to
   `/pass/settings`), store search, Talk to us (a support ticket in `/help`
-  for members, a Telegram request in the back office otherwise),
+  for members, a Telegram request in Staff otherwise),
   The IDEA Plus, FAQ (topics `general`, `store`, `plus`, `club` and
   `business`, migration `20261217000000_program_revision_names.sql`),
   links and the newsletter. Inline mode
@@ -425,7 +422,7 @@ session in the shared cookie.
   channels it records membership and sends new channel posts to newsletter
   subscribers; moderation (word filters, spam, flood muting, network-wide
   bans, unban requests) and the AI assistant were removed in favour of
-  Telegram's own tools. Back office → Telegram → Bot shows how the bot is
+  Telegram's own tools. Staff → Telegram → Bot shows how the bot is
   set up (webhook and whether it points at this API, waiting updates, the
   last delivery error, commands, the Mini App menu button, descriptions,
   sign-in with Telegram) and lets admins set it up in one go: the webhook
@@ -434,7 +431,7 @@ session in the shared cookie.
   (`apps/api/lib/telegram-setup.ts`, `POST /admin/telegram`).
   `bun run --cwd apps/api telegram:setup` does the same from a terminal.
   **The Club's join rules** (migration `20261203000000_telegram_club.sql`):
-  each chat in Back office → Telegram → Chats has `join_rule` (anyone,
+  each chat in Staff → Telegram → Chats has `join_rule` (anyone,
   members with a linked The IDEA Pass, or a Bulbs tier and up). For chats
   whose invite link asks to approve new members, Droid approves join
   requests that pass `telegram_join_check()` and declines the rest with a
@@ -466,19 +463,33 @@ session in the shared cookie.
   of it) on the `api` project. Apple Wallet needs an Apple Developer pass
   certificate and is not built yet.
 
-### The back office
+### Staff
 
-`/{locale}/staff` in The IDEA Business, for staff: catalog, orders, rentals,
-customers and CRM, finance (ledger, scenarios, payments and financial
-settings), editorial, reviews, support, Telegram, staff and the audit log.
-Newsletters are not sent from here but from Resend Broadcasts (4.3); the
+`apps/staff` (package `staff`, port 3003, `staff.theideaiq.com`) is
+everything The IDEA's team uses, at the root of its own host: catalog,
+orders, rentals, customers and CRM, finance (ledger, scenarios, payments
+and financial settings), editorial, reviews, support, Telegram, companies,
+staff and the audit log, plus The IDEA Design at `/design` (see
+[The IDEA Design](#the-idea-design)). People see the name Staff; the code
+keeps the internal name "admin" (`components/admin`, `lib/admin`, the
+`admin` messages namespace). Messages come from the `admin`, `auth`,
+`common` and `store` namespaces. It loads no analytics, and every page
+sends `noindex`. Newsletters are not sent from here but from Resend Broadcasts (4.3); the
 payroll plan, cap table, fixed assets and the own email campaigns were
 retired on 2026-10-24 and their data kept in the `archive` schema.
 
+| Area | Routes | Code |
+| --- | --- | --- |
+| Console | `/{locale}`: the dashboard (an inbox of what's waiting, then the numbers), the counter (`/counter`), search (`/search`), then sections grouped by Today, Sales (`/orders`, `/rentals`, `/customers` and CRM), Catalog (`/catalog`, `/reviews`), Community (`/editorial`, `/telegram`), Companies (`/companies`), Money (`/finance`), Help (`/support`) and Team (`/staff`, `/audit`) | `app/[locale]/(console)`, `components/admin`, `lib/admin` |
+| No access | `/{locale}/no-access` | `app/[locale]/(auth)` |
+| The IDEA Design | `/design` | `.storybook`, `stories/`, `assets/`, `lib/design-proxy.ts`, `lib/design-gate.ts` |
+
 - **Gate** (`lib/admin/session.ts`, in the console layout and again in
-  every page and Server Action): signed out → `/{locale}/sign-in?return_to=/{locale}/staff`;
-  staff on AAL1 → `/{locale}/mfa?return_to=/{locale}/staff`; signed in
-  without a `staff` row → `/{locale}/staff/no-access`. Each section checks
+  every page and Server Action): signed out → The IDEA Pass
+  `/{locale}/sign-in` on the website, with `return_to` set to Staff's home
+  page (`NEXT_PUBLIC_STAFF_URL`, `lib/admin/pass.ts`); staff on AAL1 →
+  `/{locale}/mfa` there, likewise; signed in without a `staff` row →
+  `/{locale}/no-access`. Each section checks
   the role's access (`lib/admin/roles.ts`); the database grants staff rights
   only to AAL2 sessions (enable **Authentication → Multi-Factor → TOTP**;
   it is on in the local stack).
@@ -486,10 +497,25 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
   session and role, validate with zod and run as the staff member, so RLS
   applies. Privileged steps (staff lookup) call
   `apps/api/app/admin/*` with the staff member's token (`lib/admin/api.ts`).
-  No secret lives in The IDEA Business or the website (`bun run check:secrets`).
-- **Links** use `@/lib/admin/navigation`, whose `Link`, `redirect`,
-  `useRouter` and `usePathname` take paths relative to `/staff`.
-- Grant the first superadmin with SQL, finding the account by its email
+  No secret lives in Staff, The IDEA Partners or the website (`bun run check:secrets`).
+- **Links** use `@/lib/admin/navigation`, which re-exports `Link`,
+  `redirect`, `useRouter` and `usePathname` from
+  `@repo/internationalization/navigation`: Staff answers at the root of
+  its host, so paths are written as they are (`/orders?status=open`).
+- **Tools.** The dashboard opens on "Waiting on you": unassigned
+  tickets, orders to prepare, rental requests and overdue rentals,
+  submissions, Telegram requests, procurement requests to quote, Plus
+  seats to approve and overdue company invoices, each for the roles that handle
+  them (`lib/admin/inbox.ts`). The sidebar's search (`/search`)
+  looks up order, ticket and request numbers, members by name or Pass
+  number, and products. The counter (`/counter`, support) checks a
+  member's The IDEA Pass with the camera (where the browser has
+  BarcodeDetector), a USB scanner or by typing (`scannedPass` from
+  `@repo/auth/pass-code`, shared with The IDEA Partners), then shows
+  their Bulbs, Plus and open rentals and checks them in at events around now
+  (`check_in_rsvp`, now open to support too; migration
+  `20261210000000_counter.sql`).
+- Grant the first superadmin with SQL, finding the person by their email
   (`insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '…'`).
 
 ### Principles that shape the code
@@ -498,11 +524,12 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
    Postgres with the signed-in user's token, so the database decides what each
    user can read and write. Client-side checks such as `RequireAuth` or
    `canManage` only decide what to *show*.
-2. **Secrets live in `apps/api` and Supabase, never in `apps/web` or
-   `apps/business`.** Anything a browser or the iOS/Android shell loads can be
-   extracted, so they only have `NEXT_PUBLIC_*` variables. When they need a
-   privileged action, they call `apps/api` with `callApi()`
-   (`apps/web/lib/api.ts`, `apps/business/lib/api.ts`), which sends the user's
+2. **Secrets live in `apps/api` and Supabase, never in `apps/web`,
+   `apps/partners` or `apps/staff`.** Anything a browser or the iOS/Android
+   shell loads can be extracted, so they only have `NEXT_PUBLIC_*`
+   variables. When they need a privileged action, they call `apps/api` with
+   `callApi()` (`apps/web/lib/api.ts`, `apps/partners/lib/api.ts`; Staff's
+   `apps/staff/lib/admin/api.ts`), which sends the user's
    access token as `Authorization: Bearer …` and the client platform as
    `x-client-platform`. The API verifies the token (`authenticateRequest`),
    checks the caller's role in the organization (`apps/api/lib/membership.ts`)
@@ -516,7 +543,7 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
    Tailwind utilities so they mirror in RTL. `bun run check:i18n` and
    `bun run check:rtl` enforce both rules in CI.
 5. **Secrets live only in `apps/api`.** The other apps hold public values
-   only (the back office works with the staff member's session and the
+   only (Staff works with the staff member's session and the
    publishable key); the website's contact form and status badge call the API.
    `bun run check:secrets` fails on a server-only variable or a
    secret-reading package module anywhere else, client components never
@@ -528,8 +555,8 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
 | Flow | Path |
 | --- | --- |
 | Sign in | The IDEA Pass on the website: email → `supabase.auth.signInWithOtp` → email with a 6-digit code (Resend SMTP) → code → `verifyOtp` (`type: "email"`) → session in the shared cookie (the browser's, or the WebView's in the apps). |
-| Read or write data | Screen → TanStack Query hook (`apps/web/lib/queries.ts`, `apps/business/lib/queries.ts`) → `supabase.from(…)` with the user's JWT → RLS policies. |
-| Create an organization | The IDEA Business → New (`/new`) → `rpc("create_organization")`, which inserts the organization and the caller's `owner` membership in one transaction. |
+| Read or write data | Screen → TanStack Query hook (`apps/web/lib/queries.ts`, `apps/partners/lib/queries.ts`) → `supabase.from(…)` with the user's JWT → RLS policies. |
+| Create an organization | The IDEA Partners → New (`/new`) → `rpc("create_organization")`, which inserts the organization and the caller's `owner` membership in one transaction. |
 | Privileged action | Screen → `callApi(supabase, "/checkout", …)` → `apps/api` verifies the token and role → admin client or third-party API. |
 | Payment | `/checkout` → Wayl payment link → customer pays on Wayl → signed webhook → `/webhooks/payments` → payment and subscription updated → purchase reported to analytics. |
 
@@ -538,7 +565,7 @@ retired on 2026-10-24 and their data kept in the `archive` schema.
 See [The website](#the-website): the proxy adds the locale, and
 `app/[locale]/layout.tsx` is the root layout (server-rendered `lang` and
 `dir`). Unknown paths render the localized 404 (`[...rest]`). Inside
-`apps/web` and `apps/business`, link with `Link` and `useRouter` from
+`apps/web`, `apps/partners` and `apps/staff`, link with `Link` and `useRouter` from
 `@repo/internationalization/navigation` so URLs keep their language prefix.
 
 ---
@@ -582,7 +609,7 @@ that organization instead (`accept_invitation`). Invitation links
 
 Later, users create more organizations from the sidebar's organization switcher
 (`/[locale]/organizations/new`). The active organization is remembered per
-device (`apps/business/lib/active-organization.ts`); it is a UI preference, not a
+device (`apps/partners/lib/active-organization.ts`); it is a UI preference, not a
 permission. Roles are `owner`, `admin` and `member`:
 
 | Action | owner | admin | member |
@@ -882,7 +909,8 @@ In the Supabase dashboard:
    (`https://theideaiq.com`, where The IDEA Pass lives). Add these
    **Redirect URLs**:
    - `https://theideaiq.com/**` (the website, with The IDEA Pass)
-   - `https://business.theideaiq.com/**` (The IDEA Business)
+   - `https://partners.theideaiq.com/**` (The IDEA Partners)
+   - `https://staff.theideaiq.com/**` (Staff)
    - `capacitor://localhost/**` (iOS app)
    - `https://localhost/**` (Android app)
    - `<bundle id>://**`, for example `iq.example.app://**` (native deep links)
@@ -964,8 +992,8 @@ In the Supabase dashboard:
 
 | Where | Client | RLS |
 | --- | --- | --- |
-| `apps/web` and `apps/business` client components (browser and the apps' WebView) | `useAuth().supabase` (from `getSupabase()`) | applies |
-| `apps/web` and `apps/business` Server Components and Server Actions (The IDEA Pass and its pages, the back office) | `@repo/auth/server` | applies |
+| `apps/web` and `apps/partners` client components (browser and the apps' WebView) | `useAuth().supabase` (from `getSupabase()`) | applies |
+| `apps/web` and `apps/partners` Server Components and Server Actions (The IDEA Pass and its pages), and Staff's (`apps/staff`) | `@repo/auth/server` | applies |
 | `apps/web` public pages (catalog, editorial) | the anonymous publishable-key client | applies |
 | `apps/api` endpoints called by users | verify with `authenticateRequest`, check `membershipRole`, then the admin client for the privileged step | bypassed: check access yourself |
 | Webhooks, cron jobs | `@repo/database/admin` | bypassed |
@@ -1036,7 +1064,7 @@ permissions, icons, `capacitor.config.ts`).
 
 **Navigation.** The website's own host is always loaded in the WebView.
 `allowNavigation` adds `theideaiq.com` and `*.theideaiq.com` (the website,
-The IDEA Design, the API). Every other URL, Wayl checkout included, opens
+The IDEA Partners, Staff, the API). Every other URL, Wayl checkout included, opens
 in the system browser, so the WebView never shows a third-party page.
 
 **Plugins in use** (keep every `@capacitor/*` package on the same major
@@ -1190,7 +1218,7 @@ person on the phone doesn't receive the previous account's notifications.
 
 **Test it:** sign in on a device, accept the prompt, check that a row
 appears in `push_devices`, then change one of your orders' status in the
-back office: the push arrives and tapping it opens the order.
+Staff: the push arrives and tapping it opens the order.
 
 ### 3.6 App links (Universal Links and Android App Links)
 
@@ -1341,7 +1369,7 @@ it and its passwords in the password manager; enable Play App Signing) →
 ```
 
 `<AnalyticsProvider>` is rendered once in the root layouts of `apps/web` and
-`apps/business`. Code never calls `gtag`, `fbq` or `ttq` directly. It calls
+`apps/partners` (Staff loads no analytics). Code never calls `gtag`, `fbq` or `ttq` directly. It calls
 
 ```ts
 import { track } from "@repo/analytics/client";
@@ -1595,9 +1623,9 @@ Migration `20261225000000_students_and_perks.sql`.
   badge ended to the full price at the next renewal), no deposit for
   single-item rent and kits, and student perks.
 - **Perks** (`perks`): each belongs to a partner, an organization in The
-  IDEA Business, and is open to every Pass, to students or to Plus
-  members. Support adds them in Companies → Perks. Your Pass lists them;
-  the partner's team checks a card in The IDEA Business → Perks
+  IDEA Partners, and is open to every Pass, to students or to Plus
+  members. Support adds them in Staff → Companies → Perks. Your Pass lists them;
+  the partner's team checks a card in The IDEA Partners → Perks
   (`partner_check()`: first name, member number, badges and which perks
   apply) and records a use (`redeem_perk()`, once a day per person and
   perk, Baghdad time), with monthly counts (`perk_stats()`).
@@ -1625,7 +1653,7 @@ Migration `20261227000000_pass_sign_in.sql`; the partner guide is
   choose what each partner may ask; the person unticks anything on the
   consent screen; sensitive scopes are marked. `offline_access` adds
   rotating refresh tokens (`pass_refresh_tokens`, 90 days).
-  Companies register their own apps in The IDEA Business → Developers
+  Companies register their own apps in The IDEA Partners → Developers
   (migration `20261229000000_pass_developers.sql`): they verify a domain
   (DNS TXT record or a file, checked by the API's
   `POST /pass/domains/verify`), register apps whose website and https
@@ -1732,7 +1760,7 @@ available copies by variant, condition and purpose, with the lowest price.
   used, and rent with Plus.
 - **Categories** have no kind: the shop lists those with products for sale
   and the Rent tab those with rentable products (`listed_categories`).
-- **Back office**: Catalog → product → **Copies** adds copies and edits or
+- **Staff**: Catalog → product → **Copies** adds copies and edits or
   removes each one.
 
 #### Delivery, pickup and cash orders
@@ -1740,7 +1768,7 @@ available copies by variant, condition and purpose, with the lowest price.
 Store orders are placed with `create_order(shipping, fulfilment,
 payment_method, delivery_zone)` (migration `20261120000160_delivery.sql`).
 The database prices the delivery fee from `delivery_zones` (one per
-governorate, edited in Back office → Catalog → Settings); pickup is free and
+governorate, edited in Staff → Catalog → Settings); pickup is free and
 offered once **Store pickup** is on and has an address; the free-delivery
 threshold applies to every zone.
 
@@ -1886,7 +1914,7 @@ newsletters are written and sent in **Resend → Broadcasts**, to one Resend
 segment that `apps/api` keeps in step with the accounts.
 
 - **Consent** stays in the product: `profiles.marketing_opt_in`, set during
-  onboarding and in Settings. The back office shows it per customer
+  onboarding and in Settings. Staff shows it per customer
   (Customers, "opted in" filter) and on the dashboard.
 - **Sync** (`GET /cron/newsletter-contacts`, daily at 04:00 UTC,
   `apps/api/lib/newsletter.ts`): every account with an email becomes a
@@ -1958,7 +1986,7 @@ Boxy bills The IDEA. Store pickup stays as it is.
   Boxy matches an address by its province code (`delivery_zones.
   carrier_province`) and the area's name, stored as the address's city.
   Before the first copy the field is free text.
-- **Sending:** back office → order → **Delivery with Boxy**: staff pick
+- **Sending:** Staff → order → **Delivery with Boxy**: staff pick
   the parcel size and whether it's fragile and press **Send with Boxy**.
   `apps/api` (`/admin/shipments`, `lib/boxy`) creates the Boxy order (cash
   orders: Boxy collects the order total; orders paid online: nothing),
@@ -2003,9 +2031,14 @@ Create four Vercel projects from the same repository:
 | Project | Root Directory | Domain | Notes |
 | --- | --- | --- | --- |
 | web | `apps/web` | `theideaiq.com` | The website: public pages, The IDEA Pass and its pages, cart and checkout; the iOS/Android apps load it |
-| app | `apps/business` | `business.theideaiq.com` | The IDEA Business: the company dashboard and the staff back office |
+| theideaiq-partners | `apps/partners` | `partners.theideaiq.com` | The IDEA Partners: the organization dashboard |
 | api | `apps/api` | `api.theideaiq.com` | Cron jobs are defined in `apps/api/vercel.json` |
-| storybook | `apps/storybook` | `design.theideaiq.com` | The IDEA Design; `vercel.json` sets `bun run build` (Storybook, then Next.js). Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`. No Vercel Authentication: the proxy is the gate. |
+| theideaiq-staff | `apps/staff` | `staff.theideaiq.com` | Staff and The IDEA Design at `/design` (the project that used to serve the Storybook design site). Its `build` script runs Storybook, then Next.js. No Vercel Authentication: the proxy and the pages are the gate. |
+
+DNS (Cloudflare): `partners` and `staff` are CNAME records pointing at
+Vercel (the target Vercel shows when the domain is added to the project).
+`business.theideaiq.com` and `design.theideaiq.com` are retired: delete
+their records; they have no redirects.
 
 For each project:
 
@@ -2034,7 +2067,9 @@ unset and the feature turns itself off.
 - Use separate values for **Production** and **Preview**: a staging Supabase
   project, `WAYL_ENV=test`, test event codes.
 
-The API's CORS only allows the configured app and web origins. Give previews
+The API's CORS only allows the configured origins: The IDEA Partners
+(`NEXT_PUBLIC_APP_URL`), Staff (`NEXT_PUBLIC_STAFF_URL`), the website
+(`NEXT_PUBLIC_WEB_URL` and its `www` twin) and the iOS/Android apps. Give previews
 stable domains (for example a `staging` branch with `staging.app.example.iq`
 and `staging.api.example.iq`) instead of relying on per-deployment URLs.
 
@@ -2052,9 +2087,9 @@ and Better Stack are configured on `api`, not here.
 | Variable | Need | Notes |
 | --- | --- | --- |
 | `NEXT_PUBLIC_WEB_URL` | Build | This site's URL, `https://theideaiq.com`; also the API's CORS origin for the contact form |
-| `NEXT_PUBLIC_APP_URL` | Build | The IDEA Business, `https://business.theideaiq.com`, for company and back-office links |
-| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so The IDEA Business and the design site read the session The IDEA Pass writes; unset on previews |
-| `NEXT_PUBLIC_STAFF_URL` | Optional | The IDEA Design, an allowed return_to host |
+| `NEXT_PUBLIC_APP_URL` | Build | The IDEA Partners, `https://partners.theideaiq.com`, for organization links; an allowed return_to host |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so The IDEA Partners and Staff read the session The IDEA Pass writes; unset on previews |
+| `NEXT_PUBLIC_STAFF_URL` | Optional | Staff, `https://staff.theideaiq.com`: an allowed return_to host, and the "Open Staff" link on a staff member's Pass |
 | `NEXT_PUBLIC_API_URL` | Feature | The API. Without it the contact form shows "unavailable" and the status badge is hidden. |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Documentation link |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | The public catalog, plans, The IDEA Club's posts and events (read anonymously, under Row Level Security). Without them those sections show empty states. |
@@ -2067,21 +2102,20 @@ Remove `RESEND_*`, `ARCJET_KEY`, `UPSTASH_*` and `BETTERSTACK_*` from this
 project if they are still set. Page-level bot protection for the site is
 Vercel's Firewall (Bot Protection / Attack Challenge Mode), not Arcjet.
 
-### 5.4 `app` (apps/business)
+### 5.4 `theideaiq-partners` (apps/partners)
 
-The IDEA Business: the company dashboard and the staff back office. Every variable here is
+The IDEA Partners: the organization dashboard. Every variable here is
 public (it may end up in the browser). **Never add a secret to this
 project.**
 
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Build | This app's URL, `https://business.theideaiq.com`; The IDEA Pass sends people back to it |
-| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so the website and the design site read the session; unset on previews |
-| `NEXT_PUBLIC_STAFF_URL` | Optional | The IDEA Design, an allowed return_to host |
+| `NEXT_PUBLIC_APP_URL` | Build | This app's URL, `https://partners.theideaiq.com`; The IDEA Pass sends people back to it |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so it reads the session The IDEA Pass writes; unset on previews |
 | `NEXT_PUBLIC_WEB_URL` | Build | The website, where The IDEA Pass sign-in lives |
 | `NEXT_PUBLIC_SUPABASE_URL` | Feature (the app can't sign in without it) | `https://<project-ref>.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature (same) | `sb_publishable_…` |
-| `NEXT_PUBLIC_API_URL` | Feature | Checkout, push registration and the back office's staff lookup call it |
+| `NEXT_PUBLIC_API_URL` | Feature | Checkout and push registration call it |
 | `NEXT_PUBLIC_DOCS_URL` | Optional | Help links |
 | The GA4, Meta and TikTok IDs | Optional | Same values as `web`, so visitors are followed across both |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | |
@@ -2089,11 +2123,28 @@ project.**
 | `NEXT_PUBLIC_LIVEBLOCKS_ENABLED` | Optional (`collaboration`) | `true` shows presence and cursors; the secret lives in `api` |
 | `NEXT_PUBLIC_KNOCK_API_KEY`, `NEXT_PUBLIC_KNOCK_FEED_CHANNEL_ID` | Optional (`notifications`) | Public Knock keys |
 
-### 5.5 `api` (apps/api)
+### 5.5 `theideaiq-staff` (apps/staff)
+
+Staff and The IDEA Design. Every variable here is public. **Never add a
+secret to this project.** Staff loads no analytics, so it has no pixel or
+PostHog ids.
+
+| Variable | Need | Notes |
+| --- | --- | --- |
+| `NEXT_PUBLIC_STAFF_URL` | Feature | This app's URL, `https://staff.theideaiq.com`; The IDEA Pass sends staff back to it (defaults to `http://localhost:3003`) |
+| `NEXT_PUBLIC_APP_URL` | Build | The IDEA Partners, `https://partners.theideaiq.com` (required by the shared URL settings) |
+| `NEXT_PUBLIC_WEB_URL` | Build | The website, where The IDEA Pass sign-in lives; the design site's gate sends visitors there too |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature (production) | `.theideaiq.com`, so it reads the session The IDEA Pass writes; unset on previews |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Every query runs as the staff member; without them the design site answers 503 (it fails closed) |
+| `NEXT_PUBLIC_API_URL` | Feature | Shipments, the staff lookup and other privileged steps (`app/admin/*`) |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | |
+
+### 5.6 `api` (apps/api)
 
 | Variable | Need | Notes |
 | --- | --- | --- |
 | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_WEB_URL` | Build | Also the CORS allow-list (the public `/contact` and `/status` allow the web origin only) |
+| `NEXT_PUBLIC_STAFF_URL` | Feature | Staff's origin, also allowed by CORS; without it Staff's calls to the API are refused |
 | `NEXT_PUBLIC_API_URL` | Feature | This API's public URL; the Wayl webhook URL is derived from it |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Feature | Verifying users' tokens |
 | `SUPABASE_SECRET_KEY` | Feature | `sb_secret_…`. Webhooks, cron, account and organization deletion. **Server only.** |
@@ -2120,7 +2171,7 @@ project.**
 | `LIVEBLOCKS_SECRET` | Feature, if `collaboration` is kept | `sk_…` |
 | `SVIX_TOKEN` | Feature, if `webhooks` is kept | Customer webhook portal |
 
-### 5.6 Managing variables
+### 5.7 Managing variables
 
 ```sh
 npm i -g vercel
@@ -2133,12 +2184,12 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 `.env.example` files in sync whenever a variable is added: they are the list
 `bun run init` copies from and what new developers start with.
 
-### 5.7 Go-live checklist
+### 5.8 Go-live checklist
 
 - [ ] Supabase production project linked and migrations pushed (2.6); Auth
       URLs, email codes (OTP length 8), templates and Resend SMTP
       configured, phone provider off (2.7).
-- [ ] Four Vercel projects (web, app, api, storybook) with domains and the variables above;
+- [ ] Four Vercel projects (web, theideaiq-partners, api, theideaiq-staff) with domains and the variables above;
       `WAYL_ENV=live`; no test event codes in Production.
 - [ ] Wayl webhook verified end to end (4.2).
 - [ ] Tracking verified in GA4 DebugView and in Meta and TikTok test events
@@ -2147,12 +2198,14 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 - [ ] Native apps synced against the production website, push and app links
       verified, account deletion tested, submitted (3.9).
 
-### 5.8 The shared session (The IDEA Pass)
+### 5.9 The shared session (The IDEA Pass)
 
 | Variable | Need | Notes |
 | --- | --- | --- |
-| `NEXT_PUBLIC_APP_URL` | Build, on every project | The IDEA Business, `https://business.theideaiq.com`; an allowed return_to host (`isAllowedReturnTo`) |
-| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature, on every project that reads the session (app, storybook, web) | `.theideaiq.com`; unset on previews |
-| `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_STAFF_URL`, `NEXT_PUBLIC_API_URL` | Feature (app) | The other allowed return_to hosts |
+| `NEXT_PUBLIC_APP_URL` | Build, on every project | The IDEA Partners, `https://partners.theideaiq.com`; an allowed return_to host (`isAllowedReturnTo`) |
+| `NEXT_PUBLIC_STAFF_URL` | Feature, on web, api and staff | Staff, `https://staff.theideaiq.com` (`http://localhost:3003` locally); an allowed return_to host and CORS origin |
+| `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN` | Feature, on every project that reads the session (web, partners, staff) | `.theideaiq.com`; unset on previews |
+| `NEXT_PUBLIC_WEB_URL`, `NEXT_PUBLIC_API_URL` | Feature (web) | The other allowed return_to hosts |
 
-Supabase's redirect URLs include `https://business.theideaiq.com/**`.
+Supabase's redirect URLs include `https://partners.theideaiq.com/**` and
+`https://staff.theideaiq.com/**`.
