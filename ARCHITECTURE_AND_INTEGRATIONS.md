@@ -465,8 +465,14 @@ session in the shared cookie.
   channels it records membership and sends new channel posts to newsletter
   subscribers; moderation (word filters, spam, flood muting, network-wide
   bans, unban requests) and the AI assistant were removed in favour of
-  Telegram's own tools. `bun run --cwd apps/api telegram:setup` sets the
-  webhook, its update types and the command lists.
+  Telegram's own tools. Back office → Telegram → Bot shows how the bot is
+  set up (webhook and whether it points at this API, waiting updates, the
+  last delivery error, commands, the Mini App menu button, descriptions,
+  sign-in with Telegram) and lets admins set it up in one go: the webhook
+  with its update types, the Arabic and English command lists, the menu
+  button opening `/tg` and the bot's descriptions
+  (`apps/api/lib/telegram-setup.ts`, `POST /admin/telegram`).
+  `bun run --cwd apps/api telegram:setup` does the same from a terminal.
   **The Club's join rules** (migration `20261203000000_telegram_club.sql`):
   each chat in Back office → Telegram → Chats has `join_rule` (anyone,
   members with a linked The IDEA Pass, or a Bulbs tier and up). For chats

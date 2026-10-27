@@ -21,6 +21,8 @@ export type ActionError =
   | "carrierNotConfigured"
   | "notCancellable"
   | "apiUnavailable"
+  | "telegramFailed"
+  | "telegramSecretMissing"
   | "boxPrice"
   | "boxParts"
   | "boxPicks"

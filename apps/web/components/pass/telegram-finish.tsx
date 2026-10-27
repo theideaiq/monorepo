@@ -2,6 +2,7 @@
 
 import { identify, track } from "@repo/analytics/client";
 import { EmailOtpForm } from "@repo/auth/components/email-otp-form";
+import { useTurnstile } from "@repo/auth/components/turnstile";
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Spinner } from "@repo/design-system/components/ui/spinner";
@@ -29,6 +30,8 @@ interface TelegramFinishProps {
   readonly ticket: string | null;
   /** A linked account's one-time sign-in token. */
   readonly tokenHash: string | null;
+  /** Cloudflare Turnstile's site key, when the security check is on. */
+  readonly turnstileSiteKey?: string;
 }
 
 /** A linked account: the token signs in, then on to where they were going. */
@@ -69,10 +72,12 @@ export const TelegramFinish = ({
   returnTo,
   ticket,
   tokenHash,
+  turnstileSiteKey,
 }: TelegramFinishProps) => {
   const t = useTranslations("pass.telegram");
   const locale = useLocale();
   const messages = useAuthMessages();
+  const turnstile = useTurnstile(turnstileSiteKey, locale);
   const { loading, supabase, user } = useAuth();
   const link = useLinkTelegram();
   const linking = useRef(false);
@@ -127,6 +132,7 @@ export const TelegramFinish = ({
         </p>
         <EmailOtpForm
           collectName={false}
+          getCaptchaToken={turnstile.getToken}
           locale={locale}
           messages={messages}
           onSignedIn={(userId) => {
@@ -136,6 +142,7 @@ export const TelegramFinish = ({
           shouldCreateUser
           supabase={supabase}
         />
+        {turnstile.element}
       </div>
     );
   }

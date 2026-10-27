@@ -2929,7 +2929,9 @@
       "boxPicks": "اختر العدد الصحيح من القطع لكل خانة، من فئتها وصيغتها.",
       "boxValue": "قيمة القطع المختارة أقل مما يعد به الصندوق. اختر غيرها.",
       "boxPacked": "هذا الصندوق مُجهَّز بالفعل.",
-      "boxStock": "لا يوجد مخزون كافٍ من أجزاء الصندوق."
+      "boxStock": "لا يوجد مخزون كافٍ من أجزاء الصندوق.",
+      "telegramFailed": "رفض Telegram الطلب. تحقّق من رمز البوت وأعد المحاولة.",
+      "telegramSecretMissing": "اضبط TELEGRAM_WEBHOOK_SECRET على الـ API أولًا."
     },
     "notices": {
       "saved": "تم الحفظ",
@@ -4127,7 +4129,8 @@
         "requests": "الطلبات",
         "chats": "المجموعات",
         "members": "الأعضاء",
-        "faq": "أسئلة البوت"
+        "faq": "أسئلة البوت",
+        "bot": "البوت"
       },
       "requests": {
         "status": "الحالة",
@@ -4205,6 +4208,37 @@
         "questionEn": "السؤال (بالإنجليزية)",
         "answerAr": "الإجابة (بالعربية)",
         "answerEn": "الإجابة (بالإنجليزية)"
+      },
+      "bot": {
+        "title": "بوت Telegram",
+        "description": "حالة إعداد Droid، بوت The IDEA على Telegram، الآن.",
+        "statusTitle": "الحالة",
+        "unreachable": "تعذّر الوصول إلى البوت. تحقّق من رمز البوت ثم أعد المحاولة.",
+        "token": "رمز البوت",
+        "tokenMissing": "غير مضبوط",
+        "secret": "سرّ الـ webhook",
+        "set": "مضبوط",
+        "missing": "غير موجود",
+        "webhook": "الـ webhook",
+        "none": "لا يوجد",
+        "pending": "التحديثات المنتظرة",
+        "lastError": "آخر خطأ في التسليم",
+        "commands": "الأوامر",
+        "menu": "زر القائمة (التطبيق المصغّر)",
+        "texts": "الأوصاف",
+        "login": "تسجيل الدخول عبر Telegram",
+        "loginMissing": "غير مضبوط: زر المتابعة عبر Telegram مخفي",
+        "setupTitle": "إعداد البوت",
+        "setupDescription": "يوجّه الـ webhook إلى هنا وينشر الأوامر بالعربية والإنجليزية، وزر القائمة الذي يفتح The IDEA تطبيقًا مصغّرًا، والأوصاف. يمكن تكراره بأمان، وتبقى التحديثات المنتظرة.",
+        "setup": "الإعداد الآن",
+        "ownerTitle": "خطوات المالك",
+        "ownerDescription": "تُنفَّذ مرة واحدة على Vercel (مشروع الـ API)، ثم هنا.",
+        "owner": {
+          "token": "أنشئ البوت عبر @BotFather واضبط TELEGRAM_BOT_TOKEN.",
+          "secret": "اضبط TELEGRAM_WEBHOOK_SECRET بقيمة عشوائية طويلة (openssl rand -hex 32).",
+          "login": "في @BotFather افتح Login Widget الخاص بالبوت، وأضف العنوان المسموح https://api.theideaiq.com/auth/telegram/callback، واضبط TELEGRAM_LOGIN_CLIENT_ID وTELEGRAM_LOGIN_CLIENT_SECRET.",
+          "setup": "أعد نشر الـ API، ثم اضغط الإعداد الآن في هذه الصفحة."
+        }
       }
     },
     "staff": {

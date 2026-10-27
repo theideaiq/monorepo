@@ -2929,7 +2929,9 @@
       "boxPicks": "Pick the right number of copies for each slot, from its category and format.",
       "boxValue": "The picked copies are worth less than the box promises. Pick others.",
       "boxPacked": "This box is already packed.",
-      "boxStock": "There isn't enough stock of the box's parts."
+      "boxStock": "There isn't enough stock of the box's parts.",
+      "telegramFailed": "Telegram refused the request. Check the bot token and try again.",
+      "telegramSecretMissing": "Set TELEGRAM_WEBHOOK_SECRET on the API first."
     },
     "notices": {
       "saved": "Saved",
@@ -4127,7 +4129,8 @@
         "requests": "Requests",
         "chats": "Groups",
         "members": "Members",
-        "faq": "Bot FAQ"
+        "faq": "Bot FAQ",
+        "bot": "Bot"
       },
       "requests": {
         "status": "Status",
@@ -4205,6 +4208,37 @@
         "questionEn": "Question (English)",
         "answerAr": "Answer (Arabic)",
         "answerEn": "Answer (English)"
+      },
+      "bot": {
+        "title": "Telegram bot",
+        "description": "How Droid, The IDEA's Telegram bot, is set up right now.",
+        "statusTitle": "Status",
+        "unreachable": "Couldn't reach the bot. Check the bot token, then try again.",
+        "token": "Bot token",
+        "tokenMissing": "Not set",
+        "secret": "Webhook secret",
+        "set": "Set",
+        "missing": "Missing",
+        "webhook": "Webhook",
+        "none": "None",
+        "pending": "Updates waiting",
+        "lastError": "Last delivery error",
+        "commands": "Commands",
+        "menu": "Menu button (Mini App)",
+        "texts": "Descriptions",
+        "login": "Sign in with Telegram",
+        "loginMissing": "Not set: Continue with Telegram is hidden",
+        "setupTitle": "Set up the bot",
+        "setupDescription": "Points the webhook here and publishes the commands in Arabic and English, the menu button that opens The IDEA as a Mini App, and the descriptions. Safe to repeat; waiting updates are kept.",
+        "setup": "Set up now",
+        "ownerTitle": "Owner steps",
+        "ownerDescription": "Done once on Vercel (API project), then here.",
+        "owner": {
+          "token": "Create the bot with @BotFather and set TELEGRAM_BOT_TOKEN.",
+          "secret": "Set TELEGRAM_WEBHOOK_SECRET to a long random value (openssl rand -hex 32).",
+          "login": "In @BotFather, open the bot's Login Widget, add the Allowed URL https://api.theideaiq.com/auth/telegram/callback, and set TELEGRAM_LOGIN_CLIENT_ID and TELEGRAM_LOGIN_CLIENT_SECRET.",
+          "setup": "Redeploy the API, then press Set up now on this page."
+        }
       }
     },
     "staff": {

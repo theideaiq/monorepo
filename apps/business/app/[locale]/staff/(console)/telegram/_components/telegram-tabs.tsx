@@ -11,6 +11,7 @@ export const TelegramTabs = async () => {
         { href: "/telegram/chats", label: t("chats") },
         { href: "/telegram/members", label: t("members") },
         { href: "/telegram/faq", label: t("faq") },
+        { href: "/telegram/bot", label: t("bot") },
       ]}
     />
   );

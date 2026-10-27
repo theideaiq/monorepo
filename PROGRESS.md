@@ -272,7 +272,11 @@ decisions with a date.
       Send newsletters from Resend Broadcasts to that segment only.
 - [ ] **Wayl:** production keys and the webhook URL
       (`/webhooks/payments` on the API host).
-- [ ] **Telegram:** bot token and webhook (`apps/api/scripts/telegram-setup.ts`).
+- [ ] **Telegram:** on the API project set `TELEGRAM_BOT_TOKEN`,
+      `TELEGRAM_WEBHOOK_SECRET` and, for sign-in, `TELEGRAM_LOGIN_CLIENT_ID`
+      and `TELEGRAM_LOGIN_CLIENT_SECRET` (Login Widget Allowed URL
+      `https://api.theideaiq.com/auth/telegram/callback`); redeploy, then
+      Back office → Telegram → Bot → Set up now.
 - [ ] **Domains:** once every subdomain serves HTTPS, submit the apex at
       hstspreload.org (the sites already send the preload header).
 - [ ] **First staff member:** they get The IDEA Pass with their email
