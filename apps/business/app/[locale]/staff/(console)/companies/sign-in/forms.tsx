@@ -18,7 +18,14 @@ import {
   setPassPartnerActive,
 } from "../actions";
 
-const ANSWERS = ["profile", "email", "student", "adult", "plus"] as const;
+const ANSWERS = [
+  "profile",
+  "email",
+  "student",
+  "adult",
+  "plus",
+  "card",
+] as const;
 
 interface Credentials {
   clientId: string;
@@ -62,12 +69,7 @@ export const AddPartnerForm = ({
       >
         <FieldGrid columns={3}>
           <TextField label={t("name")} name="name" required />
-          <TextField
-            dir="ltr"
-            label={t("website")}
-            name="website"
-            required
-          />
+          <TextField dir="ltr" label={t("website")} name="website" required />
           <SelectField
             hint={t("organizationHint")}
             label={t("organization")}

@@ -1652,6 +1652,38 @@ export type Database = {
           },
         ];
       };
+      pass_card_checks: {
+        Row: {
+          checked_at: string;
+          client_id: string;
+          id: number;
+          user_id: string | null;
+          valid: boolean;
+        };
+        Insert: {
+          checked_at?: string;
+          client_id: string;
+          id?: never;
+          user_id?: string | null;
+          valid: boolean;
+        };
+        Update: {
+          checked_at?: string;
+          client_id?: string;
+          id?: never;
+          user_id?: string | null;
+          valid?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "pass_card_checks_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+        ];
+      };
       pass_connections: {
         Row: {
           client_id: string;
@@ -5501,6 +5533,11 @@ export type Database = {
         };
       };
       partner_check: { Args: { org: string; scanned: string }; Returns: Json };
+      pass_card: { Args: { member: string }; Returns: Json };
+      pass_card_check: {
+        Args: { client: string; scanned: string };
+        Returns: Json;
+      };
       pass_claims: {
         Args: { client: string; member: string; scopes: string[] };
         Returns: Json;

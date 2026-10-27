@@ -12,6 +12,11 @@
 -- (a verified student, where and until when; 18 or over; a The IDEA Plus
 -- member). Each partner sees its own id for a person (`subject`), so
 -- partners can't match people between them.
+--
+-- Partners can also check a Pass card's QR code from their own app (the
+-- person showing the card is their consent; every check is listed in
+-- their Settings) and, with the `card` scope, show the person's card on
+-- their site, drawn without the scannable code.
 
 -- ── Partners ──────────────────────────────────────────────────────────────
 
@@ -37,7 +42,7 @@ create table public.pass_partners (
   redirect_uris text[] not null check (private.valid_redirect_uris(redirect_uris)),
   -- What it may ask, besides signing in (scopes).
   answers text[] not null default '{profile,email}'
-    check (answers <@ array['profile', 'email', 'student', 'adult', 'plus']),
+    check (answers <@ array['profile', 'email', 'student', 'adult', 'plus', 'card']),
   -- SHA-256 (hex) of the client secret; the secret is shown once.
   secret_hash text not null check (secret_hash ~ '^[0-9a-f]{64}$'),
   organization_id uuid references public.organizations (id) on delete set null,
@@ -294,6 +299,127 @@ security invoker
 set search_path = ''
 as $$ select private.disconnect_pass_partner(client) $$;
 
+-- ── Card checks (a partner's app scans a Pass card) ───────────────────────
+
+create table public.pass_card_checks (
+  id bigint generated always as identity primary key,
+  client_id text not null references public.pass_partners (client_id) on delete cascade,
+  -- The holder, when the card was valid.
+  user_id uuid references auth.users (id) on delete cascade,
+  valid boolean not null,
+  checked_at timestamptz not null default now()
+);
+
+comment on table public.pass_card_checks is
+  'Pass cards partner apps checked (each listed in the holder''s Settings).';
+
+create index pass_card_checks_client_idx on public.pass_card_checks (client_id, checked_at desc);
+create index pass_card_checks_user_idx on public.pass_card_checks (user_id, checked_at desc);
+
+alter table public.pass_card_checks enable row level security;
+
+create policy "Checks of your card; support sees all" on public.pass_card_checks
+  for select to authenticated
+  using (user_id = (select auth.uid()) or (select private.has_staff_role('{support}')));
+
+revoke all on public.pass_card_checks from anon, authenticated;
+grant select on public.pass_card_checks to authenticated;
+
+-- A partner's app checks a scanned card (`IDEA:<member number>:<code>`,
+-- the code changing every 30 seconds): whether it's valid, the holder's
+-- first name and member number (as printed on the card), their id at the
+-- partner when they signed in there, and the yes/no answers the partner
+-- may ask. 30 failed checks in 10 minutes pause the partner's checks (the
+-- API only).
+create function private.pass_card_check(client text, scanned text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  partner public.pass_partners;
+  member uuid;
+  badge public.student_badges;
+  result jsonb;
+begin
+  select * into partner from public.pass_partners p where p.client_id = client and p.active;
+  if partner.client_id is null then
+    raise exception 'Unknown site' using errcode = 'no_data_found';
+  end if;
+  if (
+    select count(*) from public.pass_card_checks c
+    where c.client_id = client and not c.valid and c.checked_at > now() - interval '10 minutes'
+  ) >= 30 then
+    raise exception 'Too many checks' using errcode = 'P0001';
+  end if;
+
+  member := private.pass_holder(scanned);
+  insert into public.pass_card_checks (client_id, user_id, valid) values (client, member, member is not null);
+  if member is null then
+    return jsonb_build_object('valid', false);
+  end if;
+
+  result := jsonb_build_object(
+    'valid', true,
+    'sub', (select c.subject from public.pass_connections c where c.user_id = member and c.client_id = client),
+    'given_name', private.first_name(member),
+    'member_number', (select p.member_number from public.profiles p where p.id = member)
+  );
+  if 'student' = any (partner.answers) then
+    select * into badge from public.student_badges b
+    where b.user_id = member and b.valid_until >= private.baghdad_today();
+    result := result || jsonb_build_object('student', case
+      when badge.user_id is null then jsonb_build_object('verified', false)
+      else jsonb_build_object('verified', true, 'university', badge.university_id, 'until', badge.valid_until)
+    end);
+  end if;
+  if 'adult' = any (partner.answers) then
+    result := result || jsonb_build_object('adult', private.is_adult(member));
+  end if;
+  if 'plus' = any (partner.answers) then
+    result := result || jsonb_build_object('plus', (private.member_plan(member)).id is not null);
+  end if;
+  return result;
+end;
+$$;
+
+create function public.pass_card_check(client text, scanned text)
+returns jsonb
+language sql
+security invoker
+set search_path = ''
+as $$ select private.pass_card_check(client, scanned) $$;
+
+-- What a partner's site shows of the card (the `card` scope): the name,
+-- member number, member since, the The IDEA Plus plan and the Student
+-- badge. No code (the API only).
+create function private.pass_card(member uuid)
+returns jsonb
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select jsonb_build_object(
+    'name', coalesce(nullif(trim(p.full_name), ''), private.first_name(member)),
+    'member_number', p.member_number,
+    'since', p.created_at::date,
+    'plan_en', (private.member_plan(member)).name,
+    'plan_ar', (private.member_plan(member)).name_ar,
+    'student', private.is_student(member)
+  )
+  from public.profiles p where p.id = member;
+$$;
+
+create function public.pass_card(member uuid)
+returns jsonb
+language sql
+stable
+security invoker
+set search_path = ''
+as $$ select private.pass_card(member) $$;
+
 -- ── Grants ─────────────────────────────────────────────────────────────────
 
 revoke all on function private.pass_claims(uuid, text, text[]) from public, anon, authenticated;
@@ -310,3 +436,12 @@ revoke all on function private.disconnect_pass_partner(text) from public, anon;
 revoke all on function public.disconnect_pass_partner(text) from public, anon;
 grant execute on function private.disconnect_pass_partner(text) to authenticated;
 grant execute on function public.disconnect_pass_partner(text) to authenticated;
+
+revoke all on function private.pass_card_check(text, text) from public, anon, authenticated;
+revoke all on function public.pass_card_check(text, text) from public, anon, authenticated;
+grant execute on function private.pass_card_check(text, text) to service_role;
+grant execute on function public.pass_card_check(text, text) to service_role;
+revoke all on function private.pass_card(uuid) from public, anon, authenticated;
+revoke all on function public.pass_card(uuid) from public, anon, authenticated;
+grant execute on function private.pass_card(uuid) to service_role;
+grant execute on function public.pass_card(uuid) to service_role;

@@ -58,6 +58,7 @@ Discovery: `https://api.theideaiq.com/oidc/.well-known/openid-configuration`
 | `student` | `student`: `{ "verified": true, "university": "auib", "until": "2027-06-30" }`, or `{ "verified": false }` |
 | `adult` | `adult`: `true` when 18 or over |
 | `plus` | `plus`: `true` with an active The IDEA Plus membership |
+| `card` | No claim: lets the access token fetch the person's card (below) |
 
 The ID token has the claims as they were at sign-in; userinfo works them
 out again (a badge that ended reads `verified: false`). Nothing else is
@@ -66,6 +67,55 @@ ever shared: no birthday, phone, address, university email or orders.
 Universities use the ids in Customers → Students (`auib`, `uobaghdad`,
 `mustansiriyah`, `uotechnology`, `nahrain`, `aliraqia`, `mansour`,
 `dijlah`, `rafidain`).
+
+## Showing the person's Pass card (`card` scope)
+
+`GET https://api.theideaiq.com/oidc/card` with `Authorization: Bearer
+<access token>` returns the card as an SVG image (`?lang=ar` for Arabic):
+the brand's card with the name, member number, The IDEA Plus plan, the
+Student badge and "member since", drawn **without** the scannable code (a
+copy on a website must never pass a door check). Send
+`Accept: application/json` for the same details as JSON. Fetch it from
+your server while the access token is valid (1 hour) and serve or cache
+it yourself; the person can always open the live card at
+https://theideaiq.com/pass (or in Google Wallet).
+
+## Checking a Pass card's QR code (door checks)
+
+The live card's QR code reads `IDEA:<member number>:<6 digits>`; the
+digits change every 30 seconds. A partner's app sends what it scanned:
+
+```
+POST https://api.theideaiq.com/oidc/card/check
+Authorization: Basic base64(client_id:client_secret)
+Content-Type: application/json
+
+{ "code": "IDEA:100007:123456" }
+```
+
+The answer is `{ "valid": false }`, or:
+
+```json
+{
+  "valid": true,
+  "sub": "…",
+  "given_name": "Sara",
+  "member_number": 100007,
+  "student": { "verified": true, "university": "auib", "until": "2027-06-30" },
+  "adult": true
+}
+```
+
+- `sub` is the same id as in the partner's ID tokens, or `null` if the
+  person never signed in there. Match it to your member.
+- `given_name` and `member_number` are printed on the card, so the person
+  at the door can compare. The yes/no answers are the ones the partner is
+  registered for.
+- Showing the card is the person's consent to the check. Every check is
+  listed in their Pass → Settings.
+- 30 failed checks in 10 minutes pause the partner's checks for a while
+  (HTTP 429). The client secret stays on the partner's server; an app
+  calls the partner's own backend, which calls this endpoint.
 
 ## Turning it on (owner)
 

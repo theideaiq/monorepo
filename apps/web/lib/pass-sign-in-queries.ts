@@ -66,6 +66,24 @@ export const useConnectedSites = () => {
   });
 };
 
+/** Pass → Settings: the latest checks of the member's card by partner apps. */
+export const useCardChecks = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("pass_card_checks")
+          .select("id, checked_at, pass_partners (name)")
+          .eq("user_id", requireUserId(user?.id))
+          .order("checked_at", { ascending: false })
+          .limit(10)
+      ) ?? [],
+    queryKey: ["pass-card-checks", user?.id ?? ""],
+  });
+};
+
 export const useDisconnectSite = () => {
   const { supabase, user } = useAuth();
   const queryClient = useQueryClient();

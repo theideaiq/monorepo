@@ -1785,10 +1785,13 @@
       },
       "sites": {
         "title": "Connected sites",
-        "description": "Sites you signed in to with The IDEA Pass. Disconnecting one stops what it learns; it asks again next time.",
+        "description": "Sites you signed in to with The IDEA Pass, and partners that checked your card. Disconnecting a site stops what it learns; it asks again next time.",
         "since": "Connected on {date}",
         "disconnect": "Disconnect",
-        "failed": "It couldn't be disconnected. Try again."
+        "failed": "It couldn't be disconnected. Try again.",
+        "checks": "Checks of your card",
+        "checked": "{site} checked your card on {date}",
+        "aSite": "A partner"
       }
     },
     "errors": {
@@ -4528,7 +4531,8 @@
           "email": "Email",
           "student": "Verified student",
           "adult": "18 or over",
-          "plus": "The IDEA Plus member"
+          "plus": "The IDEA Plus member",
+          "card": "Show the Pass card"
         },
         "add": "Add site",
         "once": "Copy these now: the secret isn't shown again. Send it to the partner's developers privately.",
@@ -4664,7 +4668,8 @@
         "email": "Your email address",
         "student": "Whether you're a verified student, at which university and until when",
         "adult": "Whether you're 18 or over",
-        "plus": "Whether you're a The IDEA Plus member"
+        "plus": "Whether you're a The IDEA Plus member",
+        "card": "Your Pass card, to show on their site (without its scannable code)"
       },
       "never": "It never sees your orders, address, birthday or anything else. You can disconnect it at any time in Settings.",
       "manage": "Connected sites",

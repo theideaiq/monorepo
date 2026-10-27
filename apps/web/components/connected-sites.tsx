@@ -9,27 +9,32 @@ import {
   CardTitle,
 } from "@repo/design-system/components/ui/card";
 import type { Locale } from "@repo/internationalization";
-import { formatDate } from "@repo/internationalization/format";
+import { formatDate, formatDateTime } from "@repo/internationalization/format";
 import { LinkIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { askedFor } from "@/lib/pass-sign-in";
 import {
+  useCardChecks,
   useConnectedSites,
   useDisconnectSite,
 } from "@/lib/pass-sign-in-queries";
 
 /**
  * Pass → Settings → Connected sites: the partner sites the member signed
- * in to with their Pass, what each was told, and Disconnect.
+ * in to with their Pass, what each was told, Disconnect, and the latest
+ * checks of their card by partner apps.
  */
 export const ConnectedSites = () => {
   const t = useTranslations("app.settings.sites");
   const tScopes = useTranslations("pass.authorize.scopes");
   const locale = useLocale() as Locale;
   const sites = useConnectedSites();
+  const checks = useCardChecks();
   const disconnect = useDisconnectSite();
+  const connected = sites.data ?? [];
+  const checked = checks.data ?? [];
 
-  if (!sites.isSuccess || sites.data.length === 0) {
+  if (connected.length === 0 && checked.length === 0) {
     return null;
   }
   return (
@@ -42,7 +47,7 @@ export const ConnectedSites = () => {
         <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-3">
-        {sites.data.map((site) => (
+        {connected.map((site) => (
           <div
             className="flex flex-wrap items-start justify-between gap-3 rounded-lg border p-3"
             key={site.client_id}
@@ -69,6 +74,21 @@ export const ConnectedSites = () => {
             </Button>
           </div>
         ))}
+        {checked.length > 0 ? (
+          <div className="grid gap-1">
+            <p className="font-medium text-sm">{t("checks")}</p>
+            <ul className="grid gap-1 text-muted-foreground text-xs">
+              {checked.map((check) => (
+                <li key={check.id}>
+                  {t("checked", {
+                    date: formatDateTime(check.checked_at, locale),
+                    site: check.pass_partners?.name ?? t("aSite"),
+                  })}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
         {disconnect.isError ? (
           <p className="text-destructive text-sm" role="alert">
             {t("failed")}

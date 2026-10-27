@@ -10,6 +10,7 @@ export const PASS_SCOPES = [
   "student",
   "adult",
   "plus",
+  "card",
 ] as const;
 
 export type PassScope = (typeof PASS_SCOPES)[number];

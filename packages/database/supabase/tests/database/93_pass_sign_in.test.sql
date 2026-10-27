@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(20);
+select plan(29);
 
 -- A is an adult AUIB student, B an adult with a Pass, S is support.
 delete from public.staff;
@@ -151,6 +151,47 @@ select is(
   (select public.pass_claims('00000000-0000-0000-0000-000000000931', 'pass_00000000000000000000sal1', '{openid}') - 'sub'),
   '{}'::jsonb, 'nothing beyond what was shared'
 );
+
+-- ── Card checks ──
+select pg_temp.reset_role();
+insert into private.pass_secrets (user_id, secret) values ('00000000-0000-0000-0000-000000000931', '\x0102030405060708090a0b0c0d0e0f1011121314');
+create temporary table scan as
+select 'IDEA:' || p.member_number || ':' || private.pass_code(s.secret, floor(extract(epoch from now()) / 30)::bigint) as code,
+  'IDEA:' || p.member_number || ':' || lpad(((private.pass_code(s.secret, floor(extract(epoch from now()) / 30)::bigint)::int + 1) % 1000000)::text, 6, '0') as wrong
+from public.profiles p join private.pass_secrets s on s.user_id = p.id
+where p.id = '00000000-0000-0000-0000-000000000931';
+create temporary table checked as select public.pass_card_check('pass_00000000000000000000sal1', (select code from scan)) as c;
+select results_eq(
+  $$ select c ->> 'valid', c ->> 'given_name', c -> 'student' ->> 'university', c ->> 'adult', c ? 'plus',
+       c ->> 'sub' = (select subject::text from public.pass_connections where client_id = 'pass_00000000000000000000sal1')
+     from checked $$,
+  $$ values ('true', 'Sara', 'auib', 'true', false, true) $$,
+  'a partner checks a current card: first name, the answers it may ask, its own id for them'
+);
+select is(public.pass_card_check('pass_00000000000000000000sal1', (select wrong from scan)) ->> 'valid', 'false',
+  'a wrong code is not valid');
+select is(public.pass_card_check('pass_00000000000000000000sal1', 'IDEA:1:000000') ->> 'valid', 'false',
+  'nor an unknown card');
+select is((select count(*) from public.pass_card_checks where valid and client_id = 'pass_00000000000000000000sal1'), 1::bigint, 'every check is logged');
+
+select pg_temp.login_as('00000000-0000-0000-0000-000000000931');
+select is((select count(*) from public.pass_card_checks), 1::bigint, 'the holder sees checks of their card');
+select throws_ok($$ select public.pass_card_check('pass_00000000000000000000sal1', 'IDEA:1:000000') $$,
+  '42501', null, 'only the API checks cards');
+
+select pg_temp.reset_role();
+insert into public.pass_card_checks (client_id, valid)
+select 'pass_00000000000000000000sal1', false from generate_series(1, 30);
+select throws_ok($$ select public.pass_card_check('pass_00000000000000000000sal1', (select code from scan)) $$,
+  'P0001', 'Too many checks', '30 failed checks in 10 minutes pause the partner');
+
+select results_eq(
+  $$ select public.pass_card('00000000-0000-0000-0000-000000000931') ->> 'name',
+       public.pass_card('00000000-0000-0000-0000-000000000931') ->> 'student' $$,
+  $$ values ('Sara Ahmed Ali', 'true') $$,
+  'the card for a partner''s site: name and badges'
+);
+select ok(not (public.pass_card('00000000-0000-0000-0000-000000000931') ? 'code'), 'and never the code');
 
 -- ── Disconnecting ──
 insert into public.pass_access_tokens (token_hash, client_id, user_id, scopes, expires_at)

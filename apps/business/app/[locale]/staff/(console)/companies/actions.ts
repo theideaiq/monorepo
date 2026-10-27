@@ -299,7 +299,14 @@ export const setPerkActive = staffAction(
   }
 );
 
-const PASS_ANSWERS = ["profile", "email", "student", "adult", "plus"] as const;
+const PASS_ANSWERS = [
+  "profile",
+  "email",
+  "student",
+  "adult",
+  "plus",
+  "card",
+] as const;
 
 /** A new client secret for a partner site, and its stored hash. */
 const newSecret = () => {
@@ -318,6 +325,7 @@ export const addPassPartner = staffAction(
   "companies",
   z.object({
     adult: checkbox,
+    card: checkbox,
     email: checkbox,
     name: text(80),
     organization: optionalUuid,

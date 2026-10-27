@@ -1,13 +1,11 @@
-import { createAdminClient } from "@repo/database/admin";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
+import { authenticatePartner } from "@/lib/oidc/clients";
 import {
-  clientCredentials,
   noStore,
   oauthError,
   randomToken,
-  sameDigest,
   sha256Hex,
   TOKEN_SECONDS,
   verifyPkce,
@@ -34,28 +32,11 @@ export const POST = async (request: Request) => {
     return reply(oauthError("temporarily_unavailable"), 503);
   }
   const form = new URLSearchParams(await request.text().catch(() => ""));
-  const credentials = clientCredentials(
-    request.headers.get("authorization"),
-    form
-  );
-  if (!credentials) {
+  const partner = await authenticatePartner(request, form);
+  if (!partner) {
     return invalidClient();
   }
-
-  const admin = createAdminClient();
-  const { data: partner } = await admin
-    .from("pass_partners")
-    .select("client_id, secret_hash, active")
-    .eq("client_id", credentials.clientId)
-    .maybeSingle();
-  if (
-    !(
-      partner?.active &&
-      sameDigest(partner.secret_hash, sha256Hex(credentials.secret))
-    )
-  ) {
-    return invalidClient();
-  }
+  const { admin } = partner;
   if (form.get("grant_type") !== "authorization_code") {
     return reply(oauthError("unsupported_grant_type"), 400);
   }
@@ -65,7 +46,7 @@ export const POST = async (request: Request) => {
     .from("pass_sign_in_codes")
     .update({ used_at: new Date().toISOString() })
     .eq("code_hash", sha256Hex(form.get("code") ?? ""))
-    .eq("client_id", partner.client_id)
+    .eq("client_id", partner.clientId)
     .is("used_at", null)
     .gt("expires_at", new Date().toISOString())
     .select("user_id, redirect_uri, scopes, code_challenge, nonce")
@@ -79,7 +60,7 @@ export const POST = async (request: Request) => {
   }
 
   const { data: claims, error } = await admin.rpc("pass_claims", {
-    client: partner.client_id,
+    client: partner.clientId,
     member: code.user_id,
     scopes: code.scopes,
   });
@@ -92,7 +73,7 @@ export const POST = async (request: Request) => {
   try {
     const [saved] = await Promise.all([
       admin.from("pass_access_tokens").insert({
-        client_id: partner.client_id,
+        client_id: partner.clientId,
         expires_at: expiresAt.toISOString(),
         scopes: code.scopes,
         token_hash: sha256Hex(accessToken),
@@ -102,13 +83,13 @@ export const POST = async (request: Request) => {
         .from("pass_connections")
         .update({ last_used_at: new Date().toISOString() })
         .eq("user_id", code.user_id)
-        .eq("client_id", partner.client_id),
+        .eq("client_id", partner.clientId),
     ]);
     if (saved.error) {
       throw saved.error;
     }
     const idToken = await signIdToken(signing, {
-      audience: partner.client_id,
+      audience: partner.clientId,
       claims: claims as Record<string, unknown>,
       nonce: code.nonce,
     });

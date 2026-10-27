@@ -1,8 +1,5 @@
-import { createAdminClient } from "@repo/database/admin";
 import { NextResponse } from "next/server";
-import { sha256Hex } from "@/lib/oidc/protocol";
-
-const BEARER = /^Bearer\s+([0-9a-f]{64})$/i;
+import { accessTokenOf } from "@/lib/oidc/clients";
 
 const headers = {
   "Access-Control-Allow-Headers": "authorization",
@@ -18,7 +15,6 @@ export const OPTIONS = () => new Response(null, { headers, status: 204 });
  * Stops working when they disconnect the site.
  */
 const userinfo = async (request: Request) => {
-  const token = BEARER.exec(request.headers.get("authorization") ?? "")?.[1];
   const unauthorized = () =>
     NextResponse.json(
       { error: "invalid_token" },
@@ -30,19 +26,11 @@ const userinfo = async (request: Request) => {
         status: 401,
       }
     );
-  if (!token) {
-    return unauthorized();
-  }
-  const admin = createAdminClient();
-  const { data: access } = await admin
-    .from("pass_access_tokens")
-    .select("client_id, user_id, scopes")
-    .eq("token_hash", sha256Hex(token.toLowerCase()))
-    .gt("expires_at", new Date().toISOString())
-    .maybeSingle();
+  const access = await accessTokenOf(request);
   if (!access) {
     return unauthorized();
   }
+  const { admin } = access;
   const { data: claims } = await admin.rpc("pass_claims", {
     client: access.client_id,
     member: access.user_id,
