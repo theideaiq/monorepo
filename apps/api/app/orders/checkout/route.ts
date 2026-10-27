@@ -11,7 +11,7 @@ import { getBilling, OrderNotPayableError } from "@repo/payments/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/env";
-import { corsHeaders, preflight } from "@/lib/cors";
+import { corsHeaders, preflight, webOrigins } from "@/lib/cors";
 
 const body = z.object({
   attribution: attributionSchema.optional(),
@@ -30,7 +30,9 @@ const safeRedirect = (redirectUrl: string | undefined, orderId: string) => {
   if (!redirectUrl) {
     return new URL(`/pass/orders/${orderId}`, web).toString();
   }
-  return new URL(redirectUrl).origin === web.origin ? redirectUrl : undefined;
+  return webOrigins().has(new URL(redirectUrl).origin)
+    ? redirectUrl
+    : undefined;
 };
 
 export const OPTIONS = preflight;

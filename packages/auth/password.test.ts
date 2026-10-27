@@ -17,14 +17,17 @@ const authError = (code: string, status = 400, reasons?: string[]) =>
   ({ code, message: code, name: "AuthApiError", reasons, status }) as never;
 
 describe("password policy", () => {
-  test("at least 8 characters with letters and digits", () => {
-    expect(passwordProblem("abc123")).toBe("too_short");
-    expect(passwordProblem("abcdefgh")).toBe("letters_digits");
-    expect(passwordProblem("12345678")).toBe("letters_digits");
-    expect(passwordProblem("baghdad2026")).toBeNull();
-    // Arabic letters count as letters.
-    expect(passwordProblem("بغداد2026")).toBeNull();
-    expect(passwordProblem(`a1${"x".repeat(80)}`)).toBe("too_long");
+  test("at least 8 characters with lower, upper, digit and symbol", () => {
+    expect(passwordProblem("Ab1!")).toBe("too_short");
+    expect(passwordProblem("abcdefgh")).toBe("character_mix");
+    expect(passwordProblem("baghdad2026")).toBe("character_mix");
+    expect(passwordProblem("Baghdad2026")).toBe("character_mix");
+    expect(passwordProblem("baghdad2026!")).toBe("character_mix");
+    expect(passwordProblem("Baghdad2026!")).toBeNull();
+    expect(passwordProblem("Baghdad-2026")).toBeNull();
+    // Arabic letters don't count as the Latin lowercase/uppercase Supabase checks.
+    expect(passwordProblem("بغداد2026!")).toBe("character_mix");
+    expect(passwordProblem(`Aa1!${"x".repeat(80)}`)).toBe("too_long");
   });
 
   test("names Supabase's errors", () => {
@@ -54,7 +57,7 @@ describe("signing in and up", () => {
     const result = await signInWithPassword(
       clientWith({ signInWithPassword: signInWithPassword_ }),
       " Sara@Example.com ",
-      "baghdad2026",
+      "Baghdad-2026",
       "tok"
     );
     expect(result).toEqual({
@@ -65,7 +68,7 @@ describe("signing in and up", () => {
     expect(signInWithPassword_).toHaveBeenCalledWith({
       email: "sara@example.com",
       options: { captchaToken: "tok" },
-      password: "baghdad2026",
+      password: "Baghdad-2026",
     });
   });
 
@@ -99,7 +102,7 @@ describe("signing in and up", () => {
     const result = await signUpWithPassword(
       client,
       "sara@example.com",
-      "baghdad2026",
+      "Baghdad-2026",
       { captchaToken: "tok", fullName: " Sara ", locale: "ar" }
     );
     expect(result).toMatchObject({ email: "sara@example.com", ok: true });
@@ -109,7 +112,7 @@ describe("signing in and up", () => {
         captchaToken: "tok",
         data: { full_name: "Sara", locale: "ar" },
       },
-      password: "baghdad2026",
+      password: "Baghdad-2026",
     });
   });
 
@@ -122,7 +125,7 @@ describe("signing in and up", () => {
         }),
       }),
       "sara@example.com",
-      "baghdad2026",
+      "Baghdad-2026",
       { fullName: "Sara" }
     );
     expect(result).toMatchObject({ code: "already_registered", ok: false });
@@ -171,7 +174,7 @@ describe("resetting and changing", () => {
       clientWith({ updateUser, verifyOtp }),
       "sara@example.com",
       "12345678",
-      "baghdad2026"
+      "Baghdad-2026"
     );
     expect(result).toMatchObject({ ok: true });
     expect(verifyOtp).toHaveBeenCalledWith({
@@ -179,7 +182,7 @@ describe("resetting and changing", () => {
       token: "12345678",
       type: "recovery",
     });
-    expect(updateUser).toHaveBeenCalledWith({ password: "baghdad2026" });
+    expect(updateUser).toHaveBeenCalledWith({ password: "Baghdad-2026" });
   });
 
   test("a change on an older session asks for a code", async () => {
@@ -187,15 +190,18 @@ describe("resetting and changing", () => {
       data: { user: null },
       error: authError("reauthentication_needed"),
     });
-    const result = await setPassword(clientWith({ updateUser }), "baghdad2026");
+    const result = await setPassword(
+      clientWith({ updateUser }),
+      "Baghdad-2026"
+    );
     expect(result).toMatchObject({
       code: "reauthentication_needed",
       ok: false,
     });
-    await setPassword(clientWith({ updateUser }), "baghdad2026", "123456");
+    await setPassword(clientWith({ updateUser }), "Baghdad-2026", "123456");
     expect(updateUser).toHaveBeenLastCalledWith({
       nonce: "123456",
-      password: "baghdad2026",
+      password: "Baghdad-2026",
     });
   });
 });

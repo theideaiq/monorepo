@@ -4,10 +4,23 @@ import { env } from "@/env";
 // `new URL("capacitor://localhost").origin` is "null" for custom schemes.
 const NATIVE_ORIGINS = ["capacitor://localhost", "https://localhost"];
 
+/**
+ * The website's origins: NEXT_PUBLIC_WEB_URL and its www twin (or the bare
+ * domain for a www URL), since the domain may serve either one.
+ */
+export const webOrigins = (): Set<string> => {
+  const web = new URL(env.NEXT_PUBLIC_WEB_URL);
+  const twin = new URL(web.origin);
+  twin.hostname = web.hostname.startsWith("www.")
+    ? web.hostname.slice("www.".length)
+    : `www.${web.hostname}`;
+  return new Set([web.origin, twin.origin]);
+};
+
 const allowedOrigins = () =>
   new Set([
     new URL(env.NEXT_PUBLIC_APP_URL).origin,
-    new URL(env.NEXT_PUBLIC_WEB_URL).origin,
+    ...webOrigins(),
     ...NATIVE_ORIGINS,
   ]);
 
@@ -34,7 +47,7 @@ export const preflight = (request: Request) =>
 
 /**
  * CORS headers for the website's public endpoints (contact form, status
- * badge): only the origin of NEXT_PUBLIC_WEB_URL, no credentials and no
+ * badge): only the website's origins, no credentials and no
  * Authorization header.
  */
 export const webCorsHeaders = (
@@ -43,7 +56,7 @@ export const webCorsHeaders = (
 ): Record<string, string> => {
   const origin = request.headers.get("origin");
 
-  if (origin !== new URL(env.NEXT_PUBLIC_WEB_URL).origin) {
+  if (!(origin && webOrigins().has(origin))) {
     return { Vary: "Origin" };
   }
 

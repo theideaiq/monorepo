@@ -27,25 +27,34 @@ export type PasswordResult<T = undefined> =
   | { email: string; ok: true; value: T }
   | { code: PasswordErrorCode; message: string; ok: false };
 
-/** At least 8 characters, with letters and digits (as Supabase checks). */
+/**
+ * At least 8 characters with a lowercase and an uppercase letter, a digit
+ * and a symbol: Supabase's strictest rule (Authentication → Sign In /
+ * Providers → Email → Password requirements), checked here first so the
+ * form can say what's missing.
+ */
 export const MIN_PASSWORD_LENGTH = 8;
 // bcrypt only reads the first 72 bytes.
 const MAX_PASSWORD_LENGTH = 72;
-const LETTER = /\p{L}/u;
+// The character sets Supabase Auth checks.
+const LOWER = /[a-z]/;
+const UPPER = /[A-Z]/;
 const DIGIT = /\d/;
+const SYMBOL = /[!@#$%^&*()_+\-=[\]{};':"|<>?,./`~\\]/;
 
 /** What's wrong with a new password, or null when it's fine. */
 export const passwordProblem = (
   password: string
-): "too_short" | "too_long" | "letters_digits" | null => {
+): "too_short" | "too_long" | "character_mix" | null => {
   if (password.length < MIN_PASSWORD_LENGTH) {
     return "too_short";
   }
   if (new TextEncoder().encode(password).length > MAX_PASSWORD_LENGTH) {
     return "too_long";
   }
-  if (!(LETTER.test(password) && DIGIT.test(password))) {
-    return "letters_digits";
+  const mix = [LOWER, UPPER, DIGIT, SYMBOL].every((set) => set.test(password));
+  if (!mix) {
+    return "character_mix";
   }
   return null;
 };
@@ -91,7 +100,8 @@ const invalidEmail: PasswordResult<never> = {
 
 const weak: PasswordResult<never> = {
   code: "weak_password",
-  message: "Use at least 8 characters, with letters and digits.",
+  message:
+    "Use at least 8 characters with a lowercase and an uppercase letter, a digit and a symbol.",
   ok: false,
 };
 

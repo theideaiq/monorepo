@@ -933,7 +933,7 @@ In the Supabase dashboard:
    change** on (a password change on a session older than a day asks for
    an emailed code). Passwords are the default way in (an emailed code
    stays as the other): set **Minimum password length** `8` and
-   **Password requirements** "Letters and digits", and turn on **Leaked
+   **Password requirements** "Lowercase, uppercase letters, digits and symbols" (the forms check the same rule, `packages/auth/password.ts`), and turn on **Leaked
    password protection** (HaveIBeenPwned; the advisor flags it while off).
 3. **Authentication → Sign In / Providers → Phone:** disabled (no SMS plan;
    see "Phone sign-in is switched off" in [The IDEA Pass](#the-idea-pass)).

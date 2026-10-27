@@ -71,7 +71,7 @@ describe("isAllowedReturnTo", () => {
 describe("allowedReturnToHosts", () => {
   afterEach(() => vi.unstubAllEnvs());
 
-  test("lists the website, The IDEA Business, the design site and the API", () => {
+  test("lists the website (bare and www), The IDEA Business, the design site and the API", () => {
     vi.stubEnv("NEXT_PUBLIC_WEB_URL", "https://theideaiq.com");
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://business.theideaiq.com");
     vi.stubEnv("NEXT_PUBLIC_DESIGN_URL", "https://design.theideaiq.com");
@@ -82,6 +82,7 @@ describe("allowedReturnToHosts", () => {
       "business.theideaiq.com",
       "design.theideaiq.com",
       "theideaiq.com",
+      "www.theideaiq.com",
     ]);
     expect(passOrigin()).toBe("https://theideaiq.com");
   });
