@@ -291,6 +291,7 @@ const OrderView = ({
 }) => {
   const t = useTranslations("app.orders.detail");
   const conditions = useTranslations("store.condition");
+  const boxText = useTranslations("web.store.product.box");
   const tCheckout = useTranslations("app.checkout.errors");
   const locale = useLocale();
   const pay = usePayOrder();
@@ -383,6 +384,13 @@ const OrderView = ({
                     {item.condition && item.condition !== "new" ? (
                       <span className="text-muted-foreground text-xs">
                         {conditions(item.condition)}
+                      </span>
+                    ) : null}
+                    {item.box_theme ? (
+                      <span className="text-muted-foreground text-xs">
+                        {boxText("themeLine", {
+                          theme: localized(item.box_theme, "name", locale),
+                        })}
                       </span>
                     ) : null}
                     <span className="text-muted-foreground text-xs tabular-nums">

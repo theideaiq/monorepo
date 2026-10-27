@@ -151,3 +151,31 @@ insert into public.kit_units (kit_type, label) values
 on conflict do nothing;
 update public.kit_types set games_category_id = (select id from public.product_categories where slug = 'games')
 where id = 'ps5';
+
+-- Boxes (program revision v1, step 5d): the starter box's turntable and
+-- cleaning kit, a few records, then the boxes' categories, parts and
+-- themes (the migration adds them where production already has these).
+insert into public.products
+  (slug, kind, status, category_id, name_ar, name_en, description_ar, description_en, price, stock_count, details)
+values
+  ('audio-technica-at-lp60x', 'sale', 'active', '50000000-0000-0000-0000-000000000003',
+    'مشغل أسطوانات Audio-Technica AT-LP60X', 'Audio-Technica AT-LP60X turntable',
+    'مشغل أسطوانات أوتوماتيكي بسرعتين.', 'A fully automatic two-speed turntable.',
+    259750, 3, '{}'),
+  ('vinyl-record-cleaning-kit', 'sale', 'active', '50000000-0000-0000-0000-000000000003',
+    'طقم تنظيف أسطوانات الفينيل', 'Vinyl record cleaning kit',
+    'فرشاة وسائل تنظيف لأسطوانات الفينيل.', 'A brush and cleaning fluid for vinyl records.',
+    24750, 5, '{}'),
+  ('kind-of-blue', 'sale', 'active', '50000000-0000-0000-0000-000000000005',
+    'Kind of Blue', 'Kind of Blue',
+    'ألبوم مايلز ديفيس.', 'The Miles Davis album.',
+    59750, 4, '{"Artist": "Miles Davis"}'),
+  ('rumours', 'sale', 'active', '50000000-0000-0000-0000-000000000005',
+    'Rumours', 'Rumours',
+    'ألبوم فليتوود ماك.', 'The Fleetwood Mac album.',
+    54750, 4, '{"Artist": "Fleetwood Mac"}')
+on conflict (slug) do nothing;
+update public.product_variants v set attributes = '{"Format": "Vinyl"}'
+from public.products p
+where p.id = v.product_id and p.slug in ('kind-of-blue', 'rumours');
+select private.add_launch_boxes();

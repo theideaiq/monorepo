@@ -110,7 +110,14 @@ const OrdersPage = async ({
       <PageHeader
         description={t("total", { count: format.number(count ?? 0) })}
         title={t("title")}
-      />
+      >
+        <Link
+          className="font-medium text-sm hover:underline"
+          href="/orders/boxes"
+        >
+          {t("boxesToPack")}
+        </Link>
+      </PageHeader>
       <PageBody>
         <FilterBar>
           <Input

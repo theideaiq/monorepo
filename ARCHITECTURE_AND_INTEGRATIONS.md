@@ -698,6 +698,7 @@ Current schema:
 | `…_account_deletion.sql` | `account_deletion_blockers()`: organizations the caller alone owns (see 1.6) |
 | `…_staff.sql` | `staff` roles (superadmin, admin, editor, finance, marketing, support) and the `private.has_staff_role` / `is_staff` helpers; `audit_logs` written by `private.audit_change` triggers; `set_staff_role` (superadmins only, last superadmin protected); customer suspension (`profiles.banned_at`); the private calendar token |
 | `…_commerce.sql` | The IDEA Store's catalog (`product_categories`, `products`, `product_variants`), `cart_items`, `store_settings` (delivery fee), `orders` + `order_items`; `create_order()` prices the cart from the catalog, `complete_order_payment()` (server only) marks it paid and takes stock; staff can only move orders forward. Billing extended to individual subscribers (`subscriptions.user_id`) and order payments (`payments.order_id`); plans get an `audience` (`plus` / `business`) and `rental_slots` |
+| `…_boxes.sql` | Boxes: `boxes`, `box_parts` (fixed product versions or slots filled from a category and format), `box_themes`; a box's stock comes from its parts (`private.box_stock()`, recounted with the parts' copies), an active box costs 10–15% less than its parts (`private.box_value()`); `cart_items.box_theme_id` and `order_items.box_theme_id`; orders take the fixed parts' copies, `pack_box()` the picked ones; `box_slot_copies()` |
 | `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
 | `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
 | `…_single_rent.sql` | Single-item rent: `rental_rates`, `rental_quote()`, `create_rental_order()` (rent + deposit lines), `settle_rental()`, `set_rental_deposit_rate()`; Keep it: `keep_price()`, `keep_rental()`; `rentals.kind`, `order_items.kind`, rental status `kept` |
@@ -1532,6 +1533,34 @@ no units, no bookings).
   (`hand_over_kit()`: the games go with it), collect with any damage
   (`collect_kit()`: `refund_due` / `amount_due`, refunded outside the app).
   Cancelling the order cancels the booking.
+
+#### Boxes
+
+Store products built from parts (migration `20261224000000_boxes.sql`). A
+box is a normal sale product with a `boxes` row: `box_parts` are fixed
+product versions (a turntable, a cleaning kit) or slots staff fill when
+packing (3 records from Music in Vinyl), and `min_value` is what the
+picked copies are worth together at least.
+
+- **Stock**: a box has no copies of its own; its stock count is how many
+  its parts make now (`private.box_stock()`), recounted whenever a part's
+  copies change. Checkout prices a box line at its version's price and
+  checks it against that count.
+- **Price**: an active box costs 10–15% less than its parts (the fixed
+  parts' prices plus `min_value`); the database refuses to put it on sale
+  otherwise, and Catalogue → Boxes shows the range.
+- **Theme**: a box with `box_themes` needs one picked on the product page
+  (`cart_items.box_theme_id`, copied to `order_items.box_theme_id`); the
+  cart and order show it.
+- **Packing**: a paid (or cash-confirmed) order takes the fixed parts'
+  copies; staff pick the slots' copies in Orders → Boxes to pack
+  (`pack_box()` checks the slots, the formats and the value, and sets
+  `packed_at`). Cancelling returns every copy.
+- **Boxes at launch**: Vinyl starter (AT-LP60X, cleaning kit, 3 records;
+  379,750), Mystery vinyl (3 records worth 180,000; 154,750) and Reading
+  (3 books worth 63,000; 54,750); Eid, Ramadan nights and Back to
+  university start as drafts, switched on in Catalogue → Boxes for their
+  season.
 
 #### Categories, prices and conditions (the catalogue)
 

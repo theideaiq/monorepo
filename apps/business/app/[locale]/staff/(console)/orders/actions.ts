@@ -2,7 +2,12 @@
 
 import { Constants } from "@repo/database";
 import { z } from "zod";
-import { ActionFailure, affected, staffAction } from "@/lib/admin/action";
+import {
+  ActionFailure,
+  affected,
+  check,
+  staffAction,
+} from "@/lib/admin/action";
 import { type ActionError, success } from "@/lib/admin/action-state";
 import { callApi } from "@/lib/admin/api";
 import { checkbox, optionalText, uuid } from "@/lib/admin/forms";
@@ -158,5 +163,20 @@ export const getBoxyLabel = staffAction(
       { orderId: input.id }
     );
     return success("saved", { data: label });
+  }
+);
+
+/**
+ * Packs a paid (or confirmed) box: the copies picked for its slots (worth
+ * the box's stated value) are taken with any fixed part still missing.
+ */
+export const packBox = staffAction(
+  "orders",
+  z.object({ id: uuid, picks: z.array(uuid).max(200).default([]) }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("pack_box", { picks: input.picks, target: input.id })
+    );
+    return success();
   }
 );

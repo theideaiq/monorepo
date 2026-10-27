@@ -5,7 +5,15 @@ owner's decision. Agents and contributors read this first (see `AGENTS.md`)
 and continue from the first unticked item. Tick items as they land; record
 decisions with a date.
 
-## Current state (2026-10-26: program revision, step 5c)
+## Current state (2026-10-27: program revision, step 5d)
+
+- Boxes (migration `20261224000000_boxes.sql`): Store products built from
+  parts, in stock while their parts are, priced 10–15% below them. Vinyl
+  starter (379,750), Mystery vinyl (154,750) and Reading (54,750) are on
+  sale; the customer picks a theme (genre or subject) on the product page
+  and staff pack to it in Orders → Boxes to pack. **To do:** switch on the
+  Eid, Ramadan nights and Back to university boxes in Catalogue → Boxes
+  for their seasons, and add box photos in the product editor.
 
 - Game night kits (migration `20261223000000_game_night_kits.sql`): PS5
   (49,750 with 4 games), Switch party (39,750) and Retro (24,750) for
@@ -272,6 +280,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-27: Program revision v1, step 5d (boxes): a box is built from
+  parts (fixed products plus slots staff fill), in stock while its parts
+  are, and priced 10–15% below them; the customer picks a theme at
+  checkout and staff pack to at least the stated value; launch boxes are
+  Vinyl starter, Mystery vinyl and Reading, with seasonal Eid, Ramadan
+  nights and Back to university boxes created switched off.
 
 - 2026-10-26: Program revision v1, step 5c (kits): a 100,000 IQD deposit
   at checkout that staff can waive after checking ID (verified Passes skip

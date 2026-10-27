@@ -97,6 +97,16 @@ test.describe("back office", () => {
     await expect(page.getByText("No member with that number.")).toBeVisible();
     await expectAccessible(page);
 
+    // Boxes: their parts and price check, and the ones to pack.
+    await page.goto(`${urls.app}/staff/catalog/boxes`);
+    await expect(page.getByRole("link", { name: "Reading box" })).toBeVisible();
+    await expectAccessible(page);
+    await page.goto(`${urls.app}/staff/orders/boxes`);
+    await expect(
+      page.getByRole("heading", { name: "Boxes to pack" })
+    ).toBeVisible();
+    await expectAccessible(page);
+
     // Your Pass links staff to the back office.
     await page.goto(`${urls.web}/pass`);
     await page.getByRole("link", { name: "Open the back office" }).click();

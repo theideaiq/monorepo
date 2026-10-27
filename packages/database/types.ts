@@ -225,6 +225,138 @@ export type Database = {
         };
         Relationships: [];
       };
+      box_parts: {
+        Row: {
+          box_id: string;
+          category_id: string | null;
+          created_at: string;
+          format: string | null;
+          id: string;
+          position: number;
+          product_id: string | null;
+          quantity: number;
+          variant_id: string | null;
+        };
+        Insert: {
+          box_id: string;
+          category_id?: string | null;
+          created_at?: string;
+          format?: string | null;
+          id?: string;
+          position?: number;
+          product_id?: string | null;
+          quantity?: number;
+          variant_id?: string | null;
+        };
+        Update: {
+          box_id?: string;
+          category_id?: string | null;
+          created_at?: string;
+          format?: string | null;
+          id?: string;
+          position?: number;
+          product_id?: string | null;
+          quantity?: number;
+          variant_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "box_parts_box_id_fkey";
+            columns: ["box_id"];
+            isOneToOne: false;
+            referencedRelation: "boxes";
+            referencedColumns: ["product_id"];
+          },
+          {
+            foreignKeyName: "box_parts_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "product_categories";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "box_parts_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "box_parts_product_id_variant_id_fkey";
+            columns: ["product_id", "variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["product_id", "id"];
+          },
+        ];
+      };
+      box_themes: {
+        Row: {
+          active: boolean;
+          box_id: string;
+          created_at: string;
+          id: string;
+          name_ar: string;
+          name_en: string;
+          position: number;
+        };
+        Insert: {
+          active?: boolean;
+          box_id: string;
+          created_at?: string;
+          id?: string;
+          name_ar: string;
+          name_en: string;
+          position?: number;
+        };
+        Update: {
+          active?: boolean;
+          box_id?: string;
+          created_at?: string;
+          id?: string;
+          name_ar?: string;
+          name_en?: string;
+          position?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "box_themes_box_id_fkey";
+            columns: ["box_id"];
+            isOneToOne: false;
+            referencedRelation: "boxes";
+            referencedColumns: ["product_id"];
+          },
+        ];
+      };
+      boxes: {
+        Row: {
+          min_value: number;
+          product_id: string;
+          season: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          min_value?: number;
+          product_id: string;
+          season?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          min_value?: number;
+          product_id?: string;
+          season?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "boxes_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: true;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       bulb_entries: {
         Row: {
           amount: number;
@@ -380,6 +512,7 @@ export type Database = {
       };
       cart_items: {
         Row: {
+          box_theme_id: string | null;
           condition: Database["public"]["Enums"]["product_condition"] | null;
           created_at: string;
           id: string;
@@ -390,6 +523,7 @@ export type Database = {
           variant_id: string;
         };
         Insert: {
+          box_theme_id?: string | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           created_at?: string;
           id?: string;
@@ -400,6 +534,7 @@ export type Database = {
           variant_id: string;
         };
         Update: {
+          box_theme_id?: string | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           created_at?: string;
           id?: string;
@@ -410,6 +545,13 @@ export type Database = {
           variant_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "cart_items_box_theme_id_fkey";
+            columns: ["box_theme_id"];
+            isOneToOne: false;
+            referencedRelation: "box_themes";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "cart_items_product_id_fkey";
             columns: ["product_id"];
@@ -1256,12 +1398,15 @@ export type Database = {
       order_items: {
         Row: {
           attributes: NonNullable<Json>;
+          box_theme_id: string | null;
           condition: Database["public"]["Enums"]["product_condition"] | null;
           id: string;
           kind: string;
           name_ar: string;
           name_en: string;
           order_id: string;
+          packed_at: string | null;
+          packed_by: string | null;
           product_id: string | null;
           quantity: number;
           rental_id: string | null;
@@ -1270,12 +1415,15 @@ export type Database = {
         };
         Insert: {
           attributes?: NonNullable<Json>;
+          box_theme_id?: string | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
           kind?: string;
           name_ar: string;
           name_en: string;
           order_id: string;
+          packed_at?: string | null;
+          packed_by?: string | null;
           product_id?: string | null;
           quantity: number;
           rental_id?: string | null;
@@ -1284,12 +1432,15 @@ export type Database = {
         };
         Update: {
           attributes?: NonNullable<Json>;
+          box_theme_id?: string | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
           kind?: string;
           name_ar?: string;
           name_en?: string;
           order_id?: string;
+          packed_at?: string | null;
+          packed_by?: string | null;
           product_id?: string | null;
           quantity?: number;
           rental_id?: string | null;
@@ -1297,6 +1448,13 @@ export type Database = {
           variant_id?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "order_items_box_theme_id_fkey";
+            columns: ["box_theme_id"];
+            isOneToOne: false;
+            referencedRelation: "box_themes";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "order_items_order_id_fkey";
             columns: ["order_id"];
@@ -3717,6 +3875,14 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      box_slot_copies: {
+        Args: { slot: string };
+        Returns: {
+          price: number;
+          product_id: string;
+          stock_item: string;
+        }[];
+      };
       bulbs_outstanding: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -4516,6 +4682,32 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "support_tickets";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      pack_box: {
+        Args: { picks: string[]; target: string };
+        Returns: {
+          attributes: NonNullable<Json>;
+          box_theme_id: string | null;
+          condition: Database["public"]["Enums"]["product_condition"] | null;
+          id: string;
+          kind: string;
+          name_ar: string;
+          name_en: string;
+          order_id: string;
+          packed_at: string | null;
+          packed_by: string | null;
+          product_id: string | null;
+          quantity: number;
+          rental_id: string | null;
+          unit_price: number;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "order_items";
           isOneToOne: true;
           isSetofReturn: false;
         };
