@@ -1,8 +1,17 @@
 import { refreshSession } from "@repo/auth/proxy";
 import { internationalizationMiddleware } from "@repo/internationalization/proxy";
 import { telegramMiniAppCspSources } from "@repo/security/csp";
-import { noseconeOptionsWith, withSecurityHeaders } from "@repo/security/proxy";
+import {
+  noseconeOptions,
+  noseconeOptionsWith,
+  withSecurityHeaders,
+} from "@repo/security/proxy";
 import type { NextRequest } from "next/server";
+import {
+  embedClientId,
+  isEmbedConnectPath,
+  isEmbedRequestPath,
+} from "@/lib/pass-embed";
 
 export const config = {
   // Every route except static assets, the PostHog ingest rewrites, the
@@ -18,6 +27,53 @@ export const config = {
 const options = noseconeOptionsWith(telegramMiniAppCspSources);
 
 /**
+ * The origins that may frame an app's live card (its verified domains), or
+ * none when the app may not embed it.
+ */
+const embedOrigins = async (clientId: string | null) => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!(clientId && url && key)) {
+    return [];
+  }
+  try {
+    const response = await fetch(`${url}/rest/v1/rpc/pass_card_embed_site`, {
+      body: JSON.stringify({ client: clientId }),
+      headers: {
+        apikey: key,
+        authorization: `Bearer ${key}`,
+        "content-type": "application/json",
+      },
+      method: "POST",
+    });
+    const rows = (await response.json()) as { origins?: string[] }[];
+    return response.ok ? (rows[0]?.origins ?? []) : [];
+  } catch {
+    return [];
+  }
+};
+
+/**
+ * The live card's pages: the embed may be framed only by the app's verified
+ * domains (no one else, not even Telegram); its connect popup is never
+ * framed and keeps its opener, so it can hand the frame its token.
+ */
+const embedOptions = async (request: NextRequest) => {
+  if (isEmbedConnectPath(request.nextUrl.pathname)) {
+    return {
+      ...noseconeOptions,
+      crossOriginOpenerPolicy: { policy: "unsafe-none" as const },
+    };
+  }
+  const origins = await embedOrigins(
+    embedClientId(request.nextUrl.searchParams.get("client_id"))
+  );
+  return origins.length > 0
+    ? noseconeOptionsWith({ frameAncestors: origins })
+    : noseconeOptions;
+};
+
+/**
  * Adds the locale prefix (/ar; none for English), keeps the shared session cookie of
  * The IDEA Pass fresh (so its pages and Server Actions read a valid token)
  * and adds the security headers (Nosecone). The site holds no secrets: its
@@ -26,5 +82,8 @@ const options = noseconeOptionsWith(telegramMiniAppCspSources);
  */
 export default async function proxy(request: NextRequest) {
   const response = internationalizationMiddleware(request);
-  return withSecurityHeaders(await refreshSession(request, response), options);
+  const headers = isEmbedRequestPath(request.nextUrl.pathname)
+    ? await embedOptions(request)
+    : options;
+  return withSecurityHeaders(await refreshSession(request, response), headers);
 }

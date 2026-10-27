@@ -30,7 +30,8 @@ site in Pass → Settings → Connected sites.
    every answer it registered.
 4. **Go live.** Everyone can sign in. The basic answers work at once; the
    sensitive ones (`student_email`, `phone`, `birthdate`, `address`,
-   `offline_access`) wait for staff review and aren't asked until approved.
+   `offline_access`, and `card_embed`, the live card on your site) wait
+   for staff review and aren't asked until approved.
    Asking for a new sensitive answer later goes back to review; approved
    ones keep working. Withdrawing an approval also stops it for earlier
    grants and refresh tokens.
@@ -137,6 +138,64 @@ copy on a website must never pass a door check). Send
 your server while the access token is valid (1 hour) and serve or cache
 it yourself; the person can always open the live card at
 https://theideaiq.com/pass (or in Google Wallet).
+
+## The live Pass card on your site (`card_embed`)
+
+Members can show their **live** card (the QR code and the 6-digit code
+that changes every 30 seconds) inside your pages, without the code ever
+reaching your servers. Ask for **The live Pass card on your site** in
+Developers: it works at once in testing (for your company's members) and
+after our review once live. It isn't an OpenID scope: you need no token.
+
+Frame it:
+
+```html
+<iframe
+  src="https://theideaiq.com/pass/embed?client_id=pass_…&lang=ar&theme=light"
+  title="The IDEA Pass"
+  style="width: 100%; max-width: 448px; border: 0"
+></iframe>
+```
+
+- `client_id` (required), `lang=ar|en` (or use `/ar/pass/embed`),
+  `theme=light|dark` for the few words around the card (otherwise the
+  browser's). The card itself always looks the same; around it the frame
+  is transparent.
+- **Only your verified domains may frame it** (and their subdomains, over
+  https): the page sends `Content-Security-Policy: frame-ancestors` built
+  from them, so any other site gets nothing. Add
+  `frame-src https://theideaiq.com` to your own CSP. If your page sends
+  `Cross-Origin-Opener-Policy: same-origin`, use
+  `same-origin-allow-popups` so the member's sign-in window works.
+- **Signing in.** Browsers keep The IDEA's cookie out of other sites'
+  frames, so the frame shows a **Show my Pass card** button. It opens a
+  small window on theideaiq.com where the member (signed in, or after
+  signing in) allows your site; that window hands the frame a token for
+  this browser and closes. Nothing goes through your page, and no token is
+  ever put in a URL. If the member had to sign in first, they press the
+  button once more. The frame keeps the token in its own storage for your
+  site, so the card shows straight away next time (up to 90 days after it
+  was last shown).
+- **Only the member's own card:** the frame shows the card of whoever
+  allowed it in that browser; you can't choose a card. Members see your
+  site under Pass → Settings → Connected sites and can **Stop** it there
+  (disconnecting your site stops it too); the frame then shows the button
+  again. "Not you? Remove it from this browser" clears it in the frame.
+- **Height:** the frame posts `{ type: "idea-pass-card", height }` to your
+  page (only to your verified domain) whenever its height changes, so you
+  can size it without a scrollbar:
+
+  ```js
+  window.addEventListener("message", (event) => {
+    if (event.origin === "https://theideaiq.com" && event.data?.type === "idea-pass-card") {
+      frame.style.height = `${event.data.height}px`;
+    }
+  });
+  ```
+
+  Nothing else comes out of the frame. Keep checking scans with
+  `POST /oidc/card/check` as before, and keep a link to
+  https://theideaiq.com/pass as a fallback.
 
 ## Checking a Pass card's QR code (door checks)
 

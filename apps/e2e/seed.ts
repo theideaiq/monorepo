@@ -172,3 +172,42 @@ export const resetCompany = async () => {
   );
   return data.id;
 };
+
+/** A partner app that may show the live card, framed from https://sal.test. */
+export const embedPartner = {
+  clientId: "pass_e2eembed0000000000000000",
+  name: "E2E Society",
+  origin: "https://sal.test",
+};
+
+export const seedEmbedPartner = async () => {
+  const db = admin();
+  const organizationId = await resetCompany();
+  check(
+    await db.from("pass_partner_domains").insert({
+      domain: "sal.test",
+      organization_id: organizationId,
+      verified_at: new Date().toISOString(),
+    })
+  );
+  check(
+    await db
+      .from("pass_partners")
+      .delete()
+      .eq("client_id", embedPartner.clientId)
+  );
+  // Set by staff, so the answers are approved as they are.
+  check(
+    await db.from("pass_partners").insert({
+      active: true,
+      answers: ["profile", "card_embed"],
+      client_id: embedPartner.clientId,
+      mode: "live",
+      name: embedPartner.name,
+      organization_id: organizationId,
+      redirect_uris: [`${embedPartner.origin}/cb`],
+      secret_hash: "0".repeat(64),
+      website: embedPartner.origin,
+    })
+  );
+};

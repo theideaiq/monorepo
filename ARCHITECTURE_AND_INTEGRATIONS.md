@@ -109,7 +109,7 @@ load on every page (never inside the iOS/Android apps).
 | --- | --- | --- |
 | Public pages | The IDEA Store: `/{locale}`, `/store`, `/store/<slug>`; The IDEA Plus: `/plus` (rental catalog, plans, tiers; "Your Plus" at `#yours` when signed in: membership, plans, rentals, rental requests); The IDEA Club: `/club` (one feed with chips, `?show=events\|news\|stories\|guides`; "Yours" at `#yours`: your events with the calendar feed and your submissions; the Telegram rooms card) and `/club/<slug>` (a post or an event); `/partners` ("For partners"); `/search` (products to buy and rent, events and posts); `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
 | The IDEA Pass (sign-in) | `/{locale}/sign-in`, `/mfa`, `/tg`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
-| The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders), `/pass/orders/<id>`, `/pass/saved` (saved items), `/pass/bulbs` (Bulbs, then invites at `#invite`), `/pass/settings` (with language and theme) | `app/[locale]/pass`, `components/screens` (client components with TanStack Query) |
+| The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders), `/pass/orders/<id>`, `/pass/saved` (saved items), `/pass/bulbs` (Bulbs, then invites at `#invite`), `/pass/settings` (with language and theme); `/pass/embed?client_id=…` (the live card in a partner's frame) and `/pass/embed/connect` (its popup) | `app/[locale]/pass/(member)`, `app/[locale]/pass/embed`, `components/screens` (client components with TanStack Query) |
 | Cart and checkout | `/{locale}/cart`, `/checkout` | `app/[locale]/(checkout)` |
 
 - **Session.** The browser client (`@repo/auth/client`) and the server
@@ -703,6 +703,7 @@ Current schema:
 | `…_pass_sign_in.sql` | Sign in with The IDEA Pass: `pass_card_checks`, `pass_card_check()` and `pass_card()` (partner card checks and the card image), `pass_partners` (OpenID Connect clients: return addresses, allowed scopes, the secret's hash), `pass_connections` (who shared what with which site; a per-site `subject`), `pass_sign_in_codes` and `pass_access_tokens` (hashes, the API only); `approve_pass_sign_in()` (the consent screen), `pass_claims()` (service role), `disconnect_pass_partner()` |
 | `…_pass_scopes.sql` | Every partner scope (`membership`, `student_email`, `phone`, `birthdate`, `address`, `offline_access`; picture and plan); `student_badges.university_email` (kept when verified by email); `pass_refresh_tokens` (rotating, 90 days) |
 | `…_pass_developers.sql` | Partner self-service: `pass_partner_domains` (verified by the API), `pass_partners` gains `mode` (testing or live), `requested_answers`/`approved_answers` (`answers` derived by trigger), `enabled`/`suspended_at` (`active` derived), the previous secret for 24 hours and `public_jwks`; `pass_client_assertions` (one-use `jti`s, the API only); `add_pass_domain()`, `remove_pass_domain()`, `create_pass_app()`, `update_pass_app()`, `set_pass_app_state()`, `rotate_pass_app_secret()`, `end_previous_pass_secret()`, `set_pass_app_keys()`, `pass_apps()`; staff `review_pass_app()` and `suspend_pass_app()`; testing apps sign in and check cards of their company's members only |
+| `…_pass_card_embed.sql` | The live card on a partner's site: `card_embed` is a sensitive answer (reviewed like the others); `pass_card_embeds` (one token per member and site, its hash only, 90 days after last shown); `pass_card_embed_site()` (the app's name and framing origins, anyone), `start_pass_card_embed()` (the member allows a site), `pass_card_embed()` (the frame's read with its token: the card and this step's and the next code, computed in the database), `end_pass_card_embed()`; disconnecting a site ends its embed |
 | `…_boxes.sql` | Boxes: `boxes`, `box_parts` (fixed product versions or slots filled from a category and format), `box_themes`; a box's stock comes from its parts (`private.box_stock()`, recounted with the parts' copies), an active box costs 10–15% less than its parts (`private.box_value()`); `cart_items.box_theme_id` and `order_items.box_theme_id`; orders take the fixed parts' copies, `pack_box()` the picked ones; `box_slot_copies()`. No new boxes can be created; `sync_box_stock` archives a box when its parts sell out |
 | `…_game_night_kits.sql` | Game night kits: `kit_types`, `kit_units`, `kit_bookings`, `kit_booking_games`; `kit_weekends()`, `book_kit()`, `run_kit_holds()`, `waive_kit_deposit()`, `hand_over_kit()`, `collect_kit()`; rentals kind `kit`, order line kind `kit` |
 | `…_plus_launch.sql` | The IDEA Plus launch: `plus_capacity`, `plus_waitlist` (`plus_status()`, `join_plus_waitlist()`, `run_plus_waitlist()`, `invite_to_plus()`), `plus_areas` and `plus_homes`, Plus rentals without due dates, the queue (`wishlist_items.position`, `reorder_saved()`), `plus_swaps` (`book_swap()`, `complete_swap()`, `cancel_swap()`, `my_swap_terms()`), annual plans, `plus_pauses` (`pause_plus()`, `resume_plus()`), `cancel_plus()`, `change_plus_plan()` (`subscriptions.next_plan_id`) |
@@ -1656,6 +1657,21 @@ Migration `20261227000000_pass_sign_in.sql`; the partner guide is
   code and verifier; an ES256 ID token signed with
   `PASS_OIDC_SIGNING_KEY`, and an opaque access token for userinfo) and
   userinfo.
+- **The live card on a partner's site** (`/pass/embed?client_id=…`, the
+  `card_embed` answer). `proxy.ts` sets `frame-ancestors` to the app's
+  verified domains (`pass_card_embed_site()`), so no other site can frame
+  it, and the root layout drops the header, footer and tabs there
+  (`SiteChrome`); analytics never load inside another site's frame. Our
+  session cookie doesn't reach other sites' frames, so the frame opens
+  `/pass/embed/connect` in a popup (Cross-Origin-Opener-Policy
+  `unsafe-none`, so it keeps its opener): the signed-in member allows the
+  site, `start_pass_card_embed()` returns a token and the popup posts it
+  to the frame (same origin only) and closes. The frame keeps the token in
+  its partitioned storage and reads `pass_card_embed()` once per 30-second
+  step: the card and the codes, computed in the database, so the card
+  secret never leaves it and stopping the site in Settings ends it at
+  once. The frame posts only its height to the partner page, and only to
+  a verified domain. Partner docs: `docs/platform/pass-sign-in.md`.
 - **Answers, not data.** Scopes are `openid`, `profile`, `email`,
   `membership`, `student`, `student_email`, `adult`, `plus`, `phone`,
   `birthdate`, `address`, `card` and `offline_access` (`pass_claims()`,

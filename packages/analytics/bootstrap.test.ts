@@ -80,6 +80,14 @@ describe("analytics bootstrap", () => {
     expect(win.dataLayer).toBeUndefined();
   });
 
+  it("loads nothing inside another site's frame", () => {
+    const win: FakeWindow = { top: {} };
+    win.self = win;
+    const { loaded } = run(bootstrapScript(config({ metaPixelId: "1" })), win);
+    expect(loaded).toEqual([]);
+    expect(win.dataLayer).toBeUndefined();
+  });
+
   it("escapes markup in the embedded config", () => {
     expect(bootstrapScript(config({ gaId: "G-</script>" }))).not.toContain(
       "</script>"

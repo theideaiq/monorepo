@@ -1816,7 +1816,11 @@
         "failed": "It couldn't be disconnected. Try again.",
         "checks": "Checks of your card",
         "checked": "{site} checked your card on {date}",
-        "aSite": "A partner"
+        "aSite": "A partner",
+        "embedded": "Sites showing your live card",
+        "embeddedSince": "Showing it since {date}",
+        "lastShown": "Last shown {date}",
+        "stop": "Stop"
       },
       "password": {
         "title": "Password",
@@ -2290,7 +2294,8 @@
           "birthdate": "Date of birth",
           "address": "Delivery address",
           "card": "The Pass card",
-          "offline_access": "Stay updated (refresh tokens)"
+          "offline_access": "Stay updated (refresh tokens)",
+          "card_embed": "The live Pass card on your site"
         },
         "errors": {
           "redirectNotVerified": "A return address isn't on a verified domain.",
@@ -4332,7 +4337,8 @@
           "phone": "WhatsApp number (sensitive)",
           "birthdate": "Date of birth (sensitive)",
           "address": "Delivery address (sensitive)",
-          "offline_access": "Stay updated: refresh tokens (sensitive)"
+          "offline_access": "Stay updated: refresh tokens (sensitive)",
+          "card_embed": "The live Pass card on their site (sensitive)"
         },
         "add": "Add site",
         "once": "Copy these now: the secret isn't shown again. Send it to the partner's developers privately.",
@@ -4503,6 +4509,25 @@
       "noStudentEmail": "Not on file yet: confirm your university email in Settings to share it.",
       "testing": "This site is still being tested by its company: only the company's members can sign in for now.",
       "testingOnly": "This site is in testing, so only its company's members can sign in for now."
+    },
+    "embed": {
+      "meta": "Your Pass card",
+      "unavailable": "This site can't show The IDEA Pass card.",
+      "intro": "Show your live The IDEA Pass card here, with the code {site} checks at the door.",
+      "show": "Show my Pass card",
+      "popupBlocked": "Your browser blocked the window. Allow pop-ups for this site, then try again.",
+      "forget": "Not you? Remove it from this browser",
+      "connect": {
+        "meta": "Show your Pass card",
+        "title": "Show your Pass card on {site}?",
+        "body": "Your card and its code, which changes every 30 seconds, will appear inside {site}'s pages, shown by theideaiq.com. {site} doesn't receive them. You can stop it any time in Pass → Settings.",
+        "allow": "Show my card",
+        "cancel": "Cancel",
+        "done": "Done. You can close this window.",
+        "again": "You're signed in. Go back to {site} and press “Show my Pass card” again.",
+        "notAllowed": "This site can't show your Pass card yet.",
+        "failed": "That didn't work. Please try again."
+      }
     }
   }
 }

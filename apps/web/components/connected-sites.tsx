@@ -15,14 +15,17 @@ import { useLocale, useTranslations } from "next-intl";
 import { askedFor } from "@/lib/pass-sign-in";
 import {
   useCardChecks,
+  useCardEmbeds,
   useConnectedSites,
   useDisconnectSite,
+  useEndCardEmbed,
 } from "@/lib/pass-sign-in-queries";
 
 /**
  * Pass → Settings → Connected sites: the partner sites the member signed
- * in to with their Pass, what each was told, Disconnect, and the latest
- * checks of their card by partner apps.
+ * in to with their Pass, what each was told, Disconnect, the sites showing
+ * their live card in a frame (Stop), and the latest checks of their card by
+ * partner apps.
  */
 export const ConnectedSites = () => {
   const t = useTranslations("app.settings.sites");
@@ -30,11 +33,14 @@ export const ConnectedSites = () => {
   const locale = useLocale() as Locale;
   const sites = useConnectedSites();
   const checks = useCardChecks();
+  const embeds = useCardEmbeds();
   const disconnect = useDisconnectSite();
+  const stop = useEndCardEmbed();
   const connected = sites.data ?? [];
   const checked = checks.data ?? [];
+  const shown = embeds.data ?? [];
 
-  if (connected.length === 0 && checked.length === 0) {
+  if (connected.length === 0 && checked.length === 0 && shown.length === 0) {
     return null;
   }
   return (
@@ -74,6 +80,43 @@ export const ConnectedSites = () => {
             </Button>
           </div>
         ))}
+        {shown.length > 0 ? (
+          <div className="grid gap-2">
+            <p className="font-medium text-sm">{t("embedded")}</p>
+            {shown.map((embed) => (
+              <div
+                className="flex flex-wrap items-start justify-between gap-3 rounded-lg border p-3"
+                key={embed.client_id}
+              >
+                <div className="grid gap-1 text-xs">
+                  <p className="font-medium text-sm">
+                    {embed.pass_partners?.name ?? t("aSite")}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {t("embeddedSince", {
+                      date: formatDate(embed.created_at, locale),
+                    })}
+                  </p>
+                  {embed.last_shown_at ? (
+                    <p className="text-muted-foreground">
+                      {t("lastShown", {
+                        date: formatDateTime(embed.last_shown_at, locale),
+                      })}
+                    </p>
+                  ) : null}
+                </div>
+                <Button
+                  disabled={stop.isPending}
+                  onClick={() => stop.mutate(embed.client_id)}
+                  size="sm"
+                  variant="outline"
+                >
+                  {t("stop")}
+                </Button>
+              </div>
+            ))}
+          </div>
+        ) : null}
         {checked.length > 0 ? (
           <div className="grid gap-1">
             <p className="font-medium text-sm">{t("checks")}</p>
@@ -89,7 +132,7 @@ export const ConnectedSites = () => {
             </ul>
           </div>
         ) : null}
-        {disconnect.isError ? (
+        {disconnect.isError || stop.isError ? (
           <p className="text-destructive text-sm" role="alert">
             {t("failed")}
           </p>

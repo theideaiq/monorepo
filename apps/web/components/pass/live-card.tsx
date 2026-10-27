@@ -52,16 +52,20 @@ const useCard = () => {
   });
 };
 
-/** The current code, recomputed when the 30-second step changes. */
-const usePassCode = (key: CryptoKey | undefined) => {
+/** The 30-second step and the seconds left in it, ticking every second. */
+export const usePassClock = () => {
   const [now, setNow] = useState(() => Date.now());
-  const [code, setCode] = useState<string | null>(null);
-  const step = passCodeStep(now);
-
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+  return { left: secondsLeft(now), step: passCodeStep(now) };
+};
+
+/** The current code, recomputed when the 30-second step changes. */
+const usePassCode = (key: CryptoKey | undefined) => {
+  const [code, setCode] = useState<string | null>(null);
+  const { left, step } = usePassClock();
 
   useEffect(() => {
     if (!key) {
@@ -78,7 +82,7 @@ const usePassCode = (key: CryptoKey | undefined) => {
     };
   }, [key, step]);
 
-  return { code, left: secondsLeft(now) };
+  return { code, left };
 };
 
 /** The QR code as one SVG path of dark modules. */
@@ -143,7 +147,7 @@ const CountdownRing = ({ left }: { readonly left: number }) => {
   );
 };
 
-interface LiveCardProps {
+interface CardDetails {
   /** Badges shown on the card (Student, Staff), already translated. */
   readonly badges?: readonly string[];
   /** "Member since …", already formatted. */
@@ -156,21 +160,29 @@ interface LiveCardProps {
   readonly plan: string | null;
 }
 
+interface CardFaceProps extends CardDetails {
+  /** The current 6-digit code (null while it loads). */
+  readonly code: string | null;
+  /** Seconds until the code changes. */
+  readonly left: number;
+  readonly memberNumber: number | null | undefined;
+}
+
 /**
- * The IDEA Pass as a card: guilloché, a holographic sheen that follows the
- * pointer, the member's name and number, and a QR code with a 6-digit code
- * that changes every 30 seconds (shown at the counter, checked there).
+ * The card itself: guilloché, a holographic sheen that follows the pointer,
+ * the member's name and number, and a QR code with the 6-digit code. Your
+ * Pass computes the code on the device; a partner's frame gets it from us.
  */
-export const LiveCard = ({
+export const CardFace = ({
   badges = [],
+  code,
+  left,
+  memberNumber,
   memberSince,
   name,
   plan,
-}: LiveCardProps) => {
+}: CardFaceProps) => {
   const t = useTranslations("pass.card");
-  const locale = useLocale();
-  const card = useCard();
-  const { code, left } = usePassCode(card.data?.key);
   const ref = useRef<HTMLDivElement>(null);
 
   // Tilt and move the sheen with the pointer (not for reduced motion).
@@ -195,81 +207,100 @@ export const LiveCard = ({
     ref.current?.style.setProperty("--pass-ry", "0deg");
   };
 
-  const memberNumber = card.data?.memberNumber;
   const payload = memberNumber && code ? passPayload(memberNumber, code) : null;
 
   return (
-    <figure className="grid gap-3">
-      <div className="[perspective:1200px]">
+    <div className="[perspective:1200px]">
+      <div
+        className="pass-card relative isolate aspect-[856/540] w-full overflow-hidden rounded-2xl bg-idea-pink text-white shadow-xl"
+        onPointerLeave={onPointerLeave}
+        onPointerMove={onPointerMove}
+        ref={ref}
+      >
         <div
-          className="pass-card relative isolate aspect-[856/540] w-full overflow-hidden rounded-2xl bg-idea-pink text-white shadow-xl"
-          onPointerLeave={onPointerLeave}
-          onPointerMove={onPointerMove}
-          ref={ref}
-        >
-          <div
-            className={cn(
-              "absolute inset-0 -z-10",
-              cardBackground(Boolean(plan))
-            )}
-          />
-          <Guilloche className="absolute inset-0 -z-10 size-full text-white/40" />
-          <div className="pass-sheen pointer-events-none absolute inset-0" />
+          className={cn(
+            "absolute inset-0 -z-10",
+            cardBackground(Boolean(plan))
+          )}
+        />
+        <Guilloche className="absolute inset-0 -z-10 size-full text-white/40" />
+        <div className="pass-sheen pointer-events-none absolute inset-0" />
 
-          <div className="relative grid h-full grid-cols-[1fr_auto] gap-3 p-[5%]">
-            <div className="flex min-w-0 flex-col justify-between">
-              <BrandLogo
-                className="h-6 w-auto sm:h-8"
-                line="Pass"
-                variant="on-pink"
-              />
-              <div className="grid min-w-0 gap-1">
-                <p className="flex flex-wrap items-center gap-1.5 text-[0.625rem] text-white/75 uppercase tracking-[0.2em] sm:text-xs">
-                  {plan ?? t("member")}
-                  {badges.map((badge) => (
-                    <span
-                      className="rounded-full bg-white/20 px-1.5 py-0.5 text-white tracking-normal"
-                      key={badge}
-                    >
-                      {badge}
-                    </span>
-                  ))}
-                </p>
-                <p className="truncate font-semibold text-lg leading-tight sm:text-3xl">
-                  {name}
-                </p>
-                <p
-                  className="font-mono text-sm text-white/85 tabular-nums sm:text-base"
-                  dir="ltr"
-                >
-                  {memberNumber
-                    ? `№ ${formatMemberNumber(memberNumber)}`
-                    : "№ ··· ···"}
-                </p>
-              </div>
-              <p className="text-[0.625rem] text-white/75 sm:text-xs">
-                {memberSince}
+        <div className="relative grid h-full grid-cols-[1fr_auto] gap-3 p-[5%]">
+          <div className="flex min-w-0 flex-col justify-between">
+            <BrandLogo
+              className="h-6 w-auto sm:h-8"
+              line="Pass"
+              variant="on-pink"
+            />
+            <div className="grid min-w-0 gap-1">
+              <p className="flex flex-wrap items-center gap-1.5 text-[0.625rem] text-white/75 uppercase tracking-[0.2em] sm:text-xs">
+                {plan ?? t("member")}
+                {badges.map((badge) => (
+                  <span
+                    className="rounded-full bg-white/20 px-1.5 py-0.5 text-white tracking-normal"
+                    key={badge}
+                  >
+                    {badge}
+                  </span>
+                ))}
+              </p>
+              <p className="truncate font-semibold text-lg leading-tight sm:text-3xl">
+                {name}
+              </p>
+              <p
+                className="font-mono text-sm text-white/85 tabular-nums sm:text-base"
+                dir="ltr"
+              >
+                {memberNumber
+                  ? `№ ${formatMemberNumber(memberNumber)}`
+                  : "№ ··· ···"}
               </p>
             </div>
+            <p className="text-[0.625rem] text-white/75 sm:text-xs">
+              {memberSince}
+            </p>
+          </div>
 
-            <div className="flex w-28 flex-col items-center justify-center gap-2 self-center sm:w-40">
-              <div className="aspect-square w-full overflow-hidden rounded-lg bg-white p-1.5 shadow-md">
-                {payload ? (
-                  <QrCode value={payload} />
-                ) : (
-                  <div className="size-full animate-pulse rounded bg-muted" />
-                )}
-              </div>
-              <div className="flex items-center gap-1.5" dir="ltr">
-                <span className="font-mono font-semibold text-base tabular-nums tracking-[0.18em] sm:text-xl">
-                  {code ? `${code.slice(0, 3)} ${code.slice(3)}` : "··· ···"}
-                </span>
-                <CountdownRing left={left} />
-              </div>
+          <div className="flex w-28 flex-col items-center justify-center gap-2 self-center sm:w-40">
+            <div className="aspect-square w-full overflow-hidden rounded-lg bg-white p-1.5 shadow-md">
+              {payload ? (
+                <QrCode value={payload} />
+              ) : (
+                <div className="size-full animate-pulse rounded bg-muted" />
+              )}
+            </div>
+            <div className="flex items-center gap-1.5" dir="ltr">
+              <span className="font-mono font-semibold text-base tabular-nums tracking-[0.18em] sm:text-xl">
+                {code ? `${code.slice(0, 3)} ${code.slice(3)}` : "··· ···"}
+              </span>
+              <CountdownRing left={left} />
             </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+/**
+ * The IDEA Pass as a card with a code that changes every 30 seconds (shown
+ * at the counter, checked there), computed on the device.
+ */
+export const LiveCard = (details: CardDetails) => {
+  const t = useTranslations("pass.card");
+  const locale = useLocale();
+  const card = useCard();
+  const { code, left } = usePassCode(card.data?.key);
+
+  return (
+    <figure className="grid gap-3">
+      <CardFace
+        {...details}
+        code={code}
+        left={left}
+        memberNumber={card.data?.memberNumber}
+      />
       <figcaption className="flex flex-wrap items-center justify-between gap-2 text-muted-foreground text-sm">
         <span>{t("showAtCounter")}</span>
         <span aria-live="off" className="tabular-nums">

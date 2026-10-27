@@ -32,6 +32,7 @@ const ANSWERS = [
   "birthdate",
   "address",
   "card",
+  "card_embed",
   "offline_access",
 ] as const;
 

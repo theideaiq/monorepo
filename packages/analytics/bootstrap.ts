@@ -22,11 +22,12 @@ export interface BootstrapConfig {
  *
  * Inside the Capacitor apps nothing loads: web pixels in a native app need
  * App Tracking Transparency consent on iOS, so app campaigns should use the
- * vendors' mobile SDKs instead.
+ * vendors' mobile SDKs instead. Nothing loads inside another site's frame
+ * either (a partner showing the live Pass card, Telegram Web).
  */
 export function analyticsBootstrap(config: BootstrapConfig) {
   const w = window as any;
-  if (w.Capacitor?.isNativePlatform?.()) {
+  if (w.Capacitor?.isNativePlatform?.() || w.top !== w.self) {
     return;
   }
 

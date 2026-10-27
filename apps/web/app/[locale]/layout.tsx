@@ -14,6 +14,7 @@ import type { ReactNode } from "react";
 import { AppProviders } from "@/components/providers";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
+import { SiteChrome } from "./components/site-chrome";
 import { TabBar } from "./components/tab-bar";
 
 interface RootLayoutProperties {
@@ -63,10 +64,14 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
           <AnalyticsProvider>
             <DesignSystemProvider dir={dir} labels={common.ui}>
               <AppProviders>
-                <Header />
+                <SiteChrome>
+                  <Header />
+                </SiteChrome>
                 {children}
-                <Footer />
-                <TabBar />
+                <SiteChrome>
+                  <Footer />
+                  <TabBar />
+                </SiteChrome>
               </AppProviders>
             </DesignSystemProvider>
           </AnalyticsProvider>

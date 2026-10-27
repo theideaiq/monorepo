@@ -24,6 +24,7 @@ export const APP_ANSWERS = [
   "birthdate",
   "address",
   "card",
+  "card_embed",
   "offline_access",
 ] as const;
 
@@ -36,6 +37,7 @@ export const SENSITIVE_ANSWERS: readonly AppAnswer[] = [
   "birthdate",
   "address",
   "offline_access",
+  "card_embed",
 ];
 
 export interface Credentials {
