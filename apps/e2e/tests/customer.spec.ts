@@ -209,8 +209,9 @@ test.describe("a signed-in customer", () => {
   }) => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/plus`);
+    // The page's "Join The IDEA Plus" buttons share the card's title.
     await expect(
-      page.getByText("Join The IDEA Plus", { exact: true })
+      page.locator("#join").getByText("Join The IDEA Plus", { exact: true })
     ).toBeVisible();
     await page.getByRole("combobox", { name: "Area in Baghdad" }).click();
     await page.getByRole("option", { name: "Karrada" }).click();
