@@ -966,6 +966,48 @@ In the Supabase dashboard:
    deploy; only then, in Supabase → **Authentication → Attack Protection**,
    enable CAPTCHA protection with provider Turnstile and the **secret key**.
    (Turned on before the site sends tokens, every sign-in fails.)
+8. **Sign in with Google, Apple, Microsoft, Facebook and LinkedIn.** Every
+   provider sends people back to Supabase's callback,
+   `https://mzqpquaghjogbfhiufjv.supabase.co/auth/v1/callback`, then to the
+   website's `/auth/callback` (or the apps' `com.theideaiq.app://auth/callback`,
+   already in the redirect URLs). Turn on **Authentication → Sign In /
+   Providers → Allow manual linking** (Settings → Ways to sign in), then:
+   - **Google:** Google Cloud console → APIs & Services → OAuth consent
+     screen (External; app name The IDEA; authorized domain theideaiq.com;
+     scopes email, profile, openid) → Credentials → Create OAuth client ID
+     (Web application) with the callback above as an authorized redirect
+     URI. In Supabase → Providers → **Google**: the client ID and secret.
+     A student signing in with their university's Google Workspace account
+     is verified at once (`claim_student_from_identity()`).
+   - **Apple** (needed in the iOS app once Google is offered): Apple
+     Developer → Identifiers → the App ID `com.theideaiq.app` with "Sign in
+     with Apple"; a **Services ID** (for example `com.theideaiq.signin`)
+     with Sign in with Apple, domain `theideaiq.com` and the callback above
+     as the return URL; Keys → a key with Sign in with Apple (download the
+     .p8 once). In Supabase → Providers → **Apple**: the Services ID as the
+     client ID and the secret generated from the key (Team ID, Key ID,
+     .p8). The secret expires after 6 months: put a reminder to renew it.
+   - **Microsoft:** Azure portal → Microsoft Entra ID → App registrations →
+     New registration, "Accounts in any organizational directory and
+     personal Microsoft accounts", redirect URI (Web) the callback above;
+     Certificates & secrets → a client secret (note its expiry). In
+     Supabase → Providers → **Azure**: the application (client) ID, the
+     secret and the URL `https://login.microsoftonline.com/common`.
+   - **Facebook:** Meta for Developers → Create app (Consumer) → add
+     Facebook Login → Valid OAuth Redirect URIs: the callback above;
+     permissions `email` and `public_profile`; complete business
+     verification and switch the app to Live. In Supabase → Providers →
+     **Facebook**: the App ID and App secret.
+   - **LinkedIn:** LinkedIn Developers → Create app (company page The IDEA)
+     → Products: "Sign In with LinkedIn using OpenID Connect" → Auth:
+     authorized redirect URL the callback above. In Supabase → Providers →
+     **LinkedIn (OIDC)**: the client ID and secret.
+   Then list the providers that are on, in button order, in
+   `NEXT_PUBLIC_AUTH_PROVIDERS` on the website's Vercel project (for
+   example `google,apple,azure,facebook,linkedin_oidc`) and deploy; a
+   provider missing from the list shows no button. An address that
+   already has a Pass is linked to it when the provider says it's
+   verified.
 
 ### 2.8 Which client to use where
 

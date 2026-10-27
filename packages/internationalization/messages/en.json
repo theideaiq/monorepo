@@ -139,6 +139,11 @@
         "signups_disabled": "New sign-ups are currently closed.",
         "unknown": "Something went wrong. Please try again."
       }
+    },
+    "social": {
+      "or": "or",
+      "continueWith": "Continue with {provider}",
+      "failed": "That didn't work. Please try again."
     }
   },
   "billing": {
@@ -1851,6 +1856,14 @@
         "save": "Save password",
         "saving": "Saving…",
         "saved": "Your password is saved. Next time, sign in with your email and this password."
+      },
+      "signInMethods": {
+        "title": "Ways to sign in",
+        "description": "Sign in with your email, or with another service you link here. Signing in with a university Google address verifies you as a student.",
+        "email": "Email",
+        "add": "Link {provider}",
+        "remove": "Remove",
+        "failed": "That didn't work. Please try again."
       }
     },
     "errors": {

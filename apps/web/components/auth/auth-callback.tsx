@@ -1,6 +1,8 @@
 "use client";
 
+import { isAllowedReturnTo } from "@repo/auth/pass";
 import { useAuth } from "@repo/auth/provider";
+import { takeReturnTo } from "@repo/auth/social";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { useTranslations } from "next-intl";
@@ -23,12 +25,24 @@ export const AuthCallback = () => {
   useEffect(() => {
     let active = true;
     // Resolves after the client has handled the code in the URL.
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       if (!active) {
         return;
       }
       if (data.session) {
-        router.replace("/pass");
+        // A university Google account verifies the student badge at once
+        // (nothing happens otherwise).
+        await supabase.rpc("claim_student_from_identity");
+        // Back where sign-in started (a path here or another site of The
+        // IDEA), else Your Pass.
+        const returnTo = takeReturnTo();
+        if (returnTo?.startsWith("/") && !returnTo.startsWith("//")) {
+          window.location.assign(returnTo);
+        } else if (isAllowedReturnTo(returnTo)) {
+          window.location.assign(returnTo);
+        } else {
+          router.replace("/pass");
+        }
       } else {
         setFailed(true);
       }

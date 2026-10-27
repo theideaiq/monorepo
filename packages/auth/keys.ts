@@ -8,6 +8,9 @@ export const keys = () =>
       // sign-in on The IDEA Pass carries across every subdomain. Unset
       // locally and on previews (host-only cookie).
       NEXT_PUBLIC_AUTH_COOKIE_DOMAIN: z.string().startsWith(".").optional(),
+      // Sign-in providers turned on in Supabase, in button order, e.g.
+      // "google,apple,azure,facebook,linkedin_oidc".
+      NEXT_PUBLIC_AUTH_PROVIDERS: z.string().optional(),
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z
         .string()
         .startsWith("sb_publishable_")
@@ -22,6 +25,7 @@ export const keys = () =>
     runtimeEnv: {
       NEXT_PUBLIC_AUTH_COOKIE_DOMAIN:
         process.env.NEXT_PUBLIC_AUTH_COOKIE_DOMAIN,
+      NEXT_PUBLIC_AUTH_PROVIDERS: process.env.NEXT_PUBLIC_AUTH_PROVIDERS,
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
         process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,

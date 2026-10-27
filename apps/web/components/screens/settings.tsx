@@ -2,6 +2,7 @@
 
 import { formatPhone } from "@repo/auth/phone";
 import { useAuth } from "@repo/auth/provider";
+import type { SocialProvider } from "@repo/auth/social";
 import {
   Card,
   CardContent,
@@ -25,6 +26,7 @@ import { GuardianCard } from "@/components/guardian-settings";
 import { PageHeader } from "@/components/page-header";
 import { PasswordSettingsCard } from "@/components/password-settings";
 import { ProfileForm } from "@/components/profile-form";
+import { SignInMethodsCard } from "@/components/sign-in-methods";
 import { SectionSpinner } from "@/components/states";
 import { StudentCard } from "@/components/student-settings";
 import { TelegramSettingsCard } from "@/components/telegram-settings";
@@ -71,7 +73,11 @@ const Appearance = () => {
   );
 };
 
-export const Settings = () => {
+export const Settings = ({
+  providers = [],
+}: {
+  readonly providers?: SocialProvider[];
+}) => {
   const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
@@ -129,6 +135,7 @@ export const Settings = () => {
           </CardContent>
         </Card>
         <PasswordSettingsCard />
+        <SignInMethodsCard providers={providers} />
         <BirthdayCard />
         <StudentCard />
         <ConnectedSites />

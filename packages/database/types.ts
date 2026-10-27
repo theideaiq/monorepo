@@ -4907,6 +4907,27 @@ export type Database = {
           user_id: string;
         }[];
       };
+      claim_student_from_identity: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          email_hash: string | null;
+          governorate: string | null;
+          major: string | null;
+          method: string;
+          study_year: number | null;
+          university_email: string | null;
+          university_id: string;
+          user_id: string;
+          valid_until: string;
+          verified_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "student_badges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       claim_telegram_notifications: {
         Args: {
           max_age?: string;

@@ -7,6 +7,16 @@ decisions with a date.
 
 ## Current state (2026-10-27: program revision, step 5f; Sign in with The IDEA Pass)
 
+- Sign in with Google, Apple, Microsoft, Facebook and LinkedIn (buttons
+  under the password form; the apps open the provider in the system
+  browser and come back by deep link), Settings → Ways to sign in to link
+  or remove them, and a university Google Workspace account verifies the
+  student at once (migration `20261230000000_social_sign_in.sql`).
+  **To do (owner, ARCHITECTURE_AND_INTEGRATIONS.md 2.7 step 8):** set up
+  each provider and Supabase's "Allow manual linking", then list them in
+  `NEXT_PUBLIC_AUTH_PROVIDERS` on the website. Apple is required in the
+  iOS app once Google is offered.
+
 - Passwords are the default way into The IDEA Pass: email and password
   (getting a Pass takes one emailed code; a forgotten password is reset
   with another code; Settings → Password sets or changes it), with "Email
