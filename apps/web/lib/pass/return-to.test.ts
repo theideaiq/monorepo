@@ -9,13 +9,13 @@ describe("return_to", () => {
 
   test("keeps allowed URLs, replaces others with the website, null when absent", async () => {
     vi.stubEnv("NEXT_PUBLIC_WEB_URL", "https://theideaiq.com");
-    vi.stubEnv("NEXT_PUBLIC_DESIGN_URL", "https://design.theideaiq.com");
+    vi.stubEnv("NEXT_PUBLIC_STAFF_URL", "https://staff.theideaiq.com");
 
     expect(
       await readReturnTo(
-        params({ return_to: "https://design.theideaiq.com/en" })
+        params({ return_to: "https://staff.theideaiq.com/en" })
       )
-    ).toBe("https://design.theideaiq.com/en");
+    ).toBe("https://staff.theideaiq.com/en");
     expect(
       await readReturnTo(params({ return_to: ["https://evil.example/", "x"] }))
     ).toBe("https://theideaiq.com");

@@ -1,0 +1,52 @@
+{
+  "name": "partners",
+  "private": true,
+  "scripts": {
+    "analyze": "ANALYZE=true npm run build",
+    "build": "next build",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "next dev -p 3000",
+    "start": "next start",
+    "test": "NODE_ENV=test vitest run",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@repo/analytics": "workspace:*",
+    "@repo/auth": "workspace:*",
+    "@repo/commerce": "workspace:*",
+    "@repo/config": "workspace:*",
+    "@repo/database": "workspace:*",
+    "@repo/design-system": "workspace:*",
+    "@repo/internationalization": "workspace:*",
+    "@repo/next-config": "workspace:*",
+    "@repo/observability": "workspace:*",
+    "@repo/payments": "workspace:*",
+    "@repo/security": "workspace:*",
+    "@sentry/nextjs": "^10.42.0",
+    "@supabase/supabase-js": "^2.115.0",
+    "@t3-oss/env-nextjs": "^0.13.10",
+    "@tanstack/react-query": "^5.104.1",
+    "import-in-the-middle": "^3.0.0",
+    "lucide-react": "^1.41.0",
+    "next": "16.4.3",
+    "next-intl": "^4.14.9",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "require-in-the-middle": "8.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "24.19.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "^5.1.4",
+    "jsdom": "^28.1.0",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}

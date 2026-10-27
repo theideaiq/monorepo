@@ -4,7 +4,7 @@ import { ALLOWED_UPDATES, DROID_COMMANDS } from "@repo/droid";
  * Setting up Droid, The IDEA's Telegram bot, and reading back how it's set
  * up: the webhook (this API), its commands in Arabic and English, the menu
  * button that opens the website as a Mini App (/tg) and its descriptions.
- * Used by the back office (Telegram → Bot) and `bun run telegram:setup`.
+ * Used by Staff (Telegram → Bot) and `bun run telegram:setup`.
  */
 
 type Call = <T = unknown>(

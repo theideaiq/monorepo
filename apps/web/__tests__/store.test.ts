@@ -43,10 +43,10 @@ describe("parseStoreQuery", () => {
 });
 
 describe("links", () => {
-  it("builds locale-prefixed paths here and URLs on The IDEA Business", () => {
+  it("builds locale-prefixed paths here and URLs on The IDEA Partners", () => {
     expect(pagePath("ar", "/plus", { plan: "p1" })).toBe("/ar/plus?plan=p1");
-    expect(appLink("https://business.theideaiq.com/", "en", "/invoices")).toBe(
-      "https://business.theideaiq.com/invoices"
+    expect(appLink("https://partners.theideaiq.com/", "en", "/invoices")).toBe(
+      "https://partners.theideaiq.com/invoices"
     );
   });
 });

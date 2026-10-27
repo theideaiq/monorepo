@@ -14,7 +14,7 @@ const first = (value: string | string[] | undefined) =>
  *
  * - `return_to` as a path on this site (`/en/cart`), kept as is;
  * - `return_to` as an absolute URL on one of The IDEA's hosts (the website,
- *   the design site…), kept; any other URL is replaced with the website
+ *   Staff…), kept; any other URL is replaced with the website
  *   (never an open redirect);
  * - the older `next` (a path without its locale) also works;
  * - null when none was given (go on to Your Pass).

@@ -2,7 +2,7 @@
 /**
  * Points Droid's Telegram webhook at this API, publishes its commands,
  * sets the menu button that opens the website as a Mini App (/tg) and the
- * bot's descriptions. The back office does the same (Telegram → Bot).
+ * bot's descriptions. Staff does the same (Telegram → Bot).
  *
  *   bun run --cwd apps/api telegram:setup
  *

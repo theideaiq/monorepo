@@ -14,7 +14,7 @@ import { LanguageSwitcher } from "./language-switcher";
 
 /** Links in the phone menu after the sections. */
 const moreLinks = [
-  { href: "/business", id: "business" },
+  { href: "/partners", id: "business" },
   { href: "/about", id: "about" },
   { href: "/help", id: "help" },
 ] as const;
@@ -71,7 +71,7 @@ export const Header = () => {
         <div className="ms-auto flex items-center gap-1">
           <Link
             className="hidden rounded-md px-3 py-2 font-medium text-muted-foreground text-sm transition-colors hover:bg-muted hover:text-foreground lg:block"
-            href="/business"
+            href="/partners"
           >
             {t("business")}
           </Link>

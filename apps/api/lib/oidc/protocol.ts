@@ -46,7 +46,7 @@ export const sameDigest = (a: string, b: string) => {
   return left.length === right.length && timingSafeEqual(left, right);
 };
 
-/** A random token for access tokens (and, in the back office, secrets). */
+/** A random token for access tokens (and, in Staff, secrets). */
 export const randomToken = (bytes = 32) => randomBytes(bytes).toString("hex");
 
 const VERIFIER = /^[A-Za-z0-9._~-]{43,128}$/;

@@ -11,20 +11,20 @@ import { urls } from "../playwright.config";
 import { resetStaff } from "../seed";
 import { expectAccessible } from "./helpers";
 
-/** `?return_to=…` back to the back office's home in `locale`. */
+/** `?return_to=…` back to Staff's home in `locale`. */
 const toAdmin = (locale: string) =>
   `?return_to=${encodeURIComponent(
-    `${urls.app}${locale === "en" ? "" : `/${locale}`}/staff`
+    `${urls.staff}${locale === "en" ? "/" : `/${locale}`}`
   )}`;
 
-test.describe("back office", () => {
+test.describe("Staff", () => {
   test("visitors are sent to The IDEA Pass to sign in", async ({ page }) => {
-    await page.goto(`${urls.app}/staff`);
+    await page.goto(`${urls.staff}/`);
     await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
     await expect(page.getByLabel("Email")).toBeVisible();
     await expectAccessible(page);
 
-    await page.goto(`${urls.app}/ar/staff/orders`);
+    await page.goto(`${urls.staff}/ar/orders`);
     await expect(page).toHaveURL(`${urls.web}/ar/sign-in${toAdmin("ar")}`);
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   });
@@ -33,18 +33,18 @@ test.describe("back office", () => {
     context,
     page,
   }) => {
-    await context.addCookies(await sessionCookies(customer.email, urls.app));
-    await page.goto(`${urls.app}/staff/customers`);
-    await expect(page).toHaveURL(/\/staff\/no-access$/);
+    await context.addCookies(await sessionCookies(customer.email, urls.staff));
+    await page.goto(`${urls.staff}/customers`);
+    await expect(page).toHaveURL(`${urls.staff}/no-access`);
     await expect(
       page.getByRole("heading", { name: "No access" })
     ).toBeVisible();
     await expectAccessible(page);
 
-    // Signs out through The IDEA Pass, then the back office asks to sign in.
+    // Signs out through The IDEA Pass, then Staff asks to sign in.
     await page.getByRole("link", { name: "Sign out" }).click();
     await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
-    await page.goto(`${urls.app}/staff/customers`);
+    await page.goto(`${urls.staff}/customers`);
     await expect(page).toHaveURL(new RegExp(`^${urls.web}/sign-in`));
   });
 
@@ -53,7 +53,7 @@ test.describe("back office", () => {
   }) => {
     await resetStaff();
     // Staff sign in with an email code like everyone else…
-    await page.goto(`${urls.app}/staff`);
+    await page.goto(`${urls.staff}/`);
     await expect(page).toHaveURL(`${urls.web}/sign-in${toAdmin("en")}`);
     await page.getByRole("button", { name: "Email me a code instead" }).click();
     await page.getByLabel("Email").fill(staff.email);
@@ -72,7 +72,7 @@ test.describe("back office", () => {
     await expectAccessible(page);
 
     await page.getByLabel("6-digit code").fill(totp(await secret.innerText()));
-    await expect(page).toHaveURL(new RegExp(`${urls.app}/staff$`));
+    await expect(page).toHaveURL(new RegExp(`^${urls.staff}/$`));
     await expect(
       page.getByRole("heading", { name: "Dashboard" })
     ).toBeVisible();
@@ -82,11 +82,9 @@ test.describe("back office", () => {
     ).toBeVisible();
 
     // Search from the sidebar, then the counter.
-    await page
-      .getByRole("searchbox", { name: "Search the back office" })
-      .fill("E2E");
+    await page.getByRole("searchbox", { name: "Search Staff" }).fill("E2E");
     await page.keyboard.press("Enter");
-    await expect(page).toHaveURL(/\/staff\/search\?q=E2E$/);
+    await expect(page).toHaveURL(`${urls.staff}/search?q=E2E`);
     await expect(page.getByRole("heading", { name: "Search" })).toBeVisible();
     await expectAccessible(page);
 
@@ -99,28 +97,28 @@ test.describe("back office", () => {
     await expectAccessible(page);
 
     // Boxes: their parts and price check, and the ones to pack.
-    await page.goto(`${urls.app}/staff/catalog/boxes`);
+    await page.goto(`${urls.staff}/catalog/boxes`);
     await expect(page.getByRole("link", { name: "Reading box" })).toBeVisible();
     await expectAccessible(page);
-    await page.goto(`${urls.app}/staff/orders/boxes`);
+    await page.goto(`${urls.staff}/orders/boxes`);
     await expect(
       page.getByRole("heading", { name: "Boxes to pack" })
     ).toBeVisible();
     await expectAccessible(page);
 
     // Students (card reviews, universities) and partner perks.
-    await page.goto(`${urls.app}/staff/customers/students`);
+    await page.goto(`${urls.staff}/customers/students`);
     await expect(
       page.getByRole("heading", { name: "Student cards to review" })
     ).toBeVisible();
     await expectAccessible(page);
-    await page.goto(`${urls.app}/staff/companies/perks`);
+    await page.goto(`${urls.staff}/companies/perks`);
     await expect(page.getByRole("heading", { name: "New perk" })).toBeVisible();
     await expectAccessible(page);
 
-    // Your Pass links staff to the back office.
+    // Your Pass links staff to Staff.
     await page.goto(`${urls.web}/pass`);
-    await page.getByRole("link", { name: "Open the back office" }).click();
-    await expect(page).toHaveURL(new RegExp(`${urls.app}/staff$`));
+    await page.getByRole("link", { name: "Open Staff" }).click();
+    await expect(page).toHaveURL(new RegExp(`^${urls.staff}/$`));
   });
 });

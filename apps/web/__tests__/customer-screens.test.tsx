@@ -471,7 +471,7 @@ describe("events", () => {
 });
 
 describe("accounts without organizations", () => {
-  test("the app opens without a business account", async () => {
+  test("the app opens without an organization", async () => {
     const db = fakeDb({
       results: {
         "memberships.select": { data: [], error: null },

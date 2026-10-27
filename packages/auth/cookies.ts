@@ -6,7 +6,7 @@ import { keys } from "./keys";
  * NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=".theideaiq.com" the Supabase session cookie
  * (`sb-<project ref>-auth-token`, chunked as `.0`, `.1`, … when long) is
  * written for the whole domain, so a sign-in on The IDEA Pass carries over
- * to the website, the app and the back office. Unset (local development,
+ * to the website, the app and Staff. Unset (local development,
  * previews), the cookie is host-only; on localhost cookies are shared across
  * ports anyway.
  *

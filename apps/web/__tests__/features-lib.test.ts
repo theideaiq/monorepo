@@ -119,14 +119,14 @@ describe("notifications", () => {
     expect(notificationHref("/orders/o1")).toBe("/pass/orders/o1");
     expect(notificationHref("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
     expect(notificationHref("/events")).toBe("/events");
-    // Company pages are on The IDEA Business, at the root of its site.
+    // Company pages are on The IDEA Partners, at the root of its site.
     expect(
       notificationHref(
         "/business/invoices",
         "ar",
-        "https://business.theideaiq.com"
+        "https://partners.theideaiq.com"
       )
-    ).toBe("https://business.theideaiq.com/ar/invoices");
+    ).toBe("https://partners.theideaiq.com/ar/invoices");
     // Links stored while detail pages took a query parameter.
     expect(notificationHref("/orders/view?id=o1")).toBe("/pass/orders/o1");
     expect(notificationHref("/support/view?id=t%201")).toBe("/help/t%201");

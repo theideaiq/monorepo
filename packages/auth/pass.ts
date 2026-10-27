@@ -45,14 +45,14 @@ const hostOf = (value: string | undefined) => {
 
 /**
  * The hostnames of The IDEA's own sites: the website (with the Pass), The
- * IDEA Business (company pages and the back office), the design site and the API.
+ * IDEA Partners, Staff (with the design site) and the API.
  */
 export const allowedReturnToHosts = () => {
   const hosts = new Set(
     [
       process.env.NEXT_PUBLIC_WEB_URL,
       process.env.NEXT_PUBLIC_APP_URL,
-      process.env.NEXT_PUBLIC_DESIGN_URL,
+      process.env.NEXT_PUBLIC_STAFF_URL,
       process.env.NEXT_PUBLIC_API_URL,
     ]
       .map(hostOf)

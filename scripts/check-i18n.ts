@@ -14,8 +14,10 @@ import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 
 const ROOTS = [
-  "apps/business/app",
-  "apps/business/components",
+  "apps/partners/app",
+  "apps/partners/components",
+  "apps/staff/app",
+  "apps/staff/components",
   "apps/web/app",
   "apps/web/components",
 ];

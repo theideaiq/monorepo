@@ -1,2 +1,0 @@
-# Storybook builds into public/ (bun run build); static files live in assets/.
-public/

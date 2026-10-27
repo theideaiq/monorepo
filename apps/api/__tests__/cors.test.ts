@@ -3,7 +3,8 @@ import { corsHeaders, webCorsHeaders, webOrigins } from "../lib/cors";
 
 vi.mock("@/env", () => ({
   env: {
-    NEXT_PUBLIC_APP_URL: "https://business.theideaiq.com",
+    NEXT_PUBLIC_APP_URL: "https://partners.theideaiq.com",
+    NEXT_PUBLIC_STAFF_URL: "https://staff.theideaiq.com",
     NEXT_PUBLIC_WEB_URL: "https://theideaiq.com",
   },
 }));
@@ -21,11 +22,12 @@ describe("CORS", () => {
     ]);
   });
 
-  test("signed-in calls allow both website origins and The IDEA Business", () => {
+  test("signed-in calls allow both website origins, The IDEA Partners and Staff", () => {
     for (const origin of [
       "https://theideaiq.com",
       "https://www.theideaiq.com",
-      "https://business.theideaiq.com",
+      "https://partners.theideaiq.com",
+      "https://staff.theideaiq.com",
     ]) {
       expect(corsHeaders(from(origin))["Access-Control-Allow-Origin"]).toBe(
         origin
@@ -42,7 +44,7 @@ describe("CORS", () => {
       ]
     ).toBe("https://www.theideaiq.com");
     expect(
-      webCorsHeaders(from("https://business.theideaiq.com"))[
+      webCorsHeaders(from("https://partners.theideaiq.com"))[
         "Access-Control-Allow-Origin"
       ]
     ).toBeUndefined();

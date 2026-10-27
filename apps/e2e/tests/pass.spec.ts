@@ -120,15 +120,15 @@ test.describe("The IDEA Pass", () => {
         page.getByRole("heading", { level: 1, name: "Your Pass" })
       ).toBeVisible();
       await expect(page.getByText(customer.name).first()).toBeVisible();
-      // Customers have no back office.
-      await expect(
-        page.getByRole("link", { name: "Open the back office" })
-      ).toHaveCount(0);
+      // Customers have no Staff.
+      await expect(page.getByRole("link", { name: "Open Staff" })).toHaveCount(
+        0
+      );
       await expectAccessible(page);
 
       await page.getByRole("button", { name: "Sign out" }).click();
       await expect(page).toHaveURL(`${urls.web}/sign-in`);
-      // The shared session is gone for The IDEA Business too.
+      // The shared session is gone for The IDEA Partners too.
       await page.goto(`${urls.app}/invoices`);
       await expect(page).toHaveURL(
         new RegExp(`^${urls.web}/sign-in\\?return_to=`)
@@ -139,7 +139,7 @@ test.describe("The IDEA Pass", () => {
       await page.goto(`${urls.web}/sign-in${returnTo("/saved")}`);
       await expect(page).toHaveURL(`${urls.web}/saved`);
 
-      // Another site of The IDEA (here The IDEA Business) is allowed too.
+      // Another site of The IDEA (here The IDEA Partners) is allowed too.
       await page.goto(`${urls.web}/sign-in${returnTo(`${urls.app}/invoices`)}`);
       await expect(page).toHaveURL(`${urls.app}/invoices`);
 

@@ -1,5 +1,5 @@
 /**
- * Store helpers shared by the website, the app, the back office and the
+ * Store helpers shared by the website, the app, Staff and the
  * Telegram bot: bilingual fields, prices, Iraqi governorates and the cart
  * total preview. Safe for client and server code.
  */

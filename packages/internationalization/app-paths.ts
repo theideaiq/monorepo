@@ -87,7 +87,7 @@ export const currentAppPath = (path: string) => {
 const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
 
 /**
- * The page of The IDEA Business a stored link names: links under
+ * The page of The IDEA Partners a stored link names: links under
  * `/business…` are its pages, which sit at the root of its own site
  * (`/business/invoices` → `/invoices`); null for the website's pages.
  */

@@ -7,6 +7,14 @@ decisions with a date.
 
 ## Current state (2026-10-27: program revision, step 5f; Sign in with The IDEA Pass)
 
+- The IDEA Partners and Staff (Program Revision v2, item 2): `apps/partners`
+  (`partners.theideaiq.com`, port 3000) is the organization dashboard;
+  `apps/staff` (`staff.theideaiq.com`, port 3003) is everything The IDEA's
+  team uses, with The IDEA Design at `/design`. The website's `/business`
+  is now `/partners` ("For partners"). `business.theideaiq.com`,
+  `design.theideaiq.com` and `apps/storybook` are gone, with no redirects.
+  **To do (owner):** see the Vercel item in the launch checklist.
+
 - Sign in with Google, Apple, Microsoft, Facebook and LinkedIn (buttons
   under the password form; the apps open the provider in the system
   browser and come back by deep link), Settings → Ways to sign in to link
@@ -29,13 +37,13 @@ decisions with a date.
 
 - Partner self-service (migration `20261229000000_pass_developers.sql`):
   companies register their own Sign in with The IDEA Pass apps in The IDEA
-  Business → Developers (verify a domain, register, test with their own
+  Partners → Developers (verify a domain, register, test with their own
   members, go live). Sensitive answers (university email, phone, date of
   birth, address, refresh tokens) wait for staff review in Companies →
   Sign in with the Pass (and the inbox); staff can suspend any app. Secrets
   rotate with 24 hours' grace; `private_key_jwt` with uploaded keys.
   **To do:** auibsal.org registers through Developers (invite SAL's
-  developer to a SAL company in The IDEA Business), then review its
+  developer to a SAL company in The IDEA Partners), then review its
   `student_email` request.
 
 - Sign in with The IDEA Pass (migration `20261227000000_pass_sign_in.sql`):
@@ -63,12 +71,12 @@ decisions with a date.
   with a university email (an emailed code) or a student card photo that
   support reviews in Customers → Students; the badge lasts until 30 June
   and brings Plus at 20% off (monthly), no deposits for rent and kits,
-  and student perks. Partners are organizations in The IDEA Business with
-  perks (Companies → Perks); their team checks Pass cards and records
-  uses (once a day) in The IDEA Business → Perks. **To do:** check the
+  and student perks. Partners are organizations in The IDEA Partners with
+  perks (Staff → Companies → Perks); their team checks Pass cards and records
+  uses (once a day) in The IDEA Partners → Perks. **To do:** check the
   universities' email domains in Customers → Students (seeded from public
   information); add the first partners (an organization each, invited
-  from The IDEA Business) and their perks; emails need `RESEND_FROM` and
+  from The IDEA Partners) and their perks; emails need `RESEND_FROM` and
   `RESEND_TOKEN` on the API.
 
 - Boxes (migration `20261224000000_boxes.sql`): Store products built from
@@ -136,14 +144,16 @@ decisions with a date.
   Finance → Prices checks every copy against a 20% margin floor.
 
 - Products: The IDEA Store (`/`, `/store`), The IDEA Plus (`/plus`), The
-  IDEA Club (`/club`) and The IDEA Pass (`/pass`), plus The IDEA Business
-  (`/business` on the website, the company dashboard at
-  `business.theideaiq.com`) and The IDEA Droid (the Telegram bot). Spark,
-  Suite, Megastore, The IDEA Post, Discover, Academy and Launcher are gone
-  as names.
-- `apps/app` is now `apps/business` (package `business`): company pages at
-  its root, the back office at `/{locale}/staff` (companies at
-  `/staff/companies`). `NEXT_PUBLIC_APP_URL` is The IDEA Business.
+  IDEA Club (`/club`) and The IDEA Pass (`/pass`), plus The IDEA Partners
+  (`/partners` on the website, the organization dashboard at
+  `partners.theideaiq.com`) and The IDEA Droid (the Telegram bot); Staff
+  (`staff.theideaiq.com`) is for The IDEA's team. Spark, Suite, Business,
+  Megastore, The IDEA Post, Discover, Academy and Launcher are gone as
+  names.
+- `apps/partners` (package `partners`): the organization pages at its
+  root. `apps/staff` (package `staff`): Staff at its root (companies at
+  `/companies`) and The IDEA Design at `/design`. `NEXT_PUBLIC_APP_URL` is
+  The IDEA Partners; `NEXT_PUBLIC_STAFF_URL` is Staff.
 - Website: menu Store · Plus · Club · Pass; `/club/<slug>` replaces
   `/post/…`; `/pass` has four pages (card, orders, bulbs, settings);
   `/saved`, `/help`, `/careers` and `/r/<code>` are new addresses; one
@@ -173,14 +183,14 @@ decisions with a date.
 
 - [ ] **Drafts:** about 140 drafts remain (44 with copies but no photo,
       the rest without copies). Photograph and publish them, or delete
-      them, in the back office (Catalog, status Draft).
+      them, in Staff (Catalog, status Draft).
 - [ ] **Prices to check:** consoles, accessories, hi-fi and cameras kept
       their prices (cost plus 10–15% once costs are in); the band moves
       raised the cheapest vinyl to 54,750 and CDs to 19,750 and capped
       vinyl at 89,750, so check box sets and singles. Check that the
       Frank Ocean – Orange CD is an official release before selling it.
 
-- [ ] **Costs:** enter the cost of every copy (back office → the product →
+- [ ] **Costs:** enter the cost of every copy (Staff → the product →
       copies; all 684 are empty), then fix what Finance → Prices lists.
 - [ ] **Money rules:** set the real Wayl fee rate and our delivery cost on
       Finance → Bulbs (3% and 5,000 IQD are placeholders).
@@ -201,8 +211,8 @@ decisions with a date.
       (Authentication → Sign In / Providers → Multi-factor) — staff rights
       need an authenticator-app session. Set the Site URL to
       `https://theideaiq.com` (The IDEA Pass lives on the website) and add
-      `https://theideaiq.com/**` and `https://business.theideaiq.com/**` to
-      the redirect URLs.
+      `https://theideaiq.com/**`, `https://partners.theideaiq.com/**` and
+      `https://staff.theideaiq.com/**` to the redirect URLs.
 - [x] **Telegram sign-in** (done 2026-10-27): in @BotFather open the bot →
       Login Widget, add the Redirect URI
       `https://api.theideaiq.com/auth/telegram/callback`, then set
@@ -237,27 +247,34 @@ decisions with a date.
       unaffected projects" on. Optional: `TURBO_TOKEN`/`TURBO_TEAM` for the
       remote cache.
       - `web` (`apps/web`) → `theideaiq.com`
-      - `app` (root directory `apps/business`, The IDEA Business: the
-        company dashboard and the back office) → `business.theideaiq.com`
-        (DNS)
+      - `theideaiq-partners` (root directory `apps/partners`, The IDEA
+        Partners) → `partners.theideaiq.com` (DNS: a CNAME to Vercel)
       - `api` (`apps/api`) → the API host
-      - `storybook` (`apps/storybook`, The IDEA Design) →
-        `design.theideaiq.com` (DNS), with `NEXT_PUBLIC_SUPABASE_URL` and
-        `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+      - `theideaiq-staff` (root directory `apps/staff`, Staff and The IDEA
+        Design at `/design`; the project that used to serve the design
+        site) → `staff.theideaiq.com` (DNS: a CNAME to Vercel)
+- [ ] **Vercel, The IDEA Partners and Staff (Program Revision v2, item
+      2):** set the root directories (`theideaiq-partners` → `apps/partners`,
+      `theideaiq-staff` → `apps/staff`) and the Staff project's environment
+      variables (`ARCHITECTURE_AND_INTEGRATIONS.md` 5.5); Claude does this
+      at merge. Then delete the `business.` and `design.` DNS records (no
+      redirects). Retiring `docs.` stays for item 5.
 - [ ] **Vercel, retire the old projects:** delete the `admin` and `pass`
-      projects (their apps are now `/staff` in The IDEA Business and the
+      projects (their apps are now Staff, `staff.theideaiq.com`, and the
       Pass pages on the website);
-      redirect any `admin.`/`pass.`/`spark.` DNS to `business.theideaiq.com`
-      if they were ever published. Remove `NEXT_PUBLIC_PASS_URL` and
+      remove any `admin.`/`pass.`/`spark.` DNS records if they were ever
+      published. Remove `NEXT_PUBLIC_PASS_URL` and
       `NEXT_PUBLIC_ADMIN_URL` from every project.
 - [ ] **Vercel, shared URLs:** on every project set
       `NEXT_PUBLIC_WEB_URL=https://theideaiq.com` (every "Sign in" goes to
-      The IDEA Pass there), `NEXT_PUBLIC_APP_URL=https://business.theideaiq.com`
-      and `NEXT_PUBLIC_DESIGN_URL`; set
-      `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on web, app and
-      storybook (production only).
+      The IDEA Pass there) and `NEXT_PUBLIC_APP_URL=https://partners.theideaiq.com`;
+      `NEXT_PUBLIC_STAFF_URL=https://staff.theideaiq.com` on web, api and
+      staff (an allowed return_to host and CORS origin); set
+      `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com` on web, partners and
+      staff (production only). Remove `NEXT_PUBLIC_DESIGN_URL` from every
+      project.
 - [ ] **Vercel, secrets only in `api`:** remove `RESEND_*`, `ARCJET_KEY`,
-      `UPSTASH_*` and `BETTERSTACK_*` from the `web` and `app` projects and
+      `UPSTASH_*` and `BETTERSTACK_*` from the `web` and `theideaiq-partners` projects and
       set them on `api`, which serves the contact form (`POST /contact`)
       and the status badge (`GET /status`). Turn on Vercel Firewall bot
       protection for `web` (Arcjet no longer runs there).
@@ -273,7 +290,7 @@ decisions with a date.
       `TELEGRAM_WEBHOOK_SECRET` and, for sign-in, `TELEGRAM_LOGIN_CLIENT_ID`
       and `TELEGRAM_LOGIN_CLIENT_SECRET` (Login Widget Allowed URL
       `https://api.theideaiq.com/auth/telegram/callback`); redeploy, then
-      Back office → Telegram → Bot → Set up now.
+      Staff → Telegram → Bot → Set up now.
 - [x] **Primary domain:** `theideaiq.com` serves the website and
       `www.theideaiq.com` redirects to it (308), as on auibsal.org; every
       setting (`NEXT_PUBLIC_WEB_URL`, Supabase, Google, Telegram, The IDEA
@@ -290,8 +307,7 @@ decisions with a date.
       (`/ar/sign-in`), then in the SQL editor:
       `insert into staff (user_id, role) select id, 'superadmin' from auth.users where email = '<their email>';`
       they then link an authenticator app on The IDEA Pass and open
-      `https://business.theideaiq.com/ar/staff` (or "Open the back office"
-      on their Pass).
+      `https://staff.theideaiq.com/ar` (or "Open Staff" on their Pass).
 - [ ] **Brand v1.0 (after the brand pull request ships):** paste the
       three Supabase auth templates again
       (`packages/database/supabase/templates`, now with the pink header;
@@ -349,12 +365,52 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 - [ ] Brand v1.0 follow-ups: rename The Club / Droid in the legal
       Markdown documents, and the retired names there (Megastore → The
-      IDEA Store, The IDEA Suite → The IDEA Business, the Academy's
-      programs) (legal review); store checked market prices
+      IDEA Store, The IDEA Suite and The IDEA Business → The IDEA
+      Partners, the Academy's programs) (legal review); store checked market prices
       (price, date, evidence) so SouqPrice can show. (Poppins removed
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-27: Program Revision v2, item 2: The IDEA Partners and Staff.
+  Two apps, two hosts:
+  - **The IDEA Business is renamed The IDEA Partners.** `apps/business` is
+    `apps/partners` (package `partners`, port 3000,
+    `partners.theideaiq.com`) and holds only the organization dashboard
+    (`app/[locale]/(business)`: `/`, `/procurement`, `/invoices`, `/plus`,
+    `/perks`, `/developers`, `/members`, `/billing`, `/settings`, `/new`,
+    `/documents/<kind>/<id>`, invitations), no Staff code. The website's
+    `/business` is `/partners` ("For partners").
+  - **Staff is its own app**, `apps/staff` (package `staff`, port 3003,
+    `staff.theideaiq.com`): the former back office at its root
+    (`app/[locale]/(console)`, `/no-access` in `app/[locale]/(auth)`); the
+    internal name `admin` stays in the code, and people see "Staff"
+    ("Back office" is gone). Staff sign in through The IDEA Pass with
+    `return_to` back to `NEXT_PUBLIC_STAFF_URL`, need an AAL2 session, and
+    Staff loads no analytics.
+  - **Rename without redirects:** `business.theideaiq.com`,
+    `design.theideaiq.com` and `/business` on the website are gone, with
+    no redirects (stored notification links are still mapped by
+    `businessPath`).
+  - **The design site moved into Staff:** Storybook's source and
+    configuration are in `apps/staff` (`.storybook`, `stories/`,
+    `assets/`), built into `public/design` and served at
+    `staff.theideaiq.com/design` behind the same staff check
+    (`lib/design-gate.ts`); `apps/storybook` is gone.
+  - **Shared code only through packages:** the Pass card scan parser is
+    `@repo/auth/pass-code` (`scannedPass`), the language and theme switches
+    `@repo/internationalization/controls` (`LanguageSwitcher`,
+    `ThemeToggle`); no imports across apps.
+  - **Env and Vercel:** `NEXT_PUBLIC_STAFF_URL` (production
+    `https://staff.theideaiq.com`, local `http://localhost:3003`, so the
+    Pass's localhost cookie signs staff in) replaces
+    `NEXT_PUBLIC_DESIGN_URL`; it is an allowed return_to host and an
+    allowed CORS origin of the API. `NEXT_PUBLIC_APP_URL` is The IDEA
+    Partners. Vercel project `theideaiq-partners` (root directory
+    `apps/partners`, partners.theideaiq.com) and `theideaiq-staff` (root
+    directory `apps/staff`, staff.theideaiq.com; the design site's
+    project, reused); no project deleted. CI builds api, partners, staff
+    and web, and e2e starts all four.
 
 - 2026-10-27: Program Revision v2, item 1: what v2 drops (migration
   `20270101000000_v2_removals.sql`). There are no customers yet, so the

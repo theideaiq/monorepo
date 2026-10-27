@@ -210,7 +210,7 @@ export const describeNotification = (
 
 /**
  * The path to open, or null for a missing or unsafe link. Links under
- * `/business…` are The IDEA Business's pages, on its own site (where they
+ * `/business…` are The IDEA Partners's pages, on its own site (where they
  * sit at the root: `/business/invoices` opens `/invoices` there).
  */
 export const notificationHref = (

@@ -1,7 +1,8 @@
 # Releases and migrations
 
-How a change reaches the website (with The IDEA Pass), The IDEA Business
-(companies and the back office), the design site, the API and the database.
+How a change reaches the website (with The IDEA Pass), The IDEA Partners
+(the organization dashboard), Staff (with the design site), the API and the
+database.
 
 Every change goes through a pull request to `main`. Nothing is edited on
 production by hand: not the code, not the database.

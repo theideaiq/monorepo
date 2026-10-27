@@ -2,7 +2,7 @@ The IDEA should be easy for everyone to use, including people with disabilities.
 
 ## 1. Our commitment
 
-We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA on theideaiq.com, The IDEA Business and our iOS and Android apps.
+We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA on theideaiq.com, The IDEA Partners and our iOS and Android apps.
 
 ## 2. What we do
 

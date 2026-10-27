@@ -22,27 +22,27 @@ incidents) is in `docs/platform`.
     Club is `/club`, one feed with chips (`?show=events|news|stories|guides`),
     "Yours" at `#yours` (your events with the calendar feed, your
     submissions) and the Telegram rooms card, and `/club/<slug>` is a post
-    or an event (with RSVP); `/business` presents The IDEA Business to
-    companies; `/saved` (saved products); `/help` (FAQ, the contact form at
-    `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
+    or an event (with RSVP); `/partners` ("For partners") presents The
+    IDEA Partners to organizations; `/saved` (saved products); `/help`
+    (FAQ, the contact form at `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
     and `/help/new`); `/careers`; `/about` (the company, preferences, the
     version); `/r/<code>` (a member's invite link: 10% off a new member's
     first order) and legal pages at `/legal/<policy>` (Markdown in
     `apps/web/content/legal`). The top bar holds the logo, search, saved
     (heart, to `/saved`), cart and, on desktop, the Pass avatar (saved and
     cart are hidden on sign-in and checkout); the desktop header reads Store · Plus · Club, "For
-    business", saved, cart, Pass. The footer lists Store · Plus · Club ·
-    Pass · Business, then About · Careers · Help · Legal. Old addresses
+    partners", saved, cart, Pass. The footer lists Store · Plus · Club ·
+    Pass · For partners, then About · Careers · Help · Legal. Old addresses
     have no HTTP redirects; links stored in notifications are mapped to
     current pages by `currentAppPath`/`businessPath` in
     `packages/internationalization/app-paths.ts` (used by the website,
-    The IDEA Business, Telegram and push);
+    The IDEA Partners, Telegram and push);
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in` (an
     email code signs in or creates the Pass; there is no sign-up page, and
     `/onboarding` asks for the name), `/mfa`, `/tg`, `/sign-out`, the only
     sign-in UI on the web. A person's membership *is* The IDEA Pass; never
     show the word "account". The session cookie is shared with The IDEA
-    Business and the design site (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`); other
+    Partners and Staff (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`); other
     apps link here with `passUrl()` from `@repo/auth/pass` (based on
     `NEXT_PUBLIC_WEB_URL`), which only returns to allowlisted hosts
     (`isAllowedReturnTo`);
@@ -53,30 +53,46 @@ incidents) is in `docs/platform`.
     token (`callApi` in `apps/web/lib/api.ts`);
   - The iOS/Android apps are Capacitor shells whose WebView loads the live
     website (`server.url`), so the same cookie session applies there.
-- `apps/business` — **The IDEA Business** (package `business`, port 3000,
-  `business.theideaiq.com`), for companies and staff only, server-rendered
+- `apps/partners` — **The IDEA Partners** (package `partners`, port 3000,
+  `partners.theideaiq.com`), the organization dashboard, server-rendered
+  with a `proxy.ts` (locale, session refresh, security headers): its pages
+  are at the root (`app/[locale]/(business)`: `/`, `/procurement`,
+  `/invoices`, `/plus`, `/perks`, `/developers`, `/members`, `/billing`,
+  `/settings`, `/new`, `/documents/<kind>/<id>`, invitations). It holds no
+  Staff code. No sign-in of its own: it sends people to The IDEA Pass on
+  the website with `return_to`.
+- `apps/staff` — **Staff** (package `staff`, port 3003,
+  `staff.theideaiq.com`), everything The IDEA's team uses, server-rendered
   with a `proxy.ts`:
-  - the company dashboard at its root (`app/[locale]/(business)`: `/`,
-    `/procurement`, `/invoices`, `/plus`, `/members`, `/billing`,
-    `/settings`, `/new`, `/documents/<kind>/<id>`, invitations);
-  - the staff **back office** under `/{locale}/staff` (`app/[locale]/staff`,
-    `components/admin`, `lib/admin`; the company section is
-    `/staff/companies`): staff only, with Server Actions; every query runs
-    as the staff member so RLS applies, and staff rights need an
-    authenticator-app (AAL2) session, enforced by the database too. Its
-    links use `@/lib/admin/navigation` (paths relative to `/staff`); its
-    code keeps the internal name "admin" (`lib/admin`, `components/admin`,
-    the `admin` messages namespace).
+  - the console at its root (`app/[locale]/(console)`: the dashboard `/`,
+    `/orders`, `/catalog`, `/rentals`, `/customers`, `/support`,
+    `/reviews`, `/companies`, `/finance`, `/editorial`, `/telegram`,
+    `/counter`, `/search`, `/staff`, `/audit`, …) and `/no-access`
+    (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:
+    staff only, with Server Actions; every query runs as the staff member
+    so RLS applies, and staff rights need an authenticator-app (AAL2)
+    session, enforced by the database too. Its code keeps the internal
+    name "admin" (`lib/admin`, `components/admin`, the `admin` messages
+    namespace); people see the name Staff. It loads no analytics.
+  - **The IDEA Design** at `/design`: Storybook (every
+    `@repo/design-system` component and every `@repo/email` template in
+    Arabic and English; `.storybook`, `stories/`, `assets/`).
+    `bun run build` runs `storybook build -o public/design` (with
+    `<base href="/design/">` in production builds) and then `next build`;
+    `bun run --cwd apps/staff storybook` is Storybook dev on port 6006.
+    `proxy.ts` serves it only to aal2 staff (`lib/design-gate.ts`):
+    others get a bilingual 403, signed-out visitors go to The IDEA Pass.
   - No sign-in of its own: it sends people to The IDEA Pass on the website
-    with `return_to`.
+    with `return_to` back to `NEXT_PUBLIC_STAFF_URL`. Locally it runs on
+    localhost:3003, so the Pass's localhost session cookie (cookies ignore
+    ports) signs staff in.
+- Apps never import from each other; shared code lives in packages (for
+  example the Pass card scan parser `scannedPass` in `@repo/auth/pass-code`,
+  and `LanguageSwitcher` and `ThemeToggle` in
+  `@repo/internationalization/controls`).
 - `apps/api` — webhooks (Wayl, Telegram), cron jobs, the calendar feed and
-  privileged endpoints, including `app/admin/*` for the back office and the
+  privileged endpoints, including `app/admin/*` for Staff and the
   website's contact form and status badge. The only app with secrets.
-- `apps/storybook` — **The IDEA Design** (design.theideaiq.com), the
-  staff-only design site: Storybook (every `@repo/design-system` component
-  and every `@repo/email` template in Arabic and English) built into
-  `public/` and served by a small Next.js shell whose `proxy.ts` gate
-  (`lib/gate.ts`) lets in only aal2 staff signed in through The IDEA Pass.
 - `apps/docs` — the documentation site.
 - `packages/commerce` (catalog, prices, cart totals) and `packages/droid`
   (Telegram bot) are The IDEA's own packages; the rest come from the template.
@@ -84,7 +100,9 @@ incidents) is in `docs/platform`.
   internal scope; never rename it per project.
 - `packages/config/project.json` — the single source of truth for organization,
   project, locales, region and commerce settings. Read it through `@repo/config`.
-- `apps/e2e` — Playwright journeys with axe accessibility checks.
+- `apps/e2e` — Playwright journeys with axe accessibility checks; it starts
+  all four apps (Staff on port 3003). Staff journeys run against the staff
+  host (`tests/admin.spec.ts`), partner journeys are `tests/partners.spec.ts`.
 - `scripts/` — `check-placeholders.ts`, `check-rtl.ts`, `check-i18n.ts` and
   `check-secrets.ts` are repo checks; `vercel-ignore.mjs` is every Vercel project's ignored
   build step.
@@ -115,8 +133,9 @@ bun run gen:package         # scaffold packages/<name>
 
 Run `check`, `typecheck` and `test` before every commit, and `db:test` for
 any schema change. CI (`.github/workflows/ci.yml`) also runs `bun audit`,
-the boundaries and unused-code checks, every build, a scan of the client
-bundles for secret names, the pgTAP suites, integration tests against a
+the boundaries and unused-code checks, every build (api, partners, staff,
+web), a scan of the client bundles for secret names (including
+`apps/staff/public/design`), the pgTAP suites, integration tests against a
 local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 
 ## Rules
@@ -126,19 +145,19 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   installs and runs scripts; Next.js runs on Node (`next build`, not
   `bun --bun next build`).
 - **Auth:** never authorize with `user_metadata` — users can edit it. In
-  the client components of `apps/web` and `apps/business`, query with
+  the client components of `apps/web` and `apps/partners`, query with
   `useAuth().supabase` (the cookie-based browser client) so Row Level
   Security applies; gates like `RequireAuth` are only UX. Their Server
-  Components and Server Actions (The IDEA Pass, its pages, the back office)
-  use `@repo/auth/server`. In
+  Components and Server Actions (The IDEA Pass and its pages), and those
+  of Staff (`apps/staff`), use `@repo/auth/server`. In
   `apps/api`, identify callers with `authenticateRequest` (Bearer token) and
   check their membership/role. The admin client (`@repo/database/admin`)
   bypasses RLS and is only for webhooks, cron jobs and other trusted server
   code. `@repo/auth/server` is for server code only (never a client component).
 - **Database:** schema changes are migrations with RLS policies and tests;
   see Database standards below.
-- **Secrets live only in `apps/api`.** Every other app (web, business,
-  storybook, docs, email) holds public values only: no server-only preset in
+- **Secrets live only in `apps/api`.** Every other app (web, partners,
+  staff, docs, email) holds public values only: no server-only preset in
   its `env.ts` or `.env.example`, no import of a package module that reads
   one (`@repo/email`, `@repo/rate-limit`, `@repo/security/form`,
   `@repo/database/admin`, …). Anything that needs a secret is an `apps/api`
@@ -177,7 +196,7 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
 - **Brand name:** always "The IDEA", never a bare "IDEA": The IDEA Pass,
-  The IDEA Plus, The IDEA Business, The IDEA Design, in English and Arabic copy
+  The IDEA Plus, The IDEA Partners, The IDEA Design, in English and Arabic copy
   alike (Latin letters in Arabic text). A person's membership is The IDEA Pass.
   Reword rather than writing "your The IDEA …". The one exception is the
   site's own name on Arabic pages (the logo and the page-title suffix),

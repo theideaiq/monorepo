@@ -57,7 +57,7 @@ export const noseconeOptions: Options = buildOptions();
 
 /**
  * The same headers with more origins allowed, for the pages that need them
- * (the back office: `catalogLookupCspSources`).
+ * (Staff: `catalogLookupCspSources`).
  */
 export const noseconeOptionsWith = (...sources: CspSources[]): Options =>
   buildOptions(sources);

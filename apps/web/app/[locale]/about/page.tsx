@@ -36,7 +36,7 @@ const valueIcons = [Truck, Wallet, ShieldCheck, Headphones];
 const more = [
   { href: "/help", icon: CircleHelp, id: "help" },
   { href: "/careers", icon: Briefcase, id: "careers" },
-  { href: "/business", icon: Building2, id: "business" },
+  { href: "/partners", icon: Building2, id: "business" },
   { href: "/club", icon: Users, id: "club" },
 ] as const;
 

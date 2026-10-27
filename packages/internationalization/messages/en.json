@@ -156,7 +156,7 @@
       "canceled": "Canceled",
       "expired": "Expired"
     },
-    "title": "The IDEA Business plan",
+    "title": "The IDEA Partners plan",
     "description": "Your company's plan and payments.",
     "currentPlan": "Current plan",
     "noPlan": "Your company doesn't have a plan yet.",
@@ -193,7 +193,7 @@
       "signIn": "Sign in",
       "label": "Main",
       "pass": "Pass",
-      "business": "For business",
+      "business": "For partners",
       "help": "Help",
       "legal": "Legal",
       "search": "Search",
@@ -238,7 +238,7 @@
     "home": {
       "meta": {
         "title": "Iraq's digital ecosystem",
-        "description": "Shop, rent and connect with The IDEA: the store, The IDEA Plus rentals, The IDEA Club, The IDEA Pass and The IDEA Business for companies. Based in Baghdad, serving all of Iraq."
+        "description": "Shop, rent and connect with The IDEA: the store, The IDEA Plus rentals, The IDEA Club, The IDEA Pass and The IDEA Partners. Based in Baghdad, serving all of Iraq."
       },
       "news": {
         "title": "From The IDEA Club",
@@ -463,14 +463,14 @@
         "club": "Events, news, stories and guides, and our rooms on Telegram for gamers, readers, artists and thinkers.",
         "store": "Gaming, tech, books, music and films, new and pre-owned, delivered to all 19 governorates.",
         "pass": "One membership card for everything at The IDEA: orders, Bulbs, events and more.",
-        "business": "Procurement and recruitment for companies, with a business plan and monthly invoicing."
+        "business": "For shops, suppliers and organizations: bulk buying, member perks, developers and The IDEA Plus for teams."
       },
       "more": {
         "title": "More about The IDEA",
         "careers": "Careers",
         "club": "The IDEA Club",
         "help": "Help and contact",
-        "business": "The IDEA Business for companies"
+        "business": "The IDEA Partners, for shops and organizations"
       }
     },
     "careers": {
@@ -584,7 +584,7 @@
           "careers": "Careers",
           "press": "Press and partnerships",
           "club": "The IDEA Club",
-          "business": "The IDEA Business (companies)"
+          "business": "The IDEA Partners (shops and organizations)"
         },
         "name": "Full name",
         "email": "Email",
@@ -647,8 +647,8 @@
           "description": "The rules for survey creators and the terms for respondents, including consent, anonymity and rewards."
         },
         "business": {
-          "title": "The IDEA Business",
-          "description": "Quotes, purchase orders, invoices, hiring, The IDEA Plus for teams and partner perks."
+          "title": "The IDEA Partners",
+          "description": "Quotes, purchase orders, invoices, The IDEA Plus for teams, partner perks and apps that use Sign in with The IDEA Pass."
         },
         "accessibility": {
           "title": "Accessibility",
@@ -955,59 +955,59 @@
         }
       }
     },
-    "business": {
+    "partners": {
       "meta": {
-        "title": "The IDEA Business — procurement and recruitment for companies",
-        "description": "The IDEA Business gives companies in Iraq one place for procurement and recruitment, with a business plan, purchase orders and monthly invoicing."
+        "title": "The IDEA Partners — for shops and organizations",
+        "description": "The IDEA Partners gives shops, suppliers and organizations in Iraq one place to work with The IDEA: bulk buying, member perks, Sign in with The IDEA Pass and The IDEA Plus for teams."
       },
-      "badge": "For companies",
-      "title": "The IDEA Business",
-      "subtitle": "Corporate solutions for procurement and recruitment. Equip your team and find talent, with one business account.",
+      "badge": "For partners",
+      "title": "The IDEA Partners",
+      "subtitle": "For shops, suppliers and organizations that work with The IDEA. One place for your team, your orders and your members.",
       "services": {
-        "title": "What we do for companies",
+        "title": "What partners do with The IDEA",
         "items": [
           {
-            "title": "Procurement",
-            "description": "Source tech, equipment and supplies for your company from The IDEA Store and our partners, with purchase orders."
+            "title": "Bulk buying",
+            "description": "Source tech, equipment and supplies for your organization from The IDEA Store, with quotes, purchase orders and monthly invoices."
           },
           {
-            "title": "Recruitment",
-            "description": "Tell us who you're looking for and we help you find and screen candidates."
+            "title": "Member perks",
+            "description": "Offer a discount to The IDEA Pass members and check their cards at your counter."
           },
           {
-            "title": "Team workspaces",
-            "description": "Your company gets its own dashboard on The IDEA Business: invite colleagues and give each one the right role."
+            "title": "Developers",
+            "description": "Let people sign in to your website or app with The IDEA Pass, sharing only what they agree to."
           },
           {
-            "title": "Monthly invoicing",
-            "description": "Business plans are billed monthly through Wayl, with invoices for your records."
+            "title": "The IDEA Plus for teams",
+            "description": "Give your team The IDEA Plus, billed to your organization."
           }
         ]
       },
       "how": {
         "title": "Getting started",
         "steps": [
-          "Create your company's dashboard on The IDEA Business.",
-          "Choose a business plan and invite your team.",
-          "Contact us with your first procurement or hiring request."
+          "Set up your organization on The IDEA Partners.",
+          "Invite your team and give each one the right role.",
+          "Switch on what you need: bulk buying, perks or developers."
         ]
       },
       "plans": {
-        "title": "Business plans",
-        "empty": "Contact us for a business plan tailored to your company."
+        "title": "Plans",
+        "empty": "Contact us for a plan that fits your organization."
       },
       "cta": {
         "title": "Talk to",
         "highlight": "our team",
-        "description": "Tell us about your company and what you need.",
-        "contact": "Contact sales",
+        "description": "Tell us about your organization and what you need.",
+        "contact": "Contact us",
         "app": "Set up your organization"
       }
     }
   },
   "app": {
     "meta": {
-      "title": "The IDEA Business",
+      "title": "The IDEA Partners",
       "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place."
     },
     "nav": {
@@ -1018,7 +1018,7 @@
       "plus": "The IDEA Plus",
       "events": "Events",
       "submissions": "Submissions",
-      "business": "Business",
+      "business": "Partners",
       "settings": "Settings",
       "more": "More",
       "cartCount": "{count} in cart",
@@ -1026,7 +1026,6 @@
       "support": "Support",
       "pass": "Your Pass",
       "bulbs": "Bulbs",
-      "backOffice": "Back office",
       "about": "About & info"
     },
     "roles": {
@@ -1537,16 +1536,16 @@
       }
     },
     "business": {
-      "title": "Business",
-      "description": "The IDEA Business: procurement and recruitment for companies.",
+      "title": "Partners",
+      "description": "The IDEA Partners: for shops, suppliers and organizations working with The IDEA.",
       "intro": {
-        "title": "Bring your company to The IDEA Business",
-        "description": "Create a business account for your team, or join one you've been invited to.",
-        "create": "Create a business account"
+        "title": "Bring your organization to The IDEA Partners",
+        "description": "Set up your organization for your team, or join one you've been invited to.",
+        "create": "Set up an organization"
       },
       "invitations": {
         "title": "You've been invited",
-        "description": "Join a business account that invited you.",
+        "description": "Join an organization that invited you.",
         "join": "Join",
         "joining": "Joining…",
         "as": "as {role}"
@@ -1564,7 +1563,7 @@
       },
       "members": {
         "title": "Members",
-        "description": "People in this business account.",
+        "description": "People in this organization.",
         "you": "You",
         "unnamed": "Member without a name",
         "role": "Role",
@@ -1591,7 +1590,7 @@
         }
       },
       "settings": {
-        "title": "Business settings",
+        "title": "Organization settings",
         "description": "Only owners and admins can change these settings.",
         "name": "Company name",
         "slug": "Address"
@@ -1603,8 +1602,8 @@
         "unpaidInvoices": "Unpaid invoices",
         "unpaidTotal": "{total} due",
         "plusSeats": "Members with The IDEA Plus",
-        "plan": "The IDEA Business plan: {plan}",
-        "noPlan": "No The IDEA Business plan yet. See plans"
+        "plan": "The IDEA Partners plan: {plan}",
+        "noPlan": "No The IDEA Partners plan yet. See plans"
       }
     },
     "onboarding": {
@@ -1621,13 +1620,13 @@
         "submit": "Continue"
       },
       "organization": {
-        "title": "Create a business account",
-        "description": "A business account holds your team, projects and The IDEA Business plan.",
+        "title": "Set up an organization",
+        "description": "An organization holds your team, projects and The IDEA Partners plan.",
         "name": "Company name",
         "namePlaceholder": "e.g. Al-Rafidain Trading",
         "slug": "Address",
         "slugHint": "Lowercase English letters, numbers and dashes. Used in links.",
-        "submit": "Create business account",
+        "submit": "Set up organization",
         "submitting": "Creating…"
       },
       "errors": {
@@ -1639,13 +1638,13 @@
     },
     "organizations": {
       "new": {
-        "title": "New business account",
-        "description": "Create a business account for your company or team."
+        "title": "New organization",
+        "description": "Set up an organization for your shop, company or team."
       }
     },
     "invite": {
       "title": "Accept invitation",
-      "description": "You've been invited to join a business account.",
+      "description": "You've been invited to join an organization.",
       "accept": "Accept invitation",
       "accepting": "Accepting…",
       "missing": "This invitation link is incomplete. Ask for a new one.",
@@ -1674,21 +1673,21 @@
         "description": "Permanently delete your Pass and personal data. This can't be undone.",
         "open": "Delete The IDEA Pass",
         "dialogTitle": "Delete your Pass?",
-        "consequences": "Your profile, cart, RSVPs, submissions and sign-in are deleted, and you leave every business account you belong to. Order and payment records are kept for accounting, without your name.",
+        "consequences": "Your profile, cart, RSVPs, submissions and sign-in are deleted, and you leave every organization you belong to. Order and payment records are kept for accounting, without your name.",
         "confirmLabel": "To confirm, type “{phrase}”",
         "confirmPhrase": "delete my pass",
         "confirm": "Delete my Pass permanently",
         "deleting": "Deleting…",
         "failed": "Your Pass couldn't be deleted. Please try again.",
-        "checking": "Checking your business accounts…",
+        "checking": "Checking your organizations…",
         "blockers": {
-          "title": "First, resolve your business accounts",
-          "description": "You're the only owner of the business accounts below. Make another member an owner, or delete the business account. Then you can delete your Pass.",
+          "title": "First, resolve your organizations",
+          "description": "You're the only owner of the organizations below. Make another member an owner, or delete the organization. Then you can delete your Pass.",
           "handOver": "Make another member an owner",
           "makeOwner": "Make owner",
-          "onlyMember": "You're the only member, so this business account can only be deleted.",
+          "onlyMember": "You're the only member, so this organization can only be deleted.",
           "unnamed": "Member without a name",
-          "deleteOrganization": "Delete business account",
+          "deleteOrganization": "Delete organization",
           "deleteConfirmLabel": "This deletes {name} with its projects, members and files. Type “{slug}” to confirm.",
           "deleteConfirm": "Delete {name}",
           "failed": "That didn't work. Please try again."
@@ -2600,19 +2599,19 @@
       "plus": "The IDEA Plus",
       "club": "The IDEA Club",
       "pass": "The IDEA Pass",
-      "business": "The IDEA Business"
+      "business": "The IDEA Partners"
     },
     "rentOnly": "Rent with The IDEA Plus",
     "ageRating": "Age rating: PEGI {rating}"
   },
   "admin": {
     "meta": {
-      "title": "The IDEA back office",
+      "title": "The IDEA Staff",
       "description": "Staff console for The IDEA."
     },
     "noAccess": {
       "title": "No access",
-      "description": "This account doesn't have a staff role. If you work at The IDEA, ask a superadmin to grant you access, then sign in again."
+      "description": "This Pass doesn't have a staff role. If you work at The IDEA, ask a superadmin to grant you access, then sign in again."
     },
     "nav": {
       "dashboard": "Dashboard",
@@ -2901,7 +2900,7 @@
         "audience": "Product line",
         "audiences": {
           "plus": "The IDEA Plus (members)",
-          "business": "The IDEA Business (companies)"
+          "business": "The IDEA Partners (organizations)"
         },
         "amount": "Price (IQD)",
         "amountHint": "Charged each billing period.",
@@ -3922,7 +3921,7 @@
           "store": "Store",
           "plus": "The IDEA Plus",
           "club": "The IDEA Club",
-          "business": "The IDEA Business"
+          "business": "The IDEA Partners"
         },
         "questionAr": "Question (Arabic)",
         "questionEn": "Question (English)",
@@ -3981,7 +3980,7 @@
       "since": "Since {date}",
       "revoke": "Revoke",
       "revokeConfirm": "Remove {name} from staff?",
-      "revokeDescription": "They lose access to the back office immediately and keep their The IDEA Pass."
+      "revokeDescription": "They lose access to Staff immediately and keep their The IDEA Pass."
     },
     "audit": {
       "title": "Audit log",
@@ -4119,7 +4118,7 @@
     },
     "search": {
       "title": "Search",
-      "label": "Search the back office",
+      "label": "Search Staff",
       "placeholder": "Search…",
       "hint": "Order, ticket, request and job numbers, members by name or Pass number, products, ticket subjects.",
       "for": "Results for \"{query}\"",
@@ -4272,9 +4271,9 @@
         "stop": "Stop offering",
         "offerAgain": "Offer again",
         "new": "New perk",
-        "newDescription": "The partner needs an organization in The IDEA Business: its team checks cards from Perks there.",
+        "newDescription": "The partner needs an organization in The IDEA Partners: its team checks cards from Perks there.",
         "organization": "Organization",
-        "organizationHint": "The partner's organization in The IDEA Business.",
+        "organizationHint": "The partner's organization in The IDEA Partners.",
         "partnerName": "Name customers see",
         "kind": "Type",
         "titleAr": "Perk (Arabic)",
@@ -4303,14 +4302,14 @@
       },
       "signIn": {
         "title": "Sign in with The IDEA Pass",
-        "description": "Partner apps people sign in to with their Pass. Companies register their own in The IDEA Business → Developers; you review the sensitive answers they ask for. Each person sees only what they allow, each time.",
+        "description": "Partner apps people sign in to with their Pass. Companies register their own in The IDEA Partners → Developers; you review the sensitive answers they ask for. Each person sees only what they allow, each time.",
         "empty": "No partner sites yet.",
         "connected": "{count} people connected · added {date}",
         "addTitle": "Add a partner site",
         "addDescription": "Its developers get a client id and a secret (shown once), and the discovery address https://api.theideaiq.com/oidc/.well-known/openid-configuration.",
         "name": "Site name (shown on the consent screen)",
         "website": "Website",
-        "organization": "Organization in The IDEA Business",
+        "organization": "Organization in The IDEA Partners",
         "organizationHint": "Optional: the partner's organization.",
         "noOrganization": "None",
         "redirectUris": "Return addresses",
@@ -4358,8 +4357,8 @@
   "design": {
     "forbidden": {
       "title": "The IDEA Design is for staff",
-      "body": "You're signed in, but your account isn't on the staff list. If you should have access, ask an admin to add you in the back office.",
-      "switch": "Sign in with another account"
+      "body": "You're signed in, but your Pass isn't on the staff list. If you should have access, ask an admin to add you in Staff.",
+      "switch": "Sign in with another Pass"
     }
   },
   "pass": {
@@ -4379,7 +4378,7 @@
       "nameLabel": "Name",
       "noName": "Not set yet",
       "phoneLabel": "Mobile number",
-      "backOffice": "Open the back office",
+      "backOffice": "Open Staff",
       "authenticator": "Authenticator app",
       "authenticatorOn": "On",
       "authenticatorOff": "Not set up",
@@ -4418,7 +4417,7 @@
     "mfa": {
       "title": "Authenticator app",
       "enrollTitle": "Set up your authenticator app",
-      "enrollDescription": "Protect your Pass with a second step. Link an authenticator app once; you'll enter its code when a site asks for it. Staff need it for the back office.",
+      "enrollDescription": "Protect your Pass with a second step. Link an authenticator app once; you'll enter its code when a site asks for it. The IDEA's team needs it to open Staff.",
       "challengeTitle": "Enter your authenticator code",
       "challengeDescription": "Open your authenticator app and enter the 6-digit code for The IDEA.",
       "stepInstall": "Install an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…).",

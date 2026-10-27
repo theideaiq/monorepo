@@ -12,8 +12,8 @@ export default defineConfig({
     },
     projects: [
       "apps/api",
-      "apps/business",
-      "apps/storybook",
+      "apps/partners",
+      "apps/staff",
       "apps/web",
       "packages/analytics",
       "packages/auth",

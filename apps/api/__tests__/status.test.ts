@@ -6,7 +6,7 @@ const keys = vi.fn();
 vi.mock("server-only", () => ({}));
 vi.mock("@/env", () => ({
   env: {
-    NEXT_PUBLIC_APP_URL: "https://business.theideaiq.com",
+    NEXT_PUBLIC_APP_URL: "https://partners.theideaiq.com",
     NEXT_PUBLIC_WEB_URL: WEB,
   },
 }));

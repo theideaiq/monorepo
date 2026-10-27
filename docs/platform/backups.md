@@ -39,7 +39,7 @@ owners and write down when and why.
      -f data.sql
    ```
 
-3. **Check.** Point a preview of The IDEA Business (companies and back office) at the target,
+3. **Check.** Point a preview of Staff (`apps/staff`) at the target,
    open a customer, an order, a rental and the ledger, and compare row counts
    with the source.
 

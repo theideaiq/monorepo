@@ -7,7 +7,7 @@ every time, and can disconnect a site in Pass → Settings → Connected sites.
 
 ## Getting a client
 
-**Companies register their own apps** in The IDEA Business → Developers
+**Companies register their own apps** in The IDEA Partners → Developers
 (owners and admins):
 
 1. **Verify a domain.** Add it, then publish the token we show, either as
@@ -39,7 +39,7 @@ public keys for `private_key_jwt` instead, turn the app off, and see the
 people connected and the last 30 days' sign-ins and card checks. Up to 10
 domains and 10 apps per company.
 
-**Staff** see every app in the back office (Companies → Sign in with the
+**Staff** see every app in Staff (Companies → Sign in with the
 Pass), approve or decline the sensitive answers (the company's owners and
 admins are notified, with the note), and can suspend any app. Apps waiting
 for review show in the inbox. Staff can still register an app for a
