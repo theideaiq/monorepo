@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { askedFor, parseAuthorizeRequest, returnUrl } from "@/lib/pass-sign-in";
+import {
+  askedFor,
+  parseAuthorizeRequest,
+  rememberedScopes,
+  returnUrl,
+} from "@/lib/pass-sign-in";
 
 const base = {
   client_id: "pass_00000000000000000000sal1",
@@ -57,6 +62,48 @@ describe("the authorization request", () => {
       "email",
       "student",
     ]);
+  });
+});
+
+describe("a returning member", () => {
+  const request = (overrides: Record<string, string | null> = {}) => {
+    const parsed = parse(overrides);
+    if (!parsed) {
+      throw new Error("unparsed");
+    }
+    return parsed.request;
+  };
+
+  it("reads prompt", () => {
+    expect(request().prompt).toBeNull();
+    expect(request({ prompt: "consent" }).prompt).toBe("consent");
+    expect(request({ prompt: "login consent" }).prompt).toBe("consent");
+    expect(request({ prompt: "none" }).prompt).toBe("none");
+  });
+
+  it("isn't asked again for what they already shared", () => {
+    expect(
+      rememberedScopes(request(), ["profile", "email", "student", "card"])
+    ).toEqual(["openid", "profile", "email", "student"]);
+    expect(
+      rememberedScopes(request({ prompt: "none" }), [
+        "profile",
+        "email",
+        "student",
+      ])
+    ).toEqual(["openid", "profile", "email", "student"]);
+  });
+
+  it("is asked the first time, for anything new, and on prompt=consent", () => {
+    expect(rememberedScopes(request(), null)).toBeNull();
+    expect(rememberedScopes(request(), ["profile", "email"])).toBeNull();
+    expect(
+      rememberedScopes(request({ prompt: "consent" }), [
+        "profile",
+        "email",
+        "student",
+      ])
+    ).toBeNull();
   });
 });
 

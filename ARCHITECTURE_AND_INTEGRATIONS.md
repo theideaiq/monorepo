@@ -1644,8 +1644,11 @@ Migration `20261227000000_pass_sign_in.sql`; the partner guide is
 
 - **Our own OpenID Connect provider**, not Supabase Auth's OAuth server
   (whose tokens can change the person's password on Supabase Auth). The
-  consent screen is the website's `/oauth/authorize` (signed in, each time:
-  who's asking and what it learns); allowing calls
+  consent screen is the website's `/oauth/authorize` (signed in: who's
+  asking and what it learns, shown the first time and whenever a site asks
+  for more than the member shared before, or sends `prompt=consent`; a
+  returning member goes straight back, and `prompt=none` answers
+  `consent_required` instead of showing it); allowing calls
   `approve_pass_sign_in()`, which checks the client, the exact return
   address and the scopes, remembers what was shared (`pass_connections`)
   and returns a one-use code (5 minutes, PKCE S256). The API's `/oidc`

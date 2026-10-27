@@ -47,6 +47,27 @@ export const useApprovePassSignIn = () => {
   });
 };
 
+/**
+ * What the member shared with this site the last time (null when they
+ * never signed in to it), so a returning member isn't asked again.
+ */
+export const usePassConnection = (clientId: string) => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user && clientId),
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("pass_connections")
+          .select("scopes")
+          .eq("user_id", requireUserId(user?.id))
+          .eq("client_id", clientId)
+          .maybeSingle()
+      )?.scopes ?? null,
+    queryKey: [...sitesKey(user?.id ?? ""), clientId],
+  });
+};
+
 /** Pass → Settings: the sites the member signed in to with their Pass. */
 export const useConnectedSites = () => {
   const { supabase, user } = useAuth();

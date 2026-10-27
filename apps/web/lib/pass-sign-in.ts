@@ -34,6 +34,8 @@ export interface AuthorizeRequest {
   clientId: string;
   codeChallenge: string;
   nonce: string | null;
+  /** OIDC `prompt`: "consent" always asks, "none" never shows a page. */
+  prompt: "consent" | "none" | null;
   redirectUri: string;
   scopes: string[];
   state: string | null;
@@ -61,10 +63,18 @@ export const parseAuthorizeRequest = (
     ...new Set((params.get("scope") ?? "").split(SPACES).filter(Boolean)),
   ];
   const locale = params.get("ui_locales")?.split(SPACES)[0]?.slice(0, 2);
+  const prompts = (params.get("prompt") ?? "").split(SPACES);
+  let prompt: AuthorizeRequest["prompt"] = null;
+  if (prompts.includes("consent") || prompts.includes("login")) {
+    prompt = "consent";
+  } else if (prompts.includes("none")) {
+    prompt = "none";
+  }
   const request: AuthorizeRequest = {
     clientId,
     codeChallenge: params.get("code_challenge") ?? "",
     nonce: params.get("nonce"),
+    prompt,
     redirectUri,
     scopes,
     state: params.get("state"),
@@ -96,6 +106,25 @@ export const parseAuthorizeRequest = (
 /** What the partner asks besides signing in, in a fixed order. */
 export const askedFor = (scopes: readonly string[]) =>
   PASS_SCOPES.filter((scope) => scopes.includes(scope));
+
+/**
+ * What to share without asking again: when the member already shared
+ * everything this site asks for, the scopes to send (signing in included);
+ * otherwise null and the consent screen shows. `prompt=consent` always
+ * asks.
+ */
+export const rememberedScopes = (
+  request: Pick<AuthorizeRequest, "prompt" | "scopes">,
+  shared: readonly string[] | null | undefined
+) => {
+  if (!shared || request.prompt === "consent") {
+    return null;
+  }
+  const asked = askedFor(request.scopes);
+  return asked.every((scope) => shared.includes(scope))
+    ? ["openid", ...asked]
+    : null;
+};
 
 /** The partner's return address with the code, or with an error. */
 export const returnUrl = (

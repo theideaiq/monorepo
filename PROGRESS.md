@@ -372,6 +372,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-27: Sign in with The IDEA Pass remembers consent. A member who
+  already shared everything a site asks for (`pass_connections.scopes`)
+  goes straight back to it signed in; the consent screen shows the first
+  time, when the site asks for something new, or with `prompt=consent`
+  (`login` too). `prompt=none` returns `consent_required` instead of
+  showing it. Disconnecting a site in Settings asks again next time.
+
 - 2026-10-27: Program Revision v2, item 3: navigation without repeats on
   the website. Each place has one way in:
   - **Top bar.** Phones: logo · search · bell · cart (the tabs carry

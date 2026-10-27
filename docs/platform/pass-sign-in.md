@@ -3,7 +3,9 @@
 Partner sites (the first is auibsal.org) can let people sign in with their
 The IDEA Pass. It's standard OpenID Connect (authorization code with PKCE),
 run by The IDEA's API. People see who's asking and what would be shared
-every time, and can disconnect a site in Pass → Settings → Connected sites.
+the first time, and again whenever a site asks for something they haven't
+shared; after that they go straight back signed in. They can disconnect a
+site in Pass → Settings → Connected sites.
 
 ## Getting a client
 
@@ -59,6 +61,11 @@ Discovery: `https://api.theideaiq.com/oidc/.well-known/openid-configuration`
 
 - `response_type=code`, PKCE `S256` required, `state` and `nonce`
   recommended, `ui_locales=ar` or `en` picks the consent screen's language.
+- `prompt=consent` (or `login`) always shows the consent screen;
+  `prompt=none` never shows a page: a member who already shared what you
+  ask for comes straight back with a code, anyone else with
+  `error=consent_required`. Without `prompt`, returning members aren't
+  asked again unless you ask for something new.
 - The token endpoint takes `client_secret_basic` (default),
   `client_secret_post` or `private_key_jwt`, with
   `grant_type=authorization_code` or `refresh_token`. A code

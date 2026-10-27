@@ -9,17 +9,19 @@ import {
 import { CheckIcon, ShieldCheckIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   type AuthorizeRequest,
   askedFor,
   parseAuthorizeRequest,
+  rememberedScopes,
   returnUrl,
   SENSITIVE_SCOPES,
 } from "@/lib/pass-sign-in";
 import {
   useApprovePassSignIn,
+  usePassConnection,
   usePassPartner,
 } from "@/lib/pass-sign-in-queries";
 import { useStudentProfile } from "@/lib/survey-queries";
@@ -169,8 +171,52 @@ const Consent = ({
 };
 
 /**
+ * A returning member who already shared everything the site asks for goes
+ * straight back to it, signed in, with what they shared before.
+ */
+const SignInAgain = ({
+  issuer,
+  request,
+  scopes,
+}: {
+  readonly issuer: string;
+  readonly request: AuthorizeRequest;
+  readonly scopes: string[];
+}) => {
+  const approve = useApprovePassSignIn();
+  const { mutate } = approve;
+  // The request is parsed again on every render: approve once.
+  const started = useRef<boolean>(false);
+  useEffect(() => {
+    if (started.current) {
+      return;
+    }
+    started.current = true;
+    mutate(
+      {
+        clientId: request.clientId,
+        codeChallenge: request.codeChallenge,
+        nonce: request.nonce,
+        redirectUri: request.redirectUri,
+        scopes,
+      },
+      {
+        onSuccess: (code) => {
+          if (code) {
+            window.location.replace(returnUrl(request, issuer, { code }));
+          }
+        },
+      }
+    );
+  }, [issuer, mutate, request, scopes]);
+  return approve.isError ? <ErrorState /> : <SectionSpinner />;
+};
+
+/**
  * /oauth/authorize: a partner site asks to sign the member in with their
- * Pass. The member sees who's asking and what they'd share, each time.
+ * Pass. The member sees who's asking and what they'd share the first time,
+ * and again whenever the site asks for something they haven't shared (or
+ * sends `prompt=consent`); otherwise they go straight back signed in.
  */
 export const PassConsent = ({ issuer }: { readonly issuer: string }) => {
   const params = useSearchParams();
@@ -179,6 +225,7 @@ export const PassConsent = ({ issuer }: { readonly issuer: string }) => {
   const pathname = usePathname();
   const parsed = parseAuthorizeRequest(new URLSearchParams(params.toString()));
   const partner = usePassPartner(parsed?.request.clientId ?? "");
+  const connection = usePassConnection(parsed?.request.clientId ?? "");
   const wanted = parsed?.request.uiLocale;
 
   // The partner's language, when it asks for one.
@@ -191,11 +238,18 @@ export const PassConsent = ({ issuer }: { readonly issuer: string }) => {
   if (!parsed) {
     return <UnknownSite />;
   }
-  if (partner.isPending) {
+  if (partner.isPending || connection.isPending) {
     return <SectionSpinner />;
   }
-  if (partner.isError) {
-    return <ErrorState onRetry={() => partner.refetch()} />;
+  if (partner.isError || connection.isError) {
+    return (
+      <ErrorState
+        onRetry={() => {
+          partner.refetch();
+          connection.refetch();
+        }}
+      />
+    );
   }
   const site = partner.data;
   const { problem, request } = parsed;
@@ -212,6 +266,17 @@ export const PassConsent = ({ issuer }: { readonly issuer: string }) => {
         issuer={issuer}
         request={request}
       />
+    );
+  }
+  const remembered = rememberedScopes(request, connection.data);
+  if (remembered) {
+    return (
+      <SignInAgain issuer={issuer} request={request} scopes={remembered} />
+    );
+  }
+  if (request.prompt === "none") {
+    return (
+      <SendBack error="consent_required" issuer={issuer} request={request} />
     );
   }
   return <Consent issuer={issuer} partner={site} request={request} />;
