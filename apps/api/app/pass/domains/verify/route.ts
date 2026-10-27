@@ -13,7 +13,7 @@ const bodySchema = z.object({ id: z.uuid() });
 const CHECK_INTERVAL_MS = 10_000;
 
 /**
- * The IDEA Business → Developers: checks that a company published its
+ * The IDEA Partners → Developers: checks that a company published its
  * domain's token (DNS TXT record or file) and marks the domain verified.
  * The caller must be the company's owner or admin.
  */

@@ -12,7 +12,7 @@ export default defineConfig({
     },
     projects: [
       "apps/api",
-      "apps/business",
+      "apps/partners",
       "apps/storybook",
       "apps/web",
       "packages/analytics",

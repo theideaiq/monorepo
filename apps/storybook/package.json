@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "storybook build -o public && next build",
+    "build": "storybook build -o storybook-static --quiet",
     "chromatic": "chromatic --exit-zero-on-changes",
-    "clean": "git clean -xdf .cache .next .turbo dist node_modules public",
+    "clean": "git clean -xdf .cache .turbo dist node_modules storybook-static",
     "dev": "storybook dev -p 6006",
-    "start": "next start -p 6006",
-    "test": "vitest run",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
@@ -17,7 +15,6 @@
     "@repo/design-system": "workspace:*",
     "@repo/email": "workspace:*",
     "@repo/internationalization": "workspace:*",
-    "@supabase/supabase-js": "^2.115.0",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "input-otp": "^1.4.2",
@@ -43,7 +40,6 @@
     "postcss": "^8.5.8",
     "storybook": "^10.6.3",
     "tailwindcss": "^4.2.1",
-    "typescript": "^7.0.2",
-    "vitest": "^5.0.3"
+    "typescript": "^7.0.2"
   }
 }

@@ -1,2 +1,3 @@
-# Storybook builds into public/ (bun run build); static files live in assets/.
-public/
+# Storybook builds into storybook-static/; The IDEA Partners serves it at
+# staff.theideaiq.com/design. Static files Storybook serves as-is live in assets/.
+storybook-static/

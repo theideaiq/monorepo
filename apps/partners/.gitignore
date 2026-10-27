@@ -1,0 +1,3 @@
+.vercel
+# The IDEA Design: the Storybook build, copied in by `bun run design`.
+public/design/

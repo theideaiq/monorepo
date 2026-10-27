@@ -5,11 +5,11 @@ export const keys = () =>
   createEnv({
     client: {
       NEXT_PUBLIC_API_URL: z.url().optional(),
-      // The IDEA Business: company pages and the back office.
+      // The IDEA Partners: partners' pages.
       NEXT_PUBLIC_APP_URL: z.url(),
-      // The IDEA Design: also a host the Pass may send people back to.
-      NEXT_PUBLIC_DESIGN_URL: z.url().optional(),
       NEXT_PUBLIC_DOCS_URL: z.url().optional(),
+      // Staff: the same app on its own host, with the design site at /design.
+      NEXT_PUBLIC_STAFF_URL: z.url().optional(),
       NEXT_PUBLIC_WEB_URL: z.url(),
     },
     // Treat KEY="" (as in .env.example) as unset.
@@ -18,8 +18,8 @@ export const keys = () =>
       ANALYZE: process.env.ANALYZE,
       NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
       NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-      NEXT_PUBLIC_DESIGN_URL: process.env.NEXT_PUBLIC_DESIGN_URL,
       NEXT_PUBLIC_DOCS_URL: process.env.NEXT_PUBLIC_DOCS_URL,
+      NEXT_PUBLIC_STAFF_URL: process.env.NEXT_PUBLIC_STAFF_URL,
       NEXT_PUBLIC_WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
       NEXT_RUNTIME: process.env.NEXT_RUNTIME,
       VERCEL: process.env.VERCEL,

@@ -27,7 +27,7 @@ describe("currentAppPath", () => {
   });
 });
 
-test("businessPath strips The IDEA Business's prefix", () => {
+test("businessPath strips The IDEA Partners's prefix", () => {
   expect(businessPath("/business/invoices")).toBe("/invoices");
   expect(businessPath("/business")).toBe("/");
   expect(businessPath("/businesses")).toBeNull();

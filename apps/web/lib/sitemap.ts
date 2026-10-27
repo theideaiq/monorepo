@@ -7,7 +7,7 @@ export const staticPaths = [
   "/store",
   "/plus",
   "/club",
-  "/business",
+  "/partners",
   "/about",
   "/careers",
   "/help",

@@ -8,7 +8,7 @@ import { notConfigured, SHIPPING_ROLES, shipmentErrorResponse } from "../_lib";
 const body = z.object({ orderId: z.uuid() });
 
 /**
- * The parcel's label for printing: the PDF as base64 (the back office
+ * The parcel's label for printing: the PDF as base64 (Staff
  * downloads it), or Boxy's link to it.
  */
 export const POST = async (request: Request) => {

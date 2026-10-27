@@ -27,7 +27,7 @@ const platforms = new Set<Platform>(["web", "ios", "android"]);
 
 /**
  * Only redirect back to our own sites, never to arbitrary ones: the website
- * for The IDEA Plus, The IDEA Business for business plans.
+ * for The IDEA Plus, The IDEA Partners for business plans.
  */
 const safeRedirect = (redirectUrl: string | undefined, business: boolean) => {
   const home = business
@@ -75,7 +75,7 @@ export const OPTIONS = preflight;
 
 /**
  * Starts a checkout for a plan: a business plan for an organization the
- * caller manages, or The IDEA Plus for the caller. Called by the website, The IDEA Business and the native apps
+ * caller manages, or The IDEA Plus for the caller. Called by the website, The IDEA Partners and the native apps
  * with `Authorization: Bearer <Supabase access token>`.
  */
 export const POST = async (request: Request) => {

@@ -15,10 +15,10 @@ const lines = [
   { href: "/plus", icon: Repeat, id: "plus" },
   { href: "/club", icon: UsersRound, id: "club" },
   { href: "/pass", icon: IdCard, id: "pass" },
-  { href: "/business", icon: Building2, id: "business" },
+  { href: "/partners", icon: Building2, id: "business" },
 ] as const;
 
-/** The IDEA's four products and The IDEA Business, each linking to its page. */
+/** The IDEA's four products and The IDEA Partners, each linking to its page. */
 export const ProductLines = async ({ locale }: { readonly locale: Locale }) => {
   const t = await getTranslations({ locale });
 

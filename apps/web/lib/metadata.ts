@@ -49,7 +49,7 @@ export const localizedMetadata = (
     openGraph: { type, url: localePath(locale, path) },
   });
 
-type StaticPage = "about" | "business" | "careers";
+type StaticPage = "about" | "careers" | "partners";
 
 /** `generateMetadata` for a page whose title and description are in `web.<page>.meta`. */
 export const staticPageMetadata =

@@ -19,7 +19,7 @@ interface MfaPageProps {
 /**
  * The second step: set up an authenticator app (TOTP) the first time, then
  * enter its code, which raises the session to AAL2. Staff-only sites (the
- * back office) send staff here; staff rights need AAL2 in the database too.
+ * Staff) send staff here; staff rights need AAL2 in the database too.
  */
 const MfaPage = async ({ searchParams }: MfaPageProps) => {
   const locale = await getLocale();

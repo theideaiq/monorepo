@@ -103,7 +103,7 @@ const cardBadges = (student: boolean, staff: boolean, card: CardText) => [
 /**
  * The top of Your Pass: the live card (with the code that changes every 30
  * seconds), Google Wallet, the member's perks, their details, the
- * authenticator app, sign-out and, for staff, the back office.
+ * authenticator app, sign-out and, for staff, Staff.
  */
 export const PassCard = async ({ session }: PassCardProps) => {
   const [locale, t, card] = await Promise.all([
@@ -111,7 +111,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
     getTranslations("pass.home"),
     getTranslations("pass.card"),
   ]);
-  // Everyone reads their own rows (RLS); staff see a link to the back office.
+  // Everyone reads their own rows (RLS); staff see a link to Staff.
   const [
     { data: profile },
     { data: staff },
@@ -263,9 +263,9 @@ export const PassCard = async ({ session }: PassCardProps) => {
           </Row>
         </dl>
         <div className="grid content-start gap-2 md:w-56">
-          {staff ? (
+          {staff && env.NEXT_PUBLIC_STAFF_URL ? (
             <Button asChild variant="outline">
-              <a href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/staff")}>
+              <a href={appLink(env.NEXT_PUBLIC_STAFF_URL, locale, "/")}>
                 {t("backOffice")}
                 <ExternalLinkIcon className="rtl:-scale-x-100" />
               </a>

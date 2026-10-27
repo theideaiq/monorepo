@@ -9,7 +9,7 @@ const products = [
   { href: "/plus", id: "plus" },
   { href: "/club", id: "club" },
   { href: "/pass", id: "pass" },
-  { href: "/business", id: "business" },
+  { href: "/partners", id: "business" },
 ] as const;
 
 const company = [

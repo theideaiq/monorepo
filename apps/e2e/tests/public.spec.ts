@@ -10,7 +10,7 @@ const pages = [
   { name: "Plus", path: "/plus" },
   { name: "Club", path: "/club" },
   { name: "Club events", path: "/club?show=events" },
-  { name: "Business", path: "/business" },
+  { name: "Partners", path: "/partners" },
   { name: "About", path: "/about" },
   { name: "Help", path: "/help" },
 ];

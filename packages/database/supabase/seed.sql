@@ -1,11 +1,11 @@
 -- Local development seed (runs after migrations on `supabase db reset`).
 -- Prices are in IQD (whole dinars). Production plans and the catalog are
--- managed in the back office (/staff on The IDEA Business).
+-- managed in Staff (/staff on The IDEA Partners).
 
 insert into public.plans
   (id, name, description, amount, currency, billing_interval, audience, rental_slots, tier, features_ar, features_en, position)
 values
-  ('business-monthly', 'The IDEA Business', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
+  ('business-monthly', 'The IDEA Partners', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
     '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
 
@@ -124,7 +124,7 @@ on conflict do nothing;
 -- Newest releases need The IDEA Plus Extra or higher.
 update public.products set rental_tier = 2 where slug = 'ea-fc-26-ps5';
 
--- Local store pickup (production sets the real address in the back office).
+-- Local store pickup (production sets the real address in Staff).
 update public.store_settings set
   pickup_enabled = true,
   pickup_address_ar = 'بغداد، الكرادة، شارع ٦٢ — متجر The IDEA',

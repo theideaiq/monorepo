@@ -12,7 +12,7 @@ const body = z.object({
 });
 
 /**
- * Sends a packed order to Boxy (back office → order → Send with Boxy): the
+ * Sends a packed order to Boxy (Staff → order → Send with Boxy): the
  * parcel is created, a pick-up requested, and the order marked shipped.
  */
 export const POST = async (request: Request) => {

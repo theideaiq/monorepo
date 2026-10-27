@@ -9,7 +9,7 @@ import { requireStaffCaller } from "../_lib/staff";
 const body = z.object({ action: z.enum(["status", "setup"]) });
 
 /**
- * Back office → Telegram → Bot: how Droid is set up (webhook, pending
+ * Staff → Telegram → Bot: how Droid is set up (webhook, pending
  * updates, last error, commands, Mini App button, sign-in with Telegram)
  * and, for admins, setting it up again in one go. The bot token never
  * leaves the API.

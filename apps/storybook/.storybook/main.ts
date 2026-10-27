@@ -11,6 +11,16 @@ const require = createRequire(import.meta.url);
 const getAbsolutePath = (value: string) =>
   dirname(require.resolve(join(value, "package.json")));
 
+/**
+ * The build is served at staff.theideaiq.com/design (apps/partners copies
+ * storybook-static/ into public/design), so its relative URLs resolve
+ * against /design/ whether the page is /design or /design/.
+ */
+const DESIGN_BASE = '<base href="/design/">';
+
+const withBase = (head: string, { configType }: { configType?: string }) =>
+  configType === "PRODUCTION" ? `${DESIGN_BASE}\n${head}` : head;
+
 const config: StorybookConfig = {
   addons: [
     getAbsolutePath("@chromatic-com/storybook"),
@@ -22,7 +32,8 @@ const config: StorybookConfig = {
     name: getAbsolutePath("@storybook/nextjs"),
     options: {},
   },
-  // public/ is the build output (served by the Next.js shell and its gate).
+  managerHead: (head, options) => withBase(head, options),
+  previewHead: (head, options) => withBase(head, options),
   staticDirs: ["../assets"],
   stories: [
     "../stories/**/*.mdx",

@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
 /**
  * End-to-end journeys against a local Supabase stack and the three Next.js
  * apps: the website (with The IDEA Pass, Your Pass, the cart and checkout),
- * The IDEA Business (company pages and the back office) and the API, which both call
+ * The IDEA Partners (partner pages, and Staff on its own host) and the API, which both call
  * (CI: .github/workflows/ci.yml, job "e2e"). Locally: `bun run
  * db:start`, then `bun run --cwd apps/e2e e2e`; the servers are started here
  * unless already running. E2E_START=start runs the built apps (`next start`,
@@ -48,10 +48,13 @@ process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??=
 
 const app = process.env.E2E_APP_URL ?? "http://localhost:3000";
 const web = process.env.E2E_WEB_URL ?? "http://localhost:3001";
+// Staff: The IDEA Partners on its own host, a forwarded port locally.
+const staff = process.env.E2E_STAFF_URL ?? "http://localhost:3003";
 // The IDEA Pass is part of the website (NEXT_PUBLIC_WEB_URL); it sends
 // people back to these hosts.
 process.env.NEXT_PUBLIC_APP_URL ??= app;
 process.env.NEXT_PUBLIC_WEB_URL ??= web;
+process.env.NEXT_PUBLIC_STAFF_URL ??= staff;
 const script = process.env.E2E_START === "start" ? "start" : "dev";
 // `next start` takes its port from -p.
 const port = (url: string) =>
@@ -79,10 +82,16 @@ export default defineConfig({
   use: { trace: "retain-on-failure" },
   webServer: [
     {
-      command: `bun run --cwd ../business ${script}${port(app)}`,
+      command: `bun run --cwd ../partners ${script}${port(app)}`,
       reuseExistingServer: true,
       timeout: 240_000,
       url: `${app}/robots.txt`,
+    },
+    {
+      command: "bun run --cwd ../partners staff",
+      reuseExistingServer: true,
+      timeout: 240_000,
+      url: `${staff}/robots.txt`,
     },
     {
       command: `bun run --cwd ../web ${script}${port(web)}`,
@@ -100,4 +109,4 @@ export default defineConfig({
   workers: 1,
 });
 
-export const urls = { app, web };
+export const urls = { app, staff, web };
