@@ -139,9 +139,7 @@ test("a company verifies its domain and registers a Pass app", async ({
   await expect(page.getByText("Verified", { exact: true })).toBeVisible();
 
   await page.getByText("Register an app").click();
-  await page
-    .getByLabel("Name (shown when people sign in)")
-    .fill("E2E Books");
+  await page.getByLabel("Name (shown when people sign in)").fill("E2E Books");
   await page.getByLabel("Website").fill("https://e2e-company.example");
   await page
     .getByLabel("Return addresses")
