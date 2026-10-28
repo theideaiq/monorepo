@@ -14,7 +14,8 @@ incidents) is in `docs/platform`.
   - the public pages, organised like the menu (Store · Plus · Club · Pass,
     a bottom tab bar on phones): The IDEA Store is Home (`/`), the
     storefront (categories, featured and new products), with
-    `/store` the full catalog and product pages (buying, reviews); The IDEA
+    `/store` the full catalog and product pages (buying, reviews), and
+    `/store/campaigns/<slug>` a campaign's page; The IDEA
     Plus is `/plus`, everything about renting (the rental catalog with
     categories, then plans and tiers), public, with "Your Plus" (joining
     and the waitlist at `#join`; your plan, plan changes, pause and
@@ -91,7 +92,7 @@ incidents) is in `docs/platform`.
   confirm), `/selling/offers` (buyers' offers to accept, decline or
   counter within 48 hours, and which listings take offers, with automatic
   accept and decline amounts), `/selling/sales` (sale prices between two
-  days and quantity deals), `/selling/payouts` (each weekly payout with
+  days, quantity deals and taking part in campaigns), `/selling/payouts` (each weekly payout with
   its statement) and `/selling/pickup` (its branches, each a Boxy pickup
   location),
   Perks `/perks`,
@@ -114,7 +115,8 @@ incidents) is in `docs/platform`.
     Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
     automatic checks on products shops create and shops' flags, and
     `/catalog/offers`, offers on The IDEA's own stock; each product's page
-    sets which of its copies take offers) · Orders and delivery
+    sets which of its copies take offers; and `/catalog/campaigns`,
+    seasonal campaigns shops opt in to) · Orders and delivery
     `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
     and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·
     Club `/club` (with `/club/telegram`) · Partners `/partners` (Team

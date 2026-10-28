@@ -144,3 +144,82 @@ export const isOverlap = (error: unknown) =>
 /** A day in Baghdad (UTC+3, no daylight saving) as a timestamp. */
 export const baghdadDay = (day: string, end = false) =>
   `${day}T${end ? "23:59:59" : "00:00:00"}+03:00`;
+
+const campaignsKey = ["open-campaigns"] as const;
+const entriesKey = (sellerId: string) =>
+  ["campaign-entries", sellerId] as const;
+
+/** Published campaigns that haven't ended, soonest first. */
+export const useOpenCampaigns = () => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("campaigns")
+          .select(
+            "id, slug, name_en, name_ar, description_en, description_ar, starts_at, ends_at"
+          )
+          .eq("published", true)
+          .gt("ends_at", new Date().toISOString())
+          .order("starts_at")
+      ) ?? [],
+    queryKey: campaignsKey,
+  });
+};
+
+export type OpenCampaign = NonNullable<
+  ReturnType<typeof useOpenCampaigns>["data"]
+>[number];
+
+export const useCampaignEntries = (sellerId: string) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: Boolean(sellerId),
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("campaign_entries")
+          .select("campaign_id, discount_rate")
+          .eq("seller_id", sellerId)
+      ) ?? [],
+    queryKey: entriesKey(sellerId),
+  });
+};
+
+/** Opt in to a campaign, or change the shop's discount in it. */
+export const useJoinCampaign = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      campaign,
+      rate,
+    }: {
+      campaign: string;
+      rate: number;
+    }) =>
+      unwrap(
+        await supabase.rpc("join_campaign", {
+          campaign,
+          rate,
+          seller: sellerId,
+        })
+      ),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: entriesKey(sellerId) }),
+  });
+};
+
+export const useLeaveCampaign = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (campaign: string) =>
+      unwrap(
+        await supabase.rpc("leave_campaign", { campaign, seller: sellerId })
+      ),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: entriesKey(sellerId) }),
+  });
+};

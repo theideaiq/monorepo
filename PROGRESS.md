@@ -573,6 +573,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-28: Prices, part 3 (master brief step 7, section 9;
+  `20270202000000_campaigns.sql`). Staff → Catalog → Campaigns creates
+  seasonal campaigns (names, description, dates in Baghdad time, up to 60
+  days) and publishes them. Approved shops take part from Partners →
+  Selling → Sales and deals with their own 5–50% off every listing, and
+  can change it or leave until the campaign ends. A campaign price is a
+  sale (the lower of a listing's own sale and its campaign price), so
+  checkout, offers, price history and "was" prices follow it. The
+  campaign page is `/store/campaigns/<slug>`, without struck-through
+  prices. Still to come in step 7: Staff screens for The IDEA's own sales
+  and deals, coupons within the 20% cap, student prices.
 - 2026-10-28: Prices, part 2 (master brief step 7, section 9;
   `20270201000000_shop_sales.sql`). Partners → Selling → Sales and deals:
   a listing's sale price between two days (never overlapping; every copy

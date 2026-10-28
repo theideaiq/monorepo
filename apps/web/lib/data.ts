@@ -12,7 +12,7 @@ import {
   type ProductOffer,
   productImageUrl,
 } from "@repo/commerce/catalog";
-import type { Enums, Tables } from "@repo/database";
+import type { Database, Enums, Tables } from "@repo/database";
 import { log } from "@repo/observability/log";
 import { publicFileUrl } from "@repo/storage";
 import { type Rating, type Review, ratingsById } from "./reviews";
@@ -457,4 +457,56 @@ export const getReferralKind = (code: string) =>
     }
     const kind = check(await supabase.rpc("referral_kind", { code }));
     return kind === "invite" ? kind : null;
+  });
+
+export type Campaign = Pick<
+  Tables<"campaigns">,
+  | "description_ar"
+  | "description_en"
+  | "ends_at"
+  | "id"
+  | "name_ar"
+  | "name_en"
+  | "slug"
+  | "starts_at"
+>;
+
+/** A published campaign by its slug, or null. */
+export const getCampaign = (slug: string) =>
+  fallback("campaign", null as Campaign | null, async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return null;
+    }
+    const { data, error } = await supabase
+      .from("campaigns")
+      .select(
+        "id, slug, name_en, name_ar, description_en, description_ar, starts_at, ends_at"
+      )
+      .eq("slug", slug)
+      .eq("published", true)
+      .maybeSingle();
+    if (error) {
+      throw error;
+    }
+    return data;
+  });
+
+export type CampaignListing =
+  Database["public"]["Functions"]["campaign_listings"]["Returns"][number];
+
+/** A campaign's listings: each shop taking part, cheapest first. */
+export const getCampaignListings = (slug: string) =>
+  fallback("campaignListings", [] as CampaignListing[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    const { data, error } = await supabase.rpc("campaign_listings", {
+      campaign_slug: slug,
+    });
+    if (error) {
+      throw error;
+    }
+    return data ?? [];
   });
