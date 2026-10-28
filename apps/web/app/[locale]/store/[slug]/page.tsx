@@ -24,9 +24,11 @@ import {
   RatingLink,
   SellerLine,
 } from "@/components/product-reviews";
+import { BundleContents } from "@/components/store/bundle-contents";
 import { WriteReview } from "@/components/store/product-reviews";
 import { PurchasePanel } from "@/components/store/purchase-panel";
 import {
+  getBundle,
   getOffers,
   getPlans,
   getProduct,
@@ -84,13 +86,14 @@ const ProductPage = async ({ params }: ProductProps) => {
     notFound();
   }
 
-  const [t, store, ratings, reviews, plan, offers] = await Promise.all([
+  const [t, store, ratings, reviews, plan, offers, bundle] = await Promise.all([
     getTranslations({ locale, namespace: "web.store.product" }),
     getTranslations({ locale, namespace: "store" }),
     getRatings([product.id]),
     getReviews(product.id, REVIEWS_SHOWN),
     rentalPlan(product),
     getOffers(product.id),
+    getBundle(product.id),
   ]);
   const rating = ratings[product.id] ?? null;
   const name = localized(product, "name", locale);
@@ -242,6 +245,8 @@ const ProductPage = async ({ params }: ProductProps) => {
               </p>
             )}
           </div>
+
+          <BundleContents items={bundle} locale={locale} />
 
           {description ? (
             <section className="flex flex-col gap-3">

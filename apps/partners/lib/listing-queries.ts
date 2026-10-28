@@ -238,6 +238,81 @@ export const useCreateListing = (sellerId: string) => {
   });
 };
 
+export interface NewBundle {
+  categoryId: string;
+  /** The variants in it and how many of each. */
+  items: { quantity: number; variantId: string }[];
+  nameAr: string;
+  nameEn: string;
+}
+
+/** Lists several of the shop's own items as one offer (create_bundle). */
+export const useCreateBundle = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      bundle,
+      offer,
+    }: {
+      bundle: NewBundle;
+      offer: OfferInput;
+    }) =>
+      unwrap(
+        await supabase.rpc("create_bundle", {
+          bundle_seller: sellerId,
+          category: bundle.categoryId,
+          images: [],
+          items: bundle.items.map((item) => ({
+            quantity: item.quantity,
+            variant_id: item.variantId,
+          })),
+          name_ar: bundle.nameAr.trim(),
+          name_en: bundle.nameEn.trim(),
+          offer_condition: offer.condition,
+          offer_price: offer.price,
+          offer_sku: offer.sku.trim() || undefined,
+          quantity: offer.quantity,
+        })
+      ),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: listingsKey(sellerId) }),
+  });
+};
+
+/** At most this many of one item in a bundle (the database enforces it). */
+export const MAX_BUNDLE_QUANTITY = 20;
+
+/**
+ * Checks the counts chosen for a bundle as the database will: 1 to 20 of
+ * each item and at least 2 in all.
+ */
+export const bundleProblem = (counts: readonly number[]) => {
+  let units = 0;
+  for (const count of counts) {
+    if (!Number.isInteger(count) || count < 1 || count > MAX_BUNDLE_QUANTITY) {
+      return "bundleSize" as const;
+    }
+    units += count;
+  }
+  return units < 2 ? ("bundleSize" as const) : null;
+};
+
+/**
+ * The items a bundle can hold: the shop's live offers, one per variant
+ * (an item offered in two conditions appears once).
+ */
+export const bundleChoices = (listings: readonly Listing[]) => {
+  const seen = new Set<string>();
+  return listings.filter((listing) => {
+    if (!listing.active || seen.has(listing.variant_id)) {
+      return false;
+    }
+    seen.add(listing.variant_id);
+    return true;
+  });
+};
+
 /** Tells staff a product's details are wrong. */
 export const useFlagProduct = (sellerId: string) => {
   const { supabase, user } = useAuth();
@@ -262,6 +337,9 @@ export const useFlagProduct = (sellerId: string) => {
 };
 
 export type ListingProblem =
+  | "bundleInBundle"
+  | "bundleItems"
+  | "bundleSize"
   | "exists"
   | "invalidBarcode"
   | "notAllowed"
@@ -283,6 +361,19 @@ export const toListingProblem = (error: unknown): ListingProblem => {
   }
   if (message.includes("approved shop")) {
     return "notAllowed";
+  }
+  if (message.includes("can't hold a bundle")) {
+    return "bundleInBundle";
+  }
+  if (message.includes("only items the shop offers")) {
+    return "bundleItems";
+  }
+  if (
+    message.includes("at least 2 items") ||
+    message.includes("up to 20 items") ||
+    message.includes("1 to 20 of it")
+  ) {
+    return "bundleSize";
   }
   return "unknown";
 };

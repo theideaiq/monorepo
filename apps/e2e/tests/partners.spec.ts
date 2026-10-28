@@ -247,6 +247,47 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await page.getByRole("button", { name: "Send the ready rows (1)" }).click();
   await expect(page.getByText("Sent: 1 · Refused: 0")).toBeVisible();
   await expect(page.getByText("2 available · 0 sold")).toBeVisible();
+
+  // Both items as one offer: a bundle, listed as a product of its own.
+  const removeBundle = async () => {
+    const { data: bundles } = await db
+      .from("products")
+      .select("id")
+      .eq("name_en", "E2E Record Bundle");
+    for (const bundle of bundles ?? []) {
+      await db.from("stock_items").delete().eq("product_id", bundle.id);
+      await db.from("products").delete().eq("id", bundle.id);
+    }
+  };
+  await removeBundle();
+  await page.getByRole("button", { name: "Make a bundle" }).click();
+  await page.getByLabel("E2E Shop Record", { exact: true }).check();
+  await page.getByLabel("E2E Uploaded Record", { exact: true }).check();
+  await page.getByLabel("How many of E2E Uploaded Record").fill("2");
+  const bundleForm = page.locator("form").filter({ hasText: "What's in it" });
+  await bundleForm.getByLabel("Name in English").fill("E2E Record Bundle");
+  await bundleForm.getByLabel("Name in Arabic").fill("حزمة أسطوانات");
+  await bundleForm.getByRole("combobox", { name: "Category" }).click();
+  await page.getByRole("option", { name: "Music" }).click();
+  await bundleForm.getByLabel("Price (IQD)").fill("49750");
+  await bundleForm.getByLabel("Copies").fill("1");
+  await expectAccessible(page);
+  await page.getByRole("button", { name: "List the bundle" }).click();
+  await expect(page.getByText("E2E Record Bundle")).toBeVisible();
+  const { data: bundle } = await db
+    .from("products")
+    .select("slug")
+    .eq("name_en", "E2E Record Bundle")
+    .single();
+  await page.goto(`${urls.web}/store/${bundle?.slug}`);
+  const contents = page.getByRole("region", { name: "In this bundle" });
+  await expect(contents.getByRole("link")).toHaveText([
+    "E2E Shop Record",
+    "E2E Uploaded Record",
+  ]);
+  await expect(contents.getByText("2 ×")).toBeVisible();
+  await expectAccessible(page);
+  await removeBundle();
   await removeUploaded();
 
   // The website lists the shop's offer and the cart line names the shop.

@@ -318,7 +318,9 @@
         "seller": "Sold by {seller}",
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
-        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass."
+        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass.",
+        "bundle": "In this bundle",
+        "bundleQuantity": "{count} ×"
       },
       "rating": {
         "label": "Rated {rating} out of 5",
@@ -2513,7 +2515,10 @@
           "exists": "That barcode is already on The IDEA. Find it and add your offer to it.",
           "invalidBarcode": "That isn't a valid ISBN or barcode.",
           "notAllowed": "Only owners and admins of an approved shop can list.",
-          "unknown": "Something went wrong. Try again."
+          "unknown": "Something went wrong. Try again.",
+          "bundleSize": "Choose at least 2 items, 1 to 20 of each.",
+          "bundleItems": "A bundle holds only items you offer.",
+          "bundleInBundle": "A bundle can't hold another bundle."
         },
         "upload": {
           "title": "Upload a spreadsheet",
@@ -2560,6 +2565,15 @@
             "unknownCategory": "Use one of: {categories}.",
             "duplicate": "This barcode and condition are on an earlier row."
           }
+        },
+        "bundle": {
+          "title": "Make a bundle",
+          "description": "Sell several of your items as one offer, for example a turntable and 3 records. It's listed as a product of its own, with its own price and copies.",
+          "open": "Make a bundle",
+          "items": "What's in it",
+          "howMany": "How many of {name}",
+          "copiesHint": "Copies are how many bundles you have; they don't take copies of the items in it.",
+          "create": "List the bundle"
         }
       }
     },

@@ -1,4 +1,6 @@
 import {
+  type BundleItem,
+  getBundleItems,
   getProductBySlug,
   getProductOffers,
   listCategories,
@@ -105,6 +107,13 @@ export const getOffers = (productId: string) =>
   fallback("productOffers", [] as ProductOffer[], async () => {
     const supabase = createPublicClient();
     return supabase ? await getProductOffers(supabase, productId) : [];
+  });
+
+/** What a shop's bundle holds; empty for other products. */
+export const getBundle = (productId: string) =>
+  fallback("bundleItems", [] as BundleItem[], async () => {
+    const supabase = createPublicClient();
+    return supabase ? await getBundleItems(supabase, productId) : [];
   });
 
 /** Slugs of every active product, for the sitemap and static params. */
