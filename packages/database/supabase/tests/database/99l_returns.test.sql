@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(31);
+select plan(34);
 
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-000000000d01', 'o9l@example.iq'),
@@ -245,6 +245,21 @@ select '9b100000-0000-0000-0000-0000000000e2', v.product_id, v.id, 'بلوند',
 from public.product_variants v where v.product_id = '9b100000-0000-0000-0000-000000000001';
 update public.order_items set seller_status = 'picked_up' where order_id = '9b100000-0000-0000-0000-0000000000e2';
 
+select pg_temp.login_as('00000000-0000-0000-0000-000000000d02');
+select is(
+  (select count(*)::integer from public.seller_parcels_back('9b100000-0000-0000-0000-0000000000d1')),
+  3, 'the shop sees the refused parcels to confirm'
+);
+select results_eq(
+  $$ select distinct customer from public.seller_returns('9b100000-0000-0000-0000-0000000000d1') $$,
+  $$ values ('Ali · Karrada'::text) $$,
+  'and its returns, with the customer as first name and area'
+);
+select pg_temp.login_as('00000000-0000-0000-0000-000000000d03');
+select throws_ok(
+  $$ select * from public.seller_returns('9b100000-0000-0000-0000-0000000000d1') $$,
+  '42501', null, 'other people can''t list a shop''s returns'
+);
 select pg_temp.login_as('00000000-0000-0000-0000-000000000d03');
 select throws_ok(
   $$ select public.confirm_parcel_back('9b100000-0000-0000-0000-0000000000f2') $$,
