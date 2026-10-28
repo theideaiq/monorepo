@@ -29,9 +29,10 @@ describe("regional formatting", () => {
   });
 
   test("formats IQD without fractional digits", () => {
-    // Intl separates the currency code with a no-break space.
-    expect(formatCurrency(25_000, "en")).toBe("IQD\u00a025,000");
-    expect(formatCurrency(25_000, "ar")).toContain("25,000");
+    // The currency follows the number, joined by a no-break space.
+    expect(formatCurrency(25_000, "en")).toBe("25,000\u00a0IQD");
+    expect(formatCurrency(25_000, "ar")).toBe("25,000\u00a0د.ع.");
+    expect(formatCurrency(-4750, "en")).toBe("-4,750\u00a0IQD");
   });
 
   test("formats relative times", () => {

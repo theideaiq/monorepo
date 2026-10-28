@@ -248,8 +248,8 @@ describe("private chats", () => {
     const { send, sent } = createTestBot({ data });
     await send(privateText(user(1, { language_code: "en" }), "/orders"));
     const text = textOf(sent()[0]).replace(/\s/g, " ");
-    expect(text).toContain("#1043 · On the way · IQD 725,000");
-    expect(text).toContain("#1012 · Delivered · IQD 50,000");
+    expect(text).toContain("#1043 · On the way · 725,000 IQD");
+    expect(text).toContain("#1012 · Delivered · 50,000 IQD");
     expect(text).not.toContain("9999");
     expect(buttonsOf(sent()[0])[0]?.url).toBe(
       "https://theideaiq.com/pass/orders"
@@ -264,7 +264,7 @@ describe("private chats", () => {
     const { send, sent } = createTestBot({ data });
     await send(callback(user(1, { language_code: "en" }), "m:bulbs"));
     const text = textOf(sent("editMessageText")[0]).replace(/\s/g, " ");
-    expect(text).toContain("120 Bulbs (worth IQD 12,000)");
+    expect(text).toContain("120 Bulbs (worth 12,000 IQD)");
     expect(text).toContain("Plus 35 on the way");
   });
 

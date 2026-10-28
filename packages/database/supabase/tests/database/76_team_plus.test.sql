@@ -137,7 +137,7 @@ select is(
   'the member has The IDEA Plus'
 );
 select results_eq(
-  $$ select amount, description like 'The IDEA Plus · Plus · %' from public.invoices
+  $$ select amount, description like 'Plus · %' from public.invoices
      where organization_id = '76000000-0000-0000-0000-0000000000c1' $$,
   $$ values (25000::bigint, true) $$,
   'the company is invoiced for the first month'

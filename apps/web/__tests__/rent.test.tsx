@@ -11,8 +11,8 @@ vi.mock("@repo/internationalization/navigation", () => ({
   ),
 }));
 
-const RENT_PRICE = /IQD 9,750 for 7 days/;
-const DEPOSIT = /Deposit IQD 29,750/;
+const RENT_PRICE = /9,750 IQD for 7 days/;
+const DEPOSIT = /Deposit 29,750 IQD/;
 const LATE = /after 14 days late/;
 const AR_DAYS = /لمدة 7 أيام/;
 const AR_LATE = /بعد 14 يومًا من التأخير/;

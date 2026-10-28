@@ -2646,7 +2646,7 @@
   "store": {
     "price": {
       "free": "Free",
-      "from": "From {price}",
+      "from": "From <amount>{price}</amount>",
       "save": "Save {percent}%",
       "worth": "Worth {price}"
     },

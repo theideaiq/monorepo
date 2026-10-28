@@ -29,7 +29,7 @@ export const localized = <
     "") as string;
 };
 
-/** A price in IQD for display ("٧٢٠٬٠٠٠ د.ع." / "IQD 720,000"). */
+/** A price in IQD for display ("720,000 د.ع." / "720,000 IQD"). */
 export const formatPrice = (amount: number, locale: string) =>
   formatCurrency(amount, contentLocale(locale));
 

@@ -109,10 +109,19 @@ export const ProductCard = async ({
           </p>
         ) : (
           <p className="flex flex-wrap items-baseline gap-2">
-            <span className="font-mono font-semibold tabular-nums">
-              {hasPriceRange(product.variants)
-                ? t("price.from", { price: formatPrice(product.price, locale) })
-                : formatPrice(product.price, locale)}
+            <span className="font-semibold">
+              {hasPriceRange(product.variants) ? (
+                t.rich("price.from", {
+                  amount: (chunks) => (
+                    <span className="font-mono tabular-nums">{chunks}</span>
+                  ),
+                  price: formatPrice(product.price, locale),
+                })
+              ) : (
+                <span className="font-mono tabular-nums">
+                  {formatPrice(product.price, locale)}
+                </span>
+              )}
             </span>
             {discount > 0 && product.compare_at_price ? (
               <span className="font-mono text-muted-foreground text-sm tabular-nums line-through">

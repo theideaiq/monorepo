@@ -123,17 +123,33 @@ export const formatNumber = (
   options?: Intl.NumberFormatOptions
 ) => new Intl.NumberFormat(intlLocale(locale), options).format(value);
 
-/** Money in whole units of the currency (IQD has no minor unit in practice). */
+/**
+ * Money in whole units of the currency (IQD has no minor unit in practice),
+ * with the currency after the number in every language, as the brand
+ * writes it: "25,000 IQD", "25,000 د.ع." (docs/brand/BRAND_GUIDELINES.md,
+ * section 3).
+ */
 export const formatCurrency = (
   amount: number,
   locale: Locale = defaultLocale,
   currency: string = CURRENCY
-) =>
-  new Intl.NumberFormat(intlLocale(locale), {
+) => {
+  const parts = new Intl.NumberFormat(intlLocale(locale), {
     currency,
     maximumFractionDigits: currency === "IQD" ? 0 : undefined,
     style: "currency",
-  }).format(amount);
+  }).formatToParts(amount);
+  const symbol = parts
+    .filter((part) => part.type === "currency")
+    .map((part) => part.value)
+    .join("");
+  const number = parts
+    .filter((part) => part.type !== "currency" && part.type !== "literal")
+    .map((part) => part.value)
+    .join("");
+  // A no-break space keeps the amount and its currency on one line.
+  return `${number}\u00a0${symbol}`;
+};
 
 /**
  * A date in the project time zone, for date-fns calculations such as start of
