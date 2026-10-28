@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server";
 import type { Plan } from "@/lib/data";
 
 interface PlanCardProps {
-  /** The featured plan: a 2px Plus Violet border and a flag. */
+  /** The featured plan: a 2px pink border and a pink flag. */
   readonly featured?: boolean;
   readonly href: string;
   readonly locale: Locale;
@@ -31,11 +31,11 @@ export const PlanCard = async ({
     <div
       className={cn(
         "relative flex flex-col gap-6 rounded-xl border bg-card p-6 shadow-1",
-        featured && "border-2 border-plus shadow-2"
+        featured && "border-2 border-idea-pink shadow-2"
       )}
     >
       {featured ? (
-        <span className="absolute start-6 -top-3 rounded-full bg-plus px-3 py-1 font-semibold text-on-accent text-xs">
+        <span className="absolute start-6 -top-3 rounded-full bg-idea-pink px-3 py-1 font-semibold text-on-pink text-xs">
           {t("featured")}
         </span>
       ) : null}

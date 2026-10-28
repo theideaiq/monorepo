@@ -41,7 +41,7 @@ export const formatMemberNumber = (value: number) =>
   String(value).replace(GROUPS, " ");
 
 const FONT =
-  "font-family=\"'Readex Pro', 'Noto Sans Arabic', 'Segoe UI', Arial, sans-serif\"";
+  "font-family=\"Alexandria, 'Noto Sans Arabic', 'Segoe UI', Arial, sans-serif\"";
 
 /** The card, as an SVG document. */
 export const cardSvg = (card: CardData, labels: CardLabels, rtl: boolean) => {

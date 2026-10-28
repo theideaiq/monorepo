@@ -263,7 +263,7 @@ const Rent = async ({ params, searchParams }: RentProps) => {
                     className="flex flex-col gap-3 rounded-lg border p-5"
                     key={plan.id}
                   >
-                    <Badge className="px-3 py-1 text-sm" variant="plus">
+                    <Badge className="px-3 py-1 text-sm" variant="brand">
                       {planName(plan, locale)}
                     </Badge>
                     <p className="text-muted-foreground text-sm">

@@ -41,7 +41,10 @@ export const RentCard = ({
   return (
     <div className="grid gap-3 rounded-md border p-4">
       <p className="flex items-center gap-2 font-medium">
-        <CalendarClockIcon aria-hidden="true" className="size-4 text-plus" />
+        <CalendarClockIcon
+          aria-hidden="true"
+          className="size-4 text-pink-text"
+        />
         {t("title")}
       </p>
       <p className="text-sm">

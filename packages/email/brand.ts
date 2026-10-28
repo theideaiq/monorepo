@@ -21,9 +21,9 @@ export const brand = {
   surfaceSunken: "#F2EEE2",
 } as const;
 
-/** Readex Pro for Arabic and Latin, then what email clients have. */
+/** Alexandria for Arabic and Latin, then what email clients have. */
 export const emailFont =
-  "'Readex Pro', Cairo, -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Roboto, Arial, sans-serif";
+  "Alexandria, -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Roboto, Arial, sans-serif";
 
 /** The same names as the apps' tokens, for the templates' Tailwind classes. */
 export const emailTailwindConfig: TailwindConfig = {

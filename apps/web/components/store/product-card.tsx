@@ -28,7 +28,7 @@ export const productHref = (slug: string) =>
  * A catalog tile linking to the product page, with a wishlist heart: the
  * image on a sunken ground, a 2-line name, the versions it comes in, the
  * price ("from" across versions, with any saving), the condition of
- * used items, and a full-width call to action (violet for rentals).
+ * used items, and a full-width pink call to action.
  */
 export const ProductCard = ({ product, rating }: ProductCardProps) => {
   const locale = useLocale();
@@ -70,7 +70,7 @@ export const ProductCard = ({ product, rating }: ProductCardProps) => {
           className={cn(
             buttonVariants({
               size: "sm",
-              variant: rental ? "plus" : "default",
+              variant: "default",
             }),
             "w-full"
           )}

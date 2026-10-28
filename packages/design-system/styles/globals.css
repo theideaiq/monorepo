@@ -27,11 +27,6 @@
   --surface-sunken: #f2eee2;
   --border-strong: #8a8c95;
   --focus-ring: #0f1014;
-  --plus: #5b3be8;
-  --business: #1f4fd6;
-  --club: #ff6a2b;
-  --on-accent: #ffffff;
-  --on-accent-warm: #0f1014;
   --bulb-empty: #d9dce6;
   --warning: #865a00;
   --danger: #b3261e;
@@ -73,9 +68,9 @@
   --ring: var(--focus-ring);
   --chart-1: var(--idea-pink);
   --chart-2: var(--bulb-yellow);
-  --chart-3: var(--plus);
-  --chart-4: var(--club);
-  --chart-5: var(--business);
+  --chart-3: var(--idea-pink-hover);
+  --chart-4: var(--ink-muted);
+  --chart-5: var(--success);
   --radius: 0.625rem;
   --sidebar: var(--surface-raised);
   --sidebar-foreground: var(--ink);
@@ -103,10 +98,6 @@
   --surface-sunken: #22232a;
   --border-strong: #6b6d78;
   --focus-ring: #f4cf08;
-  --plus: #a99bff;
-  --business: #7fa2ff;
-  --club: #ff7a40;
-  --on-accent: #0f1014;
   --bulb-empty: #3a3c46;
   --warning: #f5b83d;
   --danger: #ffb4a9;
@@ -122,8 +113,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans:
-    var(--font-readex), var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-alexandria), ui-sans-serif, system-ui, sans-serif;
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --font-mono: var(--font-geist-mono);
@@ -159,7 +149,7 @@
   --color-success: var(--success);
   --color-destructive-foreground: var(--destructive-foreground);
 
-  /* Brand colours: bg-idea-pink, text-pink-text, bg-surface-sunken, bg-plus… */
+  /* Brand colours: bg-idea-pink, text-pink-text, bg-surface-sunken… */
   --color-idea-pink: var(--idea-pink);
   --color-idea-pink-hover: var(--idea-pink-hover);
   --color-on-pink: var(--on-pink);
@@ -174,11 +164,6 @@
   --color-surface-sunken: var(--surface-sunken);
   --color-border-strong: var(--border-strong);
   --color-focus-ring: var(--focus-ring);
-  --color-plus: var(--plus);
-  --color-business: var(--business);
-  --color-club: var(--club);
-  --color-on-accent: var(--on-accent);
-  --color-on-accent-warm: var(--on-accent-warm);
   --color-bulb-empty: var(--bulb-empty);
   --color-warning: var(--warning);
   --color-danger: var(--danger);

@@ -1,4 +1,5 @@
 import { project } from "@repo/config";
+import { NameTile } from "@repo/design-system/components/brand/name-tile";
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +8,7 @@ import {
 } from "@repo/design-system/components/ui/accordion";
 import type { Locale, Messages } from "@repo/internationalization";
 import { JsonLd } from "@repo/seo/json-ld";
-import { Bot, Mail, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
@@ -18,6 +19,12 @@ import { env } from "@/env";
 import { telegram } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import { ContactForm } from "./components/contact-form";
+
+const ContactIcon = ({ icon: Icon }: { icon: typeof Mail }) => (
+  <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-pink-text">
+    <Icon aria-hidden="true" className="size-5" />
+  </span>
+);
 
 interface HelpProps {
   params: Promise<{ locale: Locale }>;
@@ -52,23 +59,24 @@ const Help = async ({ params }: HelpProps) => {
 
   const details = [
     {
+      // Droid's profile photo is its name tile (BRAND_GUIDELINES.md, section 5).
+      avatar: <NameTile size={40} word="Droid" />,
       href: telegram.bot,
-      icon: Bot,
       label: t("droid.title"),
       ltr: true,
       note: t("droid.description"),
       value: telegram.botHandle,
     },
     {
+      avatar: <ContactIcon icon={Mail} />,
       href: `mailto:${project.supportEmail}`,
-      icon: Mail,
       label: contact("details.email"),
       ltr: true,
       note: contact("details.emailNote"),
       value: project.supportEmail,
     },
     {
-      icon: MapPin,
+      avatar: <ContactIcon icon={MapPin} />,
       label: contact("details.location"),
       ltr: false,
       note: undefined,
@@ -119,14 +127,12 @@ const Help = async ({ params }: HelpProps) => {
         <section className="flex flex-col gap-6" id="contact">
           <h2 className="font-bold text-xl">{contact("title")}</h2>
           <ul className="grid gap-4 sm:grid-cols-3">
-            {details.map(({ href, icon: Icon, label, ltr, note, value }) => (
+            {details.map(({ avatar, href, label, ltr, note, value }) => (
               <li
                 className="flex flex-col gap-2 rounded-lg border p-5"
                 key={label}
               >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-primary/10 text-pink-text">
-                  <Icon aria-hidden="true" className="size-5" />
-                </span>
+                {avatar}
                 <p className="font-medium">{label}</p>
                 {note ? (
                   <p className="text-muted-foreground text-sm">{note}</p>

@@ -36,7 +36,7 @@ const forbiddenPage = (switchUrl: string) => {
 <p>${escapeHtml(copy.body)}</p>
 <p><a href="${escapeHtml(switchUrl)}">${escapeHtml(copy.switch)}</a></p>
 </section>`;
-  return `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>The IDEA Design</title></head><body style="font-family:'Readex Pro',Cairo,system-ui,sans-serif;max-width:34rem;margin:4rem auto;padding:0 1rem;line-height:1.7;color:#0f1014;background:#ffffff">${section("ar", ar.design.forbidden)}<hr style="border:0;border-top:1px solid #e4e4e7;margin:2rem 0">${section("en", en.design.forbidden)}</body></html>`;
+  return `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>The IDEA Design</title></head><body style="font-family:Alexandria,system-ui,sans-serif;max-width:34rem;margin:4rem auto;padding:0 1rem;line-height:1.7;color:#0f1014;background:#ffffff">${section("ar", ar.design.forbidden)}<hr style="border:0;border-top:1px solid #e4e4e7;margin:2rem 0">${section("en", en.design.forbidden)}</body></html>`;
 };
 
 // The IDEA Pass lives on the website (apps/web).

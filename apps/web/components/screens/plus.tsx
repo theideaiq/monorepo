@@ -87,10 +87,10 @@ const YourPlan = ({
   const live = subscription.data;
 
   return (
-    <Card className="border-2 border-plus">
+    <Card className="border-2 border-idea-pink">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <CrownIcon className="size-5 text-plus" />
+          <CrownIcon className="size-5 text-pink-text" />
           {t("title")}
         </CardTitle>
         <CardDescription>
@@ -349,7 +349,7 @@ const RentalItem = ({
       <span className="line-clamp-2 font-medium text-sm">{name}</span>
       {requiredTier ? (
         <Badge className="justify-self-start" variant="outline">
-          <CrownIcon className="text-plus" />
+          <CrownIcon className="text-pink-text" />
           {neededPlan
             ? t("catalog.needsPlan", { plan: neededPlan })
             : t("catalog.needsHigherPlan")}

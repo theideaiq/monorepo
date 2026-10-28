@@ -52,11 +52,6 @@ const BRAND: Swatch[] = [
     token: "--ink",
     usage: "Body and heading text only; never in logos, tiles or brand blocks.",
   },
-  {
-    label: "Plus Violet",
-    token: "--plus",
-    usage: "The IDEA Plus accent; only Plus pages and Rent with The IDEA Plus.",
-  },
 ];
 
 const ROLES: Swatch[] = [
@@ -188,21 +183,22 @@ const Introduction = () => (
       <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-2 rounded-md border p-4" lang="en">
           <code className="font-mono text-muted-foreground text-xs">
-            Readex Pro · --font-readex
+            Alexandria · --font-alexandria
           </code>
           <p className="text-h2">Games, books and more</p>
           <p className="text-small">
             One family for Latin and Arabic. Weights 400 (body), 500 (prices),
-            600 (headings and labels), 700 (titles and the wordmark).
+            600 (headings and labels), 700 (titles). The wordmark is a drawing,
+            not text.
           </p>
         </div>
         <div className="grid gap-2 rounded-md border p-4" dir="rtl" lang="ar">
           <code className="font-mono text-muted-foreground text-xs" dir="ltr">
-            Readex Pro · Cairo fallback
+            Alexandria
           </code>
           <p className="text-h2">ألعاب وكتب والمزيد</p>
           <p className="text-body-ar">
-            خط Readex Pro للعربية والإنجليزية معاً، وCairo احتياطي للعربية.
+            خط Alexandria للعربية والإنجليزية معاً، وفيه گ وچ وپ وژ.
           </p>
         </div>
       </div>
@@ -264,9 +260,9 @@ const Introduction = () => (
     <Section title="Email">
       <p className="text-sm">
         Emails can't use the CSS variables, so packages/email repeats the brand
-        values inline: the yellow logo bar (#f4cf08) with ink text, pink links
-        (#d81b60), Readex Pro with Cairo and system fallbacks, and dir="rtl"
-        with right-aligned text in Arabic. Review every template under Emails.
+        values inline: the pink header with the lock-up on pink, pink links
+        (#d81b60), Alexandria with system fallbacks, and dir="rtl" with
+        right-aligned text in Arabic. Review every template under Emails.
       </p>
     </Section>
   </main>

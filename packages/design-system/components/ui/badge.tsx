@@ -20,9 +20,6 @@ const badgeVariants = cva(
         secondary:
           "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
         highlight: "border-transparent bg-bulb-yellow text-on-yellow",
-        plus: "border-transparent bg-plus text-on-accent",
-        business: "border-transparent bg-business text-on-accent",
-        club: "border-transparent bg-club text-on-accent-warm",
         success: "border-transparent bg-success text-on-status",
         warning: "border-transparent bg-warning text-on-status",
         danger: "border-transparent bg-danger text-on-status",
