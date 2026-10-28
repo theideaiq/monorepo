@@ -34,8 +34,7 @@ export const OnPink: Story = {
     <PinkBand
       title={
         <>
-          One membership.{" "}
-          <Highlight {...args}>Endless entertainment.</Highlight>
+          Rent anything. <Highlight {...args}>Endless entertainment.</Highlight>
         </>
       }
     />

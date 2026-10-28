@@ -346,8 +346,8 @@
         "title": "Rent with The IDEA Plus",
         "description": "Rent PS5 games, books and movies with The IDEA Plus: the catalog, the plans and how it works. Delivered across Iraq and picked up when you're done."
       },
-      "badge": "The ultimate membership",
-      "title": "One membership.",
+      "badge": "The ultimate plan",
+      "title": "Rent anything.",
       "highlight": "Endless entertainment.",
       "subtitle": "Books, games and movies, delivered to your door. Keep them as long as you like, then swap them for something new.",
       "cta": "Join The IDEA Plus",
@@ -452,7 +452,7 @@
         "plus": "Rent PS5 games, books and movies every month. We deliver them, you return them when you're done.",
         "club": "Events, news, stories and guides, and our rooms on Telegram for gamers, readers, artists and thinkers.",
         "store": "Gaming, tech, books, music and films, new and pre-owned, delivered to all 19 governorates.",
-        "pass": "One membership card for everything at The IDEA: orders, Bulbs, events and more.",
+        "pass": "One Pass for everything at The IDEA: orders, Bulbs, events and more.",
         "business": "For shops, suppliers and organizations: bulk buying, member perks, developers and The IDEA Plus for teams."
       },
       "more": {
@@ -527,12 +527,12 @@
               "answer": "You subscribe to a monthly plan. Each plan lets you keep a number of items at a time. Request a game, book or movie, we deliver it, and when you're done you return it and request the next one."
             },
             {
-              "question": "Can I buy from the store without a membership?",
+              "question": "Can I buy from the store without The IDEA Plus?",
               "answer": "Absolutely. The store is open to everyone; The IDEA Plus is only needed for rentals."
             },
             {
               "question": "How do I cancel?",
-              "answer": "You can cancel your membership from Your Pass. It stays active until the end of the period you paid for. Please return any rented items."
+              "answer": "You can cancel your plan from Your Pass. It stays active until the end of the period you paid for. Please return any rented items."
             }
           ]
         },
@@ -1083,7 +1083,7 @@
       "title": "Home",
       "greeting": "Welcome, {name}",
       "greetingNoName": "Welcome",
-      "description": "Your orders, membership and events in one place.",
+      "description": "Your orders, Plus and events in one place.",
       "orders": {
         "title": "Active orders",
         "empty": "You have no orders in progress.",
@@ -1092,9 +1092,9 @@
       },
       "plus": {
         "title": "The IDEA Plus",
-        "none": "Rent games, books and movies with a monthly membership.",
+        "none": "Rent games, books and movies with a monthly plan.",
         "join": "See the plans",
-        "member": "{plan} membership",
+        "member": "Plus {plan}",
         "renews": "Renews on {date}",
         "slots": "{free} of {slots} rental slots free",
         "rentals": "Your rentals",
@@ -1356,8 +1356,8 @@
     },
     "plus": {
       "title": "Your Plus",
-      "membership": {
-        "title": "Your membership",
+      "yourPlan": {
+        "title": "Your plan",
         "none": "You're not a member yet. Choose a plan below.",
         "plan": "{plan} plan",
         "renews": "Renews on {date}",
@@ -1391,7 +1391,7 @@
         "request": "Request",
         "requesting": "Requesting…",
         "requested": "Requested. We'll contact you to arrange delivery.",
-        "needMembership": "Join The IDEA Plus to rent items.",
+        "needPlan": "Join The IDEA Plus to rent items.",
         "noSlots": "All your rental slots are in use.",
         "needsPlan": "Needs {plan}",
         "needsHigherPlan": "Needs a higher plan",
@@ -1424,7 +1424,7 @@
         "suspended": "Your Pass is suspended. Contact support.",
         "unavailable": "This item isn't available right now.",
         "unknown": "Something went wrong. Please try again.",
-        "needsTier": "This item needs a higher plan. Upgrade your membership to rent it."
+        "needsTier": "This item needs a higher plan. Upgrade your plan to rent it."
       },
       "signedOut": "Sign in to subscribe, see your rentals and request items.",
       "signIn": "Sign in",
@@ -2227,9 +2227,9 @@
       },
       "plus": {
         "title": "The IDEA Plus for your team",
-        "description": "Give members of your company The IDEA Plus. We approve each request, the member gets their membership, and you get a monthly invoice.",
+        "description": "Give people in your company The IDEA Plus. We approve each request, the person gets their Plus plan, and you get a monthly invoice.",
         "managersOnly": "Owners and admins choose who gets The IDEA Plus.",
-        "seats": "Memberships",
+        "seats": "Plus seats",
         "empty": "No one has The IDEA Plus through your company yet.",
         "unnamed": "Unnamed member",
         "planLine": "{plan} · {price} a month",
@@ -2282,7 +2282,7 @@
         "notPartner": "This organization doesn't offer perks on The IDEA Pass yet. Contact The IDEA to become a partner.",
         "checkTitle": "Check a card",
         "checkDescription": "Scan the QR code on the customer's The IDEA Pass, or type their member number and the 6-digit code under it.",
-        "card": "Scanned code or member number",
+        "card": "Scanned code or Pass number",
         "code": "6-digit code",
         "check": "Check",
         "invalidCard": "This card isn't valid. Ask them to open their Pass again: the code changes every 30 seconds.",
@@ -2393,7 +2393,7 @@
         "answers": {
           "profile": "Name and picture",
           "email": "Email",
-          "membership": "Member number",
+          "membership": "Pass number",
           "student": "Verified student (yes or no)",
           "student_email": "University email",
           "adult": "18 or over (yes or no)",
@@ -3710,8 +3710,8 @@
       "phone": "Phone (last order)",
       "telegram": "Telegram",
       "userId": "User ID",
-      "subscription": "Membership",
-      "noSubscription": "No The IDEA Plus membership.",
+      "subscription": "Plus plan",
+      "noSubscription": "No The IDEA Plus plan.",
       "renewsOn": "Renews {date}",
       "endsOn": "Ends {date}",
       "crm": "Relationship",
@@ -3730,16 +3730,16 @@
       "lastContactedHint": "Baghdad time. Leave empty if they haven't been contacted.",
       "checkPass": {
         "title": "Check a Pass",
-        "description": "Scan the card's QR code at the counter, or type the member number and the 6-digit code.",
-        "scanned": "QR code or member number",
+        "description": "Scan the card's QR code, or type the Pass number and the 6-digit code.",
+        "scanned": "QR code or Pass number",
         "code": "Code",
-        "codeHint": "Only when typing the member number",
+        "codeHint": "Only when typing the Pass number",
         "check": "Check",
         "valid": "Valid",
         "invalid": "Not valid",
         "unnamed": "No name",
         "since": "Member since {date}",
-        "unknown": "No member with this number, or the code has expired."
+        "unknown": "No Pass with this number, or the code has expired."
       },
       "bulbs": {
         "title": "Bulbs",
@@ -4496,7 +4496,7 @@
       },
       "seats": {
         "title": "The IDEA Plus seats",
-        "description": "Memberships companies pay for. Approving one starts the member's The IDEA Plus and invoices the company for the first month.",
+        "description": "Plus seats companies pay for. Approving one starts the person's The IDEA Plus and invoices the company for the first month.",
         "empty": "No seats yet.",
         "member": "Member",
         "company": "Company",
@@ -4584,7 +4584,7 @@
           "adult": "18 or over",
           "plus": "The IDEA Plus member",
           "card": "Show the Pass card",
-          "membership": "Member number",
+          "membership": "Pass number",
           "student_email": "University email (sensitive)",
           "phone": "WhatsApp number (sensitive)",
           "birthdate": "Date of birth (sensitive)",
@@ -4650,7 +4650,7 @@
   "pass": {
     "meta": {
       "title": "The IDEA Pass",
-      "description": "Your membership of everything at The IDEA: the store, The IDEA Plus, events and more."
+      "description": "Your Pass for everything at The IDEA: the store, The IDEA Plus, events and more."
     },
     "continueTo": "You'll continue to {host}.",
     "signIn": {
@@ -4660,7 +4660,7 @@
     },
     "home": {
       "title": "Your Pass",
-      "description": "Your membership card for everything at The IDEA: orders, The IDEA Plus, events and more.",
+      "description": "Your Pass card for everything at The IDEA: orders, The IDEA Plus, events and more.",
       "nameLabel": "Name",
       "noName": "Not set yet",
       "phoneLabel": "Mobile number",
@@ -4765,7 +4765,7 @@
         "adult": "Whether you're 18 or over",
         "plus": "Whether you're a The IDEA Plus member, and your plan",
         "card": "Your Pass card, to show on their site (without its scannable code)",
-        "membership": "Your member number and since when you've had the Pass",
+        "membership": "Your Pass number and since when you've had the Pass",
         "student_email": "Your verified university email",
         "phone": "Your WhatsApp number",
         "birthdate": "Your date of birth",

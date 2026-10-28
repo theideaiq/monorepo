@@ -13,9 +13,9 @@ import { queryKeys, requireUserId, unwrap } from "./queries";
 
 export interface RentalAllowance {
   free: number;
-  /** Slots of the live Plus plan (0 without a membership). */
+  /** Slots of the live Plus plan (0 without a plan). */
   slots: number;
-  /** Tier of the live Plus plan (0 without a membership). */
+  /** Tier of the live Plus plan (0 without a plan). */
   tier: number;
   /** Rentals requested, with the member or overdue. */
   used: number;
@@ -52,7 +52,7 @@ export const planForTier = <T extends { tier: number | null }>(
     .filter((plan) => plan.tier !== null && plan.tier >= required)
     .sort((a, b) => (a.tier ?? 0) - (b.tier ?? 0))[0];
 
-/** The plan tier each rental item needs (absent: any membership). */
+/** The plan tier each rental item needs (absent: any plan). */
 export const useRentalTiers = (productIds: readonly string[]) => {
   const { supabase } = useAuth();
   return useQuery({
@@ -195,6 +195,6 @@ export const usePlanCheckout = (
   });
 };
 
-/** A membership the member can use now (not merely awaiting payment). */
-export const isLiveMembership = (status: string | null | undefined) =>
+/** A plan the member can use now (not merely awaiting payment). */
+export const isLivePlan = (status: string | null | undefined) =>
   status === "active" || status === "past_due";
