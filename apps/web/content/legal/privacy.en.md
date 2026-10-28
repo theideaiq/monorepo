@@ -12,7 +12,9 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 - **Bulbs and invites:** your Bulbs history, invite code and who invited you.
 - **The IDEA Club:** event RSVPs and check-ins, submissions, reviews and their photos, and survey answers and surveys you create.
 - **Support:** your messages through Help, email, Ask Droid or The IDEA Droid.
-- **The IDEA Business:** company details, members and roles, quotes, orders and invoices.
+- **The IDEA Partners:** organization details, members and roles, quotes, orders and invoices; for shops and suppliers, business documents, the bank details for payouts, sales, payouts and deposits.
+- **Selling:** your listings and their photos, offers, bids, auction strikes and messages with buyers or sellers. Messages may be reviewed when reported or to prevent fraud.
+- **Programs:** your applications, the details reused from your Pass, guardian approvals and consent forms, installments, and passport scans. Each scan is kept with its application only and deleted after the program ends (or when the application closes).
 
 ### What we collect automatically
 
@@ -32,7 +34,7 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 
 ## 2. Why we use it
 
-- to run the service: your Pass and card, orders, delivery, rentals, The IDEA Plus, Bulbs, the Club, surveys and The IDEA Business;
+- to run the service: your Pass and card, orders, delivery, rentals, The IDEA Plus, Bulbs, selling, the Club, programs, surveys and The IDEA Partners;
 - to apply the age rules: a guardian's approval for under-18s, and hiding PEGI 18 items from under-18 Passes;
 - to take payments and keep the financial records the law requires;
 - to help you when you ask for support;
@@ -50,7 +52,7 @@ The website uses cookies and similar technologies to keep you signed in, remembe
 We do **not** sell your personal data. We share it only as needed with:
 
 - **service providers** who process it for us: hosting and database (Supabase, Vercel), payments (Wayl), delivery (Boxy, and only what it needs to deliver), email (Resend), push notifications (Google Firebase), messaging (Telegram, WhatsApp by Meta), analytics, advertising measurement, error monitoring and security;
-- **people you choose:** your guardian (your link, and what they approve) or the teen you are guardian for; the company in The IDEA Business you belong to (your name, email and role there); survey creators (your answers, anonymous where the survey says so; see [Surveys](/legal/surveys)); a partner who scans your card (only that your card is valid and which perk applies);
+- **people you choose:** your guardian (your link, and what they approve) or the teen you are guardian for; the organization in The IDEA Partners you belong to (your name, email and role there); the shop that sold you an item (what it needs to send, return or repair it); the other side of a sale between people (your name as shown and your messages, never your phone number); survey creators (your answers, anonymous where the survey says so; see [Surveys](/legal/surveys)); a partner who scans your card (only that your card is valid and which perk applies);
 - **authorities,** when the law requires it, or to protect the rights, property or safety of The IDEA, our members or the public.
 
 ## 5. Transfers outside Iraq
@@ -63,13 +65,14 @@ Some providers store or process data outside Iraq. We choose providers that prot
 - Orders, payments, invoices and receipts, for as long as the law requires.
 - Student verification documents, until they are reviewed; then only the result.
 - Survey answers, for as long as the creator needs them for that survey and its export.
+- Passport scans for a program, until the program ends or the application is closed.
 - Device and error data, for a limited time.
 
 When you delete your Pass, we delete or anonymise your personal data, except what we must keep by law (such as invoices and payment records) or to settle an open dispute.
 
 ## 7. Deleting your Pass
 
-Open **Pass → Settings → Delete your Pass** on the website or in the app, or write to us. If you alone own a company on The IDEA Business, you first make another member an owner or delete the company. Deleting your Pass removes your profile, photo, Bulbs and card; it cannot be undone. Unused Bulbs are lost (see [Rewards](/legal/rewards)), and any rented items must still be returned.
+Open **Pass → Settings → Delete your Pass** on the website or in the app, or write to us. If you alone own an organization on The IDEA Partners, you first make another member an owner or delete the organization. Deleting your Pass removes your profile, photo, Bulbs and card; it cannot be undone. Unused Bulbs are lost (see [Rewards](/legal/rewards)), and any rented items must still be returned.
 
 ## 8. Your rights
 

@@ -16,16 +16,17 @@ const BARE_NAME = /(?<!The )IDEA/;
 const ARABIC_INDIC_DIGITS = /[٠-٩]/;
 
 describe("legal documents", () => {
-  it("lists the thirteen policies in order", () => {
+  it("lists the fourteen policies in order", () => {
     expect(legalDocuments.map(({ slug }) => slug)).toEqual([
       "terms",
       "privacy",
       "delivery",
       "returns",
-      "condition",
       "plus",
       "rewards",
+      "selling",
       "club",
+      "programs",
       "surveys",
       "business",
       "accessibility",

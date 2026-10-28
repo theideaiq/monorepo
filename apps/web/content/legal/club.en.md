@@ -1,4 +1,4 @@
-The IDEA Club is the free side of The IDEA: the feed on [/club](/club), events, surveys and our chats on Telegram. Everyone with The IDEA Pass is in it. These rules keep it a place where everyone, whatever their age, background or opinions, can take part safely.
+The IDEA Club is the free side of The IDEA: on [/club](/club), Join (events and surveys), Read (posts) and Yours, and our chats on Telegram. Everyone with The IDEA Pass is in it. These rules keep it a place where everyone, whatever their age, background or opinions, can take part safely.
 
 ## 1. Where these rules apply
 
@@ -8,7 +8,7 @@ The IDEA Club is the free side of The IDEA: the feed on [/club](/club), events, 
 - our events, the counter and every meeting with our staff and riders;
 - everyone who takes part: members, guests, staff, partners and speakers.
 
-Surveys also follow [Surveys](/legal/surveys).
+Surveys also follow [Surveys](/legal/surveys), and The IDEA's programs follow [Programs](/legal/programs).
 
 ## 2. Joining
 

@@ -75,7 +75,7 @@ Where offered, kits are rented for a weekend, from Thursday evening to Saturday 
 
 - Delivery and collection in Baghdad are included.
 - Kits are booked by an adult (18 or over). At handover you show a verified Pass and your ID, or pay a refundable deposit of 100,000 IQD.
-- Plus Blaze members get 25% off. Companies and universities book kits for events through [The IDEA Business](/legal/business).
+- Plus Blaze members get 25% off. Companies and universities book kits for events through [The IDEA Partners](/legal/business).
 - The damage and loss rules in section 5 apply to every part of the kit.
 
 ## 10. Deposits

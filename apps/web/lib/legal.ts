@@ -7,18 +7,19 @@ import { join } from "node:path";
  * `updated` whenever a document changes.
  */
 export const legalDocuments = [
-  { slug: "terms", updated: "2026-10-27" },
-  { slug: "privacy", updated: "2026-10-27" },
+  { slug: "terms", updated: "2026-10-28" },
+  { slug: "privacy", updated: "2026-10-28" },
   { slug: "delivery", updated: "2026-10-26" },
-  { slug: "returns", updated: "2026-10-27" },
-  { slug: "condition", updated: "2026-10-26" },
-  { slug: "plus", updated: "2026-10-26" },
+  { slug: "returns", updated: "2026-10-28" },
+  { slug: "plus", updated: "2026-10-28" },
   { slug: "rewards", updated: "2026-10-27" },
-  { slug: "club", updated: "2026-10-26" },
-  { slug: "surveys", updated: "2026-10-27" },
-  { slug: "business", updated: "2026-10-27" },
+  { slug: "selling", updated: "2026-10-28" },
+  { slug: "club", updated: "2026-10-28" },
+  { slug: "programs", updated: "2026-10-28" },
+  { slug: "surveys", updated: "2026-10-28" },
+  { slug: "business", updated: "2026-10-28" },
   { slug: "accessibility", updated: "2026-10-27" },
-  { slug: "security", updated: "2026-10-26" },
+  { slug: "security", updated: "2026-10-28" },
   { slug: "copyright", updated: "2026-10-26" },
 ] as const;
 
