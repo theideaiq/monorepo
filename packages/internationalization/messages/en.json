@@ -2614,6 +2614,7 @@
         "expired": "That code has expired. Send a new one.",
         "invalid_phone": "We can't send a code to this number. Check it and try again.",
         "not_configured": "Phone codes aren't available yet.",
+        "not_iraqi": "Codes go to Iraqi mobile numbers only, e.g. 0770 123 4567.",
         "too_many": "Too many tries. Wait a while and try again.",
         "unavailable": "Something went wrong. Try again.",
         "wrong_code": "That code isn't right."

@@ -1,4 +1,4 @@
-import { normalizePhone } from "@repo/auth/phone";
+import { isIraqiMobile, normalizePhone } from "@repo/auth/phone";
 import { z } from "zod";
 import type { CheckResult, StartResult } from "./client";
 
@@ -7,6 +7,7 @@ export type PhoneError =
   | "expired"
   | "invalid_phone"
   | "not_configured"
+  | "not_iraqi"
   | "too_many"
   | "unavailable"
   | "wrong_code";
@@ -63,6 +64,10 @@ export const handlePhoneStart = async (
   const phone = parsed.success ? normalizePhone(parsed.data.phone) : null;
   if (!(parsed.success && phone)) {
     return fail(400, "invalid_phone");
+  }
+  // Codes go to Iraqi mobiles only: deliveries are in Iraq.
+  if (!isIraqiMobile(phone)) {
+    return fail(400, "not_iraqi");
   }
   if (deps.limit && !(await deps.limit(`phone-start:${userId}`))) {
     return fail(429, "too_many");
