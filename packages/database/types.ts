@@ -144,18 +144,21 @@ export type Database = {
       bundle_items: {
         Row: {
           bundle_id: string;
+          id: string;
           position: number;
           quantity: number;
           variant_id: string;
         };
         Insert: {
           bundle_id: string;
+          id?: string;
           position?: number;
           quantity?: number;
           variant_id: string;
         };
         Update: {
           bundle_id?: string;
+          id?: string;
           position?: number;
           quantity?: number;
           variant_id?: string;

@@ -14,12 +14,17 @@
 -- * Shops never edit a bundle once listed (like any product); they change
 --   its offer or pause it with 0 copies.
 
+-- Its own `id` key: with (bundle_id, variant_id) as the primary key,
+-- PostgREST would read this table as a second, many-to-many path between
+-- products and product_variants and refuse every `products → variants`
+-- embed as ambiguous.
 create table public.bundle_items (
+  id uuid primary key default gen_random_uuid(),
   bundle_id uuid not null references public.products (id) on delete cascade,
   variant_id uuid not null references public.product_variants (id) on delete cascade,
   quantity integer not null default 1 check (quantity between 1 and 20),
   position integer not null default 0,
-  primary key (bundle_id, variant_id)
+  unique (bundle_id, variant_id)
 );
 
 comment on table public.bundle_items is
