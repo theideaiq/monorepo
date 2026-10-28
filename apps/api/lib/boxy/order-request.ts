@@ -77,6 +77,48 @@ export const cashToCollect = (order: OrderForBoxy) =>
     ? order.total
     : 0;
 
+/**
+ * What one parcel of an order collects, when an order goes out in several
+ * (one per seller): its lines' share of the order total after discounts
+ * and Bulbs, plus the delivery fee on the order's first parcel. The share
+ * is of every line ordered, so lines cancelled as out of stock are never
+ * collected. Orders paid online collect nothing.
+ */
+export const parcelCash = ({
+  first,
+  order,
+  orderValue,
+  parcelValue,
+}: {
+  first: boolean;
+  order: OrderForBoxy;
+  /** Every line of the order: unit price × quantity. */
+  orderValue: number;
+  /** This parcel's lines. */
+  parcelValue: number;
+}) => {
+  if (cashToCollect(order) === 0) {
+    return 0;
+  }
+  const goods = Math.max(order.total - order.shipping_fee, 0);
+  const share =
+    orderValue > 0 ? Math.round((goods * parcelValue) / orderValue) : 0;
+  return share + (first ? order.shipping_fee : 0);
+};
+
+/**
+ * The order as one parcel sees it: what it collects as its total, and the
+ * delivery fee only when it carries it.
+ */
+export const parcelOrder = (
+  order: OrderForBoxy,
+  { cash, first }: { cash: number; first: boolean }
+): OrderForBoxy => ({
+  ...order,
+  shipping_fee: first ? order.shipping_fee : 0,
+  total: cash,
+});
+
 /** "+9647701234567" → "9647701234567", as Boxy takes phone numbers. */
 export const boxyPhone = (e164: string) => e164.replace(LEADING_PLUS, "");
 
@@ -116,6 +158,7 @@ export const boxyProducts = (
 };
 
 export const buildBoxyOrder = ({
+  customId,
   fragile,
   lines,
   order,
@@ -123,6 +166,8 @@ export const buildBoxyOrder = ({
   province,
   size,
 }: {
+  /** Boxy's custom id: the order number, with a suffix for a shop's parcel. */
+  customId?: string;
   fragile: boolean;
   lines: readonly LineForBoxy[];
   order: OrderForBoxy;
@@ -142,7 +187,7 @@ export const buildBoxyOrder = ({
       region_name: address.city?.trim() ?? "",
       secondary_phone: null,
     },
-    custom_id: String(order.number),
+    custom_id: customId ?? String(order.number),
     description: cut(
       notes
         ? `The IDEA order #${order.number} · ${notes}`

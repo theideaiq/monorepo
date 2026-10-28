@@ -34,8 +34,10 @@ This policy explains how selling works on The IDEA: shops selling through The ID
 ## 5. Shops: orders and shipping
 
 - Shop orders are shipped by **Boxy for The IDEA**: Boxy collects each order from the shop's address, and the buyer tracks it in Pass → Orders as usual (see [Delivery](/legal/delivery)).
-- Pack each order safely and have it ready for pickup within the time shown in Partners. Orders that aren't ready may be cancelled and refunded to the buyer.
-- Don't contact buyers to sell to them outside The IDEA.
+- Each branch you ship from is a Boxy pickup location with your pickup contact, set in Partners → Selling → Pickup. The courier calls that contact to collect parcels.
+- Pack each order safely and mark it ready for pickup within 2 days in Partners, then print its label. Labels can be printed until the courier collects the parcel. Lines not ready after 2 days go to our team, and may be cancelled and refunded to the buyer.
+- If an item turns out to be unavailable, mark it **Out of stock**: the line is cancelled and refunded, and it counts against your shop.
+- The label shows the buyer's name, phone and address so the courier can deliver. Use them only to send that parcel: don't contact buyers, keep their details, or sell to them outside The IDEA. Questions go through The IDEA.
 
 ## 6. Shops: payment and payouts
 

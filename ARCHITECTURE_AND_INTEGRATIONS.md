@@ -2026,7 +2026,7 @@ scheduled jobs make aren't checked.
 
 Purchases are delivered by **Boxy** (tryboxy.com); rentals aren't, yet.
 Customers pay The IDEA's own zone fees at checkout (`delivery_zones`);
-Boxy bills The IDEA. Store pickup stays as it is.
+Boxy bills The IDEA. Every order is delivered (no store pickup).
 
 - **Checkout:** after the governorate, the customer picks their area from
   Boxy's list (`delivery_areas`, copied daily by `/cron/boxy?areas=1`).
@@ -2041,6 +2041,19 @@ Boxy bills The IDEA. Store pickup stays as it is.
   shipped with its tracking code and page (the customer is notified and
   sees **Track your parcel** in `/pass/orders`). The panel prints the label,
   refreshes the status and cancels the parcel before it is collected.
+- **Shops' parcels:** an order goes out in one parcel per seller. A shop's
+  branches are Boxy pickup locations (`seller_locations`; Partners →
+  Selling → Pickup, saved in Boxy by `POST /v1/selling/locations/sync`;
+  Boxy has no update, so an edit makes a new location). In Partners →
+  Selling → Orders the shop marks packed lines ready at a branch (`POST
+  /v1/selling/ready`): one parcel per order from that branch, then one
+  pick-up request. It prints each label (`POST /v1/selling/label`) until
+  the courier collects it; the label is the only place the shop sees the
+  customer's phone and address. For a cash order each parcel collects its
+  lines' share of the order total and the first parcel carries the
+  delivery fee; the order is shipped once every parcel has gone and
+  delivered once every live parcel is. Late lines and refunds due show in
+  Staff → Orders → Shop lines (`/orders/shop-lines`) and the Inbox.
 - **Following:** Boxy's webhooks (only up to "in transit") and the sync job
   (`/cron/boxy`: daily on Vercel and every 15 minutes from
   `.github/workflows/boxy-sync.yml`) read each open parcel from Boxy. A

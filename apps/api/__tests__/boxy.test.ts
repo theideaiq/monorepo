@@ -5,6 +5,8 @@ import {
   buildBoxyOrder,
   cashToCollect,
   type OrderForBoxy,
+  parcelCash,
+  parcelOrder,
 } from "@/lib/boxy/order-request";
 import { deliversOrder, shipmentUpdate } from "@/lib/boxy/sync";
 import { webhookReference } from "@/lib/boxy/webhook";
@@ -91,6 +93,62 @@ describe("the Boxy order", () => {
 
   test("phone numbers lose the plus", () => {
     expect(boxyPhone("+9647701234567")).toBe("9647701234567");
+  });
+});
+
+describe("an order in several parcels", () => {
+  // 2 lines of 69,750 (one from a shop), 5,000 off, 5,000 delivery.
+  const split = order({ shipping_fee: 5000, total: 139_500 });
+  const half = { order: split, orderValue: 139_500, parcelValue: 69_750 };
+
+  test("each parcel collects its lines' share; the first carries delivery", () => {
+    const first = parcelCash({ ...half, first: true });
+    const second = parcelCash({ ...half, first: false });
+    expect(first).toBe(72_250);
+    expect(second).toBe(67_250);
+    expect(first + second).toBe(139_500);
+  });
+
+  test("a cancelled line's share is never collected", () => {
+    expect(
+      parcelCash({
+        ...half,
+        first: true,
+        orderValue: 139_500,
+        parcelValue: 69_750,
+      })
+    ).toBeLessThan(split.total);
+  });
+
+  test("a parcel's Boxy order adds up to what it collects", () => {
+    const cash = parcelCash({ ...half, first: false });
+    const request = buildBoxyOrder({
+      customId: "1024-2",
+      fragile: false,
+      lines: [{ name: "Blonde", quantity: 1, unitPrice: 69_750 }],
+      order: parcelOrder(split, { cash, first: false }),
+      pickupLocation: "loc-shop",
+      province: "BGD",
+      size: "S",
+    });
+    expect(request.custom_id).toBe("1024-2");
+    expect(request.saved_pick_up_address_uid).toBe("loc-shop");
+    expect(
+      request.products.reduce((sum, p) => sum + p.price * p.quantity, 0)
+    ).toBe(cash);
+  });
+
+  test("orders paid online collect nothing in any parcel", () => {
+    expect(
+      parcelCash({
+        ...half,
+        first: true,
+        order: order({
+          paid_at: "2026-10-28T10:00:00Z",
+          payment_method: "online",
+        }),
+      })
+    ).toBe(0);
   });
 });
 
@@ -210,6 +268,40 @@ describe("the Boxy client", () => {
       "api-key": "key-12345",
       "api-secret": "secret-12345",
     });
+  });
+
+  test("saves a pick-up location and returns its uid", async () => {
+    const fetcher = vi.fn(async () =>
+      reply({
+        object: { uid: "01JKBDVCJPZ69RTC5ENGRXM6SN" },
+        status: "success",
+      })
+    );
+    const boxy = createBoxyClient({
+      apiKey: "k",
+      apiSecret: "s",
+      baseUrl: "https://api.tryboxy.com/api/v1",
+      fetcher: fetcher as unknown as typeof fetch,
+    });
+    await expect(
+      boxy.createPickUpLocation({
+        address_text: "Karrada, Street 62",
+        default: false,
+        description: "Record Shop · Main",
+        full_name: "Omar",
+        lat: "33.3",
+        lng: "44.4",
+        phone: "9647701234567",
+        region_uid: "area-1",
+        title: "Main",
+        type: "WAREHOUSE",
+      })
+    ).resolves.toBe("01JKBDVCJPZ69RTC5ENGRXM6SN");
+    const [url, init] = fetcher.mock.calls[0] as unknown as [URL, RequestInit];
+    expect(String(url)).toBe(
+      "https://api.tryboxy.com/api/v1/merchants/saved-pick-up-addresses"
+    );
+    expect(JSON.parse(String(init.body))).toMatchObject({ type: "WAREHOUSE" });
   });
 
   test("a refused call is a BoxyError with its status", async () => {

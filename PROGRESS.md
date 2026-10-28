@@ -553,6 +553,21 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: Selling, shop orders, part 2. Partners → Selling gains
+  Orders (`/selling/orders`: lines to pack with their ready-by time, the
+  customer as "Ali · Karrada" and the payout; choose lines, the branch and
+  the parcel size and press Ready for pickup; Out of stock; Print label
+  until collected) and Pickup (`/selling/pickup`: branches with the pickup
+  contact, area and map point, saved in Boxy). apps/api saves branches in
+  Boxy (`/v1/selling/locations/sync`), sends one parcel per order from the
+  branch with one pick-up request (`/v1/selling/ready`) and serves labels
+  (`/v1/selling/label`). Orders go out in one parcel per seller: cash
+  parcels collect their lines' share of the total, the first carries the
+  delivery fee, and the order is shipped or delivered once all its
+  parcels are. Staff → Orders → Shop lines lists late lines and refunds
+  due (both in the Inbox); finance marks refunds done. The selling terms
+  and privacy policy say the label carries the buyer's name, phone and
+  address and how shops may use them.
 - 2026-10-28: Selling, returns, the schema
   (`20270124000000_returns.sql`; master brief step 5, section 6).
   `returns`: a customer asks within 14 days of delivery

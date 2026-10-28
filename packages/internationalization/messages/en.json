@@ -1594,7 +1594,9 @@
         "details": "Details",
         "shop": "Shop",
         "listings": "Listings",
-        "orders": "Bulk orders"
+        "orders": "Bulk orders",
+        "shopOrders": "Orders",
+        "pickup": "Pickup"
       },
       "members": {
         "title": "Members",
@@ -2551,6 +2553,77 @@
           "copiesHint": "Copies are how many bundles you have; they don't take copies of the items in it.",
           "create": "List the bundle"
         }
+      },
+      "shopOrders": {
+        "title": "Orders",
+        "notApproved": "Orders show here once your shop is approved.",
+        "waitingTitle": "To pack",
+        "waitingDescription": "Lines to get ready within 2 days. Choose the ones packed, the branch they leave from and the parcel size, then mark them ready: Boxy gets one parcel per order and sends a courier.",
+        "sentTitle": "Sent and closed",
+        "sentDescription": "Ready, picked up, out of stock or cancelled.",
+        "noneWaiting": "Nothing to pack right now.",
+        "noneSent": "Nothing yet.",
+        "orderLine": "Order #{number} · {customer}",
+        "money": "{price} · your payout {payout}",
+        "readyBy": "Ready by {time}",
+        "late": "Late: it was due by {time}",
+        "status": {
+          "waiting": "To pack",
+          "ready": "Ready",
+          "picked_up": "Picked up",
+          "out_of_stock": "Out of stock",
+          "cancelled": "Cancelled"
+        },
+        "outOfStock": "Out of stock",
+        "printLabel": "Print label",
+        "branch": "Leaves from",
+        "size": "Parcel size",
+        "sizes": {
+          "S": "Small",
+          "M": "Medium",
+          "L": "Large"
+        },
+        "ready": "Ready for pickup ({count})",
+        "readyDone": "{count} parcels sent to Boxy; a courier will collect them. Print each label from the list below.",
+        "readyNoPickup": "{count} parcels sent to Boxy, but the pickup request didn't go through. Try again from Boxy or ask us.",
+        "noBranch": "Add a pickup branch before marking lines ready.",
+        "addBranch": "Add a branch",
+        "errors": {
+          "failed": "Something went wrong. Try again.",
+          "ready": "Those lines couldn't be sent. Refresh and try again.",
+          "carrier": "Deliveries aren't switched on yet."
+        }
+      },
+      "pickup": {
+        "title": "Pickup",
+        "description": "Where couriers collect your parcels, and who they call. Each branch is a pickup location with Boxy.",
+        "notApproved": "Pickup branches can be added once your shop is approved.",
+        "none": "No branches yet.",
+        "name": "Branch name",
+        "namePlaceholder": "Main shop",
+        "area": "Area",
+        "chooseArea": "Choose the area",
+        "contactName": "Pickup contact",
+        "contactPhone": "Their mobile number",
+        "address": "Address",
+        "lat": "Latitude",
+        "lng": "Longitude",
+        "mapHint": "From Google Maps: press and hold the spot, then copy the two numbers.",
+        "add": "Add branch",
+        "save": "Save",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "addBranch": "Add a branch",
+        "activate": "Use again",
+        "deactivate": "Stop using",
+        "inactive": "Not in use",
+        "withBoxy": "With Boxy",
+        "notWithBoxy": "Not with Boxy yet",
+        "sendToBoxy": "Send to Boxy",
+        "errors": {
+          "save": "The branch couldn't be saved. Check the details and try again.",
+          "sync": "Boxy didn't take the branch. Check the details and try again."
+        }
       }
     },
     "ages": {
@@ -3038,7 +3111,9 @@
           "surveys": "Surveys to review",
           "passApps": "Pass apps to review",
           "productChecks": "New products to check",
-          "productFlags": "Products shops say are wrong"
+          "productFlags": "Products shops say are wrong",
+          "lateShopLines": "Shop lines past their ready-by time",
+          "shopRefunds": "Shop lines to refund"
         }
       }
     },
@@ -3493,6 +3568,21 @@
         "pending": "Waiting for the guardian",
         "approved": "Approved by the guardian",
         "declined": "Declined by the guardian"
+      },
+      "shopLines": {
+        "title": "Shop lines",
+        "description": "Shops' lines still waiting after their 2 days, and paid lines a shop cancelled as out of stock.",
+        "lateTitle": "Late lines",
+        "lateEmpty": "No late lines.",
+        "refundsTitle": "Refunds due",
+        "refundsDescription": "Refund each line to the way the customer paid (Wayl for online payments), then mark it refunded.",
+        "refundsEmpty": "No refunds due.",
+        "order": "Order",
+        "shop": "Shop",
+        "item": "Item",
+        "due": "Due",
+        "amount": "Amount",
+        "markRefunded": "Mark refunded"
       }
     },
     "rentals": {

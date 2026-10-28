@@ -84,7 +84,10 @@ incidents) is in `docs/platform`.
   `/selling/listings` (the shop's offers: find a product by ISBN, barcode or
   title, add an offer or create the product, upload many from a
   spreadsheet, make a bundle of the shop's own items, change copies and
-  price, flag wrong details),
+  price, flag wrong details), `/selling/orders` (the shop's order lines,
+  the customer only as "first name · area": ready for pickup at a branch,
+  print labels, out of stock) and `/selling/pickup` (its branches, each a
+  Boxy pickup location),
   Perks `/perks`,
   Team `/team` (bulk orders for the organization, with `/team/<id>` for a
   request, and `/team/plus`, Plus for its people), Developers

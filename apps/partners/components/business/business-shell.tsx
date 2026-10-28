@@ -29,6 +29,8 @@ const TEAM_TABS = [
 const SELLING_TABS = [
   { href: "/selling", key: "shop" },
   { href: "/selling/listings", key: "listings" },
+  { href: "/selling/orders", key: "shopOrders" },
+  { href: "/selling/pickup", key: "pickup" },
 ] as const;
 
 /** For people without a business account: what it is, invitations, create. */
