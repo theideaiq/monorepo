@@ -13,7 +13,10 @@ import type { ProductDetail, ProductOffer } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
 import { localePath } from "@repo/internationalization";
-import { formatNumber } from "@repo/internationalization/format";
+import {
+  formatDateTime,
+  formatNumber,
+} from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { CheckIcon, ShoppingCartIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -423,6 +426,19 @@ export const PurchasePanel = ({
           ) : null}
         </>
       ) : null}
+      {chosen?.sale_ends_at ? (
+        <p className="font-medium text-pink-text text-sm">
+          {t("saleEnds", { time: formatDateTime(chosen.sale_ends_at, locale) })}
+        </p>
+      ) : null}
+      {chosen?.deals.map((deal) => (
+        <p className="text-sm" key={deal.min_quantity}>
+          {t("quantityDeal", {
+            from: formatNumber(deal.min_quantity, locale),
+            rate: formatNumber(deal.discount_rate, locale),
+          })}
+        </p>
+      ))}
       {chosen?.lowest_30d ? (
         <p className="text-muted-foreground text-sm">
           {t("lowest30d", { price: formatPrice(chosen.lowest_30d, locale) })}

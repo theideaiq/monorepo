@@ -90,7 +90,8 @@ incidents) is in `docs/platform`.
   dispute within 48 hours, items to check once back, refused parcels to
   confirm), `/selling/offers` (buyers' offers to accept, decline or
   counter within 48 hours, and which listings take offers, with automatic
-  accept and decline amounts), `/selling/payouts` (each weekly payout with
+  accept and decline amounts), `/selling/sales` (sale prices between two
+  days and quantity deals), `/selling/payouts` (each weekly payout with
   its statement) and `/selling/pickup` (its branches, each a Boxy pickup
   location),
   Perks `/perks`,

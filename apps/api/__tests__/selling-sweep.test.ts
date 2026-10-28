@@ -9,16 +9,18 @@ const adminWith = (
 };
 
 describe("sweepSelling", () => {
-  it("runs the four sweeps and counts what changed", async () => {
+  it("runs the five sweeps and counts what changed", async () => {
     const { admin, rpc } = adminWith({
       refresh_seller_scores: { data: 4, error: null },
       refresh_was_prices: { data: 3, error: null },
+      sweep_listing_sales: { data: 2, error: null },
       sweep_offers: { data: [{ id: "o1" }], error: null },
       sweep_returns: { data: [{ id: "r1" }, { id: "r2" }], error: null },
     });
     await expect(sweepSelling(admin)).resolves.toEqual({
       offers: 1,
       returns: 2,
+      sales: 2,
       scores: 4,
       wasPrices: 3,
     });
@@ -26,6 +28,7 @@ describe("sweepSelling", () => {
       "sweep_returns",
       "sweep_offers",
       "refresh_seller_scores",
+      "sweep_listing_sales",
       "refresh_was_prices",
     ]);
   });

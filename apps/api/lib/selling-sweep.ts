@@ -5,6 +5,7 @@ type AdminClient = ReturnType<typeof createAdminClient>;
 export interface SellingSweep {
   offers: number;
   returns: number;
+  sales: number;
   scores: number;
   wasPrices: number;
 }
@@ -13,8 +14,9 @@ export interface SellingSweep {
  * The selling deadlines, once a day: unanswered returns are accepted and
  * unchecked returned items count as fine (`sweep_returns`), unanswered and
  * unordered offers expire (`sweep_offers`), shop scores are refreshed
- * (`refresh_seller_scores`) and "was" prices older than 30 days go
- * (`refresh_was_prices`).
+ * (`refresh_seller_scores`), prices left by sales that started or ended
+ * are recorded (`sweep_listing_sales`) and "was" prices older than 30 days
+ * go (`refresh_was_prices`).
  */
 export const sweepSelling = async (
   admin: AdminClient
@@ -31,6 +33,10 @@ export const sweepSelling = async (
   if (scores.error) {
     throw new Error(`refresh_seller_scores: ${scores.error.message}`);
   }
+  const sales = await admin.rpc("sweep_listing_sales");
+  if (sales.error) {
+    throw new Error(`sweep_listing_sales: ${sales.error.message}`);
+  }
   const wasPrices = await admin.rpc("refresh_was_prices");
   if (wasPrices.error) {
     throw new Error(`refresh_was_prices: ${wasPrices.error.message}`);
@@ -38,6 +44,7 @@ export const sweepSelling = async (
   return {
     offers: offers.data?.length ?? 0,
     returns: returns.data?.length ?? 0,
+    sales: sales.data ?? 0,
     scores: scores.data ?? 0,
     wasPrices: wasPrices.data ?? 0,
   };
