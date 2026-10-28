@@ -7343,6 +7343,52 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      staff_mark_return_received: {
+        Args: { target: string };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       start_pass_card_embed: { Args: { client: string }; Returns: string };
       start_survey: {
         Args: { target: string };
