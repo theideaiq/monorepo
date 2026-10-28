@@ -113,7 +113,7 @@ export const usePendingInvitations = () => {
   });
 };
 
-/** Active plans for one product line: business (The IDEA Partners) or Plus. */
+/** Active plans for one product line: business (Partners) or Plus. */
 export const usePlans = (audience: "business" | "plus") => {
   const { supabase } = useAuth();
   return useQuery({
@@ -218,7 +218,7 @@ export const usePlusPayments = (refetchInterval?: number | false) => {
   });
 };
 
-/** Switches a section of The IDEA Partners on or off (owners and admins). */
+/** Switches a section of Partners on or off (owners and admins). */
 export const useSetOrganizationFeature = (
   organization: OrganizationMembership
 ) => {

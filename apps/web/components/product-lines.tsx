@@ -18,7 +18,7 @@ const lines = [
   { href: "/partners", icon: Building2, id: "business" },
 ] as const;
 
-/** The IDEA's four products and The IDEA Partners, each linking to its page. */
+/** The IDEA's four products and Partners, each linking to its page. */
 export const ProductLines = async ({ locale }: { readonly locale: Locale }) => {
   const t = await getTranslations({ locale });
 

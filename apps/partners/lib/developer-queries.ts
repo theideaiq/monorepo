@@ -6,7 +6,7 @@ import { callApi } from "./api";
 import { unwrap } from "./queries";
 
 /**
- * The IDEA Partners → Developers: a company's verified domains and its
+ * Partners → Developers: a company's verified domains and its
  * Sign in with The IDEA Pass apps. Owners and admins manage them; the
  * database checks the role, the domains and the answers again.
  */

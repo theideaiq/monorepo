@@ -1,6 +1,6 @@
 ## 1. About these terms
 
-These terms are an agreement between you and The IDEA IQ Inc. ("The IDEA", "we", "us"), based in Baghdad, Iraq. They apply to theideaiq.com, The IDEA's iOS and Android apps, The IDEA Droid on Telegram and WhatsApp, and everything we offer through them: The IDEA Store, The IDEA Plus, The IDEA Club, The IDEA Pass and The IDEA Partners (together, "the service").
+These terms are an agreement between you and The IDEA IQ Inc. ("The IDEA", "we", "us"), based in Baghdad, Iraq. They apply to theideaiq.com, The IDEA's iOS and Android apps, Droid on Telegram and WhatsApp, and everything we offer through them: The IDEA Store, The IDEA Plus, The IDEA Club, The IDEA Pass and Partners (together, "the service").
 
 By using the service you agree to these terms and to the policies that complete them:
 
@@ -13,32 +13,32 @@ By using the service you agree to these terms and to the policies that complete 
 - [Club rules](/legal/club)
 - [Programs](/legal/programs)
 - [Surveys](/legal/surveys)
-- [The IDEA Partners](/legal/business)
+- [Partners](/legal/business)
 - [Accessibility](/legal/accessibility), [Security](/legal/security) and [Copyright](/legal/copyright)
 
 If you do not agree, please do not use the service. Nothing in these terms limits the rights you have under Iraqi law, including the Consumer Protection Law (Law No. 1 of 2010).
 
 ## 2. Who can use the service
 
-The IDEA Pass is open to anyone aged 13 or over. People under 13 may not have The IDEA Pass. Iraq's age of majority is 18, so some actions need a guardian or are for adults only:
+The Pass is open to anyone aged 13 or over. People under 13 may not have a Pass. Iraq's age of majority is 18, so some actions need a guardian or are for adults only:
 
 | Action | Ages 13–17 | 18 and over |
 | --- | --- | --- |
-| The IDEA Pass, browsing, the Club feed and Telegram group, Bulbs | Yes | Yes |
+| Pass, browsing, the Club feed and Telegram group, Bulbs | Yes | Yes |
 | Buying and single-item rentals | Yes, once a guardian approves each purchase; cash on delivery is handed to an adult | Yes |
-| The IDEA Plus | Yes, approved by a guardian | Yes |
+| Plus | Yes, approved by a guardian | Yes |
 | Games rated PEGI 18 and other mature items | No: hidden and not sold | Yes |
 | Game night kits | Booked by an adult | Yes |
 | Events | Yes; under-16s come with an adult | Yes |
 | Surveys, including rewarded surveys | No | Yes |
 
-**Guardians.** A guardian is an adult (18 or over) with their own The IDEA Pass. The teen adds the guardian in Pass → Settings, and the guardian approves the link from their own Pass. The guardian then approves each purchase and The IDEA Plus from their own Pass, and accepts these terms for the teen. A guardian can remove the link at any time; the teen's purchases then wait until a guardian is linked again.
+**Guardians.** A guardian is an adult (18 or over) with their own Pass. The teen adds the guardian in Pass → Settings, and the guardian approves the link from their own Pass. The guardian then approves each purchase and Plus from their own Pass, and accepts these terms for the teen. A guardian can remove the link at any time; the teen's purchases then wait until a guardian is linked again.
 
 We ask for a date of birth when you first sign in. Giving a false date of birth breaks these terms.
 
-## 3. The IDEA Pass
+## 3. Pass
 
-The IDEA Pass is your Pass: one per person, free, with your Pass card, Bulbs, orders and settings.
+The Pass is free and personal: one per person, with your Pass card, Bulbs, orders and settings.
 
 - **Signing in.** You sign in with your email and password, with a one-time code sent to your email ("Email me a code"), or with Google, Apple or Telegram. A new email address gets a new Pass.
 - **Keep it yours.** Never share your password or a sign-in code: The IDEA will never ask you for them. Keep your email secure, because whoever controls it can sign in. Tell us at once at [hi@theideaiq.com](mailto:hi@theideaiq.com) if you think someone else has used your Pass.
@@ -49,7 +49,7 @@ The IDEA Pass is your Pass: one per person, free, with your Pass card, Bulbs, or
 
 We may suspend or close a Pass that breaks these terms, for example for fraud, abuse of rewards or behaviour that breaks the [Club rules](/legal/club). Where we can, we tell you why first and give you a chance to respond.
 
-## 4. Orders from The IDEA Store
+## 4. Orders from the Store
 
 - **Product details.** Every product page shows its price in Iraqi dinars (IQD), its condition (New, Open box, Refurbished or Used; see [Returns and refunds](/legal/returns)), its availability and its details in Arabic. Games show their PEGI age rating.
 - **Prices.** The price you pay is calculated by our system at checkout, with any delivery fee, discount and Bulbs, and shown before you confirm. If a price or description is clearly wrong, we will contact you and you may cancel for a full refund.
@@ -65,7 +65,7 @@ Delivery, pickup and refused deliveries are covered in [Delivery](/legal/deliver
 - **Online payments** go through our payment partner **Wayl**, which supports cards and local wallets. We never see or store your full card or wallet details.
 - **Cash** on delivery or at pickup is offered on orders up to 500,000 IQD. Larger orders are paid online or at pickup.
 - **Bulbs** can pay for all or part of an order, delivery included (see [Rewards](/legal/rewards)).
-- **The IDEA Plus** is billed monthly (or yearly) through Wayl until you cancel (see [The IDEA Plus](/legal/plus)).
+- **Plus** is billed monthly (or yearly) through Wayl until you cancel (see [The IDEA Plus](/legal/plus)).
 
 By paying, you authorise us and Wayl to charge the amount shown to you.
 
@@ -76,13 +76,13 @@ By paying, you authorise us and Wayl to charge the amount shown to you.
 
 Rented items always remain our property.
 
-## 7. The IDEA Club and what you share
+## 7. The Club and what you share
 
 The Club's feed, events, Telegram group and surveys follow the [Club rules](/legal/club) and, for surveys, [Surveys](/legal/surveys). Reviews, photos and work you submit stay yours; you give us a licence to show them as described in [Copyright](/legal/copyright). Reviews must be honest and about a product you bought or rented.
 
-## 8. The IDEA Droid and other services
+## 8. Droid and other services
 
-The IDEA Droid, our bot on Telegram and "Ask Droid" on the site, searches the store, answers common questions and, once you link Telegram, shows your orders and Bulbs. Its answers are for help only; the order pages and these policies decide. If you turn them on, we also send order updates on WhatsApp and Telegram. Telegram, WhatsApp, Wayl and our couriers are run by other companies under their own terms.
+Droid, our bot on Telegram and "Ask Droid" on the site, searches the store, answers common questions and, once you link Telegram, shows your orders and Bulbs. Its answers are for help only; the order pages and these policies decide. If you turn them on, we also send order updates on WhatsApp and Telegram. Telegram, WhatsApp, Wayl and our couriers are run by other companies under their own terms.
 
 ## 9. Things you must not do
 
@@ -95,7 +95,7 @@ The IDEA Droid, our bot on Telegram and "Ask Droid" on the site, searches the st
 
 ## 10. Our content and marks
 
-The service and its content (software, designs, text, photos, The IDEA's name and logo, the bulb and The IDEA Droid) belong to us or our licensors. Game, album and film names and artwork belong to their owners and are shown only to identify the products. You may not copy our content without our written permission.
+The service and its content (software, designs, text, photos, The IDEA's name and logo, the bulb and Droid) belong to us or our licensors. Game, album and film names and artwork belong to their owners and are shown only to identify the products. You may not copy our content without our written permission.
 
 ## 11. Liability
 
@@ -120,4 +120,4 @@ These terms are published in Arabic and English. Both say the same thing; if the
 
 ## Contact us
 
-[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or The IDEA Droid on Telegram · The IDEA IQ Inc., Baghdad, Iraq.
+[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or Droid on Telegram · The IDEA IQ Inc., Baghdad, Iraq.

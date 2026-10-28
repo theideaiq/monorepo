@@ -238,7 +238,7 @@ describe("POST /push/register and /push/unregister", () => {
     expect(response.status).toBe(400);
   });
 
-  test("registers the device as the caller, with CORS for The IDEA Partners", async () => {
+  test("registers the device as the caller, with CORS for Partners", async () => {
     const response = await register.POST(
       post("/push/register", { platform: "android", token: TOKEN })
     );

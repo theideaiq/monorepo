@@ -28,7 +28,7 @@ Anything not listed (for example a passport, personal spending money, or visa fe
 
 ## 4. Applying
 
-- **Details from your Pass.** Your application is filled in with details you have already given The IDEA Pass (such as your name, date of birth, contact details and student badge). You check and correct them before sending; nothing is sent without you.
+- **Details from your Pass.** Your application is filled in with details you have already added to your Pass (such as your name, date of birth, contact details and student badge). You check and correct them before sending; nothing is sent without you.
 - The program may ask for more, such as a statement, a reference, school results or medical needs. Give true and complete information: false information can cost you your place.
 
 ## 5. Passports and documents
@@ -63,7 +63,7 @@ Participants follow the program's rules, the chaperone's and organisers' instruc
 
 ## 11. Partners' opportunities
 
-Partners post jobs, internships, scholarships, competitions and programs from The IDEA Partners; our staff review each one before it appears. The partner runs it and decides who takes part, and its own terms apply. Featured opportunities are labelled. If a partner's opportunity doesn't match its listing, tell us (see [The IDEA Partners](/legal/business)).
+Partners post jobs, internships, scholarships, competitions and programs from Partners; our staff review each one before it appears. The partner runs it and decides who takes part, and its own terms apply. Featured opportunities are labelled. If a partner's opportunity doesn't match its listing, tell us (see [Partners](/legal/business)).
 
 ## 12. Free programs run by others
 
@@ -74,4 +74,4 @@ Some free programs, such as IYLEP and UWC, are listed so you can find them. For 
 
 ## Contact us
 
-[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or The IDEA Droid on Telegram.
+[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or Droid on Telegram.

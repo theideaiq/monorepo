@@ -4,7 +4,7 @@ This policy explains how selling works on The IDEA: shops selling through The ID
 
 | | Shops | People |
 | --- | --- | --- |
-| Who | Businesses approved in The IDEA Partners | Pass holders aged 18 or over with a verified Pass |
+| Who | Businesses approved in Partners | Pass holders aged 18 or over with a verified Pass |
 | Where they manage sales | Partners → Selling | Pass → Selling |
 | How the buyer pays | To The IDEA, online with Wayl or in cash on delivery, as for any Store order | To the seller, in cash on delivery |
 | Does the money pass through The IDEA? | Yes, as the shop's payment agent | Never |
@@ -12,7 +12,7 @@ This policy explains how selling works on The IDEA: shops selling through The ID
 
 ## 2. Shops: joining
 
-- A shop sells through an organization in The IDEA Partners (see [The IDEA Partners](/legal/business)). It applies from Partners → Selling with its business documents, the bank details for its payouts and its security deposit, and starts selling once our staff approve it.
+- A shop sells through an organization in Partners (see [Partners](/legal/business)). It applies from Partners → Selling with its business documents, the bank details for its payouts and its security deposit, and starts selling once our staff approve it.
 - The people who act for the shop must be allowed to bind it, and keep its details, documents and bank details up to date.
 - We may refuse an application, or ask for more information, without having to give a reason.
 
@@ -58,7 +58,7 @@ Shops' items follow [Returns and refunds](/legal/returns) in full. When an item 
 
 ## 9. Shops: the Pro plan
 
-Selling is free to start; The IDEA takes only its commission. Shops that want more can take the one paid plan, **Pro**. Its price and what it includes are shown in Partners before you subscribe, and set out in [The IDEA Partners](/legal/business).
+Selling is free to start; The IDEA takes only its commission. Shops that want more can take the one paid plan, **Pro**. Its price and what it includes are shown in Partners before you subscribe, and set out in [Partners](/legal/business).
 
 ## 10. People: who can sell
 
@@ -120,4 +120,4 @@ We may remove listings, cancel orders or auctions, hold or set off payouts, keep
 
 ## Contact us
 
-[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or The IDEA Droid on Telegram.
+[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or Droid on Telegram.

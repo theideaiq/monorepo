@@ -12,7 +12,7 @@ import { env } from "@/env";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 /**
- * The IDEA Partners (partners.theideaiq.com): the pages organizations use.
+ * Partners (partners.theideaiq.com): the pages organizations use.
  * Customers use the website; The IDEA's team uses Staff (apps/staff).
  * Security headers come from `proxy.ts`.
  */

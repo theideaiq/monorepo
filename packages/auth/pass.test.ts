@@ -71,7 +71,7 @@ describe("isAllowedReturnTo", () => {
 describe("allowedReturnToHosts", () => {
   afterEach(() => vi.unstubAllEnvs());
 
-  test("lists the website (bare and www), The IDEA Partners, Staff and the API", () => {
+  test("lists the website (bare and www), Partners, Staff and the API", () => {
     vi.stubEnv("NEXT_PUBLIC_WEB_URL", "https://theideaiq.com");
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "https://partners.theideaiq.com");
     vi.stubEnv("NEXT_PUBLIC_STAFF_URL", "https://staff.theideaiq.com");

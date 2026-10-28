@@ -38,7 +38,7 @@ export const viewport: Viewport = {
 };
 
 /**
- * The root layout of the app (The IDEA Partners, and Staff on its own host):
+ * The root layout of the app (Partners, and Staff on its own host):
  * the language comes from the URL (the proxy adds it), so <html lang dir>
  * are right on the server.
  */

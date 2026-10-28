@@ -36,14 +36,14 @@ const ProductTile = ({ rental }: { rental?: boolean }) => (
     </h3>
     {rental ? (
       <p className="grid text-sm">
-        <span className="font-medium">Rent with The IDEA Plus</span>
+        <span className="font-medium">Rent with Plus</span>
         <span className="text-muted-foreground text-xs">Worth 59,750 IQD</span>
       </p>
     ) : (
       <p className="font-bold font-mono text-lg">720,000 IQD</p>
     )}
     <Button className="w-full" variant="default">
-      {rental ? "Rent with The IDEA Plus" : "Buy"}
+      {rental ? "Rent with Plus" : "Buy"}
     </Button>
   </div>
 );

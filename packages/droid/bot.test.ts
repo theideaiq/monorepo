@@ -130,7 +130,7 @@ describe("private chats", () => {
     expect(text).toContain("720,000");
     expect(text).toContain("In stock: 3");
     expect(text).toContain("https://theideaiq.com/store/playstation-5");
-    expect(text).toContain("Rent with The IDEA Plus · Out of stock");
+    expect(text).toContain("Rent with Plus · Out of stock");
     expect(text).not.toMatch(PAYMENT_WORDS);
   });
 
@@ -205,11 +205,11 @@ describe("private chats", () => {
     ]);
   });
 
-  test("orders and Bulbs ask to connect The IDEA Pass first", async () => {
+  test("orders and Bulbs ask to connect the Pass first", async () => {
     const { data } = createFakeData();
     const { send, sent } = createTestBot({ data });
     await send(privateText(user(1, { language_code: "en" }), "/orders"));
-    expect(textOf(sent()[0])).toContain("Connect Telegram to The IDEA Pass");
+    expect(textOf(sent()[0])).toContain("Connect Telegram to your Pass");
     expect(buttonsOf(sent()[0])[0]?.url).toBe(
       "https://theideaiq.com/pass/settings"
     );
@@ -490,13 +490,11 @@ describe("The Club's join requests", () => {
 
     await send(request(-500, user(1, { language_code: "en" })));
     expect(sent("declineChatJoinRequest")).toHaveLength(1);
-    expect(textOf(sent()[0])).toContain(
-      "Plus room is for The IDEA Plus members"
-    );
+    expect(textOf(sent()[0])).toContain("Plus room is for Plus members");
     expect(buttonsOf(sent()[0])[0]?.url).toBe("https://theideaiq.com/plus");
 
     await send(request(-500, user(2, { language_code: "en" })));
-    expect(textOf(sent()[1])).toContain("connect Telegram to The IDEA Pass");
+    expect(textOf(sent()[1])).toContain("connect Telegram to your Pass");
     expect(buttonsOf(sent()[1])[0]?.url).toBe(
       "https://theideaiq.com/pass/settings"
     );

@@ -1,4 +1,4 @@
--- The IDEA Partners: the sections an organization switches on.
+-- Partners: the sections an organization switches on.
 begin;
 -- <preamble>
 -- Shared pgTAP preamble. Each test file includes a copy between the preamble

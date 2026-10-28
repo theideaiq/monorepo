@@ -1,7 +1,7 @@
 import { localePath } from "@repo/internationalization";
 
 /**
- * Links to pages of this site, to The IDEA Partners (apps/business: company
+ * Links to pages of this site, to Partners (apps/business: company
  * pages and Staff) and to our Telegram presence.
  */
 
@@ -19,7 +19,7 @@ export const pagePath = (
   params?: Record<string, string>
 ) => withQuery(localePath(locale, path), params);
 
-/** `path` in `locale` on The IDEA Partners. */
+/** `path` in `locale` on Partners. */
 export const appLink = (
   appUrl: string,
   locale: string,

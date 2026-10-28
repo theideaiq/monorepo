@@ -39,7 +39,7 @@ Bulbs from an order unlock **14 days after delivery**, once the return window ha
 
 ## 4. Spending Bulbs
 
-At checkout you can pay for all or part of an order with unlocked Bulbs, delivery included. An order paid in full with Bulbs needs no other payment. If the order is cancelled or refunded, the Bulbs you spent come back. Bulbs can't pay for The IDEA Plus at the moment.
+At checkout you can pay for all or part of an order with unlocked Bulbs, delivery included. An order paid in full with Bulbs needs no other payment. If the order is cancelled or refunded, the Bulbs you spent come back. Bulbs can't pay for Plus at the moment.
 
 ## 5. Expiry
 
@@ -57,4 +57,4 @@ We may cancel Bulbs or discounts obtained by fraud, by several Passes for one pe
 
 ## Contact us
 
-[hi@theideaiq.com](mailto:hi@theideaiq.com) or The IDEA Droid on Telegram.
+[hi@theideaiq.com](mailto:hi@theideaiq.com) or Droid on Telegram.

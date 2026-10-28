@@ -127,7 +127,7 @@ describe("notifications", () => {
     expect(notificationHref("/orders/o1")).toBe("/pass/orders/o1");
     expect(notificationHref("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
     expect(notificationHref("/events")).toBe("/events");
-    // Company pages are on The IDEA Partners, at the root of its site.
+    // Company pages are on Partners, at the root of its site.
     expect(
       notificationHref(
         "/business/invoices",

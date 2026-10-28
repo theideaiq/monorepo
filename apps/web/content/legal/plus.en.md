@@ -2,7 +2,7 @@ The IDEA Plus is our rental plan: keep games, books and films as long as you lik
 
 ## 1. Where Plus is available
 
-The IDEA Plus delivers in Baghdad. Elsewhere in Iraq, and when all places are taken, you can join the waitlist on [/plus](/plus) and we will tell you when a place opens.
+Plus delivers in Baghdad. Elsewhere in Iraq, and when all places are taken, you can join the waitlist on [/plus](/plus) and we will tell you when a place opens.
 
 ## 2. Plans
 
@@ -21,7 +21,7 @@ The IDEA Plus delivers in Baghdad. Elsewhere in Iraq, and when all places are ta
 - Join from [/plus](/plus). The plan is billed in advance each month (or year) through **Wayl** and renews automatically until you cancel. Paying in cash is possible only with a verified Pass.
 - Bulbs can't pay for Plus at the moment; Plus payments earn Bulbs at your plan's rate (see [Rewards](/legal/rewards)).
 - If a renewal payment fails, we try again and remind you. Until it is paid we may hold new rentals and swaps.
-- Members aged 13 to 17 need a guardian to approve The IDEA Plus from the guardian's own Pass.
+- Members aged 13 to 17 need a guardian to approve Plus from the guardian's own Pass.
 - For rentals we may ask for a verified Pass (identity checked with a national ID card or passport).
 
 ## 4. How renting works
@@ -75,7 +75,7 @@ Where offered, kits are rented for a weekend, from Thursday evening to Saturday 
 
 - Delivery and collection in Baghdad are included.
 - Kits are booked by an adult (18 or over). At handover you show a verified Pass and your ID, or pay a refundable deposit of 100,000 IQD.
-- Plus Blaze members get 25% off. Companies and universities book kits for events through [The IDEA Partners](/legal/business).
+- Plus Blaze members get 25% off. Companies and universities book kits for events through [Partners](/legal/business).
 - The damage and loss rules in section 5 apply to every part of the kit.
 
 ## 10. Deposits
@@ -84,4 +84,4 @@ A deposit is returned in full when the item or kit comes back complete and undam
 
 ## Contact us
 
-[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or The IDEA Droid on Telegram.
+[hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or Droid on Telegram.

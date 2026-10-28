@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { requireUserId, unwrap } from "./queries";
 
 /**
- * The IDEA Partners procurement for the active company, through RLS: every
+ * Partners procurement for the active company, through RLS: every
  * member sees its requests, sent quotes, purchase orders and invoices;
  * owners and admins send requests and answer quotes.
  */

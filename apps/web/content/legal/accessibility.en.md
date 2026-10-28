@@ -2,7 +2,7 @@ The IDEA should be easy for everyone to use, including people with disabilities.
 
 ## 1. Our commitment
 
-We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA on theideaiq.com, The IDEA Partners and our iOS and Android apps.
+We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA on theideaiq.com, Partners and our iOS and Android apps.
 
 ## 2. What we do
 
@@ -16,7 +16,7 @@ We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA o
 - Some product photos and older Club posts may lack full text descriptions.
 - Pages run by others, such as Wayl's payment page and Telegram, follow their own accessibility.
 
-We are working on these. If one stops you from doing something, contact us and we will help you another way, for example by taking your order through The IDEA Droid or by email.
+We are working on these. If one stops you from doing something, contact us and we will help you another way, for example by taking your order through Droid or by email.
 
 ## 4. At events and the store
 

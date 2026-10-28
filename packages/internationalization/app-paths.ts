@@ -101,7 +101,7 @@ export const currentAppPath = (path: string) => {
 
 const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
 
-/** Pages of The IDEA Partners that moved, as [old path, current path]. */
+/** Pages of Partners that moved, as [old path, current path]. */
 const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
   ["/procurement", "/team"],
   ["/invoices", "/organization/invoices"],
@@ -112,7 +112,7 @@ const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
 ];
 
 /**
- * The page of The IDEA Partners a stored link names: links under
+ * The page of Partners a stored link names: links under
  * `/business…` are its pages, which sit at the root of its own site, at
  * their current address (`/business/invoices` → `/organization/invoices`,
  * `/business/procurement/7` → `/team/7`); null for the website's

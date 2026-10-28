@@ -9,7 +9,7 @@ const WORTH = /^Worth .*59,750/;
 describe("store components", () => {
   test("a rental-only item reads Rent, with its worth in small print", () => {
     renderWithApp(<RentOnly price={59_750} />, { locale: "en" });
-    expect(screen.getByText("Rent with The IDEA Plus")).toBeTruthy();
+    expect(screen.getByText("Rent with Plus")).toBeTruthy();
     expect(screen.getByText(WORTH)).toBeTruthy();
   });
 

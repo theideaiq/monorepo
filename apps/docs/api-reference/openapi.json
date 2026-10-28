@@ -151,7 +151,7 @@
           },
           "organizations": {
             "type": "array",
-            "description": "The person's organizations in The IDEA Partners and their role (`organizations` scope)",
+            "description": "The person's organizations in Partners and their role (`organizations` scope)",
             "items": {
               "$ref": "#/components/schemas/Organization"
             }

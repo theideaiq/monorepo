@@ -756,7 +756,7 @@ const KeyedDevelopers = ({ apiUrl }: Urls) => {
 };
 
 /**
- * The IDEA Partners → Developers: the company's own Sign in with The IDEA
+ * Partners → Developers: the company's own Sign in with The IDEA
  * Pass apps (domains, apps, secrets and keys).
  */
 export const Developers = ({ apiUrl }: Urls) => (

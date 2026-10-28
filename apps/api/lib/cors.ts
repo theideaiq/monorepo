@@ -17,7 +17,7 @@ export const webOrigins = (): Set<string> => {
   return new Set([web.origin, twin.origin]);
 };
 
-/** The IDEA Partners, Staff (its own host), the website and the apps. */
+/** Partners, Staff (its own host), the website and the apps. */
 const allowedOrigins = () =>
   new Set([
     new URL(env.NEXT_PUBLIC_APP_URL).origin,

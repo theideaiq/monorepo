@@ -21,7 +21,7 @@ was actually shared, and claims for anything else are absent.
 | `phone` | `phone_number` (`+9647…`), `phone_number_verified: false` | sensitive |
 | `birthdate` | `birthdate` (`YYYY-MM-DD`) | sensitive |
 | `address` | `address` (`formatted`, `street_address`, `locality`, `region`, `country`): the default address in the person's address book, or their latest delivery without one | sensitive |
-| `organizations` | `organizations`: `[{ "id": "…", "name": "The Iraqi Curator", "role": "admin", "app_owner": true }]`, the person's organizations in The IDEA Partners and their role (`owner`, `admin` or `member`); `app_owner` marks the organization that owns your app. `[]` when they have none | sensitive |
+| `organizations` | `organizations`: `[{ "id": "…", "name": "The Iraqi Curator", "role": "admin", "app_owner": true }]`, the person's organizations in Partners and their role (`owner`, `admin` or `member`); `app_owner` marks the organization that owns your app. `[]` when they have none | sensitive |
 | `card` | No claim: lets the access token [fetch the person's card](/card/show) | |
 | `offline_access` | No claim: the token response adds a [refresh token](/sign-in/tokens#refresh-tokens) | sensitive |
 

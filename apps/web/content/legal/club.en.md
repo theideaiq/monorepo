@@ -4,7 +4,7 @@ The IDEA Club is the free side of The IDEA: on [/club](/club), Join (events and 
 
 - the Club feed on the website and apps, and everything you submit to it;
 - reviews and photos on product pages;
-- The IDEA Club group on Telegram and its rooms (The Stage, The Lounge, The Arcade, Vibe Check, The Library, The Studio and The Office), our Telegram channel and conversations with The IDEA Droid;
+- The Club group on Telegram and its rooms (The Stage, The Lounge, The Arcade, Vibe Check, The Library, The Studio and The Office), our Telegram channel and conversations with Droid;
 - our events and every meeting with our staff and riders;
 - everyone who takes part: members, guests, staff, partners and speakers.
 
@@ -12,7 +12,7 @@ Surveys also follow [Surveys](/legal/surveys), and The IDEA's programs follow [P
 
 ## 2. Joining
 
-Anyone can read the feed. RSVPs, submissions and surveys need The IDEA Pass. To join The IDEA Club group on Telegram, link your Telegram to your Pass in Pass → Settings; The IDEA Droid then approves your request to join.
+Anyone can read the feed. RSVPs, submissions and surveys need a Pass. To join the Club group on Telegram, link your Telegram to your Pass in Pass → Settings; Droid then approves your request to join.
 
 ## 3. Expected behaviour
 
@@ -49,7 +49,7 @@ Submit only your own work, and credit others when you share theirs. Editors revi
 
 If you are harassed, see something that breaks these rules, or feel unsafe:
 
-- in Telegram, use Telegram's report button and message The IDEA Droid → Talk to us;
+- in Telegram, use Telegram's report button and message Droid → Talk to us;
 - at an event, speak to any member of staff;
 - by email, [hi@theideaiq.com](mailto:hi@theideaiq.com).
 
@@ -63,12 +63,12 @@ Our moderators use notices, warnings and bans:
 - **Warning:** for repeated or more serious behaviour. Five active warnings lead to a ban.
 - **Immediate ban:** for severe violations such as hate speech, harm to minors, gore, doxing, scams or raids.
 
-We may delete content that breaks these rules without notice, remove someone from an event without a refund, suspend their Pass and, where the law requires, report them. Bans apply across all of The IDEA Club. Aggression towards our staff or riders, in chat, by phone or at your door, leads to a permanent ban.
+We may delete content that breaks these rules without notice, remove someone from an event without a refund, suspend their Pass and, where the law requires, report them. Bans apply across all of the Club. Aggression towards our staff or riders, in chat, by phone or at your door, leads to a permanent ban.
 
-**Appeals:** if you think a decision was unfair, write to us through The IDEA Droid or by email; a member of staff who wasn't involved will review it.
+**Appeals:** if you think a decision was unfair, write to us through Droid or by email; a member of staff who wasn't involved will review it.
 
 These rules are a guide, not a complete list: we may act in situations they don't describe to protect the Club.
 
 ## Contact us
 
-[hi@theideaiq.com](mailto:hi@theideaiq.com) or The IDEA Droid on Telegram.
+[hi@theideaiq.com](mailto:hi@theideaiq.com) or Droid on Telegram.

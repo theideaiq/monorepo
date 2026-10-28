@@ -126,7 +126,7 @@ export const toSpssSyntax = (questions: readonly SurveyQuestion[]) => {
   const names = questions.map((_, index) => `q${index + 1}`);
   const label = (text: string) => text.replace(QUOTE, "'");
   return [
-    "* Reads responses.csv, exported from The IDEA Club.",
+    "* Reads responses.csv, exported from the Club.",
     "GET DATA /TYPE=TXT /FILE='responses.csv' /ENCODING='UTF8'",
     "  /DELIMITERS=',' /QUALIFIER='\"' /FIRSTCASE=2",
     "  /VARIABLES=response F8.0 submitted_at A30 counted F1.0",

@@ -19,7 +19,7 @@ interface PlanFormProps {
   readonly plan?: Tables<"plans">;
 }
 
-/** The IDEA Plus memberships and The IDEA Partners business plans. */
+/** The IDEA Plus memberships and Partners business plans. */
 export const PlanForm = ({ disabled = false, plan }: PlanFormProps) => {
   const t = useTranslations("admin.catalog.plans");
   const tCommon = useTranslations("admin.common");
