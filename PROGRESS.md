@@ -192,7 +192,9 @@ decisions with a date.
       Verify service; set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and
       `TWILIO_VERIFY_SERVICE_SID` on the theideaiq-api Vercel project. For
       WhatsApp, add a WhatsApp sender to the Verify service (needs the
-      verified Meta Business); until then codes go by SMS.
+      verified Meta Business); until then codes go by SMS. Once codes
+      arrive, turn on "Require a verified phone" (`store_settings.
+      require_verified_phone`) so deliveries and Plus homes need one.
 - [ ] **Wayl, to check and record here:** whether Plus and Pro can renew
       automatically through Wayl subscriptions; a partial refund in test
       mode.
@@ -395,6 +397,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Phone verification, part 1, the schema
+  (`20270110000000_verified_phones.sql`). `verified_phones` holds the
+  numbers a Pass proved with a code; only the API adds rows (after Twilio
+  approves the code) and owners read and remove theirs. A number the Pass
+  signed in with by SMS counts as verified too. With
+  `store_settings.require_verified_phone` on, a customer's own delivery
+  orders and Plus home need a verified number ("Verify your phone number
+  first"); orders staff or scheduled jobs make (Plus swaps) aren't
+  checked, since the Plus home they go to is. Off until Twilio is
+  configured. Part 2 adds the API endpoints and the verify step.
 - 2026-10-28: Owner decisions on selling and related points
   (`docs/program/decisions-2026-10-28.md`, given in full). They replace
   the earlier open questions and, where they differ, the v2 brief: Bulbs
