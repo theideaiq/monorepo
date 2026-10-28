@@ -8,8 +8,8 @@
  *
  * Variants: rows that share a slug and name a version (`variant_en`, with
  * an optional `format`) become one product with a variant per row; on
- * those rows price, compare-at price, stock, SKU, barcode and pictures are
- * the variant's. The product's other fields come from its first row.
+ * those rows price, stock, SKU, barcode and pictures are the variant's.
+ * "Was" prices are never imported: they come from price history. The product's other fields come from its first row.
  */
 import { csvCell, parseCsv, parseWholeNumber } from "@repo/commerce/csv";
 import { Constants, type Json, type Tables } from "@repo/database";
@@ -29,7 +29,6 @@ export const IMPORT_COLUMNS = [
   "kind",
   "category",
   "price",
-  "compare_at_price",
   "condition",
   "stock",
   "status",
@@ -49,7 +48,6 @@ export type ImportColumn = (typeof IMPORT_COLUMNS)[number];
 const COLUMN_ALIASES: Record<string, ImportColumn> = {
   barcodes: "barcode",
   category_slug: "category",
-  compare_at: "compare_at_price",
   description: "description_en",
   ean: "barcode",
   image: "image_urls",
@@ -86,7 +84,6 @@ export const IMPORT_BATCH_SIZE = 100;
 export interface ImportVariant {
   attributes?: Record<string, string>;
   barcode?: string;
-  compare_at_price?: number;
   images?: string[];
   label_ar?: string;
   label_en: string;
@@ -98,7 +95,6 @@ export interface ImportVariant {
 /** The product fields a sheet can set (the RPC's item shape, minus slug). */
 export interface ImportFields {
   category?: string;
-  compare_at_price?: number;
   condition?: ProductCondition;
   description_ar?: string;
   description_en?: string;
@@ -118,10 +114,8 @@ export type ImportField = keyof ImportFields;
 
 /** Message keys under `admin.catalog.import.errors`. */
 export type RowErrorCode =
-  | "compareAtNotHigher"
   | "duplicateSlug"
   | "duplicateVariant"
-  | "invalidCompareAt"
   | "invalidCondition"
   | "invalidImage"
   | "invalidKind"
@@ -165,7 +159,6 @@ export interface ParsedSheet {
 export type ExistingProduct = Pick<
   Tables<"products">,
   | "category_id"
-  | "compare_at_price"
   | "condition"
   | "description_ar"
   | "description_en"
@@ -181,7 +174,7 @@ export type ExistingProduct = Pick<
 >;
 
 export const EXISTING_PRODUCT_COLUMNS =
-  "slug, kind, status, category_id, name_ar, name_en, description_ar, description_en, price, compare_at_price, condition, stock_count, images, details" as const;
+  "slug, kind, status, category_id, name_ar, name_en, description_ar, description_en, price, condition, stock_count, images, details" as const;
 
 export interface ImportItem extends ImportFields {
   slug: string;
@@ -219,7 +212,6 @@ const TEMPLATE_ROWS = [
     "sale",
     "music",
     "69750",
-    "",
     "new",
     "1",
     "draft",
@@ -239,7 +231,6 @@ const TEMPLATE_ROWS = [
     "",
     "",
     "29750",
-    "",
     "new",
     "2",
     "",
@@ -367,12 +358,6 @@ const ENUM_FIELDS = [
 
 const NUMBER_FIELDS = [
   ["price", "price", "invalidPrice", Number.MAX_SAFE_INTEGER],
-  [
-    "compare_at_price",
-    "compare_at_price",
-    "invalidCompareAt",
-    Number.MAX_SAFE_INTEGER,
-  ],
   ["stock", "stock_count", "invalidStock", MAX_STOCK],
 ] as const;
 
@@ -511,12 +496,7 @@ const parseVariant = (
       variant[key] = cell(key);
     }
   }
-  for (const key of [
-    "price",
-    "compare_at_price",
-    "stock_count",
-    "images",
-  ] as const) {
+  for (const key of ["price", "stock_count", "images"] as const) {
     if (fields[key] !== undefined) {
       (variant as unknown as Record<string, unknown>)[key] = fields[key];
       delete fields[key];
@@ -670,12 +650,11 @@ const SCALAR_FIELDS = [
   "description_ar",
   "description_en",
   "price",
-  "compare_at_price",
   "condition",
   "stock_count",
 ] as const;
 
-/** A new product needs both names and a price; compare-at stays above it. */
+/** A new product needs both names and a price. */
 const mergedErrors = (
   fields: ImportFields,
   existing: ExistingProduct | undefined
@@ -694,25 +673,6 @@ const mergedErrors = (
     if (!priced) {
       errors.push({ code: "missingForNew", column: "price" });
     }
-  }
-  for (const variant of fields.variants ?? []) {
-    if (
-      variant.compare_at_price !== undefined &&
-      variant.price !== undefined &&
-      variant.compare_at_price <= variant.price
-    ) {
-      errors.push({ code: "compareAtNotHigher", column: "compare_at_price" });
-    }
-  }
-  const price = fields.price ?? existing?.price;
-  const compareAt = fields.compare_at_price ?? existing?.compare_at_price;
-  if (
-    compareAt !== null &&
-    compareAt !== undefined &&
-    price !== undefined &&
-    compareAt <= price
-  ) {
-    errors.push({ code: "compareAtNotHigher", column: "compare_at_price" });
   }
   return errors;
 };

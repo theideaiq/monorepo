@@ -20,7 +20,6 @@ const categorySlugs = new Set(categories.map((category) => category.slug));
 
 const adele: ExistingProduct = {
   category_id: "c-vinyl",
-  compare_at_price: null,
   condition: "new",
   description_ar: "وصف",
   description_en: "25 by Adele.",
@@ -166,8 +165,8 @@ describe("parseSheet", () => {
   test("reports invalid cells by column", () => {
     const { rows } = parseSheet(
       sheet(
-        "slug,kind,category,price,compare_at_price,stock,status,condition,image_urls",
-        "Bad Slug!,lease,toys,free,1.5,-1,live,mint,https://example.com/a.jpg"
+        "slug,kind,category,price,stock,status,condition,image_urls",
+        "Bad Slug!,lease,toys,free,-1,live,mint,https://example.com/a.jpg"
       ),
       categorySlugs
     );
@@ -178,7 +177,6 @@ describe("parseSheet", () => {
       "invalidCondition",
       "unknownCategory",
       "invalidPrice",
-      "invalidCompareAt",
       "invalidStock",
       "invalidImage",
     ]);
@@ -288,20 +286,13 @@ describe("buildPreview", () => {
     ).toEqual([{ line: 2, slug: "adele-25-vinyl", status: "unchanged" }]);
   });
 
-  test("the merged compare-at price must stay above the price", () => {
-    const withCompareAt = { ...adele, compare_at_price: 80_000 };
+  test('a compare-at column is ignored: "was" prices come from history', () => {
     expect(
-      preview(sheet("slug,price", "adele-25-vinyl,90000"), [withCompareAt])[0]
-    ).toMatchObject({
-      errors: [{ code: "compareAtNotHigher" }],
-      status: "error",
-    });
-    expect(
-      preview(
+      parseSheet(
         sheet("slug,price,compare_at_price", "adele-25-vinyl,90000,95000"),
-        [withCompareAt]
-      )[0]
-    ).toMatchObject({ status: "changed" });
+        categorySlugs
+      ).unknownColumns
+    ).toEqual(["compare_at_price"]);
   });
 
   test("invalid rows stay errors", () => {

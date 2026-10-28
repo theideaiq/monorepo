@@ -306,6 +306,8 @@ for any schema change; it also runs the structure and advisor checks.
   price, compare-at price and stock are derived ("from" the cheapest live
   variant) and are set on the variants; cart lines, copies and rentals
   always name their variant (a product with one live variant fills it in).
+  "Was" prices are never typed: `compare_at_price` is kept to the honest
+  one from `price_history` (15 of the last 30 days, above today's price).
   One title is one product: a title both sold and rented is a `sale`
   product with copies for rent (`rentable`, derived from its copies; The
   IDEA Plus lists rentable products), and the five categories (Music,

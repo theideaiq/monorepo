@@ -9,9 +9,10 @@ const adminWith = (
 };
 
 describe("sweepSelling", () => {
-  it("runs the three sweeps and counts what changed", async () => {
+  it("runs the four sweeps and counts what changed", async () => {
     const { admin, rpc } = adminWith({
       refresh_seller_scores: { data: 4, error: null },
+      refresh_was_prices: { data: 3, error: null },
       sweep_offers: { data: [{ id: "o1" }], error: null },
       sweep_returns: { data: [{ id: "r1" }, { id: "r2" }], error: null },
     });
@@ -19,11 +20,13 @@ describe("sweepSelling", () => {
       offers: 1,
       returns: 2,
       scores: 4,
+      wasPrices: 3,
     });
     expect(rpc.mock.calls.map(([name]) => name)).toEqual([
       "sweep_returns",
       "sweep_offers",
       "refresh_seller_scores",
+      "refresh_was_prices",
     ]);
   });
 

@@ -62,9 +62,11 @@ export const VariantForm = ({
             <TextField
               defaultValue={variant?.compare_at_price ?? ""}
               dir="ltr"
+              hint={t("fields.wasPriceHint")}
               inputMode="numeric"
               label={t("variants.compareAtPrice")}
-              name="compareAtPrice"
+              name="wasPrice"
+              readOnly
             />
             <TextField
               defaultValue={variant?.stock_count ?? 0}

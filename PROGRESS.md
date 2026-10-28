@@ -573,6 +573,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-28: Prices, part 1 (master brief step 7, section 9;
+  `20270131000000_price_history.sql`). Every listing keeps a price history
+  (`price_history`). Product pages list offers cheapest first with "Lowest
+  price" marked, and show each listing's lowest price in the last 30 days.
+  A struck-through "was" price is worked out, never typed: only a price the
+  listing held for 15 of the last 30 days, above today's
+  (`product_variants.compare_at_price` follows it; the selling cron ages it
+  out with `refresh_was_prices`). Staff forms show it read-only, and the
+  spreadsheet import no longer has a compare-at column. A listing with a
+  "was" price is on sale and takes no offers. Still to come in step 7: shop
+  sales and quantity deals, campaigns, coupons within the 20% cap, student
+  prices.
 - 2026-10-28: Payouts (master brief step 6, section 8;
   `20270130000000_payouts.sql`). Finance → Payouts prepares the weekly batch
   (`prepare_payouts`): each approved shop owed more than it owes gets a

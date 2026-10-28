@@ -243,12 +243,16 @@ export const getProductBySlug = async (
 export interface ProductOffer {
   available: number;
   condition: Tables<"products">["condition"];
+  /** Lowest price in the last 30 days, from price history; null for rent. */
+  lowest_30d: number | null;
   /** Lowest sale price; null for copies for rent. */
   price: number | null;
   purpose: "rental" | "sale";
   seller_id: string;
   seller_name: string;
   variant_id: string | null;
+  /** The honest "was" price (held 15 of the last 30 days), or null. */
+  was_price: number | null;
 }
 
 export const getProductOffers = async (
@@ -267,11 +271,13 @@ export const getProductOffers = async (
           {
             available: row.available,
             condition: row.condition,
+            lowest_30d: (row.lowest_30d as number | null) ?? null,
             price: (row.price as number | null) ?? null,
             purpose: row.purpose,
             seller_id: row.seller_id,
             seller_name: row.seller_name,
             variant_id: (row.variant_id as string | null) ?? null,
+            was_price: (row.was_price as number | null) ?? null,
           },
         ]
   );

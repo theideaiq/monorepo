@@ -1160,7 +1160,9 @@
           "waiting": "We'll tell you when it's on offer.",
           "stop": "Stop notifying me",
           "failed": "That didn't work. Try again."
-        }
+        },
+        "lowestPrice": "Lowest price",
+        "lowest30d": "Lowest in the last 30 days: {price}"
       }
     },
     "cart": {
@@ -3390,8 +3392,8 @@
         "featuredHint": "Shown on the home page and at the top of listings.",
         "price": "Price (IQD)",
         "priceHint": "For rentals: the item's replacement value.",
-        "compareAt": "Compare-at price",
-        "compareAtHint": "The old price, shown crossed out. Must be higher than the price.",
+        "compareAt": "Was price",
+        "wasPriceHint": "Worked out from price history: shown crossed out only after the price was this for at least 15 of the last 30 days.",
         "stock": "Stock",
         "stockHint": "Available copies for sale (for rent, for rental items). Changing it adds or retires copies in the product's condition; manage single copies under Copies.",
         "condition": "Condition",
@@ -3422,7 +3424,7 @@
         "sku": "SKU",
         "barcode": "Barcode",
         "price": "Price (IQD)",
-        "compareAtPrice": "Compare-at price (IQD)",
+        "compareAtPrice": "Was price (IQD)",
         "rentalStock": "Copies for rent",
         "active": "Offered to customers",
         "add": "Add variant",
@@ -3515,7 +3517,6 @@
           "kind": "sale or rental. New products are sale items unless set.",
           "category": "The category's slug, e.g. music, books or films.",
           "price": "Price in IQD, whole dinars. Needed for a new product.",
-          "compare_at_price": "The old price, shown crossed out. Must be higher than the price.",
           "condition": "new, used, refurbished or open_box.",
           "stock": "Units on hand.",
           "status": "draft, active or archived. New products start as drafts unless set.",
@@ -3568,7 +3569,6 @@
           "kind": "Line",
           "category": "Category",
           "price": "Price",
-          "compare_at_price": "Compare-at price",
           "condition": "Condition",
           "stock": "Stock",
           "stock_count": "Stock",
@@ -3586,10 +3586,8 @@
           "details": "Specifications"
         },
         "errors": {
-          "compareAtNotHigher": "the compare-at price must be higher than the price",
           "duplicateSlug": "the same slug appears on another row",
           "duplicateVariant": "another row of this product names the same version",
-          "invalidCompareAt": "not a whole number of dinars",
           "invalidCondition": "use new, used, refurbished or open_box",
           "invalidImage": "only links to the Cover Art Archive, Open Library or Wikimedia, or storage paths",
           "invalidKind": "use sale or rental",

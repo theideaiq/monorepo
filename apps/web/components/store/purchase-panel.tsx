@@ -99,6 +99,10 @@ const OfferPicker = ({ offers, onPick, value }: OfferPickerProps) => {
   const t = useTranslations("app.store.product");
   const conditions = useTranslations("store.condition");
   const locale = useLocale();
+  // Offers come cheapest first; the cheapest is marked when there's a choice.
+  const lowest = Math.min(
+    ...offers.map((offer) => offer.price ?? Number.POSITIVE_INFINITY)
+  );
   return (
     <fieldset className="grid gap-2">
       <legend className="mb-2 font-medium text-sm">{t("condition")}</legend>
@@ -119,6 +123,11 @@ const OfferPicker = ({ offers, onPick, value }: OfferPickerProps) => {
             type="button"
           >
             <span className="font-medium">{conditions(offer.condition)}</span>
+            {offers.length > 1 && offer.price === lowest ? (
+              <span className="font-medium text-pink-text text-xs">
+                {t("lowestPrice")}
+              </span>
+            ) : null}
             {offer.seller_id === HOUSE_SELLER_ID ? null : (
               <span className="text-xs">
                 {t("soldBy", { seller: offer.seller_name })}
@@ -162,6 +171,7 @@ const offerSelection = (
   const otherOffer = otherCondition || choice.sellerId !== HOUSE_SELLER_ID;
   return {
     choice,
+    chosen,
     forSale,
     otherCondition,
     price: otherOffer ? (chosen?.price ?? selection.price) : selection.price,
@@ -308,8 +318,15 @@ export const PurchasePanel = ({
   const autoAdded = useRef(false);
 
   const selection = pickVariant(product, variantId);
-  const { choice, forSale, otherCondition, price, showConditions, stock } =
-    offerSelection(offers, product, selection, pickedOffer);
+  const {
+    choice,
+    chosen,
+    forSale,
+    otherCondition,
+    price,
+    showConditions,
+    stock,
+  } = offerSelection(offers, product, selection, pickedOffer);
   const { condition } = choice;
   const chosenVariant = selection.variant;
   const canAdd =
@@ -399,12 +416,17 @@ export const PurchasePanel = ({
             <Price
               className="text-lg"
               compareAtPrice={
-                otherCondition ? null : chosenVariant.compare_at_price
+                chosen ? chosen.was_price : chosenVariant.compare_at_price
               }
               price={price}
             />
           ) : null}
         </>
+      ) : null}
+      {chosen?.lowest_30d ? (
+        <p className="text-muted-foreground text-sm">
+          {t("lowest30d", { price: formatPrice(chosen.lowest_30d, locale) })}
+        </p>
       ) : null}
       <div className="flex flex-wrap items-center gap-3">
         <QuantityStepper
