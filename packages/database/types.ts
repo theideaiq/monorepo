@@ -964,6 +964,57 @@ export type Database = {
           },
         ];
       };
+      listing_sales: {
+        Row: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          created_by: string | null;
+          ends_at: string;
+          id: string;
+          sale_price: number;
+          seller_id: string;
+          starts_at: string;
+          variant_id: string;
+        };
+        Insert: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          created_by?: string | null;
+          ends_at: string;
+          id?: string;
+          sale_price: number;
+          seller_id: string;
+          starts_at: string;
+          variant_id: string;
+        };
+        Update: {
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          created_by?: string | null;
+          ends_at?: string;
+          id?: string;
+          sale_price?: number;
+          seller_id?: string;
+          starts_at?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "listing_sales_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "listing_sales_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       notifications: {
         Row: {
           created_at: string;
@@ -3152,6 +3203,51 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [];
+      };
+      quantity_deals: {
+        Row: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          discount_rate: number;
+          id: string;
+          min_quantity: number;
+          seller_id: string;
+          variant_id: string;
+        };
+        Insert: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          discount_rate: number;
+          id?: string;
+          min_quantity: number;
+          seller_id: string;
+          variant_id: string;
+        };
+        Update: {
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          discount_rate?: number;
+          id?: string;
+          min_quantity?: number;
+          seller_id?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "quantity_deals_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "quantity_deals_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       quote_lines: {
         Row: {
@@ -6127,7 +6223,9 @@ export type Database = {
         };
       };
       decline_plus_seat: { Args: { seat: string }; Returns: undefined };
+      delete_quantity_deal: { Args: { target: string }; Returns: undefined };
       disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
+      end_listing_sale: { Args: { target: string }; Returns: undefined };
       end_pass_card_embed: { Args: { client: string }; Returns: undefined };
       end_plus_seat: { Args: { seat: string }; Returns: undefined };
       end_previous_pass_secret: {
@@ -6851,9 +6949,11 @@ export type Database = {
         Returns: {
           available: number;
           condition: Database["public"]["Enums"]["product_condition"];
+          deals: Json;
           lowest_30d: number;
           price: number;
           purpose: Database["public"]["Enums"]["stock_purpose"];
+          sale_ends_at: string;
           seller_id: string;
           seller_name: string;
           variant_id: string;
@@ -7463,6 +7563,33 @@ export type Database = {
         };
         Returns: undefined;
       };
+      set_listing_sale: {
+        Args: {
+          ends: string;
+          price: number;
+          seller: string;
+          starts: string;
+          variant: string;
+          wanted: Database["public"]["Enums"]["product_condition"];
+        };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          created_by: string | null;
+          ends_at: string;
+          id: string;
+          sale_price: number;
+          seller_id: string;
+          starts_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "listing_sales";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       set_money_rules: { Args: { rules: Json }; Returns: undefined };
       set_offer: {
         Args: {
@@ -7550,6 +7677,30 @@ export type Database = {
           purchase_order: string;
         };
         Returns: undefined;
+      };
+      set_quantity_deal: {
+        Args: {
+          from_quantity: number;
+          rate: number;
+          seller: string;
+          variant: string;
+          wanted: Database["public"]["Enums"]["product_condition"];
+        };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          discount_rate: number;
+          id: string;
+          min_quantity: number;
+          seller_id: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "quantity_deals";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       set_rental_deposit_rate: { Args: { rate: number }; Returns: undefined };
       set_seller_plan: {
@@ -7781,6 +7932,10 @@ export type Database = {
       suspend_pass_app: {
         Args: { client: string; suspend: boolean };
         Returns: undefined;
+      };
+      sweep_listing_sales: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
       };
       sweep_offers: {
         Args: Record<PropertyKey, never>;
