@@ -458,6 +458,7 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
                 fieldErrors={fieldErrors}
                 method="delivery"
                 onChange={set}
+                onLocation={(location) => setForm({ ...address, location })}
                 pickup={null}
                 zone={zone}
                 zones={zoneList}

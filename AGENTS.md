@@ -55,7 +55,8 @@ incidents) is in `docs/platform`.
     (`isAllowedReturnTo`);
   - **The IDEA Pass pages** (`app/[locale]/pass/(member)`: `/pass` the
     membership card, `/pass/orders`, `/pass/saved`, `/pass/bulbs` with
-    invites at `#invite`, `/pass/settings`); `/pass/embed` (outside that
+    invites at `#invite`, `/pass/settings` with the address book at
+    `#addresses`); `/pass/embed` (outside that
     group, no header or footer) is the live card partners frame on their
     own sites, with its connect popup at `/pass/embed/connect`; and the cart and checkout (`app/[locale]/(checkout)`): client components that query with
     `useAuth().supabase`; privileged steps go to `apps/api` with the user's

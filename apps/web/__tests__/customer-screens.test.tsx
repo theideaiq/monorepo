@@ -258,6 +258,7 @@ describe("checkout", () => {
           city: "",
           full_name: "Sara Ali",
           governorate: "baghdad",
+          landmark: "",
           notes: "",
           phone: "+9647701234567",
         },

@@ -1,6 +1,12 @@
 import { normalizePhone } from "@repo/auth/phone";
 import { type Fulfilment, governorates } from "@repo/commerce";
 
+/** A map pin (the device's location when the member shared it). */
+export interface MapPin {
+  lat: number;
+  lng: number;
+}
+
 /** The delivery address form, as typed. */
 export interface AddressForm {
   address: string;
@@ -8,6 +14,9 @@ export interface AddressForm {
   fullName: string;
   /** A governorate id, when there are no delivery zones to choose from. */
   governorate: string;
+  /** The nearest landmark ("near the Al-Rasheed bakery"). */
+  landmark: string;
+  location: MapPin | null;
   notes: string;
   phone: string;
   /** The chosen delivery zone (`delivery_zones.id`). */
@@ -20,6 +29,8 @@ export interface ShippingAddress {
   city: string;
   full_name: string;
   governorate: string;
+  landmark: string;
+  location?: MapPin;
   notes: string;
   phone: string;
 }
@@ -52,6 +63,8 @@ export const emptyAddress = (phone = ""): AddressForm => ({
   city: "",
   fullName: "",
   governorate: "",
+  landmark: "",
+  location: null,
   notes: "",
   phone,
   zoneId: "",
@@ -138,6 +151,8 @@ export const validateAddress = (
       governorate: delivery
         ? (zone ? zone.governorate : form.governorate) || ""
         : "",
+      landmark: delivery ? form.landmark.trim() : "",
+      ...(delivery && form.location ? { location: form.location } : {}),
       notes: form.notes.trim(),
       phone,
     },

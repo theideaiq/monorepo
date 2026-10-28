@@ -368,6 +368,7 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
                 fieldErrors={fieldErrors}
                 method={method}
                 onChange={set}
+                onLocation={(location) => setForm({ ...address, location })}
                 pickup={pickup}
                 zone={zone}
                 zones={zoneList}
