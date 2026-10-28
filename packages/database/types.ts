@@ -2548,6 +2548,9 @@ export type Database = {
           banned_at: string | null;
           birthday: string | null;
           calendar_token: string;
+          checkout_payment:
+            | Database["public"]["Enums"]["order_payment_method"]
+            | null;
           created_at: string;
           full_name: string | null;
           id: string;
@@ -2564,6 +2567,9 @@ export type Database = {
           banned_at?: string | null;
           birthday?: string | null;
           calendar_token?: string;
+          checkout_payment?:
+            | Database["public"]["Enums"]["order_payment_method"]
+            | null;
           created_at?: string;
           full_name?: string | null;
           id: string;
@@ -2580,6 +2586,9 @@ export type Database = {
           banned_at?: string | null;
           birthday?: string | null;
           calendar_token?: string;
+          checkout_payment?:
+            | Database["public"]["Enums"]["order_payment_method"]
+            | null;
           created_at?: string;
           full_name?: string | null;
           id?: string;
@@ -4119,6 +4128,68 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      user_addresses: {
+        Row: {
+          area: string;
+          created_at: string;
+          full_name: string;
+          governorate: string;
+          id: string;
+          is_default: boolean;
+          label: string;
+          landmark: string;
+          latitude: number | null;
+          longitude: number | null;
+          phone: string;
+          street: string;
+          updated_at: string;
+          user_id: string;
+          zone_id: string | null;
+        };
+        Insert: {
+          area?: string;
+          created_at?: string;
+          full_name: string;
+          governorate?: string;
+          id?: string;
+          is_default?: boolean;
+          label: string;
+          landmark?: string;
+          latitude?: number | null;
+          longitude?: number | null;
+          phone: string;
+          street: string;
+          updated_at?: string;
+          user_id?: string;
+          zone_id?: string | null;
+        };
+        Update: {
+          area?: string;
+          created_at?: string;
+          full_name?: string;
+          governorate?: string;
+          id?: string;
+          is_default?: boolean;
+          label?: string;
+          landmark?: string;
+          latitude?: number | null;
+          longitude?: number | null;
+          phone?: string;
+          street?: string;
+          updated_at?: string;
+          user_id?: string;
+          zone_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_addresses_zone_id_fkey";
+            columns: ["zone_id"];
+            isOneToOne: false;
+            referencedRelation: "delivery_zones";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       webhook_events: {
         Row: {

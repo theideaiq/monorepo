@@ -379,6 +379,26 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Program Revision v2, item 6 (address book and saved
+  payment), part 1, the schema (migration `20270104000000`):
+  - `user_addresses` (RLS: the owner only): label, name, phone, delivery
+    zone and governorate, area, street, nearest landmark, map pin (inside
+    Iraq), default. At most 10 each; the first is the default, making one
+    the default unsets the others, and removing the default promotes the
+    newest.
+  - `profiles.checkout_payment`: how the person last paid (online or cash on
+    delivery); checkout starts there.
+  - Orders keep the landmark and the map pin (`create_order`).
+  - **No saved cards:** Wayl's API (`api.thewayl.com/openapi.v1.json`) only
+    makes payment links, products and refunds; there are no card tokens,
+    customers or recurring charges, and we never store cards ourselves.
+    **No ZainCash or Qi numbers either:** a Wayl link takes no customer
+    details (people type their number on Wayl's page), so a stored number
+    would be personal data nothing uses. Revisit if Wayl adds tokens or we
+    integrate a wallet directly.
+  - Part 2 (the website: addresses in Settings, the checkout picker and
+    one-tap ordering) ships after this migration has run.
+
 - 2026-10-28: Program Revision v2, item 5: developer docs at
   `api.theideaiq.com`. `apps/docs` (Mintlify, now `docs.json`) holds The
   IDEA's own docs: Introduction, Quickstart, Sign in with The IDEA Pass
