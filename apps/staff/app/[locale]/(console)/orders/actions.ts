@@ -203,6 +203,23 @@ export const decideReturn = staffAction(
   }
 );
 
+/** Support marks a hand-booked return back at the shop. */
+export const markReturnReceived = staffAction(
+  "orders",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    const { error } = await supabase.rpc("staff_mark_return_received", {
+      target: input.id,
+    });
+    if (error) {
+      throw new ActionFailure(
+        error.code === "42501" ? "forbidden" : "notFound"
+      );
+    }
+    return success();
+  }
+);
+
 /** Finance marks a return refunded (Wayl or a transfer), with its reference. */
 export const markReturnRefunded = staffAction(
   "orders",
