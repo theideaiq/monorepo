@@ -13,6 +13,7 @@ import { canRead } from "@/lib/admin/roles";
 import { requireSection } from "@/lib/admin/session";
 import { CopiesPanel } from "../../_components/copies-panel";
 import { CoverFinder } from "../../_components/cover-finder";
+import { HouseOffersPanel } from "../../_components/house-offers-panel";
 import { ProductForm } from "../../_components/product-form";
 import { RatingPanel } from "../../_components/rating-panel";
 import { VariantForm } from "../../_components/variant-form";
@@ -123,6 +124,20 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           copies={copies ?? []}
           disabled={!canWrite}
           product={product}
+          variants={(variants ?? []).map((variant, index) => ({
+            id: variant.id,
+            label:
+              variantName(variant, locale) ||
+              variant.sku ||
+              t("copies.variantNumber", {
+                number: formatNumber(index + 1, locale as Locale),
+              }),
+          }))}
+        />
+        <HouseOffersPanel
+          copies={copies ?? []}
+          disabled={!canWrite}
+          supabase={supabase}
           variants={(variants ?? []).map((variant, index) => ({
             id: variant.id,
             label:

@@ -3316,7 +3316,8 @@
           "lateShopLines": "بنود متاجر تجاوزت موعد التجهيز",
           "shopRefunds": "بنود متاجر للاسترداد",
           "disputedReturns": "مُرجَعات بانتظار القرار",
-          "returnRefunds": "مبالغ مُرجَعات للإرسال"
+          "returnRefunds": "مبالغ مُرجَعات للإرسال",
+          "houseOffers": "عروض على مخزون The IDEA"
         }
       }
     },
@@ -3328,7 +3329,8 @@
         "plans": "الخطط",
         "settings": "التوصيل",
         "import": "استيراد",
-        "checks": "المراجعات"
+        "checks": "المراجعات",
+        "offers": "العروض"
       },
       "filters": {
         "anyKind": "كل الأقسام",
@@ -3666,6 +3668,35 @@
           "banned": "منتج محظور (بقي مسودة)",
           "duplicate": "تكرار محتمل"
         }
+      },
+      "offers": {
+        "title": "العروض",
+        "description": "العروض على مخزون The IDEA: أجب خلال 48 ساعة وإلا انتهى العرض. تُرفض العروض التي تقل عن حد الهامش تلقائيًا.",
+        "waitingTitle": "بانتظار الرد",
+        "waitingEmpty": "لا توجد عروض بانتظار الرد.",
+        "recentTitle": "أُجيب عنها مؤخرًا",
+        "recentEmpty": "لا توجد عروض مُجاب عنها بعد.",
+        "amounts": "العرض {offer} · السعر {price}",
+        "answerBy": "أجب قبل {time}",
+        "status": {
+          "open": "بانتظار الرد",
+          "countered": "عرض مقابل",
+          "accepted": "مقبول",
+          "declined": "مرفوض",
+          "expired": "منتهي",
+          "withdrawn": "مسحوب",
+          "purchased": "تم الطلب"
+        },
+        "accept": "اقبل {amount}",
+        "decline": "ارفض",
+        "counter": "عرض مقابل",
+        "counterLabel": "العرض المقابل (د.ع)",
+        "panelTitle": "العروض",
+        "panelDescription": "أيّ نسخ The IDEA المعروضة للبيع تقبل العروض. اترك المبالغ التلقائية فارغة للرد على كل عرض من الكتالوج ← العروض؛ حد الهامش يُطبَّق دائمًا.",
+        "takeOffers": "اقبل العروض",
+        "autoAccept": "اقبل ابتداءً من (د.ع)",
+        "autoDecline": "ارفض ما دون (د.ع)",
+        "save": "احفظ"
       }
     },
     "orders": {

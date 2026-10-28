@@ -3316,7 +3316,8 @@
           "lateShopLines": "Shop lines past their ready-by time",
           "shopRefunds": "Shop lines to refund",
           "disputedReturns": "Returns to decide",
-          "returnRefunds": "Return refunds to send"
+          "returnRefunds": "Return refunds to send",
+          "houseOffers": "Offers on The IDEA's stock"
         }
       }
     },
@@ -3328,7 +3329,8 @@
         "plans": "Plans",
         "settings": "Delivery",
         "import": "Import",
-        "checks": "Checks"
+        "checks": "Checks",
+        "offers": "Offers"
       },
       "filters": {
         "anyKind": "All lines",
@@ -3666,6 +3668,35 @@
           "banned": "Banned item (kept as a draft)",
           "duplicate": "Likely duplicate"
         }
+      },
+      "offers": {
+        "title": "Offers",
+        "description": "Make an offer on The IDEA's own stock: answer within 48 hours, or the offer expires. Offers below the margin floor are declined automatically.",
+        "waitingTitle": "Waiting for an answer",
+        "waitingEmpty": "No offers waiting.",
+        "recentTitle": "Recently answered",
+        "recentEmpty": "No answered offers yet.",
+        "amounts": "Offer {offer} · price {price}",
+        "answerBy": "Answer by {time}",
+        "status": {
+          "open": "Waiting",
+          "countered": "Countered",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "expired": "Expired",
+          "withdrawn": "Withdrawn",
+          "purchased": "Ordered"
+        },
+        "accept": "Accept {amount}",
+        "decline": "Decline",
+        "counter": "Counter",
+        "counterLabel": "Counter-offer (IQD)",
+        "panelTitle": "Offers",
+        "panelDescription": "Which of The IDEA's copies for sale take offers. Leave the automatic amounts empty to answer each offer in Catalog → Offers; the margin floor always applies.",
+        "takeOffers": "Take offers",
+        "autoAccept": "Accept from (IQD)",
+        "autoDecline": "Decline below (IQD)",
+        "save": "Save"
       }
     },
     "orders": {

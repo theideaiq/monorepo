@@ -1,5 +1,6 @@
 "use server";
 
+import { HOUSE_SELLER_ID } from "@repo/commerce";
 import { Constants } from "@repo/database";
 import { z } from "zod";
 import { affected, check, staffAction } from "@/lib/admin/action";
@@ -371,5 +372,50 @@ export const deleteCopy = staffAction(
   async ({ input, supabase }) => {
     check(await supabase.from("stock_items").delete().eq("id", input.id));
     return success("deleted");
+  }
+);
+
+/** Whether one of The IDEA's listings takes offers, and its automatic amounts. */
+export const saveHouseOfferSettings = staffAction(
+  "catalog",
+  z.object({
+    accept: checkbox,
+    acceptAt: optionalInt(1),
+    condition: z.enum(Enums.product_condition),
+    declineBelow: optionalInt(1),
+    variantId: uuid,
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("set_offer_settings", {
+        accept: input.accept,
+        accept_at: input.acceptAt ?? undefined,
+        decline_below: input.declineBelow ?? undefined,
+        seller: HOUSE_SELLER_ID,
+        variant: input.variantId,
+        wanted: input.condition,
+      })
+    );
+    return success();
+  }
+);
+
+/** Accept, decline or counter (once) an offer on The IDEA's own stock. */
+export const answerHouseOffer = staffAction(
+  "catalog",
+  z.object({
+    answer: z.enum(["accept", "decline", "counter"]),
+    counter: optionalInt(1),
+    id: uuid,
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("answer_offer", {
+        answer: input.answer,
+        counter: input.counter ?? undefined,
+        target: input.id,
+      })
+    );
+    return success();
   }
 );
