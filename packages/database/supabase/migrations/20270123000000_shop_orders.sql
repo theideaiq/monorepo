@@ -3,8 +3,9 @@
 --
 -- * `seller_locations`: a shop's Boxy pickup locations (one per branch),
 --   with its pickup contact. The shop's owners and admins edit them in
---   Partners → Settings → Pickup; apps/api creates or updates each in Boxy
---   (type WAREHOUSE) and stores Boxy's uid, which every parcel from that
+--   Partners → Settings → Pickup; apps/api creates each in Boxy
+--   (type WAREHOUSE; Boxy has no update, so an edit makes a new one) and
+--   stores Boxy's uid, which every parcel from that
 --   branch sends as `saved_pick_up_address_uid`, so the courier calls the
 --   shop's own contact.
 -- * A shop's order lines move waiting → ready → picked up, or out of
@@ -34,6 +35,8 @@ create table public.seller_locations (
   contact_name text not null check (char_length(trim(contact_name)) between 1 and 120),
   contact_phone text not null check (contact_phone ~ '^\+9647[0-9]{9}$'),
   address text not null check (char_length(trim(address)) between 5 and 300),
+  -- Boxy's area (region) the branch is in.
+  region_id text not null references public.delivery_areas (id),
   lat numeric(9, 6) not null check (lat between -90 and 90),
   lng numeric(9, 6) not null check (lng between -180 and 180),
   -- Boxy's pickup location uid, written by apps/api.
@@ -50,6 +53,7 @@ comment on table public.seller_locations is
   'A shop''s pickup locations (one per branch) and pickup contact, each a Boxy pickup location.';
 
 create index seller_locations_seller_idx on public.seller_locations (seller_id);
+create index seller_locations_region_idx on public.seller_locations (region_id);
 
 create trigger set_updated_at before update on public.seller_locations
   for each row execute function private.set_updated_at();
@@ -69,9 +73,9 @@ create policy "Shop admins edit pickup locations" on public.seller_locations
 
 revoke all on public.seller_locations from anon, authenticated;
 grant select on public.seller_locations to authenticated;
-grant insert (seller_id, name, contact_name, contact_phone, address, lat, lng)
+grant insert (seller_id, name, contact_name, contact_phone, address, region_id, lat, lng)
   on public.seller_locations to authenticated;
-grant update (name, contact_name, contact_phone, address, lat, lng, active)
+grant update (name, contact_name, contact_phone, address, region_id, lat, lng, active)
   on public.seller_locations to authenticated;
 
 -- ── Parcels per seller ─────────────────────────────────────────────────────

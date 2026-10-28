@@ -70,20 +70,21 @@ insert into public.sellers (id, organization_id, name, status) values
 insert into public.products (id, slug, name_ar, name_en, price, status, kind, condition, category_id) values
   ('9a100000-0000-0000-0000-000000000001', 'blonde-9k', 'بلوند', 'Blonde', 39750, 'active', 'sale', 'new',
    (select id from public.product_categories where slug = 'music'));
+insert into public.delivery_areas (id, province, name) values ('area-9k', 'BGD', 'الكرادة');
 create temporary table ids (name text primary key, id uuid);
 grant all on ids to authenticated;
 
 -- ── Pickup locations ──
 select pg_temp.login_as('00000000-0000-0000-0000-000000000c02');
 select throws_ok(
-  $$ insert into public.seller_locations (seller_id, name, contact_name, contact_phone, address, lat, lng)
-     values ('9a100000-0000-0000-0000-0000000000d1', 'Main', 'Omar', '+9647701234567', 'Karrada, Street 62', 33.3, 44.4) $$,
+  $$ insert into public.seller_locations (seller_id, name, contact_name, contact_phone, address, region_id, lat, lng)
+     values ('9a100000-0000-0000-0000-0000000000d1', 'Main', 'Omar', '+9647701234567', 'Karrada, Street 62', 'area-9k', 33.3, 44.4) $$,
   '42501', null, 'a member can''t add a pickup location'
 );
 select pg_temp.login_as('00000000-0000-0000-0000-000000000c01');
 with added as (
-  insert into public.seller_locations (seller_id, name, contact_name, contact_phone, address, lat, lng)
-  values ('9a100000-0000-0000-0000-0000000000d1', 'Main', 'Omar', '+9647701234567', 'Karrada, Street 62', 33.3, 44.4)
+  insert into public.seller_locations (seller_id, name, contact_name, contact_phone, address, region_id, lat, lng)
+  values ('9a100000-0000-0000-0000-0000000000d1', 'Main', 'Omar', '+9647701234567', 'Karrada, Street 62', 'area-9k', 33.3, 44.4)
   returning id
 )
 insert into ids select 'branch', id from added;
@@ -93,8 +94,8 @@ select throws_ok(
   '42501', null, 'only apps/api writes Boxy''s uid'
 );
 select throws_ok(
-  $$ insert into public.seller_locations (seller_id, name, contact_name, contact_phone, address, lat, lng)
-     values ('9a100000-0000-0000-0000-0000000000d1', 'Bad', 'Omar', '07701234567', 'Karrada, Street 62', 33.3, 44.4) $$,
+  $$ insert into public.seller_locations (seller_id, name, contact_name, contact_phone, address, region_id, lat, lng)
+     values ('9a100000-0000-0000-0000-0000000000d1', 'Bad', 'Omar', '07701234567', 'Karrada, Street 62', 'area-9k', 33.3, 44.4) $$,
   '23514', null, 'the contact phone is an Iraqi mobile in E.164'
 );
 select pg_temp.login_as('00000000-0000-0000-0000-000000000c03');

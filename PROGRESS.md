@@ -556,8 +556,10 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 - 2026-10-28: Selling, shop orders, the schema
   (`20270123000000_shop_orders.sql`; master brief step 5, section 5).
   `seller_locations` are a shop's pickup locations (one per branch, with
-  the pickup contact the courier calls), edited by its owners and admins;
-  apps/api keeps each in Boxy and stores its uid. A shop's order line now
+  the pickup contact the courier calls and its Boxy area), edited by its
+  owners and admins; apps/api creates each in Boxy and stores its uid
+  (Boxy's API has no update, so an edited branch becomes a new Boxy
+  location). A shop's order line now
   waits, is readied at a branch, is picked up, or is out of stock
   (`order_items.seller_status`), due 2 days after the order is confirmed or
   paid (`ready_by`); a cancelled order cancels its open shop lines.

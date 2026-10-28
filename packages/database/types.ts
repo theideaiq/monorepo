@@ -3201,6 +3201,7 @@ export type Database = {
           lat: number;
           lng: number;
           name: string;
+          region_id: string;
           seller_id: string;
           synced_at: string | null;
           updated_at: string;
@@ -3216,6 +3217,7 @@ export type Database = {
           lat: number;
           lng: number;
           name: string;
+          region_id: string;
           seller_id: string;
           synced_at?: string | null;
           updated_at?: string;
@@ -3231,11 +3233,19 @@ export type Database = {
           lat?: number;
           lng?: number;
           name?: string;
+          region_id?: string;
           seller_id?: string;
           synced_at?: string | null;
           updated_at?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "seller_locations_region_id_fkey";
+            columns: ["region_id"];
+            isOneToOne: false;
+            referencedRelation: "delivery_areas";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "seller_locations_seller_id_fkey";
             columns: ["seller_id"];
