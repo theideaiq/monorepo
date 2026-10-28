@@ -14,10 +14,10 @@ import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
-import { CompaniesTabs } from "../_components/companies-tabs";
-import { companyAbilities } from "../_components/roles";
-import { seatTone } from "../_components/tones";
-import { activateSeat, declineSeat, endSeat } from "../actions";
+import { CompaniesTabs } from "../../_components/companies-tabs";
+import { companyAbilities } from "../../_components/roles";
+import { seatTone } from "../../_components/tones";
+import { activateSeat, declineSeat, endSeat } from "../../actions";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.companies.seats");

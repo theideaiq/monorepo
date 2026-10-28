@@ -1059,7 +1059,7 @@
       "saved": "Saved",
       "home": "Home",
       "perks": "Perks",
-      "bulk_buying": "Bulk buying",
+      "team": "Team",
       "developers": "Developers",
       "organization": "Organization",
       "selling": "Selling"
@@ -1611,12 +1611,13 @@
         "procurement": "Bulk buying",
         "invoices": "Invoices",
         "overview": "Overview",
-        "plus": "The IDEA Plus",
+        "plus": "Plus",
         "perks": "Perks",
         "developers": "Developers",
         "details": "Details",
         "shop": "Shop",
-        "listings": "Listings"
+        "listings": "Listings",
+        "orders": "Bulk orders"
       },
       "members": {
         "title": "Members",
@@ -1680,8 +1681,8 @@
         "perks": {
           "description": "Offer perks to The IDEA Pass members and check their cards at your counter."
         },
-        "bulk_buying": {
-          "description": "Ask The IDEA for quotes on what your organization needs, with monthly invoices."
+        "team": {
+          "description": "Bulk orders for your organization with monthly invoices, and Plus for its people."
         },
         "developers": {
           "description": "Let people sign in to your website or app with The IDEA Pass."
@@ -4406,10 +4407,10 @@
       "requestedBy": "Requested by",
       "cancelRequest": "Cancel request",
       "tabs": {
-        "requests": "Requests",
+        "requests": "Team: bulk orders",
         "orders": "Purchase orders",
         "invoices": "Invoices",
-        "seats": "The IDEA Plus seats",
+        "seats": "Team: Plus seats",
         "perks": "Perks",
         "signIn": "Sign in with the Pass",
         "shops": "Shops"

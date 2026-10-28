@@ -103,10 +103,10 @@ const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
 
 /** Pages of The IDEA Partners that moved, as [old path, current path]. */
 const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
-  ["/procurement", "/bulk-buying"],
+  ["/procurement", "/team"],
   ["/invoices", "/organization/invoices"],
   ["/members", "/organization/members"],
-  ["/plus", "/organization/plus"],
+  ["/plus", "/team/plus"],
   ["/billing", "/organization/billing"],
   ["/settings", "/organization"],
 ];
@@ -115,7 +115,7 @@ const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
  * The page of The IDEA Partners a stored link names: links under
  * `/business…` are its pages, which sit at the root of its own site, at
  * their current address (`/business/invoices` → `/organization/invoices`,
- * `/business/procurement/7` → `/bulk-buying/7`); null for the website's
+ * `/business/procurement/7` → `/team/7`); null for the website's
  * pages.
  */
 export const businessPath = (path: string) => {

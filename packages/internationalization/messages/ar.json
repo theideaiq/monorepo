@@ -1059,7 +1059,7 @@
       "saved": "المحفوظات",
       "home": "الرئيسية",
       "perks": "العروض",
-      "bulk_buying": "الشراء بالجملة",
+      "team": "الفريق",
       "developers": "المطوّرون",
       "organization": "المؤسسة",
       "selling": "البيع"
@@ -1611,12 +1611,13 @@
         "procurement": "الشراء بالجملة",
         "invoices": "الفواتير",
         "overview": "نظرة عامة",
-        "plus": "The IDEA Plus",
+        "plus": "Plus",
         "perks": "العروض",
         "developers": "المطوّرون",
         "details": "التفاصيل",
         "shop": "المتجر",
-        "listings": "المعروضات"
+        "listings": "المعروضات",
+        "orders": "الطلبات بالجملة"
       },
       "members": {
         "title": "الأعضاء",
@@ -1680,8 +1681,8 @@
         "perks": {
           "description": "قدّم عروضًا لأعضاء The IDEA Pass وتحقّق من بطاقاتهم عند الاستقبال."
         },
-        "bulk_buying": {
-          "description": "اطلب من The IDEA عروض أسعار لما تحتاجه مؤسستك، مع فواتير شهرية."
+        "team": {
+          "description": "طلبات بالجملة لمؤسستك مع فواتير شهرية، و Plus لأفرادها."
         },
         "developers": {
           "description": "اسمح للناس بتسجيل الدخول إلى موقعك أو تطبيقك باستخدام The IDEA Pass."
@@ -4406,10 +4407,10 @@
       "requestedBy": "مقدّم الطلب",
       "cancelRequest": "إلغاء الطلب",
       "tabs": {
-        "requests": "الطلبات",
+        "requests": "الفريق: الطلبات بالجملة",
         "orders": "أوامر الشراء",
         "invoices": "الفواتير",
-        "seats": "مقاعد The IDEA Plus",
+        "seats": "الفريق: مقاعد Plus",
         "perks": "العروض",
         "signIn": "الدخول بالبطاقة",
         "shops": "المتاجر"

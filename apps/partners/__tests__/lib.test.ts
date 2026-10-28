@@ -124,10 +124,8 @@ describe("visibleNavItems", () => {
       "organization",
     ]);
     expect(
-      keys(
-        visibleNavItems(org("owner", ["developers", "perks", "bulk_buying"]))
-      )
-    ).toEqual(["home", "perks", "bulk_buying", "developers", "organization"]);
+      keys(visibleNavItems(org("owner", ["developers", "perks", "team"])))
+    ).toEqual(["home", "perks", "team", "developers", "organization"]);
   });
 
   test("keeps Developers for owners and admins", () => {

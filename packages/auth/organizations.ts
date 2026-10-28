@@ -11,7 +11,7 @@ export const ACTIVE_ORGANIZATION_COOKIE = "active_org";
 export const organizationFeatures = [
   "selling",
   "perks",
-  "bulk_buying",
+  "team",
   "developers",
 ] as const;
 

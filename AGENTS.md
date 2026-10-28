@@ -83,11 +83,13 @@ incidents) is in `docs/platform`.
   spreadsheet, make a bundle of the shop's own items, change copies and
   price, flag wrong details),
   Perks `/perks`,
-  Bulk buying `/bulk-buying`, Developers `/developers` and Organization
-  `/organization` (with `/organization/members`, `/organization/plus`,
-  `/organization/billing`, `/organization/invoices`), plus `/new`, `/documents/<kind>/<id>` and invitations. The
+  Team `/team` (bulk orders for the organization, with `/team/<id>` for a
+  request, and `/team/plus`, Plus for its people), Developers
+  `/developers` and Organization `/organization` (with
+  `/organization/members`, `/organization/billing`,
+  `/organization/invoices`), plus `/new`, `/documents/<kind>/<id>` and invitations. The
   sidebar holds the organization switcher and these sections; Selling,
-  Perks, Bulk buying and Developers appear once the organization adds them from Home
+  Perks, Team and Developers appear once the organization adds them from Home
   (`organizations.features`, `components/nav-items.ts`), and the bell is
   only in the top bar. Supply and Opportunities join the list when they
   ship. It holds no Staff code. No sign-in of its own: it sends
@@ -100,8 +102,10 @@ incidents) is in `docs/platform`.
     Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
     automatic checks on products shops create and shops' flags) · Orders and delivery
     `/orders` · Rentals and Plus `/rentals` · Customers `/customers` ·
-    Club `/club` (with `/club/telegram`) · Partners `/partners` (with
-    `/partners/shops`, where staff approve shops) · Finance `/finance` · Settings
+    Club `/club` (with `/club/telegram`) · Partners `/partners` (Team
+    `/partners/team` with requests at `/partners/team/<id>` and Plus seats
+    at `/partners/team/plus`, then orders, invoices, `/partners/shops`
+    where staff approve shops, perks and sign-in) · Finance `/finance` · Settings
     `/settings` (with `/settings/audit`), and `/search`; seller payouts
     join when selling ships. Then `/no-access`
     (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:

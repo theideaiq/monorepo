@@ -42,8 +42,8 @@ test("businessPath strips The IDEA Partners's prefix", () => {
 
 test("businessPath opens moved pages at their current address", () => {
   expect(businessPath("/business/invoices")).toBe("/organization/invoices");
-  expect(businessPath("/business/procurement/r1")).toBe("/bulk-buying/r1");
-  expect(businessPath("/business/procurement?x=1")).toBe("/bulk-buying?x=1");
+  expect(businessPath("/business/procurement/r1")).toBe("/team/r1");
+  expect(businessPath("/business/procurement?x=1")).toBe("/team?x=1");
   expect(businessPath("/business/settings")).toBe("/organization");
   expect(businessPath("/business/plus-other")).toBe("/plus-other");
 });

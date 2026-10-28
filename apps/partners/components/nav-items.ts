@@ -7,13 +7,13 @@ import {
   CodeXmlIcon,
   HouseIcon,
   type LucideIcon,
-  PackageSearchIcon,
   StoreIcon,
   TicketPercentIcon,
+  UsersIcon,
 } from "lucide-react";
 
 export type NavKey =
-  | "bulk_buying"
+  | "team"
   | "developers"
   | "home"
   | "organization"
@@ -39,12 +39,7 @@ export const navItems: NavItem[] = [
   { href: "/", icon: HouseIcon, key: "home" },
   { feature: "selling", href: "/selling", icon: StoreIcon, key: "selling" },
   { feature: "perks", href: "/perks", icon: TicketPercentIcon, key: "perks" },
-  {
-    feature: "bulk_buying",
-    href: "/bulk-buying",
-    icon: PackageSearchIcon,
-    key: "bulk_buying",
-  },
+  { feature: "team", href: "/team", icon: UsersIcon, key: "team" },
   {
     feature: "developers",
     href: "/developers",

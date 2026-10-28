@@ -267,7 +267,7 @@ const RequestDetail = ({ requestId }: { requestId: string }) => {
     <div className="flex flex-col gap-6">
       <Link
         className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
-        href="/bulk-buying"
+        href="/team"
       >
         <ArrowLeftIcon className="size-4 rtl:rotate-180" />
         {t("procurement.requests")}
@@ -327,7 +327,7 @@ const RequestDetail = ({ requestId }: { requestId: string }) => {
 };
 
 export const ProcurementRequest = ({ requestId }: { requestId: string }) => (
-  <BusinessShell feature="bulk_buying">
+  <BusinessShell feature="team">
     <RequestDetail requestId={requestId} />
   </BusinessShell>
 );
