@@ -123,14 +123,6 @@ on conflict do nothing;
 -- Newest releases need The IDEA Plus Extra or higher.
 update public.products set rental_tier = 2 where slug = 'ea-fc-26-ps5';
 
--- Local store pickup (production sets the real address in Staff).
-update public.store_settings set
-  pickup_enabled = true,
-  pickup_address_ar = 'بغداد، الكرادة، شارع ٦٢ — متجر The IDEA',
-  pickup_address_en = 'The IDEA store, Street 62, Karrada, Baghdad',
-  pickup_hours_ar = 'السبت إلى الخميس، ١٠ صباحاً – ٩ مساءً',
-  pickup_hours_en = 'Saturday to Thursday, 10 am – 9 pm';
-
 
 -- Single-item rent rates (program revision v1, step 5a).
 insert into public.rental_rates (category_id, price, days, late_fee) values

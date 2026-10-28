@@ -1,4 +1,4 @@
--- Delivery zones, store pickup and cash payments. Run with `bun run db:test`.
+-- Delivery zones and cash payments. Run with `bun run db:test`.
 begin;
 -- <preamble>
 -- Shared pgTAP preamble. Each test file includes a copy between the preamble
@@ -79,9 +79,6 @@ insert into public.products (id, slug, name_ar, name_en, price, stock_count, sta
 
 update public.store_settings set
   shipping_fee = 5000,
-  pickup_enabled = false,
-  pickup_address_ar = null,
-  pickup_address_en = null,
   cash_on_delivery_enabled = true;
 
 update public.delivery_zones set free_from = null, plus_free_delivery = false;
@@ -134,8 +131,8 @@ select lives_ok(
   'admins add zones'
 );
 select lives_ok(
-  $$ update public.store_settings set pickup_address_en = 'Karrada, Baghdad' $$,
-  'admins edit the pickup address'
+  $$ update public.store_settings set shipping_fee = 5000 $$,
+  'admins edit the store settings'
 );
 select ok(
   exists (select 1 from public.audit_logs where entity_type = 'delivery_zones' and action = 'update'),
@@ -225,26 +222,24 @@ select results_eq(
 );
 insert into public.cart_items (product_id, quantity) values ('60000000-0000-0000-0000-000000000001', 1);
 
--- ── Pickup ──────────────────────────────────────────────────────────────────
+-- ── Every order is delivered ────────────────────────────────────────────────
 
 select throws_ok(
   $$ select public.create_order('{"full_name":"U","phone":"+9647700000201"}', 'pickup', 'online') $$,
-  '23514', 'Store pickup is not available', 'pickup must be switched on'
+  '23514', 'Every order is delivered', 'store pickup is gone'
 );
-
-select pg_temp.reset_role();
-update public.store_settings set pickup_enabled = true;
-
-select pg_temp.login_as('00000000-0000-0000-0000-0000000000d1');
 select lives_ok(
-  $$ select public.create_order('{"full_name":"U","phone":"+9647700000201"}', 'pickup', 'online') $$,
-  'pickup needs only a name and a phone'
+  $$ select public.create_order(
+       '{"full_name":"U","phone":"+9647700000201","governorate":"baghdad","address":"Karrada"}',
+       'delivery', 'online'
+     ) $$,
+  'the order is delivered instead'
 );
 select results_eq(
-  $$ select shipping_fee, total, fulfilment::text, delivery_zone_id, shipping_address ->> 'address'
+  $$ select shipping_fee, total, fulfilment::text, shipping_address ->> 'address'
      from public.orders order by number desc limit 1 $$,
-  $$ values (0::bigint, 100000::bigint, 'pickup', null::uuid, '') $$,
-  'pickup has no delivery fee'
+  $$ values (5000::bigint, 105000::bigint, 'delivery', 'Karrada') $$,
+  'with the zone''s delivery fee'
 );
 
 -- ── Cash on delivery ────────────────────────────────────────────────────────
@@ -356,11 +351,14 @@ select throws_ok(
 -- Customers cancel a confirmed cash order; its copies come back.
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000d1');
 insert into public.cart_items (product_id, quantity) values ('60000000-0000-0000-0000-000000000001', 2);
-select public.create_order('{"full_name":"U","phone":"+9647700000201"}', 'pickup', 'cash_on_delivery');
+select public.create_order(
+  '{"full_name":"U","phone":"+9647700000201","governorate":"baghdad","address":"Karrada"}',
+  'delivery', 'cash_on_delivery'
+);
 select pg_temp.reset_role();
 select is(
   (select stock_count from public.products where slug = 'switch'), 2,
-  'paying at pickup also confirms the order and sets copies aside'
+  'a cash order is confirmed at once and sets copies aside'
 );
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000d1');
 select lives_ok(
