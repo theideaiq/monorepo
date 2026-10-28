@@ -46,7 +46,6 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
   const t = useTranslations("app.cart");
   const conditions = useTranslations("store.condition");
   const soldBy = useTranslations("app.store.product");
-  const boxText = useTranslations("web.store.product.box");
   const locale = useLocale();
   const update = useUpdateCartLine();
   const { item } = line;
@@ -88,13 +87,6 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
             {isShopLine(item) && item.seller ? (
               <span className="text-muted-foreground text-xs">
                 {soldBy("soldBy", { seller: item.seller.name })}
-              </span>
-            ) : null}
-            {item.box_theme ? (
-              <span className="text-muted-foreground text-xs">
-                {boxText("themeLine", {
-                  theme: localized(item.box_theme, "name", locale),
-                })}
               </span>
             ) : null}
           </div>

@@ -293,7 +293,6 @@ const OrderView = ({
   const t = useTranslations("app.orders.detail");
   const conditions = useTranslations("store.condition");
   const soldBy = useTranslations("app.store.product");
-  const boxText = useTranslations("web.store.product.box");
   const tCheckout = useTranslations("app.checkout.errors");
   const locale = useLocale();
   const pay = usePayOrder();
@@ -391,13 +390,6 @@ const OrderView = ({
                     {item.seller_name && item.seller_id !== HOUSE_SELLER_ID ? (
                       <span className="text-muted-foreground text-xs">
                         {soldBy("soldBy", { seller: item.seller_name })}
-                      </span>
-                    ) : null}
-                    {item.box_theme ? (
-                      <span className="text-muted-foreground text-xs">
-                        {boxText("themeLine", {
-                          theme: localized(item.box_theme, "name", locale),
-                        })}
                       </span>
                     ) : null}
                     <span className="text-muted-foreground text-xs tabular-nums">

@@ -24,7 +24,6 @@ import { QuantityStepper } from "@/components/store/quantity-stepper";
 import { RentCard } from "@/components/store/rent-card";
 import { WishlistButton } from "@/components/store/wishlist-button";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
-import { type Box, type BoxTheme, boxThemes, themeReady } from "@/lib/boxes";
 import { MAX_QUANTITY } from "@/lib/cart";
 import { useAddToCart } from "@/lib/store-queries";
 import { Price } from "./price";
@@ -68,49 +67,6 @@ const VariantPicker = ({
       </div>
       {ready ? null : (
         <p className="text-muted-foreground text-xs">{t("chooseOption")}</p>
-      )}
-    </fieldset>
-  );
-};
-
-/** A box's themes: the customer picks one, and staff pack the box to it. */
-const ThemePicker = ({
-  onPick,
-  themes,
-  value,
-}: {
-  readonly onPick: (id: string) => void;
-  readonly themes: readonly BoxTheme[];
-  readonly value: string | null;
-}) => {
-  const t = useTranslations("web.store.product.box");
-  const locale = useLocale();
-  if (themes.length === 0) {
-    return null;
-  }
-  return (
-    <fieldset className="grid gap-2">
-      <legend className="mb-2 font-medium text-sm">{t("theme")}</legend>
-      <div className="flex flex-wrap gap-2">
-        {themes.map((theme) => (
-          <button
-            aria-pressed={theme.id === value}
-            className={cn(
-              "rounded-md border px-3 py-2 text-start text-sm transition-colors",
-              theme.id === value
-                ? "border-primary bg-primary/10"
-                : "hover:bg-accent"
-            )}
-            key={theme.id}
-            onClick={() => onPick(theme.id)}
-            type="button"
-          >
-            {localized(theme, "name", locale)}
-          </button>
-        ))}
-      </div>
-      {value ? null : (
-        <p className="text-muted-foreground text-xs">{t("pickTheme")}</p>
       )}
     </fieldset>
   );
@@ -299,12 +255,9 @@ const AlsoRent = ({
  * goes to the sign-in first.
  */
 export const PurchasePanel = ({
-  box = null,
   offers = [],
   product,
 }: {
-  /** The box's parts and themes, when the product is a box. */
-  readonly box?: Box | null;
   /** The copies on offer (product_offers); empty when unknown. */
   readonly offers?: readonly ProductOffer[];
   readonly product: ProductDetail;
@@ -347,8 +300,6 @@ export const PurchasePanel = ({
   });
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
-  const themes = boxThemes(box);
-  const [themeId, setThemeId] = useState<string | null>(null);
   const autoAdded = useRef(false);
 
   const selection = pickVariant(product, variantId);
@@ -360,8 +311,7 @@ export const PurchasePanel = ({
     product.kind === "sale" &&
     product.status === "active" &&
     chosenVariant !== null &&
-    stock > 0 &&
-    themeReady(themes, themeId);
+    stock > 0;
 
   const addToCart = (amount: number) => {
     if (!chosenVariant) {
@@ -388,7 +338,6 @@ export const PurchasePanel = ({
           price,
           variant: variantName(chosenVariant, "en") || undefined,
         },
-        boxThemeId: themeId,
         condition: otherCondition ? condition : null,
         productId: product.id,
         quantity: amount,
@@ -423,7 +372,6 @@ export const PurchasePanel = ({
 
   return (
     <div className="grid gap-4">
-      <ThemePicker onPick={setThemeId} themes={themes} value={themeId} />
       {showConditions ? (
         <OfferPicker
           offers={forSale}

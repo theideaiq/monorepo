@@ -313,36 +313,6 @@ test.describe("a signed-in customer", () => {
     noErrors();
   });
 
-  test("orders a reading box on a theme", async ({ page }) => {
-    const noErrors = watchConsole(page);
-    await page.goto(`${urls.web}/store/reading-box`);
-    await expect(
-      page.getByRole("heading", { name: "What's inside" })
-    ).toBeVisible();
-    const add = page.getByRole("button", { name: "Add to cart" });
-    await expect(add).toBeDisabled();
-    await page.getByRole("button", { exact: true, name: "Novels" }).click();
-    await expectAccessible(page);
-    await add.click();
-    await page.getByRole("link", { name: "View cart" }).click();
-    await expect(page.getByText("Theme: Novels")).toBeVisible();
-    await page.getByRole("link", { name: "Checkout" }).click();
-
-    await page.getByRole("combobox", { name: "Governorate" }).click();
-    await page.getByRole("option", { name: BAGHDAD }).click();
-    await page.getByLabel("Full name").fill(customer.name);
-    await page.getByLabel("Mobile number").fill("07701234567");
-    await page
-      .getByLabel("Address", { exact: true })
-      .fill("Street 62, Karrada");
-    await page.getByRole("radio", { name: CASH_ON_DELIVERY }).click();
-    await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
-
-    await expect(page).toHaveURL(ORDER_PAGE);
-    await expect(page.getByText("Theme: Novels")).toBeVisible();
-    noErrors();
-  });
-
   test("saves an address, then checks out in one tap", async ({ page }) => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/pass/settings`);

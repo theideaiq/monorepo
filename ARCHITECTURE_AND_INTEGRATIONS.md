@@ -1583,31 +1583,15 @@ no units, no bookings).
   (`collect_kit()`: `refund_due` / `amount_due`, refunded outside the app).
   Cancelling the order cancels the booking.
 
-#### Boxes
+#### Boxes (removed)
 
-Store products built from parts (migration `20261224000000_boxes.sql`).
-The existing boxes sell until they sell out: no new box can be created
-(RLS refuses it), and `sync_box_stock` archives a box once its parts sell
-out. Catalogue → Boxes and Orders → Boxes to pack stay while any box is
-left. A box is a normal sale product with a `boxes` row: `box_parts` are fixed
-product versions (a turntable, a cleaning kit) or slots staff fill when
-packing (3 records from Music in Vinyl), and `min_value` is what the
-picked copies are worth together at least.
-
-- **Stock**: a box has no copies of its own; its stock count is how many
-  its parts make now (`private.box_stock()`), recounted whenever a part's
-  copies change. Checkout prices a box line at its version's price and
-  checks it against that count.
-- **Price**: an active box costs 10–15% less than its parts (the fixed
-  parts' prices plus `min_value`); the database refuses to put it on sale
-  otherwise, and Catalogue → Boxes shows the range.
-- **Theme**: a box with `box_themes` needs one picked on the product page
-  (`cart_items.box_theme_id`, copied to `order_items.box_theme_id`); the
-  cart and order show it.
-- **Packing**: a paid (or cash-confirmed) order takes the fixed parts'
-  copies; staff pick the slots' copies in Orders → Boxes to pack
-  (`pack_box()` checks the slots, the formats and the value, and sets
-  `packed_at`). Cancelling returns every copy.
+Boxes are gone (owner decisions of 2026-10-28; shops' bundles will
+replace them). The website no longer shows a box's contents or asks for a
+theme, the cart and orders no longer read `box_theme_id`, and Staff has no
+Catalogue → Boxes or Orders → Boxes to pack. A follow-up migration deletes
+the boxes (the 3 live and 3 seasonal drafts) with `boxes`, `box_parts`,
+`box_themes`, the box functions and triggers; past order lines keep their
+names.
 
 #### Students and partner perks
 

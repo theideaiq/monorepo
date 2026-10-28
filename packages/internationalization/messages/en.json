@@ -315,16 +315,7 @@
         "seller": "Sold by {seller}",
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
-        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass.",
-        "box": {
-          "inside": "What's inside",
-          "count": "{count} ×",
-          "picked": "{name}, picked by us",
-          "worth": "What we pick is worth at least {value}.",
-          "theme": "Theme",
-          "pickTheme": "Pick a theme: we pack the box to it.",
-          "themeLine": "Theme: {theme}"
-        }
+        "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass."
       },
       "rating": {
         "label": "Rated {rating} out of 5",
@@ -2810,12 +2801,6 @@
       "notCancellable": "Boxy can no longer cancel this parcel (it has been collected).",
       "apiUnavailable": "The server couldn't be reached. Try again shortly.",
       "unknown": "Something went wrong. Try again.",
-      "boxPrice": "A box goes on sale only at 10–15% below its parts. Change its price or its parts.",
-      "boxParts": "Add the box's parts before putting it on sale.",
-      "boxPicks": "Pick the right number of copies for each slot, from its category and format.",
-      "boxValue": "The picked copies are worth less than the box promises. Pick others.",
-      "boxPacked": "This box is already packed.",
-      "boxStock": "There isn't enough stock of the box's parts.",
       "telegramFailed": "Telegram refused the request. Check the bot token and try again.",
       "telegramSecretMissing": "The API has no webhook secret yet. Set it on Vercel first (see Telegram → Bot)."
     },
@@ -2931,8 +2916,7 @@
         "categories": "Categories",
         "plans": "Plans",
         "settings": "Delivery",
-        "import": "Import",
-        "boxes": "Boxes"
+        "import": "Import"
       },
       "filters": {
         "anyKind": "All lines",
@@ -3254,41 +3238,6 @@
           "repair": "In repair",
           "retired": "Retired"
         }
-      },
-      "boxes": {
-        "description": "The boxes still on sale, each in stock while its parts are and packed to the theme the customer picks. No new boxes are made; a box leaves the store when its parts sell out.",
-        "empty": "No boxes left.",
-        "productSlug": "Product slug",
-        "minValue": "Picked items worth at least (IQD)",
-        "minValueHint": "What the copies staff pick must be worth together, per box.",
-        "season": "Season",
-        "seasons": {
-          "none": "All year",
-          "eid": "Eid",
-          "ramadan": "Ramadan",
-          "university": "Back to university"
-        },
-        "stock": "{count} can be made now",
-        "below": "{percent}% below its parts",
-        "priceCheck": "Price {price}; parts worth {value}. To go on sale it costs {min}–{max}.",
-        "parts": "Parts",
-        "noParts": "No parts yet: add products or slots below.",
-        "part": "{count} × {name}",
-        "picked": "picked when packing",
-        "quantity": "How many",
-        "addProduct": "Add product",
-        "category": "Category",
-        "format": "Format (optional)",
-        "addSlot": "Add slot",
-        "remove": "Remove",
-        "themes": "Themes customers pick from",
-        "themeAr": "Theme (Arabic)",
-        "themeEn": "Theme (English)",
-        "addTheme": "Add theme",
-        "stopOffering": "Stop offering",
-        "offerAgain": "Offer again",
-        "putOnSale": "Put on sale",
-        "takeOff": "Take off sale"
       }
     },
     "orders": {
@@ -3394,19 +3343,6 @@
         "pending": "Waiting for the guardian",
         "approved": "Approved by the guardian",
         "declined": "Declined by the guardian"
-      },
-      "boxesToPack": "Boxes to pack",
-      "boxes": {
-        "title": "Boxes to pack",
-        "back": "Orders",
-        "description": "Paid box orders: pick the copies for each slot to the customer's theme, worth at least what the box promises.",
-        "empty": "No boxes waiting to be packed.",
-        "order": "Order {number}: {name}",
-        "line": "{customer} · {quantity} × · Theme: {theme}",
-        "noTheme": "none",
-        "pick": "Pick {count}: {name}",
-        "noCopies": "No copies left for this slot.",
-        "pack": "Pack the box"
       }
     },
     "rentals": {
