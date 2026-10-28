@@ -73,11 +73,11 @@ select is(
 
 -- Owners and admins add sections; each is kept once, in order.
 select pg_temp.login_as('00000000-0000-0000-0000-000000000982');
-update public.organizations set features = '{developers,bulk_buying,developers}'
+update public.organizations set features = '{developers,team,developers}'
 where id = '98000000-0000-0000-0000-0000000000c1';
 select is(
   (select features from public.organizations where id = '98000000-0000-0000-0000-0000000000c1'),
-  '{bulk_buying,developers}'::text[], 'An admin switches sections on (each once, sorted)'
+  '{developers,team}'::text[], 'An admin switches sections on (each once, sorted)'
 );
 
 select throws_ok(
@@ -92,7 +92,7 @@ update public.organizations set features = '{}'
 where id = '98000000-0000-0000-0000-0000000000c1';
 select is(
   (select features from public.organizations where id = '98000000-0000-0000-0000-0000000000c1'),
-  '{bulk_buying,developers}'::text[], 'Members see the sections but cannot change them'
+  '{developers,team}'::text[], 'Members see the sections but cannot change them'
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000984');
@@ -104,11 +104,11 @@ select is_empty(
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000981');
-update public.organizations set features = '{bulk_buying}'
+update public.organizations set features = '{team}'
 where id = '98000000-0000-0000-0000-0000000000c1';
 select is(
   (select features from public.organizations where id = '98000000-0000-0000-0000-0000000000c1'),
-  '{bulk_buying}'::text[], 'The owner switches a section off'
+  '{team}'::text[], 'The owner switches a section off'
 );
 
 select throws_ok(
@@ -124,7 +124,7 @@ insert into public.perks (organization_id, partner_name, title_ar, title_en) val
   ('98000000-0000-0000-0000-0000000000c1', 'Org', 'خصم ٢', 'Discount 2');
 select is(
   (select features from public.organizations where id = '98000000-0000-0000-0000-0000000000c1'),
-  '{bulk_buying,perks}'::text[], 'A perk switches Perks on'
+  '{perks,team}'::text[], 'A perk switches Perks on'
 );
 
 select is(
