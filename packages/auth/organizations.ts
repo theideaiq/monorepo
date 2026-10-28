@@ -44,7 +44,7 @@ export const listMemberships = async (
   }
 
   return data.flatMap(({ organization, role }) =>
-    organization
+    organization && role
       ? [
           {
             ...organization,

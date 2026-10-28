@@ -60,7 +60,7 @@ update public.profiles set full_name = 'Mina' where id = '00000000-0000-0000-000
 insert into public.organizations (id, name, slug) values
   ('9b000000-0000-0000-0000-0000000000c1', 'The Iraqi Curator', 'curator-9b'),
   ('9b000000-0000-0000-0000-0000000000c2', 'Books', 'books-9b');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('9b000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000009b1', 'admin'),
   ('9b000000-0000-0000-0000-0000000000c2', '00000000-0000-0000-0000-0000000009b1', 'member');
 insert into public.pass_partners (client_id, name, website, redirect_uris, answers, secret_hash, organization_id)
@@ -86,7 +86,7 @@ select ok(
   not (public.pass_claims('00000000-0000-0000-0000-0000000009b1', 'pass_0000000000000000curator9', '{openid,address}') ? 'organizations'),
   'Nothing about organizations without the scope'
 );
-delete from public.memberships where user_id = '00000000-0000-0000-0000-0000000009b1';
+delete from public.organization_members where user_id = '00000000-0000-0000-0000-0000000009b1';
 select is(
   public.pass_claims('00000000-0000-0000-0000-0000000009b1', 'pass_0000000000000000curator9', '{openid,organizations}') -> 'organizations',
   '[]'::jsonb, 'No organizations: an empty list'

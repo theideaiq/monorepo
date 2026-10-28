@@ -61,7 +61,7 @@ insert into auth.users (id, email) values
 insert into public.staff (user_id, role) values ('00000000-0000-0000-0000-0000000009e2', 'admin');
 insert into public.organizations (id, name, slug, created_by) values
   ('9e000000-0000-0000-0000-0000000000c1', 'Shop', 'shop-9e', '00000000-0000-0000-0000-0000000009e1');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('9e000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000009e1', 'owner');
 insert into storage.objects (bucket_id, name) values
   ('org-files', '9e000000-0000-0000-0000-0000000000c1/licence.pdf'),

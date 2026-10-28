@@ -55,7 +55,9 @@ const useOtherMembers = (organizationId: string, enabled: boolean) => {
       if (error) {
         throw error;
       }
-      const ids = memberships.map((membership) => membership.user_id);
+      const ids = memberships.flatMap(({ user_id }) =>
+        user_id ? [user_id] : []
+      );
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, full_name")

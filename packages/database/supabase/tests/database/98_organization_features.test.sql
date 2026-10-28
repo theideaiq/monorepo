@@ -61,7 +61,7 @@ insert into auth.users (id, email, email_confirmed_at) values
   ('00000000-0000-0000-0000-000000000984', 'x98@example.iq', now());
 insert into public.organizations (id, name, slug, created_by) values
   ('98000000-0000-0000-0000-0000000000c1', 'Org', 'org-98', '00000000-0000-0000-0000-000000000981');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('98000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000981', 'owner'),
   ('98000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000982', 'admin'),
   ('98000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000983', 'member');

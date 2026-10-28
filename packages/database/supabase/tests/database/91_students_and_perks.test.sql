@@ -198,7 +198,7 @@ select is(
 -- ── Perks ──
 insert into public.organizations (id, name, slug, created_by) values
   ('91000000-0000-0000-0000-0000000000c1', 'Bean Café', 'bean-cafe', '00000000-0000-0000-0000-000000000915');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('91000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000915', 'owner');
 insert into public.perks (id, organization_id, partner_name, kind, title_ar, title_en, audience) values
   ('91000000-0000-0000-0000-0000000000e1', '91000000-0000-0000-0000-0000000000c1', 'Bean Café', 'cafe',

@@ -67,7 +67,7 @@ update public.profiles set birthday = date '1990-01-01' where birthday is null;
 insert into public.staff (user_id, role) values ('00000000-0000-0000-0000-0000000009d5', 'admin');
 insert into public.organizations (id, name, slug, created_by) values
   ('9d000000-0000-0000-0000-0000000000c1', 'Records Shop', 'records-9d', '00000000-0000-0000-0000-0000000009d1');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('9d000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000009d1', 'owner'),
   ('9d000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000009d2', 'member');
 insert into public.products (id, slug, name_ar, name_en, price, stock_count, status, kind, condition) values

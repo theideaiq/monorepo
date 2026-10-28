@@ -19,7 +19,7 @@ const recipientsOf = async (invoice: RenewalInvoice) => {
     .select("user_id")
     .eq("organization_id", invoice.organizationId ?? "")
     .in("role", ["owner", "admin"]);
-  return (managers ?? []).map(({ user_id }) => user_id);
+  return (managers ?? []).flatMap(({ user_id }) => (user_id ? [user_id] : []));
 };
 
 /**

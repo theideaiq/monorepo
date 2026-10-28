@@ -67,7 +67,7 @@ insert into public.staff (user_id, role) values ('00000000-0000-0000-0000-000000
 insert into public.organizations (id, name, slug, created_by) values
   ('9e000000-0000-0000-0000-0000000000c1', 'Book Shop', 'books-9g', '00000000-0000-0000-0000-000000000ae1'),
   ('9e000000-0000-0000-0000-0000000000c2', 'Other Shop', 'other-9g', '00000000-0000-0000-0000-000000000ae3');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('9e000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000ae1', 'owner'),
   ('9e000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000ae2', 'member'),
   ('9e000000-0000-0000-0000-0000000000c2', '00000000-0000-0000-0000-000000000ae3', 'owner');

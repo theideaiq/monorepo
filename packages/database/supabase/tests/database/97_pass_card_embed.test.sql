@@ -65,7 +65,7 @@ where id in ('00000000-0000-0000-0000-000000000971', '00000000-0000-0000-0000-00
 insert into public.staff (user_id, role) values ('00000000-0000-0000-0000-000000000974', 'support');
 insert into public.organizations (id, name, slug, created_by) values
   ('97000000-0000-0000-0000-0000000000c1', 'Sal', 'sal', '00000000-0000-0000-0000-000000000971');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('97000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000971', 'owner'),
   ('97000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000972', 'member');
 create temporary table made (client text, token text);
