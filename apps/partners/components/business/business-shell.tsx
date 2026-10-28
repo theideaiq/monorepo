@@ -30,6 +30,7 @@ const SELLING_TABS = [
   { href: "/selling", key: "shop" },
   { href: "/selling/listings", key: "listings" },
   { href: "/selling/orders", key: "shopOrders" },
+  { href: "/selling/returns", key: "shopReturns" },
   { href: "/selling/pickup", key: "pickup" },
 ] as const;
 

@@ -1648,7 +1648,8 @@
         "listings": "المعروضات",
         "orders": "الطلبات بالجملة",
         "shopOrders": "الطلبات",
-        "pickup": "الاستلام"
+        "pickup": "الاستلام",
+        "shopReturns": "المُرجَعات"
       },
       "members": {
         "title": "الأعضاء",
@@ -2675,6 +2676,44 @@
         "errors": {
           "save": "تعذّر حفظ الفرع. تحقق من البيانات وحاول مجدداً.",
           "sync": "لم يقبل Boxy الفرع. تحقق من البيانات وحاول مجدداً."
+        }
+      },
+      "shopReturns": {
+        "title": "المُرجَعات",
+        "notApproved": "تُتاح المُرجَعات بعد اعتماد متجرك.",
+        "waitingTitle": "بانتظار ردك",
+        "waitingDescription": "اقبل الطلب أو اعترض عليه خلال 48 ساعة، وإن لم ترد يُعدّ مقبولًا. وعند عودة المنتج، افحصه خلال 48 ساعة.",
+        "noneWaiting": "لا شيء بانتظار ردك.",
+        "otherTitle": "مُرجَعات أخرى",
+        "noneOther": "لا مُرجَعات أخرى.",
+        "line": "الإرجاع R-{number} · الطلب #{order} · {customer}",
+        "unopened": "غير مفتوح",
+        "photo": "الصورة {number}",
+        "answerBy": "الرد قبل {time}",
+        "staffNote": "The IDEA: {note}",
+        "feeYours": "تُخصم أجرة توصيل الإرجاع ({fee}) من مستحقاتك.",
+        "disputeNote": "سبب الاعتراض (مطلوب للاعتراض)",
+        "problemNote": "ما المشكلة في المنتج (مطلوب للإبلاغ)",
+        "accept": "قبول",
+        "dispute": "اعتراض",
+        "itemFine": "المنتج سليم",
+        "itemProblem": "أبلغ عن مشكلة",
+        "failed": "لم ينجح ذلك. حاول مجددًا.",
+        "parcelsTitle": "طرود رُفضت عند الباب",
+        "parcelsDescription": "أعادت Boxy هذه الطرود. أكّد عودة كل طرد إليك؛ فتُلغى سطوره وتعود النسخ إلى البيع.",
+        "parcelLine": "الطلب #{order} · {customer}",
+        "returnedOn": "أُعيد {time}",
+        "parcelBack": "عاد إليّ",
+        "status": {
+          "requested": "بانتظار ردك",
+          "disputed": "تقرّر The IDEA",
+          "approved": "مقبول",
+          "collecting": "في طريق العودة",
+          "received": "بانتظار الفحص",
+          "refund_due": "المبلغ مستحق",
+          "refunded": "أُعيد المبلغ",
+          "rejected": "غير مقبول",
+          "cancelled": "مسحوب"
         }
       }
     },

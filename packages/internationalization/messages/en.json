@@ -1648,7 +1648,8 @@
         "listings": "Listings",
         "orders": "Bulk orders",
         "shopOrders": "Orders",
-        "pickup": "Pickup"
+        "pickup": "Pickup",
+        "shopReturns": "Returns"
       },
       "members": {
         "title": "Members",
@@ -2675,6 +2676,44 @@
         "errors": {
           "save": "The branch couldn't be saved. Check the details and try again.",
           "sync": "Boxy didn't take the branch. Check the details and try again."
+        }
+      },
+      "shopReturns": {
+        "title": "Returns",
+        "notApproved": "Returns open once your shop is approved.",
+        "waitingTitle": "For you to answer",
+        "waitingDescription": "Accept or dispute a request within 48 hours; if you don't answer, it's accepted. When an item is back, check it within 48 hours.",
+        "noneWaiting": "Nothing to answer.",
+        "otherTitle": "Other returns",
+        "noneOther": "No other returns.",
+        "line": "Return R-{number} · order #{order} · {customer}",
+        "unopened": "unopened",
+        "photo": "Photo {number}",
+        "answerBy": "Answer by {time}",
+        "staffNote": "The IDEA: {note}",
+        "feeYours": "The return delivery ({fee}) comes from your payout.",
+        "disputeNote": "Why you dispute it (needed to dispute)",
+        "problemNote": "What's wrong with it (needed to report a problem)",
+        "accept": "Accept",
+        "dispute": "Dispute",
+        "itemFine": "It's fine",
+        "itemProblem": "Report a problem",
+        "failed": "That didn't work. Try again.",
+        "parcelsTitle": "Parcels refused at the door",
+        "parcelsDescription": "Boxy brought these back. Confirm each one is back with you; its lines are cancelled and the copies go back on sale.",
+        "parcelLine": "Order #{order} · {customer}",
+        "returnedOn": "Returned {time}",
+        "parcelBack": "It's back",
+        "status": {
+          "requested": "To answer",
+          "disputed": "The IDEA is deciding",
+          "approved": "Accepted",
+          "collecting": "On its way back",
+          "received": "To check",
+          "refund_due": "Refund due",
+          "refunded": "Refunded",
+          "rejected": "Not accepted",
+          "cancelled": "Withdrawn"
         }
       }
     },
