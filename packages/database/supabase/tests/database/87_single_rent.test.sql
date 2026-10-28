@@ -72,8 +72,8 @@ values ('plus-rent-test', 'Plus Glow', 14750, 'month', 'plus', 1, 1);
 insert into public.subscriptions (user_id, plan_id, status, provider, current_period_start, current_period_end)
 values ('00000000-0000-0000-0000-000000000872', 'plus-rent-test', 'active', 'wayl', now(), now() + interval '30 days');
 
-update public.store_settings set cash_on_delivery_enabled = true, pickup_enabled = true,
-  pickup_address_en = 'Karrada, Baghdad', rental_deposit_rate = 50;
+update public.store_settings set cash_on_delivery_enabled = true, rental_deposit_rate = 50;
+update public.delivery_zones set active = true, fee = 5000 where governorate = 'baghdad';
 
 insert into public.products (id, slug, name_ar, name_en, price, stock_count, status, kind, category_id) values
   ('87000000-0000-0000-0000-000000000001', 'rent-game', 'لعبة', 'Game', 59750, 3, 'active', 'rental',
@@ -101,12 +101,12 @@ grant all on rented to authenticated;
 insert into rented
 select (public.create_rental_order(
   '87000000-0000-0000-0000-000000000001',
-  '{"full_name":"R","phone":"+9647700000871"}', 'pickup', 'online')).id;
+  '{"full_name":"R","phone":"+9647700000871","governorate":"baghdad","address":"Karrada"}', 'delivery', 'online')).id;
 
 select results_eq(
   $$ select status::text, subtotal, shipping_fee, total, max_bulbs from public.orders where id = (select id from rented) $$,
-  $$ values ('pending', 39500::bigint, 0::bigint, 39500::bigint, 0) $$,
-  'the order is the rent plus the deposit, picked up free, and earns no Bulbs'
+  $$ values ('pending', 39500::bigint, 5000::bigint, 44500::bigint, 0) $$,
+  'the order is the rent plus the deposit and delivery, and earns no Bulbs'
 );
 select results_eq(
   $$ select kind, unit_price from public.order_items where order_id = (select id from rented) order by kind desc $$,
@@ -135,7 +135,7 @@ update public.orders set status = 'delivered' where id = (select id from rented)
 select results_eq(
   $$ select status::text, due_at - started_at from public.rentals where order_id = (select id from rented) $$,
   $$ values ('active', interval '7 days') $$,
-  'collecting it starts the rental for 7 days'
+  'delivering it starts the rental for 7 days'
 );
 
 -- Returned 3 days late.
@@ -161,7 +161,7 @@ truncate rented;
 insert into rented
 select (public.create_rental_order(
   '87000000-0000-0000-0000-000000000001',
-  '{"full_name":"R","phone":"+9647700000871"}', 'pickup', 'cash_on_delivery')).id;
+  '{"full_name":"R","phone":"+9647700000871","governorate":"baghdad","address":"Karrada"}', 'delivery', 'cash_on_delivery')).id;
 select is(
   (select status::text from public.orders where id = (select id from rented)), 'confirmed',
   'a cash rental is confirmed at once'
@@ -182,7 +182,7 @@ truncate rented;
 insert into rented
 select (public.create_rental_order(
   '87000000-0000-0000-0000-000000000001',
-  '{"full_name":"R","phone":"+9647700000871"}', 'pickup', 'online')).id;
+  '{"full_name":"R","phone":"+9647700000871","governorate":"baghdad","address":"Karrada"}', 'delivery', 'online')).id;
 select public.cancel_order((select id from rented));
 select pg_temp.reset_role();
 select is(

@@ -125,7 +125,7 @@ select lives_ok(
 select lives_ok(
   $$insert into public.orders (user_id, subtotal, shipping_fee, total, shipping_address, fulfilment)
     values ('00000000-0000-0000-0000-0000000009f1', 1000, 0, 1000, '{}', 'pickup')$$,
-  'Store pickup needs no phone'
+  'An order with nothing to deliver needs no phone'
 );
 select throws_ok(
   $$select public.set_plus_home('99f00000-0000-0000-0000-0000000000a1', 'Street 1', '+9647700009999')$$,

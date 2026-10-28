@@ -3428,11 +3428,6 @@ export type Database = {
           max_giveaway_rate: number;
           min_margin_rate: number;
           payment_fee_rate: number;
-          pickup_address_ar: string | null;
-          pickup_address_en: string | null;
-          pickup_enabled: boolean;
-          pickup_hours_ar: string | null;
-          pickup_hours_en: string | null;
           plus_capacity: number;
           plus_invite_hours: number;
           rental_deposit_rate: number;
@@ -3453,11 +3448,6 @@ export type Database = {
           max_giveaway_rate?: number;
           min_margin_rate?: number;
           payment_fee_rate?: number;
-          pickup_address_ar?: string | null;
-          pickup_address_en?: string | null;
-          pickup_enabled?: boolean;
-          pickup_hours_ar?: string | null;
-          pickup_hours_en?: string | null;
           plus_capacity?: number;
           plus_invite_hours?: number;
           rental_deposit_rate?: number;
@@ -3478,11 +3468,6 @@ export type Database = {
           max_giveaway_rate?: number;
           min_margin_rate?: number;
           payment_fee_rate?: number;
-          pickup_address_ar?: string | null;
-          pickup_address_en?: string | null;
-          pickup_enabled?: boolean;
-          pickup_hours_ar?: string | null;
-          pickup_hours_en?: string | null;
           plus_capacity?: number;
           plus_invite_hours?: number;
           rental_deposit_rate?: number;

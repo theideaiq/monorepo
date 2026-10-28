@@ -192,7 +192,7 @@ select throws_ok(
 insert into public.cart_items (product_id, variant_id, quantity, condition)
 values ('79000000-0000-0000-0000-000000000001', '79100000-0000-0000-0000-000000000002', 1, 'new');
 select lives_ok(
-  $$ select public.create_order('{"full_name":"M","phone":"+9647700000101","address":"Karrada"}', 'pickup', 'cash_on_delivery') $$,
+  $$ select public.create_order('{"full_name":"M","phone":"+9647700000101","governorate":"baghdad","address":"Karrada"}', 'delivery', 'cash_on_delivery') $$,
   'an order takes the chosen variant'
 );
 select results_eq(
