@@ -193,8 +193,8 @@ decisions with a date.
       `TWILIO_VERIFY_SERVICE_SID` on the theideaiq-api Vercel project. For
       WhatsApp, add a WhatsApp sender to the Verify service (needs the
       verified Meta Business); until then codes go by SMS. Once codes
-      arrive, turn on "Require a verified phone" (`store_settings.
-      require_verified_phone`) so deliveries and Plus homes need one.
+      arrive, turn on Staff → Catalogue → Settings → "Require a verified
+      phone for deliveries" so deliveries and Plus homes need one.
 - [ ] **Wayl, to check and record here:** whether Plus and Pro can renew
       automatically through Wayl subscriptions; a partial refund in test
       mode.

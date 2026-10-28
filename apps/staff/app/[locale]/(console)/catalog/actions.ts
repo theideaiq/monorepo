@@ -194,6 +194,7 @@ export const saveStoreSettings = staffAction(
     pickupEnabled: checkbox,
     pickupHoursAr: optionalText(200),
     pickupHoursEn: optionalText(200),
+    requireVerifiedPhone: checkbox,
     shippingFee: int(0),
   }),
   async ({ input, supabase }) => {
@@ -207,6 +208,7 @@ export const saveStoreSettings = staffAction(
           pickup_enabled: input.pickupEnabled,
           pickup_hours_ar: input.pickupHoursAr,
           pickup_hours_en: input.pickupHoursEn,
+          require_verified_phone: input.requireVerifiedPhone,
           shipping_fee: input.shippingFee,
         })
         .eq("id", true)

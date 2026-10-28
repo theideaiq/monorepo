@@ -31,6 +31,7 @@ import { SignInMethodsCard } from "@/components/sign-in-methods";
 import { SectionSpinner } from "@/components/states";
 import { StudentCard } from "@/components/student-settings";
 import { TelegramSettingsCard } from "@/components/telegram-settings";
+import { VerifiedPhonesCard } from "@/components/verify-phone";
 import { WhatsAppSettingsCard } from "@/components/whatsapp-settings";
 import { useProfile } from "@/lib/queries";
 
@@ -136,6 +137,7 @@ export const Settings = ({
           </CardContent>
         </Card>
         <AddressBookCard />
+        <VerifiedPhonesCard />
         <PasswordSettingsCard />
         <SignInMethodsCard providers={providers} />
         <BirthdayCard />

@@ -1244,7 +1244,8 @@
         "adultsOnly": "Kits are booked by adults (18 or over).",
         "baghdadOnly": "Kits are delivered in Baghdad only.",
         "pickWeekend": "Choose one of the coming weekends.",
-        "pickGames": "Choose the kit's games."
+        "pickGames": "Choose the kit's games.",
+        "phoneUnverified": "Verify the delivery phone number first: we'll send it a code."
       },
       "fulfilment": {
         "title": "Delivery or pickup",
@@ -2500,6 +2501,32 @@
       "depositNote": "We refund the deposit after collection, less any damage. Show your ID at the door.",
       "adultsNote": "Kits are booked by adults (18 or over).",
       "noDepositNote": "Verified students book without a deposit."
+    },
+    "verifyPhone": {
+      "title": "Verified phone numbers",
+      "description": "Deliveries go to a number you've confirmed with a code. We send codes on WhatsApp, or by SMS.",
+      "none": "No verified numbers yet.",
+      "add": "Add a number",
+      "placeholder": "0770 123 4567",
+      "continue": "Continue",
+      "remove": "Remove {phone}",
+      "intro": "We'll send a code to {phone} to confirm it's yours.",
+      "send": "Send code",
+      "sending": "Sending…",
+      "sentWhatsApp": "We sent a code to {phone} on WhatsApp.",
+      "sentSms": "We sent a code to {phone} by SMS.",
+      "code": "Code",
+      "verify": "Verify",
+      "checking": "Checking…",
+      "resend": "Send a new code",
+      "problems": {
+        "expired": "That code has expired. Send a new one.",
+        "invalid_phone": "We can't send a code to this number. Check it and try again.",
+        "not_configured": "Phone codes aren't available yet.",
+        "too_many": "Too many tries. Wait a while and try again.",
+        "unavailable": "Something went wrong. Try again.",
+        "wrong_code": "That code isn't right."
+      }
     }
   },
   "store": {
@@ -3007,6 +3034,8 @@
         "shippingFeeHint": "Shown in the cart before the customer chooses a governorate. Orders use the zone's fee.",
         "cashOnDelivery": "Offer cash payment",
         "cashOnDeliveryHint": "Cash on delivery, and pay at pickup. Not third-party checkout, so it is offered in the iOS and Android apps too.",
+        "requireVerifiedPhone": "Require a verified phone for deliveries",
+        "requireVerifiedPhoneHint": "Customers confirm their delivery number with a code (WhatsApp or SMS) before ordering; Plus homes too. Turn on once Twilio Verify is set up.",
         "pickup": {
           "title": "Store pickup",
           "description": "Customers collect orders at the store, with no delivery fee. Offered at checkout once it is on and has an address.",

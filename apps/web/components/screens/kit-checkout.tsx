@@ -22,7 +22,7 @@ import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, BanknoteIcon, LockIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { type FormEvent, useId, useState } from "react";
+import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import {
   ContactCard,
@@ -31,6 +31,7 @@ import {
   useCheckoutAreas,
 } from "@/components/screens/checkout";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { CheckoutErrorNote } from "@/components/store/checkout-error";
 import {
   type AddressField,
   type AddressForm,
@@ -243,7 +244,8 @@ const KitSummary = ({
   readonly busy: boolean;
   readonly cash: boolean;
   readonly deposit: number;
-  readonly error: CheckoutError | null;
+  /** Why placing failed (CheckoutErrorNote), if it did. */
+  readonly error: ReactNode;
   readonly extraDays: number;
   readonly name: string;
   readonly ready: boolean;
@@ -287,11 +289,7 @@ const KitSummary = ({
           <li>{deposit > 0 ? t("depositNote") : t("noDepositNote")}</li>
           <li>{t("adultsNote")}</li>
         </ul>
-        {error ? (
-          <p className="text-destructive" role="alert">
-            {tCheckout(`errors.${error}`)}
-          </p>
-        ) : null}
+        {error}
         <Button disabled={busy || !ready} size="lg" type="submit">
           {busy
             ? tCheckout("placing")
@@ -476,7 +474,13 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
               busy={busy}
               cash={cash}
               deposit={isStudent ? 0 : type.deposit}
-              error={error}
+              error={
+                <CheckoutErrorNote
+                  error={error}
+                  onPhoneVerified={() => setError(null)}
+                  phone={address.phone}
+                />
+              }
               extraDays={extraDays}
               name={localized(type, "name", locale)}
               ready={ready}

@@ -17,6 +17,7 @@ export interface StoreSettingsValues {
   pickup_enabled: boolean;
   pickup_hours_ar: string | null;
   pickup_hours_en: string | null;
+  require_verified_phone: boolean;
   shipping_fee: number;
 }
 
@@ -48,6 +49,12 @@ export const StoreSettingsForm = ({
           hint={t("cashOnDeliveryHint")}
           label={t("cashOnDelivery")}
           name="cashOnDelivery"
+        />
+        <CheckboxField
+          defaultChecked={settings.require_verified_phone}
+          hint={t("requireVerifiedPhoneHint")}
+          label={t("requireVerifiedPhone")}
+          name="requireVerifiedPhone"
         />
         <div className="grid gap-4 rounded-md border p-4">
           <div className="grid gap-1">
