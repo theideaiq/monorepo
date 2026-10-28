@@ -553,6 +553,20 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: Selling, commission and plans, the schema
+  (`20270122000000_seller_plans.sql`; master brief step 5, section 7).
+  `commission_rates` holds each category's standard and Pro rate (Books,
+  Music and Films 12% / 10%, Games 10% / 8%, Gear 9% / 7%), public to read
+  and edited by finance staff; a new category starts at 12% / 10%. Shops
+  are on `free` (up to 100 active listings, enforced on `seller_offers`)
+  or `pro` (unlimited, the Pro rate; 49,750 IQD a month or 497,500 a year
+  from payouts, `seller_plan_price()`), changed by the shop's owners and
+  admins or finance with `set_seller_plan()`; going back to Free needs 100
+  or fewer active listings. Each shop's order line keeps its rate, the
+  commission and the payout after it (`order_items.commission_rate`,
+  `commission`, `seller_payout`), fixed when ordered; The IDEA's own stock
+  pays none. Pro's promoted-listing credit, seller API and full insights
+  come with those features.
 - 2026-10-28: The student check, part 2. theideaiq.com/verify ("Verify
   you're a student", no menus): signed out, the university and its email
   sign in with the emailed code and verify at once, or any email plus a
