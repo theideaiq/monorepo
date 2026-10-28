@@ -11,7 +11,7 @@ import {
 } from "@repo/design-system/components/ui/dropdown-menu";
 import { CheckIcon, ChevronsUpDownIcon, PlusIcon } from "lucide-react";
 import { type AuthMessages, defaultAuthMessages } from "../messages";
-import type { OrganizationMembership } from "../organizations";
+import type { MyOrganization } from "../organizations";
 
 interface OrganizationSwitcherProps {
   readonly activeId: string | null;
@@ -20,7 +20,7 @@ interface OrganizationSwitcherProps {
   readonly onCreate?: () => void;
   /** Called with the chosen organization; the app remembers the choice. */
   readonly onSelect: (organizationId: string) => void;
-  readonly organizations: OrganizationMembership[];
+  readonly organizations: MyOrganization[];
 }
 
 /** Switches the organization the user is working in. */

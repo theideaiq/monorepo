@@ -6,7 +6,7 @@ import type {
 
 /**
  * Who pays: a customer organization (business plans) or a single user (The IDEA
- * Plus memberships and store orders).
+ * Plus plans and store orders).
  */
 export type BillingOwner =
   | { organizationId: string; userId?: undefined }

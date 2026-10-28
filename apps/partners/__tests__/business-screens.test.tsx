@@ -38,7 +38,7 @@ const renderScreen = (
 describe("business", () => {
   test("Business offers to create or join one", async () => {
     const db = fakeDb({
-      results: { "memberships.select": { data: [], error: null } },
+      results: { "organization_members.select": { data: [], error: null } },
       rpcs: {
         pending_invitations: {
           data: [

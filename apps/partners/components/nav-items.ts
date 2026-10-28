@@ -1,6 +1,6 @@
 import type {
+  MyOrganization,
   OrganizationFeature,
-  OrganizationMembership,
 } from "@repo/auth/organizations";
 import {
   Building2Icon,
@@ -50,19 +50,19 @@ export const navItems: NavItem[] = [
   { href: "/organization", icon: Building2Icon, key: "organization" },
 ];
 
-export const isManager = (membership: OrganizationMembership) =>
-  membership.role === "owner" || membership.role === "admin";
+export const isManager = (organization: MyOrganization) =>
+  organization.role === "owner" || organization.role === "admin";
 
-/** The sections `membership` shows (only Home without an organization). */
-export const visibleNavItems = (membership: OrganizationMembership | null) =>
+/** The sections `organization` shows (only Home without an organization). */
+export const visibleNavItems = (organization: MyOrganization | null) =>
   navItems.filter((item) => {
-    if (!membership) {
+    if (!organization) {
       return item.key === "home";
     }
-    if (item.feature && !membership.features.includes(item.feature)) {
+    if (item.feature && !organization.features.includes(item.feature)) {
       return false;
     }
-    return !item.managersOnly || isManager(membership);
+    return !item.managersOnly || isManager(organization);
   });
 
 /** Whether `pathname` is inside the section at `href`. */

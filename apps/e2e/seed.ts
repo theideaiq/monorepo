@@ -172,7 +172,7 @@ export const resetCompany = async () => {
   }
   check(
     await db
-      .from("memberships")
+      .from("organization_members")
       .insert({ organization_id: data.id, role: "owner", user_id: userId })
   );
   return data.id;

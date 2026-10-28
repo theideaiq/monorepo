@@ -33,18 +33,15 @@ export const useMembers = (organizationId: string) => {
   const { supabase } = useAuth();
   return useQuery({
     queryFn: async (): Promise<Member[]> => {
-      const memberships = (
+      const rows =
         unwrap(
           await supabase
-            .from("memberships")
+            .from("organization_members")
             .select("user_id, role")
             .eq("organization_id", organizationId)
             .order("created_at")
-        ) ?? []
-      ).flatMap(({ role, user_id }) =>
-        role && user_id ? [{ role, user_id }] : []
-      );
-      const ids = memberships.map((membership) => membership.user_id);
+        ) ?? [];
+      const ids = rows.map((row) => row.user_id);
       const profiles = ids.length
         ? (unwrap(
             await supabase
@@ -56,10 +53,10 @@ export const useMembers = (organizationId: string) => {
       const names = new Map(
         profiles.map((profile) => [profile.id, profile.full_name])
       );
-      return memberships.map((membership) => ({
-        fullName: names.get(membership.user_id) ?? null,
-        role: membership.role,
-        userId: membership.user_id,
+      return rows.map((row) => ({
+        fullName: names.get(row.user_id) ?? null,
+        role: row.role,
+        userId: row.user_id,
       }));
     },
     queryKey: queryKeys.organizationMembers(organizationId),
@@ -141,7 +138,7 @@ const useRefreshMembers = (organizationId: string) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.organizationMembers(organizationId),
       }),
-      queryClient.invalidateQueries({ queryKey: ["memberships"] }),
+      queryClient.invalidateQueries({ queryKey: ["my-organizations"] }),
     ]);
 };
 
@@ -152,7 +149,7 @@ export const useChangeRole = (organizationId: string) => {
     mutationFn: async ({ role, userId }: { role: OrgRole; userId: string }) => {
       const rows = unwrap(
         await supabase
-          .from("memberships")
+          .from("organization_members")
           .update({ role })
           .eq("organization_id", organizationId)
           .eq("user_id", userId)
@@ -174,7 +171,7 @@ export const useRemoveMember = (organizationId: string) => {
     mutationFn: async (userId: string) => {
       const rows = unwrap(
         await supabase
-          .from("memberships")
+          .from("organization_members")
           .delete()
           .eq("organization_id", organizationId)
           .eq("user_id", userId)

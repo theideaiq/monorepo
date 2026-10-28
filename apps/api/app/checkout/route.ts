@@ -12,7 +12,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/env";
 import { corsHeaders, preflight, webOrigins } from "@/lib/cors";
-import { isManager, membershipRole } from "@/lib/membership";
+import { isManager, organizationRole } from "@/lib/organization-role";
 
 const body = z.object({
   /** Ad identifiers from `getAttribution()` in @repo/analytics/client. */
@@ -123,7 +123,7 @@ export const POST = async (request: Request) => {
 
   if (
     organizationId &&
-    !isManager(await membershipRole(session, organizationId))
+    !isManager(await organizationRole(session, organizationId))
   ) {
     return json({ error: "forbidden" }, 403);
   }

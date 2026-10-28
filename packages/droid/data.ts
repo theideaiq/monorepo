@@ -48,7 +48,7 @@ export interface JoinCheck {
   allowed: boolean;
   /** Whether the Telegram account is linked to The IDEA Pass. */
   linked: boolean;
-  /** open, pass (linked The IDEA Pass) or plus (and a live Plus membership). */
+  /** open, pass (linked The IDEA Pass) or plus (and a live Plus plan). */
   rule: string;
 }
 

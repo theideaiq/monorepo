@@ -47,17 +47,15 @@ const useOtherMembers = (organizationId: string, enabled: boolean) => {
   return useQuery({
     enabled: enabled && Boolean(user),
     queryFn: async () => {
-      const { data: memberships, error } = await supabase
-        .from("memberships")
+      const { data: teammates, error } = await supabase
+        .from("organization_members")
         .select("user_id")
         .eq("organization_id", organizationId)
         .neq("user_id", user?.id ?? "");
       if (error) {
         throw error;
       }
-      const ids = memberships.flatMap(({ user_id }) =>
-        user_id ? [user_id] : []
-      );
+      const ids = teammates.map((teammate) => teammate.user_id);
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, full_name")
@@ -98,13 +96,13 @@ const BlockerItem = ({ blocker, onResolved }: BlockerItemProps) => {
       }
       // RLS: only owners may grant the owner role.
       const { data, error } = await supabase
-        .from("memberships")
+        .from("organization_members")
         .update({ role: "owner" })
         .eq("organization_id", blocker.organization_id)
         .eq("user_id", memberId)
         .select("user_id");
       if (error || data.length === 0) {
-        throw error ?? new Error("Membership not updated");
+        throw error ?? new Error("Organization member not updated");
       }
     },
     onError: () => setFailed(true),
@@ -379,7 +377,7 @@ export const DeleteAccountDialog = ({ trigger }: DeleteAccountDialogProps) => {
       onOpenChange={(open) => {
         // Organizations may have changed; refresh the switcher on close.
         if (!open) {
-          queryClient.invalidateQueries({ queryKey: ["memberships"] });
+          queryClient.invalidateQueries({ queryKey: ["my-organizations"] });
         }
       }}
     >

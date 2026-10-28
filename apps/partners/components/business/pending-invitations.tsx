@@ -35,7 +35,7 @@ export const PendingInvitations = ({ onJoined }: PendingInvitationsProps) => {
     onError: (mutationError) => setError(toInvitationError(mutationError)),
     onSuccess: async (organizationId) => {
       rememberActiveOrganization(organizationId);
-      await queryClient.invalidateQueries({ queryKey: ["memberships"] });
+      await queryClient.invalidateQueries({ queryKey: ["my-organizations"] });
       onJoined();
     },
   });

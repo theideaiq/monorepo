@@ -15,7 +15,7 @@ import { ProfileForm } from "@/components/profile-form";
 import { ErrorState, FullPageSpinner } from "@/components/states";
 import { useMyGuardian } from "@/lib/guardian";
 import { needsOnboarding } from "@/lib/onboarding";
-import { useMemberships, useProfile } from "@/lib/queries";
+import { useMyOrganizations, useProfile } from "@/lib/queries";
 
 /**
  * First run after sign-up: name, language and marketing emails. Business
@@ -30,15 +30,15 @@ export const OnboardingFlow = () => {
   const next = withoutLocalePrefix(
     safeNextPath(useSearchParams().get("next")) ?? "/pass"
   );
-  const memberships = useMemberships();
+  const myOrganizations = useMyOrganizations();
   const profile = useProfile();
   // The date of birth comes first: the Pass is for 13 and over.
   const age = useMyGuardian();
   const finishing = useRef(false);
 
   const done =
-    profile.data && memberships.data
-      ? !needsOnboarding(profile.data, memberships.data.length)
+    profile.data && myOrganizations.data
+      ? !needsOnboarding(profile.data, myOrganizations.data.length)
       : false;
 
   // Already set up (e.g. opened /onboarding directly): go on.
@@ -48,19 +48,19 @@ export const OnboardingFlow = () => {
     }
   }, [done, next, router]);
 
-  if (memberships.isError || profile.isError) {
+  if (myOrganizations.isError || profile.isError) {
     return (
       <ErrorState
         className="min-h-dvh"
         onRetry={() => {
-          memberships.refetch();
+          myOrganizations.refetch();
           profile.refetch();
         }}
       />
     );
   }
 
-  if (!(memberships.data && profile.data) || (done && !finishing.current)) {
+  if (!(myOrganizations.data && profile.data) || (done && !finishing.current)) {
     return <FullPageSpinner />;
   }
 

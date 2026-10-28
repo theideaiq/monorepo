@@ -15,11 +15,11 @@ const recipientsOf = async (invoice: RenewalInvoice) => {
     return [invoice.userId];
   }
   const { data: managers } = await createAdminClient()
-    .from("memberships")
+    .from("organization_members")
     .select("user_id")
     .eq("organization_id", invoice.organizationId ?? "")
     .in("role", ["owner", "admin"]);
-  return (managers ?? []).flatMap(({ user_id }) => (user_id ? [user_id] : []));
+  return (managers ?? []).map(({ user_id }) => user_id);
 };
 
 /**
