@@ -110,7 +110,9 @@ incidents) is in `docs/platform`.
   - the console at its root (`app/[locale]/(console)`), one menu
     (`menu` in `lib/admin/roles.ts`): Inbox `/` (with `/support`) ·
     Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
-    automatic checks on products shops create and shops' flags) · Orders and delivery
+    automatic checks on products shops create and shops' flags, and
+    `/catalog/offers`, offers on The IDEA's own stock; each product's page
+    sets which of its copies take offers) · Orders and delivery
     `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
     and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·
     Club `/club` (with `/club/telegram`) · Partners `/partners` (Team
