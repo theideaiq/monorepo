@@ -76,7 +76,10 @@ incidents) is in `docs/platform`.
   `partners.theideaiq.com`), the organization dashboard, server-rendered
   with a `proxy.ts` (locale, session refresh, security headers): its pages
   are at the root (`app/[locale]/(business)`): Home `/`, Selling
-  `/selling` (the shop's application, documents and payout details),
+  `/selling` (the shop's application, documents and payout details) with
+  `/selling/listings` (the shop's offers: find a product by ISBN, barcode or
+  title, add an offer or create the product, change copies and price, flag
+  wrong details),
   Perks `/perks`,
   Bulk buying `/bulk-buying`, Developers `/developers` and Organization
   `/organization` (with `/organization/members`, `/organization/plus`,

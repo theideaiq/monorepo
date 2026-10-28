@@ -20,6 +20,12 @@ const ORGANIZATION_TABS = [
   { href: "/organization/invoices", key: "invoices" },
 ] as const;
 
+/** The pages of Selling, as tabs. */
+const SELLING_TABS = [
+  { href: "/selling", key: "shop" },
+  { href: "/selling/listings", key: "listings" },
+] as const;
+
 /** For people without a business account: what it is, invitations, create. */
 const BusinessIntro = () => {
   const t = useTranslations("app.business");
@@ -46,15 +52,25 @@ const BusinessIntro = () => {
   );
 };
 
-const OrganizationTabs = () => {
+type TabKey =
+  | (typeof ORGANIZATION_TABS)[number]["key"]
+  | (typeof SELLING_TABS)[number]["key"];
+
+const SectionTabs = ({
+  label,
+  tabs,
+}: {
+  readonly label: string;
+  readonly tabs: readonly { href: string; key: TabKey }[];
+}) => {
   const t = useTranslations("app.business");
   const pathname = usePathname();
   return (
     <nav
-      aria-label={t("organization.title")}
+      aria-label={label}
       className="-mx-4 flex gap-1 overflow-x-auto px-4 sm:mx-0 sm:px-0"
     >
-      {ORGANIZATION_TABS.map((tab) => {
+      {tabs.map((tab) => {
         const current = pathname === tab.href;
         return (
           <Link
@@ -141,7 +157,15 @@ export const BusinessShell = ({
   } else {
     content = (
       <>
-        {organization ? <OrganizationTabs /> : null}
+        {organization ? (
+          <SectionTabs
+            label={t("business.organization.title")}
+            tabs={ORGANIZATION_TABS}
+          />
+        ) : null}
+        {feature === "selling" ? (
+          <SectionTabs label={t("nav.selling")} tabs={SELLING_TABS} />
+        ) : null}
         {children}
       </>
     );

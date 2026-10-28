@@ -139,7 +139,7 @@ test("a company verifies its domain and registers a Pass app", async ({
   await expectAccessible(page);
 });
 
-test("a company applies to sell and, once approved, its offer is on the website", async ({
+test("a company applies to sell and, once approved, lists an offer that reaches the website", async ({
   context,
   page,
 }) => {
@@ -164,8 +164,9 @@ test("a company applies to sell and, once approved, its offer is on the website"
   await expect(page.getByText("Saved.")).toBeVisible();
   await expectAccessible(page);
 
-  // Staff approve it (Staff's steps are covered by pgTAP) and add a copy.
-  const { data: seller, error } = await db
+  // Staff approve it (Staff's steps are covered by pgTAP) and add the
+  // product to the catalogue.
+  const { error } = await db
     .from("sellers")
     .update({ status: "approved" })
     .eq("organization_id", organizationId)
@@ -195,25 +196,19 @@ test("a company applies to sell and, once approved, its offer is on the website"
   if (productError) {
     throw productError;
   }
-  // The default variant is made on insert.
-  const { data: variant, error: variantError } = await db
-    .from("product_variants")
-    .select("id")
-    .eq("product_id", record.id)
-    .single();
-  if (variantError) {
-    throw variantError;
-  }
-  const { error: copyError } = await db.from("stock_items").insert({
-    condition: "used",
-    price: 14_750,
-    product_id: record.id,
-    seller_id: seller.id,
-    variant_id: variant.id,
-  });
-  if (copyError) {
-    throw copyError;
-  }
+  // The shop lists it from Selling → Listings: find, sell this, offer.
+  await page.getByRole("link", { exact: true, name: "Listings" }).click();
+  await expect(page).toHaveURL(/\/selling\/listings$/);
+  await page.getByLabel("ISBN, barcode or title").fill("E2E Shop Record");
+  await page.getByRole("button", { exact: true, name: "Find" }).click();
+  await page.getByRole("button", { name: "Sell this" }).click();
+  await page.getByRole("combobox", { name: "Condition" }).click();
+  await page.getByRole("option", { name: "Used" }).click();
+  await page.getByLabel("Price (IQD)").fill("14750");
+  await page.getByLabel("Copies").fill("1");
+  await page.getByRole("button", { name: "Add my offer" }).click();
+  await expect(page.getByText("1 available · 0 sold")).toBeVisible();
+  await expectAccessible(page);
 
   // The website lists the shop's offer and the cart line names the shop.
   await context.addCookies(await sessionCookies(customer.email, urls.web));
