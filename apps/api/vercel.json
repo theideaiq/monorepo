@@ -38,6 +38,10 @@
     {
       "path": "/cron/boxy?areas=1",
       "schedule": "45 2 * * *"
+    },
+    {
+      "path": "/cron/student-checks",
+      "schedule": "20 2 * * *"
     }
   ]
 }

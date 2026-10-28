@@ -15,6 +15,7 @@ was actually shared, and claims for anything else are absent.
 | `email` | `email`, `email_verified` (the Pass email) | |
 | `pass` | `pass_number`, `pass_since` | |
 | `student` | `student`: `{ "verified": true, "university": "auib", "until": "2027-06-30" }`, or `{ "verified": false }` | |
+| `student_check` | `student_check`: `{ "verified": true, "university": "auib", "until": "2027-06-30" }`, or `{ "verified": false }`. Works for people who only did the [student check](#the-student-check), without a full Pass | |
 | `student_email` | `student_email`, `student_email_verified`: the university email the badge was verified with | sensitive |
 | `adult` | `adult`: `true` when 18 or over | |
 | `plus` | `plus`, and `plus_plan` (the plan's name) for members | |
@@ -45,6 +46,19 @@ if (!staff) throw new Error("Only our staff can sign in here");
 
 Read it from userinfo on each visit (or with `offline_access`) when
 someone's role can change: the ID token keeps it as it was at sign-in.
+
+## The student check
+
+To check that someone is a student and nothing more, ask for `openid
+student_check` only. People without a Pass verify at
+`theideaiq.com/verify` (their university email and an emailed code, or a
+student card photo) without joining; you get the yes or no, the
+university and the expiry date, never a name, email or Pass details.
+A one-time check is answered for 24 hours; a student who keeps their
+status is answered until it ends on 30 June.
+
+In person, the student shows a student code (8 characters, with a QR)
+from the same page; check it in Partners → Perks like a Pass card.
 
 ## Universities
 

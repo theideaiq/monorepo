@@ -109,3 +109,88 @@ export const useRequestStudentReview = () => {
       queryClient.invalidateQueries({ queryKey: studentKey(user?.id ?? "") }),
   });
 };
+
+// ── The student check (/verify) ────────────────────────────────────────────
+
+const checkKey = (userId: string) => ["student", userId, "check"] as const;
+
+/** Whether the Pass is bare (made by the student check) and its live check. */
+export const useStudentCheck = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const userId = requireUserId(user?.id);
+      const [profile, check] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("student_only")
+          .eq("id", userId)
+          .maybeSingle(),
+        supabase
+          .from("student_checks")
+          .select("code, code_expires_at, kept, university_id, valid_until")
+          .eq("user_id", userId)
+          .gt("code_expires_at", new Date().toISOString())
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle(),
+      ]);
+      return {
+        bare: unwrap(profile)?.student_only ?? false,
+        check: unwrap(check),
+      };
+    },
+    queryKey: checkKey(user?.id ?? ""),
+  });
+};
+
+/**
+ * Starts the check for a Pass that just signed in on /verify: a new Pass is
+ * bare, and the university email it signed in with verifies it (null when
+ * the address isn't the university's).
+ */
+export const useClaimStudentEmail = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (university: string) => {
+      unwrap(await supabase.rpc("begin_student_check"));
+      const badge = unwrap(
+        await supabase.rpc("claim_student_from_email", { university })
+      );
+      return badge?.user_id ? badge : null;
+    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: studentKey(user?.id ?? "") }),
+  });
+};
+
+/** A Pass that signed in on /verify to send its card photo. */
+export const useBeginStudentCheck = () => {
+  const { supabase } = useAuth();
+  return useMutation({
+    mutationFn: async () => unwrap(await supabase.rpc("begin_student_check")),
+  });
+};
+
+/** A one-time check, or keeping the status for the year: the code to show. */
+export const useFinishStudentCheck = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (keep: boolean) =>
+      unwrap(await supabase.rpc("finish_student_check", { keep }).single()),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: studentKey(user?.id ?? "") }),
+  });
+};
+
+/** Deletes the student status (and a bare Pass with it), through the API. */
+export const useForgetStudentStatus = () => {
+  const { supabase } = useAuth();
+  return useMutation({
+    mutationFn: () =>
+      callApi<{ passDeleted: boolean }>(supabase, "/pass/student-status", {}),
+  });
+};

@@ -2,6 +2,7 @@ import type { Database } from "@repo/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { describe, expect, test, vi } from "vitest";
 import { deleteAccount, deleteOrganization } from "../lib/deletion";
+import { forgetStudentStatus, sweepStudentChecks } from "../lib/student-status";
 
 type Client = SupabaseClient<Database>;
 
@@ -100,5 +101,41 @@ describe("deleteOrganization", () => {
       status: "forbidden",
     });
     expect(bucket.remove).not.toHaveBeenCalled();
+  });
+});
+
+describe("forgetStudentStatus", () => {
+  const user = (bare: boolean) =>
+    ({
+      rpc: vi.fn(() => Promise.resolve({ data: bare, error: null })),
+    }) as unknown as Client;
+
+  test("deletes a bare Pass with its status", async () => {
+    const { admin, deleteUser } = fakeAdmin();
+    await expect(
+      forgetStudentStatus({ admin, user: user(true) }, USER_ID)
+    ).resolves.toEqual({ passDeleted: true });
+    expect(admin.storage.from).toHaveBeenCalledWith("student-cards");
+    expect(deleteUser).toHaveBeenCalledWith(USER_ID);
+  });
+
+  test("keeps a full Pass, removing only card photos", async () => {
+    const { admin, deleteUser } = fakeAdmin();
+    await expect(
+      forgetStudentStatus({ admin, user: user(false) }, USER_ID)
+    ).resolves.toEqual({ passDeleted: false });
+    expect(admin.storage.from).toHaveBeenCalledWith("student-cards");
+    expect(deleteUser).not.toHaveBeenCalled();
+  });
+});
+
+describe("sweepStudentChecks", () => {
+  test("deletes each bare Pass the sweep returns", async () => {
+    const { admin, deleteUser } = fakeAdmin();
+    (admin as unknown as { rpc: unknown }).rpc = vi.fn(() =>
+      Promise.resolve({ data: [USER_ID], error: null })
+    );
+    await expect(sweepStudentChecks(admin)).resolves.toBe(1);
+    expect(deleteUser).toHaveBeenCalledWith(USER_ID);
   });
 });

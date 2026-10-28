@@ -57,7 +57,10 @@ incidents) is in `docs/platform`.
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in` (an
     email code signs in or creates the Pass; there is no sign-up page, and
     `/onboarding` asks for the name), `/mfa`, `/tg`, `/sign-out`, the only
-    sign-in UI on the web. A person's Pass is The IDEA Pass; never say
+    sign-in UI on the web; and `/verify`, "Verify you're a student" (the
+    student check: a university email and its code, or a card photo; a
+    Pass made there is bare, `profiles.student_only`, until it orders,
+    joins Plus or sets its name). A person's Pass is The IDEA Pass; never say
     "account" or "membership". The session cookie is shared with The IDEA
     Partners and Staff (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`); other
     apps link here with `passUrl()` from `@repo/auth/pass` (based on

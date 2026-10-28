@@ -2254,8 +2254,8 @@
         "title": "Perks",
         "notPartner": "This organization doesn't offer perks to Pass members yet. Contact The IDEA to become a partner.",
         "checkTitle": "Check a card",
-        "checkDescription": "Scan the QR code on the customer's Pass, or type their member number and the 6-digit code under it.",
-        "card": "Scanned code or Pass number",
+        "checkDescription": "Scan the QR code on the customer's Pass, or type their Pass number and the 6-digit code under it. A student who checked on The IDEA shows a student code instead: scan or type it.",
+        "card": "Scanned code, Pass number or student code",
         "code": "6-digit code",
         "check": "Check",
         "invalidCard": "This card isn't valid. Ask them to open their Pass again: the code changes every 30 seconds.",
@@ -2277,7 +2277,8 @@
         "statsTitle": "Uses by month",
         "statsDescription": "How often your perks were used in the last 12 months.",
         "noUses": "No uses yet.",
-        "uses": "{uses} uses · {people} people"
+        "uses": "{uses} uses · {people} people",
+        "studentCheck": "Verified student at {university} until {date}."
       },
       "developers": {
         "title": "Sign in with The IDEA Pass",
@@ -2368,6 +2369,7 @@
           "email": "Email",
           "pass": "Pass number",
           "student": "Verified student (yes or no)",
+          "student_check": "Student check: verified yes or no, the university and until when (no name or email)",
           "student_email": "University email",
           "adult": "18 or over (yes or no)",
           "plus": "Plus member",
@@ -4506,6 +4508,7 @@
           "profile": "Name",
           "email": "Email",
           "student": "Verified student",
+          "student_check": "Student check",
           "adult": "18 or over",
           "plus": "Plus member",
           "card": "Show the Pass card",
@@ -4687,6 +4690,7 @@
         "profile": "Your name, language and profile picture",
         "email": "Your email address",
         "student": "Whether you're a verified student, at which university and until when",
+        "student_check": "Only whether you're a verified student, at which university and until when (not your name, email or Pass)",
         "adult": "Whether you're 18 or over",
         "plus": "Whether you're a Plus member, and your plan",
         "card": "Your Pass card, to show on their site (without its scannable code)",
@@ -4730,6 +4734,39 @@
         "failed": "That didn't work. Please try again."
       },
       "openCard": "Open your live card"
+    },
+    "verify": {
+      "title": "Verify you're a student",
+      "description": "Your university email and the code we send it. That's all: no sign-up.",
+      "university": "University",
+      "chooseUniversity": "Choose your university",
+      "universityEmail": "Your university email: we'll send it an 8-digit code.",
+      "cardEmail": "Your email, so we can tell you the result. Then a photo of your student card.",
+      "useCard": "No university email? Use your student card",
+      "useEmail": "Use your university email instead",
+      "notUniversityEmail": "Verify with your university email or a photo of your student card.",
+      "waiting": "Your student card is waiting for review. We'll email you the result.",
+      "choose": {
+        "title": "You're verified. What now?",
+        "once": "Just this once",
+        "onceHint": "The result goes only to whoever asked. We keep nothing but a 30-day record against abuse.",
+        "keep": "Keep it for a year",
+        "keepHint": "Student prices, Plus at 20% off, student perks and student surveys work without asking again, until {date}."
+      },
+      "result": {
+        "verified": "Verified: student at {university} until {date}.",
+        "code": "Your student code",
+        "codeHint": "Show it to a partner; they check it in Partners. It works until {time}.",
+        "showCode": "Show my student code",
+        "continue": "Continue"
+      },
+      "delete": "Delete your student status",
+      "deleteHint": "It's deleted at once. If you got a Pass only for this check, it's deleted too.",
+      "deleted": "Your student status is deleted.",
+      "errors": {
+        "failed": "Something went wrong. Try again.",
+        "tooMany": "Too many checks. Try again later."
+      }
     }
   }
 }

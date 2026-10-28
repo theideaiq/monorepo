@@ -119,6 +119,10 @@
           "student": {
             "$ref": "#/components/schemas/Student"
           },
+          "student_check": {
+            "$ref": "#/components/schemas/Student",
+            "description": "With the student_check scope: only verified, the university and until when."
+          },
           "student_email": {
             "type": "string",
             "format": "email"

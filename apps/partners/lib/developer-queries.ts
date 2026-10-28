@@ -17,6 +17,7 @@ export const APP_ANSWERS = [
   "email",
   "pass",
   "student",
+  "student_check",
   "student_email",
   "adult",
   "plus",

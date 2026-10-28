@@ -7,6 +7,8 @@ import { useTranslations } from "next-intl";
 import { isCurrentItem, navigationItems } from "@/lib/navigation";
 import { AccountActions } from "./account-actions";
 
+const STANDALONE = /^\/verify(\/|$)/;
+
 /**
  * The site's top bar. Wider screens: the logo, Store, Plus and Club, then
  * search, Saved, the bell, the cart and The IDEA Pass. Phones (and the
@@ -27,7 +29,11 @@ export const Header = () => {
 
         <nav
           aria-label={t("label")}
-          className="hidden flex-1 justify-center md:flex"
+          className={cn(
+            "hidden flex-1 justify-center md:flex",
+            // The student check shows nothing but itself.
+            STANDALONE.test(pathname) && "md:hidden"
+          )}
         >
           <ul className="flex items-center gap-1">
             {navigationItems.map((item) => {

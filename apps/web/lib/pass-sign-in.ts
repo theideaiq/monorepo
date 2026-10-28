@@ -9,6 +9,7 @@ export const PASS_SCOPES = [
   "email",
   "pass",
   "student",
+  "student_check",
   "student_email",
   "adult",
   "plus",
