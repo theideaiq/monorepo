@@ -41,14 +41,27 @@ grant update (standard_rate, pro_rate) on public.commission_rates to authenticat
 create trigger set_updated_at before update on public.commission_rates
   for each row execute function private.set_updated_at();
 
+-- The brief's rates by category; any other category starts at 12% / 10%
+-- until finance sets it.
+create function private.default_commission(slug text, pro boolean)
+returns numeric
+language sql
+immutable
+set search_path = ''
+as $$
+  select case
+    when slug = 'games' then case when pro then 0.08 else 0.10 end
+    when slug = 'gear' then case when pro then 0.07 else 0.09 end
+    else case when pro then 0.10 else 0.12 end
+  end
+$$;
+
 insert into public.commission_rates (category_id, standard_rate, pro_rate)
-select c.id,
-  case c.slug when 'games' then 0.10 when 'gear' then 0.09 else 0.12 end,
-  case c.slug when 'games' then 0.08 when 'gear' then 0.07 else 0.10 end
+select c.id, private.default_commission(c.slug, false), private.default_commission(c.slug, true)
 from public.product_categories c
 on conflict (category_id) do nothing;
 
--- A category added later starts at the books rate until finance sets it.
+-- A category added later (or by the seed) gets its default.
 create function private.add_commission_rate()
 returns trigger
 language plpgsql
@@ -57,7 +70,7 @@ set search_path = ''
 as $$
 begin
   insert into public.commission_rates (category_id, standard_rate, pro_rate)
-  values (new.id, 0.12, 0.10)
+  values (new.id, private.default_commission(new.slug, false), private.default_commission(new.slug, true))
   on conflict (category_id) do nothing;
   return new;
 end;
