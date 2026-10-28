@@ -8,12 +8,12 @@ import { MoveLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { CoverImage } from "@/components/cover-image";
-import { clubItemPath, filterOf, filterPath } from "@/lib/club";
+import { clubItemPath, topicPath } from "@/lib/club";
 import { editorialUrl, getPost } from "@/lib/data";
 import { Markdown } from "@/lib/markdown";
 import { siteUrl } from "@/lib/metadata";
 
-/** A story, guide or news item: its chip, date, byline, cover and body. */
+/** A post: its topics, date, byline, cover and body. */
 export const PostArticle = async ({
   locale,
   slug,
@@ -29,8 +29,7 @@ export const PostArticle = async ({
   const title = localized(post, "title", locale);
   const excerpt = localized(post, "excerpt", locale);
   const cover = editorialUrl(post.cover_image);
-  const filter = filterOf(post.section);
-  const sectionTitle = t(`chips.${filter}`);
+  const topicNames = post.topics.map((tag) => t(`topics.${tag}`));
   const author = post.byline ?? t("theIdea");
 
   return (
@@ -38,8 +37,8 @@ export const PostArticle = async ({
       <JsonLd
         code={{
           "@context": "https://schema.org",
-          "@type": post.section === "news" ? "NewsArticle" : "Article",
-          articleSection: sectionTitle,
+          "@type": post.topics.includes("news") ? "NewsArticle" : "Article",
+          articleSection: topicNames,
           author: post.byline
             ? { "@type": "Person", name: post.byline }
             : { "@type": "Organization", name: "The IDEA" },
@@ -55,19 +54,22 @@ export const PostArticle = async ({
       />
       <Link
         className="mb-6 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-        href={filterPath(filter)}
+        href={topicPath()}
       >
         <MoveLeft className="size-4 rtl:rotate-180" />
-        {t("back", { section: sectionTitle })}
+        {t("backToRead")}
       </Link>
       <header className="mb-8 flex flex-col gap-3">
         <p className="flex flex-wrap items-center gap-x-3 text-muted-foreground text-sm">
-          <Link
-            className="font-medium text-pink-text hover:underline"
-            href={filterPath(filter)}
-          >
-            {sectionTitle}
-          </Link>
+          {post.topics.map((tag) => (
+            <Link
+              className="font-medium text-pink-text hover:underline"
+              href={topicPath(tag)}
+              key={tag}
+            >
+              {t(`topics.${tag}`)}
+            </Link>
+          ))}
           <time dateTime={post.published_at}>
             {formatDate(post.published_at, locale, "long")}
           </time>

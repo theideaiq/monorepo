@@ -22,7 +22,7 @@ import {
   uuid,
 } from "@/lib/admin/forms";
 import { type PublishMode, publishedAtFor } from "@/lib/admin/publishing";
-import { postSections } from "./_components/sections";
+import { postTopics } from "./_components/topics";
 
 const publishMode = z.enum(["draft", "now", "schedule"]);
 
@@ -51,10 +51,10 @@ const postSchema = z.object({
   id: optionalUuid,
   mode: publishMode,
   publishAt: optionalDateTime,
-  section: z.enum(postSections),
   slug,
   titleAr: text(200),
   titleEn: text(200),
+  topics: z.array(z.enum(postTopics)).min(1).max(5),
 });
 
 export const savePost = staffAction(
@@ -78,10 +78,10 @@ export const savePost = staffAction(
       excerpt_ar: input.excerptAr,
       excerpt_en: input.excerptEn,
       published_at: resolvePublishedAt(input.mode, current, input.publishAt),
-      section: input.section,
       slug: input.slug,
       title_ar: input.titleAr,
       title_en: input.titleEn,
+      topics: input.topics,
     };
     if (input.id) {
       affected(
@@ -335,11 +335,11 @@ export const publishSubmission = staffAction(
           body_ar: submission.body ?? "",
           body_en: submission.body ?? "",
           byline: author?.trim() || null,
-          section: "stories",
           slug: `${base.slice(0, 100)}-${input.id.slice(0, 8)}`,
           submission_id: input.id,
           title_ar: submission.title.slice(0, 200),
           title_en: submission.title.slice(0, 200),
+          topics: ["stories"],
         })
         .select("id")
         .single()

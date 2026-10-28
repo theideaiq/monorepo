@@ -13,7 +13,7 @@ import { CalendarDays, MapPin, MoveLeft, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { CoverImage } from "@/components/cover-image";
 import { RsvpButton } from "@/components/rsvp-button";
-import { clubItemPath, filterPath } from "@/lib/club";
+import { clubItemPath, joinPath } from "@/lib/club";
 import { editorialUrl, type getEvent, getRsvpCount } from "@/lib/data";
 import { seatsLeft } from "@/lib/events";
 import { Markdown, markdownToText } from "@/lib/markdown";
@@ -78,7 +78,7 @@ export const EventArticle = async ({
       />
       <Link
         className="mb-6 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-        href={filterPath("events")}
+        href={joinPath("events")}
       >
         <MoveLeft className="size-4 rtl:rotate-180" />
         {t("back")}

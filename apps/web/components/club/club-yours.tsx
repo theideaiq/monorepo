@@ -13,8 +13,9 @@ import { SignedInSection } from "@/components/signed-in-section";
 import { YourSurveys } from "./your-surveys";
 
 /**
- * The Club page's "Yours": a signed-in member's events (with the calendar
- * feed), surveys and submissions.
+ * The Club page's "Yours": a signed-in member's tickets (the events they're
+ * going to, with the calendar feed), the surveys they created and their
+ * submissions. Applications and followed opportunities join in Stage 5.
  */
 export const ClubYours = () => {
   const t = useTranslations("web.club.yours");
@@ -26,13 +27,13 @@ export const ClubYours = () => {
       signIn={t("signIn")}
       title={t("title")}
     >
-      <Tabs defaultValue="events">
+      <Tabs defaultValue="tickets">
         <TabsList>
-          <TabsTrigger value="events">{t("events")}</TabsTrigger>
+          <TabsTrigger value="tickets">{t("tickets")}</TabsTrigger>
           <TabsTrigger value="surveys">{t("surveys")}</TabsTrigger>
           <TabsTrigger value="submissions">{t("submissions")}</TabsTrigger>
         </TabsList>
-        <TabsContent className="pt-4" value="events">
+        <TabsContent className="pt-4" value="tickets">
           <YourEvents />
         </TabsContent>
         <TabsContent className="pt-4" value="surveys">

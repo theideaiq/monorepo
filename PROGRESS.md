@@ -388,6 +388,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   until then a post saved without topics takes them from its section, and
   a later migration drops it. Opportunities (and following them) arrive
   with Stage 5, so Join starts with events and surveys.
+  - Part 2, the website and Staff: `/club` is Join (`#join`, events and
+    the surveys open to the member in one list, soonest date or deadline
+    first, open-ended surveys last; chips Everything · Events · Surveys
+    with `?show=`), Read (`#read`, chips by topic with `?topic=`) and Yours
+    (`#yours`: tickets, the surveys you created with a receipt link when
+    an order paid for one, submissions), then the Telegram card. Surveys
+    to answer moved from Yours to Join. Staff tags posts with topics
+    (checkboxes, at least one). Stored `/post/<section>` and
+    `/club?show=news|stories|guides` links open the topic
+    (`currentAppPath`). No redirects.
 
 - 2026-10-28: Program Revision v2, item 7 (sign-in scopes), part 1, the
   schema (migration `20270105000000`):

@@ -14,7 +14,12 @@ describe("currentAppPath", () => {
     expect(currentAppPath("/pass/support/t1")).toBe("/help/t1");
     expect(currentAppPath("/pass/wishlist")).toBe("/pass/saved");
     expect(currentAppPath("/post/events/quiz-night")).toBe("/club/quiz-night");
-    expect(currentAppPath("/post/stories")).toBe("/club");
+    expect(currentAppPath("/post/stories")).toBe("/club?topic=stories#read");
+    expect(currentAppPath("/post/learn?ref=tg")).toBe(
+      "/club?topic=guides&ref=tg#read"
+    );
+    expect(currentAppPath("/club?show=news")).toBe("/club?topic=news#read");
+    expect(currentAppPath("/club?show=events")).toBe("/club?show=events");
     expect(currentAppPath("/suite")).toBe("/business");
     expect(currentAppPath("/i/SARA1")).toBe("/r/SARA1");
     expect(currentAppPath("/orders")).toBe("/pass/orders");

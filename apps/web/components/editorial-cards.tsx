@@ -4,14 +4,14 @@ import { formatDate, formatDateTime } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { CalendarDays, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { clubItemPath, filterOf } from "@/lib/club";
+import { clubItemPath } from "@/lib/club";
 import { type EventRow, editorialUrl, type PostSummary } from "@/lib/data";
 import { CoverImage } from "./cover-image";
 
 const cardClass =
   "group flex w-full flex-col gap-3 rounded-lg border bg-card p-3 transition-shadow hover:shadow-md";
 
-/** A post of The IDEA Club: cover, section, date, title and excerpt. */
+/** A post of The IDEA Club: cover, topics, date, title and excerpt. */
 export const PostCard = async ({
   locale,
   post,
@@ -29,7 +29,7 @@ export const PostCard = async ({
       <div className="flex flex-col gap-2 px-1 pb-1">
         <p className="flex flex-wrap items-center gap-x-2 text-muted-foreground text-xs">
           <span className="font-medium text-pink-text">
-            {t(`chips.${filterOf(post.section)}`)}
+            {post.topics.map((topic) => t(`topics.${topic}`)).join(" · ")}
           </span>
           {post.published_at ? (
             <time dateTime={post.published_at}>

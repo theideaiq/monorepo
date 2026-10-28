@@ -28,7 +28,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return { title: t("title") };
 };
 
-/** The IDEA Club: drafts, scheduled and published posts in every section. */
+/** The IDEA Club: drafts, scheduled and published posts on every topic. */
 const PostsPage = async ({
   searchParams,
 }: {
@@ -43,7 +43,7 @@ const PostsPage = async ({
 
   const { count, data: posts } = await supabase
     .from("posts")
-    .select("id, slug, section, title_ar, title_en, published_at, updated_at", {
+    .select("id, slug, topics, title_ar, title_en, published_at, updated_at", {
       count: "exact",
     })
     .order("published_at", { ascending: false, nullsFirst: true })
@@ -92,8 +92,10 @@ const PostsPage = async ({
                           {localized(post, "title", locale)}
                         </Link>
                         <span className="block text-muted-foreground text-xs">
-                          {t(`posts.sections.${post.section}`)} ·{" "}
-                          <span dir="ltr">{post.slug}</span>
+                          {post.topics
+                            .map((topic) => t(`posts.topicNames.${topic}`))
+                            .join(" · ")}{" "}
+                          · <span dir="ltr">{post.slug}</span>
                         </span>
                       </TableCell>
                       <TableCell>
