@@ -397,6 +397,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Selling (item 11), bundles, part 1, the schema
+  (`20270112000000_bundles.sql`). A shop lists several of its own items as
+  one offer (a turntable and 3 records) with `create_bundle()`: the bundle
+  is a product of its own, created by the shop and checked like any
+  product a shop creates, and `bundle_items` lists the variants in it and
+  how many of each (2 or more units, each item one the shop has an active
+  offer on, never a bundle in a bundle). The bundle has its own offer
+  (condition, price, copies, SKU), so carts, orders and payouts treat it
+  like any product; its copies don't take copies of the items in it, so
+  the shop sets how many bundles it has. Contents are fixed once listed.
+  Part 2 adds the Partners screen and the bundle's contents on the
+  product page.
 - 2026-10-28: Selling (item 11), spreadsheet upload. Partners → Selling →
   Listings takes a CSV (or tab-separated text) of up to 500 rows: barcode,
   condition (new if empty), price, quantity and SKU, plus name_en, name_ar
