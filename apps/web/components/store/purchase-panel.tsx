@@ -3,6 +3,7 @@
 import { useAuth } from "@repo/auth/provider";
 import {
   formatPrice,
+  HOUSE_SELLER_ID,
   liveVariants,
   localized,
   variantName,
@@ -117,14 +118,26 @@ const ThemePicker = ({
 
 type Condition = ProductDetail["condition"];
 
-interface ConditionPickerProps {
-  readonly offers: readonly ProductOffer[];
-  readonly onPick: (condition: Condition) => void;
-  readonly value: Condition;
+/** One offer: copies in a condition from a seller. */
+interface OfferChoice {
+  condition: Condition;
+  sellerId: string;
 }
 
-/** New, open box, refurbished or used: each with its price and copies left. */
-const ConditionPicker = ({ offers, onPick, value }: ConditionPickerProps) => {
+const sameOffer = (offer: ProductOffer, choice: OfferChoice) =>
+  offer.condition === choice.condition && offer.seller_id === choice.sellerId;
+
+interface OfferPickerProps {
+  readonly offers: readonly ProductOffer[];
+  readonly onPick: (choice: OfferChoice) => void;
+  readonly value: OfferChoice;
+}
+
+/**
+ * New, open box, refurbished or used, from The IDEA or a shop: each with
+ * its price and copies left.
+ */
+const OfferPicker = ({ offers, onPick, value }: OfferPickerProps) => {
   const t = useTranslations("app.store.product");
   const conditions = useTranslations("store.condition");
   const locale = useLocale();
@@ -134,18 +147,25 @@ const ConditionPicker = ({ offers, onPick, value }: ConditionPickerProps) => {
       <div className="flex flex-wrap gap-2">
         {offers.map((offer) => (
           <button
-            aria-pressed={offer.condition === value}
+            aria-pressed={sameOffer(offer, value)}
             className={cn(
               "grid rounded-md border px-3 py-2 text-start text-sm transition-colors",
-              offer.condition === value
+              sameOffer(offer, value)
                 ? "border-primary bg-primary/10"
                 : "hover:bg-accent"
             )}
-            key={offer.condition}
-            onClick={() => onPick(offer.condition)}
+            key={`${offer.condition}-${offer.seller_id}`}
+            onClick={() =>
+              onPick({ condition: offer.condition, sellerId: offer.seller_id })
+            }
             type="button"
           >
             <span className="font-medium">{conditions(offer.condition)}</span>
+            {offer.seller_id === HOUSE_SELLER_ID ? null : (
+              <span className="text-xs">
+                {t("soldBy", { seller: offer.seller_name })}
+              </span>
+            )}
             <span className="text-muted-foreground text-xs">
               {offer.price === null ? null : formatPrice(offer.price, locale)}
               {" · "}
@@ -156,6 +176,45 @@ const ConditionPicker = ({ offers, onPick, value }: ConditionPickerProps) => {
       </div>
     </fieldset>
   );
+};
+
+/**
+ * The chosen variant's offers for sale, and the price and copies of the
+ * chosen one (the variant's own when it is The IDEA's in the product's
+ * condition).
+ */
+const offerSelection = (
+  offers: readonly ProductOffer[],
+  product: ProductDetail,
+  selection: ReturnType<typeof pickVariant>,
+  picked: OfferChoice
+) => {
+  const forSale = offers.filter(
+    (offer) =>
+      offer.purpose === "sale" && offer.variant_id === selection.variant?.id
+  );
+  const [only] = forSale;
+  // The IDEA's copies in the product's condition until another is picked,
+  // or the first offer when there are none of those.
+  const chosen = forSale.find((offer) => sameOffer(offer, picked)) ?? only;
+  const choice = chosen
+    ? { condition: chosen.condition, sellerId: chosen.seller_id }
+    : picked;
+  const otherCondition = choice.condition !== product.condition;
+  const otherOffer = otherCondition || choice.sellerId !== HOUSE_SELLER_ID;
+  return {
+    choice,
+    forSale,
+    otherCondition,
+    price: otherOffer ? (chosen?.price ?? selection.price) : selection.price,
+    showConditions:
+      forSale.length > 1 ||
+      (only !== undefined &&
+        (only.condition !== product.condition ||
+          only.seller_id !== HOUSE_SELLER_ID)),
+    // Without offers (not loaded), the variant's or product's count.
+    stock: offers.length > 0 ? (chosen?.available ?? 0) : selection.stock,
+  };
 };
 
 /** Copies free to rent of a version (or of the item, without versions). */
@@ -282,7 +341,10 @@ export const PurchasePanel = ({
       );
     }
   };
-  const [condition, setCondition] = useState<Condition>(product.condition);
+  const [pickedOffer, setChoice] = useState<OfferChoice>({
+    condition: product.condition,
+    sellerId: HOUSE_SELLER_ID,
+  });
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const themes = boxThemes(box);
@@ -290,21 +352,9 @@ export const PurchasePanel = ({
   const autoAdded = useRef(false);
 
   const selection = pickVariant(product, variantId);
-  // Copies for sale of the chosen variant, by condition.
-  const forSale = offers.filter(
-    (offer) =>
-      offer.purpose === "sale" && offer.variant_id === selection.variant?.id
-  );
-  const chosen = forSale.find((offer) => offer.condition === condition);
-  const otherCondition = condition !== product.condition;
-  const price = otherCondition
-    ? (chosen?.price ?? selection.price)
-    : selection.price;
-  // Without offers (not loaded), the variant's or product's count.
-  const stock = offers.length > 0 ? (chosen?.available ?? 0) : selection.stock;
-  const showConditions =
-    forSale.length > 1 ||
-    (forSale.length === 1 && forSale[0]?.condition !== product.condition);
+  const { choice, forSale, otherCondition, price, showConditions, stock } =
+    offerSelection(offers, product, selection, pickedOffer);
+  const { condition } = choice;
   const chosenVariant = selection.variant;
   const canAdd =
     product.kind === "sale" &&
@@ -342,6 +392,7 @@ export const PurchasePanel = ({
         condition: otherCondition ? condition : null,
         productId: product.id,
         quantity: amount,
+        sellerId: choice.sellerId,
         variantId: chosenVariant.id,
       },
       { onSuccess: () => setAdded(true) }
@@ -374,13 +425,13 @@ export const PurchasePanel = ({
     <div className="grid gap-4">
       <ThemePicker onPick={setThemeId} themes={themes} value={themeId} />
       {showConditions ? (
-        <ConditionPicker
+        <OfferPicker
           offers={forSale}
-          onPick={(picked) => {
-            setCondition(picked);
+          onPick={(offer) => {
+            setChoice(offer);
             setQuantity(1);
           }}
-          value={condition}
+          value={choice}
         />
       ) : null}
       {liveVariants(product.product_variants).length > 1 ? (

@@ -1,4 +1,4 @@
-import { liveVariants } from "@repo/commerce";
+import { HOUSE_SELLER_ID, liveVariants } from "@repo/commerce";
 import { describe, expect, test } from "vitest";
 import { isActivePath } from "@/components/nav-items";
 import {
@@ -56,6 +56,7 @@ const item = (overrides: Partial<CartItem> = {}): CartItem => ({
   product: product(),
   product_id: "p1",
   quantity: 2,
+  seller_id: HOUSE_SELLER_ID,
   variant: null,
   variant_id: "v0",
   ...overrides,

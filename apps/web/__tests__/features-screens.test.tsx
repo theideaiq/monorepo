@@ -232,6 +232,7 @@ describe("wishlist", () => {
       condition: null,
       product_id: "p1",
       quantity: 1,
+      seller_id: "00000000-0000-4000-8000-000000000001",
       user_id: USER_ID,
       variant_id: "v0",
     });

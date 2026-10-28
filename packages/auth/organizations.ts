@@ -9,6 +9,7 @@ export const ACTIVE_ORGANIZATION_COOKIE = "active_org";
  * (`organizations.features`); Home and Organization are always there.
  */
 export const organizationFeatures = [
+  "selling",
   "perks",
   "bulk_buying",
   "developers",

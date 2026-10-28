@@ -9,6 +9,7 @@ import {
   int,
   lines,
   optionalDate,
+  optionalInt,
   optionalText,
   optionalUuid,
   text,
@@ -403,5 +404,32 @@ export const setPassPartnerAnswers = staffAction(
         .select("client_id")
     );
     return success();
+  }
+);
+
+// ── Shops selling on The IDEA ───────────────────────────────────────────────
+
+/**
+ * Approves, rejects or suspends a shop's application to sell, with a note
+ * the shop sees and the security deposit it must hold.
+ */
+export const decideSeller = staffAction(
+  "companies",
+  z.object({
+    decision: z.enum(["approved", "rejected", "suspended"]),
+    deposit: optionalInt(0),
+    id: uuid,
+    note: optionalText(1000),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("decide_seller", {
+        decision: input.decision,
+        deposit: input.deposit ?? undefined,
+        note: input.note ?? undefined,
+        target: input.id,
+      })
+    );
+    return success("saved");
   }
 );

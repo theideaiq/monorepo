@@ -236,8 +236,9 @@ export const getProductBySlug = async (
 };
 
 /**
- * What a product can be had as: its available copies by variant, condition
- * and purpose (for sale or for rent), with the lowest price for sale.
+ * What a product can be had as: its available copies by variant, condition,
+ * purpose (for sale or for rent) and seller (The IDEA or an approved shop),
+ * with the lowest price for sale.
  */
 export interface ProductOffer {
   available: number;
@@ -245,6 +246,8 @@ export interface ProductOffer {
   /** Lowest sale price; null for copies for rent. */
   price: number | null;
   purpose: "rental" | "sale";
+  seller_id: string;
+  seller_name: string;
   variant_id: string | null;
 }
 
@@ -266,6 +269,8 @@ export const getProductOffers = async (
             condition: row.condition,
             price: (row.price as number | null) ?? null,
             purpose: row.purpose,
+            seller_id: row.seller_id,
+            seller_name: row.seller_name,
             variant_id: (row.variant_id as string | null) ?? null,
           },
         ]

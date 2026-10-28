@@ -113,6 +113,11 @@ test.describe("Staff", () => {
     await page.goto(`${urls.staff}/partners/perks`);
     await expect(page.getByRole("heading", { name: "New perk" })).toBeVisible();
     await expectAccessible(page);
+    await page.goto(`${urls.staff}/partners/shops`);
+    await expect(
+      page.getByText("No shop has applied to sell yet.")
+    ).toBeVisible();
+    await expectAccessible(page);
 
     // Your Pass links staff to Staff.
     await page.goto(`${urls.web}/pass`);

@@ -138,3 +138,95 @@ test("a company verifies its domain and registers a Pass app", async ({
   await expect(page.getByText("E2E Books", { exact: true })).toBeVisible();
   await expectAccessible(page);
 });
+
+test("a company applies to sell and, once approved, its offer is on the website", async ({
+  context,
+  page,
+}) => {
+  const organizationId = await resetCompany();
+  const db = admin();
+  await context.addCookies(await sessionCookies(customer.email, urls.app));
+
+  // Selling is a section the organization adds from Home.
+  await page.goto(urls.app);
+  await page.getByRole("button", { name: "Add Selling" }).click();
+  await page.getByRole("link", { exact: true, name: "Selling" }).click();
+  await expect(page).toHaveURL(/\/selling$/);
+  await page.getByLabel("Shop name").fill("E2E Records");
+  await page.getByRole("button", { exact: true, name: "Apply" }).click();
+  await expect(page.getByText("In review")).toBeVisible();
+  await page.getByLabel("Bank", { exact: true }).fill("E2E Bank");
+  await page.getByLabel("Name on the bank details").fill("E2E Company");
+  await page.getByLabel("IBAN").fill("IQ00 TEST");
+  await expect(page.getByText("That doesn't look like an IBAN.")).toBeVisible();
+  await page.getByLabel("IBAN").fill("IQ98 NBIQ 8501 2345 6789 012");
+  await page.getByRole("button", { exact: true, name: "Save" }).click();
+  await expect(page.getByText("Saved.")).toBeVisible();
+  await expectAccessible(page);
+
+  // Staff approve it (Staff's steps are covered by pgTAP) and add a copy.
+  const { data: seller, error } = await db
+    .from("sellers")
+    .update({ status: "approved" })
+    .eq("organization_id", organizationId)
+    .select("id")
+    .single();
+  if (error) {
+    throw error;
+  }
+  await page.reload();
+  await expect(page.getByText("Approved", { exact: true })).toBeVisible();
+
+  const slug = "e2e-shop-record";
+  await db.from("products").delete().eq("slug", slug);
+  const { data: record, error: productError } = await db
+    .from("products")
+    .insert({
+      condition: "new",
+      kind: "sale",
+      name_ar: "أسطوانة للاختبار",
+      name_en: "E2E Shop Record",
+      price: 24_750,
+      slug,
+      status: "active",
+    })
+    .select("id")
+    .single();
+  if (productError) {
+    throw productError;
+  }
+  // The default variant is made on insert.
+  const { data: variant, error: variantError } = await db
+    .from("product_variants")
+    .select("id")
+    .eq("product_id", record.id)
+    .single();
+  if (variantError) {
+    throw variantError;
+  }
+  const { error: copyError } = await db.from("stock_items").insert({
+    condition: "used",
+    price: 14_750,
+    product_id: record.id,
+    seller_id: seller.id,
+    variant_id: variant.id,
+  });
+  if (copyError) {
+    throw copyError;
+  }
+
+  // The website lists the shop's offer and the cart line names the shop.
+  await context.addCookies(await sessionCookies(customer.email, urls.web));
+  await page.goto(`${urls.web}/store/${slug}`);
+  const offer = page.getByRole("button", { name: /Sold by E2E Records/ });
+  await expect(offer).toHaveAttribute("aria-pressed", "true");
+  await expectAccessible(page);
+  await page.getByRole("button", { name: "Add to cart" }).click();
+  await page.goto(`${urls.web}/cart`);
+  await expect(page.getByText(/Sold by E2E Records/)).toBeVisible();
+  await expectAccessible(page);
+
+  await db.from("cart_items").delete().eq("product_id", record.id);
+  await db.from("stock_items").delete().eq("product_id", record.id);
+  await db.from("products").delete().eq("id", record.id);
+});

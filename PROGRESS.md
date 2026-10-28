@@ -379,6 +379,24 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Program Revision v2, item 10 (sellers and offers), part 2,
+  the code:
+  - Website: the product page lists every offer (seller, condition,
+    price, copies) and a shop's offer says "Sold by <shop> · delivered and
+    paid through The IDEA"; cart lines carry `seller_id` (one line per
+    product, variant, seller and condition) and are priced from their
+    offer, as `create_order()` does; the cart and the order name the shop.
+  - The IDEA Partners → Selling (`/selling`, the `selling` feature):
+    owners and admins apply with the shop's name, upload documents (to the
+    organization's Storage folder; staff read them through migration
+    `20270108000000`) and enter payout bank details; members see the
+    status and the review note. Linked to the selling policy.
+  - Staff → Partners → Shops (`/partners/shops`): applications with their
+    documents (signed links) and payout details; staff approve, reject or
+    suspend with a note and set the security deposit (`decide_seller`).
+  - Not yet: shop listings, orders, returns and payouts (item 11). The
+    stock counts on products still include every seller's copies.
+
 - 2026-10-28: Program Revision v2, item 10 (sellers and offers), part 1,
   the schema (migration `20270107000000`):
   - `sellers`: The IDEA (the house seller, fixed id

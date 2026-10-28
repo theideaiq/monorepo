@@ -4,6 +4,7 @@ import { track } from "@repo/analytics/client";
 import { useAuth } from "@repo/auth/provider";
 import {
   type Fulfilment,
+  HOUSE_SELLER_ID,
   type PaymentMethod,
   toCheckoutQuote,
 } from "@repo/commerce";
@@ -23,12 +24,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import {
-  type CartItem,
-  cartCount,
-  isOtherCondition,
-  MAX_QUANTITY,
-} from "./cart";
+import { type CartItem, cartCount, isOtherOffer, MAX_QUANTITY } from "./cart";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /** Store catalog, cart and orders, all through RLS. */
@@ -134,15 +130,15 @@ export const useCheckoutQuote = (
 };
 
 const CART_COLUMNS =
-  "id, quantity, condition, product_id, variant_id, box_theme_id, box_theme:box_themes (name_ar, name_en), product:products (id, slug, kind, status, condition, name_ar, name_en, price, compare_at_price, currency, images, stock_count), variant:product_variants (id, label_ar, label_en, attributes, price, compare_at_price, stock_count, images)" as const;
+  "id, quantity, condition, product_id, variant_id, seller_id, seller:sellers (name), box_theme_id, box_theme:box_themes (name_ar, name_en), product:products (id, slug, kind, status, condition, name_ar, name_en, price, compare_at_price, currency, images, stock_count), variant:product_variants (id, label_ar, label_en, attributes, price, compare_at_price, stock_count, images)" as const;
 
-/** Adds the copies on offer to lines in another condition (used, …). */
+/** Adds the copies on offer to lines in another condition (used, …) or from a shop. */
 const withOffers = async (
   supabase: ReturnType<typeof useAuth>["supabase"],
   items: CartItem[]
 ) => {
   const productIds = [
-    ...new Set(items.filter(isOtherCondition).map((item) => item.product_id)),
+    ...new Set(items.filter(isOtherOffer).map((item) => item.product_id)),
   ];
   if (productIds.length === 0) {
     return items;
@@ -155,7 +151,7 @@ const withOffers = async (
     )
   );
   return items.map((item) => {
-    if (!isOtherCondition(item)) {
+    if (!isOtherOffer(item)) {
       return item;
     }
     const offer = offers
@@ -163,8 +159,9 @@ const withOffers = async (
       ?.find(
         (candidate) =>
           candidate.purpose === "sale" &&
-          candidate.condition === item.condition &&
-          candidate.variant_id === item.variant_id
+          candidate.condition === (item.condition ?? item.product?.condition) &&
+          candidate.variant_id === item.variant_id &&
+          candidate.seller_id === item.seller_id
       );
     return {
       ...item,
@@ -216,13 +213,15 @@ export interface AddToCart {
   condition?: CartItem["condition"];
   productId: string;
   quantity: number;
+  /** A shop's offer; The IDEA's when missing. */
+  sellerId?: string;
   /** The chosen variant (a product's only one when there is no choice). */
   variantId: string;
 }
 
 /**
  * Adds to the cart: raises the quantity of an existing line (one line per
- * product, variant and condition) or inserts a new one.
+ * product, variant, seller and condition) or inserts a new one.
  */
 export const useAddToCart = () => {
   const { supabase, user } = useAuth();
@@ -234,6 +233,7 @@ export const useAddToCart = () => {
       condition = null,
       productId,
       quantity,
+      sellerId = HOUSE_SELLER_ID,
       variantId,
     }: AddToCart) => {
       const userId = requireUserId(user?.id);
@@ -242,7 +242,8 @@ export const useAddToCart = () => {
         .select("id, quantity")
         .eq("user_id", userId)
         .eq("product_id", productId)
-        .eq("variant_id", variantId);
+        .eq("variant_id", variantId)
+        .eq("seller_id", sellerId);
       existing = condition
         ? existing.eq("condition", condition)
         : existing.is("condition", null);
@@ -267,6 +268,7 @@ export const useAddToCart = () => {
           condition,
           product_id: productId,
           quantity: Math.min(quantity, MAX_QUANTITY),
+          seller_id: sellerId,
           user_id: userId,
           variant_id: variantId,
         })
@@ -313,7 +315,7 @@ export const useUpdateCartLine = () => {
 };
 
 const ORDER_COLUMNS =
-  "id, number, status, guardian_status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, tracking_url, paid_at, created_at, order_items (id, product_id, variant_id, condition, name_ar, name_en, attributes, unit_price, quantity, box_theme:box_themes (name_ar, name_en), variant:product_variants (label_ar, label_en))" as const;
+  "id, number, status, guardian_status, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, tracking_url, paid_at, created_at, order_items (id, product_id, variant_id, seller_id, seller_name, condition, name_ar, name_en, attributes, unit_price, quantity, box_theme:box_themes (name_ar, name_en), variant:product_variants (label_ar, label_en))" as const;
 
 export const useOrders = () => {
   const { supabase, user } = useAuth();

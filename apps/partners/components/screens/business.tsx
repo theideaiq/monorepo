@@ -20,6 +20,7 @@ import {
   PackageSearchIcon,
   PlusIcon,
   ReceiptIcon,
+  StoreIcon,
   TicketPercentIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -144,6 +145,7 @@ const sectionIcons: Record<OrganizationFeature, LucideIcon> = {
   bulk_buying: PackageSearchIcon,
   developers: CodeXmlIcon,
   perks: TicketPercentIcon,
+  selling: StoreIcon,
 };
 
 /** Sections the organization hasn't added yet ("Add", owners and admins). */
