@@ -5289,20 +5289,10 @@ export type Database = {
         Returns: {
           code: string;
           code_expires_at: string;
-          created_at: string;
-          email_hash: string | null;
-          id: string;
           kept: boolean;
           university_id: string;
-          user_id: string | null;
           valid_until: string;
-        };
-        SetofOptions: {
-          from: "*";
-          to: "student_checks";
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
+        }[];
       };
       forget_student_status: {
         Args: Record<PropertyKey, never>;

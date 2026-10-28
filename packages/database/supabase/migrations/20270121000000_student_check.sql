@@ -223,10 +223,17 @@ end;
 $$;
 
 -- The verified student finishes: a one-time check, or keeping the status
--- for the year. Returns the check (with its code). A one-time check takes
+-- for the year. Returns the code to show and the result (not the email's
+-- hash). A one-time check takes
 -- the badge away; at most 5 a month per university email.
 create function private.finish_student_check(keep boolean)
-returns public.student_checks
+returns table (
+  code text,
+  code_expires_at timestamptz,
+  kept boolean,
+  university_id text,
+  valid_until date
+)
 language plpgsql
 security definer
 set search_path = ''
@@ -269,16 +276,22 @@ begin
   if not keep then
     delete from public.student_badges where user_id = caller;
   end if;
-  return saved;
+  return query select saved.code, saved.code_expires_at, saved.kept, saved.university_id, saved.valid_until;
 end;
 $$;
 
 create function public.finish_student_check(keep boolean)
-returns public.student_checks
+returns table (
+  code text,
+  code_expires_at timestamptz,
+  kept boolean,
+  university_id text,
+  valid_until date
+)
 language sql
 security invoker
 set search_path = ''
-as $$ select private.finish_student_check(keep) $$;
+as $$ select * from private.finish_student_check(keep) $$;
 
 revoke all on function private.finish_student_check(boolean) from public, anon;
 revoke all on function public.finish_student_check(boolean) from public, anon;

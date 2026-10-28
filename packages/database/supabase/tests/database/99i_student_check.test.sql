@@ -135,7 +135,7 @@ select ok(not (select student_only from public.profiles where id = (select auth.
 select pg_temp.login_as('00000000-0000-0000-0000-0000000009a3');
 select ok(public.begin_student_check(), 'C starts on /verify');
 select is((public.claim_student_from_email('uobaghdad')).university_id, 'uobaghdad', 'C is verified');
-select ok((public.finish_student_check(true)).kept and exists (select 1 from public.student_badges),
+select ok((select kept from public.finish_student_check(true)) and exists (select 1 from public.student_badges),
   'keeping it leaves the badge: student prices and perks');
 
 -- ── Deleting the status ──
