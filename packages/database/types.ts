@@ -2204,6 +2204,7 @@ export type Database = {
           submission_id: string | null;
           title_ar: string;
           title_en: string;
+          topics: Database["public"]["Enums"]["post_topic"][];
           updated_at: string;
         };
         Insert: {
@@ -2222,6 +2223,7 @@ export type Database = {
           submission_id?: string | null;
           title_ar: string;
           title_en: string;
+          topics?: Database["public"]["Enums"]["post_topic"][];
           updated_at?: string;
         };
         Update: {
@@ -2240,6 +2242,7 @@ export type Database = {
           submission_id?: string | null;
           title_ar?: string;
           title_en?: string;
+          topics?: Database["public"]["Enums"]["post_topic"][];
           updated_at?: string;
         };
         Relationships: [
@@ -6079,6 +6082,7 @@ export type Database = {
         | "refunded";
       plus_seat_status: "requested" | "active" | "ended" | "declined";
       post_section: "news" | "stories" | "members" | "learn";
+      post_topic: "news" | "stories" | "guides";
       procurement_status:
         | "submitted"
         | "quoted"
@@ -6316,6 +6320,7 @@ export const Constants = {
       ],
       plus_seat_status: ["requested", "active", "ended", "declined"],
       post_section: ["news", "stories", "members", "learn"],
+      post_topic: ["news", "stories", "guides"],
       procurement_status: [
         "submitted",
         "quoted",
