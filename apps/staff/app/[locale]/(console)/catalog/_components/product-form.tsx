@@ -66,11 +66,11 @@ const PricingPanel = ({
         <TextField
           defaultValue={product?.compare_at_price ?? ""}
           dir="ltr"
-          hint={t("fields.compareAtHint")}
+          hint={t("fields.wasPriceHint")}
           inputMode="numeric"
           label={t("fields.compareAt")}
-          name="compareAtPrice"
-          readOnly={variantPriced}
+          name="wasPrice"
+          readOnly
         />
         <TextField
           defaultValue={product?.stock_count ?? 0}

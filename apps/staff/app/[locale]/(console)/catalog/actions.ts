@@ -27,7 +27,6 @@ export const saveProduct = staffAction(
     const row = {
       age_rating: input.ageRating,
       category_id: input.categoryId,
-      compare_at_price: input.compareAtPrice,
       condition: input.condition,
       description_ar: input.descriptionAr,
       description_en: input.descriptionEn,
@@ -55,12 +54,7 @@ export const saveProduct = staffAction(
           .select("id", { count: "exact", head: true })
           .eq("product_id", input.id)
       );
-      const {
-        compare_at_price: _compareAtPrice,
-        price: _price,
-        stock_count: _stock,
-        ...shared
-      } = row;
+      const { price: _price, stock_count: _stock, ...shared } = row;
       affected(
         await supabase
           .from("products")
@@ -92,7 +86,6 @@ const variantSchema = z.object({
   attrKey: z.array(z.string()).optional(),
   attrValue: z.array(z.string()).optional(),
   barcode: optionalText(64),
-  compareAtPrice: optionalInt(0),
   id: optionalUuid,
   labelAr: optionalText(60),
   labelEn: optionalText(60),
@@ -113,7 +106,6 @@ export const saveVariant = staffAction(
       active: input.active,
       attributes,
       barcode: input.barcode,
-      compare_at_price: input.compareAtPrice,
       label_ar: input.labelAr ?? input.labelEn,
       label_en: input.labelEn ?? input.labelAr,
       position: input.position,

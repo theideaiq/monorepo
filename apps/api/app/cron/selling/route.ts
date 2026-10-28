@@ -6,7 +6,7 @@ import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 import { refundReturns } from "@/lib/return-refunds";
 import { sweepSelling } from "@/lib/selling-sweep";
 
-// Daily: return and offer deadlines and shop scores, then the refunds of
+// Daily: return and offer deadlines, shop scores and "was" prices, then the refunds of
 // returns paid online through Wayl (while store_settings allow it).
 export const GET = async (request: Request) => {
   if (!isAuthorizedCronRequest(request)) {

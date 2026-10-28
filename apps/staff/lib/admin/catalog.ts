@@ -29,39 +29,32 @@ const catalogImages = (max: number) =>
 /** PEGI age ratings; empty for none. */
 const AGE_RATINGS = [3, 7, 12, 16, 18] as const;
 
-export const productSchema = z
-  .object({
-    ageRating: optionalInt(3, 18).refine(
-      (value) =>
-        value === null || (AGE_RATINGS as readonly number[]).includes(value)
-    ),
-    categoryId: optionalUuid,
-    compareAtPrice: optionalInt(0),
-    condition: z.enum(Enums.product_condition),
-    descriptionAr: optionalText(10_000),
-    descriptionEn: optionalText(10_000),
-    detailKey: z.array(z.string()).optional(),
-    detailValue: z.array(z.string()).optional(),
-    featured: checkbox,
-    id: optionalUuid,
-    images: catalogImages(12),
-    kind: z.enum(Enums.product_kind),
-    nameAr: text(200),
-    nameEn: text(200),
-    price: int(0),
-    /** Minimum The IDEA Plus plan tier for rental items; null = any plan. */
-    rentalTier: optionalInt(1, 10),
-    seller: text(120),
-    slug,
-    status: z.enum(Enums.product_status),
-    stock: int(0, 1_000_000),
-    verified: checkbox,
-  })
-  .refine(
-    (product) =>
-      product.compareAtPrice === null || product.compareAtPrice > product.price,
-    { path: ["compareAtPrice"] }
-  );
+export const productSchema = z.object({
+  ageRating: optionalInt(3, 18).refine(
+    (value) =>
+      value === null || (AGE_RATINGS as readonly number[]).includes(value)
+  ),
+  categoryId: optionalUuid,
+  condition: z.enum(Enums.product_condition),
+  descriptionAr: optionalText(10_000),
+  descriptionEn: optionalText(10_000),
+  detailKey: z.array(z.string()).optional(),
+  detailValue: z.array(z.string()).optional(),
+  featured: checkbox,
+  id: optionalUuid,
+  images: catalogImages(12),
+  kind: z.enum(Enums.product_kind),
+  nameAr: text(200),
+  nameEn: text(200),
+  price: int(0),
+  /** Minimum The IDEA Plus plan tier for rental items; null = any plan. */
+  rentalTier: optionalInt(1, 10),
+  seller: text(120),
+  slug,
+  status: z.enum(Enums.product_status),
+  stock: int(0, 1_000_000),
+  verified: checkbox,
+});
 
 export const planSchema = z
   .object({
