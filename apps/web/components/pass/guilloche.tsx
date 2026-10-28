@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 /**
  * The guilloché on The IDEA Pass card: banknote-style rosettes
  * (hypotrochoids) and fine wave lines, drawn once from formulas. The card
@@ -79,24 +81,28 @@ const SMALL_ROSETTE = rosettePath(
 );
 const WAVE_PATHS = Array.from({ length: 26 }, (_, index) => wavePath(index));
 
-export const Guilloche = ({ className }: { readonly className?: string }) => (
-  <svg
-    aria-hidden="true"
-    className={className}
-    fill="none"
-    preserveAspectRatio="xMidYMid slice"
-    viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-  >
-    <g stroke="currentColor" strokeWidth="0.6">
-      {WAVE_PATHS.map((path) => (
-        <path d={path} key={path.slice(0, 24)} opacity="0.35" />
-      ))}
-    </g>
-    <g stroke="currentColor" strokeWidth="0.7">
-      {ROSETTE_PATHS.map((path, index) => (
-        <path d={path} key={ROSETTES[index]?.small} opacity="0.55" />
-      ))}
-      <path d={SMALL_ROSETTE} opacity="0.4" />
-    </g>
-  </svg>
+// Memoized: the card re-renders every second for its countdown, and the
+// guilloché never changes.
+export const Guilloche = memo(
+  ({ className }: { readonly className?: string }) => (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      preserveAspectRatio="xMidYMid slice"
+      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+    >
+      <g stroke="currentColor" strokeWidth="0.6">
+        {WAVE_PATHS.map((path) => (
+          <path d={path} key={path.slice(0, 24)} opacity="0.35" />
+        ))}
+      </g>
+      <g stroke="currentColor" strokeWidth="0.7">
+        {ROSETTE_PATHS.map((path, index) => (
+          <path d={path} key={ROSETTES[index]?.small} opacity="0.55" />
+        ))}
+        <path d={SMALL_ROSETTE} opacity="0.4" />
+      </g>
+    </svg>
+  )
 );
