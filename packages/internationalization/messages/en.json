@@ -2095,6 +2095,7 @@
         "firstOrder": "First-order bonus",
         "trade_in": "Trade-in paid in Bulbs",
         "redemption": "Spent on an order",
+        "return": "Returned item",
         "adjustment": "Adjusted by The IDEA",
         "expiry": "Expired",
         "plusPayment": "Cashback on Plus",
