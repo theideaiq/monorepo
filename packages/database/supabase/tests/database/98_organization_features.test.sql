@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(9);
+select plan(10);
 
 -- O owns Org (A an admin, M a member); X is someone else.
 insert into auth.users (id, email, email_confirmed_at) values
@@ -84,6 +84,11 @@ select throws_ok(
   $$ update public.organizations set features = '{supply}'
      where id = '98000000-0000-0000-0000-0000000000c1' $$,
   '23514', null, 'Only sections that exist can be switched on'
+);
+select throws_ok(
+  $$ update public.organizations set features = '{bulk_buying}'
+     where id = '98000000-0000-0000-0000-0000000000c1' $$,
+  '23514', null, 'Bulk buying is now part of Team'
 );
 
 -- A member can't change them; nor can someone outside the organization.

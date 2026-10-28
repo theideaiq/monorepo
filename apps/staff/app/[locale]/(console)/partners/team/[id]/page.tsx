@@ -21,16 +21,16 @@ import { formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
-import { OrderPanel } from "../_components/order-panel";
-import { NewQuoteForm, QuoteLineForm } from "../_components/quote-forms";
-import { companyAbilities } from "../_components/roles";
-import { quoteTone, requestTone } from "../_components/tones";
+import { OrderPanel } from "../../_components/order-panel";
+import { NewQuoteForm, QuoteLineForm } from "../../_components/quote-forms";
+import { companyAbilities } from "../../_components/roles";
+import { quoteTone, requestTone } from "../../_components/tones";
 import {
   cancelRequest,
   deleteQuote,
   removeQuoteLine,
   sendQuote,
-} from "../actions";
+} from "../../actions";
 
 type Quote = Tables<"quotes"> & { quote_lines: Tables<"quote_lines">[] };
 
@@ -185,7 +185,7 @@ const CompanyRequestPage = async ({
   return (
     <>
       <PageHeader
-        back={{ href: "/partners", label: t("title") }}
+        back={{ href: "/partners/team", label: t("title") }}
         description={request.organizations?.name}
         title={`${t("number", { number: String(request.number) })} · ${request.title}`}
       >

@@ -4,9 +4,9 @@ import { urls } from "../playwright.config";
 import { resetCompany } from "../seed";
 import { expectAccessible } from "./helpers";
 
-const REQUEST_PATH = /\/bulk-buying\/([0-9a-f-]{36})$/;
+const REQUEST_PATH = /\/team\/([0-9a-f-]{36})$/;
 
-test("a company adds Bulk buying, sends a request and accepts the quote", async ({
+test("a company adds Team, sends a bulk request and accepts the quote", async ({
   context,
   page,
 }) => {
@@ -15,11 +15,13 @@ test("a company adds Bulk buying, sends a request and accepts the quote", async 
 
   // A new organization starts with Home and Organization; it adds sections.
   await page.goto(urls.app);
-  await expect(page.getByRole("link", { name: "Bulk buying" })).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { exact: true, name: "Team" })
+  ).toHaveCount(0);
   await expectAccessible(page);
-  await page.getByRole("button", { name: "Add Bulk buying" }).click();
-  await page.getByRole("link", { exact: true, name: "Bulk buying" }).click();
-  await expect(page).toHaveURL(/\/bulk-buying$/);
+  await page.getByRole("button", { name: "Add Team" }).click();
+  await page.getByRole("link", { exact: true, name: "Team" }).click();
+  await expect(page).toHaveURL(/\/team$/);
   await page.getByLabel("What do you need?").fill("12 laptops");
   await page.getByLabel("Budget (IQD, optional)").fill("9000000");
   await page.getByRole("button", { name: "Send request" }).click();
@@ -77,7 +79,10 @@ test("a company adds Bulk buying, sends a request and accepts the quote", async 
   await expect(page.getByText("Sections", { exact: true })).toBeVisible();
   await page.getByRole("link", { exact: true, name: "Invoices" }).click();
   await expect(page.getByText("No invoices yet.")).toBeVisible();
-  await page.getByRole("link", { exact: true, name: "The IDEA Plus" }).click();
+  // Plus for the company's people is Team's second tab.
+  await page.getByRole("link", { exact: true, name: "Team" }).click();
+  await page.getByRole("link", { exact: true, name: "Plus" }).click();
+  await expect(page).toHaveURL(/\/team\/plus$/);
   await expect(
     page.getByText("No one has The IDEA Plus through your company yet.")
   ).toBeVisible();

@@ -17,8 +17,8 @@ import { formatters } from "@/lib/admin/format";
 import { oneOf, pageRange, type SearchParams } from "@/lib/admin/list";
 import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
-import { CompaniesTabs } from "./_components/companies-tabs";
-import { requestTone } from "./_components/tones";
+import { CompaniesTabs } from "../_components/companies-tabs";
+import { requestTone } from "../_components/tones";
 
 const views = ["open", "ordered", "delivered", "cancelled", "all"] as const;
 
@@ -102,7 +102,7 @@ const CompaniesPage = async ({
                     <TableCell className="max-w-80">
                       <Link
                         className="grid gap-0.5 hover:underline"
-                        href={`/partners/${request.id}`}
+                        href={`/partners/team/${request.id}`}
                       >
                         <span className="text-muted-foreground text-xs tabular-nums">
                           {t("number", { number: String(request.number) })}
@@ -137,7 +137,7 @@ const CompaniesPage = async ({
           count={count}
           page={page}
           params={params}
-          pathname="/partners"
+          pathname="/partners/team"
         />
       </PageBody>
     </>

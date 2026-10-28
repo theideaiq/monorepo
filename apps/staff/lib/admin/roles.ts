@@ -28,7 +28,7 @@ export type Section = (typeof sections)[number];
 export const sectionHref: Record<Section, string> = {
   audit: "/settings/audit",
   catalog: "/catalog",
-  companies: "/partners",
+  companies: "/partners/team",
   customers: "/customers",
   dashboard: "/",
   editorial: "/club",

@@ -22,6 +22,7 @@ import {
   ReceiptIcon,
   StoreIcon,
   TicketPercentIcon,
+  UsersIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { BusinessShell } from "@/components/business/business-shell";
@@ -77,7 +78,7 @@ const Overview = () => {
   const plans = usePlans("business");
   const subscription = useSubscription(active.id);
   const plan = plans.data?.find((row) => row.id === subscription.data?.plan_id);
-  const bulkBuying = active.features.includes("bulk_buying");
+  const team = active.features.includes("team");
 
   if (overview.isPending) {
     return <SectionSpinner />;
@@ -94,16 +95,16 @@ const Overview = () => {
         <p className="text-muted-foreground text-sm">{t("description")}</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
-        {bulkBuying ? (
+        {team ? (
           <>
             <Tile
-              href="/bulk-buying"
+              href="/team"
               icon={FileTextIcon}
               label={t("quotesToAnswer")}
               value={formatNumber(data.quotesToAnswer, locale)}
             />
             <Tile
-              href="/bulk-buying"
+              href="/team"
               icon={PackageSearchIcon}
               label={t("openRequests")}
               value={formatNumber(data.openRequests, locale)}
@@ -123,12 +124,14 @@ const Overview = () => {
           label={t("unpaidInvoices")}
           value={formatNumber(data.unpaidInvoices, locale)}
         />
-        <Tile
-          href="/organization/plus"
-          icon={CrownIcon}
-          label={t("plusSeats")}
-          value={formatNumber(data.plusSeats, locale)}
-        />
+        {team ? (
+          <Tile
+            href="/team/plus"
+            icon={CrownIcon}
+            label={t("plusSeats")}
+            value={formatNumber(data.plusSeats, locale)}
+          />
+        ) : null}
       </div>
       <Link
         className="text-muted-foreground text-sm underline"
@@ -142,10 +145,10 @@ const Overview = () => {
 };
 
 const sectionIcons: Record<OrganizationFeature, LucideIcon> = {
-  bulk_buying: PackageSearchIcon,
   developers: CodeXmlIcon,
   perks: TicketPercentIcon,
   selling: StoreIcon,
+  team: UsersIcon,
 };
 
 /** Sections the organization hasn't added yet ("Add", owners and admins). */

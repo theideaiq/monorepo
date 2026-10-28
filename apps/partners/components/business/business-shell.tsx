@@ -15,9 +15,14 @@ import { PendingInvitations } from "./pending-invitations";
 const ORGANIZATION_TABS = [
   { href: "/organization", key: "details" },
   { href: "/organization/members", key: "members" },
-  { href: "/organization/plus", key: "plus" },
   { href: "/organization/billing", key: "billing" },
   { href: "/organization/invoices", key: "invoices" },
+] as const;
+
+/** The pages of Team, as tabs: bulk orders, and Plus for its people. */
+const TEAM_TABS = [
+  { href: "/team", key: "orders" },
+  { href: "/team/plus", key: "plus" },
 ] as const;
 
 /** The pages of Selling, as tabs. */
@@ -54,7 +59,8 @@ const BusinessIntro = () => {
 
 type TabKey =
   | (typeof ORGANIZATION_TABS)[number]["key"]
-  | (typeof SELLING_TABS)[number]["key"];
+  | (typeof SELLING_TABS)[number]["key"]
+  | (typeof TEAM_TABS)[number]["key"];
 
 const SectionTabs = ({
   label,
@@ -165,6 +171,9 @@ export const BusinessShell = ({
         ) : null}
         {feature === "selling" ? (
           <SectionTabs label={t("nav.selling")} tabs={SELLING_TABS} />
+        ) : null}
+        {feature === "team" ? (
+          <SectionTabs label={t("nav.team")} tabs={TEAM_TABS} />
         ) : null}
         {children}
       </>

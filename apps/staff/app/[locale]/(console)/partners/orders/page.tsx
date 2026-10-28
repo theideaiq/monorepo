@@ -74,7 +74,7 @@ const CompanyOrdersPage = async ({
                       <TableCell>
                         <Link
                           className="font-medium hover:underline"
-                          href={`/partners/${order.quotes?.request_id ?? ""}`}
+                          href={`/partners/team/${order.quotes?.request_id ?? ""}`}
                         >
                           {t("orders.number", { number: String(order.number) })}
                         </Link>
