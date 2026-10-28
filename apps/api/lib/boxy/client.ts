@@ -24,6 +24,20 @@ export interface CreatedOrder {
   order: BoxyOrder & { fee?: number | null };
 }
 
+/** A pick-up location (POST /merchants/saved-pick-up-addresses). */
+export interface PickUpLocationRequest {
+  address_text: string;
+  default: boolean;
+  description: string;
+  full_name: string;
+  lat: string;
+  lng: string;
+  phone: string;
+  region_uid: string;
+  title: string;
+  type: "WAREHOUSE";
+}
+
 export type BoxyLabel =
   | { bytes: ArrayBuffer; kind: "pdf" }
   | { kind: "url"; url: string };
@@ -83,6 +97,19 @@ export const createBoxyClient = ({
 
     createOrder: (request: BoxyOrderRequest) =>
       call<CreatedOrder>("POST", "merchants/orders/request", request),
+
+    /** Saves a pick-up location (a shop's branch); returns its uid. */
+    createPickUpLocation: async (request: PickUpLocationRequest) => {
+      const saved = await call<{ uid?: string } | null>(
+        "POST",
+        "merchants/saved-pick-up-addresses",
+        request
+      );
+      if (!saved?.uid) {
+        throw new BoxyError("Boxy sent no pick-up location", 502);
+      }
+      return saved.uid;
+    },
 
     getOrder: (uid: string) =>
       call<BoxyOrder>("GET", `merchants/orders/${encodeURIComponent(uid)}`),

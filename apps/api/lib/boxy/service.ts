@@ -1,15 +1,23 @@
 import "server-only";
 
-import { variantName } from "@repo/commerce";
+import { HOUSE_SELLER_ID, variantName } from "@repo/commerce";
 import type { AdminClient } from "@repo/database/admin";
 import { env } from "@/env";
 import { type BoxyClient, BoxyError, createBoxyClient } from "./client";
 import {
   buildBoxyOrder,
-  cashToCollect,
   type OrderForBoxy,
   type ParcelSize,
+  parcelCash,
+  parcelOrder,
 } from "./order-request";
+import {
+  allDelivered,
+  hasParcel,
+  isHouseLine,
+  linesValue,
+  markOrderSent,
+} from "./parcels";
 import { CANCELLABLE, deliversOrder, shipmentUpdate } from "./sync";
 
 /** The Boxy client, or null while the key or secret is unset. */
@@ -73,9 +81,11 @@ const check = <T>({
 };
 
 /**
- * Sends a packed order to Boxy: creates the parcel, asks for a pick-up,
- * records the shipment and marks the order shipped with its tracking code
- * and page (the customer is notified by the order-status trigger).
+ * Sends The IDEA's own lines of a packed order to Boxy: creates the
+ * parcel, asks for a pick-up, records the shipment and marks the order
+ * shipped with its tracking code and page once every seller's parcel has
+ * gone (the customer is notified by the order-status trigger). Shops send
+ * their own lines from Partners (`./shop-parcels`).
  */
 export const dispatchOrder = async (
   admin: AdminClient,
@@ -91,7 +101,7 @@ export const dispatchOrder = async (
     await admin
       .from("orders")
       .select(
-        "id, number, status, fulfilment, payment_method, paid_at, total, shipping_fee, shipping_address, delivery_zone_id, order_items (name_en, unit_price, quantity, attributes, variant:product_variants (label_ar, label_en))"
+        "id, number, status, fulfilment, payment_method, paid_at, total, shipping_fee, shipping_address, delivery_zone_id, order_items (name_en, unit_price, quantity, attributes, seller_id, variant:product_variants (label_ar, label_en))"
       )
       .eq("id", orderId)
       .maybeSingle()
@@ -99,18 +109,15 @@ export const dispatchOrder = async (
   if (!order) {
     throw new ShipmentError("not_found");
   }
-  if (order.fulfilment !== "delivery" || !SHIPPABLE.has(order.status)) {
+  const ours = order.order_items.filter(isHouseLine);
+  if (
+    order.fulfilment !== "delivery" ||
+    !SHIPPABLE.has(order.status) ||
+    ours.length === 0
+  ) {
     throw new ShipmentError("not_shippable");
   }
-  const live = check(
-    await admin
-      .from("shipments")
-      .select("id")
-      .eq("order_id", order.id)
-      .eq("active", true)
-      .maybeSingle()
-  );
-  if (live) {
+  if (await liveShipment(admin, order.id)) {
     throw new ShipmentError("already_shipped");
   }
 
@@ -136,9 +143,16 @@ export const dispatchOrder = async (
     shipping_fee: order.shipping_fee,
     total: order.total,
   };
+  const first = !(await hasParcel(admin, order.id));
+  const cash = parcelCash({
+    first,
+    order: forBoxy,
+    orderValue: linesValue(order.order_items),
+    parcelValue: linesValue(ours),
+  });
   const request = buildBoxyOrder({
     fragile,
-    lines: order.order_items.map((item) => {
+    lines: ours.map((item) => {
       const version = variantName(
         { ...item.variant, attributes: item.attributes },
         "en"
@@ -149,7 +163,7 @@ export const dispatchOrder = async (
         unitPrice: item.unit_price,
       };
     }),
-    order: forBoxy,
+    order: parcelOrder(forBoxy, { cash, first }),
     pickupLocation: env.BOXY_PICKUP_LOCATION,
     province: zone.carrier_province,
     size,
@@ -174,7 +188,7 @@ export const dispatchOrder = async (
       .from("shipments")
       .insert({
         carrier_id: parcel.uid,
-        cash_amount: cashToCollect(forBoxy),
+        cash_amount: cash,
         created_by: createdBy,
         fee: typeof parcel.fee === "number" ? parcel.fee : null,
         fragile,
@@ -211,16 +225,10 @@ export const dispatchOrder = async (
       })
       .eq("id", shipment.id)
   );
-  check(
-    await admin
-      .from("orders")
-      .update({
-        status: "shipped",
-        tracking_number: parcel.platform_code ?? null,
-        tracking_url: trackingUrl,
-      })
-      .eq("id", order.id)
-  );
+  await markOrderSent(admin, order.id, {
+    code: parcel.platform_code ?? null,
+    url: trackingUrl,
+  });
 
   return {
     pickupRequested: pickup.status === "fulfilled",
@@ -229,12 +237,14 @@ export const dispatchOrder = async (
   };
 };
 
+/** The order's live parcel of The IDEA's own lines. */
 const liveShipment = async (admin: AdminClient, orderId: string) =>
   check(
     await admin
       .from("shipments")
       .select(SHIPMENT_COLUMNS)
       .eq("order_id", orderId)
+      .eq("seller_id", HOUSE_SELLER_ID)
       .eq("active", true)
       .maybeSingle()
   ) as ShipmentRow | null;
@@ -315,7 +325,17 @@ export const syncShipment = async (
         .is("tracking_url", null)
     );
   }
-  if (deliversOrder(update)) {
+  if (!(CANCELLABLE.has(update.status) || update.status === "cancelled")) {
+    // Collected: a shop's lines in the parcel are picked up.
+    check(
+      await admin
+        .from("order_items")
+        .update({ seller_status: "picked_up" })
+        .eq("shipment_id", shipment.id)
+        .eq("seller_status", "ready")
+    );
+  }
+  if (deliversOrder(update) && (await allDelivered(admin, shipment.order_id))) {
     check(
       await admin
         .from("orders")
