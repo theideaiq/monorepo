@@ -246,6 +246,7 @@ const liveShipment = async (admin: AdminClient, orderId: string) =>
       .eq("order_id", orderId)
       .eq("seller_id", HOUSE_SELLER_ID)
       .eq("active", true)
+      .is("return_id", null)
       .maybeSingle()
   ) as ShipmentRow | null;
 

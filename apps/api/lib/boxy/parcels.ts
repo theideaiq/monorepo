@@ -41,6 +41,7 @@ export const hasParcel = async (admin: AdminClient, orderId: string) => {
     .from("shipments")
     .select("id", { count: "exact", head: true })
     .eq("order_id", orderId)
+    .is("return_id", null)
     .or("active.eq.true,delivered_at.not.is.null");
   return (count ?? 0) > 0;
 };
@@ -74,6 +75,7 @@ export const allSent = async (admin: AdminClient, orderId: string) => {
     .select("id", { count: "exact", head: true })
     .eq("order_id", orderId)
     .eq("seller_id", HOUSE_SELLER_ID)
+    .is("return_id", null)
     .or("active.eq.true,delivered_at.not.is.null");
   return (count ?? 0) > 0;
 };
@@ -85,6 +87,7 @@ export const allDelivered = async (admin: AdminClient, orderId: string) => {
     .select("id", { count: "exact", head: true })
     .eq("order_id", orderId)
     .eq("active", true)
+    .is("return_id", null)
     .is("delivered_at", null);
   return (count ?? 0) === 0 && (await allSent(admin, orderId));
 };
