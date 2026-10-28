@@ -1588,7 +1588,8 @@ no units, no bookings).
 Boxes are gone (owner decisions of 2026-10-28; shops' bundles will
 replace them). The website no longer shows a box's contents or asks for a
 theme, the cart and orders no longer read `box_theme_id`, and Staff has no
-Catalogue → Boxes or Orders → Boxes to pack. A follow-up migration deletes
+Catalogue → Boxes or Orders → Boxes to pack. Migration
+`20270109000000_remove_boxes.sql` deleted
 the boxes (the 3 live and 3 seasonal drafts) with `boxes`, `box_parts`,
 `box_themes`, the box functions and triggers; past order lines keep their
 names.
@@ -1726,9 +1727,10 @@ Migration `20261226000000_surveys.sql`; the pilot starts at AUIB.
 
 #### Categories, prices and conditions (the catalogue)
 
-The store has six categories, each a filter on `/store`: Music, Games,
-Books, Films, Audio and Tech (migration `20261219000000_catalogue_fixes.sql`;
-cameras, gadgets, laptops and phones are in Tech). Prices follow the
+The store has five categories, each a filter on `/store`: Music, Games,
+Books, Films and Gear (migration `20261219000000_catalogue_fixes.sql`;
+Audio and Tech became Gear in `20270109000100_gear.sql`: hi-fi, cameras,
+gadgets, laptops and phones). Prices follow the
 program revision's bands and always end in …4,750 or …9,750: games by age
 (released in the last 6 months 99,750, up to 2 years 79,750, older 59,750),
 books by language (Arabic paperbacks 14,750, others 19,750), Blu-ray films
