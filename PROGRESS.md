@@ -553,6 +553,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: The student check, part 2. theideaiq.com/verify ("Verify
+  you're a student", no menus): signed out, the university and its email
+  sign in with the emailed code and verify at once, or any email plus a
+  card photo; signed in, the existing university-email code or card. A
+  bare Pass then chooses "Just this once" or "Keep it for a year"; the
+  result shows the student code (8 characters, `K7M2-QX9P`, with a QR of
+  `STUDENT:<code>`), valid 24 hours, and "Delete your student status"
+  (`POST /pass/student-status` deletes a bare Pass with it). Partners →
+  Perks checks a student code like a Pass card (verified, university,
+  until). `student_check` is a sign-in answer (consent, discovery, Staff
+  and Partners → Developers, docs). `/cron/student-checks` runs the daily
+  sweep.
 - 2026-10-28: The student check, part 1, the schema
   (`20270121000000_student_check.sql`; master brief step 4). On
   theideaiq.com/verify a student signs in with their university email

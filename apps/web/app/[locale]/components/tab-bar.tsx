@@ -19,7 +19,7 @@ const tabs = [
 ] as const;
 
 /** Focused steps (sign-in, checkout, the Mini App's sign-in) hide the tabs. */
-const HIDDEN = /^\/(checkout|sign-in|sign-out|mfa|onboarding|tg)(\/|$)/;
+const HIDDEN = /^\/(checkout|sign-in|sign-out|mfa|onboarding|tg|verify)(\/|$)/;
 
 const isActive = (pathname: string, tab: (typeof tabs)[number]) =>
   (tab.href === "/" ? pathname === "/" : isWithin(pathname, tab.href)) ||

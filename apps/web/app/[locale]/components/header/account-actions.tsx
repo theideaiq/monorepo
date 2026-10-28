@@ -14,7 +14,7 @@ import { isWithin } from "@/lib/navigation";
 import { useCartCount } from "@/lib/store-queries";
 
 /** Sign-in and checkout are focused steps: no search, bell or cart there. */
-const FOCUSED = /^\/(checkout|sign-in|sign-out|mfa|onboarding|tg)(\/|$)/;
+const FOCUSED = /^\/(checkout|sign-in|sign-out|mfa|onboarding|tg|verify)(\/|$)/;
 
 /** The Store and Plus screens, where the cart always shows. */
 const isShopping = (pathname: string) =>

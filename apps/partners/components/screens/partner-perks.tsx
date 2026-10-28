@@ -13,7 +13,11 @@ import {
 } from "@repo/design-system/components/ui/card";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
-import { formatNumber, intlLocale } from "@repo/internationalization/format";
+import {
+  formatCalendarDate,
+  formatNumber,
+  intlLocale,
+} from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
@@ -26,7 +30,33 @@ import {
   usePartnerCheck,
   usePerkStats,
   useRedeemPerk,
+  useUniversityNames,
 } from "@/lib/perk-queries";
+
+/**
+ * A student check's code (from /verify): verified, the university and
+ * until when, nothing about the person. Student perks are given as the
+ * partner's own rules say; nothing is recorded.
+ */
+const StudentCheckResult = ({ card }: { readonly card: CheckedCard }) => {
+  const t = useTranslations("app.company.perks");
+  const locale = useLocale();
+  const universities = useUniversityNames();
+  const row = universities.data?.find((u) => u.id === card.university);
+  return (
+    <p className="flex flex-wrap items-center gap-2 text-sm" role="status">
+      <Badge>{t("student")}</Badge>
+      {t("studentCheck", {
+        date: card.until
+          ? formatCalendarDate(new Date(`${card.until}T12:00:00`), locale)
+          : "",
+        university: row
+          ? localized(row, "name", locale)
+          : (card.university ?? ""),
+      })}
+    </p>
+  );
+};
 
 /** The checked card: who it is, their badges and the perks to record. */
 const CheckedResult = ({
@@ -49,6 +79,9 @@ const CheckedResult = ({
         {t("invalidCard")}
       </p>
     );
+  }
+  if (card.student_check) {
+    return <StudentCheckResult card={card} />;
   }
   return (
     <div className="grid gap-3">

@@ -33,6 +33,7 @@ export const GET = async () => {
         "pass_number",
         "pass_since",
         "student",
+        "student_check",
         "student_email",
         "student_email_verified",
         "adult",

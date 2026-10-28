@@ -34,6 +34,10 @@ export interface CheckedCard {
   perks?: CheckedPerk[];
   plus?: boolean;
   student?: boolean;
+  /** A student check's code: only the university and until when. */
+  student_check?: boolean;
+  university?: string;
+  until?: string;
   valid: boolean;
 }
 
@@ -93,4 +97,17 @@ export const redeemError = (message: string | undefined) => {
     return "invalidCard" as const;
   }
   return "failed" as const;
+};
+
+/** University names, for a student check's result. */
+export const useUniversityNames = () => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: async () =>
+      unwrap(
+        await supabase.from("universities").select("id, name_ar, name_en")
+      ),
+    queryKey: ["universities", "names"],
+    staleTime: 60 * 60 * 1000,
+  });
 };

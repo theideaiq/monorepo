@@ -105,6 +105,7 @@ Sensitive scopes are marked on the consent screen and off by default.
 | `email` | `email`, `email_verified` (the Pass email) | |
 | `pass` | `pass_number`, `pass_since` | |
 | `student` | `student`: `{ "verified": true, "university": "auib", "until": "2027-06-30" }`, or `{ "verified": false }` | |
+| `student_check` | `student_check`: the same yes or no, university and expiry, from a kept badge or a check made on `/verify` in the last 24 hours; for partners that only check student status (no name, email or Pass details) | |
 | `student_email` | `student_email`, `student_email_verified`: the university email the badge was verified with (absent for card-photo badges, or until the student confirms it in Settings) | sensitive |
 | `adult` | `adult`: `true` when 18 or over | |
 | `plus` | `plus`, and `plus_plan` (the plan's name) for members | |

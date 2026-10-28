@@ -25,6 +25,7 @@ const ANSWERS = [
   "email",
   "pass",
   "student",
+  "student_check",
   "student_email",
   "adult",
   "plus",

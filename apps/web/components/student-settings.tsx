@@ -34,7 +34,13 @@ const selectClassName =
   "h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs";
 
 /** A university email: a code is emailed to it and typed back here. */
-const EmailForm = ({ university }: { readonly university: string }) => {
+export const EmailForm = ({
+  onVerified,
+  university,
+}: {
+  readonly onVerified?: () => void;
+  readonly university: string;
+}) => {
   const t = useTranslations("app.settings.student");
   const locale = useLocale();
   const id = useId();
@@ -49,7 +55,7 @@ const EmailForm = ({ university }: { readonly university: string }) => {
   };
   const confirmCode = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    confirm.mutate(code.trim());
+    confirm.mutate(code.trim(), { onSuccess: () => onVerified?.() });
   };
 
   if (send.isSuccess) {
@@ -118,7 +124,13 @@ const EmailForm = ({ university }: { readonly university: string }) => {
 };
 
 /** A photo of the student card, reviewed by The IDEA's team. */
-const CardForm = ({ university }: { readonly university: string }) => {
+export const CardForm = ({
+  onSent,
+  university,
+}: {
+  readonly onSent?: () => void;
+  readonly university: string;
+}) => {
   const t = useTranslations("app.settings.student");
   const id = useId();
   const review = useRequestStudentReview();
@@ -127,7 +139,7 @@ const CardForm = ({ university }: { readonly university: string }) => {
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (photo) {
-      review.mutate({ photo, university });
+      review.mutate({ photo, university }, { onSuccess: () => onSent?.() });
     }
   };
 

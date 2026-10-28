@@ -47,6 +47,25 @@ const authorizeUrl = (
 const returnTo = (path: string) => `?return_to=${encodeURIComponent(path)}`;
 
 test.describe("The IDEA Pass", () => {
+  test("the student check asks for the university first, in both languages", async ({
+    page,
+  }) => {
+    await page.goto(`${urls.web}/verify`);
+    await expect(
+      page.getByRole("heading", { name: "Verify you're a student" })
+    ).toBeVisible();
+    await page.getByLabel("University").selectOption("auib");
+    await expect(page.getByLabel("Email")).toBeVisible();
+    await expectAccessible(page);
+
+    await page.goto(`${urls.web}/ar/verify`);
+    await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+    await expect(
+      page.getByRole("heading", { name: "تحقّق من أنك طالب" })
+    ).toBeVisible();
+    await expectAccessible(page);
+  });
+
   test("is branded and accessible in both languages", async ({ page }) => {
     await page.goto(`${urls.web}/sign-in`);
     await expect(page).toHaveTitle(/The IDEA Pass/);
