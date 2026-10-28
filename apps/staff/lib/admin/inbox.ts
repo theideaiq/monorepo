@@ -14,6 +14,8 @@ import type { ServerClient } from "./session";
 export const inboxItems = [
   "tickets",
   "orders",
+  "lateShopLines",
+  "shopRefunds",
   "rentalRequests",
   "overdueRentals",
   "submissions",
@@ -39,6 +41,7 @@ const head = { count: "exact", head: true } as const;
 
 const hrefs: Record<InboxItem, string> = {
   invoices: "/partners/invoices",
+  lateShopLines: "/orders/shop-lines",
   orders: "/orders?status=awaiting",
   overdueRentals: "/rentals?view=overdue",
   passApps: "/partners/sign-in",
@@ -47,6 +50,7 @@ const hrefs: Record<InboxItem, string> = {
   productFlags: "/catalog/checks#flags",
   rentalRequests: "/rentals",
   seats: "/partners/team/plus",
+  shopRefunds: "/orders/shop-lines#refunds",
   submissions: "/club/submissions",
   surveys: "/customers/surveys",
   telegram: "/club/telegram",
@@ -80,6 +84,8 @@ export const loadInbox = async (
     passApps,
     productChecks,
     productFlags,
+    lateShopLines,
+    shopRefunds,
   ] = await Promise.all([
     counted(can("support"), () =>
       supabase
@@ -135,10 +141,26 @@ export const loadInbox = async (
     counted(can("catalog"), () =>
       supabase.from("product_flags").select("id", head).is("resolved_at", null)
     ),
+    counted(can("orders"), () =>
+      supabase
+        .from("order_items")
+        .select("id", head)
+        .eq("seller_status", "waiting")
+        .lt("ready_by", new Date().toISOString())
+    ),
+    counted(can("orders") && finance, () =>
+      supabase
+        .from("order_items")
+        .select("id, order:orders!inner (paid_at)", head)
+        .in("seller_status", ["out_of_stock", "cancelled"])
+        .is("refunded_at", null)
+        .not("order.paid_at", "is", null)
+    ),
   ]);
 
   const counts: Record<InboxItem, number> = {
     invoices,
+    lateShopLines,
     orders,
     overdueRentals,
     passApps,
@@ -147,6 +169,7 @@ export const loadInbox = async (
     productFlags,
     rentalRequests,
     seats,
+    shopRefunds,
     submissions: (queue?.data ?? []).filter(
       (row) => row.status === "pending" || row.status === "under_review"
     ).length,

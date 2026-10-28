@@ -160,3 +160,20 @@ export const getBoxyLabel = staffAction(
     return success("saved", { data: label });
   }
 );
+
+/** Marks a shop's cancelled paid line refunded (finance; the database checks). */
+export const markLineRefunded = staffAction(
+  "orders",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    const { error } = await supabase.rpc("mark_line_refunded", {
+      line: input.id,
+    });
+    if (error) {
+      throw new ActionFailure(
+        error.code === "42501" ? "forbidden" : "notFound"
+      );
+    }
+    return success();
+  }
+);
