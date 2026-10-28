@@ -54,8 +54,8 @@ select plan(4);
 
 select results_eq(
   $$ select slug from public.product_categories order by position $$,
-  $$ values ('music'), ('games'), ('books'), ('films'), ('audio'), ('tech') $$,
-  'the store has six categories: Music, Games, Books, Films, Audio, Tech'
+  $$ values ('music'), ('games'), ('books'), ('films'), ('gear') $$,
+  'the store has five categories: Music, Games, Books, Films, Gear'
 );
 
 select is(

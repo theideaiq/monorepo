@@ -18,8 +18,7 @@ insert into public.product_categories (id, slug, name_ar, name_en, position) val
   ('50000000-0000-0000-0000-000000000001', 'games', 'الألعاب', 'Games', 2),
   ('50000000-0000-0000-0000-000000000004', 'books', 'الكتب', 'Books', 3),
   ('50000000-0000-0000-0000-000000000006', 'films', 'الأفلام', 'Films', 4),
-  ('50000000-0000-0000-0000-000000000003', 'audio', 'الصوتيات', 'Audio', 5),
-  ('50000000-0000-0000-0000-000000000002', 'tech', 'التقنية', 'Tech', 6)
+  ('50000000-0000-0000-0000-000000000002', 'gear', 'الأجهزة', 'Gear', 5)
 on conflict (id) do nothing;
 
 insert into public.products
@@ -150,17 +149,15 @@ on conflict do nothing;
 update public.kit_types set games_category_id = (select id from public.product_categories where slug = 'games')
 where id = 'ps5';
 
--- Boxes (program revision v1, step 5d): the starter box's turntable and
--- cleaning kit, a few records, then the boxes' categories, parts and
--- themes (the migration adds them where production already has these).
+-- A turntable, a cleaning kit and a few records.
 insert into public.products
   (slug, kind, status, category_id, name_ar, name_en, description_ar, description_en, price, stock_count, details)
 values
-  ('audio-technica-at-lp60x', 'sale', 'active', '50000000-0000-0000-0000-000000000003',
+  ('audio-technica-at-lp60x', 'sale', 'active', '50000000-0000-0000-0000-000000000002',
     'مشغل أسطوانات Audio-Technica AT-LP60X', 'Audio-Technica AT-LP60X turntable',
     'مشغل أسطوانات أوتوماتيكي بسرعتين.', 'A fully automatic two-speed turntable.',
     259750, 3, '{}'),
-  ('vinyl-record-cleaning-kit', 'sale', 'active', '50000000-0000-0000-0000-000000000003',
+  ('vinyl-record-cleaning-kit', 'sale', 'active', '50000000-0000-0000-0000-000000000002',
     'طقم تنظيف أسطوانات الفينيل', 'Vinyl record cleaning kit',
     'فرشاة وسائل تنظيف لأسطوانات الفينيل.', 'A brush and cleaning fluid for vinyl records.',
     24750, 5, '{}'),
@@ -177,27 +174,3 @@ update public.product_variants v set attributes = '{"Format": "Vinyl"}'
 from public.products p
 where p.id = v.product_id and p.slug in ('kind-of-blue', 'rumours');
 
--- The reading box (made by the boxes migration) with its pick slot and
--- themes, live for the end-to-end journeys. No new boxes are made since
--- program revision v2; production sells the ones left until their parts
--- run out.
-update public.products
-set category_id = (select id from public.product_categories where slug = 'books')
-where slug = 'reading-box';
-insert into public.box_parts (box_id, category_id, quantity, position)
-select p.id, p.category_id, 3, 11
-from public.products p
-where p.slug = 'reading-box'
-  and not exists (select 1 from public.box_parts bp where bp.box_id = p.id);
-insert into public.box_themes (box_id, name_ar, name_en, position)
-select p.id, t.name_ar, t.name_en, t.position
-from public.products p, (values
-  ('روايات', 'Novels', 1),
-  ('أدب عربي', 'Arabic literature', 2),
-  ('أفكار وتاريخ', 'Ideas and history', 3),
-  ('فاجئني', 'Surprise me', 4)
-) as t (name_ar, name_en, position)
-where p.slug = 'reading-box'
-  and not exists (select 1 from public.box_themes bt where bt.box_id = p.id);
-update public.products set status = 'active'
-where slug = 'reading-box' and private.box_price_ok(id);

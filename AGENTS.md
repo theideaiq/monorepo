@@ -273,8 +273,8 @@ for any schema change; it also runs the structure and advisor checks.
   always name their variant (a product with one live variant fills it in).
   One title is one product: a title both sold and rented is a `sale`
   product with copies for rent (`rentable`, derived from its copies; The
-  IDEA Plus lists rentable products), and the six categories (Music, Games,
-  Books, Films, Audio, Tech) are shared by The IDEA Store and The IDEA
+  IDEA Plus lists rentable products), and the five categories (Music,
+  Games, Books, Films, Gear) are shared by The IDEA Store and The IDEA
   Plus. Prices end in …4,750 or …9,750.
 - **RLS on every table.** Enable it in the migration that creates the table
   and add policies with pgTAP tests. `00_structure.test.sql` fails when a
