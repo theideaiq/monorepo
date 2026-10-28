@@ -42,6 +42,10 @@
     {
       "path": "/cron/student-checks",
       "schedule": "20 2 * * *"
+    },
+    {
+      "path": "/cron/selling",
+      "schedule": "40 3 * * *"
     }
   ]
 }

@@ -86,8 +86,10 @@ incidents) is in `docs/platform`.
   spreadsheet, make a bundle of the shop's own items, change copies and
   price, flag wrong details), `/selling/orders` (the shop's order lines,
   the customer only as "first name · area": ready for pickup at a branch,
-  print labels, out of stock) and `/selling/pickup` (its branches, each a
-  Boxy pickup location),
+  print labels, out of stock), `/selling/returns` (requests to accept or
+  dispute within 48 hours, items to check once back, refused parcels to
+  confirm) and `/selling/pickup` (its branches, each a Boxy pickup
+  location),
   Perks `/perks`,
   Team `/team` (bulk orders for the organization, with `/team/<id>` for a
   request, and `/team/plus`, Plus for its people), Developers
@@ -107,7 +109,8 @@ incidents) is in `docs/platform`.
     (`menu` in `lib/admin/roles.ts`): Inbox `/` (with `/support`) ·
     Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
     automatic checks on products shops create and shops' flags) · Orders and delivery
-    `/orders` · Rentals and Plus `/rentals` · Customers `/customers` ·
+    `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
+    and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·
     Club `/club` (with `/club/telegram`) · Partners `/partners` (Team
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`

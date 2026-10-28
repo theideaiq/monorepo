@@ -1329,6 +1329,58 @@
         "cancelCashDescription": "سيُلغى الطلب. لا يمكن التراجع عن ذلك.",
         "guardianPending": "هذا الطلب بانتظار موافقة وليّ أمرك. ستدفع بعد موافقته.",
         "guardianDeclined": "رفض وليّ أمرك هذا الطلب، لذلك أُلغي."
+      },
+      "returns": {
+        "return": "إرجاع",
+        "title": "إرجاع {name}",
+        "description": "أخبرنا بالسبب. الإرجاع متاح خلال 14 يومًا من التوصيل.",
+        "reason": "السبب",
+        "chooseReason": "اختر السبب",
+        "reasons": {
+          "wrong_item": "منتج خاطئ",
+          "faulty": "معيب أو تالف",
+          "not_as_described": "غير مطابق للوصف",
+          "changed_mind": "غيّرت رأيي",
+          "never_arrived": "لم يصل أصلًا"
+        },
+        "quantity": "العدد",
+        "details": "التفاصيل (اختياري)",
+        "photos": "صور المنتج",
+        "addPhoto": "أضف صورًا",
+        "removePhoto": "احذف الصورة",
+        "unopened": "المنتج لم يُفتح، وما زال في عبوته الأصلية.",
+        "policy": "توصيل الإرجاع مجاني للمنتج الخاطئ أو المعيب؛ وعند تغيير رأيك تُخصم كلفته من المبلغ المسترد. <link>سياسة الإرجاع</link>",
+        "send": "اطلب الإرجاع",
+        "sending": "جارٍ الإرسال…",
+        "failed": "تعذّر إرسال طلب الإرجاع. تحقّق من التفاصيل وحاول مجددًا.",
+        "listTitle": "المُرجَعات",
+        "listDescription": "أين وصل كل طلب إرجاع.",
+        "number": "الإرجاع R-{number}",
+        "status": {
+          "requested": "بانتظار البائع",
+          "disputed": "قيد المراجعة",
+          "approved": "مقبول",
+          "collecting": "في طريق العودة",
+          "received": "قيد الفحص",
+          "refund_due": "المبلغ في الطريق",
+          "refunded": "أُعيد المبلغ",
+          "rejected": "غير مقبول",
+          "cancelled": "مسحوب"
+        },
+        "next": {
+          "requested": "أمام البائع 48 ساعة للرد، وبعدها يُعدّ مقبولًا.",
+          "disputed": "تقرّر The IDEA خلال 48 ساعة.",
+          "approved": "سيستلم مندوبنا المنتج منك.",
+          "collecting": "المنتج في طريق العودة.",
+          "received": "يفحص البائع المنتج خلال 48 ساعة.",
+          "refund_due": "نرسل المبلغ المسترد اليوم.",
+          "refunded": "أُرسل المبلغ المسترد.",
+          "rejected": "لم يُقبل طلب الإرجاع هذا.",
+          "cancelled": "سحبت طلب الإرجاع هذا."
+        },
+        "refund": "المبلغ المسترد: {amount} و{bulbs} Bulbs",
+        "withdraw": "سحب الطلب",
+        "withdrawFailed": "تعذّر سحب طلب الإرجاع."
       }
     },
     "plus": {
@@ -1596,7 +1648,8 @@
         "listings": "المعروضات",
         "orders": "الطلبات بالجملة",
         "shopOrders": "الطلبات",
-        "pickup": "الاستلام"
+        "pickup": "الاستلام",
+        "shopReturns": "المُرجَعات"
       },
       "members": {
         "title": "الأعضاء",
@@ -2624,6 +2677,44 @@
           "save": "تعذّر حفظ الفرع. تحقق من البيانات وحاول مجدداً.",
           "sync": "لم يقبل Boxy الفرع. تحقق من البيانات وحاول مجدداً."
         }
+      },
+      "shopReturns": {
+        "title": "المُرجَعات",
+        "notApproved": "تُتاح المُرجَعات بعد اعتماد متجرك.",
+        "waitingTitle": "بانتظار ردك",
+        "waitingDescription": "اقبل الطلب أو اعترض عليه خلال 48 ساعة، وإن لم ترد يُعدّ مقبولًا. وعند عودة المنتج، افحصه خلال 48 ساعة.",
+        "noneWaiting": "لا شيء بانتظار ردك.",
+        "otherTitle": "مُرجَعات أخرى",
+        "noneOther": "لا مُرجَعات أخرى.",
+        "line": "الإرجاع R-{number} · الطلب #{order} · {customer}",
+        "unopened": "غير مفتوح",
+        "photo": "الصورة {number}",
+        "answerBy": "الرد قبل {time}",
+        "staffNote": "The IDEA: {note}",
+        "feeYours": "تُخصم أجرة توصيل الإرجاع ({fee}) من مستحقاتك.",
+        "disputeNote": "سبب الاعتراض (مطلوب للاعتراض)",
+        "problemNote": "ما المشكلة في المنتج (مطلوب للإبلاغ)",
+        "accept": "قبول",
+        "dispute": "اعتراض",
+        "itemFine": "المنتج سليم",
+        "itemProblem": "أبلغ عن مشكلة",
+        "failed": "لم ينجح ذلك. حاول مجددًا.",
+        "parcelsTitle": "طرود رُفضت عند الباب",
+        "parcelsDescription": "أعادت Boxy هذه الطرود. أكّد عودة كل طرد إليك؛ فتُلغى سطوره وتعود النسخ إلى البيع.",
+        "parcelLine": "الطلب #{order} · {customer}",
+        "returnedOn": "أُعيد {time}",
+        "parcelBack": "عاد إليّ",
+        "status": {
+          "requested": "بانتظار ردك",
+          "disputed": "تقرّر The IDEA",
+          "approved": "مقبول",
+          "collecting": "في طريق العودة",
+          "received": "بانتظار الفحص",
+          "refund_due": "المبلغ مستحق",
+          "refunded": "أُعيد المبلغ",
+          "rejected": "غير مقبول",
+          "cancelled": "مسحوب"
+        }
       }
     },
     "ages": {
@@ -3113,7 +3204,9 @@
           "productChecks": "منتجات جديدة للمراجعة",
           "productFlags": "منتجات أبلغت المتاجر عن أخطاء فيها",
           "lateShopLines": "بنود متاجر تجاوزت موعد التجهيز",
-          "shopRefunds": "بنود متاجر للاسترداد"
+          "shopRefunds": "بنود متاجر للاسترداد",
+          "disputedReturns": "مُرجَعات بانتظار القرار",
+          "returnRefunds": "مبالغ مُرجَعات للإرسال"
         }
       }
     },
@@ -3583,6 +3676,37 @@
         "due": "الموعد",
         "amount": "المبلغ",
         "markRefunded": "علّمه مسترداً"
+      },
+      "returns": {
+        "title": "المُرجَعات",
+        "description": "اعتراضات على مُرجَعات تُحسم خلال 48 ساعة، ومبالغ مستحقة الاسترداد.",
+        "disputedTitle": "الاعتراضات",
+        "disputedEmpty": "لا اعتراضات.",
+        "line": "R-{number} · {name} ×{quantity} · {shop}",
+        "house": "The IDEA",
+        "unopened": "غير مفتوح",
+        "customerSays": "الزبون: {text}",
+        "shopSays": "سبب المتجر: {text}",
+        "shopFound": "ما وجده المتجر: {text}",
+        "photo": "الصورة {number}",
+        "disputedOn": "اعتُرض عليه {time}",
+        "fault": "المسؤول",
+        "faults": {
+          "shop": "المتجر",
+          "customer": "الزبون",
+          "the_idea": "The IDEA"
+        },
+        "note": "ملاحظة للزبون والمتجر",
+        "approve": "قبول",
+        "reject": "رفض",
+        "dueTitle": "مبالغ مستحقة الاسترداد",
+        "dueDescription": "أرسل كل مبلغ في اليوم نفسه بطريقة الدفع التي استخدمها الزبون، ثم علّمه كمسترد مع المرجع.",
+        "dueEmpty": "لا مبالغ مستحقة.",
+        "refund": "استرداد {amount} و{bulbs} Bulbs (أُعيدت Bulbs مسبقًا)",
+        "reference": "مرجع الاسترداد",
+        "markRefunded": "علّمه كمسترد",
+        "viaWayl": "دُفع إلكترونيًا: استرده عبر Wayl.",
+        "viaTransfer": "دُفع نقدًا: أرسله عبر ZainCash أو Qi أو تحويل مصرفي."
       }
     },
     "rentals": {

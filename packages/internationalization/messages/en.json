@@ -1329,6 +1329,58 @@
         "cancelCashDescription": "The order is cancelled. This can't be undone.",
         "guardianPending": "This order is waiting for your guardian's approval. You'll pay once they approve it.",
         "guardianDeclined": "Your guardian declined this order, so it was cancelled."
+      },
+      "returns": {
+        "return": "Return",
+        "title": "Return {name}",
+        "description": "Tell us why. Returns are open for 14 days after delivery.",
+        "reason": "Reason",
+        "chooseReason": "Choose a reason",
+        "reasons": {
+          "wrong_item": "Wrong item",
+          "faulty": "Faulty or damaged",
+          "not_as_described": "Not as described",
+          "changed_mind": "Changed my mind",
+          "never_arrived": "It never arrived"
+        },
+        "quantity": "How many",
+        "details": "Details (optional)",
+        "photos": "Photos of the item",
+        "addPhoto": "Add photos",
+        "removePhoto": "Remove photo",
+        "unopened": "The item is unopened, in its original packaging.",
+        "policy": "Return delivery is free for wrong or faulty items; for a change of mind it comes out of your refund. <link>Returns policy</link>",
+        "send": "Ask to return",
+        "sending": "Sending…",
+        "failed": "We couldn't send your return. Check the details and try again.",
+        "listTitle": "Returns",
+        "listDescription": "Where each return is.",
+        "number": "Return R-{number}",
+        "status": {
+          "requested": "Waiting for the seller",
+          "disputed": "Under review",
+          "approved": "Accepted",
+          "collecting": "On its way back",
+          "received": "Being checked",
+          "refund_due": "Refund on its way",
+          "refunded": "Refunded",
+          "rejected": "Not accepted",
+          "cancelled": "Withdrawn"
+        },
+        "next": {
+          "requested": "The seller has 48 hours to answer; after that it's accepted.",
+          "disputed": "The IDEA is deciding, within 48 hours.",
+          "approved": "Our courier will collect the item from you.",
+          "collecting": "The item is on its way back.",
+          "received": "The seller checks the item within 48 hours.",
+          "refund_due": "We're sending your refund today.",
+          "refunded": "Your refund has been sent.",
+          "rejected": "This return wasn't accepted.",
+          "cancelled": "You withdrew this return."
+        },
+        "refund": "Refund: {amount} and {bulbs} Bulbs",
+        "withdraw": "Withdraw",
+        "withdrawFailed": "We couldn't withdraw this return."
       }
     },
     "plus": {
@@ -1596,7 +1648,8 @@
         "listings": "Listings",
         "orders": "Bulk orders",
         "shopOrders": "Orders",
-        "pickup": "Pickup"
+        "pickup": "Pickup",
+        "shopReturns": "Returns"
       },
       "members": {
         "title": "Members",
@@ -2624,6 +2677,44 @@
           "save": "The branch couldn't be saved. Check the details and try again.",
           "sync": "Boxy didn't take the branch. Check the details and try again."
         }
+      },
+      "shopReturns": {
+        "title": "Returns",
+        "notApproved": "Returns open once your shop is approved.",
+        "waitingTitle": "For you to answer",
+        "waitingDescription": "Accept or dispute a request within 48 hours; if you don't answer, it's accepted. When an item is back, check it within 48 hours.",
+        "noneWaiting": "Nothing to answer.",
+        "otherTitle": "Other returns",
+        "noneOther": "No other returns.",
+        "line": "Return R-{number} · order #{order} · {customer}",
+        "unopened": "unopened",
+        "photo": "Photo {number}",
+        "answerBy": "Answer by {time}",
+        "staffNote": "The IDEA: {note}",
+        "feeYours": "The return delivery ({fee}) comes from your payout.",
+        "disputeNote": "Why you dispute it (needed to dispute)",
+        "problemNote": "What's wrong with it (needed to report a problem)",
+        "accept": "Accept",
+        "dispute": "Dispute",
+        "itemFine": "It's fine",
+        "itemProblem": "Report a problem",
+        "failed": "That didn't work. Try again.",
+        "parcelsTitle": "Parcels refused at the door",
+        "parcelsDescription": "Boxy brought these back. Confirm each one is back with you; its lines are cancelled and the copies go back on sale.",
+        "parcelLine": "Order #{order} · {customer}",
+        "returnedOn": "Returned {time}",
+        "parcelBack": "It's back",
+        "status": {
+          "requested": "To answer",
+          "disputed": "The IDEA is deciding",
+          "approved": "Accepted",
+          "collecting": "On its way back",
+          "received": "To check",
+          "refund_due": "Refund due",
+          "refunded": "Refunded",
+          "rejected": "Not accepted",
+          "cancelled": "Withdrawn"
+        }
       }
     },
     "ages": {
@@ -3113,7 +3204,9 @@
           "productChecks": "New products to check",
           "productFlags": "Products shops say are wrong",
           "lateShopLines": "Shop lines past their ready-by time",
-          "shopRefunds": "Shop lines to refund"
+          "shopRefunds": "Shop lines to refund",
+          "disputedReturns": "Returns to decide",
+          "returnRefunds": "Return refunds to send"
         }
       }
     },
@@ -3583,6 +3676,37 @@
         "due": "Due",
         "amount": "Amount",
         "markRefunded": "Mark refunded"
+      },
+      "returns": {
+        "title": "Returns",
+        "description": "Disputed returns to decide within 48 hours, and refunds due.",
+        "disputedTitle": "Disputes",
+        "disputedEmpty": "No disputes.",
+        "line": "R-{number} · {name} ×{quantity} · {shop}",
+        "house": "The IDEA",
+        "unopened": "unopened",
+        "customerSays": "Customer: {text}",
+        "shopSays": "Shop's reason: {text}",
+        "shopFound": "Shop found: {text}",
+        "photo": "Photo {number}",
+        "disputedOn": "Disputed {time}",
+        "fault": "At fault",
+        "faults": {
+          "shop": "The shop",
+          "customer": "The customer",
+          "the_idea": "The IDEA"
+        },
+        "note": "Note for the customer and shop",
+        "approve": "Approve",
+        "reject": "Reject",
+        "dueTitle": "Refunds due",
+        "dueDescription": "Send each refund the same day, the way the customer paid, then mark it refunded with the reference.",
+        "dueEmpty": "No refunds due.",
+        "refund": "Refund {amount} and {bulbs} Bulbs (Bulbs already returned)",
+        "reference": "Refund reference",
+        "markRefunded": "Mark refunded",
+        "viaWayl": "Paid online: refund it in Wayl.",
+        "viaTransfer": "Paid in cash: send it by ZainCash, Qi or bank transfer."
       }
     },
     "rentals": {

@@ -35,6 +35,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { OrderReturns, ReturnLine } from "@/components/store/order-returns";
 import { OrderStatusBadge } from "@/components/store/order-status-badge";
 import { OrderSummary } from "@/components/store/order-summary";
 import { governorateName, type ShippingAddress } from "@/lib/address";
@@ -50,6 +51,11 @@ import {
   statusMessageKey,
   stepsFor,
 } from "@/lib/orders";
+import {
+  type OrderReturn,
+  returnedQuantity,
+  useOrderReturns,
+} from "@/lib/return-queries";
 import {
   useCancelOrder,
   useOrder,
@@ -250,6 +256,35 @@ const MethodCard = ({
   );
 };
 
+/** A line's total and, on a delivered order, its Return button. */
+const LineAside = ({
+  item,
+  orderId,
+  returns,
+}: {
+  readonly item: Order["order_items"][number];
+  readonly orderId: string;
+  readonly returns: readonly OrderReturn[] | undefined;
+}) => {
+  const locale = useLocale();
+  const left = returns ? item.quantity - returnedQuantity(returns, item.id) : 0;
+  return (
+    <span className="grid shrink-0 justify-items-end gap-2">
+      <span className="tabular-nums">
+        {formatPrice(item.unit_price * item.quantity, locale)}
+      </span>
+      {left > 0 ? (
+        <ReturnLine
+          available={left}
+          lineId={item.id}
+          name={localized(item, "name", locale)}
+          orderId={orderId}
+        />
+      ) : null}
+    </span>
+  );
+};
+
 const OrderView = ({
   order,
   watching,
@@ -275,6 +310,10 @@ const OrderView = ({
   const cancellable = pending || (cash && order.status === "confirmed");
   const address = order.shipping_address as unknown as ShippingAddress;
   const total = formatPrice(order.total, locale);
+  const returns = useOrderReturns(order.id, order.status === "delivered");
+  const names = new Map(
+    order.order_items.map((item) => [item.id, localized(item, "name", locale)])
+  );
 
   return (
     <div className="grid gap-6">
@@ -368,15 +407,22 @@ const OrderView = ({
                       {formatNumber(item.quantity, locale)}
                     </span>
                   </span>
-                  <span className="shrink-0 tabular-nums">
-                    {formatPrice(item.unit_price * item.quantity, locale)}
-                  </span>
+                  <LineAside
+                    item={item}
+                    orderId={order.id}
+                    returns={returns.data}
+                  />
                 </li>
               ))}
             </ul>
           </CardContent>
         </Card>
         <div className="grid gap-6">
+          <OrderReturns
+            names={names}
+            orderId={order.id}
+            returns={returns.data ?? []}
+          />
           <Card>
             <CardHeader>
               <CardTitle>{t("summary")}</CardTitle>

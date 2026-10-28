@@ -350,3 +350,36 @@ export {
   fileNameOf,
   StorageError,
 } from "./files";
+
+/** Uploads a photo of an item the signed-in customer is returning. */
+export const uploadReturnPhoto = (
+  supabase: Client,
+  userId: string,
+  file: File
+) => {
+  assertAllowed("returnPhotos", file);
+  return upload(
+    supabase,
+    buckets.returnPhotos.id,
+    objectPath(userId, file.name),
+    file
+  );
+};
+
+/** A time-limited link to a return photo (the customer, the shop or staff). */
+export const getReturnPhotoUrl = async (
+  supabase: Client,
+  path: string,
+  expiresIn = 10 * 60
+) => {
+  const { data, error } = await supabase.storage
+    .from(buckets.returnPhotos.id)
+    .createSignedUrl(path, expiresIn);
+  if (error || !data) {
+    throw new StorageError(
+      "not_found",
+      `No signed URL: ${error?.message ?? "no data"}`
+    );
+  }
+  return data.signedUrl;
+};
