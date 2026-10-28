@@ -379,6 +379,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Program Revision v2, item 8 (The Club as Join · Read ·
+  Yours), part 1, the schema (migration `20270106000000`): posts carry
+  topic tags (`posts.topics`, `post_topic`: news, stories, guides), one
+  to five each, for the Read feed's `?topic=`. Sections map to topics:
+  news → news, stories and members' work → stories, learn → guides.
+  `section` stays until the website and Staff stop reading it (part 2);
+  until then a post saved without topics takes them from its section, and
+  a later migration drops it. Opportunities (and following them) arrive
+  with Stage 5, so Join starts with events and surveys.
+
 - 2026-10-28: Program Revision v2, item 7 (sign-in scopes), part 1, the
   schema (migration `20270105000000`):
   - `address` now comes from the person's default address in the address
