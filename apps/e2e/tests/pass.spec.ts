@@ -11,12 +11,12 @@ const partner = {
   redirect: `${urls.web}/e2e-partner/callback`,
 };
 
-const seedPartner = async () => {
+const seedPartner = async (answers = ["profile", "email", "student"]) => {
   const { error } = await admin()
     .from("pass_partners")
     .upsert({
       active: true,
-      answers: ["profile", "email", "student"],
+      answers,
       client_id: partner.clientId,
       name: partner.name,
       redirect_uris: [partner.redirect],
@@ -28,7 +28,10 @@ const seedPartner = async () => {
   }
 };
 
-const authorizeUrl = (redirect = partner.redirect) =>
+const authorizeUrl = (
+  redirect = partner.redirect,
+  scope = "openid profile student"
+) =>
   `${urls.web}/oauth/authorize?${new URLSearchParams({
     client_id: partner.clientId,
     code_challenge: "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM",
@@ -36,7 +39,7 @@ const authorizeUrl = (redirect = partner.redirect) =>
     nonce: "e2e-nonce",
     redirect_uri: redirect,
     response_type: "code",
-    scope: "openid profile student",
+    scope,
     state: "e2e-state",
   })}`;
 
@@ -108,6 +111,24 @@ test.describe("The IDEA Pass", () => {
       await expect(sites.getByText(partner.name)).toBeVisible();
       await sites.getByRole("button", { name: "Disconnect" }).click();
       await expect(page.locator("#sites")).toHaveCount(0);
+    });
+
+    test("asks for the address and organizations item by item", async ({
+      page,
+    }) => {
+      await seedPartner(["profile", "address", "organizations"]);
+      await page.goto(
+        authorizeUrl(partner.redirect, "openid profile address organizations")
+      );
+      const address = page.getByRole("checkbox", {
+        name: /Your default delivery address/,
+      });
+      const organizations = page.getByRole("checkbox", {
+        name: /The organizations you belong to in The IDEA Partners/,
+      });
+      await expect(address).toBeVisible();
+      await expect(organizations).toBeVisible();
+      await expectAccessible(page);
     });
 
     test("an unknown return address gets nothing", async ({ page }) => {

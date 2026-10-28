@@ -390,7 +390,9 @@ steps need Xcode, Android Studio and the store/Firebase accounts
     Iraqi Curator can admit only its own staff. It is sensitive (staff
     review it before a live app may ask) and is `[]` for people in none.
   - Part 2 offers it in Partners → Developers, Staff and on the consent
-    screen, and documents both, once this migration has run.
+    screen (and in discovery), and documents both: the developer docs'
+    Scopes page has an "Admitting only your staff" example, and the
+    OpenAPI `Claims` schema an `Organization` list.
 
 - 2026-10-28: Program Revision v2, item 6 (address book and saved
   payment), part 1, the schema (migration `20270104000000`):

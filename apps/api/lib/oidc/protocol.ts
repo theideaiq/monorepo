@@ -26,6 +26,7 @@ export const PASS_SCOPES = [
   "phone",
   "birthdate",
   "address",
+  "organizations",
   "card",
   "offline_access",
 ] as const;

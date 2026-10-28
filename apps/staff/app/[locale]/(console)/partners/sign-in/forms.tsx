@@ -31,6 +31,7 @@ const ANSWERS = [
   "phone",
   "birthdate",
   "address",
+  "organizations",
   "card",
   "card_embed",
   "offline_access",
