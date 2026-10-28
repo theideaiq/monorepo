@@ -24,10 +24,15 @@ import {
   baghdadDay,
   isOverlap,
   type ListingSale,
+  type OpenCampaign,
   type QuantityDeal,
+  useCampaignEntries,
   useDeleteDeal,
   useEndSale,
+  useJoinCampaign,
+  useLeaveCampaign,
   useListingSales,
+  useOpenCampaigns,
   useQuantityDeals,
   useSetDeal,
   useSetSale,
@@ -292,6 +297,126 @@ const ListingRow = ({
   );
 };
 
+/** One open campaign: the shop's discount in it, or a way to join. */
+const CampaignRow = ({
+  campaign,
+  rate,
+  sellerId,
+}: {
+  readonly campaign: OpenCampaign;
+  readonly rate: number | undefined;
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.company.shopSales");
+  const locale = useLocale() as Locale;
+  const join = useJoinCampaign(sellerId);
+  const leave = useLeaveCampaign(sellerId);
+  const id = useId();
+  const [value, setValue] = useState(rate === undefined ? "" : String(rate));
+  const share = Number(value);
+  const valid = Number.isInteger(share) && share >= 5 && share <= 50;
+
+  return (
+    <li className="grid gap-2 p-3 text-sm">
+      <p className="font-medium">
+        {locale === "ar" ? campaign.name_ar : campaign.name_en}
+        <span className="text-muted-foreground">
+          {" "}
+          ·{" "}
+          {t("campaignDates", {
+            ends: formatDate(campaign.ends_at, locale),
+            starts: formatDate(campaign.starts_at, locale),
+          })}
+        </span>
+      </p>
+      {(locale === "ar" ? campaign.description_ar : campaign.description_en) ? (
+        <p className="text-muted-foreground">
+          {locale === "ar" ? campaign.description_ar : campaign.description_en}
+        </p>
+      ) : null}
+      <form
+        className="flex flex-wrap items-end gap-3"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (valid) {
+            join.mutate({ campaign: campaign.id, rate: share });
+          }
+        }}
+      >
+        <div className="grid gap-1">
+          <Label htmlFor={`${id}-rate`}>{t("campaignRate")}</Label>
+          <Input
+            className="w-24"
+            id={`${id}-rate`}
+            inputMode="numeric"
+            onChange={(event) => setValue(event.target.value)}
+            type="number"
+            value={value}
+          />
+        </div>
+        <Button
+          disabled={!valid || join.isPending}
+          size="sm"
+          type="submit"
+          variant="outline"
+        >
+          {rate === undefined ? t("joinCampaign") : t("updateCampaign")}
+        </Button>
+        {rate === undefined ? null : (
+          <Button
+            disabled={leave.isPending}
+            onClick={() => leave.mutate(campaign.id)}
+            size="sm"
+            type="button"
+            variant="ghost"
+          >
+            {t("leaveCampaign")}
+          </Button>
+        )}
+      </form>
+      {join.isError || leave.isError ? (
+        <p className="text-destructive" role="alert">
+          {t("campaignFailed")}
+        </p>
+      ) : null}
+    </li>
+  );
+};
+
+/** Open campaigns the shop can take part in with its own discount. */
+const CampaignsCard = ({ sellerId }: { readonly sellerId: string }) => {
+  const t = useTranslations("app.company.shopSales");
+  const campaigns = useOpenCampaigns();
+  const entries = useCampaignEntries(sellerId);
+  if ((campaigns.data ?? []).length === 0) {
+    return null;
+  }
+  return (
+    <Card className="max-w-3xl">
+      <CardHeader>
+        <CardTitle>{t("campaignsTitle")}</CardTitle>
+        <CardDescription>{t("campaignsDescription")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ul className="divide-y rounded-md border">
+          {(campaigns.data ?? []).map((campaign) => (
+            <CampaignRow
+              campaign={campaign}
+              key={campaign.id}
+              rate={
+                (entries.data ?? []).find(
+                  (entry) => entry.campaign_id === campaign.id
+                )?.discount_rate
+              }
+              sellerId={sellerId}
+            />
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  );
+};
+
 const SalesBody = () => {
   const t = useTranslations("app.company.shopSales");
   const { active, canManage } = useActiveOrganization();
@@ -317,37 +442,40 @@ const SalesBody = () => {
     (listing) => listing.active && listing.available > 0
   );
   return (
-    <Card className="max-w-3xl">
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {forSale.length === 0 ? (
-          <p className="text-muted-foreground text-sm">{t("noListings")}</p>
-        ) : null}
-        {forSale.length > 0 && !canManage ? (
-          <p className="text-muted-foreground text-sm">{t("ownersOnly")}</p>
-        ) : null}
-        {forSale.length > 0 && canManage ? (
-          <ul className="divide-y rounded-md border">
-            {forSale.map((listing) => (
-              <ListingRow
-                deals={(deals.data ?? []).filter((deal) =>
-                  sameListing(listing, deal)
-                )}
-                key={listing.offer_id}
-                listing={listing}
-                sales={(sales.data ?? []).filter((sale) =>
-                  sameListing(listing, sale)
-                )}
-                sellerId={sellerId}
-              />
-            ))}
-          </ul>
-        ) : null}
-      </CardContent>
-    </Card>
+    <div className="grid gap-6">
+      {canManage ? <CampaignsCard sellerId={sellerId} /> : null}
+      <Card className="max-w-3xl">
+        <CardHeader>
+          <CardTitle>{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {forSale.length === 0 ? (
+            <p className="text-muted-foreground text-sm">{t("noListings")}</p>
+          ) : null}
+          {forSale.length > 0 && !canManage ? (
+            <p className="text-muted-foreground text-sm">{t("ownersOnly")}</p>
+          ) : null}
+          {forSale.length > 0 && canManage ? (
+            <ul className="divide-y rounded-md border">
+              {forSale.map((listing) => (
+                <ListingRow
+                  deals={(deals.data ?? []).filter((deal) =>
+                    sameListing(listing, deal)
+                  )}
+                  key={listing.offer_id}
+                  listing={listing}
+                  sales={(sales.data ?? []).filter((sale) =>
+                    sameListing(listing, sale)
+                  )}
+                  sellerId={sellerId}
+                />
+              ))}
+            </ul>
+          ) : null}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

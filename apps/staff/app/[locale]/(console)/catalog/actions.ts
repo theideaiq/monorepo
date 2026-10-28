@@ -8,6 +8,7 @@ import { success } from "@/lib/admin/action-state";
 import { planSchema, productSchema } from "@/lib/admin/catalog";
 import {
   checkbox,
+  dateTime,
   int,
   keyValues,
   optionalInt,
@@ -411,5 +412,69 @@ export const answerHouseOffer = staffAction(
       })
     );
     return success();
+  }
+);
+
+const campaignSchema = z.object({
+  descriptionAr: optionalText(2000),
+  descriptionEn: optionalText(2000),
+  endsAt: dateTime,
+  nameAr: text(120),
+  nameEn: text(120),
+  published: checkbox,
+  slug,
+  startsAt: dateTime,
+});
+
+/** A new seasonal campaign; shops opt in once it's published. */
+export const createCampaign = staffAction(
+  "catalog",
+  campaignSchema,
+  async ({ input, supabase }) => {
+    check(
+      await supabase.from("campaigns").insert({
+        description_ar: input.descriptionAr,
+        description_en: input.descriptionEn,
+        ends_at: input.endsAt,
+        name_ar: input.nameAr,
+        name_en: input.nameEn,
+        published: input.published,
+        slug: input.slug,
+        starts_at: input.startsAt,
+      })
+    );
+    return success("saved");
+  }
+);
+
+export const setCampaignPublished = staffAction(
+  "catalog",
+  z.object({ id: uuid, published: z.enum(["true", "false"]) }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("campaigns")
+        .update({ published: input.published === "true" })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success();
+  }
+);
+
+/** Only drafts can be deleted; a published campaign is ended by its date. */
+export const deleteCampaign = staffAction(
+  "catalog",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("campaigns")
+        .delete()
+        .eq("id", input.id)
+        .eq("published", false)
+        .select("id")
+    );
+    return success("deleted");
   }
 );

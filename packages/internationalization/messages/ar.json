@@ -339,7 +339,13 @@
         "photoAlt": "صورة من مراجعة {name}",
         "photoBonus": "حصل صاحب هذه المراجعة على 5 Bulbs لإضافة صورة."
       },
-      "sortApply": "رتّب"
+      "sortApply": "رتّب",
+      "campaign": {
+        "dates": "من {starts} إلى {ends}",
+        "shops": "المشاركون: {shops}",
+        "empty": "لا توجد منتجات في هذه الحملة بعد.",
+        "soldBy": "يبيعه {seller}"
+      }
     },
     "plus": {
       "meta": {
@@ -2801,7 +2807,15 @@
         "addDeal": "إضافة عرض",
         "deal": "خصم {rate}% على كل قطعة ابتداءً من {from} نسخ",
         "removeDeal": "إزالة",
-        "dealFailed": "لم ينجح ذلك. استخدم من 2 إلى 20 نسخة وخصمًا من 1 إلى 50%."
+        "dealFailed": "لم ينجح ذلك. استخدم من 2 إلى 20 نسخة وخصمًا من 1 إلى 50%.",
+        "campaignsTitle": "الحملات",
+        "campaignsDescription": "شارك بخصمك الخاص على كل منتجاتك طوال مدة الحملة، ويظهر متجرك في صفحتها. يمكنك تغييره أو الانسحاب حتى تنتهي الحملة.",
+        "campaignDates": "من {starts} إلى {ends}",
+        "campaignRate": "% خصم على كل المنتجات",
+        "joinCampaign": "شارك",
+        "updateCampaign": "تحديث",
+        "leaveCampaign": "انسحب",
+        "campaignFailed": "لم ينجح ذلك. استخدم خصمًا من 5 إلى 50%."
       }
     },
     "ages": {
@@ -3380,7 +3394,8 @@
         "settings": "التوصيل",
         "import": "استيراد",
         "checks": "المراجعات",
-        "offers": "العروض"
+        "offers": "العروض",
+        "campaigns": "الحملات"
       },
       "filters": {
         "anyKind": "كل الأقسام",
@@ -3745,6 +3760,36 @@
         "autoAccept": "اقبل ابتداءً من (د.ع)",
         "autoDecline": "ارفض ما دون (د.ع)",
         "save": "احفظ"
+      },
+      "campaigns": {
+        "title": "الحملات",
+        "description": "حملات موسمية. بعد النشر تشارك المتاجر المعتمدة من Partners بخصمها الخاص على كل منتجاتها، وتظهر في صفحة الحملة طوال مدتها.",
+        "newTitle": "حملة جديدة",
+        "nameEn": "الاسم (بالإنجليزية)",
+        "nameAr": "الاسم (بالعربية)",
+        "slug": "العنوان",
+        "slugHint": "آخر theideaiq.com/store/campaigns/…: أحرف إنجليزية صغيرة وأرقام وشرطات.",
+        "startsAt": "تبدأ",
+        "endsAt": "تنتهي",
+        "timeHint": "بتوقيت بغداد. 60 يومًا كحد أقصى.",
+        "descriptionEn": "الوصف (بالإنجليزية)",
+        "descriptionAr": "الوصف (بالعربية)",
+        "publishNow": "انشر الآن (يمكن للمتاجر المشاركة)",
+        "create": "إنشاء الحملة",
+        "empty": "لا توجد حملات بعد.",
+        "state": {
+          "draft": "مسودة",
+          "upcoming": "قادمة",
+          "running": "جارية",
+          "ended": "منتهية"
+        },
+        "dates": "من {starts} إلى {ends}",
+        "noShops": "لا توجد متاجر بعد.",
+        "entry": "{shop} {rate}%",
+        "publish": "نشر",
+        "unpublish": "إلغاء النشر",
+        "delete": "حذف",
+        "deleteConfirm": "حذف مسودة الحملة هذه؟"
       }
     },
     "orders": {

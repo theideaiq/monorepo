@@ -15,6 +15,7 @@ export const CatalogTabs = async () => {
         },
         { href: "/catalog/checks", label: t("checks") },
         { href: "/catalog/offers", label: t("offers") },
+        { href: "/catalog/campaigns", label: t("campaigns") },
         { href: "/catalog/import", label: t("import") },
         { href: "/catalog/categories", label: t("categories") },
         { href: "/catalog/plans", label: t("plans") },

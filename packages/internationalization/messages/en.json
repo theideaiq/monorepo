@@ -339,7 +339,13 @@
         "photoAlt": "Photo from {name}'s review",
         "photoBonus": "This reviewer earned 5 Bulbs for adding a photo."
       },
-      "sortApply": "Sort"
+      "sortApply": "Sort",
+      "campaign": {
+        "dates": "{starts} to {ends}",
+        "shops": "Taking part: {shops}",
+        "empty": "No listings in this campaign yet.",
+        "soldBy": "Sold by {seller}"
+      }
     },
     "plus": {
       "meta": {
@@ -2801,7 +2807,15 @@
         "addDeal": "Add deal",
         "deal": "{rate}% off each from {from} copies",
         "removeDeal": "Remove",
-        "dealFailed": "That didn't work. Use 2 to 20 copies and 1 to 50% off."
+        "dealFailed": "That didn't work. Use 2 to 20 copies and 1 to 50% off.",
+        "campaignsTitle": "Campaigns",
+        "campaignsDescription": "Take part with your own share off every listing while a campaign runs; your shop is featured on the campaign page. You can change it or leave until the campaign ends.",
+        "campaignDates": "{starts} to {ends}",
+        "campaignRate": "% off every listing",
+        "joinCampaign": "Take part",
+        "updateCampaign": "Update",
+        "leaveCampaign": "Leave",
+        "campaignFailed": "That didn't work. Use 5 to 50% off."
       }
     },
     "ages": {
@@ -3380,7 +3394,8 @@
         "settings": "Delivery",
         "import": "Import",
         "checks": "Checks",
-        "offers": "Offers"
+        "offers": "Offers",
+        "campaigns": "Campaigns"
       },
       "filters": {
         "anyKind": "All lines",
@@ -3745,6 +3760,36 @@
         "autoAccept": "Accept from (IQD)",
         "autoDecline": "Decline below (IQD)",
         "save": "Save"
+      },
+      "campaigns": {
+        "title": "Campaigns",
+        "description": "Seasonal campaigns. Once published, approved shops opt in from Partners with their own discount on every listing, and are featured on the campaign page while it runs.",
+        "newTitle": "New campaign",
+        "nameEn": "Name (English)",
+        "nameAr": "Name (Arabic)",
+        "slug": "Address",
+        "slugHint": "The end of theideaiq.com/store/campaigns/…: lowercase letters, numbers and dashes.",
+        "startsAt": "Starts",
+        "endsAt": "Ends",
+        "timeHint": "Baghdad time. At most 60 days.",
+        "descriptionEn": "Description (English)",
+        "descriptionAr": "Description (Arabic)",
+        "publishNow": "Publish now (shops can opt in)",
+        "create": "Create campaign",
+        "empty": "No campaigns yet.",
+        "state": {
+          "draft": "Draft",
+          "upcoming": "Coming",
+          "running": "Running",
+          "ended": "Ended"
+        },
+        "dates": "{starts} to {ends}",
+        "noShops": "No shops yet.",
+        "entry": "{shop} {rate}%",
+        "publish": "Publish",
+        "unpublish": "Unpublish",
+        "delete": "Delete",
+        "deleteConfirm": "Delete this draft campaign?"
       }
     },
     "orders": {
