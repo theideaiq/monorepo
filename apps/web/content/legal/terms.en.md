@@ -53,17 +53,17 @@ We may suspend or close a Pass that breaks these terms, for example for fraud, a
 
 - **Product details.** Every product page shows its price in Iraqi dinars (IQD), its condition (New, Open box, Refurbished or Used; see [Returns and refunds](/legal/returns)), its availability and its details in Arabic. Games show their PEGI age rating.
 - **Prices.** The price you pay is calculated by our system at checkout, with any delivery fee, discount and Bulbs, and shown before you confirm. If a price or description is clearly wrong, we will contact you and you may cancel for a full refund.
-- **When an order is confirmed.** An order paid online is confirmed once the payment succeeds. A cash order is confirmed when you place it and paid on delivery or at pickup.
+- **When an order is confirmed.** An order paid online is confirmed once the payment succeeds. A cash order is confirmed when you place it and paid on delivery.
 - **Receipts.** Every order gets a receipt with the price, date and specifications of what you bought, in Pass → Orders and by email.
 - **Discounts.** At most 20% of an order's value is given away in discounts and rewards combined (invite discounts, free delivery and the Bulbs it earns). When more would apply, the discount shrinks first, then the Bulbs earned.
 - **Personal use.** We sell to customers for their own use. We may limit quantities or cancel orders that look like reselling or fraud, with a full refund.
 
-Delivery, pickup and refused deliveries are covered in [Delivery](/legal/delivery); returns and refunds in [Returns and refunds](/legal/returns).
+Delivery and refused deliveries are covered in [Delivery](/legal/delivery); returns and refunds in [Returns and refunds](/legal/returns).
 
 ## 5. Payments
 
 - **Online payments** go through our payment partner **Wayl**, which supports cards and local wallets. We never see or store your full card or wallet details.
-- **Cash** on delivery or at pickup is offered on orders up to 500,000 IQD. Larger orders are paid online or at pickup.
+- **Cash** on delivery is offered on orders up to 500,000 IQD. Larger orders are paid online.
 - **Bulbs** can pay for all or part of an order, delivery included (see [Rewards](/legal/rewards)).
 - **Plus** is billed monthly (or yearly) through Wayl until you cancel (see [The IDEA Plus](/legal/plus)).
 

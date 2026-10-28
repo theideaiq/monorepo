@@ -351,7 +351,7 @@ session in the shared cookie.
   capped at `store_settings.max_giveaway_rate` (20%) of the items: the
   discount shrinks first, then `orders.max_bulbs` caps the cashback. Cash
   on delivery is refused over `store_settings.cash_limit` (500,000 IQD;
-  those orders are paid online or at pickup). Every copy has a cost
+  those orders are paid online). Every copy has a cost
   (`stock_items.cost`); `price_check()` (Finance → Prices) lists sale
   copies with no cost or priced under the floor: cost plus the payment
   fee (`payment_fee_rate`), our delivery cost (`delivery_cost`) and the
@@ -1505,7 +1505,7 @@ The IDEA Plus (migration `20261221000000_single_rent.sql`):
   calls `create_rental_order()`: an order of two lines, the rent and a
   refundable deposit (`store_settings.rental_deposit_rate`, 50% of the
   item's price), plus delivery (free in Baghdad on Plus plans that include
-  it) or pickup, paid online or in cash like any order. It holds a copy and
+  it), paid online or in cash like any order. It holds a copy and
   creates a `rentals` row with `kind = 'single'`. The rental starts when
   the order is delivered and is due after the rate's days; it can't start
   before the order is paid or confirmed. No Bulbs are earned or spent.
@@ -1778,22 +1778,23 @@ available copies by variant, condition and purpose, with the lowest price.
 - **Staff**: Catalog → product → **Copies** adds copies and edits or
   removes each one.
 
-#### Delivery, pickup and cash orders
+#### Delivery and cash orders
 
-Store orders are placed with `create_order(shipping, fulfilment,
-payment_method, delivery_zone)` (migration `20261120000160_delivery.sql`).
-The database prices the delivery fee from `delivery_zones` (one per
-governorate, edited in Staff → Catalog → Settings); pickup is free and
-offered once **Store pickup** is on and has an address; the free-delivery
-threshold applies to every zone.
+Store orders are placed with `create_order(shipping, payment_method,
+delivery_zone)` (migration `20261120000160_delivery.sql`). Every order is
+delivered by Boxy: store pickup was removed (owner decision, 2026-10-28),
+and `orders.fulfilment` is `pickup` only on past orders, which still show
+"Picked up". The database prices the delivery fee from `delivery_zones`
+(one per governorate, edited in Staff → Catalog → Settings); the
+free-delivery threshold applies to every zone.
 
 - **Pay online** (`online`): the order is `pending` and the customer pays
   on Wayl as below.
-- **Cash on delivery / pay at pickup** (`cash_on_delivery`, switched by
+- **Cash on delivery** (`cash_on_delivery`, switched by
   **Offer cash payment**): the order starts `confirmed` with its stock
   taken. The website asks `POST /orders/confirmation` (Bearer token) to email the
   confirmation once (`confirmation_emailed_at`). Staff move it through
-  preparing and shipped (pickup: "Ready for pickup"), and **Mark cash
+  preparing and shipped, and **Mark cash
   collected** (`mark_cash_collected`, support or finance) marks it paid and
   delivered and records a `cash` payment for the ledger. Until then it can
   still be cancelled, which returns the stock. Cash is not third-party

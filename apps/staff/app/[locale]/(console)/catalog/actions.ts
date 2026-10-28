@@ -189,11 +189,6 @@ export const saveStoreSettings = staffAction(
   "catalog",
   z.object({
     cashOnDelivery: checkbox,
-    pickupAddressAr: optionalText(500),
-    pickupAddressEn: optionalText(500),
-    pickupEnabled: checkbox,
-    pickupHoursAr: optionalText(200),
-    pickupHoursEn: optionalText(200),
     requireVerifiedPhone: checkbox,
     shippingFee: int(0),
   }),
@@ -203,11 +198,6 @@ export const saveStoreSettings = staffAction(
         .from("store_settings")
         .update({
           cash_on_delivery_enabled: input.cashOnDelivery,
-          pickup_address_ar: input.pickupAddressAr,
-          pickup_address_en: input.pickupAddressEn,
-          pickup_enabled: input.pickupEnabled,
-          pickup_hours_ar: input.pickupHoursAr,
-          pickup_hours_en: input.pickupHoursEn,
           require_verified_phone: input.requireVerifiedPhone,
           shipping_fee: input.shippingFee,
         })

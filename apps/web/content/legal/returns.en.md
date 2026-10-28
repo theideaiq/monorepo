@@ -33,7 +33,7 @@ When a copy isn't new, its product page describes anything you should know, such
 
 ## 5. The 14-day window
 
-You can return an item within **14 days of delivery** (or of pickup, where offered). The item must come back with its accessories, packaging and anything that came with it, in the condition you received it.
+You can return an item within **14 days of delivery**. The item must come back with its accessories, packaging and anything that came with it, in the condition you received it.
 
 | Item | Can it be returned within 14 days? |
 | --- | --- |

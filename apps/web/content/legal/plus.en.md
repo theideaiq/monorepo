@@ -28,7 +28,7 @@ Plus delivers in Baghdad. Elsewhere in Iraq, and when all places are taken, you 
 
 - Add what you want to **Saved**: for Plus members it is your rental queue, in order. We send the next available item from it.
 - **Keep items as long as you like.** There are no due dates and no late fees while your plan is active.
-- **Swaps:** our rider brings your next item and takes the last one back in one visit, on your area's delivery day. Or swap at a pickup point.
+- **Swaps:** our rider brings your next item and takes the last one back in one visit, on your area's delivery day.
 - New releases in their first 30 days are for Plus Shine and Plus Blaze.
 - What you can rent: PS5 and Switch games, books, films on Blu-ray and, where offered, board games. Consoles are rented only as game night kits.
 

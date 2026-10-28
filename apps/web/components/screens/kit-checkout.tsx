@@ -363,13 +363,12 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
   const weekend = data.weekends.find((item) => item.startsOn === startsOn);
   const { cash, cashOffered, paymentMethod, zone, zoneList } = resolveChoices({
     address,
-    fulfilment: "delivery",
     payment,
     settings: data.settings,
     subtotal: kitTotal(weekend, extraDays),
     zones: data.zones,
   });
-  const areas = useCheckoutAreas("delivery", zone);
+  const areas = useCheckoutAreas(zone);
   const busy = place.isPending || place.isSuccess;
   const { type } = data;
   const ready = Boolean(weekend && type && games.length === (type?.games ?? 0));
@@ -377,11 +376,7 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-    const result = validateAddress(address, {
-      areas,
-      fulfilment: "delivery",
-      zones: zoneList,
-    });
+    const result = validateAddress(address, { areas, zones: zoneList });
     setFieldErrors(result.errors);
     if (!(result.shipping && result.zoneId && startsOn && ready)) {
       return;
@@ -454,17 +449,14 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
                 areas={areas}
                 busy={busy}
                 fieldErrors={fieldErrors}
-                method="delivery"
                 onChange={set}
                 onLocation={(location) => setForm({ ...address, location })}
-                pickup={null}
                 zone={zone}
                 zones={zoneList}
               />
               {cashOffered ? (
                 <PaymentCard
                   busy={busy}
-                  method="delivery"
                   onChange={setPayment}
                   value={paymentMethod}
                 />

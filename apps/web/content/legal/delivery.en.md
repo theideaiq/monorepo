@@ -23,29 +23,25 @@ Delivery times are estimates shown at checkout. They start once an order is conf
 
 Store orders are delivered by our courier partner **Boxy**. Once your order is on its way, Pass → Orders shows **Track your parcel**, and you get an update by email and, if you turned them on, by push, Telegram or WhatsApp. The courier may call you before arriving, so please keep your phone number up to date.
 
-## 5. Store pickup
-
-Where store pickup is offered, you can choose it at checkout for free. The checkout shows the address and opening hours. We tell you when the order is ready; bring your Pass card or your order number.
-
-## 6. Paying for delivery orders
+## 5. Paying for delivery orders
 
 - **Online with Wayl**, when you check out.
-- **Cash on delivery** or **at pickup**, for orders up to 500,000 IQD. Orders over 500,000 IQD are paid online or at pickup.
+- **Cash on delivery**, for orders up to 500,000 IQD. Orders over 500,000 IQD are paid online.
 - **Bulbs**, for all or part of the order.
 
 For members aged 13 to 17, a guardian approves the order first, and cash on delivery is handed over by an adult.
 
-## 7. When the parcel arrives
+## 6. When the parcel arrives
 
 Please check the parcel before you accept it. If it is damaged, open or clearly wrong, you may refuse it, or accept it and tell us as soon as possible. Our [Returns and refunds](/legal/returns) policy covers faulty, wrong and damaged items. Once a parcel is delivered to you or to the person at your address, it is your responsibility.
 
-## 8. Failed and refused deliveries
+## 7. Failed and refused deliveries
 
 - **We can't reach you.** The courier tries to contact you. If the parcel can't be delivered, it comes back to us and we contact you to arrange another delivery or cancel the order.
 - **You refuse a parcel** that is not faulty, wrong or damaged: a cash order is cancelled; a paid order is refunded without the delivery fee.
 - **Repeated refusals.** If cash orders are refused again and again, we may ask that future orders be paid online.
 
-## 9. Address and order changes
+## 8. Address and order changes
 
 You can change the delivery address by contacting us before the order is handed to the courier. After that, we will try, but can't promise.
 

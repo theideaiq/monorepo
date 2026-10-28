@@ -1,5 +1,5 @@
 import { normalizePhone } from "@repo/auth/phone";
-import { type Fulfilment, governorates } from "@repo/commerce";
+import { governorates } from "@repo/commerce";
 
 /** A map pin (the device's location when the member shared it). */
 export interface MapPin {
@@ -105,7 +105,7 @@ const deliveryErrors = (
 /**
  * Checks the form like `create_order()` does and returns the payload, or
  * the fields to fix. The phone is normalized to E.164 ("0770…" works).
- * Pickup needs only a name and a phone. Delivery needs an address and a
+ * Delivery needs a name, a phone, an address and a
  * zone from `zones` (its governorate goes on the address); without zones,
  * a governorate id, from which the database finds the zone. When the
  * courier's `areas` for the zone are known, the city must be one of them
@@ -115,17 +115,14 @@ export const validateAddress = (
   form: AddressForm,
   {
     areas,
-    fulfilment = "delivery",
     zones,
   }: {
     areas?: readonly string[];
-    fulfilment?: Fulfilment;
     zones?: readonly ZoneChoice[];
   } = {}
 ): ValidatedAddress => {
   const errors: AddressField[] = [];
   const phone = normalizePhone(form.phone);
-  const delivery = fulfilment === "delivery";
   const zone = zones?.find(({ id }) => id === form.zoneId) ?? null;
 
   if (!form.fullName.trim()) {
@@ -134,9 +131,7 @@ export const validateAddress = (
   if (!phone) {
     errors.push("phone");
   }
-  if (delivery) {
-    errors.push(...deliveryErrors(form, zones ? zone : undefined, areas));
-  }
+  errors.push(...deliveryErrors(form, zones ? zone : undefined, areas));
 
   if (errors.length > 0 || !phone) {
     return { errors, shipping: null, zoneId: null };
@@ -145,18 +140,16 @@ export const validateAddress = (
   return {
     errors: [],
     shipping: {
-      address: delivery ? form.address.trim() : "",
-      city: delivery ? form.city.trim() : "",
+      address: form.address.trim(),
+      city: form.city.trim(),
       full_name: form.fullName.trim(),
-      governorate: delivery
-        ? (zone ? zone.governorate : form.governorate) || ""
-        : "",
-      landmark: delivery ? form.landmark.trim() : "",
-      ...(delivery && form.location ? { location: form.location } : {}),
+      governorate: (zone ? zone.governorate : form.governorate) || "",
+      landmark: form.landmark.trim(),
+      ...(form.location ? { location: form.location } : {}),
       notes: form.notes.trim(),
       phone,
     },
-    zoneId: delivery && zone ? zone.id : null,
+    zoneId: zone ? zone.id : null,
   };
 };
 

@@ -3,7 +3,6 @@
 import { track } from "@repo/analytics/client";
 import { useAuth } from "@repo/auth/provider";
 import {
-  type Fulfilment,
   HOUSE_SELLER_ID,
   type PaymentMethod,
   toCheckoutQuote,
@@ -89,7 +88,6 @@ export const useDeliveryZones = () => {
 
 /** What the checkout asks the server to price. */
 export interface QuoteRequest {
-  fulfilment: Fulfilment;
   /** A governorate id when there's no zone to choose. */
   governorate?: string | null;
   paymentMethod: PaymentMethod;
@@ -116,7 +114,6 @@ export const useCheckoutQuote = (
         unwrap(
           await supabase.rpc("checkout_quote", {
             delivery_zone: ask.zoneId || undefined,
-            fulfilment: ask.fulfilment,
             governorate: ask.governorate || undefined,
             payment_method: ask.paymentMethod,
             use_bulbs: ask.useBulbs,

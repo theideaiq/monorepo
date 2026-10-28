@@ -216,7 +216,7 @@ describe("delivery address", () => {
     });
   });
 
-  test("delivery keeps the landmark and the pin; pickup drops them", () => {
+  test("delivery keeps the landmark and the pin", () => {
     const pinned = {
       ...filled,
       landmark: " Opposite the bakery ",
@@ -226,9 +226,6 @@ describe("delivery address", () => {
       landmark: "Opposite the bakery",
       location: { lat: 33.3, lng: 44.4 },
     });
-    const pickup = validateAddress(pinned, { fulfilment: "pickup" }).shipping;
-    expect(pickup?.landmark).toBe("");
-    expect(pickup).not.toHaveProperty("location");
   });
 
   test("with the courier's areas known, the city must be one of them", () => {
@@ -239,19 +236,6 @@ describe("delivery address", () => {
     ).toEqual([]);
     // Unknown areas (before the first copy): any city goes.
     expect(validateAddress(filled, { areas: [] }).errors).toEqual([]);
-  });
-
-  test("pickup needs only a name and a phone", () => {
-    expect(
-      validateAddress(
-        { ...filled, address: "", governorate: "" },
-        { fulfilment: "pickup" }
-      )
-    ).toMatchObject({
-      errors: [],
-      shipping: { address: "", governorate: "" },
-      zoneId: null,
-    });
   });
 
   test("delivery takes the zone's governorate", () => {

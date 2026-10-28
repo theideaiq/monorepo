@@ -610,7 +610,7 @@
         },
         "delivery": {
           "title": "Delivery",
-          "description": "Delivery fees, times, the courier, store pickup, cash on delivery and refused deliveries."
+          "description": "Delivery fees, times, the courier, cash on delivery and refused deliveries."
         },
         "returns": {
           "title": "Returns and refunds",
@@ -1242,8 +1242,7 @@
         "unavailable": "A product in your cart is no longer available. Check your cart.",
         "unknown": "Something went wrong. Please try again.",
         "cashUnavailable": "Cash payment isn't available right now. Choose to pay online.",
-        "pickupUnavailable": "Pickup from the store isn't available right now. Choose delivery.",
-        "zoneUnavailable": "We can't deliver to this governorate right now. Choose another, or pick up from the store.",
+        "zoneUnavailable": "We can't deliver to this governorate right now. Choose another.",
         "notEnoughBulbs": "You don't have that many Bulbs any more. Check the amount and try again.",
         "guardianRequired": "Under 18, your orders need a guardian. Link one in Settings.",
         "needsBirthday": "Add your date of birth in Settings first.",
@@ -1256,33 +1255,15 @@
         "pickGames": "Choose the kit's games.",
         "phoneUnverified": "Verify the delivery phone number first: we'll send it a code."
       },
-      "fulfilment": {
-        "title": "Delivery or pickup",
-        "delivery": "Delivery",
-        "deliveryHint": "To your door, anywhere in Iraq.",
-        "pickup": "Pickup",
-        "pickupHint": "Collect it from our store, free."
-      },
-      "pickup": {
-        "title": "Pickup from the store",
-        "description": "We'll call you when your order is ready to collect.",
-        "address": "Store address",
-        "hours": "Opening hours",
-        "notes": "Notes for the store",
-        "notesPlaceholder": "Anything we should know"
-      },
       "payment": {
         "title": "Payment",
         "online": "Pay online",
         "onlineHint": "Card, Qi Card, ZainCash, FIB and more on Wayl's secure page.",
         "cash": "Cash on delivery",
-        "cashHint": "Pay the courier in cash when your order arrives.",
-        "pickupCash": "Pay at pickup",
-        "pickupCashHint": "Pay in cash at the store when you collect your order."
+        "cashHint": "Pay the courier in cash when your order arrives."
       },
       "placeOrderCash": "Place order · {amount}",
       "cashNote": "You'll pay {amount} in cash when your order arrives.",
-      "pickupCashNote": "You'll pay {amount} at the store when you collect your order.",
       "bulbs": {
         "title": "Pay with Bulbs",
         "available": "You have {bulbs} Bulbs ({amount}).",
@@ -1343,12 +1324,8 @@
         "refundedNotice": "This order was refunded.",
         "help": "Get help with this order",
         "method": "Delivery and payment",
-        "pickupAt": "Pickup from",
-        "pickupHours": "Opening hours",
         "contact": "Contact",
         "confirmedNotice": "Your order is confirmed. Have {amount} ready in cash for the courier.",
-        "confirmedPickupNotice": "Your order is confirmed. We'll call you when it's ready; pay {amount} at the store.",
-        "readyNotice": "Your order is ready. Collect it from the store during opening hours.",
         "cancelCashDescription": "The order is cancelled. This can't be undone.",
         "guardianPending": "This order is waiting for your guardian's approval. You'll pay once they approve it.",
         "guardianDeclined": "Your guardian declined this order, so it was cancelled."
@@ -3153,18 +3130,9 @@
         "shippingFee": "Delivery fee (IQD)",
         "shippingFeeHint": "Shown in the cart before the customer chooses a governorate. Orders use the zone's fee.",
         "cashOnDelivery": "Offer cash payment",
-        "cashOnDeliveryHint": "Cash on delivery, and pay at pickup. Not third-party checkout, so it is offered in the iOS and Android apps too.",
+        "cashOnDeliveryHint": "Not third-party checkout, so it is offered in the iOS and Android apps too.",
         "requireVerifiedPhone": "Require a verified phone for deliveries",
         "requireVerifiedPhoneHint": "Customers confirm their delivery number with a code (WhatsApp or SMS) before ordering; Plus homes too. Turn on once Twilio Verify is set up.",
-        "pickup": {
-          "title": "Store pickup",
-          "description": "Customers collect orders at the store, with no delivery fee. Offered at checkout once it is on and has an address.",
-          "enabled": "Offer pickup",
-          "addressAr": "Address (Arabic)",
-          "addressEn": "Address (English)",
-          "hoursAr": "Opening hours (Arabic)",
-          "hoursEn": "Opening hours (English)"
-        },
         "zones": {
           "title": "Delivery zones",
           "description": "Each zone has its own fee and its own free delivery: from a subtotal for everyone, and on any order for Plus plans with free delivery. Inactive zones aren't offered at checkout.",
@@ -3479,7 +3447,7 @@
       },
       "cash": {
         "title": "Cash payment",
-        "due": "Collect {amount} in cash on delivery or at pickup, then record it here.",
+        "due": "Collect {amount} in cash on delivery, then record it here.",
         "collected": "Cash collected {date}.",
         "action": "Mark cash collected",
         "confirm": "Record {amount} collected in cash?",
@@ -3942,7 +3910,7 @@
         "maxGiveawayRate": "Most an order gives away (%)",
         "maxGiveawayRateHint": "Discount, free delivery and Bulbs together, as a share of the subtotal. The discount shrinks first, then the Bulbs.",
         "cashLimit": "Cash on delivery up to (IQD)",
-        "cashLimitHint": "Larger orders are paid online or at pickup. Empty for no limit.",
+        "cashLimitHint": "Larger orders are paid online. Empty for no limit.",
         "priceCheck": "Price check",
         "priceCheckHint": "A price passes when it leaves at least the margin after the copy's cost, the payment fee, one delivery and the most an order gives away.",
         "paymentFeeRate": "Online payment fee (%)",

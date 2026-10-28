@@ -54,7 +54,6 @@ import {
   useCancelOrder,
   useOrder,
   useOrderPayments,
-  useStoreSettings,
 } from "@/lib/store-queries";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
 
@@ -186,7 +185,6 @@ const OrderNotices = ({
   const locale = useLocale();
   const muted = "rounded-md bg-muted p-4 text-sm";
   const amount = formatPrice(order.total, locale);
-  const pickup = order.fulfilment === "pickup";
 
   if (justPaid || (watching && order.paid_at)) {
     return (
@@ -214,13 +212,7 @@ const OrderNotices = ({
         <p className={muted}>{t("pendingNotice")}</p>
       );
     case "confirmed":
-      return (
-        <p className={muted}>
-          {t(pickup ? "confirmedPickupNotice" : "confirmedNotice", { amount })}
-        </p>
-      );
-    case "shipped":
-      return pickup ? <p className={muted}>{t("readyNotice")}</p> : null;
+      return <p className={muted}>{t("confirmedNotice", { amount })}</p>;
     case "cancelled":
       return <p className={muted}>{t("cancelledNotice")}</p>;
     case "refunded":
@@ -230,7 +222,7 @@ const OrderNotices = ({
   }
 };
 
-/** Delivery or pickup (with the store's address), and how it's paid. */
+/** Delivery (or, on past orders, pickup) and how it's paid. */
 const MethodCard = ({
   fulfilment,
   paymentMethod,
@@ -240,9 +232,6 @@ const MethodCard = ({
 }) => {
   const t = useTranslations("app.orders.detail");
   const tStore = useTranslations("store");
-  const locale = useLocale();
-  const settings = useStoreSettings();
-  const pickup = fulfilment === "pickup" ? settings.data?.pickup : null;
 
   return (
     <Card>
@@ -256,24 +245,6 @@ const MethodCard = ({
             `paymentMethod.${paymentMessageKey(paymentMethod, fulfilment)}`
           )}
         </p>
-        {pickup ? (
-          <dl className="grid gap-2 pt-2">
-            <div className="grid gap-0.5">
-              <dt className="text-muted-foreground">{t("pickupAt")}</dt>
-              <dd className="whitespace-pre-line">
-                {localized(pickup, "address", locale)}
-              </dd>
-            </div>
-            {localized(pickup, "hours", locale) ? (
-              <div className="grid gap-0.5">
-                <dt className="text-muted-foreground">{t("pickupHours")}</dt>
-                <dd className="whitespace-pre-line">
-                  {localized(pickup, "hours", locale)}
-                </dd>
-              </div>
-            ) : null}
-          </dl>
-        ) : null}
       </CardContent>
     </Card>
   );

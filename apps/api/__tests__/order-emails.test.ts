@@ -5,7 +5,6 @@ import { orderEmailContent, sendOrderEmails } from "../lib/order-emails";
 
 const ORDER = {
   currency: "IQD",
-  fulfilment: "delivery" as const,
   id: "order-1",
   number: 10_042,
   order_items: [
@@ -125,24 +124,9 @@ describe("sendOrderEmails", () => {
 });
 
 describe("orderEmailContent", () => {
-  test("a cash pickup order shows the store's address and pays in cash", () => {
-    const content = orderEmailContent(
-      {
-        ...ORDER,
-        fulfilment: "pickup",
-        payment_method: "cash_on_delivery",
-        shipping_fee: 0,
-      },
-      "en",
-      { address_ar: "بغداد، الكرادة", address_en: "Karrada, Baghdad" }
-    );
-    expect(content).toMatchObject({ cash: true, pickup: true });
-    expect(content.address.address).toBe("Karrada, Baghdad");
-  });
-
   test("a delivery order keeps the customer's address", () => {
     const content = orderEmailContent(ORDER, "ar");
-    expect(content).toMatchObject({ cash: false, pickup: false });
+    expect(content).toMatchObject({ cash: false });
     expect(content.address.address).toBe("Street 52");
   });
 });

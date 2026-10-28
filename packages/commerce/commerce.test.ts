@@ -41,7 +41,6 @@ describe("commerce helpers", () => {
     const settings = { shippingFee: 5000 };
     const baghdad = {
       freeFrom: 150_000,
-      fulfilment: "delivery" as const,
       zoneFee: 5000,
     };
     expect(deliveryFee(40_000, settings, baghdad)).toBe(5000);
@@ -49,15 +48,8 @@ describe("commerce helpers", () => {
     expect(deliveryFee(40_000, settings, { ...baghdad, planFree: true })).toBe(
       0
     );
-    expect(
-      deliveryFee(40_000, settings, { fulfilment: "delivery", zoneFee: 9000 })
-    ).toBe(9000);
-    expect(
-      deliveryFee(40_000, settings, { fulfilment: "delivery", zoneFee: null })
-    ).toBe(5000);
-    expect(
-      deliveryFee(40_000, settings, { fulfilment: "pickup", zoneFee: 9000 })
-    ).toBe(0);
+    expect(deliveryFee(40_000, settings, { zoneFee: 9000 })).toBe(9000);
+    expect(deliveryFee(40_000, settings, { zoneFee: null })).toBe(5000);
   });
 
   test("reads the server's checkout quote", () => {
