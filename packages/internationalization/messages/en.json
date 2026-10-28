@@ -198,7 +198,10 @@
       "legal": "Legal",
       "search": "Search",
       "cart": "Cart",
-      "cartCount": "{count} in cart"
+      "cartCount": "{count} in cart",
+      "aboutHelp": "About & help",
+      "aboutHelpHint": "Careers, partners, contact, policies, language and the app version",
+      "saved": "Saved"
     },
     "tabs": {
       "label": "Main",
@@ -689,7 +692,10 @@
       "legal": "Terms and policies",
       "app": "This app",
       "versionLine": "Version {version} · build {build}",
-      "appVersion": "App {version}"
+      "appVersion": "App {version}",
+      "copyVersion": "Copy the version for support",
+      "versionCopied": "Copied.",
+      "settings": "Language and theme"
     },
     "help": {
       "meta": {

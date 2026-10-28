@@ -9,9 +9,10 @@ import { AccountActions } from "./account-actions";
 
 /**
  * The site's top bar. Wider screens: the logo, Store, Plus and Club, then
- * search, the bell, the cart and The IDEA Pass. Phones: the logo, search,
- * the bell and the cart; the tabs carry the sections and the Pass. The
- * language, theme and everything else live in the footer.
+ * search, Saved, the bell, the cart and The IDEA Pass. Phones (and the
+ * apps): the logo, search, Saved, the bell and the cart; the tabs carry the
+ * sections and the Pass. Phones have no footer: My Pass ends with "About &
+ * help" (/about), and Pass → Settings has the language and theme.
  */
 export const Header = () => {
   const t = useTranslations("web.nav");

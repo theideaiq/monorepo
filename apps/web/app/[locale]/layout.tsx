@@ -16,6 +16,7 @@ import { Footer } from "./components/footer";
 import { Header } from "./components/header";
 import { SiteChrome } from "./components/site-chrome";
 import { TabBar } from "./components/tab-bar";
+import { WebOnly } from "./components/web-only";
 
 interface RootLayoutProperties {
   readonly children: ReactNode;
@@ -69,7 +70,9 @@ const RootLayout = async ({ children, params }: RootLayoutProperties) => {
                 </SiteChrome>
                 {children}
                 <SiteChrome>
-                  <Footer />
+                  <WebOnly>
+                    <Footer />
+                  </WebOnly>
                   <TabBar />
                 </SiteChrome>
               </AppProviders>

@@ -6,7 +6,7 @@ import { cn } from "@repo/design-system/lib/utils";
 import { localePath } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link, usePathname } from "@repo/internationalization/navigation";
-import { SearchIcon, ShoppingCartIcon } from "lucide-react";
+import { HeartIcon, SearchIcon, ShoppingCartIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { NotificationBell } from "@/components/notification-bell";
@@ -62,10 +62,10 @@ interface AccountActionsProps {
 }
 
 /**
- * The top bar's end: search, the bell (signed in), the cart, then on wider
- * screens The IDEA Pass: "Sign in" (coming back to this page) when signed
- * out, the member's Pass button when signed in. On phones the Pass tab
- * does that.
+ * The top bar's end: search, Saved (no badge), the bell (signed in), the
+ * cart, then on wider screens The IDEA Pass: "Sign in" (coming back to
+ * this page) when signed out, the member's Pass button when signed in. On
+ * phones the Pass tab does that.
  */
 export const AccountActions = ({ className }: AccountActionsProps) => {
   const t = useTranslations("web.nav");
@@ -115,6 +115,11 @@ export const AccountActions = ({ className }: AccountActionsProps) => {
           <Button asChild size="icon" variant="ghost">
             <Link aria-label={t("search")} href="/search">
               <SearchIcon className="size-5" />
+            </Link>
+          </Button>
+          <Button asChild size="icon" variant="ghost">
+            <Link aria-label={t("saved")} href="/pass/saved">
+              <HeartIcon className="size-5" />
             </Link>
           </Button>
           <NotificationBell />

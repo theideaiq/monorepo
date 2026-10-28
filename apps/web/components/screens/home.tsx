@@ -18,6 +18,7 @@ import { Link } from "@repo/internationalization/navigation";
 import { CalendarDaysIcon, CrownIcon, PackageIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
+import { AboutHelpLink } from "@/components/about-help-link";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { OrderStatusBadge } from "@/components/store/order-status-badge";
@@ -275,6 +276,7 @@ export const Home = ({ card }: { readonly card?: ReactNode }) => {
           <PlusPanel />
           <NextEvents />
         </div>
+        <AboutHelpLink />
       </div>
     </>
   );
