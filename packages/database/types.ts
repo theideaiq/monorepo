@@ -3202,6 +3202,7 @@ export type Database = {
           plus_capacity: number;
           plus_invite_hours: number;
           rental_deposit_rate: number;
+          require_verified_phone: boolean;
           return_days: number;
           shipping_fee: number;
           survey_fee_rate: number;
@@ -3226,6 +3227,7 @@ export type Database = {
           plus_capacity?: number;
           plus_invite_hours?: number;
           rental_deposit_rate?: number;
+          require_verified_phone?: boolean;
           return_days?: number;
           shipping_fee?: number;
           survey_fee_rate?: number;
@@ -3250,6 +3252,7 @@ export type Database = {
           plus_capacity?: number;
           plus_invite_hours?: number;
           rental_deposit_rate?: number;
+          require_verified_phone?: boolean;
           return_days?: number;
           shipping_fee?: number;
           survey_fee_rate?: number;
@@ -4166,6 +4169,24 @@ export type Database = {
           },
         ];
       };
+      verified_phones: {
+        Row: {
+          phone: string;
+          user_id: string;
+          verified_at: string;
+        };
+        Insert: {
+          phone: string;
+          user_id: string;
+          verified_at?: string;
+        };
+        Update: {
+          phone?: string;
+          user_id?: string;
+          verified_at?: string;
+        };
+        Relationships: [];
+      };
       webhook_events: {
         Row: {
           event_key: string;
@@ -4984,6 +5005,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      is_phone_verified: { Args: { phone: string }; Returns: boolean };
       issue_invoice: {
         Args: { days?: number; purchase_order: string };
         Returns: string;
