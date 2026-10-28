@@ -90,7 +90,7 @@ describe("role → sections", () => {
       "customers",
       "club",
       "partners",
-      "space",
+      "counter",
       "finance",
       "settings",
     ]);

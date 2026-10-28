@@ -86,7 +86,7 @@ test.describe("Staff", () => {
     await expect(page.getByRole("heading", { name: "Search" })).toBeVisible();
     await expectAccessible(page);
 
-    await page.getByRole("link", { name: "The IDEA Space" }).click();
+    await page.getByRole("link", { name: "Counter" }).click();
     await page
       .getByLabel("Scanned code or member number")
       .fill("IDEA:1:000000");

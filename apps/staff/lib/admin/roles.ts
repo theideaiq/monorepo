@@ -30,7 +30,7 @@ export const sectionHref: Record<Section, string> = {
   audit: "/settings/audit",
   catalog: "/catalog",
   companies: "/partners",
-  counter: "/space",
+  counter: "/counter",
   customers: "/customers",
   dashboard: "/",
   editorial: "/club",
@@ -116,7 +116,7 @@ export const menu = [
   { id: "customers", sections: ["customers"] },
   { id: "club", sections: ["editorial", "telegram"] },
   { id: "partners", sections: ["companies"] },
-  { id: "space", sections: ["counter"] },
+  { id: "counter", sections: ["counter"] },
   { id: "finance", sections: ["finance"] },
   { id: "settings", sections: ["staff", "audit"] },
 ] as const satisfies readonly { id: string; sections: readonly Section[] }[];

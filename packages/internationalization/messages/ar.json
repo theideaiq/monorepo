@@ -630,7 +630,7 @@
         },
         "selling": {
           "title": "البيع",
-          "description": "كيف تبيع المتاجر والأفراد على The IDEA: الإعلانات والمدفوعات والتحويلات واللقاء في The IDEA Space والمزادات."
+          "description": "كيف تبيع المتاجر والأفراد على The IDEA: الإعلانات والمدفوعات والتحويلات والمزادات."
         },
         "club": {
           "title": "قواعد النادي",
@@ -2730,11 +2730,6 @@
       "buy": "اشترِ",
       "rent": "استأجر مع The IDEA Plus"
     },
-    "souq": {
-      "currency": "دينار عراقي",
-      "market": "بالسوگ بـ",
-      "withUs": "يمنا بـ"
-    },
     "orderStatusPickup": {
       "shipped": "جاهز للاستلام",
       "delivered": "تم الاستلام"
@@ -2784,7 +2779,7 @@
       "audit": "سجلّ التدقيق",
       "support": "الدعم",
       "reviews": "التقييمات",
-      "counter": "The IDEA Space",
+      "counter": "الكاونتر",
       "companies": "الشركاء"
     },
     "roles": {
@@ -4281,7 +4276,7 @@
       "request": "الطلب #{number}"
     },
     "counter": {
-      "title": "The IDEA Space",
+      "title": "الكاونتر",
       "check": "تحقق من The IDEA Pass",
       "description": "امسح رمز QR على البطاقة (بالكاميرا أو الماسح)، أو اكتب رقم العضو والرمز المكوّن من 6 أرقام.",
       "camera": "امسح بالكاميرا",

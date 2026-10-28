@@ -74,7 +74,7 @@ Iraq's Consumer Protection Law requires a warranty for goods that need one; wher
 ## 9. How to return an item
 
 1. Contact us from [Help](/help#contact), by email or through The IDEA Droid, with your order number, the item and the reason.
-2. We tell you how to send it back: collected by our courier, or brought to The IDEA Space where that is offered. Please don't send items back without contacting us first, and don't send a shop's item to the shop directly.
+2. We tell you how to send it back: collected by our courier. Please don't send items back without contacting us first, and don't send a shop's item to the shop directly.
 3. We check the item when it arrives and tell you the result.
 
 **Who pays the return delivery:** you do, unless the item is faulty, wrong or not as described; then we do.
@@ -97,7 +97,7 @@ Items sold by shops on The IDEA follow this whole policy: the same 14-day window
 
 ## 12. Items bought from people
 
-Items that people sell to each other on The IDEA are paid to the seller in person at The IDEA Space or in cash on delivery; the money never passes through The IDEA. This policy's returns and refunds therefore don't apply to them: check the item before you pay, or book a "Checked at the Space" inspection where offered. If a person's item was misdescribed, report it to us; we will help you and the seller resolve it and may remove the seller. See [Selling](/legal/selling).
+Items that people sell to each other on The IDEA are paid to the seller in cash on delivery; the money never passes through The IDEA. This policy's returns and refunds therefore don't apply to them: check the item before you pay. If a person's item was misdescribed, report it to us; we will help you and the seller resolve it and may remove the seller. See [Selling](/legal/selling).
 
 ## 13. The IDEA Plus
 
@@ -120,9 +120,8 @@ The refund terms of a paid event are shown when you book. If we cancel an event,
 
 Orders by organizations through The IDEA Partners follow this policy, unless your agreement with us says otherwise (see [The IDEA Partners](/legal/business)).
 
-## 17. Market prices and age ratings
+## 17. Age ratings
 
-- **Market ("souq") prices.** Some product pages compare a price with the price in Iraq's market (the souq). We show a market price only when we have checked it in the last 7 days and saved the evidence (where and when it was seen). If we haven't, we don't show one.
 - **Age ratings.** Games show their PEGI age rating (3, 7, 12, 16 or 18). Games rated PEGI 18 and other mature items are hidden from and not sold to members under 18, by The IDEA or by shops.
 
 ## Contact us

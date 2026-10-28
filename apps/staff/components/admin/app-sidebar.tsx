@@ -45,6 +45,7 @@ import { AdminSearch } from "./admin-search";
 const icons: Record<MenuId, LucideIcon> = {
   catalog: PackageIcon,
   club: BookOpenIcon,
+  counter: ScanLineIcon,
   customers: UsersIcon,
   finance: LandmarkIcon,
   inbox: InboxIcon,
@@ -52,7 +53,6 @@ const icons: Record<MenuId, LucideIcon> = {
   partners: HandshakeIcon,
   rentals: RepeatIcon,
   settings: SettingsIcon,
-  space: ScanLineIcon,
 };
 
 interface AppSidebarProps {
