@@ -2,6 +2,7 @@ import {
   type CartLine,
   cartTotals,
   type DeliveryChoice,
+  HOUSE_SELLER_ID,
   type StoreSettings,
 } from "@repo/commerce";
 
@@ -45,13 +46,17 @@ export interface CartItem {
   condition: Condition | null;
   id: string;
   /**
-   * For a line in another condition (a used copy of a new product): its
-   * copies for sale and their lowest price, from `product_offers`.
+   * For a line in another condition (a used copy of a new product) or from
+   * a shop: its copies for sale and their lowest price, from
+   * `product_offers`.
    */
   offer?: { available: number; price: number } | null;
   product: CartProduct | null;
   product_id: string;
   quantity: number;
+  /** Who sells the line's copies: The IDEA unless it names a shop. */
+  seller?: { name: string } | null;
+  seller_id: string;
   variant: CartVariant | null;
   variant_id: string;
 }
@@ -68,13 +73,24 @@ export interface CartLineView extends CartLine {
 export const isOtherCondition = (item: CartItem) =>
   item.condition !== null && item.condition !== item.product?.condition;
 
+/** Whether a line is sold by a shop rather than The IDEA. */
+export const isShopLine = (item: CartItem) =>
+  Boolean(item.seller_id) && item.seller_id !== HOUSE_SELLER_ID;
+
+/**
+ * Whether a line is priced from its offer (another condition, or a shop's
+ * copies) rather than the variant.
+ */
+export const isOtherOffer = (item: CartItem) =>
+  isOtherCondition(item) || isShopLine(item);
+
 /**
  * Prices a cart line like `create_order()` does: copies in another
- * condition at their own price, else the variant's price.
+ * condition or from a shop at their own price, else the variant's price.
  */
 export const toCartLine = (item: CartItem): CartLineView => {
   const { product } = item;
-  if (isOtherCondition(item)) {
+  if (isOtherOffer(item)) {
     return {
       available: item.offer?.available ?? 0,
       buyable: product?.status === "active" && Boolean(item.offer),

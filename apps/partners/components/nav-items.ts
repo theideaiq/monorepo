@@ -8,6 +8,7 @@ import {
   HouseIcon,
   type LucideIcon,
   PackageSearchIcon,
+  StoreIcon,
   TicketPercentIcon,
 } from "lucide-react";
 
@@ -16,7 +17,8 @@ export type NavKey =
   | "developers"
   | "home"
   | "organization"
-  | "perks";
+  | "perks"
+  | "selling";
 
 export interface NavItem {
   /** Shown once the organization has switched the section on. */
@@ -30,11 +32,12 @@ export interface NavItem {
 
 /**
  * The sections of The IDEA Partners, in sidebar order: Home and
- * Organization always, the rest once added from Home. Selling, Supply and
- * Opportunities join between Home and Perks when they ship.
+ * Organization always, the rest once added from Home. Supply and
+ * Opportunities join after Selling when they ship.
  */
 export const navItems: NavItem[] = [
   { href: "/", icon: HouseIcon, key: "home" },
+  { feature: "selling", href: "/selling", icon: StoreIcon, key: "selling" },
   { feature: "perks", href: "/perks", icon: TicketPercentIcon, key: "perks" },
   {
     feature: "bulk_buying",

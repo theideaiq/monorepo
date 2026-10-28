@@ -1062,7 +1062,8 @@
       "perks": "Perks",
       "bulk_buying": "Bulk buying",
       "developers": "Developers",
-      "organization": "Organization"
+      "organization": "Organization",
+      "selling": "Selling"
     },
     "roles": {
       "owner": "Owner",
@@ -1142,7 +1143,7 @@
         "rentalOnly": "This item is for rent: with The IDEA Plus, or on its own.",
         "goToPlus": "Go to The IDEA Plus",
         "addFailed": "We couldn't add this to your cart. Please try again.",
-        "soldBy": "Sold by {seller}",
+        "soldBy": "Sold by {seller} · delivered and paid through The IDEA",
         "verifiedSeller": "Verified seller",
         "left": "{count} left",
         "alsoRent": "Also for rent with The IDEA Plus",
@@ -1682,7 +1683,10 @@
           "description": "Let people sign in to your website or app with The IDEA Pass."
         },
         "addSection": "Add {section}",
-        "removeSection": "Remove {section}"
+        "removeSection": "Remove {section}",
+        "selling": {
+          "description": "Sell your products on The IDEA Store: we collect payment, deliver and pay you weekly."
+        }
       }
     },
     "onboarding": {
@@ -2406,6 +2410,54 @@
           "tooSoon": "Wait a few seconds before checking again.",
           "notAllowed": "Only the company's owners and admins can do this.",
           "unknown": "Something went wrong. Please try again."
+        }
+      },
+      "selling": {
+        "title": "Selling",
+        "intro": "Sell on The IDEA Store in your own name: The IDEA collects payment and delivers for you, and pays you weekly after the 14-day return window, minus commission. Staff review every shop before it sells.",
+        "policy": "Read the selling policy",
+        "applyTitle": "Apply to sell",
+        "applyAgainTitle": "Apply again",
+        "applyDescription": "Then add your documents and where to send payouts below; staff review them before you can sell.",
+        "shopName": "Shop name",
+        "shopNameHint": "Shown on your offers as \"Sold by …\".",
+        "apply": "Apply",
+        "failed": "Something went wrong. Try again.",
+        "askManager": "Ask an owner or admin of your organization to apply.",
+        "note": "Note from The IDEA:",
+        "deposit": "Security deposit: {held} held of {required}.",
+        "status": {
+          "pending": "In review",
+          "approved": "Approved",
+          "rejected": "Not approved",
+          "suspended": "Suspended"
+        },
+        "next": {
+          "pending": "We're reviewing your application. Make sure your documents and payout details are complete.",
+          "approved": "Your shop is approved. Listing your products here arrives soon; until then, staff add your copies for you.",
+          "rejected": "Your application wasn't approved. Read the note, then apply again when you're ready.",
+          "suspended": "Your shop is suspended: its offers aren't shown. Contact us to sort it out."
+        },
+        "documents": {
+          "title": "Documents",
+          "description": "Your business licence and an ID of the person responsible (PDF or photos). Only your owners, admins and The IDEA's staff see them.",
+          "none": "No documents yet.",
+          "add": "Add a document",
+          "uploading": "Uploading…",
+          "remove": "Remove {name}",
+          "failed": "The document couldn't be saved. Try again."
+        },
+        "payout": {
+          "title": "Payouts",
+          "description": "The bank transfer The IDEA sends your weekly payouts to.",
+          "bank": "Bank",
+          "accountName": "Name on the bank details",
+          "iban": "IBAN",
+          "ibanHint": "For example IQ98 NBIQ 8501 2345 6789 012.",
+          "ibanInvalid": "That doesn't look like an IBAN.",
+          "save": "Save",
+          "saved": "Saved.",
+          "failed": "The details couldn't be saved. Try again."
         }
       }
     },
@@ -4290,7 +4342,8 @@
         "invoices": "Invoices",
         "seats": "The IDEA Plus seats",
         "perks": "Perks",
-        "signIn": "Sign in with the Pass"
+        "signIn": "Sign in with the Pass",
+        "shops": "Shops"
       },
       "quotes": {
         "number": "Quote #{number}",
@@ -4448,6 +4501,28 @@
         "note": "Note to the company (optional)",
         "approve": "Approve",
         "decline": "Decline"
+      },
+      "shops": {
+        "title": "Shops",
+        "empty": "No shop has applied to sell yet.",
+        "applied": "{organization} · applied {date}",
+        "documents": "Documents",
+        "noDocuments": "No documents yet.",
+        "payout": "Payouts",
+        "noPayout": "No payout details yet.",
+        "depositState": "Deposit: {held} held of {required}",
+        "decision": "Decision",
+        "deposit": "Security deposit (IQD)",
+        "depositHint": "What the shop must hold before it sells; leave empty to keep it.",
+        "note": "Note to the shop",
+        "noteHint": "The shop sees it in Partners → Selling.",
+        "save": "Save the decision",
+        "statuses": {
+          "pending": "In review",
+          "approved": "Approved",
+          "rejected": "Not approved",
+          "suspended": "Suspended"
+        }
       }
     }
   },

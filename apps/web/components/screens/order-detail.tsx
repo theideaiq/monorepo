@@ -4,6 +4,7 @@ import { formatPhone } from "@repo/auth/phone";
 import {
   type Fulfilment,
   formatPrice,
+  HOUSE_SELLER_ID,
   localized,
   type PaymentMethod,
   variantName,
@@ -291,6 +292,7 @@ const OrderView = ({
 }) => {
   const t = useTranslations("app.orders.detail");
   const conditions = useTranslations("store.condition");
+  const soldBy = useTranslations("app.store.product");
   const boxText = useTranslations("web.store.product.box");
   const tCheckout = useTranslations("app.checkout.errors");
   const locale = useLocale();
@@ -384,6 +386,11 @@ const OrderView = ({
                     {item.condition && item.condition !== "new" ? (
                       <span className="text-muted-foreground text-xs">
                         {conditions(item.condition)}
+                      </span>
+                    ) : null}
+                    {item.seller_name && item.seller_id !== HOUSE_SELLER_ID ? (
+                      <span className="text-muted-foreground text-xs">
+                        {soldBy("soldBy", { seller: item.seller_name })}
                       </span>
                     ) : null}
                     {item.box_theme ? (

@@ -30,6 +30,7 @@ import {
   type CartLineView,
   freeDeliveryRemaining,
   isOtherCondition,
+  isShopLine,
   lineProblem,
   MAX_QUANTITY,
   summarizeCart,
@@ -44,6 +45,7 @@ import {
 const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
   const t = useTranslations("app.cart");
   const conditions = useTranslations("store.condition");
+  const soldBy = useTranslations("app.store.product");
   const boxText = useTranslations("web.store.product.box");
   const locale = useLocale();
   const update = useUpdateCartLine();
@@ -81,6 +83,11 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
             {item.condition && isOtherCondition(item) ? (
               <span className="text-muted-foreground text-xs">
                 {conditions(item.condition)}
+              </span>
+            ) : null}
+            {isShopLine(item) && item.seller ? (
+              <span className="text-muted-foreground text-xs">
+                {soldBy("soldBy", { seller: item.seller.name })}
               </span>
             ) : null}
             {item.box_theme ? (

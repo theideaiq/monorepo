@@ -182,6 +182,9 @@ export interface DeliveryChoice {
 /** 1 Bulb takes 100 IQD off an order. */
 export const BULB_VALUE_IQD = 100;
 
+/** The IDEA as a seller: it holds its own stock and sells next to shops. */
+export const HOUSE_SELLER_ID = "00000000-0000-4000-8000-000000000001";
+
 /** A friend's invite: 10% off the first order, at most 15,000 IQD. */
 export const INVITE_DISCOUNT_CAP = 15_000;
 
