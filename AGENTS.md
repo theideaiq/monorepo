@@ -17,7 +17,7 @@ incidents) is in `docs/platform`.
     `/store` the full catalog and product pages (buying, reviews); The IDEA
     Plus is `/plus`, everything about renting (the rental catalog with
     categories, then plans and tiers), public, with "Your Plus" (joining
-    and the waitlist at `#join`; membership, plan changes, pause and
+    and the waitlist at `#join`; your plan, plan changes, pause and
     cancel, swaps, the queue and rentals) at `#yours` when signed in; The IDEA
     Club is `/club` in three parts: Join at `#join` (events and the
     member's surveys by date or deadline, `?show=events|surveys`;
@@ -35,7 +35,8 @@ incidents) is in `docs/platform`.
     first order) and legal pages at `/legal/<policy>` (Markdown in
     `apps/web/content/legal`). Each place has one way in. Phones: the top
     bar holds the logo, search, Saved (the heart), the bell and the cart;
-    the tabs Store · Plus · Club · Pass (the cart is never a tab). Wider
+    the tabs Store · Plus · Club · Pass, with the cart in the top bar (never a
+    tab). Wider
     screens: logo · Store · Plus · Club · search · Saved · bell · cart ·
     Pass avatar ("Sign in" when signed out). The heart has no badge and
     opens `/pass/saved`; the bell shows only when signed in and only in
@@ -56,14 +57,14 @@ incidents) is in `docs/platform`.
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in` (an
     email code signs in or creates the Pass; there is no sign-up page, and
     `/onboarding` asks for the name), `/mfa`, `/tg`, `/sign-out`, the only
-    sign-in UI on the web. A person's membership *is* The IDEA Pass; never
-    show the word "account". The session cookie is shared with The IDEA
+    sign-in UI on the web. A person's Pass is The IDEA Pass; never say
+    "account" or "membership". The session cookie is shared with The IDEA
     Partners and Staff (`NEXT_PUBLIC_AUTH_COOKIE_DOMAIN`); other
     apps link here with `passUrl()` from `@repo/auth/pass` (based on
     `NEXT_PUBLIC_WEB_URL`), which only returns to allowlisted hosts
     (`isAllowedReturnTo`);
   - **The IDEA Pass pages** (`app/[locale]/pass/(member)`: `/pass` the
-    membership card, `/pass/orders`, `/pass/saved`, `/pass/bulbs` with
+    Pass card, `/pass/orders`, `/pass/saved`, `/pass/bulbs` with
     invites at `#invite`, `/pass/settings` with the address book at
     `#addresses`); `/pass/embed` (outside that
     group, no header or footer) is the live card partners frame on their
@@ -192,7 +193,7 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   Components and Server Actions (The IDEA Pass and its pages), and those
   of Staff (`apps/staff`), use `@repo/auth/server`. In
   `apps/api`, identify callers with `authenticateRequest` (Bearer token) and
-  check their membership/role. The admin client (`@repo/database/admin`)
+  check their role in the organization. The admin client (`@repo/database/admin`)
   bypasses RLS and is only for webhooks, cron jobs and other trusted server
   code. `@repo/auth/server` is for server code only (never a client component).
 - **Database:** schema changes are migrations with RLS policies and tests;
@@ -238,7 +239,8 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
   through third-party checkout inside the iOS/Android apps.
 - **Brand name:** always "The IDEA", never a bare "IDEA": The IDEA Pass,
   The IDEA Plus, The IDEA Partners, The IDEA Design, in English and Arabic copy
-  alike (Latin letters in Arabic text). A person's membership is The IDEA Pass.
+  alike (Latin letters in Arabic text). A person's Pass is The IDEA Pass;
+  Plus is "Plus" or "your plan"; never say "account" or "membership".
   Reword rather than writing "your The IDEA …". The one exception is the
   site's own name on Arabic pages (the logo and the page-title suffix),
   which is ايديا (`localizedName` in `project.json`; `projectName(locale)`
