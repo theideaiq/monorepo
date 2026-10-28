@@ -1649,7 +1649,8 @@
         "orders": "Bulk orders",
         "shopOrders": "Orders",
         "pickup": "Pickup",
-        "shopReturns": "Returns"
+        "shopReturns": "Returns",
+        "shopOffers": "Offers"
       },
       "members": {
         "title": "Members",
@@ -2715,6 +2716,43 @@
           "rejected": "Not accepted",
           "cancelled": "Withdrawn"
         }
+      },
+      "shopOffers": {
+        "title": "Offers",
+        "notApproved": "Offers open once your shop is approved.",
+        "waitingTitle": "Waiting for your answer",
+        "waitingDescription": "Accept, decline or counter once within 48 hours; offers you don't answer expire. Buyers stay anonymous until they order.",
+        "noneWaiting": "No offers waiting.",
+        "status": {
+          "open": "Waiting for you",
+          "countered": "Waiting for the buyer",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "expired": "Expired",
+          "withdrawn": "Withdrawn",
+          "purchased": "Ordered"
+        },
+        "amounts": "Offer {offer} · your price {price}",
+        "answerBy": "Answer by {time}.",
+        "waitingBuyer": "You countered; the buyer answers by {time}.",
+        "accept": "Accept {amount}",
+        "decline": "Decline",
+        "counter": "Counter",
+        "counterLabel": "Your counter-offer (IQD)",
+        "counterPlaceholder": "Amount in IQD",
+        "failed": "That didn't work. Refresh and try again.",
+        "settingsTitle": "Which listings take offers",
+        "settingsDescription": "Offers start at 60% of the price. Leave the automatic amounts empty to answer every offer yourself; listings on sale never take offers.",
+        "noListings": "No listings with copies for sale yet.",
+        "takeOffers": "Take offers",
+        "autoAccept": "Accept automatically from (IQD)",
+        "autoDecline": "Decline automatically below (IQD)",
+        "save": "Save",
+        "saving": "Saving…",
+        "saved": "Saved",
+        "amountsInvalid": "Use whole amounts, with the decline amount at or below the accept amount.",
+        "otherTitle": "Last 30 days",
+        "noneOther": "No other offers in the last 30 days."
       }
     },
     "ages": {
@@ -2785,6 +2823,50 @@
         "too_many": "Too many tries. Wait a while and try again.",
         "unavailable": "Something went wrong. Try again.",
         "wrong_code": "That code isn't right."
+      }
+    },
+    "offers": {
+      "make": {
+        "button": "Make an offer",
+        "label": "Your offer (IQD)",
+        "range": "From {min}, up to just under {price}. The seller answers within 48 hours.",
+        "send": "Send offer",
+        "sending": "Sending…",
+        "signIn": "Sign in to make an offer",
+        "result": {
+          "sent": "Offer sent: {amount}. The seller has 48 hours to answer.",
+          "accepted": "Accepted! It's in your cart at {amount} for 24 hours.",
+          "declined": "The seller declined {amount}. You can try a higher offer."
+        },
+        "follow": "Follow it in Saved",
+        "viewCart": "View cart",
+        "duplicate": "You already have an offer on this. Follow it in Pass → Saved.",
+        "failed": "Couldn't send the offer. Check the amount and try again."
+      },
+      "mine": {
+        "title": "Your offers",
+        "description": "Offers you've made on items. An accepted offer stays in your cart at that price for 24 hours.",
+        "status": {
+          "open": "Waiting for the seller",
+          "countered": "Counter-offer",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "expired": "Expired",
+          "withdrawn": "Withdrawn",
+          "purchased": "Bought"
+        },
+        "amounts": "Your offer {offer} · price {price}",
+        "countered": "The seller asks {amount}. Answer by {time}.",
+        "waiting": "The seller answers by {time}.",
+        "inCart": "In your cart at {amount} until {time}.",
+        "viewCart": "View cart",
+        "accept": "Accept {amount}",
+        "decline": "Decline",
+        "counter": "Counter",
+        "counterLabel": "Your counter-offer (IQD)",
+        "counterPlaceholder": "Amount in IQD",
+        "withdraw": "Withdraw",
+        "failed": "That didn't work. Refresh and try again."
       }
     }
   },
@@ -3234,7 +3316,8 @@
           "lateShopLines": "Shop lines past their ready-by time",
           "shopRefunds": "Shop lines to refund",
           "disputedReturns": "Returns to decide",
-          "returnRefunds": "Return refunds to send"
+          "returnRefunds": "Return refunds to send",
+          "houseOffers": "Offers on The IDEA's stock"
         }
       }
     },
@@ -3246,7 +3329,8 @@
         "plans": "Plans",
         "settings": "Delivery",
         "import": "Import",
-        "checks": "Checks"
+        "checks": "Checks",
+        "offers": "Offers"
       },
       "filters": {
         "anyKind": "All lines",
@@ -3584,6 +3668,35 @@
           "banned": "Banned item (kept as a draft)",
           "duplicate": "Likely duplicate"
         }
+      },
+      "offers": {
+        "title": "Offers",
+        "description": "Make an offer on The IDEA's own stock: answer within 48 hours, or the offer expires. Offers below the margin floor are declined automatically.",
+        "waitingTitle": "Waiting for an answer",
+        "waitingEmpty": "No offers waiting.",
+        "recentTitle": "Recently answered",
+        "recentEmpty": "No answered offers yet.",
+        "amounts": "Offer {offer} · price {price}",
+        "answerBy": "Answer by {time}",
+        "status": {
+          "open": "Waiting",
+          "countered": "Countered",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "expired": "Expired",
+          "withdrawn": "Withdrawn",
+          "purchased": "Ordered"
+        },
+        "accept": "Accept {amount}",
+        "decline": "Decline",
+        "counter": "Counter",
+        "counterLabel": "Counter-offer (IQD)",
+        "panelTitle": "Offers",
+        "panelDescription": "Which of The IDEA's copies for sale take offers. Leave the automatic amounts empty to answer each offer in Catalog → Offers; the margin floor always applies.",
+        "takeOffers": "Take offers",
+        "autoAccept": "Accept from (IQD)",
+        "autoDecline": "Decline below (IQD)",
+        "save": "Save"
       }
     },
     "orders": {

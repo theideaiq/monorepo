@@ -1,5 +1,6 @@
 import "server-only";
 
+import { HOUSE_SELLER_ID } from "@repo/commerce";
 import type { StaffRole } from "@repo/database";
 import { awaitingFulfilment } from "./fulfilment";
 import { canRead } from "./roles";
@@ -25,6 +26,7 @@ export const inboxItems = [
   "passApps",
   "productChecks",
   "productFlags",
+  "houseOffers",
   "telegram",
   "procurement",
   "seats",
@@ -43,6 +45,7 @@ const head = { count: "exact", head: true } as const;
 
 const hrefs: Record<InboxItem, string> = {
   disputedReturns: "/orders/returns",
+  houseOffers: "/catalog/offers",
   invoices: "/partners/invoices",
   lateShopLines: "/orders/shop-lines",
   orders: "/orders?status=awaiting",
@@ -92,6 +95,7 @@ export const loadInbox = async (
     shopRefunds,
     disputedReturns,
     returnRefunds,
+    houseOffers,
   ] = await Promise.all([
     counted(can("support"), () =>
       supabase
@@ -168,10 +172,18 @@ export const loadInbox = async (
     counted(can("orders") && finance, () =>
       supabase.from("returns").select("id", head).eq("status", "refund_due")
     ),
+    counted(can("catalog"), () =>
+      supabase
+        .from("offers")
+        .select("id", head)
+        .eq("seller_id", HOUSE_SELLER_ID)
+        .eq("status", "open")
+    ),
   ]);
 
   const counts: Record<InboxItem, number> = {
     disputedReturns,
+    houseOffers,
     invoices,
     lateShopLines,
     orders,

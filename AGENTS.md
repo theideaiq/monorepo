@@ -88,7 +88,9 @@ incidents) is in `docs/platform`.
   the customer only as "first name · area": ready for pickup at a branch,
   print labels, out of stock), `/selling/returns` (requests to accept or
   dispute within 48 hours, items to check once back, refused parcels to
-  confirm) and `/selling/pickup` (its branches, each a Boxy pickup
+  confirm), `/selling/offers` (buyers' offers to accept, decline or
+  counter within 48 hours, and which listings take offers, with automatic
+  accept and decline amounts) and `/selling/pickup` (its branches, each a Boxy pickup
   location),
   Perks `/perks`,
   Team `/team` (bulk orders for the organization, with `/team/<id>` for a
@@ -108,7 +110,9 @@ incidents) is in `docs/platform`.
   - the console at its root (`app/[locale]/(console)`), one menu
     (`menu` in `lib/admin/roles.ts`): Inbox `/` (with `/support`) ·
     Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
-    automatic checks on products shops create and shops' flags) · Orders and delivery
+    automatic checks on products shops create and shops' flags, and
+    `/catalog/offers`, offers on The IDEA's own stock; each product's page
+    sets which of its copies take offers) · Orders and delivery
     `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
     and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·
     Club `/club` (with `/club/telegram`) · Partners `/partners` (Team

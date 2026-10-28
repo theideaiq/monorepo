@@ -15,6 +15,7 @@ import { HeartIcon, ShoppingCartIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { MyOffers } from "@/components/store/my-offers";
 import { Price } from "@/components/store/price";
 import { productHref } from "@/components/store/product-card";
 import { ProductImage } from "@/components/store/product-image";
@@ -163,6 +164,7 @@ export const Wishlist = () => {
             ))}
           </ul>
         ) : null}
+        <MyOffers />
       </div>
     </>
   );
