@@ -306,8 +306,8 @@ $$;
 
 revoke all on function private.student_check_result(uuid) from public, anon, authenticated;
 
--- "Your student status" is deleted: the badge goes and the codes stop
--- working; the 30-day records lose the Pass. Returns whether the Pass is
+-- "Your student status" is deleted: the badge goes, a pending request is
+-- withdrawn and the codes stop working; the 30-day records lose the Pass. Returns whether the Pass is
 -- bare, so the API deletes it too.
 create function private.forget_student_status()
 returns boolean
@@ -323,8 +323,9 @@ begin
     raise exception 'Not authenticated' using errcode = 'insufficient_privilege';
   end if;
   delete from public.student_badges where user_id = caller;
-  update public.student_requests set status = 'cancelled', code_hash = null, email = null
-  where user_id = caller and status = 'pending' and method = 'email';
+  -- A card waiting for review is withdrawn; the API deletes the photo.
+  update public.student_requests set status = 'cancelled', code_hash = null, email = null, card_path = null
+  where user_id = caller and status = 'pending';
   update public.student_checks set user_id = null, code_expires_at = least(code_expires_at, now())
   where user_id = caller;
   select p.student_only into bare from public.profiles p where p.id = caller;
