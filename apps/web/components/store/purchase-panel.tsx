@@ -26,6 +26,7 @@ import { WishlistButton } from "@/components/store/wishlist-button";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import { MAX_QUANTITY } from "@/lib/cart";
 import { useAddToCart } from "@/lib/store-queries";
+import { NotifyMe } from "./notify-me";
 import { Price } from "./price";
 
 interface VariantPickerProps {
@@ -437,6 +438,9 @@ export const PurchasePanel = ({
         <p className="text-destructive text-sm" role="alert">
           {t("addFailed")}
         </p>
+      ) : null}
+      {product.status === "active" && product.stock_count === 0 ? (
+        <NotifyMe productId={product.id} slug={product.slug} />
       ) : null}
       <AlsoRent offers={offers} product={product} variant={chosenVariant} />
     </div>

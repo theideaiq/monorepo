@@ -95,7 +95,8 @@ incidents) is in `docs/platform`.
   with a `proxy.ts`:
   - the console at its root (`app/[locale]/(console)`), one menu
     (`menu` in `lib/admin/roles.ts`): Inbox `/` (with `/support`) ·
-    Catalog `/catalog` (with `/catalog/reviews`) · Orders and delivery
+    Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
+    automatic checks on products shops create and shops' flags) · Orders and delivery
     `/orders` · Rentals and Plus `/rentals` · Customers `/customers` ·
     Club `/club` (with `/club/telegram`) · Partners `/partners` (with
     `/partners/shops`, where staff approve shops) · Counter

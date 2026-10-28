@@ -98,6 +98,14 @@ describe("notifications", () => {
         kind: "support",
       }).body
     ).toBe("We replied to ticket #1001: Late delivery");
+
+    const available = {
+      data: { name_ar: "كثيب", name_en: "Dune" },
+      event: "product_available",
+      kind: "system" as const,
+    };
+    expect(render(available).body).toBe("Dune is on offer on The IDEA now.");
+    expect(render(available, "ar").body).toContain("كثيب");
   });
 
   test("falls back for unknown events and odd data", () => {

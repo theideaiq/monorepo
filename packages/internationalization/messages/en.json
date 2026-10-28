@@ -1151,6 +1151,13 @@
           "lateFee": "{fee} a day if it's late; after {days} late it's charged at its used price",
           "cta": "Rent it",
           "rentedOut": "All copies are rented out right now."
+        },
+        "notify": {
+          "none": "No one has this on offer right now.",
+          "notify": "Notify me",
+          "waiting": "We'll tell you when it's on offer.",
+          "stop": "Stop notifying me",
+          "failed": "That didn't work. Try again."
         }
       }
     },
@@ -2788,6 +2795,10 @@
         "pass_app_declined": {
           "title": "Your app's request wasn't approved",
           "body": "{name} keeps working with the basic answers. Open it to see our note."
+        },
+        "product_available": {
+          "title": "It's on offer",
+          "body": "{name} is on offer on The IDEA now."
         }
       },
       "kinds": {
@@ -2989,7 +3000,9 @@
           "seats": "The IDEA Plus seats to approve",
           "invoices": "Overdue company invoices",
           "surveys": "Surveys to review",
-          "passApps": "Pass apps to review"
+          "passApps": "Pass apps to review",
+          "productChecks": "New products to check",
+          "productFlags": "Products shops say are wrong"
         }
       }
     },
@@ -3000,7 +3013,8 @@
         "categories": "Categories",
         "plans": "Plans",
         "settings": "Delivery",
-        "import": "Import"
+        "import": "Import",
+        "checks": "Checks"
       },
       "filters": {
         "anyKind": "All lines",
@@ -3323,6 +3337,29 @@
           "rented": "Rented out",
           "repair": "In repair",
           "retired": "Retired"
+        }
+      },
+      "checks": {
+        "title": "Checks",
+        "description": "New products from shops that the automatic checks flagged, and shops' reports of wrong details. Fix or merge the product, then mark it resolved.",
+        "checksTitle": "Automatic checks",
+        "checksEmpty": "No new products to check.",
+        "flagsTitle": "Flags from shops",
+        "flagsEmpty": "No flags from shops.",
+        "product": "Product",
+        "reason": "Found",
+        "shop": "Shop",
+        "note": "What's wrong",
+        "date": "Date",
+        "resolve": "Resolved",
+        "deleted": "Deleted product",
+        "notLive": "Not live",
+        "duplicateOf": "Looks like",
+        "reasons": {
+          "missing_fields": "Missing details",
+          "missing_photo": "No photo",
+          "banned": "Banned item (kept as a draft)",
+          "duplicate": "Likely duplicate"
         }
       }
     },
