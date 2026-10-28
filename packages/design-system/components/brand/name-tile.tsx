@@ -14,7 +14,7 @@ interface NameTileProps {
 
 /**
  * A name tile, the avatar language of The IDEA's Telegram community: one
- * Readex Pro 700 word across about 70% of a circle (or a square with 22%
+ * Alexandria 700 word across about 70% of a circle (or a square with 22%
  * corners). Without a word: the yellow bulb on pink.
  */
 export const NameTile = ({

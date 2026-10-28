@@ -93,7 +93,7 @@ const WishlistLine = ({ product }: { readonly product: Product }) => {
             </Button>
           ) : null}
           {action === "rent" ? (
-            <Button asChild size="sm" variant="plus">
+            <Button asChild size="sm">
               <Link href="/plus">{t("rentWithPlus")}</Link>
             </Button>
           ) : null}

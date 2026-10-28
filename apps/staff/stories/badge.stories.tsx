@@ -64,17 +64,14 @@ const tones = [
   "neutral",
   "brand",
   "highlight",
-  "plus",
-  "business",
-  "club",
   "success",
   "warning",
   "danger",
 ] as const;
 
 /**
- * Every tone. Product accents (plus, business, club) only
- * on their own line's pages; status tones always carry an icon and a word.
+ * Every tone. One palette for every product: no product accents;
+ * status tones always carry an icon and a word.
  */
 export const Tones: Story = {
   render: () => (

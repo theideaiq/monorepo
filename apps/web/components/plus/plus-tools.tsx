@@ -172,7 +172,7 @@ const BookedSwap = ({
     ? t("onDate", { date: formatDate(swap.scheduled_for, locale) })
     : t("dateSoon");
   return (
-    <div className="grid gap-2 rounded-md border border-plus p-4 text-sm">
+    <div className="grid gap-2 rounded-md border border-idea-pink p-4 text-sm">
       <p className="font-medium">{t("booked")}</p>
       <p>{when}</p>
       {swap.fee > 0 && swap.order_id ? (

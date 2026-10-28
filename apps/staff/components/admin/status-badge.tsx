@@ -13,7 +13,7 @@ export type Tone =
 const tones: Record<Tone, string> = {
   brand: "bg-bulb-yellow/20 text-foreground border-bulb-yellow/60",
   danger: "bg-danger/10 text-danger border-danger/40",
-  info: "bg-business/10 text-business border-business/30",
+  info: "bg-surface-sunken text-foreground border-border-strong",
   neutral: "bg-muted text-muted-foreground border-border",
   success: "bg-success/10 text-success border-success/30",
   warning: "bg-warning/10 text-warning border-warning/40",

@@ -42,7 +42,7 @@ const ProductTile = ({ rental }: { rental?: boolean }) => (
     ) : (
       <p className="font-bold font-mono text-lg">720,000 IQD</p>
     )}
-    <Button className="w-full" variant={rental ? "plus" : "default"}>
+    <Button className="w-full" variant="default">
       {rental ? "Rent with The IDEA Plus" : "Buy"}
     </Button>
   </div>
@@ -52,12 +52,12 @@ const PlanTile = ({ featured }: { featured?: boolean }) => (
   <div
     className={
       featured
-        ? "relative flex w-72 flex-col gap-6 rounded-xl border-2 border-plus bg-card p-6 shadow-2"
+        ? "relative flex w-72 flex-col gap-6 rounded-xl border-2 border-idea-pink bg-card p-6 shadow-2"
         : "relative flex w-72 flex-col gap-6 rounded-xl border bg-card p-6 shadow-1"
     }
   >
     {featured ? (
-      <span className="absolute start-6 -top-3 rounded-full bg-plus px-3 py-1 font-semibold text-on-accent text-xs">
+      <span className="absolute start-6 -top-3 rounded-full bg-idea-pink px-3 py-1 font-semibold text-on-pink text-xs">
         Recommended
       </span>
     ) : null}
@@ -93,7 +93,7 @@ export const Product: Story = {
   ),
 };
 
-/** The featured plan: 2px Plus Violet border, violet flag, pink button. */
+/** The featured plan: 2px pink border, pink flag, pink button. */
 export const Plan: Story = {
   render: () => (
     <div className="flex flex-wrap gap-6 pt-4">

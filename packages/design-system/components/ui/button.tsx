@@ -14,8 +14,6 @@ const buttonVariants = cva(
         // The primary action on pink grounds (PinkBand): yellow, dark text.
         brand:
           "bg-bulb-yellow text-on-yellow hover:bg-bulb-yellow-hover active:bg-bulb-yellow-hover",
-        // Only "Rent with The IDEA Plus".
-        plus: "bg-plus text-on-accent hover:bg-plus/90",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:

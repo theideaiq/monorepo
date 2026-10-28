@@ -48,11 +48,6 @@ export const Brand: Story = {
   ],
 };
 
-/** `plus`: Plus Violet, only for "Rent with The IDEA Plus". */
-export const Plus: Story = {
-  args: { children: "Rent with The IDEA Plus", variant: "plus" },
-};
-
 /** Heights 36 (default), 44 (lg) and 52 (xl). */
 export const Heights: Story = {
   render: (args) => (

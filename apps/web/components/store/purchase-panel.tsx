@@ -201,7 +201,7 @@ const RentPanel = ({
       <div className="grid gap-3 rounded-md border p-4">
         <p className="text-sm">{t("rentalOnly")}</p>
         <div className="flex flex-wrap gap-3">
-          <Button asChild variant="plus">
+          <Button asChild>
             <Link href="/plus">{t("goToPlus")}</Link>
           </Button>
           <WishlistButton productId={product.id} withLabel />
@@ -242,7 +242,10 @@ const AlsoRent = ({
         variantId={variant?.id ?? null}
       />
       <p className="text-sm">
-        <Link className="font-medium text-plus hover:underline" href="/plus">
+        <Link
+          className="font-medium text-pink-text hover:underline"
+          href="/plus"
+        >
           {t("alsoRent")}
         </Link>
       </p>

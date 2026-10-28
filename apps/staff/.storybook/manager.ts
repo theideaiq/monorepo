@@ -19,7 +19,7 @@ addons.setConfig({
     colorPrimary: "#d81b60",
     colorSecondary: "#d81b60",
     fontBase:
-      "'Readex Pro', Cairo, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif",
+      "Alexandria, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif",
     textColor: "#0f1014",
     textMutedColor: "#5b5d66",
   }),

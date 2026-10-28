@@ -138,7 +138,7 @@ const PlusPanel = () => {
   return (
     <Panel
       action={<ViewAll href="/plus#yours" />}
-      icon={<CrownIcon className="size-5 text-plus" />}
+      icon={<CrownIcon className="size-5 text-pink-text" />}
       title={t("title")}
     >
       {subscription.isPending ? <SectionSpinner className="py-6" /> : null}

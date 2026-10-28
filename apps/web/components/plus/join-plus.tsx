@@ -198,7 +198,7 @@ const WaitlistPlace = ({ status }: { readonly status: PlusStatus }) => {
 
   if (status.waitlistStatus === "invited" && status.inviteExpiresAt) {
     return (
-      <p className="rounded-md bg-plus/10 p-3 text-sm" role="status">
+      <p className="rounded-md bg-surface-sunken p-3 text-sm" role="status">
         {t("invited", {
           until: formatDateTime(status.inviteExpiresAt, locale),
         })}
@@ -325,7 +325,7 @@ export const JoinPlus = () => {
     <Card id="join">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <MapPinIcon aria-hidden="true" className="size-5 text-plus" />
+          <MapPinIcon aria-hidden="true" className="size-5 text-pink-text" />
           {t("title")}
         </CardTitle>
         <CardDescription>{t("description")}</CardDescription>

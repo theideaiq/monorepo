@@ -1,6 +1,7 @@
 import { project } from "@repo/config";
 import { cn } from "../lib/utils";
 import { Bulb } from "./brand/bulb";
+import { Wordmark } from "./brand/wordmark";
 
 /** The grounds the logo sits on (BRAND_GUIDELINES.md, section 4). */
 export type BrandLogoVariant =
@@ -54,13 +55,14 @@ const arabicName = project.localizedName?.ar;
 
 /**
  * The IDEA's lock-up: the bulb, a gap of a third of its height, then the
- * wordmark in Readex Pro 700 (−1% tracking); the bulb is 1.6 × the cap
- * height. Every app renders the brand through this component.
+ * wordmark (the outlined drawing, never live text); the bulb is 1.6 × the
+ * cap height. Every app renders the brand through this component, and
+ * screen readers hear the name.
  *
  * On Arabic pages (`lang="ar"`) the name alone is the Arabic one from
- * `project.json`, chosen in CSS so this works in server and client
- * components; a line lock-up keeps the Latin product name ("The IDEA
- * Partners"), set left-to-right.
+ * `project.json`, set in the text font and chosen in CSS so this works in
+ * server and client components; a product lock-up keeps the wordmark and
+ * adds the short name ("Partners") in weight 600, left-to-right.
  */
 export const BrandLogo = ({
   className,
@@ -77,18 +79,28 @@ export const BrandLogo = ({
   >
     <Bulb className={cn("size-[1.15em] shrink-0", bulbColor[variant])} />
     {showName ? (
-      <span className={cn("whitespace-nowrap", wordColor[variant])}>
+      <span
+        className={cn(
+          "inline-flex items-center whitespace-nowrap",
+          wordColor[variant]
+        )}
+      >
         {arabicName && !line ? (
           <>
-            <span className="[&:lang(ar)]:hidden" dir="ltr">
-              {project.name}
+            <span
+              className="inline-flex items-center [&:lang(ar)]:hidden"
+              dir="ltr"
+            >
+              <Wordmark className="h-[0.72em] w-auto" />
+              <span className="sr-only">{project.name}</span>
             </span>
             <span className="hidden [&:lang(ar)]:inline">{arabicName}</span>
           </>
         ) : (
-          <span dir="ltr">
-            {project.name}
-            {line ? <span className="font-semibold"> {line}</span> : null}
+          <span className="inline-flex items-center gap-[0.28em]" dir="ltr">
+            <Wordmark className="h-[0.72em] w-auto" />
+            <span className="sr-only">{project.name}</span>
+            {line ? <span className="font-semibold">{line}</span> : null}
           </span>
         )}
       </span>
