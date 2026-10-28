@@ -180,6 +180,90 @@ export type Database = {
           },
         ];
       };
+      campaign_entries: {
+        Row: {
+          campaign_id: string;
+          created_at: string;
+          discount_rate: number;
+          seller_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          campaign_id: string;
+          created_at?: string;
+          discount_rate: number;
+          seller_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          campaign_id?: string;
+          created_at?: string;
+          discount_rate?: number;
+          seller_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "campaign_entries_campaign_id_fkey";
+            columns: ["campaign_id"];
+            isOneToOne: false;
+            referencedRelation: "campaigns";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "campaign_entries_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      campaigns: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          description_ar: string | null;
+          description_en: string | null;
+          ends_at: string;
+          id: string;
+          name_ar: string;
+          name_en: string;
+          published: boolean;
+          slug: string;
+          starts_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          description_ar?: string | null;
+          description_en?: string | null;
+          ends_at: string;
+          id?: string;
+          name_ar: string;
+          name_en: string;
+          published?: boolean;
+          slug: string;
+          starts_at: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          description_ar?: string | null;
+          description_en?: string | null;
+          ends_at?: string;
+          id?: string;
+          name_ar?: string;
+          name_en?: string;
+          published?: boolean;
+          slug?: string;
+          starts_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       cart_items: {
         Row: {
           condition: Database["public"]["Enums"]["product_condition"] | null;
@@ -5478,6 +5562,22 @@ export type Database = {
           value_iqd: number;
         }[];
       };
+      campaign_listings: {
+        Args: { campaign_slug: string };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          images: string[];
+          name_ar: string;
+          name_en: string;
+          price: number;
+          product_id: string;
+          regular_price: number;
+          seller_id: string;
+          seller_name: string;
+          slug: string;
+          variant_id: string;
+        }[];
+      };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
       cancel_payout: {
         Args: { target: string };
@@ -6321,6 +6421,22 @@ export type Database = {
         Args: { address: string; member: string; university: string };
         Returns: string;
       };
+      join_campaign: {
+        Args: { campaign: string; rate: number; seller: string };
+        Returns: {
+          campaign_id: string;
+          created_at: string;
+          discount_rate: number;
+          seller_id: string;
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "campaign_entries";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       join_plus_waitlist: {
         Args: { governorate: string; plan: string };
         Returns: number;
@@ -6374,6 +6490,10 @@ export type Database = {
           starts_on: string;
           units_free: number;
         }[];
+      };
+      leave_campaign: {
+        Args: { campaign: string; seller: string };
+        Returns: undefined;
       };
       leave_plus_waitlist: {
         Args: Record<PropertyKey, never>;
