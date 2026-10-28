@@ -1006,6 +1006,149 @@ export type Database = {
         };
         Relationships: [];
       };
+      offer_settings: {
+        Row: {
+          accept_offers: boolean;
+          auto_accept_at: number | null;
+          auto_decline_below: number | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          seller_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        Insert: {
+          accept_offers?: boolean;
+          auto_accept_at?: number | null;
+          auto_decline_below?: number | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          seller_id: string;
+          updated_at?: string;
+          variant_id: string;
+        };
+        Update: {
+          accept_offers?: boolean;
+          auto_accept_at?: number | null;
+          auto_decline_below?: number | null;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          seller_id?: string;
+          updated_at?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "offer_settings_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "offer_settings_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      offers: {
+        Row: {
+          accepted_at: string | null;
+          amount: number;
+          answered_by: string | null;
+          buyer_amount: number;
+          buyer_counter: number | null;
+          buyer_id: string;
+          cart_until: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          expires_at: string;
+          id: string;
+          list_price: number;
+          number: number;
+          order_item_id: string | null;
+          product_id: string;
+          seller_counter: number | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["offer_status"];
+          updated_at: string;
+          variant_id: string;
+        };
+        Insert: {
+          accepted_at?: string | null;
+          amount: number;
+          answered_by?: string | null;
+          buyer_amount: number;
+          buyer_counter?: number | null;
+          buyer_id: string;
+          cart_until?: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          expires_at?: string;
+          id?: string;
+          list_price: number;
+          number?: never;
+          order_item_id?: string | null;
+          product_id: string;
+          seller_counter?: number | null;
+          seller_id: string;
+          status?: Database["public"]["Enums"]["offer_status"];
+          updated_at?: string;
+          variant_id: string;
+        };
+        Update: {
+          accepted_at?: string | null;
+          amount?: number;
+          answered_by?: string | null;
+          buyer_amount?: number;
+          buyer_counter?: number | null;
+          buyer_id?: string;
+          cart_until?: string | null;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          expires_at?: string;
+          id?: string;
+          list_price?: number;
+          number?: never;
+          order_item_id?: string | null;
+          product_id?: string;
+          seller_counter?: number | null;
+          seller_id?: string;
+          status?: Database["public"]["Enums"]["offer_status"];
+          updated_at?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "offers_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "offers_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "offers_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "offers_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       order_items: {
         Row: {
           attributes: NonNullable<Json>;
@@ -3756,6 +3899,7 @@ export type Database = {
           id: boolean;
           max_giveaway_rate: number;
           min_margin_rate: number;
+          offer_floor_rate: number;
           payment_fee_rate: number;
           plus_capacity: number;
           plus_invite_hours: number;
@@ -3777,6 +3921,7 @@ export type Database = {
           id?: boolean;
           max_giveaway_rate?: number;
           min_margin_rate?: number;
+          offer_floor_rate?: number;
           payment_fee_rate?: number;
           plus_capacity?: number;
           plus_invite_hours?: number;
@@ -3798,6 +3943,7 @@ export type Database = {
           id?: boolean;
           max_giveaway_rate?: number;
           min_margin_rate?: number;
+          offer_floor_rate?: number;
           payment_fee_rate?: number;
           plus_capacity?: number;
           plus_invite_hours?: number;
@@ -4923,6 +5069,37 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      answer_offer: {
+        Args: { answer: string; counter?: number; target: string };
+        Returns: {
+          accepted_at: string | null;
+          amount: number;
+          answered_by: string | null;
+          buyer_amount: number;
+          buyer_counter: number | null;
+          buyer_id: string;
+          cart_until: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          expires_at: string;
+          id: string;
+          list_price: number;
+          number: number;
+          order_item_id: string | null;
+          product_id: string;
+          seller_counter: number | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["offer_status"];
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       apply_to_sell: {
         Args: { org: string; seller_name: string };
         Returns: {
@@ -5942,6 +6119,42 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      make_offer: {
+        Args: {
+          offered: number;
+          seller: string;
+          variant: string;
+          wanted: Database["public"]["Enums"]["product_condition"];
+        };
+        Returns: {
+          accepted_at: string | null;
+          amount: number;
+          answered_by: string | null;
+          buyer_amount: number;
+          buyer_counter: number | null;
+          buyer_id: string;
+          cart_until: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          expires_at: string;
+          id: string;
+          list_price: number;
+          number: number;
+          order_item_id: string | null;
+          product_id: string;
+          seller_counter: number | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["offer_status"];
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       mark_cash_collected: {
         Args: { order_id: string };
         Returns: {
@@ -6212,6 +6425,15 @@ export type Database = {
         }[];
       };
       notify_rentals_due_soon: { Args: { within?: string }; Returns: number };
+      offerable_listings: {
+        Args: { item: string };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          min_offer: number;
+          seller_id: string;
+          variant_id: string;
+        }[];
+      };
       open_support_ticket_for: {
         Args: {
           customer: string;
@@ -6922,6 +7144,31 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      set_offer_settings: {
+        Args: {
+          accept: boolean;
+          accept_at?: number;
+          decline_below?: number;
+          seller: string;
+          variant: string;
+          wanted: Database["public"]["Enums"]["product_condition"];
+        };
+        Returns: {
+          accept_offers: boolean;
+          auto_accept_at: number | null;
+          auto_decline_below: number | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          seller_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "offer_settings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       set_pass_app_keys: {
         Args: { client: string; jwks: Json };
         Returns: undefined;
@@ -7141,6 +7388,37 @@ export type Database = {
         Args: { client: string; suspend: boolean };
         Returns: undefined;
       };
+      sweep_offers: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          accepted_at: string | null;
+          amount: number;
+          answered_by: string | null;
+          buyer_amount: number;
+          buyer_counter: number | null;
+          buyer_id: string;
+          cart_until: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          expires_at: string;
+          id: string;
+          list_price: number;
+          number: number;
+          order_item_id: string | null;
+          product_id: string;
+          seller_counter: number | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["offer_status"];
+          updated_at: string;
+          variant_id: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "offers";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
       sweep_returns: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -7236,6 +7514,37 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      withdraw_offer: {
+        Args: { target: string };
+        Returns: {
+          accepted_at: string | null;
+          amount: number;
+          answered_by: string | null;
+          buyer_amount: number;
+          buyer_counter: number | null;
+          buyer_id: string;
+          cart_until: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          expires_at: string;
+          id: string;
+          list_price: number;
+          number: number;
+          order_item_id: string | null;
+          product_id: string;
+          seller_counter: number | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["offer_status"];
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
     };
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
@@ -7260,6 +7569,14 @@ export type Database = {
         | "promo"
         | "system"
         | "trade_in";
+      offer_status:
+        | "open"
+        | "countered"
+        | "accepted"
+        | "declined"
+        | "expired"
+        | "withdrawn"
+        | "purchased";
       order_fulfilment: "delivery" | "pickup";
       order_payment_method: "online" | "cash_on_delivery";
       order_status:
@@ -7526,6 +7843,15 @@ export const Constants = {
         "promo",
         "system",
         "trade_in",
+      ],
+      offer_status: [
+        "open",
+        "countered",
+        "accepted",
+        "declined",
+        "expired",
+        "withdrawn",
+        "purchased",
       ],
       order_fulfilment: ["delivery", "pickup"],
       order_payment_method: ["online", "cash_on_delivery"],

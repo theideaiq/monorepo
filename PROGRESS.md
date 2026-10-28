@@ -553,6 +553,24 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: Selling, Make an offer, the schema
+  (`20270125000000_offers.sql`; master brief step 5, section 14 without
+  auctions). A listing (seller, variant, condition) takes offers when its
+  shop's owners or admins, or Staff for The IDEA's stock, turn it on
+  (`offer_settings`, `set_offer_settings`), optionally with an amount that
+  accepts at once and one that declines. Never on items on sale (a
+  compare-at price), rentals or anything not a sale copy.
+  `offerable_listings()` tells the product page which listings take offers
+  and the lowest offer (60% of the price, `store_settings.offer_floor_rate`).
+  `make_offer()` allows one open offer per listing and 3 per seller; The
+  IDEA's stock declines offers below its margin floor. `answer_offer()`:
+  the seller accepts, declines or counters, the buyer answers a counter;
+  one counter each way, 48 hours per move (`sweep_offers()` expires them).
+  An accepted offer puts one copy in the buyer's cart at that price for 24
+  hours (`price_checkout`), and ordering it marks the offer purchased. The
+  buyer gets a bell notification for the seller's answer. Part 2: the
+  product page, Pass → Saved (offers), Partners → Selling → Offers and
+  Staff for The IDEA's stock, with the bell copy for offer events.
 - 2026-10-28: Selling, shop orders, part 2. Partners → Selling gains
   Orders (`/selling/orders`: lines to pack with their ready-by time, the
   customer as "Ali · Karrada" and the payout; choose lines, the branch and
