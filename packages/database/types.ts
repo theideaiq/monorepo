@@ -268,6 +268,35 @@ export type Database = {
         };
         Relationships: [];
       };
+      commission_rates: {
+        Row: {
+          category_id: string;
+          pro_rate: number;
+          standard_rate: number;
+          updated_at: string;
+        };
+        Insert: {
+          category_id: string;
+          pro_rate: number;
+          standard_rate: number;
+          updated_at?: string;
+        };
+        Update: {
+          category_id?: string;
+          pro_rate?: number;
+          standard_rate?: number;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "commission_rates_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: true;
+            referencedRelation: "product_categories";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       crm_contacts: {
         Row: {
           last_contacted_at: string | null;
@@ -980,6 +1009,8 @@ export type Database = {
       order_items: {
         Row: {
           attributes: NonNullable<Json>;
+          commission: number | null;
+          commission_rate: number | null;
           condition: Database["public"]["Enums"]["product_condition"] | null;
           id: string;
           kind: string;
@@ -993,11 +1024,14 @@ export type Database = {
           rental_id: string | null;
           seller_id: string | null;
           seller_name: string | null;
+          seller_payout: number | null;
           unit_price: number;
           variant_id: string | null;
         };
         Insert: {
           attributes?: NonNullable<Json>;
+          commission?: number | null;
+          commission_rate?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
           kind?: string;
@@ -1011,11 +1045,14 @@ export type Database = {
           rental_id?: string | null;
           seller_id?: string | null;
           seller_name?: string | null;
+          seller_payout?: number | null;
           unit_price: number;
           variant_id?: string | null;
         };
         Update: {
           attributes?: NonNullable<Json>;
+          commission?: number | null;
+          commission_rate?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
           kind?: string;
@@ -1029,6 +1066,7 @@ export type Database = {
           rental_id?: string | null;
           seller_id?: string | null;
           seller_name?: string | null;
+          seller_payout?: number | null;
           unit_price?: number;
           variant_id?: string | null;
         };
@@ -3174,6 +3212,9 @@ export type Database = {
           is_house: boolean;
           name: string;
           organization_id: string | null;
+          plan: Database["public"]["Enums"]["seller_plan"];
+          plan_billing: string | null;
+          plan_since: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
         };
@@ -3186,6 +3227,9 @@ export type Database = {
           is_house?: boolean;
           name: string;
           organization_id?: string | null;
+          plan?: Database["public"]["Enums"]["seller_plan"];
+          plan_billing?: string | null;
+          plan_since?: string | null;
           status?: Database["public"]["Enums"]["seller_status"];
           updated_at?: string;
         };
@@ -3198,6 +3242,9 @@ export type Database = {
           is_house?: boolean;
           name?: string;
           organization_id?: string | null;
+          plan?: Database["public"]["Enums"]["seller_plan"];
+          plan_billing?: string | null;
+          plan_since?: string | null;
           status?: Database["public"]["Enums"]["seller_status"];
           updated_at?: string;
         };
@@ -4605,6 +4652,9 @@ export type Database = {
           is_house: boolean;
           name: string;
           organization_id: string | null;
+          plan: Database["public"]["Enums"]["seller_plan"];
+          plan_billing: string | null;
+          plan_since: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
         };
@@ -5254,6 +5304,9 @@ export type Database = {
           is_house: boolean;
           name: string;
           organization_id: string | null;
+          plan: Database["public"]["Enums"]["seller_plan"];
+          plan_billing: string | null;
+          plan_since: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
         };
@@ -6168,6 +6221,7 @@ export type Database = {
           variant_id: string;
         }[];
       };
+      seller_plan_price: { Args: { billing: string }; Returns: number };
       send_quote: { Args: { quote: string }; Returns: undefined };
       set_guardian_plus: {
         Args: { allow: boolean; link: string };
@@ -6244,6 +6298,34 @@ export type Database = {
         Returns: undefined;
       };
       set_rental_deposit_rate: { Args: { rate: number }; Returns: undefined };
+      set_seller_plan: {
+        Args: {
+          billing?: string;
+          new_plan: Database["public"]["Enums"]["seller_plan"];
+          target: string;
+        };
+        Returns: {
+          applied_at: string;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          id: string;
+          is_house: boolean;
+          name: string;
+          organization_id: string | null;
+          plan: Database["public"]["Enums"]["seller_plan"];
+          plan_billing: string | null;
+          plan_since: string | null;
+          status: Database["public"]["Enums"]["seller_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sellers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       set_staff_role: {
         Args: {
           new_role: Database["public"]["Enums"]["staff_role"];
@@ -6516,6 +6598,7 @@ export type Database = {
         | "cancelled"
         | "kept";
       review_status: "published" | "hidden";
+      seller_plan: "free" | "pro";
       seller_status: "pending" | "approved" | "rejected" | "suspended";
       staff_role:
         | "superadmin"
@@ -6763,6 +6846,7 @@ export const Constants = {
         "kept",
       ],
       review_status: ["published", "hidden"],
+      seller_plan: ["free", "pro"],
       seller_status: ["pending", "approved", "rejected", "suspended"],
       staff_role: [
         "superadmin",
