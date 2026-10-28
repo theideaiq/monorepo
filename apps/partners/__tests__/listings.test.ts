@@ -1,5 +1,8 @@
 import { describe, expect, test } from "vitest";
 import {
+  bundleChoices,
+  bundleProblem,
+  type Listing,
   looksLikeCode,
   offerProblem,
   toListingProblem,
@@ -39,5 +42,27 @@ describe("listings", () => {
       })
     ).toBe("notAllowed");
     expect(toListingProblem(new Error("boom"))).toBe("unknown");
+  });
+
+  test("checks a bundle's counts as the database does", () => {
+    expect(bundleProblem([1, 3])).toBeNull();
+    expect(bundleProblem([2])).toBeNull();
+    expect(bundleProblem([1])).toBe("bundleSize");
+    expect(bundleProblem([])).toBe("bundleSize");
+    expect(bundleProblem([1, 21])).toBe("bundleSize");
+    expect(bundleProblem([1, Number.NaN])).toBe("bundleSize");
+  });
+
+  test("offers each live item once for a bundle", () => {
+    const listing = (variant: string, active = true) =>
+      ({ active, variant_id: variant }) as Listing;
+    expect(
+      bundleChoices([
+        listing("a"),
+        listing("a"),
+        listing("b", false),
+        listing("c"),
+      ]).map((choice) => choice.variant_id)
+    ).toEqual(["a", "c"]);
   });
 });

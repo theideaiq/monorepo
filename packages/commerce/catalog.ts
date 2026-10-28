@@ -278,6 +278,58 @@ export const getProductOffers = async (
 };
 
 /** The store's counter, when customers may collect orders there. */
+/** One line of a shop's bundle: an item in it and how many. */
+export interface BundleItem {
+  label_ar: string | null;
+  label_en: string | null;
+  name_ar: string;
+  name_en: string;
+  quantity: number;
+  slug: string;
+}
+
+interface BundleRow {
+  quantity: number;
+  variant: {
+    label_ar: string | null;
+    label_en: string | null;
+    product: { name_ar: string; name_en: string; slug: string } | null;
+  } | null;
+}
+
+/**
+ * What a bundle holds, in order (`bundle_items`); empty for any other
+ * product. Items whose product isn't visible are left out.
+ */
+export const getBundleItems = async (
+  supabase: Client,
+  productId: string
+): Promise<BundleItem[]> => {
+  const rows = (unwrap(
+    await supabase
+      .from("bundle_items")
+      .select(
+        "quantity, variant:product_variants (label_en, label_ar, product:products (slug, name_en, name_ar))"
+      )
+      .eq("bundle_id", productId)
+      .order("position")
+  ) ?? []) as unknown as BundleRow[];
+  return rows.flatMap(({ quantity, variant }) =>
+    variant?.product
+      ? [
+          {
+            label_ar: variant.label_ar,
+            label_en: variant.label_en,
+            name_ar: variant.product.name_ar,
+            name_en: variant.product.name_en,
+            quantity,
+            slug: variant.product.slug,
+          },
+        ]
+      : []
+  );
+};
+
 export interface PickupLocation {
   address_ar: string;
   address_en: string;

@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/design-system/components/ui/card";
+import { Checkbox } from "@repo/design-system/components/ui/checkbox";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import {
@@ -21,7 +22,13 @@ import {
 } from "@repo/design-system/components/ui/select";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { formatNumber } from "@repo/internationalization/format";
-import { FlagIcon, PencilIcon, PlusIcon, SearchIcon } from "lucide-react";
+import {
+  FlagIcon,
+  PackageIcon,
+  PencilIcon,
+  PlusIcon,
+  SearchIcon,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
@@ -29,12 +36,15 @@ import { useActiveOrganization } from "@/components/organization-provider";
 import { ListingUpload } from "@/components/screens/listing-upload";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
+  bundleChoices,
+  bundleProblem,
   type CatalogMatch,
   CONDITIONS,
   type Condition,
   type Listing,
   type ListingProblem,
   looksLikeCode,
+  MAX_BUNDLE_QUANTITY,
   MAX_QUANTITY,
   MIN_PRICE,
   type OfferInput,
@@ -42,6 +52,7 @@ import {
   toListingProblem,
   useCatalogSearch,
   useCategories,
+  useCreateBundle,
   useCreateListing,
   useFlagProduct,
   useListings,
@@ -663,6 +674,219 @@ const ListingRow = ({
   );
 };
 
+/** Ticks and counts of the items chosen for a bundle, by variant. */
+type BundlePicks = Record<string, number>;
+
+const BundleItems = ({
+  listings,
+  onChange,
+  picks,
+}: {
+  readonly listings: readonly Listing[];
+  readonly onChange: (picks: BundlePicks) => void;
+  readonly picks: BundlePicks;
+}) => {
+  const t = useTranslations("app.company.listings.bundle");
+  const locale = useLocale();
+  const id = useId();
+  return (
+    <fieldset className="grid gap-2">
+      <legend className="mb-2 font-medium text-sm">{t("items")}</legend>
+      <ul className="divide-y rounded-md border">
+        {bundleChoices(listings).map((listing) => {
+          const picked = picks[listing.variant_id];
+          const name = locale === "ar" ? listing.name_ar : listing.name_en;
+          return (
+            <li
+              className="flex flex-wrap items-center gap-3 p-3"
+              key={listing.variant_id}
+            >
+              <Checkbox
+                checked={picked !== undefined}
+                id={`${id}-${listing.variant_id}`}
+                onCheckedChange={(checked) => {
+                  const next = { ...picks };
+                  if (checked) {
+                    next[listing.variant_id] = 1;
+                  } else {
+                    delete next[listing.variant_id];
+                  }
+                  onChange(next);
+                }}
+              />
+              <Label
+                className="flex-1 font-normal"
+                htmlFor={`${id}-${listing.variant_id}`}
+              >
+                {name}
+              </Label>
+              {picked === undefined ? null : (
+                <Input
+                  aria-label={t("howMany", { name })}
+                  className="w-20"
+                  dir="ltr"
+                  inputMode="numeric"
+                  max={MAX_BUNDLE_QUANTITY}
+                  min={1}
+                  onChange={(event) =>
+                    onChange({
+                      ...picks,
+                      [listing.variant_id]: toInteger(event.target.value),
+                    })
+                  }
+                  type="number"
+                  value={Number.isNaN(picked) ? "" : picked}
+                />
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </fieldset>
+  );
+};
+
+/** Several of the shop's own items as one offer. */
+const MakeBundle = ({
+  listings,
+  sellerId,
+}: {
+  readonly listings: readonly Listing[];
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.company.listings");
+  const bundleText = useTranslations("app.company.listings.bundle");
+  const locale = useLocale();
+  const id = useId();
+  const categories = useCategories();
+  const create = useCreateBundle(sellerId);
+  const [open, setOpen] = useState(false);
+  const [picks, setPicks] = useState<BundlePicks>({});
+  const [categoryId, setCategoryId] = useState("");
+  const [nameEn, setNameEn] = useState("");
+  const [nameAr, setNameAr] = useState("");
+  const [offer, setOffer] = useState(emptyOffer);
+  const [problem, setProblem] = useState<ProblemKey | null>(null);
+
+  const reset = () => {
+    setOpen(false);
+    setPicks({});
+    setCategoryId("");
+    setNameEn("");
+    setNameAr("");
+    setProblem(null);
+  };
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const wrong =
+      bundleProblem(Object.values(picks)) ??
+      (categoryId && (nameEn.trim() || nameAr.trim()) ? null : "details") ??
+      offerProblem(offer);
+    setProblem(wrong);
+    if (wrong) {
+      return;
+    }
+    create.mutate(
+      {
+        bundle: {
+          categoryId,
+          items: Object.entries(picks).map(([variantId, quantity]) => ({
+            quantity,
+            variantId,
+          })),
+          nameAr,
+          nameEn,
+        },
+        offer,
+      },
+      {
+        onError: (error) => setProblem(toListingProblem(error)),
+        onSuccess: reset,
+      }
+    );
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{bundleText("title")}</CardTitle>
+        <CardDescription>{bundleText("description")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {open ? (
+          <form className="grid gap-4" noValidate onSubmit={submit}>
+            <BundleItems
+              listings={listings}
+              onChange={setPicks}
+              picks={picks}
+            />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-2">
+                <Label htmlFor={`${id}-name-en`}>{t("nameEn")}</Label>
+                <Input
+                  dir="ltr"
+                  id={`${id}-name-en`}
+                  maxLength={200}
+                  onChange={(event) => setNameEn(event.target.value)}
+                  value={nameEn}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor={`${id}-name-ar`}>{t("nameAr")}</Label>
+                <Input
+                  dir="rtl"
+                  id={`${id}-name-ar`}
+                  maxLength={200}
+                  onChange={(event) => setNameAr(event.target.value)}
+                  value={nameAr}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor={`${id}-category`}>{t("category")}</Label>
+                <Select onValueChange={setCategoryId} value={categoryId}>
+                  <SelectTrigger id={`${id}-category`}>
+                    <SelectValue placeholder={t("chooseCategory")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(categories.data ?? []).map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {locale === "ar" ? category.name_ar : category.name_en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <OfferFields onChange={setOffer} />
+            <p className="text-muted-foreground text-xs">
+              {bundleText("copiesHint")}
+            </p>
+            <Problem problem={problem} />
+            <div className="flex gap-2">
+              <Button disabled={create.isPending} type="submit">
+                {bundleText("create")}
+              </Button>
+              <Button onClick={reset} type="button" variant="ghost">
+                {t("cancel")}
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <Button
+            disabled={bundleChoices(listings).length < 1}
+            onClick={() => setOpen(true)}
+            variant="outline"
+          >
+            <PackageIcon />
+            {bundleText("open")}
+          </Button>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
 const ListingsBody = () => {
   const t = useTranslations("app.company.listings");
   const { active, canManage } = useActiveOrganization();
@@ -685,6 +909,9 @@ const ListingsBody = () => {
     <div className="grid max-w-3xl gap-6">
       {canManage ? <AddListing sellerId={sellerId} /> : null}
       {canManage ? <ListingUpload sellerId={sellerId} /> : null}
+      {canManage && listings.data ? (
+        <MakeBundle listings={listings.data} sellerId={sellerId} />
+      ) : null}
       <Card>
         <CardHeader>
           <CardTitle>{t("yoursTitle")}</CardTitle>
