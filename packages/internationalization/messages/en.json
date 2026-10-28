@@ -1649,7 +1649,8 @@
         "orders": "Bulk orders",
         "shopOrders": "Orders",
         "pickup": "Pickup",
-        "shopReturns": "Returns"
+        "shopReturns": "Returns",
+        "shopOffers": "Offers"
       },
       "members": {
         "title": "Members",
@@ -2715,6 +2716,43 @@
           "rejected": "Not accepted",
           "cancelled": "Withdrawn"
         }
+      },
+      "shopOffers": {
+        "title": "Offers",
+        "notApproved": "Offers open once your shop is approved.",
+        "waitingTitle": "Waiting for your answer",
+        "waitingDescription": "Accept, decline or counter once within 48 hours; offers you don't answer expire. Buyers stay anonymous until they order.",
+        "noneWaiting": "No offers waiting.",
+        "status": {
+          "open": "Waiting for you",
+          "countered": "Waiting for the buyer",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "expired": "Expired",
+          "withdrawn": "Withdrawn",
+          "purchased": "Ordered"
+        },
+        "amounts": "Offer {offer} · your price {price}",
+        "answerBy": "Answer by {time}.",
+        "waitingBuyer": "You countered; the buyer answers by {time}.",
+        "accept": "Accept {amount}",
+        "decline": "Decline",
+        "counter": "Counter",
+        "counterLabel": "Your counter-offer (IQD)",
+        "counterPlaceholder": "Amount in IQD",
+        "failed": "That didn't work. Refresh and try again.",
+        "settingsTitle": "Which listings take offers",
+        "settingsDescription": "Offers start at 60% of the price. Leave the automatic amounts empty to answer every offer yourself; listings on sale never take offers.",
+        "noListings": "No listings with copies for sale yet.",
+        "takeOffers": "Take offers",
+        "autoAccept": "Accept automatically from (IQD)",
+        "autoDecline": "Decline automatically below (IQD)",
+        "save": "Save",
+        "saving": "Saving…",
+        "saved": "Saved",
+        "amountsInvalid": "Use whole amounts, with the decline amount at or below the accept amount.",
+        "otherTitle": "Last 30 days",
+        "noneOther": "No other offers in the last 30 days."
       }
     },
     "ages": {

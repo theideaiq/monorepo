@@ -88,7 +88,9 @@ incidents) is in `docs/platform`.
   the customer only as "first name · area": ready for pickup at a branch,
   print labels, out of stock), `/selling/returns` (requests to accept or
   dispute within 48 hours, items to check once back, refused parcels to
-  confirm) and `/selling/pickup` (its branches, each a Boxy pickup
+  confirm), `/selling/offers` (buyers' offers to accept, decline or
+  counter within 48 hours, and which listings take offers, with automatic
+  accept and decline amounts) and `/selling/pickup` (its branches, each a Boxy pickup
   location),
   Perks `/perks`,
   Team `/team` (bulk orders for the organization, with `/team/<id>` for a
