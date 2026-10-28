@@ -148,10 +148,48 @@
           },
           "address": {
             "$ref": "#/components/schemas/Address"
+          },
+          "organizations": {
+            "type": "array",
+            "description": "The person's organizations in The IDEA Partners and their role (`organizations` scope)",
+            "items": {
+              "$ref": "#/components/schemas/Organization"
+            }
           }
         },
         "required": [
           "sub"
+        ]
+      },
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "The Iraqi Curator"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "admin",
+              "member"
+            ]
+          },
+          "app_owner": {
+            "type": "boolean",
+            "description": "Whether this organization owns the app asking"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "role",
+          "app_owner"
         ]
       }
     }

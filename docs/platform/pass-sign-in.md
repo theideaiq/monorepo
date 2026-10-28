@@ -29,7 +29,7 @@ site in Pass → Settings → Connected sites.
    can sign in (and only their cards pass card checks), and it can ask for
    every answer it registered.
 4. **Go live.** Everyone can sign in. The basic answers work at once; the
-   sensitive ones (`student_email`, `phone`, `birthdate`, `address`,
+   sensitive ones (`student_email`, `phone`, `birthdate`, `address`, `organizations`,
    `offline_access`, and `card_embed`, the live card on your site) wait
    for staff review and aren't asked until approved.
    Asking for a new sensitive answer later goes back to review; approved
@@ -110,7 +110,8 @@ Sensitive scopes are marked on the consent screen and off by default.
 | `plus` | `plus`, and `plus_plan` (the plan's name) for members | |
 | `phone` | `phone_number` (the WhatsApp number from Settings, `+9647…`), `phone_number_verified: false` | sensitive |
 | `birthdate` | `birthdate` (`YYYY-MM-DD`) | sensitive |
-| `address` | `address` (OpenID Connect address: `formatted`, `street_address`, `locality`, `region`, `country`), from the latest delivery | sensitive |
+| `address` | `address` (OpenID Connect address: `formatted`, `street_address`, `locality`, `region`, `country`), from the default address in Pass → Settings → Addresses, or the latest delivery without one | sensitive |
+| `organizations` | `organizations`: `[{ "id": "…", "name": "The Iraqi Curator", "role": "admin", "app_owner": true }]`, the person's organizations in The IDEA Partners and their role (`owner`, `admin` or `member`); `app_owner` marks the organization that owns the app. `[]` when they have none | sensitive |
 | `card` | No claim: lets the access token fetch the person's card (below) | |
 | `offline_access` | No claim: the token response adds a `refresh_token` | sensitive |
 

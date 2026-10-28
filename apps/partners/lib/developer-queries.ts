@@ -23,6 +23,7 @@ export const APP_ANSWERS = [
   "phone",
   "birthdate",
   "address",
+  "organizations",
   "card",
   "card_embed",
   "offline_access",
@@ -36,6 +37,7 @@ export const SENSITIVE_ANSWERS: readonly AppAnswer[] = [
   "phone",
   "birthdate",
   "address",
+  "organizations",
   "offline_access",
   "card_embed",
 ];

@@ -42,6 +42,7 @@ export const GET = async () => {
         "phone_number_verified",
         "birthdate",
         "address",
+        "organizations",
       ],
       code_challenge_methods_supported: ["S256"],
       grant_types_supported: ["authorization_code", "refresh_token"],

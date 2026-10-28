@@ -2367,7 +2367,8 @@
           "address": "Delivery address",
           "card": "The Pass card",
           "offline_access": "Stay updated (refresh tokens)",
-          "card_embed": "The live Pass card on your site"
+          "card_embed": "The live Pass card on your site",
+          "organizations": "Organizations and roles in The IDEA Partners"
         },
         "errors": {
           "redirectNotVerified": "A return address isn't on a verified domain.",
@@ -4400,7 +4401,8 @@
           "birthdate": "Date of birth (sensitive)",
           "address": "Delivery address (sensitive)",
           "offline_access": "Stay updated: refresh tokens (sensitive)",
-          "card_embed": "The live Pass card on their site (sensitive)"
+          "card_embed": "The live Pass card on their site (sensitive)",
+          "organizations": "Organizations and roles (sensitive)"
         },
         "add": "Add site",
         "once": "Copy these now: the secret isn't shown again. Send it to the partner's developers privately.",
@@ -4556,8 +4558,9 @@
         "student_email": "Your verified university email",
         "phone": "Your WhatsApp number",
         "birthdate": "Your date of birth",
-        "address": "Your latest delivery address",
-        "offline_access": "Keep these up to date after you leave (for example, whether you're still a student) until you disconnect it"
+        "address": "Your default delivery address",
+        "offline_access": "Keep these up to date after you leave (for example, whether you're still a student) until you disconnect it",
+        "organizations": "The organizations you belong to in The IDEA Partners, and your role in each"
       },
       "never": "It never sees anything you didn't tick, your orders or your payments. You can disconnect it at any time in Settings.",
       "manage": "Connected sites",

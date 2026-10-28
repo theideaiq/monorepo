@@ -20,7 +20,8 @@ was actually shared, and claims for anything else are absent.
 | `plus` | `plus`, and `plus_plan` (the plan's name) for members | |
 | `phone` | `phone_number` (`+9647…`), `phone_number_verified: false` | sensitive |
 | `birthdate` | `birthdate` (`YYYY-MM-DD`) | sensitive |
-| `address` | `address` (`formatted`, `street_address`, `locality`, `region`, `country`) | sensitive |
+| `address` | `address` (`formatted`, `street_address`, `locality`, `region`, `country`): the default address in the person's address book, or their latest delivery without one | sensitive |
+| `organizations` | `organizations`: `[{ "id": "…", "name": "The Iraqi Curator", "role": "admin", "app_owner": true }]`, the person's organizations in The IDEA Partners and their role (`owner`, `admin` or `member`); `app_owner` marks the organization that owns your app. `[]` when they have none | sensitive |
 | `card` | No claim: lets the access token [fetch the person's card](/card/show) | |
 | `offline_access` | No claim: the token response adds a [refresh token](/sign-in/tokens#refresh-tokens) | sensitive |
 
@@ -31,6 +32,19 @@ Sensitive scopes are marked on the consent screen and unticked by default.
 The ID token has the claims as they were at sign-in. Userinfo
 (`GET /oidc/userinfo` with the access token) works them out again, so a
 student badge that has ended reads `verified: false`.
+
+## Admitting only your staff
+
+Ask for `organizations` and let someone in only when the list has your
+organization with `app_owner: true` (and, if you like, the role you need):
+
+```js
+const staff = (claims.organizations ?? []).find((o) => o.app_owner);
+if (!staff) throw new Error("Only our staff can sign in here");
+```
+
+Read it from userinfo on each visit (or with `offline_access`) when
+someone's role can change: the ID token keeps it as it was at sign-in.
 
 ## Universities
 

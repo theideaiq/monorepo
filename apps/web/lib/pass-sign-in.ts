@@ -15,6 +15,7 @@ export const PASS_SCOPES = [
   "phone",
   "birthdate",
   "address",
+  "organizations",
   "card",
   "offline_access",
 ] as const;
@@ -25,6 +26,7 @@ export const SENSITIVE_SCOPES: readonly PassScope[] = [
   "phone",
   "birthdate",
   "address",
+  "organizations",
   "offline_access",
 ];
 
