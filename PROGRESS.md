@@ -197,7 +197,8 @@ decisions with a date.
       phone for deliveries" so deliveries and Plus homes need one.
 - [ ] **Wayl, to check and record here:** whether Plus and Pro can renew
       automatically through Wayl subscriptions; a partial refund in test
-      mode.
+      mode, then turn on Staff → Catalog → Delivery → "Refund returns
+      through Wayl".
 
 - [ ] **Developer docs:** connect `apps/docs` to Mintlify (mintlify.com →
       new deployment from GitHub, monorepo path `apps/docs`; or `bunx mint
@@ -572,6 +573,21 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-28: Selling, returns and offers, part 3. Support marks returns
+  The IDEA collected by hand back at the shop (Staff → Orders → Returns,
+  "Collected by hand"; `staff_mark_return_received`). The customer's bell
+  follows each return (accepted, not accepted, refund on its way, refund
+  sent; `notify_return_status`) and the seller's answers to offers. Make
+  an offer has its screens: the product page, Pass → Saved → Your offers,
+  Partners → Selling → Offers (answer within 48 hours, choose which listings
+  take offers and automatic amounts) and Staff → Catalog → Offers for The
+  IDEA's stock (Inbox item; each product's page sets which copies take
+  offers). Refunds of returns paid online can go out through Wayl each
+  morning (`/cron/selling`: `claim_return_refunds` → Wayl →
+  `record_return_refund`, or `release_return_refund` for finance to send by
+  hand), behind Staff → Catalog → Delivery → "Refund returns through Wayl",
+  off until a partial refund has worked in Wayl's test mode. Still to come:
+  booking the collection with Boxy.
 - 2026-10-28: Selling, Make an offer, the schema
   (`20270125000000_offers.sql`; master brief step 5, section 14 without
   auctions). A listing (seller, variant, condition) takes offers when its

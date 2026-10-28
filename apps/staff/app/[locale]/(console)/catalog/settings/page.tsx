@@ -17,7 +17,9 @@ const StoreSettingsPage = async () => {
   const [{ data: settings }, { data: zones }] = await Promise.all([
     supabase
       .from("store_settings")
-      .select("shipping_fee, cash_on_delivery_enabled, require_verified_phone")
+      .select(
+        "shipping_fee, cash_on_delivery_enabled, require_verified_phone, wayl_return_refunds"
+      )
       .maybeSingle(),
     supabase
       .from("delivery_zones")
@@ -42,6 +44,7 @@ const StoreSettingsPage = async () => {
                 settings?.cash_on_delivery_enabled ?? false,
               require_verified_phone: settings?.require_verified_phone ?? false,
               shipping_fee: settings?.shipping_fee ?? 0,
+              wayl_return_refunds: settings?.wayl_return_refunds ?? false,
             }}
           />
         </Panel>

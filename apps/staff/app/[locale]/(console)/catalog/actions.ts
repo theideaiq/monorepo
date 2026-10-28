@@ -192,6 +192,7 @@ export const saveStoreSettings = staffAction(
     cashOnDelivery: checkbox,
     requireVerifiedPhone: checkbox,
     shippingFee: int(0),
+    waylReturnRefunds: checkbox,
   }),
   async ({ input, supabase }) => {
     affected(
@@ -201,6 +202,7 @@ export const saveStoreSettings = staffAction(
           cash_on_delivery_enabled: input.cashOnDelivery,
           require_verified_phone: input.requireVerifiedPhone,
           shipping_fee: input.shippingFee,
+          wayl_return_refunds: input.waylReturnRefunds,
         })
         .eq("id", true)
         .select("id")

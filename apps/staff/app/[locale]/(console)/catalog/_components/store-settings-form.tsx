@@ -9,6 +9,7 @@ export interface StoreSettingsValues {
   cash_on_delivery_enabled: boolean;
   require_verified_phone: boolean;
   shipping_fee: number;
+  wayl_return_refunds: boolean;
 }
 
 export const StoreSettingsForm = ({
@@ -45,6 +46,12 @@ export const StoreSettingsForm = ({
           hint={t("requireVerifiedPhoneHint")}
           label={t("requireVerifiedPhone")}
           name="requireVerifiedPhone"
+        />
+        <CheckboxField
+          defaultChecked={settings.wayl_return_refunds}
+          hint={t("waylReturnRefundsHint")}
+          label={t("waylReturnRefunds")}
+          name="waylReturnRefunds"
         />
         {disabled ? null : (
           <div className="flex justify-end">
