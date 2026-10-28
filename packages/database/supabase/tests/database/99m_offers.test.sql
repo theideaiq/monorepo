@@ -72,7 +72,6 @@ insert into public.products (id, slug, name_ar, name_en, price, status, kind, co
   ('9c100000-0000-0000-0000-000000000001', 'blonde-9m', 'بلوند', 'Blonde', 39750, 'active', 'sale', 'new'),
   ('9c100000-0000-0000-0000-000000000002', 'house-9m', 'بيت', 'House record', 99750, 'active', 'sale', 'new'),
   ('9c100000-0000-0000-0000-000000000003', 'sale-9m', 'تخفيض', 'On sale', 29750, 'active', 'sale', 'new');
-update public.product_variants set compare_at_price = 34750 where product_id = '9c100000-0000-0000-0000-000000000003';
 create temporary table ids (name text primary key, id uuid);
 grant all on ids to authenticated;
 insert into ids select 'v', id from public.product_variants where product_id = '9c100000-0000-0000-0000-000000000001';
@@ -87,6 +86,10 @@ insert into public.stock_items (product_id, condition, purpose, price, cost) val
   ('9c100000-0000-0000-0000-000000000002', 'new', 'sale', 99750, 30000);
 insert into public.stock_items (product_id, condition, purpose, price, seller_id) values
   ('9c100000-0000-0000-0000-000000000003', 'new', 'sale', 29750, '9c100000-0000-0000-0000-0000000000d1');
+-- The sale item was 34,750 for the 20 days before today: its "was" price.
+insert into public.price_history (variant_id, seller_id, condition, price, started_at, ended_at)
+select id, '9c100000-0000-0000-0000-0000000000d1', 'new', 34750, now() - interval '20 days', now()
+from ids where name = 'sale';
 update public.store_settings set cash_on_delivery_enabled = true;
 update public.delivery_zones set active = true where governorate = 'baghdad';
 

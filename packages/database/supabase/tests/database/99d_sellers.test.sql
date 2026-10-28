@@ -179,8 +179,8 @@ select pg_temp.login_anon();
 select results_eq(
   $$ select seller_name, condition::text, available, price
      from public.product_offers('9d000000-0000-0000-0000-000000000001') where purpose = 'sale' $$,
-  $$ values ('The IDEA', 'new', 2, 20000::bigint), ('Records Shop', 'used', 1, 15000::bigint) $$,
-  'Offers are listed by seller, The IDEA first'
+  $$ values ('Records Shop', 'used', 1, 15000::bigint), ('The IDEA', 'new', 2, 20000::bigint) $$,
+  'Offers are listed cheapest first'
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000009d4');
