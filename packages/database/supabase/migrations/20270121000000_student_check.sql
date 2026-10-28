@@ -169,8 +169,9 @@ create table public.student_checks (
   -- Whether the student kept the status for the year.
   kept boolean not null,
   email_hash text,
-  -- What a partner checks in person: 8 letters and digits, for 24 hours.
-  code text not null check (code ~ '^[A-HJ-NP-Z2-9]{8}$'),
+  -- What a partner checks in person: 8 letters and digits (at least one
+  -- letter), for 24 hours.
+  code text not null check (code ~ '^[A-HJ-NP-Z2-9]{8}$' and code ~ '[A-Z]'),
   code_expires_at timestamptz not null,
   created_at timestamptz not null default now()
 );
@@ -195,7 +196,7 @@ revoke all on public.student_checks from anon, authenticated;
 grant select (id, user_id, university_id, valid_until, kept, code, code_expires_at, created_at)
   on public.student_checks to authenticated;
 
--- A code no live check uses.
+-- A code no check uses yet.
 create function private.new_student_code()
 returns text
 language plpgsql
@@ -213,7 +214,9 @@ begin
     for i in 0..7 loop
       candidate := candidate || substr(alphabet, (get_byte(bytes, i) % 32) + 1, 1);
     end loop;
-    exit when not exists (select 1 from public.student_checks c where c.code = candidate);
+    -- At least one letter, so a code never reads as a Pass number.
+    exit when candidate ~ '[A-Z]'
+      and not exists (select 1 from public.student_checks c where c.code = candidate);
   end loop;
   return candidate;
 end;
