@@ -141,6 +141,45 @@ export type Database = {
           },
         ];
       };
+      bundle_items: {
+        Row: {
+          bundle_id: string;
+          id: string;
+          position: number;
+          quantity: number;
+          variant_id: string;
+        };
+        Insert: {
+          bundle_id: string;
+          id?: string;
+          position?: number;
+          quantity?: number;
+          variant_id: string;
+        };
+        Update: {
+          bundle_id?: string;
+          id?: string;
+          position?: number;
+          quantity?: number;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bundle_items_bundle_id_fkey";
+            columns: ["bundle_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "bundle_items_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       cart_items: {
         Row: {
           condition: Database["public"]["Enums"]["product_condition"] | null;
@@ -4926,6 +4965,21 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      create_bundle: {
+        Args: {
+          bundle_seller: string;
+          category: string;
+          images: string[];
+          items: Json;
+          name_ar: string;
+          name_en: string;
+          offer_condition: Database["public"]["Enums"]["product_condition"];
+          offer_price: number;
+          offer_sku?: string;
+          quantity: number;
+        };
+        Returns: string;
       };
       create_listing: {
         Args: {
