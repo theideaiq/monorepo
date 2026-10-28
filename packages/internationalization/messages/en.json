@@ -630,7 +630,7 @@
         },
         "selling": {
           "title": "Selling",
-          "description": "How shops and people sell on The IDEA: listings, payments, payouts, meeting at The IDEA Space and auctions."
+          "description": "How shops and people sell on The IDEA: listings, payments, payouts and auctions."
         },
         "club": {
           "title": "Club rules",
@@ -2730,11 +2730,6 @@
       "buy": "Buy",
       "rent": "Rent with The IDEA Plus"
     },
-    "souq": {
-      "currency": "IQD",
-      "market": "In the market",
-      "withUs": "With us"
-    },
     "orderStatusPickup": {
       "shipped": "Ready for pickup",
       "delivered": "Picked up"
@@ -2784,7 +2779,7 @@
       "audit": "Audit log",
       "support": "Support",
       "reviews": "Reviews",
-      "counter": "The IDEA Space",
+      "counter": "Counter",
       "companies": "Partners"
     },
     "roles": {
@@ -4281,7 +4276,7 @@
       "request": "Request #{number}"
     },
     "counter": {
-      "title": "The IDEA Space",
+      "title": "Counter",
       "check": "Check a The IDEA Pass",
       "description": "Scan the card's QR code (camera or scanner), or type the member number and the 6-digit code.",
       "camera": "Scan with the camera",

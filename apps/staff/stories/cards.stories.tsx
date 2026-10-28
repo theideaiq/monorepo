@@ -1,5 +1,4 @@
 import { Bulb } from "@repo/design-system/components/brand/bulb";
-import { SouqPrice } from "@repo/design-system/components/brand/souq-price";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Meta, StoryObj } from "@storybook/react";
@@ -41,13 +40,7 @@ const ProductTile = ({ rental }: { rental?: boolean }) => (
         <span className="text-muted-foreground text-xs">Worth 59,750 IQD</span>
       </p>
     ) : (
-      <SouqPrice
-        checkedAt="2026-10-22T09:00:00Z"
-        labels={{ currency: "IQD", market: "In the market", withUs: "With us" }}
-        marketPrice="1,080,000"
-        now={new Date("2026-10-24T12:00:00Z")}
-        price="720,000"
-      />
+      <p className="font-bold font-mono text-lg">720,000 IQD</p>
     )}
     <Button className="w-full" variant={rental ? "plus" : "default"}>
       {rental ? "Rent with The IDEA Plus" : "Buy"}
@@ -90,7 +83,7 @@ const PlanTile = ({ featured }: { featured?: boolean }) => (
   </div>
 );
 
-/** A sale item with a checked souq price, and a rental with its bulb. */
+/** A sale item with its price, and a rental with its bulb. */
 export const Product: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">

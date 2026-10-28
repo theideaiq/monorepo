@@ -15,7 +15,7 @@ Use these rules for everything that carries the name: theideaiq.com and its apps
 | | |
 | --- | --- |
 | Purpose | Switch on the curious Iraqi. |
-| Positioning | For young Iraqis who want the world's best games, books, tech and learning without the hassle, The IDEA is the one membership that brings it to your door, on your side, at a fair price. Unlike marketplaces and resellers, we show the souq price beside ours and keep our promises on price, date and condition. |
+| Positioning | For young Iraqis who want the world's best games, books, tech and learning without the hassle, The IDEA is the one membership that brings it to your door, on your side, at a fair price. Unlike marketplaces and resellers, we keep our promises on price, date and condition. |
 | Personality | Bright, warm, quick, on your side, proudly Iraqi. Never loud for its own sake, smug, corporate, political or sectarian. |
 | Brand line | **اعلگها** (Iraqi Arabic: “switch it on”) · English **Switch on.** |
 | Formal descriptor | Innovation for every aspect of life. |
@@ -51,7 +51,7 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 2. **Bright, not loud.** One idea per line. No exclamation marks in the product UI; at most one in a campaign.
 3. **On your side.** Talk about what the customer gets, not what we are.
 4. **Promise and prove.** Every claim names a number, a date or a place: "delivered to all 19 governorates".
-5. **Arabic first.** Social, The IDEA Club and campaigns speak Iraqi Arabic ("اعلگها", "يمنا بـ", "بالسوگ", "اخو الجديد"). Product screens, receipts and legal pages use clear Modern Standard Arabic with Iraqi warmth. English is written as English, not translated.
+5. **Arabic first.** Social, The IDEA Club and campaigns speak Iraqi Arabic ("اعلگها", "يمنا بـ", "اخو الجديد"). Product screens, receipts and legal pages use clear Modern Standard Arabic with Iraqi warmth. English is written as English, not translated.
 
 **Mechanics**
 
@@ -62,7 +62,7 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 - Headlines: a plain first line and a highlighted second — "Innovation for / **every aspect of life.**"
 - No emoji in the product UI or official copy; sparingly in The IDEA Club and captions, never in place of words.
 - Errors say what happened and what to do: "Payment didn't go through. Try another card or ZainCash."
-- Never mock competitors; the souq price is a fact, not a joke. No politics or sectarian references; Eid, Ramadan, Christmas, Nowruz and national days are greeted equally.
+- Never mock competitors. No politics or sectarian references; Eid, Ramadan, Christmas, Nowruz and national days are greeted equally.
 
 | Instead of | Write |
 | --- | --- |
@@ -154,8 +154,7 @@ Never set Arabic below 14px; never letter-space, italicise or fake-bold Arabic; 
 
 1. **The bulb kicker.** A small yellow bulb (pink on paper) centred above every post headline, slide title and receipt header.
 2. **The Highlight.** One or two headline words on a yellow swipe with dark text; on pink grounds, the words simply turn yellow. One per headline.
-3. **The souq price.** First the market price, small and struck through: "بالسوگ بـ 150,000". Then ours, large and bold: "يمنا بـ 99,750 دينار عراقي". Show a market price only if we checked it in the market in the last 7 days and keep the evidence (screenshot or receipt) for 12 months; consumer law can treat comparison prices as advertising claims.
-4. **The condition bulbs.** Customers see one of three bulbs, always with the word beside it; letter grades stay internal.
+3. **The condition bulbs.** Customers see one of three bulbs, always with the word beside it; letter grades stay internal.
 
    | Bulb | Arabic | English | Internal grade |
    | --- | --- | --- | --- |
@@ -179,7 +178,7 @@ Never set Arabic below 14px; never letter-space, italicise or fake-bold Arabic; 
 
 | Template | Size | Ground | Layout |
 | --- | --- | --- | --- |
-| Product post | 1080 × 1350 | Pink | Bulb kicker · Arabic kicker word in yellow (عملاق, كاميرا) · model name in white or yellow · cut-out product · souq price block |
+| Product post | 1080 × 1350 | Pink | Bulb kicker · Arabic kicker word in yellow (عملاق, كاميرا) · model name in white or yellow · cut-out product · price block |
 | The IDEA Club update | 1080 × 1080 | Pink or yellow, alternating | One flat illustration or one huge word or number in the opposite brand colour; details in the caption |
 | Story | 1080 × 1920 | Pink | Bulb kicker · headline · one image · one sticker or link · 250px safe zones |
 | Announcement or job | 1080 × 1350 | Yellow | Pink headline, dark details, a name tile tag |
@@ -198,7 +197,7 @@ Captions: Arabic first, English after a line break when needed; end with the act
 ## 12. Places and objects
 
 - **Store fascia and pop-ups:** the Pink Band with the yellow bulb and white wordmark.
-- **Shelf price strips:** yellow, with the souq price above ours.
+- **Shelf price strips:** yellow, with our price.
 - **Packaging:** pink boxes with a yellow bulb for The IDEA Store; the Pink Mailer for Plus; kraft with a pink bulb for books.
 - **Riders and staff:** pink tee or jacket, yellow bulb on the chest, "اعلگها" across the back.
 - **Events:** yellow rays on pink backdrops; one product accent per event.
