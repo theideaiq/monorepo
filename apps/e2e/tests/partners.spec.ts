@@ -210,6 +210,45 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await expect(page.getByText("1 available · 0 sold")).toBeVisible();
   await expectAccessible(page);
 
+  // Many at once from a spreadsheet: a new product and a row to fix.
+  const uploadBarcode = "2000000000015";
+  const removeUploaded = async () => {
+    const { data: uploaded } = await db
+      .from("product_variants")
+      .select("product_id")
+      .eq("barcode", uploadBarcode);
+    for (const variant of uploaded ?? []) {
+      await db
+        .from("stock_items")
+        .delete()
+        .eq("product_id", variant.product_id);
+      await db.from("products").delete().eq("id", variant.product_id);
+    }
+  };
+  await removeUploaded();
+  await page.getByLabel("CSV file").setInputFiles({
+    buffer: Buffer.from(
+      [
+        "barcode,condition,price,quantity,name_en,name_ar,category",
+        `${uploadBarcode},new,19750,2,E2E Uploaded Record,أسطوانة مرفوعة,music`,
+        "2000000000022,new,100,1,,,",
+      ].join("\n")
+    ),
+    mimeType: "text/csv",
+    name: "listings.csv",
+  });
+  await expect(
+    page.getByText("Found: 0 · New products: 1 · To fix: 1")
+  ).toBeVisible();
+  await expect(
+    page.getByText("Enter a price of at least 250 IQD.")
+  ).toBeVisible();
+  await expectAccessible(page);
+  await page.getByRole("button", { name: "Send the ready rows (1)" }).click();
+  await expect(page.getByText("Sent: 1 · Refused: 0")).toBeVisible();
+  await expect(page.getByText("2 available · 0 sold")).toBeVisible();
+  await removeUploaded();
+
   // The website lists the shop's offer and the cart line names the shop.
   await context.addCookies(await sessionCookies(customer.email, urls.web));
   await page.goto(`${urls.web}/store/${slug}`);
@@ -217,6 +256,9 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await expect(offer).toHaveAttribute("aria-pressed", "true");
   await expectAccessible(page);
   await page.getByRole("button", { name: "Add to cart" }).click();
+  await expect(
+    page.getByRole("status").filter({ hasText: "Added to your cart." })
+  ).toBeVisible();
   await page.goto(`${urls.web}/cart`);
   await expect(page.getByText(/Sold by E2E Records/)).toBeVisible();
   await expectAccessible(page);
