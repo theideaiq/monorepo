@@ -50,7 +50,6 @@ describe("role → sections", () => {
   test("support handles customers, tickets, reviews, orders, rentals and Telegram", () => {
     expect(visibleSections("support")).toEqual([
       "dashboard",
-      "counter",
       "orders",
       "rentals",
       "customers",
@@ -90,7 +89,6 @@ describe("role → sections", () => {
       "customers",
       "club",
       "partners",
-      "counter",
       "finance",
       "settings",
     ]);

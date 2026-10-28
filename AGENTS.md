@@ -101,8 +101,7 @@ incidents) is in `docs/platform`.
     automatic checks on products shops create and shops' flags) · Orders and delivery
     `/orders` · Rentals and Plus `/rentals` · Customers `/customers` ·
     Club `/club` (with `/club/telegram`) · Partners `/partners` (with
-    `/partners/shops`, where staff approve shops) · Counter
-    `/counter` (checking Pass cards in person) · Finance `/finance` · Settings
+    `/partners/shops`, where staff approve shops) · Finance `/finance` · Settings
     `/settings` (with `/settings/audit`), and `/search`; seller payouts
     join when selling ships. Then `/no-access`
     (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:

@@ -42,7 +42,7 @@ The IDEA Pass is your Pass: one per person, free, with your Pass card, Bulbs, or
 
 - **Signing in.** You sign in with your email and password, with a one-time code sent to your email ("Email me a code"), or with Google, Apple or Telegram. A new email address gets a new Pass.
 - **Keep it yours.** Never share your password or a sign-in code: The IDEA will never ask you for them. Keep your email secure, because whoever controls it can sign in. Tell us at once at [hi@theideaiq.com](mailto:hi@theideaiq.com) if you think someone else has used your Pass.
-- **The card.** Your card shows a QR code that changes every 30 seconds. It is for you; showing someone else's card at our counter or a partner is not allowed.
+- **The card.** Your card shows a QR code that changes every 30 seconds. It is for you; showing someone else's card to our staff or a partner is not allowed.
 - **Accurate details.** Keep your name, email and delivery details true and up to date.
 - **Verified Pass.** For some rentals and cash payments we check your identity (for example with a national ID card or passport). A Pass that passes this check is a "verified Pass". We may refuse a rental if the check fails.
 - **Deleting your Pass.** You can delete your Pass at any time in Pass → Settings. See [Privacy](/legal/privacy) for what happens to your data.

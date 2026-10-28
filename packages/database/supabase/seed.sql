@@ -85,7 +85,7 @@ insert into public.posts (slug, section, title_ar, title_en, excerpt_ar, excerpt
   ('how-plus-rentals-work', 'learn', 'كيف يعمل الإيجار في The IDEA Plus', 'How The IDEA Plus rentals work',
     'اختر، استلم، أعد: دليل قصير.', 'Pick, receive, return: a short guide.',
     'اختر ما تريد من المتجر، ونوصله إليك، وتعيده متى انتهيت.', 'Pick what you want in the store, we deliver it, and you return it when you are done.', now()),
-  ('behind-the-counter', 'stories', 'خلف الكاونتر', 'Behind the counter',
+  ('meet-the-store-team', 'stories', 'تعرّف على فريق المتجر', 'Meet the store team',
     'لقاء مع فريق المتجر.', 'Meet the store team.',
     'تعرّف على الفريق الذي يختار كل قطعة في المتجر.', 'Meet the team who pick every item in the store.', now())
 on conflict (slug) do nothing;

@@ -5,7 +5,7 @@ The IDEA Club is the free side of The IDEA: on [/club](/club), Join (events and 
 - the Club feed on the website and apps, and everything you submit to it;
 - reviews and photos on product pages;
 - The IDEA Club group on Telegram and its rooms (The Stage, The Lounge, The Arcade, Vibe Check, The Library, The Studio and The Office), our Telegram channel and conversations with The IDEA Droid;
-- our events, the counter and every meeting with our staff and riders;
+- our events and every meeting with our staff and riders;
 - everyone who takes part: members, guests, staff, partners and speakers.
 
 Surveys also follow [Surveys](/legal/surveys), and The IDEA's programs follow [Programs](/legal/programs).

@@ -6,10 +6,6 @@ import { Checkbox } from "@repo/design-system/components/ui/checkbox";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@repo/design-system/components/ui/radio-group";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -172,12 +168,9 @@ const BookedSwap = ({
   const t = useTranslations("app.plus.swap");
   const locale = useLocale();
   const { cancelSwap } = usePlusActions();
-  let when = t("atCounter");
-  if (swap.method === "home") {
-    when = swap.scheduled_for
-      ? t("onDate", { date: formatDate(swap.scheduled_for, locale) })
-      : t("dateSoon");
-  }
+  const when = swap.scheduled_for
+    ? t("onDate", { date: formatDate(swap.scheduled_for, locale) })
+    : t("dateSoon");
   return (
     <div className="grid gap-2 rounded-md border border-plus p-4 text-sm">
       <p className="font-medium">{t("booked")}</p>
@@ -204,21 +197,12 @@ const BookedSwap = ({
 };
 
 /** What the next home swap costs: included, or the extra fee. */
-const SwapTerms = ({
-  firstDelivery,
-  method,
-}: {
-  readonly firstDelivery: boolean;
-  readonly method: "counter" | "home";
-}) => {
+const SwapTerms = ({ firstDelivery }: { readonly firstDelivery: boolean }) => {
   const t = useTranslations("app.plus.swap");
   const locale = useLocale();
   const terms = useSwapTerms().data;
   if (!terms) {
     return null;
-  }
-  if (method === "counter") {
-    return <p className="text-muted-foreground text-sm">{t("counterFree")}</p>;
   }
   const left = Math.max(0, terms.homeSwaps - terms.used);
   let note = t("extra", { fee: formatPrice(terms.extraFee, locale) });
@@ -241,13 +225,12 @@ const SwapTerms = ({
 };
 
 /**
- * Book a swap: tick what goes back and what comes next (from the queue),
- * at home on the area's day or at the counter.
+ * Book a home swap: tick what goes back and what comes next (the queue's
+ * next items are picked), on the area's delivery day.
  */
 export const SwapPanel = ({ slots }: { readonly slots: number }) => {
   const t = useTranslations("app.plus.swap");
   const locale = useLocale();
-  const id = useId();
   const rentals = useRentals().data ?? [];
   const queue = useQueue();
   const swap = useOpenSwap().data;
@@ -255,7 +238,6 @@ export const SwapPanel = ({ slots }: { readonly slots: number }) => {
   const { bookSwap } = usePlusActions();
   const [returns, setReturns] = useState<string[]>([]);
   const [wants, setWants] = useState<string[] | null>(null);
-  const [method, setMethod] = useState<"counter" | "home">("home");
 
   if (swap) {
     return <BookedSwap swap={swap} />;
@@ -322,28 +304,10 @@ export const SwapPanel = ({ slots }: { readonly slots: number }) => {
           </Label>
         ))}
       </fieldset>
-      <RadioGroup
-        aria-label={t("method")}
-        className="flex flex-wrap gap-4"
-        onValueChange={(value) => setMethod(value as "counter" | "home")}
-        value={method}
-      >
-        <Label
-          className="flex items-center gap-2 font-normal"
-          htmlFor={`${id}-home`}
-        >
-          <RadioGroupItem disabled={!home} id={`${id}-home`} value="home" />
-          {t("home")}
-        </Label>
-        <Label
-          className="flex items-center gap-2 font-normal"
-          htmlFor={`${id}-counter`}
-        >
-          <RadioGroupItem id={`${id}-counter`} value="counter" />
-          {t("counter")}
-        </Label>
-      </RadioGroup>
-      <SwapTerms firstDelivery={holding.length === 0} method={method} />
+      {home ? null : (
+        <p className="text-muted-foreground text-sm">{t("errors.needsHome")}</p>
+      )}
+      <SwapTerms firstDelivery={holding.length === 0} />
       {tooMany ? (
         <p className="text-destructive text-sm" role="alert">
           {t("tooMany", { n: formatNumber(room, locale) })}
@@ -356,10 +320,10 @@ export const SwapPanel = ({ slots }: { readonly slots: number }) => {
       ) : null}
       <Button
         className="justify-self-start"
-        disabled={nothing || tooMany || bookSwap.isPending}
+        disabled={!home || nothing || tooMany || bookSwap.isPending}
         onClick={() =>
           bookSwap.mutate(
-            { method, returns, wants: chosen },
+            { method: "home", returns, wants: chosen },
             {
               onSuccess: () => {
                 setReturns([]);

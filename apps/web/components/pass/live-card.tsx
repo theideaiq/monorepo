@@ -302,7 +302,7 @@ export const LiveCard = (details: CardDetails) => {
         memberNumber={card.data?.memberNumber}
       />
       <figcaption className="flex flex-wrap items-center justify-between gap-2 text-muted-foreground text-sm">
-        <span>{t("showAtCounter")}</span>
+        <span>{t("showCard")}</span>
         <span aria-live="off" className="tabular-nums">
           {t("newCodeIn", { seconds: formatNumber(left, locale) })}
         </span>

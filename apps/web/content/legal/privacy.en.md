@@ -1,4 +1,4 @@
-The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy explains what personal data we collect when you use theideaiq.com, The IDEA's iOS and Android apps, The IDEA Droid on Telegram and WhatsApp, and our counter and events (together, "the service"); why we collect it; who we share it with; how long we keep it; and the choices you have.
+The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy explains what personal data we collect when you use theideaiq.com, The IDEA's iOS and Android apps, The IDEA Droid on Telegram and WhatsApp, and our events (together, "the service"); why we collect it; who we share it with; how long we keep it; and the choices you have.
 
 ## 1. What we collect
 
@@ -20,7 +20,7 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 
 - **Device and usage data:** IP address, browser and device type, pages viewed, and when.
 - **Error and performance data**, so we can find and fix problems.
-- **The card:** your device keeps the secret that makes your card's changing code, so the card works offline. When the counter or a partner scans your card, we record the check.
+- **The card:** your device keeps the secret that makes your card's changing code, so the card works offline. When our staff or a partner scans your card, we record the check.
 - **Push notifications:** a device token, if you allow notifications in our apps.
 
 ### What other services send us
