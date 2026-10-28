@@ -6023,6 +6023,26 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      seller_listings: {
+        Args: { listing_seller: string };
+        Returns: {
+          active: boolean;
+          available: number;
+          barcode: string;
+          condition: Database["public"]["Enums"]["product_condition"];
+          name_ar: string;
+          name_en: string;
+          offer_id: string;
+          price: number;
+          product_id: string;
+          product_status: Database["public"]["Enums"]["product_status"];
+          sku: string;
+          slug: string;
+          sold: number;
+          updated_at: string;
+          variant_id: string;
+        }[];
+      };
       send_quote: { Args: { quote: string }; Returns: undefined };
       set_guardian_plus: {
         Args: { allow: boolean; link: string };
