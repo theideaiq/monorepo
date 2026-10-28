@@ -1,0 +1,42 @@
+---
+title: "Scopes and claims"
+description: "What you can ask for, and what comes back."
+---
+
+`openid` is required. You can ask only for the scopes your app is
+registered for (and, when live, that are approved). The person can untick
+any of them on the consent screen: the token response's `scope` lists what
+was actually shared, and claims for anything else are absent.
+
+| Scope | Claims | |
+| --- | --- | --- |
+| `openid` | `sub`: the person's id **at your site** (each site gets its own) | |
+| `profile` | `name`, `given_name`, `family_name`, `locale` (`ar` or `en`), `picture` | |
+| `email` | `email`, `email_verified` (the Pass email) | |
+| `membership` | `member_number`, `member_since` | |
+| `student` | `student`: `{ "verified": true, "university": "auib", "until": "2027-06-30" }`, or `{ "verified": false }` | |
+| `student_email` | `student_email`, `student_email_verified`: the university email the badge was verified with | sensitive |
+| `adult` | `adult`: `true` when 18 or over | |
+| `plus` | `plus`, and `plus_plan` (the plan's name) for members | |
+| `phone` | `phone_number` (`+9647…`), `phone_number_verified: false` | sensitive |
+| `birthdate` | `birthdate` (`YYYY-MM-DD`) | sensitive |
+| `address` | `address` (`formatted`, `street_address`, `locality`, `region`, `country`) | sensitive |
+| `card` | No claim: lets the access token [fetch the person's card](/card/show) | |
+| `offline_access` | No claim: the token response adds a [refresh token](/sign-in/tokens#refresh-tokens) | sensitive |
+
+Sensitive scopes are marked on the consent screen and unticked by default.
+
+## ID token and userinfo
+
+The ID token has the claims as they were at sign-in. Userinfo
+(`GET /oidc/userinfo` with the access token) works them out again, so a
+student badge that has ended reads `verified: false`.
+
+## Universities
+
+`student.university` is one of: `auib`, `uobaghdad`, `mustansiriyah`,
+`uotechnology`, `nahrain`, `aliraqia`, `mansour`, `dijlah`, `rafidain`.
+
+<Note>
+  We never share orders, payments or anything the person didn't tick.
+</Note>

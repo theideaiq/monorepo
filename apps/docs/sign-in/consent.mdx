@@ -1,0 +1,23 @@
+---
+title: "Consent"
+description: "When people see the consent screen, and how to skip it."
+---
+
+The first time someone signs in to your app, The IDEA shows your app's
+name, its website and what you ask for. They can untick anything that isn't
+required and say yes or no.
+
+After that, The IDEA remembers what they shared with your app:
+
+- **Without `prompt`:** a returning person who already shared everything
+  you ask for comes straight back with a code. Ask for something new and
+  they see the consent screen again, for the new part.
+- **`prompt=consent`** (or `login`): always show the consent screen.
+- **`prompt=none`:** never show a page. A person who already shared what
+  you ask for comes back with a code; anyone else comes back with
+  `error=consent_required`. Use it to sign people in silently, and fall
+  back to a normal request on that error.
+
+People see your app in **Pass → Settings → Connected sites** and can
+disconnect it there. That ends its refresh tokens and live card frames, and
+the next sign-in asks again.

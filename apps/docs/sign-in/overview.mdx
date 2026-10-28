@@ -1,0 +1,58 @@
+---
+title: "Sign in with The IDEA Pass"
+sidebarTitle: "Overview"
+description: "OpenID Connect with the authorization code flow and PKCE."
+---
+
+Sign in with The IDEA Pass is standard [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html):
+the authorization code flow, with PKCE required. People see who's asking
+and what would be shared the first time, and again whenever you ask for
+something new; after that they come straight back signed in.
+
+## Endpoints
+
+| | |
+| --- | --- |
+| Discovery | `https://api.theideaiq.com/oidc/.well-known/openid-configuration` |
+| Issuer | `https://api.theideaiq.com/oidc` |
+| Authorization | `https://theideaiq.com/oauth/authorize` |
+| Token | `https://api.theideaiq.com/oidc/token` |
+| Userinfo | `https://api.theideaiq.com/oidc/userinfo` |
+| Keys (JWKS) | `https://api.theideaiq.com/oidc/jwks` (ES256) |
+
+## The authorization request
+
+| Parameter | |
+| --- | --- |
+| `response_type` | `code` |
+| `client_id` | Your app's client id (`pass_…`) |
+| `redirect_uri` | One of your registered return addresses, exactly |
+| `scope` | `openid` and the [scopes](/sign-in/scopes) you registered |
+| `code_challenge`, `code_challenge_method` | PKCE, `S256` only (required) |
+| `state`, `nonce` | Recommended |
+| `ui_locales` | `ar` or `en`: the consent screen's language |
+| `prompt` | `consent` (or `login`), `none`, or absent: see [Consent](/sign-in/consent) |
+
+## What comes back
+
+Your return address gets `code`, `state` and `iss`, or an `error`:
+
+| Error | When |
+| --- | --- |
+| `access_denied` | The person said no |
+| `consent_required` | `prompt=none`, and the person hasn't shared what you ask for |
+| `invalid_scope` | You asked for a scope your app isn't registered (or approved) for |
+| `invalid_request` | A parameter is missing or wrong (for example no PKCE) |
+
+An unknown client or return address is never sent anything: the person
+sees an error on The IDEA instead.
+
+A code lasts 5 minutes and works once; a failed exchange uses it up.
+Exchange it at the [token endpoint](/sign-in/tokens).
+
+## Who can sign in
+
+- **Testing** (a new app): only members of your organization, and the
+  sensitive scopes work without review.
+- **Live:** everyone with The IDEA Pass. Sensitive scopes work once our
+  staff approve them. See [Register an app](/apps/register).

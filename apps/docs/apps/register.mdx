@@ -1,0 +1,55 @@
+---
+title: "Register an app"
+description: "Verify your domain, register, test with your team and go live."
+---
+
+Owners and admins register apps in **The IDEA Partners → Developers**
+([partners.theideaiq.com/developers](https://partners.theideaiq.com/developers)).
+If your organization doesn't show Developers yet, add it from Home.
+
+<Steps>
+  <Step title="Verify a domain">
+    Add your domain, then publish the token we show, either:
+
+    - as a DNS TXT record `_theidea-pass.<domain>` with the value
+      `theidea-pass-verification=<token>`, or
+    - as a file at `https://<domain>/.well-known/theidea-pass-verification.txt`
+      holding the token.
+
+    Press **Check now**. We look for the record, then the file (no
+    redirects, 5 seconds). theideaiq.com and shared hosting domains can't be
+    used.
+  </Step>
+  <Step title="Register the app">
+    Its name (shown on the consent screen), website and exact return
+    addresses. The website and every https return address must be on a
+    verified domain (or under it); `http://localhost:<port>/…` is allowed
+    for development. Tick the answers (scopes) it needs.
+
+    You see the **client id** (`pass_…`) and **client secret** once; we keep
+    only a hash of the secret.
+  </Step>
+  <Step title="Test with your team">
+    A new app is in **testing**: only your organization's members can sign
+    in (and only their cards pass card checks), and every answer you
+    registered works.
+  </Step>
+  <Step title="Go live">
+    Everyone can sign in. The basic answers work at once. The sensitive ones
+    (`student_email`, `phone`, `birthdate`, `address`, `offline_access` and
+    the live card) wait for our review and aren't asked until approved; you
+    get a notification either way. Asking for a new sensitive answer later
+    goes back to review, while approved ones keep working.
+  </Step>
+</Steps>
+
+## Managing it
+
+- **Secrets:** rotate (the previous secret keeps working 24 hours, or stops
+  at once if you choose), stop the previous one early, or upload public keys
+  for [`private_key_jwt`](/sign-in/client-authentication#private_key_jwt).
+- **People and activity:** the people connected, and the last 30 days'
+  sign-ins and card checks.
+- **Off switch:** turn the app off at any time; staff can also suspend it.
+- **Limits:** up to 10 domains and 10 apps per organization. A domain an app
+  still uses can't be removed.

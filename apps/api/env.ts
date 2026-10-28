@@ -41,6 +41,7 @@ export const env = withPresets(
     extends: presets,
     runtimeEnv: {
       CRON_SECRET: process.env.CRON_SECRET,
+      DOCS_URL: process.env.DOCS_URL,
       FCM_SERVICE_ACCOUNT: process.env.FCM_SERVICE_ACCOUNT,
       GOOGLE_WALLET_ISSUER_ID: process.env.GOOGLE_WALLET_ISSUER_ID,
       GOOGLE_WALLET_SERVICE_ACCOUNT: process.env.GOOGLE_WALLET_SERVICE_ACCOUNT,
@@ -53,6 +54,10 @@ export const env = withPresets(
       // Shared secret Vercel Cron sends as a Bearer token. Generate with
       // `openssl rand -hex 32`. Cron routes reject every request when unset.
       CRON_SECRET: z.string().min(32).optional(),
+      // The developer docs (apps/docs) on Mintlify, served at this site's
+      // root by rewrite (https://<subdomain>.mintlify.site). "/" is a 404
+      // while unset.
+      DOCS_URL: z.url().optional(),
       // Firebase service account key (the JSON file's contents, or base64
       // of it) for push notifications through FCM HTTP v1. Push is off
       // while unset.

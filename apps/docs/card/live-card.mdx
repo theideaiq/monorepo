@@ -1,0 +1,67 @@
+---
+title: "The live card on your site"
+description: "Frame the member's live Pass card, QR code and all, in your own pages."
+---
+
+Members can show their **live** card (the QR code and the 6-digit code
+that changes every 30 seconds) inside your pages, without the code ever
+reaching your servers. It isn't an OpenID scope and needs no token: ask
+for **The live Pass card on your site** in Developers. It works at once in
+testing (for your organization's members) and after our review once live.
+
+## Frame it
+
+```html
+<iframe
+  src="https://theideaiq.com/pass/embed?client_id=pass_…&lang=ar&theme=light"
+  title="The IDEA Pass"
+  style="width: 100%; max-width: 448px; border: 0"
+></iframe>
+```
+
+| Parameter | |
+| --- | --- |
+| `client_id` | Required |
+| `lang` | `ar` or `en` (or use `/ar/pass/embed`) |
+| `theme` | `light` or `dark`, for the few words around the card (otherwise the browser's) |
+
+The card itself always looks the same; around it the frame is transparent.
+
+## Your page's headers
+
+- **Only your verified domains may frame it** (and their subdomains, over
+  https): the frame sends `Content-Security-Policy: frame-ancestors` built
+  from them. Add `frame-src https://theideaiq.com` to your own CSP.
+- **Don't send `Cross-Origin-Opener-Policy: same-origin`** on the page with
+  the frame: the browser then cuts the sign-in window off from the frame,
+  and the card never arrives. Send `same-origin-allow-popups`, or no such
+  header, on that page.
+
+## How members connect it
+
+Browsers keep The IDEA's cookie out of other sites' frames, so the frame
+shows a **Show my Pass card** button. It opens a small window on
+theideaiq.com where the member (signed in, or after signing in) allows
+your site; the window hands the frame a token for this browser and closes.
+Nothing goes through your page, and no token is ever put in a URL.
+
+The frame keeps that token in its own storage for your site, so the card
+shows straight away next time (up to 90 days after it was last shown).
+It always shows the card of whoever allowed it in that browser: you can't
+choose a card. Members can **Stop** your site in Pass → Settings →
+Connected sites, or remove it from the browser in the frame.
+
+## Fitting the height
+
+The frame tells your page its height, and nothing else:
+
+```js
+window.addEventListener("message", (event) => {
+  if (event.origin === "https://theideaiq.com" && event.data?.type === "idea-pass-card") {
+    frame.style.height = `${event.data.height}px`;
+  }
+});
+```
+
+Keep checking scans with [the card check](/card/check), and keep a link to
+[theideaiq.com/pass](https://theideaiq.com/pass) as a fallback.

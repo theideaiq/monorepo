@@ -1,0 +1,46 @@
+---
+title: "The IDEA for developers"
+sidebarTitle: "Introduction"
+description: "Let people sign in with The IDEA Pass, check their cards at your door and show their live card on your site."
+---
+
+The IDEA Pass is the membership card of The IDEA in Iraq. Its members are
+students, gamers, readers and music lovers who already carry it on their
+phones. These docs are for partners who build on it:
+
+<CardGroup cols={2}>
+  <Card title="Sign in with The IDEA Pass" icon="right-to-bracket" href="/sign-in/overview">
+    Standard OpenID Connect. People sign in to your site with their Pass and
+    choose what to share.
+  </Card>
+  <Card title="Check a Pass card" icon="qrcode" href="/card/check">
+    Scan the card's QR code at your door and get a yes or no, with the
+    answers you registered for.
+  </Card>
+  <Card title="The live card on your site" icon="id-card" href="/card/live-card">
+    Frame the member's live card, with its changing code, inside your own
+    members' page.
+  </Card>
+  <Card title="Register an app" icon="key" href="/apps/register">
+    Verify your domain and get a client id in The IDEA Partners, then test
+    with your own team.
+  </Card>
+</CardGroup>
+
+## How it fits together
+
+- **The IDEA Partners** (`partners.theideaiq.com`) is where your
+  organization registers apps, verifies domains and manages secrets
+  (Developers, for owners and admins).
+- **The API** (`api.theideaiq.com`) runs the OpenID Connect provider and
+  the card endpoints. Its base for sign-in is `https://api.theideaiq.com/oidc`.
+- **The website** (`theideaiq.com`) is where people sign in and say yes:
+  the consent screen and the live card are on its pages.
+
+Nothing you receive includes orders, payments or anything the person
+didn't tick. Every site gets its own id for each person.
+
+<Note>
+  Questions or a review you're waiting on? Write to us from The IDEA
+  Partners, or at [theideaiq.com/help](https://theideaiq.com/help#contact).
+</Note>

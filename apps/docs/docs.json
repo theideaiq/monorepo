@@ -1,0 +1,79 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "The IDEA Developers",
+  "description": "Sign in with The IDEA Pass, the Pass card and the API of The IDEA.",
+  "colors": {
+    "primary": "#D81B60",
+    "light": "#F06292",
+    "dark": "#D81B60"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://theideaiq.com"
+  },
+  "navbar": {
+    "links": [
+      { "label": "The IDEA Partners", "href": "https://partners.theideaiq.com" }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Register an app",
+      "href": "https://partners.theideaiq.com/developers"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          { "group": "Get started", "pages": ["index", "quickstart"] },
+          {
+            "group": "Sign in with The IDEA Pass",
+            "pages": [
+              "sign-in/overview",
+              "sign-in/scopes",
+              "sign-in/consent",
+              "sign-in/tokens",
+              "sign-in/client-authentication"
+            ]
+          },
+          {
+            "group": "The Pass card",
+            "pages": ["card/show", "card/live-card", "card/check"]
+          },
+          { "group": "Your apps", "pages": ["apps/register"] }
+        ]
+      },
+      {
+        "tab": "API reference",
+        "groups": [
+          { "group": "Overview", "pages": ["api-reference/introduction"] },
+          {
+            "group": "OpenID Connect",
+            "openapi": "api-reference/openapi.json",
+            "pages": [
+              "GET /oidc/.well-known/openid-configuration",
+              "GET /oidc/jwks",
+              "POST /oidc/token",
+              "GET /oidc/userinfo"
+            ]
+          },
+          {
+            "group": "The Pass card",
+            "openapi": "api-reference/openapi.json",
+            "pages": ["GET /oidc/card", "POST /oidc/card/check"]
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "telegram": "https://t.me/theideaiq",
+      "website": "https://theideaiq.com"
+    }
+  }
+}

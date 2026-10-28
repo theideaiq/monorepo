@@ -2247,7 +2247,8 @@
           "auth": "Your server authenticates with the client secret (HTTP Basic or form fields) or, with keys below, a signed client assertion (private_key_jwt, ES256 or RS256, at most 5 minutes, a new jti each time). Never put the secret in a browser or a mobile app.",
           "scopes": "Ask for openid plus the answers your app is registered for. People can untick any of them; the token response's scope lists what they shared. Each person has a different sub at each app.",
           "card": "With the card answer, your server can fetch the person's card image (GET /oidc/card). To check a scanned Pass card at a door, POST its code to /oidc/card/check with your credentials.",
-          "keys": "After a new secret, the previous one keeps working for 24 hours so you can switch without downtime, unless you stop it."
+          "keys": "After a new secret, the previous one keeps working for 24 hours so you can switch without downtime, unless you stop it.",
+          "docs": "Read the developer docs"
         },
         "discovery": "Discovery",
         "once": "Copy these now: the secret isn't shown again. Keep it on your server only.",

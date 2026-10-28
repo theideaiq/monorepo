@@ -1,0 +1,42 @@
+---
+title: "Check a Pass card"
+description: "Scan the live card's QR code at your door."
+---
+
+The live card's QR code reads `IDEA:<member number>:<6 digits>`; the
+digits change every 30 seconds. Send what you scanned from your server:
+
+```bash
+curl https://api.theideaiq.com/oidc/card/check \
+  -u "pass_…:$CLIENT_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{ "code": "IDEA:100007:123456" }'
+```
+
+The answer is `{ "valid": false }`, or:
+
+```json
+{
+  "valid": true,
+  "sub": "…",
+  "given_name": "Sara",
+  "member_number": 100007,
+  "student": { "verified": true, "university": "auib", "until": "2027-06-30" },
+  "adult": true
+}
+```
+
+- `sub` is the same id as in your ID tokens, or `null` if the person never
+  signed in to your app. Match it to your member.
+- `given_name` and `member_number` are printed on the card, so whoever is
+  at the door can compare. The yes/no answers are the ones your app is
+  registered for.
+- Showing the card is the person's consent to the check. Every check is
+  listed in their Pass → Settings.
+- 30 failed checks in 10 minutes pause your checks for a while (HTTP 429
+  with `Retry-After`).
+- In testing, only your organization's members' cards pass.
+
+Your client secret stays on your server: a scanning app calls your own
+backend, which calls this endpoint. [`private_key_jwt`](/sign-in/client-authentication#private_key_jwt)
+works here too.
