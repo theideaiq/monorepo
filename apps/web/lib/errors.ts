@@ -65,6 +65,7 @@ export type CheckoutError =
   | "notPayable"
   | "outOfStock"
   | "payment"
+  | "phoneUnverified"
   | "pickupUnavailable"
   | "rentedOut"
   | "kitsFull"
@@ -102,6 +103,9 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
   }
   if (message.includes("no longer available")) {
     return "unavailable";
+  }
+  if (message.includes("Verify your phone number")) {
+    return "phoneUnverified";
   }
   if (message.includes("Invalid shipping address")) {
     return "invalidAddress";

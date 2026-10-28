@@ -18,7 +18,7 @@ const StoreSettingsPage = async () => {
     supabase
       .from("store_settings")
       .select(
-        "shipping_fee, cash_on_delivery_enabled, pickup_enabled, pickup_address_ar, pickup_address_en, pickup_hours_ar, pickup_hours_en"
+        "shipping_fee, cash_on_delivery_enabled, pickup_enabled, pickup_address_ar, pickup_address_en, pickup_hours_ar, pickup_hours_en, require_verified_phone"
       )
       .maybeSingle(),
     supabase
@@ -47,6 +47,7 @@ const StoreSettingsPage = async () => {
               pickup_enabled: settings?.pickup_enabled ?? false,
               pickup_hours_ar: settings?.pickup_hours_ar ?? null,
               pickup_hours_en: settings?.pickup_hours_en ?? null,
+              require_verified_phone: settings?.require_verified_phone ?? false,
               shipping_fee: settings?.shipping_fee ?? 0,
             }}
           />

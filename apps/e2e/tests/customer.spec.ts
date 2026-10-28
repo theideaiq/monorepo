@@ -385,6 +385,22 @@ test.describe("a signed-in customer", () => {
     noErrors();
   });
 
+  test("starts verifying a phone in Settings", async ({ page }) => {
+    await page.goto(`${urls.web}/pass/settings`);
+    await expect(page.getByText("Verified phone numbers")).toBeVisible();
+    await page.getByLabel("Add a number").fill("0770 123 4567");
+    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(
+      page.getByText("We'll send a code to +964 770 123 4567")
+    ).toBeVisible();
+    await expectAccessible(page);
+    // CI has no Twilio keys: the API says codes aren't available yet.
+    await page.getByRole("button", { name: "Send code" }).click();
+    await expect(
+      page.getByText("Phone codes aren't available yet.")
+    ).toBeVisible();
+  });
+
   test("opens a support ticket", async ({ page }) => {
     const subject = `Delivery question ${Date.now()}`;
     await page.goto(`${urls.web}/help/new`);

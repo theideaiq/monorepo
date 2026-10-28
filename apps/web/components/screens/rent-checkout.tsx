@@ -24,7 +24,7 @@ import { Link, useRouter } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, BanknoteIcon, LockIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, type ReactNode, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import {
   ContactCard,
@@ -34,6 +34,7 @@ import {
   useCheckoutAreas,
 } from "@/components/screens/checkout";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { CheckoutErrorNote } from "@/components/store/checkout-error";
 import { productHref } from "@/components/store/product-card";
 import {
   type AddressField,
@@ -62,7 +63,8 @@ interface RentSummaryProps {
   readonly cash: boolean;
   /** The zone's fee; null for pickup (or before a zone is chosen). */
   readonly deliveryFee: number | null;
-  readonly error: CheckoutError | null;
+  /** Why placing failed (CheckoutErrorNote), if it did. */
+  readonly error: ReactNode;
   readonly method: Fulfilment;
   readonly name: string;
   readonly quote: RentalQuote;
@@ -138,11 +140,7 @@ const RentSummary = ({
           </li>
           {method === "delivery" ? <li>{t("plusDelivery")}</li> : null}
         </ul>
-        {error ? (
-          <p className="text-destructive" role="alert">
-            {tCheckout(`errors.${error}`)}
-          </p>
-        ) : null}
+        {error}
         <Button disabled={busy} size="lg" type="submit">
           {busy
             ? tCheckout("placing")
@@ -386,7 +384,13 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
               busy={busy}
               cash={cash}
               deliveryFee={method === "delivery" ? (zone?.fee ?? null) : null}
-              error={error}
+              error={
+                <CheckoutErrorNote
+                  error={error}
+                  onPhoneVerified={() => setError(null)}
+                  phone={address.phone}
+                />
+              }
               method={method}
               name={data.name}
               quote={quote}

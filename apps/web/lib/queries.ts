@@ -61,6 +61,7 @@ export const queryKeys = {
   tickets: (userId: string) => ["tickets", "list", userId] as const,
   unreadNotifications: (userId: string) =>
     ["notifications", userId, "unread"] as const,
+  verifiedPhones: (userId: string) => ["verified-phones", userId] as const,
   whatsappSettings: (userId: string) => ["whatsapp-settings", userId] as const,
   wishlist: (userId: string) => ["wishlist", userId] as const,
 };

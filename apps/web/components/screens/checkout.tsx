@@ -40,10 +40,11 @@ import { formatNumber } from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, BanknoteIcon, LockIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { type FormEvent, useId, useState } from "react";
+import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { Field, LandmarkFields } from "@/components/address-fields";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { CheckoutErrorNote } from "@/components/store/checkout-error";
 import { OrderSummary } from "@/components/store/order-summary";
 import {
   type AddressField,
@@ -620,7 +621,8 @@ const BulbsCard = ({
 interface SummaryCardProps {
   readonly busy: boolean;
   readonly cash: boolean;
-  readonly error: CheckoutError | null;
+  /** Why placing failed (CheckoutErrorNote), if it did. */
+  readonly error: ReactNode;
   readonly method: Fulfilment;
   /** "Deliver to Home · Pay online", when a saved address is chosen. */
   readonly oneTap?: string | null;
@@ -699,11 +701,7 @@ const SummaryCard = ({
             })}
           </p>
         ) : null}
-        {error ? (
-          <p className="text-destructive text-sm" role="alert">
-            {t(`errors.${error}`)}
-          </p>
-        ) : null}
+        {error}
         {oneTap ? <p className="font-medium text-sm">{oneTap}</p> : null}
         <Button disabled={busy || !summary.canCheckout} size="lg" type="submit">
           {busy
@@ -1248,7 +1246,13 @@ export const Checkout = () => {
             <SummaryCard
               busy={busy}
               cash={cash}
-              error={error}
+              error={
+                <CheckoutErrorNote
+                  error={error}
+                  onPhoneVerified={() => setError(null)}
+                  phone={address.phone}
+                />
+              }
               method={method}
               oneTap={book.oneTap(method, cash)}
               quote={quote ?? null}

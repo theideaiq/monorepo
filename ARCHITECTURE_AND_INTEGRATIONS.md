@@ -1990,6 +1990,35 @@ until both `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
 | `order_shipped` | name, order number, tracking | `Hi {{1}}, your order {{2}} is on its way. Tracking: {{3}}.` | `مرحباً {{1}}، طلبك {{2}} في الطريق إليك. رقم التتبع: {{3}}.` |
 | `rental_due_soon` | name, item, due date | `Hi {{1}}, a reminder that {{2}} from The IDEA Plus is due back on {{3}}.` | `مرحباً {{1}}، تذكير بأن موعد إرجاع {{2}} من The IDEA Plus هو {{3}}.` |
 
+### 4.4a Phone verification
+
+Deliveries go to numbers a Pass has proved it owns. Pass → Settings →
+**Verified phone numbers** and the checkouts (when an order is refused
+with "Verify your phone number first") send a code with
+`POST /account/phone/start` and check it with `POST /account/phone/check`
+(`apps/api/lib/phone-verify`, Bearer token). The API asks **Twilio Verify**
+for the code on WhatsApp first and by SMS when WhatsApp can't deliver;
+Twilio keeps the code, its expiry and its attempt limits, and we never see
+it. On approval the API adds the number to `verified_phones` (the admin
+client; people can only read and remove their own rows). A number someone
+signed in with by SMS counts as verified too. Each Pass gets ten sends or
+checks an hour (Upstash) on top of Twilio's limits.
+
+The check itself is `store_settings.require_verified_phone` (Staff →
+Catalogue → Settings): off by default; when on, a customer's own delivery orders (shop, rent and game
+night kit checkouts) and Plus home need a verified number. Orders staff or
+scheduled jobs make aren't checked.
+
+**Owner setup**
+
+1. Twilio Console → create an account, then Verify → Services → create a
+   service (code length 6). Set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`
+   and `TWILIO_VERIFY_SERVICE_SID` on the `api` Vercel project.
+2. For WhatsApp: in the Verify service, add a WhatsApp sender (it needs The
+   IDEA's verified Meta Business). Until then codes go by SMS.
+3. Try it from Pass → Settings, then turn on the check in Staff →
+   Catalogue → Settings → **Require a verified phone for deliveries**.
+
 ### 4.5 Delivery with Boxy
 
 Purchases are delivered by **Boxy** (tryboxy.com); rentals aren't, yet.
@@ -2174,6 +2203,7 @@ PostHog ids.
 | `RESEND_TOKEN`, `RESEND_FROM` | Feature | Receipts, renewal invoices and the website's contact form (`POST /contact`, delivered to `supportEmail` in `project.json`); without them the form answers "unavailable" |
 | `RESEND_SEGMENT_ID` | Feature | The Resend segment newsletters go to; `/cron/newsletter-contacts` syncs the accounts there (4.3). The sync is off without it. Needs `RESEND_TOKEN` with full access (contacts), not a sending-only key. |
 | `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` | Optional | WhatsApp order updates (4.4); off without them. **Server only.** |
+| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_VERIFY_SERVICE_SID` | Optional | Phone verification codes (4.4a); "not configured" without them. **Server only.** |
 | `WHATSAPP_TEMPLATE_LANG` | Optional | `ar` (default) or `en`: the template language for customers in another language |
 | `ARCJET_KEY` | Optional | `ajkey_…`. Guards the website's public forms (`@repo/security/form`: shield, bots, 5 per 10 minutes, undeliverable addresses) |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Feature | Droid's sessions and flood counters; the contact form's one message per visitor per day |
