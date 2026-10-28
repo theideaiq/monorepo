@@ -188,6 +188,11 @@ decisions with a date.
       discounts on the top 10 brands (Reloadly, LikeCard, Golden Codes) and
       record the result here; ask Boxy whether a reverse-pickup order type
       is planned.
+- [ ] **Twilio Verify (phone codes):** create a Twilio account and a
+      Verify service; set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and
+      `TWILIO_VERIFY_SERVICE_SID` on the theideaiq-api Vercel project. For
+      WhatsApp, add a WhatsApp sender to the Verify service (needs the
+      verified Meta Business); until then codes go by SMS.
 - [ ] **Wayl, to check and record here:** whether Plus and Pro can renew
       automatically through Wayl subscriptions; a partial refund in test
       mode.
@@ -403,7 +408,8 @@ steps need Xcode, Android Studio and the store/Firebase accounts
      Tech → Gear; header with the Saved heart, no footer on phones, About
      & help in My Pass, version on /about (section 11 layout).
   2. Phone verification (one-time code to an Iraqi number), required for
-     every delivery order.
+     every delivery order. Codes go through Twilio Verify, WhatsApp first
+     with SMS as the fallback (owner's choice, 2026-10-28).
   3. Selling (item 11): listings by ISBN/barcode or title (pick or create,
      product data filled in, automatic checks to Staff → Inbox, flags,
      spreadsheet upload, bundles, shop SKU, offers-only visibility with
