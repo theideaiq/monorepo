@@ -12,9 +12,9 @@ export const lockupOnPinkUrl = `${project.url ?? "https://theideaiq.com"}/brand/
 const Logo = ({ alt }: { readonly alt: string }) => (
   <Img
     alt={alt}
-    height="40"
+    height="41"
     src={lockupOnPinkUrl}
-    style={{ display: "inline-block", height: 40, width: 142 }}
+    style={{ display: "inline-block", height: 41, width: 142 }}
     width="142"
   />
 );

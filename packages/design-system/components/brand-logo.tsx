@@ -1,7 +1,6 @@
 import { project } from "@repo/config";
 import { cn } from "../lib/utils";
 import { Bulb } from "./brand/bulb";
-import { Wordmark } from "./brand/wordmark";
 
 /** The grounds the logo sits on (BRAND_GUIDELINES.md, section 4). */
 export type BrandLogoVariant =
@@ -55,14 +54,14 @@ const arabicName = project.localizedName?.ar;
 
 /**
  * The IDEA's lock-up: the bulb, a gap of a third of its height, then the
- * wordmark (the outlined drawing, never live text); the bulb is 1.6 × the
- * cap height. Every app renders the brand through this component, and
+ * wordmark, "The IDEA" as live text in Alexandria 700 at −1% tracking
+ * (never an image of text); the bulb is 1.6 × the cap height. Every app renders the brand through this component, and
  * screen readers hear the name.
  *
  * On Arabic pages (`lang="ar"`) the name alone is the Arabic one from
- * `project.json`, set in the text font and chosen in CSS so this works in
- * server and client components; a product lock-up keeps the wordmark and
- * adds the short name ("Partners") in weight 600, left-to-right.
+ * `project.json`, chosen in CSS so this works in server and client
+ * components; a product lock-up keeps the wordmark and adds the short name
+ * ("Partners") in weight 600, left-to-right.
  */
 export const BrandLogo = ({
   className,
@@ -72,7 +71,7 @@ export const BrandLogo = ({
 }: BrandLogoProps) => (
   <span
     className={cn(
-      "inline-flex items-center gap-[0.38em] font-bold tracking-[-0.01em]",
+      "inline-flex items-center gap-[0.38em] font-bold font-sans tracking-[-0.01em]",
       className
     )}
     data-variant={variant}
@@ -87,20 +86,15 @@ export const BrandLogo = ({
       >
         {arabicName && !line ? (
           <>
-            <span
-              className="inline-flex items-center [&:lang(ar)]:hidden"
-              dir="ltr"
-            >
-              <Wordmark className="h-[0.72em] w-auto" />
-              <span className="sr-only">{project.name}</span>
+            <span className="[&:lang(ar)]:hidden" dir="ltr">
+              {project.name}
             </span>
             <span className="hidden [&:lang(ar)]:inline">{arabicName}</span>
           </>
         ) : (
-          <span className="inline-flex items-center gap-[0.28em]" dir="ltr">
-            <Wordmark className="h-[0.72em] w-auto" />
-            <span className="sr-only">{project.name}</span>
-            {line ? <span className="font-semibold">{line}</span> : null}
+          <span dir="ltr">
+            {project.name}
+            {line ? <span className="font-semibold"> {line}</span> : null}
           </span>
         )}
       </span>

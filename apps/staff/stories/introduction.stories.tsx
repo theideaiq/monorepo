@@ -188,8 +188,8 @@ const Introduction = () => (
           <p className="text-h2">Games, books and more</p>
           <p className="text-small">
             One family for Latin and Arabic. Weights 400 (body), 500 (prices),
-            600 (headings and labels), 700 (titles). The wordmark is a drawing,
-            not text.
+            600 (headings and labels), 700 (titles). The wordmark is live text
+            in 700.
           </p>
         </div>
         <div className="grid gap-2 rounded-md border p-4" dir="rtl" lang="ar">

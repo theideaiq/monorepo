@@ -94,18 +94,18 @@ On phones scale `display-xl` to 44/48 and `display` to 36/42. Arabic never below
 
 Add every other token from `tokens.css` and expose them in `@theme inline` as `--color-*` (`bg-idea-pink`, `text-pink-text`, `bg-surface-sunken` …). Remove `--plus`, `--business`/`--partners`, `--club`, `--on-accent` and `--on-accent-warm` and every use of them (the classes become pink, yellow or neutral as section 4 says).
 
-Fonts (`packages/design-system/lib/fonts.ts`): load **Alexandria** with `next/font/google` (subsets `latin` and `arabic`, weights 400, 500, 600, 700) as the only `--font-sans` family; drop Readex Pro and Cairo (Readex Pro has no گ, چ, پ or ژ, so Iraqi words fell back to Cairo mid-word); keep Geist Mono. The logo's wordmark stays outlined Readex Pro Bold in the SVGs and is never set as live text. Email templates and the Supabase auth templates use Alexandria with a system fallback.
+Fonts (`packages/design-system/lib/fonts.ts`): load **Alexandria** with `next/font/google` (subsets `latin` and `arabic`, weights 400, 500, 600, 700) as the only `--font-sans` family; drop Readex Pro and Cairo (Readex Pro has no گ, چ, پ or ژ, so Iraqi words fell back to Cairo mid-word); keep Geist Mono. The logo's wordmark is Alexandria Bold: live text in `BrandLogo`, outlined in the logo SVGs. Email templates and the Supabase auth templates use Alexandria with a system fallback.
 
 ## 4. Components
 
 | Component | Spec |
 | --- | --- |
-| `BrandLogo` (exists) | Props `variant: 'on-light' \| 'on-pink' \| 'on-yellow' \| 'on-dark'` and `line?: Line` (Club, Design, Droid, Partners, Pass, Plus, Staff, Store). On light and yellow: pink bulb and pink wordmark; on pink and dark: yellow bulb and white wordmark. The wordmark is the outlined drawing (Readex Pro Bold, −1% tracking), never live text. Never black. English always `dir="ltr"`. |
+| `BrandLogo` (exists) | Props `variant: 'on-light' \| 'on-pink' \| 'on-yellow' \| 'on-dark'` and `line?: Line` (Club, Design, Droid, Partners, Pass, Plus, Staff, Store). On light and yellow: pink bulb and pink wordmark; on pink and dark: yellow bulb and white wordmark. The wordmark is live text "The IDEA" in Alexandria 700, −1% tracking, beside the bulb SVG (never an image of text). Never black. English always `dir="ltr"`. |
 | `Button` (exists) | `default` = pink / white; `brand` (new) = yellow / dark text, for use on pink grounds; `outline` = transparent + `border-strong`; `ghost`; `destructive` = danger. The `plus` variant is removed: the primary action is pink whatever it is (buy, rent, bid). Heights 36 / 44 / 52, `radius-md`, 2px focus ring offset 2px. |
 | `Highlight` (new) | Yellow swipe with dark text on paper and dark; inside pink grounds the words turn yellow, no swipe. One per headline. |
 | `BulbKicker` (new) | Small bulb (20–28px) centered above a headline: yellow on pink and dark, pink on paper and yellow. |
 | `PinkBand` (new) | Full-width pink band, yellow bulb kicker, white headline with one yellow Highlight, yellow `brand` button. Once per page. |
-| `NameTile` (exists) | Circle (or `shape="square"` at 22%) with one bold word (outlined in the SVG files; live text in Alexandria 700): `public` = white on pink (Club, Droid, Plus, Partners); `internal` = pink on yellow (Staff); no word = yellow bulb on pink. Sizes 32–128. |
+| `NameTile` (exists) | Circle (or `shape="square"` at 22%) with one bold word in Alexandria 700 (outlined in the SVG files, live text in the component): `public` = white on pink (Club, Droid, Plus, Partners); `internal` = pink on yellow (Staff); no word = yellow bulb on pink. Sizes 32–128. |
 | Condition label | Four plain labels: New, Open box, Refurbished, Used (جديد · علبة مفتوحة · مجدّد · مستعمل), `Badge` outline, shown when not new. The bulb belongs only to Bulbs; the condition bulbs and their files (`logos/condition-*.svg`) are retired. |
 | `Badge` (exists) | Tones: neutral, brand (pink), highlight (yellow), success, warning, danger (status needs an icon). The `plus`, `business` and `club` tones are removed. |
 | `PlanCard` | `radius-xl`; featured: 2px pink border, pink flag, pink primary button; others outline. Shows per tier: items at a time, home swaps, the Bulbs rate ("Earn 3% in Bulbs" is the one place a rate appears), perks. A Duo toggle switches every card to its Duo price. Student price shown to verified students. |

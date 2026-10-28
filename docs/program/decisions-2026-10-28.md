@@ -707,3 +707,74 @@ dropped or postponed. The order of work is in `PROGRESS.md` (Decisions,
 - **Sign in with The IDEA Pass for other sites:** offered only to SAL until the outside security review is done.
 - **Finance (ledger, journal):** no new features. It stays as built.
 - **Native apps:** before store submission, make sure push notifications, Google Wallet and the share sheet work. Apple's minimum-functionality review (guideline 4.2) looks for them.
+
+# Master brief
+
+The owner's master brief of the same day brings every decision into one
+place. Where it differs from anything above, it wins. What it adds:
+
+## Open questions answered
+
+1. **Store pickup at checkout: removed.** Pickup belonged to The IDEA
+   Space and the counter, which are gone. Remove the delivery/pickup
+   choice at checkout, `PickupDetails` and `PickupLocation` in
+   `@repo/commerce/catalog`, their messages, and the pickup locations data
+   and its Staff settings (by a migration). Every order is delivered by
+   Boxy: The IDEA's own stock from The IDEA's Boxy pickup location, shop
+   items from each shop's own; single rentals, kits and Plus swaps are
+   delivered too. Past orders keep showing "Picked up".
+2. **The `membership` sign-in scope becomes `pass`.** Its claims
+   `member_number` and `member_since` become `pass_number` and
+   `pass_since`. Change the allowed lists in `pass_partners` and
+   `private.pass_claims` (a migration), `apps/api/lib/oidc/protocol.ts`,
+   the consent screen ("Your Pass number and since when you've had your
+   Pass."), Partners → Developers and `docs/platform/pass-sign-in.md`. No
+   alias: SAL (auibsal.org), the only partner using it, has its
+   registration updated in the same change, and its developer gets the new
+   names.
+3. **`public.memberships` becomes `public.organization_members`,** with
+   its indexes and policies, the functions that name it (recreated in a
+   new migration), generated types, code and pgTAP tests.
+   `organization_members` is for Partners, `plus_members` for Plus Duo,
+   and "membership" appears nowhere.
+
+## Brand
+
+- The brand files in `docs/brand/` are the master brief's copy: the
+  wordmark is now set in Alexandria Bold and the logo files are redrawn
+  with it (lock-ups and name tiles, including `tile-partners.svg` and
+  `tile-droid.svg`). The tiles' titles stay short (Partners, Droid, Staff).
+- **The wordmark is live text:** `BrandLogo` renders the bulb SVG beside
+  "The IDEA" in Alexandria 700 with −1% tracking, never an image of text.
+  The apps' copies of the logo files, the email headers and the Open
+  Graph image are replaced with the redrawn files.
+
+## Order of work
+
+Skip what's done; one pull request per item, schema first, every item
+green before the next.
+
+1. Clean-ups: The IDEA Space out of copy; store pickup removed; the
+   counter removed; the souq price removed (code, then the migration);
+   boxes removed; Audio + Tech → Gear; the brand tokens, Alexandria and the
+   live-text wordmark; names and "membership" wording; the header with
+   the Saved heart, no footer on phones, About & help in the Pass and the
+   version on /about.
+2. Renames: the `pass` scope and `organization_members`.
+3. Phone verification, required for every delivery order.
+4. The student check: the standalone verify page, the yes/no request for
+   partners and the in-person code.
+5. Selling: listings, shop orders with Boxy pickup locations and labels,
+   returns, commission and the Free/Pro plans, and Make an offer.
+6. Payouts.
+7. Prices.
+8. Saved, lists and the Plus queue.
+9. Bulbs at 1 Bulb = 1 IQD with the universal rate.
+10. Surveys.
+11. Catalog: rent up to 3 for one delivery fee, textbooks, new
+    categories, Send as a gift, one cart.
+12. Plus features, partner perks and Team.
+13. Supply and verification: supplier shops for Plus and kits; identity,
+    shop and organization verification; educators.
+14. Then, in order: Opportunities, auctions, Get offers from shops, people
+    selling, textbook resale, Plus Duo, digital codes and Apple Wallet.

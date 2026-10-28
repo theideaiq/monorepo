@@ -396,6 +396,32 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Master brief from the owner, the last word on everything
+  decided so far (recorded in `docs/program/decisions-2026-10-28.md`,
+  "Master brief"). Where it differs from earlier messages it wins:
+  - **Store pickup goes.** No delivery/pickup choice at checkout, no
+    `PickupDetails`/`PickupLocation` in `@repo/commerce/catalog`, no pickup
+    locations or their Staff settings (removed by a migration). Every
+    order, rental, kit and Plus swap is delivered by Boxy; past orders keep
+    showing "Picked up".
+  - **The sign-in scope `membership` becomes `pass`,** its claims
+    `pass_number` and `pass_since`, with no alias. SAL (auibsal.org), the
+    only partner using it, is updated in the same change.
+  - **`public.memberships` becomes `public.organization_members`,** with
+    its indexes, policies, functions (recreated), types, code and tests.
+  - **The wordmark is live text:** `BrandLogo` sets "The IDEA" in
+    Alexandria 700 at −1% tracking beside the bulb, replacing the outlined
+    drawing; the logo files in `docs/brand/logos/` are redrawn in
+    Alexandria Bold and replace the apps' copies, the email header and the
+    Open Graph image.
+  - **Order of work:** clean-ups (store pickup, the live wordmark and the
+    redrawn logos, then whatever of the rest is left), the two renames,
+    phone verification for every delivery order, the student check,
+    selling, payouts, prices, Saved and lists, Bulbs, surveys, catalog,
+    Plus features and Team, supply and verification, then Opportunities,
+    auctions, Get offers from shops, people selling, textbook resale, Plus
+    Duo, digital codes and Apple Wallet. One pull request per item, schema
+    first, each green before the next.
 - 2026-10-28: Brand update (still v1.0), from the owner with
   `docs/brand/CLAUDE_CODE_BRIEF.md`. `docs/brand/` now holds the updated
   guidelines, design system and tokens, the new `logos/tile-partners.svg`,
