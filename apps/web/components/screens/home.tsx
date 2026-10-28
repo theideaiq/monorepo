@@ -224,7 +224,7 @@ const NextEvents = () => {
         <div className="grid justify-items-start gap-3">
           <p className="text-muted-foreground text-sm">{t("empty")}</p>
           <Button asChild size="sm" variant="outline">
-            <Link href="/club?show=events">{t("browse")}</Link>
+            <Link href="/club?show=events#join">{t("browse")}</Link>
           </Button>
         </div>
       ) : null}

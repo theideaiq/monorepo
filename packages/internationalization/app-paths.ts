@@ -43,12 +43,20 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/a", "/r"],
 ];
 
-/** Sections of /post that were pages and are now filters of /club. */
-const POST_SECTIONS = new Set(["/post/news", "/post/stories", "/post/learn"]);
+/** Sections of /post that were pages, now topics of the Club's Read feed. */
+const POST_SECTIONS: Record<string, string> = {
+  "/post/learn": "/club?topic=guides",
+  "/post/news": "/club?topic=news",
+  "/post/stories": "/club?topic=stories",
+};
+
+/** News, stories and guides were `/club?show=…`; they are Read's topics now. */
+const CLUB_TOPICS = new Set(["news", "stories", "guides"]);
 
 const moved = (pathname: string): [string, string] | null => {
-  if (POST_SECTIONS.has(pathname)) {
-    return ["/club", ""];
+  const section = POST_SECTIONS[pathname];
+  if (section) {
+    return [section, "#read"];
   }
   for (const [from, to, anchor = ""] of MOVED) {
     if (pathname === from) {
@@ -66,7 +74,8 @@ const moved = (pathname: string): [string, string] | null => {
  * page's current URL: detail pages that took a query parameter while the
  * app was a static export (`/orders/view?id=…` → `/pass/orders/…`), and
  * pages that moved (`/pass/support/…` → `/help/…`, `/pass/plus` →
- * `/plus#yours`). Other paths are returned unchanged.
+ * `/plus#yours`, `/club?show=news` → `/club?topic=news#read`). Other paths
+ * are returned unchanged.
  */
 export const currentAppPath = (path: string) => {
   const url = new URL(path, "http://site.invalid");
@@ -77,11 +86,17 @@ export const currentAppPath = (path: string) => {
     const query = url.searchParams.toString();
     return `${legacy[0]}/${encodeURIComponent(value)}${query ? `?${query}` : ""}`;
   }
+  const show = url.searchParams.get("show");
+  if (url.pathname === "/club" && show && CLUB_TOPICS.has(show)) {
+    return `/club?topic=${show}${url.hash || "#read"}`;
+  }
   const current = moved(url.pathname);
   if (!current) {
     return path;
   }
-  return `${current[0]}${url.search}${url.hash || current[1]}`;
+  const [page, anchor] = current;
+  const query = page.includes("?") ? url.search.replace("?", "&") : url.search;
+  return `${page}${query}${url.hash || anchor}`;
 };
 
 const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;

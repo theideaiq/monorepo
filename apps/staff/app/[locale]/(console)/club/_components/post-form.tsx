@@ -4,8 +4,8 @@ import type { Tables } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import {
+  CheckboxField,
   FieldGrid,
-  SelectField,
   TextareaField,
   TextField,
 } from "@/components/admin/fields";
@@ -15,7 +15,7 @@ import { Panel } from "@/components/admin/page";
 import type { PublishMode } from "@/lib/admin/publishing";
 import { savePost } from "../actions";
 import { PublishField } from "./publish-field";
-import { postSections } from "./sections";
+import { postTopics } from "./topics";
 
 interface PostFormProps {
   readonly mode: PublishMode;
@@ -25,7 +25,7 @@ interface PostFormProps {
 }
 
 /**
- * A bilingual post of The IDEA Club (its section and byline, Markdown
+ * A bilingual post of The IDEA Club (its topics and byline, Markdown
  * bodies and a cover image).
  */
 export const PostForm = ({
@@ -67,15 +67,18 @@ export const PostForm = ({
             name="slug"
             required
           />
-          <SelectField
-            defaultValue={post?.section ?? "news"}
-            label={t("section")}
-            name="section"
-            options={postSections.map((value) => ({
-              label: t(`sections.${value}`),
-              value,
-            }))}
-          />
+          <fieldset className="grid gap-2">
+            <legend className="mb-1 font-medium text-sm">{t("topics")}</legend>
+            {postTopics.map((topic) => (
+              <CheckboxField
+                defaultChecked={(post?.topics ?? ["news"]).includes(topic)}
+                key={topic}
+                label={t(`topicNames.${topic}`)}
+                name="topics[]"
+                value={topic}
+              />
+            ))}
+          </fieldset>
           <TextField
             defaultValue={post?.byline ?? ""}
             hint={t("bylineHint")}

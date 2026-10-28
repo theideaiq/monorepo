@@ -10,6 +10,7 @@ const pages = [
   { name: "Plus", path: "/plus" },
   { name: "Club", path: "/club" },
   { name: "Club events", path: "/club?show=events" },
+  { name: "Club guides", path: "/club?topic=guides" },
   { name: "Partners", path: "/partners" },
   { name: "About", path: "/about" },
   { name: "Help", path: "/help" },
@@ -74,6 +75,50 @@ test.describe("public site", () => {
       await expect(page).toHaveURL(/\/club$/);
       await expectAccessible(page);
     });
+  });
+
+  test("the Club is Join, Read and Yours, with Telegram at the bottom", async ({
+    page,
+  }) => {
+    await page.goto(`${urls.web}/club`);
+    const parts = page.getByRole("navigation", { name: "The IDEA Club" });
+    for (const name of ["Join", "Read", "Yours"]) {
+      await expect(parts.getByRole("link", { name })).toBeVisible();
+      await expect(
+        page.getByRole("heading", { exact: true, level: 2, name })
+      ).toBeVisible();
+    }
+    // Signed out, Join asks for a Pass before showing surveys.
+    await expect(
+      page.getByText("Sign in to see the surveys you can answer.")
+    ).toBeVisible();
+
+    // Telegram is one card, after Yours.
+    const yours = await page
+      .getByRole("heading", { exact: true, level: 2, name: "Yours" })
+      .boundingBox();
+    const telegram = await page
+      .getByRole("heading", { name: "The IDEA Club on Telegram" })
+      .boundingBox();
+    expect(telegram?.y ?? 0).toBeGreaterThan(yours?.y ?? 0);
+
+    // Read filters by topic.
+    const topics = page.getByRole("navigation", { name: "Topics" });
+    await topics.getByRole("link", { name: "Guides" }).click();
+    await expect(page).toHaveURL(/\/club\?topic=guides#read$/);
+    await expect(
+      page
+        .getByRole("navigation", { name: "Topics" })
+        .getByRole("link", { name: "Guides" })
+    ).toHaveAttribute("aria-current", "page");
+
+    // Join filters by kind.
+    await page
+      .getByRole("navigation", { name: "Show" })
+      .getByRole("link", { name: "Events" })
+      .click();
+    await expect(page).toHaveURL(/\/club\?show=events#join$/);
+    await expectAccessible(page);
   });
 
   test("each place has one way in: top bar, tabs and footer", async ({

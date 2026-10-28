@@ -754,22 +754,12 @@
       "byline": "By {name}",
       "theIdea": "The IDEA",
       "meta": {
-        "title": "The IDEA Club — events, news, stories and guides",
-        "description": "Events, news, stories and guides from The IDEA and its members, and our rooms on Telegram."
+        "title": "The IDEA Club — join, read and take part",
+        "description": "Join events and surveys, read news, stories and guides, and meet us on Telegram."
       },
       "title": "The IDEA Club",
-      "description": "Events, news, stories and guides from The IDEA and its members, and our rooms on Telegram.",
-      "chips": {
-        "label": "Show",
-        "all": "Everything",
-        "events": "Events",
-        "news": "News",
-        "stories": "Stories",
-        "guides": "Guides"
-      },
-      "noEvents": "No upcoming events right now. Check back soon.",
+      "description": "Join events and surveys, read news, stories and guides, and meet us on Telegram.",
       "pastEvents": "Past events",
-      "back": "Back to {section}",
       "telegram": {
         "title": "The IDEA Club on Telegram",
         "description": "Seven rooms for music, games, books, films, making things and work, looked after by The IDEA Droid.",
@@ -788,11 +778,11 @@
       },
       "yours": {
         "title": "Yours",
-        "events": "Your events",
         "submissions": "Your submissions",
-        "signedOut": "Sign in to see the events you're going to, answer surveys and submit your work.",
+        "signedOut": "Sign in to see your tickets, the surveys you created and your submissions.",
         "signIn": "Sign in",
-        "surveys": "Surveys"
+        "surveys": "Surveys",
+        "tickets": "Your tickets"
       },
       "surveys": {
         "title": "Survey",
@@ -928,10 +918,6 @@
           "average": "Average: {n}"
         },
         "yours": {
-          "toAnswer": "Surveys for you",
-          "noneToAnswer": "No surveys for you right now.",
-          "reward": "+{bulbs} Bulbs",
-          "giveToGet": "Give to get",
           "created": "Your surveys",
           "new": "New survey",
           "credits": "Response credits: {n}",
@@ -944,9 +930,42 @@
             "open": "Open",
             "closed": "Closed",
             "rejected": "Not published"
-          }
+          },
+          "receipt": "Receipt"
         }
-      }
+      },
+      "parts": {
+        "label": "The IDEA Club",
+        "join": "Join",
+        "read": "Read",
+        "yours": "Yours"
+      },
+      "join": {
+        "description": "Events and surveys, soonest first.",
+        "label": "Show",
+        "all": "Everything",
+        "events": "Events",
+        "surveys": "Surveys",
+        "survey": "Survey",
+        "reward": "+{bulbs} Bulbs",
+        "giveToGet": "Give to get",
+        "closes": "Closes {date}",
+        "signInForSurveys": "Sign in to see the surveys you can answer.",
+        "signIn": "Sign in",
+        "empty": {
+          "all": "Nothing to join right now. Check back soon.",
+          "events": "No upcoming events right now. Check back soon.",
+          "surveys": "No surveys for you right now."
+        }
+      },
+      "topics": {
+        "label": "Topics",
+        "all": "Everything",
+        "news": "News",
+        "stories": "Stories",
+        "guides": "Guides"
+      },
+      "backToRead": "Back to Read"
     },
     "partners": {
       "meta": {
@@ -3823,20 +3842,19 @@
         "titleEn": "Title (English)",
         "slug": "Slug",
         "slugHint": "The web address, e.g. new-games-arrive.",
-        "section": "Section",
-        "sections": {
-          "news": "News",
-          "stories": "Stories",
-          "members": "Members' work",
-          "learn": "Learn"
-        },
         "byline": "Byline",
         "bylineHint": "Who wrote it, as shown on the post. Leave empty for The IDEA.",
         "excerptAr": "Summary (Arabic)",
         "excerptEn": "Summary (English)",
         "cover": "Cover image",
         "bodyAr": "Article (Arabic)",
-        "bodyEn": "Article (English)"
+        "bodyEn": "Article (English)",
+        "topics": "Topics (at least one)",
+        "topicNames": {
+          "news": "News",
+          "stories": "Stories",
+          "guides": "Guides"
+        }
       },
       "events": {
         "new": "New event",

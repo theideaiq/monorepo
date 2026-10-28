@@ -19,10 +19,14 @@ incidents) is in `docs/platform`.
     categories, then plans and tiers), public, with "Your Plus" (joining
     and the waitlist at `#join`; membership, plan changes, pause and
     cancel, swaps, the queue and rentals) at `#yours` when signed in; The IDEA
-    Club is `/club`, one feed with chips (`?show=events|news|stories|guides`),
-    "Yours" at `#yours` (your events with the calendar feed, your
-    submissions) and the Telegram rooms card, and `/club/<slug>` is a post
-    or an event (with RSVP); `/partners` ("For partners") presents The
+    Club is `/club` in three parts: Join at `#join` (events and the
+    member's surveys by date or deadline, `?show=events|surveys`;
+    opportunities join in Stage 5), Read at `#read` (posts by topic tag,
+    `?topic=news|stories|guides`, `posts.topics`) and Yours at `#yours`
+    (tickets with the calendar feed, the surveys you created and your
+    submissions, each linking to its receipt in `/pass/orders` when it was
+    paid for), then the Telegram rooms as one card at the bottom;
+    `/club/<slug>` is a post or an event (with RSVP); `/partners` ("For partners") presents The
     IDEA Partners to organizations; `/search` (the one search: products
     to buy and rent, events and posts); `/help`
     (FAQ, the contact form at `#contact`, Ask Droid and the member's support tickets at `/help/<id>`

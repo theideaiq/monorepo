@@ -306,7 +306,7 @@ export const editorialUrl = (path: string | null | undefined) => {
 };
 
 const POST_SUMMARY =
-  "id, slug, section, byline, title_ar, title_en, excerpt_ar, excerpt_en, cover_image, published_at, updated_at" as const;
+  "id, slug, topics, byline, title_ar, title_en, excerpt_ar, excerpt_en, cover_image, published_at, updated_at" as const;
 
 export type PostSummary = Pick<
   Tables<"posts">,
@@ -316,24 +316,24 @@ export type PostSummary = Pick<
   | "excerpt_en"
   | "id"
   | "published_at"
-  | "section"
   | "slug"
   | "title_ar"
   | "title_en"
+  | "topics"
   | "updated_at"
 >;
 
-/** Published posts of The IDEA Club, newest first (one section or all). */
+/** Published posts of The IDEA Club, newest first (one topic or all). */
 export const getPosts = ({
   limit = 24,
   search,
-  sections,
+  topic,
 }: {
   limit?: number;
   /** Only posts with this in their title. */
   search?: string;
-  /** Only these sections (all when missing). */
-  sections?: Enums<"post_section">[];
+  /** Only posts tagged with this topic (all when missing). */
+  topic?: Enums<"post_topic">;
 } = {}) =>
   fallback("posts", [] as PostSummary[], async () => {
     const supabase = createPublicClient();
@@ -345,8 +345,8 @@ export const getPosts = ({
       .select(POST_SUMMARY)
       .not("published_at", "is", null)
       .lte("published_at", new Date().toISOString());
-    if (sections) {
-      query = query.in("section", sections);
+    if (topic) {
+      query = query.contains("topics", [topic]);
     }
     const titled = titleSearch(search);
     if (titled) {
@@ -366,7 +366,7 @@ export const getPost = async (slug: string) => {
     await supabase
       .from("posts")
       .select(
-        "id, slug, section, byline, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, cover_image, published_at, updated_at"
+        "id, slug, topics, byline, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, cover_image, published_at, updated_at"
       )
       .eq("slug", slug)
       .not("published_at", "is", null)
