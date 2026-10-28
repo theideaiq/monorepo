@@ -1900,6 +1900,117 @@ export type Database = {
           },
         ];
       };
+      payout_lines: {
+        Row: {
+          amount: number;
+          covers_until: string | null;
+          created_at: string;
+          id: string;
+          kind: Database["public"]["Enums"]["payout_line_kind"];
+          order_item_id: string | null;
+          payout_id: string;
+          return_id: string | null;
+        };
+        Insert: {
+          amount: number;
+          covers_until?: string | null;
+          created_at?: string;
+          id?: string;
+          kind: Database["public"]["Enums"]["payout_line_kind"];
+          order_item_id?: string | null;
+          payout_id: string;
+          return_id?: string | null;
+        };
+        Update: {
+          amount?: number;
+          covers_until?: string | null;
+          created_at?: string;
+          id?: string;
+          kind?: Database["public"]["Enums"]["payout_line_kind"];
+          order_item_id?: string | null;
+          payout_id?: string;
+          return_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payout_lines_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payout_lines_payout_id_fkey";
+            columns: ["payout_id"];
+            isOneToOne: false;
+            referencedRelation: "payouts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "payout_lines_return_id_fkey";
+            columns: ["return_id"];
+            isOneToOne: false;
+            referencedRelation: "returns";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      payouts: {
+        Row: {
+          amount: number;
+          created_at: string;
+          id: string;
+          method: string | null;
+          number: number;
+          paid_at: string | null;
+          paid_by: string | null;
+          period_end: string;
+          prepared_by: string | null;
+          reference: string | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["payout_status"];
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          id?: string;
+          method?: string | null;
+          number?: never;
+          paid_at?: string | null;
+          paid_by?: string | null;
+          period_end: string;
+          prepared_by?: string | null;
+          reference?: string | null;
+          seller_id: string;
+          status?: Database["public"]["Enums"]["payout_status"];
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          id?: string;
+          method?: string | null;
+          number?: never;
+          paid_at?: string | null;
+          paid_by?: string | null;
+          period_end?: string;
+          prepared_by?: string | null;
+          reference?: string | null;
+          seller_id?: string;
+          status?: Database["public"]["Enums"]["payout_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "payouts_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       perk_redemptions: {
         Row: {
           created_at: string;
@@ -5227,6 +5338,30 @@ export type Database = {
         }[];
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
+      cancel_payout: {
+        Args: { target: string };
+        Returns: {
+          amount: number;
+          created_at: string;
+          id: string;
+          method: string | null;
+          number: number;
+          paid_at: string | null;
+          paid_by: string | null;
+          period_end: string;
+          prepared_by: string | null;
+          reference: string | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["payout_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "payouts";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       cancel_plus: {
         Args: { keep?: boolean };
         Returns: {
@@ -6235,6 +6370,30 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      mark_payout_paid: {
+        Args: { method: string; reference: string; target: string };
+        Returns: {
+          amount: number;
+          created_at: string;
+          id: string;
+          method: string | null;
+          number: number;
+          paid_at: string | null;
+          paid_by: string | null;
+          period_end: string;
+          prepared_by: string | null;
+          reference: string | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["payout_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "payouts";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       mark_return_received: {
         Args: { target: string };
         Returns: {
@@ -6600,6 +6759,30 @@ export type Database = {
           scenario?: Database["public"]["Enums"]["ledger_scenario"];
         };
         Returns: string;
+      };
+      prepare_payouts: {
+        Args: { period_end?: string };
+        Returns: {
+          amount: number;
+          created_at: string;
+          id: string;
+          method: string | null;
+          number: number;
+          paid_at: string | null;
+          paid_by: string | null;
+          period_end: string;
+          prepared_by: string | null;
+          reference: string | null;
+          seller_id: string;
+          status: Database["public"]["Enums"]["payout_status"];
+          updated_at: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "payouts";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
       };
       price_check: {
         Args: { max_rows?: number };
@@ -7760,6 +7943,8 @@ export type Database = {
         | "canceled"
         | "expired"
         | "refunded";
+      payout_line_kind: "sale" | "collection_fee" | "pro_fee";
+      payout_status: "pending" | "paid" | "cancelled";
       plus_seat_status: "requested" | "active" | "ended" | "declined";
       post_section: "news" | "stories" | "members" | "learn";
       post_topic: "news" | "stories" | "guides";
@@ -8038,6 +8223,8 @@ export const Constants = {
         "expired",
         "refunded",
       ],
+      payout_line_kind: ["sale", "collection_fee", "pro_fee"],
+      payout_status: ["pending", "paid", "cancelled"],
       plus_seat_status: ["requested", "active", "ended", "declined"],
       post_section: ["news", "stories", "members", "learn"],
       post_topic: ["news", "stories", "guides"],
