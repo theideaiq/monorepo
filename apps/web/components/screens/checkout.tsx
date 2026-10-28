@@ -5,13 +5,12 @@ import { useAuth } from "@repo/auth/provider";
 import {
   BULB_VALUE_IQD,
   type CheckoutQuote,
-  type Fulfilment,
   formatPrice,
   localized,
   type PaymentMethod,
   variantName,
 } from "@repo/commerce";
-import type { DeliveryZone, PickupLocation } from "@repo/commerce/catalog";
+import type { DeliveryZone } from "@repo/commerce/catalog";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
@@ -89,7 +88,7 @@ interface ChoiceProps<T extends string> {
   readonly value: T;
 }
 
-/** A labelled group of radio cards (delivery or pickup, how to pay). */
+/** A labelled group of radio cards (how to pay). */
 const Choice = <T extends string>({
   disabled,
   label,
@@ -127,28 +126,6 @@ const Choice = <T extends string>({
   );
 };
 
-/** Where and when to collect a pickup order. */
-const PickupDetails = ({ pickup }: { readonly pickup: PickupLocation }) => {
-  const t = useTranslations("app.checkout.pickup");
-  const locale = useLocale() as Locale;
-  const address = localized(pickup, "address", locale);
-  const hours = localized(pickup, "hours", locale);
-  return (
-    <dl className="grid gap-3 rounded-md bg-muted p-4 text-sm sm:col-span-2">
-      <div className="grid gap-0.5">
-        <dt className="text-muted-foreground">{t("address")}</dt>
-        <dd className="whitespace-pre-line">{address}</dd>
-      </div>
-      {hours ? (
-        <div className="grid gap-0.5">
-          <dt className="text-muted-foreground">{t("hours")}</dt>
-          <dd className="whitespace-pre-line">{hours}</dd>
-        </div>
-      ) : null}
-    </dl>
-  );
-};
-
 /** The fee and delivery time of the chosen zone. */
 const zoneHint = (
   zone: DeliveryZone | undefined,
@@ -163,53 +140,15 @@ const zoneHint = (
       })
     : undefined;
 
-interface OptionCardProps<T extends string> {
+interface PaymentCardProps {
   readonly busy: boolean;
-  readonly method: Fulfilment;
-  readonly onChange: (value: T) => void;
+  readonly onChange: (value: PaymentMethod) => void;
+  readonly value: PaymentMethod;
 }
 
-/** Delivery to an address, or pickup from the store. */
-export const FulfilmentCard = ({
-  busy,
-  method,
-  onChange,
-}: OptionCardProps<Fulfilment>) => {
-  const t = useTranslations("app.checkout.fulfilment");
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Choice
-          disabled={busy}
-          label={t("title")}
-          onChange={onChange}
-          options={[
-            {
-              hint: t("deliveryHint"),
-              label: t("delivery"),
-              value: "delivery",
-            },
-            { hint: t("pickupHint"), label: t("pickup"), value: "pickup" },
-          ]}
-          value={method}
-        />
-      </CardContent>
-    </Card>
-  );
-};
-
-/** Online through Wayl, or cash to the courier or at the counter. */
-export const PaymentCard = ({
-  busy,
-  method,
-  onChange,
-  value,
-}: OptionCardProps<PaymentMethod> & { readonly value: PaymentMethod }) => {
+/** Online through Wayl, or cash to the courier. */
+export const PaymentCard = ({ busy, onChange, value }: PaymentCardProps) => {
   const t = useTranslations("app.checkout.payment");
-  const pickup = method === "pickup";
   return (
     <Card>
       <CardHeader>
@@ -223,8 +162,8 @@ export const PaymentCard = ({
           options={[
             { hint: t("onlineHint"), label: t("online"), value: "online" },
             {
-              hint: t(pickup ? "pickupCashHint" : "cashHint"),
-              label: t(pickup ? "pickupCash" : "cash"),
+              hint: t("cashHint"),
+              label: t("cash"),
               value: "cash_on_delivery",
             },
           ]}
@@ -241,24 +180,20 @@ interface ContactCardProps {
   readonly areas: readonly string[];
   readonly busy: boolean;
   readonly fieldErrors: AddressField[];
-  readonly method: Fulfilment;
   readonly onChange: (field: keyof AddressForm) => (value: string) => void;
   readonly onLocation: (location: MapPin | null) => void;
-  readonly pickup: PickupLocation | null;
   readonly zone: DeliveryZone | undefined;
   readonly zones: DeliveryZone[];
 }
 
-/** The recipient, and the delivery address and zone (or the store's counter). */
+/** The recipient, and the delivery address and zone. */
 export const ContactCard = ({
   address,
   areas,
   busy,
   fieldErrors,
-  method,
   onChange: set,
   onLocation,
-  pickup,
   zone,
   zones: zoneList,
 }: ContactCardProps) => {
@@ -269,19 +204,15 @@ export const ContactCard = ({
     fieldErrors.includes(field) ? t(`fieldErrors.${field}`) : null;
   const describedBy = (field: AddressField) =>
     fieldErrors.includes(field) ? `${id}-${field}-error` : undefined;
-  const isPickup = method === "pickup";
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t(isPickup ? "pickup.title" : "address.title")}</CardTitle>
-        <CardDescription>
-          {t(isPickup ? "pickup.description" : "address.description")}
-        </CardDescription>
+        <CardTitle>{t("address.title")}</CardTitle>
+        <CardDescription>{t("address.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <fieldset className="grid gap-4 sm:grid-cols-2" disabled={busy}>
-          {isPickup && pickup ? <PickupDetails pickup={pickup} /> : null}
           <Field
             error={fieldError("fullName")}
             htmlFor={`${id}-fullName`}
@@ -317,120 +248,104 @@ export const ContactCard = ({
               value={address.phone}
             />
           </Field>
-          {isPickup ? null : (
-            <>
-              <Field
-                error={fieldError("governorate")}
-                hint={zoneHint(zone, t, locale)}
-                htmlFor={`${id}-governorate`}
-                label={t("address.governorate")}
+          <Field
+            error={fieldError("governorate")}
+            hint={zoneHint(zone, t, locale)}
+            htmlFor={`${id}-governorate`}
+            label={t("address.governorate")}
+          >
+            <Select onValueChange={set("zoneId")} value={address.zoneId}>
+              <SelectTrigger
+                aria-describedby={describedBy("governorate")}
+                aria-invalid={fieldErrors.includes("governorate")}
+                className="w-full"
+                id={`${id}-governorate`}
               >
-                <Select onValueChange={set("zoneId")} value={address.zoneId}>
-                  <SelectTrigger
-                    aria-describedby={describedBy("governorate")}
-                    aria-invalid={fieldErrors.includes("governorate")}
-                    className="w-full"
-                    id={`${id}-governorate`}
-                  >
-                    <SelectValue
-                      placeholder={t("address.governoratePlaceholder")}
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {zoneList.map((option) => (
-                      <SelectItem key={option.id} value={option.id}>
-                        {t("address.zoneOption", {
-                          fee: formatPrice(option.fee, locale),
-                          name: localized(option, "name", locale),
-                        })}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-              {areas.length > 0 ? (
-                <Field
-                  error={fieldError("city")}
-                  hint={t("address.areaHint")}
-                  htmlFor={`${id}-city`}
-                  label={t("address.area")}
-                >
-                  <Input
-                    aria-describedby={describedBy("city")}
-                    aria-invalid={fieldErrors.includes("city")}
-                    autoComplete="off"
-                    dir="rtl"
-                    id={`${id}-city`}
-                    list={`${id}-areas`}
-                    maxLength={60}
-                    onChange={(event) => set("city")(event.target.value)}
-                    value={address.city}
-                  />
-                  <datalist id={`${id}-areas`}>
-                    {areas.map((area) => (
-                      <option key={area} value={area} />
-                    ))}
-                  </datalist>
-                </Field>
-              ) : (
-                <Field
-                  htmlFor={`${id}-city`}
-                  label={t("address.city")}
-                  optional
-                >
-                  <Input
-                    autoComplete="address-level2"
-                    id={`${id}-city`}
-                    maxLength={60}
-                    onChange={(event) => set("city")(event.target.value)}
-                    value={address.city}
-                  />
-                </Field>
-              )}
-              <div className="sm:col-span-2">
-                <Field
-                  error={fieldError("address")}
-                  htmlFor={`${id}-address`}
-                  label={t("address.address")}
-                >
-                  <Textarea
-                    aria-describedby={describedBy("address")}
-                    aria-invalid={fieldErrors.includes("address")}
-                    autoComplete="street-address"
-                    id={`${id}-address`}
-                    maxLength={500}
-                    onChange={(event) => set("address")(event.target.value)}
-                    placeholder={t("address.addressPlaceholder")}
-                    rows={3}
-                    value={address.address}
-                  />
-                </Field>
-              </div>
-              <LandmarkFields
-                disabled={busy}
-                id={id}
-                landmark={address.landmark}
-                location={address.location}
-                onLandmark={set("landmark")}
-                onLocation={onLocation}
+                <SelectValue
+                  placeholder={t("address.governoratePlaceholder")}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {zoneList.map((option) => (
+                  <SelectItem key={option.id} value={option.id}>
+                    {t("address.zoneOption", {
+                      fee: formatPrice(option.fee, locale),
+                      name: localized(option, "name", locale),
+                    })}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+          {areas.length > 0 ? (
+            <Field
+              error={fieldError("city")}
+              hint={t("address.areaHint")}
+              htmlFor={`${id}-city`}
+              label={t("address.area")}
+            >
+              <Input
+                aria-describedby={describedBy("city")}
+                aria-invalid={fieldErrors.includes("city")}
+                autoComplete="off"
+                dir="rtl"
+                id={`${id}-city`}
+                list={`${id}-areas`}
+                maxLength={60}
+                onChange={(event) => set("city")(event.target.value)}
+                value={address.city}
               />
-            </>
+              <datalist id={`${id}-areas`}>
+                {areas.map((area) => (
+                  <option key={area} value={area} />
+                ))}
+              </datalist>
+            </Field>
+          ) : (
+            <Field htmlFor={`${id}-city`} label={t("address.city")} optional>
+              <Input
+                autoComplete="address-level2"
+                id={`${id}-city`}
+                maxLength={60}
+                onChange={(event) => set("city")(event.target.value)}
+                value={address.city}
+              />
+            </Field>
           )}
           <div className="sm:col-span-2">
             <Field
-              htmlFor={`${id}-notes`}
-              label={t(isPickup ? "pickup.notes" : "address.notes")}
-              optional
+              error={fieldError("address")}
+              htmlFor={`${id}-address`}
+              label={t("address.address")}
             >
+              <Textarea
+                aria-describedby={describedBy("address")}
+                aria-invalid={fieldErrors.includes("address")}
+                autoComplete="street-address"
+                id={`${id}-address`}
+                maxLength={500}
+                onChange={(event) => set("address")(event.target.value)}
+                placeholder={t("address.addressPlaceholder")}
+                rows={3}
+                value={address.address}
+              />
+            </Field>
+          </div>
+          <LandmarkFields
+            disabled={busy}
+            id={id}
+            landmark={address.landmark}
+            location={address.location}
+            onLandmark={set("landmark")}
+            onLocation={onLocation}
+          />
+          <div className="sm:col-span-2">
+            <Field htmlFor={`${id}-notes`} label={t("address.notes")} optional>
               <Textarea
                 id={`${id}-notes`}
                 maxLength={500}
                 onChange={(event) => set("notes")(event.target.value)}
-                placeholder={t(
-                  isPickup
-                    ? "pickup.notesPlaceholder"
-                    : "address.notesPlaceholder"
-                )}
+                placeholder={t("address.notesPlaceholder")}
                 rows={2}
                 value={address.notes}
               />
@@ -623,10 +538,9 @@ interface SummaryCardProps {
   readonly cash: boolean;
   /** Why placing failed (CheckoutErrorNote), if it did. */
   readonly error: ReactNode;
-  readonly method: Fulfilment;
   /** "Deliver to Home · Pay online", when a saved address is chosen. */
   readonly oneTap?: string | null;
-  /** The server's quote, once a zone (or pickup) is chosen. */
+  /** The server's quote, once a zone is chosen. */
   readonly quote: CheckoutQuote | null;
   readonly summary: ReturnType<typeof summarizeCart>;
 }
@@ -636,7 +550,6 @@ const SummaryCard = ({
   busy,
   cash,
   error,
-  method,
   oneTap,
   quote,
   summary,
@@ -649,7 +562,6 @@ const SummaryCard = ({
     quote && quote.shippingFee > 0
       ? freeDeliveryRemaining(quote.subtotal, quote.freeFrom)
       : 0;
-  const cashNote = method === "pickup" ? "pickupCashNote" : "cashNote";
 
   return (
     <Card className="lg:sticky lg:top-4">
@@ -714,7 +626,7 @@ const SummaryCard = ({
           ) : (
             <LockIcon className="size-3.5" />
           )}
-          {cash ? t(cashNote, { amount }) : t("secure")}
+          {cash ? t("cashNote", { amount }) : t("secure")}
         </p>
       </CardContent>
     </Card>
@@ -726,67 +638,52 @@ const NEW_ADDRESS = "new";
 
 /**
  * What to ask the server to price: nothing until delivery has a zone (or a
- * governorate) or pickup is chosen, and nothing for a cart that can't be
- * ordered.
+ * governorate), and nothing for a cart that can't be ordered.
  */
 const quoteRequestFor = ({
   canCheckout,
   governorate,
-  method,
   paymentMethod,
   useBulbs,
   zoneId,
 }: {
   canCheckout: boolean;
   governorate: string;
-  method: Fulfilment;
   paymentMethod: PaymentMethod;
   useBulbs: number;
   zoneId: string | undefined;
 }): QuoteRequest | null => {
-  if (!canCheckout || (method === "delivery" && !zoneId && !governorate)) {
+  if (!(canCheckout && (zoneId || governorate))) {
     return null;
   }
   return {
-    fulfilment: method,
-    governorate: method === "delivery" && !zoneId ? governorate : null,
+    governorate: zoneId ? null : governorate,
     paymentMethod,
     useBulbs,
-    zoneId: method === "delivery" ? zoneId : null,
+    zoneId,
   };
 };
 
 /**
- * What the customer can choose (pickup and cash only when the store offers
- * them) and what they chose, falling back to delivery and online payment.
+ * What the customer can choose (cash only when the store offers it) and what
+ * they chose, falling back to online payment.
  */
 export const resolveChoices = ({
   address,
-  fulfilment,
   payment,
   settings,
   subtotal,
   zones,
 }: {
   address: AddressForm;
-  fulfilment: Fulfilment;
   payment: PaymentMethod;
-  settings:
-    | {
-        cashLimit: number | null;
-        cashOnDelivery: boolean;
-        pickup: PickupLocation | null;
-      }
-    | undefined;
+  settings: { cashLimit: number | null; cashOnDelivery: boolean } | undefined;
   /** The cart's subtotal: delivery above the cash limit is paid online. */
   subtotal: number;
   zones: DeliveryZone[] | undefined;
 }) => {
   const zoneList = zones ?? [];
-  const pickup = settings?.pickup ?? null;
-  const method = (pickup ? fulfilment : "delivery") as Fulfilment;
   const overLimit =
-    method === "delivery" &&
     settings?.cashLimit !== null &&
     settings?.cashLimit !== undefined &&
     subtotal > settings.cashLimit;
@@ -795,23 +692,15 @@ export const resolveChoices = ({
   return {
     cash: paymentMethod === "cash_on_delivery",
     cashOffered,
-    method,
     paymentMethod,
-    pickup,
     zone: zoneList.find(({ id }) => id === address.zoneId),
     zoneList,
   };
 };
 
 /** The courier's areas the address needs (delivery to a known zone). */
-export const useCheckoutAreas = (
-  method: Fulfilment,
-  zone: DeliveryZone | undefined
-): string[] => {
-  const province =
-    method === "delivery" ? (zone?.carrier_province ?? null) : null;
-  return useDeliveryAreas(province).data ?? [];
-};
+export const useCheckoutAreas = (zone: DeliveryZone | undefined): string[] =>
+  useDeliveryAreas(zone?.carrier_province ?? null).data ?? [];
 
 /**
  * The customer's choices and the order's price: a local estimate, then the
@@ -821,7 +710,6 @@ export const useCheckoutAreas = (
 const useCheckoutPricing = ({
   address,
   cart,
-  fulfilment,
   payment,
   settings,
   useBulbs,
@@ -829,7 +717,6 @@ const useCheckoutPricing = ({
 }: {
   address: AddressForm;
   cart: ReturnType<typeof useCart>;
-  fulfilment: Fulfilment;
   payment: PaymentMethod;
   settings: ReturnType<typeof useStoreSettings>;
   useBulbs: boolean;
@@ -844,21 +731,19 @@ const useCheckoutPricing = ({
     cart.data && settings.data ? summarizeCart(cart.data, settings.data) : null;
   const choices = resolveChoices({
     address,
-    fulfilment,
     payment,
     settings: settings.data,
     subtotal: estimate?.totals.subtotal ?? 0,
     zones: zones.data,
   });
-  const { method, paymentMethod, zone } = choices;
+  const { paymentMethod, zone } = choices;
 
-  const areas = useCheckoutAreas(method, zone);
+  const areas = useCheckoutAreas(zone);
 
   const summary =
     cart.data && settings.data
       ? summarizeCart(cart.data, settings.data, {
           freeFrom: zone?.free_from,
-          fulfilment: method,
           zoneFee: zone?.fee,
         })
       : null;
@@ -866,7 +751,6 @@ const useCheckoutPricing = ({
     quoteRequestFor({
       canCheckout: summary?.canCheckout ?? false,
       governorate: address.governorate,
-      method,
       paymentMethod,
       useBulbs: useBulbs ? availableBulbs : 0,
       zoneId: zone?.id,
@@ -927,12 +811,10 @@ const useAddressBook = () => {
 
   /** Best effort after an order: neither stops it. */
   const afterOrder = ({
-    delivery,
     paymentMethod,
     shipping,
     zoneId,
   }: {
-    delivery: boolean;
     /** The way chosen, when there was a choice. */
     paymentMethod: PaymentMethod | null;
     shipping: ShippingAddress;
@@ -941,7 +823,7 @@ const useAddressBook = () => {
     if (paymentMethod && paymentMethod !== remembered.data) {
       rememberPayment.mutate(paymentMethod);
     }
-    if (delivery && !savedAddress && saveNew) {
+    if (!savedAddress && saveNew) {
       saveAddress.mutate({
         input: {
           area: shipping.city,
@@ -967,8 +849,8 @@ const useAddressBook = () => {
       (remembered.isPending && !remembered.isError),
     newLabel,
     /** "Deliver to Home · Pay online", for a saved address. */
-    oneTap: (method: Fulfilment, cash: boolean) =>
-      method === "delivery" && savedAddress
+    oneTap: (cash: boolean) =>
+      savedAddress
         ? t("oneTap", {
             label: savedAddress.label,
             payment: t(cash ? "payment.cash" : "payment.online"),
@@ -997,9 +879,7 @@ interface AddressSectionProps {
   readonly book: ReturnType<typeof useAddressBook>;
   readonly busy: boolean;
   readonly fieldErrors: AddressField[];
-  readonly method: Fulfilment;
   readonly onChange: (field: keyof AddressForm) => (value: string) => void;
-  readonly pickup: PickupLocation | null;
   readonly zone: DeliveryZone | undefined;
   readonly zones: DeliveryZone[];
 }
@@ -1013,18 +893,15 @@ const AddressSection = ({
   book,
   busy,
   fieldErrors,
-  method,
   onChange,
-  pickup,
   zone,
   zones,
 }: AddressSectionProps) => {
   const { address, saved, savedAddress } = book;
-  const delivery = method === "delivery";
-  const showForm = !(delivery && savedAddress && !book.editing);
+  const showForm = !(savedAddress && !book.editing);
   return (
     <>
-      {delivery && saved.length > 0 ? (
+      {saved.length > 0 ? (
         <SavedAddressesCard
           addresses={saved}
           busy={busy}
@@ -1040,15 +917,13 @@ const AddressSection = ({
           areas={areas}
           busy={busy}
           fieldErrors={fieldErrors}
-          method={method}
           onChange={onChange}
           onLocation={(location) => book.setForm({ ...address, location })}
-          pickup={pickup}
           zone={zone}
           zones={zones}
         />
       ) : null}
-      {delivery && !savedAddress && saved.length < MAX_ADDRESSES ? (
+      {!savedAddress && saved.length < MAX_ADDRESSES ? (
         <SaveAddressFields
           busy={busy}
           label={book.newLabel}
@@ -1062,7 +937,7 @@ const AddressSection = ({
 };
 
 /**
- * Checkout: delivery (address and zone) or pickup, online or cash payment,
+ * Checkout: the delivery address and zone, online or cash payment,
  * then `create_order` (which prices the fee from the zone) and, for online
  * payment, the hosted payment page. The order's page shows what happened.
  */
@@ -1076,7 +951,6 @@ export const Checkout = () => {
   const place = usePlaceOrder();
   const book = useAddressBook();
   const { address, setForm } = book;
-  const [fulfilment, setFulfilment] = useState<Fulfilment>("delivery");
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
@@ -1089,11 +963,9 @@ export const Checkout = () => {
     areas,
     availableBulbs,
     cash,
-    method,
     paidWithBulbs,
     paymentOffered,
     paymentMethod,
-    pickup,
     quote,
     summary,
     zone,
@@ -1101,7 +973,6 @@ export const Checkout = () => {
   } = useCheckoutPricing({
     address,
     cart,
-    fulfilment,
     payment: book.payment,
     settings,
     useBulbs,
@@ -1112,18 +983,13 @@ export const Checkout = () => {
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-    const result = validateAddress(address, {
-      areas,
-      fulfilment: method,
-      zones: zoneList,
-    });
+    const result = validateAddress(address, { areas, zones: zoneList });
     setFieldErrors(result.errors);
     if (!result.shipping) {
       return;
     }
     const request = {
       deliveryZone: result.zoneId,
-      fulfilment: method,
       paymentMethod: paidWithBulbs ? ("online" as const) : paymentMethod,
       shipping: result.shipping,
       useBulbs: quote?.bulbsUsed ?? 0,
@@ -1132,7 +998,6 @@ export const Checkout = () => {
       onError: (mutationError) => setError(toCheckoutError(mutationError)),
       onSuccess: ({ order, paymentError, url }) => {
         book.afterOrder({
-          delivery: method === "delivery",
           paymentMethod: paymentOffered ? paymentMethod : null,
           shipping: result.shipping,
           zoneId: result.zoneId,
@@ -1208,21 +1073,12 @@ export const Checkout = () => {
             onSubmit={submit}
           >
             <div className="grid gap-6">
-              {pickup ? (
-                <FulfilmentCard
-                  busy={busy}
-                  method={method}
-                  onChange={setFulfilment}
-                />
-              ) : null}
               <AddressSection
                 areas={areas}
                 book={book}
                 busy={busy}
                 fieldErrors={fieldErrors}
-                method={method}
                 onChange={set}
-                pickup={pickup}
                 zone={zone}
                 zones={zoneList}
               />
@@ -1236,7 +1092,6 @@ export const Checkout = () => {
               {paymentOffered ? (
                 <PaymentCard
                   busy={busy}
-                  method={method}
                   onChange={book.setPayment}
                   value={paymentMethod}
                 />
@@ -1253,8 +1108,7 @@ export const Checkout = () => {
                   phone={address.phone}
                 />
               }
-              method={method}
-              oneTap={book.oneTap(method, cash)}
+              oneTap={book.oneTap(cash)}
               quote={quote ?? null}
               summary={summary}
             />

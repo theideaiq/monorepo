@@ -162,17 +162,19 @@ export interface StoreSettings {
   shippingFee: number;
 }
 
-/** How an order reaches the customer (`orders.fulfilment`). */
+/**
+ * How an order reached the customer (`orders.fulfilment`): every order is
+ * delivered now; "pickup" remains on past orders.
+ */
 export type Fulfilment = "delivery" | "pickup";
 
 /** How an order is paid (`orders.payment_method`). */
 export type PaymentMethod = "cash_on_delivery" | "online";
 
-/** Pickup or delivery, and the chosen zone's rules for delivery. */
+/** The chosen zone's rules for delivery. */
 export interface DeliveryChoice {
   /** The zone's subtotal from which delivery is free for everyone. */
   freeFrom?: number | null;
-  fulfilment: Fulfilment;
   /** The member's plan delivers free to this zone. */
   planFree?: boolean;
   /** The delivery zone's fee; the store's default fee when none is chosen. */
@@ -192,8 +194,7 @@ export const INVITE_DISCOUNT_CAP = 15_000;
 export type DiscountSource = "invite";
 
 /**
- * The delivery fee, mirroring `price_checkout()`: pickup is free; delivery
- * costs the zone's fee unless the subtotal reaches the zone's free-delivery
+ * The delivery fee, mirroring `price_checkout()`: the zone's fee unless the subtotal reaches the zone's free-delivery
  * threshold or the member's plan delivers free there.
  */
 export const deliveryFee = (
@@ -201,7 +202,7 @@ export const deliveryFee = (
   settings: StoreSettings,
   choice?: DeliveryChoice
 ) => {
-  if (subtotal === 0 || choice?.fulfilment === "pickup") {
+  if (subtotal === 0) {
     return 0;
   }
   const freeFrom = choice?.freeFrom;
@@ -299,7 +300,7 @@ export const orderSteps = [
 
 /**
  * The steps of an order paid in cash: confirmed when placed, paid once the
- * cash is collected on delivery or at pickup.
+ * cash is collected on delivery.
  */
 export const cashOrderSteps = [
   "confirmed",

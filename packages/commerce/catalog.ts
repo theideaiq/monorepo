@@ -330,56 +330,26 @@ export const getBundleItems = async (
   );
 };
 
-export interface PickupLocation {
-  address_ar: string;
-  address_en: string;
-  hours_ar: string;
-  hours_en: string;
-}
-
 type StoreSettingsRow = Pick<
   Tables<"store_settings">,
-  | "cash_on_delivery_enabled"
-  | "cash_limit"
-  | "pickup_address_ar"
-  | "pickup_address_en"
-  | "pickup_enabled"
-  | "pickup_hours_ar"
-  | "pickup_hours_en"
-  | "shipping_fee"
+  "cash_on_delivery_enabled" | "cash_limit" | "shipping_fee"
 >;
 
 /**
- * Delivery fees, the pickup location (null when pickup is off or has no
- * address) and whether cash payment is offered.
+ * The default delivery fee and whether cash payment is offered.
  */
 export const getStoreSettings = async (supabase: Client) => {
   const row = unwrap(
     await supabase
       .from("store_settings")
-      .select(
-        "shipping_fee, cash_limit, pickup_enabled, pickup_address_ar, pickup_address_en, pickup_hours_ar, pickup_hours_en, cash_on_delivery_enabled"
-      )
+      .select("shipping_fee, cash_limit, cash_on_delivery_enabled")
       .single()
   ) as Partial<StoreSettingsRow> &
     Pick<StoreSettingsRow, "cash_limit" | "shipping_fee">;
-  const hasAddress = Boolean(
-    row.pickup_address_ar?.trim() || row.pickup_address_en?.trim()
-  );
-  const pickup: PickupLocation | null =
-    row.pickup_enabled && hasAddress
-      ? {
-          address_ar: row.pickup_address_ar ?? "",
-          address_en: row.pickup_address_en ?? "",
-          hours_ar: row.pickup_hours_ar ?? "",
-          hours_en: row.pickup_hours_en ?? "",
-        }
-      : null;
   return {
-    /** Above this subtotal, cash only at pickup (null: no limit). */
+    /** Above this subtotal, online payment only (null: no limit). */
     cashLimit: row.cash_limit,
     cashOnDelivery: row.cash_on_delivery_enabled ?? false,
-    pickup,
     shippingFee: row.shipping_fee,
   };
 };

@@ -2,7 +2,6 @@
 
 import { useAuth } from "@repo/auth/provider";
 import {
-  type Fulfilment,
   formatPrice,
   liveVariants,
   localized,
@@ -28,7 +27,6 @@ import { type FormEvent, type ReactNode, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import {
   ContactCard,
-  FulfilmentCard,
   PaymentCard,
   resolveChoices,
   useCheckoutAreas,
@@ -61,11 +59,10 @@ import {
 interface RentSummaryProps {
   readonly busy: boolean;
   readonly cash: boolean;
-  /** The zone's fee; null for pickup (or before a zone is chosen). */
+  /** The zone's fee; null before a zone is chosen. */
   readonly deliveryFee: number | null;
   /** Why placing failed (CheckoutErrorNote), if it did. */
   readonly error: ReactNode;
-  readonly method: Fulfilment;
   readonly name: string;
   readonly quote: RentalQuote;
 }
@@ -89,7 +86,6 @@ const RentSummary = ({
   cash,
   deliveryFee,
   error,
-  method,
   name,
   quote,
 }: RentSummaryProps) => {
@@ -117,14 +113,12 @@ const RentSummary = ({
             label={t("deposit")}
             value={formatPrice(quote.deposit, locale)}
           />
-          {method === "delivery" ? (
-            <Row
-              label={t("delivery")}
-              value={
-                deliveryFee === null ? "—" : formatPrice(deliveryFee, locale)
-              }
-            />
-          ) : null}
+          <Row
+            label={t("delivery")}
+            value={
+              deliveryFee === null ? "—" : formatPrice(deliveryFee, locale)
+            }
+          />
           <div className="flex justify-between gap-3 border-t pt-2 font-medium">
             <dt>{t("total")}</dt>
             <dd className="tabular-nums">{amount}</dd>
@@ -138,7 +132,7 @@ const RentSummary = ({
               fee: formatPrice(quote.lateFee, locale),
             })}
           </li>
-          {method === "delivery" ? <li>{t("plusDelivery")}</li> : null}
+          <li>{t("plusDelivery")}</li>
         </ul>
         {error}
         <Button disabled={busy} size="lg" type="submit">
@@ -152,11 +146,7 @@ const RentSummary = ({
           ) : (
             <LockIcon className="size-3.5" />
           )}
-          {cash
-            ? tCheckout(method === "pickup" ? "pickupCashNote" : "cashNote", {
-                amount,
-              })
-            : tCheckout("secure")}
+          {cash ? tCheckout("cashNote", { amount }) : tCheckout("secure")}
         </p>
       </CardContent>
     </Card>
@@ -254,7 +244,7 @@ const PaymentFailed = ({ orderId }: { readonly orderId: string }) => {
 };
 
 /**
- * Renting one item on its own: delivery or pickup, online or cash, then
+ * Renting one item on its own: delivered, paid online or in cash, then
  * `create_rental_order()` (the rent and a refundable deposit) and, for
  * online payment, the hosted payment page. The order's page follows it.
  */
@@ -265,7 +255,6 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
   const data = useRentData(slug);
   const { product, quote, variant } = data;
   const place = usePlaceRental();
-  const [fulfilment, setFulfilment] = useState<Fulfilment>("delivery");
   const [payment, setPayment] = useState<PaymentMethod>("online");
   const [form, setForm] = useState<AddressForm | null>(null);
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
@@ -279,26 +268,20 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
   const set = (field: keyof AddressForm) => (value: string) =>
     setForm({ ...address, [field]: value });
 
-  const { cash, cashOffered, method, paymentMethod, pickup, zone, zoneList } =
-    resolveChoices({
-      address,
-      fulfilment,
-      payment,
-      settings: data.settings,
-      subtotal: (quote?.price ?? 0) + (quote?.deposit ?? 0),
-      zones: data.zones,
-    });
-  const areas = useCheckoutAreas(method, zone);
+  const { cash, cashOffered, paymentMethod, zone, zoneList } = resolveChoices({
+    address,
+    payment,
+    settings: data.settings,
+    subtotal: (quote?.price ?? 0) + (quote?.deposit ?? 0),
+    zones: data.zones,
+  });
+  const areas = useCheckoutAreas(zone);
   const busy = place.isPending || place.isSuccess;
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-    const result = validateAddress(address, {
-      areas,
-      fulfilment: method,
-      zones: zoneList,
-    });
+    const result = validateAddress(address, { areas, zones: zoneList });
     setFieldErrors(result.errors);
     if (!(product && result.shipping)) {
       return;
@@ -306,7 +289,6 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
     place.mutate(
       {
         deliveryZone: result.zoneId,
-        fulfilment: method,
         paymentMethod,
         productId: product.id,
         shipping: result.shipping,
@@ -352,29 +334,19 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
             onSubmit={submit}
           >
             <div className="grid gap-6">
-              {pickup ? (
-                <FulfilmentCard
-                  busy={busy}
-                  method={method}
-                  onChange={setFulfilment}
-                />
-              ) : null}
               <ContactCard
                 address={address}
                 areas={areas}
                 busy={busy}
                 fieldErrors={fieldErrors}
-                method={method}
                 onChange={set}
                 onLocation={(location) => setForm({ ...address, location })}
-                pickup={pickup}
                 zone={zone}
                 zones={zoneList}
               />
               {cashOffered ? (
                 <PaymentCard
                   busy={busy}
-                  method={method}
                   onChange={setPayment}
                   value={paymentMethod}
                 />
@@ -383,7 +355,7 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
             <RentSummary
               busy={busy}
               cash={cash}
-              deliveryFee={method === "delivery" ? (zone?.fee ?? null) : null}
+              deliveryFee={zone?.fee ?? null}
               error={
                 <CheckoutErrorNote
                   error={error}
@@ -391,7 +363,6 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
                   phone={address.phone}
                 />
               }
-              method={method}
               name={data.name}
               quote={quote}
             />

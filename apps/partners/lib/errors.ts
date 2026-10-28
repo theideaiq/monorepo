@@ -61,7 +61,6 @@ export type CheckoutError =
   | "notPayable"
   | "outOfStock"
   | "payment"
-  | "pickupUnavailable"
   | "suspended"
   | "unavailable"
   | "unknown"
@@ -98,9 +97,6 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
   }
   if (message.includes("Delivery zone not available")) {
     return "zoneUnavailable";
-  }
-  if (message.includes("Store pickup is not available")) {
-    return "pickupUnavailable";
   }
   if (message.includes("Cash payment is not available")) {
     return "cashUnavailable";

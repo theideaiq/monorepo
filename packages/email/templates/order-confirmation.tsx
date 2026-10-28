@@ -37,14 +37,12 @@ export interface OrderConfirmationAddress {
 
 export interface OrderConfirmationProps {
   readonly address: OrderConfirmationAddress;
-  /** Paid in cash on delivery or at pickup (not paid yet). */
+  /** Paid in cash on delivery (not paid yet). */
   readonly cash?: boolean;
   readonly items: readonly OrderConfirmationItem[];
   readonly locale: OrderEmailLocale;
   /** "#10042" */
   readonly orderNumber: string;
-  /** Collected from the store: the address is the store's. */
-  readonly pickup?: boolean;
   /** Already formatted amounts. */
   readonly shipping: string;
   readonly subtotal: string;
@@ -61,10 +59,7 @@ const copy = {
     intro: "استلمنا دفعتك وبدأنا تجهيز طلبك. سنتواصل معك عند خروجه للتوصيل.",
     introCash:
       "استلمنا طلبك وبدأنا تجهيزه. ستدفع نقداً عند استلامه، وسنتواصل معك عند خروجه للتوصيل.",
-    introPickup:
-      "استلمنا طلبك وبدأنا تجهيزه. سنتصل بك عندما يصبح جاهزاً للاستلام من المتجر.",
     notes: "ملاحظات",
-    pickupAddress: "الاستلام من المتجر",
     preview: (number: string) => `تم تأكيد طلبك ${number} من The IDEA`,
     quantity: (count: number) => `الكمية: ${count}`,
     shipping: "التوصيل",
@@ -83,10 +78,7 @@ const copy = {
       "We received your payment and started preparing your order. We'll get in touch when it's out for delivery.",
     introCash:
       "We received your order and started preparing it. You'll pay in cash when it arrives; we'll get in touch when it's out for delivery.",
-    introPickup:
-      "We received your order and started preparing it. We'll call you when it's ready to collect from the store.",
     notes: "Notes",
-    pickupAddress: "Pickup from the store",
     preview: (number: string) => `Your The IDEA order ${number} is confirmed`,
     quantity: (count: number) => `Qty: ${count}`,
     shipping: "Delivery",
@@ -109,19 +101,13 @@ export const OrderConfirmationTemplate = ({
   items,
   locale,
   orderNumber,
-  pickup = false,
   shipping,
   subtotal,
   supportEmail,
   total,
 }: OrderConfirmationProps) => {
   const text = copy[locale];
-  let intro: string = text.intro;
-  if (pickup) {
-    intro = text.introPickup;
-  } else if (cash) {
-    intro = text.introCash;
-  }
+  const intro = cash ? text.introCash : text.intro;
   const dir = locale === "ar" ? "rtl" : "ltr";
   const align = locale === "ar" ? "right" : "left";
   const end = locale === "ar" ? "left" : "right";
@@ -207,7 +193,7 @@ export const OrderConfirmationTemplate = ({
               <Hr className="my-6" />
 
               <Text className="mt-0 mb-1 font-semibold text-ink">
-                {pickup ? text.pickupAddress : text.address}
+                {text.address}
               </Text>
               <Text className="m-0 text-ink">{address.fullName}</Text>
               <Text

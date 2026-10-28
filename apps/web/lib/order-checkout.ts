@@ -2,7 +2,7 @@
 
 import { getAttribution, track } from "@repo/analytics/client";
 import { useAuth } from "@repo/auth/provider";
-import { type Fulfilment, localized, type PaymentMethod } from "@repo/commerce";
+import { localized, type PaymentMethod } from "@repo/commerce";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import { callApi } from "./api";
@@ -71,9 +71,8 @@ export const usePayOrder = () => {
 
 /** What the checkout sends to `create_order()`; the fee is priced there. */
 export interface PlaceOrder {
-  /** The chosen delivery zone; null for pickup. */
+  /** The chosen delivery zone; null when the server finds it. */
   deliveryZone: string | null;
-  fulfilment: Fulfilment;
   paymentMethod: PaymentMethod;
   shipping: object;
   /** Bulbs to spend; the server caps them at what the order costs. */
@@ -178,7 +177,6 @@ export const usePlaceOrder = () => {
   return useMutation({
     mutationFn: async ({
       deliveryZone,
-      fulfilment,
       paymentMethod,
       shipping,
       useBulbs,
@@ -186,7 +184,6 @@ export const usePlaceOrder = () => {
       finish(
         unwrap(
           await supabase.rpc("create_order", {
-            fulfilment,
             payment_method: paymentMethod,
             shipping: { ...shipping },
             use_bulbs: useBulbs,
@@ -224,7 +221,6 @@ export const usePlaceRental = () => {
   return useMutation({
     mutationFn: async ({
       deliveryZone,
-      fulfilment,
       paymentMethod,
       productId,
       shipping,
@@ -233,7 +229,6 @@ export const usePlaceRental = () => {
       finish(
         unwrap(
           await supabase.rpc("create_rental_order", {
-            fulfilment,
             payment_method: paymentMethod,
             rental_product: productId,
             shipping: { ...shipping },

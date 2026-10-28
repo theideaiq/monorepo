@@ -251,7 +251,6 @@ describe("checkout", () => {
     expect(db.rpcCalls.find((call) => call.name === "create_order")).toEqual({
       args: {
         delivery_zone: "zone-baghdad",
-        fulfilment: "delivery",
         payment_method: "online",
         shipping: {
           address: "Karrada, street 62",
@@ -310,7 +309,6 @@ describe("checkout", () => {
       db.rpcCalls.find((call) => call.name === "checkout_quote")?.args
     ).toMatchObject({
       delivery_zone: "zone-baghdad",
-      fulfilment: "delivery",
       payment_method: "online",
       use_bulbs: 0,
     });
@@ -337,7 +335,6 @@ describe("checkout", () => {
       db.rpcCalls.find((call) => call.name === "create_order")?.args
     ).toMatchObject({
       delivery_zone: "zone-baghdad",
-      fulfilment: "delivery",
       payment_method: "cash_on_delivery",
     });
     expect(requestBody(fetchMock).url).toBe(

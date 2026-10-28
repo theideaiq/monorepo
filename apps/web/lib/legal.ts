@@ -9,7 +9,7 @@ import { join } from "node:path";
 export const legalDocuments = [
   { slug: "terms", updated: "2026-10-28" },
   { slug: "privacy", updated: "2026-10-28" },
-  { slug: "delivery", updated: "2026-10-26" },
+  { slug: "delivery", updated: "2026-10-28" },
   { slug: "returns", updated: "2026-10-28" },
   { slug: "plus", updated: "2026-10-28" },
   { slug: "rewards", updated: "2026-10-27" },
