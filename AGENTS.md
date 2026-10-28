@@ -90,7 +90,8 @@ incidents) is in `docs/platform`.
   dispute within 48 hours, items to check once back, refused parcels to
   confirm), `/selling/offers` (buyers' offers to accept, decline or
   counter within 48 hours, and which listings take offers, with automatic
-  accept and decline amounts) and `/selling/pickup` (its branches, each a Boxy pickup
+  accept and decline amounts), `/selling/payouts` (each weekly payout with
+  its statement) and `/selling/pickup` (its branches, each a Boxy pickup
   location),
   Perks `/perks`,
   Team `/team` (bulk orders for the organization, with `/team/<id>` for a
@@ -118,9 +119,9 @@ incidents) is in `docs/platform`.
     Club `/club` (with `/club/telegram`) · Partners `/partners` (Team
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`
-    where staff approve shops, perks and sign-in) · Finance `/finance` · Settings
-    `/settings` (with `/settings/audit`), and `/search`; seller payouts
-    join when selling ships. Then `/no-access`
+    where staff approve shops, perks and sign-in) · Finance `/finance` (with
+    `/finance/payouts`, the weekly shop payouts) · Settings
+    `/settings` (with `/settings/audit`), and `/search`. Then `/no-access`
     (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:
     staff only, with Server Actions; every query runs as the staff member
     so RLS applies, and staff rights need an authenticator-app (AAL2)
