@@ -114,7 +114,9 @@ test.describe("Staff", () => {
     await expect(page.getByRole("heading", { name: "New perk" })).toBeVisible();
     await expectAccessible(page);
     await page.goto(`${urls.staff}/partners/shops`);
-    await expect(page.getByRole("heading", { name: "Shops" })).toBeVisible();
+    await expect(
+      page.getByText("No shop has applied to sell yet.")
+    ).toBeVisible();
     await expectAccessible(page);
 
     // Your Pass links staff to Staff.

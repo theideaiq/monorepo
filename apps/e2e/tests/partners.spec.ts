@@ -155,7 +155,7 @@ test("a company applies to sell and, once approved, its offer is on the website"
   await page.getByLabel("Shop name").fill("E2E Records");
   await page.getByRole("button", { exact: true, name: "Apply" }).click();
   await expect(page.getByText("In review")).toBeVisible();
-  await page.getByLabel("Bank").fill("E2E Bank");
+  await page.getByLabel("Bank", { exact: true }).fill("E2E Bank");
   await page.getByLabel("Name on the bank details").fill("E2E Company");
   await page.getByLabel("IBAN").fill("IQ00 TEST");
   await expect(page.getByText("That doesn't look like an IBAN.")).toBeVisible();
@@ -190,18 +190,26 @@ test("a company applies to sell and, once approved, its offer is on the website"
       slug,
       status: "active",
     })
-    .select("id, product_variants (id)")
+    .select("id")
     .single();
   if (productError) {
     throw productError;
   }
-  const variantId = record.product_variants[0]?.id ?? "";
+  // The default variant is made on insert.
+  const { data: variant, error: variantError } = await db
+    .from("product_variants")
+    .select("id")
+    .eq("product_id", record.id)
+    .single();
+  if (variantError) {
+    throw variantError;
+  }
   const { error: copyError } = await db.from("stock_items").insert({
     condition: "used",
     price: 14_750,
     product_id: record.id,
     seller_id: seller.id,
-    variant_id: variantId,
+    variant_id: variant.id,
   });
   if (copyError) {
     throw copyError;
