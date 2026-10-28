@@ -5,7 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 export const ACTIVE_ORGANIZATION_COOKIE = "active_org";
 
 /**
- * Sections of The IDEA Partners an organization switches on from Home
+ * Sections of Partners an organization switches on from Home
  * (`organizations.features`); Home and Organization are always there.
  */
 export const organizationFeatures = [

@@ -132,7 +132,7 @@ interface BusinessShellProps {
 }
 
 /**
- * A screen of The IDEA Partners that needs an active organization (chosen
+ * A screen of Partners that needs an active organization (chosen
  * in the sidebar). Without one, it shows the introduction instead; in a
  * section the organization hasn't added, it says so.
  */

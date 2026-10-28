@@ -244,7 +244,7 @@ const PerksForPartner = () => {
 };
 
 /**
- * The IDEA Partners → Perks, for partners: check a The IDEA Pass card at
+ * Partners → Perks, for partners: check a The IDEA Pass card at
  * the counter, record the perk (once a day per person) and see the monthly
  * counts.
  */

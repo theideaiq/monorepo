@@ -6,7 +6,7 @@ interface NameTileProps {
   readonly shape?: "circle" | "square";
   /** Width and height in pixels, 32–128. */
   readonly size?: number;
-  /** `public`: white on pink. `internal` (The IDEA Staff): pink on yellow. */
+  /** `public`: white on pink. `internal` (Staff): pink on yellow. */
   readonly tone?: "internal" | "public";
   /** One bold word ("Club", "Post"); without one the tile shows the bulb. */
   readonly word?: string;

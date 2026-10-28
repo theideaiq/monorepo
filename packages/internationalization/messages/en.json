@@ -57,7 +57,7 @@
       "invalid_code": "That code is incorrect or has expired.",
       "invalid_email": "Enter a valid email address, e.g. name@example.com.",
       "invalid_phone": "Enter a valid mobile number, e.g. 0770 123 4567.",
-      "no_account": "There's no The IDEA Pass with this email yet.",
+      "no_account": "There's no Pass with this email yet.",
       "rate_limited": "Too many attempts. Please wait a moment and try again.",
       "signups_disabled": "New sign-ups are currently closed.",
       "unknown": "Something went wrong. Please try again."
@@ -76,9 +76,9 @@
     },
     "signOut": "Sign out",
     "signUp": {
-      "title": "Get The IDEA Pass",
+      "title": "Get your Pass",
       "description": "Sign up with your email.",
-      "haveAccount": "Already have The IDEA Pass?",
+      "haveAccount": "Already have a Pass?",
       "signInLink": "Sign in"
     },
     "verify": "Verify",
@@ -107,9 +107,9 @@
       "useCode": "Email me a code instead",
       "usePassword": "Sign in with a password",
       "newHere": "New to The IDEA?",
-      "haveOne": "Already have The IDEA Pass?",
-      "createPass": "Get The IDEA Pass",
-      "signUpTitle": "Get The IDEA Pass: your name, email and a password. We'll email you one code to confirm it's you.",
+      "haveOne": "Already have a Pass?",
+      "createPass": "Get your Pass",
+      "signUpTitle": "Get your Pass: your name, email and a password. We'll email you one code to confirm it's you.",
       "resetTitle": "Reset your password",
       "sendCode": "Send the code",
       "codeLabel": "Code from the email",
@@ -124,7 +124,7 @@
         "wrong_password": "That email and password don't match. Try again, or reset your password.",
         "weak_password": "This password isn't strong enough. Use at least 8 characters, with a lowercase letter, a capital letter, a digit and a symbol, and avoid common passwords.",
         "pwned_password": "This password has appeared in a data leak elsewhere. Choose a different one.",
-        "already_registered": "This email already has The IDEA Pass. Sign in, or reset your password.",
+        "already_registered": "This email already has a Pass. Sign in, or reset your password.",
         "unconfirmed": "Confirm your email first: sign in with a code instead and we'll confirm it.",
         "reauthentication_needed": "For your security, confirm it's you with the code we just emailed.",
         "name_required": "Enter your name.",
@@ -156,7 +156,7 @@
       "canceled": "Canceled",
       "expired": "Expired"
     },
-    "title": "The IDEA Partners plan",
+    "title": "Partners plan",
     "description": "Your company's plan and payments.",
     "currentPlan": "Current plan",
     "noPlan": "Your company doesn't have a plan yet.",
@@ -232,22 +232,22 @@
     "appCta": {
       "title": "One Pass for",
       "highlight": "everything at The IDEA",
-      "description": "Shop the store, rent with The IDEA Plus, RSVP to events and submit your work, all with The IDEA Pass.",
+      "description": "Shop the store, rent with Plus, RSVP to events and submit your work, all with your Pass.",
       "button": "Open Your Pass",
       "signIn": "Sign in"
     },
     "home": {
       "meta": {
         "title": "Iraq's digital ecosystem",
-        "description": "Shop, rent and connect with The IDEA: the store, The IDEA Plus rentals, The IDEA Club, The IDEA Pass and The IDEA Partners. Based in Baghdad, serving all of Iraq."
+        "description": "Shop, rent and connect with The IDEA: the store, The IDEA Plus rentals, The IDEA Club, The IDEA Pass and Partners. Based in Baghdad, serving all of Iraq."
       },
       "news": {
-        "title": "From The IDEA Club",
+        "title": "From the Club",
         "empty": "Nothing published yet."
       },
       "events": {
         "title": "Next events",
-        "empty": "No upcoming events right now. Follow The IDEA Club on Telegram to hear about the next one."
+        "empty": "No upcoming events right now. Follow the Club on Telegram to hear about the next one."
       },
       "title": "What are you looking for?",
       "newest": {
@@ -255,12 +255,12 @@
       },
       "rent": {
         "title": "Rent instead of buying",
-        "highlight": "with The IDEA Plus.",
+        "highlight": "with Plus.",
         "description": "Games, books and movies for a monthly fee: we deliver them and pick them up when you're done.",
         "cta": "See what's for rent"
       },
       "member": {
-        "guest": "Earn Bulbs on every order with The IDEA Pass",
+        "guest": "Earn Bulbs on every order with your Pass",
         "bulbs": "{available} Bulbs",
         "orders": "Orders on the way: {count}"
       },
@@ -271,8 +271,8 @@
     },
     "rent": {
       "title": "Rent",
-      "highlight": "with The IDEA Plus",
-      "plans": "See The IDEA Plus plans",
+      "highlight": "with Plus",
+      "plans": "See Plus plans",
       "empty": "Nothing to rent matches that yet."
     },
     "store": {
@@ -312,7 +312,7 @@
         "condition": "Condition",
         "sku": "SKU",
         "back": "Back to the store",
-        "plusBack": "Back to The IDEA Plus",
+        "plusBack": "Back to Plus",
         "image": "{name}, image {number}",
         "delivery": "Delivery to all 19 governorates of Iraq.",
         "seller": "Sold by {seller}",
@@ -350,7 +350,7 @@
       "title": "Rent anything.",
       "highlight": "Endless entertainment.",
       "subtitle": "Books, games and movies, delivered to your door. Keep them as long as you like, then swap them for something new.",
-      "cta": "Join The IDEA Plus",
+      "cta": "Join Plus",
       "seePlans": "See the plans",
       "how": {
         "title": "How it works",
@@ -453,14 +453,14 @@
         "club": "Events, news, stories and guides, and our rooms on Telegram for gamers, readers, artists and thinkers.",
         "store": "Gaming, tech, books, music and films, new and pre-owned, delivered to all 19 governorates.",
         "pass": "One Pass for everything at The IDEA: orders, Bulbs, events and more.",
-        "business": "For shops, suppliers and organizations: bulk buying, member perks, developers and The IDEA Plus for teams."
+        "business": "For shops, suppliers and organizations: bulk buying, member perks, developers and Plus for teams."
       },
       "more": {
         "title": "More about The IDEA",
         "careers": "Careers",
-        "club": "The IDEA Club",
+        "club": "Club",
         "help": "Help and contact",
-        "business": "The IDEA Partners, for shops and organizations"
+        "business": "Partners, for shops and organizations"
       }
     },
     "careers": {
@@ -496,14 +496,14 @@
     },
     "faq": {
       "title": "Frequently asked questions",
-      "description": "Can't find your answer? Contact us or ask The IDEA Droid on Telegram.",
+      "description": "Can't find your answer? Contact us or ask Droid on Telegram.",
       "groups": [
         {
           "title": "Store",
           "items": [
             {
               "question": "How do I place an order?",
-              "answer": "Browse the store, add items to your cart and check out. You need The IDEA Pass to order; signing up takes a minute."
+              "answer": "Browse the store, add items to your cart and check out. You need a Pass to order; signing up takes a minute."
             },
             {
               "question": "How do I pay?",
@@ -520,15 +520,15 @@
           ]
         },
         {
-          "title": "The IDEA Plus",
+          "title": "Plus",
           "items": [
             {
-              "question": "How does The IDEA Plus work?",
+              "question": "How does Plus work?",
               "answer": "You subscribe to a monthly plan. Each plan lets you keep a number of items at a time. Request a game, book or movie, we deliver it, and when you're done you return it and request the next one."
             },
             {
-              "question": "Can I buy from the store without The IDEA Plus?",
-              "answer": "Absolutely. The store is open to everyone; The IDEA Plus is only needed for rentals."
+              "question": "Can I buy from the store without Plus?",
+              "answer": "Absolutely. The store is open to everyone; Plus is only needed for rentals."
             },
             {
               "question": "How do I cancel?",
@@ -537,19 +537,19 @@
           ]
         },
         {
-          "title": "The IDEA Pass",
+          "title": "Pass",
           "items": [
             {
               "question": "Do I need to sign up separately for each service?",
-              "answer": "No. One The IDEA Pass works across the store, The IDEA Plus, The IDEA Club and The IDEA Partners."
+              "answer": "No. One Pass works across the store, Plus, the Club and Partners."
             },
             {
-              "question": "How do I delete The IDEA Pass?",
+              "question": "How do I delete my Pass?",
               "answer": "You can delete it from the settings in Your Pass. Some records, such as invoices, are kept as the law requires."
             },
             {
               "question": "How do I get help with an order or a rental?",
-              "answer": "Sign in and open a support ticket from Help. You can follow our replies there. Without The IDEA Pass, email hi@theideaiq.com or use the contact form."
+              "answer": "Sign in and open a support ticket from Help. You can follow our replies there. Without a Pass, email hi@theideaiq.com or use the contact form."
             }
           ]
         }
@@ -570,11 +570,11 @@
         "topics": {
           "general": "General question",
           "store": "Store order",
-          "plus": "The IDEA Plus",
+          "plus": "Plus",
           "careers": "Careers",
           "press": "Press and partnerships",
-          "club": "The IDEA Club",
-          "business": "The IDEA Partners (shops and organizations)"
+          "club": "Club",
+          "business": "Partners (shops and organizations)"
         },
         "name": "Full name",
         "email": "Email",
@@ -602,11 +602,11 @@
       "documents": {
         "terms": {
           "title": "Terms of use",
-          "description": "The terms for The IDEA Pass, orders, payments and everything The IDEA offers, including the age rules."
+          "description": "The terms for the Pass, orders, payments and everything The IDEA offers, including the age rules."
         },
         "privacy": {
           "title": "Privacy policy",
-          "description": "What personal data The IDEA collects, why, who it is shared with, and how to delete The IDEA Pass."
+          "description": "What personal data The IDEA collects, why, who it is shared with, and how to delete your Pass."
         },
         "delivery": {
           "title": "Delivery",
@@ -630,7 +630,7 @@
         },
         "club": {
           "title": "Club rules",
-          "description": "How to take part in The IDEA Club: rooms, events, photos, behaviour, reporting and moderation."
+          "description": "How to take part in the Club: rooms, events, photos, behaviour, reporting and moderation."
         },
         "programs": {
           "title": "Programs",
@@ -641,8 +641,8 @@
           "description": "The rules for survey creators and the terms for respondents, including consent, anonymity and rewards."
         },
         "business": {
-          "title": "The IDEA Partners",
-          "description": "Free for organizations: perks, bulk buying, team Plus, Sign in with The IDEA Pass, selling and the Pro plan, supplying The IDEA Plus and posting opportunities."
+          "title": "Partners",
+          "description": "Free for organizations: perks, bulk buying, team Plus, Sign in with The IDEA Pass, selling and the Pro plan, supplying Plus and posting opportunities."
         },
         "accessibility": {
           "title": "Accessibility",
@@ -664,7 +664,7 @@
         "description": "Launches, meetups and community nights from The IDEA. RSVP with The IDEA Pass."
       },
       "title": "Events",
-      "description": "Launches, meetups and community nights. RSVP with The IDEA Pass.",
+      "description": "Launches, meetups and community nights. RSVP with your Pass.",
       "upcoming": "Upcoming",
       "past": "Past events",
       "empty": "No upcoming events right now.",
@@ -681,16 +681,16 @@
     "invite": {
       "title": "A friend invited you to The IDEA",
       "description": "Join The IDEA with a friend's invite and get 10% off your first order.",
-      "offer": "Join with The IDEA Pass and get 10% off your first order (up to {cap}).",
+      "offer": "Join with a Pass and get 10% off your first order (up to {cap}).",
       "claimed": "You're in: 10% off your first order (up to {cap}).",
       "claimedBy": "{name} invited you: 10% off your first order (up to {cap}).",
       "notEligible": "This invite is for new members only. You can still shop and earn Bulbs.",
-      "join": "Join with The IDEA Pass",
+      "join": "Join with a Pass",
       "shop": "Shop the store"
     },
     "info": {
       "contact": "Contact",
-      "telegram": "The IDEA Club on Telegram",
+      "telegram": "The Club on Telegram",
       "legal": "Terms and policies",
       "app": "This app",
       "versionLine": "Version {version} · build {build}",
@@ -702,10 +702,10 @@
     "help": {
       "meta": {
         "title": "Help",
-        "description": "Your support tickets, answers to common questions, The IDEA Droid and how to reach us."
+        "description": "Your support tickets, answers to common questions, Droid and how to reach us."
       },
       "title": "Help",
-      "description": "Ask about an order, a rental or The IDEA Plus. Open a ticket, ask The IDEA Droid or write to us.",
+      "description": "Ask about an order, a rental or Plus. Open a ticket, ask Droid or write to us.",
       "droid": {
         "title": "Ask Droid",
         "description": "Our bot answers on Telegram: your orders, Bulbs and common questions."
@@ -760,12 +760,12 @@
         "title": "The IDEA Club — join, read and take part",
         "description": "Join events and surveys, read news, stories and guides, and meet us on Telegram."
       },
-      "title": "The IDEA Club",
+      "title": "Club",
       "description": "Join events and surveys, read news, stories and guides, and meet us on Telegram.",
       "pastEvents": "Past events",
       "telegram": {
-        "title": "The IDEA Club on Telegram",
-        "description": "Seven rooms for music, games, books, films, making things and work, looked after by The IDEA Droid.",
+        "title": "The Club on Telegram",
+        "description": "Seven rooms for music, games, books, films, making things and work, looked after by Droid.",
         "join": "Join on Telegram",
         "guidelines": "Before you join, read",
         "guidelinesLink": "the Club rules",
@@ -789,7 +789,7 @@
       },
       "surveys": {
         "title": "Survey",
-        "back": "Back to The IDEA Club",
+        "back": "Back to the Club",
         "studentsCreate": "Verified students can create surveys.",
         "verify": "Verify as a student",
         "answer": {
@@ -938,7 +938,7 @@
         }
       },
       "parts": {
-        "label": "The IDEA Club",
+        "label": "Club",
         "join": "Join",
         "read": "Read",
         "yours": "Yours"
@@ -972,37 +972,37 @@
     },
     "partners": {
       "meta": {
-        "title": "The IDEA Partners — for shops and organizations",
-        "description": "The IDEA Partners gives shops, suppliers and organizations in Iraq one place to work with The IDEA: bulk buying, member perks, Sign in with The IDEA Pass and The IDEA Plus for teams."
+        "title": "Partners — for shops and organizations",
+        "description": "Partners gives shops, suppliers and organizations in Iraq one place to work with The IDEA: bulk buying, member perks, Sign in with The IDEA Pass and The IDEA Plus for teams."
       },
       "badge": "For partners",
-      "title": "The IDEA Partners",
+      "title": "Partners",
       "subtitle": "For shops, suppliers and organizations that work with The IDEA. One place for your team, your orders and your members.",
       "services": {
         "title": "What partners do with The IDEA",
         "items": [
           {
             "title": "Bulk buying",
-            "description": "Source tech, equipment and supplies for your organization from The IDEA Store, with quotes, purchase orders and monthly invoices."
+            "description": "Source tech, equipment and supplies for your organization from the Store, with quotes, purchase orders and monthly invoices."
           },
           {
             "title": "Member perks",
-            "description": "Offer a discount to The IDEA Pass members and check their cards at your counter."
+            "description": "Offer a discount to Pass members and check their cards at your counter."
           },
           {
             "title": "Developers",
             "description": "Let people sign in to your website or app with The IDEA Pass, sharing only what they agree to."
           },
           {
-            "title": "The IDEA Plus for teams",
-            "description": "Give your team The IDEA Plus, billed to your organization."
+            "title": "Plus for teams",
+            "description": "Give your team Plus, billed to your organization."
           }
         ]
       },
       "how": {
         "title": "Getting started",
         "steps": [
-          "Set up your organization on The IDEA Partners.",
+          "Set up your organization on Partners.",
           "Invite your team and give each one the right role.",
           "Switch on what you need: bulk buying, perks or developers."
         ]
@@ -1021,14 +1021,14 @@
     },
     "search": {
       "title": "Search",
-      "description": "Products to buy or rent, events and posts of The IDEA Club, in Arabic or English.",
+      "description": "Products to buy or rent, events and posts of the Club, in Arabic or English.",
       "label": "Search The IDEA",
       "placeholder": "Search products, events and posts…",
       "submit": "Search",
       "results": "Results for “{query}”",
       "empty": "Nothing matches your search. Try another word, in Arabic or English.",
       "products": "Products",
-      "rentals": "To rent with The IDEA Plus",
+      "rentals": "To rent with Plus",
       "events": "Events",
       "posts": "Posts",
       "allProducts": "All results in the Store",
@@ -1037,7 +1037,7 @@
   },
   "app": {
     "meta": {
-      "title": "The IDEA Partners",
+      "title": "Partners",
       "description": "The IDEA's app: your orders, The IDEA Plus, events and support in one place."
     },
     "nav": {
@@ -1045,7 +1045,7 @@
       "store": "Store",
       "cart": "Cart",
       "orders": "Orders",
-      "plus": "The IDEA Plus",
+      "plus": "Plus",
       "events": "Events",
       "submissions": "Submissions",
       "settings": "Settings",
@@ -1091,7 +1091,7 @@
         "placed": "Placed on {date}"
       },
       "plus": {
-        "title": "The IDEA Plus",
+        "title": "Plus",
         "none": "Rent games, books and movies with a monthly plan.",
         "join": "See the plans",
         "member": "Plus {plan}",
@@ -1139,13 +1139,13 @@
         "details": "Specifications",
         "about": "About this product",
         "condition": "Condition",
-        "rentalOnly": "This item is for rent: with The IDEA Plus, or on its own.",
-        "goToPlus": "Go to The IDEA Plus",
+        "rentalOnly": "This item is for rent: with Plus, or on its own.",
+        "goToPlus": "Go to Plus",
         "addFailed": "We couldn't add this to your cart. Please try again.",
         "soldBy": "Sold by {seller} · delivered and paid through The IDEA",
         "verifiedSeller": "Verified seller",
         "left": "{count} left",
-        "alsoRent": "Also for rent with The IDEA Plus",
+        "alsoRent": "Also for rent with Plus",
         "rent": {
           "title": "Rent it on its own",
           "price": "{price} for {days}",
@@ -1391,7 +1391,7 @@
         "request": "Request",
         "requesting": "Requesting…",
         "requested": "Requested. We'll contact you to arrange delivery.",
-        "needPlan": "Join The IDEA Plus to rent items.",
+        "needPlan": "Join Plus to rent items.",
         "noSlots": "All your rental slots are in use.",
         "needsPlan": "Needs {plan}",
         "needsHigherPlan": "Needs a higher plan",
@@ -1429,7 +1429,7 @@
       "signedOut": "Sign in to subscribe, see your rentals and request items.",
       "signIn": "Sign in",
       "join": {
-        "title": "Join The IDEA Plus",
+        "title": "Join Plus",
         "description": "Plus starts in Baghdad with a limited number of places, so every member gets their items on time.",
         "placesLeft": "{count, plural, one {One place left} other {{n} places left}}",
         "full": "Plus is full right now; {waiting} waiting.",
@@ -1553,7 +1553,7 @@
     },
     "submissions": {
       "title": "Submissions",
-      "description": "Send your writing or visual art to The IDEA Club. Editors review every submission without seeing the author's name.",
+      "description": "Send your writing or visual art to the Club. Editors review every submission without seeing the author's name.",
       "form": {
         "title": "Submit your work",
         "workTitle": "Title",
@@ -1591,9 +1591,9 @@
     },
     "business": {
       "title": "Partners",
-      "description": "The IDEA Partners: for shops, suppliers and organizations working with The IDEA.",
+      "description": "Partners: for shops, suppliers and organizations working with The IDEA.",
       "intro": {
-        "title": "Bring your organization to The IDEA Partners",
+        "title": "Bring your organization to Partners",
         "description": "Set up your organization for your team, or join one you've been invited to.",
         "create": "Set up an organization"
       },
@@ -1659,9 +1659,9 @@
         "openRequests": "Open requests",
         "unpaidInvoices": "Unpaid invoices",
         "unpaidTotal": "{total} due",
-        "plusSeats": "Members with The IDEA Plus",
-        "plan": "The IDEA Partners plan: {plan}",
-        "noPlan": "No The IDEA Partners plan yet. See plans"
+        "plusSeats": "Plus members",
+        "plan": "Partners plan: {plan}",
+        "noPlan": "No Partners plan yet. See plans"
       },
       "organization": {
         "title": "Organization"
@@ -1674,12 +1674,12 @@
         "failed": "That didn't save. Please try again.",
         "managersOnly": "Owners and admins add sections.",
         "settingsTitle": "Sections",
-        "settingsDescription": "The sections your organization uses in The IDEA Partners.",
+        "settingsDescription": "The sections your organization uses in Partners.",
         "off": "{section} isn't switched on for {organization}.",
         "offManage": "Add it from Home.",
         "offAsk": "Ask an owner or admin to add it.",
         "perks": {
-          "description": "Offer perks to The IDEA Pass members and check their cards at your counter."
+          "description": "Offer perks to Pass members and check their cards at your counter."
         },
         "team": {
           "description": "Bulk orders for your organization with monthly invoices, and Plus for its people."
@@ -1690,7 +1690,7 @@
         "addSection": "Add {section}",
         "removeSection": "Remove {section}",
         "selling": {
-          "description": "Sell your products on The IDEA Store: we collect payment, deliver and pay you weekly."
+          "description": "Sell your products on the Store: we collect payment, deliver and pay you weekly."
         }
       }
     },
@@ -1709,7 +1709,7 @@
       },
       "organization": {
         "title": "Set up an organization",
-        "description": "An organization holds your team, projects and The IDEA Partners plan.",
+        "description": "An organization holds your team, projects and Partners plan.",
         "name": "Company name",
         "namePlaceholder": "e.g. Al-Rafidain Trading",
         "slug": "Address",
@@ -1757,9 +1757,9 @@
         "theme": "Theme"
       },
       "deleteAccount": {
-        "title": "Delete The IDEA Pass",
+        "title": "Delete your Pass",
         "description": "Permanently delete your Pass and personal data. This can't be undone.",
-        "open": "Delete The IDEA Pass",
+        "open": "Delete your Pass",
         "dialogTitle": "Delete your Pass?",
         "consequences": "Your profile, cart, RSVPs, submissions and sign-in are deleted, and you leave every organization you belong to. Order and payment records are kept for accounting, without your name.",
         "confirmLabel": "To confirm, type “{phrase}”",
@@ -1805,29 +1805,29 @@
       },
       "birthday": {
         "title": "Date of birth",
-        "description": "The IDEA Pass is for people aged 13 and over, and under-18s link a guardian. You'll also get 25 Bulbs every year on your birthday.",
+        "description": "The Pass is for people aged 13 and over, and under-18s link a guardian. You'll also get 25 Bulbs every year on your birthday.",
         "label": "Your date of birth",
         "save": "Save",
         "once": "You can set it once. To change it later, contact support.",
         "locked": "To change it, contact support.",
         "failed": "Your date of birth couldn't be saved. Try again.",
-        "tooYoung": "The IDEA Pass is for people aged 13 and over."
+        "tooYoung": "The Pass is for people aged 13 and over."
       },
       "guardian": {
         "title": "Guardian",
-        "teenDescription": "Under 18, a guardian approves your orders and The IDEA Plus. Your guardian signs in with The IDEA Pass too.",
-        "adultDescription": "Guardians approve the orders of teens aged 13 to 17, signed in with The IDEA Pass.",
+        "teenDescription": "Under 18, a guardian approves your orders and Plus. Your guardian signs in with their Pass too.",
+        "adultDescription": "Guardians approve the orders of teens aged 13 to 17, signed in with their Pass.",
         "needsBirthday": "Add your date of birth first.",
         "invite": "Invite a guardian",
         "newCode": "New code",
-        "inviteHelp": "Send this link to your parent or guardian. They sign in with The IDEA Pass and accept it.",
+        "inviteHelp": "Send this link to your parent or guardian. They sign in with their Pass and accept it.",
         "code": "Code: {code}",
         "copy": "Copy the link",
         "copied": "Copied",
         "waiting": "Waiting for your guardian to accept.",
         "linked": "Your guardian: {name}",
-        "plusAllowed": "The IDEA Plus: allowed",
-        "plusNotAllowed": "The IDEA Plus: your guardian hasn't allowed it yet",
+        "plusAllowed": "Plus: allowed",
+        "plusNotAllowed": "Plus: your guardian hasn't allowed it yet",
         "remove": "Remove",
         "acceptTitle": "Be a guardian",
         "codeLabel": "Invite code",
@@ -1836,7 +1836,7 @@
         "inviteUsed": "This invite has already been used or replaced.",
         "accept": "Accept",
         "teens": "Teens you look after",
-        "allowPlus": "Allow The IDEA Plus",
+        "allowPlus": "Allow Plus",
         "noPending": "No orders waiting.",
         "order": "Order #{number} · {items} · {total}",
         "items": "{count, plural, one {{n} item} other {{n} items}}",
@@ -1848,7 +1848,7 @@
       },
       "student": {
         "title": "Student verification",
-        "description": "Verify with your university email or a photo of your student card. Students get The IDEA Plus at 20% off, rent and book kits without a deposit, and student perks. The badge lasts until the end of the academic year.",
+        "description": "Verify with your university email or a photo of your student card. Students get Plus at 20% off, rent and book kits without a deposit, and student perks. The badge lasts until the end of the academic year.",
         "university": "University",
         "chooseUniversity": "Choose your university",
         "how": "How to verify",
@@ -1869,7 +1869,7 @@
         "rejected": "We couldn't verify your card: {reason}",
         "errors": {
           "not_university": "Use an email address from your university.",
-          "email_taken": "This email has already verified another The IDEA Pass.",
+          "email_taken": "This email has already verified another Pass.",
           "too_many": "Too many codes today. Try again tomorrow.",
           "email_unavailable": "We couldn't send the email right now. Try again later.",
           "failed": "Something went wrong. Try again.",
@@ -1893,7 +1893,7 @@
       },
       "sites": {
         "title": "Connected sites",
-        "description": "Sites you signed in to with The IDEA Pass, and partners that checked your card. Disconnecting a site stops what it learns; it asks again next time.",
+        "description": "Sites you signed in to with your Pass, and partners that checked your card. Disconnecting a site stops what it learns; it asks again next time.",
         "since": "Connected on {date}",
         "disconnect": "Disconnect",
         "failed": "It couldn't be disconnected. Try again.",
@@ -2005,12 +2005,12 @@
       "remove": "Remove from wishlist",
       "save": "Save",
       "saved": "Saved",
-      "rental": "Rented with The IDEA Plus",
+      "rental": "Rented with Plus",
       "moveToCart": "Move to cart",
       "moving": "Moving…",
       "moveFailed": "We couldn't move this to your cart. Please try again.",
       "chooseOptions": "Choose options",
-      "rentWithPlus": "Rent with The IDEA Plus",
+      "rentWithPlus": "Rent with Plus",
       "unavailable": "Not available right now",
       "empty": {
         "title": "Your wishlist is empty",
@@ -2020,7 +2020,7 @@
     },
     "support": {
       "title": "Your support tickets",
-      "description": "Questions about an order, a rental or The IDEA Pass? We're here to help.",
+      "description": "Questions about an order, a rental or your Pass? We're here to help.",
       "newTicket": "New request",
       "number": "Ticket #{number}",
       "lastActivity": "Last activity {date}",
@@ -2072,7 +2072,7 @@
         "sending": "Sending…"
       },
       "openTicket": "View ticket",
-      "signedOut": "Sign in with The IDEA Pass to open a ticket and follow our replies."
+      "signedOut": "Sign in with your Pass to open a ticket and follow our replies."
     },
     "notifications": {
       "title": "Notifications",
@@ -2120,7 +2120,7 @@
         "redemption": "Spent on an order",
         "adjustment": "Adjusted by The IDEA",
         "expiry": "Expired",
-        "plusPayment": "Cashback on The IDEA Plus",
+        "plusPayment": "Cashback on Plus",
         "birthday": "Birthday bonus",
         "photoReview": "Photo review bonus",
         "checkIn": "Event check-in bonus",
@@ -2222,11 +2222,11 @@
         "howToPay": "Pay by bank transfer, ZainCash, FIB or Qi, quoting the invoice number. Questions? Contact support."
       },
       "plus": {
-        "title": "The IDEA Plus for your team",
-        "description": "Give people in your company The IDEA Plus. We approve each request, the person gets their Plus plan, and you get a monthly invoice.",
-        "managersOnly": "Owners and admins choose who gets The IDEA Plus.",
+        "title": "Plus for your team",
+        "description": "Give people in your company Plus. We approve each request, the person gets their Plus plan, and you get a monthly invoice.",
+        "managersOnly": "Owners and admins choose who gets Plus.",
         "seats": "Plus seats",
-        "empty": "No one has The IDEA Plus through your company yet.",
+        "empty": "No one has Plus through your company yet.",
         "unnamed": "Unnamed member",
         "planLine": "{plan} · {price} a month",
         "renews": "renews {date}",
@@ -2241,8 +2241,8 @@
           "declined": "Declined"
         },
         "request": {
-          "title": "Give a member The IDEA Plus",
-          "description": "Monthly plans only. A member who already has their own The IDEA Plus can't get one.",
+          "title": "Give a member Plus",
+          "description": "Monthly plans only. A member who already has their own Plus can't get one.",
           "member": "Member",
           "plan": "Plan",
           "choose": "Choose",
@@ -2275,9 +2275,9 @@
       },
       "perks": {
         "title": "Perks",
-        "notPartner": "This organization doesn't offer perks on The IDEA Pass yet. Contact The IDEA to become a partner.",
+        "notPartner": "This organization doesn't offer perks to Pass members yet. Contact The IDEA to become a partner.",
         "checkTitle": "Check a card",
-        "checkDescription": "Scan the QR code on the customer's The IDEA Pass, or type their member number and the 6-digit code under it.",
+        "checkDescription": "Scan the QR code on the customer's Pass, or type their member number and the 6-digit code under it.",
         "card": "Scanned code or Pass number",
         "code": "6-digit code",
         "check": "Check",
@@ -2304,7 +2304,7 @@
       },
       "developers": {
         "title": "Sign in with The IDEA Pass",
-        "description": "Let people sign in to your website or app with their The IDEA Pass, and learn only what they allow: their name, email, whether they're a verified student, 18 or over, a The IDEA Plus member, and more.",
+        "description": "Let people sign in to your website or app with their Pass, and learn only what they allow: their name, email, whether they're a verified student, 18 or over, a Plus member, and more.",
         "adminsOnly": "Only the company's owners and admins manage its Pass apps.",
         "steps": {
           "domain": "Verify your domain with a DNS record or a file.",
@@ -2393,14 +2393,14 @@
           "student": "Verified student (yes or no)",
           "student_email": "University email",
           "adult": "18 or over (yes or no)",
-          "plus": "The IDEA Plus member",
+          "plus": "Plus member",
           "phone": "WhatsApp number",
           "birthdate": "Date of birth",
           "address": "Delivery address",
           "card": "The Pass card",
           "offline_access": "Stay updated (refresh tokens)",
           "card_embed": "The live Pass card on your site",
-          "organizations": "Organizations and roles in The IDEA Partners"
+          "organizations": "Organizations and roles in Partners"
         },
         "errors": {
           "redirectNotVerified": "A return address isn't on a verified domain.",
@@ -2419,7 +2419,7 @@
       },
       "selling": {
         "title": "Selling",
-        "intro": "Sell on The IDEA Store in your own name: The IDEA collects payment and delivers for you, and pays you weekly after the 14-day return window, minus commission. Staff review every shop before it sells.",
+        "intro": "Sell on the Store in your own name: The IDEA collects payment and delivers for you, and pays you weekly after the 14-day return window, minus commission. Staff review every shop before it sells.",
         "policy": "Read the selling policy",
         "applyTitle": "Apply to sell",
         "applyAgainTitle": "Apply again",
@@ -2576,7 +2576,7 @@
     "ages": {
       "adultsOnly": "This is for members aged 18 and over.",
       "needsBirthday": "Add your date of birth in Settings first.",
-      "guardianRequired": "Under 18, your guardian needs to allow The IDEA Plus first, in Settings."
+      "guardianRequired": "Under 18, your guardian needs to allow Plus first, in Settings."
     },
     "rent": {
       "title": "Rent an item",
@@ -2587,7 +2587,7 @@
       "total": "Total",
       "depositNote": "We refund the deposit when you return the item, less any late fees or damage.",
       "lateNote": "Late returns cost {fee} a day. After {days} late, the item is yours at its used price.",
-      "plusDelivery": "Delivery is free in Baghdad with The IDEA Plus plans that include it; your order shows the final total.",
+      "plusDelivery": "Delivery is free in Baghdad with Plus plans that include it; your order shows the final total.",
       "paymentFailed": "Your rental is booked, but we couldn't open the payment page. Pay from the order.",
       "viewOrder": "View order",
       "notRentable": "This item can't be rented on its own.",
@@ -2595,7 +2595,7 @@
     },
     "kits": {
       "title": "Game night kit",
-      "back": "Back to The IDEA Plus",
+      "back": "Back to Plus",
       "notFound": "This kit isn't available.",
       "when": "Which weekend",
       "whenHelp": "We bring it on Thursday evening and collect it on Saturday evening.",
@@ -2697,7 +2697,7 @@
     },
     "kind": {
       "sale": "Store",
-      "rental": "The IDEA Plus"
+      "rental": "Plus"
     },
     "ticketStatus": {
       "open": "Open",
@@ -2708,8 +2708,8 @@
     "ticketTopic": {
       "order": "Order",
       "rental": "Rental",
-      "plus": "The IDEA Plus",
-      "account": "The IDEA Pass",
+      "plus": "Plus",
+      "account": "Pass",
       "other": "Other"
     },
     "ticketPriority": {
@@ -2786,7 +2786,7 @@
         },
         "bulbs_birthday": {
           "title": "Happy birthday from The IDEA",
-          "body": "We've added {bulbs} Bulbs to The IDEA Pass. Enjoy your day!"
+          "body": "We've added {bulbs} Bulbs to your Pass. Enjoy your day!"
         },
         "quote_sent": {
           "title": "You have a quote",
@@ -2797,8 +2797,8 @@
           "body": "Invoice #{number} for {amount}, due {date}."
         },
         "plus_seat_active": {
-          "title": "The IDEA Plus from your company",
-          "body": "Your company gave you The IDEA Plus ({plan}). Start renting."
+          "title": "Plus from your company",
+          "body": "Your company gave you Plus ({plan}). Start renting."
         },
         "guardian_order_request": {
           "title": "An order to approve",
@@ -2814,10 +2814,10 @@
         },
         "guardian_linked": {
           "title": "Your guardian is linked",
-          "body": "{name} is now your guardian on The IDEA Pass."
+          "body": "{name} is now your guardian on your Pass."
         },
         "plus_invite": {
-          "title": "A place in The IDEA Plus",
+          "title": "A place in Plus",
           "body": "A place is yours for {hours} hours. Choose a plan to join."
         },
         "plus_swap_booked": {
@@ -2842,7 +2842,7 @@
         },
         "survey_rejected": {
           "title": "Your survey wasn't approved",
-          "body": "Open \"{title}\" in The IDEA Club to see why."
+          "body": "Open \"{title}\" in the Club to see why."
         },
         "pass_app_approved": {
           "title": "Your app was approved",
@@ -2861,7 +2861,7 @@
         "order": "Order update",
         "rental": "Rental update",
         "support": "Support update",
-        "plus": "The IDEA Plus update",
+        "plus": "Plus update",
         "promo": "News from The IDEA",
         "system": "Notice",
         "trade_in": "Sell to us update"
@@ -2870,7 +2870,7 @@
     },
     "card": {
       "buy": "Buy",
-      "rent": "Rent with The IDEA Plus"
+      "rent": "Rent with Plus"
     },
     "orderStatusPickup": {
       "shipped": "Ready for pickup",
@@ -2890,18 +2890,18 @@
       "noTracking": "we'll send it soon"
     },
     "lines": {
-      "store": "The IDEA Store",
-      "plus": "The IDEA Plus",
-      "club": "The IDEA Club",
-      "pass": "The IDEA Pass",
-      "business": "The IDEA Partners"
+      "store": "Store",
+      "plus": "Plus",
+      "club": "Club",
+      "pass": "Pass",
+      "business": "Partners"
     },
-    "rentOnly": "Rent with The IDEA Plus",
+    "rentOnly": "Rent with Plus",
     "ageRating": "Age rating: PEGI {rating}"
   },
   "admin": {
     "meta": {
-      "title": "The IDEA Staff",
+      "title": "Staff",
       "description": "Staff console for The IDEA."
     },
     "noAccess": {
@@ -3052,7 +3052,7 @@
           "submissions": "Submissions to review",
           "telegram": "Telegram requests",
           "procurement": "New bulk-buying requests to quote",
-          "seats": "The IDEA Plus seats to approve",
+          "seats": "Plus seats to approve",
           "invoices": "Overdue company invoices",
           "surveys": "Surveys to review",
           "passApps": "Pass apps to review",
@@ -3097,7 +3097,7 @@
         "slug": "Slug",
         "slugHint": "The web address: lower-case letters, numbers and dashes, e.g. ps5-slim.",
         "kind": "Line",
-        "kindHint": "Store items are sold; The IDEA Plus items are rented to members.",
+        "kindHint": "Store items are sold; Plus items are rented to members.",
         "status": "Status",
         "statusHint": "Only live products appear in the store.",
         "category": "Category",
@@ -3119,8 +3119,8 @@
         "verified": "Verified seller",
         "verifiedHint": "Shows the verified badge next to the seller.",
         "rentalTier": "Plan needed to rent",
-        "rentalTierHint": "Members on a lower The IDEA Plus plan can't rent this item.",
-        "anyPlan": "Any The IDEA Plus plan",
+        "rentalTierHint": "Members on a lower Plus plan can't rent this item.",
+        "anyPlan": "Any Plus plan",
         "tierOption": "Tier {tier}: {names}",
         "unknownTier": "No plan at this tier",
         "ageRating": "Age rating (PEGI)",
@@ -3191,8 +3191,8 @@
         "description": "Description",
         "audience": "Product line",
         "audiences": {
-          "plus": "The IDEA Plus (members)",
-          "business": "The IDEA Partners (organizations)"
+          "plus": "Plus (members)",
+          "business": "Partners (organizations)"
         },
         "amount": "Price (IQD)",
         "amountHint": "Charged each billing period.",
@@ -3210,7 +3210,7 @@
         "inactive": "Hidden",
         "activeHint": "Unavailable plans are hidden from new customers; current subscribers keep them.",
         "tier": "Tier",
-        "tierHint": "1 to 10; higher plans unlock items that need a higher tier. Required for The IDEA Plus.",
+        "tierHint": "1 to 10; higher plans unlock items that need a higher tier. Required for Plus.",
         "bulbRate": "Bulbs back (%)",
         "bulbRateHint": "What members on this plan earn on purchases. Empty for the store's rate.",
         "freeDelivery": "Free Store delivery",
@@ -3705,7 +3705,7 @@
       "telegram": "Telegram",
       "userId": "User ID",
       "subscription": "Plus plan",
-      "noSubscription": "No The IDEA Plus plan.",
+      "noSubscription": "No Plus plan.",
       "renewsOn": "Renews {date}",
       "endsOn": "Ends {date}",
       "crm": "Relationship",
@@ -4101,7 +4101,7 @@
         "decisionNote": "Note to the author",
         "decisionNoteHint": "Shown to the author with the decision.",
         "saveDecision": "Save decision",
-        "publish": "The IDEA Club",
+        "publish": "Club",
         "publishHint": "Accepted work is published in Members' work. This creates a draft with the member's name as the byline.",
         "createPost": "Create the post",
         "openPost": "Open the post"
@@ -4139,7 +4139,7 @@
         "reopen": "Reopen"
       },
       "chats": {
-        "description": "Groups and channels The IDEA Droid is an admin of. With join requests on in Telegram, Droid lets people in by each chat's rule (anyone, members who linked The IDEA Pass, or The IDEA Plus members) and tells the others how to qualify. It also records who joins and sends new channel posts to newsletter subscribers. Droid can also post The IDEA Club's news, upcoming events and new arrivals to a forum topic of each chat (the topic ID is the number at the end of a link to a message in it).",
+        "description": "Groups and channels Droid is an admin of. With join requests on in Telegram, Droid lets people in by each chat's rule (anyone, members who linked their Pass, or Plus members) and tells the others how to qualify. It also records who joins and sends new channel posts to newsletter subscribers. Droid can also post the Club's news, upcoming events and new arrivals to a forum topic of each chat (the topic ID is the number at the end of a link to a message in it).",
         "empty": "No groups yet. Add the bot to a group as an administrator, then add the group here.",
         "new": "Add a group",
         "id": "Chat ID",
@@ -4149,8 +4149,8 @@
         "joinRule": "Who can join",
         "joinRules": {
           "open": "Anyone",
-          "pass": "The IDEA Pass members",
-          "plus": "The IDEA Plus members"
+          "pass": "Pass members",
+          "plus": "Plus members"
         },
         "topics": {
           "news": "News topic",
@@ -4178,15 +4178,15 @@
         "lastSeen": "Last seen"
       },
       "faq": {
-        "description": "The IDEA Droid offers these answers in private chats, in the member's language.",
+        "description": "Droid offers these answers in private chats, in the member's language.",
         "new": "New question",
         "topic": "Topic",
         "topics": {
           "general": "General",
           "store": "Store",
-          "plus": "The IDEA Plus",
-          "club": "The IDEA Club",
-          "business": "The IDEA Partners"
+          "plus": "Plus",
+          "club": "Club",
+          "business": "Partners"
         },
         "questionAr": "Question (Arabic)",
         "questionEn": "Question (English)",
@@ -4229,11 +4229,11 @@
       "title": "Staff",
       "description": "Back-office roles. Only superadmins can change them.",
       "add": "Add a staff member",
-      "addDescription": "Look them up by the mobile number or email they use for The IDEA Pass, then choose a role. They must have signed in at least once.",
+      "addDescription": "Look them up by the mobile number or email they use for their Pass, then choose a role. They must have signed in at least once.",
       "lookup": "Mobile number or email",
       "lookupHint": "e.g. 0770 123 4567 or name@theideaiq.com",
       "find": "Find",
-      "notFound": "No The IDEA Pass uses that number or email.",
+      "notFound": "No Pass uses that number or email.",
       "unnamed": "Unnamed",
       "currentRole": "Current role: {role}",
       "grant": "Grant role",
@@ -4245,7 +4245,7 @@
       "since": "Since {date}",
       "revoke": "Revoke",
       "revokeConfirm": "Remove {name} from staff?",
-      "revokeDescription": "They lose access to Staff immediately and keep their The IDEA Pass."
+      "revokeDescription": "They lose access to Staff immediately and keep their Pass."
     },
     "audit": {
       "title": "Audit log",
@@ -4303,7 +4303,7 @@
       "topics": {
         "order": "Order",
         "rental": "Rental",
-        "plus": "The IDEA Plus",
+        "plus": "Plus",
         "account": "Account",
         "other": "Other"
       },
@@ -4451,8 +4451,8 @@
         "voidInvoice": "Void invoice"
       },
       "seats": {
-        "title": "The IDEA Plus seats",
-        "description": "Plus seats companies pay for. Approving one starts the person's The IDEA Plus and invoices the company for the first month.",
+        "title": "Plus seats",
+        "description": "Plus seats companies pay for. Approving one starts the person's Plus and invoices the company for the first month.",
         "empty": "No seats yet.",
         "member": "Member",
         "company": "Company",
@@ -4460,7 +4460,7 @@
         "status": "Status",
         "until": "Paid until",
         "approve": "Approve",
-        "approveDescription": "The member gets The IDEA Plus now and the company is invoiced for the first month, due in 15 days.",
+        "approveDescription": "The member gets Plus now and the company is invoiced for the first month, due in 15 days.",
         "decline": "Decline",
         "end": "End at the end of the month"
       },
@@ -4489,9 +4489,9 @@
         "stop": "Stop offering",
         "offerAgain": "Offer again",
         "new": "New perk",
-        "newDescription": "The partner needs an organization in The IDEA Partners: its team checks cards from Perks there.",
+        "newDescription": "The partner needs an organization in Partners: its team checks cards from Perks there.",
         "organization": "Organization",
-        "organizationHint": "The partner's organization in The IDEA Partners.",
+        "organizationHint": "The partner's organization in Partners.",
         "partnerName": "Name customers see",
         "kind": "Type",
         "titleAr": "Perk (Arabic)",
@@ -4520,14 +4520,14 @@
       },
       "signIn": {
         "title": "Sign in with The IDEA Pass",
-        "description": "Partner apps people sign in to with their Pass. Companies register their own in The IDEA Partners → Developers; you review the sensitive answers they ask for. Each person sees only what they allow, each time.",
+        "description": "Partner apps people sign in to with their Pass. Companies register their own in Partners → Developers; you review the sensitive answers they ask for. Each person sees only what they allow, each time.",
         "empty": "No partner sites yet.",
         "connected": "{count} people connected · added {date}",
         "addTitle": "Add a partner site",
         "addDescription": "Its developers get a client id and a secret (shown once), and the discovery address https://api.theideaiq.com/oidc/.well-known/openid-configuration.",
         "name": "Site name (shown on the consent screen)",
         "website": "Website",
-        "organization": "Organization in The IDEA Partners",
+        "organization": "Organization in Partners",
         "organizationHint": "Optional: the partner's organization.",
         "noOrganization": "None",
         "redirectUris": "Return addresses",
@@ -4538,7 +4538,7 @@
           "email": "Email",
           "student": "Verified student",
           "adult": "18 or over",
-          "plus": "The IDEA Plus member",
+          "plus": "Plus member",
           "card": "Show the Pass card",
           "membership": "Pass number",
           "student_email": "University email (sensitive)",
@@ -4616,7 +4616,7 @@
     },
     "home": {
       "title": "Your Pass",
-      "description": "Your Pass card for everything at The IDEA: orders, The IDEA Plus, events and more.",
+      "description": "Your Pass card for everything at The IDEA: orders, Plus, events and more.",
       "nameLabel": "Name",
       "noName": "Not set yet",
       "phoneLabel": "Mobile number",
@@ -4636,17 +4636,17 @@
       "addToWallet": "Add to Google Wallet",
       "walletFailed": "Google Wallet couldn't open. Try again.",
       "perks": {
-        "title": "With The IDEA Pass",
+        "title": "With your Pass",
         "plus": "{plan}: {slots} rentals at a time",
-        "plusMember": "The IDEA Plus: {plan}",
-        "joinPlus": "Join The IDEA Plus to rent games and more",
+        "plusMember": "Plus: {plan}",
+        "joinPlus": "Join Plus to rent games and more",
         "delivery": "Every order and delivery, tracked here",
         "events": "Events and meetups, RSVP in a tap",
         "bulbs": "{bulbs} Bulbs, {rate}% back on every order",
         "freeDelivery": "Free Store delivery in Baghdad on every order",
         "freeDeliveryFrom": "Free delivery in Baghdad from {amount}",
         "student": "Verified student until {date}",
-        "verifyStudent": "Verify as a student: The IDEA Plus at 20% off, no deposits and student perks"
+        "verifyStudent": "Verify as a student: Plus at 20% off, no deposits and student perks"
       },
       "badges": {
         "student": "Student",
@@ -4680,8 +4680,8 @@
       "continue": "Continue with Telegram",
       "signingIn": "Signing you in…",
       "back": "Back to sign-in",
-      "welcome": "Your Telegram account is verified. Enter your email to finish: we'll send your receipts there and use it if you ever need to recover The IDEA Pass.",
-      "welcomeName": "Hi {name}, your Telegram account is verified. Enter your email to finish: we'll send your receipts there and use it if you ever need to recover The IDEA Pass.",
+      "welcome": "Your Telegram account is verified. Enter your email to finish: we'll send your receipts there and use it if you ever need to recover your Pass.",
+      "welcomeName": "Hi {name}, your Telegram account is verified. Enter your email to finish: we'll send your receipts there and use it if you ever need to recover your Pass.",
       "errors": {
         "cancelled": "Telegram sign-in was cancelled.",
         "failed": "We couldn't sign you in with Telegram. Try again, or use your email.",
@@ -4692,9 +4692,9 @@
       "miniApp": {
         "title": "The IDEA in Telegram",
         "opening": "Opening The IDEA…",
-        "welcome": "Connect The IDEA Pass to see your orders, Bulbs and member prices right here in Telegram.",
-        "welcomeName": "Hi {name}! Connect The IDEA Pass to see your orders, Bulbs and member prices right here in Telegram.",
-        "connect": "Connect The IDEA Pass",
+        "welcome": "Connect your Pass to see your orders, Bulbs and member prices right here in Telegram.",
+        "welcomeName": "Hi {name}! Connect your Pass to see your orders, Bulbs and member prices right here in Telegram.",
+        "connect": "Connect your Pass",
         "browse": "Browse the store",
         "suspended": "This Pass is suspended. Contact support."
       }
@@ -4707,7 +4707,7 @@
         "plus": "Plus"
       },
       "verifyToUse": "Verify as a student to use it",
-      "joinToUse": "Join The IDEA Plus to use it"
+      "joinToUse": "Join Plus to use it"
     },
     "authorize": {
       "meta": "Sign in with The IDEA Pass",
@@ -4719,7 +4719,7 @@
         "email": "Your email address",
         "student": "Whether you're a verified student, at which university and until when",
         "adult": "Whether you're 18 or over",
-        "plus": "Whether you're a The IDEA Plus member, and your plan",
+        "plus": "Whether you're a Plus member, and your plan",
         "card": "Your Pass card, to show on their site (without its scannable code)",
         "membership": "Your Pass number and since when you've had the Pass",
         "student_email": "Your verified university email",
@@ -4727,7 +4727,7 @@
         "birthdate": "Your date of birth",
         "address": "Your default delivery address",
         "offline_access": "Keep these up to date after you leave (for example, whether you're still a student) until you disconnect it",
-        "organizations": "The organizations you belong to in The IDEA Partners, and your role in each"
+        "organizations": "The organizations you belong to in Partners, and your role in each"
       },
       "never": "It never sees anything you didn't tick, your orders or your payments. You can disconnect it at any time in Settings.",
       "manage": "Connected sites",
@@ -4745,7 +4745,7 @@
     "embed": {
       "meta": "Your Pass card",
       "unavailable": "This site can't show The IDEA Pass card.",
-      "intro": "Show your live The IDEA Pass card here, with the code {site} checks at the door.",
+      "intro": "Show your live Pass card here, with the code {site} checks at the door.",
       "show": "Show my Pass card",
       "popupBlocked": "The window couldn't open or connect back to this page.",
       "forget": "Not you? Remove it from this browser",

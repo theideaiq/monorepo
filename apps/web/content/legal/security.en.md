@@ -3,9 +3,9 @@ We welcome reports from anyone who finds a security weakness in The IDEA's servi
 ## 1. Scope
 
 - theideaiq.com, including The IDEA Pass and the cart and checkout;
-- partners.theideaiq.com (The IDEA Partners), staff.theideaiq.com (Staff and The IDEA Design) and api.theideaiq.com (the API and developer docs);
+- partners.theideaiq.com (Partners), staff.theideaiq.com (Staff and The IDEA Design) and api.theideaiq.com (the API and developer docs);
 - The IDEA's iOS and Android apps;
-- The IDEA Droid on Telegram.
+- Droid on Telegram.
 
 Services run by others (such as Wayl, Boxy, Telegram or our hosting providers) have their own security programmes; report weaknesses in them to those companies.
 
@@ -21,7 +21,7 @@ Write in English or Arabic. Please don't report weaknesses publicly, in the Club
 
 ## 3. Rules for testing
 
-- Use only your own The IDEA Pass, or test ones you create. Never access, change or delete other people's data; if you reach it by accident, stop, don't keep it, and tell us.
+- Use only your own Pass, or test ones you create. Never access, change or delete other people's data; if you reach it by accident, stop, don't keep it, and tell us.
 - Don't disrupt the service: no denial-of-service attacks, spam, or heavy automated scanning.
 - Don't use social engineering or phishing on our staff, riders or members, and don't test our store or offices physically.
 - Don't place real orders you don't mean to pay for, or try to obtain goods, Bulbs or payments.

@@ -358,7 +358,7 @@ max_enrolled_factors = 10
 
 # Control MFA via App Authenticator (TOTP)
 [auth.mfa.totp]
-# Staff use Staff (/staff on The IDEA Partners, apps/business) with an authenticator app; the
+# Staff use Staff (/staff on Partners, apps/business) with an authenticator app; the
 # database only grants staff rights to AAL2 sessions.
 enroll_enabled = true
 verify_enabled = true

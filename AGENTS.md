@@ -53,7 +53,7 @@ incidents) is in `docs/platform`.
     have no HTTP redirects; links stored in notifications are mapped to
     current pages by `currentAppPath`/`businessPath` in
     `packages/internationalization/app-paths.ts` (used by the website,
-    The IDEA Partners, Telegram and push);
+    Partners, Telegram and push);
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in` (an
     email code signs in or creates the Pass; there is no sign-up page, and
     `/onboarding` asks for the name), `/mfa`, `/tg`, `/sign-out`, the only
@@ -73,7 +73,7 @@ incidents) is in `docs/platform`.
     token (`callApi` in `apps/web/lib/api.ts`);
   - The iOS/Android apps are Capacitor shells whose WebView loads the live
     website (`server.url`), so the same cookie session applies there.
-- `apps/partners` — **The IDEA Partners** (package `partners`, port 3000,
+- `apps/partners` — **Partners** (package `partners`, port 3000,
   `partners.theideaiq.com`), the organization dashboard, server-rendered
   with a `proxy.ts` (locale, session refresh, security headers): its pages
   are at the root (`app/[locale]/(business)`): Home `/`, Selling

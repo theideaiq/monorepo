@@ -35,7 +35,7 @@ const Partners = async ({ params }: PartnersProps) => {
   const plans = await getPlans("business");
   const services = t.raw("services.items") as Services;
   const steps = t.raw("how.steps") as Steps;
-  // Organizations are set up and billed on The IDEA Partners.
+  // Organizations are set up and billed on Partners.
   const organizationUrl = appLink(env.NEXT_PUBLIC_APP_URL, locale, "/new");
 
   return (

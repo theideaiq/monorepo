@@ -6,6 +6,6 @@ export const openCheckout = (url: string) => {
   window.location.assign(url);
 };
 
-/** Where the payment page sends the customer back to (a page of The IDEA Partners). */
+/** Where the payment page sends the customer back to (a page of Partners). */
 export const checkoutReturnUrl = (locale: string, path: string) =>
   `${env.NEXT_PUBLIC_APP_URL}${localePath(locale, path)}`;

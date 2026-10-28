@@ -31,17 +31,17 @@ test("a new email gets The IDEA Pass with a password and one code", async ({
     page.getByRole("heading", { name: "Sign in to The IDEA Pass" })
   ).toBeVisible();
   await expectAccessible(page);
-  await page.getByRole("button", { name: "Get The IDEA Pass" }).click();
+  await page.getByRole("button", { name: "Get your Pass" }).click();
   await page.getByLabel("Full name").fill(signUpUser.name);
   await page.getByLabel("Email").fill(signUpUser.email);
   // A weak password can't be sent.
   await page.getByLabel("Password").fill("short");
   await expect(
-    page.getByRole("button", { name: "Get The IDEA Pass" })
+    page.getByRole("button", { name: "Get your Pass" })
   ).toBeDisabled();
   await page.getByLabel("Password").fill(SIGN_UP_PASSWORD);
   await clearInbox(signUpUser.email);
-  await page.getByRole("button", { name: "Get The IDEA Pass" }).click();
+  await page.getByRole("button", { name: "Get your Pass" }).click();
   await expect(
     page.getByText(`We emailed an 8-digit code to ${signUpUser.email}.`)
   ).toBeVisible();
@@ -266,9 +266,9 @@ test.describe("a signed-in customer", () => {
   }) => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/plus`);
-    // The page's "Join The IDEA Plus" buttons share the card's title.
+    // The page's "Join Plus" buttons share the card's title.
     await expect(
-      page.locator("#join").getByText("Join The IDEA Plus", { exact: true })
+      page.locator("#join").getByText("Join Plus", { exact: true })
     ).toBeVisible();
     await page.getByRole("combobox", { name: "Area in Baghdad" }).click();
     await page.getByRole("option", { name: "Karrada" }).click();

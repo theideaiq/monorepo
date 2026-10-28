@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Name tiles: one bold word on a circle (or a 22% square). Public channels
- * are white on pink; The IDEA Staff is pink on yellow; no word is the
+ * are white on pink; Staff is pink on yellow; no word is the
  * yellow bulb on pink.
  */
 const meta = {

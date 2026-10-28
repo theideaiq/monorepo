@@ -152,7 +152,7 @@ export interface CheckoutPlan {
 
 /**
  * Starts a hosted checkout for a plan: The IDEA Plus (owned by the user) without
- * `organizationId`, a plan of The IDEA Partners with it. Remembers the checkout so
+ * `organizationId`, a plan of Partners with it. Remembers the checkout so
  * the purchase is reported once paid, then opens the payment page.
  */
 export const usePlanCheckout = (

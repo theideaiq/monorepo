@@ -25,7 +25,7 @@ Store orders are delivered by our courier partner **Boxy**. Once your order is o
 
 ## 5. Store pickup
 
-Where store pickup is offered, you can choose it at checkout for free. The checkout shows the address and opening hours. We tell you when the order is ready; bring your card from The IDEA Pass or your order number.
+Where store pickup is offered, you can choose it at checkout for free. The checkout shows the address and opening hours. We tell you when the order is ready; bring your Pass card or your order number.
 
 ## 6. Paying for delivery orders
 
@@ -51,4 +51,4 @@ You can change the delivery address by contacting us before the order is handed 
 
 ## Contact us
 
-Delivery questions: [hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or The IDEA Droid on Telegram. Please include your order number.
+Delivery questions: [hi@theideaiq.com](mailto:hi@theideaiq.com), [Help](/help#contact) or Droid on Telegram. Please include your order number.

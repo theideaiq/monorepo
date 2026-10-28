@@ -81,7 +81,7 @@ test.describe("public site", () => {
     page,
   }) => {
     await page.goto(`${urls.web}/club`);
-    const parts = page.getByRole("navigation", { name: "The IDEA Club" });
+    const parts = page.getByRole("navigation", { exact: true, name: "Club" });
     for (const name of ["Join", "Read", "Yours"]) {
       await expect(parts.getByRole("link", { name })).toBeVisible();
       await expect(
@@ -98,7 +98,7 @@ test.describe("public site", () => {
       .getByRole("heading", { exact: true, level: 2, name: "Yours" })
       .boundingBox();
     const telegram = await page
-      .getByRole("heading", { name: "The IDEA Club on Telegram" })
+      .getByRole("heading", { name: "The Club on Telegram" })
       .boundingBox();
     expect(telegram?.y ?? 0).toBeGreaterThan(yours?.y ?? 0);
 

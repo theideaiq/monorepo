@@ -5,7 +5,7 @@ export const keys = () =>
   createEnv({
     client: {
       NEXT_PUBLIC_API_URL: z.url().optional(),
-      // The IDEA Partners: partners' pages.
+      // Partners: partners' pages.
       NEXT_PUBLIC_APP_URL: z.url(),
       NEXT_PUBLIC_DOCS_URL: z.url().optional(),
       // Staff: the same app on its own host, with the design site at /design.

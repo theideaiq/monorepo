@@ -2,7 +2,7 @@ This policy explains who owns what on The IDEA's services, what happens to conte
 
 ## 1. Our content
 
-The service's software, designs, text, photos, The IDEA's name and logo, the bulb and The IDEA Droid belong to The IDEA IQ Inc. or our licensors. You may share links to our pages, but not copy or reuse our content without our written permission.
+The service's software, designs, text, photos, The IDEA's name and logo, the bulb and Droid belong to The IDEA IQ Inc. or our licensors. You may share links to our pages, but not copy or reuse our content without our written permission.
 
 ## 2. Game, album, film and book art
 

@@ -14,7 +14,7 @@ import { getLocaleLabel, type Locale, locales } from "./config";
 import { usePathname, useRouter } from "./navigation";
 
 /**
- * The language and theme switches The IDEA Partners and Staff share. Their
+ * The language and theme switches Partners and Staff share. Their
  * texts come from the `common` messages.
  */
 

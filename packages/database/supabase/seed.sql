@@ -1,11 +1,11 @@
 -- Local development seed (runs after migrations on `supabase db reset`).
 -- Prices are in IQD (whole dinars). Production plans and the catalog are
--- managed in Staff (/staff on The IDEA Partners).
+-- managed in Staff (/staff on Partners).
 
 insert into public.plans
   (id, name, description, amount, currency, billing_interval, audience, rental_slots, tier, features_ar, features_en, position)
 values
-  ('business-monthly', 'The IDEA Partners', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
+  ('business-monthly', 'Partners', 'Procurement and recruitment for companies', 150000, 'IQD', 'month', 'business', null, null,
     '{"طلبات شراء للشركات","فواتير شهرية","مدير حساب"}', '{"Company purchase orders","Monthly invoicing","Account manager"}', 10)
 on conflict (id) do nothing;
 

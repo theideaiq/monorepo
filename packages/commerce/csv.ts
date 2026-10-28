@@ -1,6 +1,6 @@
 /**
  * Spreadsheet files read in the browser: Staff's catalog import and the
- * shops' listing upload in The IDEA Partners.
+ * shops' listing upload in Partners.
  */
 
 const LINE_END = /\r?\n|$/;

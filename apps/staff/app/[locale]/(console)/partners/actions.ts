@@ -17,7 +17,7 @@ import {
 } from "@/lib/admin/forms";
 
 /**
- * The IDEA Partners procurement, run as the staff member: support writes and
+ * Partners procurement, run as the staff member: support writes and
  * sends quotes and marks orders delivered; finance invoices them. The
  * database checks each step (migration 20261206000000_suite_procurement).
  */
@@ -201,7 +201,7 @@ const PERK_KINDS = [
   "other",
 ] as const;
 
-/** Adds a perk a partner (an organization in The IDEA Partners) offers. */
+/** Adds a perk a partner (an organization in Partners) offers. */
 export const addPerk = staffAction(
   "companies",
   z.object({

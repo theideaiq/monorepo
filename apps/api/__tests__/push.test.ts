@@ -170,7 +170,7 @@ describe("pushText", () => {
 
   test("falls back to the kind, then to a notice; Kurdish reads Arabic", () => {
     expect(pushText({ event: "plus_welcome", kind: "plus" }, "en").title).toBe(
-      "The IDEA Plus update"
+      "Plus update"
     );
     expect(pushText({ event: "x", kind: "unknown" }, "en").title).toBe(
       "Notice"

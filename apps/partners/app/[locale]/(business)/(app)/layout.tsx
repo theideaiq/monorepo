@@ -12,7 +12,7 @@ interface AppLayoutProps {
 }
 
 /**
- * The IDEA Partners, for partners: requires a session (from
+ * Partners, for partners: requires a session (from
  * The IDEA Pass on the website). The Business screens ask for an
  * organization.
  */

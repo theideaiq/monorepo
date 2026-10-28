@@ -6,7 +6,7 @@ import { CreateOrganizationForm } from "@/components/organization-form";
 import { useOrganization } from "@/components/organization-provider";
 import { PageHeader } from "@/components/page-header";
 
-/** /business/new: a business account (organization) for The IDEA Partners. */
+/** /business/new: a business account (organization) for Partners. */
 export const NewOrganization = () => {
   const t = useTranslations("app.organizations.new");
   const router = useRouter();

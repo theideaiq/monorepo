@@ -18,7 +18,7 @@ export const GET = async (request: Request) => {
     "run_plus_seat_renewals"
   );
   if (error) {
-    log.error(`The IDEA Plus seat renewals failed: ${parseError(error)}`);
+    log.error(`Plus seat renewals failed: ${parseError(error)}`);
     return NextResponse.json({ error: "renewals_failed" }, { status: 500 });
   }
   return NextResponse.json({ ok: true, renewed: data });

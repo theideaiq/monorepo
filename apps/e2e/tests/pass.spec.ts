@@ -124,7 +124,7 @@ test.describe("The IDEA Pass", () => {
         name: /Your default delivery address/,
       });
       const organizations = page.getByRole("checkbox", {
-        name: /The organizations you belong to in The IDEA Partners/,
+        name: /The organizations you belong to in Partners/,
       });
       await expect(address).toBeVisible();
       await expect(organizations).toBeVisible();
@@ -156,7 +156,7 @@ test.describe("The IDEA Pass", () => {
 
       await page.getByRole("button", { name: "Sign out" }).click();
       await expect(page).toHaveURL(`${urls.web}/sign-in`);
-      // The shared session is gone for The IDEA Partners too.
+      // The shared session is gone for Partners too.
       await page.goto(`${urls.app}/organization/invoices`);
       await expect(page).toHaveURL(
         new RegExp(`^${urls.web}/sign-in\\?return_to=`)
@@ -167,7 +167,7 @@ test.describe("The IDEA Pass", () => {
       await page.goto(`${urls.web}/sign-in${returnTo("/pass/saved")}`);
       await expect(page).toHaveURL(`${urls.web}/pass/saved`);
 
-      // Another site of The IDEA (here The IDEA Partners) is allowed too.
+      // Another site of The IDEA (here Partners) is allowed too.
       await page.goto(
         `${urls.web}/sign-in${returnTo(`${urls.app}/organization/invoices`)}`
       );

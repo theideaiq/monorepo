@@ -22,7 +22,7 @@ describe("CORS", () => {
     ]);
   });
 
-  test("signed-in calls allow both website origins, The IDEA Partners and Staff", () => {
+  test("signed-in calls allow both website origins, Partners and Staff", () => {
     for (const origin of [
       "https://theideaiq.com",
       "https://www.theideaiq.com",

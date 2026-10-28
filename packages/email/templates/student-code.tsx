@@ -26,7 +26,7 @@ const copy = {
     expires: "ينتهي هذا الرمز بعد 15 دقيقة. إن لم تطلبه، تجاهل هذه الرسالة.",
     heading: "رمز التحقق من صفة الطالب",
     intro: (university: string) =>
-      `أدخل هذا الرمز في The IDEA Pass لتأكيد أنك طالب في ${university}:`,
+      `أدخل هذا الرمز في بطاقة Pass الخاصة بك لتأكيد أنك طالب في ${university}:`,
     preview: (code: string) => `رمز التحقق: ${code}`,
   },
   en: {
@@ -34,7 +34,7 @@ const copy = {
       "The code expires in 15 minutes. If you didn't ask for it, ignore this email.",
     heading: "Your student verification code",
     intro: (university: string) =>
-      `Enter this code in The IDEA Pass to confirm you're a student at ${university}:`,
+      `Enter this code in your Pass to confirm you're a student at ${university}:`,
     preview: (code: string) => `Your verification code: ${code}`,
   },
 } as const;

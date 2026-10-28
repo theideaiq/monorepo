@@ -31,7 +31,7 @@ export interface NavItem {
 }
 
 /**
- * The sections of The IDEA Partners, in sidebar order: Home and
+ * The sections of Partners, in sidebar order: Home and
  * Organization always, the rest once added from Home. Supply and
  * Opportunities join after Selling when they ship.
  */

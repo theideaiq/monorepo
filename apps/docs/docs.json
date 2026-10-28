@@ -16,7 +16,7 @@
   },
   "navbar": {
     "links": [
-      { "label": "The IDEA Partners", "href": "https://partners.theideaiq.com" }
+      { "label": "Partners", "href": "https://partners.theideaiq.com" }
     ],
     "primary": {
       "type": "button",

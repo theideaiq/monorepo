@@ -73,7 +73,7 @@ Iraq's Consumer Protection Law requires a warranty for goods that need one; wher
 
 ## 9. How to return an item
 
-1. Contact us from [Help](/help#contact), by email or through The IDEA Droid, with your order number, the item and the reason.
+1. Contact us from [Help](/help#contact), by email or through Droid, with your order number, the item and the reason.
 2. We tell you how to send it back: collected by our courier. Please don't send items back without contacting us first, and don't send a shop's item to the shop directly.
 3. We check the item when it arrives and tell you the result.
 
@@ -99,7 +99,7 @@ Items sold by shops on The IDEA follow this whole policy: the same 14-day window
 
 Items that people sell to each other on The IDEA are paid to the seller in cash on delivery; the money never passes through The IDEA. This policy's returns and refunds therefore don't apply to them: check the item before you pay. If a person's item was misdescribed, report it to us; we will help you and the seller resolve it and may remove the seller. See [Selling](/legal/selling).
 
-## 13. The IDEA Plus
+## 13. Plus
 
 - You can cancel any time; the plan stays active until the end of the month (or year) you paid for, once your items are back. We don't refund part of a month.
 - If you were charged by mistake or twice, contact us and we will refund the extra charge.
@@ -118,7 +118,7 @@ The refund terms of a paid event are shown when you book. If we cancel an event,
 
 ## 16. Organizations
 
-Orders by organizations through The IDEA Partners follow this policy, unless your agreement with us says otherwise (see [The IDEA Partners](/legal/business)).
+Orders by organizations through Partners follow this policy, unless your agreement with us says otherwise (see [Partners](/legal/business)).
 
 ## 17. Age ratings
 

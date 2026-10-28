@@ -84,7 +84,7 @@ test("a company adds Team, sends a bulk request and accepts the quote", async ({
   await page.getByRole("link", { exact: true, name: "Plus" }).click();
   await expect(page).toHaveURL(/\/team\/plus$/);
   await expect(
-    page.getByText("No one has The IDEA Plus through your company yet.")
+    page.getByText("No one has Plus through your company yet.")
   ).toBeVisible();
   await expectAccessible(page);
 });
