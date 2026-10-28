@@ -5,7 +5,9 @@ Partners) and related points, as given. They replace earlier answers and,
 where they differ, the v2 brief (for example Bulbs: 1 Bulb = 1 IQD
 replaces the brief's 1 Bulb = 10 IQD). The order of work is in
 `PROGRESS.md` (Decisions, 2026-10-28). Further decisions given the same
-day ("part 2", at the end of this file) win where they differ.
+day ("part 2", at the end of this file) win where they differ. The brand
+update of the same day (`docs/brand/`) makes Partners, Droid and Staff
+always short: read any "The IDEA Partners" here as "Partners".
 
 The IDEA Space is left out entirely for now: build nothing for it and
 remove any mention of it from copy.
