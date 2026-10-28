@@ -52,7 +52,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(22);
+select plan(25);
 
 -- O owns Shop (M a plain member), X runs a pending shop, U a customer, A staff.
 truncate public.products, public.orders cascade;
@@ -152,6 +152,26 @@ select throws_ok(
   '42501', null, 'A shop that isn''t approved can''t list'
 );
 select is((select count(*)::int from public.seller_offers), 0, 'Other shops don''t see the offer');
+
+-- ── What Partners shows ─────────────────────────────────────────────────────
+
+select pg_temp.login_as('00000000-0000-0000-0000-000000000ae2');
+select results_eq(
+  $$ select name_en, condition::text, price, sku, available, sold
+     from public.seller_listings('9e000000-0000-0000-0000-0000000000d1') $$,
+  $$ values ('Dune', 'used', 8750::bigint, 'BK-001', 1, 0) $$,
+  'Members see each offer with its product and copies'
+);
+select pg_temp.login_as('00000000-0000-0000-0000-000000000ae3');
+select is_empty(
+  $$ select 1 from public.seller_listings('9e000000-0000-0000-0000-0000000000d1') $$,
+  'Other shops see nothing'
+);
+select pg_temp.login_anon();
+select throws_ok(
+  $$ select 1 from public.seller_listings('9e000000-0000-0000-0000-0000000000d1') $$,
+  '42501', null, 'Visitors can''t ask'
+);
 
 -- ── Products shops create ───────────────────────────────────────────────────
 
