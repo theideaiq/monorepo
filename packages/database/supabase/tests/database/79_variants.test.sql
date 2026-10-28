@@ -74,8 +74,8 @@ insert into public.products (id, slug, name_ar, name_en, price, compare_at_price
 select results_eq(
   $$ select price, compare_at_price, stock_count, label_en from public.product_variants
      where product_id = '79000000-0000-0000-0000-000000000001' $$,
-  $$ values (30000::bigint, 35000::bigint, 2, null::text) $$,
-  'a product inserted on its own gets a default variant with its price and stock'
+  $$ values (30000::bigint, null::bigint, 2, null::text) $$,
+  'a product inserted on its own gets a default variant with its price and stock (and no typed "was" price)'
 );
 
 update public.products set price = 32000, stock_count = 3 where id = '79000000-0000-0000-0000-000000000001';

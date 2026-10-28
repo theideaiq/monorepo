@@ -2510,6 +2510,51 @@ export type Database = {
           },
         ];
       };
+      price_history: {
+        Row: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          ended_at: string | null;
+          id: string;
+          price: number;
+          seller_id: string;
+          started_at: string;
+          variant_id: string;
+        };
+        Insert: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          ended_at?: string | null;
+          id?: string;
+          price: number;
+          seller_id: string;
+          started_at?: string;
+          variant_id: string;
+        };
+        Update: {
+          condition?: Database["public"]["Enums"]["product_condition"];
+          ended_at?: string | null;
+          id?: string;
+          price?: number;
+          seller_id?: string;
+          started_at?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "price_history_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "price_history_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       procurement_requests: {
         Row: {
           assigned_to: string | null;
@@ -6806,11 +6851,13 @@ export type Database = {
         Returns: {
           available: number;
           condition: Database["public"]["Enums"]["product_condition"];
+          lowest_30d: number;
           price: number;
           purpose: Database["public"]["Enums"]["stock_purpose"];
           seller_id: string;
           seller_name: string;
           variant_id: string;
+          was_price: number;
         }[];
       };
       product_review_list: {
@@ -6937,6 +6984,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      refresh_was_prices: { Args: Record<PropertyKey, never>; Returns: number };
       register_push_device: {
         Args: { device_platform: string; device_token: string };
         Returns: string;
