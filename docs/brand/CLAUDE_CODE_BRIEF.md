@@ -8,7 +8,7 @@ The brand stays version 1.0. This update brings the brand and the design system 
 
 **What changes:**
 - **One palette.** The product accents are gone: the tokens `plus`, `business`, `club`, `on-accent` and `on-accent-warm`, the `plus` button variant and the accent badge tones. Products are told apart by name.
-- **Alexandria replaces Readex Pro and Cairo** as the text font for both scripts. Readex Pro has no گ, چ, پ or ژ, so Iraqi words switched fonts mid-word. The logo's wordmark stays an outlined drawing.
+- **Alexandria replaces Readex Pro and Cairo** as the text font for both scripts. Readex Pro has no گ, چ, پ or ژ, so Iraqi words switched fonts mid-word. The logo's wordmark is Alexandria Bold too: live text in `BrandLogo`, and redrawn (outlined) in the logo files in `docs/brand/logos/`.
 - **Names.** Partners, Droid and Staff are always short (never "The IDEA Partners", "The IDEA Droid", "The IDEA Business"). Full names (The IDEA Store, Plus, Club, Pass) are for titles and first mentions outside our surfaces; short names everywhere inside them. Always capitalized; "your Pass". No "membership", "account" or "users".
 - **No mascot.** Droid's profile photo is `tile-droid.svg`. Remove any mascot artwork, stickers or empty-state art of the old character.
 - **Removed:** the condition bulbs (condition is four plain labels), SouqPrice, the box UI and the counter UI.
@@ -26,7 +26,7 @@ The brand stays version 1.0. This update brings the brand and the design system 
    - `Button`: remove the `plus` variant and use `default` (pink) for every primary action.
    - `Badge`: remove the `plus`, `business` and `club` tones.
    - `PlanCard` and plan marks are pink.
-   - `BrandLogo` `line` values: Club, Design, Droid, Partners, Pass, Plus, Staff, Store.
+   - `BrandLogo`: render the bulb SVG beside live text "The IDEA" in Alexandria 700, −1% tracking; `line` values: Club, Design, Droid, Partners, Pass, Plus, Staff, Store.
 3. **Names.**
    - Messages files in both languages:
      - The IDEA Partners → Partners, The IDEA Droid → Droid, The IDEA Business → Partners;
@@ -34,7 +34,7 @@ The brand stays version 1.0. This update brings the brand and the design system 
      - no "membership".
    - Update the brand-name rule in `AGENTS.md` to match BRAND_GUIDELINES.md section 2.
 4. **Assets.**
-   - Copy `docs/brand/logos/tile-partners.svg` (attached) and serve `tile-droid.svg` as Droid's avatar wherever the bot or Droid appears.
+   - The lock-ups and name tiles in `docs/brand/logos/` are redrawn in Alexandria Bold, and `tile-partners.svg` is new. Replace every copy the apps serve (and the email headers and the Open Graph image), and use `tile-droid.svg` as Droid's avatar wherever the bot appears.
    - Delete `docs/brand/logos/condition-*.svg`, any `ConditionBulb` code and any mascot images.
 5. **Retire:** SouqPrice, the box product UI and the counter UI, with their stories and messages.
 6. **New components** (DESIGN_SYSTEM.md section 4.1):

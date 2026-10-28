@@ -109,7 +109,7 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 
 **No black in the logo, tiles or brand blocks.** The mark lives in pink, yellow and white only. Black (ink) is for reading text, never for the brand itself.
 
-**The bulb** is the lamp with five rays already used in the app. Never redraw it. **The wordmark** is **The IDEA** drawn in Readex Pro Bold, −1% tracking, and supplied as outlines: it never changes with the text font. **The lock-up** is the bulb, a gap of one-third of its height, then the wordmark; the bulb is 1.6 × the cap height.
+**The bulb** is the lamp with five rays already used in the app. Never redraw it. **The wordmark** is **The IDEA** set in Alexandria Bold, −1% tracking. In the website and apps it is live text beside the bulb; in the logo files it is outlined. **The lock-up** is the bulb, a gap of one-third of its height, then the wordmark; the bulb is 1.6 × the cap height.
 
 | Ground | Bulb | Wordmark | File |
 | --- | --- | --- | --- |
@@ -121,7 +121,7 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 - **Avatar:** yellow bulb on a pink circle (`avatar-the-idea.svg`) on every social network and the Telegram channel.
 - **App icon and favicon:** yellow bulb on a pink rounded square, 22% corners (`app-icon.svg`); `app-icon-yellow.svg` (pink bulb on yellow) for seasonal use.
 - **Clear space:** one ray length on every side. **Minimum size:** bulb 16px on screen or 6mm in print; lock-up 80px wide.
-- **Product lock-ups:** bulb + The IDEA + the short name in weight 600. Never a separate logo for a product.
+- **Product lock-ups:** bulb + The IDEA + the short name in Alexandria 600. Never a separate logo for a product.
 - **"Sold on The IDEA":** shops may show this with `lockup-on-light.svg` or `lockup-on-pink.svg` next to their own logo, never merged with it. A shop never uses the bulb as its own mark.
 - **Don't:** use black, put the yellow bulb on paper or white (it disappears), recolor the bulb, outline it, add effects, stretch it, or set the wordmark in another font.
 
@@ -175,7 +175,7 @@ Print: the screen values above are the reference. Match them to Pantone spot col
 
 ## 7. Typography
 
-**Alexandria** for Arabic and Latin: one family drawn for both scripts, with every letter Iraqi Arabic and Kurdish use, including gaf, che, pe, zhe and ve (the samples above). Readex Pro, used before, has no gaf, che, pe or zhe, so those letters fell back to another font and looked wrong in words like the brand line. **Geist Mono** for prices, bids, Bulbs amounts and order numbers on screens. The logo's wordmark stays as drawn.
+**Alexandria** for Arabic and Latin: one family drawn for both scripts, with every letter Iraqi Arabic and Kurdish use, including gaf, che, pe, zhe and ve (the samples above). Readex Pro, used before, has no gaf, che, pe or zhe, so those letters fell back to another font and looked wrong in words like the brand line. **Geist Mono** for prices, bids, Bulbs amounts and order numbers on screens. The logo's wordmark is Alexandria Bold too.
 
 | Style | Size / line | Weight |
 | --- | --- | --- |
