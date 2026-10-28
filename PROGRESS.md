@@ -396,6 +396,35 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Brand update (still v1.0), from the owner with
+  `docs/brand/CLAUDE_CODE_BRIEF.md`. `docs/brand/` now holds the updated
+  guidelines, design system and tokens, the new `logos/tile-partners.svg`,
+  and the designed guidelines and the packaging guide as PDFs; the
+  condition bulbs (`logos/condition-*.svg`) are retired. The changes:
+  - one palette: pink, yellow, paper and ink for every product; the
+    Plus violet, Partners cobalt and Club orange tokens (`plus`,
+    `business`, `club`, `on-accent`, `on-accent-warm`), the `plus` button
+    variant and the accent badge tones go; status colors are only for
+    states;
+  - Alexandria replaces Readex Pro and Cairo for Arabic and Latin
+    (Readex Pro has no گ, چ, پ or ژ); the logo's wordmark stays an
+    outlined drawing;
+  - names: Partners, Droid and Staff are always short; full names (The
+    IDEA Store, Plus, Club, Pass) in titles and first mentions outside
+    our own surfaces, short names inside them; always capitalized; "your
+    Pass"; no "membership", "account" or "users". Every "The IDEA
+    Partners" in the earlier decisions reads as "Partners";
+  - no mascot: Droid's profile photo is `tile-droid.svg`;
+  - removed: condition bulbs (condition is four plain labels), SouqPrice,
+    boxes and the counter, with their stories;
+  - new components (DESIGN_SYSTEM.md section 4.1: offers, auctions, Make
+    an offer, Saved, Bulbs, verification, gifts, codes, surveys) and
+    updates to the Pass card, plan cards, product cards, header, tabs and
+    the footer (desktop only).
+  No separate brand pull request: the token, font and name changes and
+  the removals go with step 1 (clean-ups); each new component lands, with
+  its stories in The IDEA Design, with the feature that uses it.
+
 - 2026-10-28: Further owner decisions, part 2
   (`docs/program/decisions-2026-10-28.md`, given in full after part 1).
   They win where they differ from part 1. Nothing is dropped or postponed;

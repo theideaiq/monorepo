@@ -237,10 +237,16 @@ local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 - **Payments:** in-app (native) checkout is controlled by
   `project.commerce.allowNativeCheckout`. Digital goods must not be sold
   through third-party checkout inside the iOS/Android apps.
-- **Brand name:** always "The IDEA", never a bare "IDEA": The IDEA Pass,
-  The IDEA Plus, The IDEA Partners, The IDEA Design, in English and Arabic copy
-  alike (Latin letters in Arabic text). A person's Pass is The IDEA Pass;
-  Plus is "Plus" or "your plan"; never say "account" or "membership".
+- **Brand name:** always "The IDEA", never a bare "IDEA", in English and
+  Arabic copy alike (Latin letters in Arabic text); `docs/brand/BRAND_GUIDELINES.md`
+  section 2 has the rules. Full names (The IDEA Store, The IDEA Plus, The
+  IDEA Club, The IDEA Pass) go in titles and first mentions outside our own
+  surfaces; inside the website, apps and emails write Store, Plus, Club and
+  Pass. Partners, Droid and Staff are always short: never "The IDEA
+  Partners", "The IDEA Droid", "The IDEA Staff" or "The IDEA Business".
+  Names are always capitalized (Bulbs, Glow, Shine, Blaze, Duo too); a
+  person's own is "your Pass", "your Plus" or "your plan"; never say
+  "account", "membership" or "users" in customer copy.
   Reword rather than writing "your The IDEA …". The one exception is the
   site's own name on Arabic pages (the logo and the page-title suffix),
   which is ايديا (`localizedName` in `project.json`; `projectName(locale)`
