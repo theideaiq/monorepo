@@ -379,6 +379,28 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Program Revision v2, item 10 (sellers and offers), part 1,
+  the schema (migration `20270107000000`):
+  - `sellers`: The IDEA (the house seller, fixed id
+    `00000000-0000-4000-8000-000000000001`, holding today's stock) and
+    shops, one per organization in The IDEA Partners, `pending` →
+    `approved` / `rejected` / `suspended`. Visitors see approved sellers;
+    members see their organization's application.
+  - `seller_details`: documents (under the organization's Storage
+    folder), payout bank details, the security deposit and the review
+    note, for the organization's owners and admins and for staff. Owners
+    and admins apply (`apply_to_sell`) and edit documents and payout
+    details; staff decide (`decide_seller`) and set the deposit.
+  - An offer is a seller's available copies of one variant in one
+    condition: `stock_items`, `cart_items` and `order_items` gain
+    `seller_id` (The IDEA by default; order lines also keep
+    `seller_name`), `product_offers()` returns the seller, and checkout
+    takes copies from the line's seller only, and only while it is
+    approved. Kept as copies rather than a separate offers table, so
+    The IDEA's per-copy stock, costs and the stock counts work unchanged.
+  - Partners gains the `selling` section. Part 2 (website, Partners →
+    Selling, Staff review) follows once this migration has run.
+
 - 2026-10-28: Program Revision v2, item 9 (policies): 14 at
   `/legal/<policy>`. Condition and warranty is merged into Returns, which
   gains the refund for items not as described (shop items are refunded by

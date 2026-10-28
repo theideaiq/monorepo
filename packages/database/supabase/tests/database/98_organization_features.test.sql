@@ -81,7 +81,7 @@ select is(
 );
 
 select throws_ok(
-  $$ update public.organizations set features = '{selling}'
+  $$ update public.organizations set features = '{supply}'
      where id = '98000000-0000-0000-0000-0000000000c1' $$,
   '23514', null, 'Only sections that exist can be switched on'
 );

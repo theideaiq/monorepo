@@ -266,6 +266,7 @@ export type Database = {
           id: string;
           product_id: string;
           quantity: number;
+          seller_id: string;
           updated_at: string;
           user_id: string;
           variant_id: string;
@@ -277,6 +278,7 @@ export type Database = {
           id?: string;
           product_id: string;
           quantity?: number;
+          seller_id?: string;
           updated_at?: string;
           user_id?: string;
           variant_id: string;
@@ -288,6 +290,7 @@ export type Database = {
           id?: string;
           product_id?: string;
           quantity?: number;
+          seller_id?: string;
           updated_at?: string;
           user_id?: string;
           variant_id?: string;
@@ -313,6 +316,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "product_variants";
             referencedColumns: ["product_id", "id"];
+          },
+          {
+            foreignKeyName: "cart_items_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -1099,6 +1109,8 @@ export type Database = {
           product_id: string | null;
           quantity: number;
           rental_id: string | null;
+          seller_id: string | null;
+          seller_name: string | null;
           unit_price: number;
           variant_id: string | null;
         };
@@ -1116,6 +1128,8 @@ export type Database = {
           product_id?: string | null;
           quantity: number;
           rental_id?: string | null;
+          seller_id?: string | null;
+          seller_name?: string | null;
           unit_price: number;
           variant_id?: string | null;
         };
@@ -1133,6 +1147,8 @@ export type Database = {
           product_id?: string | null;
           quantity?: number;
           rental_id?: string | null;
+          seller_id?: string | null;
+          seller_name?: string | null;
           unit_price?: number;
           variant_id?: string | null;
         };
@@ -1163,6 +1179,13 @@ export type Database = {
             columns: ["rental_id"];
             isOneToOne: false;
             referencedRelation: "rentals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
             referencedColumns: ["id"];
           },
           {
@@ -3012,6 +3035,97 @@ export type Database = {
           },
         ];
       };
+      seller_details: {
+        Row: {
+          deposit_held: number;
+          deposit_required: number;
+          documents: string[];
+          payout_account_name: string | null;
+          payout_bank: string | null;
+          payout_iban: string | null;
+          review_note: string | null;
+          seller_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          deposit_held?: number;
+          deposit_required?: number;
+          documents?: string[];
+          payout_account_name?: string | null;
+          payout_bank?: string | null;
+          payout_iban?: string | null;
+          review_note?: string | null;
+          seller_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          deposit_held?: number;
+          deposit_required?: number;
+          documents?: string[];
+          payout_account_name?: string | null;
+          payout_bank?: string | null;
+          payout_iban?: string | null;
+          review_note?: string | null;
+          seller_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "seller_details_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: true;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      sellers: {
+        Row: {
+          applied_at: string;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          id: string;
+          is_house: boolean;
+          name: string;
+          organization_id: string | null;
+          status: Database["public"]["Enums"]["seller_status"];
+          updated_at: string;
+        };
+        Insert: {
+          applied_at?: string;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          id?: string;
+          is_house?: boolean;
+          name: string;
+          organization_id?: string | null;
+          status?: Database["public"]["Enums"]["seller_status"];
+          updated_at?: string;
+        };
+        Update: {
+          applied_at?: string;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          id?: string;
+          is_house?: boolean;
+          name?: string;
+          organization_id?: string | null;
+          status?: Database["public"]["Enums"]["seller_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "sellers_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: true;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       shipments: {
         Row: {
           action_required: string | null;
@@ -3139,6 +3253,7 @@ export type Database = {
           product_id: string;
           purpose: Database["public"]["Enums"]["stock_purpose"];
           rental_id: string | null;
+          seller_id: string;
           serial: string | null;
           status: Database["public"]["Enums"]["stock_status"];
           updated_at: string;
@@ -3157,6 +3272,7 @@ export type Database = {
           product_id: string;
           purpose?: Database["public"]["Enums"]["stock_purpose"];
           rental_id?: string | null;
+          seller_id?: string;
           serial?: string | null;
           status?: Database["public"]["Enums"]["stock_status"];
           updated_at?: string;
@@ -3175,6 +3291,7 @@ export type Database = {
           product_id?: string;
           purpose?: Database["public"]["Enums"]["stock_purpose"];
           rental_id?: string | null;
+          seller_id?: string;
           serial?: string | null;
           status?: Database["public"]["Enums"]["stock_status"];
           updated_at?: string;
@@ -3207,6 +3324,13 @@ export type Database = {
             columns: ["rental_id"];
             isOneToOne: false;
             referencedRelation: "rentals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "stock_items_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
             referencedColumns: ["id"];
           },
         ];
@@ -4335,6 +4459,27 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      apply_to_sell: {
+        Args: { org: string; seller_name: string };
+        Returns: {
+          applied_at: string;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          id: string;
+          is_house: boolean;
+          name: string;
+          organization_id: string | null;
+          status: Database["public"]["Enums"]["seller_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sellers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       approve_pass_sign_in: {
         Args: {
           client: string;
@@ -4910,6 +5055,32 @@ export type Database = {
         Args: { accept: boolean; quote: string; reference?: string };
         Returns: string;
       };
+      decide_seller: {
+        Args: {
+          decision: Database["public"]["Enums"]["seller_status"];
+          deposit?: number;
+          note?: string;
+          target: string;
+        };
+        Returns: {
+          applied_at: string;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          id: string;
+          is_house: boolean;
+          name: string;
+          organization_id: string | null;
+          status: Database["public"]["Enums"]["seller_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sellers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       decline_plus_seat: { Args: { seat: string }; Returns: undefined };
       disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
       end_pass_card_embed: { Args: { client: string }; Returns: undefined };
@@ -5292,6 +5463,8 @@ export type Database = {
           product_id: string | null;
           quantity: number;
           rental_id: string | null;
+          seller_id: string | null;
+          seller_name: string | null;
           unit_price: number;
           variant_id: string | null;
         };
@@ -5440,6 +5613,8 @@ export type Database = {
           condition: Database["public"]["Enums"]["product_condition"];
           price: number;
           purpose: Database["public"]["Enums"]["stock_purpose"];
+          seller_id: string;
+          seller_name: string;
           variant_id: string;
         }[];
       };
@@ -6103,6 +6278,7 @@ export type Database = {
         | "cancelled"
         | "kept";
       review_status: "published" | "hidden";
+      seller_status: "pending" | "approved" | "rejected" | "suspended";
       staff_role:
         | "superadmin"
         | "admin"
@@ -6343,6 +6519,7 @@ export const Constants = {
         "kept",
       ],
       review_status: ["published", "hidden"],
+      seller_status: ["pending", "approved", "rejected", "suspended"],
       staff_role: [
         "superadmin",
         "admin",
