@@ -2615,6 +2615,7 @@ export type Database = {
           locale: string;
           marketing_opt_in: boolean;
           member_number: number;
+          student_only: boolean;
           updated_at: string;
           whatsapp_opt_in: boolean;
           whatsapp_phone: string | null;
@@ -2634,6 +2635,7 @@ export type Database = {
           locale?: string;
           marketing_opt_in?: boolean;
           member_number?: never;
+          student_only?: boolean;
           updated_at?: string;
           whatsapp_opt_in?: boolean;
           whatsapp_phone?: string | null;
@@ -2653,6 +2655,7 @@ export type Database = {
           locale?: string;
           marketing_opt_in?: boolean;
           member_number?: never;
+          student_only?: boolean;
           updated_at?: string;
           whatsapp_opt_in?: boolean;
           whatsapp_phone?: string | null;
@@ -3520,6 +3523,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "student_badges_university_id_fkey";
+            columns: ["university_id"];
+            isOneToOne: false;
+            referencedRelation: "universities";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      student_checks: {
+        Row: {
+          code: string;
+          code_expires_at: string;
+          created_at: string;
+          email_hash: string | null;
+          id: string;
+          kept: boolean;
+          university_id: string;
+          user_id: string | null;
+          valid_until: string;
+        };
+        Insert: {
+          code: string;
+          code_expires_at: string;
+          created_at?: string;
+          email_hash?: string | null;
+          id?: string;
+          kept: boolean;
+          university_id: string;
+          user_id?: string | null;
+          valid_until: string;
+        };
+        Update: {
+          code?: string;
+          code_expires_at?: string;
+          created_at?: string;
+          email_hash?: string | null;
+          id?: string;
+          kept?: boolean;
+          university_id?: string;
+          user_id?: string | null;
+          valid_until?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "student_checks_university_id_fkey";
             columns: ["university_id"];
             isOneToOne: false;
             referencedRelation: "universities";
@@ -4578,6 +4625,10 @@ export type Database = {
         };
         Returns: string;
       };
+      begin_student_check: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
       book_kit: {
         Args: {
           delivery_zone: string;
@@ -4774,6 +4825,27 @@ export type Database = {
           locale: string;
           user_id: string;
         }[];
+      };
+      claim_student_from_email: {
+        Args: { university: string };
+        Returns: {
+          email_hash: string | null;
+          governorate: string | null;
+          major: string | null;
+          method: string;
+          study_year: number | null;
+          university_email: string | null;
+          university_id: string;
+          user_id: string;
+          valid_until: string;
+          verified_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "student_badges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       claim_student_from_identity: {
         Args: Record<PropertyKey, never>;
@@ -5211,6 +5283,20 @@ export type Database = {
           status: Database["public"]["Enums"]["product_status"];
           variant_id: string;
         }[];
+      };
+      finish_student_check: {
+        Args: { keep: boolean };
+        Returns: {
+          code: string;
+          code_expires_at: string;
+          kept: boolean;
+          university_id: string;
+          valid_until: string;
+        }[];
+      };
+      forget_student_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
       };
       guardian_invite: {
         Args: { invite_code: string };
@@ -6310,6 +6396,10 @@ export type Database = {
       suspend_pass_app: {
         Args: { client: string; suspend: boolean };
         Returns: undefined;
+      };
+      sweep_student_checks: {
+        Args: Record<PropertyKey, never>;
+        Returns: string[];
       };
       telegram_join_check: {
         Args: { chat: number; member: number };
