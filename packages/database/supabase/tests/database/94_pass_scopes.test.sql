@@ -61,7 +61,7 @@ update public.profiles set full_name = 'Sara Ahmed', birthday = date '2001-05-06
 where id = '00000000-0000-0000-0000-000000000941';
 insert into public.pass_partners (client_id, name, website, redirect_uris, answers, secret_hash)
 values ('pass_00000000000000000000sal4', 'SAL', 'https://auibsal.org', '{https://auibsal.org/auth/pass}',
-  '{profile,email,membership,student,student_email,adult,plus,phone,birthdate,address,card,offline_access}', repeat('b', 64));
+  '{profile,email,pass,student,student_email,adult,plus,phone,birthdate,address,card,offline_access}', repeat('b', 64));
 insert into public.orders (user_id, status, subtotal, shipping_fee, total, max_bulbs, shipping_address, fulfilment, payment_method)
 values ('00000000-0000-0000-0000-000000000941', 'pending', 1000, 0, 1000, 0,
   '{"full_name":"Sara","phone":"0770","address":"Street 5, House 10","city":"Karrada","governorate":"baghdad","notes":""}',
@@ -86,20 +86,20 @@ select is((select university_email from public.student_badges), 'sara@auib.edu.i
 create temporary table codes (code text);
 grant all on codes to authenticated;
 insert into codes select public.approve_pass_sign_in('pass_00000000000000000000sal4', 'https://auibsal.org/auth/pass',
-  '{openid,profile,email,membership,student,student_email,plus,phone,birthdate,address,offline_access}', repeat('x', 43));
+  '{openid,profile,email,pass,student,student_email,plus,phone,birthdate,address,offline_access}', repeat('x', 43));
 select pg_temp.reset_role();
 create temporary table claimed as
 select public.pass_claims('00000000-0000-0000-0000-000000000941', 'pass_00000000000000000000sal4',
-  '{openid,profile,email,membership,student,student_email,plus,phone,birthdate,address,offline_access}') as c;
+  '{openid,profile,email,pass,student,student_email,plus,phone,birthdate,address,offline_access}') as c;
 select results_eq(
   $$ select c ->> 'student_email', c ->> 'student_email_verified', c -> 'student' ->> 'university' from claimed $$,
   $$ values ('sara@auib.edu.iq', 'true', 'auib') $$,
   'student and university email'
 );
 select results_eq(
-  $$ select c ->> 'picture', c ->> 'member_number' is not null, c ->> 'member_since' is not null from claimed $$,
+  $$ select c ->> 'picture', c ->> 'pass_number' is not null, c ->> 'pass_since' is not null from claimed $$,
   $$ values ('https://cdn.example/a.png', true, true) $$,
-  'picture and membership'
+  'picture and the Pass number'
 );
 select results_eq(
   $$ select c ->> 'phone_number', c ->> 'phone_number_verified', c ->> 'birthdate' from claimed $$,

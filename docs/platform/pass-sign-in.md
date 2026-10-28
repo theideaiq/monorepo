@@ -103,7 +103,7 @@ Sensitive scopes are marked on the consent screen and off by default.
 | `openid` | `sub`: the person's id **at this site** (each site gets its own) | |
 | `profile` | `name`, `given_name`, `family_name`, `locale` (`ar` or `en`), `picture` | |
 | `email` | `email`, `email_verified` (the Pass email) | |
-| `membership` | `member_number`, `member_since` | |
+| `pass` | `pass_number`, `pass_since` | |
 | `student` | `student`: `{ "verified": true, "university": "auib", "until": "2027-06-30" }`, or `{ "verified": false }` | |
 | `student_email` | `student_email`, `student_email_verified`: the university email the badge was verified with (absent for card-photo badges, or until the student confirms it in Settings) | sensitive |
 | `adult` | `adult`: `true` when 18 or over | |
