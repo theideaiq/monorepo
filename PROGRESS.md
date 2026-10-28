@@ -181,6 +181,17 @@ decisions with a date.
 
 ## Launch checklist (needs an owner with access)
 
+- [ ] **Owner decisions of 2026-10-28** (`docs/program/decisions-2026-10-28.md`):
+      SPF, DKIM and DMARC; Meta Business verification; Google Search
+      Console and Bing Webmaster Tools; the PCI SAQ A self-assessment; a
+      WCAG 2.2 AA accessibility statement; compare digital-code suppliers'
+      discounts on the top 10 brands (Reloadly, LikeCard, Golden Codes) and
+      record the result here; ask Boxy whether a reverse-pickup order type
+      is planned.
+- [ ] **Wayl, to check and record here:** whether Plus and Pro can renew
+      automatically through Wayl subscriptions; a partial refund in test
+      mode.
+
 - [ ] **Developer docs:** connect `apps/docs` to Mintlify (mintlify.com →
       new deployment from GitHub, monorepo path `apps/docs`; or `bunx mint
       login` then publish), and in its Custom domain settings turn on
@@ -378,6 +389,40 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-28: Owner decisions on selling and related points
+  (`docs/program/decisions-2026-10-28.md`, given in full). They replace
+  the earlier open questions and, where they differ, the v2 brief: Bulbs
+  become 1 Bulb = 1 IQD (not 10 IQD), The IDEA Space is left out (nothing
+  built, no mention in copy), boxes go entirely (shop bundles replace
+  them), the souq price goes, Audio and Tech merge into Gear. Order of
+  work, schema first and one PR each, every item green before the next:
+  1. Clean-ups: The IDEA Space out of copy; the souq price removed (code,
+     then the migration dropping its columns); boxes removed (code, then
+     the migration deleting them, order lines keep their names); Audio +
+     Tech → Gear; header with the Saved heart, no footer on phones, About
+     & help in My Pass, version on /about (section 11 layout).
+  2. Phone verification (one-time code to an Iraqi number), required for
+     every delivery order.
+  3. Selling (item 11): listings by ISBN/barcode or title (pick or create,
+     product data filled in, automatic checks to Staff → Inbox, flags,
+     spreadsheet upload, bundles, shop SKU, offers-only visibility with
+     Notify me); shop orders with Boxy pickup locations, labels and
+     pickups (no customer contact on Partners screens); returns;
+     commission per category and the Free/Pro plans.
+  4. Payouts (item 12): weekly batch, statements per line, Bulbs credit,
+     Pro fee from payouts.
+  5. Prices (section 7): price history, lowest in 30 days, honest "was"
+     prices, shop sales and quantity deals, campaigns, coupons in the cap,
+     student prices.
+  6. Saved, lists and the Plus queue (section 10).
+  7. Bulbs at 1 Bulb = 1 IQD (section 12), with the rewards policy.
+  8. Catalogue (section 9): rent up to 3 for one delivery fee, textbooks,
+     new categories, Send as a gift, one cart (section 11).
+  9. Then item 13 (Plus supplier shops, kits lent by shops), Stages 3–5
+     (identity, shop and organization verification, educators with their
+     stages), digital codes in Stage 6 (section 13), and connections and
+     imports with the stage that needs each (section 14).
 
 - 2026-10-28: Program Revision v2, item 10 (sellers and offers), part 2,
   the code:
