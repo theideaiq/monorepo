@@ -109,10 +109,10 @@
           "email_verified": {
             "type": "boolean"
           },
-          "member_number": {
+          "pass_number": {
             "type": "integer"
           },
-          "member_since": {
+          "pass_since": {
             "type": "string",
             "format": "date"
           },

@@ -1658,9 +1658,11 @@ Migration `20261227000000_pass_sign_in.sql`; the partner guide is
   once. The frame posts only its height to the partner page, and only to
   a verified domain. Partner docs: `docs/platform/pass-sign-in.md`.
 - **Answers, not data.** Scopes are `openid`, `profile`, `email`,
-  `membership`, `student`, `student_email`, `adult`, `plus`, `phone`,
+  `pass` (`pass_number`, `pass_since`; `membership` until migration
+  `20270118000000_pass_scope.sql`), `student`, `student_email`, `adult`,
+  `plus`, `phone`,
   `birthdate`, `address` (the default saved address), `organizations`
-  (the person's organizations in The IDEA Partners and their role, with
+  (the person's organizations in Partners and their role, with
   `app_owner` for the app's own), `card` and `offline_access`
   (`pass_claims()`, migrations `20261228000000_pass_scopes.sql` and
   `20270105000000_pass_scopes_v2.sql`); `sub` is per site. Staff

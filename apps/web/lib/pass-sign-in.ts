@@ -7,7 +7,7 @@
 export const PASS_SCOPES = [
   "profile",
   "email",
-  "membership",
+  "pass",
   "student",
   "student_email",
   "adult",

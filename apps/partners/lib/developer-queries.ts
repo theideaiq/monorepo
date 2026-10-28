@@ -15,7 +15,7 @@ import { unwrap } from "./queries";
 export const APP_ANSWERS = [
   "profile",
   "email",
-  "membership",
+  "pass",
   "student",
   "student_email",
   "adult",

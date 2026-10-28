@@ -23,7 +23,7 @@ import {
 const ANSWERS = [
   "profile",
   "email",
-  "membership",
+  "pass",
   "student",
   "student_email",
   "adult",
