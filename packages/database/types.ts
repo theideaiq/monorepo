@@ -1014,6 +1014,7 @@ export type Database = {
           condition: Database["public"]["Enums"]["product_condition"] | null;
           id: string;
           kind: string;
+          location_id: string | null;
           name_ar: string;
           name_en: string;
           order_id: string;
@@ -1021,10 +1022,17 @@ export type Database = {
           packed_by: string | null;
           product_id: string | null;
           quantity: number;
+          ready_at: string | null;
+          ready_by: string | null;
+          refunded_at: string | null;
           rental_id: string | null;
           seller_id: string | null;
           seller_name: string | null;
           seller_payout: number | null;
+          seller_status:
+            | Database["public"]["Enums"]["seller_line_status"]
+            | null;
+          shipment_id: string | null;
           unit_price: number;
           variant_id: string | null;
         };
@@ -1035,6 +1043,7 @@ export type Database = {
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
           kind?: string;
+          location_id?: string | null;
           name_ar: string;
           name_en: string;
           order_id: string;
@@ -1042,10 +1051,17 @@ export type Database = {
           packed_by?: string | null;
           product_id?: string | null;
           quantity: number;
+          ready_at?: string | null;
+          ready_by?: string | null;
+          refunded_at?: string | null;
           rental_id?: string | null;
           seller_id?: string | null;
           seller_name?: string | null;
           seller_payout?: number | null;
+          seller_status?:
+            | Database["public"]["Enums"]["seller_line_status"]
+            | null;
+          shipment_id?: string | null;
           unit_price: number;
           variant_id?: string | null;
         };
@@ -1056,6 +1072,7 @@ export type Database = {
           condition?: Database["public"]["Enums"]["product_condition"] | null;
           id?: string;
           kind?: string;
+          location_id?: string | null;
           name_ar?: string;
           name_en?: string;
           order_id?: string;
@@ -1063,14 +1080,28 @@ export type Database = {
           packed_by?: string | null;
           product_id?: string | null;
           quantity?: number;
+          ready_at?: string | null;
+          ready_by?: string | null;
+          refunded_at?: string | null;
           rental_id?: string | null;
           seller_id?: string | null;
           seller_name?: string | null;
           seller_payout?: number | null;
+          seller_status?:
+            | Database["public"]["Enums"]["seller_line_status"]
+            | null;
+          shipment_id?: string | null;
           unit_price?: number;
           variant_id?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "order_items_location_id_fkey";
+            columns: ["location_id"];
+            isOneToOne: false;
+            referencedRelation: "seller_locations";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "order_items_order_id_fkey";
             columns: ["order_id"];
@@ -1097,6 +1128,13 @@ export type Database = {
             columns: ["seller_id"];
             isOneToOne: false;
             referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_shipment_id_fkey";
+            columns: ["shipment_id"];
+            isOneToOne: false;
+            referencedRelation: "shipments";
             referencedColumns: ["id"];
           },
           {
@@ -3151,6 +3189,72 @@ export type Database = {
           },
         ];
       };
+      seller_locations: {
+        Row: {
+          active: boolean;
+          address: string;
+          boxy_uid: string | null;
+          contact_name: string;
+          contact_phone: string;
+          created_at: string;
+          id: string;
+          lat: number;
+          lng: number;
+          name: string;
+          region_id: string;
+          seller_id: string;
+          synced_at: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          address: string;
+          boxy_uid?: string | null;
+          contact_name: string;
+          contact_phone: string;
+          created_at?: string;
+          id?: string;
+          lat: number;
+          lng: number;
+          name: string;
+          region_id: string;
+          seller_id: string;
+          synced_at?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          address?: string;
+          boxy_uid?: string | null;
+          contact_name?: string;
+          contact_phone?: string;
+          created_at?: string;
+          id?: string;
+          lat?: number;
+          lng?: number;
+          name?: string;
+          region_id?: string;
+          seller_id?: string;
+          synced_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "seller_locations_region_id_fkey";
+            columns: ["region_id"];
+            isOneToOne: false;
+            referencedRelation: "delivery_areas";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "seller_locations_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       seller_offers: {
         Row: {
           active: boolean;
@@ -3273,9 +3377,11 @@ export type Database = {
           fragile: boolean;
           history: NonNullable<Json>;
           id: string;
+          location_id: string | null;
           order_id: string;
           pickup_id: string | null;
           returned_at: string | null;
+          seller_id: string;
           size: string;
           status: string;
           status_title: string | null;
@@ -3298,9 +3404,11 @@ export type Database = {
           fragile?: boolean;
           history?: NonNullable<Json>;
           id?: string;
+          location_id?: string | null;
           order_id: string;
           pickup_id?: string | null;
           returned_at?: string | null;
+          seller_id?: string;
           size: string;
           status?: string;
           status_title?: string | null;
@@ -3323,9 +3431,11 @@ export type Database = {
           fragile?: boolean;
           history?: NonNullable<Json>;
           id?: string;
+          location_id?: string | null;
           order_id?: string;
           pickup_id?: string | null;
           returned_at?: string | null;
+          seller_id?: string;
           size?: string;
           status?: string;
           status_title?: string | null;
@@ -3336,10 +3446,24 @@ export type Database = {
         };
         Relationships: [
           {
+            foreignKeyName: "shipments_location_id_fkey";
+            columns: ["location_id"];
+            isOneToOne: false;
+            referencedRelation: "seller_locations";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "shipments_order_id_fkey";
             columns: ["order_id"];
             isOneToOne: false;
             referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shipments_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
             referencedColumns: ["id"];
           },
         ];
@@ -5549,6 +5673,15 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      mark_line_out_of_stock: {
+        Args: { line: string };
+        Returns: Database["public"]["Enums"]["seller_line_status"];
+      };
+      mark_line_refunded: { Args: { line: string }; Returns: string };
+      mark_lines_ready: {
+        Args: { lines: string[]; location: string };
+        Returns: string[];
+      };
       mark_newsletter_synced: {
         Args: { user_ids: string[] };
         Returns: undefined;
@@ -6221,6 +6354,31 @@ export type Database = {
           variant_id: string;
         }[];
       };
+      seller_order_lines: {
+        Args: { shop: string };
+        Returns: {
+          attributes: Json;
+          commission: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          customer: string;
+          line_id: string;
+          location_id: string;
+          name_ar: string;
+          name_en: string;
+          order_id: string;
+          order_number: string;
+          ordered_at: string;
+          quantity: number;
+          ready_at: string;
+          ready_by: string;
+          seller_payout: number;
+          shipment_id: string;
+          shipment_status: string;
+          status: Database["public"]["Enums"]["seller_line_status"];
+          tracking_code: string;
+          unit_price: number;
+        }[];
+      };
       seller_plan_price: { Args: { billing: string }; Returns: number };
       send_quote: { Args: { quote: string }; Returns: undefined };
       set_guardian_plus: {
@@ -6598,6 +6756,12 @@ export type Database = {
         | "cancelled"
         | "kept";
       review_status: "published" | "hidden";
+      seller_line_status:
+        | "waiting"
+        | "ready"
+        | "picked_up"
+        | "out_of_stock"
+        | "cancelled";
       seller_plan: "free" | "pro";
       seller_status: "pending" | "approved" | "rejected" | "suspended";
       staff_role:
@@ -6846,6 +7010,13 @@ export const Constants = {
         "kept",
       ],
       review_status: ["published", "hidden"],
+      seller_line_status: [
+        "waiting",
+        "ready",
+        "picked_up",
+        "out_of_stock",
+        "cancelled",
+      ],
       seller_plan: ["free", "pro"],
       seller_status: ["pending", "approved", "rejected", "suspended"],
       staff_role: [

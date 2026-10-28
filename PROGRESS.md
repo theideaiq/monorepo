@@ -553,6 +553,25 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: Selling, shop orders, the schema
+  (`20270123000000_shop_orders.sql`; master brief step 5, section 5).
+  `seller_locations` are a shop's pickup locations (one per branch, with
+  the pickup contact the courier calls and its Boxy area), edited by its
+  owners and admins; apps/api creates each in Boxy and stores its uid
+  (Boxy's API has no update, so an edited branch becomes a new Boxy
+  location). A shop's order line now
+  waits, is readied at a branch, is picked up, or is out of stock
+  (`order_items.seller_status`), due 2 days after the order is confirmed or
+  paid (`ready_by`); a cancelled order cancels its open shop lines.
+  `seller_order_lines()` is what Partners shows (order number, item,
+  condition, quantity, price, payout, "Ali · Karrada", ready-by), never the
+  phone, address or email. `mark_lines_ready()` readies lines at a branch
+  Boxy knows and returns the orders for apps/api to send; an order has one
+  live parcel per seller (`shipments.seller_id`, `location_id`).
+  `mark_line_out_of_stock()` cancels a waiting line and retires its copy;
+  finance marks paid lines refunded (`mark_line_refunded`). Part 2: the
+  Partners screens, Boxy pickup locations, labels and pickups, and the
+  late-lines and refunds items in Staff → Inbox.
 - 2026-10-28: Selling, commission and plans, the schema
   (`20270122000000_seller_plans.sql`; master brief step 5, section 7).
   `commission_rates` holds each category's standard and Pro rate (Books,
