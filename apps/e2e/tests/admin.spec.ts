@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 import {
+  admin,
   clearInbox,
   customer,
   emailedCode,
+  product,
   sessionCookies,
   staff,
   totp,
@@ -108,6 +110,35 @@ test.describe("Staff", () => {
       page.getByText("No shop has applied to sell yet.")
     ).toBeVisible();
     await expectAccessible(page);
+
+    // Catalog → Checks: what the automatic checks and shops sent staff.
+    const db = admin();
+    const { data: item } = await db
+      .from("products")
+      .select("id")
+      .eq("slug", product.slug)
+      .single();
+    if (!item) {
+      throw new Error("The seed product is missing");
+    }
+    await db.from("product_checks").delete().eq("product_id", item.id);
+    await db.from("product_flags").delete().eq("product_id", item.id);
+    await db
+      .from("product_checks")
+      .insert({ product_id: item.id, reason: "missing_photo" });
+    await db.from("product_flags").insert({
+      note: "The year is wrong",
+      product_id: item.id,
+      seller_id: "00000000-0000-4000-8000-000000000001",
+    });
+    await page.goto(`${urls.staff}/catalog/checks`);
+    await expect(page.getByText("No photo")).toBeVisible();
+    await expect(page.getByText("The year is wrong")).toBeVisible();
+    await expectAccessible(page);
+    await page.getByRole("button", { name: "Resolved" }).first().click();
+    await expect(page.getByText("No new products to check.")).toBeVisible();
+    await page.getByRole("button", { name: "Resolved" }).click();
+    await expect(page.getByText("No flags from shops.")).toBeVisible();
 
     // Your Pass links staff to Staff.
     await page.goto(`${urls.web}/pass`);

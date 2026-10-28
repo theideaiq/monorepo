@@ -57,6 +57,7 @@ export const NOTIFICATION_EVENTS = [
   "student_rejected",
   "survey_approved",
   "survey_rejected",
+  "product_available",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -151,6 +152,11 @@ const extraValues: Partial<
   pass_app_declined: (data) => ({ name: text(data.name) }),
   plus_invite: (data) => ({ hours: text(data.hours) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
+  product_available: (data, locale) => {
+    const english = text(data.name_en);
+    const arabic = text(data.name_ar);
+    return { name: (locale === "ar" ? arabic : english) || english || arabic };
+  },
   quote_sent: quoteValues,
   student_verified: (data, locale) => {
     const until = text(data.until);
