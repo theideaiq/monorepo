@@ -3430,7 +3430,9 @@
           "deleteDescription": "Past orders keep their fee. To stop offering a zone for now, untick Offered instead.",
           "freeFrom": "Free from (IQD)",
           "plusFree": "Free for Plus plans with free delivery"
-        }
+        },
+        "waylReturnRefunds": "Refund returns through Wayl",
+        "waylReturnRefundsHint": "Returns of orders paid online are refunded through Wayl each morning, instead of by hand in Orders → Returns. Turn on only after a partial refund has worked in Wayl's test mode."
       },
       "plans": {
         "new": "New plan",
@@ -3846,7 +3848,7 @@
         "refund": "Refund {amount} and {bulbs} Bulbs (Bulbs already returned)",
         "reference": "Refund reference",
         "markRefunded": "Mark refunded",
-        "viaWayl": "Paid online: refund it in Wayl.",
+        "viaWayl": "Paid online: refund it in Wayl, unless Wayl refunds are on (Catalog → Delivery), which send it each morning.",
         "viaTransfer": "Paid in cash: send it by ZainCash, Qi or bank transfer.",
         "byHandTitle": "Collected by hand",
         "byHandDescription": "Accepted returns with no Boxy parcel. Mark each one once it's back at the shop; the shop then has 48 hours to check it.",
