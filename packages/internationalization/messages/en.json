@@ -2786,6 +2786,50 @@
         "unavailable": "Something went wrong. Try again.",
         "wrong_code": "That code isn't right."
       }
+    },
+    "offers": {
+      "make": {
+        "button": "Make an offer",
+        "label": "Your offer (IQD)",
+        "range": "From {min}, up to just under {price}. The seller answers within 48 hours.",
+        "send": "Send offer",
+        "sending": "Sending…",
+        "signIn": "Sign in to make an offer",
+        "result": {
+          "sent": "Offer sent: {amount}. The seller has 48 hours to answer.",
+          "accepted": "Accepted! It's in your cart at {amount} for 24 hours.",
+          "declined": "The seller declined {amount}. You can try a higher offer."
+        },
+        "follow": "Follow it in Saved",
+        "viewCart": "View cart",
+        "duplicate": "You already have an offer on this. Follow it in Pass → Saved.",
+        "failed": "Couldn't send the offer. Check the amount and try again."
+      },
+      "mine": {
+        "title": "Your offers",
+        "description": "Offers you've made on items. An accepted offer stays in your cart at that price for 24 hours.",
+        "status": {
+          "open": "Waiting for the seller",
+          "countered": "Counter-offer",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "expired": "Expired",
+          "withdrawn": "Withdrawn",
+          "purchased": "Bought"
+        },
+        "amounts": "Your offer {offer} · price {price}",
+        "countered": "The seller asks {amount}. Answer by {time}.",
+        "waiting": "The seller answers by {time}.",
+        "inCart": "In your cart at {amount} until {time}.",
+        "viewCart": "View cart",
+        "accept": "Accept {amount}",
+        "decline": "Decline",
+        "counter": "Counter",
+        "counterLabel": "Your counter-offer (IQD)",
+        "counterPlaceholder": "Amount in IQD",
+        "withdraw": "Withdraw",
+        "failed": "That didn't work. Refresh and try again."
+      }
     }
   },
   "store": {

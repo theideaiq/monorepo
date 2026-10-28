@@ -26,6 +26,7 @@ import { WishlistButton } from "@/components/store/wishlist-button";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import { MAX_QUANTITY } from "@/lib/cart";
 import { useAddToCart } from "@/lib/store-queries";
+import { MakeOffer } from "./make-offer";
 import { NotifyMe } from "./notify-me";
 import { Price } from "./price";
 
@@ -425,6 +426,16 @@ export const PurchasePanel = ({
         </Button>
         <WishlistButton productId={product.id} withLabel />
       </div>
+      {canAdd ? (
+        <MakeOffer
+          condition={condition}
+          price={price}
+          productId={product.id}
+          sellerId={choice.sellerId}
+          slug={product.slug}
+          variantId={chosenVariant?.id ?? null}
+        />
+      ) : null}
       {added ? (
         <p className="flex flex-wrap items-center gap-2 text-sm" role="status">
           <CheckIcon className="size-4 text-success" />
