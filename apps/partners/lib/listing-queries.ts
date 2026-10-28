@@ -303,3 +303,111 @@ export const offerProblem = (
   }
   return null;
 };
+
+const LOOKUP_BATCH = 5;
+
+export interface UploadMatch {
+  nameAr: string;
+  nameEn: string;
+  variantId: string;
+}
+
+/**
+ * Finds the variant for each barcode of an upload (a few at a time); a
+ * barcode nobody has is left out of the map.
+ */
+export const useMatchUpload = () => {
+  const { supabase } = useAuth();
+  return useMutation({
+    mutationFn: async (
+      barcodes: readonly string[]
+    ): Promise<Map<string, UploadMatch>> => {
+      const matches = new Map<string, UploadMatch>();
+      const unique = [...new Set(barcodes)];
+      for (let start = 0; start < unique.length; start += LOOKUP_BATCH) {
+        // biome-ignore lint/performance/noAwaitInLoops: a few lookups at a time
+        await Promise.all(
+          unique.slice(start, start + LOOKUP_BATCH).map(async (code) => {
+            const found = unwrap(
+              await supabase.rpc("find_by_barcode", { code })
+            )?.[0];
+            if (found) {
+              matches.set(code, {
+                nameAr: found.name_ar,
+                nameEn: found.name_en,
+                variantId: found.variant_id,
+              });
+            }
+          })
+        );
+      }
+      return matches;
+    },
+  });
+};
+
+/** One upload row ready to send: an offer on a found variant, or a new product. */
+export type UploadItem =
+  | { line: number; offer: OfferInput; variantId: string }
+  | { line: number; offer: OfferInput; product: NewProduct };
+
+export interface UploadResult {
+  line: number;
+  problem: ListingProblem | null;
+}
+
+/**
+ * Sends the rows one by one (each is its own offer, so one refusal
+ * doesn't stop the rest) and reports how each went.
+ */
+export const useApplyUpload = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      items,
+      onProgress,
+    }: {
+      items: readonly UploadItem[];
+      onProgress: (done: number) => void;
+    }): Promise<UploadResult[]> => {
+      const results: UploadResult[] = [];
+      for (const item of items) {
+        const { offer } = item;
+        const call =
+          "variantId" in item
+            ? supabase.rpc("set_offer", {
+                offer_condition: offer.condition,
+                offer_price: offer.price,
+                offer_seller: sellerId,
+                offer_sku: offer.sku.trim() || undefined,
+                offer_variant: item.variantId,
+                quantity: offer.quantity,
+              })
+            : supabase.rpc("create_listing", {
+                barcode: item.product.barcode,
+                category: item.product.categoryId,
+                details: {},
+                images: [],
+                listing_seller: sellerId,
+                name_ar: item.product.nameAr,
+                name_en: item.product.nameEn,
+                offer_condition: offer.condition,
+                offer_price: offer.price,
+                offer_sku: offer.sku.trim() || undefined,
+                quantity: offer.quantity,
+              });
+        // biome-ignore lint/performance/noAwaitInLoops: one row at a time, so progress shows and one refusal stops nothing
+        const { error } = await call;
+        results.push({
+          line: item.line,
+          problem: error ? toListingProblem(error) : null,
+        });
+        onProgress(results.length);
+      }
+      return results;
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: listingsKey(sellerId) }),
+  });
+};

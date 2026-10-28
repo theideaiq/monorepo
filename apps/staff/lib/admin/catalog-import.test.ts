@@ -1,3 +1,4 @@
+import { parseCsv } from "@repo/commerce/csv";
 import { describe, expect, test } from "vitest";
 import {
   buildPreview,
@@ -5,9 +6,7 @@ import {
   type ExistingProduct,
   IMPORT_COLUMNS,
   importItems,
-  parseCsv,
   parseSheet,
-  parseWholeNumber,
   slugify,
   templateCsv,
 } from "./catalog-import";
@@ -38,29 +37,6 @@ const adele: ExistingProduct = {
 
 const sheet = (...lines: string[]) => lines.join("\n");
 
-describe("parseCsv", () => {
-  test("reads quoted cells with commas, quotes and line breaks", () => {
-    expect(parseCsv('﻿a,b,c\r\n"x, y","say ""hi""","two\nlines"\r\n')).toEqual([
-      ["a", "b", "c"],
-      ["x, y", 'say "hi"', "two\nlines"],
-    ]);
-  });
-
-  test("reads tab-separated text pasted from a spreadsheet", () => {
-    expect(parseCsv("slug\tprice\nps5\t700000")).toEqual([
-      ["slug", "price"],
-      ["ps5", "700000"],
-    ]);
-  });
-
-  test("keeps empty trailing cells", () => {
-    expect(parseCsv("a,b,\n1,,")).toEqual([
-      ["a", "b", ""],
-      ["1", "", ""],
-    ]);
-  });
-});
-
 describe("cells", () => {
   test("slugify makes web-safe slugs from English names", () => {
     expect(slugify("Beyoncé – RENAISSANCE (Vinyl)")).toBe(
@@ -68,15 +44,6 @@ describe("cells", () => {
     );
     expect(slugify("Taylor’s Version & More")).toBe("taylors-version-and-more");
     expect(slugify("العادات الذرية")).toBe("");
-  });
-
-  test("parseWholeNumber reads grouped, Arabic-Indic and decimal-zero numbers", () => {
-    expect(parseWholeNumber("64,750")).toBe(64_750);
-    expect(parseWholeNumber("٦٤٬٧٥٠")).toBe(64_750);
-    expect(parseWholeNumber("64750.00")).toBe(64_750);
-    expect(parseWholeNumber("12.5")).toBeNull();
-    expect(parseWholeNumber("-3")).toBeNull();
-    expect(parseWholeNumber("abc")).toBeNull();
   });
 
   test("the template has every column and parses cleanly", () => {

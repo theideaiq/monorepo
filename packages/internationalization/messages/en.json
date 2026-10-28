@@ -2514,6 +2514,52 @@
           "invalidBarcode": "That isn't a valid ISBN or barcode.",
           "notAllowed": "Only owners and admins of an approved shop can list.",
           "unknown": "Something went wrong. Try again."
+        },
+        "upload": {
+          "title": "Upload a spreadsheet",
+          "description": "List many offers at once from a CSV file, up to {max} rows. Each row is checked here before anything is sent.",
+          "file": "CSV file",
+          "template": "Download the template",
+          "columns": "Columns: barcode, condition (new, open box, used or refurbished; new if empty), price, quantity and sku. For a barcode nobody has listed, also name_en, name_ar and category ({categories}).",
+          "checking": "Checking the rows…",
+          "summary": "Found: {matched} · New products: {new} · To fix: {errors}",
+          "offer": "{condition} · {price} · Copies: {copies}",
+          "send": "Send the ready rows ({count})",
+          "sending": "Sending {done} of {total}…",
+          "finished": "Sent: {sent} · Refused: {failed}",
+          "sent": "Listed",
+          "again": "Upload another file",
+          "cancel": "Clear",
+          "needsDetailsHint": "Nobody has listed this barcode. Add name_en, name_ar and category to create it.",
+          "table": {
+            "line": "Row",
+            "product": "Product",
+            "offer": "Offer",
+            "result": "Result"
+          },
+          "status": {
+            "matched": "Found",
+            "new": "New product",
+            "needsDetails": "Needs details",
+            "error": "Fix this row"
+          },
+          "problems": {
+            "empty": "The file has no rows.",
+            "missingColumns": "The file needs barcode, price and quantity columns. Start from the template.",
+            "tooManyRows": "Upload at most {max} rows at a time.",
+            "tooLarge": "The file is too large.",
+            "unreadable": "The file couldn't be read. Save it as CSV (UTF-8) and try again.",
+            "lookupFailed": "The rows couldn't be checked. Try again."
+          },
+          "errors": {
+            "missingBarcode": "Add a barcode or ISBN.",
+            "invalidCondition": "Use new, open box, used or refurbished.",
+            "invalidPrice": "Enter a price of at least {min} IQD.",
+            "invalidQuantity": "Enter 0 to {max} copies.",
+            "tooLong": "A name or SKU is too long.",
+            "unknownCategory": "Use one of: {categories}.",
+            "duplicate": "This barcode and condition are on an earlier row."
+          }
         }
       }
     },

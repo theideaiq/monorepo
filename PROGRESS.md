@@ -397,6 +397,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Selling (item 11), spreadsheet upload. Partners → Selling →
+  Listings takes a CSV (or tab-separated text) of up to 500 rows: barcode,
+  condition (new if empty), price, quantity and SKU, plus name_en, name_ar
+  and category for a barcode nobody has listed. The file is read and
+  checked in the browser; each row shows as found, a new product or what
+  to fix, and nothing is sent until the shop confirms. Each row is then
+  sent on its own (`set_offer()` or `create_listing()`), so one refusal
+  doesn't stop the rest. No schema change. The CSV reader Staff's catalog
+  import used is now shared (`@repo/commerce/csv`).
 - 2026-10-28: Selling (item 11), part 1, the listings schema
   (`20270111000000_listings.sql`). Barcodes are stored as digits (an
   ISBN-10 as its ISBN-13) and stay unique, so a scanned or typed code finds

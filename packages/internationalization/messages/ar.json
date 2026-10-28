@@ -2514,6 +2514,52 @@
           "invalidBarcode": "هذا ليس رقم ISBN أو باركود صالحاً.",
           "notAllowed": "يمكن للمالكين والمشرفين في متجر موافَق عليه فقط إضافة المعروضات.",
           "unknown": "حدث خطأ ما. حاول مجدداً."
+        },
+        "upload": {
+          "title": "رفع جدول",
+          "description": "اعرض عروضًا كثيرة دفعة واحدة من ملف CSV، حتى {max} صف. يُفحص كل صف هنا قبل إرسال أي شيء.",
+          "file": "ملف CSV",
+          "template": "تنزيل القالب",
+          "columns": "الأعمدة: barcode وcondition (new أو open box أو used أو refurbished؛ new إن تُرك فارغًا) وprice وquantity وsku. للباركود الذي لم يعرضه أحد، أضف أيضًا name_en وname_ar وcategory ({categories}).",
+          "checking": "جارٍ فحص الصفوف…",
+          "summary": "موجود: {matched} · منتجات جديدة: {new} · للتصحيح: {errors}",
+          "offer": "{condition} · {price} · النسخ: {copies}",
+          "send": "إرسال الصفوف الجاهزة ({count})",
+          "sending": "جارٍ إرسال {done} من {total}…",
+          "finished": "أُرسل: {sent} · رُفض: {failed}",
+          "sent": "تم العرض",
+          "again": "رفع ملف آخر",
+          "cancel": "مسح",
+          "needsDetailsHint": "لم يعرض أحد هذا الباركود. أضف name_en وname_ar وcategory لإنشائه.",
+          "table": {
+            "line": "الصف",
+            "product": "المنتج",
+            "offer": "العرض",
+            "result": "النتيجة"
+          },
+          "status": {
+            "matched": "موجود",
+            "new": "منتج جديد",
+            "needsDetails": "تنقصه تفاصيل",
+            "error": "صحّح هذا الصف"
+          },
+          "problems": {
+            "empty": "لا يحتوي الملف على صفوف.",
+            "missingColumns": "يحتاج الملف إلى الأعمدة barcode وprice وquantity. ابدأ من القالب.",
+            "tooManyRows": "ارفع {max} صف على الأكثر في كل مرة.",
+            "tooLarge": "الملف كبير جدًا.",
+            "unreadable": "تعذّرت قراءة الملف. احفظه بصيغة CSV (UTF-8) وحاول مجددًا.",
+            "lookupFailed": "تعذّر فحص الصفوف. حاول مجددًا."
+          },
+          "errors": {
+            "missingBarcode": "أضف باركوداً أو رقم ISBN.",
+            "invalidCondition": "استخدم new أو open box أو used أو refurbished.",
+            "invalidPrice": "أدخل سعراً لا يقل عن {min} دينار.",
+            "invalidQuantity": "أدخل من 0 إلى {max} نسخة.",
+            "tooLong": "الاسم أو SKU طويل جدًا.",
+            "unknownCategory": "استخدم إحدى الفئات: {categories}.",
+            "duplicate": "هذا الباركود وهذه الحالة في صف سابق."
+          }
         }
       }
     },

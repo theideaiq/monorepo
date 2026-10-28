@@ -4,7 +4,8 @@
   "private": true,
   "exports": {
     ".": "./index.ts",
-    "./catalog": "./catalog.ts"
+    "./catalog": "./catalog.ts",
+    "./csv": "./csv.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",

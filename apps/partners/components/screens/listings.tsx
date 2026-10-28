@@ -26,6 +26,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
+import { ListingUpload } from "@/components/screens/listing-upload";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   type CatalogMatch,
@@ -683,6 +684,7 @@ const ListingsBody = () => {
   return (
     <div className="grid max-w-3xl gap-6">
       {canManage ? <AddListing sellerId={sellerId} /> : null}
+      {canManage ? <ListingUpload sellerId={sellerId} /> : null}
       <Card>
         <CardHeader>
           <CardTitle>{t("yoursTitle")}</CardTitle>
