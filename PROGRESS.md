@@ -223,8 +223,8 @@ decisions with a date.
       Plans) when The IDEA Plus opens.
 - [x] **Returns policy:** the 14 public policies in
       `apps/web/content/legal` (returns replaces refund, 14 days; club
-      replaces community and conduct), 2026-10-26. Owner step: have them
-      reviewed under Iraqi law, and confirm Wayl's refund window and fees.
+      replaces community and conduct), 2026-10-26. Owner step: confirm
+      Wayl's refund window and fees.
 
 - [ ] **Delivery with Boxy** (ARCHITECTURE_AND_INTEGRATIONS.md 4.5): Boxy
       key and secret on the `api` project (sandbox first), the pick-up
@@ -391,11 +391,74 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 - [ ] Brand v1.0 follow-ups: rename The Club / Droid in the legal
       Markdown documents, and the retired names there (Megastore → The
       IDEA Store, The IDEA Suite and The IDEA Business → The IDEA
-      Partners, the Academy's programs) (legal review); store checked market prices
-      (price, date, evidence) so SouqPrice can show. (Poppins removed
-      2026-10-25.)
+      Partners, the Academy's programs). (Poppins removed 2026-10-25; the
+      souq price was removed 2026-10-28.)
 
 ## Decisions
+
+- 2026-10-28: Further owner decisions, part 2
+  (`docs/program/decisions-2026-10-28.md`, given in full after part 1).
+  They win where they differ from part 1. Nothing is dropped or postponed;
+  each change joins the step it belongs to in the order of work below:
+  - step 1 (clean-ups) gains: the counter removed entirely (Staff →
+    Counter, counter swaps and any counter sale or pickup code, with
+    migrations dropping what only the counter uses; Plus swaps are home
+    swaps only, 1/2/4 a month and 3,000 IQD for an extra one); Partners'
+    Bulk buying and Plus seats merged into one feature, Team (`/team`,
+    Staff → Partners → Team); Microsoft, Facebook and LinkedIn sign-in
+    removed (email + password, email code, Google, Apple and Telegram
+    stay); no "membership" anywhere (copy in both languages, code names,
+    Staff labels: "your Pass" / "The IDEA Pass", "Plus" / "your plan",
+    Staff's "Memberships" → "Plus seats").
+  - step 3 (selling) gains Make an offer ("Accept offers" on a listing:
+    not on digital codes, rentals, Plus, kits, tickets, programs or items
+    in a sale or campaign; offers under 60% of the price blocked;
+    accept, decline or counter once each way; 48 hours to answer; optional
+    automatic accept and decline amounts; an accepted offer sits in the
+    buyer's cart at that price for 24 hours; one open offer per listing
+    and 3 per seller; The IDEA's own stock declines offers under the
+    margin floor).
+  - step 7 (Bulbs) becomes one universal earn rate: 2% for everyone and
+    3% / 4% / 5% for Plus Glow / Shine / Blaze on everything (The IDEA's
+    sales, shop items, rentals, kits, tickets, programs), rounded to whole
+    Bulbs; digital codes and Plus fees earn nothing; Gear's commission
+    rises to 9% standard / 7% Pro; product pages say "Earn 340 Bulbs" and
+    plan cards the plan's rate; Bulbs are spent on purchases and on Plus,
+    never sold, cashed out or transferred; the rewards policy follows.
+    Surveys become Free and Boosted only (Boosted paid in IQD through an
+    order at the reward × 1.1, rewards by median time at 100 Bulbs a
+    minute from 200 to 2,000, counting rules, appeals, bias controls,
+    perks, privacy and creator rules as recorded); they land with the
+    Bulbs step, since they replace the Bulbs-paid survey kinds.
+  - Additions, each with the step that owns its area: a review request 3
+    days after delivery; a cart reminder after 24 hours (marketing
+    consent); Staff → Catalog's empty searches; WhatsApp order updates
+    once Meta Business verification is done; key metrics on Staff's home
+    page; a check that referral rewards were converted to 1 Bulb = 1 IQD.
+  - After step 9, in this order (replacing "digital codes in Stage 6,
+    after Opportunities"): Opportunities; auctions (collectible copies,
+    proxy bidding, anti-sniping, 48 hours to pay, second chance,
+    non-payment strikes; `collectible`, `auctions`, `bids`, `offers`);
+    Get offers from shops; people selling; textbooks; the new Plus
+    features (pay with Bulbs up to 50% of a month in steps of 250,
+    monthly survey credits 10/25/50, early access to campaigns, Plus
+    prices on offers, tickets and programs, Plus RSVP 48 hours early and
+    Blaze seats, Shine 10% off kits, the queue picked for home swaps,
+    tiered and paired partner perks), then Plus Duo (Glow 20,750 · Shine
+    31,750 · Blaze 55,750 IQD a month, `plus_members`); digital codes;
+    Apple Wallet.
+  - Sign in with The IDEA Pass for other sites is offered only to SAL
+    until the outside security review is done. Finance (ledger, journal)
+    gets no new features. Before store submission, push notifications,
+    Google Wallet and the share sheet must work in the native apps
+    (Apple guideline 4.2). No legal review is planned: the Iraqi-law and
+    "(legal review)" items are removed.
+  - Pay with Bulbs and Wayl renewals: Plus doesn't renew through Wayl
+    subscriptions at a fixed amount. Billing is invoice-based
+    (`packages/payments/billing/service.ts`): the daily
+    `/cron/subscriptions` issues a renewal invoice before each period
+    ends, paid through a new Wayl checkout link. So Bulbs can apply to
+    every renewal (taken off that invoice) as well as to prepaid months.
 
 - 2026-10-28: Selling (item 11), bundles, part 1, the schema
   (`20270112000000_bundles.sql`). A shop lists several of its own items as
@@ -477,8 +540,8 @@ steps need Xcode, Android Studio and the store/Firebase accounts
      new categories, Send as a gift, one cart (section 11).
   9. Then item 13 (Plus supplier shops, kits lent by shops), Stages 3–5
      (identity, shop and organization verification, educators with their
-     stages), digital codes in Stage 6 (section 13), and connections and
-     imports with the stage that needs each (section 14).
+     stages), and connections and imports with the stage that needs each
+     (section 14). Digital codes move later (part 2, below).
 
 - 2026-10-28: Program Revision v2, item 10 (sellers and offers), part 2,
   the code:

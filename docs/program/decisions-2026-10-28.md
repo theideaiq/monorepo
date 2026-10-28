@@ -4,7 +4,8 @@ The owner's decisions on Program Revision v2, item 11 (selling in
 Partners) and related points, as given. They replace earlier answers and,
 where they differ, the v2 brief (for example Bulbs: 1 Bulb = 1 IQD
 replaces the brief's 1 Bulb = 10 IQD). The order of work is in
-`PROGRESS.md` (Decisions, 2026-10-28).
+`PROGRESS.md` (Decisions, 2026-10-28). Further decisions given the same
+day ("part 2", at the end of this file) win where they differ.
 
 The IDEA Space is left out entirely for now: build nothing for it and
 remove any mention of it from copy.
@@ -470,3 +471,237 @@ carries them.
   - Google Search Console and Bing Webmaster Tools;
   - the PCI SAQ A self-assessment;
   - a WCAG 2.2 AA accessibility statement.
+
+---
+
+# Further owner decisions, 28 October 2026 (part 2)
+
+Given the same day, after the decisions above (sections 1–15, "part 1").
+Where they differ, these win. Section numbers below are part 2's own;
+"section N of the earlier decisions" means part 1. Nothing in the plan is
+dropped or postponed. The order of work is in `PROGRESS.md` (Decisions,
+2026-10-28).
+
+## 1. Order of work
+- **Unchanged:** every item stays in the recorded order of work. Fold the changes below into the step each belongs to:
+  - the Bulbs rate (section 2) into the Bulbs step;
+  - Make an offer (section 6) into selling;
+  - the cleanups (sections 4, 5, 8 and 9) into step 1.
+- **After it,** build the remaining items in this order (replacing "digital codes: stage 6, after Opportunities"):
+  1. Opportunities;
+  2. auctions (section 6);
+  3. Get offers from shops;
+  4. people selling;
+  5. textbooks;
+  6. the new Plus features (section 3), then Plus Duo;
+  7. digital codes;
+  8. Apple Wallet.
+
+## 2. Bulbs: one universal earn rate (replaces section 12's earn rates and its survey line)
+- **Rates:** 2% for everyone, and 3% / 4% / 5% for Plus Glow / Shine / Blaze.
+- **The same rate applies to everything:** The IDEA's own sales, shop items, rentals, kits, tickets and programs. No exceptions by category or price. Earnings are rounded to whole Bulbs.
+- **Still earns nothing:** digital codes and Plus fees.
+- **Gear's commission** rises to 9% standard / 7% Pro (section 4 of the earlier decisions), so the top rate stays inside the commission. Books, Music, Films and Games stay as they are.
+- **Showing the reward:** product pages show the number, not the rate: "Earn 340 Bulbs". Plus plan cards show the plan's rate.
+- **Spending:** Bulbs are spent on purchases and on Plus (section 3). Still no cash-out and no transfers.
+- **Bulbs are never sold.** Replace "Survey rewards: paid in Bulbs. Creators buy them at 1 Bulb = 1 IQD" with "Survey respondents earn Bulbs from The IDEA; creators pay for Boosted responses in IQD" (section 7).
+- **Policy:** update the rewards policy to match.
+
+## 3. Plus: new features
+**Where things live:**
+- Plus is the only name; there's no "membership" anywhere (section 9).
+- Everything about Plus stays in **Your Plus** on the Plus tab. The Pass home only previews it.
+- The queue stays in Saved → Queue (section 10 of the earlier decisions, unchanged). Your Plus shows "Next up" with the first 3 items, linking there.
+
+**The features:**
+- **Pay with Bulbs:**
+  - Bulbs can cover up to 50% of a month's price, in steps of 250, applied to the next renewal or to prepaid months.
+  - Your Plus has "Use Bulbs on my next renewal".
+  - If Plus renews through Wayl subscriptions at a fixed amount, Bulbs apply only to manual renewals and prepaid months. Record which in PROGRESS.md.
+- **Survey credits:** free response credits on the 1st of every month (10 for Glow, 25 for Shine, 50 for Blaze). They don't carry over, and the amounts are settings.
+- **Early access to campaigns:** 24 hours early, or 48 hours for Blaze.
+- **Plus price:** a shop can set a Plus price on an offer, shown to Plus members, the same way as the student price. The shop pays for it.
+- **Club:**
+  - Plus members RSVP 48 hours before everyone else;
+  - each event can hold reserved seats for Blaze members, a number set per event;
+  - organizers can set a Plus price on paid tickets and programs.
+- **Kits:** Shine gets 10% off (Blaze keeps 25%).
+- **Swaps:** home swaps only (section 4). When booking one, the next items in the queue are picked by default.
+- **Plan cards and the Plus policy:** list all of this per tier.
+
+**Plus Duo:**
+- **Who:** a plan holder invites one more Pass.
+- **Prices a month:** Glow Duo 20,750 · Shine Duo 31,750 · Blaze Duo 55,750 IQD. Annual plans follow the same 10-months-for-12 rule.
+- **The second person gets, on their own:**
+  - the plan's Bulbs rate and survey credits;
+  - early access, Plus prices and partner perks for Plus;
+  - the Plus badge on their Pass card.
+- **Shared:** the plan's rental slots and home swaps.
+  - Each person keeps their own queue in Saved.
+  - Home swaps go to one shared address in a Plus area.
+  - Swaps alternate between the two queues by default, and the plan holder can change that.
+- **Billing:** the plan holder pays. The student price applies when the plan holder is a verified student.
+- **Ages:** a 13–17-year-old can be the second person with their guardian's approval.
+- **Ending it:** the second person can leave at any time. The plan holder can remove them from the next renewal; their rentals must be returned first.
+- **Gifts:** a Duo can be given through Send as a gift.
+- **Data:** `plus_members` (plan subscription, Pass, role holder or partner, invited and joined dates), with RLS policies and pgTAP tests.
+
+**Partner perks** (extend what exists):
+- **Audiences:** everyone / students / Plus stay. Add an option to aim a Plus perk at specific tiers.
+- **Paired perks:** a partner can link two perks ("10% for everyone", "20% for Plus").
+  - The Pass card shows each person the best perk they qualify for.
+  - A better perk they don't get yet shows as "With Plus: 20%".
+- **Use:** unchanged, checked in Partners once a day per person.
+
+## 4. Remove the counter entirely
+- **The counter was part of The IDEA Space.** Remove:
+  - Staff → Counter;
+  - counter swaps in Plus (copy, the swap booking option, the "unlimited counter swaps" line, plan cards and the Plus policy);
+  - any counter sale or pickup code, its messages and its data. Migrations drop what only the counter uses.
+- **Plus swaps** are home swaps only: 1/2/4 a month, and 3,000 IQD for an extra one.
+
+## 5. Partners: merge Bulk buying and Plus seats into "Team"
+- **One feature, Team (`/team`):** bulk orders for the organization, and Plus for its people (today's seats).
+- The feature flag, menu item, Staff pages (Partners → Team) and copy change to match.
+
+## 6. Make an offer and auctions
+**Both work inside normal selling,** on copies of products in the catalog. For each copy, the seller chooses **Sell at a price** (optionally with "Accept offers") or **Auction**.
+- **Existing products:** an auction sits on that product's page next to the normal offers.
+- **New products:** a seller creates the product the normal way (ISBN, barcode or title; pick or create), then picks the format.
+- **No Buy now:** a fixed price is normal selling.
+
+**Make an offer** (a switch on a listing: "Accept offers")
+- **Allowed on every listing except:**
+  - digital codes;
+  - rentals and Plus;
+  - kits, tickets and programs;
+  - items in a sale or campaign (discounts don't stack).
+- **Who decides:** the seller turns it on or off per listing. For The IDEA's own stock, Staff turn it on, and offers below the margin floor (Finance → Prices) are declined automatically.
+- **How it works:**
+  - Offers below 60% of the price are blocked (a setting).
+  - The seller accepts, declines or counters, once each way.
+  - An offer expires after 48 hours.
+  - Optionally, the seller can set an amount above which offers are accepted automatically, and one below which they're declined.
+  - An accepted offer goes to the buyer's cart at that price for 24 hours.
+- **Limits:** one open offer per buyer per listing, and at most 3 open offers per buyer with the same seller.
+
+**Auctions**
+- **Which copies:**
+  - copies of products in categories Staff enable for auctions (trading cards, rare and limited vinyl, signed items, first editions, retro games and consoles), or of products flagged Collectible;
+  - any copy the seller marks as signed, limited or rare. Staff can review these marks, and a wrong mark counts against the seller's score.
+  - Never for new in-print items at their band price, rentals, kits, tickets, programs or digital codes.
+- **Photos:** every auction needs the seller's own photos of that exact copy (at least 3) and a condition description.
+- **Minimum start price:** 25,000 IQD (a setting).
+- **Who can auction:** approved shops, The IDEA (its own collectible copies) and, once people selling is built, people (identity verification required).
+- **Where they show:** on the product page next to the normal offers ("Auction · ends in 2 days · current bid 85,000 IQD"), and on Store → Auctions, which lists every live auction.
+- **Format:**
+  - a start price and an optional hidden reserve;
+  - it runs 3, 5, 7 or 10 days;
+  - **proxy bidding:** the bidder sets a maximum and the system bids for them, in set increments;
+  - **anti-sniping:** a bid in the last 2 minutes extends the auction by 2 minutes.
+- **To bid:** phone verification, plus identity verification above a set amount (the existing setting).
+- **Paying:**
+  - The winner gets 48 hours to pay through checkout, notified by the bell, push and email.
+  - If they don't pay, the seller can offer the item to the next highest bidder at that bidder's last bid ("second chance").
+- **Non-payment strikes:** each unpaid win is a strike. 2 strikes in 12 months blocks bidding for 90 days; 3 blocks it permanently.
+
+**Both features:**
+- **Fees:** commission on the final price, at the category's rate. No listing fees.
+- **Where people find them:**
+  - bids and offers in Saved;
+  - outbid, won, offer received and offer answered notifications in the bell;
+  - a seller's auctions and offers in Partners → Selling, and in Staff for The IDEA's stock.
+- **Data:** a `collectible` flag on products; `auctions`, `bids` and `offers`, with RLS policies and pgTAP tests. Placing bids and answering offers are SECURITY DEFINER functions in `private`.
+
+## 7. Surveys: Free and Boosted only
+**Bulbs are never sold or transferred:**
+- Remove the `bulbs` kind (creators paying from their own balance) and the `cash` kind. The kinds become `free` (unchanged) and `boosted`.
+- Existing open Bulbs surveys run to completion under the old rules, with held Bulbs returned on close.
+
+**Boosted:**
+- The creator pays The IDEA in IQD through a normal order: no Bulbs, no coupons.
+- The price is the reward × 1.1 per counted response.
+- The IDEA rewards each counted response with Bulbs.
+- The survey opens when paid and stays open until it reaches its target or 60 days pass. Unused responses are then refunded through Wayl when the amount is at least 1,000 IQD.
+
+**Rewards by time, not by number of questions:**
+- **Rate:** 100 Bulbs per minute of median completion time, from 200 to 2,000. This replaces the length-based `private.survey_reward`.
+- **Before opening:** the builder estimates the time from the questions (choice questions, scales and text answers count differently).
+- **After the first 10 counted responses:** the reward resets to the real median.
+  - If it goes down, the unused amount is refunded at close.
+  - If it goes up, collection pauses until the creator confirms and pays the difference.
+- **Payment never depends on the answers given.**
+- **Withdrawal:**
+  - Anyone can quit before submitting.
+  - After submitting, a respondent can delete their response until the survey closes. They keep the reward, and the response stops counting toward the target.
+- **Closed early:** if the creator closes a survey or it breaks, people who started in the last 60 minutes are still paid in full, at the creator's cost.
+
+**Counting rules (shown before starting):**
+- **The start screen shows:** the reward, the estimated time, that there are attention checks, and these rules.
+- **A response doesn't count if it:**
+  - fails 2 or more attention checks, or
+  - finishes in under a third of the median time (or under `min_seconds` before there's a median).
+  - One failed check still counts.
+- **Explanation and appeal:** the respondent sees why a response didn't count and can appeal once. Appeals go to Staff → Inbox.
+- **Creators can't reject responses.** Only these rules decide.
+
+**Bias controls:**
+- **Trusted respondents:** after 20 counted answers with no failed attention checks in the last 10, a respondent sees Boosted surveys 24 hours early. During that window they can fill at most 50% of the target. Thresholds are settings.
+- **Rotation:** who sees a new survey first rotates among eligible respondents.
+- **Daily limit:** each person can answer at most 5 Boosted surveys a day (a setting).
+- **Phone verification is required to answer Boosted surveys:** one Pass per person.
+- **Quotas:** a creator can cap the share of responses from any value of an existing targeting field (university, major, year, governorate). No quotas on sensitive attributes.
+- **"Who answered" box** on the results page and in the export:
+  - the breakdown by targeting fields against the target;
+  - how many started, finished and were excluded;
+  - the median time;
+  - the fixed note: "Respondents are The IDEA Pass users who chose to answer, some for a reward. They are not a random sample of Iraq."
+
+**Perks for respondents:**
+- **Results summary:** when a survey closes, respondents see a summary. The creator can turn it off for academic surveys that need it.
+- **Contributor badge** on the Pass card, with levels at 10, 50 and 200 counted answers.
+- **Participation certificate:** a PDF from Club → Yours → Surveys listing the surveys answered (titles, dates and counts, never answers).
+  - Its terms say universities giving course credit must offer students another way to earn it.
+- **Not offered:** raffles, prize draws or cash.
+
+**Privacy:**
+- **Small groups stay hidden:** no breakdown or filter shows a group smaller than 5 people, in results, exports or the respondents' summary.
+- **Free text:** the builder warns that free-text answers can identify people.
+- **Retention:** raw answers are deleted 24 months after the survey closes, unless the ethics reference states longer. The creator is warned 30 days before.
+- **Use of the export:** for the stated purpose only.
+
+**Rules for creators:**
+- **Always shown on the survey:** who runs it and its purpose ("Thesis research, AUIB" / "Market research by <organization>").
+- **Not allowed:** advertising or sales, asking for contact details, or hiding who runs the survey.
+- **Academic surveys on sensitive topics** require the ethics reference as well as staff review.
+- **Deception studies** require the ethics reference and a debrief screen after submitting.
+- **Policy and builder:** update the surveys policy (`content/legal/surveys.*.md`) and the builder copy to match.
+
+**Unchanged:** targeting, the question checker, attention checks and anonymous results.
+
+## 8. Sign-in methods
+- **Remove Microsoft (azure), Facebook and LinkedIn sign-in:** the code, env lists, docs, PROGRESS.md and settings copy.
+- **Keep:** email + password, email code, Google, Apple (required in the iOS app) and Telegram.
+
+## 9. Wording: no "membership"
+- **Replace "membership" everywhere:** copy in both languages, code names, Staff labels and AGENTS.md.
+  - The Pass is "your Pass" / "The IDEA Pass"; Plus is "Plus" / "your plan".
+  - Examples: "One membership." gets a new headline; "Your membership" → "Your plan"; "{plan} membership" → "Plus {plan}"; Staff's "Memberships" → "Plus seats".
+- **AGENTS.md:**
+  - replace "A person's membership *is* The IDEA Pass" with "A person's Pass is The IDEA Pass; never say 'account' or 'membership'";
+  - the phone tabs are Store · Plus · Club · Pass, with the cart in the top bar;
+  - remove the retired names from the repository map (Spark, Suite, Storybook, design.theideaiq.com, `/post`, Discover tabs).
+
+## 10. Additions
+- **Review request:** 3 days after delivery, by push and email, linking to the product's review form.
+- **Cart reminder:** one push and email 24 hours after a cart is left with items, for signed-in Passes that allow marketing messages.
+- **Empty searches:** Staff → Catalog shows searches with no results (term, count, last seen).
+- **WhatsApp order updates:** order placed, out for delivery and delivered, once Meta Business verification is done. Telegram keeps working through the Droid.
+- **Key metrics on Staff's home page:** orders per week, new Passes, Plus sign-ups and cancellations, and conversion from cart to paid order.
+- **Referrals:** check that referral rewards were converted to 1 Bulb = 1 IQD.
+
+## 11. Other cleanups
+- **PROGRESS.md:** remove the "have them reviewed under Iraqi law" and "(legal review)" items. No legal review is planned.
+- **Sign in with The IDEA Pass for other sites:** offered only to SAL until the outside security review is done.
+- **Finance (ledger, journal):** no new features. It stays as built.
+- **Native apps:** before store submission, make sure push notifications, Google Wallet and the share sheet work. Apple's minimum-functionality review (guideline 4.2) looks for them.
