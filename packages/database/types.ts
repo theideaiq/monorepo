@@ -3145,6 +3145,142 @@ export type Database = {
           },
         ];
       };
+      returns: {
+        Row: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        Insert: {
+          check_by?: string | null;
+          collection_fee?: number | null;
+          condition_note?: string | null;
+          condition_ok?: boolean | null;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          details?: string | null;
+          disputed_at?: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id?: string;
+          needs_collection?: boolean;
+          number?: never;
+          order_id: string;
+          order_item_id: string;
+          photos?: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at?: string | null;
+          refund_amount?: number | null;
+          refund_bulbs?: number | null;
+          refund_due_at?: string | null;
+          refund_reference?: string | null;
+          refunded_at?: string | null;
+          refunded_by?: string | null;
+          respond_by?: string;
+          responded_at?: string | null;
+          responded_by?: string | null;
+          seller_id: string;
+          shop_note?: string | null;
+          staff_note?: string | null;
+          status?: Database["public"]["Enums"]["return_status"];
+          unopened?: boolean;
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          check_by?: string | null;
+          collection_fee?: number | null;
+          condition_note?: string | null;
+          condition_ok?: boolean | null;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          details?: string | null;
+          disputed_at?: string | null;
+          fault?: Database["public"]["Enums"]["return_fault"];
+          id?: string;
+          needs_collection?: boolean;
+          number?: never;
+          order_id?: string;
+          order_item_id?: string;
+          photos?: string[];
+          quantity?: number;
+          reason?: Database["public"]["Enums"]["return_reason"];
+          received_at?: string | null;
+          refund_amount?: number | null;
+          refund_bulbs?: number | null;
+          refund_due_at?: string | null;
+          refund_reference?: string | null;
+          refunded_at?: string | null;
+          refunded_by?: string | null;
+          respond_by?: string;
+          responded_at?: string | null;
+          responded_by?: string | null;
+          seller_id?: string;
+          shop_note?: string | null;
+          staff_note?: string | null;
+          status?: Database["public"]["Enums"]["return_status"];
+          unopened?: boolean;
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "returns_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "returns_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "returns_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       seller_details: {
         Row: {
           deposit_held: number;
@@ -3319,6 +3455,8 @@ export type Database = {
           plan: Database["public"]["Enums"]["seller_plan"];
           plan_billing: string | null;
           plan_since: string | null;
+          score: number;
+          score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
         };
@@ -3334,6 +3472,8 @@ export type Database = {
           plan?: Database["public"]["Enums"]["seller_plan"];
           plan_billing?: string | null;
           plan_since?: string | null;
+          score?: number;
+          score_updated_at?: string | null;
           status?: Database["public"]["Enums"]["seller_status"];
           updated_at?: string;
         };
@@ -3349,6 +3489,8 @@ export type Database = {
           plan?: Database["public"]["Enums"]["seller_plan"];
           plan_billing?: string | null;
           plan_since?: string | null;
+          score?: number;
+          score_updated_at?: string | null;
           status?: Database["public"]["Enums"]["seller_status"];
           updated_at?: string;
         };
@@ -3366,6 +3508,7 @@ export type Database = {
         Row: {
           action_required: string | null;
           active: boolean;
+          back_confirmed_at: string | null;
           cancelled_at: string | null;
           carrier: string;
           carrier_id: string;
@@ -3380,6 +3523,7 @@ export type Database = {
           location_id: string | null;
           order_id: string;
           pickup_id: string | null;
+          return_id: string | null;
           returned_at: string | null;
           seller_id: string;
           size: string;
@@ -3393,6 +3537,7 @@ export type Database = {
         Insert: {
           action_required?: string | null;
           active?: boolean;
+          back_confirmed_at?: string | null;
           cancelled_at?: string | null;
           carrier?: string;
           carrier_id: string;
@@ -3407,6 +3552,7 @@ export type Database = {
           location_id?: string | null;
           order_id: string;
           pickup_id?: string | null;
+          return_id?: string | null;
           returned_at?: string | null;
           seller_id?: string;
           size: string;
@@ -3420,6 +3566,7 @@ export type Database = {
         Update: {
           action_required?: string | null;
           active?: boolean;
+          back_confirmed_at?: string | null;
           cancelled_at?: string | null;
           carrier?: string;
           carrier_id?: string;
@@ -3434,6 +3581,7 @@ export type Database = {
           location_id?: string | null;
           order_id?: string;
           pickup_id?: string | null;
+          return_id?: string | null;
           returned_at?: string | null;
           seller_id?: string;
           size?: string;
@@ -3457,6 +3605,13 @@ export type Database = {
             columns: ["order_id"];
             isOneToOne: false;
             referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "shipments_return_id_fkey";
+            columns: ["return_id"];
+            isOneToOne: false;
+            referencedRelation: "returns";
             referencedColumns: ["id"];
           },
           {
@@ -3604,6 +3759,7 @@ export type Database = {
           payment_fee_rate: number;
           plus_capacity: number;
           plus_invite_hours: number;
+          refused_cash_limit: number;
           rental_deposit_rate: number;
           require_verified_phone: boolean;
           return_days: number;
@@ -3624,6 +3780,7 @@ export type Database = {
           payment_fee_rate?: number;
           plus_capacity?: number;
           plus_invite_hours?: number;
+          refused_cash_limit?: number;
           rental_deposit_rate?: number;
           require_verified_phone?: boolean;
           return_days?: number;
@@ -3644,6 +3801,7 @@ export type Database = {
           payment_fee_rate?: number;
           plus_capacity?: number;
           plus_invite_hours?: number;
+          refused_cash_limit?: number;
           rental_deposit_rate?: number;
           require_verified_phone?: boolean;
           return_days?: number;
@@ -4779,6 +4937,8 @@ export type Database = {
           plan: Database["public"]["Enums"]["seller_plan"];
           plan_billing: string | null;
           plan_since: string | null;
+          score: number;
+          score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
         };
@@ -4913,6 +5073,52 @@ export type Database = {
         Returns: undefined;
       };
       cancel_rental: { Args: { rental: string }; Returns: undefined };
+      cancel_return: {
+        Args: { target: string };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       cancel_swap: {
         Args: { target: string };
         Returns: {
@@ -5176,6 +5382,53 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      confirm_parcel_back: { Args: { parcel: string }; Returns: string };
+      confirm_return_condition: {
+        Args: { note?: string; ok: boolean; target: string };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       confirm_student_email: {
         Args: { code: string };
         Returns: {
@@ -5412,6 +5665,57 @@ export type Database = {
         Args: { accept: boolean; quote: string; reference?: string };
         Returns: string;
       };
+      decide_return: {
+        Args: {
+          approve: boolean;
+          fault?: Database["public"]["Enums"]["return_fault"];
+          note: string;
+          target: string;
+        };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       decide_seller: {
         Args: {
           decision: Database["public"]["Enums"]["seller_status"];
@@ -5431,6 +5735,8 @@ export type Database = {
           plan: Database["public"]["Enums"]["seller_plan"];
           plan_billing: string | null;
           plan_since: string | null;
+          score: number;
+          score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
         };
@@ -5694,6 +6000,98 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      mark_return_received: {
+        Args: { target: string };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      mark_return_refunded: {
+        Args: { reference: string; target: string };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       member_bulbs: {
         Args: { member: string };
         Returns: {
@@ -5702,6 +6100,7 @@ export type Database = {
           rate: number;
         }[];
       };
+      must_pay_online: { Args: Record<PropertyKey, never>; Returns: boolean };
       my_birthday: { Args: Record<PropertyKey, never>; Returns: string };
       my_bulbs: {
         Args: Record<PropertyKey, never>;
@@ -6058,6 +6457,10 @@ export type Database = {
         };
       };
       referral_kind: { Args: { code: string }; Returns: string };
+      refresh_seller_scores: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       register_push_device: {
         Args: { device_platform: string; device_token: string };
         Returns: string;
@@ -6118,6 +6521,59 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      request_return: {
+        Args: {
+          details?: string;
+          line: string;
+          photos?: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          unopened?: boolean;
+        };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       request_student_review: {
         Args: { photo: string; university: string };
         Returns: {
@@ -6139,6 +6595,52 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "student_requests";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      respond_to_return: {
+        Args: { accept: boolean; note?: string; target: string };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -6474,6 +6976,8 @@ export type Database = {
           plan: Database["public"]["Enums"]["seller_plan"];
           plan_billing: string | null;
           plan_since: string | null;
+          score: number;
+          score_updated_at: string | null;
           status: Database["public"]["Enums"]["seller_status"];
           updated_at: string;
         };
@@ -6637,6 +7141,52 @@ export type Database = {
         Args: { client: string; suspend: boolean };
         Returns: undefined;
       };
+      sweep_returns: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
       sweep_student_checks: {
         Args: Record<PropertyKey, never>;
         Returns: string[];
@@ -6696,7 +7246,8 @@ export type Database = {
         | "trade_in"
         | "redemption"
         | "adjustment"
-        | "expiry";
+        | "expiry"
+        | "return";
       bulb_status: "pending" | "available" | "void";
       crm_status: "lead" | "customer" | "vip" | "churned";
       invoice_status: "issued" | "paid" | "void";
@@ -6755,6 +7306,23 @@ export type Database = {
         | "overdue"
         | "cancelled"
         | "kept";
+      return_fault: "shop" | "customer" | "the_idea";
+      return_reason:
+        | "wrong_item"
+        | "faulty"
+        | "not_as_described"
+        | "changed_mind"
+        | "never_arrived";
+      return_status:
+        | "requested"
+        | "disputed"
+        | "approved"
+        | "collecting"
+        | "received"
+        | "refund_due"
+        | "refunded"
+        | "rejected"
+        | "cancelled";
       review_status: "published" | "hidden";
       seller_line_status:
         | "waiting"
@@ -6944,6 +7512,7 @@ export const Constants = {
         "redemption",
         "adjustment",
         "expiry",
+        "return",
       ],
       bulb_status: ["pending", "available", "void"],
       crm_status: ["lead", "customer", "vip", "churned"],
@@ -7008,6 +7577,25 @@ export const Constants = {
         "overdue",
         "cancelled",
         "kept",
+      ],
+      return_fault: ["shop", "customer", "the_idea"],
+      return_reason: [
+        "wrong_item",
+        "faulty",
+        "not_as_described",
+        "changed_mind",
+        "never_arrived",
+      ],
+      return_status: [
+        "requested",
+        "disputed",
+        "approved",
+        "collecting",
+        "received",
+        "refund_due",
+        "refunded",
+        "rejected",
+        "cancelled",
       ],
       review_status: ["published", "hidden"],
       seller_line_status: [
