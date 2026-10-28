@@ -1650,7 +1650,8 @@
         "shopOrders": "Orders",
         "pickup": "Pickup",
         "shopReturns": "Returns",
-        "shopOffers": "Offers"
+        "shopOffers": "Offers",
+        "shopPayouts": "Payouts"
       },
       "members": {
         "title": "Members",
@@ -2753,6 +2754,28 @@
         "amountsInvalid": "Use whole amounts, with the decline amount at or below the accept amount.",
         "otherTitle": "Last 30 days",
         "noneOther": "No other offers in the last 30 days."
+      },
+      "shopPayouts": {
+        "title": "Payouts",
+        "notApproved": "Payouts start once your shop is approved.",
+        "description": "The IDEA pays you every week for items whose 14-day return window has closed with no return open: what each sold for, after commission, less any refund, Boxy's fee for returns that were your shop's fault and the Pro fee. We send it to the payout details in Selling.",
+        "none": "No payouts yet.",
+        "payout": "Payout #{number} · up to {period}",
+        "status": {
+          "pending": "Being sent",
+          "paid": "Paid",
+          "cancelled": "Cancelled"
+        },
+        "paidOn": "Sent by {method} on {time} · reference {reference}",
+        "methods": {
+          "bank": "bank transfer",
+          "zaincash": "ZainCash",
+          "qi": "Qi"
+        },
+        "sale": "Order #{order} · {name} ×{quantity}",
+        "saleUnknown": "An item you sold",
+        "collectionFee": "Return collection fee (your shop's fault)",
+        "proFee": "Pro plan, until {date}"
       }
     },
     "ages": {
@@ -3317,7 +3340,8 @@
           "shopRefunds": "Shop lines to refund",
           "disputedReturns": "Returns to decide",
           "returnRefunds": "Return refunds to send",
-          "houseOffers": "Offers on The IDEA's stock"
+          "houseOffers": "Offers on The IDEA's stock",
+          "pendingPayouts": "Shop payouts to send"
         }
       }
     },
@@ -4155,7 +4179,8 @@
         "settings": "Settings",
         "bulbs": "Bulbs",
         "prices": "Prices",
-        "rentals": "Rental rates"
+        "rentals": "Rental rates",
+        "payouts": "Payouts"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -4304,6 +4329,38 @@
         "priceHint": "Empty: not rented on its own.",
         "days": "Days",
         "lateFee": "Late fee per day (IQD)"
+      },
+      "payouts": {
+        "prepareTitle": "Prepare payouts",
+        "prepareDescription": "Each approved shop owed more than it owes gets a payout: its items whose 14-day return window has closed with no return open, after commission, less refunds, Boxy's fee for returns that were the shop's fault and the Pro fee. Run it once a week.",
+        "periodEnd": "Up to",
+        "prepare": "Prepare payouts",
+        "pendingTitle": "To send",
+        "pendingEmpty": "No payouts waiting to be sent.",
+        "download": "Download CSV",
+        "line": "#{number} · {shop}",
+        "summary": "{lines} items up to {period} · {deducted} deducted",
+        "account": "{bank} · {name} · {iban}",
+        "noAccount": "The shop hasn't added its payout details yet: ask it to add them in Partners → Selling.",
+        "method": "Sent by",
+        "methods": {
+          "bank": "Bank transfer",
+          "zaincash": "ZainCash",
+          "qi": "Qi"
+        },
+        "reference": "Transfer reference",
+        "markPaid": "Mark paid",
+        "cancel": "Cancel",
+        "cancelTitle": "Cancel this payout?",
+        "cancelDescription": "Its items go back to the next batch.",
+        "recentTitle": "Recent",
+        "recentEmpty": "No payouts sent yet.",
+        "status": {
+          "pending": "To send",
+          "paid": "Paid",
+          "cancelled": "Cancelled"
+        },
+        "paidOn": "{method} · {reference} · {time}"
       }
     },
     "editorial": {

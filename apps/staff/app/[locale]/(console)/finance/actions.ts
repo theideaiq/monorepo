@@ -16,12 +16,14 @@ import {
 } from "@/lib/admin/finance";
 import {
   checkbox,
+  date,
   decimalIn,
   int,
   optionalInt,
   optionalText,
   optionalUuid,
   text,
+  uuid,
 } from "@/lib/admin/forms";
 import { toRpcLines, validateJournalLines } from "@/lib/admin/journal";
 
@@ -234,6 +236,50 @@ export const saveRentalRates = staffAction(
         rate: Number(input.depositRate),
       })
     );
+    return success();
+  }
+);
+
+// ── Seller payouts ──────────────────────────────────────────────────────────
+
+/** Prepares this week's batch: a pending payout per shop owed money. */
+export const preparePayouts = staffAction(
+  "finance",
+  z.object({ periodEnd: date }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("prepare_payouts", { period_end: input.periodEnd })
+    );
+    return success();
+  }
+);
+
+/** A payout sent by bank, ZainCash or Qi, with the transfer's reference. */
+export const markPayoutPaid = staffAction(
+  "finance",
+  z.object({
+    id: uuid,
+    method: z.enum(["bank", "zaincash", "qi"]),
+    reference: text(200),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("mark_payout_paid", {
+        method: input.method,
+        reference: input.reference,
+        target: input.id,
+      })
+    );
+    return success();
+  }
+);
+
+/** A payout prepared by mistake: its lines wait for the next batch. */
+export const cancelPayout = staffAction(
+  "finance",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("cancel_payout", { target: input.id }));
     return success();
   }
 );

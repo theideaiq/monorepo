@@ -573,6 +573,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-28: Payouts (master brief step 6, section 8;
+  `20270130000000_payouts.sql`). Finance → Payouts prepares the weekly batch
+  (`prepare_payouts`): each approved shop owed more than it owes gets a
+  pending payout with a statement line per item whose 14-day return window
+  closed with no return open (its payout after commission, less any quantity
+  refunded), less Boxy's fee for returns at the shop's fault and each Pro
+  month or year begun. Download the batch as CSV, transfer by bank, ZainCash
+  or Qi, then mark each paid with the reference (`mark_payout_paid`), or
+  cancel one so its lines wait for the next batch; pending payouts are an
+  Inbox item. Partners → Selling → Payouts shows each payout and its
+  statement. Bulbs spent on a shop's item are The IDEA's: the shop is paid
+  as if the full price was paid (to confirm with the owner).
 - 2026-10-28: Selling, returns and offers, part 3. Support marks returns
   The IDEA collected by hand back at the shop (Staff → Orders → Returns,
   "Collected by hand"; `staff_mark_return_received`). The customer's bell

@@ -27,6 +27,7 @@ export const inboxItems = [
   "productChecks",
   "productFlags",
   "houseOffers",
+  "pendingPayouts",
   "telegram",
   "procurement",
   "seats",
@@ -51,6 +52,7 @@ const hrefs: Record<InboxItem, string> = {
   orders: "/orders?status=awaiting",
   overdueRentals: "/rentals?view=overdue",
   passApps: "/partners/sign-in",
+  pendingPayouts: "/finance/payouts",
   procurement: "/partners/team",
   productChecks: "/catalog/checks",
   productFlags: "/catalog/checks#flags",
@@ -96,6 +98,7 @@ export const loadInbox = async (
     disputedReturns,
     returnRefunds,
     houseOffers,
+    pendingPayouts,
   ] = await Promise.all([
     counted(can("support"), () =>
       supabase
@@ -179,6 +182,9 @@ export const loadInbox = async (
         .eq("seller_id", HOUSE_SELLER_ID)
         .eq("status", "open")
     ),
+    counted(can("finance") && finance, () =>
+      supabase.from("payouts").select("id", head).eq("status", "pending")
+    ),
   ]);
 
   const counts: Record<InboxItem, number> = {
@@ -189,6 +195,7 @@ export const loadInbox = async (
     orders,
     overdueRentals,
     passApps,
+    pendingPayouts,
     procurement,
     productChecks,
     productFlags,
