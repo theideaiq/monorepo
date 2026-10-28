@@ -28,7 +28,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 /**
  * Partner perks on The IDEA Pass: who offers them (an organization in The
- * IDEA Business, whose team checks cards from its dashboard), who they're
+ * IDEA Partners, whose team checks cards from its dashboard), who they're
  * open to, and how often they were used this month.
  */
 const PerksPage = async () => {

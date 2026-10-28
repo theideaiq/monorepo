@@ -38,9 +38,9 @@ We may review a survey before it goes live, and refuse or remove one that breaks
 
 The IDEA runs the survey tools and keeps answers for as long as the creator needs them for that survey and its export. The creator is responsible for how they use the answers they export. See [Privacy](/legal/privacy) for your rights.
 
-## 6. The IDEA Business
+## 6. The IDEA Partners
 
-Companies running rewarded surveys through The IDEA Business follow this policy and their agreement with us (see [The IDEA Business](/legal/business)).
+Organizations running rewarded surveys through The IDEA Partners follow this policy and their agreement with us (see [The IDEA Partners](/legal/business)).
 
 ## Contact us
 

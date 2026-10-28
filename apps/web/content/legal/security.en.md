@@ -3,7 +3,7 @@ We welcome reports from anyone who finds a security weakness in The IDEA's servi
 ## 1. Scope
 
 - theideaiq.com, including The IDEA Pass and the cart and checkout;
-- business.theideaiq.com (The IDEA Business), api.theideaiq.com and design.theideaiq.com;
+- partners.theideaiq.com (The IDEA Partners), staff.theideaiq.com (Staff and The IDEA Design) and api.theideaiq.com (the API and developer docs);
 - The IDEA's iOS and Android apps;
 - The IDEA Droid on Telegram.
 

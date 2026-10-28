@@ -1,18 +1,19 @@
 ## 1. About these terms
 
-These terms are an agreement between you and The IDEA IQ Inc. ("The IDEA", "we", "us"), based in Baghdad, Iraq. They apply to theideaiq.com, The IDEA's iOS and Android apps, The IDEA Droid on Telegram and WhatsApp, and everything we offer through them: The IDEA Store, The IDEA Plus, The IDEA Club, The IDEA Pass and The IDEA Business (together, "the service").
+These terms are an agreement between you and The IDEA IQ Inc. ("The IDEA", "we", "us"), based in Baghdad, Iraq. They apply to theideaiq.com, The IDEA's iOS and Android apps, The IDEA Droid on Telegram and WhatsApp, and everything we offer through them: The IDEA Store, The IDEA Plus, The IDEA Club, The IDEA Pass and The IDEA Partners (together, "the service").
 
 By using the service you agree to these terms and to the policies that complete them:
 
 - [Privacy](/legal/privacy)
 - [Delivery](/legal/delivery)
-- [Returns and refunds](/legal/returns)
-- [Condition and warranty](/legal/condition)
+- [Returns and refunds](/legal/returns) (including condition and warranty)
 - [The IDEA Plus](/legal/plus)
 - [Rewards](/legal/rewards) (Bulbs and invites)
+- [Selling](/legal/selling)
 - [Club rules](/legal/club)
+- [Programs](/legal/programs)
 - [Surveys](/legal/surveys)
-- [The IDEA Business](/legal/business)
+- [The IDEA Partners](/legal/business)
 - [Accessibility](/legal/accessibility), [Security](/legal/security) and [Copyright](/legal/copyright)
 
 If you do not agree, please do not use the service. Nothing in these terms limits the rights you have under Iraqi law, including the Consumer Protection Law (Law No. 1 of 2010).
@@ -50,7 +51,7 @@ We may suspend or close a Pass that breaks these terms, for example for fraud, a
 
 ## 4. Orders from The IDEA Store
 
-- **Product details.** Every product page shows its price in Iraqi dinars (IQD), its condition (New, Open box, Refurbished or Used; see [Condition and warranty](/legal/condition)), its availability and its details in Arabic. Games show their PEGI age rating.
+- **Product details.** Every product page shows its price in Iraqi dinars (IQD), its condition (New, Open box, Refurbished or Used; see [Returns and refunds](/legal/returns)), its availability and its details in Arabic. Games show their PEGI age rating.
 - **Prices.** The price you pay is calculated by our system at checkout, with any delivery fee, discount and Bulbs, and shown before you confirm. If a price or description is clearly wrong, we will contact you and you may cancel for a full refund.
 - **When an order is confirmed.** An order paid online is confirmed once the payment succeeds. A cash order is confirmed when you place it and paid on delivery or at pickup.
 - **Receipts.** Every order gets a receipt with the price, date and specifications of what you bought, in Pass → Orders and by email.

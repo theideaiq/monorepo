@@ -545,7 +545,7 @@
           "items": [
             {
               "question": "Do I need to sign up separately for each service?",
-              "answer": "No. One The IDEA Pass works across the store, The IDEA Plus, The IDEA Club and The IDEA Business."
+              "answer": "No. One The IDEA Pass works across the store, The IDEA Plus, The IDEA Club and The IDEA Partners."
             },
             {
               "question": "How do I delete The IDEA Pass?",
@@ -618,11 +618,7 @@
         },
         "returns": {
           "title": "Returns and refunds",
-          "description": "The 14-day return window, faulty items, and refunds to the original payment or as Bulbs."
-        },
-        "condition": {
-          "title": "Condition and warranty",
-          "description": "What New, Open box, Refurbished and Used mean, how items are checked and the warranty each comes with."
+          "description": "Condition grades and warranty, the 14-day return window, items not as described, and refunds to the original payment or as Bulbs."
         },
         "plus": {
           "title": "The IDEA Plus",
@@ -632,9 +628,17 @@
           "title": "Rewards",
           "description": "How Bulbs are earned, unlocked, spent and expire, and the rules for invites."
         },
+        "selling": {
+          "title": "Selling",
+          "description": "How shops and people sell on The IDEA: listings, payments, payouts, meeting at The IDEA Space and auctions."
+        },
         "club": {
           "title": "Club rules",
           "description": "How to take part in The IDEA Club: rooms, events, photos, behaviour, reporting and moderation."
+        },
+        "programs": {
+          "title": "Programs",
+          "description": "The IDEA's exchanges, trips and courses: packages, guardian approval, installments, passports and refunds, including visa refusal."
         },
         "surveys": {
           "title": "Surveys",
@@ -642,7 +646,7 @@
         },
         "business": {
           "title": "The IDEA Partners",
-          "description": "Quotes, purchase orders, invoices, The IDEA Plus for teams, partner perks and apps that use Sign in with The IDEA Pass."
+          "description": "Free for organizations: perks, bulk buying, team Plus, Sign in with The IDEA Pass, selling and the Pro plan, supplying The IDEA Plus and posting opportunities."
         },
         "accessibility": {
           "title": "Accessibility",

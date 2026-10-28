@@ -119,9 +119,9 @@ decisions with a date.
   for the date of birth at first sign-in; 13–17-year-olds link a guardian
   signed in with The IDEA Pass who approves each order and The IDEA Plus in
   Settings; PEGI 18 items are hidden from them. Reviews that earned the photo bonus say so.
-- The 13 public policies at `/legal/<policy>` (terms, privacy, delivery,
-  returns, condition, plus, rewards, club, surveys, business,
-  accessibility, security, copyright) replace the old five, with
+- The 14 public policies at `/legal/<policy>` (terms, privacy, delivery,
+  returns with condition, plus, rewards, selling, club, programs, surveys,
+  business, accessibility, security, copyright), with
   `/.well-known/security.txt`.
 
 - Catalogue fixes (migration `20261219000000_catalogue_fixes.sql`): six
@@ -378,6 +378,30 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-28: Program Revision v2, item 9 (policies): 14 at
+  `/legal/<policy>`. Condition and warranty is merged into Returns, which
+  gains the refund for items not as described (shop items are refunded by
+  The IDEA and recovered from the shop's deposit and next payout; no
+  branded guarantee) and makes opened media returnable when not as
+  described. New: Selling (shops selling in their own name with The IDEA
+  as payment agent, weekly payouts after the return window, deposits;
+  people selling at The IDEA Space or cash on delivery, never through The
+  IDEA; Get offers from shops; auctions), opening in stages, and Programs
+  (packages, guardian approval, installments, passport scans deleted
+  after, refunds by notice period, visa refusal refunded minus costs
+  actually paid and unrecoverable, free partner programs with Notify me).
+  Business now describes The IDEA Partners (perks, bulk buying, team Plus,
+  developers, shops and Pro, suppliers, opportunities). Terms, privacy,
+  Plus, surveys, club and security follow (links, The IDEA Partners, the
+  new hosts, selling and passport data). **Bulb values and rates stay as
+  the site applies them today** (1 Bulb = 100 IQD, 3% and Plus 4/5/6%,
+  survey rewards 2–10): the rewards page and those figures change with
+  the Bulbs v2 migration (item 14), together with the code. Figures the
+  brief leaves open (commission, deposit, Pro price, inspection fee,
+  refund schedules) are "shown in Partners" or on the program page until
+  set. Delivery per seller, The IDEA Space pickup and supplier copies in
+  Plus are written into their policies with those stages.
 
 - 2026-10-28: Program Revision v2, item 8 (The Club as Join · Read ·
   Yours), part 1, the schema (migration `20270106000000`): posts carry

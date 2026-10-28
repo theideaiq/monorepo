@@ -3,7 +3,7 @@
 ## 1. النطاق
 
 - theideaiq.com، بما في ذلك The IDEA Pass والسلة وإتمام الطلب؛
-- business.theideaiq.com (The IDEA Business) و api.theideaiq.com و design.theideaiq.com؛
+- partners.theideaiq.com (The IDEA Partners) و staff.theideaiq.com (Staff و The IDEA Design) و api.theideaiq.com (الواجهة البرمجية ووثائق المطوّرين)؛
 - تطبيقات The IDEA على iOS وأندرويد؛
 - The IDEA Droid على تيليغرام.
 
