@@ -349,7 +349,7 @@ begin
   update public.order_items set seller_status = 'out_of_stock' where id = line;
   update public.stock_items set status = 'retired', order_item_id = null
   where order_item_id = line;
-  return 'out_of_stock';
+  return 'out_of_stock'::public.seller_line_status;
 end;
 $$;
 
