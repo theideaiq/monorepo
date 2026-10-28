@@ -33,14 +33,17 @@ export const useMembers = (organizationId: string) => {
   const { supabase } = useAuth();
   return useQuery({
     queryFn: async (): Promise<Member[]> => {
-      const memberships =
+      const memberships = (
         unwrap(
           await supabase
             .from("memberships")
             .select("user_id, role")
             .eq("organization_id", organizationId)
             .order("created_at")
-        ) ?? [];
+        ) ?? []
+      ).flatMap(({ role, user_id }) =>
+        role && user_id ? [{ role, user_id }] : []
+      );
       const ids = memberships.map((membership) => membership.user_id);
       const profiles = ids.length
         ? (unwrap(

@@ -46,7 +46,7 @@ export const POST = async (request: Request) => {
     .eq("organization_id", domain.organization_id)
     .eq("user_id", session.userId)
     .maybeSingle();
-  if (!(membership && ["owner", "admin"].includes(membership.role))) {
+  if (!(membership?.role && ["owner", "admin"].includes(membership.role))) {
     return json({ error: "forbidden" }, 403);
   }
   if (domain.verified_at) {
