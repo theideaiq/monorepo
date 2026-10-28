@@ -229,6 +229,8 @@ export const usePlaceRental = () => {
       finish(
         unwrap(
           await supabase.rpc("create_rental_order", {
+            // Its default is still pickup until the database drops it.
+            fulfilment: "delivery",
             payment_method: paymentMethod,
             rental_product: productId,
             shipping: { ...shipping },
