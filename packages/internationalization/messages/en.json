@@ -3706,7 +3706,11 @@
         "reference": "Refund reference",
         "markRefunded": "Mark refunded",
         "viaWayl": "Paid online: refund it in Wayl.",
-        "viaTransfer": "Paid in cash: send it by ZainCash, Qi or bank transfer."
+        "viaTransfer": "Paid in cash: send it by ZainCash, Qi or bank transfer.",
+        "byHandTitle": "Collected by hand",
+        "byHandDescription": "Accepted returns with no Boxy parcel. Mark each one once it's back at the shop; the shop then has 48 hours to check it.",
+        "byHandEmpty": "No returns waiting to come back by hand.",
+        "markReceived": "Back at the shop"
       }
     },
     "rentals": {

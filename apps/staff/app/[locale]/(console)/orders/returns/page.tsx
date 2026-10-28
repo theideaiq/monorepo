@@ -6,7 +6,7 @@ import { EmptyState, PageBody, PageHeader } from "@/components/admin/page";
 import { formatters } from "@/lib/admin/format";
 import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
-import { DecideReturnForm, RefundedForm } from "./forms";
+import { DecideReturnForm, ReceivedForm, RefundedForm } from "./forms";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.orders.returns");
@@ -30,20 +30,31 @@ const ReturnsPage = async () => {
   const reasons = await getTranslations("app.orders.returns.reasons");
   const format = formatters(locale);
 
-  const [{ data: disputed }, { data: due }] = await Promise.all([
-    supabase
-      .from("returns")
-      .select(RETURN_COLUMNS)
-      .eq("status", "disputed")
-      .order("disputed_at")
-      .limit(LIMIT),
-    supabase
-      .from("returns")
-      .select(RETURN_COLUMNS)
-      .eq("status", "refund_due")
-      .order("refund_due_at")
-      .limit(LIMIT),
-  ]);
+  const [{ data: disputed }, { data: due }, { data: coming }] =
+    await Promise.all([
+      supabase
+        .from("returns")
+        .select(RETURN_COLUMNS)
+        .eq("status", "disputed")
+        .order("disputed_at")
+        .limit(LIMIT),
+      supabase
+        .from("returns")
+        .select(RETURN_COLUMNS)
+        .eq("status", "refund_due")
+        .order("refund_due_at")
+        .limit(LIMIT),
+      supabase
+        .from("returns")
+        .select(`${RETURN_COLUMNS}, responded_at, parcels:shipments (id)`)
+        .in("status", ["approved", "collecting"])
+        .eq("needs_collection", true)
+        .order("responded_at")
+        .limit(LIMIT),
+    ]);
+  // Returns with a Boxy parcel move on by themselves; the rest were
+  // collected by hand and support marks them back at the shop.
+  const byHand = (coming ?? []).filter((item) => item.parcels.length === 0);
 
   const photoUrls = new Map(
     await Promise.all(
@@ -139,6 +150,25 @@ const ReturnsPage = async () => {
                   {canWrite ? (
                     <DecideReturnForm fault={item.fault} id={item.id} />
                   ) : null}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="grid gap-3" id="by-hand">
+          <h2 className="font-semibold text-lg">{t("byHandTitle")}</h2>
+          <p className="text-muted-foreground text-sm">
+            {t("byHandDescription")}
+          </p>
+          {byHand.length === 0 ? (
+            <EmptyState title={t("byHandEmpty")} />
+          ) : (
+            <ul className="grid gap-3">
+              {byHand.map((item) => (
+                <li className="grid gap-3 rounded-lg border p-4" key={item.id}>
+                  {heading(item)}
+                  {canWrite ? <ReceivedForm id={item.id} /> : null}
                 </li>
               ))}
             </ul>

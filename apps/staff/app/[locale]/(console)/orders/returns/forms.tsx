@@ -3,7 +3,11 @@
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import { SelectField, TextField } from "@/components/admin/fields";
-import { decideReturn, markReturnRefunded } from "../actions";
+import {
+  decideReturn,
+  markReturnReceived,
+  markReturnRefunded,
+} from "../actions";
 
 const FAULTS = ["shop", "customer", "the_idea"] as const;
 
@@ -68,6 +72,17 @@ export const RefundedForm = ({ id }: { readonly id: string }) => {
         wrapperClassName="min-w-48 flex-1"
       />
       <SubmitButton size="sm">{t("markRefunded")}</SubmitButton>
+    </ActionForm>
+  );
+};
+
+/** A return The IDEA collected by hand is back at the shop. */
+export const ReceivedForm = ({ id }: { readonly id: string }) => {
+  const t = useTranslations("admin.orders.returns");
+  return (
+    <ActionForm action={markReturnReceived}>
+      <input name="id" type="hidden" value={id} />
+      <SubmitButton size="sm">{t("markReceived")}</SubmitButton>
     </ActionForm>
   );
 };
