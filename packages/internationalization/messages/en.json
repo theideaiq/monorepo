@@ -1329,6 +1329,58 @@
         "cancelCashDescription": "The order is cancelled. This can't be undone.",
         "guardianPending": "This order is waiting for your guardian's approval. You'll pay once they approve it.",
         "guardianDeclined": "Your guardian declined this order, so it was cancelled."
+      },
+      "returns": {
+        "return": "Return",
+        "title": "Return {name}",
+        "description": "Tell us why. Returns are open for 14 days after delivery.",
+        "reason": "Reason",
+        "chooseReason": "Choose a reason",
+        "reasons": {
+          "wrong_item": "Wrong item",
+          "faulty": "Faulty or damaged",
+          "not_as_described": "Not as described",
+          "changed_mind": "Changed my mind",
+          "never_arrived": "It never arrived"
+        },
+        "quantity": "How many",
+        "details": "Details (optional)",
+        "photos": "Photos of the item",
+        "addPhoto": "Add photos",
+        "removePhoto": "Remove photo",
+        "unopened": "The item is unopened, in its original packaging.",
+        "policy": "Return delivery is free for wrong or faulty items; for a change of mind it comes out of your refund. <link>Returns policy</link>",
+        "send": "Ask to return",
+        "sending": "Sending…",
+        "failed": "We couldn't send your return. Check the details and try again.",
+        "listTitle": "Returns",
+        "listDescription": "Where each return is.",
+        "number": "Return R-{number}",
+        "status": {
+          "requested": "Waiting for the seller",
+          "disputed": "Under review",
+          "approved": "Accepted",
+          "collecting": "On its way back",
+          "received": "Being checked",
+          "refund_due": "Refund on its way",
+          "refunded": "Refunded",
+          "rejected": "Not accepted",
+          "cancelled": "Withdrawn"
+        },
+        "next": {
+          "requested": "The seller has 48 hours to answer; after that it's accepted.",
+          "disputed": "The IDEA is deciding, within 48 hours.",
+          "approved": "Our courier will collect the item from you.",
+          "collecting": "The item is on its way back.",
+          "received": "The seller checks the item within 48 hours.",
+          "refund_due": "We're sending your refund today.",
+          "refunded": "Your refund has been sent.",
+          "rejected": "This return wasn't accepted.",
+          "cancelled": "You withdrew this return."
+        },
+        "refund": "Refund: {amount} and {bulbs} Bulbs",
+        "withdraw": "Withdraw",
+        "withdrawFailed": "We couldn't withdraw this return."
       }
     },
     "plus": {

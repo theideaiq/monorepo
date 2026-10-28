@@ -73,23 +73,28 @@ Iraq's Consumer Protection Law requires a warranty for goods that need one; wher
 
 ## 9. How to return an item
 
-1. Contact us from [Help](/help#contact), by email or through Droid, with your order number, the item and the reason.
-2. We tell you how to send it back: collected by our courier. Please don't send items back without contacting us first, and don't send a shop's item to the shop directly.
-3. We check the item when it arrives and tell you the result.
+1. In Pass → Orders, open the order and choose **Return** next to the item. Give the reason and, unless the parcel never arrived, photos of the item. For a change of mind, confirm the item is unopened.
+2. The seller has 48 hours to accept or dispute the return; if they don't answer, it is accepted. If they dispute it, The IDEA decides within 48 hours. Wrong items are accepted at once.
+3. Once it's accepted, our courier collects the item from you. Please don't send items back yourself, and don't send a shop's item to the shop directly.
+4. The seller checks the item within 48 hours of getting it back, and we refund you the same day.
 
-**Who pays the return delivery:** you do, unless the item is faulty, wrong or not as described; then we do.
+You can withdraw a return in Pass → Orders until the courier collects it.
+
+**Delivery costs:** refusing a parcel at the door costs nothing. After you accept it, return delivery is free when the item is wrong or faulty; for a change of mind, its cost comes out of your refund.
+
+**Refused cash orders:** after 3 cash orders refused or not received at the door, orders on your Pass are paid online.
 
 ## 10. Refunds
 
-Once a return is approved, we refund the price of the item, and the delivery fee when the item was faulty, wrong or not as described.
+Once a returned item has been checked, we refund your share of what you paid for it, less the return delivery for a change of mind.
 
 - **Paid online with Wayl:** the refund goes back to the card or wallet you paid with. Your bank or wallet may take a few days more to show it.
-- **Paid in cash:** we refund you in cash or by transfer, as agreed with you.
-- **As Bulbs, if you choose:** instead of money, you can take the refund as Bulbs (1 Bulb = 100 IQD), usable right away.
-- **Bulbs you spent** on the order come back as Bulbs.
-- **Bulbs the order earned** are cancelled, and so are any invite rewards on it (see [Rewards](/legal/rewards)).
+- **Paid in cash:** we refund you by ZainCash, Qi or bank transfer.
+- **Refunds always go back the way you paid;** we don't give store credit.
+- **Bulbs you spent** on the item come back as Bulbs.
+- **Bulbs the item earned** are cancelled, and so are any invite rewards on it (see [Rewards](/legal/rewards)).
 
-We aim to send refunds within 10 business days of approving them.
+We send refunds the same day the return is complete.
 
 ## 11. Items from shops
 
