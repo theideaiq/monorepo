@@ -563,6 +563,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first"); orders staff or scheduled jobs make (Plus swaps) aren't
   checked, since the Plus home they go to is. Off until Twilio is
   configured. Part 2 adds the API endpoints and the verify step.
+- 2026-10-28: Phone verification, master brief step 3. The check
+  already covers every delivery order (cash or paid online), rentals and
+  kits included, and Plus homes; codes now go to Iraqi mobiles only
+  (+964 7…), other numbers get "Codes go to Iraqi mobile numbers only".
+  It turns on with Staff → Catalogue → Settings once Twilio Verify is set
+  up (launch checklist).
 - 2026-10-28: Owner decisions on selling and related points
   (`docs/program/decisions-2026-10-28.md`, given in full). They replace
   the earlier open questions and, where they differ, the v2 brief: Bulbs

@@ -147,6 +147,20 @@ describe("phone endpoints", () => {
     expect(result.body).toEqual({ error: "invalid_phone", ok: false });
   });
 
+  test("send codes to Iraqi mobiles only", async () => {
+    const d = deps();
+    const result = await handlePhoneStart(
+      post({ phone: "+962791234567" }),
+      USER,
+      d
+    );
+    expect(result).toEqual({
+      body: { error: "not_iraqi", ok: false },
+      status: 400,
+    });
+    expect(d.verify?.start).not.toHaveBeenCalled();
+  });
+
   test("apply our own limit per Pass", async () => {
     const limit = vi.fn(() => Promise.resolve(false));
     const result = await handlePhoneStart(

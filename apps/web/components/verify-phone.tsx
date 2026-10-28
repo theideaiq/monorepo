@@ -25,6 +25,7 @@ type PhoneProblem =
   | "expired"
   | "invalid_phone"
   | "not_configured"
+  | "not_iraqi"
   | "too_many"
   | "unavailable"
   | "wrong_code";
@@ -33,6 +34,7 @@ const PHONE_PROBLEMS = new Set<string>([
   "expired",
   "invalid_phone",
   "not_configured",
+  "not_iraqi",
   "too_many",
   "wrong_code",
 ]);
