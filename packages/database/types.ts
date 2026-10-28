@@ -7103,7 +7103,49 @@ export type Database = {
           unit_price: number;
         }[];
       };
+      seller_parcels_back: {
+        Args: { shop: string };
+        Returns: {
+          customer: string;
+          items: string;
+          order_number: string;
+          returned_at: string;
+          shipment_id: string;
+          tracking_code: string;
+        }[];
+      };
       seller_plan_price: { Args: { billing: string }; Returns: number };
+      seller_returns: {
+        Args: { shop: string };
+        Returns: {
+          attributes: Json;
+          check_by: string;
+          collection_fee: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          condition_note: string;
+          condition_ok: boolean;
+          created_at: string;
+          customer: string;
+          details: string;
+          fault: Database["public"]["Enums"]["return_fault"];
+          name_ar: string;
+          name_en: string;
+          number: number;
+          order_number: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string;
+          refund_amount: number;
+          respond_by: string;
+          return_id: string;
+          shop_note: string;
+          staff_note: string;
+          status: Database["public"]["Enums"]["return_status"];
+          unit_price: number;
+          unopened: boolean;
+        }[];
+      };
       send_quote: { Args: { quote: string }; Returns: undefined };
       set_guardian_plus: {
         Args: { allow: boolean; link: string };

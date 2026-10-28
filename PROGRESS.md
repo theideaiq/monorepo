@@ -553,6 +553,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: Selling, return lists for shops
+  (`20270126000000_return_lists.sql`). `seller_returns(shop)` lists a
+  shop's returns with the item and the customer as "first name · area",
+  and `seller_parcels_back(shop)` the parcels refused at the door that it
+  must confirm; shops can't read orders, lines or parcels themselves.
 - 2026-10-28: Selling, Make an offer, the schema
   (`20270125000000_offers.sql`; master brief step 5, section 14 without
   auctions). A listing (seller, variant, condition) takes offers when its
