@@ -1,0 +1,22 @@
+---
+title: "Show the person's card"
+description: "The Pass card as an image or JSON, with the card scope."
+---
+
+With the `card` scope, the access token can fetch the person's card:
+
+```bash
+curl https://api.theideaiq.com/oidc/card \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
+
+- The answer is an **SVG image** of the brand's card: name, member
+  number, The IDEA Plus plan, the Student badge and "member since".
+  Add `?lang=ar` for Arabic.
+- Send `Accept: application/json` for the same details as JSON.
+- It's drawn **without** the scannable code: a copy on a website must never
+  pass a door check. For the live code, use [the live card](/card/live-card).
+
+Fetch it from your server while the access token is valid (1 hour), and
+serve or cache it yourself. The person can always open the live card at
+[theideaiq.com/pass](https://theideaiq.com/pass) or in Google Wallet.

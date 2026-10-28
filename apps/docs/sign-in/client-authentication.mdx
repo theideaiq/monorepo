@@ -1,0 +1,40 @@
+---
+title: "Client authentication"
+description: "Your client secret, or signed assertions with your own keys."
+---
+
+The token endpoint and the card check take:
+
+- **`client_secret_basic`** (the default): `Authorization: Basic base64(client_id:client_secret)`.
+- **`client_secret_post`:** `client_id` and `client_secret` in the body.
+- **`private_key_jwt`:** a signed assertion instead of the secret.
+
+Keep the secret on your server. A mobile app calls your own backend, which
+calls The IDEA.
+
+## Rotating the secret
+
+In Developers, **Rotate the secret** shows a new one. The previous one keeps
+working for 24 hours (or stops at once, if you choose), so you can deploy
+the new one first; you can stop it early.
+
+## `private_key_jwt`
+
+Upload your public keys in Developers (a JWK set of up to 5 EC P-256 or
+RSA 2048+ keys). Then sign a JWT instead of sending the secret:
+
+```text
+client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+client_assertion=<JWT>
+```
+
+The JWT:
+
+- signed with ES256 or RS256;
+- `iss` and `sub`: your client id;
+- `aud`: the issuer (`https://api.theideaiq.com/oidc`) or the endpoint
+  (`…/oidc/token`, `…/oidc/card/check`);
+- at most 5 minutes from `iat` to `exp`;
+- a fresh `jti` each time (each is accepted once).
+
+The card check takes the same two fields in its JSON body.

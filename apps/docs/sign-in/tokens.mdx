@@ -1,0 +1,42 @@
+---
+title: "Tokens"
+description: "Exchanging the code, refreshing, and what each token is for."
+---
+
+## Exchanging the code
+
+`POST https://api.theideaiq.com/oidc/token` (form-encoded), authenticated
+as your app ([client authentication](/sign-in/client-authentication)):
+
+| Field | |
+| --- | --- |
+| `grant_type` | `authorization_code` |
+| `code` | From your return address |
+| `redirect_uri` | The same return address |
+| `code_verifier` | Your PKCE verifier |
+
+The answer:
+
+| | |
+| --- | --- |
+| `id_token` | A JWT (ES256, 1 hour) with the claims for the scopes shared |
+| `access_token` | 1 hour, for [userinfo](/sign-in/scopes#id-token-and-userinfo) and [the card](/card/show) |
+| `token_type` | `Bearer` |
+| `expires_in` | Seconds |
+| `scope` | What the person actually shared |
+| `refresh_token` | With `offline_access` only |
+
+## Refresh tokens
+
+With `offline_access`, send `grant_type=refresh_token` and
+`refresh_token=…` (authenticated as your app) to get a new access token,
+ID token and refresh token. Each refresh token works **once**: use the new
+one each time. They last 90 days, and disconnecting your app in the
+person's Settings ends them.
+
+## Errors
+
+The token endpoint answers OAuth errors as JSON (`{ "error": "invalid_grant" }`):
+`invalid_client` (wrong secret or assertion), `invalid_grant` (a used,
+expired or unknown code or refresh token, or a wrong verifier),
+`invalid_request`, `unsupported_grant_type`, and `temporarily_unavailable` (503) while sign-in is switched off.

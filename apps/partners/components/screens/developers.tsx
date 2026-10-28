@@ -132,6 +132,14 @@ const Guide = ({ apiUrl }: Urls) => {
             <p>{t("guide.keys")}</p>
           </div>
         </details>
+        <a
+          className="justify-self-start font-medium underline underline-offset-2"
+          href={apiUrl}
+          rel="noopener"
+          target="_blank"
+        >
+          {t("guide.docs")}
+        </a>
       </CardContent>
     </Card>
   );

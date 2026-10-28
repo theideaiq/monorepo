@@ -111,7 +111,13 @@ incidents) is in `docs/platform`.
 - `apps/api` — webhooks (Wayl, Telegram), cron jobs, the calendar feed and
   privileged endpoints, including `app/admin/*` for Staff and the
   website's contact form and status badge. The only app with secrets.
-- `apps/docs` — the documentation site.
+- `apps/docs` — The IDEA's developer docs (Mintlify, `docs.json`): Sign in
+  with The IDEA Pass, the Pass card, registering an app and the API
+  reference (`api-reference/openapi.json`). Mintlify hosts them and
+  `apps/api` serves them at the root of `api.theideaiq.com` by fallback
+  rewrites (`lib/docs.ts`, `DOCS_URL`); the API keeps `/oidc/*`,
+  `/webhooks/*`, `/cron/*` and its other paths, and new endpoints go under
+  `/v1/*`. `bunx mint dev` previews them, `bunx mint validate` checks them.
 - `packages/commerce` (catalog, prices, cart totals) and `packages/droid`
   (Telegram bot) are The IDEA's own packages; the rest come from the template.
 - `packages/*` — shared code, imported as `@repo/<name>`. `@repo` is a fixed
@@ -276,6 +282,12 @@ for any schema change; it also runs the structure and advisor checks.
   function, `security_invoker` views, no `user_metadata` in policies, no
   extensions or materialized views in `public`, no duplicate indexes.
   Never edit an applied migration; fix findings in a new one.
+- **Code ships after its schema.** The apps deploy as soon as a pull
+  request merges, but the migration runs only after CI passes on `main`
+  (minutes later). Code that reads a new column, table or function must not
+  merge with it: ship the migration first, then the code that uses it (or
+  make the code work without it). A query naming a missing column fails for
+  everyone until the migration lands.
 - **SECURITY DEFINER bodies live in `private`.** An RPC the apps call is a
   SECURITY DEFINER function in `private` that checks the caller itself
   (`private.has_staff_role`, `private.has_org_role`, …); the name in

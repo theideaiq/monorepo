@@ -181,6 +181,13 @@ decisions with a date.
 
 ## Launch checklist (needs an owner with access)
 
+- [ ] **Developer docs:** connect `apps/docs` to Mintlify (mintlify.com →
+      new deployment from GitHub, monorepo path `apps/docs`; or `bunx mint
+      login` then publish), and in its Custom domain settings turn on
+      "Host at" `api.theideaiq.com` with no base path. Then set `DOCS_URL`
+      to the deployment's `https://<subdomain>.mintlify.site` on the
+      theideaiq-api Vercel project (Production) and redeploy it.
+
 - [ ] **Drafts:** about 140 drafts remain (44 with copies but no photo,
       the rest without copies). Photograph and publish them, or delete
       them, in Staff (Catalog, status Draft).
@@ -371,6 +378,25 @@ steps need Xcode, Android Studio and the store/Firebase accounts
       2026-10-25.)
 
 ## Decisions
+
+- 2026-10-28: Program Revision v2, item 5: developer docs at
+  `api.theideaiq.com`. `apps/docs` (Mintlify, now `docs.json`) holds The
+  IDEA's own docs: Introduction, Quickstart, Sign in with The IDEA Pass
+  (overview, scopes, consent, tokens, client authentication), the Pass card
+  (showing it, the live card on your site, door checks), registering an app,
+  and an API reference from `api-reference/openapi.json`. The Mintlify
+  starter content is gone. `apps/api` serves the docs at its root with
+  fallback rewrites (`lib/docs.ts`) once `DOCS_URL` is set: every API route
+  answers first, and the API's own path prefixes (`/oidc`, `/webhooks`,
+  `/cron`, `/v1`, …) never fall through to the docs. No `docs.theideaiq.com`.
+  Partner bots get their page with Stage 3, when they exist. Owner steps are
+  in the launch checklist.
+- 2026-10-28: Code ships after its schema. Merging #1029 deployed the
+  website about seven minutes before its migration ran, and Your Pass
+  showed "We couldn't load this page" until it did: the organization query
+  named the new `organizations.features` column. Code that reads a new
+  column, table or function now merges after its migration (AGENTS.md,
+  Database standards).
 
 - 2026-10-28: Program Revision v2, item 4: Partners and Staff menus.
   - **Partners:** a sidebar with the organization switcher at the top,

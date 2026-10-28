@@ -1,94 +1,380 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
+    "title": "The IDEA API",
+    "version": "1.0",
+    "description": "Sign in with The IDEA Pass (OpenID Connect) and the Pass card."
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.theideaiq.com"
     }
   ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
-  "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+  "components": {
+    "securitySchemes": {
+      "clientBasic": {
+        "type": "http",
+        "scheme": "basic",
+        "description": "Your client id and client secret (client_secret_basic). The token endpoint and the card check also take client_secret_post and private_key_jwt fields."
+      },
+      "accessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "An access token from the token endpoint (1 hour)."
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
           }
-        ],
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "Student": {
+        "type": "object",
+        "properties": {
+          "verified": {
+            "type": "boolean"
+          },
+          "university": {
+            "type": "string",
+            "example": "auib"
+          },
+          "until": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "verified"
+        ]
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "formatted": {
+            "type": "string"
+          },
+          "street_address": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          }
+        }
+      },
+      "Claims": {
+        "type": "object",
+        "description": "The claims for the scopes the person shared; others are absent.",
+        "properties": {
+          "sub": {
+            "type": "string",
+            "description": "The person's id at your site"
+          },
+          "name": {
+            "type": "string"
+          },
+          "given_name": {
+            "type": "string"
+          },
+          "family_name": {
+            "type": "string"
+          },
+          "locale": {
+            "type": "string",
+            "enum": [
+              "ar",
+              "en"
+            ]
+          },
+          "picture": {
+            "type": "string",
+            "format": "uri"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "email_verified": {
+            "type": "boolean"
+          },
+          "member_number": {
+            "type": "integer"
+          },
+          "member_since": {
+            "type": "string",
+            "format": "date"
+          },
+          "student": {
+            "$ref": "#/components/schemas/Student"
+          },
+          "student_email": {
+            "type": "string",
+            "format": "email"
+          },
+          "student_email_verified": {
+            "type": "boolean"
+          },
+          "adult": {
+            "type": "boolean"
+          },
+          "plus": {
+            "type": "boolean"
+          },
+          "plus_plan": {
+            "type": "string"
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+9647700000000"
+          },
+          "phone_number_verified": {
+            "type": "boolean"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "required": [
+          "sub"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/oidc/.well-known/openid-configuration": {
+      "get": {
+        "summary": "Discovery document",
+        "description": "The OpenID Connect discovery document: endpoints, scopes, claims and supported methods.",
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "The discovery document",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sign in with The IDEA Pass is switched off",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oidc/jwks": {
+      "get": {
+        "summary": "Signing keys",
+        "description": "The public keys (JWK set, ES256) that sign ID tokens.",
+        "responses": {
+          "200": {
+            "description": "A JWK set",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "keys": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+          }
+        }
+      }
+    },
+    "/oidc/token": {
+      "post": {
+        "summary": "Token",
+        "description": "Exchange an authorization code, or a refresh token, for tokens. Authenticate as your app.",
+        "security": [
+          {
+            "clientBasic": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "authorization_code",
+                      "refresh_token"
+                    ]
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "With authorization_code"
+                  },
+                  "redirect_uri": {
+                    "type": "string",
+                    "description": "With authorization_code: the same return address"
+                  },
+                  "code_verifier": {
+                    "type": "string",
+                    "description": "With authorization_code: your PKCE verifier"
+                  },
+                  "refresh_token": {
+                    "type": "string",
+                    "description": "With refresh_token"
+                  },
+                  "client_id": {
+                    "type": "string",
+                    "description": "client_secret_post or private_key_jwt"
+                  },
+                  "client_secret": {
+                    "type": "string",
+                    "description": "client_secret_post"
+                  },
+                  "client_assertion_type": {
+                    "type": "string",
+                    "description": "private_key_jwt: urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+                  },
+                  "client_assertion": {
+                    "type": "string",
+                    "description": "private_key_jwt: the signed JWT"
+                  }
+                },
+                "required": [
+                  "grant_type"
+                ]
               }
             }
           }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Tokens",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "type": "object",
+                  "properties": {
+                    "id_token": {
+                      "type": "string"
+                    },
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string",
+                      "enum": [
+                        "Bearer"
+                      ]
+                    },
+                    "expires_in": {
+                      "type": "integer"
+                    },
+                    "scope": {
+                      "type": "string",
+                      "description": "What the person actually shared"
+                    },
+                    "refresh_token": {
+                      "type": "string",
+                      "description": "With offline_access"
+                    }
+                  },
+                  "required": [
+                    "id_token",
+                    "access_token",
+                    "token_type",
+                    "expires_in",
+                    "scope"
+                  ]
                 }
               }
             }
           },
           "400": {
-            "description": "unexpected error",
+            "description": "invalid_grant, invalid_request or unsupported_grant_type",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "invalid_client",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "temporarily_unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
                 }
               }
             }
@@ -96,99 +382,209 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/oidc/userinfo": {
+      "get": {
+        "summary": "Userinfo",
+        "description": "The person's claims for the scopes they shared, worked out now.",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Claims",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Claims"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "invalid_token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oidc/card": {
+      "get": {
+        "summary": "The person's card",
+        "description": "The Pass card as an SVG image, drawn without the scannable code, or as JSON with Accept: application/json. Needs the card scope.",
+        "security": [
+          {
+            "accessToken": []
+          }
+        ],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
+            "name": "lang",
+            "in": "query",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string",
+              "enum": [
+                "ar",
+                "en"
+              ]
             }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "200": {
+            "description": "The card",
+            "content": {
+              "image/svg+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           },
-          "400": {
-            "description": "unexpected error",
+          "401": {
+            "description": "invalid_token",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
                 }
               }
             }
           }
         }
       }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
+    },
+    "/oidc/card/check": {
+      "post": {
+        "summary": "Check a Pass card",
+        "description": "Check a scanned live card (its QR code reads IDEA:<member number>:<6 digits>). Authenticate as your app; call it from your server.",
+        "security": [
+          {
+            "clientBasic": []
           }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "IDEA:100007:123456"
+                  }
+                },
+                "required": [
+                  "code"
+                ]
               }
             }
           }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
+        },
+        "responses": {
+          "200": {
+            "description": "The answer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "valid": {
+                      "type": "boolean"
+                    },
+                    "sub": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Your id for the person, or null if they never signed in to your app"
+                    },
+                    "given_name": {
+                      "type": "string"
+                    },
+                    "member_number": {
+                      "type": "integer"
+                    },
+                    "student": {
+                      "$ref": "#/components/schemas/Student"
+                    },
+                    "adult": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "valid"
+                  ]
+                }
+              }
+            }
           },
-          "message": {
-            "type": "string"
+          "401": {
+            "description": "invalid_client",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "too_many_checks: 30 failed checks in 10 minutes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }

@@ -1,33 +1,16 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "API reference"
+description: "The endpoints of api.theideaiq.com that partners call."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+Base URL: `https://api.theideaiq.com`.
 
-## Welcome
+- **OpenID Connect** (`/oidc/…`): discovery, keys, the token endpoint and
+  userinfo. See [Sign in with The IDEA Pass](/sign-in/overview).
+- **The Pass card** (`/oidc/card`, `/oidc/card/check`): the person's card
+  with an access token, and door checks with your app's credentials.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
-
-## Authentication
-
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+Errors are JSON: OAuth errors (`{ "error": "invalid_grant" }`) on the
+token endpoint, `invalid_token` (401, with `WWW-Authenticate`) when an
+access token is missing or expired. New endpoints will be added under
+`/v1/…`.

@@ -51,6 +51,7 @@
     "BETTERSTACK_*",
     "BOXY_*",
     "CRON_SECRET",
+    "DOCS_URL",
     "FCM_SERVICE_ACCOUNT",
     "GOOGLE_WALLET_*",
     "PASS_OIDC_*",
