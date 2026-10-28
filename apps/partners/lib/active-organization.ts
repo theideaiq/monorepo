@@ -2,7 +2,7 @@ const STORAGE_KEY = "active-organization";
 
 /**
  * The organization the user last worked in. Only a preference: the app
- * checks it against the user's memberships (RLS decides what is visible).
+ * checks it against the user's organizations (RLS decides what is visible).
  */
 export const readActiveOrganization = () => {
   try {

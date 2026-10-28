@@ -8,7 +8,7 @@
 import type { Database } from "@repo/database";
 import { createClient } from "@supabase/supabase-js";
 import { beforeAll, describe, expect, test } from "vitest";
-import { listMemberships, pickActiveOrganization } from "./organizations";
+import { listMyOrganizations, pickActiveOrganization } from "./organizations";
 import { sendEmailOtp, verifyEmailOtp } from "./otp";
 
 const url = process.env.API_URL ?? "http://127.0.0.1:54321";
@@ -97,9 +97,9 @@ describe.skipIf(!(process.env.SUPABASE_INTEGRATION && publishableKey))(
       );
       expect(error).toBeNull();
 
-      const memberships = await listMemberships(supabase, userId);
+      const organizations = await listMyOrganizations(supabase, userId);
       expect(
-        pickActiveOrganization(memberships, organization?.id)
+        pickActiveOrganization(organizations, organization?.id)
       ).toMatchObject({
         role: "owner",
         slug,

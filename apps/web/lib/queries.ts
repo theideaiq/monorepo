@@ -1,6 +1,6 @@
 "use client";
 
-import { listMemberships } from "@repo/auth/organizations";
+import { listMyOrganizations } from "@repo/auth/organizations";
 import { useAuth } from "@repo/auth/provider";
 import { useQuery } from "@tanstack/react-query";
 
@@ -21,7 +21,7 @@ export const queryKeys = {
   events: ["events"] as const,
   invitations: (userId: string) => ["invitations", userId] as const,
   invites: (userId: string) => ["invites", userId] as const,
-  memberships: (userId: string) => ["memberships", userId] as const,
+  myOrganizations: (userId: string) => ["my-organizations", userId] as const,
   myReview: (productId: string, userId: string) =>
     ["reviews", "mine", productId, userId] as const,
   myRsvps: (userId: string) => ["rsvps", userId] as const,
@@ -81,12 +81,12 @@ export const unwrap = <T>({ data, error }: { data: T; error: unknown }): T => {
   return data;
 };
 
-export const useMemberships = () => {
+export const useMyOrganizations = () => {
   const { supabase, user } = useAuth();
   return useQuery({
     enabled: Boolean(user),
-    queryFn: () => listMemberships(supabase, requireUserId(user?.id)),
-    queryKey: queryKeys.memberships(user?.id ?? ""),
+    queryFn: () => listMyOrganizations(supabase, requireUserId(user?.id)),
+    queryKey: queryKeys.myOrganizations(user?.id ?? ""),
   });
 };
 

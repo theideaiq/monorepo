@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  listMemberships,
+  listMyOrganizations,
+  type MyOrganization,
   type OrganizationFeature,
-  type OrganizationMembership,
 } from "@repo/auth/organizations";
 import { useAuth } from "@repo/auth/provider";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -21,7 +21,7 @@ export const queryKeys = {
   deliveryZones: ["delivery-zones"] as const,
   events: ["events"] as const,
   invitations: (userId: string) => ["invitations", userId] as const,
-  memberships: (userId: string) => ["memberships", userId] as const,
+  myOrganizations: (userId: string) => ["my-organizations", userId] as const,
   myReview: (productId: string, userId: string) =>
     ["reviews", "mine", productId, userId] as const,
   myRsvps: (userId: string) => ["rsvps", userId] as const,
@@ -77,12 +77,12 @@ export const unwrap = <T>({ data, error }: { data: T; error: unknown }): T => {
   return data;
 };
 
-export const useMemberships = () => {
+export const useMyOrganizations = () => {
   const { supabase, user } = useAuth();
   return useQuery({
     enabled: Boolean(user),
-    queryFn: () => listMemberships(supabase, requireUserId(user?.id)),
-    queryKey: queryKeys.memberships(user?.id ?? ""),
+    queryFn: () => listMyOrganizations(supabase, requireUserId(user?.id)),
+    queryKey: queryKeys.myOrganizations(user?.id ?? ""),
   });
 };
 
@@ -219,9 +219,7 @@ export const usePlusPayments = (refetchInterval?: number | false) => {
 };
 
 /** Switches a section of Partners on or off (owners and admins). */
-export const useSetOrganizationFeature = (
-  organization: OrganizationMembership
-) => {
+export const useSetOrganizationFeature = (organization: MyOrganization) => {
   const { supabase } = useAuth();
   const queryClient = useQueryClient();
   return useMutation({
@@ -244,6 +242,6 @@ export const useSetOrganizationFeature = (
       }
     },
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["memberships"] }),
+      queryClient.invalidateQueries({ queryKey: ["my-organizations"] }),
   });
 };

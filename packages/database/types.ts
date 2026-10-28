@@ -4467,35 +4467,6 @@ export type Database = {
       };
     };
     Views: {
-      memberships: {
-        Row: {
-          created_at: string | null;
-          organization_id: string | null;
-          role: Database["public"]["Enums"]["org_role"] | null;
-          user_id: string | null;
-        };
-        Insert: {
-          created_at?: string | null;
-          organization_id?: string | null;
-          role?: Database["public"]["Enums"]["org_role"] | null;
-          user_id?: string | null;
-        };
-        Update: {
-          created_at?: string | null;
-          organization_id?: string | null;
-          role?: Database["public"]["Enums"]["org_role"] | null;
-          user_id?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "organization_members_organization_id_fkey";
-            columns: ["organization_id"];
-            isOneToOne: false;
-            referencedRelation: "organizations";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       product_ratings: {
         Row: {
           average: number | null;

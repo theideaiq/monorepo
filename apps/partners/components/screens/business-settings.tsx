@@ -45,7 +45,7 @@ const OrganizationSettings = () => {
     onError: (mutationError) => setError(toOrganizationError(mutationError)),
     onSuccess: async () => {
       setSaved(true);
-      await queryClient.invalidateQueries({ queryKey: ["memberships"] });
+      await queryClient.invalidateQueries({ queryKey: ["my-organizations"] });
     },
   });
 

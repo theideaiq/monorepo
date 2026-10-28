@@ -9,7 +9,7 @@ import { authCookieOptions } from "./cookies";
 import { keys } from "./keys";
 import {
   ACTIVE_ORGANIZATION_COOKIE,
-  listMemberships,
+  listMyOrganizations,
   pickActiveOrganization,
 } from "./organizations";
 
@@ -58,7 +58,7 @@ export const currentUser = cache(async () => {
 });
 
 /**
- * The caller's identity and active organization, resolved from memberships
+ * The caller's identity and active organization, resolved from organization_members
  * (never from user-editable metadata). Cached per request.
  */
 export const auth = cache(async () => {
@@ -73,7 +73,7 @@ export const auth = cache(async () => {
 
   const cookieStore = await cookies();
   const active = pickActiveOrganization(
-    await listMemberships(supabase, userId),
+    await listMyOrganizations(supabase, userId),
     cookieStore.get(ACTIVE_ORGANIZATION_COOKIE)?.value
   );
 

@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  type OrganizationMembership,
+  type MyOrganization,
   pickActiveOrganization,
 } from "@repo/auth/organizations";
 import { createContext, type ReactNode, use, useMemo, useState } from "react";
@@ -9,15 +9,15 @@ import {
   readActiveOrganization,
   rememberActiveOrganization,
 } from "@/lib/active-organization";
-import { useMemberships } from "@/lib/queries";
+import { useMyOrganizations } from "@/lib/queries";
 import { ErrorState, FullPageSpinner } from "./states";
 
 interface OrganizationContextValue {
   /** The organization the user works in, or null without any. */
-  active: OrganizationMembership | null;
+  active: MyOrganization | null;
   /** True for owners and admins of the active organization. */
   canManage: boolean;
-  organizations: OrganizationMembership[];
+  organizations: MyOrganization[];
   select: (organizationId: string) => void;
 }
 
@@ -36,9 +36,9 @@ export const OrganizationProvider = ({
 }: {
   readonly children: ReactNode;
 }) => {
-  const memberships = useMemberships();
+  const myOrganizations = useMyOrganizations();
   const [preferredId, setPreferredId] = useState(readActiveOrganization);
-  const organizations = memberships.data;
+  const organizations = myOrganizations.data;
 
   const value = useMemo(() => {
     if (!organizations) {
@@ -56,8 +56,8 @@ export const OrganizationProvider = ({
     };
   }, [organizations, preferredId]);
 
-  if (memberships.isError) {
-    return <ErrorState onRetry={() => memberships.refetch()} />;
+  if (myOrganizations.isError) {
+    return <ErrorState onRetry={() => myOrganizations.refetch()} />;
   }
 
   if (!value) {

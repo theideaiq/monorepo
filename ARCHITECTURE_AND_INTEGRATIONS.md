@@ -646,7 +646,7 @@ has. For each one, the user either:
   members; RLS only lets owners grant the owner role), or
 - **deletes the organization**, after typing its address. This calls
   `POST /organizations/delete` in `apps/api`. The delete runs as the user, so
-  the owners-only policy applies. Projects, memberships, invitations and the
+  the owners-only policy applies. Projects, organization members, invitations and the
   subscription go with it, payment records are kept with the organization
   cleared, and the `org-files/<organization id>/` folder is removed.
 
@@ -658,7 +658,7 @@ account" or «احذف حسابي»). `POST /account/delete` then:
 2. removes the user's `avatars/<user id>/` folder (storage objects have no
    foreign key to users);
 3. deletes the auth user with the admin API. That cascades to the profile
-   and memberships and clears `created_by`, `invited_by` and
+   and organization members and clears `created_by`, `invited_by` and
    `payments.user_id`.
 
 The database is the final guard: `private.protect_last_owner` refuses to
@@ -691,7 +691,7 @@ Current schema:
 
 | Migration | Contents |
 | --- | --- |
-| `…_tenancy.sql` | `profiles`, `organizations`, `memberships`, `invitations`, `projects`; RLS helpers in the `private` schema; `create_organization` and `accept_invitation` RPCs; last-owner protection |
+| `…_tenancy.sql` | `profiles`, `organizations`, `memberships` (renamed `organization_members` in `20270119000000_organization_members.sql`), `invitations`, `projects`; RLS helpers in the `private` schema; `create_organization` and `accept_invitation` RPCs; last-owner protection |
 | `…_billing.sql` | `plans`, `subscriptions`, `payments`, `webhook_events` (idempotency) |
 | `…_storage.sql` | `org-files` (private) and `avatars` (public) buckets with path-based policies |
 | `…_pending_invitations.sql` | `pending_invitations()` RPC for onboarding |

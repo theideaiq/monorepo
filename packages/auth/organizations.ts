@@ -20,7 +20,7 @@ export type OrganizationFeature = (typeof organizationFeatures)[number];
 const isOrganizationFeature = (value: string): value is OrganizationFeature =>
   (organizationFeatures as readonly string[]).includes(value);
 
-export interface OrganizationMembership {
+export interface MyOrganization {
   features: OrganizationFeature[];
   id: string;
   name: string;
@@ -28,13 +28,13 @@ export interface OrganizationMembership {
   slug: string;
 }
 
-/** The user's organizations, oldest membership first (RLS-scoped). */
-export const listMemberships = async (
+/** The user's organizations, oldest first (RLS-scoped). */
+export const listMyOrganizations = async (
   supabase: SupabaseClient<Database>,
   userId: string
-): Promise<OrganizationMembership[]> => {
+): Promise<MyOrganization[]> => {
   const { data, error } = await supabase
-    .from("memberships")
+    .from("organization_members")
     .select("role, organization:organizations (id, name, slug, features)")
     .eq("user_id", userId)
     .order("created_at");
@@ -44,7 +44,7 @@ export const listMemberships = async (
   }
 
   return data.flatMap(({ organization, role }) =>
-    organization && role
+    organization
       ? [
           {
             ...organization,
@@ -59,12 +59,12 @@ export const listMemberships = async (
 /**
  * The organization to act in: the preferred one if the user is a member of
  * it (the cookie is client-controlled, so it is only a preference), otherwise
- * the first membership.
+ * the first one.
  */
 export const pickActiveOrganization = (
-  memberships: OrganizationMembership[],
+  organizations: MyOrganization[],
   preferredId?: string | null
 ) =>
-  memberships.find((membership) => membership.id === preferredId) ??
-  memberships[0] ??
+  organizations.find((organization) => organization.id === preferredId) ??
+  organizations[0] ??
   null;

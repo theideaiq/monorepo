@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { isAuthorizedCronRequest, unauthorized } from "@/lib/cron";
 
 /**
- * Daily: renews the company-paid The IDEA Plus memberships due within three
+ * Daily: renews the company-paid Plus seats due within three
  * days and invoices each company for them (`run_plus_seat_renewals`,
  * migration 20261208000000_team_plus.sql).
  */

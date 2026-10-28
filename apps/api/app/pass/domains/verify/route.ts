@@ -40,13 +40,13 @@ export const POST = async (request: Request) => {
   if (!domain) {
     return json({ error: "not_found" }, 404);
   }
-  const { data: membership } = await admin
-    .from("memberships")
+  const { data: member } = await admin
+    .from("organization_members")
     .select("role")
     .eq("organization_id", domain.organization_id)
     .eq("user_id", session.userId)
     .maybeSingle();
-  if (!(membership?.role && ["owner", "admin"].includes(membership.role))) {
+  if (!(member && ["owner", "admin"].includes(member.role))) {
     return json({ error: "forbidden" }, 403);
   }
   if (domain.verified_at) {

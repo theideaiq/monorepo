@@ -24,7 +24,7 @@ interface Clients {
  * handed over or deleted first; otherwise nothing is changed and the list
  * is returned so the app can help resolve them.
  *
- * Deleting the auth user cascades to the profile and memberships and
+ * Deleting the auth user cascades to the profile and organization_members and
  * clears authorship columns (see the account deletion migration). The
  * avatar folder is removed first, as files have no foreign key to users.
  */
@@ -57,7 +57,7 @@ export type OrganizationDeletion =
 
 /**
  * Deletes an organization and its files. The delete runs as the caller, so
- * the RLS policy decides (owners only); its projects, memberships,
+ * the RLS policy decides (owners only); its projects, organization_members,
  * invitations and subscription go with it, payments are kept with the
  * organization cleared.
  */

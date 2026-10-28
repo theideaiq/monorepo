@@ -96,8 +96,14 @@ describe("delete account", () => {
         [],
       ],
       fromResults: {
-        "memberships.select": { data: [{ user_id: TEAMMATE }], error: null },
-        "memberships.update": { data: [{ user_id: TEAMMATE }], error: null },
+        "organization_members.select": {
+          data: [{ user_id: TEAMMATE }],
+          error: null,
+        },
+        "organization_members.update": {
+          data: [{ user_id: TEAMMATE }],
+          error: null,
+        },
         "profiles.select": {
           data: [{ full_name: "Member B", id: TEAMMATE }],
           error: null,
@@ -119,12 +125,12 @@ describe("delete account", () => {
     expect(calls).toContainEqual({
       args: [{ role: "owner" }],
       method: "update",
-      table: "memberships",
+      table: "organization_members",
     });
     expect(calls).toContainEqual({
       args: ["user_id", TEAMMATE],
       method: "eq",
-      table: "memberships",
+      table: "organization_members",
     });
     expect(fetchMock).not.toHaveBeenCalled();
   });

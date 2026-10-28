@@ -49,7 +49,7 @@ export const CreateOrganizationForm = ({
     onError: (mutationError) => setError(toOrganizationError(mutationError)),
     onSuccess: async (organization) => {
       rememberActiveOrganization(organization.id);
-      await queryClient.invalidateQueries({ queryKey: ["memberships"] });
+      await queryClient.invalidateQueries({ queryKey: ["my-organizations"] });
       onCreated(organization.id);
     },
   });

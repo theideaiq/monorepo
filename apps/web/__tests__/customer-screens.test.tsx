@@ -473,7 +473,7 @@ describe("accounts without organizations", () => {
   test("the app opens without an organization", async () => {
     const db = fakeDb({
       results: {
-        "memberships.select": { data: [], error: null },
+        "organization_members.select": { data: [], error: null },
         "profiles.select": { data: [profile], error: null },
       },
     });
@@ -493,7 +493,7 @@ describe("accounts without organizations", () => {
   test("new accounts go through onboarding first", async () => {
     const db = fakeDb({
       results: {
-        "memberships.select": { data: [], error: null },
+        "organization_members.select": { data: [], error: null },
         "profiles.select": {
           data: [{ ...profile, updated_at: profile.created_at }],
           error: null,

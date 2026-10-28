@@ -11,12 +11,12 @@ export type ApiSession = NonNullable<
  * The caller's role in an organization, or null if they aren't a member.
  * Runs as the user, so Row Level Security decides what they can see.
  */
-export const membershipRole = async (
+export const organizationRole = async (
   session: ApiSession,
   organizationId: string
 ): Promise<OrgRole | null> => {
   const { data } = await session.supabase
-    .from("memberships")
+    .from("organization_members")
     .select("role")
     .eq("organization_id", organizationId)
     .eq("user_id", session.userId)
