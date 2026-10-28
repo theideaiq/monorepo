@@ -27,9 +27,14 @@ export const Price = ({
   return (
     <span className={cn("flex flex-wrap items-baseline gap-x-2", className)}>
       <span className="font-semibold tabular-nums">
-        {from
-          ? t("from", { price: formatPrice(price, locale) })
-          : formatPrice(price, locale)}
+        {from ? (
+          t.rich("from", {
+            amount: (chunks) => <span className="font-mono">{chunks}</span>,
+            price: formatPrice(price, locale),
+          })
+        ) : (
+          <span className="font-mono">{formatPrice(price, locale)}</span>
+        )}
       </span>
       {percent > 0 && compareAtPrice ? (
         <>

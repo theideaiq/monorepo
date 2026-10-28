@@ -64,7 +64,7 @@ const PlanTile = ({ featured }: { featured?: boolean }) => (
     <div className="grid gap-2">
       <h3 className="text-h3">{featured ? "Plus Extra" : "Plus Essential"}</h3>
       <p className="font-bold font-mono text-3xl">
-        {featured ? "IQD 25,000" : "IQD 15,000"}
+        {featured ? "25,000 IQD" : "15,000 IQD"}
       </p>
     </div>
     <ul className="grid gap-2 text-sm">

@@ -193,11 +193,18 @@ const ProductPage = async ({ params }: ProductProps) => {
             ) : (
               <p className="flex flex-wrap items-baseline gap-3">
                 <span className="font-bold text-2xl">
-                  {priceRange
-                    ? store("price.from", {
-                        price: formatPrice(product.price, locale),
-                      })
-                    : formatPrice(product.price, locale)}
+                  {priceRange ? (
+                    store.rich("price.from", {
+                      amount: (chunks) => (
+                        <span className="font-mono">{chunks}</span>
+                      ),
+                      price: formatPrice(product.price, locale),
+                    })
+                  ) : (
+                    <span className="font-mono">
+                      {formatPrice(product.price, locale)}
+                    </span>
+                  )}
                 </span>
                 {discount > 0 && product.compare_at_price ? (
                   <>

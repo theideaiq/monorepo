@@ -79,7 +79,7 @@ update public.delivery_zones set active = true, fee = 5000 where governorate = '
 select throws_ok(
   $$ update public.profiles set birthday = (now() at time zone 'Asia/Baghdad')::date - interval '12 years'
      where id = '00000000-0000-0000-0000-000000000864' $$,
-  '23514', 'The IDEA Pass is for people aged 13 and over',
+  '23514', 'The Pass is for people aged 13 and over',
   'the Pass is for people aged 13 and over'
 );
 

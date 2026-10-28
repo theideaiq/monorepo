@@ -23,6 +23,8 @@ const paths = (value: unknown, prefix = ""): string[] => {
 // Simple arguments ({name}) and ICU arguments ({count, plural, …}).
 const PLACEHOLDER = /\{(\w+)(?=[,}])/g;
 const PATH_SEGMENT = /\.|\[(\d+)\]/;
+/** An opening rich-text tag such as `<amount>`. */
+const TAG = /<(\w+)>/g;
 const placeholders = (text: string) =>
   [...new Set([...text.matchAll(PLACEHOLDER)].map((match) => match[1]))].sort();
 
@@ -74,10 +76,25 @@ describe("messages", () => {
       for (const path of paths(messages)) {
         if (!path.includes("[")) {
           // Every argument gets a value; plural arguments need a number.
+          const raw = String(t.raw(path as never));
           const values = Object.fromEntries(
-            placeholders(String(t.raw(path as never))).map((name) => [name, 1])
+            placeholders(raw).map((name) => [name, 1])
           );
-          t(path as never, values as never);
+          // Rich-text tags (`<amount>…</amount>`) get a pass-through handler.
+          const tags = [...raw.matchAll(TAG)].map((match) => match[1]);
+          if (tags.length > 0) {
+            t.markup(
+              path as never,
+              {
+                ...values,
+                ...Object.fromEntries(
+                  tags.map((tag) => [tag, (chunks: string) => chunks])
+                ),
+              } as never
+            );
+          } else {
+            t(path as never, values as never);
+          }
         }
       }
       expect(problems, locale).toEqual([]);
