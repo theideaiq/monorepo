@@ -3000,6 +3000,34 @@
         "product_available": {
           "title": "أصبح متوفراً",
           "body": "{name} معروض الآن في The IDEA."
+        },
+        "offer_accepted": {
+          "title": "قُبل عرضك",
+          "body": "قُبل عرضك {amount} على {name}. ستجده في سلتك بهذا السعر لمدة 24 ساعة."
+        },
+        "offer_declined": {
+          "title": "رُفض عرضك",
+          "body": "رُفض عرضك على {name}."
+        },
+        "offer_countered": {
+          "title": "عرض مقابل",
+          "body": "يطلب بائع {name} مبلغ {amount}. اقبله أو ارفضه خلال 48 ساعة."
+        },
+        "return_approved": {
+          "title": "قُبل الإرجاع",
+          "body": "قُبل الإرجاع رقم {number} لـ {name} (الطلب رقم {order}). سيستلمه مندوبنا منك."
+        },
+        "return_rejected": {
+          "title": "لم يُقبل الإرجاع",
+          "body": "لم يُقبل الإرجاع رقم {number} لـ {name} (الطلب رقم {order}). افتح الطلب لمعرفة السبب."
+        },
+        "return_refund_due": {
+          "title": "المبلغ في الطريق",
+          "body": "فُحص {name}: سنعيد لك {amount} عن الإرجاع رقم {number}."
+        },
+        "return_refunded": {
+          "title": "أُعيد المبلغ",
+          "body": "أعدنا لك {amount} عن الإرجاع رقم {number} ({name})."
         }
       },
       "kinds": {

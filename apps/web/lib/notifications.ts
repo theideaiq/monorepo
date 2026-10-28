@@ -58,6 +58,13 @@ export const NOTIFICATION_EVENTS = [
   "survey_approved",
   "survey_rejected",
   "product_available",
+  "offer_accepted",
+  "offer_declined",
+  "offer_countered",
+  "return_approved",
+  "return_rejected",
+  "return_refund_due",
+  "return_refunded",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -128,6 +135,35 @@ const invoiceValues = (
   };
 };
 
+/** The item's name in the viewer's language, falling back to the other. */
+const itemName = (data: Record<string, Json | undefined>, locale: Locale) => {
+  const english = text(data.name_en);
+  const arabic = text(data.name_ar);
+  return (locale === "ar" ? arabic : english) || english || arabic;
+};
+
+/** An offer's item and amount (`offer_*`). */
+const offerValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const amount = Number(text(data.amount));
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    name: itemName(data, locale),
+  };
+};
+
+/** A return's number, item, order and refund (`return_*`). */
+const returnValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => ({
+  ...offerValues(data, locale),
+  number: text(data.number),
+  order: text(data.order_number),
+});
+
 /** Events whose data needs formatting beyond the common fields. */
 const extraValues: Partial<
   Record<
@@ -148,16 +184,19 @@ const extraValues: Partial<
     number: text(data.number),
   }),
   invoice_issued: invoiceValues,
+  offer_accepted: offerValues,
+  offer_countered: offerValues,
+  offer_declined: offerValues,
   pass_app_approved: (data) => ({ name: text(data.name) }),
   pass_app_declined: (data) => ({ name: text(data.name) }),
   plus_invite: (data) => ({ hours: text(data.hours) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
-  product_available: (data, locale) => {
-    const english = text(data.name_en);
-    const arabic = text(data.name_ar);
-    return { name: (locale === "ar" ? arabic : english) || english || arabic };
-  },
+  product_available: (data, locale) => ({ name: itemName(data, locale) }),
   quote_sent: quoteValues,
+  return_approved: returnValues,
+  return_refund_due: returnValues,
+  return_refunded: returnValues,
+  return_rejected: returnValues,
   student_verified: (data, locale) => {
     const until = text(data.until);
     return { date: until ? formatDate(`${until}T12:00:00`, locale) : "" };

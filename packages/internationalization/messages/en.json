@@ -3000,6 +3000,34 @@
         "product_available": {
           "title": "It's on offer",
           "body": "{name} is on offer on The IDEA now."
+        },
+        "offer_accepted": {
+          "title": "Offer accepted",
+          "body": "Your offer of {amount} for {name} was accepted. It's in your cart at that price for 24 hours."
+        },
+        "offer_declined": {
+          "title": "Offer declined",
+          "body": "Your offer for {name} was declined."
+        },
+        "offer_countered": {
+          "title": "A counter-offer",
+          "body": "The seller of {name} asks {amount}. Accept or decline it within 48 hours."
+        },
+        "return_approved": {
+          "title": "Return accepted",
+          "body": "Return #{number} for {name} (order #{order}) was accepted. Our courier will collect it."
+        },
+        "return_rejected": {
+          "title": "Return not accepted",
+          "body": "Return #{number} for {name} (order #{order}) wasn't accepted. Open the order to see why."
+        },
+        "return_refund_due": {
+          "title": "Refund on its way",
+          "body": "{name} has been checked: we're refunding {amount} for return #{number}."
+        },
+        "return_refunded": {
+          "title": "Refund sent",
+          "body": "We refunded {amount} for return #{number} ({name})."
         }
       },
       "kinds": {
