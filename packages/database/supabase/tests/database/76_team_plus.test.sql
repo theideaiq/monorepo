@@ -72,7 +72,7 @@ insert into public.plans (id, name, amount, billing_interval, audience, rental_s
 
 insert into public.organizations (id, name, slug, created_by) values
   ('76000000-0000-0000-0000-0000000000c1', 'Acme', 'acme-team-plus', '00000000-0000-0000-0000-0000000076a1');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('76000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000076a1', 'owner'),
   ('76000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000076a2', 'member'),
   ('76000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000076a4', 'member')
@@ -154,7 +154,7 @@ select is(
 );
 
 -- ── Leaving ─────────────────────────────────────────────────────────────────
-delete from public.memberships
+delete from public.organization_members
 where organization_id = '76000000-0000-0000-0000-0000000000c1'
   and user_id = '00000000-0000-0000-0000-0000000076a2';
 select results_eq(

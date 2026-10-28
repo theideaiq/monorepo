@@ -63,7 +63,7 @@ insert into auth.users (id, email) values
 insert into public.organizations (id, name, slug, created_by) values
   ('9f000000-0000-0000-0000-0000000000c1', 'Record Shop', 'records-9h', '00000000-0000-0000-0000-000000000af1'),
   ('9f000000-0000-0000-0000-0000000000c2', 'Other Shop', 'other-9h', '00000000-0000-0000-0000-000000000af3');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('9f000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000af1', 'owner'),
   ('9f000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-000000000af2', 'member'),
   ('9f000000-0000-0000-0000-0000000000c2', '00000000-0000-0000-0000-000000000af3', 'owner');

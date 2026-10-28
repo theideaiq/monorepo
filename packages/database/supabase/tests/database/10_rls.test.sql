@@ -66,7 +66,7 @@ insert into public.organizations (id, name, slug, created_by) values
   ('10000000-0000-0000-0000-000000000001', 'Org One', 'org-one', '00000000-0000-0000-0000-00000000000a'),
   ('10000000-0000-0000-0000-000000000002', 'Org Two', 'org-two', '00000000-0000-0000-0000-00000000000c');
 
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-00000000000a', 'owner'),
   ('10000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-00000000000b', 'member'),
   ('10000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-00000000000c', 'owner');
@@ -165,14 +165,14 @@ select is_empty(
   'members cannot rename the organization'
 );
 select throws_ok(
-  $$ insert into public.memberships (organization_id, user_id, role)
+  $$ insert into public.organization_members (organization_id, user_id, role)
      values ('10000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-00000000000b', 'owner') $$,
   '42501',
   null,
-  'nobody can add memberships directly'
+  'nobody can add members directly'
 );
 select is_empty(
-  $$ update public.memberships set role = 'owner'
+  $$ update public.organization_members set role = 'owner'
      where user_id = '00000000-0000-0000-0000-00000000000b' returning user_id $$,
   'members cannot promote themselves'
 );
@@ -246,12 +246,12 @@ select throws_ok(
   'invitations cannot grant the owner role'
 );
 select isnt_empty(
-  $$ update public.memberships set role = 'admin'
+  $$ update public.organization_members set role = 'admin'
      where user_id = '00000000-0000-0000-0000-00000000000b' returning user_id $$,
   'owners can change members'' roles'
 );
 select throws_ok(
-  $$ update public.memberships set role = 'member'
+  $$ update public.organization_members set role = 'member'
      where user_id = '00000000-0000-0000-0000-00000000000a' $$,
   '23514',
   'An organization must keep at least one owner',
@@ -263,7 +263,7 @@ select throws_ok(
 select pg_temp.login_as('00000000-0000-0000-0000-00000000000b');
 
 select is_empty(
-  $$ delete from public.memberships
+  $$ delete from public.organization_members
      where user_id = '00000000-0000-0000-0000-00000000000a' returning user_id $$,
   'admins cannot remove owners'
 );
@@ -321,7 +321,7 @@ select lives_ok(
   'users can create organizations'
 );
 select results_eq(
-  $$ select m.role::text from public.memberships m
+  $$ select m.role::text from public.organization_members m
      join public.organizations o on o.id = m.organization_id
      where o.slug = 'org-three' $$,
   array['owner'],
@@ -413,7 +413,7 @@ select results_eq(
   'other members are counted so ownership can be handed over'
 );
 select isnt_empty(
-  $$ update public.memberships set role = 'owner'
+  $$ update public.organization_members set role = 'owner'
      where organization_id = '10000000-0000-0000-0000-000000000001'
        and user_id = '00000000-0000-0000-0000-00000000000b'
      returning user_id $$,
@@ -447,12 +447,12 @@ select lives_ok(
   'an account whose organizations have another owner can be deleted'
 );
 select results_eq(
-  $$ select user_id::text, role::text from public.memberships
+  $$ select user_id::text, role::text from public.organization_members
      where organization_id = '10000000-0000-0000-0000-000000000001'
      order by user_id $$,
   $$ values ('00000000-0000-0000-0000-00000000000b', 'owner'),
             ('00000000-0000-0000-0000-00000000000d', 'member') $$,
-  'deleting the account removes its memberships and keeps the organization'
+  'deleting the account removes it from its organizations and keeps the organization'
 );
 
 select * from finish();

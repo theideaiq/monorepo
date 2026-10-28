@@ -69,7 +69,7 @@ insert into public.staff (user_id, role) values
 
 insert into public.organizations (id, name, slug, created_by) values
   ('75000000-0000-0000-0000-0000000000c1', 'Acme', 'acme-procurement', '00000000-0000-0000-0000-0000000075a1');
-insert into public.memberships (organization_id, user_id, role) values
+insert into public.organization_members (organization_id, user_id, role) values
   ('75000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000075a1', 'owner'),
   ('75000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000075a2', 'member')
 on conflict do nothing;
