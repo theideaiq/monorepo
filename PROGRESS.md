@@ -553,6 +553,23 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: The student check, part 1, the schema
+  (`20270121000000_student_check.sql`; master brief step 4). On
+  theideaiq.com/verify a student signs in with their university email
+  (the sign-in code proves it: `claim_student_from_email`) or any email
+  plus a card photo. A Pass made there is bare (`profiles.student_only`,
+  `begin_student_check`): no onboarding, and it becomes a full Pass once
+  it gets a name, an order or a plan. Then the student chooses
+  (`finish_student_check(keep)`): a one-time check removes the badge, or
+  they keep it for the year (prices, Plus at 20% off, perks). Each check
+  is a `student_checks` row with an 8-character code valid 24 hours;
+  Partners checks it in person with `partner_check` (verified, university,
+  until; no name). The `student_check` sign-in answer gives a partner the
+  same. `forget_student_status` deletes "Your student status" (the API
+  deletes a bare Pass with it); `sweep_student_checks` (daily) forgets
+  checks after 30 days and lists bare Passes to delete. At most 5
+  one-time checks a month per university email. The page, the API and
+  Partners follow in part 2.
 - 2026-10-28: Phone verification, part 1, the schema
   (`20270110000000_verified_phones.sql`). `verified_phones` holds the
   numbers a Pass proved with a code; only the API adds rows (after Twilio
