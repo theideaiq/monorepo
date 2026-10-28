@@ -198,7 +198,10 @@
       "legal": "القانونية",
       "search": "بحث",
       "cart": "السلة",
-      "cartCount": "في السلة: {count}"
+      "cartCount": "في السلة: {count}",
+      "aboutHelp": "عن The IDEA والمساعدة",
+      "aboutHelpHint": "الوظائف والشركاء والتواصل والسياسات واللغة وإصدار التطبيق",
+      "saved": "المحفوظات"
     },
     "tabs": {
       "label": "الأقسام الرئيسية",
@@ -689,7 +692,10 @@
       "legal": "الشروط والسياسات",
       "app": "هذا التطبيق",
       "versionLine": "الإصدار {version} · البناء {build}",
-      "appVersion": "التطبيق {version}"
+      "appVersion": "التطبيق {version}",
+      "copyVersion": "انسخ رقم الإصدار للدعم",
+      "versionCopied": "نُسخ.",
+      "settings": "اللغة والمظهر"
     },
     "help": {
       "meta": {

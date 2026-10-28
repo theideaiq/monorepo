@@ -1,6 +1,10 @@
 import { project } from "@repo/config";
 import { Highlight } from "@repo/design-system/components/brand/highlight";
 import type { Locale, Messages } from "@repo/internationalization";
+import {
+  LanguageSwitcher,
+  ThemeToggle,
+} from "@repo/internationalization/controls";
 import { Link } from "@repo/internationalization/navigation";
 import {
   Briefcase,
@@ -23,6 +27,7 @@ import { PageHero } from "@/components/page-hero";
 import { ProductLines } from "@/components/product-lines";
 import { Section } from "@/components/section";
 import { SystemStatusBadge } from "@/components/system-status";
+import { VersionCopy } from "@/components/version-copy";
 import { env } from "@/env";
 import { legalDocuments } from "@/lib/legal";
 import { telegram } from "@/lib/links";
@@ -124,11 +129,15 @@ const About = async ({ params }: AboutProps) => {
               </Link>
             ))}
           </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="font-semibold">{info("settings")}</h2>
+            <div className="flex items-center gap-1">
+              <LanguageSwitcher />
+              <ThemeToggle />
+            </div>
+          </div>
           <div className="flex flex-col gap-2 text-muted-foreground">
             <h2 className="font-semibold text-foreground">{info("app")}</h2>
-            <p dir="ltr">
-              {info("versionLine", { build: buildId(), version: APP_VERSION })}
-            </p>
             <NativeAppVersion />
             <SystemStatusBadge
               apiUrl={env.NEXT_PUBLIC_API_URL}
@@ -199,9 +208,14 @@ const About = async ({ params }: AboutProps) => {
         <ProductLines locale={locale} />
       </Section>
       <AppCta locale={locale} />
-      <p className="container mx-auto px-4 pb-10 text-muted-foreground text-xs">
-        {web("footer.trademarks")}
-      </p>
+      <div className="container mx-auto grid gap-2 px-4 pb-10">
+        <p className="text-muted-foreground text-xs">
+          {web("footer.trademarks")}
+        </p>
+        <VersionCopy
+          text={info("versionLine", { build: buildId(), version: APP_VERSION })}
+        />
+      </div>
     </>
   );
 };

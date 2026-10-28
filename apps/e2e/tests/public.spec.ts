@@ -121,16 +121,16 @@ test.describe("public site", () => {
     await expectAccessible(page);
   });
 
-  test("each place has one way in: top bar, tabs and footer", async ({
+  test("each place has one way in: top bar, tabs, footer and About & help", async ({
     page,
   }) => {
     await page.goto(`${urls.web}/about`);
     const header = page.getByRole("banner");
     // Signed out on a page outside the Store and Plus, with an empty cart:
-    // search and Sign in only (no saved items, bell, cart or business link).
+    // search, Saved and Sign in (no bell, cart or business link).
     await expect(header.getByRole("link", { name: "Search" })).toBeVisible();
     await expect(header.getByRole("link", { name: "Sign in" })).toBeVisible();
-    await expect(header.getByRole("link", { name: "Saved" })).toHaveCount(0);
+    await expect(header.getByRole("link", { name: "Saved" })).toBeVisible();
     await expect(header.getByRole("link", { name: "Cart" })).toHaveCount(0);
     await expect(
       header.getByRole("link", { name: "For partners" })
@@ -151,6 +151,17 @@ test.describe("public site", () => {
     await expect(
       footer.getByRole("button", { name: "Switch language" })
     ).toBeVisible();
+
+    // Phones have no footer: sign-in (the Pass tab) ends with About & help.
+    await page.setViewportSize({ height: 844, width: 390 });
+    await expect(footer).toBeHidden();
+    await page.goto(`${urls.web}/sign-in`);
+    await page.getByRole("link", { name: /^About & help/ }).click();
+    await expect(page).toHaveURL(/\/about$/);
+    await expect(
+      page.getByRole("button", { name: "Switch language" })
+    ).toBeVisible();
+    await page.setViewportSize({ height: 900, width: 1280 });
 
     // The cart shows on the Store and Plus screens.
     await page.goto(`${urls.web}/store`);

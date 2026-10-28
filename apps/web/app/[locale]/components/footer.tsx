@@ -18,16 +18,17 @@ const links = [
 ] as const;
 
 /**
- * Under every page: what the top bar and tabs don't carry (For partners,
- * About, Careers, Help, Legal), the language and theme, our social links,
- * the copyright and the version. Store, Plus, Club and Pass are in the
- * header and the tabs, so they aren't repeated here.
+ * Under every page on wider screens of the website: what the top bar
+ * doesn't carry (For partners, About, Careers, Help, Legal), the language
+ * and theme, our social links, the copyright and the version. Phones and
+ * the apps have no footer: My Pass ends with "About & help" (/about, which
+ * holds all of this) and Pass → Settings has the language and theme.
  */
 export const Footer = async () => {
   const t = await getTranslations("web");
 
   return (
-    <footer className="border-t bg-surface-raised">
+    <footer className="hidden border-t bg-surface-raised md:block">
       <div className="container mx-auto flex flex-col gap-3 px-4 py-5 text-muted-foreground text-xs">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <nav

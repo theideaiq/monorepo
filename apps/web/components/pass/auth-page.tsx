@@ -2,6 +2,7 @@ import { enabledProviders } from "@repo/auth/social";
 import { localePath } from "@repo/internationalization";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
+import { AboutHelpLink } from "@/components/about-help-link";
 import { env } from "@/env";
 import { hostOf, readReturnTo, type SearchParams } from "@/lib/pass/return-to";
 import { getPassSession } from "@/lib/pass/session";
@@ -66,6 +67,7 @@ export const AuthPage = async ({ searchParams }: AuthPageProps) => {
         returnTo={returnTo}
       />
       <TelegramButton returnTo={returnTo} />
+      <AboutHelpLink />
     </div>
   );
 };

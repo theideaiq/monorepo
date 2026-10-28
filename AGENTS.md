@@ -34,16 +34,21 @@ incidents) is in `docs/platform`.
     version); `/r/<code>` (a member's invite link: 10% off a new member's
     first order) and legal pages at `/legal/<policy>` (Markdown in
     `apps/web/content/legal`). Each place has one way in. Phones: the top
-    bar holds the logo, search, the bell and the cart; the tabs Store ·
-    Plus · Club · Pass. Wider screens: logo · Store · Plus · Club · search
-    · bell · cart · Pass avatar ("Sign in" when signed out). The bell
-    shows only when signed in and only in the top bar; the cart shows on
-    the Store and Plus screens and anywhere while it holds items; search,
-    bell and cart are hidden on sign-in and checkout. Saved items are in
-    Your Pass (`/pass/saved`; the heart is only on products). The footer,
-    on every screen, lists For partners · About · Careers · Help · Legal,
-    the language and theme switches and the Telegram link; Store, Plus,
-    Club and Pass are never repeated there. Old addresses
+    bar holds the logo, search, Saved (the heart), the bell and the cart;
+    the tabs Store · Plus · Club · Pass (the cart is never a tab). Wider
+    screens: logo · Store · Plus · Club · search · Saved · bell · cart ·
+    Pass avatar ("Sign in" when signed out). The heart has no badge and
+    opens `/pass/saved`; the bell shows only when signed in and only in
+    the top bar; the cart shows on the Store and Plus screens and anywhere
+    while it holds items; search, Saved, bell and cart are hidden on
+    sign-in and checkout. The footer is on wider screens of the website
+    only (never on phones or in the apps): For partners · About · Careers
+    · Help · Legal, the language and theme switches and the Telegram
+    link; Store, Plus, Club and Pass are never repeated there. On phones,
+    My Pass and sign-in end with "About & help" (`/about`, which holds the
+    company's pages, contact, the policies, language and theme, and the
+    version, tapped to copy), and Pass → Settings has the language and
+    theme. Old addresses
     have no HTTP redirects; links stored in notifications are mapped to
     current pages by `currentAppPath`/`businessPath` in
     `packages/internationalization/app-paths.ts` (used by the website,
