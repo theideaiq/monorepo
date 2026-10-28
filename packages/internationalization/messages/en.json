@@ -1172,11 +1172,20 @@
         "area": "Area",
         "areaHint": "Start typing, then pick your area from the list.",
         "address": "Address",
-        "addressPlaceholder": "Neighbourhood, street, building, nearest landmark",
+        "addressPlaceholder": "Neighbourhood, street, building, floor",
         "notes": "Delivery notes",
         "notesPlaceholder": "Anything the courier should know",
         "governorateHint": "Delivery: {fee}. Usually arrives in {min}–{max} days.",
-        "zoneOption": "{name} — {fee}"
+        "zoneOption": "{name} — {fee}",
+        "landmark": "Nearest landmark",
+        "landmarkPlaceholder": "For example, opposite the Al-Rasheed bakery",
+        "pin": "Pin my location",
+        "pinHint": "Helps the courier find you.",
+        "pinned": "Location pinned",
+        "pinView": "See it on the map",
+        "pinRemove": "Remove the pin",
+        "pinFailed": "We couldn't get your location. Check that your browser may use it.",
+        "pinOutside": "That location is outside Iraq."
       },
       "fieldErrors": {
         "fullName": "Enter the recipient's name.",
@@ -1251,7 +1260,17 @@
       },
       "planDelivery": "Free delivery with your Plus plan.",
       "freeDeliveryNudge": "Add {amount} more for free delivery.",
-      "bulbsToEarn": "You'll earn {bulbs} Bulbs once it's delivered."
+      "bulbsToEarn": "You'll earn {bulbs} Bulbs once it's delivered.",
+      "saved": {
+        "title": "Deliver to",
+        "new": "A new address",
+        "save": "Save this address for next time",
+        "label": "Name it",
+        "labelPlaceholder": "Home, Work…",
+        "edit": "Edit",
+        "defaultLabel": "Home"
+      },
+      "oneTap": "Deliver to {label} · {payment}"
     },
     "orders": {
       "title": "Orders",
@@ -1872,6 +1891,26 @@
         "add": "Link {provider}",
         "remove": "Remove",
         "failed": "That didn't work. Please try again."
+      },
+      "addresses": {
+        "title": "Addresses",
+        "description": "Where we deliver your orders. Checkout starts with the default.",
+        "empty": "No saved addresses yet. Add one here or save it at checkout.",
+        "add": "Add an address",
+        "edit": "Edit",
+        "editLabel": "Edit {label}",
+        "remove": "Remove",
+        "removeLabel": "Remove {label}",
+        "makeDefault": "Make default",
+        "makeDefaultLabel": "Make {label} the default",
+        "default": "Default",
+        "save": "Save address",
+        "cancel": "Cancel",
+        "label": "Name",
+        "labelPlaceholder": "Home, Work…",
+        "full": "You can save up to {max} addresses.",
+        "failed": "That didn't save. Please try again.",
+        "labelMissing": "Give the address a name."
       }
     },
     "errors": {

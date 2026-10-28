@@ -1172,11 +1172,20 @@
         "area": "المنطقة",
         "areaHint": "ابدأ الكتابة ثم اختر منطقتك من القائمة.",
         "address": "العنوان",
-        "addressPlaceholder": "الحي، الشارع، المبنى، أقرب نقطة دالة",
+        "addressPlaceholder": "المحلة، الزقاق، الدار أو البناية، الطابق",
         "notes": "ملاحظات التوصيل",
         "notesPlaceholder": "أي شيء ينبغي أن يعرفه المندوب",
         "governorateHint": "التوصيل: {fee}. يصل عادةً خلال {min}–{max} أيام.",
-        "zoneOption": "{name} — {fee}"
+        "zoneOption": "{name} — {fee}",
+        "landmark": "أقرب نقطة دالة",
+        "landmarkPlaceholder": "مثلًا: مقابل مخبز الرشيد",
+        "pin": "حدّد موقعي",
+        "pinHint": "يساعد المندوب على الوصول إليك.",
+        "pinned": "تم تحديد الموقع",
+        "pinView": "اعرضه على الخريطة",
+        "pinRemove": "أزل الموقع",
+        "pinFailed": "تعذّر تحديد موقعك. تأكد من السماح للمتصفح باستخدامه.",
+        "pinOutside": "هذا الموقع خارج العراق."
       },
       "fieldErrors": {
         "fullName": "أدخل اسم المستلم.",
@@ -1251,7 +1260,17 @@
       },
       "planDelivery": "توصيل مجاني مع خطتك في Plus.",
       "freeDeliveryNudge": "أضف ما قيمته {amount} لتحصل على توصيل مجاني.",
-      "bulbsToEarn": "ستكسب {bulbs} Bulbs عند توصيل الطلب."
+      "bulbsToEarn": "ستكسب {bulbs} Bulbs عند توصيل الطلب.",
+      "saved": {
+        "title": "التوصيل إلى",
+        "new": "عنوان جديد",
+        "save": "احفظ هذا العنوان للمرة القادمة",
+        "label": "سمِّه",
+        "labelPlaceholder": "البيت، العمل…",
+        "edit": "تعديل",
+        "defaultLabel": "البيت"
+      },
+      "oneTap": "التوصيل إلى {label} · {payment}"
     },
     "orders": {
       "title": "الطلبات",
@@ -1872,6 +1891,26 @@
         "add": "ربط {provider}",
         "remove": "إزالة",
         "failed": "لم ينجح ذلك. يُرجى المحاولة مجددًا."
+      },
+      "addresses": {
+        "title": "العناوين",
+        "description": "أين نوصل طلباتك. تبدأ صفحة الدفع بالعنوان الافتراضي.",
+        "empty": "لا توجد عناوين محفوظة بعد. أضف عنوانًا هنا أو احفظه عند الدفع.",
+        "add": "أضف عنوانًا",
+        "edit": "تعديل",
+        "editLabel": "تعديل {label}",
+        "remove": "إزالة",
+        "removeLabel": "إزالة {label}",
+        "makeDefault": "اجعله الافتراضي",
+        "makeDefaultLabel": "اجعل {label} العنوان الافتراضي",
+        "default": "الافتراضي",
+        "save": "احفظ العنوان",
+        "cancel": "إلغاء",
+        "label": "الاسم",
+        "labelPlaceholder": "البيت، العمل…",
+        "full": "يمكنك حفظ {max} عناوين كحد أقصى.",
+        "failed": "لم يُحفظ ذلك. يُرجى المحاولة مرة أخرى.",
+        "labelMissing": "أعطِ العنوان اسمًا."
       }
     },
     "errors": {

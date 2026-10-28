@@ -1,5 +1,6 @@
 "use client";
 
+import { formatPhone } from "@repo/auth/phone";
 import { useAuth } from "@repo/auth/provider";
 import {
   BULB_VALUE_IQD,
@@ -39,7 +40,8 @@ import { formatNumber } from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, BanknoteIcon, LockIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { type FormEvent, type ReactNode, useId, useState } from "react";
+import { type FormEvent, useId, useState } from "react";
+import { Field, LandmarkFields } from "@/components/address-fields";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { OrderSummary } from "@/components/store/order-summary";
@@ -48,8 +50,20 @@ import {
   type AddressForm,
   accountPhone,
   emptyAddress,
+  type MapPin,
+  type ShippingAddress,
   validateAddress,
 } from "@/lib/address";
+import {
+  addressLine,
+  addressToForm,
+  MAX_ADDRESSES,
+  type SavedAddress,
+  useAddresses,
+  useCheckoutPayment,
+  useRememberPayment,
+  useSaveAddress,
+} from "@/lib/address-book";
 import { useMyBulbs } from "@/lib/bulbs-queries";
 import { freeDeliveryRemaining, summarizeCart } from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
@@ -65,47 +79,6 @@ import {
   useDeliveryZones,
   useStoreSettings,
 } from "@/lib/store-queries";
-
-interface FieldProps {
-  readonly children: ReactNode;
-  readonly error?: string | null;
-  readonly hint?: string;
-  readonly htmlFor: string;
-  readonly label: string;
-  readonly optional?: boolean;
-}
-
-const Field = ({
-  children,
-  error,
-  hint,
-  htmlFor,
-  label,
-  optional,
-}: FieldProps) => {
-  const t = useTranslations("common");
-  return (
-    <div className="grid gap-2">
-      <Label htmlFor={htmlFor}>
-        {label}
-        {optional ? (
-          <span className="font-normal text-muted-foreground text-xs">
-            ({t("optional")})
-          </span>
-        ) : null}
-      </Label>
-      {children}
-      {hint && !error ? (
-        <p className="text-muted-foreground text-xs">{hint}</p>
-      ) : null}
-      {error ? (
-        <p className="text-destructive text-xs" id={`${htmlFor}-error`}>
-          {error}
-        </p>
-      ) : null}
-    </div>
-  );
-};
 
 interface ChoiceProps<T extends string> {
   readonly disabled?: boolean;
@@ -269,6 +242,7 @@ interface ContactCardProps {
   readonly fieldErrors: AddressField[];
   readonly method: Fulfilment;
   readonly onChange: (field: keyof AddressForm) => (value: string) => void;
+  readonly onLocation: (location: MapPin | null) => void;
   readonly pickup: PickupLocation | null;
   readonly zone: DeliveryZone | undefined;
   readonly zones: DeliveryZone[];
@@ -282,6 +256,7 @@ export const ContactCard = ({
   fieldErrors,
   method,
   onChange: set,
+  onLocation,
   pickup,
   zone,
   zones: zoneList,
@@ -430,6 +405,14 @@ export const ContactCard = ({
                   />
                 </Field>
               </div>
+              <LandmarkFields
+                disabled={busy}
+                id={id}
+                landmark={address.landmark}
+                location={address.location}
+                onLandmark={set("landmark")}
+                onLocation={onLocation}
+              />
             </>
           )}
           <div className="sm:col-span-2">
@@ -455,6 +438,128 @@ export const ContactCard = ({
         </fieldset>
       </CardContent>
     </Card>
+  );
+};
+
+interface SavedAddressesCardProps {
+  readonly addresses: SavedAddress[];
+  readonly busy: boolean;
+  readonly editing: boolean;
+  readonly onEdit: () => void;
+  readonly onSelect: (id: string) => void;
+  readonly selected: string;
+}
+
+/** Where to deliver: a saved address (shown briefly) or a new one. */
+const SavedAddressesCard = ({
+  addresses,
+  busy,
+  editing,
+  onEdit,
+  onSelect,
+  selected,
+}: SavedAddressesCardProps) => {
+  const locale = useLocale();
+  const t = useTranslations("app.checkout.saved");
+  const id = useId();
+  const chosen = addresses.find((row) => row.id === selected);
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("title")}</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-4">
+        <RadioGroup
+          aria-label={t("title")}
+          className="flex flex-wrap gap-2"
+          disabled={busy}
+          onValueChange={onSelect}
+          value={selected}
+        >
+          {[
+            ...addresses.map((row) => ({ id: row.id, label: row.label })),
+            { id: NEW_ADDRESS, label: t("new") },
+          ].map((option) => (
+            <Label
+              className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 has-[[data-state=checked]]:border-primary"
+              htmlFor={`${id}-${option.id}`}
+              key={option.id}
+            >
+              <RadioGroupItem id={`${id}-${option.id}`} value={option.id} />
+              {option.label}
+            </Label>
+          ))}
+        </RadioGroup>
+        {chosen && !editing ? (
+          <div className="flex items-start justify-between gap-4 text-sm">
+            <address className="grid gap-0.5 not-italic">
+              <span className="font-medium">{chosen.full_name}</span>
+              <span>{addressLine(chosen, locale)}</span>
+              {chosen.landmark ? (
+                <span className="text-muted-foreground">{chosen.landmark}</span>
+              ) : null}
+              <span className="text-muted-foreground" dir="ltr">
+                {formatPhone(chosen.phone)}
+              </span>
+            </address>
+            <Button
+              disabled={busy}
+              onClick={onEdit}
+              size="sm"
+              type="button"
+              variant="ghost"
+            >
+              {t("edit")}
+            </Button>
+          </div>
+        ) : null}
+      </CardContent>
+    </Card>
+  );
+};
+
+interface SaveAddressFieldsProps {
+  readonly busy: boolean;
+  readonly label: string;
+  readonly onLabel: (value: string) => void;
+  readonly onSave: (save: boolean) => void;
+  readonly save: boolean;
+}
+
+/** "Save this address for next time", and its name. */
+const SaveAddressFields = ({
+  busy,
+  label,
+  onLabel,
+  onSave,
+  save,
+}: SaveAddressFieldsProps) => {
+  const t = useTranslations("app.checkout.saved");
+  const id = useId();
+  return (
+    <div className="grid gap-3 rounded-lg border p-4">
+      <div className="flex items-center gap-2">
+        <Checkbox
+          checked={save}
+          disabled={busy}
+          id={`${id}-save`}
+          onCheckedChange={(checked) => onSave(checked === true)}
+        />
+        <Label htmlFor={`${id}-save`}>{t("save")}</Label>
+      </div>
+      {save ? (
+        <Field htmlFor={`${id}-label`} label={t("label")}>
+          <Input
+            disabled={busy}
+            id={`${id}-label`}
+            maxLength={40}
+            onChange={(event) => onLabel(event.target.value)}
+            placeholder={t("labelPlaceholder")}
+            value={label}
+          />
+        </Field>
+      ) : null}
+    </div>
   );
 };
 
@@ -517,6 +622,8 @@ interface SummaryCardProps {
   readonly cash: boolean;
   readonly error: CheckoutError | null;
   readonly method: Fulfilment;
+  /** "Deliver to Home · Pay online", when a saved address is chosen. */
+  readonly oneTap?: string | null;
   /** The server's quote, once a zone (or pickup) is chosen. */
   readonly quote: CheckoutQuote | null;
   readonly summary: ReturnType<typeof summarizeCart>;
@@ -528,6 +635,7 @@ const SummaryCard = ({
   cash,
   error,
   method,
+  oneTap,
   quote,
   summary,
 }: SummaryCardProps) => {
@@ -596,6 +704,7 @@ const SummaryCard = ({
             {t(`errors.${error}`)}
           </p>
         ) : null}
+        {oneTap ? <p className="font-medium text-sm">{oneTap}</p> : null}
         <Button disabled={busy || !summary.canCheckout} size="lg" type="submit">
           {busy
             ? t("placing")
@@ -613,6 +722,9 @@ const SummaryCard = ({
     </Card>
   );
 };
+
+/** The picker's "A new address". */
+const NEW_ADDRESS = "new";
 
 /**
  * What to ask the server to price: nothing until delivery has a zone (or a
@@ -781,6 +893,177 @@ const useCheckoutPricing = ({
 };
 
 /**
+ * The address book at checkout: the saved address to deliver to (the
+ * default first) or a new one, and the way the member last paid. After an
+ * order, it remembers a new way to pay and saves a new address if asked.
+ */
+const useAddressBook = () => {
+  const t = useTranslations("app.checkout");
+  const { user } = useAuth();
+  const profile = useProfile();
+  const addresses = useAddresses();
+  const remembered = useCheckoutPayment();
+  const rememberPayment = useRememberPayment();
+  const saveAddress = useSaveAddress();
+  const [chosenPayment, setPayment] = useState<PaymentMethod | null>(null);
+  const [form, setForm] = useState<AddressForm | null>(null);
+  // A saved address's id, or NEW_ADDRESS; null: the default address.
+  const [picked, setPicked] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [saveNew, setSaveNew] = useState(false);
+  const [newLabel, setNewLabel] = useState("");
+
+  const saved = addresses.data ?? [];
+  const selected = picked ?? saved[0]?.id ?? NEW_ADDRESS;
+  const savedAddress = saved.find((row) => row.id === selected);
+
+  // A new address starts from the account: its phone number and name.
+  const address: AddressForm =
+    form ??
+    (savedAddress
+      ? addressToForm(savedAddress)
+      : {
+          ...emptyAddress(accountPhone(user?.phone)),
+          fullName: profile.data?.full_name ?? "",
+        });
+
+  /** Best effort after an order: neither stops it. */
+  const afterOrder = ({
+    delivery,
+    paymentMethod,
+    shipping,
+    zoneId,
+  }: {
+    delivery: boolean;
+    /** The way chosen, when there was a choice. */
+    paymentMethod: PaymentMethod | null;
+    shipping: ShippingAddress;
+    zoneId: string | null;
+  }) => {
+    if (paymentMethod && paymentMethod !== remembered.data) {
+      rememberPayment.mutate(paymentMethod);
+    }
+    if (delivery && !savedAddress && saveNew) {
+      saveAddress.mutate({
+        input: {
+          area: shipping.city,
+          fullName: shipping.full_name,
+          governorate: shipping.governorate,
+          label: newLabel.trim() || t("saved.defaultLabel"),
+          landmark: shipping.landmark,
+          location: shipping.location ?? null,
+          phone: shipping.phone,
+          street: shipping.address,
+          zoneId,
+        },
+      });
+    }
+  };
+
+  return {
+    address,
+    afterOrder,
+    editing,
+    loading:
+      (addresses.isPending && !addresses.isError) ||
+      (remembered.isPending && !remembered.isError),
+    newLabel,
+    /** "Deliver to Home · Pay online", for a saved address. */
+    oneTap: (method: Fulfilment, cash: boolean) =>
+      method === "delivery" && savedAddress
+        ? t("oneTap", {
+            label: savedAddress.label,
+            payment: t(cash ? "payment.cash" : "payment.online"),
+          })
+        : null,
+    payment: chosenPayment ?? remembered.data ?? "online",
+    pick: (id: string) => {
+      setPicked(id);
+      setForm(null);
+      setEditing(false);
+    },
+    saved,
+    savedAddress,
+    saveNew,
+    selected,
+    setEditing,
+    setForm,
+    setNewLabel,
+    setPayment,
+    setSaveNew,
+  };
+};
+
+interface AddressSectionProps {
+  readonly areas: readonly string[];
+  readonly book: ReturnType<typeof useAddressBook>;
+  readonly busy: boolean;
+  readonly fieldErrors: AddressField[];
+  readonly method: Fulfilment;
+  readonly onChange: (field: keyof AddressForm) => (value: string) => void;
+  readonly pickup: PickupLocation | null;
+  readonly zone: DeliveryZone | undefined;
+  readonly zones: DeliveryZone[];
+}
+
+/**
+ * Where the order goes: a saved address (briefly, "Edit" opens the form),
+ * or the form, with "Save this address" for a new one.
+ */
+const AddressSection = ({
+  areas,
+  book,
+  busy,
+  fieldErrors,
+  method,
+  onChange,
+  pickup,
+  zone,
+  zones,
+}: AddressSectionProps) => {
+  const { address, saved, savedAddress } = book;
+  const delivery = method === "delivery";
+  const showForm = !(delivery && savedAddress && !book.editing);
+  return (
+    <>
+      {delivery && saved.length > 0 ? (
+        <SavedAddressesCard
+          addresses={saved}
+          busy={busy}
+          editing={book.editing}
+          onEdit={() => book.setEditing(true)}
+          onSelect={book.pick}
+          selected={book.selected}
+        />
+      ) : null}
+      {showForm ? (
+        <ContactCard
+          address={address}
+          areas={areas}
+          busy={busy}
+          fieldErrors={fieldErrors}
+          method={method}
+          onChange={onChange}
+          onLocation={(location) => book.setForm({ ...address, location })}
+          pickup={pickup}
+          zone={zone}
+          zones={zones}
+        />
+      ) : null}
+      {delivery && !savedAddress && saved.length < MAX_ADDRESSES ? (
+        <SaveAddressFields
+          busy={busy}
+          label={book.newLabel}
+          onLabel={book.setNewLabel}
+          onSave={book.setSaveNew}
+          save={book.saveNew}
+        />
+      ) : null}
+    </>
+  );
+};
+
+/**
  * Checkout: delivery (address and zone) or pickup, online or cash payment,
  * then `create_order` (which prices the fee from the zone) and, for online
  * payment, the hosted payment page. The order's page shows what happened.
@@ -788,25 +1071,18 @@ const useCheckoutPricing = ({
 export const Checkout = () => {
   const t = useTranslations("app.checkout");
   const router = useRouter();
-  const { user } = useAuth();
   const profile = useProfile();
   const cart = useCart();
   const settings = useStoreSettings();
   const zones = useDeliveryZones();
   const place = usePlaceOrder();
+  const book = useAddressBook();
+  const { address, setForm } = book;
   const [fulfilment, setFulfilment] = useState<Fulfilment>("delivery");
-  const [payment, setPayment] = useState<PaymentMethod>("online");
-  const [form, setForm] = useState<AddressForm | null>(null);
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [useBulbs, setUseBulbs] = useState(false);
-
-  // The form starts from the account: its phone number and name.
-  const address: AddressForm = form ?? {
-    ...emptyAddress(accountPhone(user?.phone)),
-    fullName: profile.data?.full_name ?? "",
-  };
 
   const set = (field: keyof AddressForm) => (value: string) =>
     setForm({ ...address, [field]: value });
@@ -828,7 +1104,7 @@ export const Checkout = () => {
     address,
     cart,
     fulfilment,
-    payment,
+    payment: book.payment,
     settings,
     useBulbs,
     zones,
@@ -857,6 +1133,12 @@ export const Checkout = () => {
     place.mutate(request, {
       onError: (mutationError) => setError(toCheckoutError(mutationError)),
       onSuccess: ({ order, paymentError, url }) => {
+        book.afterOrder({
+          delivery: method === "delivery",
+          paymentMethod: paymentOffered ? paymentMethod : null,
+          shipping: result.shipping,
+          zoneId: result.zoneId,
+        });
         if (paymentError) {
           setCreatedOrderId(order.id);
           return;
@@ -890,7 +1172,8 @@ export const Checkout = () => {
     cart.isPending ||
     settings.isPending ||
     zones.isPending ||
-    profile.isPending;
+    profile.isPending ||
+    book.loading;
   const failed = cart.isError || settings.isError || zones.isError;
   const empty = summary !== null && summary.lines.length === 0 && !busy;
 
@@ -934,9 +1217,9 @@ export const Checkout = () => {
                   onChange={setFulfilment}
                 />
               ) : null}
-              <ContactCard
-                address={address}
+              <AddressSection
                 areas={areas}
+                book={book}
                 busy={busy}
                 fieldErrors={fieldErrors}
                 method={method}
@@ -956,7 +1239,7 @@ export const Checkout = () => {
                 <PaymentCard
                   busy={busy}
                   method={method}
-                  onChange={setPayment}
+                  onChange={book.setPayment}
                   value={paymentMethod}
                 />
               ) : null}
@@ -967,6 +1250,7 @@ export const Checkout = () => {
               cash={cash}
               error={error}
               method={method}
+              oneTap={book.oneTap(method, cash)}
               quote={quote ?? null}
               summary={summary}
             />

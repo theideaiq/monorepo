@@ -20,6 +20,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { Suspense, useId } from "react";
 import { DeleteAccountCard } from "@/components/account/delete-account";
+import { AddressBookCard } from "@/components/address-book-settings";
 import { BirthdayCard } from "@/components/birthday-settings";
 import { ConnectedSites } from "@/components/connected-sites";
 import { GuardianCard } from "@/components/guardian-settings";
@@ -134,6 +135,7 @@ export const Settings = ({
             )}
           </CardContent>
         </Card>
+        <AddressBookCard />
         <PasswordSettingsCard />
         <SignInMethodsCard providers={providers} />
         <BirthdayCard />

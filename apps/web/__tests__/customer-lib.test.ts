@@ -7,6 +7,7 @@ import {
   governorateName,
   validateAddress,
 } from "@/lib/address";
+import { addressToForm, pinInIraq } from "@/lib/address-book";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import {
   type CartItem,
@@ -206,11 +207,27 @@ describe("delivery address", () => {
         city: "Baghdad",
         full_name: "Sara Ali",
         governorate: "baghdad",
+        landmark: "",
         notes: "",
         phone: "+9647701234567",
       },
       zoneId: null,
     });
+  });
+
+  test("delivery keeps the landmark and the pin; pickup drops them", () => {
+    const pinned = {
+      ...filled,
+      landmark: " Opposite the bakery ",
+      location: { lat: 33.3, lng: 44.4 },
+    };
+    expect(validateAddress(pinned).shipping).toMatchObject({
+      landmark: "Opposite the bakery",
+      location: { lat: 33.3, lng: 44.4 },
+    });
+    const pickup = validateAddress(pinned, { fulfilment: "pickup" }).shipping;
+    expect(pickup?.landmark).toBe("");
+    expect(pickup).not.toHaveProperty("location");
   });
 
   test("with the courier's areas known, the city must be one of them", () => {
@@ -434,5 +451,44 @@ describe("accounts", () => {
     expect(isActivePath("/store/product", "/")).toBe(false);
     expect(isActivePath("/store/product", "/store")).toBe(true);
     expect(isActivePath("/storefront", "/store")).toBe(false);
+  });
+});
+
+describe("address book", () => {
+  test("a saved address fills the checkout form", () => {
+    expect(
+      addressToForm({
+        area: "Karrada",
+        created_at: "",
+        full_name: "Sara Ali",
+        governorate: "baghdad",
+        id: "a1",
+        is_default: true,
+        label: "Home",
+        landmark: "Near the bakery",
+        latitude: 33.3,
+        longitude: 44.42,
+        phone: "+9647701234567",
+        street: "Street 62",
+        updated_at: "",
+        user_id: "u",
+        zone_id: "zone-baghdad",
+      })
+    ).toEqual({
+      address: "Street 62",
+      city: "Karrada",
+      fullName: "Sara Ali",
+      governorate: "baghdad",
+      landmark: "Near the bakery",
+      location: { lat: 33.3, lng: 44.42 },
+      notes: "",
+      phone: "+9647701234567",
+      zoneId: "zone-baghdad",
+    });
+  });
+
+  test("pins outside Iraq are refused, like the database does", () => {
+    expect(pinInIraq({ lat: 33.3, lng: 44.4 })).toBe(true);
+    expect(pinInIraq({ lat: 51.5, lng: -0.1 })).toBe(false);
   });
 });

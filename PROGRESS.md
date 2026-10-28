@@ -396,8 +396,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
     details (people type their number on Wayl's page), so a stored number
     would be personal data nothing uses. Revisit if Wayl adds tokens or we
     integrate a wallet directly.
-  - Part 2 (the website: addresses in Settings, the checkout picker and
-    one-tap ordering) ships after this migration has run.
+  - Part 2, the website: Pass → Settings → Addresses (add, edit, remove,
+    make default, nearest landmark, "Pin my location"); checkout starts
+    with the default address shown briefly ("Edit" opens the form) and
+    the way the member last paid, so it's one tap: "Deliver to Home · Pay
+    online", then Place order. Another saved address or "A new address"
+    is one tap away, and a new one can be saved for next time. Orders
+    carry the landmark and the pin to the courier.
 
 - 2026-10-28: Program Revision v2, item 5: developer docs at
   `api.theideaiq.com`. `apps/docs` (Mintlify, now `docs.json`) holds The

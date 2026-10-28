@@ -79,6 +79,11 @@ export const resetCustomer = async () => {
   check(await db.from("plus_homes").delete().eq("user_id", id));
   check(await db.from("plus_waitlist").delete().eq("user_id", id));
   check(await db.from("notifications").delete().eq("user_id", id));
+  // No saved addresses, no remembered way to pay.
+  check(await db.from("user_addresses").delete().eq("user_id", id));
+  check(
+    await db.from("profiles").update({ checkout_payment: null }).eq("id", id)
+  );
   // An adult, so orders need no guardian; earlier rentals are given back.
   check(
     await db

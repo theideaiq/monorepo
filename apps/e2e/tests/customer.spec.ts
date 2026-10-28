@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import {
+  admin,
   clearInbox,
   customer,
   emailedCode,
@@ -339,6 +340,63 @@ test.describe("a signed-in customer", () => {
 
     await expect(page).toHaveURL(ORDER_PAGE);
     await expect(page.getByText("Theme: Novels")).toBeVisible();
+    noErrors();
+  });
+
+  test("saves an address, then checks out in one tap", async ({ page }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/pass/settings`);
+    const book = page.locator("#addresses");
+    await expect(
+      book.getByText("No saved addresses yet.", { exact: false })
+    ).toBeVisible();
+    await book.getByRole("button", { name: "Add an address" }).click();
+    await book.getByLabel("Name", { exact: true }).fill("Home");
+    await book.getByLabel("Mobile number").fill("07701234567");
+    await book.getByRole("combobox", { name: "Governorate" }).click();
+    await page.getByRole("option", { name: BAGHDAD }).click();
+    await book.getByLabel("Area").fill("Karrada");
+    await book.getByLabel("Address", { exact: true }).fill("Street 62");
+    await book.getByLabel("Nearest landmark").fill("Opposite the bakery");
+    await expectAccessible(page);
+    await book.getByRole("button", { name: "Save address" }).click();
+    await expect(book.getByText("Default", { exact: true })).toBeVisible();
+    await expect(book.getByText("Opposite the bakery")).toBeVisible();
+
+    await page.goto(`${urls.web}/store/${product.slug}`);
+    await page.getByRole("button", { name: "Add to cart" }).click();
+    await page.getByRole("link", { name: "View cart" }).click();
+    await page.getByRole("link", { name: "Checkout" }).click();
+
+    // The saved address is already chosen: no form to fill.
+    await expect(page.getByText("Deliver to Home · Pay online")).toBeVisible();
+    await expect(page.getByLabel("Full name")).toHaveCount(0);
+    await expectAccessible(page);
+    await page.getByRole("radio", { name: CASH_ON_DELIVERY }).click();
+    await expect(
+      page.getByText("Deliver to Home · Cash on delivery")
+    ).toBeVisible();
+    await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
+    await expect(page).toHaveURL(ORDER_PAGE);
+
+    const { data } = await admin()
+      .from("orders")
+      .select("shipping_address")
+      .eq("id", page.url().split("/").at(-1) ?? "")
+      .single();
+    expect(data?.shipping_address).toMatchObject({
+      address: "Street 62",
+      city: "Karrada",
+      landmark: "Opposite the bakery",
+    });
+
+    // Next time, checkout remembers cash on delivery.
+    await page.goto(`${urls.web}/store/${product.slug}`);
+    await page.getByRole("button", { name: "Add to cart" }).click();
+    await page.goto(`${urls.web}/checkout`);
+    await expect(
+      page.getByText("Deliver to Home · Cash on delivery")
+    ).toBeVisible();
     noErrors();
   });
 
