@@ -212,7 +212,7 @@ select results_eq(
   'the first delivery is free and comes on the area''s day (Thursday)'
 );
 select throws_ok(
-  $$ select public.book_swap('{}', '{88000000-0000-0000-0000-000000000002}', 'counter') $$,
+  $$ select public.book_swap('{}', '{88000000-0000-0000-0000-000000000002}', 'home') $$,
   '23514', 'A swap is already booked',
   'one swap at a time'
 );
@@ -281,15 +281,16 @@ select results_eq(
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000881');
-select lives_ok(
+select throws_ok(
   $$ select public.book_swap(
        array[(select id from public.rentals where user_id = '00000000-0000-0000-0000-000000000881' and status = 'active')],
        '{88000000-0000-0000-0000-000000000003}', 'counter') $$,
-  'swaps at the counter are unlimited'
+  '23514', 'Invalid swap',
+  'swaps are home swaps only (there is no counter)'
 );
 select is(
-  (select fee from public.plus_swaps where user_id = '00000000-0000-0000-0000-000000000881' and status = 'booked'),
-  0::bigint, 'and free'
+  (select count(*)::integer from public.plus_swaps where user_id = '00000000-0000-0000-0000-000000000881' and status = 'booked'),
+  0, 'and nothing is booked'
 );
 select pg_temp.reset_role();
 update public.plus_swaps set status = 'cancelled' where user_id = '00000000-0000-0000-0000-000000000881' and status = 'booked';
@@ -306,7 +307,7 @@ select results_eq(
   'a pause moves the paid period on by its days'
 );
 select throws_ok(
-  $$ select public.book_swap('{}', '{88000000-0000-0000-0000-000000000001}', 'counter') $$,
+  $$ select public.book_swap('{}', '{88000000-0000-0000-0000-000000000001}', 'home') $$,
   '23514', 'Plus is paused',
   'no swaps while paused'
 );
@@ -321,7 +322,7 @@ select results_eq(
   'cancelling at the period end drops a pending plan change'
 );
 select throws_ok(
-  $$ select public.book_swap('{}', '{88000000-0000-0000-0000-000000000001}', 'counter') $$,
+  $$ select public.book_swap('{}', '{88000000-0000-0000-0000-000000000001}', 'home') $$,
   '23514', 'Plus ends at the end of this period',
   'while cancelling, nothing new comes'
 );

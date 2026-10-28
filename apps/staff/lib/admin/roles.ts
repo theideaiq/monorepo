@@ -8,7 +8,6 @@ import type { StaffRole } from "@repo/database";
  */
 export const sections = [
   "dashboard",
-  "counter",
   "catalog",
   "orders",
   "rentals",
@@ -30,7 +29,6 @@ export const sectionHref: Record<Section, string> = {
   audit: "/settings/audit",
   catalog: "/catalog",
   companies: "/partners",
-  counter: "/counter",
   customers: "/customers",
   dashboard: "/",
   editorial: "/club",
@@ -76,8 +74,6 @@ const roleAccess: Record<StaffRole, AccessMap> = {
   superadmin: everything(),
   support: {
     companies: "write",
-    // The counter: checking Pass cards, Bulbs and rentals in person.
-    counter: "write",
     customers: "write",
     dashboard: "read",
     orders: "write",
@@ -116,7 +112,6 @@ export const menu = [
   { id: "customers", sections: ["customers"] },
   { id: "club", sections: ["editorial", "telegram"] },
   { id: "partners", sections: ["companies"] },
-  { id: "counter", sections: ["counter"] },
   { id: "finance", sections: ["finance"] },
   { id: "settings", sections: ["staff", "audit"] },
 ] as const satisfies readonly { id: string; sections: readonly Section[] }[];

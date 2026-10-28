@@ -1415,7 +1415,7 @@
         "keepFailed": "We couldn't start that. Please try again.",
         "single": "Rented on its own · deposit {deposit} · {fee} a day late",
         "refundDue": "Settled: {amount} of your deposit comes back to you",
-        "amountDue": "Settled: {amount} to pay at the counter",
+        "amountDue": "Settled: {amount} to pay",
         "viewOrder": "Order"
       },
       "errors": {
@@ -1476,10 +1476,6 @@
         "goesBack": "Going back",
         "comesNext": "Coming next (room for {n})",
         "queueEmpty": "Add items to your queue first.",
-        "method": "Where",
-        "home": "At home",
-        "counter": "At the counter",
-        "counterFree": "Swaps at the counter are unlimited.",
         "firstFree": "Your first delivery is included.",
         "included": "{count, plural, one {One home swap left this month.} other {{n} home swaps left this month.}}",
         "extra": "This month's home swaps are used: this one costs {fee}.",
@@ -1490,7 +1486,6 @@
         "booked": "Your swap is booked",
         "onDate": "We'll come on {date}.",
         "dateSoon": "We'll tell you the day soon.",
-        "atCounter": "Bring your items to the counter whenever you like.",
         "payExtra": "Pay {fee} for the extra swap",
         "cancel": "Cancel the swap",
         "errors": {
@@ -2925,7 +2920,6 @@
       "audit": "Audit log",
       "support": "Support",
       "reviews": "Reviews",
-      "counter": "Counter",
       "companies": "Partners"
     },
     "roles": {
@@ -3574,7 +3568,6 @@
         "when": "When",
         "back": "Going back",
         "next": "Coming next",
-        "counter": "At the counter",
         "noDay": "Area has no day yet",
         "feeUnpaid": "Extra swap {fee}: not paid yet",
         "feePaid": "Extra swap {fee}: paid",
@@ -4394,44 +4387,6 @@
       "requests": "Bulk-buying requests",
       "request": "Request #{number}"
     },
-    "counter": {
-      "title": "Counter",
-      "check": "Check a The IDEA Pass",
-      "description": "Scan the card's QR code (camera or scanner), or type the member number and the 6-digit code.",
-      "camera": "Scan with the camera",
-      "stopCamera": "Stop the camera",
-      "cameraError": "The camera isn't available. Use a scanner or type the code.",
-      "scanned": "Scanned code or member number",
-      "code": "Code",
-      "codeHint": "The 6 digits on the card",
-      "submit": "Check",
-      "valid": "Valid",
-      "invalid": "Not valid",
-      "expired": "The code has changed. Ask the member to refresh their card.",
-      "unknown": "No member with that number.",
-      "unnamed": "Unnamed member",
-      "number": "Member number",
-      "since": "Member since",
-      "bulbs": "Bulbs",
-      "plus": "The IDEA Plus",
-      "noPlus": "Not a member",
-      "openMember": "Open the member's page",
-      "rentals": "Rentals",
-      "noRentals": "No open rentals.",
-      "due": "Due {date}",
-      "openRentals": "Open rentals",
-      "events": "Events today",
-      "noEvents": "No RSVPs for events around now.",
-      "checkIn": "Check in",
-      "checkedIn": "Checked in",
-      "rentalStatus": {
-        "requested": "Requested",
-        "active": "Active",
-        "overdue": "Overdue",
-        "returned": "Returned",
-        "cancelled": "Cancelled"
-      }
-    },
     "companies": {
       "title": "Partners",
       "count": "{count} requests",
@@ -4674,7 +4629,7 @@
     },
     "card": {
       "member": "Member",
-      "showAtCounter": "Show this at the counter",
+      "showCard": "Show this to a partner or at an event",
       "newCodeIn": "New code in {seconds}s",
       "unavailable": "The card couldn't load. Check your connection and try again.",
       "addToWallet": "Add to Google Wallet",

@@ -1,4 +1,4 @@
--- The counter: support reads RSVPs and checks members in.
+-- Event check-in: support reads RSVPs and checks members in.
 begin;
 -- <preamble>
 -- Shared pgTAP preamble. Each test file includes a copy between the preamble
@@ -61,14 +61,14 @@ insert into public.staff (user_id, role) values
   ('00000000-0000-0000-0000-0000000078a2', 'support'),
   ('00000000-0000-0000-0000-0000000078a3', 'finance');
 insert into public.events (id, slug, title_ar, title_en, location, starts_at, published) values
-  ('78000000-0000-0000-0000-0000000000e1', 'counter-night', 'أمسية', 'Night', 'Baghdad', now() + interval '2 hours', true);
+  ('78000000-0000-0000-0000-0000000000e1', 'check-in-night', 'أمسية', 'Night', 'Baghdad', now() + interval '2 hours', true);
 insert into public.event_rsvps (event_id, user_id) values
   ('78000000-0000-0000-0000-0000000000e1', '00000000-0000-0000-0000-0000000078a1');
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000078a2', 'aal2');
 select is(
   (select count(*)::integer from public.event_rsvps where event_id = '78000000-0000-0000-0000-0000000000e1'),
-  1, 'support sees the RSVPs at the counter'
+  1, 'support sees the RSVPs'
 );
 select isnt(
   public.check_in_rsvp('78000000-0000-0000-0000-0000000000e1', '00000000-0000-0000-0000-0000000078a1'),

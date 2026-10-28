@@ -41,7 +41,7 @@ const PAID = new Set([
 
 type Supabase = Awaited<ReturnType<typeof requireSection>>["supabase"];
 
-/** Booked swaps, soonest day first, then the counter ones. */
+/** Booked swaps, soonest day first. */
 const loadSwaps = (supabase: Supabase) =>
   supabase
     .from("plus_swaps")
@@ -58,19 +58,12 @@ const names = (
   locale: string
 ) => rentals.map((rental) => localized(rental, "name", locale)).join(" · ");
 
-/** When the swap happens: the area's day, no day yet, or the counter. */
+/** When the swap happens: the area's day, or no day yet. */
 const swapWhen = (
   swap: Swap,
   t: Translate,
   format: ReturnType<typeof formatters>
-) => {
-  if (swap.method !== "home") {
-    return t("swaps.counter");
-  }
-  return swap.scheduled_for
-    ? format.date(swap.scheduled_for)
-    : t("swaps.noDay");
-};
+) => (swap.scheduled_for ? format.date(swap.scheduled_for) : t("swaps.noDay"));
 
 /** Complete (once any extra fee is paid) or cancel a swap. */
 const SwapActions = ({
@@ -166,8 +159,8 @@ const SwapRow = ({
 };
 
 /**
- * The IDEA Plus swaps booked: at home on the area's day (soonest first) or
- * at the counter, with what goes back and what comes next.
+ * The IDEA Plus home swaps booked, on the area's day (soonest first), with
+ * what goes back and what comes next.
  */
 const SwapsPage = async () => {
   const { canWrite, supabase } = await requireSection("rentals");

@@ -14,7 +14,7 @@ The IDEA Plus delivers in Baghdad. Elsewhere in Iraq, and when all places are ta
 
 - **Yearly:** where offered, pay for 10 months and get 12.
 - **Students:** members with a verified Student badge get 20% off monthly plans, where offered.
-- An extra home swap costs 3,000 IQD. Swaps at a pickup point (our store counter and partner desks, where offered) are unlimited on every plan.
+- Swaps are home swaps, on your area's delivery day. An extra home swap costs 3,000 IQD.
 
 ## 3. Joining and paying
 
@@ -60,7 +60,7 @@ Where offered, rentable products have a **Rent** button next to Buy.
 | Film | 2,750 IQD for 7 days | 500 IQD |
 
 - After 14 days late, the item is yours at its used price, charged to you, less the late fees already paid.
-- Pickup at our counter is free; home delivery is charged as a normal order (see [Delivery](/legal/delivery)).
+- Delivery is charged as a normal order (see [Delivery](/legal/delivery)).
 - You need a verified Pass or a refundable deposit of half the item's value.
 
 ## 9. Game night kits

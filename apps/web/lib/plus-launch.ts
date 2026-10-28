@@ -178,7 +178,7 @@ export const usePlusActions = () => {
         returns,
         wants,
       }: {
-        method: "counter" | "home";
+        method: "home";
         paymentMethod?: PaymentMethod;
         returns: string[];
         wants: string[];

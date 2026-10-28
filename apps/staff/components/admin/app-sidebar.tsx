@@ -31,7 +31,6 @@ import {
   type LucideIcon,
   PackageIcon,
   RepeatIcon,
-  ScanLineIcon,
   SettingsIcon,
   ShoppingCartIcon,
   UsersIcon,
@@ -45,7 +44,6 @@ import { AdminSearch } from "./admin-search";
 const icons: Record<MenuId, LucideIcon> = {
   catalog: PackageIcon,
   club: BookOpenIcon,
-  counter: ScanLineIcon,
   customers: UsersIcon,
   finance: LandmarkIcon,
   inbox: InboxIcon,
