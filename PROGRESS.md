@@ -553,6 +553,31 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: Selling, returns, the schema
+  (`20270124000000_returns.sql`; master brief step 5, section 6).
+  `returns`: a customer asks within 14 days of delivery
+  (`request_return`), with a reason and photos (the private
+  `return-photos` bucket); changed mind needs the item unopened, a wrong
+  item is approved at once and a parcel that never arrived is refunded
+  without collection. The shop accepts or disputes within 48 hours
+  (`respond_to_return`; support answers for The IDEA's own stock), and
+  silence accepts. Support decides disputes and who is at fault
+  (`decide_return`). apps/api books the collection (a shipment with
+  `return_id`), stores Boxy's fee and marks it back
+  (`mark_return_received`). The shop then checks it within 48 hours
+  (`confirm_return_condition`; silence means it's fine), and the refund
+  falls due. That's the line's share of the goods paid, less the return
+  delivery for changed mind; Bulbs spent come back and the line's cashback
+  goes. Finance marks cash refunds paid (`mark_return_refunded`) and
+  apps/api records Wayl refunds. `sweep_returns()` applies the deadlines
+  (cron). A refused parcel, once the shop confirms it's back
+  (`confirm_parcel_back`), cancels its lines. After 3 refused cash
+  orders a Pass pays online (`store_settings.refused_cash_limit`,
+  `must_pay_online()`, enforced on new orders). `sellers.score` (valid
+  returns, out of stock and late lines over 90 days) is refreshed nightly
+  (`refresh_seller_scores`). Part 2: the screens, Boxy collection (the
+  temporary-pickup-location workaround, tried in sandbox first), Wayl
+  refunds and the returns policy page.
 - 2026-10-28: Selling, shop orders, the schema
   (`20270123000000_shop_orders.sql`; master brief step 5, section 5).
   `seller_locations` are a shop's pickup locations (one per branch, with
