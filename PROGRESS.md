@@ -379,6 +379,19 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Program Revision v2, item 7 (sign-in scopes), part 1, the
+  schema (migration `20270105000000`):
+  - `address` now comes from the person's default address in the address
+    book (item 6), and only without one from their latest delivery.
+    People still tick it on the consent screen, item by item.
+  - New `organizations` answer: the person's organizations in The IDEA
+    Partners and their role (`owner`, `admin`, `member`), with `app_owner`
+    marking the organization that owns the app, so a partner such as The
+    Iraqi Curator can admit only its own staff. It is sensitive (staff
+    review it before a live app may ask) and is `[]` for people in none.
+  - Part 2 offers it in Partners → Developers, Staff and on the consent
+    screen, and documents both, once this migration has run.
+
 - 2026-10-28: Program Revision v2, item 6 (address book and saved
   payment), part 1, the schema (migration `20270104000000`):
   - `user_addresses` (RLS: the owner only): label, name, phone, delivery
