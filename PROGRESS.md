@@ -553,6 +553,20 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   once when a copy goes on sale. Bundles, plan limits and commission come
   in later parts; the Partners screens and the Staff inbox items follow in
   part 2.
+- 2026-10-28: Selling, returns, part 2. Pass → Orders: delivered lines get
+  a Return button (reason, how many, details, photos in the private
+  `return-photos` bucket, "unopened" for a change of mind), and the order
+  lists its returns with where each is and the refund, withdrawable until
+  collection. Partners → Selling → Returns: accept or dispute within 48
+  hours, check what came back, confirm refused parcels. Staff → Orders →
+  Returns: decide disputes and who is at fault; refunds due are sent the
+  way the customer paid (Wayl, or ZainCash, Qi or a transfer) and marked
+  with the reference; both are Inbox items. `/cron/selling` (daily) runs
+  `sweep_returns`, `sweep_offers` and `refresh_seller_scores`. The returns
+  policy describes the request, answers, delivery costs, refused cash
+  orders and same-day refunds. Still to come: booking the collection with
+  Boxy (the temporary-pickup-location workaround, tried in sandbox first),
+  automatic Wayl refunds and the bell notifications for returns.
 - 2026-10-28: Selling, return lists for shops
   (`20270126000000_return_lists.sql`). `seller_returns(shop)` lists a
   shop's returns with the item and the customer as "first name · area",

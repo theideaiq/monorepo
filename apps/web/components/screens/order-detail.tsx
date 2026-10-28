@@ -310,7 +310,7 @@ const OrderView = ({
   const cancellable = pending || (cash && order.status === "confirmed");
   const address = order.shipping_address as unknown as ShippingAddress;
   const total = formatPrice(order.total, locale);
-  const returns = useOrderReturns(order.status === "delivered" ? order.id : "");
+  const returns = useOrderReturns(order.id, order.status === "delivered");
   const names = new Map(
     order.order_items.map((item) => [item.id, localized(item, "name", locale)])
   );
@@ -418,13 +418,11 @@ const OrderView = ({
           </CardContent>
         </Card>
         <div className="grid gap-6">
-          {returns.data ? (
-            <OrderReturns
-              names={names}
-              orderId={order.id}
-              returns={returns.data}
-            />
-          ) : null}
+          <OrderReturns
+            names={names}
+            orderId={order.id}
+            returns={returns.data ?? []}
+          />
           <Card>
             <CardHeader>
               <CardTitle>{t("summary")}</CardTitle>

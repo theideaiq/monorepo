@@ -177,3 +177,49 @@ export const markLineRefunded = staffAction(
     return success();
   }
 );
+
+/** Support decides a disputed return and who is at fault. */
+export const decideReturn = staffAction(
+  "orders",
+  z.object({
+    approve: checkbox,
+    fault: z.enum(Constants.public.Enums.return_fault),
+    id: uuid,
+    note: z.string().trim().min(1).max(2000),
+  }),
+  async ({ input, supabase }) => {
+    const { error } = await supabase.rpc("decide_return", {
+      approve: input.approve,
+      fault: input.fault,
+      note: input.note,
+      target: input.id,
+    });
+    if (error) {
+      throw new ActionFailure(
+        error.code === "42501" ? "forbidden" : "notFound"
+      );
+    }
+    return success();
+  }
+);
+
+/** Finance marks a return refunded (Wayl or a transfer), with its reference. */
+export const markReturnRefunded = staffAction(
+  "orders",
+  z.object({
+    id: uuid,
+    reference: z.string().trim().min(1).max(200),
+  }),
+  async ({ input, supabase }) => {
+    const { error } = await supabase.rpc("mark_return_refunded", {
+      reference: input.reference,
+      target: input.id,
+    });
+    if (error) {
+      throw new ActionFailure(
+        error.code === "42501" ? "forbidden" : "notFound"
+      );
+    }
+    return success();
+  }
+);

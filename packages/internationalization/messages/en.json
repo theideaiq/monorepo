@@ -3204,7 +3204,9 @@
           "productChecks": "New products to check",
           "productFlags": "Products shops say are wrong",
           "lateShopLines": "Shop lines past their ready-by time",
-          "shopRefunds": "Shop lines to refund"
+          "shopRefunds": "Shop lines to refund",
+          "disputedReturns": "Returns to decide",
+          "returnRefunds": "Return refunds to send"
         }
       }
     },
@@ -3674,6 +3676,37 @@
         "due": "Due",
         "amount": "Amount",
         "markRefunded": "Mark refunded"
+      },
+      "returns": {
+        "title": "Returns",
+        "description": "Disputed returns to decide within 48 hours, and refunds due.",
+        "disputedTitle": "Disputes",
+        "disputedEmpty": "No disputes.",
+        "line": "R-{number} · {name} ×{quantity} · {shop}",
+        "house": "The IDEA",
+        "unopened": "unopened",
+        "customerSays": "Customer: {text}",
+        "shopSays": "Shop's reason: {text}",
+        "shopFound": "Shop found: {text}",
+        "photo": "Photo {number}",
+        "disputedOn": "Disputed {time}",
+        "fault": "At fault",
+        "faults": {
+          "shop": "The shop",
+          "customer": "The customer",
+          "the_idea": "The IDEA"
+        },
+        "note": "Note for the customer and shop",
+        "approve": "Approve",
+        "reject": "Reject",
+        "dueTitle": "Refunds due",
+        "dueDescription": "Send each refund the same day, the way the customer paid, then mark it refunded with the reference.",
+        "dueEmpty": "No refunds due.",
+        "refund": "Refund {amount} and {bulbs} Bulbs (Bulbs already returned)",
+        "reference": "Refund reference",
+        "markRefunded": "Mark refunded",
+        "viaWayl": "Paid online: refund it in Wayl.",
+        "viaTransfer": "Paid in cash: send it by ZainCash, Qi or bank transfer."
       }
     },
     "rentals": {

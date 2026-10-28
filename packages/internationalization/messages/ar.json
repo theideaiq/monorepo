@@ -3204,7 +3204,9 @@
           "productChecks": "منتجات جديدة للمراجعة",
           "productFlags": "منتجات أبلغت المتاجر عن أخطاء فيها",
           "lateShopLines": "بنود متاجر تجاوزت موعد التجهيز",
-          "shopRefunds": "بنود متاجر للاسترداد"
+          "shopRefunds": "بنود متاجر للاسترداد",
+          "disputedReturns": "مُرجَعات بانتظار القرار",
+          "returnRefunds": "مبالغ مُرجَعات للإرسال"
         }
       }
     },
@@ -3674,6 +3676,37 @@
         "due": "الموعد",
         "amount": "المبلغ",
         "markRefunded": "علّمه مسترداً"
+      },
+      "returns": {
+        "title": "المُرجَعات",
+        "description": "اعتراضات على مُرجَعات تُحسم خلال 48 ساعة، ومبالغ مستحقة الاسترداد.",
+        "disputedTitle": "الاعتراضات",
+        "disputedEmpty": "لا اعتراضات.",
+        "line": "R-{number} · {name} ×{quantity} · {shop}",
+        "house": "The IDEA",
+        "unopened": "غير مفتوح",
+        "customerSays": "الزبون: {text}",
+        "shopSays": "سبب المتجر: {text}",
+        "shopFound": "ما وجده المتجر: {text}",
+        "photo": "الصورة {number}",
+        "disputedOn": "اعتُرض عليه {time}",
+        "fault": "المسؤول",
+        "faults": {
+          "shop": "المتجر",
+          "customer": "الزبون",
+          "the_idea": "The IDEA"
+        },
+        "note": "ملاحظة للزبون والمتجر",
+        "approve": "قبول",
+        "reject": "رفض",
+        "dueTitle": "مبالغ مستحقة الاسترداد",
+        "dueDescription": "أرسل كل مبلغ في اليوم نفسه بطريقة الدفع التي استخدمها الزبون، ثم علّمه كمسترد مع المرجع.",
+        "dueEmpty": "لا مبالغ مستحقة.",
+        "refund": "استرداد {amount} و{bulbs} Bulbs (أُعيدت Bulbs مسبقًا)",
+        "reference": "مرجع الاسترداد",
+        "markRefunded": "علّمه كمسترد",
+        "viaWayl": "دُفع إلكترونيًا: استرده عبر Wayl.",
+        "viaTransfer": "دُفع نقدًا: أرسله عبر ZainCash أو Qi أو تحويل مصرفي."
       }
     },
     "rentals": {

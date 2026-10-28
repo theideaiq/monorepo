@@ -16,6 +16,8 @@ export const inboxItems = [
   "orders",
   "lateShopLines",
   "shopRefunds",
+  "disputedReturns",
+  "returnRefunds",
   "rentalRequests",
   "overdueRentals",
   "submissions",
@@ -40,6 +42,7 @@ export interface InboxEntry {
 const head = { count: "exact", head: true } as const;
 
 const hrefs: Record<InboxItem, string> = {
+  disputedReturns: "/orders/returns",
   invoices: "/partners/invoices",
   lateShopLines: "/orders/shop-lines",
   orders: "/orders?status=awaiting",
@@ -49,6 +52,7 @@ const hrefs: Record<InboxItem, string> = {
   productChecks: "/catalog/checks",
   productFlags: "/catalog/checks#flags",
   rentalRequests: "/rentals",
+  returnRefunds: "/orders/returns#refunds",
   seats: "/partners/team/plus",
   shopRefunds: "/orders/shop-lines#refunds",
   submissions: "/club/submissions",
@@ -86,6 +90,8 @@ export const loadInbox = async (
     productFlags,
     lateShopLines,
     shopRefunds,
+    disputedReturns,
+    returnRefunds,
   ] = await Promise.all([
     counted(can("support"), () =>
       supabase
@@ -156,9 +162,16 @@ export const loadInbox = async (
         .is("refunded_at", null)
         .not("order.paid_at", "is", null)
     ),
+    counted(can("orders"), () =>
+      supabase.from("returns").select("id", head).eq("status", "disputed")
+    ),
+    counted(can("orders") && finance, () =>
+      supabase.from("returns").select("id", head).eq("status", "refund_due")
+    ),
   ]);
 
   const counts: Record<InboxItem, number> = {
+    disputedReturns,
     invoices,
     lateShopLines,
     orders,
@@ -168,6 +181,7 @@ export const loadInbox = async (
     productChecks,
     productFlags,
     rentalRequests,
+    returnRefunds,
     seats,
     shopRefunds,
     submissions: (queue?.data ?? []).filter(

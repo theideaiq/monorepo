@@ -39,10 +39,11 @@ const OPEN_STATUSES = new Set<ReturnStatus>([
 
 const returnsKey = (orderId: string) => ["returns", orderId] as const;
 
-export const useOrderReturns = (orderId: string) => {
+/** An order's returns; only fetched once the order is delivered. */
+export const useOrderReturns = (orderId: string, delivered: boolean) => {
   const { supabase, user } = useAuth();
   return useQuery({
-    enabled: Boolean(user && orderId),
+    enabled: Boolean(user && orderId && delivered),
     queryFn: async () =>
       unwrap(
         await supabase
