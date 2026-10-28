@@ -397,6 +397,23 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-28: Selling (item 11), part 1, the listings schema
+  (`20270111000000_listings.sql`). Barcodes are stored as digits (an
+  ISBN-10 as its ISBN-13) and stay unique, so a scanned or typed code finds
+  one product (`find_by_barcode`). A shop's offer (`seller_offers`: one
+  variant in one condition, its price and its own SKU) is set with
+  `set_offer()`, which keeps that many available copies at that price and
+  retires extras; copies already sold or reserved are untouched. Owners and
+  admins of an approved shop list; members see the offers. With no match a
+  shop creates the product (`create_listing()`): live at once, a draft if
+  it names a banned term (`banned_terms`, staff-edited), and checked for
+  missing fields, a photo and likely duplicates (`product_checks`, for
+  Staff → Inbox). A barcode already in the catalogue must be picked ("Product
+  exists"). Shops never edit products; they flag wrong details
+  (`product_flags`). "Notify me" (`product_alerts`) tells a waiting Pass
+  once when a copy goes on sale. Bundles, plan limits and commission come
+  in later parts; the Partners screens and the Staff inbox items follow in
+  part 2.
 - 2026-10-28: Phone verification, part 1, the schema
   (`20270110000000_verified_phones.sql`). `verified_phones` holds the
   numbers a Pass proved with a code; only the API adds rows (after Twilio

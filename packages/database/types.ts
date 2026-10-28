@@ -39,6 +39,21 @@ export type Database = {
         };
         Relationships: [];
       };
+      banned_terms: {
+        Row: {
+          created_at: string;
+          term: string;
+        };
+        Insert: {
+          created_at?: string;
+          term: string;
+        };
+        Update: {
+          created_at?: string;
+          term?: string;
+        };
+        Relationships: [];
+      };
       bulb_entries: {
         Row: {
           amount: number;
@@ -2179,6 +2194,32 @@ export type Database = {
           },
         ];
       };
+      product_alerts: {
+        Row: {
+          created_at: string;
+          product_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          product_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          product_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "product_alerts_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       product_categories: {
         Row: {
           created_at: string;
@@ -2205,6 +2246,99 @@ export type Database = {
           slug?: string;
         };
         Relationships: [];
+      };
+      product_checks: {
+        Row: {
+          created_at: string;
+          id: string;
+          other_product_id: string | null;
+          product_id: string;
+          reason: Database["public"]["Enums"]["product_check_reason"];
+          resolved_at: string | null;
+          resolved_by: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          other_product_id?: string | null;
+          product_id: string;
+          reason: Database["public"]["Enums"]["product_check_reason"];
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          other_product_id?: string | null;
+          product_id?: string;
+          reason?: Database["public"]["Enums"]["product_check_reason"];
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "product_checks_other_product_id_fkey";
+            columns: ["other_product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "product_checks_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      product_flags: {
+        Row: {
+          created_at: string;
+          flagged_by: string | null;
+          id: string;
+          note: string;
+          product_id: string;
+          resolved_at: string | null;
+          resolved_by: string | null;
+          seller_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          flagged_by?: string | null;
+          id?: string;
+          note: string;
+          product_id: string;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          seller_id: string;
+        };
+        Update: {
+          created_at?: string;
+          flagged_by?: string | null;
+          id?: string;
+          note?: string;
+          product_id?: string;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          seller_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "product_flags_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "product_flags_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       product_reviews: {
         Row: {
@@ -2328,6 +2462,7 @@ export type Database = {
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
           created_at: string;
+          created_by_seller: string | null;
           currency: string;
           description_ar: string | null;
           description_en: string | null;
@@ -2356,6 +2491,7 @@ export type Database = {
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
           created_at?: string;
+          created_by_seller?: string | null;
           currency?: string;
           description_ar?: string | null;
           description_en?: string | null;
@@ -2384,6 +2520,7 @@ export type Database = {
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
           created_at?: string;
+          created_by_seller?: string | null;
           currency?: string;
           description_ar?: string | null;
           description_en?: string | null;
@@ -2412,6 +2549,13 @@ export type Database = {
             columns: ["category_id"];
             isOneToOne: false;
             referencedRelation: "product_categories";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "products_created_by_seller_fkey";
+            columns: ["created_by_seller"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
             referencedColumns: ["id"];
           },
         ];
@@ -2923,6 +3067,57 @@ export type Database = {
             columns: ["seller_id"];
             isOneToOne: true;
             referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      seller_offers: {
+        Row: {
+          active: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          id: string;
+          price: number;
+          seller_id: string;
+          sku: string | null;
+          updated_at: string;
+          variant_id: string;
+        };
+        Insert: {
+          active?: boolean;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          id?: string;
+          price: number;
+          seller_id: string;
+          sku?: string | null;
+          updated_at?: string;
+          variant_id: string;
+        };
+        Update: {
+          active?: boolean;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          id?: string;
+          price?: number;
+          seller_id?: string;
+          sku?: string | null;
+          updated_at?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "seller_offers_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "seller_offers_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
             referencedColumns: ["id"];
           },
         ];
@@ -4732,6 +4927,22 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      create_listing: {
+        Args: {
+          barcode: string;
+          category: string;
+          details: Json;
+          images: string[];
+          listing_seller: string;
+          name_ar: string;
+          name_en: string;
+          offer_condition: Database["public"]["Enums"]["product_condition"];
+          offer_price: number;
+          offer_sku?: string;
+          quantity: number;
+        };
+        Returns: string;
+      };
       create_order: {
         Args: {
           delivery_zone?: string;
@@ -4951,6 +5162,17 @@ export type Database = {
         Returns: undefined;
       };
       event_rsvp_count: { Args: { event: string }; Returns: number };
+      find_by_barcode: {
+        Args: { code: string };
+        Returns: {
+          name_ar: string;
+          name_en: string;
+          product_id: string;
+          slug: string;
+          status: Database["public"]["Enums"]["product_status"];
+          variant_id: string;
+        }[];
+      };
       guardian_invite: {
         Args: { invite_code: string };
         Returns: {
@@ -5771,6 +5993,7 @@ export type Database = {
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
           created_at: string;
+          created_by_seller: string | null;
           currency: string;
           description_ar: string | null;
           description_en: string | null;
@@ -5813,6 +6036,33 @@ export type Database = {
         Returns: undefined;
       };
       set_money_rules: { Args: { rules: Json }; Returns: undefined };
+      set_offer: {
+        Args: {
+          offer_condition: Database["public"]["Enums"]["product_condition"];
+          offer_price: number;
+          offer_seller: string;
+          offer_sku?: string;
+          offer_variant: string;
+          quantity: number;
+        };
+        Returns: {
+          active: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          id: string;
+          price: number;
+          seller_id: string;
+          sku: string | null;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "seller_offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       set_pass_app_keys: {
         Args: { client: string; jwks: Json };
         Returns: undefined;
@@ -6098,6 +6348,11 @@ export type Database = {
         | "ordered"
         | "delivered"
         | "cancelled";
+      product_check_reason:
+        | "missing_fields"
+        | "missing_photo"
+        | "banned"
+        | "duplicate";
       product_condition: "new" | "used" | "refurbished" | "open_box";
       product_kind: "sale" | "rental";
       product_status: "draft" | "active" | "archived";
@@ -6337,6 +6592,12 @@ export const Constants = {
         "ordered",
         "delivered",
         "cancelled",
+      ],
+      product_check_reason: [
+        "missing_fields",
+        "missing_photo",
+        "banned",
+        "duplicate",
       ],
       product_condition: ["new", "used", "refurbished", "open_box"],
       product_kind: ["sale", "rental"],
