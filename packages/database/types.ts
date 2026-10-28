@@ -3311,6 +3311,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -3348,6 +3349,7 @@ export type Database = {
           received_at?: string | null;
           refund_amount?: number | null;
           refund_bulbs?: number | null;
+          refund_claimed_at?: string | null;
           refund_due_at?: string | null;
           refund_reference?: string | null;
           refunded_at?: string | null;
@@ -3385,6 +3387,7 @@ export type Database = {
           received_at?: string | null;
           refund_amount?: number | null;
           refund_bulbs?: number | null;
+          refund_claimed_at?: string | null;
           refund_due_at?: string | null;
           refund_reference?: string | null;
           refunded_at?: string | null;
@@ -3911,6 +3914,7 @@ export type Database = {
           survey_fee_rate: number;
           survey_welcome_credits: number;
           updated_at: string;
+          wayl_return_refunds: boolean;
         };
         Insert: {
           bulb_rate?: number;
@@ -3933,6 +3937,7 @@ export type Database = {
           survey_fee_rate?: number;
           survey_welcome_credits?: number;
           updated_at?: string;
+          wayl_return_refunds?: boolean;
         };
         Update: {
           bulb_rate?: number;
@@ -3955,6 +3960,7 @@ export type Database = {
           survey_fee_rate?: number;
           survey_welcome_credits?: number;
           updated_at?: string;
+          wayl_return_refunds?: boolean;
         };
         Relationships: [];
       };
@@ -5274,6 +5280,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -5381,6 +5388,19 @@ export type Database = {
           link: string;
           locale: string;
           user_id: string;
+        }[];
+      };
+      claim_return_refunds: {
+        Args: { max_rows?: number };
+        Returns: {
+          amount: number;
+          item_name: string;
+          number: number;
+          order_number: string;
+          payment_reference: string;
+          reason: Database["public"]["Enums"]["return_reason"];
+          refundable: number;
+          return_id: string;
         }[];
       };
       claim_student_from_email: {
@@ -5584,6 +5604,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -5871,6 +5892,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -6237,6 +6259,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -6283,6 +6306,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -6661,6 +6685,53 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      record_return_refund: {
+        Args: { reference: string; target: string };
+        Returns: {
+          check_by: string | null;
+          collection_fee: number | null;
+          condition_note: string | null;
+          condition_ok: boolean | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          details: string | null;
+          disputed_at: string | null;
+          fault: Database["public"]["Enums"]["return_fault"];
+          id: string;
+          needs_collection: boolean;
+          number: number;
+          order_id: string;
+          order_item_id: string;
+          photos: string[];
+          quantity: number;
+          reason: Database["public"]["Enums"]["return_reason"];
+          received_at: string | null;
+          refund_amount: number | null;
+          refund_bulbs: number | null;
+          refund_claimed_at: string | null;
+          refund_due_at: string | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          respond_by: string;
+          responded_at: string | null;
+          responded_by: string | null;
+          seller_id: string;
+          shop_note: string | null;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["return_status"];
+          unopened: boolean;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       redeem_perk: {
         Args: { perk: string; scanned: string };
         Returns: {
@@ -6687,6 +6758,7 @@ export type Database = {
         Args: { device_platform: string; device_token: string };
         Returns: string;
       };
+      release_return_refund: { Args: { target: string }; Returns: undefined };
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
       rental_quote: {
         Args: { product: string; variant?: string };
@@ -6774,6 +6846,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -6845,6 +6918,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -7367,6 +7441,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
@@ -7531,6 +7606,7 @@ export type Database = {
           received_at: string | null;
           refund_amount: number | null;
           refund_bulbs: number | null;
+          refund_claimed_at: string | null;
           refund_due_at: string | null;
           refund_reference: string | null;
           refunded_at: string | null;
