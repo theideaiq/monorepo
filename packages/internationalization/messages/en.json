@@ -1162,7 +1162,9 @@
           "failed": "That didn't work. Try again."
         },
         "lowestPrice": "Lowest price",
-        "lowest30d": "Lowest in the last 30 days: {price}"
+        "lowest30d": "Lowest in the last 30 days: {price}",
+        "saleEnds": "Sale ends {time}",
+        "quantityDeal": "Buy {from} or more: {rate}% off each"
       }
     },
     "cart": {
@@ -1653,7 +1655,8 @@
         "pickup": "Pickup",
         "shopReturns": "Returns",
         "shopOffers": "Offers",
-        "shopPayouts": "Payouts"
+        "shopPayouts": "Payouts",
+        "shopSales": "Sales and deals"
       },
       "members": {
         "title": "Members",
@@ -2778,6 +2781,27 @@
         "saleUnknown": "An item you sold",
         "collectionFee": "Return collection fee (your shop's fault)",
         "proFee": "Pro plan, until {date}"
+      },
+      "shopSales": {
+        "title": "Sales and deals",
+        "description": "Put a listing on sale between two days (Baghdad time), and take a share off each copy when a customer buys several. A listing on sale takes no offers, and its old price shows crossed out only once it held for 15 of the last 30 days.",
+        "notApproved": "Sales open once your shop is approved.",
+        "noListings": "No listings with copies for sale yet.",
+        "ownersOnly": "Owners and admins set sales and deals.",
+        "salePrice": "Sale price (IQD)",
+        "starts": "First day",
+        "ends": "Last day",
+        "addSale": "Add sale",
+        "sale": "On sale at {price} from {starts} to {ends}",
+        "endSale": "End sale",
+        "overlap": "This listing already has a sale on those days.",
+        "saleFailed": "That didn't work. A sale price is below the price and ends in the future.",
+        "fromQuantity": "From (copies)",
+        "rate": "% off each",
+        "addDeal": "Add deal",
+        "deal": "{rate}% off each from {from} copies",
+        "removeDeal": "Remove",
+        "dealFailed": "That didn't work. Use 2 to 20 copies and 1 to 50% off."
       }
     },
     "ages": {

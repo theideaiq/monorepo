@@ -573,6 +573,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-28: Prices, part 2 (master brief step 7, section 9;
+  `20270201000000_shop_sales.sql`). Partners → Selling → Sales and deals:
+  a listing's sale price between two days (never overlapping; every copy
+  costs the sale price while it runs, so checkout, offers and price history
+  follow it) and quantity deals (a share off each copy from 2 to 20
+  copies, the best one applying at checkout, never with an accepted
+  offer). A listing on sale takes no offers. Product pages show when a sale
+  ends and the listing's deals. The selling cron records the prices sales
+  leave behind (`sweep_listing_sales`). The IDEA's own sales and deals
+  (editors, above the margin floor) are in the schema; their Staff screen
+  comes with campaigns.
 - 2026-10-28: Prices, part 1 (master brief step 7, section 9;
   `20270131000000_price_history.sql`). Every listing keeps a price history
   (`price_history`). Product pages list offers cheapest first with "Lowest
@@ -582,9 +593,8 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   (`product_variants.compare_at_price` follows it; the selling cron ages it
   out with `refresh_was_prices`). Staff forms show it read-only, and the
   spreadsheet import no longer has a compare-at column. A listing with a
-  "was" price is on sale and takes no offers. Still to come in step 7: shop
-  sales and quantity deals, campaigns, coupons within the 20% cap, student
-  prices.
+  "was" price is on sale and takes no offers. Still to come in step 7: campaigns,
+  coupons within the 20% cap, student prices.
 - 2026-10-28: Payouts (master brief step 6, section 8;
   `20270130000000_payouts.sql`). Finance → Payouts prepares the weekly batch
   (`prepare_payouts`): each approved shop owed more than it owes gets a

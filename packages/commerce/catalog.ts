@@ -235,6 +235,11 @@ export const getProductBySlug = async (
   return row as ProductDetail | null;
 };
 
+export interface QuantityDeal {
+  discount_rate: number;
+  min_quantity: number;
+}
+
 /**
  * What a product can be had as: its available copies by variant, condition,
  * purpose (for sale or for rent) and seller (The IDEA or an approved shop),
@@ -243,11 +248,15 @@ export const getProductBySlug = async (
 export interface ProductOffer {
   available: number;
   condition: Tables<"products">["condition"];
+  /** Quantity deals: a share off each copy from a quantity on. */
+  deals: QuantityDeal[];
   /** Lowest price in the last 30 days, from price history; null for rent. */
   lowest_30d: number | null;
   /** Lowest sale price; null for copies for rent. */
   price: number | null;
   purpose: "rental" | "sale";
+  /** When the running sale ends, or null. */
+  sale_ends_at: string | null;
   seller_id: string;
   seller_name: string;
   variant_id: string | null;
@@ -271,9 +280,11 @@ export const getProductOffers = async (
           {
             available: row.available,
             condition: row.condition,
+            deals: (row.deals as QuantityDeal[] | null) ?? [],
             lowest_30d: (row.lowest_30d as number | null) ?? null,
             price: (row.price as number | null) ?? null,
             purpose: row.purpose,
+            sale_ends_at: (row.sale_ends_at as string | null) ?? null,
             seller_id: row.seller_id,
             seller_name: row.seller_name,
             variant_id: (row.variant_id as string | null) ?? null,
