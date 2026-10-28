@@ -8,37 +8,43 @@
   transition: transform 0.2s ease-out;
 }
 
+/* The sheen: a glow that follows the pointer, and a band of colour that
+   sweeps across. The band is its own layer moved with a transform, so the
+   browser slides it on the GPU instead of repainting the card every frame
+   (which made pages framing the card, /pass/embed, stutter). */
 .pass-sheen {
-  background:
-    radial-gradient(
-      circle at var(--pass-x, 30%) var(--pass-y, 20%),
-      rgb(255 255 255 / 0.35),
-      transparent 45%
-    ),
-    linear-gradient(
-      115deg,
-      transparent 30%,
-      rgb(255 214 0 / 0.2) 45%,
-      rgb(120 200 255 / 0.2) 55%,
-      transparent 70%
-    );
-  background-size:
-    100% 100%,
-    250% 250%;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at var(--pass-x, 30%) var(--pass-y, 20%),
+    rgb(255 255 255 / 0.35),
+    transparent 45%
+  );
   mix-blend-mode: soft-light;
+}
+
+.pass-sheen::before {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 250%;
+  content: "";
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgb(255 214 0 / 0.2) 45%,
+    rgb(120 200 255 / 0.2) 55%,
+    transparent 70%
+  );
   animation: pass-sheen 8s linear infinite;
+  will-change: transform;
 }
 
 @keyframes pass-sheen {
   from {
-    background-position:
-      0 0,
-      100% 0;
+    transform: translateX(-100%);
   }
   to {
-    background-position:
-      0 0,
-      -150% 0;
+    transform: translateX(40%);
   }
 }
 
@@ -46,7 +52,8 @@
   .pass-card {
     transition: none;
   }
-  .pass-sheen {
+  .pass-sheen::before {
+    transform: translateX(-60%);
     animation: none;
   }
 }
