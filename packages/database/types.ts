@@ -935,6 +935,35 @@ export type Database = {
           },
         ];
       };
+      memberships: {
+        Row: {
+          created_at: string;
+          organization_id: string;
+          role: Database["public"]["Enums"]["org_role"];
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          organization_id: string;
+          role?: Database["public"]["Enums"]["org_role"];
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          organization_id?: string;
+          role?: Database["public"]["Enums"]["org_role"];
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "memberships_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       notifications: {
         Row: {
           created_at: string;
@@ -1161,35 +1190,6 @@ export type Database = {
             columns: ["delivery_zone_id"];
             isOneToOne: false;
             referencedRelation: "delivery_zones";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      organization_members: {
-        Row: {
-          created_at: string;
-          organization_id: string;
-          role: Database["public"]["Enums"]["org_role"];
-          user_id: string;
-        };
-        Insert: {
-          created_at?: string;
-          organization_id: string;
-          role?: Database["public"]["Enums"]["org_role"];
-          user_id: string;
-        };
-        Update: {
-          created_at?: string;
-          organization_id?: string;
-          role?: Database["public"]["Enums"]["org_role"];
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "organization_members_organization_id_fkey";
-            columns: ["organization_id"];
-            isOneToOne: false;
-            referencedRelation: "organizations";
             referencedColumns: ["id"];
           },
         ];
@@ -4467,35 +4467,6 @@ export type Database = {
       };
     };
     Views: {
-      memberships: {
-        Row: {
-          created_at: string | null;
-          organization_id: string | null;
-          role: Database["public"]["Enums"]["org_role"] | null;
-          user_id: string | null;
-        };
-        Insert: {
-          created_at?: string | null;
-          organization_id?: string | null;
-          role?: Database["public"]["Enums"]["org_role"] | null;
-          user_id?: string | null;
-        };
-        Update: {
-          created_at?: string | null;
-          organization_id?: string | null;
-          role?: Database["public"]["Enums"]["org_role"] | null;
-          user_id?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "organization_members_organization_id_fkey";
-            columns: ["organization_id"];
-            isOneToOne: false;
-            referencedRelation: "organizations";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       product_ratings: {
         Row: {
           average: number | null;
