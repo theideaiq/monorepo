@@ -59,7 +59,7 @@ export const generateMetadata = async ({
 
 /**
  * The IDEA Plus: everything about renting on one page. On the unfiltered
- * first page, "Your Plus" (the member's membership and rentals, or a way to
+ * first page, "Your Plus" (the member's plan and rentals, or a way to
  * sign in) comes first; then the rental catalog (search, categories, the
  * plan each item needs) and how it works, the plans and their tiers.
  */

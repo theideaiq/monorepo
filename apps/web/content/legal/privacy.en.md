@@ -4,7 +4,7 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 
 ### What you give us
 
-- **The IDEA Pass:** your name, email address, date of birth, language and theme, and, if you add them, a photo, a phone number and your birthday for birthday Bulbs. Your Pass has a member number.
+- **The IDEA Pass:** your name, email address, date of birth, language and theme, and, if you add them, a photo, a phone number and your birthday for birthday Bulbs. Your Pass has a number.
 - **Guardians:** for members aged 13 to 17, the link to their guardian's Pass and the guardian's approvals.
 - **Delivery:** your addresses, governorate and area, and the phone number the courier uses.
 - **Orders and rentals:** what you buy, rent or return, The IDEA Plus plan, your rental queue (Saved), swaps, game night kits, deposits and receipts.

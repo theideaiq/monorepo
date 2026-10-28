@@ -197,7 +197,7 @@ export const usePayments = (organizationId: string, enabled: boolean) => {
   });
 };
 
-/** The user's membership payments (not organizations', not store orders). */
+/** The user's Plus payments (not organizations', not store orders). */
 export const usePlusPayments = (refetchInterval?: number | false) => {
   const { supabase, user } = useAuth();
   return useQuery({

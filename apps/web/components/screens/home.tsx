@@ -25,11 +25,7 @@ import { OrderStatusBadge } from "@/components/store/order-status-badge";
 import { upcomingRsvps, useMyRsvps } from "@/lib/community-queries";
 import { orderPath } from "@/lib/order-checkout";
 import { isActiveOrder } from "@/lib/orders";
-import {
-  isLiveMembership,
-  useRentalAllowance,
-  useRentals,
-} from "@/lib/plus-queries";
+import { isLivePlan, useRentalAllowance, useRentals } from "@/lib/plus-queries";
 import { usePlans, usePlusSubscription, useProfile } from "@/lib/queries";
 import { useOrders } from "@/lib/store-queries";
 
@@ -131,7 +127,7 @@ const PlusPanel = () => {
   const plans = usePlans("plus");
   const allowance = useRentalAllowance();
   const rentals = useRentals();
-  const member = isLiveMembership(subscription.data?.status);
+  const member = isLivePlan(subscription.data?.status);
   const plan = plans.data?.find(
     (item) => item.id === subscription.data?.plan_id
   );
@@ -248,7 +244,7 @@ const NextEvents = () => {
 };
 
 /**
- * Your Pass: a greeting, the membership card (`card`, rendered on the
+ * Your Pass: a greeting, the Pass card (`card`, rendered on the
  * server, with the Bulbs balance), then what's on the way: active orders,
  * Plus rentals and the next events. The Store has its own tab.
  */

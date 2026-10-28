@@ -1,4 +1,4 @@
-The IDEA Plus is our rental membership: keep games, books and films as long as you like, swap them for the next one, with no due dates and no late fees. This policy also covers renting a single item from The IDEA Store without a membership, and game night kits.
+The IDEA Plus is our rental plan: keep games, books and films as long as you like, swap them for the next one, with no due dates and no late fees. This policy also covers renting a single item from The IDEA Store without a Plus plan, and game night kits.
 
 ## 1. Where Plus is available
 
@@ -27,7 +27,7 @@ The IDEA Plus delivers in Baghdad. Elsewhere in Iraq, and when all places are ta
 ## 4. How renting works
 
 - Add what you want to **Saved**: for Plus members it is your rental queue, in order. We send the next available item from it.
-- **Keep items as long as you like.** There are no due dates and no late fees while your membership is active.
+- **Keep items as long as you like.** There are no due dates and no late fees while your plan is active.
 - **Swaps:** our rider brings your next item and takes the last one back in one visit, on your area's delivery day. Or swap at a pickup point.
 - New releases in their first 30 days are for Plus Shine and Plus Blaze.
 - What you can rent: PS5 and Switch games, books, films on Blu-ray and, where offered, board games. Consoles are rented only as game night kits.
@@ -47,9 +47,9 @@ Love something you are renting? Buy that copy at its used price, minus one month
 - **Change plan** in Your Plus. A move to a plan with fewer items takes effect once you have no more items at home than the new plan allows.
 - **Pause** for up to one month a year. While paused you aren't charged and no new items are sent; items at home stay with you.
 - **Cancel any time** in Your Plus. The cancellation takes effect at the end of the month you paid for, once your items are back. We don't refund part of a month.
-- **Unreturned items:** if an item isn't back within 14 days after your membership ends, or within 14 days of our reminder, and you don't reply, we may charge its replacement cost.
+- **Unreturned items:** if an item isn't back within 14 days after your plan ends, or within 14 days of our reminder, and you don't reply, we may charge its replacement cost.
 
-## 8. Single-item rent (no membership)
+## 8. Single-item rent (no plan)
 
 Where offered, rentable products have a **Rent** button next to Buy.
 

@@ -37,7 +37,7 @@ import { toRentalError } from "@/lib/errors";
 import { orderPath, useKeepRental } from "@/lib/order-checkout";
 import { plansFor, usePlusStatus } from "@/lib/plus-launch";
 import {
-  isLiveMembership,
+  isLivePlan,
   meetsTier,
   planForTier,
   type RentalAllowance,
@@ -69,14 +69,14 @@ const RENTAL_BADGE: Record<
   returned: "outline",
 };
 
-const Membership = ({
+const YourPlan = ({
   allowance,
   confirming,
 }: {
   readonly allowance: RentalAllowance | undefined;
   readonly confirming: boolean;
 }) => {
-  const t = useTranslations("app.plus.membership");
+  const t = useTranslations("app.plus.yourPlan");
   const tBilling = useTranslations("billing.status");
   const locale = useLocale();
   const plans = usePlans("plus");
@@ -193,7 +193,7 @@ const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
   const subscription = usePlusSubscription();
   const checkout = usePlanCheckout("/plus");
   const canSell = useCanSellDigitalGoods();
-  const member = isLiveMembership(subscription.data?.status);
+  const member = isLivePlan(subscription.data?.status);
   const canJoin = usePlusStatus().data?.canJoin ?? false;
   const [billing, setBilling] = useState<"month" | "year">("month");
   const shown = plansFor(plans.data ?? undefined, billing);
@@ -334,7 +334,7 @@ const RentalItem = ({
 
   let hint: string | null = null;
   if (!member) {
-    hint = t("catalog.needMembership");
+    hint = t("catalog.needPlan");
   } else if (tierTooLow) {
     hint = neededPlan
       ? t("catalog.upgradeTo", { plan: neededPlan })
@@ -647,7 +647,7 @@ const MyRentals = () => {
 };
 
 /**
- * "Your Plus" at the top of /plus: the member's membership, plans, rentals
+ * "Your Plus" at the top of /plus: the member's plan, plans, rentals
  * and the rental catalog to request from; signed out, a way to sign in.
  */
 export const YourPlus = () => {
@@ -670,7 +670,7 @@ const PlusMember = () => {
   const subscription = usePlusSubscription();
   const allowance = useRentalAllowance();
   const payments = usePlusPayments(confirming ? POLL_MS : false);
-  const member = isLiveMembership(subscription.data?.status);
+  const member = isLivePlan(subscription.data?.status);
   const refetchSubscription = subscription.refetch;
   const refetchAllowance = allowance.refetch;
 
@@ -690,7 +690,7 @@ const PlusMember = () => {
   return (
     <div className="flex flex-col gap-8">
       {member ? null : <JoinPlus />}
-      <Membership allowance={allowance.data} confirming={confirming} />
+      <YourPlan allowance={allowance.data} confirming={confirming} />
       {member ? (
         <>
           <ManagePlus />

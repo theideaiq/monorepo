@@ -38,7 +38,7 @@ We ask for a date of birth when you first sign in. Giving a false date of birth 
 
 ## 3. The IDEA Pass
 
-The IDEA Pass is your membership: one per person, free, with your member card, Bulbs, orders and settings.
+The IDEA Pass is your Pass: one per person, free, with your Pass card, Bulbs, orders and settings.
 
 - **Signing in.** You sign in with your email and password, with a one-time code sent to your email ("Email me a code"), or with Google, Apple or Telegram. A new email address gets a new Pass.
 - **Keep it yours.** Never share your password or a sign-in code: The IDEA will never ask you for them. Keep your email secure, because whoever controls it can sign in. Tell us at once at [hi@theideaiq.com](mailto:hi@theideaiq.com) if you think someone else has used your Pass.
@@ -71,7 +71,7 @@ By paying, you authorise us and Wayl to charge the amount shown to you.
 
 ## 6. Renting, Plus and rewards
 
-- [The IDEA Plus](/legal/plus) covers the membership, single-item rentals, game night kits and deposits.
+- [The IDEA Plus](/legal/plus) covers the Plus plans, single-item rentals, game night kits and deposits.
 - [Rewards](/legal/rewards) covers Bulbs and invites.
 
 Rented items always remain our property.
