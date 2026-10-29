@@ -494,3 +494,31 @@ export const saveIndividualLimit = staffAction(
     return success();
   }
 );
+
+/**
+ * Makes an approved shop a supplier (copies for Plus, kit units for game
+ * nights), changes its fees or pauses it. Staff admins only; the database
+ * checks it too.
+ */
+export const saveSupplyTerms = staffAction(
+  "companies",
+  z.object({
+    active: checkbox,
+    id: uuid,
+    kitFee: int(0),
+    note: optionalText(1000),
+    rentalFee: int(0),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("set_supply_terms", {
+        active: input.active,
+        kit_fee: input.kitFee,
+        note: input.note ?? undefined,
+        rental_fee: input.rentalFee,
+        shop: input.id,
+      })
+    );
+    return success("saved");
+  }
+);

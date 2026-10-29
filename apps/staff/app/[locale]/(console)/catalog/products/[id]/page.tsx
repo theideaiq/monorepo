@@ -11,6 +11,7 @@ import { isUuid } from "@/lib/admin/list";
 import { ratingSummary } from "@/lib/admin/reviews";
 import { canRead } from "@/lib/admin/roles";
 import { requireSection } from "@/lib/admin/session";
+import { supplierOptions } from "@/lib/admin/suppliers";
 import { CopiesPanel } from "../../_components/copies-panel";
 import { CoverFinder } from "../../_components/cover-finder";
 import { HouseOffersPanel } from "../../_components/house-offers-panel";
@@ -41,6 +42,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
     { data: plans },
     { data: reviews },
     { data: copies },
+    suppliers,
   ] = await Promise.all([
     supabase.from("products").select("*").eq("id", id).maybeSingle(),
     supabase
@@ -70,6 +72,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       .order("status")
       .order("created_at", { ascending: false })
       .limit(500),
+    supplierOptions(supabase, t("copies.house")),
   ]);
 
   if (!product) {
@@ -122,6 +125,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           copies={copies ?? []}
           disabled={!canWrite}
           product={product}
+          suppliers={suppliers}
           variants={(variants ?? []).map((variant, index) => ({
             id: variant.id,
             label:

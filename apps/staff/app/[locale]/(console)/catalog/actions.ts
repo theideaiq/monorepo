@@ -309,6 +309,8 @@ const copyFields = {
   note: optionalText(1000),
   price: optionalInt(1),
   purpose: z.enum(Enums.stock_purpose),
+  // The IDEA or a supplier shop; left out for a shop's own copies.
+  sellerId: optionalUuid,
   serial: optionalText(120),
   variantId: uuid,
 };
@@ -320,9 +322,11 @@ const copyRow = (input: {
   note: string | null;
   price: number | null;
   purpose: (typeof Enums.stock_purpose)[number];
+  sellerId: string | null;
   serial: string | null;
   variantId: string;
 }) => ({
+  ...(input.sellerId ? { seller_id: input.sellerId } : {}),
   condition: input.condition,
   cost: input.cost,
   location: input.location ?? "",

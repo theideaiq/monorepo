@@ -101,7 +101,8 @@ incidents) is in `docs/platform`.
   accept and decline amounts), `/selling/sales` (sale prices between two
   days, quantity deals, student prices and taking part in campaigns), `/selling/payouts` (each weekly payout with
   its statement) and `/selling/pickup` (its branches, each a Boxy pickup
-  location),
+  location), Supply `/supply` (a supplier shop's copies lent to Plus and
+  kit units lent to game nights, with its fees and what each earned),
   Perks `/perks`,
   Team `/team` (bulk orders for the organization, with `/team/<id>` for a
   request, and `/team/plus`, Plus for its people), Developers
@@ -109,10 +110,10 @@ incidents) is in `docs/platform`.
   `/organization/members`, `/organization/billing`,
   `/organization/invoices`), plus `/new`, `/documents/<kind>/<id>` and invitations. The
   sidebar holds the organization switcher and these sections; Selling,
-  Perks, Team and Developers appear once the organization adds them from Home
-  (`organizations.features`, `components/nav-items.ts`), and the bell is
-  only in the top bar. Supply and Opportunities join the list when they
-  ship. It holds no Staff code. No sign-in of its own: it sends
+  Supply, Perks, Team and Developers appear once the organization adds them
+  from Home (`organizations.features`, `components/nav-items.ts`), and the
+  bell is only in the top bar. Opportunities joins the list when it
+  ships. It holds no Staff code. No sign-in of its own: it sends
   people to The IDEA Pass on the website with `return_to`.
 - `apps/staff` — **Staff** (package `staff`, port 3003,
   `staff.theideaiq.com`), everything The IDEA's team uses, server-rendered

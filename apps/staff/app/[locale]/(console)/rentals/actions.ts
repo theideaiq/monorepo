@@ -8,6 +8,7 @@ import {
   date,
   int,
   optionalText,
+  optionalUuid,
   text,
   uuid,
 } from "@/lib/admin/forms";
@@ -244,25 +245,37 @@ export const collectKit = staffAction(
 /** Adds a kit unit once the physical kit is ready. */
 export const addKitUnit = staffAction(
   "rentals",
-  z.object({ kit: text(40), label: text(60) }),
+  z.object({ kit: text(40), label: text(60), sellerId: optionalUuid }),
   async ({ input, supabase }) => {
     check(
-      await supabase
-        .from("kit_units")
-        .insert({ kit_type: input.kit, label: input.label })
+      await supabase.from("kit_units").insert({
+        kit_type: input.kit,
+        label: input.label,
+        ...(input.sellerId ? { seller_id: input.sellerId } : {}),
+      })
     );
   }
 );
 
-/** Sends a kit unit to repair, back to service, or retires it. */
+/**
+ * Sends a kit unit to repair, back to service, or retires it, and records
+ * who owns it (The IDEA or a supplier shop).
+ */
 export const setKitUnitStatus = staffAction(
   "rentals",
-  z.object({ id: uuid, status: z.enum(["active", "repair", "retired"]) }),
+  z.object({
+    id: uuid,
+    sellerId: optionalUuid,
+    status: z.enum(["active", "repair", "retired"]),
+  }),
   async ({ input, supabase }) => {
     affected(
       await supabase
         .from("kit_units")
-        .update({ status: input.status })
+        .update({
+          status: input.status,
+          ...(input.sellerId ? { seller_id: input.sellerId } : {}),
+        })
         .eq("id", input.id)
         .select("id")
     );

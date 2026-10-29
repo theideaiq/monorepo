@@ -10,6 +10,7 @@ import {
   SelectField,
   TextField,
 } from "@/components/admin/fields";
+import type { SupplierOption } from "@/lib/admin/suppliers";
 import {
   addKitUnit,
   collectKit,
@@ -139,22 +140,34 @@ export const KitTypeForm = ({
   );
 };
 
-/** Adds a unit of a kit. */
+/** Adds a unit of a kit, The IDEA's own or a supplier shop's. */
 export const AddKitUnitForm = ({
   kits,
+  suppliers,
 }: {
   readonly kits: { id: string; name: string }[];
+  readonly suppliers: readonly SupplierOption[];
 }) => {
   const t = useTranslations("admin.rentals.kits");
   return (
     <ActionForm action={addKitUnit} className="rounded-md border p-3">
-      <FieldGrid columns={3}>
+      <FieldGrid columns={suppliers.length > 1 ? 4 : 3}>
         <SelectField
           label={t("kit")}
           name="kit"
           options={kits.map((kit) => ({ label: kit.name, value: kit.id }))}
         />
         <TextField label={t("unitLabel")} name="label" required />
+        {suppliers.length > 1 ? (
+          <SelectField
+            label={t("supplier")}
+            name="sellerId"
+            options={suppliers.map((row) => ({
+              label: row.name,
+              value: row.id,
+            }))}
+          />
+        ) : null}
         <div className="flex items-end">
           <SubmitButton size="sm">{t("addUnit")}</SubmitButton>
         </div>
@@ -163,13 +176,17 @@ export const AddKitUnitForm = ({
   );
 };
 
-/** Sends a unit to repair or retires it. */
+/** Sends a unit to repair or retires it, and who owns it. */
 export const KitUnitStatus = ({
   id,
+  sellerId,
   status,
+  suppliers,
 }: {
   readonly id: string;
+  readonly sellerId: string;
   readonly status: string;
+  readonly suppliers: readonly SupplierOption[];
 }) => {
   const t = useTranslations("admin.rentals.kits");
   return (
@@ -178,6 +195,20 @@ export const KitUnitStatus = ({
       className="flex items-center justify-end gap-2"
     >
       <input name="id" type="hidden" value={id} />
+      {suppliers.length > 1 && suppliers.some((row) => row.id === sellerId) ? (
+        <select
+          aria-label={t("supplier")}
+          className="h-8 rounded-md border bg-transparent px-2 text-sm"
+          defaultValue={sellerId}
+          name="sellerId"
+        >
+          {suppliers.map((row) => (
+            <option key={row.id} value={row.id}>
+              {row.name}
+            </option>
+          ))}
+        </select>
+      ) : null}
       <select
         aria-label={t("unitStatus")}
         className="h-8 rounded-md border bg-transparent px-2 text-sm"

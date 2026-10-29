@@ -63,13 +63,18 @@ const PayoutsPage = async () => {
   };
   const summary = (row: Row) => {
     const sales = row.lines.filter((line) => line.kind === "sale");
+    // Supply fees are owed to the shop, like sales; the rest is deducted.
+    const supply = row.lines
+      .filter((line) => line.kind === "supply")
+      .reduce((sum, line) => sum + line.amount, 0);
     const deducted = row.lines
-      .filter((line) => line.kind !== "sale")
+      .filter((line) => line.kind !== "sale" && line.kind !== "supply")
       .reduce((sum, line) => sum - line.amount, 0);
-    return t("summary", {
+    return t(supply > 0 ? "summarySupply" : "summary", {
       deducted: formatPrice(deducted, locale),
       lines: format.number(sales.length),
       period: format.date(row.period_end),
+      supply: formatPrice(supply, locale),
     });
   };
 
