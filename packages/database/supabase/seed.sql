@@ -144,6 +144,12 @@ insert into public.rental_rates (category_id, price, days, late_fee)
 select id, 9750, 7, 1750 from public.product_categories where slug = 'board-games'
 on conflict (category_id) do nothing;
 
+-- Textbooks rent for the term; one runs locally from a month ago.
+update public.rental_rates set per_term = true
+where category_id = '50000000-0000-0000-0000-000000000008';
+insert into public.academic_terms (name_ar, name_en, starts_on, ends_on) values
+  ('الفصل الأول', 'First term', current_date - 30, current_date + 90);
+
 -- Game night kits ready to book locally (production adds them in the back
 -- office when each kit is ready).
 insert into public.kit_units (kit_type, label) values
