@@ -205,8 +205,11 @@ export const usePlaceOrder = () => {
 
 /** What the checkout sends to `create_gift_order()`. */
 export interface PlaceGift {
-  /** Where the gift goes; the recipient gives the address there. */
-  deliveryZone: string;
+  /**
+   * Where the gift goes; the recipient gives the address there. Null when
+   * nothing is delivered (only Plus months).
+   */
+  deliveryZone: string | null;
   hidePrice: boolean;
   message: string;
   useBulbs: number;
@@ -232,7 +235,8 @@ export const usePlaceGift = () => {
       finish(
         unwrap(
           await supabase.rpc("create_gift_order", {
-            delivery_zone: deliveryZone,
+            // The argument has no default, so null is sent for "no area".
+            delivery_zone: deliveryZone as string,
             hide_price: hidePrice,
             use_bulbs: useBulbs,
             ...(message.trim() ? { message: message.trim() } : {}),

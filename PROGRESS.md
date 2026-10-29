@@ -707,6 +707,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   kit or a rental can't be sent as a gift. One cart now holds everything
   bought once that exists today; tickets, programs and digital codes join
   when they're built, and gifting Plus months is still to come.
+- 2026-10-29: Catalog, part 7 (step 11; `20270221000000_plus_gifts.sql`).
+  Plus months as a gift: "Give Plus" on the Plus page puts 1, 3, 6 or 12
+  prepaid months of a monthly plan in the cart, and they always check out
+  with Send as a gift (alone, with no area or delivery fee, or with other
+  things). The recipient claims them from the link without an address:
+  without Plus, it starts at once (as joining allows) and ends with the
+  gift unless they keep it; with Plus, each renewal uses a gifted month
+  instead of an invoice (the renewal job calls `use_plus_gift_month`
+  first). Gifted months count for no free delivery, discount, cap or
+  cashback; Bulbs pay up to half of one month. The cart badge now counts
+  the kit and Plus months too. Step 11 is done.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

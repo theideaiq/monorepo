@@ -1221,8 +1221,19 @@
         "invalidAddress": "Check the name, phone and address.",
         "phoneUnverified": "Verify your phone number first.",
         "suspended": "This Pass can't accept gifts.",
-        "unknown": "Something went wrong. Try again."
-      }
+        "unknown": "Something went wrong. Try again.",
+        "guardian": "Your guardian needs to allow Plus first, from their Pass.",
+        "company": "Your organization pays for your Plus, so gifted months can't be added.",
+        "plusHome": "Add your home in Baghdad on the Plus page first, then open this link again.",
+        "plusOutside": "Plus is in Baghdad only for now.",
+        "plusFull": "Plus is full right now. Join the waitlist, then open this link again once you're invited."
+      },
+      "plusMonths": "{count, plural, one {{months} month} other {{months} months}} of {plan}",
+      "claimPlusIntro": "The months are added to your Pass. If you already have Plus, they pay your next renewals.",
+      "claimPlus": "Add to my Pass",
+      "claimedPlus": "It's yours: the Plus months are on your Pass.",
+      "yourPlus": "See your Plus",
+      "joinPlus": "Go to Plus"
     }
   },
   "app": {
@@ -1401,6 +1412,10 @@
         "when": "From Thursday {date}{hasExtra, select, yes { · {extra} extra days} other {}}",
         "deposit": "Deposit {deposit}, refunded when it comes back",
         "booked": "Every kit is booked that weekend. Remove it and choose another weekend."
+      },
+      "plus": {
+        "label": "Plus as a gift",
+        "months": "{count, plural, one {{months} month} other {{months} months}}, sent as a gift"
       }
     },
     "checkout": {
@@ -1529,10 +1544,14 @@
         "messagePlaceholder": "Happy birthday!",
         "hidePrice": "Hide the price",
         "payNote": "Gifts are paid online or with Bulbs.",
-        "noRentals": "Rentals and game night kits can't be sent as gifts. Remove them from the cart to send the rest as a gift."
+        "noRentals": "Rentals and game night kits can't be sent as gifts. Remove them from the cart to send the rest as a gift.",
+        "plusOnly": "Plus months are always sent as a gift: they claim them from the link you send.",
+        "plusWithRentals": "Plus months are sent as a gift, and rentals and game night kits can't be. Remove one or the other to check out.",
+        "plusNote": "The months are added to their Pass when they claim it. If they already have Plus, the months pay their next renewals."
       },
       "rentLine": "Rent",
-      "kitLine": "Kit"
+      "kitLine": "Kit",
+      "plusLine": "Gift"
     },
     "orders": {
       "title": "Orders",
@@ -1817,6 +1836,18 @@
         "endsOn": "Plus ends on {date}. Return your items by then.",
         "cancel": "Cancel Plus",
         "keep": "Keep Plus"
+      },
+      "give": {
+        "title": "Give Plus",
+        "description": "Prepaid months of Plus for someone else. They claim them from a link you send.",
+        "plan": "Plan",
+        "months": "How long",
+        "monthsOption": "{count, plural, one {{months} month} other {{months} months}}",
+        "each": "{price} {per}",
+        "note": "To start Plus, they need a home in Baghdad and a free place, as when joining. Gifted months never renew on their own.",
+        "addToCart": "Add to cart",
+        "adding": "Adding…",
+        "failed": "We couldn't add it to the cart. Try again."
       }
     },
     "events": {

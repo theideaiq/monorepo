@@ -43,13 +43,23 @@ interface GiftSwitchProps {
   readonly onChange: (gift: boolean) => void;
   /** The cart holds a rental, which can't be a gift. */
   readonly rentals?: boolean;
+  /** The cart holds Plus months, which are only sent as gifts. */
+  readonly required?: boolean;
 }
+
+const switchHint = (rentals: boolean, required: boolean) => {
+  if (rentals) {
+    return required ? "plusWithRentals" : "noRentals";
+  }
+  return required ? "plusOnly" : "switchHint";
+};
 
 /** "Send as a gift": the recipient gives their own address from a link. */
 export const GiftSwitch = ({
   busy,
   gift,
   onChange,
+  required = false,
   rentals = false,
 }: GiftSwitchProps) => {
   const t = useTranslations("app.checkout.gift");
@@ -58,8 +68,8 @@ export const GiftSwitch = ({
     <Card>
       <CardContent className="flex items-start gap-3">
         <Checkbox
-          checked={gift && !rentals}
-          disabled={busy || rentals}
+          checked={(gift || required) && !rentals}
+          disabled={busy || rentals || required}
           id={id}
           onCheckedChange={(checked) => onChange(checked === true)}
         />
@@ -69,7 +79,7 @@ export const GiftSwitch = ({
             {t("switch")}
           </Label>
           <p className="text-muted-foreground text-sm">
-            {t(rentals ? "noRentals" : "switchHint")}
+            {t(switchHint(rentals, required))}
           </p>
         </div>
       </CardContent>
@@ -82,6 +92,10 @@ interface GiftDetailsCardProps {
   readonly form: GiftForm;
   readonly missingZone: boolean;
   readonly onChange: (form: GiftForm) => void;
+  /** Plus months are in it: they're added to the recipient's Pass. */
+  readonly plus?: boolean;
+  /** Something is delivered, so the gift needs an area. */
+  readonly ships?: boolean;
   readonly zones: DeliveryZone[];
 }
 
@@ -91,6 +105,8 @@ export const GiftDetailsCard = ({
   form,
   missingZone,
   onChange,
+  plus = false,
+  ships = true,
   zones,
 }: GiftDetailsCardProps) => {
   const t = useTranslations("app.checkout.gift");
@@ -105,37 +121,39 @@ export const GiftDetailsCard = ({
         <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
-        <Field
-          error={missingZone ? t("zoneMissing") : null}
-          hint={t("zoneHint")}
-          htmlFor={`${id}-zone`}
-          label={t("zone")}
-        >
-          <Select
-            disabled={busy}
-            onValueChange={(zoneId) => onChange({ ...form, zoneId })}
-            value={form.zoneId}
+        {ships ? (
+          <Field
+            error={missingZone ? t("zoneMissing") : null}
+            hint={t("zoneHint")}
+            htmlFor={`${id}-zone`}
+            label={t("zone")}
           >
-            <SelectTrigger
-              aria-describedby={missingZone ? `${id}-zone-error` : undefined}
-              aria-invalid={missingZone}
-              className="w-full"
-              id={`${id}-zone`}
+            <Select
+              disabled={busy}
+              onValueChange={(zoneId) => onChange({ ...form, zoneId })}
+              value={form.zoneId}
             >
-              <SelectValue placeholder={t("zonePlaceholder")} />
-            </SelectTrigger>
-            <SelectContent>
-              {zones.map((zone) => (
-                <SelectItem key={zone.id} value={zone.id}>
-                  {tCheckout("address.zoneOption", {
-                    fee: formatPrice(zone.fee, locale),
-                    name: localized(zone, "name", locale),
-                  })}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </Field>
+              <SelectTrigger
+                aria-describedby={missingZone ? `${id}-zone-error` : undefined}
+                aria-invalid={missingZone}
+                className="w-full"
+                id={`${id}-zone`}
+              >
+                <SelectValue placeholder={t("zonePlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                {zones.map((zone) => (
+                  <SelectItem key={zone.id} value={zone.id}>
+                    {tCheckout("address.zoneOption", {
+                      fee: formatPrice(zone.fee, locale),
+                      name: localized(zone, "name", locale),
+                    })}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
+        ) : null}
         <Field htmlFor={`${id}-message`} label={t("message")} optional>
           <Textarea
             disabled={busy}
@@ -160,6 +178,9 @@ export const GiftDetailsCard = ({
           />
           <Label htmlFor={`${id}-hide`}>{t("hidePrice")}</Label>
         </div>
+        {plus ? (
+          <p className="text-muted-foreground text-xs">{t("plusNote")}</p>
+        ) : null}
         <p className="text-muted-foreground text-xs">{t("payNote")}</p>
       </CardContent>
     </Card>

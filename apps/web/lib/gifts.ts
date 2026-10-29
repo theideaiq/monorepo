@@ -26,8 +26,18 @@ export interface GiftDetails {
   message: string | null;
   number?: number;
   order_id: string;
+  /** Plus months in it, added to the recipient's Pass when claimed. */
+  plus: {
+    months: number;
+    name: string;
+    name_ar: string | null;
+    plan_id: string;
+    used: number;
+  } | null;
   /** Paid, so it can be claimed (and then shipped). */
   ready: boolean;
+  /** Something is delivered, so claiming asks for an address. */
+  ships: boolean;
   status: OrderStatus;
   /** Null when the sender hid the price. */
   total: number | null;
@@ -104,15 +114,24 @@ export const useClaimGift = (token: string) => {
   const { supabase, user } = useAuth();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (shipping: object) =>
+    // No address when nothing is delivered (only Plus months).
+    mutationFn: async (shipping: object | null) =>
       unwrap(
-        await supabase.rpc("claim_gift", { shipping: { ...shipping }, token })
+        await supabase.rpc("claim_gift", {
+          token,
+          ...(shipping ? { shipping: { ...shipping } } : {}),
+        })
       ) as string,
     // The link is spent now: its preview isn't refetched.
     onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: giftKeys.received(user?.id ?? ""),
-      }),
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: giftKeys.received(user?.id ?? ""),
+        }),
+        // Plus months start Plus or wait for its renewals.
+        queryClient.invalidateQueries({ queryKey: ["plus-subscription"] }),
+        queryClient.invalidateQueries({ queryKey: ["plus-launch"] }),
+      ]),
   });
 };
 

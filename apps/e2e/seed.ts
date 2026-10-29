@@ -77,6 +77,7 @@ export const resetCustomer = async () => {
   const id = await ensureUser(customer.email, customer.name);
   check(await db.from("cart_items").delete().eq("user_id", id));
   check(await db.from("cart_kits").delete().eq("user_id", id));
+  check(await db.from("cart_plus_gifts").delete().eq("user_id", id));
   check(await db.from("wishlist_items").delete().eq("user_id", id));
   check(await db.from("plus_homes").delete().eq("user_id", id));
   check(await db.from("plus_waitlist").delete().eq("user_id", id));
@@ -114,6 +115,45 @@ export const resetCustomer = async () => {
 /** The customer's friend, who claims gifts. */
 export const resetFriend = async () => {
   await ensureUser(friend.email, friend.name);
+};
+
+/**
+ * The friend without Plus but with a home in Baghdad, so gifted Plus
+ * months can start it.
+ */
+export const resetFriendForPlus = async () => {
+  const db = admin();
+  const id = await ensureUser(friend.email, friend.name);
+  check(
+    await db
+      .from("subscriptions")
+      .update({ status: "expired" })
+      .eq("user_id", id)
+      .in("status", ["incomplete", "active", "past_due"])
+  );
+  check(
+    await db
+      .from("profiles")
+      .update({ birthday: "1996-02-11" })
+      .eq("id", id)
+      .is("birthday", null)
+  );
+  const { data: area } = await db
+    .from("plus_areas")
+    .select("id")
+    .eq("active", true)
+    .order("position")
+    .limit(1)
+    .single();
+  check(
+    await db.from("plus_homes").upsert({
+      address: "Street 14",
+      area_id: area?.id ?? "",
+      phone: "+9647701234568",
+      user_id: id,
+    })
+  );
+  return id;
 };
 
 /** A staff member (admin role) with no authenticator app linked yet. */

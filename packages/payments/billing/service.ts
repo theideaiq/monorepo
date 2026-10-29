@@ -249,6 +249,7 @@ export const createBillingService = ({
 
   type RenewalResult =
     | { kind: "expired" }
+    | { kind: "gifted" }
     | { kind: "skipped"; pastDue: boolean }
     | { invoice: RenewalInvoice; kind: "invoiced"; pastDue: boolean };
 
@@ -257,6 +258,12 @@ export const createBillingService = ({
     current: Date,
     { graceDays, leadDays }: { graceDays: number; leadDays: number }
   ): Promise<RenewalResult> => {
+    // A Plus month someone gave the member pays the period before any
+    // invoice, even on a cancelled subscription (it ends once they're used).
+    if (await repository.spendGiftMonth(subscription.id)) {
+      return { kind: "gifted" };
+    }
+
     const end = subscription.currentPeriodEnd ?? current;
 
     // Cancelled ones end with their paid period; unpaid ones after the grace.
@@ -389,6 +396,7 @@ export const createBillingService = ({
       );
       const invoices: RenewalInvoice[] = [];
       let expired = 0;
+      let gifted = 0;
       let pastDue = 0;
 
       for (const subscription of due) {
@@ -402,6 +410,10 @@ export const createBillingService = ({
           expired += 1;
           continue;
         }
+        if (result.kind === "gifted") {
+          gifted += 1;
+          continue;
+        }
         if (result.pastDue) {
           pastDue += 1;
         }
@@ -410,7 +422,7 @@ export const createBillingService = ({
         }
       }
 
-      return { expired, invoices, pastDue };
+      return { expired, gifted, invoices, pastDue };
     },
     /**
      * Starts paying for a plan; returns the hosted checkout URL. Business

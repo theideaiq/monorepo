@@ -242,3 +242,24 @@ export const addKitToSummary = (
     },
   };
 };
+
+/**
+ * Adds the cart's gifted Plus months to its summary (they're outside free
+ * delivery, so callers leave `plus` out of the threshold).
+ */
+export const addPlusGiftToSummary = (
+  summary: ReturnType<typeof summarizeCart>,
+  plus: { price: number } | null
+): ReturnType<typeof summarizeCart> =>
+  plus
+    ? {
+        ...summary,
+        canCheckout: summary.problems === 0,
+        totals: {
+          ...summary.totals,
+          count: summary.totals.count + 1,
+          subtotal: summary.totals.subtotal + plus.price,
+          total: summary.totals.total + plus.price,
+        },
+      }
+    : summary;

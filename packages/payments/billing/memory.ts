@@ -19,6 +19,8 @@ export const createMemoryBillingRepository = (
   orders: OrderRecord[] = []
 ) => {
   const state = {
+    /** Gifted Plus months left, by user. */
+    giftMonths: new Map<string, number>(),
     orders: new Map(orders.map((order) => [order.id, { ...order }])),
     payments: new Map<
       string,
@@ -141,6 +143,24 @@ export const createMemoryBillingRepository = (
       const id = state.webhookEvents.size + 1;
       state.webhookEvents.set(key, { id, processed: false });
       return Promise.resolve(id);
+    },
+    spendGiftMonth(subscriptionId) {
+      const subscription = state.subscriptions.get(subscriptionId);
+      const left = state.giftMonths.get(subscription?.userId ?? "") ?? 0;
+      if (!subscription?.userId || left === 0) {
+        return Promise.resolve(false);
+      }
+      state.giftMonths.set(subscription.userId, left - 1);
+      const base = subscription.currentPeriodEnd ?? new Date();
+      const end = new Date(base);
+      end.setUTCMonth(end.getUTCMonth() + 1);
+      state.subscriptions.set(subscriptionId, {
+        ...subscription,
+        currentPeriodEnd: end,
+        currentPeriodStart: base,
+        status: "active",
+      });
+      return Promise.resolve(true);
     },
     updatePayment(referenceId, update) {
       const payment = state.payments.get(referenceId);

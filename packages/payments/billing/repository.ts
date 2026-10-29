@@ -130,6 +130,11 @@ export interface BillingRepository {
     provider: string;
     referenceId: string;
   }) => Promise<number | null>;
+  /**
+   * Pays the subscription's next period with a Plus month someone gave
+   * the member, if any are left; false when none are.
+   */
+  spendGiftMonth: (subscriptionId: string) => Promise<boolean>;
   updatePayment: (referenceId: string, update: PaymentUpdate) => Promise<void>;
   updateSubscription: (id: string, update: SubscriptionUpdate) => Promise<void>;
 }

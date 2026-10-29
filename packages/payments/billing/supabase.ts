@@ -272,6 +272,14 @@ export const createSupabaseBillingRepository = (
     return unwrap({ data, error }).id;
   },
 
+  async spendGiftMonth(subscriptionId) {
+    const { data, error } = await supabase.rpc("use_plus_gift_month", {
+      subscription: subscriptionId,
+    });
+    check(error);
+    return data === true;
+  },
+
   async updatePayment(referenceId, update) {
     const { error } = await supabase
       .from("payments")

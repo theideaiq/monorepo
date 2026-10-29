@@ -275,6 +275,31 @@ describe("billing", () => {
     expect([...state.subscriptions.values()][0]?.status).toBe("canceled");
   });
 
+  test("a gifted Plus month pays a renewal instead of an invoice", async () => {
+    const { billing, provider, setNow, state } = setup();
+    const { referenceId } = await billing.startCheckout({
+      owner: { userId: "user-1" },
+      planId: "pro-monthly",
+      userId: "user-1",
+    });
+    await billing.handleWebhook(provider.settle(referenceId, "paid"));
+    state.giftMonths.set("user-1", 1);
+
+    setNow(new Date("2026-11-01T06:00:00Z"));
+    expect(await billing.issueRenewals()).toMatchObject({
+      gifted: 1,
+      invoices: [],
+    });
+    expect(
+      [...state.subscriptions.values()][0]?.currentPeriodEnd?.toISOString()
+    ).toBe("2026-12-03T12:00:00.000Z");
+
+    // Once they're used, renewals are invoiced again.
+    setNow(new Date("2026-12-01T06:00:00Z"));
+    expect(await billing.issueRenewals()).toMatchObject({ gifted: 0 });
+    expect(state.payments.size).toBe(2);
+  });
+
   test("individual users subscribe on their own", async () => {
     const { billing, provider, state } = setup();
     const { referenceId } = await billing.startCheckout({
