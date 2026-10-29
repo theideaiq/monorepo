@@ -198,6 +198,12 @@ const CustomersPage = async ({
         </Link>
         <Link
           className="font-medium text-sm hover:underline"
+          href="/customers/verifications"
+        >
+          {t("verificationsLink")}
+        </Link>
+        <Link
+          className="font-medium text-sm hover:underline"
           href="/customers/surveys"
         >
           {t("surveysLink")}

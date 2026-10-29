@@ -267,6 +267,24 @@ export const uploadVerificationFile = (
   );
 };
 
+/** A time-limited link to an identity or educator document (its owner or support). */
+export const getVerificationFileUrl = async (
+  supabase: Client,
+  path: string,
+  expiresIn = 10 * 60
+) => {
+  const { data, error } = await supabase.storage
+    .from(buckets.verifications.id)
+    .createSignedUrl(path, expiresIn);
+  if (error || !data) {
+    throw new StorageError(
+      "not_found",
+      `No signed URL: ${error?.message ?? "no data"}`
+    );
+  }
+  return data.signedUrl;
+};
+
 /** Uploads a document for a partner's student verification (apps/api, service role). */
 export const uploadStudentDocument = (
   admin: Client,

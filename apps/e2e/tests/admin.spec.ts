@@ -94,6 +94,12 @@ test.describe("Staff", () => {
       page.getByRole("heading", { name: "Student cards to review" })
     ).toBeVisible();
     await expectAccessible(page);
+    // Verifications: identity, educator and organization reviews.
+    await page.goto(`${urls.staff}/customers/verifications`);
+    await expect(
+      page.getByRole("heading", { name: "Organizations" })
+    ).toBeVisible();
+    await expectAccessible(page);
     await page.goto(`${urls.staff}/partners/perks`);
     await expect(page.getByRole("heading", { name: "New perk" })).toBeVisible();
     await expectAccessible(page);
