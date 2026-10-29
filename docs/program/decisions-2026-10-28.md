@@ -941,3 +941,16 @@ Plus Duo waits for step 14.
   Plus at 20% off, partner perks for students, creating surveys); the Pass
   card says "Educator", and partners' student checks still answer for
   students only.
+- **Shops:** a shop is a registered business (commercial registration and
+  the owner's ID: no limits) or an individual trader (the owner's ID only).
+  An individual trader may sell up to 5,000,000 IQD in a Baghdad calendar
+  month by default (Staff → Settings changes it); cancelled orders and
+  refunded lines don't count, and a checkout that would pass the limit is
+  refused. New applications are individual traders unless they say
+  otherwise; shops approved before this were reviewed with their documents
+  and are registered. Staff can change a shop's kind.
+- **Organizations:** a company is verified at once by a domain it already
+  proved in Partners → Developers, or reviewed by support from an official
+  letter. Student societies also upload their university's approval, so
+  they are always reviewed. Letters and approvals are kept (they are not
+  personal ID); the owners and admins are told the outcome.
