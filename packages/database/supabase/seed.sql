@@ -21,6 +21,13 @@ insert into public.product_categories (id, slug, name_ar, name_en, position) val
   ('50000000-0000-0000-0000-000000000002', 'gear', 'الأجهزة', 'Gear', 5)
 on conflict (id) do nothing;
 
+-- Books' subcategories (the migration adds them in production, where
+-- Books already exists).
+insert into public.product_categories (id, slug, name_ar, name_en, position, parent_id) values
+  ('50000000-0000-0000-0000-000000000007', 'comics-manga', 'القصص المصوّرة والمانغا', 'Comics & manga', 1, '50000000-0000-0000-0000-000000000004'),
+  ('50000000-0000-0000-0000-000000000008', 'textbooks', 'الكتب الدراسية', 'Textbooks', 2, '50000000-0000-0000-0000-000000000004')
+on conflict (slug) do nothing;
+
 insert into public.products
   (slug, kind, status, category_id, name_ar, name_en, description_ar, description_en, price, compare_at_price, stock_count, featured, details)
 values
@@ -128,7 +135,13 @@ update public.products set rental_tier = 2 where slug = 'ea-fc-26-ps5';
 insert into public.rental_rates (category_id, price, days, late_fee) values
   ('50000000-0000-0000-0000-000000000001', 9750, 7, 1750),
   ('50000000-0000-0000-0000-000000000004', 3750, 14, 500),
-  ('50000000-0000-0000-0000-000000000006', 2750, 7, 500)
+  ('50000000-0000-0000-0000-000000000006', 2750, 7, 500),
+  ('50000000-0000-0000-0000-000000000007', 3750, 14, 500),
+  ('50000000-0000-0000-0000-000000000008', 3750, 14, 500)
+on conflict (category_id) do nothing;
+
+insert into public.rental_rates (category_id, price, days, late_fee)
+select id, 9750, 7, 1750 from public.product_categories where slug = 'board-games'
 on conflict (category_id) do nothing;
 
 -- Game night kits ready to book locally (production adds them in the back

@@ -2889,6 +2889,7 @@ export type Database = {
           id: string;
           name_ar: string;
           name_en: string;
+          parent_id: string | null;
           position: number;
           slug: string;
         };
@@ -2897,6 +2898,7 @@ export type Database = {
           id?: string;
           name_ar: string;
           name_en: string;
+          parent_id?: string | null;
           position?: number;
           slug: string;
         };
@@ -2905,10 +2907,19 @@ export type Database = {
           id?: string;
           name_ar?: string;
           name_en?: string;
+          parent_id?: string | null;
           position?: number;
           slug?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "product_categories_parent_id_fkey";
+            columns: ["parent_id"];
+            isOneToOne: false;
+            referencedRelation: "product_categories";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       product_checks: {
         Row: {
@@ -7137,6 +7148,7 @@ export type Database = {
           id: string;
           name_ar: string;
           name_en: string;
+          parent_id: string | null;
           position: number;
           slug: string;
         }[];

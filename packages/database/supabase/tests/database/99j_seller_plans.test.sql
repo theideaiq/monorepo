@@ -74,12 +74,14 @@ insert into public.products (id, slug, name_ar, name_en, price, status, kind, co
 select results_eq(
   $$ select c.slug, r.standard_rate, r.pro_rate from public.commission_rates r
      join public.product_categories c on c.id = r.category_id order by c.slug $$,
-  $$ values ('books'::text, 0.12::numeric, 0.10::numeric), ('films', 0.12, 0.10), ('games', 0.10, 0.08),
-       ('gear', 0.09, 0.07), ('music', 0.12, 0.10) $$,
+  $$ values ('board-games'::text, 0.10::numeric, 0.08::numeric), ('books', 0.12, 0.10),
+       ('comics-manga', 0.12, 0.10), ('films', 0.12, 0.10), ('games', 0.10, 0.08),
+       ('gear', 0.09, 0.07), ('music', 0.12, 0.10), ('textbooks', 0.12, 0.10),
+       ('trading-cards', 0.12, 0.10) $$,
   'the brief''s rates, standard and Pro'
 );
 select pg_temp.login_anon();
-select is((select count(*)::integer from public.commission_rates), 5, 'anyone sees the rates');
+select is((select count(*)::integer from public.commission_rates), 9, 'anyone sees the rates');
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000b01');
 select is_empty(
