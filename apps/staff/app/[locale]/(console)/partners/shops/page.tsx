@@ -12,7 +12,7 @@ import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { requireSection } from "@/lib/admin/session";
 import { CompaniesTabs } from "../_components/companies-tabs";
-import { DecideSellerForm } from "./forms";
+import { DecideSellerForm, IndividualLimitForm, ShopKindForm } from "./forms";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.companies.shops");
@@ -20,6 +20,20 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const STATUS_ORDER = ["pending", "approved", "suspended", "rejected"] as const;
+
+/** Registered business or individual trader. */
+const KindBadge = ({
+  kind,
+  labels,
+}: {
+  readonly kind: "individual" | "registered" | null;
+  readonly labels: Record<"individual" | "registered", string>;
+}) => {
+  if (!kind) {
+    return null;
+  }
+  return <StatusBadge status="draft">{labels[kind]}</StatusBadge>;
+};
 
 /**
  * Shops that applied to sell on The IDEA (Partners → Selling): their
@@ -32,14 +46,24 @@ const ShopsPage = async () => {
   const t = await getTranslations("admin.companies.shops");
   const tCompanies = await getTranslations("admin.companies");
   const format = formatters(locale);
+  const kindLabels = {
+    individual: t("kinds.individual"),
+    registered: t("kinds.registered"),
+  };
 
-  const { data } = await supabase
-    .from("sellers")
-    .select(
-      "id, name, status, applied_at, decided_at, organization:organizations (name), details:seller_details (documents, payout_bank, payout_account_name, payout_iban, deposit_required, deposit_held, review_note)"
-    )
-    .eq("is_house", false)
-    .order("applied_at", { ascending: false });
+  const [{ data }, { data: settings }] = await Promise.all([
+    supabase
+      .from("sellers")
+      .select(
+        "id, name, status, kind, applied_at, decided_at, organization:organizations (name), details:seller_details (documents, payout_bank, payout_account_name, payout_iban, deposit_required, deposit_held, review_note)"
+      )
+      .eq("is_house", false)
+      .order("applied_at", { ascending: false }),
+    supabase
+      .from("store_settings")
+      .select("individual_monthly_limit")
+      .maybeSingle(),
+  ]);
   const shops = [...(data ?? [])].sort(
     (a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status)
   );
@@ -62,6 +86,11 @@ const ShopsPage = async () => {
       <PageHeader title={tCompanies("title")} />
       <CompaniesTabs />
       <PageBody>
+        {canWrite && settings ? (
+          <Panel description={t("limitDescription")} title={t("limitTitle")}>
+            <IndividualLimitForm limit={settings.individual_monthly_limit} />
+          </Panel>
+        ) : null}
         {shops.length === 0 ? (
           <EmptyState title={t("empty")} />
         ) : (
@@ -80,9 +109,12 @@ const ShopsPage = async () => {
                         })}
                       </p>
                     </div>
-                    <StatusBadge status={shop.status}>
-                      {t(`statuses.${shop.status}`)}
-                    </StatusBadge>
+                    <div className="flex flex-wrap gap-2">
+                      <KindBadge kind={shop.kind} labels={kindLabels} />
+                      <StatusBadge status={shop.status}>
+                        {t(`statuses.${shop.status}`)}
+                      </StatusBadge>
+                    </div>
                   </div>
                   <div className="grid gap-4 text-sm sm:grid-cols-2">
                     <div className="grid gap-1">
@@ -142,11 +174,14 @@ const ShopsPage = async () => {
                     </div>
                   </div>
                   {canWrite ? (
-                    <DecideSellerForm
-                      deposit={details?.deposit_required ?? 0}
-                      id={shop.id}
-                      note={details?.review_note ?? ""}
-                    />
+                    <>
+                      <ShopKindForm id={shop.id} kind={shop.kind} />
+                      <DecideSellerForm
+                        deposit={details?.deposit_required ?? 0}
+                        id={shop.id}
+                        note={details?.review_note ?? ""}
+                      />
+                    </>
                   ) : null}
                 </Panel>
               );

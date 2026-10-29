@@ -47,6 +47,8 @@ export const NOTIFICATION_EVENTS = [
   "plus_seat_active",
   "pass_app_approved",
   "pass_app_declined",
+  "organization_verified",
+  "organization_rejected",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];

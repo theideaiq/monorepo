@@ -2002,7 +2002,32 @@
         "title": "Organization settings",
         "description": "Only owners and admins can change these settings.",
         "name": "Company name",
-        "slug": "Address"
+        "slug": "Address",
+        "verification": {
+          "title": "Verification",
+          "description": "A verified organization shows a badge to The IDEA's members and partners.",
+          "verified": "Verified",
+          "verifiedOn": "Verified on {date}.",
+          "waiting": "Your request is waiting for review. We'll let you know.",
+          "rejected": "We couldn't verify it: {reason}",
+          "askAdmin": "Ask an owner or admin to verify the organization.",
+          "how": "How to verify",
+          "byDomain": "Verified domain",
+          "byLetter": "Official letter",
+          "domainHint": "Uses a domain you verified in Developers. It works at once.",
+          "letter": "Official letter",
+          "letterHint": "On your letterhead, signed and stamped (photo or PDF).",
+          "society": "We're a student society",
+          "university": "University",
+          "approval": "The university's approval (photo or PDF)",
+          "verify": "Verify",
+          "send": "Send for review",
+          "errors": {
+            "noDomain": "Verify a domain in Developers first, or send a letter.",
+            "society": "Add the university and its approval.",
+            "failed": "It couldn't be sent. Try again."
+          }
+        }
       },
       "overview": {
         "description": "What needs your attention at The IDEA.",
@@ -2924,6 +2949,14 @@
           "save": "Save",
           "saved": "Saved.",
           "failed": "The details couldn't be saved. Try again."
+        },
+        "kind": {
+          "label": "Kind of shop",
+          "registered": "Registered business",
+          "registeredHint": "With a commercial registration and the owner's ID. No sales limit.",
+          "individual": "Individual trader",
+          "individualHint": "With the owner's ID only. Sales are limited each month.",
+          "used": "Sold this month: {sold} of {limit}."
         }
       },
       "listings": {
@@ -3607,6 +3640,14 @@
         "pass_app_declined": {
           "title": "Your app's request wasn't approved",
           "body": "{name} keeps working with the basic answers. Open it to see our note."
+        },
+        "organization_verified": {
+          "title": "Your organization is verified",
+          "body": "The IDEA has verified your organization."
+        },
+        "organization_rejected": {
+          "title": "We couldn't verify your organization",
+          "body": "Open Organization to see why and try again."
         },
         "product_available": {
           "title": "It's on offer",
@@ -5726,7 +5767,17 @@
           "approved": "Approved",
           "rejected": "Not approved",
           "suspended": "Suspended"
-        }
+        },
+        "kind": "Kind of shop",
+        "kinds": {
+          "registered": "Registered business",
+          "individual": "Individual trader"
+        },
+        "saveKind": "Change kind",
+        "limitTitle": "Individual traders",
+        "limitDescription": "Shops with only the owner's ID can sell up to this much each Baghdad calendar month. Cancelled orders and refunded lines don't count.",
+        "limit": "Monthly sales limit (IQD)",
+        "limitHint": "Checkouts that would pass it are refused."
       }
     }
   },

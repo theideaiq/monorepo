@@ -8,7 +8,7 @@ import {
   TextareaField,
   TextField,
 } from "@/components/admin/fields";
-import { decideSeller } from "../actions";
+import { decideSeller, saveIndividualLimit, setShopKind } from "../actions";
 
 const DECISIONS = ["approved", "rejected", "suspended"] as const;
 
@@ -53,6 +53,62 @@ export const DecideSellerForm = ({
         rows={2}
       />
       <SubmitButton className="justify-self-start">{t("save")}</SubmitButton>
+    </ActionForm>
+  );
+};
+
+const KINDS = ["registered", "individual"] as const;
+
+/** Registered (commercial registration) or individual trader. */
+export const ShopKindForm = ({
+  id,
+  kind,
+}: {
+  readonly id: string;
+  readonly kind: (typeof KINDS)[number] | null;
+}) => {
+  const t = useTranslations("admin.companies.shops");
+  if (!kind) {
+    return null;
+  }
+  return (
+    <ActionForm action={setShopKind} className="flex flex-wrap items-end gap-3">
+      <input name="id" type="hidden" value={id} />
+      <SelectField
+        defaultValue={kind}
+        label={t("kind")}
+        name="kind"
+        options={KINDS.map((value) => ({
+          label: t(`kinds.${value}`),
+          value,
+        }))}
+      />
+      <SubmitButton size="sm" variant="outline">
+        {t("saveKind")}
+      </SubmitButton>
+    </ActionForm>
+  );
+};
+
+/** Individual traders' monthly sales limit (IQD). */
+export const IndividualLimitForm = ({ limit }: { readonly limit: number }) => {
+  const t = useTranslations("admin.companies.shops");
+  return (
+    <ActionForm
+      action={saveIndividualLimit}
+      className="flex flex-wrap items-end gap-3"
+    >
+      <TextField
+        defaultValue={String(limit)}
+        dir="ltr"
+        hint={t("limitHint")}
+        inputMode="numeric"
+        label={t("limit")}
+        name="limit"
+        required
+        wrapperClassName="w-56"
+      />
+      <SubmitButton size="sm">{t("save")}</SubmitButton>
     </ActionForm>
   );
 };

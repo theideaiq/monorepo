@@ -142,6 +142,16 @@ test("a company verifies its domain and registers a Pass app", async ({
   await page.goto(`${urls.app}/ar/developers`);
   await expect(page.getByText("E2E Books", { exact: true })).toBeVisible();
   await expectAccessible(page);
+
+  // The verified domain verifies the organization at once (in Arabic, the
+  // language chosen above).
+  await page.goto(`${urls.app}/ar/organization`);
+  const verification = page.locator("#verification");
+  await verification.getByRole("button", { exact: true, name: "وثّق" }).click();
+  await expect(
+    verification.getByText("وُثّقت في", { exact: false })
+  ).toBeVisible();
+  await expectAccessible(page);
 });
 
 test("a company applies to sell and, once approved, lists an offer that reaches the website", async ({
@@ -160,6 +170,9 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await page.getByLabel("Shop name").fill("E2E Records");
   await page.getByRole("button", { exact: true, name: "Apply" }).click();
   await expect(page.getByText("In review")).toBeVisible();
+  await expect(
+    page.getByText("Individual trader", { exact: true }).first()
+  ).toBeVisible();
   await page.getByLabel("Bank", { exact: true }).fill("E2E Bank");
   await page.getByLabel("Name on the bank details").fill("E2E Company");
   await page.getByLabel("IBAN").fill("IQ00 TEST");
