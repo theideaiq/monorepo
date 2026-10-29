@@ -1,4 +1,4 @@
-import { localized } from "@repo/commerce";
+import { categoryOptions } from "@repo/commerce";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { PageBody, PageHeader } from "@/components/admin/page";
@@ -19,7 +19,7 @@ const NewProductPage = async () => {
   const [{ data: categories }, { data: plans }] = await Promise.all([
     supabase
       .from("product_categories")
-      .select("id, name_ar, name_en")
+      .select("id, name_ar, name_en, parent_id")
       .order("position"),
     supabase
       .from("plans")
@@ -37,10 +37,7 @@ const NewProductPage = async () => {
       />
       <PageBody className="max-w-5xl">
         <ProductForm
-          categories={(categories ?? []).map((category) => ({
-            id: category.id,
-            label: localized(category, "name", locale),
-          }))}
+          categories={categoryOptions(categories ?? [], locale)}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
           tiers={tierOptions(plans ?? [])}
         />

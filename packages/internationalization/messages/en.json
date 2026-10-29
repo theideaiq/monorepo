@@ -284,6 +284,8 @@
       "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order here and pay through Wayl or cash on delivery.",
       "categories": "Categories",
       "allCategories": "All",
+      "subcategories": "Subcategories",
+      "allIn": "All {category}",
       "formatsLabel": "Formats",
       "allFormats": "All formats",
       "formats": {
@@ -3746,7 +3748,8 @@
         "ageRating": "Age rating (PEGI)",
         "ageRatingHint": "Shown on the product page; PEGI 18 items will be hidden from under-18 Passes.",
         "releaseDate": "Release date",
-        "releaseDateHint": "Optional. Saved shows \"Coming soon\" before it and \"Out now\" for 14 days after."
+        "releaseDateHint": "Optional. Saved shows \"Coming soon\" before it and \"Out now\" for 14 days after.",
+        "parent": "Under"
       },
       "variants": {
         "title": "Variants",
@@ -3766,9 +3769,10 @@
         "variantPriced": "Price and stock are set on each variant below; the product shows the lowest price."
       },
       "categories": {
-        "description": "Categories group products in the store. Deleting one leaves its products without a category.",
+        "description": "Categories group products in the store. A category can sit under a top-level one (one level deep), and a top-level category's filter includes its subcategories. Deleting a category leaves its products without one; move or delete its subcategories first.",
         "new": "New category",
-        "deleteDescription": "Its products stay, without a category."
+        "deleteDescription": "Its products stay, without a category.",
+        "topLevel": "Top level"
       },
       "settings": {
         "description": "Applied to every new order.",

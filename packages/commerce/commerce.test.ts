@@ -3,6 +3,7 @@ import {
   bulbsToEarn,
   bulbsToSpend,
   cartTotals,
+  categoryOptions,
   deliveryFee,
   describeAttributes,
   discountPercent,
@@ -147,5 +148,20 @@ describe("planName", () => {
     expect(bulbsToSpend(50_000, 8000)).toBe(8000);
     expect(bulbsToSpend(900, 105_000)).toBe(0);
     expect(bulbsToSpend(5000, 999)).toBe(0);
+  });
+});
+
+describe("categoryOptions", () => {
+  test("lists each parent followed by its subcategories", () => {
+    const rows = [
+      { id: "b", name_ar: "الكتب", name_en: "Books", parent_id: null },
+      { id: "m", name_ar: "المانغا", name_en: "Manga", parent_id: "b" },
+      { id: "g", name_ar: "الألعاب", name_en: "Games", parent_id: null },
+    ];
+    expect(categoryOptions(rows, "en")).toEqual([
+      { id: "b", label: "Books" },
+      { id: "m", label: "Books › Manga" },
+      { id: "g", label: "Games" },
+    ]);
   });
 });

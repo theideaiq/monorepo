@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice } from "@repo/commerce";
+import { categoryOptions, formatPrice } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -317,9 +317,9 @@ const CreateProduct = ({
               <SelectValue placeholder={t("chooseCategory")} />
             </SelectTrigger>
             <SelectContent>
-              {(categories.data ?? []).map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {locale === "ar" ? category.name_ar : category.name_en}
+              {categoryOptions(categories.data ?? [], locale).map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -849,11 +849,13 @@ const MakeBundle = ({
                     <SelectValue placeholder={t("chooseCategory")} />
                   </SelectTrigger>
                   <SelectContent>
-                    {(categories.data ?? []).map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {locale === "ar" ? category.name_ar : category.name_en}
-                      </SelectItem>
-                    ))}
+                    {categoryOptions(categories.data ?? [], locale).map(
+                      (option) => (
+                        <SelectItem key={option.id} value={option.id}>
+                          {option.label}
+                        </SelectItem>
+                      )
+                    )}
                   </SelectContent>
                 </Select>
               </div>

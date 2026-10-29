@@ -4,10 +4,10 @@ import { listProducts } from "./catalog";
 type Call = [string, ...unknown[]];
 
 /** A Supabase client stand-in that records the query builder calls. */
-const fakeClient = (rows: unknown[] = []) => {
+const fakeClient = (rows: unknown[] = [], categories: unknown[] = []) => {
   const calls: Call[] = [];
   const builder: Record<string, unknown> = {};
-  for (const method of ["select", "eq", "order", "or"]) {
+  for (const method of ["select", "eq", "in", "order", "or"]) {
     builder[method] = (...args: unknown[]) => {
       calls.push([method, ...args]);
       return builder;
@@ -20,7 +20,9 @@ const fakeClient = (rows: unknown[] = []) => {
   const client = {
     from: (table: string) => {
       calls.push(["from", table]);
-      return builder;
+      return table === "product_categories"
+        ? { select: () => Promise.resolve({ data: categories, error: null }) }
+        : builder;
     },
     rpc: (name: string, args: unknown) => {
       calls.push(["rpc", name, args]);
@@ -50,6 +52,21 @@ describe("listProducts", () => {
     ]);
     expect(calls.some(([method]) => method === "order")).toBe(false);
     expect(calls.at(-1)).toEqual(["range", 12, 23]);
+  });
+
+  test("a category includes its subcategories", async () => {
+    const { calls, client } = fakeClient(
+      [],
+      [
+        { id: "books", parent_id: null, slug: "books" },
+        { id: "manga", parent_id: "books", slug: "comics-manga" },
+        { id: "games", parent_id: null, slug: "games" },
+      ]
+    );
+    await listProducts(client, { category: "books" });
+    expect(calls).toContainEqual(["in", "category_id", ["books", "manga"]]);
+    await listProducts(client, { category: "comics-manga" });
+    expect(calls).toContainEqual(["in", "category_id", ["manga"]]);
   });
 
   test("a price sort reorders the search results", async () => {

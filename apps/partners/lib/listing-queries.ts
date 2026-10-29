@@ -148,7 +148,7 @@ export const useCategories = () => {
       unwrap(
         await supabase
           .from("product_categories")
-          .select("id, slug, name_en, name_ar")
+          .select("id, slug, name_en, name_ar, parent_id")
           .order("position")
       ),
     queryKey: ["product-categories"],
