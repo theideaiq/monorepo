@@ -12,6 +12,7 @@ import { slugify } from "@/lib/admin/catalog-import";
 import {
   checkbox,
   dateTime,
+  optionalDate,
   optionalDateTime,
   optionalInt,
   optionalStoragePath,
@@ -358,5 +359,182 @@ export const publishSubmission = staffAction(
         .single()
     );
     return success("saved", { redirectTo: `/club/posts/${data?.id}` });
+  }
+);
+
+// ── Opportunities ──────────────────────────────────────────────────────────
+
+const opportunityKinds = [
+  "job",
+  "internship",
+  "scholarship",
+  "competition",
+  "program",
+] as const;
+
+const optionalHttpsUrl = z
+  .string()
+  .trim()
+  .max(500)
+  .optional()
+  .transform((value) => value || null)
+  .pipe(z.union([z.null(), z.url().startsWith("https://")]));
+
+const opportunitySchema = z
+  .object({
+    applicantFee: optionalInt(0, 1_000_000_000),
+    applyUrl: optionalHttpsUrl,
+    coverImage: optionalStoragePath,
+    deadline: optionalDateTime,
+    descriptionAr: optionalText(10_000),
+    descriptionEn: optionalText(10_000),
+    endsOn: optionalDate,
+    feeNote: optionalText(300),
+    id: optionalUuid,
+    kind: z.enum(opportunityKinds),
+    /** The IDEA's own only: listed straight away, or kept as a draft. */
+    listed: checkbox,
+    location: optionalText(160),
+    opensAt: optionalDateTime,
+    remote: checkbox,
+    startsOn: optionalDate,
+    summaryAr: optionalText(300),
+    summaryEn: optionalText(300),
+    titleAr: text(160),
+    titleEn: text(160),
+  })
+  .refine((row) => row.remote || row.location, { path: ["location"] })
+  .refine(
+    (row) =>
+      !(row.opensAt && row.deadline) ||
+      new Date(row.opensAt) < new Date(row.deadline),
+    { path: ["deadline"] }
+  )
+  .refine(
+    (row) => !(row.startsOn && row.endsOn) || row.startsOn <= row.endsOn,
+    { path: ["endsOn"] }
+  );
+
+/**
+ * Saves an opportunity. New ones are The IDEA's own (listed or a draft);
+ * an organization's keep their review status when editors correct them.
+ */
+export const saveOpportunity = staffAction(
+  "editorial",
+  opportunitySchema,
+  async ({ input, supabase }) => {
+    const row = {
+      applicant_fee: input.applicantFee ?? 0,
+      apply_url: input.applyUrl,
+      cover_image: input.coverImage,
+      deadline: input.deadline,
+      description_ar: input.descriptionAr,
+      description_en: input.descriptionEn,
+      ends_on: input.endsOn,
+      fee_note: input.feeNote,
+      kind: input.kind,
+      location: input.location,
+      opens_at: input.opensAt,
+      remote: input.remote,
+      starts_on: input.startsOn,
+      summary_ar: input.summaryAr,
+      summary_en: input.summaryEn,
+      title_ar: input.titleAr,
+      title_en: input.titleEn,
+    };
+    const status = input.listed ? "approved" : "draft";
+    if (input.id) {
+      const { data: current } = check(
+        await supabase
+          .from("opportunities")
+          .select("organization_id")
+          .eq("id", input.id)
+          .single()
+      );
+      affected(
+        await supabase
+          .from("opportunities")
+          .update(current?.organization_id ? row : { ...row, status })
+          .eq("id", input.id)
+          .select("id")
+      );
+      return success();
+    }
+    const { data } = check(
+      await supabase
+        .from("opportunities")
+        // The database makes the slug from the title.
+        .insert({ ...row, slug: "", status })
+        .select("id")
+        .single()
+    );
+    return success("saved", {
+      redirectTo: `/club/opportunities/${data?.id}`,
+    });
+  }
+);
+
+/** Approve, ask for changes or refuse an organization's opportunity. */
+export const reviewOpportunity = staffAction(
+  "editorial",
+  z
+    .object({
+      decision: z.enum(["approved", "changes", "rejected"]),
+      id: uuid,
+      note: optionalText(1000),
+    })
+    .refine((row) => row.decision === "approved" || row.note, {
+      path: ["note"],
+    }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("review_opportunity", {
+        decision: input.decision,
+        note: input.note ?? undefined,
+        opportunity: input.id,
+      })
+    );
+    return success("saved");
+  }
+);
+
+/** Features an opportunity until a date (the paid extra), or stops it. */
+export const featureOpportunity = staffAction(
+  "editorial",
+  z.object({ id: uuid, until: optionalDateTime }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("opportunities")
+        .update({ featured_until: input.until })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success("saved");
+  }
+);
+
+/** Closes a listed opportunity early. */
+export const closeOpportunity = staffAction(
+  "editorial",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("opportunities")
+        .update({ status: "closed" })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success("saved");
+  }
+);
+
+export const deleteOpportunity = staffAction(
+  "editorial",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.from("opportunities").delete().eq("id", input.id));
+    return success("deleted", { redirectTo: "/club/opportunities" });
   }
 );

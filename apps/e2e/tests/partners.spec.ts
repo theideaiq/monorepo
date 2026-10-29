@@ -169,7 +169,7 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await expect(page).toHaveURL(/\/selling$/);
   await page.getByLabel("Shop name").fill("E2E Records");
   await page.getByRole("button", { exact: true, name: "Apply" }).click();
-  await expect(page.getByText("In review")).toBeVisible();
+  await expect(page.getByText("In review", { exact: true })).toBeVisible();
   await expect(
     page.getByText("Individual trader", { exact: true }).first()
   ).toBeVisible();
@@ -392,4 +392,45 @@ test("a supplier shop sees what it lends The IDEA and what it earned", async ({
   await expect(page.getByText("Game night with E2E Unit")).toBeVisible();
   await expect(page.getByText("In your next payout")).toBeVisible();
   await expectAccessible(page);
+});
+
+test("a company posts an opportunity and sends it for review", async ({
+  context,
+  page,
+}) => {
+  const organizationId = await resetCompany();
+  const db = admin();
+  await context.addCookies(await sessionCookies(customer.email, urls.app));
+
+  // Opportunities is a section the organization adds from Home.
+  await page.goto(urls.app);
+  await page.getByRole("button", { name: "Add Opportunities" }).click();
+  await page.getByRole("link", { exact: true, name: "Opportunities" }).click();
+  await expect(page).toHaveURL(/\/opportunities$/);
+  await expect(page.getByText("No opportunities yet.")).toBeVisible();
+
+  await page.getByRole("button", { name: "New opportunity" }).click();
+  await page.getByLabel("Title in English").fill("E2E Summer Internship");
+  await page.getByLabel("Title in Arabic").fill("تدريب صيفي للاختبار");
+  await page.getByLabel("Online (can be done from anywhere)").check();
+  await page.getByLabel("Where to apply").fill("https://e2e.example/apply");
+  await expectAccessible(page);
+  await page
+    .getByRole("button", { exact: true, name: "Send for review" })
+    .click();
+  await expect(page.getByText("E2E Summer Internship")).toBeVisible();
+  await expect(page.getByText("In review", { exact: true })).toBeVisible();
+  await expectAccessible(page);
+
+  // The IDEA's editors approve it (Staff's steps are covered in admin.spec).
+  const { error } = await db
+    .from("opportunities")
+    .update({ status: "approved" })
+    .eq("organization_id", organizationId);
+  if (error) {
+    throw error;
+  }
+  await page.reload();
+  await expect(page.getByText("Listed", { exact: true })).toBeVisible();
+  await expect(page.getByText("Following: 0")).toBeVisible();
 });

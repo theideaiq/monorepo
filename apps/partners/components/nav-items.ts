@@ -3,6 +3,7 @@ import type {
   OrganizationFeature,
 } from "@repo/auth/organizations";
 import {
+  BriefcaseIcon,
   Building2Icon,
   CodeXmlIcon,
   HouseIcon,
@@ -17,6 +18,7 @@ export type NavKey =
   | "team"
   | "developers"
   | "home"
+  | "opportunities"
   | "organization"
   | "perks"
   | "selling"
@@ -34,13 +36,18 @@ export interface NavItem {
 
 /**
  * The sections of Partners, in sidebar order: Home and
- * Organization always, the rest once added from Home. Opportunities
- * joins after Supply when it ships.
+ * Organization always, the rest once added from Home.
  */
 export const navItems: NavItem[] = [
   { href: "/", icon: HouseIcon, key: "home" },
   { feature: "selling", href: "/selling", icon: StoreIcon, key: "selling" },
   { feature: "supply", href: "/supply", icon: PackageOpenIcon, key: "supply" },
+  {
+    feature: "opportunities",
+    href: "/opportunities",
+    icon: BriefcaseIcon,
+    key: "opportunities",
+  },
   { feature: "perks", href: "/perks", icon: TicketPercentIcon, key: "perks" },
   { feature: "team", href: "/team", icon: UsersIcon, key: "team" },
   {

@@ -49,6 +49,9 @@ export const NOTIFICATION_EVENTS = [
   "pass_app_declined",
   "organization_verified",
   "organization_rejected",
+  "opportunity_approved",
+  "opportunity_changes",
+  "opportunity_rejected",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -119,6 +122,12 @@ const invoiceValues = (
   };
 };
 
+/** An opportunity's title in the viewer's language. */
+const localizedTitle = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => text(locale === "ar" ? data.title_ar : data.title_en);
+
 /** Events whose data needs formatting beyond the common fields. */
 const extraValues: Partial<
   Record<
@@ -132,6 +141,15 @@ const extraValues: Partial<
   bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
   invoice_issued: invoiceValues,
+  opportunity_approved: (data, locale) => ({
+    title: localizedTitle(data, locale),
+  }),
+  opportunity_changes: (data, locale) => ({
+    title: localizedTitle(data, locale),
+  }),
+  opportunity_rejected: (data, locale) => ({
+    title: localizedTitle(data, locale),
+  }),
   pass_app_approved: (data) => ({ name: text(data.name) }),
   pass_app_declined: (data) => ({ name: text(data.name) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),

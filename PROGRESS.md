@@ -718,6 +718,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Opportunities, part 2 (step 14, Partners and Staff).
+  Opportunities is a Partners section (after Supply): owners and admins
+  write a draft, send it for review, take it back, close a listed one or
+  delete a draft; members see each listing's status, The IDEA's note and
+  how many follow it. Staff → Club → Opportunities lists those waiting for
+  review (also in the Inbox), where editors approve, ask for changes or
+  refuse, feature a listing until a date and post The IDEA's own.
+  Organizations' owners and admins get the decision in their bell.
 - 2026-10-29: Opportunities, part 1 (step 14;
   `20270303000000_opportunities.sql`). Jobs, internships, scholarships,
   competitions and programs (`opportunities`): organizations with the new

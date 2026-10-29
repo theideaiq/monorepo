@@ -12,6 +12,7 @@ import {
 } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import {
+  BriefcaseIcon,
   ChevronRightIcon,
   CodeXmlIcon,
   CrownIcon,
@@ -147,6 +148,7 @@ const Overview = () => {
 
 const sectionIcons: Record<OrganizationFeature, LucideIcon> = {
   developers: CodeXmlIcon,
+  opportunities: BriefcaseIcon,
   perks: TicketPercentIcon,
   selling: StoreIcon,
   supply: PackageOpenIcon,
