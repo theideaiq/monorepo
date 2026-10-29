@@ -77,6 +77,32 @@ export const useRsvpCount = (eventId: string) => {
   });
 };
 
+/**
+ * When the member can RSVP (Plus members 48 hours before everyone) and how
+ * many seats they can still take (null: unlimited); `event_rsvp_window`.
+ */
+export const useRsvpWindow = (eventId: string) => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    queryFn: async () => {
+      const row =
+        unwrap(
+          await supabase
+            .rpc("event_rsvp_window", { event: eventId })
+            .maybeSingle()
+        ) ?? null;
+      return row
+        ? {
+            opensAt: row.opens_at as string | null,
+            plusOpensAt: row.plus_opens_at as string | null,
+            seatsLeft: row.seats_left as number | null,
+          }
+        : null;
+    },
+    queryKey: [...queryKeys.rsvpCount(eventId), "window", user?.id ?? ""],
+  });
+};
+
 /** RSVPs for the user or cancels one (`going: false`). */
 export const useRsvp = () => {
   const { supabase, user } = useAuth();

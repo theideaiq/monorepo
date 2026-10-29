@@ -16,6 +16,8 @@ import { saveEvent } from "../actions";
 interface EventFormProps {
   readonly endsAt: string;
   readonly event?: Tables<"events">;
+  /** When RSVPs open to everyone, as a Baghdad `datetime-local` value. */
+  readonly rsvpOpensAt: string;
   readonly startsAt: string;
   readonly supabaseUrl: string;
 }
@@ -24,6 +26,7 @@ interface EventFormProps {
 export const EventForm = ({
   endsAt,
   event,
+  rsvpOpensAt,
   startsAt,
   supabaseUrl,
 }: EventFormProps) => {
@@ -87,6 +90,21 @@ export const EventForm = ({
             inputMode="numeric"
             label={t("capacity")}
             name="capacity"
+          />
+          <TextField
+            defaultValue={event?.blaze_seats || ""}
+            dir="ltr"
+            hint={t("blazeSeatsHint")}
+            inputMode="numeric"
+            label={t("blazeSeats")}
+            name="blazeSeats"
+          />
+          <TextField
+            defaultValue={rsvpOpensAt}
+            hint={t("rsvpOpensHint")}
+            label={t("rsvpOpens")}
+            name="rsvpOpensAt"
+            type="datetime-local"
           />
         </FieldGrid>
         <FieldGrid>
