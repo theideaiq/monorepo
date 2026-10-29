@@ -44,16 +44,37 @@ A branded house: one masterbrand, a few plain product names, and one color syste
 
 **Naming rules**
 
-- **The masterbrand:** **The IDEA**, with *IDEA* in capitals, every time, in English and Arabic copy (Latin letters inside Arabic text). Never "Idea", "IDEA" alone or "the idea". On Arabic pages the site's own name (logo, page titles) is ايديا.
+- **The masterbrand:** **The IDEA**, with *IDEA* in capitals, every time, in English copy. Never "Idea", "IDEA" alone or "the idea". In Arabic copy it is **ايديا**, everywhere (see "Arabic names" below).
 - **Full names in titles and first mentions:** The IDEA Store, The IDEA Plus, The IDEA Club, The IDEA Pass. Use them in titles, in ads, store listings and social bios, and the first time a product is named somewhere The IDEA isn't already the context (a press note, a partner's site, a poster).
 - **Short names everywhere The IDEA is already the context:** inside our website and apps, our emails, our documents and our own channels, write Store, Plus, Club and Pass. "Rent with Plus", "Open the Club".
 - **Partners, Droid and Staff are always short.** Never "The IDEA Partners", "The IDEA Droid" or "The IDEA Staff".
-- **Always capitalized:** Store, Plus, Club, Pass, Partners, Droid, Staff, Bulbs, and the plans Glow, Shine, Blaze and Duo, in English and inside Arabic copy.
+- **Always capitalized:** Store, Plus, Club, Pass, Partners, Droid, Staff, Bulbs, and the plans Glow, Shine, Blaze and Duo, in English copy. The plans keep their Latin names inside Arabic copy too.
 - **Someone's own:** use the short name with a possessive: your Pass, my Plus, his Pass, your Saved list. Never "your The IDEA Pass".
 - **The product itself:** when you talk about the product rather than someone's own, use its full name outside our surfaces ("The IDEA Plus lets you rent games…") and "the" + short name inside them ("the Club has three parts").
 - **People:** people on Plus are Plus members. Never "account", "membership" or "users" in customer copy.
 - **A new name must earn it:** customers join it, pay for it or visit it on its own, and it will exist in two years. Everything else is a plain word: Saved, Lists, Queue, Cart, Orders, Help, Make an offer, Auctions, Get offers, Events, Opportunities, Surveys.
 - **Retired names, never used again:** Megastore, Suite, Spark, Business, The IDEA Post, Discover, Academy, Launcher, Journal, The IDEA Space, Sell to us, boxes, the souq price, The IDEA Partners, The IDEA Droid.
+
+**Arabic names** (the owner's amendment of 30 October 2026)
+
+Arabic copy uses the official Arabic names, never the English names in Latin letters. Short forms inside our website, apps and emails; full forms in titles and first mentions.
+
+| English | Arabic, short | Arabic, full |
+| --- | --- | --- |
+| The IDEA | ايديا | ايديا |
+| Store | السوگ | سوگ ايديا |
+| Plus | الپلص | ايديا پلص |
+| Pass | الپاس | ايديا پاس |
+| Club | النادي | نادي ايديا |
+| Partners | الشركاء | شركاء ايديا |
+| Bulbs | الگلوبات (one: گلوب; with a number: "340 گلوب") | — |
+| Staff | الستاف | — |
+| Droid | الدرويد | — |
+
+- **Possessives:** پاسك، پلصي، گلوباتك.
+- **Letters:** always پ (U+067E) and گ (U+06AF), never ب, ك or ق in their place. Search treats ب/پ, ك/ق/گ/ک, ا/أ/إ/آ and ي/ی/ى as the same letter, so people find these names however they type them.
+- **Latin letters stay** for the plans (Glow, Shine, Blaze, Duo) and for product and model names: "ايديا پلص Shine".
+- **Bulbs with numbers:** "اكسب 340 گلوب", "2,340 گلوب = خصم 2,340 دينار".
 
 **Channels and usernames**
 
@@ -86,7 +107,7 @@ We write like we talk to a friend we respect: short sentences, real words, a lit
 - Buttons start with a verb: "Rent with Plus", "Buy", "Rent for 7 days", "Make an offer", "Place bid", "Send as a gift".
 - Latin digits with thousands separators, currency after: **22,750 IQD**, **99,750 دينار عراقي**. The IDEA's own prices end in …4,750 or …9,750. Dates in Baghdad time.
 - Plus plans carry their item count: "Plus Shine · 2 items at a time".
-- **Money and Bulbs:** prices, payments, payouts, fees and deposits are in IQD; rewards and anything The IDEA gives away are in Bulbs (1 Bulb = 1 IQD). Write "Earn 340 Bulbs" and "2,340 Bulbs = 2,340 IQD off"; "Bulbs" stays in Latin letters in Arabic copy ("اكسب 340 Bulbs"). Never a rewards percentage on a product; plan cards are the one place a rate appears.
+- **Money and Bulbs:** prices, payments, payouts, fees and deposits are in IQD; rewards and anything The IDEA gives away are in Bulbs (1 Bulb = 1 IQD). Write "Earn 340 Bulbs" and "2,340 Bulbs = 2,340 IQD off"; in Arabic copy "اكسب 340 گلوب" and "2,340 گلوب = خصم 2,340 دينار". Never a rewards percentage on a product; plan cards are the one place a rate appears.
 - **Sellers:** a shop's offer always says who sells it: "Sold by <shop> · delivered and paid through The IDEA".
 - **Honest prices:** a struck-through "was" price appears only when that offer really sold at that price (15 of the last 30 days). "Lowest in 30 days" backs any "lowest" claim.
 - Headlines: a plain first line and a highlighted second: "One Pass. / **Everything worth having.**"

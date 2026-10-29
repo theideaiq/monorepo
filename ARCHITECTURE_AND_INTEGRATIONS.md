@@ -947,9 +947,9 @@ In the Supabase dashboard:
    the template of the same name, with these subjects (the same as
    `config.toml`):
    - **Confirm signup** ← `confirmation.html`, subject
-     `رمز التسجيل في The IDEA Pass · Sign-up code for The IDEA Pass: {{ .Token }}`;
+     `رمز التسجيل في ايديا پاس · Sign-up code for The IDEA Pass: {{ .Token }}`;
    - **Magic Link** ← `magic_link.html`, subject
-     `رمز الدخول إلى The IDEA Pass · Sign-in code for The IDEA Pass: {{ .Token }}`;
+     `رمز الدخول إلى ايديا پاس · Sign-in code for The IDEA Pass: {{ .Token }}`;
    - **Change Email Address** ← `email_change.html`, subject
      `تأكيد البريد الإلكتروني · Confirm your email for The IDEA Pass`;
    - **Reset Password** ← `recovery.html`, subject

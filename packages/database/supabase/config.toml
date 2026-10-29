@@ -272,13 +272,13 @@ otp_expiry = 600
 
 # Sign-up: sent to a new address. Shows the code; verifyOtp type "email".
 [auth.email.template.confirmation]
-subject = "رمز التسجيل في The IDEA Pass · Sign-up code for The IDEA Pass: {{ .Token }}"
+subject = "رمز التسجيل في ايديا پاس · Sign-up code for The IDEA Pass: {{ .Token }}"
 content_path = "./supabase/templates/confirmation.html"
 
 # Sign-in: sent to an existing address (Supabase calls it the magic link
 # email). Shows the code only, no link.
 [auth.email.template.magic_link]
-subject = "رمز الدخول إلى The IDEA Pass · Sign-in code for The IDEA Pass: {{ .Token }}"
+subject = "رمز الدخول إلى ايديا پاس · Sign-in code for The IDEA Pass: {{ .Token }}"
 content_path = "./supabase/templates/magic_link.html"
 
 # Forgotten password: the code (verifyOtp type "recovery"), then the new one.

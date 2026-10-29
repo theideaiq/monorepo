@@ -142,7 +142,7 @@ test("the sign-in page is accessible in Arabic", async ({ page }) => {
   await expect(page).toHaveURL(`${urls.web}/ar/sign-in`);
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   await expect(
-    page.getByRole("heading", { name: "تسجيل الدخول إلى The IDEA Pass" })
+    page.getByRole("heading", { name: "تسجيل الدخول إلى ايديا پاس" })
   ).toBeVisible();
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expectAccessible(page);

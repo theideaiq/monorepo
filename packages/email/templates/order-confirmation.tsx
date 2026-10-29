@@ -60,7 +60,7 @@ const copy = {
     introCash:
       "استلمنا طلبك وبدأنا تجهيزه. ستدفع نقداً عند استلامه، وسنتواصل معك عند خروجه للتوصيل.",
     notes: "ملاحظات",
-    preview: (number: string) => `تم تأكيد طلبك ${number} من The IDEA`,
+    preview: (number: string) => `تم تأكيد طلبك ${number} من ايديا`,
     quantity: (count: number) => `الكمية: ${count}`,
     shipping: "التوصيل",
     subtotal: "المجموع الفرعي",

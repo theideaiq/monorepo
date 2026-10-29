@@ -1173,3 +1173,40 @@ messages with phone numbers hidden. Where it leaves room:
 - **Auctions by people** stay with shops and The IDEA for now: an auction
   is paid online through The IDEA, which the policy rules out for people's
   sales. That needs the owner's call before it's built.
+## Amendment, 30 October 2026: Arabic names
+
+The owner's amendment changes section 23 and replaces the line in section
+16 that kept "Bulbs" in Latin letters in Arabic copy.
+
+- **Arabic copy uses the official Arabic names** (`docs/brand/BRAND_GUIDELINES.md`
+  section 2): The IDEA ايديا (everywhere); Store السوگ / سوگ ايديا; Plus
+  الپلص / ايديا پلص; Pass الپاس / ايديا پاس; Club النادي / نادي ايديا;
+  Partners الشركاء / شركاء ايديا; Bulbs الگلوبات (one گلوب; "340 گلوب");
+  Staff الستاف; Droid الدرويد. Short forms inside the website, apps and
+  emails; full forms in titles and first mentions. Possessives: پاسك،
+  پلصي، گلوباتك. Always پ (U+067E) and گ (U+06AF).
+- **Latin letters stay** for the plans (Glow, Shine, Blaze, Duo) and for
+  product and model names: "ايديا پلص Shine".
+- **Rewritten:** `ar.json`, the Arabic email templates (including the
+  sign-in emails in `packages/database/supabase/templates` and their
+  subjects), the Arabic legal pages, Droid's Arabic, the plans' Arabic
+  names and features in the database, AGENTS.md and the brand guidelines.
+- **Search** folds ب/پ, ك/ق/گ/ک, ا/أ/إ/آ and ي/ی/ى in
+  `private.normalize_search`, the one function used for both the products'
+  index and the query (`20270312000000_arabic_names.sql`).
+- **A test** (`packages/internationalization/messages.test.ts`) fails when
+  `ar.json` holds The IDEA, Store, Plus, Pass, Club, Partners, Bulbs, Staff
+  or Droid in Latin letters.
+- **Where it leaves room:**
+  - "The IDEA IQ Inc.", the registered company, keeps its legal name.
+  - "The IDEA Design" (Staff's design site) becomes "ايديا Design".
+  - Partners as the place one goes ("in Partners → Selling") is شركاء ايديا,
+    so it doesn't read as ordinary partners; menu labels are الشركاء.
+  - "المتجر" stays where it means a shop, a seller or a pickup counter; it
+    becomes السوگ where it names The IDEA Store.
+- **Not yet:** the WhatsApp templates are registered with Meta and change
+  only when they are submitted again; the published posts (Club → Read)
+  are editorial content that editors update in Staff; the title search of
+  posts, events and opportunities doesn't fold these letters yet (it
+  filters with PostgREST, not `normalize_search`) and follows in its own
+  schema-then-code pair.

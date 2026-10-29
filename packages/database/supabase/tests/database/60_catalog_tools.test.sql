@@ -93,8 +93,8 @@ select is(private.normalize_search('مكتبة مستشفى'), 'مكتبه مس�
   'Ta marbuta becomes ha and alef maqsura becomes ya');
 select is(private.normalize_search('الْعَرَبِيَّةُ'), 'العربيه',
   'Tashkeel is removed');
-select is(private.normalize_search('مـــوسـيـقـى'), 'موسيقي',
-  'Tatweel is removed');
+select is(private.normalize_search('مـــوسـيـقـى'), 'موسيكي',
+  'Tatweel is removed (and ق folds to ك)');
 select is(private.normalize_search('  Taylor   SWIFT '), 'taylor swift',
   'Latin text is lower-cased and spaces collapsed');
 select is(private.normalize_search(null), '', 'Null normalizes to an empty string');
