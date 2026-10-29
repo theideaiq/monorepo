@@ -478,3 +478,69 @@ export const deleteCampaign = staffAction(
     return success("deleted");
   }
 );
+
+/** A sale on one of The IDEA's listings; it stays above the margin floor. */
+export const setHouseSale = staffAction(
+  "catalog",
+  z.object({
+    condition: z.enum(Enums.product_condition),
+    endsAt: dateTime,
+    price: int(1),
+    startsAt: dateTime,
+    variantId: uuid,
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("set_listing_sale", {
+        ends: input.endsAt,
+        price: input.price,
+        seller: HOUSE_SELLER_ID,
+        starts: input.startsAt,
+        variant: input.variantId,
+        wanted: input.condition,
+      })
+    );
+    return success("saved");
+  }
+);
+
+export const endHouseSale = staffAction(
+  "catalog",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("end_listing_sale", { target: input.id }));
+    return success();
+  }
+);
+
+/** A share off each of The IDEA's copies from a quantity on. */
+export const setHouseDeal = staffAction(
+  "catalog",
+  z.object({
+    condition: z.enum(Enums.product_condition),
+    fromQuantity: int(2, 20),
+    rate: int(1, 50),
+    variantId: uuid,
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("set_quantity_deal", {
+        from_quantity: input.fromQuantity,
+        rate: input.rate,
+        seller: HOUSE_SELLER_ID,
+        variant: input.variantId,
+        wanted: input.condition,
+      })
+    );
+    return success("saved");
+  }
+);
+
+export const deleteHouseDeal = staffAction(
+  "catalog",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("delete_quantity_deal", { target: input.id }));
+    return success();
+  }
+);

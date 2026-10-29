@@ -582,8 +582,9 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   sale (the lower of a listing's own sale and its campaign price), so
   checkout, offers, price history and "was" prices follow it. The
   campaign page is `/store/campaigns/<slug>`, without struck-through
-  prices. Still to come in step 7: Staff screens for The IDEA's own sales
-  and deals, coupons within the 20% cap, student prices.
+  prices. Each product's page in Staff now has Sales and deals for The
+  IDEA's own copies (above the margin floor). Still to come in step 7:
+  coupons within the 20% cap, student prices.
 - 2026-10-28: Prices, part 2 (master brief step 7, section 9;
   `20270201000000_shop_sales.sql`). Partners → Selling → Sales and deals:
   a listing's sale price between two days (never overlapping; every copy
