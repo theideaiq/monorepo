@@ -695,9 +695,12 @@ test("a member follows an opportunity and finds it in Club → Yours", async ({
   // Its page (Club → Join lists it too, but that list is cached a while;
   // the public journey checks it renders).
   await page.goto(`${urls.web}/club/opportunities/${slug}`);
-  await expect(page.getByText("Run by The IDEA")).toBeVisible();
   await expect(
     page.getByRole("heading", { level: 1, name: title })
+  ).toBeVisible();
+  // Streaming can leave a hidden copy of the page; read the visible one.
+  await expect(
+    page.getByRole("article").getByText("Run by The IDEA")
   ).toBeVisible();
   await page.getByRole("button", { name: "Notify me" }).click();
   await expect(
