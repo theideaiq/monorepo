@@ -718,6 +718,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Plus features, part 2 (step 12; `20270223000000_plus_bulbs_credits.sql`).
+  Your Plus → Manage has "Use Bulbs on my next renewal": in steps of 250,
+  up to half of a month's price; the renewal invoice comes down by them and
+  they're spent once it's paid. Each Baghdad month, `/cron/plus-credits`
+  (apps/api, daily) gives Plus members their free survey credits (Glow 10,
+  Shine 25, Blaze 50; a store setting), and one last set when Plus ends.
 - 2026-10-29: Plus features, part 1 (step 12; `20270222000000_plus_prices.sql`).
   Plus prices: shops (Partners → Selling → Sales) and editors (Staff →
   Catalog, The IDEA's own stock) set a price for Plus members below the

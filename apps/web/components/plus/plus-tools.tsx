@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice, localized, planName } from "@repo/commerce";
+import { BULB_STEP, formatPrice, localized, planName } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Checkbox } from "@repo/design-system/components/ui/checkbox";
 import { Input } from "@repo/design-system/components/ui/input";
@@ -17,6 +17,7 @@ import { Link } from "@repo/internationalization/navigation";
 import { ArrowDownIcon, ArrowUpIcon, XIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
+import { useMyBulbs } from "@/lib/bulbs-queries";
 import { orderPath } from "@/lib/order-checkout";
 import {
   useOpenSwap,
@@ -390,6 +391,95 @@ const PauseControl = ({
   );
 };
 
+/**
+ * "Use Bulbs on my next renewal": up to half of the next month's price,
+ * in steps of 250; the renewal invoice takes them off.
+ */
+const RenewalBulbs = ({
+  chosen,
+  price,
+}: {
+  readonly chosen: number;
+  /** The price the next renewal is billed at. */
+  readonly price: number;
+}) => {
+  const t = useTranslations("app.plus.manage.bulbs");
+  const locale = useLocale();
+  const id = useId();
+  const { setRenewalBulbs } = usePlusActions();
+  const available = Math.max(0, useMyBulbs().data?.available ?? 0);
+  const cap = Math.floor(price / 2 / BULB_STEP) * BULB_STEP;
+  const most = Math.min(cap, Math.floor(available / BULB_STEP) * BULB_STEP);
+  const [amount, setAmount] = useState("");
+  const wanted = Number(amount);
+  const valid =
+    Number.isInteger(wanted) &&
+    wanted > 0 &&
+    wanted % BULB_STEP === 0 &&
+    wanted <= most;
+
+  if (most === 0 && chosen === 0) {
+    return null;
+  }
+  return (
+    <div className="grid gap-2">
+      <p className="font-medium text-sm">{t("title")}</p>
+      {chosen > 0 ? (
+        <div className="flex flex-wrap items-center gap-3 text-sm">
+          <span className="flex-1">
+            {t("chosen", { bulbs: formatNumber(chosen, locale) })}
+          </span>
+          <Button
+            disabled={setRenewalBulbs.isPending}
+            onClick={() => setRenewalBulbs.mutate(0)}
+            size="sm"
+            variant="ghost"
+          >
+            {t("stop")}
+          </Button>
+        </div>
+      ) : null}
+      <div className="flex flex-wrap items-end gap-3">
+        <div className="grid gap-2">
+          <Label htmlFor={`${id}-bulbs`}>{t("amount")}</Label>
+          <Input
+            className="w-32"
+            dir="ltr"
+            id={`${id}-bulbs`}
+            inputMode="numeric"
+            max={most}
+            min={BULB_STEP}
+            onChange={(event) => setAmount(event.target.value)}
+            step={BULB_STEP}
+            type="number"
+            value={amount}
+          />
+        </div>
+        <Button
+          disabled={!valid || setRenewalBulbs.isPending}
+          onClick={() =>
+            setRenewalBulbs.mutate(wanted, { onSuccess: () => setAmount("") })
+          }
+          variant="outline"
+        >
+          {t("use")}
+        </Button>
+      </div>
+      <p className="text-muted-foreground text-xs">
+        {t("help", {
+          available: formatNumber(available, locale),
+          most: formatNumber(most, locale),
+        })}
+      </p>
+      {setRenewalBulbs.isError ? (
+        <p className="text-destructive text-sm" role="alert">
+          {t("failed")}
+        </p>
+      ) : null}
+    </div>
+  );
+};
+
 /** Change plan (from the next renewal), pause, or cancel. */
 export const ManagePlus = () => {
   const t = useTranslations("app.plus.manage");
@@ -436,6 +526,12 @@ export const ManagePlus = () => {
             : t("changeHelp")}
         </p>
       </div>
+      <RenewalBulbs
+        chosen={state.renewal_bulbs}
+        price={
+          (next ?? plans.find((plan) => plan.id === state.plan_id))?.amount ?? 0
+        }
+      />
       <PauseControl pausedUntil={state.paused_until} />
       <div className="flex flex-wrap items-center gap-3 text-sm">
         <span className="flex-1">

@@ -180,6 +180,8 @@ export const createBillingService = ({
   const invoicePlan = (
     plan: PlanRecord,
     options: {
+      /** Bulbs (1 = 1 IQD) taken off the price, for a Plus renewal. */
+      bulbs?: number;
       expiresInMinutes?: number;
       metadata?: Record<string, unknown>;
       organizationId: string | null;
@@ -187,14 +189,18 @@ export const createBillingService = ({
       subscriptionId: string;
       userId: string | null;
     }
-  ) =>
-    createInvoice({
-      ...options,
-      amount: plan.amount,
+  ) => {
+    const { bulbs = 0, ...rest } = options;
+    const amount = plan.amount - bulbs;
+    return createInvoice({
+      ...rest,
+      amount,
       currency: plan.currency,
       description: plan.name,
-      lineItems: [{ amount: plan.amount, label: plan.name }],
+      lineItems: [{ amount, label: plan.name }],
+      metadata: bulbs > 0 ? { ...rest.metadata, bulbs } : rest.metadata,
     });
+  };
 
   const activateSubscription = async (subscription: SubscriptionRecord) => {
     const plan = await repository.getPlan(subscription.planId);
@@ -244,6 +250,11 @@ export const createBillingService = ({
     );
     if (subscription) {
       await activateSubscription(subscription);
+    }
+    // A renewal paid partly with Bulbs spends them now.
+    const bulbs = Number(payment.metadata.bulbs ?? 0);
+    if (bulbs > 0) {
+      await repository.spendRenewalBulbs(payment.subscriptionId, bulbs);
     }
   };
 
@@ -309,7 +320,13 @@ export const createBillingService = ({
       return { kind: "skipped", pastDue };
     }
 
+    // Bulbs the member chose for this renewal come off the invoice.
+    const bulbs = Math.min(
+      await repository.renewalBulbs(subscription.id),
+      Math.floor(plan.amount / 2)
+    );
     const { referenceId, url } = await invoicePlan(plan, {
+      bulbs,
       expiresInMinutes: Math.min(
         MAX_LINK_MINUTES,
         (leadDays + graceDays) * 24 * 60
@@ -321,7 +338,7 @@ export const createBillingService = ({
 
     return {
       invoice: {
-        amount: plan.amount,
+        amount: plan.amount - bulbs,
         currency: plan.currency,
         organizationId: subscription.organizationId,
         referenceId,

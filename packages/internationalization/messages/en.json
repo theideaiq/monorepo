@@ -1836,7 +1836,16 @@
         "cancelHelp": "Cancel any time; Plus ends with your paid period.",
         "endsOn": "Plus ends on {date}. Return your items by then.",
         "cancel": "Cancel Plus",
-        "keep": "Keep Plus"
+        "keep": "Keep Plus",
+        "bulbs": {
+          "title": "Use Bulbs on my next renewal",
+          "chosen": "Your next renewal takes {bulbs} Bulbs off its price.",
+          "stop": "Don't use Bulbs",
+          "amount": "Bulbs",
+          "use": "Use on next renewal",
+          "help": "Up to half of a month, in steps of 250: up to {most} now. You have {available} Bulbs; the renewal takes what you still have then.",
+          "failed": "We couldn't save that. Use steps of 250, up to half of a month."
+        }
       },
       "give": {
         "title": "Give Plus",

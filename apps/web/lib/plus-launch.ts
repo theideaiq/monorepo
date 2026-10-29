@@ -143,7 +143,7 @@ export const usePlusPlanState = () => {
         await supabase
           .from("subscriptions")
           .select(
-            "id, plan_id, next_plan_id, paused_until, cancel_at_period_end, current_period_end, provider"
+            "id, plan_id, next_plan_id, paused_until, cancel_at_period_end, current_period_end, provider, renewal_bulbs"
           )
           .eq("user_id", user?.id ?? "")
           .in("status", ["active", "past_due"])
@@ -255,6 +255,18 @@ export const usePlusActions = () => {
           })
         ),
       onSettled: refresh,
+    }),
+    /** Bulbs for the next renewal (steps of 250, up to half its price). */
+    setRenewalBulbs: useMutation({
+      mutationFn: async (amount: number) =>
+        unwrap(await supabase.rpc("set_renewal_bulbs", { amount })),
+      onSettled: () =>
+        Promise.all([
+          refresh(),
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.bulbs(user?.id ?? ""),
+          }),
+        ]),
     }),
   };
 };

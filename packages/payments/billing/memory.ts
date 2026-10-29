@@ -27,6 +27,10 @@ export const createMemoryBillingRepository = (
       PaymentRecord & { checkoutUrl?: string | null }
     >(),
     plans: new Map(plans.map((plan) => [plan.id, plan])),
+    /** Bulbs chosen for the next renewal, by subscription. */
+    renewalBulbs: new Map<string, number>(),
+    /** Bulbs spent on renewals, by subscription. */
+    spentBulbs: new Map<string, number>(),
     subscriptions: new Map<string, SubscriptionRecord>(),
     webhookEvents: new Map<string, { id: number; processed: boolean }>(),
   };
@@ -144,6 +148,9 @@ export const createMemoryBillingRepository = (
       state.webhookEvents.set(key, { id, processed: false });
       return Promise.resolve(id);
     },
+    renewalBulbs(subscriptionId) {
+      return Promise.resolve(state.renewalBulbs.get(subscriptionId) ?? 0);
+    },
     spendGiftMonth(subscriptionId) {
       const subscription = state.subscriptions.get(subscriptionId);
       const left = state.giftMonths.get(subscription?.userId ?? "") ?? 0;
@@ -161,6 +168,14 @@ export const createMemoryBillingRepository = (
         status: "active",
       });
       return Promise.resolve(true);
+    },
+    spendRenewalBulbs(subscriptionId, bulbs) {
+      state.spentBulbs.set(
+        subscriptionId,
+        (state.spentBulbs.get(subscriptionId) ?? 0) + bulbs
+      );
+      state.renewalBulbs.delete(subscriptionId);
+      return Promise.resolve();
     },
     updatePayment(referenceId, update) {
       const payment = state.payments.get(referenceId);

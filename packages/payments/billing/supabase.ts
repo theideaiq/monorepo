@@ -272,12 +272,28 @@ export const createSupabaseBillingRepository = (
     return unwrap({ data, error }).id;
   },
 
+  async renewalBulbs(subscriptionId) {
+    const { data, error } = await supabase.rpc("plus_renewal_bulbs", {
+      subscription: subscriptionId,
+    });
+    check(error);
+    return data ?? 0;
+  },
+
   async spendGiftMonth(subscriptionId) {
     const { data, error } = await supabase.rpc("use_plus_gift_month", {
       subscription: subscriptionId,
     });
     check(error);
     return data === true;
+  },
+
+  async spendRenewalBulbs(subscriptionId, bulbs) {
+    const { error } = await supabase.rpc("spend_renewal_bulbs", {
+      bulbs,
+      subscription: subscriptionId,
+    });
+    check(error);
   },
 
   async updatePayment(referenceId, update) {
