@@ -28,7 +28,7 @@ import { RentCard } from "@/components/store/rent-card";
 import { WishlistButton } from "@/components/store/wishlist-button";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import { MAX_QUANTITY } from "@/lib/cart";
-import { useAddToCart } from "@/lib/store-queries";
+import { useAddToCart, useStudentPrice } from "@/lib/store-queries";
 import { MakeOffer } from "./make-offer";
 import { NotifyMe } from "./notify-me";
 import { Price } from "./price";
@@ -268,6 +268,30 @@ const AlsoRent = ({
 };
 
 /**
+ * "Student price", for verified students only: the listing's lower price
+ * they pay at checkout. Never struck through against the price.
+ */
+const StudentPriceNote = ({
+  listing,
+  productId,
+}: {
+  readonly listing: ProductOffer | null;
+  readonly productId: string;
+}) => {
+  const t = useTranslations("app.store.product");
+  const locale = useLocale();
+  const price = useStudentPrice(productId, listing);
+  if (price === null) {
+    return null;
+  }
+  return (
+    <p className="font-medium text-sm">
+      {t("studentPrice", { price: formatPrice(price, locale) })}
+    </p>
+  );
+};
+
+/**
  * Buying on the product page: option, quantity, add to cart and the
  * wishlist. The cart is the signed-in customer's: adding while signed out
  * goes to the sign-in first.
@@ -439,6 +463,7 @@ export const PurchasePanel = ({
           })}
         </p>
       ))}
+      <StudentPriceNote listing={chosen ?? null} productId={product.id} />
       {chosen?.lowest_30d ? (
         <p className="text-muted-foreground text-sm">
           {t("lowest30d", { price: formatPrice(chosen.lowest_30d, locale) })}

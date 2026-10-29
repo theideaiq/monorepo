@@ -1170,7 +1170,8 @@
         "lowestPrice": "أقل سعر",
         "lowest30d": "أقل سعر في آخر 30 يومًا: {price}",
         "saleEnds": "ينتهي التخفيض {time}",
-        "quantityDeal": "اشترِ {from} أو أكثر: خصم {rate}% على كل قطعة"
+        "quantityDeal": "اشترِ {from} أو أكثر: خصم {rate}% على كل قطعة",
+        "studentPrice": "سعر الطلاب: {price}"
       }
     },
     "cart": {
@@ -2833,7 +2834,14 @@
         "joinCampaign": "شارك",
         "updateCampaign": "تحديث",
         "leaveCampaign": "انسحب",
-        "campaignFailed": "لم ينجح ذلك. استخدم خصمًا من 5 إلى 50%."
+        "campaignFailed": "لم ينجح ذلك. استخدم خصمًا من 5 إلى 50%.",
+        "studentPrice": "سعر الطلاب {price}",
+        "studentPriceField": "سعر الطلاب (دينار)",
+        "setStudentPrice": "تعيين سعر الطلاب",
+        "changeStudentPrice": "تغيير سعر الطلاب",
+        "removeStudentPrice": "إزالة",
+        "studentPriceHint": "يراه ويدفعه الطلاب الموثّقون فقط؛ ويتحمّل متجرك الفرق. ويبقى أقل من السعر.",
+        "studentPriceFailed": "تعذّر حفظ سعر الطلاب. يجب أن يكون أقل من السعر."
       }
     },
     "ages": {
@@ -3822,7 +3830,12 @@
         "rate": "% خصم على كل نسخة",
         "addDeal": "إضافة عرض",
         "deal": "خصم {rate}% على كل نسخة ابتداءً من {from} نسخ",
-        "removeDeal": "إزالة"
+        "removeDeal": "إزالة",
+        "studentPrice": "سعر الطلاب {price}",
+        "studentPriceField": "سعر الطلاب (دينار)",
+        "setStudentPrice": "تعيين سعر الطلاب",
+        "removeStudentPrice": "إزالة",
+        "studentPriceHint": "للطلاب الموثّقين فقط؛ فوق الحد الأدنى للهامش."
       }
     },
     "orders": {

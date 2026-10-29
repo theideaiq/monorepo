@@ -26,6 +26,7 @@ import {
   type ListingSale,
   type OpenCampaign,
   type QuantityDeal,
+  type StudentPrice,
   useCampaignEntries,
   useDeleteDeal,
   useEndSale,
@@ -34,8 +35,11 @@ import {
   useListingSales,
   useOpenCampaigns,
   useQuantityDeals,
+  useRemoveStudentPrice,
   useSetDeal,
   useSetSale,
+  useSetStudentPrice,
+  useStudentPrices,
 } from "@/lib/shop-sale-queries";
 
 const sameListing = (
@@ -227,16 +231,102 @@ const DealForm = ({
   );
 };
 
+/** A listing's student price: what it is, a way to change or remove it. */
+const StudentPriceRow = ({
+  current,
+  listing,
+  sellerId,
+}: {
+  readonly current: StudentPrice | undefined;
+  readonly listing: Listing;
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.company.shopSales");
+  const locale = useLocale() as Locale;
+  const save = useSetStudentPrice(sellerId);
+  const remove = useRemoveStudentPrice(sellerId);
+  const id = useId();
+  const [price, setPrice] = useState("");
+  const amount = Number(price);
+  const valid =
+    Number.isInteger(amount) && amount > 0 && listing.price > amount;
+
+  return (
+    <form
+      className="grid gap-2"
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (valid) {
+          save.mutate(
+            {
+              condition: listing.condition,
+              price: amount,
+              variantId: listing.variant_id,
+            },
+            { onSuccess: () => setPrice("") }
+          );
+        }
+      }}
+    >
+      {current ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <span>
+            {t("studentPrice", { price: formatPrice(current.price, locale) })}
+          </span>
+          <Button
+            disabled={remove.isPending}
+            onClick={() => remove.mutate(current.id)}
+            size="sm"
+            type="button"
+            variant="ghost"
+          >
+            {t("removeStudentPrice")}
+          </Button>
+        </div>
+      ) : null}
+      <div className="flex flex-wrap items-end gap-3">
+        <div className="grid gap-1">
+          <Label htmlFor={`${id}-student`}>{t("studentPriceField")}</Label>
+          <Input
+            className="w-36"
+            id={`${id}-student`}
+            inputMode="numeric"
+            onChange={(event) => setPrice(event.target.value)}
+            type="number"
+            value={price}
+          />
+        </div>
+        <Button
+          disabled={!valid || save.isPending}
+          size="sm"
+          type="submit"
+          variant="outline"
+        >
+          {current ? t("changeStudentPrice") : t("setStudentPrice")}
+        </Button>
+      </div>
+      <p className="text-muted-foreground text-xs">{t("studentPriceHint")}</p>
+      {save.isError ? (
+        <p className="text-destructive text-sm" role="alert">
+          {t("studentPriceFailed")}
+        </p>
+      ) : null}
+    </form>
+  );
+};
+
 const ListingRow = ({
   deals,
   listing,
   sales,
   sellerId,
+  student,
 }: {
   readonly deals: readonly QuantityDeal[];
   readonly listing: Listing;
   readonly sales: readonly ListingSale[];
   readonly sellerId: string;
+  readonly student: StudentPrice | undefined;
 }) => {
   const t = useTranslations("app.company.shopSales");
   const conditions = useTranslations("store.condition");
@@ -293,6 +383,11 @@ const ListingRow = ({
         </div>
       ))}
       <DealForm listing={listing} sellerId={sellerId} />
+      <StudentPriceRow
+        current={student}
+        listing={listing}
+        sellerId={sellerId}
+      />
     </li>
   );
 };
@@ -425,7 +520,8 @@ const SalesBody = () => {
   const listings = useListings(sellerId);
   const sales = useListingSales(sellerId);
   const deals = useQuantityDeals(sellerId);
-  const queries = [shop, listings, sales, deals];
+  const students = useStudentPrices(sellerId);
+  const queries = [shop, listings, sales, deals, students];
 
   if (queries.some((query) => query.isPending)) {
     return <SectionSpinner />;
@@ -469,6 +565,9 @@ const SalesBody = () => {
                     sameListing(listing, sale)
                   )}
                   sellerId={sellerId}
+                  student={(students.data ?? []).find((row) =>
+                    sameListing(listing, row)
+                  )}
                 />
               ))}
             </ul>
@@ -481,7 +580,7 @@ const SalesBody = () => {
 
 /**
  * Partners → Selling → Sales and deals: a listing's sale price between two
- * days, and a share off each copy from a quantity on.
+ * days, a share off each copy from a quantity on, and its student price.
  */
 export const ShopSales = () => (
   <BusinessShell feature="selling">

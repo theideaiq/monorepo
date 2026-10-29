@@ -544,3 +544,33 @@ export const deleteHouseDeal = staffAction(
     return success();
   }
 );
+
+/** A student price on one of The IDEA's listings, above the margin floor. */
+export const setHouseStudentPrice = staffAction(
+  "catalog",
+  z.object({
+    condition: z.enum(Enums.product_condition),
+    price: int(1),
+    variantId: uuid,
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("set_student_price", {
+        price: input.price,
+        seller: HOUSE_SELLER_ID,
+        variant: input.variantId,
+        wanted: input.condition,
+      })
+    );
+    return success("saved");
+  }
+);
+
+export const removeHouseStudentPrice = staffAction(
+  "catalog",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("remove_student_price", { target: input.id }));
+    return success();
+  }
+);

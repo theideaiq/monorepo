@@ -16,6 +16,7 @@ import {
   listDeliveryZones,
   listProducts,
   type ProductFilters,
+  type ProductOffer,
 } from "@repo/commerce/catalog";
 import {
   keepPreviousData,
@@ -124,6 +125,34 @@ export const useCheckoutQuote = (
     queryKey: ["checkout-quote", user?.id ?? "", request, ...version],
     retry: false,
   });
+};
+
+/**
+ * A listing's student price, for a verified student (null for everyone
+ * else). Product pages load offers without the member's session, so this
+ * asks again as the member.
+ */
+export const useStudentPrice = (
+  productId: string,
+  listing: Pick<ProductOffer, "condition" | "seller_id" | "variant_id"> | null
+) => {
+  const { supabase, user } = useAuth();
+  const offers = useQuery({
+    enabled: Boolean(user) && listing !== null,
+    queryFn: () => getProductOffers(supabase, productId),
+    queryKey: ["student-prices", user?.id ?? "", productId],
+    staleTime: 60_000,
+  });
+  const match = listing
+    ? offers.data?.find(
+        (offer) =>
+          offer.purpose === "sale" &&
+          offer.seller_id === listing.seller_id &&
+          offer.variant_id === listing.variant_id &&
+          offer.condition === listing.condition
+      )
+    : undefined;
+  return match?.student_price ?? null;
 };
 
 /** Why a coupon code can't be used (`apply_coupon()`'s answer). */
