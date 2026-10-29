@@ -772,6 +772,7 @@ export const useCheckoutAreas = (zone: DeliveryZone | undefined): string[] =>
  */
 const useCheckoutPricing = ({
   address,
+  busy,
   cart,
   kit,
   payment,
@@ -781,6 +782,11 @@ const useCheckoutPricing = ({
   zones,
 }: {
   address: AddressForm;
+  /**
+   * An order is being placed or was placed: the cart is emptying, so the
+   * last quote stays rather than asking again for an empty cart.
+   */
+  busy: boolean;
   cart: ReturnType<typeof useCart>;
   /** The cart's game night kit: delivered in Baghdad only. */
   kit: KitLine | null;
@@ -827,7 +833,7 @@ const useCheckoutPricing = ({
   const ships = Boolean(kit) || (summary?.lines.length ?? 0) > 0;
   const quote = useCheckoutQuote(
     quoteRequestFor({
-      canCheckout: summary?.canCheckout ?? false,
+      canCheckout: !busy && (summary?.canCheckout ?? false),
       governorate: address.governorate,
       paymentMethod,
       ships,
@@ -1149,6 +1155,11 @@ export const Checkout = () => {
   const set = (field: keyof AddressForm) => (value: string) =>
     setForm({ ...address, [field]: value });
 
+  const busy =
+    place.isPending ||
+    place.isSuccess ||
+    placeGift.isPending ||
+    placeGift.isSuccess;
   const {
     areas,
     availableBulbs,
@@ -1165,6 +1176,7 @@ export const Checkout = () => {
     address: gift
       ? { ...address, governorate: "", zoneId: gift.zoneId }
       : address,
+    busy,
     cart,
     kit,
     payment: gift ? "online" : book.payment,
@@ -1173,11 +1185,6 @@ export const Checkout = () => {
     useBulbs,
     zones,
   });
-  const busy =
-    place.isPending ||
-    place.isSuccess ||
-    placeGift.isPending ||
-    placeGift.isSuccess;
 
   const afterPlaced = ({
     order,
