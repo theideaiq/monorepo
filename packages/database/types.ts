@@ -680,6 +680,7 @@ export type Database = {
       };
       event_rsvps: {
         Row: {
+          blaze: boolean;
           checked_in_at: string | null;
           checked_in_by: string | null;
           created_at: string;
@@ -687,6 +688,7 @@ export type Database = {
           user_id: string;
         };
         Insert: {
+          blaze?: boolean;
           checked_in_at?: string | null;
           checked_in_by?: string | null;
           created_at?: string;
@@ -694,6 +696,7 @@ export type Database = {
           user_id?: string;
         };
         Update: {
+          blaze?: boolean;
           checked_in_at?: string | null;
           checked_in_by?: string | null;
           created_at?: string;
@@ -712,6 +715,7 @@ export type Database = {
       };
       events: {
         Row: {
+          blaze_seats: number;
           capacity: number | null;
           cover_image: string | null;
           created_at: string;
@@ -722,6 +726,7 @@ export type Database = {
           id: string;
           location: string;
           published: boolean;
+          rsvp_opens_at: string | null;
           slug: string;
           starts_at: string;
           title_ar: string;
@@ -729,6 +734,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          blaze_seats?: number;
           capacity?: number | null;
           cover_image?: string | null;
           created_at?: string;
@@ -739,6 +745,7 @@ export type Database = {
           id?: string;
           location: string;
           published?: boolean;
+          rsvp_opens_at?: string | null;
           slug: string;
           starts_at: string;
           title_ar: string;
@@ -746,6 +753,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          blaze_seats?: number;
           capacity?: number | null;
           cover_image?: string | null;
           created_at?: string;
@@ -756,6 +764,7 @@ export type Database = {
           id?: string;
           location?: string;
           published?: boolean;
+          rsvp_opens_at?: string | null;
           slug?: string;
           starts_at?: string;
           title_ar?: string;
@@ -7304,6 +7313,14 @@ export type Database = {
         Returns: undefined;
       };
       event_rsvp_count: { Args: { event: string }; Returns: number };
+      event_rsvp_window: {
+        Args: { event: string };
+        Returns: {
+          opens_at: string;
+          plus_opens_at: string;
+          seats_left: number;
+        }[];
+      };
       find_by_barcode: {
         Args: { code: string };
         Returns: {

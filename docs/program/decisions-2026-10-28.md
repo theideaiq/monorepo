@@ -912,3 +912,10 @@ Plus Duo waits for step 14.
   over: on the 1st, what's left of last month's grant expires before the
   new one, counting Plus credits as used before credits earned by
   answering.
+- **Club:** RSVPs open to everyone at an event's opening time and to Plus
+  members 48 hours before. Staff can set the opening; when they publish
+  without one it is 48 hours after publishing (at the latest the start), so
+  Plus always comes first. Events published before this keep RSVPs open.
+  Blaze seats: an event holds a set number of seats for Blaze members;
+  others can take only what's left beside the unclaimed Blaze seats, which
+  open to everyone 24 hours before the start.

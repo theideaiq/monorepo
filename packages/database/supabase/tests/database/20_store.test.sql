@@ -263,9 +263,9 @@ select is(
 
 -- ── Editorial ───────────────────────────────────────────────────────────────
 
-insert into public.events (id, slug, title_ar, title_en, location, starts_at, published, capacity) values
-  ('30000000-0000-0000-0000-000000000001', 'reading', 'أمسية', 'Reading', 'Baghdad', now() + interval '7 days', true, 1),
-  ('30000000-0000-0000-0000-000000000002', 'draft-event', 'مسودة', 'Draft', 'Baghdad', now() + interval '7 days', false, null);
+insert into public.events (id, slug, title_ar, title_en, location, starts_at, published, capacity, rsvp_opens_at) values
+  ('30000000-0000-0000-0000-000000000001', 'reading', 'أمسية', 'Reading', 'Baghdad', now() + interval '7 days', true, 1, now()),
+  ('30000000-0000-0000-0000-000000000002', 'draft-event', 'مسودة', 'Draft', 'Baghdad', now() + interval '7 days', false, null, null);
 insert into public.posts (slug, title_ar, title_en, published_at) values
   ('hello', 'مرحبا', 'Hello', now()),
   ('later', 'لاحقا', 'Later', null);

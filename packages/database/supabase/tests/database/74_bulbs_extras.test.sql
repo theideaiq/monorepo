@@ -171,8 +171,8 @@ select is(
 );
 
 -- ── Event check-ins ─────────────────────────────────────────────────────────
-insert into public.events (id, slug, title_ar, title_en, location, starts_at, published) values
-  ('74000000-0000-0000-0000-0000000000f1', 'extras-night', 'أمسية', 'Night', 'Baghdad', now() + interval '1 day', true);
+insert into public.events (id, slug, title_ar, title_en, location, starts_at, published, rsvp_opens_at) values
+  ('74000000-0000-0000-0000-0000000000f1', 'extras-night', 'أمسية', 'Night', 'Baghdad', now() + interval '1 day', true, now());
 insert into public.event_rsvps (event_id, user_id) values
   ('74000000-0000-0000-0000-0000000000f1', '00000000-0000-0000-0000-0000000007e1');
 

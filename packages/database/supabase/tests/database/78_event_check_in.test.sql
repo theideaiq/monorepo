@@ -60,8 +60,8 @@ insert into auth.users (id, email, raw_user_meta_data) values
 insert into public.staff (user_id, role) values
   ('00000000-0000-0000-0000-0000000078a2', 'support'),
   ('00000000-0000-0000-0000-0000000078a3', 'finance');
-insert into public.events (id, slug, title_ar, title_en, location, starts_at, published) values
-  ('78000000-0000-0000-0000-0000000000e1', 'check-in-night', 'أمسية', 'Night', 'Baghdad', now() + interval '2 hours', true);
+insert into public.events (id, slug, title_ar, title_en, location, starts_at, published, rsvp_opens_at) values
+  ('78000000-0000-0000-0000-0000000000e1', 'check-in-night', 'أمسية', 'Night', 'Baghdad', now() + interval '2 hours', true, now());
 insert into public.event_rsvps (event_id, user_id) values
   ('78000000-0000-0000-0000-0000000000e1', '00000000-0000-0000-0000-0000000078a1');
 
