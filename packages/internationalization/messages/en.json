@@ -3085,6 +3085,7 @@
       "title": "Rent an item",
       "back": "Back to the item",
       "rent": "Rent for {days}",
+      "rentUntil": "Rent for the term, until {date}",
       "deposit": "Refundable deposit",
       "delivery": "Delivery",
       "total": "Total",
@@ -4764,7 +4765,9 @@
         "price": "Price (IQD)",
         "priceHint": "Empty: not rented on its own.",
         "days": "Days",
-        "lateFee": "Late fee per day (IQD)"
+        "lateFee": "Late fee per day (IQD)",
+        "perTerm": "For the term",
+        "perTermHint": "The price covers the rest of the current term, and the item is due when the term ends (textbooks)."
       },
       "payouts": {
         "prepareTitle": "Prepare payouts",
@@ -4833,6 +4836,15 @@
         "from": "From {starts}",
         "uses": "Used {used} times · {perMember} per Pass",
         "usesOf": "Used {used} of {max} times · {perMember} per Pass"
+      },
+      "terms": {
+        "title": "Terms",
+        "hint": "University terms. Textbooks and other per-term rentals run until the end of the current term, or of the next one starting within 30 days. Between terms they can't be rented.",
+        "nameAr": "Name (Arabic)",
+        "nameEn": "Name (English)",
+        "startsOn": "Starts",
+        "endsOn": "Ends",
+        "deleteDescription": "Rentals already made keep their due dates."
       }
     },
     "editorial": {

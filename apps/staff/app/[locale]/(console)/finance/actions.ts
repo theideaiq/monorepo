@@ -197,6 +197,7 @@ export const saveRentalRates = staffAction(
       category_id: string;
       days: number;
       late_fee: number;
+      per_term: boolean;
       price: number;
     }[] = [];
     const removed: string[] = [];
@@ -221,6 +222,7 @@ export const saveRentalRates = staffAction(
         category_id: category,
         days: days.data,
         late_fee: lateFee.data,
+        per_term: input[`perTerm:${category}`] === "on",
         price: price.data,
       });
     }
@@ -238,6 +240,43 @@ export const saveRentalRates = staffAction(
       })
     );
     return success();
+  }
+);
+
+/** An academic term: per-term rentals (textbooks) run to its end. */
+export const saveTerm = staffAction(
+  "finance",
+  z
+    .object({
+      endsOn: date,
+      id: optionalUuid,
+      nameAr: text(120),
+      nameEn: text(120),
+      startsOn: date,
+    })
+    .refine((term) => term.endsOn > term.startsOn),
+  async ({ input, supabase }) => {
+    const row = {
+      ends_on: input.endsOn,
+      name_ar: input.nameAr,
+      name_en: input.nameEn,
+      starts_on: input.startsOn,
+    };
+    check(
+      input.id
+        ? await supabase.from("academic_terms").update(row).eq("id", input.id)
+        : await supabase.from("academic_terms").insert(row)
+    );
+    return success();
+  }
+);
+
+export const deleteTerm = staffAction(
+  "finance",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.from("academic_terms").delete().eq("id", input.id));
+    return success("deleted");
   }
 );
 
