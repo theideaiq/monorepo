@@ -4,12 +4,14 @@ import { accessTokenOf } from "@/lib/oidc/clients";
 
 const LABELS = {
   ar: {
+    educator: "هيئة تدريس",
     member: "عضو",
     notForScanning: "للعرض فقط",
     since: "عضو منذ",
     student: "طالب",
   },
   en: {
+    educator: "EDUCATOR",
     member: "MEMBER",
     notForScanning: "Not for scanning",
     since: "Member since",
@@ -18,6 +20,7 @@ const LABELS = {
 } as const;
 
 interface PassCard {
+  educator?: boolean;
   member_number: number | null;
   name: string | null;
   plan_ar: string | null;
@@ -52,6 +55,7 @@ export const GET = async (request: Request) => {
   }
   const arabic = new URL(request.url).searchParams.get("lang") === "ar";
   const details = {
+    educator: card.educator ?? false,
     memberNumber: card.member_number,
     name: card.name ?? "",
     plan: (arabic ? card.plan_ar : card.plan_en) ?? null,

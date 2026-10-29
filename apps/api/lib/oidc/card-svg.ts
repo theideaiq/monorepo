@@ -8,6 +8,8 @@ import { BULB_PATH } from "@repo/design-system/components/brand/bulb";
  */
 
 export interface CardData {
+  /** Verified educator (shown when not a student). */
+  educator?: boolean;
   memberNumber: number | null;
   name: string;
   /** The The IDEA Plus plan's name, when the member has one. */
@@ -17,6 +19,7 @@ export interface CardData {
 }
 
 export interface CardLabels {
+  educator: string;
   member: string;
   notForScanning: string;
   since: string;
@@ -52,6 +55,7 @@ export const cardSvg = (card: CardData, labels: CardLabels, rtl: boolean) => {
   const tier = [
     card.plan ?? labels.member,
     ...(card.student ? [labels.student] : []),
+    ...(card.educator && !card.student ? [labels.educator] : []),
   ]
     .map(escapeXml)
     .join("  ·  ");

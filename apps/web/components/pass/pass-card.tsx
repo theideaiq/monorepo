@@ -103,12 +103,14 @@ const contributorLevel = (record: unknown) => {
 /** The badges on the card (the Plus plan shows on its own). */
 const cardBadges = (
   student: boolean,
+  educator: boolean,
   staff: boolean,
   contributor: number,
   card: CardText,
   locale: Locale
 ) => [
   ...(student ? [card("badges.student")] : []),
+  ...(educator && !student ? [card("badges.educator")] : []),
   ...(contributor > 0
     ? [card("badges.contributor", { level: formatNumber(contributor, locale) })]
     : []),
@@ -136,6 +138,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
     { data: student },
     { data: offers },
     { data: record },
+    { data: educator },
   ] = await Promise.all([
     session.supabase
       .from("profiles")
@@ -167,6 +170,11 @@ export const PassCard = async ({ session }: PassCardProps) => {
     session.supabase.rpc("my_student").maybeSingle(),
     session.supabase.rpc("my_perks"),
     session.supabase.rpc("my_survey_record"),
+    session.supabase
+      .from("educator_badges")
+      .select("valid_until")
+      .eq("user_id", session.user.id)
+      .maybeSingle(),
   ]);
   const name = profile?.full_name?.trim();
   const phone = session.user.phone ? formatPhone(session.user.phone) : null;
@@ -221,6 +229,10 @@ export const PassCard = async ({ session }: PassCardProps) => {
           <LiveCard
             badges={cardBadges(
               Boolean(student?.verified),
+              Boolean(
+                educator &&
+                  educator.valid_until >= new Date().toISOString().slice(0, 10)
+              ),
               Boolean(staff),
               contributorLevel(record),
               card,

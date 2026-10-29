@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { cardSvg, formatMemberNumber } from "./card-svg";
 
 const labels = {
+  educator: "EDUCATOR",
   member: "MEMBER",
   notForScanning: "Not for scanning",
   since: "Member since",
@@ -26,6 +27,21 @@ describe("the card for partner sites", () => {
     expect(svg).toContain("Glow  ·  STUDENT");
     expect(svg).toContain("Not for scanning");
     expect(svg.startsWith("<svg")).toBe(true);
+  });
+
+  it("shows Educator for a verified educator who isn't a student", () => {
+    const card = {
+      educator: true,
+      memberNumber: 42,
+      name: "Dr Hana",
+      plan: null,
+      since: "2026-10",
+      student: false,
+    };
+    expect(cardSvg(card, labels, false)).toContain("MEMBER  ·  EDUCATOR");
+    expect(cardSvg({ ...card, student: true }, labels, false)).not.toContain(
+      "EDUCATOR"
+    );
   });
 
   it("escapes what members write", () => {

@@ -5835,6 +5835,7 @@
       },
       "badges": {
         "student": "Student",
+        "educator": "Educator",
         "staff": "Staff",
         "contributor": "Contributor {level}"
       }

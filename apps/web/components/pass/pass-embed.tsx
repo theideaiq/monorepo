@@ -15,6 +15,17 @@ import {
 import { type EmbeddedCard, useEmbeddedCard } from "@/lib/pass-sign-in-queries";
 import { CardFace, usePassClock } from "./live-card";
 
+/** Student, or Educator for a verified educator who isn't one. */
+const embedBadges = (
+  card: { educator?: boolean; student: boolean },
+  label: (key: "badges.educator" | "badges.student") => string
+) => {
+  if (card.student) {
+    return [label("badges.student")];
+  }
+  return card.educator ? [label("badges.educator")] : [];
+};
+
 /** The frame's token for this partner (kept in this site's own storage). */
 const readToken = (clientId: string) => {
   try {
@@ -174,7 +185,7 @@ export const PassEmbed = ({
       {token && card ? (
         <figure className="grid gap-2">
           <CardFace
-            badges={card.student ? [tCard("badges.student")] : []}
+            badges={embedBadges(card, tCard)}
             code={code}
             left={left}
             memberNumber={card.member_number}
