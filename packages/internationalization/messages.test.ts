@@ -103,13 +103,13 @@ describe("messages", () => {
 
   test("Arabic copy uses the Arabic names, never the Latin ones", () => {
     // Plan names (Glow, Shine, Blaze, Duo) stay in Latin letters; argument
-    // names and rich-text tags are code, not copy.
+    // names are code, not copy.
     const values = (value: unknown): string[] =>
       typeof value === "string"
         ? [value]
         : Object.values(value ?? {}).flatMap(values);
     const offending = values(ar).filter((text) =>
-      LATIN_NAME.test(text.replace(ARGUMENT_OR_TAG, ""))
+      LATIN_NAME.test(text.replace(ARGUMENT, ""))
     );
     expect(offending).toEqual([]);
   });
@@ -117,4 +117,4 @@ describe("messages", () => {
 
 const LATIN_NAME =
   /The IDEA|\b(?:Store|Plus|Pass|Club|Partners|Bulbs?|Staff|Droid)\b/;
-const ARGUMENT_OR_TAG = /\{\w+|<\/?\w+>/g;
+const ARGUMENT = /\{\w+/g;
