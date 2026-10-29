@@ -2115,7 +2115,14 @@
           "failed": "It couldn't be saved. Try again."
         },
         "emailOnFile": "University email on file: {email}. Partner sites see it only when you allow them.",
-        "addEmail": "Add your university email to share it with partner sites that ask (only when you allow them)."
+        "addEmail": "Add your university email to share it with partner sites that ask (only when you allow them).",
+        "remove": {
+          "button": "Remove student status",
+          "confirm": "Remove your student badge? Student prices and perks stop, and a card waiting for review is withdrawn. Partners you shared your status with keep their own verification until you delete it from their email.",
+          "yes": "Remove",
+          "no": "Keep it",
+          "failed": "We couldn't remove it. Try again."
+        }
       },
       "sites": {
         "title": "Connected sites",
