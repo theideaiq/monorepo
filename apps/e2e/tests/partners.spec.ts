@@ -308,6 +308,12 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await removeBundle();
   await removeUploaded();
 
+  // Selling → Auctions: put one of its copies up for auction.
+  await page.goto(`${urls.app}/selling/auctions`);
+  await expect(page.getByText("Put a copy up for auction")).toBeVisible();
+  await expect(page.getByText("No live auctions.")).toBeVisible();
+  await expectAccessible(page);
+
   // The website lists the shop's offer and the cart line names the shop.
   await context.addCookies(await sessionCookies(customer.email, urls.web));
   await page.goto(`${urls.web}/store/${slug}`);

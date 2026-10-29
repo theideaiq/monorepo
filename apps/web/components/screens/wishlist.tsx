@@ -37,6 +37,7 @@ import { Queue } from "@/components/plus/plus-tools";
 import { SavedLists } from "@/components/saved/saved-lists";
 import { TellMe } from "@/components/saved/tell-me";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { MyBids } from "@/components/store/auctions";
 import { MyOffers } from "@/components/store/my-offers";
 import { Price } from "@/components/store/price";
 import { productHref } from "@/components/store/product-card";
@@ -329,6 +330,7 @@ export const Wishlist = () => {
               <SavedItems items={items} lists={lists} />
             ) : null}
             <MyOffers />
+            <MyBids />
           </TabsContent>
           <TabsContent className="pt-4" value="lists">
             <SavedLists items={items} />

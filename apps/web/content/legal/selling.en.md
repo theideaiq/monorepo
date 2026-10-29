@@ -92,15 +92,17 @@ Instead of listing an item yourself, you can ask shops on The IDEA for offers. D
 
 ## 15. Auctions for collectibles
 
-Approved sellers can auction collectibles. These rules apply to every auction:
+Approved shops, and The IDEA for its own copies, can auction collectibles: copies that are signed, limited or rare, products The IDEA lists as collectible, and used copies in the categories open for auctions. New copies at their usual price and rentals aren't auctioned. These rules apply to every auction:
 
-- **Verified bidders.** Bidding needs a verified Pass and age 18 or over.
-- **Proxy bidding.** You enter the most you are willing to pay; The IDEA bids for you, one step at a time, only as far as needed to keep you ahead, up to your maximum. Other bidders don't see your maximum.
+- **The copy and its photos.** Each auction shows the seller's own photos of that exact copy (at least 3) and describes its condition. A seller who marks a copy signed, limited or rare must be right: The IDEA reviews these marks, and a wrong one counts against the shop.
+- **Who can bid.** You need to be 18 or over and have a verified phone number. A maximum above 500,000 IQD also needs your identity verified. Sellers, and the people who work for them, can't bid on their own auctions.
+- **Proxy bidding.** You enter the most you are willing to pay; The IDEA bids for you, one step at a time, only as far as needed to keep you ahead, up to your maximum. Other bidders don't see your maximum. Bids are shown by number ("Bidder 3"), never by name.
 - **Reserve price.** A seller may set a hidden minimum. If bidding doesn't reach it, the item isn't sold. The listing says whether there is a reserve and whether it has been met.
-- **Buy It Now.** A seller may also set a price at which you can buy the item at once, while the listing offers it.
-- **Ending.** A bid in the **last 2 minutes** adds **2 minutes** to the auction, so everyone has time to respond.
-- **A winning bid is a promise to buy.** The winner pays within the time shown on the listing, in the way that seller's sales are paid (section 1).
-- **Strikes.** A winner who doesn't pay gets a strike, and the seller may offer the item to the next bidder. Repeated strikes end the right to bid.
+- **No "Buy It Now".** An auction ends only by bidding; an item at a fixed price is a normal listing.
+- **Ending.** An auction runs 3, 5, 7 or 10 days. A bid in the **last 2 minutes** adds **2 minutes**, so everyone has time to respond.
+- **A winning bid is a promise to buy.** The winner has **48 hours** to pay, online through the cart, where the win is waiting.
+- **Strikes.** A win that isn't paid in time is a strike. Two strikes within 12 months pause bidding for 90 days; three end it. The seller may then offer the item once to the next highest bidder at that bidder's last bid; letting that offer pass isn't a strike.
+- **Fees.** The seller pays the commission for the item's category on the final price. There are no listing fees.
 - **No shill bidding.** Sellers, and anyone acting with them, must not bid on their own items or push up prices. We check bidding patterns, cancel auctions affected by shill bidding and remove those involved.
 
 ## 16. Items not allowed

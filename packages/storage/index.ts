@@ -163,6 +163,7 @@ export const getPublicFileUrl = (
 export const publicFileUrl = (
   supabaseUrl: string,
   bucket:
+    | typeof buckets.auctionPhotos.id
     | typeof buckets.catalog.id
     | typeof buckets.editorial.id
     | typeof buckets.reviews.id,
@@ -185,6 +186,21 @@ export const uploadPublicFile = (
     supabase,
     buckets[bucket].id,
     objectPath(folder, file.name),
+    file
+  );
+};
+
+/** Uploads a photo of a copy a seller puts up for auction, to its folder. */
+export const uploadAuctionPhoto = (
+  supabase: Client,
+  sellerId: string,
+  file: File
+) => {
+  assertAllowed("auctionPhotos", file);
+  return upload(
+    supabase,
+    buckets.auctionPhotos.id,
+    objectPath(sellerId, file.name),
     file
   );
 };

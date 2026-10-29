@@ -838,3 +838,116 @@ test("a member applies to one of The IDEA's programs and pays the first installm
   await db.from("program_applications").delete().eq("program_id", listing.id);
   await db.from("opportunities").delete().eq("id", listing.id);
 });
+
+/** A 1×1 PNG, standing in for a seller's photo of the copy. */
+const PIXEL = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+  "base64"
+);
+const HOUSE_SELLER = "00000000-0000-4000-8000-000000000001";
+
+test("a member bids on an auction, wins it and finds it in the cart", async ({
+  context,
+  page,
+}) => {
+  await resetCustomer();
+  const db = admin();
+  const slug = "e2e-auction-card";
+  const name = "E2E Signed Card";
+
+  // A collectible product with one of The IDEA's copies, and the seller's
+  // photos of it.
+  const { data: item, error } = await db
+    .from("products")
+    .upsert(
+      {
+        collectible: true,
+        condition: "used",
+        kind: "sale",
+        name_ar: "بطاقة موقعة للاختبار",
+        name_en: name,
+        price: 30_000,
+        slug,
+        status: "active",
+      },
+      { onConflict: "slug" }
+    )
+    .select("id")
+    .single();
+  if (error) {
+    throw error;
+  }
+  // Earlier runs' auctions go, and their copies with them.
+  await db.from("auctions").delete().eq("product_id", item.id);
+  await db.from("stock_items").delete().eq("product_id", item.id);
+  const { data: copy } = await db
+    .from("stock_items")
+    .insert({
+      condition: "used",
+      product_id: item.id,
+      purpose: "sale",
+      status: "reserved",
+    })
+    .select("id, variant_id")
+    .single();
+  const photos = [1, 2, 3].map((n) => `${HOUSE_SELLER}/e2e-card-${n}.png`);
+  for (const path of photos) {
+    await db.storage
+      .from("auction-photos")
+      .upload(path, PIXEL, { contentType: "image/png", upsert: true });
+  }
+  const { data: auction, error: auctionError } = await db
+    .from("auctions")
+    .insert({
+      condition: "used",
+      condition_note: "Signed on the front, light wear on the corners.",
+      days: 3,
+      ends_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+      photos,
+      product_id: item.id,
+      seller_id: HOUSE_SELLER,
+      start_price: 30_000,
+      stock_item_id: copy?.id ?? "",
+      variant_id: copy?.variant_id ?? "",
+    })
+    .select("id, number")
+    .single();
+  if (auctionError) {
+    throw auctionError;
+  }
+  await context.addCookies(await sessionCookies(customer.email, urls.web));
+
+  // Store → Auctions lists it; its page takes a maximum.
+  await page.goto(`${urls.web}/store/auctions`);
+  await expect(
+    page.getByRole("link", { name: new RegExp(name) })
+  ).toBeVisible();
+  await expectAccessible(page);
+  await page.goto(`${urls.web}/store/auctions/${auction.number}`);
+  await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
+  await page.getByLabel("Your maximum (IQD)").fill("40000");
+  await page.getByRole("button", { name: "Place bid" }).click();
+  await expect(page.getByText(/You're the highest bidder at/)).toBeVisible();
+  await expect(page.getByText("Bidder 1")).toBeVisible();
+  await expectAccessible(page);
+
+  // It ends; the page settles it and the win is in the cart.
+  await db
+    .from("auctions")
+    .update({
+      ends_at: new Date(Date.now() - 1000).toISOString(),
+      starts_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    })
+    .eq("id", auction.id);
+  await page.reload();
+  await expect(page.getByText(/^You won at/)).toBeVisible();
+  await page.getByRole("link", { name: "Go to cart" }).click();
+  await expect(page).toHaveURL(new RegExp(`^${urls.web}/cart`));
+  await expect(page.getByText(/^Won · pay by/)).toBeVisible();
+  await expectAccessible(page);
+
+  // Saved → Bids shows it too.
+  await page.goto(`${urls.web}/pass/saved`);
+  await expect(page.getByRole("heading", { name: "Your bids" })).toBeVisible();
+  await expect(page.getByText("You won", { exact: true })).toBeVisible();
+});

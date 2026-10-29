@@ -665,3 +665,27 @@ export const getSharedList = (token: string) =>
       };
     }
   );
+
+// ── Auctions ────────────────────────────────────────────────────────────────
+
+/** The product an auction is for (for its page title), or null. */
+export const getAuctionTitle = (number: number) =>
+  fallback(
+    "auctionTitle",
+    null as { name_ar: string; name_en: string } | null,
+    async () => {
+      const supabase = createPublicClient();
+      if (!supabase) {
+        return null;
+      }
+      const { data, error } = await supabase
+        .from("auctions")
+        .select("product:products (name_ar, name_en)")
+        .eq("number", number)
+        .maybeSingle();
+      if (error) {
+        throw error;
+      }
+      return data?.product ?? null;
+    }
+  );

@@ -4,6 +4,17 @@
  * request is sent; the bucket enforces them either way.
  */
 export const buckets = {
+  /**
+   * The seller's own photos of a copy on auction (public), under
+   * "<seller id>/…": the shop's owners and admins, or Staff for The IDEA's
+   * copies, write them.
+   */
+  auctionPhotos: {
+    id: "auction-photos",
+    maxBytes: 5 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp"],
+    public: true,
+  },
   /** Public profile pictures, under "<user id>/…"; only the owner writes. */
   avatars: {
     id: "avatars",

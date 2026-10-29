@@ -39,6 +39,8 @@ test("businessPath strips Partners' prefix", () => {
   expect(businessPath("/business/developers")).toBe("/developers");
   expect(businessPath("/business/perks?x=1")).toBe("/perks?x=1");
   expect(businessPath("/business")).toBe("/");
+  expect(businessPath("/selling/auctions")).toBe("/selling/auctions");
+  expect(businessPath("/sellingstuff")).toBeNull();
   expect(businessPath("/businesses")).toBeNull();
   expect(businessPath("/pass")).toBeNull();
 });

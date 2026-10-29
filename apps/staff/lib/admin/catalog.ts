@@ -36,6 +36,7 @@ export const productSchema = z.object({
       value === null || (AGE_RATINGS as readonly number[]).includes(value)
   ),
   categoryId: optionalUuid,
+  collectible: checkbox,
   condition: z.enum(Enums.product_condition),
   descriptionAr: optionalText(10_000),
   descriptionEn: optionalText(10_000),

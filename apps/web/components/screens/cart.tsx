@@ -16,7 +16,11 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@repo/design-system/components/ui/empty";
-import { formatDate, formatNumber } from "@repo/internationalization/format";
+import {
+  formatDate,
+  formatDateTime,
+  formatNumber,
+} from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import {
   GiftIcon,
@@ -32,6 +36,12 @@ import { productHref } from "@/components/store/product-card";
 import { ProductImage } from "@/components/store/product-image";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
 import {
+  type AuctionLine,
+  useCartAuctionLines,
+  useRemoveCartAuction,
+} from "@/lib/auctions";
+import {
+  addAuctionsToSummary,
   addKitToSummary,
   addPlusGiftToSummary,
   addProgramsToSummary,
@@ -336,6 +346,48 @@ const ProgramRow = ({ line }: { readonly line: ProgramLine }) => {
   );
 };
 
+/** A won auction in the cart: paid online by its deadline. */
+const AuctionRow = ({ line }: { readonly line: AuctionLine }) => {
+  const t = useTranslations("app.cart.auction");
+  const tCart = useTranslations("app.cart");
+  const locale = useLocale();
+  const remove = useRemoveCartAuction();
+  return (
+    <li className="grid gap-2 py-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="grid min-w-0 gap-0.5">
+          <Link
+            className="font-medium text-sm hover:underline"
+            href={`/store/auctions/${line.number}`}
+          >
+            {line.name ? localized(line.name, "name", locale) : ""}
+          </Link>
+          <span className="text-muted-foreground text-xs">
+            {line.payBy
+              ? t("payBy", { time: formatDateTime(line.payBy, locale) })
+              : t("won")}
+          </span>
+        </div>
+        <span className="shrink-0 font-medium text-sm tabular-nums">
+          {formatPrice(line.amount, locale)}
+        </span>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-muted-foreground text-xs">{t("online")}</span>
+        <Button
+          disabled={remove.isPending}
+          onClick={() => remove.mutate(line.auctionId)}
+          size="sm"
+          variant="ghost"
+        >
+          <Trash2Icon />
+          {tCart("remove")}
+        </Button>
+      </div>
+    </li>
+  );
+};
+
 /** The cart's lines and kit, priced, and whether there's anything in it. */
 const useCartSummary = (
   items: ReturnType<typeof useCart>["data"],
@@ -345,23 +397,29 @@ const useCartSummary = (
   const kit = useCartKitLine(isStudent);
   const plus = useCartPlusGiftLine();
   const programs = useCartProgramLines();
+  const auctions = useCartAuctionLines();
   const summary =
     items && settings
-      ? addProgramsToSummary(
-          addPlusGiftToSummary(
-            addKitToSummary(summarizeCart(items, settings), kit),
-            plus
+      ? addAuctionsToSummary(
+          addProgramsToSummary(
+            addPlusGiftToSummary(
+              addKitToSummary(summarizeCart(items, settings), kit),
+              plus
+            ),
+            programs
           ),
-          programs
+          auctions
         )
       : null;
   return {
+    auctions,
     empty:
       summary !== null &&
       summary.lines.length === 0 &&
       !kit &&
       !plus &&
-      programs.length === 0,
+      programs.length === 0 &&
+      auctions.length === 0,
     kit,
     plus,
     programs,
@@ -381,7 +439,7 @@ export const Cart = () => {
 
   const loading = cart.isPending || settings.isPending;
   const failed = cart.isError || settings.isError;
-  const { empty, kit, plus, programs, summary } = useCartSummary(
+  const { auctions, empty, kit, plus, programs, summary } = useCartSummary(
     cart.data,
     settings.data
   );
@@ -444,6 +502,9 @@ export const Cart = () => {
                 {plus ? <PlusGiftRow plus={plus} /> : null}
                 {programs.map((line) => (
                   <ProgramRow key={line.applicationId} line={line} />
+                ))}
+                {auctions.map((line) => (
+                  <AuctionRow key={line.auctionId} line={line} />
                 ))}
               </ul>
             </section>

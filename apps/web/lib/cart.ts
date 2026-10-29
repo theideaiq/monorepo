@@ -287,3 +287,27 @@ export const addProgramsToSummary = (
     },
   };
 };
+
+/**
+ * Adds won auctions to the cart's summary: bought goods at the final
+ * price, paid online, counting towards free delivery like other goods.
+ */
+export const addAuctionsToSummary = (
+  summary: ReturnType<typeof summarizeCart>,
+  auctions: readonly { amount: number }[]
+): ReturnType<typeof summarizeCart> => {
+  if (auctions.length === 0) {
+    return summary;
+  }
+  const amount = auctions.reduce((sum, line) => sum + line.amount, 0);
+  return {
+    ...summary,
+    canCheckout: summary.problems === 0,
+    totals: {
+      ...summary.totals,
+      count: summary.totals.count + auctions.length,
+      subtotal: summary.totals.subtotal + amount,
+      total: summary.totals.total + amount,
+    },
+  };
+};

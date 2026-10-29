@@ -10,6 +10,7 @@ import {
   checkFile,
   fileNameOf,
   publicFileUrl,
+  uploadAuctionPhoto,
   uploadPublicFile,
 } from "@repo/storage";
 import { FileTextIcon, StarIcon, UploadIcon, XIcon } from "lucide-react";
@@ -21,9 +22,12 @@ import { useFormContext } from "./action-form";
 
 interface FileUploadProps {
   readonly accept: "image" | "pdf";
-  readonly bucket: "catalog" | "editorial";
+  readonly bucket: "auctionPhotos" | "catalog" | "editorial";
   readonly defaultPaths?: string[];
-  /** Folder inside the bucket, e.g. "products" or "posts". */
+  /**
+   * Folder inside the bucket, e.g. "products" or "posts" (for auction
+   * photos, the seller's id).
+   */
   readonly folder: string;
   readonly hint?: string;
   readonly label: string;
@@ -185,7 +189,11 @@ export const FileUpload = ({
     setUploading(true);
     try {
       const stored = await Promise.all(
-        files.map((file) => uploadPublicFile(supabase, bucket, folder, file))
+        files.map((file) =>
+          bucket === "auctionPhotos"
+            ? uploadAuctionPhoto(supabase, folder, file)
+            : uploadPublicFile(supabase, bucket, folder, file)
+        )
       );
       const added = stored.map((file) => file.path);
       setPaths((current) => (multiple ? [...current, ...added] : added));
@@ -246,7 +254,7 @@ export const FileUpload = ({
               url={
                 isRemoteCatalogImage(path)
                   ? path
-                  : publicFileUrl(supabaseUrl, bucket, path)
+                  : publicFileUrl(supabaseUrl, buckets[bucket].id, path)
               }
             />
           ))}

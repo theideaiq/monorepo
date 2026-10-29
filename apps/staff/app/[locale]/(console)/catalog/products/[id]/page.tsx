@@ -14,6 +14,7 @@ import { requireSection } from "@/lib/admin/session";
 import { supplierOptions } from "@/lib/admin/suppliers";
 import { CopiesPanel } from "../../_components/copies-panel";
 import { CoverFinder } from "../../_components/cover-finder";
+import { HouseAuctionPanel } from "../../_components/house-auction-panel";
 import { HouseOffersPanel } from "../../_components/house-offers-panel";
 import { HouseSalesPanel } from "../../_components/house-sales-panel";
 import { ProductForm } from "../../_components/product-form";
@@ -78,6 +79,15 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   if (!product) {
     notFound();
   }
+  const variantOptions = (variants ?? []).map((variant, index) => ({
+    id: variant.id,
+    label:
+      variantName(variant, locale) ||
+      variant.sku ||
+      t("copies.variantNumber", {
+        number: formatNumber(index + 1, locale as Locale),
+      }),
+  }));
 
   return (
     <>
@@ -126,43 +136,25 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           disabled={!canWrite}
           product={product}
           suppliers={suppliers}
-          variants={(variants ?? []).map((variant, index) => ({
-            id: variant.id,
-            label:
-              variantName(variant, locale) ||
-              variant.sku ||
-              t("copies.variantNumber", {
-                number: formatNumber(index + 1, locale as Locale),
-              }),
-          }))}
+          variants={variantOptions}
         />
         <HouseOffersPanel
           copies={copies ?? []}
           disabled={!canWrite}
           supabase={supabase}
-          variants={(variants ?? []).map((variant, index) => ({
-            id: variant.id,
-            label:
-              variantName(variant, locale) ||
-              variant.sku ||
-              t("copies.variantNumber", {
-                number: formatNumber(index + 1, locale as Locale),
-              }),
-          }))}
+          variants={variantOptions}
+        />
+        <HouseAuctionPanel
+          copies={copies ?? []}
+          disabled={!canWrite}
+          supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
+          variants={variantOptions}
         />
         <HouseSalesPanel
           copies={copies ?? []}
           disabled={!canWrite}
           supabase={supabase}
-          variants={(variants ?? []).map((variant, index) => ({
-            id: variant.id,
-            label:
-              variantName(variant, locale) ||
-              variant.sku ||
-              t("copies.variantNumber", {
-                number: formatNumber(index + 1, locale as Locale),
-              }),
-          }))}
+          variants={variantOptions}
         />
         <RatingPanel
           productId={product.id}
