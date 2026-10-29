@@ -90,8 +90,11 @@ incidents) is in `docs/platform`.
     Plus members, Queue), `/pass/selling` (Get offers from shops: describe
     an item with photos, compare shops' offers, accept one and arrange the
     hand-over in messages), `/pass/bulbs` with
-    invites at `#invite`, `/pass/settings` with the address book at
-    `#addresses`); `/pass/embed` (outside that
+    invites at `#invite`, `/pass/settings` in sections: Profile, Email (the
+    sign-in address and password), Phone (verified numbers and WhatsApp),
+    Connections (sign-in accounts, Telegram, connected sites) and More
+    (the address book at `#addresses`, birthday, guardian, verification,
+    appearance, deleting the Pass)); `/pass/embed` (outside that
     group, no header or footer) is the live card partners frame on their
     own sites, with its connect popup at `/pass/embed/connect`; `/lists/<token>`
     is a list a member shared by link; and the cart and checkout (`app/[locale]/(checkout)`): client components that query with
