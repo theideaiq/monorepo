@@ -1030,7 +1030,10 @@ Plus Duo waits for step 14.
     schedule;
   - a program The IDEA calls off refunds everything.
   Finance pays the refund (Wayl or cash) and records it; automatic Wayl
-  refunds can follow, as for returns.
+  refunds can follow, as for returns. The refund schedule and visa share
+  are fixed on the application when the place is accepted (the programs
+  policy), so changing a program later never changes them; any
+  installment past its date can release a place.
 - **Passport scans** stay private (the applicant and editors) and are
   deleted 30 days after the application ends or the program does.
 - **Not yet:** sending a program as a gift, and a Plus price per tier.

@@ -3889,6 +3889,7 @@ export type Database = {
           program_id: string;
           refund_amount: number | null;
           refund_reference: string | null;
+          refund_schedule: Json | null;
           refunded_at: string | null;
           refunded_by: string | null;
           review_note: string | null;
@@ -3897,6 +3898,7 @@ export type Database = {
           status: string;
           updated_at: string;
           user_id: string;
+          visa_refund_rate: number | null;
         };
         Insert: {
           cancel_reason?: string | null;
@@ -3918,6 +3920,7 @@ export type Database = {
           program_id: string;
           refund_amount?: number | null;
           refund_reference?: string | null;
+          refund_schedule?: Json | null;
           refunded_at?: string | null;
           refunded_by?: string | null;
           review_note?: string | null;
@@ -3926,6 +3929,7 @@ export type Database = {
           status?: string;
           updated_at?: string;
           user_id: string;
+          visa_refund_rate?: number | null;
         };
         Update: {
           cancel_reason?: string | null;
@@ -3947,6 +3951,7 @@ export type Database = {
           program_id?: string;
           refund_amount?: number | null;
           refund_reference?: string | null;
+          refund_schedule?: Json | null;
           refunded_at?: string | null;
           refunded_by?: string | null;
           review_note?: string | null;
@@ -3955,6 +3960,7 @@ export type Database = {
           status?: string;
           updated_at?: string;
           user_id?: string;
+          visa_refund_rate?: number | null;
         };
         Relationships: [
           {
