@@ -718,6 +718,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Verification, parts 1 and 2 (step 13; schema
+  `20270227000000_identity_educators.sql`, `20270228000000_shop_org_verification.sql`).
+  Identity checks (National Card both sides and a selfie, reviewed by
+  support, only the name and date kept), the educator badge (staff email
+  code or documents; every student perk, "Educator" on the Pass card),
+  shop kinds (registered: no limits; individual trader: a monthly sales
+  limit from Staff, checked on every order line) and organization
+  verification (a verified domain at once, or an official letter;
+  student societies add their university's approval and are always
+  reviewed). The screens follow once production has the migrations.
 - 2026-10-29: Plus features, part 4 (step 12; `20270225000000_perk_tiers.sql`).
   Partner perks can be for given Plus tiers (Glow, Shine, Blaze), and two
   perks of the same partner can be paired (a student and a Plus version):

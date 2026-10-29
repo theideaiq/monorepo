@@ -1856,6 +1856,72 @@ export type Database = {
           },
         ];
       };
+      organization_verifications: {
+        Row: {
+          approval: string | null;
+          domain_id: string | null;
+          is_student_society: boolean;
+          letter: string | null;
+          method: string;
+          organization_id: string;
+          reject_reason: string | null;
+          requested_at: string;
+          requested_by: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          university: string | null;
+          verified_at: string | null;
+        };
+        Insert: {
+          approval?: string | null;
+          domain_id?: string | null;
+          is_student_society?: boolean;
+          letter?: string | null;
+          method: string;
+          organization_id: string;
+          reject_reason?: string | null;
+          requested_at?: string;
+          requested_by?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          university?: string | null;
+          verified_at?: string | null;
+        };
+        Update: {
+          approval?: string | null;
+          domain_id?: string | null;
+          is_student_society?: boolean;
+          letter?: string | null;
+          method?: string;
+          organization_id?: string;
+          reject_reason?: string | null;
+          requested_at?: string;
+          requested_by?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          university?: string | null;
+          verified_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "organization_verifications_domain_id_fkey";
+            columns: ["domain_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partner_domains";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "organization_verifications_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: true;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       organizations: {
         Row: {
           created_at: string;
@@ -4446,6 +4512,7 @@ export type Database = {
           decided_by: string | null;
           id: string;
           is_house: boolean;
+          kind: Database["public"]["Enums"]["shop_kind"] | null;
           name: string;
           organization_id: string | null;
           plan: Database["public"]["Enums"]["seller_plan"];
@@ -4463,6 +4530,7 @@ export type Database = {
           decided_by?: string | null;
           id?: string;
           is_house?: boolean;
+          kind?: Database["public"]["Enums"]["shop_kind"] | null;
           name: string;
           organization_id?: string | null;
           plan?: Database["public"]["Enums"]["seller_plan"];
@@ -4480,6 +4548,7 @@ export type Database = {
           decided_by?: string | null;
           id?: string;
           is_house?: boolean;
+          kind?: Database["public"]["Enums"]["shop_kind"] | null;
           name?: string;
           organization_id?: string | null;
           plan?: Database["public"]["Enums"]["seller_plan"];
@@ -4750,6 +4819,7 @@ export type Database = {
           delivery_cost: number;
           extra_swap_fee: number;
           id: boolean;
+          individual_monthly_limit: number;
           max_giveaway_rate: number;
           min_margin_rate: number;
           offer_floor_rate: number;
@@ -4779,6 +4849,7 @@ export type Database = {
           delivery_cost?: number;
           extra_swap_fee?: number;
           id?: boolean;
+          individual_monthly_limit?: number;
           max_giveaway_rate?: number;
           min_margin_rate?: number;
           offer_floor_rate?: number;
@@ -4808,6 +4879,7 @@ export type Database = {
           delivery_cost?: number;
           extra_swap_fee?: number;
           id?: boolean;
+          individual_monthly_limit?: number;
           max_giveaway_rate?: number;
           min_margin_rate?: number;
           offer_floor_rate?: number;
@@ -6315,7 +6387,11 @@ export type Database = {
       };
       apply_coupon: { Args: { entered: string }; Returns: string };
       apply_to_sell: {
-        Args: { org: string; seller_name: string };
+        Args: {
+          org: string;
+          seller_name: string;
+          shop_kind?: Database["public"]["Enums"]["shop_kind"];
+        };
         Returns: {
           applied_at: string;
           created_at: string;
@@ -6323,6 +6399,7 @@ export type Database = {
           decided_by: string | null;
           id: string;
           is_house: boolean;
+          kind: Database["public"]["Enums"]["shop_kind"] | null;
           name: string;
           organization_id: string | null;
           plan: Database["public"]["Enums"]["seller_plan"];
@@ -7407,6 +7484,7 @@ export type Database = {
           decided_by: string | null;
           id: string;
           is_house: boolean;
+          kind: Database["public"]["Enums"]["shop_kind"] | null;
           name: string;
           organization_id: string | null;
           plan: Database["public"]["Enums"]["seller_plan"];
@@ -8534,6 +8612,17 @@ export type Database = {
         Returns: string;
       };
       request_identity_check: { Args: { files: string[] }; Returns: string };
+      request_organization_check: {
+        Args: {
+          approval?: string;
+          letter?: string;
+          method: string;
+          org: string;
+          student_society?: boolean;
+          university?: string;
+        };
+        Returns: string;
+      };
       request_plus_seat: {
         Args: { member: string; org: string; plan: string };
         Returns: string;
@@ -8745,6 +8834,10 @@ export type Database = {
           target: string;
         };
         Returns: string[];
+      };
+      review_organization_check: {
+        Args: { approve: boolean; org: string; reason?: string };
+        Returns: undefined;
       };
       review_pass_app: {
         Args: { approve: boolean; client: string; note?: string };
@@ -9264,6 +9357,37 @@ export type Database = {
           decided_by: string | null;
           id: string;
           is_house: boolean;
+          kind: Database["public"]["Enums"]["shop_kind"] | null;
+          name: string;
+          organization_id: string | null;
+          plan: Database["public"]["Enums"]["seller_plan"];
+          plan_billing: string | null;
+          plan_since: string | null;
+          score: number;
+          score_updated_at: string | null;
+          status: Database["public"]["Enums"]["seller_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sellers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      set_shop_kind: {
+        Args: {
+          shop_kind: Database["public"]["Enums"]["shop_kind"];
+          target: string;
+        };
+        Returns: {
+          applied_at: string;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          id: string;
+          is_house: boolean;
+          kind: Database["public"]["Enums"]["shop_kind"] | null;
           name: string;
           organization_id: string | null;
           plan: Database["public"]["Enums"]["seller_plan"];
@@ -9386,6 +9510,7 @@ export type Database = {
           product_id: string;
         }[];
       };
+      shop_limit: { Args: { shop: string }; Returns: Json };
       spend_renewal_bulbs: {
         Args: { bulbs: number; subscription: string };
         Returns: number;
@@ -9890,6 +10015,7 @@ export type Database = {
         | "cancelled";
       seller_plan: "free" | "pro";
       seller_status: "pending" | "approved" | "rejected" | "suspended";
+      shop_kind: "registered" | "individual";
       staff_role:
         | "superadmin"
         | "admin"
@@ -10177,6 +10303,7 @@ export const Constants = {
       ],
       seller_plan: ["free", "pro"],
       seller_status: ["pending", "approved", "rejected", "suspended"],
+      shop_kind: ["registered", "individual"],
       staff_role: [
         "superadmin",
         "admin",
