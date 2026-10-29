@@ -485,7 +485,7 @@ const RequestCard = ({ request }: { readonly request: MySellRequest }) => {
  * Your Pass → Selling: ask shops for offers on your own things, compare
  * their offers, accept one and arrange the hand-over in messages.
  */
-export const Selling = () => {
+export const Selling = ({ sellUrl }: { readonly sellUrl: string }) => {
   const t = useTranslations("app.selling");
   const requests = useMySellRequests();
 
@@ -494,6 +494,17 @@ export const Selling = () => {
       <PageHeader title={t("title")} />
       <div className="flex max-w-3xl flex-1 flex-col gap-6">
         <p className="text-muted-foreground">{t("intro")}</p>
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("yourself.title")}</CardTitle>
+            <CardDescription>{t("yourself.description")}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild variant="outline">
+              <a href={sellUrl}>{t("yourself.start")}</a>
+            </Button>
+          </CardContent>
+        </Card>
         <AskForOffers />
         <section className="grid gap-4" id="offers">
           <h2 className="font-semibold text-lg">{t("yours")}</h2>

@@ -573,6 +573,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-30: Textbook resale (step 14; decisions "Textbook resale"):
+  students resell as individual trader shops in Partners, no new schema.
+  Store → Textbooks and Pass → Selling ("Sell it yourself") link to
+  Partners `/new?for=selling`, which makes the organization with Selling
+  on and opens the shop's application. Next in step 14: Plus Duo.
 - 2026-10-30: Pass → Settings in sections (the owner's message of 30
   October): Profile; Email (the sign-in address and its password); Phone
   (verified numbers and WhatsApp updates); Connections (sign-in accounts,

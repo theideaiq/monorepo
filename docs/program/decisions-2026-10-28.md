@@ -1239,3 +1239,19 @@ The owner's message of 30 October 2026:
   Apple, Telegram, connected sites); a **Phone** section (the number, its
   verification and WhatsApp updates together); an **Email** section.
   (Planned as its own pull request.)
+
+## Textbook resale (step 14, decided 30 October 2026)
+
+The brief's "resale between students each term" would be people selling,
+which the owner cancelled the same day. The owner's choice: **students
+resell as individual traders.** A student who wants to sell last term's
+textbooks opens a shop in Partners as an individual trader (their ID only,
+the monthly sales limit of Part 8) and lists them like any shop: paid
+through The IDEA, collected by Boxy, paid out weekly, returns under the
+Returns policy. Nothing new in the schema; the website points the way:
+
+- Store → Books → Textbooks says "Done with last term's textbooks? Sell
+  them…" with a link to Partners;
+- Pass → Selling has "Sell it yourself", next to Get offers from shops;
+- Partners `/new?for=selling` makes the organization with Selling on and
+  opens the shop's application (individual trader is the default kind).

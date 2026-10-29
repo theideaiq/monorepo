@@ -353,7 +353,9 @@
         "title": "Auctions",
         "description": "Signed, limited, rare and collectible copies, each with the seller's own photos. Set your maximum and we bid for you.",
         "one": "Bid on {name}: the seller's photos of this copy, its condition, the current bid and time left."
-      }
+      },
+      "sellTextbooks": "Done with last term's textbooks? Sell them on the Store as an individual trader: open a shop in Partners with your ID; there's no fee to start, only commission on what sells.",
+      "sellTextbooksLink": "Start selling"
     },
     "plus": {
       "meta": {
@@ -2259,7 +2261,8 @@
     "organizations": {
       "new": {
         "title": "New organization",
-        "description": "Set up an organization for your shop, company or team."
+        "description": "Set up an organization for your shop, company or team.",
+        "sellingDescription": "Name your shop, then apply to sell. Selling your own things? Apply as an individual trader with your ID; a registered business adds its commercial registration."
       }
     },
     "invite": {
@@ -3978,6 +3981,11 @@
         "placeholder": "Write to the shop",
         "send": "Send",
         "private": "Messages go through The IDEA. Don't share your phone number or address here."
+      },
+      "yourself": {
+        "title": "Sell it yourself",
+        "description": "Textbooks at the end of term, games you've finished, anything of your own: open a shop in Partners as an individual trader (your ID only, a monthly sales limit). Your items go on the Store; The IDEA collects the payment, Boxy collects from you, and you're paid each week.",
+        "start": "Open a shop in Partners"
       }
     }
   },
