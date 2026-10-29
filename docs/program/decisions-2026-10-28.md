@@ -954,3 +954,22 @@ Plus Duo waits for step 14.
   letter. Student societies also upload their university's approval, so
   they are always reviewed. Letters and approvals are kept (they are not
   personal ID); the owners and admins are told the outcome.
+
+## Part 9: supply (step 13)
+
+- **Supplier shops** are approved shops that lend things The IDEA rents
+  out: copies join the Plus pool (and single rentals), kit units join game
+  nights. The IDEA runs every rental and booking; the member never deals
+  with the supplier.
+- **Fees:** each supplier has its own fee per rental of one of its copies
+  and per booking of one of its kit units, set in Staff. A fee is earned
+  when the rental starts or the kit goes out (a rental cancelled before it
+  starts earns nothing), once per rental or booking, at the fee in force
+  then. Fees are paid with the shop's weekly payout as one Supply line and
+  listed one by one in Partners → Supply.
+- **Hand-over:** staff record the copies and units a supplier hands over
+  (marked as the supplier's) and return them when asked; Partners → Supply
+  shows each copy and unit, where it is and what it earned. A monthly fee
+  per copy, and shops offering their own single rentals with their own
+  deposit and ID check, come later if suppliers ask for them.
+

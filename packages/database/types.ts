@@ -1234,6 +1234,7 @@ export type Database = {
           kit_type: string;
           label: string;
           note: string | null;
+          seller_id: string;
           status: string;
         };
         Insert: {
@@ -1242,6 +1243,7 @@ export type Database = {
           kit_type: string;
           label: string;
           note?: string | null;
+          seller_id?: string;
           status?: string;
         };
         Update: {
@@ -1250,6 +1252,7 @@ export type Database = {
           kit_type?: string;
           label?: string;
           note?: string | null;
+          seller_id?: string;
           status?: string;
         };
         Relationships: [
@@ -1258,6 +1261,13 @@ export type Database = {
             columns: ["kit_type"];
             isOneToOne: false;
             referencedRelation: "kit_types";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "kit_units_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
             referencedColumns: ["id"];
           },
         ];
@@ -5306,6 +5316,135 @@ export type Database = {
             columns: ["plan_id"];
             isOneToOne: false;
             referencedRelation: "plans";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      supply_earnings: {
+        Row: {
+          created_at: string;
+          earned_on: string;
+          fee: number;
+          id: string;
+          kind: string;
+          kit_booking_id: string | null;
+          kit_unit_id: string | null;
+          label: string;
+          payout_line_id: string | null;
+          rental_id: string | null;
+          seller_id: string;
+          stock_item_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          earned_on?: string;
+          fee: number;
+          id?: string;
+          kind: string;
+          kit_booking_id?: string | null;
+          kit_unit_id?: string | null;
+          label: string;
+          payout_line_id?: string | null;
+          rental_id?: string | null;
+          seller_id: string;
+          stock_item_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          earned_on?: string;
+          fee?: number;
+          id?: string;
+          kind?: string;
+          kit_booking_id?: string | null;
+          kit_unit_id?: string | null;
+          label?: string;
+          payout_line_id?: string | null;
+          rental_id?: string | null;
+          seller_id?: string;
+          stock_item_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "supply_earnings_kit_booking_id_fkey";
+            columns: ["kit_booking_id"];
+            isOneToOne: false;
+            referencedRelation: "kit_bookings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supply_earnings_kit_unit_id_fkey";
+            columns: ["kit_unit_id"];
+            isOneToOne: false;
+            referencedRelation: "kit_units";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supply_earnings_payout_line_id_fkey";
+            columns: ["payout_line_id"];
+            isOneToOne: false;
+            referencedRelation: "payout_lines";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supply_earnings_rental_id_fkey";
+            columns: ["rental_id"];
+            isOneToOne: false;
+            referencedRelation: "rentals";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supply_earnings_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "supply_earnings_stock_item_id_fkey";
+            columns: ["stock_item_id"];
+            isOneToOne: false;
+            referencedRelation: "stock_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      supply_terms: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          kit_fee: number;
+          note: string | null;
+          rental_fee: number;
+          seller_id: string;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          kit_fee?: number;
+          note?: string | null;
+          rental_fee?: number;
+          seller_id: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          kit_fee?: number;
+          note?: string | null;
+          rental_fee?: number;
+          seller_id?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "supply_terms_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: true;
+            referencedRelation: "sellers";
             referencedColumns: ["id"];
           },
         ];
@@ -9458,6 +9597,31 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      set_supply_terms: {
+        Args: {
+          active?: boolean;
+          kit_fee: number;
+          note?: string;
+          rental_fee: number;
+          shop: string;
+        };
+        Returns: {
+          active: boolean;
+          created_at: string;
+          kit_fee: number;
+          note: string | null;
+          rental_fee: number;
+          seller_id: string;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "supply_terms";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       settle_rental: {
         Args: { damage?: number; target: string };
         Returns: {
@@ -9640,6 +9804,19 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      supply_items: {
+        Args: { shop: string };
+        Returns: {
+          condition: string;
+          earned: number;
+          id: string;
+          kind: string;
+          name_ar: string;
+          name_en: string;
+          rentals: number;
+          status: string;
+        }[];
       };
       survey_appeals: {
         Args: Record<PropertyKey, never>;
@@ -9960,7 +10137,12 @@ export type Database = {
         | "canceled"
         | "expired"
         | "refunded";
-      payout_line_kind: "sale" | "collection_fee" | "pro_fee" | "delivery_fee";
+      payout_line_kind:
+        | "sale"
+        | "collection_fee"
+        | "pro_fee"
+        | "delivery_fee"
+        | "supply";
       payout_status: "pending" | "paid" | "cancelled";
       plus_seat_status: "requested" | "active" | "ended" | "declined";
       post_section: "news" | "stories" | "members" | "learn";
@@ -10242,7 +10424,13 @@ export const Constants = {
         "expired",
         "refunded",
       ],
-      payout_line_kind: ["sale", "collection_fee", "pro_fee", "delivery_fee"],
+      payout_line_kind: [
+        "sale",
+        "collection_fee",
+        "pro_fee",
+        "delivery_fee",
+        "supply",
+      ],
       payout_status: ["pending", "paid", "cancelled"],
       plus_seat_status: ["requested", "active", "ended", "declined"],
       post_section: ["news", "stories", "members", "learn"],
