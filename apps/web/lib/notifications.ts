@@ -9,7 +9,11 @@ import {
   currentAppPath,
   safeNextPath,
 } from "@repo/internationalization/app-paths";
-import { formatDate, formatNumber } from "@repo/internationalization/format";
+import {
+  formatDate,
+  formatDateTime,
+  formatNumber,
+} from "@repo/internationalization/format";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { appLink } from "./links";
 import { queryKeys, requireUserId, unwrap } from "./queries";
@@ -93,6 +97,14 @@ export const NOTIFICATION_EVENTS = [
   "return_rejected",
   "return_refund_due",
   "return_refunded",
+  "auction_outbid",
+  "auction_won",
+  "auction_unpaid",
+  "auction_second_chance",
+  "auction_sold",
+  "auction_unsold",
+  "auction_unpaid_shop",
+  "auction_mark_wrong",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -221,6 +233,20 @@ const returnValues = (
   order: text(data.order_number),
 });
 
+/** An auction's item, its price and when it must be paid (`auction_*`). */
+const auctionValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const amount = Number(text(data.amount));
+  const payBy = text(data.pay_by);
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    name: itemName(data, locale),
+    time: payBy ? formatDateTime(payBy, locale) : "",
+  };
+};
+
 /** Events whose data needs formatting beyond the common fields. */
 const extraValues: Partial<
   Record<
@@ -231,6 +257,14 @@ const extraValues: Partial<
     ) => Record<string, string>
   >
 > = {
+  auction_mark_wrong: auctionValues,
+  auction_outbid: auctionValues,
+  auction_second_chance: auctionValues,
+  auction_sold: auctionValues,
+  auction_unpaid: auctionValues,
+  auction_unpaid_shop: auctionValues,
+  auction_unsold: auctionValues,
+  auction_won: auctionValues,
   bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
   gift_claimed: (data) => ({
@@ -313,12 +347,26 @@ const extraValues: Partial<
  * (numbers as text, dates in Baghdad time). Unknown events fall back to a
  * title for their kind and a generic line.
  */
+/**
+ * The event to describe: an unpaid auction reaches the winner and the
+ * shop under one name; the shop's links to Partners.
+ */
+const eventFor = ({
+  event,
+  link,
+}: Pick<NotificationRow, "event"> & { link?: string | null }) =>
+  event === "auction_unpaid" && link?.startsWith("/selling")
+    ? "auction_unpaid_shop"
+    : event;
+
 export const describeNotification = (
-  notification: Pick<NotificationRow, "data" | "event" | "kind">,
+  notification: Pick<NotificationRow, "data" | "event" | "kind"> & {
+    link?: string | null;
+  },
   locale: Locale
 ): NotificationText => {
   const data = asRecord(notification.data);
-  const { event } = notification;
+  const event = eventFor(notification);
 
   if (!isKnownEvent(event)) {
     return {

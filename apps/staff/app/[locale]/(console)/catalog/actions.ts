@@ -28,6 +28,7 @@ export const saveProduct = staffAction(
     const row = {
       age_rating: input.ageRating,
       category_id: input.categoryId,
+      collectible: input.collectible,
       condition: input.condition,
       description_ar: input.descriptionAr,
       description_en: input.descriptionEn,
@@ -140,6 +141,7 @@ export const deleteVariant = staffAction(
 );
 
 const categorySchema = z.object({
+  auctions: checkbox,
   id: optionalUuid,
   nameAr: text(120),
   nameEn: text(120),
@@ -153,6 +155,7 @@ export const saveCategory = staffAction(
   categorySchema,
   async ({ input, supabase }) => {
     const row = {
+      auctions: input.auctions,
       name_ar: input.nameAr,
       name_en: input.nameEn,
       parent_id: input.parentId,
@@ -185,6 +188,8 @@ export const deleteCategory = staffAction(
 export const saveStoreSettings = staffAction(
   "catalog",
   z.object({
+    auctionIdentityAbove: int(1),
+    auctionMinStart: int(1),
     cashOnDelivery: checkbox,
     requireVerifiedPhone: checkbox,
     shippingFee: int(0),
@@ -200,6 +205,8 @@ export const saveStoreSettings = staffAction(
       await supabase
         .from("store_settings")
         .update({
+          auction_identity_above: input.auctionIdentityAbove,
+          auction_min_start: input.auctionMinStart,
           cash_on_delivery_enabled: input.cashOnDelivery,
           require_verified_phone: input.requireVerifiedPhone,
           shipping_fee: input.shippingFee,
@@ -618,6 +625,86 @@ export const removeHousePlusPrice = staffAction(
   z.object({ id: uuid }),
   async ({ input, supabase }) => {
     check(await supabase.rpc("remove_plus_price", { target: input.id }));
+    return success();
+  }
+);
+
+// ── Auctions ───────────────────────────────────────────────────────────────
+
+/** Puts one of The IDEA's copies up for auction, with Staff's photos. */
+export const startHouseAuction = staffAction(
+  "catalog",
+  z.object({
+    days: z.enum(["3", "5", "7", "10"]).transform(Number),
+    // "<variant id>:<condition>"
+    listing: z
+      .string()
+      .transform((value) => {
+        const [variantId, condition] = value.split(":");
+        return { condition, variantId };
+      })
+      .pipe(
+        z.object({
+          condition: z.enum(Enums.product_condition),
+          variantId: uuid,
+        })
+      ),
+    mark: z
+      .enum(["", ...Enums.auction_mark])
+      .transform((value) => (value === "" ? null : value)),
+    note: text(2000),
+    photos: z
+      .array(z.string())
+      .optional()
+      .transform((values) =>
+        (values ?? []).map((value) => value.trim()).filter(Boolean)
+      )
+      .pipe(z.array(z.string()).min(3).max(12)),
+    reserve: optionalInt(1),
+    startPrice: int(1),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("start_auction", {
+        condition_note: input.note,
+        copy_mark: input.mark ?? undefined,
+        days: input.days,
+        photos: input.photos,
+        reserve: input.reserve ?? undefined,
+        seller: HOUSE_SELLER_ID,
+        start_price: input.startPrice,
+        variant: input.listing.variantId,
+        wanted: input.listing.condition,
+      })
+    );
+    return success();
+  }
+);
+
+/** Confirms a signed, limited or rare mark, or finds it wrong. */
+export const reviewAuctionMark = staffAction(
+  "catalog",
+  z.object({ correct: z.enum(["true", "false"]), id: uuid }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("review_auction_mark", {
+        correct: input.correct === "true",
+        target: input.id,
+      })
+    );
+    return success();
+  }
+);
+
+/** Cancel (no bids yet), offer a second chance or close an unpaid one. */
+export const houseAuctionAction = staffAction(
+  "catalog",
+  z.object({
+    action: z.enum(["cancel_auction", "close_auction", "offer_second_chance"]),
+    id: uuid,
+  }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc(input.action, { target: input.id }));
     return success();
   }
 );

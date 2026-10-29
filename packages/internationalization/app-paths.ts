@@ -103,6 +103,12 @@ export const currentAppPath = (path: string) => {
 
 const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
 
+/**
+ * Partners' sections stored at their own address, without `/business`
+ * (the auction notifications link `/selling/auctions`).
+ */
+const PARTNERS_SECTION = /^\/selling(?=[/?#]|$)/;
+
 /** Pages of Partners that moved, as [old path, current path]. */
 const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
   ["/procurement", "/team"],
@@ -121,6 +127,9 @@ const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
  * pages.
  */
 export const businessPath = (path: string) => {
+  if (PARTNERS_SECTION.test(path)) {
+    return path;
+  }
   if (!BUSINESS_PATH.test(path)) {
     return null;
   }

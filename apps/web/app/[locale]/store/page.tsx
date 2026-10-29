@@ -157,6 +157,9 @@ const Store = async ({ params, searchParams }: StoreProps) => {
               {localized(category, "name", locale)}
             </Link>
           ))}
+          <Link className={chip(false)} href="/store/auctions">
+            {t("store.auctionsLink")}
+          </Link>
         </nav>
 
         {parent && subcategories.length > 0 ? (

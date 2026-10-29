@@ -18,7 +18,7 @@ const StoreSettingsPage = async () => {
     supabase
       .from("store_settings")
       .select(
-        "shipping_fee, cash_on_delivery_enabled, require_verified_phone, wayl_return_refunds, survey_trusted_answers, survey_trusted_window, survey_early_hours, survey_early_share, survey_daily_boosted"
+        "auction_min_start, auction_identity_above, shipping_fee, cash_on_delivery_enabled, require_verified_phone, wayl_return_refunds, survey_trusted_answers, survey_trusted_window, survey_early_hours, survey_early_share, survey_daily_boosted"
       )
       .maybeSingle(),
     supabase
@@ -40,6 +40,9 @@ const StoreSettingsPage = async () => {
           <StoreSettingsForm
             disabled={!canWrite}
             settings={{
+              auction_identity_above:
+                settings?.auction_identity_above ?? 500_000,
+              auction_min_start: settings?.auction_min_start ?? 25_000,
               cash_on_delivery_enabled:
                 settings?.cash_on_delivery_enabled ?? false,
               require_verified_phone: settings?.require_verified_phone ?? false,

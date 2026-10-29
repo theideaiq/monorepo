@@ -4,7 +4,11 @@ import type { Tables } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ActionButton } from "@/components/admin/action-button";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
-import { SelectField, TextField } from "@/components/admin/fields";
+import {
+  CheckboxField,
+  SelectField,
+  TextField,
+} from "@/components/admin/fields";
 import { deleteCategory, saveCategory } from "../actions";
 
 interface CategoryFormProps {
@@ -76,6 +80,12 @@ export const CategoryForm = ({
           label={tCommon("position")}
           name="position"
           wrapperClassName="w-20"
+        />
+        <CheckboxField
+          defaultChecked={category?.auctions ?? false}
+          disabled={disabled}
+          label={t("fields.auctions")}
+          name="auctions"
         />
         {disabled ? null : (
           <SubmitButton variant={category ? "secondary" : "default"}>

@@ -24,6 +24,7 @@ import {
   RatingLink,
   SellerLine,
 } from "@/components/product-reviews";
+import { ProductAuctions } from "@/components/store/auctions";
 import { BundleContents } from "@/components/store/bundle-contents";
 import { WriteReview } from "@/components/store/product-reviews";
 import { PurchasePanel } from "@/components/store/purchase-panel";
@@ -235,6 +236,7 @@ const ProductPage = async ({ params }: ProductProps) => {
             <Suspense>
               <PurchasePanel offers={offers} product={product} />
             </Suspense>
+            <ProductAuctions productId={product.id} />
             {plan ? (
               <div className="flex flex-col gap-1 rounded-md border border-brand/60 bg-brand/10 p-3 text-sm">
                 <p className="font-medium">

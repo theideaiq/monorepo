@@ -718,6 +718,26 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Auctions, part 3 (step 14, the code). Website: Store →
+  Auctions (`/store/auctions`) and an auction's page
+  (`/store/auctions/<number>`: the seller's photos, condition and mark,
+  current bid, time left, the reserve met or not, bidding by maximum, the
+  history by alias); a product's live auctions sit under its normal
+  offers; Saved shows "Your bids"; a win is a cart line paid online (no
+  cash on delivery) and counts as goods; eight `auction_*` notifications
+  (the shop's link to Partners: `businessPath` now treats `/selling…` as a
+  Partners page). Partners → Selling → Auctions: put a copy of a listing
+  up for auction (photos to `auction-photos/<seller id>/`, condition,
+  mark, start price, hidden reserve, days), follow live ones and wins,
+  cancel before any bid, offer a second chance or close after an unpaid
+  win. Staff: Catalog → Auctions (marks to review, The IDEA's auctions),
+  an "Auction a copy" panel on a product's page, the Collectible flag on
+  products, "Open for auctions" on categories and the two auction
+  settings in Catalog → Settings. The daily `/cron/selling` also runs
+  `settle_auctions`. The selling policy's auction section now matches (no
+  Buy It Now, 48 hours, strikes, fees). Step 14's auctions are done.
+- 2026-10-29: Auctions, parts 1 and 2 (`20270307000000_auctions.sql`,
+  `20270308000000_auction_checkout.sql`, schema first; decisions Part 12).
 - 2026-10-29: Opportunities, part 6 (step 14, the programs code). Staff:
   The IDEA's program opportunities get a Package panel (price, Plus price,
   seats, ages, insurance, chaperone, passport, what's included, up to 4

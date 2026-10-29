@@ -15,7 +15,10 @@ incidents) is in `docs/platform`.
     a bottom tab bar on phones): The IDEA Store is Home (`/`), the
     storefront (categories, featured and new products), with
     `/store` the full catalog and product pages (buying, reviews), and
-    `/store/campaigns/<slug>` a campaign's page; The IDEA
+    `/store/campaigns/<slug>` a campaign's page, `/store/auctions` every
+    live auction and `/store/auctions/<number>` one (the seller's photos,
+    bidding by maximum, the history by alias; a win goes to the cart and
+    is paid online within 48 hours); The IDEA
     Plus is `/plus`, everything about renting (the rental catalog with
     categories, then plans and tiers), public, with "Your Plus" (joining
     and the waitlist at `#join`; your plan, plan changes, pause and
@@ -104,7 +107,9 @@ incidents) is in `docs/platform`.
   dispute within 48 hours, items to check once back, refused parcels to
   confirm), `/selling/offers` (buyers' offers to accept, decline or
   counter within 48 hours, and which listings take offers, with automatic
-  accept and decline amounts), `/selling/sales` (sale prices between two
+  accept and decline amounts), `/selling/auctions` (putting a copy up for
+  auction with the shop's own photos, its bids, and a second chance or
+  closing after an unpaid win), `/selling/sales` (sale prices between two
   days, quantity deals, student prices and taking part in campaigns), `/selling/payouts` (each weekly payout with
   its statement) and `/selling/pickup` (its branches, each a Boxy pickup
   location), Supply `/supply` (a supplier shop's copies lent to Plus and
@@ -131,7 +136,9 @@ incidents) is in `docs/platform`.
     Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
     automatic checks on products shops create and shops' flags, and
     `/catalog/offers`, offers on The IDEA's own stock; each product's page
-    sets which of its copies take offers; and `/catalog/campaigns`,
+    sets which of its copies take offers and auctions one;
+    `/catalog/auctions`, signed, limited and rare marks to review and The
+    IDEA's own auctions; and `/catalog/campaigns`,
     seasonal campaigns shops opt in to) · Orders and delivery
     `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
     and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·

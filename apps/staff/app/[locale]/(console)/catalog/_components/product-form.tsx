@@ -233,6 +233,12 @@ export const ProductForm = ({
             name="featured"
           />
           <CheckboxField
+            defaultChecked={product?.collectible ?? false}
+            hint={t("fields.collectibleHint")}
+            label={t("fields.collectible")}
+            name="collectible"
+          />
+          <CheckboxField
             defaultChecked={product?.verified ?? true}
             hint={t("fields.verifiedHint")}
             label={t("fields.verified")}

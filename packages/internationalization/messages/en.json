@@ -347,6 +347,12 @@
         "shops": "Taking part: {shops}",
         "empty": "No listings in this campaign yet.",
         "soldBy": "Sold by {seller}"
+      },
+      "auctionsLink": "Auctions",
+      "auctions": {
+        "title": "Auctions",
+        "description": "Signed, limited, rare and collectible copies, each with the seller's own photos. Set your maximum and we bid for you.",
+        "one": "Bid on {name}: the seller's photos of this copy, its condition, the current bid and time left."
       }
     },
     "plus": {
@@ -1548,6 +1554,11 @@
         "installment": "Installment {first} of {total}",
         "installments": "Installments {first}–{last} of {total}",
         "online": "Paid online"
+      },
+      "auction": {
+        "payBy": "Won · pay by {time}",
+        "won": "Won at auction",
+        "online": "Paid online"
       }
     },
     "checkout": {
@@ -1688,7 +1699,8 @@
       "programs": {
         "title": "Nothing to deliver",
         "description": "Program installments are paid online, so no address is needed."
-      }
+      },
+      "auctionLine": "Auction"
     },
     "orders": {
       "title": "Orders",
@@ -2104,7 +2116,8 @@
         "shopReturns": "Returns",
         "shopOffers": "Offers",
         "shopPayouts": "Payouts",
-        "shopSales": "Sales and deals"
+        "shopSales": "Sales and deals",
+        "shopAuctions": "Auctions"
       },
       "members": {
         "title": "Members",
@@ -3537,6 +3550,66 @@
           "cancel": "Cancel",
           "failed": "That didn't save. Check the details and try again."
         }
+      },
+      "shopAuctions": {
+        "title": "Auctions",
+        "notApproved": "Auctions open once your shop is approved.",
+        "startTitle": "Put a copy up for auction",
+        "startDescription": "For signed, limited and rare copies, collectibles, and used copies in categories open for auctions. Start at {minimum} or more; the commission is your category's rate on the final price.",
+        "listing": "Listing",
+        "chooseListing": "Choose one of your listings",
+        "mark": "This copy is",
+        "noMark": "Not marked",
+        "markHint": "Mark it signed, limited or rare only when it is: The IDEA reviews marks, and a wrong one counts against your shop's score.",
+        "startPrice": "Start price (IQD)",
+        "reserve": "Hidden reserve (IQD, optional)",
+        "reserveHint": "Below the reserve the copy doesn't sell. Bidders only see whether it's met.",
+        "days": "Runs for",
+        "daysOption": "{days} days",
+        "photos": "Your photos of this copy",
+        "photosHint": "3 to 12 photos of this exact copy. Chosen: {count}",
+        "note": "Condition",
+        "start": "Start auction",
+        "starting": "Starting…",
+        "started": "The auction is live.",
+        "openTitle": "Live and waiting for payment",
+        "endedTitle": "Ended",
+        "noneOpen": "No live auctions.",
+        "noneEnded": "None in the last 90 days.",
+        "number": "Auction {number}",
+        "status": {
+          "live": "Live",
+          "won": "Waiting for payment",
+          "paid": "Paid",
+          "unsold": "Unsold",
+          "unpaid": "Not paid",
+          "cancelled": "Cancelled"
+        },
+        "current": "Current bid {amount} · bids: {bids}",
+        "noBids": "No bids · starts at {amount}",
+        "reserveMet": "reserve {amount} met",
+        "reserveNotMet": "reserve {amount} not met",
+        "endsAt": "Ends {time}",
+        "waitingPayment": "Won at {amount}; the winner pays by {time}.",
+        "markWrong": "The IDEA found this mark wrong.",
+        "cancel": "Cancel auction",
+        "secondChance": "Offer to the next bidder",
+        "close": "Close and put back on sale",
+        "problems": {
+          "newCopy": "A new copy needs to be marked signed, limited or rare (or the product collectible).",
+          "category": "This category isn't open for auctions. Mark the copy if it's signed, limited or rare.",
+          "rental": "Rentals can't be auctioned.",
+          "minimum": "Start at {minimum} or more.",
+          "reserve": "Set the reserve above the start price.",
+          "days": "Choose 3, 5, 7 or 10 days.",
+          "photos": "Add 3 to 12 photos of this copy.",
+          "note": "Describe the copy's condition.",
+          "copy": "That copy isn't available.",
+          "hasBids": "An auction with bids can't be cancelled.",
+          "secondChance": "A second chance is offered once, after an unpaid win.",
+          "noBidder": "There's no other bidder to offer it to.",
+          "failed": "That didn't work. Try again."
+        }
       }
     },
     "ages": {
@@ -3673,6 +3746,85 @@
         "counterPlaceholder": "Amount in IQD",
         "withdraw": "Withdraw",
         "failed": "That didn't work. Refresh and try again."
+      }
+    },
+    "auctions": {
+      "label": "Auction",
+      "onProduct": "On auction",
+      "ends": "Ends",
+      "currentBid": "Current bid {amount}",
+      "bids": "Bids: {count}",
+      "startsAt": "Starts at {amount}",
+      "empty": "No auctions right now. Check back soon.",
+      "marks": {
+        "signed": "Signed",
+        "limited": "Limited",
+        "rare": "Rare"
+      },
+      "mine": {
+        "title": "Your bids",
+        "description": "Auctions you've bid on. A win is in your cart for 48 hours.",
+        "state": {
+          "winning": "Highest bid",
+          "outbid": "Outbid",
+          "won": "You won",
+          "offered": "Offered to you",
+          "paid": "Paid",
+          "unpaid": "Not paid in time",
+          "lost": "Ended"
+        },
+        "live": "Current bid {current} · your maximum {maximum}",
+        "yourBid": "Your last bid {amount}",
+        "payBy": "Pay {amount} by {time}.",
+        "viewCart": "View cart"
+      },
+      "bid": {
+        "label": "Your maximum (IQD)",
+        "hint": "{amount} or more. We bid for you, one step at a time, up to your maximum.",
+        "raiseHint": "You're the highest bidder. Your maximum is {maximum}; you can raise it.",
+        "place": "Place bid",
+        "raise": "Raise maximum",
+        "placing": "Bidding…",
+        "proxy": "Nobody sees your maximum. A bid in the last 2 minutes adds 2 minutes.",
+        "winning": "You're the highest bidder at {amount}.",
+        "outbid": "Another bidder's maximum is higher. The current bid is {amount}.",
+        "refused": {
+          "phone": "Verify your phone number to bid.",
+          "identity": "Bids this high need your identity verified.",
+          "blocked": "Bidding is paused on your Pass after unpaid wins.",
+          "adult": "You need to be 18 or over to bid.",
+          "own": "You can't bid on your own shop's auction.",
+          "ended": "This auction has ended.",
+          "tooLow": "That's below the next bid. Refresh and try a higher amount.",
+          "raise": "Raise your maximum above the one you set.",
+          "failed": "Couldn't place the bid. Try again."
+        },
+        "fix": {
+          "phone": "Verify it in Settings",
+          "identity": "Verify your identity"
+        }
+      },
+      "page": {
+        "photo": "{name}, photo {number}",
+        "signIn": "Sign in to bid",
+        "youWon": "You won at {amount}.",
+        "offered": "The seller offers it to you at {amount}.",
+        "payBy": "Pay through the cart by {time}, or it goes to another bidder.",
+        "goToCart": "Go to cart",
+        "addToCart": "Put it in the cart",
+        "endsAt": "Ends {time}",
+        "sold": "Ended · sold at {amount}",
+        "ended": "Ended",
+        "history": "Bids",
+        "noBids": "No bids yet.",
+        "bidder": "Bidder {number}",
+        "missing": "This auction isn't available.",
+        "soldBy": "Sold by {seller}",
+        "reserveMet": "The reserve price is met.",
+        "reserveNotMet": "The reserve price isn't met yet.",
+        "condition": "Condition",
+        "product": "About this product",
+        "back": "Auctions"
       }
     }
   },
@@ -4040,6 +4192,38 @@
         "program_refunded": {
           "title": "Refund sent",
           "body": "{amount} for \"{title}\" was refunded."
+        },
+        "auction_outbid": {
+          "title": "You've been outbid",
+          "body": "Someone bid more for {name}. The current bid is {amount}."
+        },
+        "auction_won": {
+          "title": "You won the auction",
+          "body": "{name} is yours at {amount}. It's in your cart: pay by {time}."
+        },
+        "auction_unpaid": {
+          "title": "Auction not paid",
+          "body": "{name} wasn't paid in time, so it counts as a strike on your Pass."
+        },
+        "auction_second_chance": {
+          "title": "A second chance",
+          "body": "The seller offers you {name} at {amount}. It's in your cart: pay by {time}."
+        },
+        "auction_sold": {
+          "title": "Your auction sold",
+          "body": "{name} sold at {amount}. The winner has 48 hours to pay."
+        },
+        "auction_unsold": {
+          "title": "Your auction ended unsold",
+          "body": "{name} had no bid at the reserve. Its copy is back on sale."
+        },
+        "auction_unpaid_shop": {
+          "title": "An auction wasn't paid",
+          "body": "The winner didn't pay for {name}. Offer it to the next bidder or close it."
+        },
+        "auction_mark_wrong": {
+          "title": "An auction's mark was wrong",
+          "body": "Staff found the mark on {name} wrong. It counts against your shop's score."
         }
       },
       "kinds": {
@@ -4270,7 +4454,8 @@
         "import": "Import",
         "checks": "Checks",
         "offers": "Offers",
-        "campaigns": "Campaigns"
+        "campaigns": "Campaigns",
+        "auctions": "Auctions"
       },
       "filters": {
         "anyKind": "All lines",
@@ -4328,7 +4513,10 @@
         "ageRatingHint": "Shown on the product page; PEGI 18 items will be hidden from under-18 Passes.",
         "releaseDate": "Release date",
         "releaseDateHint": "Optional. Saved shows \"Coming soon\" before it and \"Out now\" for 14 days after.",
-        "parent": "Under"
+        "parent": "Under",
+        "collectible": "Collectible",
+        "collectibleHint": "Any copy of it can be auctioned, new ones too.",
+        "auctions": "Open for auctions (used copies)"
       },
       "variants": {
         "title": "Variants",
@@ -4385,6 +4573,13 @@
           "surveyEarlyHours": "Early window (hours)",
           "surveyEarlyShare": "Share of the target in the early window (%)",
           "surveyDailyBoosted": "Boosted surveys a person answers a day"
+        },
+        "auctions": {
+          "title": "Auctions",
+          "hint": "The lowest start price, and the maximum bid above which bidders verify their identity (IQD).",
+          "minStart": "Minimum start price",
+          "identityAbove": "Identity check above",
+          "identityAboveHint": "A maximum bid above this needs a verified identity."
         }
       },
       "plans": {
@@ -4705,6 +4900,51 @@
         "plusPriceField": "Plus price (IQD)",
         "setPlusPrice": "Set Plus price",
         "plusPriceHint": "For Plus members only; above the margin floor."
+      },
+      "auctions": {
+        "title": "Auctions",
+        "description": "Marks to review, and The IDEA's own auctions. Start one from a product's page.",
+        "marksTitle": "Marks to review",
+        "marksDescription": "Copies their seller marked signed, limited or rare. A wrong mark counts against the shop's score.",
+        "marksEmpty": "No marks waiting.",
+        "houseTitle": "The IDEA's auctions",
+        "houseEmpty": "The IDEA has no auctions yet.",
+        "theIdea": "The IDEA",
+        "shop": "Shop: {name}",
+        "current": "Current bid {amount} · bids: {bids}",
+        "starts": "No bids · starts at {amount}",
+        "endsAt": "Ends {time}",
+        "payBy": "Won at {amount}; paid by {time}",
+        "photo": "Photo {number}",
+        "markRight": "Mark is right",
+        "markWrong": "Mark is wrong",
+        "markWrongTitle": "Find this mark wrong?",
+        "markWrongDescription": "The shop is told, and it counts against its score for 90 days.",
+        "cancel": "Cancel",
+        "secondChance": "Offer to the next bidder",
+        "close": "Close and put back on sale",
+        "status": {
+          "live": "Live",
+          "won": "Waiting for payment",
+          "paid": "Paid",
+          "unsold": "Unsold",
+          "unpaid": "Not paid",
+          "cancelled": "Cancelled"
+        },
+        "panelTitle": "Auction a copy",
+        "panelDescription": "For collectible products, copies marked signed, limited or rare, and used copies in categories open for auctions.",
+        "listing": "Copy",
+        "startPrice": "Start price (IQD)",
+        "reserve": "Hidden reserve (IQD)",
+        "reserveHint": "Optional; above the start price.",
+        "days": "Runs for",
+        "daysOption": "{days} days",
+        "mark": "This copy is",
+        "noMark": "Not marked",
+        "photos": "Photos of this copy",
+        "photosHint": "3 to 12 photos of this exact copy.",
+        "note": "Condition",
+        "start": "Start auction"
       }
     },
     "orders": {

@@ -6,6 +6,8 @@ import { CheckboxField, FieldGrid, TextField } from "@/components/admin/fields";
 import { saveStoreSettings } from "../actions";
 
 export interface StoreSettingsValues {
+  auction_identity_above: number;
+  auction_min_start: number;
   cash_on_delivery_enabled: boolean;
   require_verified_phone: boolean;
   shipping_fee: number;
@@ -58,6 +60,27 @@ export const StoreSettingsForm = ({
           label={t("waylReturnRefunds")}
           name="waylReturnRefunds"
         />
+        <fieldset className="grid gap-3 border-t pt-4">
+          <legend className="font-medium text-sm">{t("auctions.title")}</legend>
+          <p className="text-muted-foreground text-xs">{t("auctions.hint")}</p>
+          <FieldGrid>
+            <TextField
+              defaultValue={settings.auction_min_start}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("auctions.minStart")}
+              name="auctionMinStart"
+            />
+            <TextField
+              defaultValue={settings.auction_identity_above}
+              dir="ltr"
+              hint={t("auctions.identityAboveHint")}
+              inputMode="numeric"
+              label={t("auctions.identityAbove")}
+              name="auctionIdentityAbove"
+            />
+          </FieldGrid>
+        </fieldset>
         <fieldset className="grid gap-3 border-t pt-4">
           <legend className="font-medium text-sm">{t("surveys.title")}</legend>
           <p className="text-muted-foreground text-xs">{t("surveys.hint")}</p>

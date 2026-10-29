@@ -74,8 +74,10 @@ import {
   useRememberPayment,
   useSaveAddress,
 } from "@/lib/address-book";
+import { type AuctionLine, useCartAuctionLines } from "@/lib/auctions";
 import { useMyBulbs } from "@/lib/bulbs-queries";
 import {
+  addAuctionsToSummary,
   addKitToSummary,
   addPlusGiftToSummary,
   addProgramsToSummary,
@@ -563,6 +565,8 @@ const BulbsCard = ({
 };
 
 interface SummaryCardProps {
+  /** The won auctions in the cart, listed with the lines. */
+  readonly auctionNames?: readonly string[];
   readonly busy: boolean;
   readonly cash: boolean;
   /** Why placing failed (CheckoutErrorNote), if it did. */
@@ -582,6 +586,7 @@ interface SummaryCardProps {
 
 /** What's being ordered, the totals, and the button that places the order. */
 const SummaryCard = ({
+  auctionNames = [],
   busy,
   cash,
   error,
@@ -657,6 +662,14 @@ const SummaryCard = ({
               <span className="line-clamp-1 min-w-0">{name}</span>
               <span className="shrink-0 text-muted-foreground">
                 {t("programLine")}
+              </span>
+            </li>
+          ))}
+          {auctionNames.map((name) => (
+            <li className="flex justify-between gap-3" key={name}>
+              <span className="line-clamp-1 min-w-0">{name}</span>
+              <span className="shrink-0 text-muted-foreground">
+                {t("auctionLine")}
               </span>
             </li>
           ))}
@@ -785,6 +798,7 @@ export const useCheckoutAreas = (zone: DeliveryZone | undefined): string[] =>
  */
 const useCheckoutPricing = ({
   address,
+  auctions,
   busy,
   cart,
   kit,
@@ -796,6 +810,8 @@ const useCheckoutPricing = ({
   zones,
 }: {
   address: AddressForm;
+  /** The cart's won auctions: delivered, paid online. */
+  auctions: readonly AuctionLine[];
   /**
    * An order is being placed or was placed: the cart is emptying, so the
    * last quote stays rather than asking again for an empty cart.
@@ -823,9 +839,9 @@ const useCheckoutPricing = ({
   const choices = resolveChoices({
     address,
     payment,
-    // Programs are paid online, never on delivery.
+    // Programs and won auctions are paid online, never on delivery.
     settings:
-      programs.length > 0 && settings.data
+      programs.length + auctions.length > 0 && settings.data
         ? { ...settings.data, cashOnDelivery: false }
         : settings.data,
     subtotal: estimate?.totals.subtotal ?? 0,
@@ -839,21 +855,25 @@ const useCheckoutPricing = ({
 
   const summary =
     cart.data && settings.data
-      ? addProgramsToSummary(
-          addPlusGiftToSummary(
-            addKitToSummary(
-              summarizeCart(cart.data, settings.data, {
-                freeFrom: zone?.free_from,
-                zoneFee: zone?.fee,
-              }),
-              kit
+      ? addAuctionsToSummary(
+          addProgramsToSummary(
+            addPlusGiftToSummary(
+              addKitToSummary(
+                summarizeCart(cart.data, settings.data, {
+                  freeFrom: zone?.free_from,
+                  zoneFee: zone?.fee,
+                }),
+                kit
+              ),
+              plus
             ),
-            plus
+            programs
           ),
-          programs
+          auctions
         )
       : null;
-  const ships = Boolean(kit) || (summary?.lines.length ?? 0) > 0;
+  const ships =
+    Boolean(kit) || (summary?.lines.length ?? 0) > 0 || auctions.length > 0;
   const quote = useCheckoutQuote(
     quoteRequestFor({
       canCheckout: !busy && (summary?.canCheckout ?? false),
@@ -1131,6 +1151,18 @@ const usePlusInCart = () => {
   };
 };
 
+/** The cart's won auctions, and their names. */
+const useAuctionsInCart = () => {
+  const locale = useLocale();
+  const auctions = useCartAuctionLines();
+  return {
+    auctionNames: auctions.map((line) =>
+      line.name ? localized(line.name, "name", locale) : ""
+    ),
+    auctions,
+  };
+};
+
 /** The cart's program installments, and their names. */
 const useProgramsInCart = () => {
   const locale = useLocale();
@@ -1288,6 +1320,7 @@ export const Checkout = () => {
   const { kit, kitName } = useKitInCart();
   const { plus, plusName } = usePlusInCart();
   const { programNames, programs } = useProgramsInCart();
+  const { auctionNames, auctions } = useAuctionsInCart();
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
@@ -1321,6 +1354,7 @@ export const Checkout = () => {
     address: gift
       ? { ...address, governorate: "", zoneId: gift.zoneId }
       : address,
+    auctions,
     busy,
     cart,
     kit,
@@ -1437,7 +1471,13 @@ export const Checkout = () => {
     profile.isPending ||
     book.loading;
   const failed = cart.isError || settings.isError || zones.isError;
-  const empty = isEmpty(summary, kit, plus !== null, busy, programs.length > 0);
+  const empty = isEmpty(
+    summary,
+    kit,
+    plus !== null,
+    busy,
+    programs.length + auctions.length > 0
+  );
 
   return (
     <>
@@ -1505,6 +1545,7 @@ export const Checkout = () => {
             </div>
 
             <SummaryCard
+              auctionNames={auctionNames}
               busy={busy}
               cash={cash}
               error={
