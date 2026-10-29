@@ -9,7 +9,9 @@ import { PageHero } from "@/components/page-hero";
 import { Pagination } from "@/components/pagination";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
+import { env } from "@/env";
 import { getCategories, getFormats, getProducts, getRatings } from "@/lib/data";
+import { appLink } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import {
   parseStoreQuery,
@@ -212,6 +214,20 @@ const Store = async ({ params, searchParams }: StoreProps) => {
               </Link>
             ))}
           </nav>
+        ) : null}
+
+        {query.category === "textbooks" ? (
+          <p className="mb-6 rounded-lg border bg-muted/40 p-4 text-sm">
+            {t("store.sellTextbooks")}{" "}
+            <a
+              className="font-medium text-pink-text underline"
+              href={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/new", {
+                for: "selling",
+              })}
+            >
+              {t("store.sellTextbooksLink")}
+            </a>
+          </p>
         ) : null}
 
         {query.q ? (
