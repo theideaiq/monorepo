@@ -711,7 +711,10 @@ test("a member follows an opportunity and finds it in Club → Yours", async ({
   // Club → Yours → Following lists it.
   await page.goto(`${urls.web}/club#yours`);
   await page.getByRole("tab", { name: "Following" }).click();
-  await expect(page.getByRole("link", { name: title })).toBeVisible();
+  // Join's card links to it too, under a longer name.
+  await expect(
+    page.getByRole("link", { exact: true, name: title })
+  ).toBeVisible();
   await expectAccessible(page);
 
   await db.from("opportunities").delete().eq("slug", slug);
