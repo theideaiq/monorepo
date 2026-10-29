@@ -5,6 +5,9 @@ import { urls } from "../playwright.config";
 
 /** No serious or critical WCAG 2.1 A/AA violations on the page as shown. */
 export const expectAccessible = async (page: Page) => {
+  // After a client-side navigation the new page's <title> arrives a moment
+  // after its content; wait for it rather than fail document-title.
+  await expect(page).toHaveTitle(/\S/);
   // Let transitions settle first: a button fading back in from its disabled
   // opacity would otherwise be measured mid-fade and fail color contrast.
   // Endless animations (spinners) are skipped.

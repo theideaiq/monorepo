@@ -31,7 +31,7 @@ import { WishlistButton } from "@/components/store/wishlist-button";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import { useBulbRules, useMyBulbs } from "@/lib/bulbs-queries";
 import { MAX_QUANTITY } from "@/lib/cart";
-import { useAddToCart, useStudentPrice } from "@/lib/store-queries";
+import { useAddToCart, useMemberPrices } from "@/lib/store-queries";
 import { MakeOffer } from "./make-offer";
 import { NotifyMe } from "./notify-me";
 import { Price } from "./price";
@@ -272,10 +272,11 @@ const AlsoRent = ({
 };
 
 /**
- * "Student price", for verified students only: the listing's lower price
- * they pay at checkout. Never struck through against the price.
+ * "Student price" (verified students) and "Plus price" (Plus members): the
+ * listing's lower prices they pay at checkout, the lower of the two when
+ * both apply. Never struck through against the price.
  */
-const StudentPriceNote = ({
+const MemberPriceNote = ({
   listing,
   productId,
 }: {
@@ -284,13 +285,20 @@ const StudentPriceNote = ({
 }) => {
   const t = useTranslations("app.store.product");
   const locale = useLocale();
-  const price = useStudentPrice(productId, listing);
-  if (price === null) {
+  const { plus, student } = useMemberPrices(productId, listing);
+  if (plus !== null && (student === null || plus < student)) {
+    return (
+      <p className="font-medium text-sm">
+        {t("plusPrice", { price: formatPrice(plus, locale) })}
+      </p>
+    );
+  }
+  if (student === null) {
     return null;
   }
   return (
     <p className="font-medium text-sm">
-      {t("studentPrice", { price: formatPrice(price, locale) })}
+      {t("studentPrice", { price: formatPrice(student, locale) })}
     </p>
   );
 };
@@ -495,7 +503,7 @@ export const PurchasePanel = ({
           })}
         </p>
       ))}
-      <StudentPriceNote listing={chosen ?? null} productId={product.id} />
+      <MemberPriceNote listing={chosen ?? null} productId={product.id} />
       {chosen?.lowest_30d ? (
         <p className="text-muted-foreground text-sm">
           {t("lowest30d", { price: formatPrice(chosen.lowest_30d, locale) })}

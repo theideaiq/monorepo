@@ -718,6 +718,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Plus features, part 1 (step 12; `20270222000000_plus_prices.sql`).
+  Plus prices: shops (Partners → Selling → Sales) and editors (Staff →
+  Catalog, The IDEA's own stock) set a price for Plus members below the
+  listing's, paid by the shop, as with student prices. Plus members see
+  "Plus price" on the product page and pay it at checkout; a campaign's
+  discount reaches them 24 hours before it opens (48 for Blaze). Shine
+  gets 10% off game night kits (Blaze 25%). The plan cards and the Plus
+  policy list the features per tier once step 12's parts are in.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

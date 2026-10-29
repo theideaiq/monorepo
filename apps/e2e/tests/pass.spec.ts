@@ -69,11 +69,15 @@ test.describe("The IDEA Pass", () => {
   test("is branded and accessible in both languages", async ({ page }) => {
     await page.goto(`${urls.web}/sign-in`);
     await expect(page).toHaveTitle(/The IDEA Pass/);
+    // Waits out a moment where hydration briefly shows the form twice, but
+    // still fails if a second field stays.
+    await expect(page.getByLabel("Email")).toHaveCount(1);
     await expect(page.getByLabel("Email")).toBeVisible();
     await expectAccessible(page);
 
     await page.goto(`${urls.web}/ar/sign-in`);
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+    await expect(page.getByLabel("البريد الإلكتروني")).toHaveCount(1);
     await expect(page.getByLabel("البريد الإلكتروني")).toBeVisible();
     await expectAccessible(page);
   });

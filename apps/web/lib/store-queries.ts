@@ -136,11 +136,11 @@ export const useCheckoutQuote = (
 };
 
 /**
- * A listing's student price, for a verified student (null for everyone
- * else). Product pages load offers without the member's session, so this
- * asks again as the member.
+ * A listing's student price (verified students) and Plus price (Plus
+ * members), each null for everyone else. Product pages load offers without
+ * the member's session, so this asks again as the member.
  */
-export const useStudentPrice = (
+export const useMemberPrices = (
   productId: string,
   listing: Pick<ProductOffer, "condition" | "seller_id" | "variant_id"> | null
 ) => {
@@ -160,7 +160,10 @@ export const useStudentPrice = (
           offer.condition === listing.condition
       )
     : undefined;
-  return match?.student_price ?? null;
+  return {
+    plus: match?.plus_price ?? null,
+    student: match?.student_price ?? null,
+  };
 };
 
 /** Why a coupon code can't be used (`apply_coupon()`'s answer). */

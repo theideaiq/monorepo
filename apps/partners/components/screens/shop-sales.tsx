@@ -24,22 +24,23 @@ import {
   baghdadDay,
   isOverlap,
   type ListingSale,
+  type MemberPrice,
+  type MemberPriceKind,
   type OpenCampaign,
   type QuantityDeal,
-  type StudentPrice,
   useCampaignEntries,
   useDeleteDeal,
   useEndSale,
   useJoinCampaign,
   useLeaveCampaign,
   useListingSales,
+  useMemberPrices,
   useOpenCampaigns,
   useQuantityDeals,
-  useRemoveStudentPrice,
+  useRemoveMemberPrice,
   useSetDeal,
+  useSetMemberPrice,
   useSetSale,
-  useSetStudentPrice,
-  useStudentPrices,
 } from "@/lib/shop-sale-queries";
 
 const sameListing = (
@@ -231,20 +232,47 @@ const DealForm = ({
   );
 };
 
-/** A listing's student price: what it is, a way to change or remove it. */
-const StudentPriceRow = ({
+const MEMBER_PRICE_TEXT = {
+  plus: {
+    change: "changePlusPrice",
+    failed: "plusPriceFailed",
+    field: "plusPriceField",
+    hint: "plusPriceHint",
+    remove: "removePlusPrice",
+    set: "setPlusPrice",
+    shown: "plusPrice",
+  },
+  student: {
+    change: "changeStudentPrice",
+    failed: "studentPriceFailed",
+    field: "studentPriceField",
+    hint: "studentPriceHint",
+    remove: "removeStudentPrice",
+    set: "setStudentPrice",
+    shown: "studentPrice",
+  },
+} as const;
+
+/**
+ * A listing's student or Plus price: what it is, a way to change or
+ * remove it.
+ */
+const MemberPriceRow = ({
   current,
+  kind,
   listing,
   sellerId,
 }: {
-  readonly current: StudentPrice | undefined;
+  readonly current: MemberPrice | undefined;
+  readonly kind: MemberPriceKind;
   readonly listing: Listing;
   readonly sellerId: string;
 }) => {
   const t = useTranslations("app.company.shopSales");
+  const text = MEMBER_PRICE_TEXT[kind];
   const locale = useLocale() as Locale;
-  const save = useSetStudentPrice(sellerId);
-  const remove = useRemoveStudentPrice(sellerId);
+  const save = useSetMemberPrice(sellerId, kind);
+  const remove = useRemoveMemberPrice(sellerId, kind);
   const id = useId();
   const [price, setPrice] = useState("");
   const amount = Number(price);
@@ -271,7 +299,7 @@ const StudentPriceRow = ({
       {current ? (
         <div className="flex flex-wrap items-center gap-2">
           <span>
-            {t("studentPrice", { price: formatPrice(current.price, locale) })}
+            {t(text.shown, { price: formatPrice(current.price, locale) })}
           </span>
           <Button
             disabled={remove.isPending}
@@ -280,16 +308,16 @@ const StudentPriceRow = ({
             type="button"
             variant="ghost"
           >
-            {t("removeStudentPrice")}
+            {t(text.remove)}
           </Button>
         </div>
       ) : null}
       <div className="flex flex-wrap items-end gap-3">
         <div className="grid gap-1">
-          <Label htmlFor={`${id}-student`}>{t("studentPriceField")}</Label>
+          <Label htmlFor={`${id}-${kind}`}>{t(text.field)}</Label>
           <Input
             className="w-36"
-            id={`${id}-student`}
+            id={`${id}-${kind}`}
             inputMode="numeric"
             onChange={(event) => setPrice(event.target.value)}
             type="number"
@@ -302,13 +330,13 @@ const StudentPriceRow = ({
           type="submit"
           variant="outline"
         >
-          {current ? t("changeStudentPrice") : t("setStudentPrice")}
+          {current ? t(text.change) : t(text.set)}
         </Button>
       </div>
-      <p className="text-muted-foreground text-xs">{t("studentPriceHint")}</p>
+      <p className="text-muted-foreground text-xs">{t(text.hint)}</p>
       {save.isError ? (
         <p className="text-destructive text-sm" role="alert">
-          {t("studentPriceFailed")}
+          {t(text.failed)}
         </p>
       ) : null}
     </form>
@@ -319,14 +347,16 @@ const ListingRow = ({
   deals,
   listing,
   sales,
+  plus,
   sellerId,
   student,
 }: {
   readonly deals: readonly QuantityDeal[];
   readonly listing: Listing;
+  readonly plus: MemberPrice | undefined;
   readonly sales: readonly ListingSale[];
   readonly sellerId: string;
-  readonly student: StudentPrice | undefined;
+  readonly student: MemberPrice | undefined;
 }) => {
   const t = useTranslations("app.company.shopSales");
   const conditions = useTranslations("store.condition");
@@ -383,8 +413,15 @@ const ListingRow = ({
         </div>
       ))}
       <DealForm listing={listing} sellerId={sellerId} />
-      <StudentPriceRow
+      <MemberPriceRow
         current={student}
+        kind="student"
+        listing={listing}
+        sellerId={sellerId}
+      />
+      <MemberPriceRow
+        current={plus}
+        kind="plus"
         listing={listing}
         sellerId={sellerId}
       />
@@ -520,8 +557,9 @@ const SalesBody = () => {
   const listings = useListings(sellerId);
   const sales = useListingSales(sellerId);
   const deals = useQuantityDeals(sellerId);
-  const students = useStudentPrices(sellerId);
-  const queries = [shop, listings, sales, deals, students];
+  const students = useMemberPrices(sellerId, "student");
+  const pluses = useMemberPrices(sellerId, "plus");
+  const queries = [shop, listings, sales, deals, students, pluses];
 
   if (queries.some((query) => query.isPending)) {
     return <SectionSpinner />;
@@ -561,6 +599,9 @@ const SalesBody = () => {
                   )}
                   key={listing.offer_id}
                   listing={listing}
+                  plus={(pluses.data ?? []).find((row) =>
+                    sameListing(listing, row)
+                  )}
                   sales={(sales.data ?? []).filter((sale) =>
                     sameListing(listing, sale)
                   )}

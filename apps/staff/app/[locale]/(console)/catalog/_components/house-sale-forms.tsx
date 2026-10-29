@@ -3,7 +3,12 @@
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import { TextField } from "@/components/admin/fields";
-import { setHouseDeal, setHouseSale, setHouseStudentPrice } from "../actions";
+import {
+  setHouseDeal,
+  setHousePlusPrice,
+  setHouseSale,
+  setHouseStudentPrice,
+} from "../actions";
 
 /** A new sale on one of The IDEA's listings (Baghdad time). */
 export const HouseSaleForm = ({
@@ -117,6 +122,39 @@ export const HouseStudentPriceForm = ({
       />
       <SubmitButton size="sm" variant="outline">
         {t("setStudentPrice")}
+      </SubmitButton>
+    </ActionForm>
+  );
+};
+
+/** The Plus price of one of The IDEA's listings (set or change it). */
+export const HousePlusPriceForm = ({
+  condition,
+  variantId,
+}: {
+  readonly condition: string;
+  readonly variantId: string;
+}) => {
+  const t = useTranslations("admin.catalog.sales");
+  return (
+    <ActionForm
+      action={setHousePlusPrice}
+      className="flex flex-wrap items-end gap-3"
+      resetOnSuccess
+    >
+      <input name="variantId" type="hidden" value={variantId} />
+      <input name="condition" type="hidden" value={condition} />
+      <TextField
+        dir="ltr"
+        hint={t("plusPriceHint")}
+        inputMode="numeric"
+        label={t("plusPriceField")}
+        name="price"
+        required
+        wrapperClassName="w-48"
+      />
+      <SubmitButton size="sm" variant="outline">
+        {t("setPlusPrice")}
       </SubmitButton>
     </ActionForm>
   );
