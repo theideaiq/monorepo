@@ -3113,6 +3113,7 @@ export type Database = {
           name_ar: string;
           name_en: string;
           price: number;
+          release_date: string | null;
           rentable: boolean;
           rental_stock: number;
           rental_tier: number | null;
@@ -3142,6 +3143,7 @@ export type Database = {
           name_ar: string;
           name_en: string;
           price: number;
+          release_date?: string | null;
           rentable?: boolean;
           rental_stock?: number;
           rental_tier?: number | null;
@@ -3171,6 +3173,7 @@ export type Database = {
           name_ar?: string;
           name_en?: string;
           price?: number;
+          release_date?: string | null;
           rentable?: boolean;
           rental_stock?: number;
           rental_tier?: number | null;
@@ -3559,6 +3562,35 @@ export type Database = {
           },
         ];
       };
+      rental_queue_items: {
+        Row: {
+          created_at: string;
+          position: number;
+          product_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          position: number;
+          product_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          position?: number;
+          product_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "rental_queue_items_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       rental_rates: {
         Row: {
           category_id: string;
@@ -3852,6 +3884,36 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      saved_lists: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+          share_token: string;
+          shared: boolean;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+          share_token?: string;
+          shared?: boolean;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+          share_token?: string;
+          shared?: boolean;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       seller_details: {
         Row: {
@@ -5440,24 +5502,46 @@ export type Database = {
       };
       wishlist_items: {
         Row: {
+          alerted_price: number | null;
           created_at: string;
+          list_id: string | null;
+          notify: boolean;
           position: number;
+          price_target: number | null;
           product_id: string;
+          saved_price: number | null;
           user_id: string;
         };
         Insert: {
+          alerted_price?: number | null;
           created_at?: string;
+          list_id?: string | null;
+          notify?: boolean;
           position?: number;
+          price_target?: number | null;
           product_id: string;
+          saved_price?: number | null;
           user_id?: string;
         };
         Update: {
+          alerted_price?: number | null;
           created_at?: string;
+          list_id?: string | null;
+          notify?: boolean;
           position?: number;
+          price_target?: number | null;
           product_id?: string;
+          saved_price?: number | null;
           user_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "wishlist_items_list_id_fkey";
+            columns: ["list_id"];
+            isOneToOne: false;
+            referencedRelation: "saved_lists";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "wishlist_items_product_id_fkey";
             columns: ["product_id"];
@@ -7277,6 +7361,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      queue_add: { Args: { product: string }; Returns: undefined };
       queue_due_telegram_posts: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -7368,6 +7453,7 @@ export type Database = {
           price: number;
         }[];
       };
+      reorder_queue: { Args: { products: string[] }; Returns: undefined };
       reorder_saved: { Args: { products: string[] }; Returns: undefined };
       report_survey: {
         Args: { reason: string; target: string };
@@ -7713,6 +7799,7 @@ export type Database = {
           name_ar: string;
           name_en: string;
           price: number;
+          release_date: string | null;
           rentable: boolean;
           rental_stock: number;
           rental_tier: number | null;
@@ -8090,6 +8177,14 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      shared_list: {
+        Args: { token: string };
+        Returns: {
+          list_name: string;
+          owner_name: string;
+          product_id: string;
+        }[];
       };
       staff_mark_return_received: {
         Args: { target: string };
