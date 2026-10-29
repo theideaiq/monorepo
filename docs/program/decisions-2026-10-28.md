@@ -1144,7 +1144,11 @@ it leaves room:
   the shop pays the member as its offer says.
 - Requests and offers past their time expire in the API's daily cron.
 
-## Part 14: people selling (step 14)
+## Part 14: people selling (step 14), cancelled
+
+> Cancelled by the owner on 30 October 2026 (see "Amendment, 30 October
+> 2026: people selling, verification and Pass settings" below). Kept for
+> the record.
 
 The selling policy (sections 10 to 13) sets the rules: adults with a
 verified Pass, their own things, photos of the actual item, a fixed price
@@ -1210,3 +1214,28 @@ The owner's amendment changes section 23 and replaces the line in section
   posts, events and opportunities doesn't fold these letters yet (it
   filters with PostgREST, not `normalize_search`) and follows in its own
   schema-then-code pair.
+
+## Amendment, 30 October 2026: people selling, verification and Pass settings
+
+The owner's message of 30 October 2026:
+
+- **People selling is cancelled.** A person who wants to sell signs up in
+  Partners as an individual trader shop (the owner's ID only, a monthly
+  sales limit; Part 8), and sells like any shop: paid through The IDEA,
+  delivered by Boxy, returns under the Returns policy. Step 14's "people
+  selling" item is dropped, and so is "auctions by people" (individual
+  traders can auction as shops do). The schema merged as
+  `20270311000000_member_listings.sql` is removed by
+  `20270313000000_cancel_people_selling.sql`; no code used it. The
+  selling, returns and privacy policies lose their sections on sales
+  between people.
+- **All verification goes in `/verify`.** The standalone student page
+  becomes the one place to verify: student (university email or card),
+  educator, identity (National Card and selfie) and organizations
+  reached from Partners. Pass → Settings links there instead of holding
+  its own Verification card. (Planned as its own pull request.)
+- **Pass → Settings is grouped:** one **Connections** section for
+  everything linked to the Pass (sign-in accounts such as Google and
+  Apple, Telegram, connected sites); a **Phone** section (the number, its
+  verification and WhatsApp updates together); an **Email** section.
+  (Planned as its own pull request.)
