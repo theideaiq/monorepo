@@ -648,6 +648,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   its tables. Returns now refund the original delivery fee when the return
   isn't the customer's doing (`20270212000100_return_delivery_fee.sql`); a
   shop at fault pays it from its payout.
+- 2026-10-29: Pass → Settings → Student verification has "Remove student
+  status" (verified or waiting for review): the badge goes and a waiting
+  card is withdrawn; partners' own verifications stay. Part 3 of
+  `docs/program/decisions-2026-10-28.md` records the partner verification
+  and delivery-fee decisions.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

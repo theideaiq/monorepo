@@ -162,9 +162,12 @@ export const useBeginStudentCheck = () => {
 
 /** Deletes the student status (and a bare Pass with it), through the API. */
 export const useForgetStudentStatus = () => {
-  const { supabase } = useAuth();
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () =>
       callApi<{ passDeleted: boolean }>(supabase, "/pass/student-status", {}),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: studentKey(user?.id ?? "") }),
   });
 };

@@ -778,3 +778,39 @@ green before the next.
     shop and organization verification; educators.
 14. Then, in order: Opportunities, auctions, Get offers from shops, people
     selling, textbook resale, Plus Duo, digital codes and Apple Wallet.
+
+## Part 3: student verification for partners, delivery fees on refunds
+
+Given after part 2 and restated in the master brief; these win where they
+differ from earlier parts.
+
+- **Student verification for partners** is a separate service. The IDEA's
+  own student badge (Settings, `/verify`) stays as built.
+  - A partner starts a verification from its backend with its Sign in with
+    The IDEA Pass app credentials and sends the student to
+    `theideaiq.com/verify/<id>` (redirect, or a popup on desktop; an
+    embedded mode is optional and has no one-tap path). The student goes
+    back to the partner's return URL afterwards.
+  - A Pass holder with a valid badge shares it in one tap ("Share your
+    student status with <partner>?"). Otherwise: sign in (no sign-up
+    prompt), the university email with an 8-digit code (verified at once,
+    at most 5 codes per address a day), or a document (a student card or
+    enrollment proof within 3 months) reviewed in Staff → Inbox, usually
+    within 1 working day. No Pass is needed.
+  - One verification per partner per person, valid until 30 June. No
+    record shared across partners.
+  - Partners receive only the status, the university and valid_until,
+    through the API and a webhook. The confirmation email has "Delete this
+    verification", which notifies the partner. The document is deleted
+    after review.
+  - Removed: the shared cross-partner record, one-time tickets, rotating
+    in-person codes and public check pages. Pass card checks and the card
+    embed are unchanged.
+- **Remove student status** in Pass → Settings (the student card): removes
+  the badge and withdraws a card waiting for review. Partners' own
+  verifications stay until deleted from their emails.
+- **Delivery fee on refunds:** faulty, wrong or not-as-described returns
+  get the original delivery fee back. The shop pays it from its pending
+  payout for its items; The IDEA pays for its own stock and its own
+  mistakes. Change-of-mind returns don't get it back.
+- **Offers on The IDEA's own stock:** no change.

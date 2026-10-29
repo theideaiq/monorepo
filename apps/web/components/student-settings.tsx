@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@repo/auth/provider";
 import { governorates, localized } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -19,6 +20,7 @@ import { type FormEvent, useId, useState } from "react";
 import { ApiError } from "@/lib/api";
 import {
   useConfirmStudentEmail,
+  useForgetStudentStatus,
   useMyStudent,
   useRequestStudentReview,
   useSendStudentCode,
@@ -310,6 +312,71 @@ const StudentProfile = ({ university }: { readonly university: string }) => {
   );
 };
 
+/**
+ * Removes the student status: the badge goes, a card waiting for review is
+ * withdrawn and its photo deleted. Partners' own verifications stay until
+ * deleted from their emails. A bare Pass (from the student check) goes too.
+ */
+const RemoveStatus = () => {
+  const t = useTranslations("app.settings.student.remove");
+  const { supabase } = useAuth();
+  const forget = useForgetStudentStatus();
+  const [asking, setAsking] = useState(false);
+
+  if (!asking) {
+    return (
+      <Button
+        className="justify-self-start"
+        onClick={() => setAsking(true)}
+        size="sm"
+        type="button"
+        variant="outline"
+      >
+        {t("button")}
+      </Button>
+    );
+  }
+  return (
+    <div className="grid gap-2 rounded-md border p-3">
+      <p className="text-sm">{t("confirm")}</p>
+      <div className="flex flex-wrap gap-2">
+        <Button
+          disabled={forget.isPending}
+          onClick={() =>
+            forget.mutate(undefined, {
+              onSuccess: async ({ passDeleted }) => {
+                setAsking(false);
+                if (passDeleted) {
+                  await supabase.auth.signOut({ scope: "local" });
+                }
+              },
+            })
+          }
+          size="sm"
+          type="button"
+          variant="destructive"
+        >
+          {t("yes")}
+        </Button>
+        <Button
+          disabled={forget.isPending}
+          onClick={() => setAsking(false)}
+          size="sm"
+          type="button"
+          variant="outline"
+        >
+          {t("no")}
+        </Button>
+      </div>
+      {forget.isError ? (
+        <p className="text-destructive text-sm" role="alert">
+          {t("failed")}
+        </p>
+      ) : null}
+    </div>
+  );
+};
+
 /** Choose the university, then verify by email or with the card. */
 const VerifyForms = () => {
   const t = useTranslations("app.settings.student");
@@ -397,10 +464,16 @@ export const StudentCard = () => {
           })}
         </p>
         <StudentProfile university={student.university_id ?? ""} />
+        <RemoveStatus />
       </>
     );
   } else if (student?.pending === "card") {
-    body = <p className="text-sm">{t("waiting")}</p>;
+    body = (
+      <>
+        <p className="text-sm">{t("waiting")}</p>
+        <RemoveStatus />
+      </>
+    );
   }
 
   return (
