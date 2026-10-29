@@ -4481,6 +4481,54 @@ export type Database = {
           },
         ];
       };
+      student_prices: {
+        Row: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          price: number;
+          seller_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        Insert: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          price: number;
+          seller_id: string;
+          updated_at?: string;
+          variant_id: string;
+        };
+        Update: {
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          price?: number;
+          seller_id?: string;
+          updated_at?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "student_prices_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "student_prices_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       student_requests: {
         Row: {
           attempts: number;
@@ -7173,6 +7221,7 @@ export type Database = {
           sale_ends_at: string;
           seller_id: string;
           seller_name: string;
+          student_price: number;
           variant_id: string;
           was_price: number;
         }[];
@@ -7309,6 +7358,7 @@ export type Database = {
       release_return_refund: { Args: { target: string }; Returns: undefined };
       remove_coupon: { Args: Record<PropertyKey, never>; Returns: undefined };
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
+      remove_student_price: { Args: { target: string }; Returns: undefined };
       rental_quote: {
         Args: { product: string; variant?: string };
         Returns: {
@@ -7958,6 +8008,30 @@ export type Database = {
           target: string;
         };
         Returns: undefined;
+      };
+      set_student_price: {
+        Args: {
+          price: number;
+          seller: string;
+          variant: string;
+          wanted: Database["public"]["Enums"]["product_condition"];
+        };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          price: number;
+          seller_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "student_prices";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       set_student_profile: {
         Args: { governorate: string; major: string; study_year: number };
