@@ -387,6 +387,41 @@ revoke all on function public.student_verification_page(uuid) from public;
 grant execute on function private.student_verification_page(uuid) to anon, authenticated;
 grant execute on function public.student_verification_page(uuid) to anon, authenticated;
 
+-- The origins that may frame /verify/<id> (its embedded mode): the
+-- partner organization's verified domains.
+create function private.student_verification_origins(target uuid)
+returns text[]
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select coalesce((
+    select array(
+      select o from public.pass_partner_domains d,
+        lateral unnest(array['https://' || d.domain, 'https://*.' || d.domain]) o
+      where d.organization_id = p.organization_id and d.verified_at is not null
+      order by o
+    )
+    from public.student_verifications v
+    join public.pass_partners p on p.client_id = v.client_id
+    where v.id = target and p.active and p.organization_id is not null
+  ), '{}');
+$$;
+
+create function public.student_verification_origins(target uuid)
+returns text[]
+language sql
+stable
+security invoker
+set search_path = ''
+as $$ select private.student_verification_origins(target) $$;
+
+revoke all on function private.student_verification_origins(uuid) from public;
+revoke all on function public.student_verification_origins(uuid) from public;
+grant execute on function private.student_verification_origins(uuid) to anon, authenticated;
+grant execute on function public.student_verification_origins(uuid) to anon, authenticated;
+
 -- One tap: the signed-in Pass holder's valid badge verifies them for this
 -- partner. Returns the email to confirm to and the delete token.
 create function public.share_student_verification(target uuid, member uuid)

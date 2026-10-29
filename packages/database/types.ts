@@ -8861,6 +8861,10 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      student_verification_origins: {
+        Args: { target: string };
+        Returns: string[];
+      };
       student_verification_page: { Args: { target: string }; Returns: Json };
       submit_student_verification_document: {
         Args: {

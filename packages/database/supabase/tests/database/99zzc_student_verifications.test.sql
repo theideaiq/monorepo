@@ -52,7 +52,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(24);
+select plan(25);
 
 insert into auth.users (id, email, raw_user_meta_data) values
   ('00000000-0000-0000-0000-00000000ab01', 'holder@example.iq', '{"full_name":"Badge Holder"}'),
@@ -87,6 +87,8 @@ select results_eq(
   'the page shows the partner and the status to anyone with the link'
 );
 select throws_ok($$ select count(*) from public.student_verifications $$, '42501', null, 'visitors can''t read verifications');
+select is(public.student_verification_origins((select id from ids where name = 'email')), '{}'::text[],
+  'a partner without verified domains can''t frame the page');
 
 -- ── The university email ──
 select pg_temp.reset_role();
