@@ -83,7 +83,7 @@ select pg_temp.reset_role();
 select is(
   (select amount from public.bulb_entries
    where user_id = '00000000-0000-0000-0000-0000000078a1' and reason = 'event_check_in'),
-  10, 'the check-in pays 10 Bulbs'
+  1000, 'the check-in pays 1,000 Bulbs'
 );
 
 select * from finish();

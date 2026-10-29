@@ -75,8 +75,8 @@ select is(
 select results_eq(
   $$ select amount, status::text from public.bulb_entries
      where user_id = '00000000-0000-0000-0000-0000000000e1' and reason = 'telegram' $$,
-  $$ values (10, 'available') $$,
-  'connecting Telegram earns 10 Bulbs'
+  $$ values (1000, 'available') $$,
+  'connecting Telegram earns 1,000 Bulbs'
 );
 
 select throws_ok(

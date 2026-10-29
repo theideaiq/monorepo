@@ -1,4 +1,4 @@
--- More ways to earn Bulbs: Plus payments, birthdays, photo reviews and event check-ins.
+-- More ways to earn Bulbs: birthdays, photo reviews and event check-ins.
 begin;
 -- <preamble>
 -- Shared pgTAP preamble. Each test file includes a copy between the preamble
@@ -80,19 +80,15 @@ insert into public.subscriptions (id, user_id, plan_id, status, provider, curren
 values ('74000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000007e2', 'plus-extras-test', 'active', 'wayl', now(), now() + interval '30 days');
 
 -- ── Plus payments ───────────────────────────────────────────────────────────
--- P's plan earns 4%: 4% of 15,000 IQD = 600 IQD = 6 Bulbs.
+-- Plus fees earn no Bulbs (P's plan rate is for what P buys and rents).
 insert into public.payments (id, user_id, subscription_id, reference_id, provider, amount, status, paid_at)
 values ('74000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-0000000007e2',
   '74000000-0000-0000-0000-0000000000c1', 'extras-plus-1', 'wayl', 15000, 'paid', now());
-select results_eq(
-  $$ select amount, status::text from public.bulb_entries where payment_id = '74000000-0000-0000-0000-0000000000d1' $$,
-  $$ values (6, 'available') $$,
-  'a Plus payment earns cashback at the member''s rate, usable at once'
-);
+select is((select count(*)::integer from public.bulb_entries where payment_id = '74000000-0000-0000-0000-0000000000d1'), 0, 'a Plus payment earns no Bulbs');
 update public.payments set status = 'paid', description = 'again' where id = '74000000-0000-0000-0000-0000000000d1';
-select is((select count(*)::integer from public.bulb_entries where payment_id = '74000000-0000-0000-0000-0000000000d1'), 1, 'each payment earns once');
+select is((select count(*)::integer from public.bulb_entries where payment_id = '74000000-0000-0000-0000-0000000000d1'), 0, 'nor when it is paid again');
 update public.payments set status = 'refunded', refunded_amount = 15000 where id = '74000000-0000-0000-0000-0000000000d1';
-select is((select status::text from public.bulb_entries where payment_id = '74000000-0000-0000-0000-0000000000d1'), 'void', 'a refund voids it');
+select is((select count(*)::integer from public.bulb_entries where payment_id = '74000000-0000-0000-0000-0000000000d1'), 0, 'nor when it is refunded');
 
 -- ── Birthdays ───────────────────────────────────────────────────────────────
 update public.profiles set birthday = ((now() at time zone 'Asia/Baghdad')::date - interval '30 years')::date
@@ -102,8 +98,8 @@ where id = '00000000-0000-0000-0000-0000000007e2';
 select is(public.run_birthday_bulbs(), 1, 'today''s birthday gets its bonus');
 select results_eq(
   $$ select amount from public.bulb_entries where user_id = '00000000-0000-0000-0000-0000000007e1' and reason like 'birthday_%' $$,
-  $$ values (25) $$,
-  '25 Bulbs'
+  $$ values (2500) $$,
+  '2,500 Bulbs'
 );
 select is(public.run_birthday_bulbs(), 0, 'once a year');
 select is(
@@ -144,8 +140,8 @@ select pg_temp.reset_role();
 select results_eq(
   $$ select amount from public.bulb_entries e join public.product_reviews r on r.id = e.review_id
      where r.user_id = '00000000-0000-0000-0000-0000000007e1' and e.status <> 'void' $$,
-  $$ values (5) $$,
-  'a published photo review of a bought product earns 5 Bulbs'
+  $$ values (500) $$,
+  'a published photo review of a bought product earns 500 Bulbs'
 );
 update public.product_reviews set status = 'hidden' where user_id = '00000000-0000-0000-0000-0000000007e1';
 select is(
@@ -195,8 +191,8 @@ select throws_ok(
 select pg_temp.reset_role();
 select results_eq(
   $$ select amount from public.bulb_entries where event_id = '74000000-0000-0000-0000-0000000000f1' $$,
-  $$ values (10) $$,
-  'checking in pays 10 Bulbs once'
+  $$ values (1000) $$,
+  'checking in pays 1,000 Bulbs once'
 );
 
 select * from finish();

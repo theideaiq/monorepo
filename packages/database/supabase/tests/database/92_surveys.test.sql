@@ -76,8 +76,8 @@ grant all on ids to authenticated;
 -- ── Lengths and who creates ──
 select results_eq(
   $$ values (private.survey_reward(1), private.survey_reward(10), private.survey_reward(40)) $$,
-  $$ values (2, 5, 10) $$,
-  'rewards go from 2 to 10 Bulbs by length'
+  $$ values (200, 500, 1000) $$,
+  'rewards go from 200 to 1,000 Bulbs by length'
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000923');
@@ -168,10 +168,10 @@ select throws_ok(
   '23514', 'Not enough Bulbs for the rewards', 'rewards need the Bulbs to pay them'
 );
 select pg_temp.reset_role();
-insert into public.bulb_entries (user_id, amount, kind, reason) values ('00000000-0000-0000-0000-000000000921', 100, 'bonus', 'test');
+insert into public.bulb_entries (user_id, amount, kind, reason) values ('00000000-0000-0000-0000-000000000921', 10000, 'bonus', 'test');
 select pg_temp.login_as('00000000-0000-0000-0000-000000000921');
-select is((public.publish_survey((select id from ids where name = 'bulbs'))).held, 5,
-  'the rewards (2 × 2) and the fee are held');
+select is((public.publish_survey((select id from ids where name = 'bulbs'))).held, 440,
+  'the rewards (2 × 200) and the 10% fee are held');
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000922');
 select is((select count(*)::integer from public.surveys_for_me()), 0, 'targeted surveys skip other majors');
@@ -179,11 +179,11 @@ select public.set_student_profile('Medicine', 2::smallint, 'baghdad');
 select public.start_survey((select id from ids where name = 'bulbs'));
 select public.submit_survey((select id from ids where name = 'bulbs'), jsonb_build_object(
   (select id::text from public.survey_questions where survey_id = (select id from ids where name = 'bulbs')), 4));
-select is((select available from public.my_bulbs()), 2::bigint, 'the respondent earns the reward');
+select is((select available from public.my_bulbs()), 200::bigint, 'the respondent earns the reward');
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000921');
 select is((public.close_survey((select id from ids where name = 'bulbs'))).status, 'closed', 'the creator closes it');
-select is((select available from public.my_bulbs()), 97::bigint, 'and gets the unused Bulbs back');
+select is((select available from public.my_bulbs()), 9780::bigint, 'and gets the unused Bulbs back');
 
 -- ── Cash ──
 insert into ids select 'cash', (public.save_survey('{
@@ -197,7 +197,7 @@ update public.orders set status = 'paid', paid_at = now()
 where id = (select order_id from public.surveys where id = (select id from ids where name = 'cash'));
 select is((select status from public.surveys where id = (select id from ids where name = 'cash')), 'open', 'and opens when paid');
 select is((select total from public.orders where id = (select order_id from public.surveys where id = (select id from ids where name = 'cash'))),
-  2200::bigint, '100 IQD a Bulb for the rewards and the fee');
+  2200::bigint, '1 IQD a Bulb for the rewards and the fee');
 select is((select status::text from public.orders where id = (select order_id from public.surveys where id = (select id from ids where name = 'cash'))),
   'delivered', 'the paid order is done (nothing to hand over)');
 select is((select count(*) from public.notifications n

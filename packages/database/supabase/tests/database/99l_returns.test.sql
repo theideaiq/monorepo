@@ -77,11 +77,11 @@ create temporary table ids (name text primary key, id uuid);
 grant all on ids to authenticated;
 
 -- A delivered online order: 3 copies of one record and 1 of another
--- line, 100 Bulbs spent (10,000 IQD).
+-- line, 10,000 Bulbs spent (10,000 IQD).
 insert into public.orders (id, user_id, status, subtotal, shipping_fee, bulbs_used, bulbs_discount, total, max_bulbs,
   shipping_address, fulfilment, payment_method, paid_at)
 values
-  ('9b100000-0000-0000-0000-0000000000e1', '00000000-0000-0000-0000-000000000d04', 'delivered', 159000, 5000, 100, 10000, 154000, 100,
+  ('9b100000-0000-0000-0000-0000000000e1', '00000000-0000-0000-0000-000000000d04', 'delivered', 159000, 5000, 10000, 10000, 154000, 10000,
    '{"full_name":"Ali Hassan","phone":"+9647711111111","address":"House 9, Street 5","city":"Karrada","governorate":"baghdad"}',
    'delivery', 'online', now() - interval '3 days');
 insert into public.order_items (order_id, product_id, variant_id, name_ar, name_en, unit_price, quantity, seller_id, seller_name)
@@ -169,13 +169,13 @@ select pg_temp.login_as('00000000-0000-0000-0000-000000000d02');
 select results_eq(
   $$ select status::text, refund_amount, refund_bulbs
      from public.confirm_return_condition((select id from ids where name = 'faulty'), true) $$,
-  $$ values ('refund_due', 37250::bigint, 25) $$,
+  $$ values ('refund_due', 37250::bigint, 2500) $$,
   'the shop''s check makes the line''s share of the goods paid, and its Bulbs, due'
 );
 select pg_temp.reset_role();
 select is(
   (select sum(amount)::integer from public.bulb_entries where order_id = '9b100000-0000-0000-0000-0000000000e1' and kind = 'return'),
-  25, 'the Bulbs come back'
+  2500, 'the Bulbs come back'
 );
 select pg_temp.login_as('00000000-0000-0000-0000-000000000d05', 'aal2');
 select throws_ok(

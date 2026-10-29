@@ -57,9 +57,9 @@ select plan(9);
 select results_eq(
   $$ select id, amount, rental_slots, bulb_rate, free_delivery from public.plans
      where id in ('plus-glow', 'plus-shine', 'plus-blaze') order by amount $$,
-  $$ values ('plus-glow', 14750::bigint, 1, 4::numeric(4, 2), false),
-            ('plus-shine', 22750::bigint, 2, 5::numeric(4, 2), true),
-            ('plus-blaze', 39750::bigint, 4, 6::numeric(4, 2), true) $$,
+  $$ values ('plus-glow', 14750::bigint, 1, 3::numeric(4, 2), false),
+            ('plus-shine', 22750::bigint, 2, 4::numeric(4, 2), true),
+            ('plus-blaze', 39750::bigint, 4, 5::numeric(4, 2), true) $$,
   'the Plus plans are Glow, Shine and Blaze'
 );
 select results_eq(

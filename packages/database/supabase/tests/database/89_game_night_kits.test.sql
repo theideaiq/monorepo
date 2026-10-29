@@ -144,8 +144,8 @@ insert into booked select (public.book_kit(
 )).id;
 select results_eq(
   $$ select status::text, total, max_bulbs from public.orders where id = (select id from booked) $$,
-  $$ values ('pending', 169500::bigint, 0) $$,
-  'the order is the weekend, an extra day and the 100,000 deposit, earning no Bulbs'
+  $$ values ('pending', 169500::bigint, 13900) $$,
+  'the order is the weekend, an extra day and the 100,000 deposit; the kit earns Bulbs (up to 20%)'
 );
 select results_eq(
   $$ select kind, unit_price from public.order_items where order_id = (select id from booked) order by kind desc $$,
