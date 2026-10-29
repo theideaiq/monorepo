@@ -2,6 +2,16 @@ import { describe, expect, test } from "vitest";
 import { businessPath, currentAppPath, safeNextPath } from "./app-paths";
 
 describe("currentAppPath", () => {
+  test("sends the old Settings verification cards to /verify", () => {
+    expect(currentAppPath("/pass/settings#student")).toBe(
+      "/verify?kind=student"
+    );
+    expect(currentAppPath("/pass/settings#verification")).toBe("/verify");
+    expect(currentAppPath("/pass/settings#guardian")).toBe(
+      "/pass/settings#guardian"
+    );
+  });
+
   test("opens detail pages stored with a query parameter at their URL", () => {
     expect(currentAppPath("/orders/view?id=o%201&x=1")).toBe(
       "/pass/orders/o%201?x=1"

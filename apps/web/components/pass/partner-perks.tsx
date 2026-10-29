@@ -48,7 +48,7 @@ const linkClass = "font-medium text-pink-text text-xs hover:underline";
 
 /** Where to get a perk that isn't the member's yet. */
 const pathFor = (audience: PerkAudience) =>
-  audience === "students" ? "/pass/settings#student" : "/plus";
+  audience === "students" ? "/verify?kind=student" : "/plus";
 
 /** Who the perk is for: students, Plus, or some Plus tiers. */
 const audienceLabel = (perk: PerkRow, t: Translate) =>

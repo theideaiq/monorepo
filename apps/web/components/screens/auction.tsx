@@ -72,7 +72,7 @@ const REFUSAL_LINKS: Partial<Record<Refusal, "identity" | "phone">> = {
   phone: "phone",
 };
 const FIX_PATHS = {
-  identity: "/pass/settings#verification",
+  identity: "/verify?kind=identity",
   phone: "/pass/settings",
 } as const;
 

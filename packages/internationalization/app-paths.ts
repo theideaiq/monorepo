@@ -45,6 +45,15 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/a", "/r"],
 ];
 
+/**
+ * Sections of a page that moved to another page, by path and anchor: the
+ * student and verification cards left Pass → Settings for /verify.
+ */
+const MOVED_SECTIONS: Record<string, string> = {
+  "/pass/settings#student": "/verify?kind=student",
+  "/pass/settings#verification": "/verify",
+};
+
 /** Sections of /post that were pages, now topics of the Club's Read feed. */
 const POST_SECTIONS: Record<string, string> = {
   "/post/learn": "/club?topic=guides",
@@ -87,6 +96,10 @@ export const currentAppPath = (path: string) => {
     url.searchParams.delete(legacy[1]);
     const query = url.searchParams.toString();
     return `${legacy[0]}/${encodeURIComponent(value)}${query ? `?${query}` : ""}`;
+  }
+  const section = MOVED_SECTIONS[`${url.pathname}${url.hash}`];
+  if (section) {
+    return section;
   }
   const show = url.searchParams.get("show");
   if (url.pathname === "/club" && show && CLUB_TOPICS.has(show)) {

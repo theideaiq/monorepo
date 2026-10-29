@@ -3,13 +3,6 @@
 import { useAuth } from "@repo/auth/provider";
 import { governorates, localized } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@repo/design-system/components/ui/card";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import type { Locale } from "@repo/internationalization";
@@ -433,12 +426,12 @@ const VerifyForms = () => {
 };
 
 /**
- * Your Pass → Settings: verify as a student with a university email (or a
+ * /verify → Student: verify as a student with a university email (or a
  * student card photo our team checks). The badge lasts until the end of
  * the academic year and brings the Plus student price, no deposits and
  * student perks.
  */
-export const StudentCard = () => {
+export const StudentSection = () => {
   const t = useTranslations("app.settings.student");
   const locale = useLocale() as Locale;
   const status = useMyStudent();
@@ -477,31 +470,28 @@ export const StudentCard = () => {
   }
 
   return (
-    <Card id="student">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+    <section aria-labelledby="verify-student" className="grid gap-3">
+      <div>
+        <h2 className="flex items-center gap-2 font-medium" id="verify-student">
           <GraduationCapIcon
             aria-hidden="true"
             className="size-5 text-pink-text"
           />
           {t("title")}
-        </CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-3">
-        {!student?.verified && student?.valid_until ? (
-          <p className="text-muted-foreground text-sm">
-            {t("ended", { date: day(student.valid_until, locale) })}
-          </p>
-        ) : null}
-        {!(student?.verified || student?.pending) &&
-        student?.rejected_reason ? (
-          <p className="text-destructive text-sm">
-            {t("rejected", { reason: student.rejected_reason })}
-          </p>
-        ) : null}
-        {body}
-      </CardContent>
-    </Card>
+        </h2>
+        <p className="text-muted-foreground text-sm">{t("description")}</p>
+      </div>
+      {!student?.verified && student?.valid_until ? (
+        <p className="text-muted-foreground text-sm">
+          {t("ended", { date: day(student.valid_until, locale) })}
+        </p>
+      ) : null}
+      {!(student?.verified || student?.pending) && student?.rejected_reason ? (
+        <p className="text-destructive text-sm">
+          {t("rejected", { reason: student.rejected_reason })}
+        </p>
+      ) : null}
+      {body}
+    </section>
   );
 };
