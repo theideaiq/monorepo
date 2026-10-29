@@ -10,7 +10,7 @@ import {
 import { formatters } from "@/lib/admin/format";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
-import { ReviewSurveyForm } from "./forms";
+import { DecideAppealForm, ReviewSurveyForm } from "./forms";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.customers.surveys");
@@ -50,6 +50,7 @@ const SurveysPage = async () => {
     .order("updated_at")
     .limit(50);
   const surveys = data ?? [];
+  const { data: appeals } = await supabase.rpc("survey_appeals");
   const names = await profileNames(
     supabase,
     surveys.flatMap((survey) => survey.creator_id ?? [])
@@ -84,7 +85,7 @@ const SurveysPage = async () => {
                       t("unnamed")}
                   </MaybeLink>
                   {" · "}
-                  {t(`kinds.${survey.kind as "bulbs" | "cash" | "free"}`)}
+                  {t(`kinds.${survey.kind as "boosted" | "bulbs" | "free"}`)}
                   {" · "}
                   {t("wanted", { count: format.number(survey.wanted) })}
                   {" · "}
@@ -151,6 +152,44 @@ const SurveysPage = async () => {
             </article>
           ))}
         </Panel>
+        <div className="grid" id="appeals">
+          <Panel title={t("appeals.title")}>
+            <p className="text-muted-foreground text-sm">
+              {t("appeals.description")}
+            </p>
+            {(appeals ?? []).length === 0 ? (
+              <EmptyState title={t("appeals.empty")} />
+            ) : null}
+            {(appeals ?? []).map((appeal) => (
+              <article
+                className="grid gap-2 border-t pt-3"
+                key={appeal.response_id}
+              >
+                <h3 className="font-semibold">{appeal.title}</h3>
+                <p className="text-sm">
+                  {appeal.excluded_reason === "too_fast"
+                    ? t("appeals.tooFast", {
+                        median: format.number(appeal.median_seconds ?? 0),
+                        min: format.number(appeal.min_seconds),
+                        seconds: format.number(appeal.seconds ?? 0),
+                      })
+                    : t("appeals.attention", {
+                        failed: format.number(appeal.failed_checks),
+                      })}
+                </p>
+                {appeal.note ? (
+                  <p className="whitespace-pre-line text-muted-foreground text-sm">
+                    {appeal.note}
+                  </p>
+                ) : null}
+                <p className="text-muted-foreground text-xs">
+                  {format.date(appeal.appealed_at)}
+                </p>
+                {canWrite ? <DecideAppealForm id={appeal.response_id} /> : null}
+              </article>
+            ))}
+          </Panel>
+        </div>
       </PageBody>
     </>
   );

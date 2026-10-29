@@ -6,6 +6,8 @@ import {
   type SurveyQuestion,
   surveyCost,
   surveyError,
+  surveyEstimate,
+  surveyMinutes,
   surveyReward,
   toCsv,
   toExcel,
@@ -46,11 +48,26 @@ const results = [
 ];
 
 describe("survey rewards", () => {
-  it("grow with length, from 200 to 1,000 Bulbs", () => {
-    expect(surveyReward(1)).toBe(200);
-    expect(surveyReward(4)).toBe(300);
-    expect(surveyReward(10)).toBe(500);
-    expect(surveyReward(60)).toBe(1000);
+  it("are 100 Bulbs a minute, from 200 to 2,000", () => {
+    expect(surveyReward(30)).toBe(200);
+    expect(surveyReward(150)).toBe(250);
+    expect(surveyReward(600)).toBe(1000);
+    expect(surveyReward(3600)).toBe(2000);
+  });
+
+  it("estimate the time from the questions", () => {
+    expect(surveyEstimate(questions)).toBe(
+      30 +
+        questions.reduce(
+          (sum, q) =>
+            sum +
+            { multiple: 12, number: 10, scale: 6, single: 8, text: 45 }[q.kind],
+          0
+        )
+    );
+    expect(surveyEstimate([])).toBe(30);
+    expect(surveyMinutes(54)).toBe(1);
+    expect(surveyMinutes(150)).toBe(3);
   });
 
   it("cost the creator the rewards plus the fee", () => {

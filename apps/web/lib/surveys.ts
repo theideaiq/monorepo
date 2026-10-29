@@ -8,7 +8,11 @@ export interface SurveyQuestion {
   required: boolean;
 }
 
-export type SurveyKind = "bulbs" | "cash" | "free";
+/** Free (answer to get answers) or Boosted (paid in IQD, rewarded in Bulbs). */
+export type SurveyKind = "boosted" | "free";
+
+/** Why a submitted response doesn't count (`survey_responses.excluded_reason`). */
+export type ExcludedReason = "attention" | "too_fast";
 
 /** Answers by question id, as `submit_survey()` takes them. */
 export type SurveyAnswers = Record<string, number | string | string[]>;
@@ -21,12 +25,32 @@ export interface SurveyResult {
   submitted_at: string | null;
 }
 
-/** Bulbs a response earns, by length (`private.survey_reward`). */
-export const surveyReward = (questions: number) =>
-  100 *
-  Math.min(10, Math.max(2, 2 + Math.floor((Math.max(questions, 0) - 1) / 3)));
+/** Seconds each kind of question takes, after 30 to read the consent (`private.survey_estimate`). */
+const QUESTION_SECONDS: Record<SurveyQuestion["kind"], number> = {
+  multiple: 12,
+  number: 10,
+  scale: 6,
+  single: 8,
+  text: 45,
+};
 
-/** What a rewarded survey costs its creator in Bulbs (1 IQD each). */
+/** The time to answer, estimated from the questions. */
+export const surveyEstimate = (questions: readonly SurveyQuestion[]) =>
+  30 +
+  questions.reduce(
+    (total, question) => total + QUESTION_SECONDS[question.kind],
+    0
+  );
+
+/** Bulbs a response earns: 100 a minute, from 200 to 2,000 (`private.survey_reward_for`). */
+export const surveyReward = (seconds: number) =>
+  Math.min(2000, Math.max(200, Math.round((Math.max(seconds, 0) * 100) / 60)));
+
+/** Whole minutes for "about N minutes", at least 1. */
+export const surveyMinutes = (seconds: number) =>
+  Math.max(1, Math.round(seconds / 60));
+
+/** What a Boosted survey costs its creator in IQD: the reward × 1.1 for each response. */
 export const surveyCost = (reward: number, wanted: number, feeRate = 10) =>
   // In hundredths of a Bulb, so 2 × 50 × 1.1 is 110 and not 111.
   Math.ceil(Math.round(reward * wanted * (100 + feeRate) * 100) / 10_000);

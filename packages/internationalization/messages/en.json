@@ -808,7 +808,6 @@
           "thanks": "Thank you",
           "thanksReward": "Your answers count: {bulbs} Bulbs are on your Pass.",
           "thanksCredit": "Your answers count, and you earned a response credit for your own surveys.",
-          "notCounted": "Your answers were sent, but they don't count: they were too quick or missed a check question.",
           "sending": "Sending…",
           "submit": "Send my answers",
           "consent": "Before you start",
@@ -817,7 +816,38 @@
           "terms": "Survey terms",
           "yours": "This is your survey.",
           "results": "See the answers",
-          "agree": "I agree, start"
+          "agree": "I agree, start",
+          "rules": {
+            "title": "How it works",
+            "reward": "Each counted response earns {bulbs} Bulbs.",
+            "credit": "A counted response earns you a credit for your own surveys.",
+            "time": "It takes about {minutes} min.",
+            "checks": "There are check questions to show you're reading.",
+            "counts": "A response doesn't count if 2 or more check questions are wrong, or it's sent in under a third of the usual time. One wrong check still counts. You'll see why, and you can appeal once.",
+            "quit": "You can quit before sending. After sending you can delete your answers until the survey closes: you keep the reward.",
+            "appeal": "Payment never depends on what you answer, and the creator can't reject responses."
+          },
+          "quit": "Quit",
+          "paused": "This survey is paused for a moment while its creator confirms the reward. Come back soon.",
+          "withdrawn": "You deleted your answers. They no longer count, and you kept your reward.",
+          "excluded": {
+            "attention": "Your answers were sent, but they don't count: 2 or more check questions were wrong.",
+            "too_fast": "Your answers were sent, but they don't count: they came in under a third of the usual time."
+          },
+          "appeal": {
+            "label": "Think it's a mistake? Tell us why (once).",
+            "send": "Appeal",
+            "failed": "The appeal couldn't be sent. Try again.",
+            "sent": "Your appeal is with our team.",
+            "declined": "Our team looked at your appeal and the response still doesn't count."
+          },
+          "delete": {
+            "open": "Delete my answers",
+            "explain": "Your answers are deleted and stop counting toward the survey. You keep the reward.",
+            "confirm": "Delete them",
+            "keep": "Keep them",
+            "failed": "Your answers couldn't be deleted. Try again."
+          }
         },
         "report": {
           "open": "Report this survey",
@@ -885,12 +915,9 @@
           "rewards": "Rewards",
           "surveyKinds": {
             "free": "Give to get (free)",
-            "bulbs": "Rewarded with my Bulbs",
-            "cash": "Bulbs reward, bought from The IDEA"
+            "boosted": "Boosted: rewarded in Bulbs, paid in IQD"
           },
           "freeNote": "Each response uses one of your credits. You earn a credit for every survey you answer, and you start with 10.",
-          "bulbsNote": "Each counted response earns {bulbs} Bulbs. {cost} Bulbs (with the 10% fee) are held when the survey opens; what isn't used comes back when it closes.",
-          "cashNote": "Respondents earn Bulbs only: {bulbs} Bulbs for each counted response. You buy them from The IDEA for {cost} (with the 10% fee) and the survey opens once it's paid.",
           "wanted": "Responses wanted",
           "minSeconds": "Minimum time (seconds)",
           "minSecondsNote": "Answers sent faster than this don't count.",
@@ -899,7 +926,10 @@
           "publish": "Publish",
           "saveDraft": "Save the draft",
           "saved": "Saved.",
-          "incomplete": "Add a title (at least 3 characters) and write every question."
+          "incomplete": "Add a title (at least 3 characters) and write every question.",
+          "estimate": "It takes about {minutes} min to answer.",
+          "boostedNote": "It takes about {minutes} min, so each counted response earns {bulbs} Bulbs (100 a minute, from 200 to 2,000), which The IDEA gives. You pay {cost} for them with the 10% fee, and the survey opens once it's paid, for 60 days. What isn't used comes back to you when it closes, from 1,000 IQD.",
+          "boostedMedian": "After the first 10 counted responses the reward follows their real median time. If it's lower, the difference comes back at close; if it's higher, the survey pauses until you pay the difference."
         },
         "manage": {
           "title": "Your survey",
@@ -941,7 +971,12 @@
             "closed": "Closed",
             "rejected": "Not published"
           },
-          "receipt": "Receipt"
+          "receipt": "Receipt",
+          "paused": "The real median time is longer, so the reward goes up to {bulbs} Bulbs. The survey is paused until you pay the difference.",
+          "confirmReward": "Accept and pay the difference",
+          "payDifference": "Pay the difference",
+          "refundDue": "{amount} of unused rewards is on its way back to you.",
+          "refunded": "{amount} of unused rewards was refunded."
         }
       },
       "parts": {
@@ -3277,6 +3312,22 @@
         "saved_price_drop": {
           "title": "Price dropped",
           "body": "{name}, which you saved, is now {price}."
+        },
+        "survey_paused": {
+          "title": "Your survey is paused",
+          "body": "\"{title}\" takes longer than estimated, so the reward goes up to {bulbs} Bulbs. Pay the difference to carry on."
+        },
+        "survey_appeal_upheld": {
+          "title": "Your appeal was upheld",
+          "body": "Your answers to \"{title}\" count now."
+        },
+        "survey_appeal_declined": {
+          "title": "Your appeal was declined",
+          "body": "Your answers to \"{title}\" still don't count."
+        },
+        "survey_refunded": {
+          "title": "Survey refund sent",
+          "body": "{amount} of unused rewards from \"{title}\" was refunded."
         }
       },
       "kinds": {
@@ -3485,7 +3536,8 @@
           "disputedReturns": "Returns to decide",
           "returnRefunds": "Return refunds to send",
           "houseOffers": "Offers on The IDEA's stock",
-          "pendingPayouts": "Shop payouts to send"
+          "pendingPayouts": "Shop payouts to send",
+          "surveyAppeals": "Survey appeals to decide"
         }
       }
     },
@@ -4339,8 +4391,8 @@
         "unnamed": "No name",
         "kinds": {
           "free": "Give to get",
-          "bulbs": "Rewarded in Bulbs",
-          "cash": "Bulbs reward, bought with IQD"
+          "boosted": "Boosted (paid in IQD)",
+          "bulbs": "Rewarded in Bulbs (old)"
         },
         "wanted": "{count} responses wanted",
         "wasOpen": "was open",
@@ -4359,7 +4411,16 @@
         "reports": "Reports",
         "note": "Note to the creator",
         "approve": "Approve",
-        "reject": "Reject"
+        "reject": "Reject",
+        "appeals": {
+          "title": "Appeals",
+          "description": "Respondents whose answers didn't count and who say it's a mistake. Upheld, the response counts and is paid; creators can't reject responses.",
+          "empty": "No appeals waiting.",
+          "attention": "{failed} check questions wrong.",
+          "tooFast": "Sent in {seconds} s (the median is {median} s; the minimum before a median is {min} s).",
+          "uphold": "Uphold: it counts",
+          "decline": "Decline"
+        }
       }
     },
     "finance": {

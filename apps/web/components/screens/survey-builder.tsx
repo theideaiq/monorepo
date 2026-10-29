@@ -30,6 +30,8 @@ import {
   type SurveyQuestion,
   surveyCost,
   surveyError,
+  surveyEstimate,
+  surveyMinutes,
   surveyReward,
 } from "@/lib/surveys";
 
@@ -40,7 +42,7 @@ const QUESTION_KINDS = [
   "text",
   "number",
 ] as const;
-const SURVEY_KINDS = ["free", "bulbs", "cash"] as const;
+const SURVEY_KINDS = ["free", "boosted"] as const;
 const YEARS = [1, 2, 3, 4, 5, 6, 7] as const;
 
 const selectClassName =
@@ -276,23 +278,28 @@ const Field = ({
 const RewardNote = ({ draft }: { readonly draft: SurveyDraft }) => {
   const t = useTranslations("web.club.surveys.builder");
   const locale = useLocale();
-  const reward = surveyReward(draft.questions.length);
+  const seconds = surveyEstimate(draft.questions);
+  const reward = surveyReward(seconds);
   const cost = surveyCost(reward, draft.wanted);
+  const minutes = formatNumber(surveyMinutes(seconds), locale);
   if (draft.kind === "free") {
-    return <p className="text-muted-foreground text-sm">{t("freeNote")}</p>;
+    return (
+      <p className="text-muted-foreground text-sm">
+        {t("freeNote")} {t("estimate", { minutes })}
+      </p>
+    );
   }
   return (
-    <p className="text-muted-foreground text-sm">
-      {draft.kind === "bulbs"
-        ? t("bulbsNote", {
-            bulbs: formatNumber(reward, locale),
-            cost: formatNumber(cost, locale),
-          })
-        : t("cashNote", {
-            bulbs: formatNumber(reward, locale),
-            cost: formatPrice(cost, locale),
-          })}
-    </p>
+    <div className="grid gap-1 text-muted-foreground text-sm">
+      <p>
+        {t("boostedNote", {
+          bulbs: formatNumber(reward, locale),
+          cost: formatPrice(cost, locale),
+          minutes,
+        })}
+      </p>
+      <p>{t("boostedMedian")}</p>
+    </div>
   );
 };
 

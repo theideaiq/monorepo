@@ -1,5 +1,6 @@
 "use client";
 
+import { formatPrice } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
@@ -11,7 +12,61 @@ import { EmptyState } from "@/components/section";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { receiptPath, surveyPath } from "@/lib/club";
 import { useMyStudent } from "@/lib/student-queries";
-import { useMySurveys, useSurveyCredits } from "@/lib/survey-queries";
+import {
+  useConfirmSurveyReward,
+  useMySurveys,
+  useSurveyCredits,
+} from "@/lib/survey-queries";
+
+type MySurvey = NonNullable<ReturnType<typeof useMySurveys>["data"]>[number];
+
+/**
+ * What a Boosted survey needs from its creator or owes them: a higher
+ * reward to pay for (collection is paused), or a refund of what wasn't used.
+ */
+const SurveyMoney = ({ survey }: { readonly survey: MySurvey }) => {
+  const t = useTranslations("web.club.surveys.yours");
+  const locale = useLocale() as Locale;
+  const confirm = useConfirmSurveyReward();
+  if (survey.reward_pending !== null) {
+    return (
+      <div className="grid w-full gap-2 text-sm">
+        <p>
+          {t("paused", {
+            bulbs: formatNumber(survey.reward_pending, locale),
+          })}
+        </p>
+        {survey.topup_order_id ? (
+          <Link
+            className="justify-self-start text-pink-text underline"
+            href={receiptPath(survey.topup_order_id)}
+          >
+            {t("payDifference")}
+          </Link>
+        ) : (
+          <Button
+            className="justify-self-start"
+            disabled={confirm.isPending}
+            onClick={() => confirm.mutate(survey.id)}
+            size="sm"
+          >
+            {t("confirmReward")}
+          </Button>
+        )}
+      </div>
+    );
+  }
+  if (survey.refund_amount > 0) {
+    return (
+      <p className="w-full text-muted-foreground text-sm">
+        {t(survey.refunded_at ? "refunded" : "refundDue", {
+          amount: formatPrice(survey.refund_amount, locale),
+        })}
+      </p>
+    );
+  }
+  return null;
+};
 
 /** The member's own surveys, with their status and responses. */
 const Created = () => {
@@ -57,6 +112,7 @@ const Created = () => {
               </Link>
             ) : null}
           </span>
+          <SurveyMoney survey={survey} />
         </li>
       ))}
     </ul>

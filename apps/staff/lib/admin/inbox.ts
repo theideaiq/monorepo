@@ -23,6 +23,7 @@ export const inboxItems = [
   "overdueRentals",
   "submissions",
   "surveys",
+  "surveyAppeals",
   "passApps",
   "productChecks",
   "productFlags",
@@ -61,6 +62,7 @@ const hrefs: Record<InboxItem, string> = {
   seats: "/partners/team/plus",
   shopRefunds: "/orders/shop-lines#refunds",
   submissions: "/club/submissions",
+  surveyAppeals: "/customers/surveys#appeals",
   surveys: "/customers/surveys",
   telegram: "/club/telegram",
   tickets: "/support?status=open",
@@ -99,6 +101,7 @@ export const loadInbox = async (
     returnRefunds,
     houseOffers,
     pendingPayouts,
+    surveyAppeals,
   ] = await Promise.all([
     counted(can("support"), () =>
       supabase
@@ -185,6 +188,13 @@ export const loadInbox = async (
     counted(can("finance") && finance, () =>
       supabase.from("payouts").select("id", head).eq("status", "pending")
     ),
+    counted(can("customers"), () =>
+      supabase
+        .from("survey_responses")
+        .select("id", head)
+        .not("appealed_at", "is", null)
+        .is("appeal_decided_at", null)
+    ),
   ]);
 
   const counts: Record<InboxItem, number> = {
@@ -206,6 +216,7 @@ export const loadInbox = async (
     submissions: (queue?.data ?? []).filter(
       (row) => row.status === "pending" || row.status === "under_review"
     ).length,
+    surveyAppeals,
     surveys,
     telegram,
     tickets,
