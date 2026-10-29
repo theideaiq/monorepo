@@ -1,6 +1,7 @@
 import {
   admin,
   customer,
+  friend,
   PASSWORD,
   product,
   signUpUser,
@@ -107,6 +108,11 @@ export const resetCustomer = async () => {
       user_id: id,
     })
   );
+};
+
+/** The customer's friend, who claims gifts. */
+export const resetFriend = async () => {
+  await ensureUser(friend.email, friend.name);
 };
 
 /** A staff member (admin role) with no authenticator app linked yet. */

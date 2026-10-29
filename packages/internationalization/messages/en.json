@@ -1200,6 +1200,29 @@
       "from": "A list from {owner}.",
       "fromSomeone": "A shared list.",
       "empty": "Nothing in this list right now."
+    },
+    "gift": {
+      "title": "A gift for you",
+      "from": "A gift from {name}",
+      "fromSomeone": "A gift for you",
+      "worth": "Worth {amount}",
+      "claimIntro": "Where should we bring it? It's delivered in {area}.",
+      "claim": "Accept the gift",
+      "claiming": "Accepting…",
+      "claimed": "It's yours. We'll deliver it to your address and let you know when it's on its way.",
+      "yourGifts": "See your gifts",
+      "notReady": "This gift isn't ready yet. Open the link again a little later.",
+      "signInHint": "Sign in with your Pass (or make one) to accept it and tell us where to deliver it.",
+      "signIn": "Sign in to accept",
+      "errors": {
+        "notFound": "This link doesn't work any more: the gift may have been accepted, or the link replaced.",
+        "notReady": "This gift isn't ready yet. Open the link again a little later.",
+        "yours": "This gift is from you. Send the link to the person it's for.",
+        "invalidAddress": "Check the name, phone and address.",
+        "phoneUnverified": "Verify your phone number first.",
+        "suspended": "This Pass can't accept gifts.",
+        "unknown": "Something went wrong. Try again."
+      }
     }
   },
   "app": {
@@ -1475,6 +1498,20 @@
           "below_minimum": "Your order is below that code's minimum.",
           "failed": "We couldn't apply the code. Please try again."
         }
+      },
+      "gift": {
+        "switch": "Send as a gift",
+        "switchHint": "They give their own address from a link you send. The price can stay hidden.",
+        "title": "The gift",
+        "description": "Choose where it goes; the delivery fee is for that area. You'll get a link to send them after paying.",
+        "zone": "Where it goes",
+        "zoneHint": "They give their address in this area when they accept it.",
+        "zonePlaceholder": "Choose a governorate or area",
+        "zoneMissing": "Choose where the gift goes.",
+        "message": "Your message",
+        "messagePlaceholder": "Happy birthday!",
+        "hidePrice": "Hide the price",
+        "payNote": "Gifts are paid online or with Bulbs."
       }
     },
     "orders": {
@@ -1521,7 +1558,22 @@
         "confirmedNotice": "Your order is confirmed. Have {amount} ready in cash for the courier.",
         "cancelCashDescription": "The order is cancelled. This can't be undone.",
         "guardianPending": "This order is waiting for your guardian's approval. You'll pay once they approve it.",
-        "guardianDeclined": "Your guardian declined this order, so it was cancelled."
+        "guardianDeclined": "Your guardian declined this order, so it was cancelled.",
+        "gift": {
+          "title": "Sent as a gift",
+          "waiting": "Waiting for them to accept it and give their address. Nothing ships until then.",
+          "claimed": "Accepted on {date}. It goes to their address.",
+          "priceHidden": "The price is hidden from them.",
+          "priceShown": "They can see the price.",
+          "link": "The gift link",
+          "linkHint": "Anyone with this link can accept the gift, so send it only to them.",
+          "share": "Share the gift link",
+          "newLink": "Make a new link",
+          "copy": "Copy the link",
+          "shareText": "I sent you a gift from The IDEA",
+          "linkFailed": "The link couldn't be made. Try again."
+        },
+        "giftAddress": "To the recipient's address, in {area}."
       },
       "returns": {
         "return": "Return",
@@ -1574,6 +1626,12 @@
         "refund": "Refund: {amount} and {bulbs} Bulbs",
         "withdraw": "Withdraw",
         "withdrawFailed": "We couldn't withdraw this return."
+      },
+      "gifts": {
+        "title": "Gifts for you",
+        "from": "From {name}",
+        "fromSomeone": "A gift for you",
+        "claimed": "accepted on {date}"
       }
     },
     "plus": {
@@ -3479,6 +3537,18 @@
         "survey_answers_deleted": {
           "title": "Survey answers deleted",
           "body": "The raw answers to \"{title}\" were deleted; the counts stay."
+        },
+        "gift_claimed": {
+          "title": "Your gift was accepted",
+          "body": "{name} accepted the gift in order #{number}. It ships to them now."
+        },
+        "gift_shipped": {
+          "title": "Your gift is on its way",
+          "body": "The gift in order #{number} has shipped to you."
+        },
+        "gift_delivered": {
+          "title": "Your gift has arrived",
+          "body": "The gift in order #{number} was delivered. Enjoy it!"
         }
       },
       "kinds": {
@@ -4286,6 +4356,14 @@
         "byHandDescription": "Accepted returns with no Boxy parcel. Mark each one once it's back at the shop; the shop then has 48 hours to check it.",
         "byHandEmpty": "No returns waiting to come back by hand.",
         "markReceived": "Back at the shop"
+      },
+      "gift": {
+        "badge": "Gift",
+        "waiting": "Gift · waiting for the address",
+        "title": "Gift",
+        "hint": "Sent as a gift: it ships to the recipient's address once they accept it.",
+        "noMessage": "No message.",
+        "hidePrice": "The price is hidden: leave the receipt and prices out of the parcel."
       }
     },
     "rentals": {

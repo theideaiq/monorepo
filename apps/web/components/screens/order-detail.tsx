@@ -32,9 +32,10 @@ import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, CheckIcon, LifeBuoyIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { GiftOrderCard } from "@/components/store/gift-order";
 import { OrderReturns, ReturnLine } from "@/components/store/order-returns";
 import { OrderStatusBadge } from "@/components/store/order-status-badge";
 import { OrderSummary } from "@/components/store/order-summary";
@@ -135,6 +136,38 @@ const Address = ({ address }: { readonly address: ShippingAddress }) => {
   );
 };
 
+/** Where it goes; for a gift, only the area (the address is theirs). */
+const AddressCard = ({
+  address,
+  order,
+}: {
+  readonly address: ShippingAddress;
+  readonly order: Order;
+}) => {
+  const t = useTranslations("app.orders.detail");
+  const locale = useLocale();
+  let body: ReactNode = <Address address={address} />;
+  if (order.is_gift) {
+    body = (
+      <p className="text-sm">
+        {t("giftAddress", {
+          area: governorateName(address.governorate, locale),
+        })}
+      </p>
+    );
+  }
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {order.fulfilment === "pickup" ? t("contact") : t("address")}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>{body}</CardContent>
+    </Card>
+  );
+};
+
 const CancelOrder = ({
   cash,
   orderId,
@@ -195,7 +228,7 @@ const OrderNotices = ({
   if (justPaid || (watching && order.paid_at)) {
     return (
       <p
-        className="rounded-md bg-success/10 p-4 text-sm text-success"
+        className="rounded-md border border-success/30 bg-success/10 p-4 text-foreground text-sm"
         role="status"
       >
         {t("thanks")}
@@ -338,6 +371,10 @@ const OrderView = ({
         </div>
       ) : null}
 
+      {order.is_gift ? (
+        <GiftOrderCard orderId={order.id} status={order.status} />
+      ) : null}
+
       {orderProgress(order.status, order.payment_method) >= 0 ? (
         <Card>
           <CardHeader>
@@ -448,16 +485,7 @@ const OrderView = ({
             fulfilment={order.fulfilment}
             paymentMethod={order.payment_method}
           />
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {order.fulfilment === "pickup" ? t("contact") : t("address")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Address address={address} />
-            </CardContent>
-          </Card>
+          <AddressCard address={address} order={order} />
         </div>
       </div>
     </div>

@@ -677,6 +677,19 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   be rented. The rent checkout shows "until <date>". **To do (owner):**
   enter this year's terms in Staff before textbooks go on sale. Textbook
   resale between students is step 14.
+- 2026-10-29: Catalog, part 4 (step 11; `20270218000000_gifts.sql`). Send
+  as a gift: at checkout, "Send as a gift" replaces the address with where
+  it goes (the area sets the delivery fee), a message and "Hide the
+  price"; gifts are paid online or with Bulbs. The order's page shares the
+  gift link (a new link replaces the old one). The recipient opens
+  `/gift/<link>`, sees who it's from, the message and what's inside, signs
+  in and gives their own address in that area; nothing ships until then
+  (Staff shows "Gift · waiting for the address" and holds the order). The
+  recipient finds it under Pass → Orders → Gifts for you and hears when it
+  ships and arrives; the buyer hears when it's accepted and sees only the
+  area. Staff's order page shows the message to put in the parcel and
+  whether prices stay out. Gifting Plus or other non-physical items is
+  still to come.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

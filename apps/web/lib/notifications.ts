@@ -47,6 +47,9 @@ export const NOTIFICATION_EVENTS = [
   "pass_app_approved",
   "pass_app_declined",
   "guardian_order_request",
+  "gift_claimed",
+  "gift_shipped",
+  "gift_delivered",
   "guardian_approved",
   "guardian_declined",
   "guardian_linked",
@@ -185,6 +188,12 @@ const extraValues: Partial<
 > = {
   bulbs_birthday: bulbsExpiringValues,
   bulbs_expiring: bulbsExpiringValues,
+  gift_claimed: (data) => ({
+    name: text(data.name),
+    number: text(data.number),
+  }),
+  gift_delivered: (data) => ({ number: text(data.number) }),
+  gift_shipped: (data) => ({ number: text(data.number) }),
   guardian_approved: (data) => ({ number: text(data.number) }),
   guardian_declined: (data) => ({ number: text(data.number) }),
   guardian_linked: (data) => ({ name: text(data.name) }),

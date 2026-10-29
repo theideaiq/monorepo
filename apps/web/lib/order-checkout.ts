@@ -203,6 +203,53 @@ export const usePlaceOrder = () => {
   });
 };
 
+/** What the checkout sends to `create_gift_order()`. */
+export interface PlaceGift {
+  /** Where the gift goes; the recipient gives the address there. */
+  deliveryZone: string;
+  hidePrice: boolean;
+  message: string;
+  useBulbs: number;
+}
+
+/**
+ * The cart as a gift: `create_gift_order()` makes an order without an
+ * address, paid online (or with Bulbs), which ships once the recipient
+ * claims it from the link.
+ */
+export const usePlaceGift = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  const finish = useFinishOrder();
+
+  return useMutation({
+    mutationFn: async ({
+      deliveryZone,
+      hidePrice,
+      message,
+      useBulbs,
+    }: PlaceGift) =>
+      finish(
+        unwrap(
+          await supabase.rpc("create_gift_order", {
+            delivery_zone: deliveryZone,
+            hide_price: hidePrice,
+            use_bulbs: useBulbs,
+            ...(message.trim() ? { message: message.trim() } : {}),
+          })
+        ),
+        "online"
+      ),
+    onSettled: () =>
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.cart(user?.id ?? ""),
+        }),
+        queryClient.invalidateQueries({ queryKey: ["orders"] }),
+      ]),
+  });
+};
+
 /** What the rent checkout sends to `create_rentals_order()`. */
 export interface PlaceRental extends Omit<PlaceOrder, "useBulbs"> {
   /** 1 to 3 items (several only films, books or games). */

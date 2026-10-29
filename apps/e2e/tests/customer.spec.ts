@@ -4,11 +4,12 @@ import {
   clearInbox,
   customer,
   emailedCode,
+  friend,
   product,
   signUpUser,
 } from "../fixtures";
 import { urls } from "../playwright.config";
-import { resetCustomer, resetSignUpUser } from "../seed";
+import { resetCustomer, resetFriend, resetSignUpUser } from "../seed";
 import {
   expectAccessible,
   expectSignedInHome,
@@ -183,6 +184,7 @@ const KIT_PAGE = /\/kits\/retro$/;
 const BAGHDAD = /^Baghdad/;
 const CASH_ON_DELIVERY = /^Cash on delivery/;
 const PLACE_CASH_ORDER = /^Place order · /;
+const PLACE_ORDER = /^Place order and pay /;
 const RENT_PAGE = /\/rent\/elden-ring-ps5$/;
 const ORDER_PAGE = /\/pass\/orders\/[^/]+$/;
 const STUDENT_NUDGE = /^Verify as a student/;
@@ -385,6 +387,84 @@ test.describe("a signed-in customer", () => {
     await expect(
       page.getByText("Deliver to Home · Cash on delivery")
     ).toBeVisible();
+    noErrors();
+  });
+
+  test("sends the cart as a gift, and a friend claims it", async ({
+    browser,
+    page,
+  }) => {
+    const startedAt = new Date().toISOString();
+    await page.goto(`${urls.web}/store/${product.slug}`);
+    await page.getByRole("button", { name: "Add to cart" }).click();
+    await page.getByRole("link", { name: "View cart" }).click();
+    await page.getByRole("link", { name: "Checkout" }).click();
+
+    await page.getByLabel("Send as a gift").check();
+    await expect(page.getByLabel("Full name")).toHaveCount(0);
+    await page.getByRole("combobox", { name: "Where it goes" }).click();
+    await page.getByRole("option", { name: BAGHDAD }).click();
+    await page.getByLabel("Your message").fill("Happy birthday!");
+    await expectAccessible(page);
+    const paying = page.waitForResponse((response) =>
+      response.url().endsWith("/orders/checkout")
+    );
+    await page.getByRole("button", { name: PLACE_ORDER }).click();
+    // The payment page opens next (or fails locally); the order exists.
+    await paying;
+    const db = admin();
+    const giftOrder = async () =>
+      (
+        await db
+          .from("orders")
+          .select("id")
+          .eq("is_gift", true)
+          .gte("created_at", startedAt)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle()
+      ).data;
+    await expect.poll(giftOrder, { timeout: 30_000 }).not.toBeNull();
+    const order = await giftOrder();
+    const orderId = order?.id ?? "";
+    expect(
+      (await db.rpc("complete_order_payment", { order_id: orderId })).error
+    ).toBeNull();
+
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/pass/orders/${orderId}`);
+    await expect(page.getByText("Sent as a gift")).toBeVisible();
+    await page.getByRole("button", { name: "Share the gift link" }).click();
+    const link = await page.getByLabel("The gift link").inputValue();
+    expect(link).toContain("/gift/");
+    await expectAccessible(page);
+
+    // The friend opens the link, signs in and gives their address.
+    await resetFriend();
+    const context = await browser.newContext();
+    await signIn(context, friend.email);
+    const gift = await context.newPage();
+    await gift.goto(link);
+    await expect(gift.getByText("Happy birthday!")).toBeVisible();
+    await gift.getByLabel("Full name").fill(friend.name);
+    await gift.getByLabel("Mobile number").fill("07701234568");
+    await gift.getByLabel("City or district").fill("Mansour");
+    await gift.getByLabel("Address", { exact: true }).fill("Street 14");
+    await expectAccessible(gift);
+    await gift.getByRole("button", { name: "Accept the gift" }).click();
+    await expect(gift.getByText("It's yours.", { exact: false })).toBeVisible();
+    await context.close();
+
+    const { data: claimed } = await db
+      .from("orders")
+      .select("shipping_address")
+      .eq("id", orderId)
+      .single();
+    expect(claimed?.shipping_address).toMatchObject({
+      address: "Street 14",
+      city: "Mansour",
+      governorate: "baghdad",
+    });
     noErrors();
   });
 
