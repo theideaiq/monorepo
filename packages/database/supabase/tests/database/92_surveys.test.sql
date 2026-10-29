@@ -66,6 +66,12 @@ insert into auth.users (id, email, raw_user_meta_data) values
 update public.profiles set birthday = date '1995-01-01' where birthday is null;
 update public.profiles set birthday = (now() - interval '16 years')::date where id = '00000000-0000-0000-0000-000000000924';
 insert into public.staff (user_id, role) values ('00000000-0000-0000-0000-000000000925', 'support');
+-- Boosted surveys need a phone of one's own; the early window is off here
+-- (99z covers it).
+insert into public.verified_phones (user_id, phone)
+select u.id, '+9647700' || lpad((row_number() over (order by u.id))::text, 6, '0') from auth.users u
+on conflict do nothing;
+update public.store_settings set survey_early_hours = 0;
 insert into public.student_badges (user_id, university_id, valid_until, method, major, study_year) values
   ('00000000-0000-0000-0000-000000000921', 'auib', private.baghdad_today() + 100, 'email', 'Computer science', 3),
   ('00000000-0000-0000-0000-000000000922', 'auib', private.baghdad_today() + 100, 'email', 'Computer science', 2);
