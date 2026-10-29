@@ -996,3 +996,42 @@ Plus Duo waits for step 14.
   chaperone for under-18 groups, installments, guardian approval, a refund
   schedule, application details from the Pass, passport scans kept per
   application and deleted after) come in their own part.
+
+
+## Part 11: The IDEA's paid programs (step 14.1)
+
+- **What's sold:** a program The IDEA runs, as one package: its price
+  covers everything listed under "What's included". Travelling programs
+  always include travel insurance; any program open to under-18s has a
+  chaperone from The IDEA. Plus members pay the Plus price when there is
+  one (fixed when they're accepted).
+- **Applying:** from the program's page, while it's open, for the ages it
+  sets (on the day it starts). Name, date of birth, phone, area and
+  university are copied from the Pass; the applicant adds an emergency
+  contact, a few lines on why and, when asked, passport scans. One live
+  application per program.
+- **Under 18:** the guardian linked to their Pass approves the
+  application before review; declining cancels it. The installments that
+  follow need no second approval.
+- **Review:** editors accept (within the seats), waitlist or refuse, with
+  a note. Accepting fixes the price and splits it into the program's
+  installments (each rounded down to 250 IQD, the last takes the rest);
+  the first is due within the program's payment window (7 days by
+  default), the others on their dates.
+- **Paying:** through the one cart, online only: the next installment or
+  everything left, never as a gift and with no delivery. Paying the
+  first confirms the place. Program payments earn Bulbs like everything
+  else, and Bulbs can pay them.
+- **Refunds:**
+  - withdrawing before the start refunds what was paid by the program's
+    schedule (for example 100% from 30 days before, 50% from 7 days);
+  - a refused visa refunds the program's visa share (100% by default);
+  - a place not paid by its date can be released, refunding by the
+    schedule;
+  - a program The IDEA calls off refunds everything.
+  Finance pays the refund (Wayl or cash) and records it; automatic Wayl
+  refunds can follow, as for returns.
+- **Passport scans** stay private (the applicant and editors) and are
+  deleted 30 days after the application ends or the program does.
+- **Not yet:** sending a program as a gift, and a Plus price per tier.
+

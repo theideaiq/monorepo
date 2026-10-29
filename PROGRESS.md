@@ -718,6 +718,24 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Opportunities, part 5 (step 14; `20270305000000_programs.sql`,
+  schema first). The IDEA's paid programs: a `programs` row on one of its
+  own program opportunities holds the package (travel insurance always
+  when travelling, a chaperone whenever under-18s can join), price and
+  Plus price, seats, ages, an installment plan (1–6 shares adding up to
+  100%), a refund schedule (share back by days before the start) and the
+  share back on a refused visa. Members apply (`apply_to_program`) with
+  their Pass details copied in, an emergency contact and passport scans
+  (`program-documents`, "<user id>/<program id>/…"); a minor's guardian
+  approves first. Editors accept within the seats, waitlist or refuse;
+  accepting fixes the price and the installments (first due within the
+  program's payment window). Installments go through the one cart
+  (`cart_programs`: the next one or everything left; online only, never a
+  gift, no address, no second guardian approval) as `program` order lines,
+  which earn Bulbs; paying the first confirms the place. Withdrawing,
+  refused visas, unpaid places and programs called off set the refund;
+  Finance marks it paid. Scans are deleted 30 days after the application
+  or the program ends (`sweep_program_documents`, cron in the next part).
 - 2026-10-29: Opportunities, part 4 (step 14, the website). Club → Join
   lists opportunities with events and surveys (featured first, then by
   deadline; `?show=opportunities`), each naming who runs it;

@@ -454,6 +454,35 @@ export type Database = {
           },
         ];
       };
+      cart_programs: {
+        Row: {
+          application_id: string;
+          created_at: string;
+          pay_in_full: boolean;
+          user_id: string;
+        };
+        Insert: {
+          application_id: string;
+          created_at?: string;
+          pay_in_full?: boolean;
+          user_id?: string;
+        };
+        Update: {
+          application_id?: string;
+          created_at?: string;
+          pay_in_full?: boolean;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cart_programs_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "program_applications";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       chart_of_accounts: {
         Row: {
           active: boolean;
@@ -3839,6 +3868,217 @@ export type Database = {
         };
         Relationships: [];
       };
+      program_applications: {
+        Row: {
+          cancel_reason: string | null;
+          created_at: string;
+          details: NonNullable<Json>;
+          documents_removed_at: string | null;
+          emergency_name: string;
+          emergency_phone: string;
+          ended_at: string | null;
+          guardian_decided_at: string | null;
+          guardian_id: string | null;
+          guardian_status: string | null;
+          id: string;
+          motivation: string | null;
+          passport_files: string[];
+          pay_by: string | null;
+          plus_price: boolean;
+          price: number | null;
+          program_id: string;
+          refund_amount: number | null;
+          refund_reference: string | null;
+          refunded_at: string | null;
+          refunded_by: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          cancel_reason?: string | null;
+          created_at?: string;
+          details?: NonNullable<Json>;
+          documents_removed_at?: string | null;
+          emergency_name: string;
+          emergency_phone: string;
+          ended_at?: string | null;
+          guardian_decided_at?: string | null;
+          guardian_id?: string | null;
+          guardian_status?: string | null;
+          id?: string;
+          motivation?: string | null;
+          passport_files?: string[];
+          pay_by?: string | null;
+          plus_price?: boolean;
+          price?: number | null;
+          program_id: string;
+          refund_amount?: number | null;
+          refund_reference?: string | null;
+          refunded_at?: string | null;
+          refunded_by?: string | null;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          cancel_reason?: string | null;
+          created_at?: string;
+          details?: NonNullable<Json>;
+          documents_removed_at?: string | null;
+          emergency_name?: string;
+          emergency_phone?: string;
+          ended_at?: string | null;
+          guardian_decided_at?: string | null;
+          guardian_id?: string | null;
+          guardian_status?: string | null;
+          id?: string;
+          motivation?: string | null;
+          passport_files?: string[];
+          pay_by?: string | null;
+          plus_price?: boolean;
+          price?: number | null;
+          program_id?: string;
+          refund_amount?: number | null;
+          refund_reference?: string | null;
+          refunded_at?: string | null;
+          refunded_by?: string | null;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "program_applications_program_id_fkey";
+            columns: ["program_id"];
+            isOneToOne: false;
+            referencedRelation: "programs";
+            referencedColumns: ["opportunity_id"];
+          },
+        ];
+      };
+      program_payments: {
+        Row: {
+          amount: number;
+          application_id: string;
+          due_on: string;
+          order_id: string | null;
+          paid_at: string | null;
+          position: number;
+        };
+        Insert: {
+          amount: number;
+          application_id: string;
+          due_on: string;
+          order_id?: string | null;
+          paid_at?: string | null;
+          position: number;
+        };
+        Update: {
+          amount?: number;
+          application_id?: string;
+          due_on?: string;
+          order_id?: string | null;
+          paid_at?: string | null;
+          position?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "program_payments_application_id_fkey";
+            columns: ["application_id"];
+            isOneToOne: false;
+            referencedRelation: "program_applications";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "program_payments_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      programs: {
+        Row: {
+          chaperone: boolean;
+          created_at: string;
+          includes_ar: string | null;
+          includes_en: string | null;
+          installments: NonNullable<Json>;
+          insurance: boolean;
+          max_age: number | null;
+          min_age: number;
+          opportunity_id: string;
+          passport_required: boolean;
+          pay_within_days: number;
+          plus_price: number | null;
+          price: number;
+          refund_schedule: NonNullable<Json>;
+          seats: number | null;
+          travel: boolean;
+          updated_at: string;
+          visa_refund_rate: number;
+        };
+        Insert: {
+          chaperone?: boolean;
+          created_at?: string;
+          includes_ar?: string | null;
+          includes_en?: string | null;
+          installments?: NonNullable<Json>;
+          insurance?: boolean;
+          max_age?: number | null;
+          min_age?: number;
+          opportunity_id: string;
+          passport_required?: boolean;
+          pay_within_days?: number;
+          plus_price?: number | null;
+          price: number;
+          refund_schedule?: NonNullable<Json>;
+          seats?: number | null;
+          travel?: boolean;
+          updated_at?: string;
+          visa_refund_rate?: number;
+        };
+        Update: {
+          chaperone?: boolean;
+          created_at?: string;
+          includes_ar?: string | null;
+          includes_en?: string | null;
+          installments?: NonNullable<Json>;
+          insurance?: boolean;
+          max_age?: number | null;
+          min_age?: number;
+          opportunity_id?: string;
+          passport_required?: boolean;
+          pay_within_days?: number;
+          plus_price?: number | null;
+          price?: number;
+          refund_schedule?: NonNullable<Json>;
+          seats?: number | null;
+          travel?: boolean;
+          updated_at?: string;
+          visa_refund_rate?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "programs_opportunity_id_fkey";
+            columns: ["opportunity_id"];
+            isOneToOne: true;
+            referencedRelation: "opportunities";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       projects: {
         Row: {
           created_at: string;
@@ -6667,6 +6907,16 @@ export type Database = {
         };
       };
       apply_coupon: { Args: { entered: string }; Returns: string };
+      apply_to_program: {
+        Args: {
+          emergency_name: string;
+          emergency_phone: string;
+          motivation?: string;
+          passport_files?: string[];
+          program: string;
+        };
+        Returns: string;
+      };
       apply_to_sell: {
         Args: {
           org: string;
@@ -7694,6 +7944,10 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      decide_program_guardian: {
+        Args: { application: string; approve: boolean };
+        Returns: undefined;
+      };
       decide_quote: {
         Args: { accept: boolean; quote: string; reference?: string };
         Returns: string;
@@ -7825,6 +8079,10 @@ export type Database = {
       end_previous_pass_secret: {
         Args: { client: string };
         Returns: undefined;
+      };
+      end_program_application: {
+        Args: { application: string; outcome: string };
+        Returns: number;
       };
       event_rsvp_count: { Args: { event: string }; Returns: number };
       event_rsvp_window: {
@@ -8167,6 +8425,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      mark_program_refunded: {
+        Args: { application: string; reference?: string };
+        Returns: undefined;
       };
       mark_return_received: {
         Args: { target: string };
@@ -9139,6 +9401,10 @@ export type Database = {
         Args: { approve: boolean; client: string; note?: string };
         Returns: undefined;
       };
+      review_program_application: {
+        Args: { application: string; decision: string; note?: string };
+        Returns: undefined;
+      };
       review_queue: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -9581,6 +9847,10 @@ export type Database = {
       };
       set_plus_settings: {
         Args: { capacity: number; invite_hours: number; swap_fee: number };
+        Returns: undefined;
+      };
+      set_program_documents: {
+        Args: { application: string; files: string[] };
         Returns: undefined;
       };
       set_purchase_order_status: {
@@ -10104,6 +10374,13 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      sweep_program_documents: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          application_id: string;
+          files: string[];
+        }[];
+      };
       sweep_returns: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -10237,6 +10514,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      withdraw_program_application: {
+        Args: { application: string };
+        Returns: number;
       };
       withdraw_survey_response: {
         Args: { target: string };
