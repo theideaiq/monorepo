@@ -82,6 +82,13 @@ const Store = async ({ params, searchParams }: StoreProps) => {
       ? t(`store.formats.${format as (typeof NAMED_FORMATS)[number]}`)
       : format;
 
+  // Top-level categories, and the selected one's family underneath.
+  const topLevel = categories.filter((category) => !category.parent_id);
+  const selected = categories.find((c) => c.slug === query.category);
+  const parentId = selected?.parent_id ?? selected?.id;
+  const parent = categories.find((category) => category.id === parentId);
+  const subcategories = categories.filter((c) => c.parent_id === parentId);
+
   const chip = (active: boolean) =>
     cn(
       "rounded-full border px-4 py-1.5 text-sm transition-colors",
@@ -138,12 +145,12 @@ const Store = async ({ params, searchParams }: StoreProps) => {
           >
             {t("store.allCategories")}
           </Link>
-          {categories.map((category) => (
+          {topLevel.map((category) => (
             <Link
               aria-current={
                 query.category === category.slug ? "page" : undefined
               }
-              className={chip(query.category === category.slug)}
+              className={chip(category.id === parentId)}
               href={`/store${storeQueryString(query, { category: category.slug, page: 1 })}`}
               key={category.id}
             >
@@ -151,6 +158,34 @@ const Store = async ({ params, searchParams }: StoreProps) => {
             </Link>
           ))}
         </nav>
+
+        {parent && subcategories.length > 0 ? (
+          <nav
+            aria-label={t("store.subcategories")}
+            className="-mt-4 mb-8 flex flex-wrap gap-2"
+          >
+            <Link
+              className={chip(query.category === parent.slug)}
+              href={`/store${storeQueryString(query, { category: parent.slug, page: 1 })}`}
+            >
+              {t("store.allIn", {
+                category: localized(parent, "name", locale),
+              })}
+            </Link>
+            {subcategories.map((category) => (
+              <Link
+                aria-current={
+                  query.category === category.slug ? "page" : undefined
+                }
+                className={chip(query.category === category.slug)}
+                href={`/store${storeQueryString(query, { category: category.slug, page: 1 })}`}
+                key={category.id}
+              >
+                {localized(category, "name", locale)}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
 
         {formats.length > 1 ? (
           <nav

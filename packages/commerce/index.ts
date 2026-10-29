@@ -29,6 +29,33 @@ export const localized = <
     "") as string;
 };
 
+interface CategoryRow {
+  readonly id: string;
+  readonly name_ar: string;
+  readonly name_en: string;
+  readonly parent_id?: string | null;
+}
+
+/**
+ * Categories for a picker, in order: each top-level category (in the given
+ * order) followed by its subcategories, labelled "Books › Comics & manga".
+ */
+export const categoryOptions = (
+  categories: readonly CategoryRow[],
+  locale: string
+): { id: string; label: string }[] =>
+  categories
+    .filter((category) => !category.parent_id)
+    .flatMap((parent) => [
+      { id: parent.id, label: localized(parent, "name", locale) },
+      ...categories
+        .filter((category) => category.parent_id === parent.id)
+        .map((child) => ({
+          id: child.id,
+          label: `${localized(parent, "name", locale)} › ${localized(child, "name", locale)}`,
+        })),
+    ]);
+
 /** A price in IQD for display ("720,000 د.ع." / "720,000 IQD"). */
 export const formatPrice = (amount: number, locale: string) =>
   formatCurrency(amount, contentLocale(locale));

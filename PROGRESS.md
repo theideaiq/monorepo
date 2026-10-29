@@ -653,6 +653,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   card is withdrawn; partners' own verifications stay. Part 3 of
   `docs/program/decisions-2026-10-28.md` records the partner verification
   and delivery-fee decisions.
+- 2026-10-29: Catalog, part 1 (master brief step 11;
+  `20270215000000_category_families.sql`). Categories can sit one level
+  under a top-level one: Comics & manga and Textbooks under Books. New
+  Board games (rentable, in Plus too, at the games rate) and Trading cards.
+  The store shows top-level chips and the chosen category's subcategories;
+  a parent's filter and search include them. Staff → Catalog → Categories
+  picks the parent; the product forms (Staff, Partners) list subcategories
+  as "Books › Comics & manga". Next: rent up to 3 for one delivery fee,
+  textbook semesters, one cart, Send as a gift.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

@@ -4,17 +4,20 @@ import type { Tables } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ActionButton } from "@/components/admin/action-button";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
-import { TextField } from "@/components/admin/fields";
+import { SelectField, TextField } from "@/components/admin/fields";
 import { deleteCategory, saveCategory } from "../actions";
 
 interface CategoryFormProps {
   readonly category?: Tables<"product_categories">;
   readonly disabled?: boolean;
+  /** Top-level categories this one can sit under (one level only). */
+  readonly parents: { id: string; label: string }[];
 }
 
 export const CategoryForm = ({
   category,
   disabled = false,
+  parents,
 }: CategoryFormProps) => {
   const t = useTranslations("admin.catalog");
   const tCommon = useTranslations("admin.common");
@@ -51,6 +54,19 @@ export const CategoryForm = ({
           label={t("fields.slug")}
           name="slug"
           wrapperClassName="w-40"
+        />
+        <SelectField
+          defaultValue={category?.parent_id ?? ""}
+          disabled={disabled}
+          label={t("fields.parent")}
+          name="parentId"
+          options={[
+            { label: t("categories.topLevel"), value: "" },
+            ...parents
+              .filter((parent) => parent.id !== category?.id)
+              .map((parent) => ({ label: parent.label, value: parent.id })),
+          ]}
+          wrapperClassName="w-44"
         />
         <TextField
           defaultValue={category?.position ?? 0}

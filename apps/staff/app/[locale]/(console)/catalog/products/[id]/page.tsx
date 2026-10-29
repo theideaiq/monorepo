@@ -1,4 +1,4 @@
-import { localized, variantName } from "@repo/commerce";
+import { categoryOptions, localized, variantName } from "@repo/commerce";
 import type { Locale } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { notFound } from "next/navigation";
@@ -50,7 +50,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       .order("position"),
     supabase
       .from("product_categories")
-      .select("id, slug, name_ar, name_en")
+      .select("id, slug, name_ar, name_en, parent_id")
       .order("position"),
     supabase
       .from("plans")
@@ -110,10 +110,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
         ) : null}
         {/* A new key after each save (e.g. a cover found above) reloads the images. */}
         <ProductForm
-          categories={(categories ?? []).map((category) => ({
-            id: category.id,
-            label: localized(category, "name", locale),
-          }))}
+          categories={categoryOptions(categories ?? [], locale)}
           disabled={!canWrite}
           key={product.updated_at}
           product={product}

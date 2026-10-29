@@ -91,8 +91,25 @@ export const listCategories = async (
   unwrap(
     await supabase
       .rpc("listed_categories", { for_rent: kind === "rental" })
-      .select("id, slug, name_ar, name_en, position")
+      .select("id, slug, name_ar, name_en, position, parent_id")
   );
+
+/**
+ * A category and its subcategories (a parent's filter includes them), by
+ * slug; empty for an unknown slug.
+ */
+export const categoryFamily = async (supabase: Client, slug: string) => {
+  const rows =
+    unwrap(
+      await supabase.from("product_categories").select("id, slug, parent_id")
+    ) ?? [];
+  const parent = rows.find((row) => row.slug === slug);
+  return parent
+    ? rows
+        .filter((row) => row.id === parent.id || row.parent_id === parent.id)
+        .map((row) => row.id)
+    : [];
+};
 
 /** Longest search term sent to the database (the store's ?q= is cut there too). */
 const SEARCH_MAX_LENGTH = 100;
@@ -146,11 +163,7 @@ export const listProducts = async (
 
   let query = supabase
     .from("products")
-    .select(
-      `${PRODUCT_CARD_COLUMNS}${
-        category ? ", product_categories!inner (slug)" : ""
-      }${formatJoin}`
-    )
+    .select(`${PRODUCT_CARD_COLUMNS}${formatJoin}`)
     .eq("status", "active");
   // The Rent tab lists every rentable product (rental items, and shop
   // products with copies for rent); the shop, products for sale.
@@ -158,7 +171,7 @@ export const listProducts = async (
     kind === "rental" ? query.eq("rentable", true) : query.eq("kind", kind);
 
   if (category) {
-    query = query.eq("product_categories.slug", category);
+    query = query.in("category_id", await categoryFamily(supabase, category));
   }
   if (format) {
     query = query
@@ -179,12 +192,10 @@ export const listProducts = async (
   );
 };
 
-/** Cards without the rows joined only to filter (category, format). */
+/** Cards without the rows joined only to filter (format). */
 const withoutJoins = (rows: unknown[]): ProductCard[] =>
-  (
-    rows as (ProductCard & { format?: unknown; product_categories?: unknown })[]
-  ).map(
-    ({ format: _format, product_categories: _category, ...product }) => product
+  (rows as (ProductCard & { format?: unknown })[]).map(
+    ({ format: _format, ...product }) => product
   );
 
 /**

@@ -143,6 +143,7 @@ const categorySchema = z.object({
   id: optionalUuid,
   nameAr: text(120),
   nameEn: text(120),
+  parentId: optionalUuid,
   position: int(0, 10_000),
   slug: slug.max(64),
 });
@@ -154,6 +155,7 @@ export const saveCategory = staffAction(
     const row = {
       name_ar: input.nameAr,
       name_en: input.nameEn,
+      parent_id: input.parentId,
       position: input.position,
       slug: input.slug,
     };
