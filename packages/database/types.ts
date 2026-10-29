@@ -4675,6 +4675,7 @@ export type Database = {
           payment_fee_rate: number;
           plus_capacity: number;
           plus_invite_hours: number;
+          plus_survey_credits: number[];
           refused_cash_limit: number;
           rental_deposit_rate: number;
           require_verified_phone: boolean;
@@ -4703,6 +4704,7 @@ export type Database = {
           payment_fee_rate?: number;
           plus_capacity?: number;
           plus_invite_hours?: number;
+          plus_survey_credits?: number[];
           refused_cash_limit?: number;
           rental_deposit_rate?: number;
           require_verified_phone?: boolean;
@@ -4731,6 +4733,7 @@ export type Database = {
           payment_fee_rate?: number;
           plus_capacity?: number;
           plus_invite_hours?: number;
+          plus_survey_credits?: number[];
           refused_cash_limit?: number;
           rental_deposit_rate?: number;
           require_verified_phone?: boolean;
@@ -5093,6 +5096,7 @@ export type Database = {
           paused_until: string | null;
           plan_id: string;
           provider: string;
+          renewal_bulbs: number;
           status: Database["public"]["Enums"]["subscription_status"];
           updated_at: string;
           user_id: string | null;
@@ -5108,6 +5112,7 @@ export type Database = {
           paused_until?: string | null;
           plan_id: string;
           provider: string;
+          renewal_bulbs?: number;
           status?: Database["public"]["Enums"]["subscription_status"];
           updated_at?: string;
           user_id?: string | null;
@@ -5123,6 +5128,7 @@ export type Database = {
           paused_until?: string | null;
           plan_id?: string;
           provider?: string;
+          renewal_bulbs?: number;
           status?: Database["public"]["Enums"]["subscription_status"];
           updated_at?: string;
           user_id?: string | null;
@@ -5277,6 +5283,7 @@ export type Database = {
           amount: number;
           created_at: string;
           id: string;
+          period: string | null;
           reason: string;
           response_id: string | null;
           survey_id: string | null;
@@ -5286,6 +5293,7 @@ export type Database = {
           amount: number;
           created_at?: string;
           id?: string;
+          period?: string | null;
           reason: string;
           response_id?: string | null;
           survey_id?: string | null;
@@ -5295,6 +5303,7 @@ export type Database = {
           amount?: number;
           created_at?: string;
           id?: string;
+          period?: string | null;
           reason?: string;
           response_id?: string | null;
           survey_id?: string | null;
@@ -6335,6 +6344,7 @@ export type Database = {
           paused_until: string | null;
           plan_id: string;
           provider: string;
+          renewal_bulbs: number;
           status: Database["public"]["Enums"]["subscription_status"];
           updated_at: string;
           user_id: string | null;
@@ -6434,6 +6444,7 @@ export type Database = {
           paused_until: string | null;
           plan_id: string;
           provider: string;
+          renewal_bulbs: number;
           status: Database["public"]["Enums"]["subscription_status"];
           updated_at: string;
           user_id: string | null;
@@ -7314,6 +7325,10 @@ export type Database = {
       };
       gift_link: { Args: { target: string }; Returns: string };
       gift_preview: { Args: { token: string }; Returns: Json };
+      grant_plus_survey_credits: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       guardian_invite: {
         Args: { invite_code: string };
         Returns: {
@@ -7948,6 +7963,7 @@ export type Database = {
           paused_until: string | null;
           plan_id: string;
           provider: string;
+          renewal_bulbs: number;
           status: Database["public"]["Enums"]["subscription_status"];
           updated_at: string;
           user_id: string | null;
@@ -7978,6 +7994,7 @@ export type Database = {
           uses: number;
         }[];
       };
+      plus_renewal_bulbs: { Args: { subscription: string }; Returns: number };
       plus_status: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -8500,6 +8517,7 @@ export type Database = {
           paused_until: string | null;
           plan_id: string;
           provider: string;
+          renewal_bulbs: number;
           status: Database["public"]["Enums"]["subscription_status"];
           updated_at: string;
           user_id: string | null;
@@ -8990,6 +9008,31 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      set_renewal_bulbs: {
+        Args: { amount: number };
+        Returns: {
+          cancel_at_period_end: boolean;
+          created_at: string;
+          current_period_end: string | null;
+          current_period_start: string | null;
+          id: string;
+          next_plan_id: string | null;
+          organization_id: string | null;
+          paused_until: string | null;
+          plan_id: string;
+          provider: string;
+          renewal_bulbs: number;
+          status: Database["public"]["Enums"]["subscription_status"];
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "subscriptions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       set_rental_deposit_rate: { Args: { rate: number }; Returns: undefined };
       set_seller_plan: {
         Args: {
@@ -9125,6 +9168,10 @@ export type Database = {
           owner_name: string;
           product_id: string;
         }[];
+      };
+      spend_renewal_bulbs: {
+        Args: { bulbs: number; subscription: string };
+        Returns: number;
       };
       staff_mark_return_received: {
         Args: { target: string };
