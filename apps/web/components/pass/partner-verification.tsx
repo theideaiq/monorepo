@@ -360,7 +360,7 @@ const Started = ({
       )}
       {byDocument ? <DocumentFlow page={page} /> : <EmailFlow page={page} />}
       <Button
-        className="justify-self-center"
+        className="h-auto justify-self-center whitespace-normal text-center"
         onClick={() => setByDocument(!byDocument)}
         type="button"
         variant="link"
