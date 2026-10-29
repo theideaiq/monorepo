@@ -715,6 +715,47 @@ export type Database = {
         };
         Relationships: [];
       };
+      gifts: {
+        Row: {
+          claimed_at: string | null;
+          created_at: string;
+          hide_price: boolean;
+          message: string | null;
+          order_id: string;
+          recipient_id: string | null;
+          sender_id: string | null;
+          token_hash: string | null;
+        };
+        Insert: {
+          claimed_at?: string | null;
+          created_at?: string;
+          hide_price?: boolean;
+          message?: string | null;
+          order_id: string;
+          recipient_id?: string | null;
+          sender_id?: string | null;
+          token_hash?: string | null;
+        };
+        Update: {
+          claimed_at?: string | null;
+          created_at?: string;
+          hide_price?: boolean;
+          message?: string | null;
+          order_id?: string;
+          recipient_id?: string | null;
+          sender_id?: string | null;
+          token_hash?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "gifts_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: true;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       guardian_links: {
         Row: {
           accepted_at: string | null;
@@ -1549,6 +1590,7 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status: string | null;
           id: string;
+          is_gift: boolean;
           max_bulbs: number | null;
           number: number;
           paid_at: string | null;
@@ -1578,6 +1620,7 @@ export type Database = {
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status?: string | null;
           id?: string;
+          is_gift?: boolean;
           max_bulbs?: number | null;
           number?: never;
           paid_at?: string | null;
@@ -1607,6 +1650,7 @@ export type Database = {
           fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status?: string | null;
           id?: string;
+          is_gift?: boolean;
           max_bulbs?: number | null;
           number?: never;
           paid_at?: string | null;
@@ -6013,6 +6057,7 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status: string | null;
           id: string;
+          is_gift: boolean;
           max_bulbs: number | null;
           number: number;
           paid_at: string | null;
@@ -6258,6 +6303,7 @@ export type Database = {
         };
         Returns: Json;
       };
+      claim_gift: { Args: { shipping: Json; token: string }; Returns: string };
       claim_invite: { Args: { code: string }; Returns: string };
       claim_partner_webhooks: {
         Args: { max_rows?: number };
@@ -6655,6 +6701,50 @@ export type Database = {
         };
         Returns: string;
       };
+      create_gift_order: {
+        Args: {
+          delivery_zone: string;
+          hide_price?: boolean;
+          message?: string;
+          use_bulbs?: number;
+        };
+        Returns: {
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          coupon_id: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          is_gift: boolean;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       create_listing: {
         Args: {
           barcode: string;
@@ -6693,6 +6783,7 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status: string | null;
           id: string;
+          is_gift: boolean;
           max_bulbs: number | null;
           number: number;
           paid_at: string | null;
@@ -6766,6 +6857,7 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status: string | null;
           id: string;
+          is_gift: boolean;
           max_bulbs: number | null;
           number: number;
           paid_at: string | null;
@@ -6809,6 +6901,7 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status: string | null;
           id: string;
+          is_gift: boolean;
           max_bulbs: number | null;
           number: number;
           paid_at: string | null;
@@ -6879,6 +6972,7 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status: string | null;
           id: string;
+          is_gift: boolean;
           max_bulbs: number | null;
           number: number;
           paid_at: string | null;
@@ -7052,6 +7146,8 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
       };
+      gift_link: { Args: { target: string }; Returns: string };
+      gift_preview: { Args: { token: string }; Returns: Json };
       guardian_invite: {
         Args: { invite_code: string };
         Returns: {
@@ -7155,6 +7251,7 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status: string | null;
           id: string;
+          is_gift: boolean;
           max_bulbs: number | null;
           number: number;
           paid_at: string | null;
@@ -7287,6 +7384,7 @@ export type Database = {
           fulfilment: Database["public"]["Enums"]["order_fulfilment"];
           guardian_status: string | null;
           id: string;
+          is_gift: boolean;
           max_bulbs: number | null;
           number: number;
           paid_at: string | null;
@@ -7872,6 +7970,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      received_gifts: { Args: Record<PropertyKey, never>; Returns: Json[] };
       record_return_refund: {
         Args: { reference: string; target: string };
         Returns: {
