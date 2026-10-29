@@ -92,7 +92,7 @@ incidents) is in `docs/platform`.
   confirm), `/selling/offers` (buyers' offers to accept, decline or
   counter within 48 hours, and which listings take offers, with automatic
   accept and decline amounts), `/selling/sales` (sale prices between two
-  days, quantity deals and taking part in campaigns), `/selling/payouts` (each weekly payout with
+  days, quantity deals, student prices and taking part in campaigns), `/selling/payouts` (each weekly payout with
   its statement) and `/selling/pickup` (its branches, each a Boxy pickup
   location),
   Perks `/perks`,

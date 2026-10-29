@@ -259,6 +259,8 @@ export interface ProductOffer {
   sale_ends_at: string | null;
   seller_id: string;
   seller_name: string;
+  /** The listing's student price, only for verified students; else null. */
+  student_price: number | null;
   variant_id: string | null;
   /** The honest "was" price (held 15 of the last 30 days), or null. */
   was_price: number | null;
@@ -287,6 +289,7 @@ export const getProductOffers = async (
             sale_ends_at: (row.sale_ends_at as string | null) ?? null,
             seller_id: row.seller_id,
             seller_name: row.seller_name,
+            student_price: (row.student_price as number | null) ?? null,
             variant_id: (row.variant_id as string | null) ?? null,
             was_price: (row.was_price as number | null) ?? null,
           },

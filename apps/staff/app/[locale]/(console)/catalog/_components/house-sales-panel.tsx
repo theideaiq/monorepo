@@ -6,17 +6,51 @@ import { ActionButton } from "@/components/admin/action-button";
 import { Panel } from "@/components/admin/page";
 import { formatters } from "@/lib/admin/format";
 import type { ServerClient } from "@/lib/admin/session";
-import { deleteHouseDeal, endHouseSale } from "../actions";
-import { HouseDealForm, HouseSaleForm } from "./house-sale-forms";
+import {
+  deleteHouseDeal,
+  endHouseSale,
+  removeHouseStudentPrice,
+} from "../actions";
+import {
+  HouseDealForm,
+  HouseSaleForm,
+  HouseStudentPriceForm,
+} from "./house-sale-forms";
 
 type Copy = Pick<
   Database["public"]["Tables"]["stock_items"]["Row"],
   "condition" | "purpose" | "seller_id" | "status" | "variant_id"
 >;
 
+/** A listing's student price, with a way to remove it. */
+const StudentPriceLine = ({
+  disabled,
+  id,
+  label,
+  removeLabel,
+}: {
+  readonly disabled: boolean;
+  readonly id: string;
+  readonly label: string;
+  readonly removeLabel: string;
+}) => (
+  <div className="flex flex-wrap items-center gap-2 text-sm">
+    <span>{label}</span>
+    {disabled ? null : (
+      <ActionButton
+        action={removeHouseStudentPrice}
+        fields={{ id }}
+        variant="ghost"
+      >
+        {removeLabel}
+      </ActionButton>
+    )}
+  </div>
+);
+
 /**
- * Sales and quantity deals on The IDEA's own copies of this product, one
- * block per version and condition for sale. Both stay above the margin
+ * Sales, quantity deals and student prices on The IDEA's own copies of
+ * this product, one block per version and condition for sale. Both stay above the margin
  * floor (the database refuses lower ones).
  */
 export const HouseSalesPanel = async ({
@@ -50,21 +84,27 @@ export const HouseSalesPanel = async ({
     return null;
   }
   const ids = listings.map((copy) => copy.variant_id);
-  const [{ data: sales }, { data: deals }] = await Promise.all([
-    supabase
-      .from("listing_sales")
-      .select("id, variant_id, condition, sale_price, starts_at, ends_at")
-      .eq("seller_id", HOUSE_SELLER_ID)
-      .in("variant_id", ids)
-      .gt("ends_at", new Date().toISOString())
-      .order("starts_at"),
-    supabase
-      .from("quantity_deals")
-      .select("id, variant_id, condition, min_quantity, discount_rate")
-      .eq("seller_id", HOUSE_SELLER_ID)
-      .in("variant_id", ids)
-      .order("min_quantity"),
-  ]);
+  const [{ data: sales }, { data: deals }, { data: students }] =
+    await Promise.all([
+      supabase
+        .from("listing_sales")
+        .select("id, variant_id, condition, sale_price, starts_at, ends_at")
+        .eq("seller_id", HOUSE_SELLER_ID)
+        .in("variant_id", ids)
+        .gt("ends_at", new Date().toISOString())
+        .order("starts_at"),
+      supabase
+        .from("quantity_deals")
+        .select("id, variant_id, condition, min_quantity, discount_rate")
+        .eq("seller_id", HOUSE_SELLER_ID)
+        .in("variant_id", ids)
+        .order("min_quantity"),
+      supabase
+        .from("student_prices")
+        .select("id, variant_id, condition, price")
+        .eq("seller_id", HOUSE_SELLER_ID)
+        .in("variant_id", ids),
+    ]);
   const same = (copy: Copy, row: { condition: string; variant_id: string }) =>
     row.variant_id === copy.variant_id && row.condition === copy.condition;
 
@@ -131,6 +171,19 @@ export const HouseSalesPanel = async ({
                   )}
                 </div>
               ))}
+            {(students ?? [])
+              .filter((row) => same(copy, row))
+              .map((row) => (
+                <StudentPriceLine
+                  disabled={disabled}
+                  id={row.id}
+                  key={row.id}
+                  label={t("studentPrice", {
+                    price: formatPrice(row.price, locale),
+                  })}
+                  removeLabel={t("removeStudentPrice")}
+                />
+              ))}
             {disabled ? null : (
               <>
                 <HouseSaleForm
@@ -138,6 +191,10 @@ export const HouseSalesPanel = async ({
                   variantId={copy.variant_id}
                 />
                 <HouseDealForm
+                  condition={copy.condition}
+                  variantId={copy.variant_id}
+                />
+                <HouseStudentPriceForm
                   condition={copy.condition}
                   variantId={copy.variant_id}
                 />

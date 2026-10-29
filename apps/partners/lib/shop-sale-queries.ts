@@ -223,3 +223,59 @@ export const useLeaveCampaign = (sellerId: string) => {
       queryClient.invalidateQueries({ queryKey: entriesKey(sellerId) }),
   });
 };
+
+const studentKey = (sellerId: string) => ["student-prices", sellerId] as const;
+
+/** The shop's student prices: only verified students see and pay them. */
+export const useStudentPrices = (sellerId: string) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: Boolean(sellerId),
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("student_prices")
+          .select("id, variant_id, condition, price")
+          .eq("seller_id", sellerId)
+      ) ?? [],
+    queryKey: studentKey(sellerId),
+  });
+};
+
+export type StudentPrice = NonNullable<
+  ReturnType<typeof useStudentPrices>["data"]
+>[number];
+
+/** Sets or changes a listing's student price (below its price). */
+export const useSetStudentPrice = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: {
+      condition: Condition;
+      price: number;
+      variantId: string;
+    }) =>
+      unwrap(
+        await supabase.rpc("set_student_price", {
+          price: input.price,
+          seller: sellerId,
+          variant: input.variantId,
+          wanted: input.condition,
+        })
+      ),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: studentKey(sellerId) }),
+  });
+};
+
+export const useRemoveStudentPrice = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (target: string) =>
+      unwrap(await supabase.rpc("remove_student_price", { target })),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: studentKey(sellerId) }),
+  });
+};

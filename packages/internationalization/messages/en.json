@@ -1170,7 +1170,8 @@
         "lowestPrice": "Lowest price",
         "lowest30d": "Lowest in the last 30 days: {price}",
         "saleEnds": "Sale ends {time}",
-        "quantityDeal": "Buy {from} or more: {rate}% off each"
+        "quantityDeal": "Buy {from} or more: {rate}% off each",
+        "studentPrice": "Student price: {price}"
       }
     },
     "cart": {
@@ -2833,7 +2834,14 @@
         "joinCampaign": "Take part",
         "updateCampaign": "Update",
         "leaveCampaign": "Leave",
-        "campaignFailed": "That didn't work. Use 5 to 50% off."
+        "campaignFailed": "That didn't work. Use 5 to 50% off.",
+        "studentPrice": "Student price {price}",
+        "studentPriceField": "Student price (IQD)",
+        "setStudentPrice": "Set student price",
+        "changeStudentPrice": "Change student price",
+        "removeStudentPrice": "Remove",
+        "studentPriceHint": "Only verified students see it and pay it; your shop pays the difference. It stays below the price.",
+        "studentPriceFailed": "We couldn't save the student price. It must be below the price."
       }
     },
     "ages": {
@@ -3822,7 +3830,12 @@
         "rate": "% off each",
         "addDeal": "Add deal",
         "deal": "{rate}% off each from {from} copies",
-        "removeDeal": "Remove"
+        "removeDeal": "Remove",
+        "studentPrice": "Student price {price}",
+        "studentPriceField": "Student price (IQD)",
+        "setStudentPrice": "Set student price",
+        "removeStudentPrice": "Remove",
+        "studentPriceHint": "For verified students only; above the margin floor."
       }
     },
     "orders": {

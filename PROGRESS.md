@@ -573,6 +573,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-29: Prices, part 5 (master brief step 7, section 9;
+  `20270204000000_student_prices.sql`). Shops set a student price on any
+  listing in Partners → Selling → Sales and deals (below its price; the
+  shop pays the difference), and editors set them on The IDEA's own
+  copies from the product's page in Staff (above the margin floor). Only
+  verified students see it ("Student price" on the product page, never
+  struck through) and pay it at checkout when it is lower than the price,
+  sale or quantity deal; it never joins an accepted offer and stays out of
+  price history. The cart shows the usual price; checkout's total is the
+  student's. Educators join when the educator badge ships (section 21).
+  Step 7 (prices) is done.
 - 2026-10-29: Prices, part 4 (master brief step 7, section 9;
   `20270203000000_coupons.sql`). Staff → Finance → Coupons creates codes
   The IDEA pays for (a share up to 20% or an amount off, an optional most
