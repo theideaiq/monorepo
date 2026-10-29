@@ -588,11 +588,15 @@ test.describe("a signed-in customer", () => {
     await page.getByRole("link", { name: STUDENT_NUDGE }).first().click();
     await expect(page).toHaveURL(/\/pass\/settings#student$/);
     await expect(page.getByText("Student verification")).toBeVisible();
-    await page.getByLabel("University", { exact: true }).selectOption("auib");
+    // The student card (the educator badge below has its own university).
+    const student = page.locator("#student");
+    await student
+      .getByLabel("University", { exact: true })
+      .selectOption("auib");
     await expect(
-      page.getByRole("button", { name: "University email" })
+      student.getByRole("button", { name: "University email" })
     ).toBeVisible();
-    await expect(page.getByLabel("Your university email")).toBeVisible();
+    await expect(student.getByLabel("Your university email")).toBeVisible();
     await expectAccessible(page);
     noErrors();
   });

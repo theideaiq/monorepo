@@ -82,6 +82,10 @@ export const resetCustomer = async () => {
   check(await db.from("plus_homes").delete().eq("user_id", id));
   check(await db.from("plus_waitlist").delete().eq("user_id", id));
   check(await db.from("notifications").delete().eq("user_id", id));
+  // Not verified: no identity check or educator badge, nothing in review.
+  check(await db.from("verification_requests").delete().eq("user_id", id));
+  check(await db.from("identity_verifications").delete().eq("user_id", id));
+  check(await db.from("educator_badges").delete().eq("user_id", id));
   // No saved addresses, no remembered way to pay.
   check(await db.from("user_addresses").delete().eq("user_id", id));
   check(
