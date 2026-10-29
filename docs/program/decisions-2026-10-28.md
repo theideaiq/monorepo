@@ -1143,3 +1143,33 @@ it leaves room:
 - **Money:** The IDEA doesn't buy, price or guarantee, and takes no fee;
   the shop pays the member as its offer says.
 - Requests and offers past their time expire in the API's daily cron.
+
+## Part 14: people selling (step 14)
+
+The selling policy (sections 10 to 13) sets the rules: adults with a
+verified Pass, their own things, photos of the actual item, a fixed price
+or offers, cash to the seller on delivery, money never through The IDEA,
+messages with phone numbers hidden. Where it leaves room:
+
+- **Verified Pass** means a verified identity (step 13), as the brief
+  requires for people who sell. Sellers are 18 or over.
+- **Buyers** are 18 or over too, with a verified phone while phone checks
+  are on: the sale ends with two strangers meeting and cash changing hands.
+- **Listing:** a product from the catalog or a title, the condition, a
+  description, 3 to 8 of the seller's photos (private bucket, shown to
+  anyone while the listing is live), the area, a price of at least 1,000
+  IQD and whether offers are allowed. A listing runs 30 days and can be
+  renewed; at most 20 live per seller. Visitors see the first name and
+  area only. 18-rated products are hidden from minors, as in the Store.
+- **Buying:** buying at the price reserves the listing at once; an offer
+  below it waits up to 72 hours for the seller. Accepting one reserves the
+  listing and declines the others. A buyer has at most 10 offers waiting.
+- **Hand-over:** the two agree a time and place in the messages; there is
+  no Boxy delivery, so no money passes through The IDEA or its courier.
+  The seller marks it sold; either side can call it off, and the listing
+  is live again.
+- **No fee, no Bulbs.** Support can take down a listing that breaks the
+  policy, saying why; the seller is told.
+- **Auctions by people** stay with shops and The IDEA for now: an auction
+  is paid online through The IDEA, which the policy rules out for people's
+  sales. That needs the owner's call before it's built.

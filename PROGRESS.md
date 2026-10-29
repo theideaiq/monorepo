@@ -749,6 +749,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Buy It Now, 48 hours, strikes, fees). Step 14's auctions are done.
 - 2026-10-29: Auctions, parts 1 and 2 (`20270307000000_auctions.sql`,
   `20270308000000_auction_checkout.sql`, schema first; decisions Part 12).
+- 2026-10-29: People selling, part 1 (step 14; schema
+  `20270311000000_member_listings.sql`, decisions Part 14). Adults with a
+  verified identity list their own things (3 to 8 photos in the private
+  `member-listing-photos` bucket, condition, area, a price of at least
+  1,000 IQD, offers allowed or not; 30 days, renewable, 20 live at most).
+  Anyone browses live listings by first name and area
+  (`member_listings_for_sale`, `member_listing`); adults with a verified
+  phone buy at the price (reserving it) or offer less for 72 hours; the
+  seller accepts, marks it sold or either side calls it off; messages
+  between them; support take listings down; `sweep_member_listings`
+  expires what's due. Cash to the seller, never through The IDEA. The
+  code (Pass → Selling, the Store) follows once this migration has run.
 - 2026-10-29: Opportunities, part 6 (step 14, the programs code). Staff:
   The IDEA's program opportunities get a Package panel (price, Plus price,
   seats, ages, insurance, chaperone, passport, what's included, up to 4
