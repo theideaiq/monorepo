@@ -17,7 +17,10 @@ import {
   CardTitle,
 } from "@repo/design-system/components/ui/card";
 import type { Locale } from "@repo/internationalization";
-import { formatNumber } from "@repo/internationalization/format";
+import {
+  formatCalendarDate,
+  formatNumber,
+} from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, BanknoteIcon, LockIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -93,6 +96,8 @@ const RentSummary = ({ busy, cash, error, names, quote }: RentSummaryProps) => {
   const locale = useLocale() as Locale;
   const days = (count: number) =>
     t("days", { count, n: formatNumber(count, locale) });
+  const until = (value: string) =>
+    formatCalendarDate(new Date(`${value}T12:00:00`), locale);
   const amount = formatPrice(quote.total, locale);
   const lateFee = Math.max(0, ...quote.items.map((item) => item.lateFee));
 
@@ -110,7 +115,9 @@ const RentSummary = ({ busy, cash, error, names, quote }: RentSummaryProps) => {
                   {names.get(item.productId)}
                 </span>
                 <span className="text-muted-foreground">
-                  {t("rent", { days: days(item.days) })}
+                  {item.until
+                    ? t("rentUntil", { date: until(item.until) })
+                    : t("rent", { days: days(item.days) })}
                 </span>
               </dt>
               <dd className="tabular-nums">

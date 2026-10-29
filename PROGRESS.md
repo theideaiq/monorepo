@@ -669,6 +669,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   has "Rent more for the same delivery". Rentals get the zone's
   free-delivery threshold on the rent (deposits don't count), as
   purchases do. Gear and music still rent one at a time.
+- 2026-10-29: Catalog, part 3 (step 11; `20270217000000_textbook_terms.sql`).
+  Textbooks rent for the term: Staff → Finance → Rentals sets the terms
+  (names and dates) and marks a category's rate "For the term". A
+  textbook rented now is priced for, and due at the end of, the current
+  term (or the next one starting within 30 days); between terms it can't
+  be rented. The rent checkout shows "until <date>". **To do (owner):**
+  enter this year's terms in Staff before textbooks go on sale. Textbook
+  resale between students is step 14.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

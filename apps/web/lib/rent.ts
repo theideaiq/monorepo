@@ -104,7 +104,8 @@ export interface RentalsQuote {
   fee: number | null;
   /** The zone's free-delivery threshold on the rent, if any. */
   freeFrom: number | null;
-  items: (RentalQuote & RentalItem)[];
+  /** Per-term items (textbooks) are due on `until`, the term's last day. */
+  items: (RentalQuote & RentalItem & { until: string | null })[];
   rent: number;
   total: number;
 }
@@ -126,6 +127,7 @@ interface QuoteRow {
     late_fee: number;
     price: number;
     product: string;
+    until: string | null;
     variant: string | null;
   }[];
   rent: number;
@@ -157,6 +159,7 @@ export const useRentalsQuote = (
           lateFee: item.late_fee,
           price: item.price,
           productId: item.product,
+          until: item.until,
           variantId: item.variant,
         })),
         rent: row.rent,
