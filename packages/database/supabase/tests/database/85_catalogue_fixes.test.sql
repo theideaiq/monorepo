@@ -53,9 +53,9 @@ grant execute on all functions in schema pg_temp to public;
 select plan(4);
 
 select results_eq(
-  $$ select slug from public.product_categories order by position $$,
-  $$ values ('music'), ('games'), ('books'), ('films'), ('gear') $$,
-  'the store has five categories: Music, Games, Books, Films, Gear'
+  $$ select slug from public.product_categories where parent_id is null order by position $$,
+  $$ values ('music'), ('games'), ('books'), ('films'), ('gear'), ('board-games'), ('trading-cards') $$,
+  'the store has seven top-level categories: Music, Games, Books, Films, Gear, Board games, Trading cards'
 );
 
 select is(
