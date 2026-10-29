@@ -1589,6 +1589,145 @@ export type Database = {
           },
         ];
       };
+      opportunities: {
+        Row: {
+          applicant_fee: number;
+          apply_url: string | null;
+          cover_image: string | null;
+          created_at: string;
+          created_by: string | null;
+          deadline: string | null;
+          deadline_notified_at: string | null;
+          description_ar: string | null;
+          description_en: string | null;
+          ends_on: string | null;
+          featured_until: string | null;
+          fee_note: string | null;
+          id: string;
+          kind: Database["public"]["Enums"]["opportunity_kind"];
+          location: string | null;
+          open_notified_at: string | null;
+          opens_at: string | null;
+          organization_id: string | null;
+          published_at: string | null;
+          remote: boolean;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          slug: string;
+          starts_on: string | null;
+          status: string;
+          submitted_at: string | null;
+          summary_ar: string | null;
+          summary_en: string | null;
+          title_ar: string;
+          title_en: string;
+          updated_at: string;
+        };
+        Insert: {
+          applicant_fee?: number;
+          apply_url?: string | null;
+          cover_image?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          deadline?: string | null;
+          deadline_notified_at?: string | null;
+          description_ar?: string | null;
+          description_en?: string | null;
+          ends_on?: string | null;
+          featured_until?: string | null;
+          fee_note?: string | null;
+          id?: string;
+          kind: Database["public"]["Enums"]["opportunity_kind"];
+          location?: string | null;
+          open_notified_at?: string | null;
+          opens_at?: string | null;
+          organization_id?: string | null;
+          published_at?: string | null;
+          remote?: boolean;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          slug: string;
+          starts_on?: string | null;
+          status?: string;
+          submitted_at?: string | null;
+          summary_ar?: string | null;
+          summary_en?: string | null;
+          title_ar: string;
+          title_en: string;
+          updated_at?: string;
+        };
+        Update: {
+          applicant_fee?: number;
+          apply_url?: string | null;
+          cover_image?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          deadline?: string | null;
+          deadline_notified_at?: string | null;
+          description_ar?: string | null;
+          description_en?: string | null;
+          ends_on?: string | null;
+          featured_until?: string | null;
+          fee_note?: string | null;
+          id?: string;
+          kind?: Database["public"]["Enums"]["opportunity_kind"];
+          location?: string | null;
+          open_notified_at?: string | null;
+          opens_at?: string | null;
+          organization_id?: string | null;
+          published_at?: string | null;
+          remote?: boolean;
+          review_note?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          slug?: string;
+          starts_on?: string | null;
+          status?: string;
+          submitted_at?: string | null;
+          summary_ar?: string | null;
+          summary_en?: string | null;
+          title_ar?: string;
+          title_en?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "opportunities_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      opportunity_follows: {
+        Row: {
+          created_at: string;
+          opportunity_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          opportunity_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          opportunity_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_follows_opportunity_id_fkey";
+            columns: ["opportunity_id"];
+            isOneToOne: false;
+            referencedRelation: "opportunities";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       order_items: {
         Row: {
           attributes: NonNullable<Json>;
@@ -8270,6 +8409,10 @@ export type Database = {
           user_id: string;
         }[];
       };
+      notify_opportunity_followers: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       notify_rentals_due_soon: { Args: { within?: string }; Returns: number };
       offerable_listings: {
         Args: { item: string };
@@ -8308,6 +8451,13 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      opportunity_followers: {
+        Args: { org: string };
+        Returns: {
+          followers: number;
+          opportunity_id: string;
+        }[];
       };
       partner_check: { Args: { org: string; scanned: string }; Returns: Json };
       pass_app_webhooks: {
@@ -8973,6 +9123,10 @@ export type Database = {
           target: string;
         };
         Returns: string[];
+      };
+      review_opportunity: {
+        Args: { decision: string; note?: string; opportunity: string };
+        Returns: undefined;
       };
       review_organization_check: {
         Args: { approve: boolean; org: string; reason?: string };
@@ -10118,6 +10272,12 @@ export type Database = {
         | "expired"
         | "withdrawn"
         | "purchased";
+      opportunity_kind:
+        | "job"
+        | "internship"
+        | "scholarship"
+        | "competition"
+        | "program";
       order_fulfilment: "delivery" | "pickup";
       order_payment_method: "online" | "cash_on_delivery";
       order_status:
@@ -10402,6 +10562,13 @@ export const Constants = {
         "expired",
         "withdrawn",
         "purchased",
+      ],
+      opportunity_kind: [
+        "job",
+        "internship",
+        "scholarship",
+        "competition",
+        "program",
       ],
       order_fulfilment: ["delivery", "pickup"],
       order_payment_method: ["online", "cash_on_delivery"],

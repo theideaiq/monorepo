@@ -973,3 +973,26 @@ Plus Duo waits for step 14.
   per copy, and shops offering their own single rentals with their own
   deposit and ID check, come later if suppliers ask for them.
 
+
+## Part 10: opportunities (step 14.1)
+
+- **What they are:** jobs, internships, scholarships, competitions and
+  programs, listed in Club → Join with the organization running each one
+  (or The IDEA, for its own). `/careers` stays for The IDEA's own jobs.
+- **Organizations** add an Opportunities section from Partners → Home and
+  post from there. Every listing is reviewed by The IDEA's editors in
+  Staff → Club before it appears: approved, sent back with what to change,
+  or refused. Changing a listed opportunity sends it back for review; the
+  organization can close it early. Owners and admins hear each decision.
+- **Applying** happens on the organization's side for now (its link), with
+  any fee to applicants shown on the listing. Featuring is a paid extra
+  staff switch on until a date, and featured listings are labelled.
+- **Notify me:** members follow an opportunity, listed or closed. They
+  hear when it opens (again, for yearly programs such as IYLEP or UWC) and
+  three days before its deadline. Past its deadline a listing closes and
+  stays visible so people can follow it for next time. Organizations see
+  how many follow each listing, never who.
+- **The IDEA's paid programs** (whole packages with travel insurance, a
+  chaperone for under-18 groups, installments, guardian approval, a refund
+  schedule, application details from the Pass, passport scans kept per
+  application and deleted after) come in their own part.
