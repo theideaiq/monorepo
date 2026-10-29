@@ -13,7 +13,6 @@ import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@repo/design-system/components/ui/card";
@@ -35,6 +34,10 @@ import { ErrorState, SectionSpinner } from "@/components/states";
 import { CheckoutErrorNote } from "@/components/store/checkout-error";
 import { productHref } from "@/components/store/product-card";
 import {
+  type ExtraRental,
+  RentTogether,
+} from "@/components/store/rent-together";
+import {
   type AddressField,
   type AddressForm,
   accountPhone,
@@ -47,10 +50,13 @@ import { isNativeApp } from "@/lib/platform";
 import { useProfile } from "@/lib/queries";
 import {
   KEEP_AFTER_LATE_DAYS,
-  type RentalQuote,
+  type RentalsQuote,
+  rentsTogether,
   useRentalQuote,
+  useRentalsQuote,
 } from "@/lib/rent";
 import {
+  useCategories,
   useDeliveryZones,
   useProduct,
   useStoreSettings,
@@ -59,12 +65,12 @@ import {
 interface RentSummaryProps {
   readonly busy: boolean;
   readonly cash: boolean;
-  /** The zone's fee; null before a zone is chosen. */
-  readonly deliveryFee: number | null;
   /** Why placing failed (CheckoutErrorNote), if it did. */
   readonly error: ReactNode;
-  readonly name: string;
-  readonly quote: RentalQuote;
+  /** Each item's name, by product. */
+  readonly names: ReadonlyMap<string, string>;
+  /** The order, priced by the server (one delivery fee for every item). */
+  readonly quote: RentalsQuote;
 }
 
 const Row = ({
@@ -80,44 +86,45 @@ const Row = ({
   </div>
 );
 
-/** The rent, the refundable deposit, delivery and the total to pay. */
-const RentSummary = ({
-  busy,
-  cash,
-  deliveryFee,
-  error,
-  name,
-  quote,
-}: RentSummaryProps) => {
+/** Each item's rent, the refundable deposits, delivery and the total. */
+const RentSummary = ({ busy, cash, error, names, quote }: RentSummaryProps) => {
   const t = useTranslations("app.rent");
   const tCheckout = useTranslations("app.checkout");
   const locale = useLocale() as Locale;
   const days = (count: number) =>
     t("days", { count, n: formatNumber(count, locale) });
-  const total = quote.price + quote.deposit + (deliveryFee ?? 0);
-  const amount = formatPrice(total, locale);
+  const amount = formatPrice(quote.total, locale);
+  const lateFee = Math.max(0, ...quote.items.map((item) => item.lateFee));
 
   return (
     <Card className="lg:sticky lg:top-4">
       <CardHeader>
         <CardTitle>{tCheckout("summary")}</CardTitle>
-        <CardDescription>{name}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 text-sm">
         <dl className="grid gap-2">
-          <Row
-            label={t("rent", { days: days(quote.days) })}
-            value={formatPrice(quote.price, locale)}
-          />
+          {quote.items.map((item) => (
+            <div className="flex justify-between gap-3" key={item.productId}>
+              <dt>
+                <span className="block font-medium">
+                  {names.get(item.productId)}
+                </span>
+                <span className="text-muted-foreground">
+                  {t("rent", { days: days(item.days) })}
+                </span>
+              </dt>
+              <dd className="tabular-nums">
+                {formatPrice(item.price, locale)}
+              </dd>
+            </div>
+          ))}
           <Row
             label={t("deposit")}
             value={formatPrice(quote.deposit, locale)}
           />
           <Row
             label={t("delivery")}
-            value={
-              deliveryFee === null ? "—" : formatPrice(deliveryFee, locale)
-            }
+            value={quote.fee === null ? "—" : formatPrice(quote.fee, locale)}
           />
           <div className="flex justify-between gap-3 border-t pt-2 font-medium">
             <dt>{t("total")}</dt>
@@ -129,10 +136,14 @@ const RentSummary = ({
           <li>
             {t("lateNote", {
               days: days(KEEP_AFTER_LATE_DAYS),
-              fee: formatPrice(quote.lateFee, locale),
+              fee: formatPrice(lateFee, locale),
             })}
           </li>
-          <li>{t("plusDelivery")}</li>
+          <li>
+            {quote.freeFrom === null
+              ? t("plusDelivery")
+              : t("freeFrom", { amount: formatPrice(quote.freeFrom, locale) })}
+          </li>
         </ul>
         {error}
         <Button disabled={busy} size="lg" type="submit">
@@ -202,6 +213,44 @@ const useRentData = (slug: string) => {
   };
 };
 
+/**
+ * The rental's items (the chosen one and those added), their names, the
+ * server's price for them and whether more can be added (films, books and
+ * games rent together).
+ */
+const useRentItems = (
+  data: ReturnType<typeof useRentData>,
+  extras: readonly ExtraRental[],
+  zoneId: string | null
+) => {
+  const categories = useCategories("rental");
+  const { product, variant } = data;
+  const items = product
+    ? [
+        { productId: product.id, variantId: variant?.id ?? null },
+        ...extras.map((extra) => ({
+          productId: extra.productId,
+          variantId: null,
+        })),
+      ]
+    : [];
+  const together = useRentalsQuote(items, zoneId);
+  const names = new Map<string, string>(
+    extras.map((extra) => [extra.productId, extra.name])
+  );
+  if (product) {
+    names.set(product.id, data.name);
+  }
+  return {
+    canAddMore: product
+      ? rentsTogether(product.category_id, categories.data ?? [])
+      : false,
+    items,
+    names,
+    together,
+  };
+};
+
 /** Loading, failed, or not for rent on its own. */
 const RentStatus = ({
   data,
@@ -244,22 +293,25 @@ const PaymentFailed = ({ orderId }: { readonly orderId: string }) => {
 };
 
 /**
- * Renting one item on its own: delivered, paid online or in cash, then
- * `create_rental_order()` (the rent and a refundable deposit) and, for
- * online payment, the hosted payment page. The order's page follows it.
+ * Renting on its own: the item, and up to 2 more films, books or games
+ * for the same delivery; delivered, paid online or in cash, then
+ * `create_rentals_order()` (each item's rent and refundable deposit, one
+ * delivery fee) and, for online payment, the hosted payment page. The
+ * order's page follows it.
  */
 export const RentCheckout = ({ slug }: { readonly slug: string }) => {
   const t = useTranslations("app.rent");
   const router = useRouter();
   const { user } = useAuth();
   const data = useRentData(slug);
-  const { product, quote, variant } = data;
+  const { product, quote } = data;
   const place = usePlaceRental();
   const [payment, setPayment] = useState<PaymentMethod>("online");
   const [form, setForm] = useState<AddressForm | null>(null);
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [extras, setExtras] = useState<ExtraRental[]>([]);
 
   const address: AddressForm = form ?? {
     ...emptyAddress(accountPhone(user?.phone)),
@@ -268,11 +320,19 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
   const set = (field: keyof AddressForm) => (value: string) =>
     setForm({ ...address, [field]: value });
 
+  const { canAddMore, items, names, together } = useRentItems(
+    data,
+    extras,
+    address.zoneId || null
+  );
+
   const { cash, cashOffered, paymentMethod, zone, zoneList } = resolveChoices({
     address,
     payment,
     settings: data.settings,
-    subtotal: (quote?.price ?? 0) + (quote?.deposit ?? 0),
+    subtotal:
+      (together.data?.rent ?? quote?.price ?? 0) +
+      (together.data?.deposit ?? quote?.deposit ?? 0),
     zones: data.zones,
   });
   const areas = useCheckoutAreas(zone);
@@ -289,10 +349,9 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
     place.mutate(
       {
         deliveryZone: result.zoneId,
+        items,
         paymentMethod,
-        productId: product.id,
         shipping: result.shipping,
-        variantId: variant?.id ?? null,
       },
       {
         onError: (mutationError) => setError(toCheckoutError(mutationError)),
@@ -344,6 +403,19 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
                 zone={zone}
                 zones={zoneList}
               />
+              {canAddMore ? (
+                <RentTogether
+                  busy={busy}
+                  chosen={extras}
+                  exclude={items.map((item) => item.productId)}
+                  onAdd={(extra) => setExtras([...extras, extra])}
+                  onRemove={(productId) =>
+                    setExtras(
+                      extras.filter((extra) => extra.productId !== productId)
+                    )
+                  }
+                />
+              ) : null}
               {cashOffered ? (
                 <PaymentCard
                   busy={busy}
@@ -352,20 +424,23 @@ export const RentCheckout = ({ slug }: { readonly slug: string }) => {
                 />
               ) : null}
             </div>
-            <RentSummary
-              busy={busy}
-              cash={cash}
-              deliveryFee={zone?.fee ?? null}
-              error={
-                <CheckoutErrorNote
-                  error={error}
-                  onPhoneVerified={() => setError(null)}
-                  phone={address.phone}
-                />
-              }
-              name={data.name}
-              quote={quote}
-            />
+            {together.data ? (
+              <RentSummary
+                busy={busy}
+                cash={cash}
+                error={
+                  <CheckoutErrorNote
+                    error={error}
+                    onPhoneVerified={() => setError(null)}
+                    phone={address.phone}
+                  />
+                }
+                names={names}
+                quote={together.data}
+              />
+            ) : (
+              <SectionSpinner />
+            )}
           </form>
         ) : null}
       </div>
