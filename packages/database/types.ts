@@ -1668,6 +1668,53 @@ export type Database = {
         };
         Relationships: [];
       };
+      partner_webhook_events: {
+        Row: {
+          attempts: number;
+          claimed_until: string | null;
+          client_id: string;
+          created_at: string;
+          delivered_at: string | null;
+          id: string;
+          last_error: string | null;
+          next_attempt_at: string;
+          payload: NonNullable<Json>;
+          type: string;
+        };
+        Insert: {
+          attempts?: number;
+          claimed_until?: string | null;
+          client_id: string;
+          created_at?: string;
+          delivered_at?: string | null;
+          id?: string;
+          last_error?: string | null;
+          next_attempt_at?: string;
+          payload: NonNullable<Json>;
+          type: string;
+        };
+        Update: {
+          attempts?: number;
+          claimed_until?: string | null;
+          client_id?: string;
+          created_at?: string;
+          delivered_at?: string | null;
+          id?: string;
+          last_error?: string | null;
+          next_attempt_at?: string;
+          payload?: NonNullable<Json>;
+          type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "partner_webhook_events_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+        ];
+      };
       pass_access_tokens: {
         Row: {
           client_id: string;
@@ -1895,6 +1942,7 @@ export type Database = {
           secret_hash: string;
           suspended_at: string | null;
           updated_at: string;
+          webhook_url: string | null;
           website: string;
         };
         Insert: {
@@ -1919,6 +1967,7 @@ export type Database = {
           secret_hash: string;
           suspended_at?: string | null;
           updated_at?: string;
+          webhook_url?: string | null;
           website: string;
         };
         Update: {
@@ -1943,6 +1992,7 @@ export type Database = {
           secret_hash?: string;
           suspended_at?: string | null;
           updated_at?: string;
+          webhook_url?: string | null;
           website?: string;
         };
         Relationships: [
@@ -3729,6 +3779,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -3767,6 +3818,7 @@ export type Database = {
           created_at?: string;
           decided_at?: string | null;
           decided_by?: string | null;
+          delivery_refund?: number;
           details?: string | null;
           disputed_at?: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -3805,6 +3857,7 @@ export type Database = {
           created_at?: string;
           decided_at?: string | null;
           decided_by?: string | null;
+          delivery_refund?: number;
           details?: string | null;
           disputed_at?: string | null;
           fault?: Database["public"]["Enums"]["return_fault"];
@@ -4632,6 +4685,96 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "student_requests_university_id_fkey";
+            columns: ["university_id"];
+            isOneToOne: false;
+            referencedRelation: "universities";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      student_verifications: {
+        Row: {
+          attempts: number;
+          client_id: string;
+          code_expires_at: string | null;
+          code_hash: string | null;
+          created_at: string;
+          delete_token_hash: string | null;
+          document_kind: string | null;
+          document_path: string | null;
+          email: string | null;
+          email_hash: string | null;
+          id: string;
+          method: string | null;
+          reject_reason: string | null;
+          return_url: string;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          university_id: string | null;
+          updated_at: string;
+          user_id: string | null;
+          valid_until: string | null;
+          verified_at: string | null;
+        };
+        Insert: {
+          attempts?: number;
+          client_id: string;
+          code_expires_at?: string | null;
+          code_hash?: string | null;
+          created_at?: string;
+          delete_token_hash?: string | null;
+          document_kind?: string | null;
+          document_path?: string | null;
+          email?: string | null;
+          email_hash?: string | null;
+          id?: string;
+          method?: string | null;
+          reject_reason?: string | null;
+          return_url: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          university_id?: string | null;
+          updated_at?: string;
+          user_id?: string | null;
+          valid_until?: string | null;
+          verified_at?: string | null;
+        };
+        Update: {
+          attempts?: number;
+          client_id?: string;
+          code_expires_at?: string | null;
+          code_hash?: string | null;
+          created_at?: string;
+          delete_token_hash?: string | null;
+          document_kind?: string | null;
+          document_path?: string | null;
+          email?: string | null;
+          email_hash?: string | null;
+          id?: string;
+          method?: string | null;
+          reject_reason?: string | null;
+          return_url?: string;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          university_id?: string | null;
+          updated_at?: string;
+          user_id?: string | null;
+          valid_until?: string | null;
+          verified_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "student_verifications_client_id_fkey";
+            columns: ["client_id"];
+            isOneToOne: false;
+            referencedRelation: "pass_partners";
+            referencedColumns: ["client_id"];
+          },
+          {
+            foreignKeyName: "student_verifications_university_id_fkey";
             columns: ["university_id"];
             isOneToOne: false;
             referencedRelation: "universities";
@@ -6007,6 +6150,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -6115,6 +6259,17 @@ export type Database = {
         Returns: Json;
       };
       claim_invite: { Args: { code: string }; Returns: string };
+      claim_partner_webhooks: {
+        Args: { max_rows?: number };
+        Returns: {
+          attempts: number;
+          client_id: string;
+          id: string;
+          payload: Json;
+          type: string;
+          url: string;
+        }[];
+      };
       claim_push_notifications: {
         Args: {
           max_age?: string;
@@ -6361,6 +6516,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -6418,6 +6574,14 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      confirm_student_verification_email: {
+        Args: { code: string; target: string };
+        Returns: {
+          delete_token: string;
+          email: string;
+          verified: boolean;
+        }[];
       };
       confirm_survey_reward: {
         Args: { target: string };
@@ -6624,6 +6788,10 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      create_student_verification: {
+        Args: { client: string; return_url: string };
+        Returns: string;
+      };
       create_support_ticket: {
         Args: {
           ticket_body: string;
@@ -6709,6 +6877,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -6808,6 +6977,10 @@ export type Database = {
       };
       decline_plus_seat: { Args: { seat: string }; Returns: undefined };
       delete_quantity_deal: { Args: { target: string }; Returns: undefined };
+      delete_student_verification: {
+        Args: { target: string; token: string };
+        Returns: boolean;
+      };
       disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
       end_listing_sale: { Args: { target: string }; Returns: undefined };
       end_pass_card_embed: { Args: { client: string }; Returns: undefined };
@@ -6827,6 +7000,10 @@ export type Database = {
           status: Database["public"]["Enums"]["product_status"];
           variant_id: string;
         }[];
+      };
+      finish_partner_webhook: {
+        Args: { delivered: boolean; error?: string; target: string };
+        Returns: undefined;
       };
       finish_student_check: {
         Args: { keep: boolean };
@@ -7153,6 +7330,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7200,6 +7378,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7407,6 +7586,13 @@ export type Database = {
         };
       };
       partner_check: { Args: { org: string; scanned: string }; Returns: Json };
+      pass_app_webhooks: {
+        Args: { org: string };
+        Returns: {
+          client_id: string;
+          webhook_url: string;
+        }[];
+      };
       pass_apps: {
         Args: { org?: string };
         Returns: {
@@ -7662,6 +7848,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7866,6 +8053,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7938,6 +8126,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -8024,6 +8213,14 @@ export type Database = {
           until?: string;
         };
         Returns: string;
+      };
+      review_student_verification: {
+        Args: { approve: boolean; reason?: string; target: string };
+        Returns: {
+          delete_token: string;
+          document_path: string;
+          email: string;
+        }[];
       };
       review_survey: {
         Args: { approve: boolean; note?: string; target: string };
@@ -8391,6 +8588,10 @@ export type Database = {
         Args: { client: string; enabled: boolean; live: boolean };
         Returns: undefined;
       };
+      set_pass_app_webhook: {
+        Args: { client: string; url: string };
+        Returns: string;
+      };
       set_plus_home: {
         Args: { address: string; area: string; phone: string };
         Returns: {
@@ -8563,6 +8764,13 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      share_student_verification: {
+        Args: { member: string; target: string };
+        Returns: {
+          delete_token: string;
+          email: string;
+        }[];
+      };
       shared_list: {
         Args: { token: string };
         Returns: {
@@ -8581,6 +8789,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -8619,6 +8828,10 @@ export type Database = {
         };
       };
       start_pass_card_embed: { Args: { client: string }; Returns: string };
+      start_student_verification_email: {
+        Args: { address: string; target: string; university: string };
+        Returns: string;
+      };
       start_survey: {
         Args: { target: string };
         Returns: {
@@ -8647,6 +8860,21 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      student_verification_origins: {
+        Args: { target: string };
+        Returns: string[];
+      };
+      student_verification_page: { Args: { target: string }; Returns: Json };
+      submit_student_verification_document: {
+        Args: {
+          address: string;
+          kind: string;
+          path: string;
+          target: string;
+          university: string;
+        };
+        Returns: undefined;
       };
       submit_survey: {
         Args: { answers: Json; target: string };
@@ -8816,6 +9044,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -8856,6 +9085,10 @@ export type Database = {
       sweep_student_checks: {
         Args: Record<PropertyKey, never>;
         Returns: string[];
+      };
+      sweep_student_verifications: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
       };
       sweep_surveys: { Args: Record<PropertyKey, never>; Returns: number };
       telegram_join_check: {
@@ -8990,7 +9223,7 @@ export type Database = {
         | "canceled"
         | "expired"
         | "refunded";
-      payout_line_kind: "sale" | "collection_fee" | "pro_fee";
+      payout_line_kind: "sale" | "collection_fee" | "pro_fee" | "delivery_fee";
       payout_status: "pending" | "paid" | "cancelled";
       plus_seat_status: "requested" | "active" | "ended" | "declined";
       post_section: "news" | "stories" | "members" | "learn";
@@ -9271,7 +9504,7 @@ export const Constants = {
         "expired",
         "refunded",
       ],
-      payout_line_kind: ["sale", "collection_fee", "pro_fee"],
+      payout_line_kind: ["sale", "collection_fee", "pro_fee", "delivery_fee"],
       payout_status: ["pending", "paid", "cancelled"],
       plus_seat_status: ["requested", "active", "ended", "declined"],
       post_section: ["news", "stories", "members", "learn"],

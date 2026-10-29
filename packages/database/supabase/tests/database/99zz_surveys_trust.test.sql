@@ -52,7 +52,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(19);
+select plan(21);
 
 truncate public.orders, public.bulb_entries cascade;
 insert into auth.users (id, email, raw_user_meta_data) values
@@ -133,6 +133,11 @@ select results_eq($$ select answer from public.survey_attention_answers((select 
 select pg_temp.login_as('00000000-0000-0000-0000-00000000aa02');
 select throws_ok($$ select public.survey_attention_answers((select id from ids where name = 'ad')) $$, 'P0002', null,
   'respondents can''t');
+select throws_ok($$ select attention_answer from public.survey_questions $$, '42501', null,
+  'and can''t read the expected answers from the questions');
+select pg_temp.login_as('00000000-0000-0000-0000-00000000aa01');
+select is((select count(*)::integer from public.survey_questions where survey_id = (select id from ids where name = 'ad') and is_attention), 1,
+  'the other columns, is_attention among them, stay readable');
 
 -- ── The results summary ──
 -- Six counted answers: five Coffee, one Tea.

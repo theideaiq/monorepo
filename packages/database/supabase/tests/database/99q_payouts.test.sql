@@ -102,11 +102,11 @@ update public.order_items set seller_status = 'picked_up',
                      else '9b500000-0000-0000-0000-0000000000f1'::uuid end
 where order_id in ('9b500000-0000-0000-0000-0000000000e1', '9b500000-0000-0000-0000-0000000000e2');
 insert into public.returns (id, order_id, order_item_id, seller_id, user_id, quantity, reason, photos, status, fault,
-  refund_amount, refund_bulbs, refund_due_at, refunded_at, collection_fee)
+  refund_amount, refund_bulbs, refund_due_at, refunded_at, collection_fee, delivery_refund)
 values
   ('9b500000-0000-0000-0000-0000000000b1', '9b500000-0000-0000-0000-0000000000e1', '9b500000-0000-0000-0000-0000000000a3',
    '9b500000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000b04', 1, 'faulty',
-   array['00000000-0000-0000-0000-000000000b04/a.jpg'], 'refunded', 'shop', 200000, 0, now(), now(), 5000);
+   array['00000000-0000-0000-0000-000000000b04/a.jpg'], 'refunded', 'shop', 203000, 0, now(), now(), 5000, 3000);
 
 -- What each line pays after commission.
 create temporary table owed as
@@ -123,6 +123,7 @@ select results_eq(
   $$ select kind::text, amount from public.payout_lines order by kind, amount $$,
   $$ values
     ('collection_fee', -5000::bigint),
+    ('delivery_fee', -3000::bigint),
     ('pro_fee', -49750::bigint),
     ('pro_fee', -49750::bigint),
     ('sale', least(
@@ -131,7 +132,7 @@ select results_eq(
     ('sale', greatest(
       (select seller_payout from owed where id = '9b500000-0000-0000-0000-0000000000a1'),
       (select seller_payout / 2 from owed where id = '9b500000-0000-0000-0000-0000000000a3'))) $$,
-  'closed lines are paid (less what came back), the shop''s collection fee and each Pro month begun deducted; the open window waits'
+  'closed lines are paid (less what came back), the shop''s collection and delivery fees and each Pro month begun deducted; the open window waits'
 );
 select is(
   (select amount from public.payouts),
@@ -141,7 +142,7 @@ select is(
 select is((select count(*)::integer from public.prepare_payouts()), 0, 'nothing is paid twice');
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000b01');
-select is((select count(*)::integer from public.payout_lines), 5, 'the shop sees its statement');
+select is((select count(*)::integer from public.payout_lines), 6, 'the shop sees its statement');
 select throws_ok(
   $$ select public.mark_payout_paid((select id from public.payouts), 'bank', 'TX-1') $$,
   '42501', null, 'shops don''t mark payouts paid'
