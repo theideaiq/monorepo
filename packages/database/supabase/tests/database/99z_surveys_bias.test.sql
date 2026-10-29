@@ -107,7 +107,7 @@ select ok(private.is_trusted_respondent('00000000-0000-0000-0000-000000009802') 
 -- ── A new Boosted survey: the early window ──
 select pg_temp.login_as('00000000-0000-0000-0000-000000009801');
 insert into ids select 'b', (public.save_survey('{
-  "title": "Campus food", "kind": "boosted", "wanted": 4,
+  "run_by": "AUIB", "purpose": "market", "title": "Campus food", "kind": "boosted", "wanted": 4,
   "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "number", "prompt": "Meals a week on campus"}]}')).id;
 select public.publish_survey((select id from ids where name = 'b'));
@@ -139,7 +139,7 @@ select pg_temp.reset_role();
 update public.store_settings set survey_daily_boosted = 1;
 select pg_temp.login_as('00000000-0000-0000-0000-000000009801');
 insert into ids select 'b2', (public.save_survey('{
-  "title": "Campus buses", "kind": "boosted", "wanted": 4,
+  "run_by": "AUIB", "purpose": "market", "title": "Campus buses", "kind": "boosted", "wanted": 4,
   "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "number", "prompt": "Buses a week"}]}')).id;
 select public.publish_survey((select id from ids where name = 'b2'));
@@ -157,7 +157,7 @@ update public.store_settings set survey_daily_boosted = 5;
 -- ── Quotas ──
 select pg_temp.login_as('00000000-0000-0000-0000-000000009801');
 insert into ids select 'q', (public.save_survey('{
-  "title": "Medicine study", "kind": "boosted", "wanted": 2, "quotas": {"governorate": 50, "religion": 10},
+  "run_by": "AUIB", "purpose": "market", "title": "Medicine study", "kind": "boosted", "wanted": 2, "quotas": {"governorate": 50, "religion": 10},
   "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "scale", "prompt": "How tired are you?"}]}')).id;
 select is((select quotas from public.surveys where id = (select id from ids where name = 'q')), '{"governorate": 50}'::jsonb,
