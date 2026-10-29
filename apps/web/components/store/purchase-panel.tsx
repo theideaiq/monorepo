@@ -24,6 +24,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { productHref } from "@/components/store/product-card";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
+import { QueueButton } from "@/components/store/queue-button";
 import { RentCard } from "@/components/store/rent-card";
 import { WishlistButton } from "@/components/store/wishlist-button";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
@@ -219,6 +220,7 @@ const RentPanel = ({
             <Link href="/plus">{t("goToPlus")}</Link>
           </Button>
           <WishlistButton productId={product.id} withLabel />
+          <QueueButton productId={product.id} rentable={product.rentable} />
         </div>
       </div>
       <RentCard
@@ -488,6 +490,7 @@ export const PurchasePanel = ({
           {add.isPending ? t("adding") : t("addToCart")}
         </Button>
         <WishlistButton productId={product.id} withLabel />
+        <QueueButton productId={product.id} rentable={product.rentable} />
       </div>
       {canAdd ? (
         <MakeOffer

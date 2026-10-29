@@ -573,6 +573,26 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-29: Saved, lists and the Plus queue, part 1 (master brief step 8,
+  section 12; `20270205000000_saved_lists_queue.sql`). Pass → Saved has
+  three tabs. Saved: everything hearted, each with its state (Price
+  dropped · In stock · Out now · Rentable now · Coming soon · Unavailable),
+  filter chips (All · On sale · In stock · Coming soon), a sort (recently
+  saved, price), "Tell me" (on by default, with an optional price target)
+  and Add to cart, Add to queue, Move to list and Remove. Lists: named
+  lists, private or shared by link (`/lists/<token>` shows the list's
+  name, the owner's first name and its products). Queue (Plus members):
+  its own table now, copied from each Plus member's rentable saved items;
+  rentable product pages have Add to queue, and swaps take from the top.
+  The bell tells of the first copy in stock ("Back in stock", or "Out now"
+  within 14 days of a release date, which Staff set on the product) and of
+  lower prices (under the target, when set).
+- 2026-10-29: Saved, part 2 (step 8). The cart has "Save for later" (the
+  line moves to Saved). Signed out, the heart works too: hearts are kept
+  in the browser and move into Saved at sign-in. "Notify me" saves the
+  product with "Tell me" on instead of writing `product_alerts`, which a
+  later migration drops once this is live. Still to come in step 8: Send
+  as a gift from a shared list (with the gift checkout, section 11).
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the

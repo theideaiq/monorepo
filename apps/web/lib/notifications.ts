@@ -58,6 +58,9 @@ export const NOTIFICATION_EVENTS = [
   "survey_approved",
   "survey_rejected",
   "product_available",
+  "saved_back_in_stock",
+  "saved_out_now",
+  "saved_price_drop",
   "offer_accepted",
   "offer_declined",
   "offer_countered",
@@ -197,6 +200,15 @@ const extraValues: Partial<
   return_refund_due: returnValues,
   return_refunded: returnValues,
   return_rejected: returnValues,
+  saved_back_in_stock: (data, locale) => ({ name: itemName(data, locale) }),
+  saved_out_now: (data, locale) => ({ name: itemName(data, locale) }),
+  saved_price_drop: (data, locale) => {
+    const price = Number(text(data.price));
+    return {
+      name: itemName(data, locale),
+      price: Number.isFinite(price) ? formatPrice(price, locale) : "",
+    };
+  },
   student_verified: (data, locale) => {
     const until = text(data.until);
     return { date: until ? formatDate(`${until}T12:00:00`, locale) : "" };

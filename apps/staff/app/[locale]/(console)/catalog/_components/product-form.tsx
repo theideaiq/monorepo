@@ -179,6 +179,13 @@ export const ProductForm = ({
                 value,
               }))}
             />
+            <TextField
+              defaultValue={product?.release_date ?? ""}
+              hint={t("fields.releaseDateHint")}
+              label={t("fields.releaseDate")}
+              name="releaseDate"
+              type="date"
+            />
             <SelectField
               defaultValue={String(product?.age_rating ?? "")}
               hint={t("fields.ageRatingHint")}

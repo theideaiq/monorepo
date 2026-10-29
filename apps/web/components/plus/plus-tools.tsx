@@ -28,10 +28,10 @@ import {
 import { useRentals } from "@/lib/plus-queries";
 import { usePlans } from "@/lib/queries";
 import {
-  useReorderSaved,
-  useToggleWishlist,
-  useWishlist,
-} from "@/lib/wishlist-queries";
+  useQueue,
+  useRemoveFromQueue,
+  useReorderQueue,
+} from "@/lib/queue-queries";
 
 type PlusError =
   | "ending"
@@ -63,38 +63,26 @@ const plusErrorKey = (error: Error | null): PlusError => {
   return known.find(([text]) => message.includes(text))?.[1] ?? "failed";
 };
 
-/** The Saved items that can be rented, in the member's order. */
-export const useQueue = () => {
-  const wishlist = useWishlist();
-  return (wishlist.data ?? []).filter(
-    (item) => item.product?.rentable && item.product.status === "active"
-  );
-};
-
 /**
- * The queue: Saved items to rent next, in order. Moving one up or down
- * reorders Saved itself.
+ * The queue: what to rent next, in order (Pass → Saved → Queue holds the
+ * same list). Swaps take from the top.
  */
 export const Queue = () => {
   const t = useTranslations("app.plus.queue");
   const locale = useLocale();
-  const wishlist = useWishlist();
-  const queue = useQueue();
-  const reorder = useReorderSaved();
-  const toggle = useToggleWishlist();
+  const { items: queue } = useQueue();
+  const reorder = useReorderQueue();
+  const remove = useRemoveFromQueue();
 
   const move = (productId: string, by: -1 | 1) => {
-    const ids = (wishlist.data ?? []).map((item) => item.product_id);
-    const queued = queue.map((item) => item.product_id);
-    const at = queued.indexOf(productId);
-    const swapWith = queued[at + by];
+    const ids = queue.map((item) => item.product_id);
+    const at = ids.indexOf(productId);
+    const swapWith = ids[at + by];
     if (swapWith === undefined) {
       return;
     }
-    const from = ids.indexOf(productId);
-    const to = ids.indexOf(swapWith);
-    ids[from] = swapWith;
-    ids[to] = productId;
+    ids[at] = swapWith;
+    ids[at + by] = productId;
     reorder.mutate(ids);
   };
 
@@ -141,10 +129,8 @@ export const Queue = () => {
                 </Button>
                 <Button
                   aria-label={t("remove", { name })}
-                  disabled={toggle.isPending}
-                  onClick={() =>
-                    toggle.mutate({ productId: item.product_id, saved: true })
-                  }
+                  disabled={remove.isPending}
+                  onClick={() => remove.mutate(item.product_id)}
                   size="icon"
                   variant="ghost"
                 >
@@ -232,7 +218,7 @@ export const SwapPanel = ({ slots }: { readonly slots: number }) => {
   const t = useTranslations("app.plus.swap");
   const locale = useLocale();
   const rentals = useRentals().data ?? [];
-  const queue = useQueue();
+  const { items: queue } = useQueue();
   const swap = useOpenSwap().data;
   const home = usePlusHome().data;
   const { bookSwap } = usePlusActions();

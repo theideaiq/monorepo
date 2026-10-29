@@ -38,6 +38,7 @@ export const saveProduct = staffAction(
       name_ar: input.nameAr,
       name_en: input.nameEn,
       price: input.price,
+      release_date: input.releaseDate,
       rental_tier: input.rentalTier,
       seller: input.seller,
       slug: input.slug,

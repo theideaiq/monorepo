@@ -245,7 +245,7 @@ describe("wishlist", () => {
   test("an empty wishlist points to the store", async () => {
     const db = fakeDb();
     renderScreen(<Wishlist />, db.supabase);
-    expect(await screen.findByText("Your wishlist is empty")).toBeTruthy();
+    expect(await screen.findByText("Nothing saved yet")).toBeTruthy();
   });
 });
 

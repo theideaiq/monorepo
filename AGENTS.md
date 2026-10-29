@@ -68,11 +68,13 @@ incidents) is in `docs/platform`.
     `NEXT_PUBLIC_WEB_URL`), which only returns to allowlisted hosts
     (`isAllowedReturnTo`);
   - **The IDEA Pass pages** (`app/[locale]/pass/(member)`: `/pass` the
-    Pass card, `/pass/orders`, `/pass/saved`, `/pass/bulbs` with
+    Pass card, `/pass/orders`, `/pass/saved` (tabs Saved, Lists and, for
+    Plus members, Queue), `/pass/bulbs` with
     invites at `#invite`, `/pass/settings` with the address book at
     `#addresses`); `/pass/embed` (outside that
     group, no header or footer) is the live card partners frame on their
-    own sites, with its connect popup at `/pass/embed/connect`; and the cart and checkout (`app/[locale]/(checkout)`): client components that query with
+    own sites, with its connect popup at `/pass/embed/connect`; `/lists/<token>`
+    is a list a member shared by link; and the cart and checkout (`app/[locale]/(checkout)`): client components that query with
     `useAuth().supabase`; privileged steps go to `apps/api` with the user's
     token (`callApi` in `apps/web/lib/api.ts`);
   - The iOS/Android apps are Capacitor shells whose WebView loads the live
