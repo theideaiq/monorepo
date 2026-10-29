@@ -882,3 +882,21 @@ differ from earlier parts.
     first gifted month at once.
   - **Plus paid by an organization** can't take gifted months, so they
     don't sit unused.
+
+## Part 7: Plus features (step 12)
+
+Step 12 ships in four parts, each schema first: prices; Bulbs on renewal
+and survey credits; the Club; partner perks. Team was merged in step 1, and
+Plus Duo waits for step 14.
+
+- **Plus prices** work like student prices: a shop (or editors for The
+  IDEA's own stock, above the margin floor) sets one below the listing's
+  price and pays for it; only Plus members see and pay it; it stays out of
+  price history and "was" prices. When a member is both a student and on
+  Plus, the lower price wins.
+- **Early access to campaigns:** a campaign's discount reaches Plus
+  members 24 hours before it opens (48 for Blaze), as their Plus price;
+  everyone else gets it when it opens.
+- **Kits:** Shine 10% off, Blaze 25%, on the weekend price and extra days.
+- **Tickets and programs** have no price yet, so their Plus price comes
+  when paid tickets and programs are built.
