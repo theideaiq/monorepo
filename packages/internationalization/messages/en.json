@@ -847,7 +847,8 @@
             "confirm": "Delete them",
             "keep": "Keep them",
             "failed": "Your answers couldn't be deleted. Try again."
-          }
+          },
+          "debrief": "About this study"
         },
         "report": {
           "open": "Report this survey",
@@ -869,7 +870,10 @@
           "answered": "You already answered this survey.",
           "failed": "Something went wrong. Try again.",
           "quotaFull": "This survey already has enough answers from people like you. Look for another one.",
-          "dailyLimit": "You've answered today's Boosted surveys. Come back tomorrow."
+          "dailyLimit": "You've answered today's Boosted surveys. Come back tomorrow.",
+          "debrief": "Add the debrief for your deception study before publishing.",
+          "ethicsNeeded": "Academic surveys on sensitive topics need the ethics reference.",
+          "runBy": "Say who runs the survey and its purpose before publishing."
         },
         "builder": {
           "newTitle": "New survey",
@@ -942,6 +946,29 @@
               "year": "Year",
               "governorate": "Governorate"
             }
+          },
+          "runBy": "Who runs it",
+          "runByNote": "Shown on the survey: your university, organization or name (for example \"Thesis research, AUIB\").",
+          "purpose": "Purpose",
+          "purposeChoose": "Choose…",
+          "purposes": {
+            "academic": "Academic research",
+            "market": "Market research",
+            "community": "Community research"
+          },
+          "textWarning": "Free-text answers can identify people. Ask only what you need, and never for names or contact details.",
+          "creatorRules": "Every survey shows who runs it and why. Advertising or selling, asking for contact details and hiding who runs a survey aren't allowed.",
+          "research": {
+            "title": "Privacy and research",
+            "summary": "Show respondents a summary when it closes",
+            "summaryNote": "Respondents see how people answered the choice and scale questions, never anyone's own answers. Only academic surveys can turn it off.",
+            "deception": "This is a deception study",
+            "deceptionNote": "It doesn't tell respondents everything at first. It needs the ethics reference and a debrief, and is always reviewed.",
+            "debrief": "Debrief",
+            "debriefNote": "Shown to each respondent after they submit: what the study was really about.",
+            "keep": "Keep the answers for (months)",
+            "keepNote": "Raw answers are deleted this many months after the survey closes (24 to 120, as your ethics approval states). You're told 30 days before.",
+            "keepEthics": "Raw answers are deleted 24 months after the survey closes; you're told 30 days before. Keeping them longer needs an ethics reference."
           }
         },
         "manage": {
@@ -984,8 +1011,23 @@
             "other": "Other (small groups)",
             "unknown": "Not given",
             "smallGroups": "Groups of fewer than 5 people are never shown.",
-            "note": "Respondents are The IDEA Pass users who chose to answer, some for a reward. They are not a random sample of Iraq."
-          }
+            "note": "Respondents are The IDEA Pass users who chose to answer, some for a reward. They are not a random sample of Iraq.",
+            "export": {
+              "wanted": "Wanted",
+              "started": "Started",
+              "finished": "Finished",
+              "counted": "Counted",
+              "excluded": "Didn't count",
+              "median": "Median time (seconds)"
+            }
+          },
+          "exportPurpose": "Use the export only for the purpose the survey states.",
+          "retention": {
+            "deleted": "The raw answers were deleted on {date}; the counts stay.",
+            "on": "The raw answers will be deleted on {date}.",
+            "after": "The raw answers are deleted {months} months after the survey closes."
+          },
+          "audienceCsv": "Who answered (CSV)"
         },
         "yours": {
           "created": "Your surveys",
@@ -1007,6 +1049,44 @@
           "payDifference": "Pay the difference",
           "refundDue": "{amount} of unused rewards is on its way back to you.",
           "refunded": "{amount} of unused rewards was refunded."
+        },
+        "runBy": {
+          "withPurpose": "{purpose} · {runBy}",
+          "only": "{runBy}",
+          "purposes": {
+            "academic": "Academic research",
+            "market": "Market research",
+            "community": "Community research"
+          }
+        },
+        "summary": {
+          "title": "Results summary",
+          "responses": "{count} counted responses",
+          "tooFew": "There aren't enough answers to show a summary.",
+          "fewer": "Fewer than 5",
+          "note": "Groups of fewer than 5 people are never shown."
+        },
+        "answered": {
+          "title": "Surveys you answered",
+          "badge": "Contributor badge: {level} counted answers.",
+          "noBadge": "No contributor badge yet.",
+          "next": "{counted} counted; the next badge is at {next}.",
+          "none": "You haven't answered a survey yet.",
+          "counted": "Counted",
+          "notCounted": "Didn't count",
+          "summary": "Results summary",
+          "certificate": "Participation certificate (PDF)"
+        },
+        "certificate": {
+          "title": "Certificate of participation",
+          "save": "Save as PDF",
+          "body": "{name} answered {count} surveys in the Club whose answers counted.",
+          "none": "No counted answers yet.",
+          "survey": "Survey",
+          "runBy": "Run by",
+          "date": "Date",
+          "issued": "Issued by The IDEA on {date}.",
+          "terms": "This certificate lists the surveys answered, never the answers. A university that gives course credit for answering surveys must offer students another way to earn the same credit."
         }
       },
       "parts": {
@@ -3364,6 +3444,14 @@
         "survey_refunded": {
           "title": "Survey refund sent",
           "body": "{amount} of unused rewards from \"{title}\" was refunded."
+        },
+        "survey_answers_expiring": {
+          "title": "Survey answers will be deleted soon",
+          "body": "The raw answers to \"{title}\" will be deleted on {date}. Export them before then if you still need them."
+        },
+        "survey_answers_deleted": {
+          "title": "Survey answers deleted",
+          "body": "The raw answers to \"{title}\" were deleted; the counts stay."
         }
       },
       "kinds": {
@@ -4449,7 +4537,9 @@
           "money": "Income or money",
           "identity": "Identity numbers",
           "contact": "Contact details",
-          "reported": "Reported"
+          "reported": "Reported",
+          "advertising": "Advertising",
+          "deception": "Deception study"
         },
         "consent": "Consent text",
         "ethics": "Ethics approval: {reference}",
@@ -4465,7 +4555,14 @@
           "tooFast": "Sent in {seconds} s (the median is {median} s; the minimum before a median is {min} s).",
           "uphold": "Uphold: it counts",
           "decline": "Decline"
-        }
+        },
+        "runBy": "{purpose} · {runBy}",
+        "purposes": {
+          "academic": "Academic research",
+          "market": "Market research",
+          "community": "Community research"
+        },
+        "debrief": "Debrief"
       }
     },
     "finance": {
@@ -5377,7 +5474,8 @@
       },
       "badges": {
         "student": "Student",
-        "staff": "Staff"
+        "staff": "Staff",
+        "contributor": "Contributor {level}"
       }
     },
     "signOut": {

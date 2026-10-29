@@ -17,6 +17,7 @@ import {
   useMySurveys,
   useSurveyCredits,
 } from "@/lib/survey-queries";
+import { SurveysAnswered } from "./surveys-answered";
 
 type MySurvey = NonNullable<ReturnType<typeof useMySurveys>["data"]>[number];
 
@@ -163,6 +164,7 @@ export const YourSurveys = () => {
           </p>
         )}
       </div>
+      <SurveysAnswered />
     </div>
   );
 };

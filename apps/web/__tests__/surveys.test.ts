@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  answersDeleteOn,
+  audienceRows,
   missingAnswers,
   questionSummary,
   resultRows,
@@ -152,5 +154,57 @@ describe("survey errors", () => {
     expect(surveyError("Not enough Bulbs for the rewards")).toBe("bulbs");
     expect(surveyError("something else")).toBe("failed");
     expect(surveyError(undefined)).toBe("failed");
+  });
+});
+
+describe("part 3: export and retention", () => {
+  it("names the new publishing errors", () => {
+    expect(surveyError("Say who runs the survey and why")).toBe("runBy");
+    expect(surveyError("Add the ethics reference")).toBe("ethicsNeeded");
+    expect(surveyError("Add the debrief")).toBe("debrief");
+  });
+
+  it("adds sheets after the responses", () => {
+    const book = toExcel([["a"]], [{ name: "Who answered", rows: [["b"]] }]);
+    expect(book.indexOf('ss:Name="Responses"')).toBeLessThan(
+      book.indexOf('ss:Name="Who answered"')
+    );
+    expect(book.match(/<Worksheet /g)).toHaveLength(2);
+  });
+
+  it("writes who answered as rows, ending with the note", () => {
+    const rows = audienceRows(
+      {
+        breakdown: { governorate: [{ count: 5, value: "baghdad" }] },
+        counted: 6,
+        excluded: 1,
+        finished: 7,
+        median_seconds: 240,
+        quotas: {},
+        started: 8,
+        wanted: 50,
+      },
+      {
+        field: (field) => field,
+        note: "Not a random sample.",
+        stats: {
+          counted: "Counted",
+          excluded: "Excluded",
+          finished: "Finished",
+          median: "Median",
+          started: "Started",
+          wanted: "Wanted",
+        },
+      }
+    );
+    expect(rows[0]).toEqual(["Wanted", "50"]);
+    expect(rows).toContainEqual(["governorate", "baghdad", "5"]);
+    expect(rows.at(-1)).toEqual(["Not a random sample."]);
+  });
+
+  it("deletes raw answers months after closing", () => {
+    expect(
+      answersDeleteOn("2026-01-15T10:00:00Z", 24).toISOString().slice(0, 10)
+    ).toBe("2028-01-15");
   });
 });

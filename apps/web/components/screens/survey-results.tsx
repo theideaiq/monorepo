@@ -4,8 +4,10 @@ import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { ArrowLeftIcon, DownloadIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { RunBy } from "@/components/club/run-by";
+import { SurveyExport } from "@/components/club/survey-export";
 import { WhoAnswered } from "@/components/club/who-answered";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
@@ -16,15 +18,10 @@ import {
   useSurveyResults,
 } from "@/lib/survey-queries";
 import {
-  downloadText,
   questionSummary,
-  resultRows,
   type SurveyQuestion,
   type SurveyResult,
   surveyError,
-  toCsv,
-  toExcel,
-  toSpssSyntax,
 } from "@/lib/surveys";
 
 const surveyHref = (id: string) => `/club/surveys/${encodeURIComponent(id)}`;
@@ -171,7 +168,6 @@ export const SurveyResults = ({ surveyId }: { readonly surveyId: string }) => {
   const questions = data.survey_questions;
   const rows = results.data ?? [];
   const counted = rows.filter((row) => row.counted).length;
-  const exportRows = () => resultRows(questions, rows);
 
   return (
     <div className="flex flex-col gap-6">
@@ -183,6 +179,7 @@ export const SurveyResults = ({ surveyId }: { readonly surveyId: string }) => {
         {tSurveys("back")}
       </Link>
       <PageHeader title={data.title} />
+      <RunBy purpose={data.purpose} runBy={data.run_by} />
       <StatusNotice survey={data} />
       {data.status === "open" ? (
         <div className="grid gap-2">
@@ -232,57 +229,7 @@ export const SurveyResults = ({ surveyId }: { readonly surveyId: string }) => {
             ) : null}
           </dl>
           <WhoAnswered surveyId={surveyId} />
-          <div className="grid gap-2">
-            <h2 className="font-semibold text-lg">{t("export")}</h2>
-            <p className="text-muted-foreground text-sm">{t("exportNote")}</p>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                className="gap-2"
-                disabled={rows.length === 0}
-                onClick={() =>
-                  downloadText(
-                    "responses.csv",
-                    "text/csv;charset=utf-8",
-                    toCsv(exportRows())
-                  )
-                }
-                variant="outline"
-              >
-                <DownloadIcon aria-hidden="true" className="size-4" />
-                {t("csv")}
-              </Button>
-              <Button
-                className="gap-2"
-                disabled={rows.length === 0}
-                onClick={() =>
-                  downloadText(
-                    "responses.xls",
-                    "application/vnd.ms-excel",
-                    toExcel(exportRows())
-                  )
-                }
-                variant="outline"
-              >
-                <DownloadIcon aria-hidden="true" className="size-4" />
-                {t("excel")}
-              </Button>
-              <Button
-                className="gap-2"
-                disabled={rows.length === 0}
-                onClick={() =>
-                  downloadText(
-                    "responses.sps",
-                    "text/plain;charset=utf-8",
-                    toSpssSyntax(questions)
-                  )
-                }
-                variant="outline"
-              >
-                <DownloadIcon aria-hidden="true" className="size-4" />
-                {t("spss")}
-              </Button>
-            </div>
-          </div>
+          <SurveyExport questions={questions} rows={rows} survey={data} />
           {results.isPending ? <SectionSpinner /> : null}
           {results.isError ? (
             <ErrorState onRetry={() => results.refetch()} />

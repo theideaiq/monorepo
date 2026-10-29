@@ -22,13 +22,17 @@ import { ErrorState, SectionSpinner } from "@/components/states";
 import { useMyStudent, useUniversities } from "@/lib/student-queries";
 import {
   type SurveyDraft,
+  useDraftPrivate,
   useSaveSurvey,
   useSurvey,
 } from "@/lib/survey-queries";
 import {
+  KEEP_MONTHS,
   QUOTA_FIELDS,
   type QuotaField,
+  SURVEY_PURPOSES,
   type SurveyKind,
+  type SurveyPurpose,
   type SurveyQuestion,
   surveyCost,
   surveyError,
@@ -60,14 +64,20 @@ const blankQuestion = (): SurveyQuestion => ({
 
 const emptyDraft = (locale: string): SurveyDraft => ({
   consent: "",
+  debrief: "",
+  deception: false,
   description: "",
   ethics_reference: "",
   governorates: [],
+  keep_months: KEEP_MONTHS.default,
   kind: "free",
   language: locale === "en" ? "en" : "ar",
   majors: [],
   min_seconds: 60,
+  purpose: "",
   questions: [blankQuestion()],
+  run_by: "",
+  share_summary: true,
   students_only: false,
   title: "",
   universities: [],
@@ -218,6 +228,9 @@ const QuestionEditor = ({
           <p className="text-muted-foreground text-xs">{t("optionsNote")}</p>
         </div>
       ) : null}
+      {question.kind === "text" ? (
+        <p className="text-muted-foreground text-xs">{t("textWarning")}</p>
+      ) : null}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
         <label className="flex items-center gap-2 text-sm">
           <input
@@ -327,6 +340,104 @@ const QuotaFields = ({
   );
 };
 
+/**
+ * The summary for respondents (off only for academic surveys), deception
+ * studies with their debrief, and how long the answers are kept; the last
+ * two need the ethics reference.
+ */
+const ResearchFields = ({
+  draft,
+  set,
+}: {
+  readonly draft: SurveyDraft;
+  readonly set: <K extends keyof SurveyDraft>(
+    key: K,
+    value: SurveyDraft[K]
+  ) => void;
+}) => {
+  const t = useTranslations("web.club.surveys.builder.research");
+  const id = useId();
+  const academic = draft.purpose === "academic";
+  const ethics = draft.ethics_reference.trim().length > 0;
+  return (
+    <section className="grid gap-4">
+      <h2 className="font-semibold text-lg">{t("title")}</h2>
+      <label className="flex items-start gap-2 text-sm">
+        <input
+          checked={draft.share_summary || !academic}
+          className="mt-0.5 size-4 accent-primary"
+          disabled={!academic}
+          onChange={(event) => set("share_summary", event.target.checked)}
+          type="checkbox"
+        />
+        <span>
+          {t("summary")}
+          <span className="block text-muted-foreground text-xs">
+            {t("summaryNote")}
+          </span>
+        </span>
+      </label>
+      <label className="flex items-start gap-2 text-sm">
+        <input
+          checked={draft.deception && ethics}
+          className="mt-0.5 size-4 accent-primary"
+          disabled={!ethics}
+          onChange={(event) => set("deception", event.target.checked)}
+          type="checkbox"
+        />
+        <span>
+          {t("deception")}
+          <span className="block text-muted-foreground text-xs">
+            {t("deceptionNote")}
+          </span>
+        </span>
+      </label>
+      {draft.deception && ethics ? (
+        <Field
+          htmlFor={`${id}-debrief`}
+          label={t("debrief")}
+          note={t("debriefNote")}
+        >
+          <Textarea
+            id={`${id}-debrief`}
+            maxLength={3000}
+            onChange={(event) => set("debrief", event.target.value)}
+            rows={4}
+            value={draft.debrief}
+          />
+        </Field>
+      ) : null}
+      <Field
+        htmlFor={`${id}-keep`}
+        label={t("keep")}
+        note={ethics ? t("keepNote") : t("keepEthics")}
+      >
+        <Input
+          dir="ltr"
+          disabled={!ethics}
+          id={`${id}-keep`}
+          max={KEEP_MONTHS.max}
+          min={KEEP_MONTHS.default}
+          onChange={(event) =>
+            set(
+              "keep_months",
+              Math.min(
+                KEEP_MONTHS.max,
+                Math.max(
+                  KEEP_MONTHS.default,
+                  Number(event.target.value) || KEEP_MONTHS.default
+                )
+              )
+            )
+          }
+          type="number"
+          value={ethics ? draft.keep_months : KEEP_MONTHS.default}
+        />
+      </Field>
+    </section>
+  );
+};
+
 /** What the respondents get and what it costs the creator. */
 const RewardNote = ({ draft }: { readonly draft: SurveyDraft }) => {
   const t = useTranslations("web.club.surveys.builder");
@@ -402,6 +513,7 @@ const BuilderForm = ({ initial }: { readonly initial: SurveyDraft }) => {
     };
     const blank =
       body.title.trim().length < 3 ||
+      (publish && !(body.run_by.trim() && body.purpose)) ||
       body.questions.some((question) => !question.prompt.trim());
     setInvalid(blank);
     if (blank) {
@@ -447,6 +559,39 @@ const BuilderForm = ({ initial }: { readonly initial: SurveyDraft }) => {
             value={draft.title}
           />
         </Field>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            htmlFor={`${id}-run-by`}
+            label={t("runBy")}
+            note={t("runByNote")}
+          >
+            <Input
+              aria-invalid={(invalid && !draft.run_by.trim()) || undefined}
+              id={`${id}-run-by`}
+              maxLength={120}
+              onChange={(event) => set("run_by", event.target.value)}
+              value={draft.run_by}
+            />
+          </Field>
+          <Field htmlFor={`${id}-purpose`} label={t("purpose")}>
+            <select
+              aria-invalid={(invalid && !draft.purpose) || undefined}
+              className={selectClassName}
+              id={`${id}-purpose`}
+              onChange={(event) =>
+                set("purpose", event.target.value as SurveyPurpose | "")
+              }
+              value={draft.purpose}
+            >
+              <option value="">{t("purposeChoose")}</option>
+              {SURVEY_PURPOSES.map((purpose) => (
+                <option key={purpose} value={purpose}>
+                  {t(`purposes.${purpose}`)}
+                </option>
+              ))}
+            </select>
+          </Field>
+        </div>
         <Field htmlFor={`${id}-description`} label={t("description")}>
           <Textarea
             id={`${id}-description`}
@@ -587,6 +732,8 @@ const BuilderForm = ({ initial }: { readonly initial: SurveyDraft }) => {
         />
       </section>
 
+      <ResearchFields draft={draft} set={set} />
+
       <section className="grid gap-4">
         <h2 className="font-semibold text-lg">{t("rewards")}</h2>
         <fieldset className="flex flex-wrap gap-2">
@@ -646,6 +793,7 @@ const BuilderForm = ({ initial }: { readonly initial: SurveyDraft }) => {
       </section>
 
       <div className="grid gap-3">
+        <p className="text-muted-foreground text-sm">{t("creatorRules")}</p>
         <p className="text-muted-foreground text-sm">
           {t("reviewNote")}{" "}
           <Link className="text-pink-text underline" href="/legal/surveys">
@@ -689,11 +837,16 @@ const BuilderForm = ({ initial }: { readonly initial: SurveyDraft }) => {
 const EditDraft = ({ surveyId }: { readonly surveyId: string }) => {
   const t = useTranslations("web.club.surveys.builder");
   const survey = useSurvey(surveyId);
-  if (survey.isPending) {
+  const hidden = useDraftPrivate(surveyId);
+  if (survey.isPending || hidden.isPending) {
     return <SectionSpinner />;
   }
-  if (survey.isError) {
-    return <ErrorState onRetry={() => survey.refetch()} />;
+  if (survey.isError || hidden.isError) {
+    return (
+      <ErrorState
+        onRetry={() => Promise.all([survey.refetch(), hidden.refetch()])}
+      />
+    );
   }
   const { data } = survey;
   if (data?.status !== "draft") {
@@ -703,22 +856,28 @@ const EditDraft = ({ surveyId }: { readonly surveyId: string }) => {
     <BuilderForm
       initial={{
         consent: data.consent,
+        debrief: hidden.data.debrief,
+        deception: data.deception,
         description: data.description,
         ethics_reference: data.ethics_reference ?? "",
         governorates: data.governorates,
         id: data.id,
+        keep_months: data.keep_months,
         kind: data.kind as SurveyKind,
         language: data.language === "en" ? "en" : "ar",
         majors: data.majors,
         min_seconds: data.min_seconds,
+        purpose: (data.purpose ?? "") as SurveyPurpose | "",
         questions: data.survey_questions.map((question) => ({
-          attention_answer: question.attention_answer,
+          attention_answer: hidden.data.attention.get(question.id) ?? null,
           kind: question.kind,
           options: question.options,
           prompt: question.prompt,
           required: question.required,
         })),
         quotas: (data.quotas ?? {}) as SurveyDraft["quotas"],
+        run_by: data.run_by ?? "",
+        share_summary: data.share_summary,
         students_only: data.students_only,
         title: data.title,
         universities: data.universities,

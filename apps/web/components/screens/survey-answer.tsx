@@ -12,7 +12,9 @@ import { Link } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, FlagIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useState } from "react";
+import { RunBy } from "@/components/club/run-by";
 import { SurveyResponseStatus } from "@/components/club/survey-response-status";
+import { SurveySummaryPanel } from "@/components/club/survey-summary";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -21,6 +23,7 @@ import {
   useStartSurvey,
   useSubmitSurvey,
   useSurvey,
+  useSurveyDebrief,
   useWithdrawResponse,
 } from "@/lib/survey-queries";
 import {
@@ -255,6 +258,7 @@ export const SurveyAnswer = ({ surveyId }: { readonly surveyId: string }) => {
         <BackToClub />
         <p className="text-muted-foreground">{t("closed")}</p>
         <SurveyResponseStatus open={false} surveyId={surveyId} />
+        <SurveySummaryPanel surveyId={surveyId} />
       </div>
     );
   }
@@ -262,11 +266,24 @@ export const SurveyAnswer = ({ surveyId }: { readonly surveyId: string }) => {
 };
 
 /** After sending: whether the answers counted, what they earned, and the rest. */
-const Thanks = ({ surveyId }: { readonly surveyId: string }) => {
+const Thanks = ({
+  deception,
+  surveyId,
+}: {
+  readonly deception: boolean;
+  readonly surveyId: string;
+}) => {
   const t = useTranslations("web.club.surveys.answer");
+  const debrief = useSurveyDebrief(surveyId, deception);
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title={t("thanks")} />
+      {debrief.data ? (
+        <section className="grid gap-2 rounded-lg border bg-surface-raised p-4">
+          <h2 className="font-semibold">{t("debrief")}</h2>
+          <p className="whitespace-pre-line text-sm">{debrief.data}</p>
+        </section>
+      ) : null}
       <SurveyResponseStatus open surveyId={surveyId} />
       <BackToClub />
     </div>
@@ -282,7 +299,7 @@ const CountingRules = ({ survey }: { readonly survey: LoadedSurvey }) => {
   const locale = useLocale() as Locale;
   const seconds = survey.median_seconds ?? survey.estimated_seconds ?? 0;
   const checks = survey.survey_questions.some(
-    (question) => question.attention_answer
+    (question) => question.is_attention
   );
   return (
     <section className="grid gap-2 rounded-lg border p-4 text-sm">
@@ -385,7 +402,7 @@ const OpenSurvey = ({ survey: data }: { readonly survey: LoadedSurvey }) => {
   const own = data.creator_id === user?.id;
 
   if (submit.isSuccess || mine.data?.submitted_at) {
-    return <Thanks surveyId={surveyId} />;
+    return <Thanks deception={data.deception} surveyId={surveyId} />;
   }
 
   const send = (event: FormEvent<HTMLFormElement>) => {
@@ -418,6 +435,7 @@ const OpenSurvey = ({ survey: data }: { readonly survey: LoadedSurvey }) => {
         lang={data.language}
       >
         <PageHeader title={data.title} />
+        <RunBy purpose={data.purpose} runBy={data.run_by} />
         {data.description ? (
           <p className="whitespace-pre-line text-muted-foreground">
             {data.description}

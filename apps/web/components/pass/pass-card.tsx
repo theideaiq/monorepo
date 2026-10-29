@@ -94,9 +94,24 @@ const studentPerk = (
     : card("perks.verifyStudent"),
 });
 
+/** The contributor badge: counted survey answers (10, 50 or 200), from `my_survey_record()`. */
+const contributorLevel = (record: unknown) => {
+  const level = Number((record as { level?: unknown } | null)?.level);
+  return Number.isFinite(level) ? level : 0;
+};
+
 /** The badges on the card (the Plus plan shows on its own). */
-const cardBadges = (student: boolean, staff: boolean, card: CardText) => [
+const cardBadges = (
+  student: boolean,
+  staff: boolean,
+  contributor: number,
+  card: CardText,
+  locale: Locale
+) => [
   ...(student ? [card("badges.student")] : []),
+  ...(contributor > 0
+    ? [card("badges.contributor", { level: formatNumber(contributor, locale) })]
+    : []),
   ...(staff ? [card("badges.staff")] : []),
 ];
 
@@ -120,6 +135,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
     { data: baghdad },
     { data: student },
     { data: offers },
+    { data: record },
   ] = await Promise.all([
     session.supabase
       .from("profiles")
@@ -157,6 +173,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
       .eq("active", true)
       .order("position")
       .order("created_at"),
+    session.supabase.rpc("my_survey_record"),
   ]);
   const name = profile?.full_name?.trim();
   const phone = session.user.phone ? formatPhone(session.user.phone) : null;
@@ -212,7 +229,9 @@ export const PassCard = async ({ session }: PassCardProps) => {
             badges={cardBadges(
               Boolean(student?.verified),
               Boolean(staff),
-              card
+              contributorLevel(record),
+              card,
+              locale
             )}
             memberSince={
               profile
