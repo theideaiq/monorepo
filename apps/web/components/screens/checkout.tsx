@@ -74,9 +74,16 @@ import {
   useSaveAddress,
 } from "@/lib/address-book";
 import { useMyBulbs } from "@/lib/bulbs-queries";
-import { freeDeliveryRemaining, isRentLine, summarizeCart } from "@/lib/cart";
+import {
+  addKitToSummary,
+  freeDeliveryRemaining,
+  isRentLine,
+  type KitLine,
+  summarizeCart,
+} from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
 import { useInviteDiscount } from "@/lib/invites";
+import { useCartKitLine } from "@/lib/kits";
 import { orderPath, usePlaceGift, usePlaceOrder } from "@/lib/order-checkout";
 import { isNativeApp } from "@/lib/platform";
 import { useProfile } from "@/lib/queries";
@@ -88,6 +95,7 @@ import {
   useDeliveryZones,
   useStoreSettings,
 } from "@/lib/store-queries";
+import { useMyStudent } from "@/lib/student-queries";
 
 interface ChoiceProps<T extends string> {
   readonly disabled?: boolean;
@@ -554,6 +562,8 @@ interface SummaryCardProps {
   readonly cash: boolean;
   /** Why placing failed (CheckoutErrorNote), if it did. */
   readonly error: ReactNode;
+  /** The cart's game night kit's name, listed with the lines. */
+  readonly kitName?: string | null;
   /** "Deliver to Home · Pay online", when a saved address is chosen. */
   readonly oneTap?: string | null;
   /** The server's quote, once a zone is chosen. */
@@ -566,6 +576,7 @@ const SummaryCard = ({
   busy,
   cash,
   error,
+  kitName = null,
   oneTap,
   quote,
   summary,
@@ -614,6 +625,14 @@ const SummaryCard = ({
                 </span>
               </li>
             ))}
+          {kitName ? (
+            <li className="flex justify-between gap-3">
+              <span className="line-clamp-1 min-w-0">{kitName}</span>
+              <span className="shrink-0 text-muted-foreground">
+                {t("kitLine")}
+              </span>
+            </li>
+          ) : null}
         </ul>
         <OrderSummary {...totals} />
         {quote ? (
@@ -734,6 +753,7 @@ export const useCheckoutAreas = (zone: DeliveryZone | undefined): string[] =>
 const useCheckoutPricing = ({
   address,
   cart,
+  kit,
   payment,
   settings,
   useBulbs,
@@ -741,6 +761,8 @@ const useCheckoutPricing = ({
 }: {
   address: AddressForm;
   cart: ReturnType<typeof useCart>;
+  /** The cart's game night kit: delivered in Baghdad only. */
+  kit: KitLine | null;
   payment: PaymentMethod;
   settings: ReturnType<typeof useStoreSettings>;
   useBulbs: boolean;
@@ -758,7 +780,9 @@ const useCheckoutPricing = ({
     payment,
     settings: settings.data,
     subtotal: estimate?.totals.subtotal ?? 0,
-    zones: zones.data,
+    zones: kit
+      ? zones.data?.filter((option) => option.governorate === "baghdad")
+      : zones.data,
   });
   const { paymentMethod, zone } = choices;
 
@@ -766,10 +790,13 @@ const useCheckoutPricing = ({
 
   const summary =
     cart.data && settings.data
-      ? summarizeCart(cart.data, settings.data, {
-          freeFrom: zone?.free_from,
-          zoneFee: zone?.fee,
-        })
+      ? addKitToSummary(
+          summarizeCart(cart.data, settings.data, {
+            freeFrom: zone?.free_from,
+            zoneFee: zone?.fee,
+          }),
+          kit
+        )
       : null;
   const quote = useCheckoutQuote(
     quoteRequestFor({
@@ -997,6 +1024,30 @@ const WhereItGoes = ({
   </>
 );
 
+/** The cart's game night kit, priced, and its name. */
+const useKitInCart = () => {
+  const locale = useLocale();
+  const isStudent = useMyStudent().data?.verified ?? false;
+  const kit = useCartKitLine(isStudent);
+  return {
+    kit,
+    kitName: kit?.item.kit ? localized(kit.item.kit, "name", locale) : null,
+  };
+};
+
+/** Rentals and kits come back to whoever has them, so they aren't gifts. */
+const giftBlocked = (
+  summary: ReturnType<typeof summarizeCart>,
+  kit: KitLine | null
+) => kit !== null || summary.lines.some((line) => isRentLine(line.item));
+
+/** Nothing left to check out (and not because an order is being placed). */
+const isEmpty = (
+  summary: ReturnType<typeof summarizeCart> | null,
+  kit: KitLine | null,
+  busy: boolean
+) => summary !== null && summary.lines.length === 0 && !kit && !busy;
+
 /**
  * Checkout: the delivery address and zone, online or cash payment,
  * then `create_order` (which prices the fee from the zone) and, for online
@@ -1013,6 +1064,7 @@ export const Checkout = () => {
   const placeGift = usePlaceGift();
   const book = useAddressBook();
   const { address, setForm } = book;
+  const { kit, kitName } = useKitInCart();
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
@@ -1040,6 +1092,7 @@ export const Checkout = () => {
       ? { ...address, governorate: "", zoneId: gift.zoneId }
       : address,
     cart,
+    kit,
     payment: gift ? "online" : book.payment,
     settings,
     useBulbs,
@@ -1144,7 +1197,7 @@ export const Checkout = () => {
     profile.isPending ||
     book.loading;
   const failed = cart.isError || settings.isError || zones.isError;
-  const empty = summary !== null && summary.lines.length === 0 && !busy;
+  const empty = isEmpty(summary, kit, busy);
 
   return (
     <>
@@ -1188,7 +1241,7 @@ export const Checkout = () => {
                 missingGiftZone={missingGiftZone}
                 onChange={set}
                 onGift={setGift}
-                rentals={summary.lines.some((line) => isRentLine(line.item))}
+                rentals={giftBlocked(summary, kit)}
                 zone={zone}
                 zones={zoneList}
               />
@@ -1218,6 +1271,7 @@ export const Checkout = () => {
                   phone={address.phone}
                 />
               }
+              kitName={kitName}
               oneTap={gift ? null : book.oneTap(cash)}
               quote={quote ?? null}
               summary={summary}
