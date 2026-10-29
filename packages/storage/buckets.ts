@@ -77,6 +77,16 @@ export const buckets = {
     mimeTypes: ["image/png", "image/jpeg", "application/pdf"],
     public: false,
   },
+  /**
+   * Identity and educator documents under "<user id>/…": the member
+   * uploads them, support reads them and deletes them after review.
+   */
+  verifications: {
+    id: "verifications",
+    maxBytes: 10 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp", "application/pdf"],
+    public: false,
+  },
 } as const;
 
 export type BucketKey = keyof typeof buckets;

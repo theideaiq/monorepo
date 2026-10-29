@@ -347,6 +347,33 @@ test.describe("a signed-in customer", () => {
     noErrors();
   });
 
+  test("sends identity photos for review", async ({ page }) => {
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/pass/settings`);
+    const card = page.locator("#verification");
+    const photo = (name: string) => ({
+      buffer: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+        "base64"
+      ),
+      mimeType: "image/png",
+      name,
+    });
+    await card
+      .getByLabel("Front of your National Card")
+      .setInputFiles(photo("front.png"));
+    await card
+      .getByLabel("Back of your National Card")
+      .setInputFiles(photo("back.png"));
+    await card.getByLabel("A selfie").setInputFiles(photo("selfie.png"));
+    await expectAccessible(page);
+    await card.getByRole("button", { name: "Send for review" }).first().click();
+    await expect(
+      card.getByText("Your photos are waiting for review.", { exact: false })
+    ).toBeVisible();
+    noErrors();
+  });
+
   test("saves an address, then checks out in one tap", async ({ page }) => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/pass/settings`);

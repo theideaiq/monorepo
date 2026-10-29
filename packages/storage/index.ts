@@ -252,6 +252,21 @@ export const uploadStudentCard = (
   );
 };
 
+/** Uploads an identity or educator document to the member's folder. */
+export const uploadVerificationFile = (
+  supabase: Client,
+  userId: string,
+  file: File
+) => {
+  assertAllowed("verifications", file);
+  return upload(
+    supabase,
+    buckets.verifications.id,
+    objectPath(userId, file.name),
+    file
+  );
+};
+
 /** Uploads a document for a partner's student verification (apps/api, service role). */
 export const uploadStudentDocument = (
   admin: Client,
