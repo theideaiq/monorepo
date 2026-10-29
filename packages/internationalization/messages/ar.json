@@ -5835,6 +5835,7 @@
       },
       "badges": {
         "student": "طالب",
+        "educator": "هيئة تدريس",
         "staff": "فريق العمل",
         "contributor": "مساهم {level}"
       }

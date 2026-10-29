@@ -166,6 +166,8 @@ export const useStartCardEmbed = () => {
 /** What the frame shows: the card and the codes for this step and the next. */
 export interface EmbeddedCard {
   code: string;
+  /** Verified educator (pass_card), shown when not a student. */
+  educator?: boolean;
   member_number: number;
   name: string;
   next_code: string;
