@@ -1112,3 +1112,34 @@ Plus Duo waits for step 14.
     sells the copy and lifts the strike. If the copy has gone to a second
     chance, the late payment takes nothing and the line is refunded as
     out of stock.
+
+## Part 13: Get offers from shops (step 14)
+
+The brief names it; the selling policy (section 14) sets the rules. Where
+it leaves room:
+
+- **Who asks:** a member aged 18 or over, with a verified phone number
+  once `require_verified_phone` is on. At most 5 open requests.
+- **The request:** one item, either a catalog product or a title, with its
+  condition, a description, 3 to 8 photos and the area it's in (one of
+  the delivery zones). Photos are private: the member, support, and shops
+  while the request is open (and the shop whose offer was accepted).
+  A request is open for 7 days.
+- **Who offers:** approved shops (owners and admins), never The IDEA
+  itself and never on an item belonging to one of the shop's own people.
+  Shops see the item, its photos and area and the member's first name,
+  never who the member is.
+- **The offer:** an amount, how the shop checks the item (it collects it,
+  or the member brings it to a branch), how it pays (cash or transfer)
+  and a note. One live offer per shop per request. An offer stands for 72
+  hours or until the request closes, and the shop can withdraw it while it
+  waits.
+- **Choosing:** the member accepts one (the others are declined) or none
+  (closing the request).
+- **After acceptance:** the shop marks the sale done, or either side
+  calls it off. Contact details are never passed on: the two sides arrange
+  the hand-over in the messages, which The IDEA passes on and keeps (the
+  author's identity stays private).
+- **Money:** The IDEA doesn't buy, price or guarantee, and takes no fee;
+  the shop pays the member as its offer says.
+- Requests and offers past their time expire in the API's daily cron.
