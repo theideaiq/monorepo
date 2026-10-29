@@ -2530,6 +2530,29 @@
         "full": "You can save up to {max} addresses.",
         "failed": "That didn't save. Please try again.",
         "labelMissing": "Give the address a name."
+      },
+      "sections": {
+        "label": "Settings sections",
+        "profile": {
+          "title": "Profile",
+          "description": "Your name, language and the emails you'd like from us."
+        },
+        "email": {
+          "title": "Email",
+          "description": "The address your Pass signs in with, and its password."
+        },
+        "phone": {
+          "title": "Phone",
+          "description": "Your verified numbers and order updates on WhatsApp."
+        },
+        "connections": {
+          "title": "Connections",
+          "description": "Everything linked to your Pass: sign-in accounts, Telegram and the sites you signed in to with it."
+        },
+        "more": {
+          "title": "More",
+          "description": "Addresses, birthday, guardian, verification, appearance and deleting your Pass."
+        }
       }
     },
     "errors": {

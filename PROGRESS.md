@@ -573,6 +573,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-30: Pass → Settings in sections (the owner's message of 30
+  October): Profile; Email (the sign-in address and its password); Phone
+  (verified numbers and WhatsApp updates); Connections (sign-in accounts,
+  Telegram, connected sites); More (addresses, birthday, guardian,
+  verification, appearance, deleting the Pass), with a menu of the
+  sections at the top.
 - 2026-10-30: All verification in `/verify` (the owner's message of 30
   October). With a Pass, `/verify` has tabs for student (the card that was
   in Pass → Settings, with the major and year), educator, identity and
