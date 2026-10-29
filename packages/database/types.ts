@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      academic_terms: {
+        Row: {
+          created_at: string;
+          ends_on: string;
+          id: string;
+          name_ar: string;
+          name_en: string;
+          starts_on: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          ends_on: string;
+          id?: string;
+          name_ar: string;
+          name_en: string;
+          starts_on: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          ends_on?: string;
+          id?: string;
+          name_ar?: string;
+          name_en?: string;
+          starts_on?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       audit_logs: {
         Row: {
           action: string;
@@ -3631,6 +3661,7 @@ export type Database = {
           category_id: string;
           days: number;
           late_fee: number;
+          per_term: boolean;
           price: number;
           updated_at: string;
         };
@@ -3638,6 +3669,7 @@ export type Database = {
           category_id: string;
           days: number;
           late_fee: number;
+          per_term?: boolean;
           price: number;
           updated_at?: string;
         };
@@ -3645,6 +3677,7 @@ export type Database = {
           category_id?: string;
           days?: number;
           late_fee?: number;
+          per_term?: boolean;
           price?: number;
           updated_at?: string;
         };
@@ -7989,6 +8022,24 @@ export type Database = {
           late_fee: number;
           price: number;
         }[];
+      };
+      rental_term: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          created_at: string;
+          ends_on: string;
+          id: string;
+          name_ar: string;
+          name_en: string;
+          starts_on: string;
+          updated_at: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "academic_terms";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
       };
       rentals_quote: {
         Args: { delivery_zone?: string; items: Json };
