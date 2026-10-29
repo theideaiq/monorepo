@@ -50,7 +50,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(15);
+select plan(17);
 
 -- O owns the supplier shop, X is someone else, A is a staff admin, F is
 -- finance, C rents.
@@ -183,6 +183,20 @@ select is(
   (select amount from public.prepare_payouts(current_date)
    where seller_id = '9a3a0000-0000-0000-0000-0000000000d1'),
   9500::bigint, 'which pays them'
+);
+
+-- ── The Supply section ────────────────────────────────────────────────────
+
+select pg_temp.reset_role();
+select lives_ok(
+  $$ update public.organizations set features = array['selling', 'supply']
+     where id = '9a3a0000-0000-0000-0000-0000000000a1' $$,
+  'an organization can add the Supply section'
+);
+select throws_ok(
+  $$ update public.organizations set features = array['nonsense']
+     where id = '9a3a0000-0000-0000-0000-0000000000a1' $$,
+  '23514', null, 'but not an unknown one'
 );
 
 select * from finish();
