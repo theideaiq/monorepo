@@ -3729,6 +3729,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -3767,6 +3768,7 @@ export type Database = {
           created_at?: string;
           decided_at?: string | null;
           decided_by?: string | null;
+          delivery_refund?: number;
           details?: string | null;
           disputed_at?: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -3805,6 +3807,7 @@ export type Database = {
           created_at?: string;
           decided_at?: string | null;
           decided_by?: string | null;
+          delivery_refund?: number;
           details?: string | null;
           disputed_at?: string | null;
           fault?: Database["public"]["Enums"]["return_fault"];
@@ -6007,6 +6010,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -6361,6 +6365,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -6709,6 +6714,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7153,6 +7159,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7200,6 +7207,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7662,6 +7670,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7866,6 +7875,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -7938,6 +7948,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -8581,6 +8592,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -8816,6 +8828,7 @@ export type Database = {
           created_at: string;
           decided_at: string | null;
           decided_by: string | null;
+          delivery_refund: number;
           details: string | null;
           disputed_at: string | null;
           fault: Database["public"]["Enums"]["return_fault"];
@@ -8990,7 +9003,7 @@ export type Database = {
         | "canceled"
         | "expired"
         | "refunded";
-      payout_line_kind: "sale" | "collection_fee" | "pro_fee";
+      payout_line_kind: "sale" | "collection_fee" | "pro_fee" | "delivery_fee";
       payout_status: "pending" | "paid" | "cancelled";
       plus_seat_status: "requested" | "active" | "ended" | "declined";
       post_section: "news" | "stories" | "members" | "learn";
@@ -9271,7 +9284,7 @@ export const Constants = {
         "expired",
         "refunded",
       ],
-      payout_line_kind: ["sale", "collection_fee", "pro_fee"],
+      payout_line_kind: ["sale", "collection_fee", "pro_fee", "delivery_fee"],
       payout_status: ["pending", "paid", "cancelled"],
       plus_seat_status: ["requested", "active", "ended", "declined"],
       post_section: ["news", "stories", "members", "learn"],

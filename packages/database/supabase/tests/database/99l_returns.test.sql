@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(34);
+select plan(35);
 
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-000000000d01', 'o9l@example.iq'),
@@ -169,8 +169,8 @@ select pg_temp.login_as('00000000-0000-0000-0000-000000000d02');
 select results_eq(
   $$ select status::text, refund_amount, refund_bulbs
      from public.confirm_return_condition((select id from ids where name = 'faulty'), true) $$,
-  $$ values ('refund_due', 37250::bigint, 2500) $$,
-  'the shop''s check makes the line''s share of the goods paid, and its Bulbs, due'
+  $$ values ('refund_due', 42250::bigint, 2500) $$,
+  'the shop''s check makes the line''s share of the goods paid, the delivery fee and its Bulbs due'
 );
 select pg_temp.reset_role();
 select is(
@@ -215,6 +215,14 @@ select is(
   (public.request_return((select id from ids where name = 'three'), 1, 'wrong_item', null,
     array['00000000-0000-0000-0000-000000000d04/c.jpg'])).status,
   'approved'::public.return_status, 'a wrong item is approved at once'
+);
+select pg_temp.reset_role();
+select results_eq(
+  $$ select r.reason::text, private.return_delivery_refund(r) from public.returns r
+     where r.order_id = '9b100000-0000-0000-0000-0000000000e1' and r.reason in ('faulty', 'wrong_item')
+     order by 1 $$,
+  $$ values ('faulty', 5000::bigint), ('wrong_item', 0::bigint) $$,
+  'the order''s delivery fee is refunded once, with the first return that isn''t the customer''s doing'
 );
 select pg_temp.reset_role();
 update public.shipments set delivered_at = now() - interval '15 days' where id = '9b100000-0000-0000-0000-0000000000f1';

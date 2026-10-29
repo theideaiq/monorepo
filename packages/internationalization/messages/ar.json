@@ -3022,7 +3022,8 @@
         "sale": "الطلب #{order} · {name} ×{quantity}",
         "saleUnknown": "منتج بعته",
         "collectionFee": "رسوم استلام إرجاع (مسؤولية متجرك)",
-        "proFee": "خطة Pro، حتى {date}"
+        "proFee": "خطة Pro، حتى {date}",
+        "deliveryFee": "رسوم التوصيل المُعادة للزبون (خطأ متجرك)"
       },
       "shopSales": {
         "title": "التخفيضات والعروض",

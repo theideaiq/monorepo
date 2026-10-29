@@ -3022,7 +3022,8 @@
         "sale": "Order #{order} · {name} ×{quantity}",
         "saleUnknown": "An item you sold",
         "collectionFee": "Return collection fee (your shop's fault)",
-        "proFee": "Pro plan, until {date}"
+        "proFee": "Pro plan, until {date}",
+        "deliveryFee": "Delivery fee refunded to the customer (your shop's fault)"
       },
       "shopSales": {
         "title": "Sales and deals",
