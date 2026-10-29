@@ -422,6 +422,38 @@ export type Database = {
           },
         ];
       };
+      cart_plus_gifts: {
+        Row: {
+          created_at: string;
+          months: number;
+          plan_id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          months: number;
+          plan_id: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          months?: number;
+          plan_id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cart_plus_gifts_plan_id_fkey";
+            columns: ["plan_id"];
+            isOneToOne: false;
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       chart_of_accounts: {
         Row: {
           active: boolean;
@@ -2604,6 +2636,48 @@ export type Database = {
           weekday?: number | null;
         };
         Relationships: [];
+      };
+      plus_gift_months: {
+        Row: {
+          created_at: string;
+          months: number;
+          order_id: string;
+          plan_id: string;
+          used: number;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          months: number;
+          order_id: string;
+          plan_id: string;
+          used?: number;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          months?: number;
+          order_id?: string;
+          plan_id?: string;
+          used?: number;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_gift_months_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: true;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plus_gift_months_plan_id_fkey";
+            columns: ["plan_id"];
+            isOneToOne: false;
+            referencedRelation: "plans";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       plus_homes: {
         Row: {
@@ -6347,7 +6421,7 @@ export type Database = {
         };
         Returns: Json;
       };
-      claim_gift: { Args: { shipping: Json; token: string }; Returns: string };
+      claim_gift: { Args: { shipping?: Json; token: string }; Returns: string };
       claim_invite: { Args: { code: string }; Returns: string };
       claim_partner_webhooks: {
         Args: { max_rows?: number };
@@ -9309,6 +9383,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      use_plus_gift_month: { Args: { subscription: string }; Returns: boolean };
       waive_kit_deposit: {
         Args: { target: string };
         Returns: {

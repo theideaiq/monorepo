@@ -857,3 +857,28 @@ differ from earlier parts.
   can't be sent as gifts.
 - **Next:** tickets, programs and digital codes join the cart when they
   exist. Subscriptions (Plus, Pro) keep their own checkout.
+
+## Part 6: Plus months as a gift
+
+- **What's given:** 1 to 12 prepaid months of a monthly Plus plan (Glow,
+  Shine or Blaze), at its monthly price for each month. Never a student
+  price, since the recipient may not be a student; never a yearly plan.
+- **Only as a gift.** Plus months go in the cart (one Plus gift per cart)
+  and check out with Send as a gift, alone or with other things. Starting
+  Plus for yourself stays on the plan page's own checkout.
+- **Money rules:** gifted months don't count towards free delivery,
+  discounts, the giveaway cap or cashback (nothing is earned on Plus
+  fees). Bulbs pay up to half of one month. Months on their own have
+  nothing to deliver, so the buyer chooses no area and pays no delivery.
+- **Claiming:** the recipient opens the link and claims it; no address is
+  asked when nothing is delivered, and the order counts as delivered.
+  - **Without Plus:** they need what joining needs (a home in Baghdad and
+    a free place, or a waitlist invite; a guardian's permission under 18).
+    Plus starts at once on the gifted plan and ends when the gifted
+    months are used, unless they choose to keep it.
+  - **With Plus:** the months wait. Each renewal uses a gifted month
+    instead of an invoice, on the gifted plan; once they're used, the
+    member's own plan comes back. A member whose Plus is overdue uses the
+    first gifted month at once.
+  - **Plus paid by an organization** can't take gifted months, so they
+    don't sit unused.

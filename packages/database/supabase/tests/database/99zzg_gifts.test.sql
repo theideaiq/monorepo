@@ -131,7 +131,7 @@ select throws_ok(
 );
 select is(
   public.gift_preview((select value from made where name = 'token')) - 'order_id' - 'items' - 'zone_id',
-  '{"from":"Bashar","message":"Happy birthday!","claimed":false,"ready":false,"status":"pending","governorate":"baghdad","total":null}'::jsonb,
+  '{"from":"Bashar","message":"Happy birthday!","claimed":false,"ready":false,"status":"pending","governorate":"baghdad","total":null,"ships":true,"plus":null}'::jsonb,
   'anyone with the link sees who it''s from, the message and no price'
 );
 select is(
