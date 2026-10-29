@@ -88,13 +88,13 @@ select results_eq(
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000923');
 select throws_ok(
-  $$ select public.save_survey('{"title":"Mine","questions":[{"kind":"text","prompt":"Why?"}]}') $$,
+  $$ select public.save_survey('{"run_by":"AUIB", "purpose":"market", "title":"Mine","questions":[{"kind":"text","prompt":"Why?"}]}') $$,
   '42501', 'Only verified students create surveys', 'only verified students create surveys'
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000921');
 insert into ids select 'free', (public.save_survey('{
-  "title": "Study habits",
+  "run_by": "AUIB", "purpose": "market", "title": "Study habits",
   "min_seconds": 0,
   "questions": [
     {"kind": "single", "prompt": "How often do you study?", "options": ["Daily", "Weekly"]},
@@ -109,7 +109,7 @@ select throws_ok(
 );
 select lives_ok(
   $$ select public.save_survey(jsonb_build_object(
-       'id', (select id from ids where name = 'free'), 'title', 'Study habits', 'min_seconds', 0,
+       'id', (select id from ids where name = 'free'), 'run_by', 'AUIB', 'purpose', 'market', 'title', 'Study habits', 'min_seconds', 0,
        'consent', 'Your answers are anonymous and used for a graduation project only.',
        'questions', '[{"kind":"single","prompt":"How often do you study?","options":["Daily","Weekly"]},
                      {"kind":"single","prompt":"Pick Blue to show you are reading","options":["Red","Blue"],"attention_answer":"Blue"},
@@ -166,7 +166,7 @@ select is((select count(*)::integer from public.survey_responses), 0, 'but not w
 
 -- ── Targeting and Boosted rewards ──
 insert into ids select 'bulbs', (public.save_survey('{
-  "title": "Medicine students", "kind": "boosted", "wanted": 2, "majors": ["Medicine"], "min_seconds": 0,
+  "run_by": "AUIB", "purpose": "market", "title": "Medicine students", "kind": "boosted", "wanted": 2, "majors": ["Medicine"], "min_seconds": 0,
   "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "scale", "prompt": "How tired are you?"}]}')).id;
 select is((public.publish_survey((select id from ids where name = 'bulbs'))).held, 440,
@@ -192,7 +192,7 @@ select is((select refund_amount from public.surveys where id = (select id from i
 
 -- ── Cash ──
 insert into ids select 'cash', (public.save_survey('{
-  "title": "Campus food", "kind": "cash", "wanted": 10, "min_seconds": 60,
+  "run_by": "AUIB", "purpose": "market", "title": "Campus food", "kind": "cash", "wanted": 10, "min_seconds": 60,
   "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "number", "prompt": "Meals a week on campus"}]}')).id;
 select is((public.publish_survey((select id from ids where name = 'cash'))).status, 'awaiting_payment',
@@ -212,7 +212,7 @@ select is((select count(*) from public.notifications n
 -- ── Review ──
 select pg_temp.login_as('00000000-0000-0000-0000-000000000921');
 insert into ids select 'flagged', (public.save_survey('{
-  "title": "Beliefs", "consent": "Your answers are anonymous and used for research only.",
+  "run_by": "AUIB", "purpose": "market", "title": "Beliefs", "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "text", "prompt": "What is your religion?"}]}')).id;
 select results_eq(
   $$ select status, flags from public.publish_survey((select id from ids where name = 'flagged')) $$,

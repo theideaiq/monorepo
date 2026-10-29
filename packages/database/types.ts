@@ -4964,10 +4964,34 @@ export type Database = {
           },
         ];
       };
+      survey_debriefs: {
+        Row: {
+          body: string;
+          survey_id: string;
+        };
+        Insert: {
+          body: string;
+          survey_id: string;
+        };
+        Update: {
+          body?: string;
+          survey_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "survey_debriefs_survey_id_fkey";
+            columns: ["survey_id"];
+            isOneToOne: true;
+            referencedRelation: "surveys";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       survey_questions: {
         Row: {
           attention_answer: string | null;
           id: string;
+          is_attention: boolean | null;
           kind: string;
           options: string[];
           position: number;
@@ -4978,6 +5002,7 @@ export type Database = {
         Insert: {
           attention_answer?: string | null;
           id?: string;
+          is_attention?: never;
           kind: string;
           options?: string[];
           position?: number;
@@ -4988,6 +5013,7 @@ export type Database = {
         Update: {
           attention_answer?: string | null;
           id?: string;
+          is_attention?: never;
           kind?: string;
           options?: string[];
           position?: number;
@@ -5107,11 +5133,14 @@ export type Database = {
       };
       surveys: {
         Row: {
+          answers_deleted_at: string | null;
+          answers_warned_at: string | null;
           closed_at: string | null;
           closes_at: string | null;
           consent: string;
           created_at: string;
           creator_id: string | null;
+          deception: boolean;
           description: string;
           estimated_seconds: number | null;
           ethics_reference: string | null;
@@ -5119,6 +5148,7 @@ export type Database = {
           governorates: string[];
           held: number;
           id: string;
+          keep_months: number;
           kind: string;
           language: string;
           majors: string[];
@@ -5127,6 +5157,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          purpose: string | null;
           quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
@@ -5138,6 +5169,8 @@ export type Database = {
           reviewed_by: string | null;
           reward: number;
           reward_pending: number | null;
+          run_by: string | null;
+          share_summary: boolean;
           status: string;
           students_only: boolean;
           title: string;
@@ -5148,11 +5181,14 @@ export type Database = {
           years: number[];
         };
         Insert: {
+          answers_deleted_at?: string | null;
+          answers_warned_at?: string | null;
           closed_at?: string | null;
           closes_at?: string | null;
           consent?: string;
           created_at?: string;
           creator_id?: string | null;
+          deception?: boolean;
           description?: string;
           estimated_seconds?: number | null;
           ethics_reference?: string | null;
@@ -5160,6 +5196,7 @@ export type Database = {
           governorates?: string[];
           held?: number;
           id?: string;
+          keep_months?: number;
           kind?: string;
           language?: string;
           majors?: string[];
@@ -5168,6 +5205,7 @@ export type Database = {
           opened_at?: string | null;
           order_id?: string | null;
           paused_at?: string | null;
+          purpose?: string | null;
           quotas?: NonNullable<Json>;
           refund_amount?: number;
           refund_claimed_at?: string | null;
@@ -5179,6 +5217,8 @@ export type Database = {
           reviewed_by?: string | null;
           reward?: number;
           reward_pending?: number | null;
+          run_by?: string | null;
+          share_summary?: boolean;
           status?: string;
           students_only?: boolean;
           title: string;
@@ -5189,11 +5229,14 @@ export type Database = {
           years?: number[];
         };
         Update: {
+          answers_deleted_at?: string | null;
+          answers_warned_at?: string | null;
           closed_at?: string | null;
           closes_at?: string | null;
           consent?: string;
           created_at?: string;
           creator_id?: string | null;
+          deception?: boolean;
           description?: string;
           estimated_seconds?: number | null;
           ethics_reference?: string | null;
@@ -5201,6 +5244,7 @@ export type Database = {
           governorates?: string[];
           held?: number;
           id?: string;
+          keep_months?: number;
           kind?: string;
           language?: string;
           majors?: string[];
@@ -5209,6 +5253,7 @@ export type Database = {
           opened_at?: string | null;
           order_id?: string | null;
           paused_at?: string | null;
+          purpose?: string | null;
           quotas?: NonNullable<Json>;
           refund_amount?: number;
           refund_claimed_at?: string | null;
@@ -5220,6 +5265,8 @@ export type Database = {
           reviewed_by?: string | null;
           reward?: number;
           reward_pending?: number | null;
+          run_by?: string | null;
+          share_summary?: boolean;
           status?: string;
           students_only?: boolean;
           title?: string;
@@ -6197,11 +6244,14 @@ export type Database = {
       close_survey: {
         Args: { target: string };
         Returns: {
+          answers_deleted_at: string | null;
+          answers_warned_at: string | null;
           closed_at: string | null;
           closes_at: string | null;
           consent: string;
           created_at: string;
           creator_id: string | null;
+          deception: boolean;
           description: string;
           estimated_seconds: number | null;
           ethics_reference: string | null;
@@ -6209,6 +6259,7 @@ export type Database = {
           governorates: string[];
           held: number;
           id: string;
+          keep_months: number;
           kind: string;
           language: string;
           majors: string[];
@@ -6217,6 +6268,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          purpose: string | null;
           quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
@@ -6228,6 +6280,8 @@ export type Database = {
           reviewed_by: string | null;
           reward: number;
           reward_pending: number | null;
+          run_by: string | null;
+          share_summary: boolean;
           status: string;
           students_only: boolean;
           title: string;
@@ -6368,11 +6422,14 @@ export type Database = {
       confirm_survey_reward: {
         Args: { target: string };
         Returns: {
+          answers_deleted_at: string | null;
+          answers_warned_at: string | null;
           closed_at: string | null;
           closes_at: string | null;
           consent: string;
           created_at: string;
           creator_id: string | null;
+          deception: boolean;
           description: string;
           estimated_seconds: number | null;
           ethics_reference: string | null;
@@ -6380,6 +6437,7 @@ export type Database = {
           governorates: string[];
           held: number;
           id: string;
+          keep_months: number;
           kind: string;
           language: string;
           majors: string[];
@@ -6388,6 +6446,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          purpose: string | null;
           quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
@@ -6399,6 +6458,8 @@ export type Database = {
           reviewed_by: string | null;
           reward: number;
           reward_pending: number | null;
+          run_by: string | null;
+          share_summary: boolean;
           status: string;
           students_only: boolean;
           title: string;
@@ -7260,6 +7321,7 @@ export type Database = {
         }[];
       };
       my_survey_credits: { Args: Record<PropertyKey, never>; Returns: number };
+      my_survey_record: { Args: Record<PropertyKey, never>; Returns: Json };
       my_swap_terms: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -7531,11 +7593,14 @@ export type Database = {
       publish_survey: {
         Args: { target: string };
         Returns: {
+          answers_deleted_at: string | null;
+          answers_warned_at: string | null;
           closed_at: string | null;
           closes_at: string | null;
           consent: string;
           created_at: string;
           creator_id: string | null;
+          deception: boolean;
           description: string;
           estimated_seconds: number | null;
           ethics_reference: string | null;
@@ -7543,6 +7608,7 @@ export type Database = {
           governorates: string[];
           held: number;
           id: string;
+          keep_months: number;
           kind: string;
           language: string;
           majors: string[];
@@ -7551,6 +7617,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          purpose: string | null;
           quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
@@ -7562,6 +7629,8 @@ export type Database = {
           reviewed_by: string | null;
           reward: number;
           reward_pending: number | null;
+          run_by: string | null;
+          share_summary: boolean;
           status: string;
           students_only: boolean;
           title: string;
@@ -7638,11 +7707,14 @@ export type Database = {
           target: string;
         };
         Returns: {
+          answers_deleted_at: string | null;
+          answers_warned_at: string | null;
           closed_at: string | null;
           closes_at: string | null;
           consent: string;
           created_at: string;
           creator_id: string | null;
+          deception: boolean;
           description: string;
           estimated_seconds: number | null;
           ethics_reference: string | null;
@@ -7650,6 +7722,7 @@ export type Database = {
           governorates: string[];
           held: number;
           id: string;
+          keep_months: number;
           kind: string;
           language: string;
           majors: string[];
@@ -7658,6 +7731,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          purpose: string | null;
           quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
@@ -7669,6 +7743,8 @@ export type Database = {
           reviewed_by: string | null;
           reward: number;
           reward_pending: number | null;
+          run_by: string | null;
+          share_summary: boolean;
           status: string;
           students_only: boolean;
           title: string;
@@ -7952,11 +8028,14 @@ export type Database = {
       review_survey: {
         Args: { approve: boolean; note?: string; target: string };
         Returns: {
+          answers_deleted_at: string | null;
+          answers_warned_at: string | null;
           closed_at: string | null;
           closes_at: string | null;
           consent: string;
           created_at: string;
           creator_id: string | null;
+          deception: boolean;
           description: string;
           estimated_seconds: number | null;
           ethics_reference: string | null;
@@ -7964,6 +8043,7 @@ export type Database = {
           governorates: string[];
           held: number;
           id: string;
+          keep_months: number;
           kind: string;
           language: string;
           majors: string[];
@@ -7972,6 +8052,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          purpose: string | null;
           quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
@@ -7983,6 +8064,8 @@ export type Database = {
           reviewed_by: string | null;
           reward: number;
           reward_pending: number | null;
+          run_by: string | null;
+          share_summary: boolean;
           status: string;
           students_only: boolean;
           title: string;
@@ -8023,11 +8106,14 @@ export type Database = {
       save_survey: {
         Args: { body: Json };
         Returns: {
+          answers_deleted_at: string | null;
+          answers_warned_at: string | null;
           closed_at: string | null;
           closes_at: string | null;
           consent: string;
           created_at: string;
           creator_id: string | null;
+          deception: boolean;
           description: string;
           estimated_seconds: number | null;
           ethics_reference: string | null;
@@ -8035,6 +8121,7 @@ export type Database = {
           governorates: string[];
           held: number;
           id: string;
+          keep_months: number;
           kind: string;
           language: string;
           majors: string[];
@@ -8043,6 +8130,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          purpose: string | null;
           quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
@@ -8054,6 +8142,8 @@ export type Database = {
           reviewed_by: string | null;
           reward: number;
           reward_pending: number | null;
+          run_by: string | null;
+          share_summary: boolean;
           status: string;
           students_only: boolean;
           title: string;
@@ -8602,6 +8692,13 @@ export type Database = {
           title: string;
         }[];
       };
+      survey_attention_answers: {
+        Args: { target: string };
+        Returns: {
+          answer: string;
+          question_id: string;
+        }[];
+      };
       survey_audience: { Args: { target: string }; Returns: Json };
       survey_results: {
         Args: { target: string };
@@ -8612,14 +8709,18 @@ export type Database = {
           submitted_at: string;
         }[];
       };
+      survey_summary: { Args: { target: string }; Returns: Json };
       surveys_for_me: {
         Args: Record<PropertyKey, never>;
         Returns: {
+          answers_deleted_at: string | null;
+          answers_warned_at: string | null;
           closed_at: string | null;
           closes_at: string | null;
           consent: string;
           created_at: string;
           creator_id: string | null;
+          deception: boolean;
           description: string;
           estimated_seconds: number | null;
           ethics_reference: string | null;
@@ -8627,6 +8728,7 @@ export type Database = {
           governorates: string[];
           held: number;
           id: string;
+          keep_months: number;
           kind: string;
           language: string;
           majors: string[];
@@ -8635,6 +8737,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          purpose: string | null;
           quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
@@ -8646,6 +8749,8 @@ export type Database = {
           reviewed_by: string | null;
           reward: number;
           reward_pending: number | null;
+          run_by: string | null;
+          share_summary: boolean;
           status: string;
           students_only: boolean;
           title: string;

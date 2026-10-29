@@ -89,7 +89,7 @@ grant all on ids to authenticated;
 -- ── Opening ──
 select pg_temp.login_as('00000000-0000-0000-0000-0000000099c1');
 insert into ids select 'b', (public.save_survey('{
-  "title": "Study habits", "kind": "boosted", "wanted": 20,
+  "run_by": "AUIB", "purpose": "market", "title": "Study habits", "kind": "boosted", "wanted": 20,
   "consent": "Your answers are anonymous and used for a graduation project only.",
   "questions": [
     {"kind": "single", "prompt": "How often do you study?", "options": ["Daily", "Weekly"]},
@@ -258,7 +258,7 @@ select is((select count(*)::integer from public.claim_survey_refunds()), 0, 'and
 -- ── 60 days ──
 select pg_temp.login_as('00000000-0000-0000-0000-0000000099c1');
 insert into ids select 'old', (public.save_survey('{
-  "title": "Campus food", "kind": "free",
+  "run_by": "AUIB", "purpose": "market", "title": "Campus food", "kind": "free",
   "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "number", "prompt": "Meals a week on campus"}]}')).id;
 select public.publish_survey((select id from ids where name = 'old'));
