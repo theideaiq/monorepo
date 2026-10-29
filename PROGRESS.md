@@ -718,6 +718,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Plus features, part 4 (step 12; `20270225000000_perk_tiers.sql`).
+  Partner perks can be for given Plus tiers (Glow, Shine, Blaze), and two
+  perks of the same partner can be paired (a student and a Plus version):
+  a member sees the better one they can use. Pass → partner perks shows
+  which tier or badge opens a closed perk; Staff → Partners → Perks sets
+  the tiers and pairs.
 - 2026-10-29: Plus features, part 3 (step 12; `20270224000000_club_plus.sql`).
   Club RSVPs open at a set time (48 hours after an event is published,
   or its start if sooner; Staff can change it on the event), and Plus

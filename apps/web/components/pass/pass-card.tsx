@@ -165,14 +165,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
       .eq("active", true)
       .maybeSingle(),
     session.supabase.rpc("my_student").maybeSingle(),
-    session.supabase
-      .from("perks")
-      .select(
-        "id, partner_name, title_ar, title_en, details_ar, details_en, area_ar, area_en, audience"
-      )
-      .eq("active", true)
-      .order("position")
-      .order("created_at"),
+    session.supabase.rpc("my_perks"),
     session.supabase.rpc("my_survey_record"),
   ]);
   const name = profile?.full_name?.trim();
@@ -247,11 +240,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
         </div>
         <Perks perks={perks} title={card("perks.title")} />
       </div>
-      <PartnerPerks
-        badges={{ plus: Boolean(plan), student: Boolean(student?.verified) }}
-        locale={locale}
-        perks={offers ?? []}
-      />
+      <PartnerPerks locale={locale} perks={offers ?? []} />
       <div className="grid gap-4 border-t pt-4 md:grid-cols-[1fr_auto]">
         <dl className="grid content-start gap-2 text-sm">
           {session.user.email ? (

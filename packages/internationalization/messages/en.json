@@ -5558,7 +5558,12 @@
           "everyone": "Everyone with a Pass",
           "students": "Verified students",
           "plus": "Plus members"
-        }
+        },
+        "tiers": "Plus tiers",
+        "tiersHint": "For a Plus perk: tick the tiers it's for, or none for every Plus member.",
+        "pairWith": "Paired with",
+        "notPaired": "Not paired",
+        "pair": "Save pair"
       },
       "signIn": {
         "title": "Sign in with The IDEA Pass",
@@ -5747,10 +5752,14 @@
       "description": "Show your card at the counter: the partner scans it to give you the perk, once a day.",
       "audience": {
         "students": "Students",
-        "plus": "Plus"
+        "plus": "Plus",
+        "plusTiers": "Plus {tiers}"
       },
       "verifyToUse": "Verify as a student to use it",
-      "joinToUse": "Join Plus to use it"
+      "joinToUse": "Join Plus to use it",
+      "tierToUse": "For Plus {tiers}",
+      "upgradePlus": "With Plus: {title}",
+      "upgradeStudents": "For students: {title}"
     },
     "authorize": {
       "meta": "Sign in with The IDEA Pass",
