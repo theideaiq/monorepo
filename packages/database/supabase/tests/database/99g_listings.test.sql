@@ -235,7 +235,7 @@ select pg_temp.reset_role();
 update public.stock_items set status = 'retired'
 where product_id = '9e000000-0000-0000-0000-000000000001' and status = 'available';
 select pg_temp.login_as('00000000-0000-0000-0000-000000000ae4');
-insert into public.product_alerts (user_id, product_id)
+insert into public.wishlist_items (user_id, product_id)
 values ('00000000-0000-0000-0000-000000000ae4', '9e000000-0000-0000-0000-000000000001');
 select pg_temp.login_as('00000000-0000-0000-0000-000000000ae1');
 select public.set_offer('9e000000-0000-0000-0000-0000000000d1',
@@ -244,11 +244,17 @@ select public.set_offer('9e000000-0000-0000-0000-0000000000d1',
 select pg_temp.reset_role();
 select results_eq(
   $$ select event, link from public.notifications where user_id = '00000000-0000-0000-0000-000000000ae4' $$,
-  $$ values ('product_available', '/store/dune-9g') $$,
-  'A new offer tells those waiting'
+  $$ values ('saved_back_in_stock', '/store/dune-9g') $$,
+  'A new offer tells those who saved it'
 );
+select pg_temp.login_as('00000000-0000-0000-0000-000000000ae1');
+select public.set_offer('9e000000-0000-0000-0000-0000000000d1',
+  (select id from public.product_variants where product_id = '9e000000-0000-0000-0000-000000000001'),
+  'new', 9750, 1, 'BK-9G-NEW');
+select pg_temp.reset_role();
 select is(
-  (select count(*)::int from public.product_alerts), 0, 'Each alert is sent once'
+  (select count(*)::int from public.notifications where user_id = '00000000-0000-0000-0000-000000000ae4'),
+  1, 'A second listing in stock is not news'
 );
 
 select * from finish();
