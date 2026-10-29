@@ -78,6 +78,8 @@ export const resetCustomer = async () => {
   check(await db.from("cart_items").delete().eq("user_id", id));
   check(await db.from("cart_kits").delete().eq("user_id", id));
   check(await db.from("cart_plus_gifts").delete().eq("user_id", id));
+  // No program applications (their installments and cart lines go too).
+  check(await db.from("program_applications").delete().eq("user_id", id));
   check(await db.from("wishlist_items").delete().eq("user_id", id));
   check(await db.from("plus_homes").delete().eq("user_id", id));
   check(await db.from("plus_waitlist").delete().eq("user_id", id));
@@ -114,6 +116,7 @@ export const resetCustomer = async () => {
       user_id: id,
     })
   );
+  return id;
 };
 
 /** The customer's friend, who claims gifts. */

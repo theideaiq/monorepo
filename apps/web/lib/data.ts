@@ -507,6 +507,43 @@ export const getOpportunity = async (slug: string) => {
   );
 };
 
+export type ProgramRow = Pick<
+  Tables<"programs">,
+  | "chaperone"
+  | "includes_ar"
+  | "includes_en"
+  | "installments"
+  | "insurance"
+  | "max_age"
+  | "min_age"
+  | "opportunity_id"
+  | "passport_required"
+  | "pay_within_days"
+  | "plus_price"
+  | "price"
+  | "refund_schedule"
+  | "seats"
+  | "travel"
+  | "visa_refund_rate"
+>;
+
+/** The package behind one of The IDEA's programs, when it's sold here. */
+export const getProgram = async (opportunityId: string) => {
+  const supabase = createPublicClient();
+  if (!supabase) {
+    return null;
+  }
+  return check(
+    await supabase
+      .from("programs")
+      .select(
+        "opportunity_id, price, plus_price, seats, min_age, max_age, travel, insurance, chaperone, passport_required, includes_ar, includes_en, installments, refund_schedule, visa_refund_rate, pay_within_days"
+      )
+      .eq("opportunity_id", opportunityId)
+      .maybeSingle()
+  ) as ProgramRow | null;
+};
+
 /** How many people RSVP'd, without revealing who (`event_rsvp_count`). */
 export const getRsvpCount = (eventId: string) =>
   fallback("event_rsvp_count", null as number | null, async () => {

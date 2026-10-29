@@ -10,6 +10,7 @@ import {
 import { addressToForm, pinInIraq } from "@/lib/address-book";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
 import {
+  addProgramsToSummary,
   type CartItem,
   cartCount,
   clampQuantity,
@@ -31,6 +32,7 @@ import { needsOnboarding } from "@/lib/onboarding";
 import { orderPath } from "@/lib/order-checkout";
 import { isActiveOrder, itemCount, orderProgress } from "@/lib/orders";
 import { toAllowance } from "@/lib/plus-queries";
+import { payable, unpaid } from "@/lib/programs";
 
 const product = (
   overrides: Partial<NonNullable<CartItem["product"]>> = {}
@@ -154,6 +156,41 @@ describe("cart", () => {
     expect(clampQuantity(0, 5)).toBe(1);
     expect(clampQuantity(50, 99)).toBe(20);
     expect(clampQuantity(4, 2)).toBe(2);
+  });
+
+  test("program installments add to the totals, with nothing to deliver", () => {
+    const summary = addProgramsToSummary(summarizeCart([], settings), [
+      { amount: 500_000 },
+    ]);
+    expect(summary.totals).toMatchObject({
+      count: 1,
+      shippingFee: 0,
+      subtotal: 500_000,
+      total: 500_000,
+    });
+    expect(summary.canCheckout).toBe(true);
+  });
+
+  test("pays the installments not paid or waiting in an order", () => {
+    const payment = (
+      position: number,
+      extra: Partial<Parameters<typeof payable>[0]> = {}
+    ) => ({
+      amount: 250_000,
+      due_on: "2027-01-01",
+      order: null,
+      paid_at: null,
+      position,
+      ...extra,
+    });
+    const payments = [
+      payment(3),
+      payment(1, { paid_at: "2026-12-01T00:00:00Z" }),
+      payment(2, { order: { status: "cancelled" } }),
+    ];
+    expect(unpaid({ payments }).map((row) => row.position)).toEqual([2, 3]);
+    expect(payments.filter(payable).map((row) => row.position)).toEqual([3, 2]);
+    expect(payable(payment(4, { order: { status: "pending" } }))).toBe(false);
   });
 
   test("says how far a zone's free delivery is", () => {

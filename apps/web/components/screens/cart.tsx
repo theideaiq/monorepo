@@ -34,6 +34,7 @@ import { QuantityStepper } from "@/components/store/quantity-stepper";
 import {
   addKitToSummary,
   addPlusGiftToSummary,
+  addProgramsToSummary,
   type CartLineView,
   freeDeliveryRemaining,
   isOtherCondition,
@@ -45,6 +46,11 @@ import {
 } from "@/lib/cart";
 import { useCartKitLine, useRemoveCartKit } from "@/lib/kits";
 import { useCartPlusGiftLine, useRemoveCartPlusGift } from "@/lib/plus-gifts";
+import {
+  type ProgramLine,
+  useCartProgramLines,
+  useRemoveCartProgram,
+} from "@/lib/programs";
 import {
   useCart,
   useDeliveryZones,
@@ -285,6 +291,51 @@ const PlusGiftRow = ({ plus }: { readonly plus: CartPlusLine }) => {
   );
 };
 
+/** A program installment (or what's left) in the cart: paid online. */
+const ProgramRow = ({ line }: { readonly line: ProgramLine }) => {
+  const t = useTranslations("app.cart.program");
+  const tCart = useTranslations("app.cart");
+  const locale = useLocale();
+  const remove = useRemoveCartProgram();
+  const first = String(line.positions[0] ?? 1);
+  const last = String(line.positions.at(-1) ?? 1);
+  return (
+    <li className="grid gap-2 py-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="grid min-w-0 gap-0.5">
+          <span className="font-medium text-sm">
+            {line.title ? localized(line.title, "title", locale) : ""}
+          </span>
+          <span className="text-muted-foreground text-xs">
+            {line.total === 1
+              ? t("full")
+              : t(first === last ? "installment" : "installments", {
+                  first,
+                  last,
+                  total: String(line.total),
+                })}
+          </span>
+        </div>
+        <span className="shrink-0 font-medium text-sm tabular-nums">
+          {formatPrice(line.amount, locale)}
+        </span>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-muted-foreground text-xs">{t("online")}</span>
+        <Button
+          disabled={remove.isPending}
+          onClick={() => remove.mutate(line.applicationId)}
+          size="sm"
+          variant="ghost"
+        >
+          <Trash2Icon />
+          {tCart("remove")}
+        </Button>
+      </div>
+    </li>
+  );
+};
+
 /** The cart's lines and kit, priced, and whether there's anything in it. */
 const useCartSummary = (
   items: ReturnType<typeof useCart>["data"],
@@ -293,17 +344,27 @@ const useCartSummary = (
   const isStudent = useMyStudent().data?.verified ?? false;
   const kit = useCartKitLine(isStudent);
   const plus = useCartPlusGiftLine();
+  const programs = useCartProgramLines();
   const summary =
     items && settings
-      ? addPlusGiftToSummary(
-          addKitToSummary(summarizeCart(items, settings), kit),
-          plus
+      ? addProgramsToSummary(
+          addPlusGiftToSummary(
+            addKitToSummary(summarizeCart(items, settings), kit),
+            plus
+          ),
+          programs
         )
       : null;
   return {
-    empty: summary !== null && summary.lines.length === 0 && !kit && !plus,
+    empty:
+      summary !== null &&
+      summary.lines.length === 0 &&
+      !kit &&
+      !plus &&
+      programs.length === 0,
     kit,
     plus,
+    programs,
     summary,
   };
 };
@@ -320,14 +381,17 @@ export const Cart = () => {
 
   const loading = cart.isPending || settings.isPending;
   const failed = cart.isError || settings.isError;
-  const { empty, kit, plus, summary } = useCartSummary(
+  const { empty, kit, plus, programs, summary } = useCartSummary(
     cart.data,
     settings.data
   );
-  // Deposits and gifted Plus months don't count towards free delivery.
+  // Deposits, gifted Plus months and programs don't count towards free
+  // delivery.
+  const outside =
+    (plus?.price ?? 0) + programs.reduce((sum, line) => sum + line.amount, 0);
   const remaining = summary
     ? freeDeliveryRemaining(
-        summary.totals.subtotal - summary.totals.deposits - (plus?.price ?? 0),
+        summary.totals.subtotal - summary.totals.deposits - outside,
         baghdad?.free_from
       )
     : 0;
@@ -378,6 +442,9 @@ export const Cart = () => {
                 ))}
                 {kit ? <KitRow kit={kit} /> : null}
                 {plus ? <PlusGiftRow plus={plus} /> : null}
+                {programs.map((line) => (
+                  <ProgramRow key={line.applicationId} line={line} />
+                ))}
               </ul>
             </section>
             <Card className="lg:sticky lg:top-4">

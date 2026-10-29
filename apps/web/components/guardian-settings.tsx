@@ -25,6 +25,7 @@ import {
   useMyGuardian,
   useMyTeens,
 } from "@/lib/guardian";
+import { TeenApplications } from "./teen-applications";
 
 const errorKey = (error: Error | null) => {
   const message = error?.message ?? "";
@@ -163,6 +164,7 @@ const AdultGuardian = () => {
 
   return (
     <div className="grid gap-5 text-sm">
+      <TeenApplications />
       {teens.length > 0 ? (
         <section className="grid gap-3">
           <h3 className="font-medium">{t("teens")}</h3>

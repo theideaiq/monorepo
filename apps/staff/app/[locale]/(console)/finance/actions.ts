@@ -391,3 +391,18 @@ export const setCouponActive = staffAction(
     return success();
   }
 );
+
+/** Finance records a program refund it paid (Wayl or cash). */
+export const markProgramRefunded = staffAction(
+  "finance",
+  z.object({ id: uuid, reference: optionalText(200) }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("mark_program_refunded", {
+        application: input.id,
+        reference: input.reference ?? undefined,
+      })
+    );
+    return success("saved");
+  }
+);

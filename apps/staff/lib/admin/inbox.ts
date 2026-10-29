@@ -23,6 +23,7 @@ export const inboxItems = [
   "overdueRentals",
   "submissions",
   "opportunities",
+  "programApplications",
   "surveys",
   "surveyAppeals",
   "studentDocuments",
@@ -34,6 +35,7 @@ export const inboxItems = [
   "productFlags",
   "houseOffers",
   "pendingPayouts",
+  "programRefunds",
   "telegram",
   "procurement",
   "seats",
@@ -66,6 +68,8 @@ const hrefs: Record<InboxItem, string> = {
   procurement: "/partners/team",
   productChecks: "/catalog/checks",
   productFlags: "/catalog/checks#flags",
+  programApplications: "/club/opportunities#applications",
+  programRefunds: "/finance/programs",
   rentalRequests: "/rentals",
   returnRefunds: "/orders/returns#refunds",
   seats: "/partners/team/plus",
@@ -117,6 +121,8 @@ export const loadInbox = async (
     educatorChecks,
     organizationChecks,
     opportunities,
+    programApplications,
+    programRefunds,
   ] = await Promise.all([
     counted(can("support"), () =>
       supabase
@@ -240,6 +246,21 @@ export const loadInbox = async (
     counted(can("editorial"), () =>
       supabase.from("opportunities").select("id", head).eq("status", "pending")
     ),
+    // A minor's application waits for the guardian before review.
+    counted(can("editorial"), () =>
+      supabase
+        .from("program_applications")
+        .select("id", head)
+        .eq("status", "submitted")
+        .or("guardian_status.is.null,guardian_status.eq.approved")
+    ),
+    counted(finance, () =>
+      supabase
+        .from("program_applications")
+        .select("id", head)
+        .gt("refund_amount", 0)
+        .is("refunded_at", null)
+    ),
   ]);
 
   const counts: Record<InboxItem, number> = {
@@ -258,6 +279,8 @@ export const loadInbox = async (
     procurement,
     productChecks,
     productFlags,
+    programApplications,
+    programRefunds,
     rentalRequests,
     returnRefunds,
     seats,

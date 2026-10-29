@@ -719,3 +719,122 @@ test("a member follows an opportunity and finds it in Club → Yours", async ({
 
   await db.from("opportunities").delete().eq("slug", slug);
 });
+
+test("a member applies to one of The IDEA's programs and pays the first installment in the cart", async ({
+  context,
+  page,
+}) => {
+  await resetCustomer();
+  const db = admin();
+  const stamp = Date.now();
+  const slug = `e2e-summer-${stamp}`;
+  const title = `E2E Summer ${stamp}`;
+  // Earlier runs' programs: their applications first (they keep the program).
+  const { data: old } = await db
+    .from("opportunities")
+    .select("id")
+    .like("slug", "e2e-summer-%");
+  const oldIds = (old ?? []).map((row) => row.id);
+  await db.from("program_applications").delete().in("program_id", oldIds);
+  await db.from("opportunities").delete().in("id", oldIds);
+  const { data: listing, error } = await db
+    .from("opportunities")
+    .insert({
+      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      kind: "program",
+      location: "Boston",
+      slug,
+      starts_on: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(0, 10),
+      status: "approved",
+      title_ar: "برنامج صيفي للاختبار",
+      title_en: title,
+    })
+    .select("id")
+    .single();
+  if (error) {
+    throw error;
+  }
+  const later = new Date(Date.now() + 40 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
+  const program = await db.from("programs").insert({
+    includes_en: "Flights, a host family and classes",
+    installments: [{ percent: 50 }, { due_on: later, percent: 50 }],
+    min_age: 18,
+    opportunity_id: listing.id,
+    price: 1_000_000,
+    refund_schedule: [{ days_before: 30, percent: 100 }],
+  });
+  if (program.error) {
+    throw program.error;
+  }
+  await context.addCookies(await sessionCookies(customer.email, urls.web));
+
+  // The package and the form.
+  await page.goto(`${urls.web}/club/opportunities/${slug}`);
+  await expect(
+    page.getByRole("heading", { level: 1, name: title })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("article").getByText("Flights, a host family and classes")
+  ).toBeVisible();
+  await page.getByLabel("Emergency contact's name").fill("Mum");
+  await page.getByLabel("Emergency contact's phone").fill("+9647700000999");
+  await page.getByLabel("Passport scan").setInputFiles({
+    buffer: Buffer.from("e2e passport"),
+    mimeType: "application/pdf",
+    name: "passport.pdf",
+  });
+  await page.getByRole("button", { name: "Send application" }).click();
+  await expect(
+    page.getByRole("article").getByText("Application sent")
+  ).toBeVisible();
+  await expectAccessible(page);
+
+  // Staff accept it (as `review_program_application` would).
+  const { data: application } = await db
+    .from("program_applications")
+    .select("id")
+    .eq("program_id", listing.id)
+    .single();
+  const today = new Date().toISOString().slice(0, 10);
+  await db
+    .from("program_applications")
+    .update({ pay_by: today, price: 1_000_000, status: "accepted" })
+    .eq("id", application?.id ?? "");
+  await db.from("program_payments").insert([
+    {
+      amount: 500_000,
+      application_id: application?.id ?? "",
+      due_on: today,
+      position: 1,
+    },
+    {
+      amount: 500_000,
+      application_id: application?.id ?? "",
+      due_on: later,
+      position: 2,
+    },
+  ]);
+
+  // The first installment goes to the cart, and checks out with no address.
+  await page.reload();
+  await page.getByRole("button", { name: /^Pay .*\(due / }).click();
+  await expect(page).toHaveURL(new RegExp(`^${urls.web}/cart`));
+  await expect(page.getByText("Installment 1 of 2")).toBeVisible();
+  await expectAccessible(page);
+  await page.getByRole("link", { name: "Checkout" }).click();
+  await expect(page).toHaveURL(new RegExp(`^${urls.web}/checkout`));
+  await expect(page.getByText("Nothing to deliver")).toBeVisible({
+    timeout: 20_000,
+  });
+
+  await db
+    .from("cart_programs")
+    .delete()
+    .eq("application_id", application?.id ?? "");
+  await db.from("program_applications").delete().eq("program_id", listing.id);
+  await db.from("opportunities").delete().eq("id", listing.id);
+});

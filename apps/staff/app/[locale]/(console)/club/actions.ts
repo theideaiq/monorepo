@@ -12,6 +12,7 @@ import { slugify } from "@/lib/admin/catalog-import";
 import {
   checkbox,
   dateTime,
+  int,
   optionalDate,
   optionalDateTime,
   optionalInt,
@@ -536,5 +537,179 @@ export const deleteOpportunity = staffAction(
   async ({ input, supabase }) => {
     check(await supabase.from("opportunities").delete().eq("id", input.id));
     return success("deleted", { redirectTo: "/club/opportunities" });
+  }
+);
+
+// ── The IDEA's paid programs ───────────────────────────────────────────────
+
+const rows = z.array(z.string().trim().max(20)).max(6).default([]);
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+const WHOLE = /^\d+$/;
+
+/** The installment rows filled in: shares of 100%, the later ones dated. */
+const installmentsOf = (percents: string[], dates: string[]) =>
+  percents.flatMap((percent, index) =>
+    percent
+      ? [
+          index === 0
+            ? { percent: Number(percent) }
+            : { due_on: dates[index] ?? "", percent: Number(percent) },
+        ]
+      : []
+  );
+
+/** The refund rows filled in, furthest from the start first. */
+const refundScheduleOf = (days: string[], percents: string[]) =>
+  days
+    .flatMap((day, index) =>
+      day && percents[index]
+        ? [{ days_before: Number(day), percent: Number(percents[index]) }]
+        : []
+    )
+    .sort((a, b) => b.days_before - a.days_before);
+
+const programSchema = z
+  .object({
+    chaperone: checkbox,
+    id: uuid,
+    includesAr: optionalText(2000),
+    includesEn: optionalText(2000),
+    installmentDue: rows,
+    installmentPercent: rows,
+    insurance: checkbox,
+    maxAge: optionalInt(13, 99),
+    minAge: int(13, 99),
+    passportRequired: checkbox,
+    payWithinDays: int(1, 30),
+    plusPrice: optionalInt(0, 1_000_000_000),
+    price: int(0, 1_000_000_000),
+    refundDays: rows,
+    refundPercent: rows,
+    seats: optionalInt(1, 1000),
+    travel: checkbox,
+    visaRefundRate: int(0, 100),
+  })
+  .refine((row) => row.price % 250 === 0, { path: ["price"] })
+  .refine(
+    (row) =>
+      row.plusPrice === null ||
+      (row.plusPrice % 250 === 0 && row.plusPrice < row.price),
+    { path: ["plusPrice"] }
+  )
+  .refine((row) => row.maxAge === null || row.maxAge >= row.minAge, {
+    path: ["maxAge"],
+  })
+  .refine((row) => !row.travel || row.insurance, { path: ["insurance"] })
+  .refine((row) => row.minAge >= 18 || row.chaperone, { path: ["chaperone"] })
+  .refine(
+    (row) => {
+      const steps = installmentsOf(row.installmentPercent, row.installmentDue);
+      const dates = steps.slice(1).map((step) => step.due_on ?? "");
+      return (
+        steps.length > 0 &&
+        steps.every(
+          (step) =>
+            Number.isInteger(step.percent) &&
+            step.percent >= 1 &&
+            step.percent <= 100
+        ) &&
+        steps.reduce((sum, step) => sum + step.percent, 0) === 100 &&
+        dates.every(
+          (day, index) =>
+            DAY.test(day) && (index === 0 || day > dates[index - 1])
+        )
+      );
+    },
+    { path: ["installmentPercent"] }
+  )
+  .refine(
+    (row) =>
+      [...row.refundDays, ...row.refundPercent].every(
+        (value) => !value || WHOLE.test(value)
+      ) &&
+      refundScheduleOf(row.refundDays, row.refundPercent).every(
+        (step, index, all) =>
+          step.days_before <= 365 &&
+          step.percent <= 100 &&
+          (index === 0 ||
+            (step.days_before < all[index - 1].days_before &&
+              step.percent <= all[index - 1].percent))
+      ),
+    { path: ["refundDays"] }
+  );
+
+/** Sells one of The IDEA's program opportunities as a package. */
+export const saveProgram = staffAction(
+  "editorial",
+  programSchema,
+  async ({ input, supabase }) => {
+    check(
+      await supabase.from("programs").upsert({
+        chaperone: input.chaperone,
+        includes_ar: input.includesAr,
+        includes_en: input.includesEn,
+        installments: installmentsOf(
+          input.installmentPercent,
+          input.installmentDue
+        ),
+        insurance: input.insurance,
+        max_age: input.maxAge,
+        min_age: input.minAge,
+        opportunity_id: input.id,
+        passport_required: input.passportRequired,
+        pay_within_days: input.payWithinDays,
+        plus_price: input.plusPrice,
+        price: input.price,
+        refund_schedule: refundScheduleOf(
+          input.refundDays,
+          input.refundPercent
+        ),
+        seats: input.seats,
+        travel: input.travel,
+        visa_refund_rate: input.visaRefundRate,
+      })
+    );
+    return success("saved");
+  }
+);
+
+/** Accept (within the seats), waitlist or refuse an application. */
+export const reviewApplication = staffAction(
+  "editorial",
+  z.object({
+    decision: z.enum(["accepted", "waitlisted", "refused"]),
+    id: uuid,
+    note: optionalText(1000),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("review_program_application", {
+        application: input.id,
+        decision: input.decision,
+        note: input.note ?? undefined,
+      })
+    );
+    return success("saved");
+  }
+);
+
+/**
+ * Ends a place: the program done, a refused visa, unpaid by its date or
+ * called off by The IDEA; the refund follows the program's rules.
+ */
+export const endApplication = staffAction(
+  "editorial",
+  z.object({
+    id: uuid,
+    outcome: z.enum(["completed", "visa_refused", "unpaid", "the_idea"]),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("end_program_application", {
+        application: input.id,
+        outcome: input.outcome,
+      })
+    );
+    return success("saved");
   }
 );

@@ -285,6 +285,40 @@ export const getVerificationFileUrl = async (
   return data.signedUrl;
 };
 
+/** Uploads a passport scan for a program the member applies to. */
+export const uploadProgramDocument = (
+  supabase: Client,
+  userId: string,
+  programId: string,
+  file: File
+) => {
+  assertAllowed("programDocuments", file);
+  return upload(
+    supabase,
+    buckets.programDocuments.id,
+    objectPath(`${userId}/${programId}`, file.name),
+    file
+  );
+};
+
+/** A time-limited link to a passport scan (its applicant or editors). */
+export const getProgramDocumentUrl = async (
+  supabase: Client,
+  path: string,
+  expiresIn = 10 * 60
+) => {
+  const { data, error } = await supabase.storage
+    .from(buckets.programDocuments.id)
+    .createSignedUrl(path, expiresIn);
+  if (error || !data) {
+    throw new StorageError(
+      "not_found",
+      `No signed URL: ${error?.message ?? "no data"}`
+    );
+  }
+  return data.signedUrl;
+};
+
 /** Uploads a document for a partner's student verification (apps/api, service role). */
 export const uploadStudentDocument = (
   admin: Client,

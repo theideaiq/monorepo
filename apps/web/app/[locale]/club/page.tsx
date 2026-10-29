@@ -32,7 +32,7 @@ import { localizedMetadata } from "@/lib/metadata";
 
 interface ClubProps {
   params: Promise<{ locale: Locale }>;
-  searchParams: Promise<{ show?: string; topic?: string }>;
+  searchParams: Promise<{ show?: string; tab?: string; topic?: string }>;
 }
 
 /** The rooms, as on Telegram (topics of The IDEA Club group). */
@@ -223,7 +223,7 @@ const Read = async ({
  * submissions), with the Telegram rooms at the bottom.
  */
 const Club = async ({ params, searchParams }: ClubProps) => {
-  const [{ locale }, { show, topic }] = await Promise.all([
+  const [{ locale }, { show, tab, topic }] = await Promise.all([
     params,
     searchParams,
   ]);
@@ -247,7 +247,7 @@ const Club = async ({ params, searchParams }: ClubProps) => {
         </Section>
       ) : null}
       <Section className="flex flex-col gap-12">
-        <ClubYours />
+        <ClubYours tab={tab} />
         <TelegramCard locale={locale} />
       </Section>
     </>

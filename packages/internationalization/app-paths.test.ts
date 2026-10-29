@@ -13,6 +13,9 @@ describe("currentAppPath", () => {
     expect(currentAppPath("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
     expect(currentAppPath("/pass/support/t1")).toBe("/help/t1");
     expect(currentAppPath("/pass/wishlist")).toBe("/pass/saved");
+    expect(currentAppPath("/club/yours?tab=applications")).toBe(
+      "/club?tab=applications#yours"
+    );
     expect(currentAppPath("/post/events/quiz-night")).toBe("/club/quiz-night");
     expect(currentAppPath("/post/stories")).toBe("/club?topic=stories#read");
     expect(currentAppPath("/post/learn?ref=tg")).toBe(

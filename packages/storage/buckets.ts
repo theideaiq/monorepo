@@ -33,6 +33,17 @@ export const buckets = {
     public: false,
   },
   /**
+   * Passport scans for The IDEA's programs under
+   * "<user id>/<program id>/…": the applicant uploads them, editors read
+   * them; deleted 30 days after the application or the program ends.
+   */
+  programDocuments: {
+    id: "program-documents",
+    maxBytes: 10 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp", "application/pdf"],
+    public: false,
+  },
+  /**
    * Photos of an item a customer returns, under "<user id>/…": the
    * customer uploads them; the shop and support read them.
    */

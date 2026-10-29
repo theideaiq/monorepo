@@ -26,11 +26,14 @@ incidents) is in `docs/platform`.
     (posts by topic tag, `?topic=news|stories|guides`, `posts.topics`)
     and Yours at `#yours` (tickets with the calendar feed, the surveys you
     created, your submissions, each linking to its receipt in
-    `/pass/orders` when it was paid for, and the opportunities you
-    follow), then the Telegram rooms as one card at the bottom;
+    `/pass/orders` when it was paid for, your applications to The IDEA's
+    programs and the opportunities you follow; `?tab=` opens one), then
+    the Telegram rooms as one card at the bottom;
     `/club/<slug>` is a post or an event (with RSVP) and
     `/club/opportunities/<slug>` an opportunity (who runs it, where to
-    apply and Notify me); `/partners` ("For partners") presents The
+    apply and Notify me; for The IDEA's own programs, the package, the
+    application with passport scans, its installments, which go through
+    the cart, and withdrawing); `/partners` ("For partners") presents The
     IDEA Partners to organizations; `/search` (the one search: products
     to buy and rent, events, opportunities and posts); `/help`
     (FAQ, the contact form at `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
@@ -133,12 +136,14 @@ incidents) is in `docs/platform`.
     `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
     and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·
     Club `/club` (with `/club/opportunities`, where editors review
-    organizations' opportunities and post The IDEA's own, and
-    `/club/telegram`) · Partners `/partners` (Team
+    organizations' opportunities and post The IDEA's own, selling The
+    IDEA's programs as packages with their applications at
+    `/club/opportunities/<id>/applications`, and `/club/telegram`) · Partners `/partners` (Team
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`
     where staff approve shops, perks and sign-in) · Finance `/finance` (with
-    `/finance/payouts`, the weekly shop payouts, and `/finance/coupons`,
+    `/finance/payouts`, the weekly shop payouts, `/finance/programs`,
+    program refunds to pay, and `/finance/coupons`,
     coupon codes members enter at checkout) · Settings
     `/settings` (with `/settings/audit`), and `/search`. Then `/no-access`
     (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:

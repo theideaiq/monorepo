@@ -80,6 +80,14 @@ export const NOTIFICATION_EVENTS = [
   "offer_declined",
   "opportunity_open",
   "opportunity_deadline",
+  "program_guardian_request",
+  "program_guardian_approved",
+  "program_guardian_declined",
+  "program_accepted",
+  "program_waitlisted",
+  "program_refused",
+  "program_cancelled",
+  "program_refunded",
   "offer_countered",
   "return_approved",
   "return_rejected",
@@ -176,6 +184,21 @@ const opportunityValues = (
   };
 };
 
+/** A program's title, who applied and any refund (`program_*`). */
+const programValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const amount = Number(text(data.amount) || text(data.refund));
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    hasRefund: amount > 0 ? "yes" : "no",
+    name: text(data.name),
+    reason: text(data.reason) || "other",
+    title: opportunityValues(data, locale).title,
+  };
+};
+
 /** An offer's item and amount (`offer_*`). */
 const offerValues = (
   data: Record<string, Json | undefined>,
@@ -234,6 +257,14 @@ const extraValues: Partial<
   plus_invite: (data) => ({ hours: text(data.hours) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
   product_available: (data, locale) => ({ name: itemName(data, locale) }),
+  program_accepted: programValues,
+  program_cancelled: programValues,
+  program_guardian_approved: programValues,
+  program_guardian_declined: programValues,
+  program_guardian_request: programValues,
+  program_refunded: programValues,
+  program_refused: programValues,
+  program_waitlisted: programValues,
   quote_sent: quoteValues,
   return_approved: returnValues,
   return_refund_due: returnValues,

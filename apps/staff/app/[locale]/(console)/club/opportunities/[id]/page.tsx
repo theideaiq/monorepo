@@ -8,12 +8,14 @@ import { env } from "@/env";
 import { toBaghdadInput } from "@/lib/admin/dates";
 import { formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";
+import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
 import { OpportunityForm } from "../../_components/opportunity-form";
 import {
   FeatureOpportunityForm,
   ReviewOpportunityForm,
 } from "../../_components/opportunity-review";
+import { ProgramForm } from "../../_components/program-form";
 import { closeOpportunity, deleteOpportunity } from "../../actions";
 
 type Status =
@@ -55,6 +57,21 @@ const OpportunityPage = async ({
   const runBy = (Array.isArray(organization) ? organization[0] : organization)
     ?.name;
   const status = row.status as Status;
+  // The IDEA's own programs are sold here as packages.
+  const sold = row.kind === "program" && !row.organization_id;
+  const [{ data: program }, { count: applications }] = sold
+    ? await Promise.all([
+        supabase
+          .from("programs")
+          .select("*")
+          .eq("opportunity_id", id)
+          .maybeSingle(),
+        supabase
+          .from("program_applications")
+          .select("id", { count: "exact", head: true })
+          .eq("program_id", id),
+      ])
+    : [{ data: null }, { count: null }];
 
   return (
     <>
@@ -76,12 +93,32 @@ const OpportunityPage = async ({
         </ActionButton>
       </PageHeader>
       <PageBody className="xl:grid-cols-[1fr_22rem]">
-        <OpportunityForm
-          deadline={toBaghdadInput(row.deadline)}
-          opensAt={toBaghdadInput(row.opens_at)}
-          opportunity={row}
-          supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
-        />
+        <div className="grid content-start gap-4">
+          <OpportunityForm
+            deadline={toBaghdadInput(row.deadline)}
+            opensAt={toBaghdadInput(row.opens_at)}
+            opportunity={row}
+            supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
+          />
+          {sold ? (
+            <Panel
+              description={t("programs.packageDescription")}
+              title={t("programs.package")}
+            >
+              {program ? (
+                <Link
+                  className="text-sm underline"
+                  href={`/club/opportunities/${row.id}/applications`}
+                >
+                  {t("programs.applicationsLink", {
+                    count: format.number(applications ?? 0),
+                  })}
+                </Link>
+              ) : null}
+              <ProgramForm opportunityId={row.id} program={program} />
+            </Panel>
+          ) : null}
+        </div>
         <div className="grid content-start gap-4">
           <Panel title={t("opportunities.status")}>
             <div className="flex flex-wrap items-center gap-2 text-sm">

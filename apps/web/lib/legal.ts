@@ -15,7 +15,7 @@ export const legalDocuments = [
   { slug: "rewards", updated: "2026-10-29" },
   { slug: "selling", updated: "2026-10-28" },
   { slug: "club", updated: "2026-10-28" },
-  { slug: "programs", updated: "2026-10-28" },
+  { slug: "programs", updated: "2026-10-29" },
   { slug: "surveys", updated: "2026-10-29" },
   { slug: "business", updated: "2026-10-28" },
   { slug: "accessibility", updated: "2026-10-27" },

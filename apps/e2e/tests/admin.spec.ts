@@ -10,7 +10,7 @@ import {
   totp,
 } from "../fixtures";
 import { urls } from "../playwright.config";
-import { resetCompany, resetStaff } from "../seed";
+import { resetCompany, resetCustomer, resetStaff } from "../seed";
 import { expectAccessible } from "./helpers";
 
 /** `?return_to=…` back to Staff's home in `locale`. */
@@ -121,6 +121,66 @@ test.describe("Staff", () => {
     await page.getByRole("button", { name: "Send decision" }).click();
     await expect(page.getByText("Listed", { exact: true })).toBeVisible();
     await expectAccessible(page);
+
+    // Club → Opportunities: one of The IDEA's programs sold as a package,
+    // and an application accepted.
+    const customerId = await resetCustomer();
+    const { data: old } = await db
+      .from("opportunities")
+      .select("id")
+      .eq("slug", "e2e-staff-program");
+    await db
+      .from("opportunities")
+      .delete()
+      .in(
+        "id",
+        (old ?? []).map((row) => row.id)
+      );
+    const { data: listing } = await db
+      .from("opportunities")
+      .insert({
+        kind: "program",
+        location: "Boston",
+        slug: "e2e-staff-program",
+        starts_on: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .slice(0, 10),
+        status: "approved",
+        title_ar: "برنامج الموظفين",
+        title_en: "E2E Staff Program",
+      })
+      .select("id")
+      .single();
+    await page.goto(`${urls.staff}/club/opportunities/${listing?.id}`);
+    await page.getByLabel("Price (IQD)", { exact: true }).fill("1000000");
+    await page.getByRole("button", { name: "Save package" }).click();
+    await expect(
+      page.getByRole("link", { name: "Applications (0)" })
+    ).toBeVisible();
+    await expectAccessible(page);
+    await db.from("program_applications").insert({
+      emergency_name: "Mum",
+      emergency_phone: "+9647700000999",
+      program_id: listing?.id ?? "",
+      user_id: customerId,
+    });
+    await page.goto(`${urls.staff}/club/opportunities#applications`);
+    await page
+      .getByRole("link", { name: "E2E Staff Program: 1 waiting" })
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Applications" })
+    ).toBeVisible();
+    await expectAccessible(page);
+    await page.getByRole("link", { name: customer.name }).click();
+    await page.getByRole("button", { name: "Send decision" }).click();
+    await expect(page.getByText("Installments ·")).toBeVisible();
+    await expectAccessible(page);
+    await db.from("program_applications").delete().eq("user_id", customerId);
+    await db
+      .from("opportunities")
+      .delete()
+      .eq("id", listing?.id ?? "");
 
     await page.goto(`${urls.staff}/partners/perks`);
     await expect(page.getByRole("heading", { name: "New perk" })).toBeVisible();
