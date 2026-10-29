@@ -46,6 +46,13 @@ const LineLabel = ({
   if (line.kind === "delivery_fee") {
     return t("deliveryFee");
   }
+  if (line.kind === "supply") {
+    return t("supply", {
+      date: line.covers_until
+        ? formatDate(`${line.covers_until}T12:00:00`, locale)
+        : "",
+    });
+  }
   return t("proFee", {
     date: line.covers_until
       ? formatDate(`${line.covers_until}T12:00:00`, locale)

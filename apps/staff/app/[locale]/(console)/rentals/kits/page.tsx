@@ -1,4 +1,4 @@
-import { localized } from "@repo/commerce";
+import { HOUSE_SELLER_ID, localized } from "@repo/commerce";
 import {
   Table,
   TableBody,
@@ -21,6 +21,7 @@ import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
+import { supplierOptions } from "@/lib/admin/suppliers";
 import { rentalTabs } from "../tabs";
 import {
   AddKitUnitForm,
@@ -148,7 +149,7 @@ const KitsPage = async () => {
   const t = await getTranslations("admin.rentals");
   const format = formatters(locale);
 
-  const [{ data: bookings }, { data: kits }, { data: units }] =
+  const [{ data: bookings }, { data: kits }, { data: units }, suppliers] =
     await Promise.all([
       loadBookings(supabase),
       supabase
@@ -157,10 +158,12 @@ const KitsPage = async () => {
         .order("position"),
       supabase
         .from("kit_units")
-        .select("id, kit_type, label, status")
+        .select("id, kit_type, label, status, seller_id")
         .order("kit_type")
         .order("label"),
+      supplierOptions(supabase, t("kits.house")),
     ]);
+  const supplierName = new Map(suppliers.map((row) => [row.id, row.name]));
   const names = await profileNames(
     supabase,
     (bookings ?? []).flatMap((booking) =>
@@ -232,9 +235,21 @@ const KitsPage = async () => {
                     <span>
                       {kitName.get(unit.kit_type) ?? unit.kit_type} ·{" "}
                       {unit.label}
+                      {unit.seller_id === HOUSE_SELLER_ID ? null : (
+                        <span className="block text-muted-foreground text-xs">
+                          {t("kits.suppliedBy", {
+                            shop: supplierName.get(unit.seller_id) ?? "",
+                          })}
+                        </span>
+                      )}
                     </span>
                     {canWrite ? (
-                      <KitUnitStatus id={unit.id} status={unit.status} />
+                      <KitUnitStatus
+                        id={unit.id}
+                        sellerId={unit.seller_id}
+                        status={unit.status}
+                        suppliers={suppliers}
+                      />
                     ) : (
                       <span>{t(`kits.units.${unit.status as "active"}`)}</span>
                     )}
@@ -248,6 +263,7 @@ const KitsPage = async () => {
                   id: kit.id,
                   name: kitName.get(kit.id) ?? kit.id,
                 }))}
+                suppliers={suppliers}
               />
             ) : null}
           </div>

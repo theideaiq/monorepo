@@ -718,6 +718,18 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Supply, parts 2 and 3 (step 13;
+  `20270302000000_supply_feature.sql`, then the code). Supply is a
+  Partners section organizations add from Home (`supply` in
+  `organizations.features`), after Selling in the sidebar. Partners →
+  Supply needs an approved shop: every member sees the copies and kit
+  units The IDEA holds for it and how often each went out; owners and
+  admins also see the fees agreed and each fee earned, and the payout
+  statement labels the Supply line. Staff: Partners → Shops sets an
+  approved shop's fees (staff admins), a copy's and a kit unit's owner is
+  The IDEA or a supplier (Catalog → product → Copies, Rentals → Kits), and
+  Finance → Payouts counts supply fees as owed, not deducted. Step 13 is
+  done.
 - 2026-10-29: Supply, part 1 (step 13; `20270301000000_supply_kind.sql`,
   `20270301000100_supply.sql`). Supplier shops lend copies to Plus and kit
   units to game nights: staff set each supplier's fee per rental and per

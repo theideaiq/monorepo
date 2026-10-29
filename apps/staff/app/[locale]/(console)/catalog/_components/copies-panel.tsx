@@ -1,5 +1,6 @@
 "use client";
 
+import { HOUSE_SELLER_ID } from "@repo/commerce";
 import { Constants, type Tables } from "@repo/database";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
@@ -9,6 +10,7 @@ import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import { FieldGrid, SelectField, TextField } from "@/components/admin/fields";
 import { Panel } from "@/components/admin/page";
 import { formatters } from "@/lib/admin/format";
+import type { SupplierOption } from "@/lib/admin/suppliers";
 import { addCopies, deleteCopy, saveCopy } from "../actions";
 
 const { Enums } = Constants.public;
@@ -25,19 +27,29 @@ interface CopyFieldsProps {
   readonly copy?: Copy;
   readonly defaultCondition: Copy["condition"];
   readonly defaultPurpose: Copy["purpose"];
+  /** The IDEA first, then the shops that supply it. */
+  readonly suppliers: readonly SupplierOption[];
   /** The product's variants (at least one). */
   readonly variants: readonly CopyVariant[];
 }
 
-/** Variant, condition, purpose, place, prices, serial and note of a copy. */
+/**
+ * Variant, condition, purpose, owner, place, prices, serial and note of a
+ * copy. The owner is chosen only between The IDEA and its suppliers; a
+ * shop's own copies (its listings) keep their shop.
+ */
 const CopyFields = ({
   copy,
   defaultCondition,
   defaultPurpose,
+  suppliers,
   variants,
 }: CopyFieldsProps) => {
   const t = useTranslations("admin.catalog");
   const tStore = useTranslations("store");
+  const owner = copy?.seller_id ?? HOUSE_SELLER_ID;
+  const chooseOwner =
+    suppliers.length > 1 && suppliers.some((row) => row.id === owner);
   return (
     <FieldGrid columns={4}>
       {variants.length > 1 ? (
@@ -75,6 +87,18 @@ const CopyFields = ({
           value,
         }))}
       />
+      {chooseOwner ? (
+        <SelectField
+          defaultValue={owner}
+          hint={t("copies.supplierHint")}
+          label={t("copies.supplier")}
+          name="sellerId"
+          options={suppliers.map((row) => ({
+            label: row.name,
+            value: row.id,
+          }))}
+        />
+      ) : null}
       <TextField
         defaultValue={copy?.location ?? ""}
         label={t("copies.location")}
@@ -176,6 +200,7 @@ interface CopiesPanelProps {
   readonly copies: Copy[];
   readonly disabled: boolean;
   readonly product: Pick<Tables<"products">, "condition" | "id" | "kind">;
+  readonly suppliers: readonly SupplierOption[];
   readonly variants: readonly CopyVariant[];
 }
 
@@ -187,6 +212,7 @@ export const CopiesPanel = ({
   copies,
   disabled,
   product,
+  suppliers,
   variants,
 }: CopiesPanelProps) => {
   const t = useTranslations("admin.catalog");
@@ -194,6 +220,7 @@ export const CopiesPanel = ({
   const defaults = {
     defaultCondition: product.condition,
     defaultPurpose: product.kind === "rental" ? "rental" : "sale",
+    suppliers,
     variants,
   } as const;
   const available = copies.filter((copy) => copy.status === "available");

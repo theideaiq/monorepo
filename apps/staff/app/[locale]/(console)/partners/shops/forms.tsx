@@ -3,12 +3,18 @@
 import { useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import {
+  CheckboxField,
   FieldGrid,
   SelectField,
   TextareaField,
   TextField,
 } from "@/components/admin/fields";
-import { decideSeller, saveIndividualLimit, setShopKind } from "../actions";
+import {
+  decideSeller,
+  saveIndividualLimit,
+  saveSupplyTerms,
+  setShopKind,
+} from "../actions";
 
 const DECISIONS = ["approved", "rejected", "suspended"] as const;
 
@@ -109,6 +115,64 @@ export const IndividualLimitForm = ({ limit }: { readonly limit: number }) => {
         wrapperClassName="w-56"
       />
       <SubmitButton size="sm">{t("save")}</SubmitButton>
+    </ActionForm>
+  );
+};
+
+/** A supplier's fees per rental and per kit booking, paused or not. */
+export const SupplyTermsForm = ({
+  id,
+  terms,
+}: {
+  readonly id: string;
+  readonly terms: {
+    active: boolean;
+    kit_fee: number;
+    note: string | null;
+    rental_fee: number;
+  } | null;
+}) => {
+  const t = useTranslations("admin.companies.shops.supply");
+  return (
+    <ActionForm action={saveSupplyTerms} className="grid gap-3">
+      <input name="id" type="hidden" value={id} />
+      <FieldGrid columns={2}>
+        <TextField
+          defaultValue={String(terms?.rental_fee ?? 0)}
+          dir="ltr"
+          hint={t("rentalFeeHint")}
+          inputMode="numeric"
+          label={t("rentalFee")}
+          name="rentalFee"
+          required
+        />
+        <TextField
+          defaultValue={String(terms?.kit_fee ?? 0)}
+          dir="ltr"
+          hint={t("kitFeeHint")}
+          inputMode="numeric"
+          label={t("kitFee")}
+          name="kitFee"
+          required
+        />
+      </FieldGrid>
+      <TextareaField
+        defaultValue={terms?.note ?? ""}
+        hint={t("noteHint")}
+        label={t("note")}
+        maxLength={1000}
+        name="note"
+        rows={2}
+      />
+      <CheckboxField
+        defaultChecked={terms?.active ?? true}
+        hint={t("activeHint")}
+        label={t("active")}
+        name="active"
+      />
+      <SubmitButton className="justify-self-start" size="sm" variant="outline">
+        {t(terms ? "save" : "start")}
+      </SubmitButton>
     </ActionForm>
   );
 };

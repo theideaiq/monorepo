@@ -326,3 +326,70 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await db.from("stock_items").delete().eq("product_id", record.id);
   await db.from("products").delete().eq("id", record.id);
 });
+
+test("a supplier shop sees what it lends The IDEA and what it earned", async ({
+  context,
+  page,
+}) => {
+  const organizationId = await resetCompany();
+  const db = admin();
+  await context.addCookies(await sessionCookies(customer.email, urls.app));
+
+  // An approved shop that staff made a supplier, with one kit unit that
+  // went out once (Staff's steps and the fee triggers are covered by pgTAP).
+  const { data: shop, error } = await db
+    .from("sellers")
+    .insert({
+      name: "E2E Supplies",
+      organization_id: organizationId,
+      status: "approved",
+    })
+    .select("id")
+    .single();
+  if (error) {
+    throw error;
+  }
+  const { data: unit, error: unitError } = await db
+    .from("kit_units")
+    .insert({ kit_type: "ps5", label: "E2E Unit", seller_id: shop.id })
+    .select("id")
+    .single();
+  if (unitError) {
+    throw unitError;
+  }
+  for (const result of [
+    await db.from("supply_terms").insert({
+      kit_fee: 5000,
+      note: "E2E terms",
+      rental_fee: 1000,
+      seller_id: shop.id,
+    }),
+    await db.from("supply_earnings").insert({
+      fee: 5000,
+      kind: "kit",
+      kit_unit_id: unit.id,
+      label: "E2E Unit",
+      seller_id: shop.id,
+    }),
+  ]) {
+    if (result.error) {
+      throw result.error;
+    }
+  }
+
+  // Supply is a section the organization adds from Home, after Selling.
+  await page.goto(urls.app);
+  await page.getByRole("button", { name: "Add Supply" }).click();
+  await page.getByRole("link", { exact: true, name: "Supply" }).click();
+  await expect(page).toHaveURL(/\/supply$/);
+  await expect(
+    page.getByText("per game night booking of one of your kit units", {
+      exact: false,
+    })
+  ).toBeVisible();
+  await expect(page.getByText("E2E terms")).toBeVisible();
+  await expect(page.getByText("Times out: 1")).toBeVisible();
+  await expect(page.getByText("Game night with E2E Unit")).toBeVisible();
+  await expect(page.getByText("In your next payout")).toBeVisible();
+  await expectAccessible(page);
+});

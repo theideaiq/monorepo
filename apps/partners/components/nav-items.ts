@@ -7,6 +7,7 @@ import {
   CodeXmlIcon,
   HouseIcon,
   type LucideIcon,
+  PackageOpenIcon,
   StoreIcon,
   TicketPercentIcon,
   UsersIcon,
@@ -18,7 +19,8 @@ export type NavKey =
   | "home"
   | "organization"
   | "perks"
-  | "selling";
+  | "selling"
+  | "supply";
 
 export interface NavItem {
   /** Shown once the organization has switched the section on. */
@@ -32,12 +34,13 @@ export interface NavItem {
 
 /**
  * The sections of Partners, in sidebar order: Home and
- * Organization always, the rest once added from Home. Supply and
- * Opportunities join after Selling when they ship.
+ * Organization always, the rest once added from Home. Opportunities
+ * joins after Supply when it ships.
  */
 export const navItems: NavItem[] = [
   { href: "/", icon: HouseIcon, key: "home" },
   { feature: "selling", href: "/selling", icon: StoreIcon, key: "selling" },
+  { feature: "supply", href: "/supply", icon: PackageOpenIcon, key: "supply" },
   { feature: "perks", href: "/perks", icon: TicketPercentIcon, key: "perks" },
   { feature: "team", href: "/team", icon: UsersIcon, key: "team" },
   {

@@ -1263,7 +1263,8 @@
       "team": "Team",
       "developers": "Developers",
       "organization": "Organization",
-      "selling": "Selling"
+      "selling": "Selling",
+      "supply": "Supply"
     },
     "roles": {
       "owner": "Owner",
@@ -2067,6 +2068,9 @@
         "removeSection": "Remove {section}",
         "selling": {
           "description": "Sell your products on the Store: we collect payment, deliver and pay you weekly."
+        },
+        "supply": {
+          "description": "Lend copies to Plus and kit units to game nights, and earn a fee each time one goes out."
         }
       }
     },
@@ -3233,7 +3237,8 @@
         "saleUnknown": "An item you sold",
         "collectionFee": "Return collection fee (your shop's fault)",
         "proFee": "Pro plan, until {date}",
-        "deliveryFee": "Delivery fee refunded to the customer (your shop's fault)"
+        "deliveryFee": "Delivery fee refunded to the customer (your shop's fault)",
+        "supply": "Supply fees, up to {date}"
       },
       "shopSales": {
         "title": "Sales and deals",
@@ -3277,6 +3282,48 @@
         "removePlusPrice": "Remove",
         "plusPriceHint": "Only Plus members see it and pay it; your shop pays the difference. It stays below the price.",
         "plusPriceFailed": "We couldn't save the Plus price. It must be below the price."
+      },
+      "supply": {
+        "description": "Copies you lend to the Plus pool and kit units you lend to game nights. The IDEA rents them out, looks after them and pays you a fee each time one goes out, with your weekly payout.",
+        "needsShop": "Supply is for approved shops. Apply to sell first.",
+        "toSelling": "Go to Selling",
+        "terms": {
+          "title": "Your fees",
+          "description": "Agreed with The IDEA. A fee is earned when a rental holding one of your copies starts, or when one of your kit units goes out to a game night.",
+          "none": "You don't supply The IDEA yet. Contact The IDEA's team to lend copies or kit units.",
+          "active": "Active",
+          "paused": "Paused",
+          "rentalFee": "{fee} per rental of one of your copies",
+          "kitFee": "{fee} per game night booking of one of your kit units",
+          "updated": "Last changed {date}"
+        },
+        "items": {
+          "title": "Your copies and kit units",
+          "description": "What The IDEA holds for you, and how many times each has gone out.",
+          "none": "Nothing yet. Once you hand copies or kit units over, they appear here.",
+          "copy": "Copy for Plus",
+          "kit": "Game night kit unit",
+          "rentals": "Times out: {count}"
+        },
+        "earnings": {
+          "title": "Fees earned",
+          "description": "Each fee is paid with your next weekly payout.",
+          "payouts": "See payouts",
+          "none": "No fees yet.",
+          "rental": "Rental of {name}",
+          "kit": "Game night with {name}",
+          "paid": "Paid",
+          "due": "In your next payout"
+        },
+        "status": {
+          "available": "On the shelf",
+          "reserved": "Reserved",
+          "sold": "Sold",
+          "rented": "Out on a rental",
+          "repair": "Being repaired",
+          "retired": "Retired",
+          "active": "In use"
+        }
       }
     },
     "ages": {
@@ -4280,7 +4327,10 @@
           "rented": "Rented out",
           "repair": "In repair",
           "retired": "Retired"
-        }
+        },
+        "house": "The IDEA",
+        "supplier": "Owner",
+        "supplierHint": "The IDEA, or a supplier shop that lends it (earns its rental fee)."
       },
       "checks": {
         "title": "Checks",
@@ -4676,7 +4726,10 @@
         "price": "Weekend (IQD)",
         "extraDayPrice": "Extra day (IQD)",
         "depositField": "Deposit (IQD)",
-        "offered": "Offered"
+        "offered": "Offered",
+        "house": "The IDEA",
+        "supplier": "Owner",
+        "suppliedBy": "Lent by {shop}"
       }
     },
     "customers": {
@@ -5091,7 +5144,8 @@
           "paid": "Paid",
           "cancelled": "Cancelled"
         },
-        "paidOn": "{method} · {reference} · {time}"
+        "paidOn": "{method} · {reference} · {time}",
+        "summarySupply": "{lines} items and {supply} in supply fees up to {period} · {deducted} deducted"
       },
       "coupons": {
         "title": "Coupons",
@@ -5777,7 +5831,24 @@
         "limitTitle": "Individual traders",
         "limitDescription": "Shops with only the owner's ID can sell up to this much each Baghdad calendar month. Cancelled orders and refunded lines don't count.",
         "limit": "Monthly sales limit (IQD)",
-        "limitHint": "Checkouts that would pass it are refused."
+        "limitHint": "Checkouts that would pass it are refused.",
+        "supply": {
+          "title": "Make a supplier",
+          "summary": "Supplier ({state}) · {rental} per rental · {kit} per kit booking",
+          "on": "active",
+          "paused": "paused",
+          "description": "A supplier lends copies to the Plus pool and kit units to game nights, and earns a fee each time one goes out, paid with its weekly payout. Set its copies' and units' owner in Catalog and Rentals.",
+          "rentalFee": "Fee per rental (IQD)",
+          "rentalFeeHint": "Earned when a rental holding one of its copies starts.",
+          "kitFee": "Fee per kit booking (IQD)",
+          "kitFeeHint": "Earned when one of its kit units goes out.",
+          "note": "Note",
+          "noteHint": "What was agreed; the shop sees it in Partners → Supply.",
+          "active": "Active",
+          "activeHint": "Paused suppliers earn nothing until switched on again.",
+          "save": "Save fees",
+          "start": "Make a supplier"
+        }
       }
     }
   },

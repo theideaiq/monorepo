@@ -128,6 +128,12 @@ describe("visibleNavItems", () => {
     ).toEqual(["home", "perks", "team", "developers", "organization"]);
   });
 
+  test("puts Supply right after Selling, for every member", () => {
+    expect(keys(visibleNavItems(org("member", ["supply", "selling"])))).toEqual(
+      ["home", "selling", "supply", "organization"]
+    );
+  });
+
   test("keeps Developers for owners and admins", () => {
     expect(keys(visibleNavItems(org("member", ["developers"])))).toEqual([
       "home",

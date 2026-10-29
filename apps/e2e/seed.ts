@@ -212,6 +212,16 @@ export const ensureProduct = async () => {
 export const resetCompany = async () => {
   const db = admin();
   const userId = await ensureUser(customer.email, customer.name);
+  // A shop's copies and the kit units it lent keep the shop (no cascade):
+  // remove them first.
+  const { data: shops } = await db
+    .from("sellers")
+    .select("id, organization:organizations!inner (slug)")
+    .eq("organization.slug", "e2e-company");
+  for (const shop of shops ?? []) {
+    check(await db.from("stock_items").delete().eq("seller_id", shop.id));
+    check(await db.from("kit_units").delete().eq("seller_id", shop.id));
+  }
   check(await db.from("organizations").delete().eq("slug", "e2e-company"));
   const { data, error } = await db
     .from("organizations")

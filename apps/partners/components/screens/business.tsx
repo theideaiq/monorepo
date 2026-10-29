@@ -17,6 +17,7 @@ import {
   CrownIcon,
   FileTextIcon,
   type LucideIcon,
+  PackageOpenIcon,
   PackageSearchIcon,
   PlusIcon,
   ReceiptIcon,
@@ -148,6 +149,7 @@ const sectionIcons: Record<OrganizationFeature, LucideIcon> = {
   developers: CodeXmlIcon,
   perks: TicketPercentIcon,
   selling: StoreIcon,
+  supply: PackageOpenIcon,
   team: UsersIcon,
 };
 

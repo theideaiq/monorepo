@@ -12,7 +12,12 @@ import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { requireSection } from "@/lib/admin/session";
 import { CompaniesTabs } from "../_components/companies-tabs";
-import { DecideSellerForm, IndividualLimitForm, ShopKindForm } from "./forms";
+import {
+  DecideSellerForm,
+  IndividualLimitForm,
+  ShopKindForm,
+  SupplyTermsForm,
+} from "./forms";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.companies.shops");
@@ -35,13 +40,62 @@ const KindBadge = ({
   return <StatusBadge status="draft">{labels[kind]}</StatusBadge>;
 };
 
+interface SupplyTerms {
+  active: boolean;
+  kit_fee: number;
+  note: string | null;
+  rental_fee: number;
+}
+
+/** An approved shop's supplier fees, folded, with the form to set them. */
+const SupplyDetails = ({
+  canSupply,
+  locale,
+  shop,
+  t,
+  termsOf,
+}: {
+  /** Staff admins only. */
+  readonly canSupply: boolean;
+  readonly locale: string;
+  readonly shop: { id: string; status: string };
+  readonly t: Awaited<
+    ReturnType<typeof getTranslations<"admin.companies.shops">>
+  >;
+  readonly termsOf: ReadonlyMap<string, SupplyTerms>;
+}) => {
+  if (!canSupply || shop.status !== "approved") {
+    return null;
+  }
+  const terms = termsOf.get(shop.id) ?? null;
+  return (
+    <details className="grid gap-3 rounded-md border p-3 text-sm">
+      <summary className="cursor-pointer font-medium">
+        {terms
+          ? t("supply.summary", {
+              kit: formatPrice(terms.kit_fee, locale),
+              rental: formatPrice(terms.rental_fee, locale),
+              state: t(terms.active ? "supply.on" : "supply.paused"),
+            })
+          : t("supply.title")}
+      </summary>
+      <p className="mt-2 text-muted-foreground">{t("supply.description")}</p>
+      <div className="mt-3">
+        <SupplyTermsForm id={shop.id} terms={terms} />
+      </div>
+    </details>
+  );
+};
+
 /**
  * Shops that applied to sell on The IDEA (Partners → Selling): their
  * documents and payout details, newest applications first within each
  * status, and the decision with its note and deposit.
  */
 const ShopsPage = async () => {
-  const { canWrite, supabase } = await requireSection("companies");
+  const { canWrite, staff, supabase } = await requireSection("companies");
+  // Supplier fees are for staff admins (the database checks it too).
+  const canSupply = staff.role === "admin" || staff.role === "superadmin";
   const locale = await getLocale();
   const t = await getTranslations("admin.companies.shops");
   const tCompanies = await getTranslations("admin.companies");
@@ -51,19 +105,26 @@ const ShopsPage = async () => {
     registered: t("kinds.registered"),
   };
 
-  const [{ data }, { data: settings }] = await Promise.all([
-    supabase
-      .from("sellers")
-      .select(
-        "id, name, status, kind, applied_at, decided_at, organization:organizations (name), details:seller_details (documents, payout_bank, payout_account_name, payout_iban, deposit_required, deposit_held, review_note)"
-      )
-      .eq("is_house", false)
-      .order("applied_at", { ascending: false }),
-    supabase
-      .from("store_settings")
-      .select("individual_monthly_limit")
-      .maybeSingle(),
-  ]);
+  const [{ data }, { data: settings }, { data: supplyTerms }] =
+    await Promise.all([
+      supabase
+        .from("sellers")
+        .select(
+          "id, name, status, kind, applied_at, decided_at, organization:organizations (name), details:seller_details (documents, payout_bank, payout_account_name, payout_iban, deposit_required, deposit_held, review_note)"
+        )
+        .eq("is_house", false)
+        .order("applied_at", { ascending: false }),
+      supabase
+        .from("store_settings")
+        .select("individual_monthly_limit")
+        .maybeSingle(),
+      supabase
+        .from("supply_terms")
+        .select("seller_id, rental_fee, kit_fee, active, note"),
+    ]);
+  const termsOf = new Map(
+    (supplyTerms ?? []).map((row) => [row.seller_id, row])
+  );
   const shops = [...(data ?? [])].sort(
     (a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status)
   );
@@ -175,6 +236,13 @@ const ShopsPage = async () => {
                   </div>
                   {canWrite ? (
                     <>
+                      <SupplyDetails
+                        canSupply={canSupply}
+                        locale={locale}
+                        shop={shop}
+                        t={t}
+                        termsOf={termsOf}
+                      />
                       <ShopKindForm id={shop.id} kind={shop.kind} />
                       <DecideSellerForm
                         deposit={details?.deposit_required ?? 0}
