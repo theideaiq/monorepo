@@ -639,7 +639,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   is on with Twilio); creators cap the share from one university, major,
   year or governorate; "Who answered" gives the counts, the median time
   and the respondents by targeting field, hiding groups under 5. The
-  thresholds are store settings.
+  thresholds are store settings. The code: the builder takes quotas; the
+  results page has the "Who answered" box with the note that respondents
+  aren't a random sample of Iraq; Club → Join says when a phone of one's
+  own is needed, when today's Boosted limit is reached and when someone is
+  a trusted respondent; Staff → Catalog → Settings holds the thresholds.
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the

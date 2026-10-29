@@ -6,6 +6,7 @@ import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, DownloadIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { WhoAnswered } from "@/components/club/who-answered";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { orderPath } from "@/lib/order-checkout";
@@ -230,6 +231,7 @@ export const SurveyResults = ({ surveyId }: { readonly surveyId: string }) => {
               </div>
             ) : null}
           </dl>
+          <WhoAnswered surveyId={surveyId} />
           <div className="grid gap-2">
             <h2 className="font-semibold text-lg">{t("export")}</h2>
             <p className="text-muted-foreground text-sm">{t("exportNote")}</p>

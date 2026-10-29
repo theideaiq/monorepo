@@ -5,7 +5,9 @@ import type { Json } from "@repo/database";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { requireUserId, unwrap } from "./queries";
 import type {
+  QuotaField,
   SurveyAnswers,
+  SurveyAudience,
   SurveyKind,
   SurveyQuestion,
   SurveyResult,
@@ -17,7 +19,7 @@ import type {
  */
 
 const SURVEY_COLUMNS =
-  "id, creator_id, title, description, language, consent, kind, status, wanted, reward, held, order_id, students_only, universities, majors, years, governorates, min_seconds, ethics_reference, flags, review_note, opened_at, closes_at, closed_at, created_at, estimated_seconds, median_seconds, reward_pending, paused_at, topup_order_id, refund_amount, refunded_amount, refunded_at" as const;
+  "id, creator_id, title, quotas, description, language, consent, kind, status, wanted, reward, held, order_id, students_only, universities, majors, years, governorates, min_seconds, ethics_reference, flags, review_note, opened_at, closes_at, closed_at, created_at, estimated_seconds, median_seconds, reward_pending, paused_at, topup_order_id, refund_amount, refunded_amount, refunded_at" as const;
 
 const keys = {
   credits: (userId: string) => ["survey-credits", userId] as const,
@@ -104,6 +106,8 @@ export interface SurveyDraft {
   majors: string[];
   min_seconds: number;
   questions: SurveyQuestion[];
+  /** The largest share (%) of the target from one value of a field. */
+  quotas?: Partial<Record<QuotaField, number>>;
   students_only: boolean;
   title: string;
   universities: string[];
@@ -308,5 +312,29 @@ export const useConfirmSurveyReward = () => {
       unwrap(await supabase.rpc("confirm_survey_reward", { target })),
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: keys.mine(user?.id ?? "") }),
+  });
+};
+
+/** "Who answered": for the creator, once the survey has opened. */
+export const useSurveyAudience = (id: string, enabled: boolean) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled,
+    queryFn: async () =>
+      unwrap(
+        await supabase.rpc("survey_audience", { target: id })
+      ) as unknown as SurveyAudience,
+    queryKey: ["survey-audience", id] as const,
+  });
+};
+
+/** Whether the member can answer Boosted surveys: a phone of their own and today's count. */
+export const useMySurveyAccess = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () =>
+      unwrap(await supabase.rpc("my_survey_access"))?.[0] ?? null,
+    queryKey: ["survey-access", user?.id ?? ""] as const,
   });
 };

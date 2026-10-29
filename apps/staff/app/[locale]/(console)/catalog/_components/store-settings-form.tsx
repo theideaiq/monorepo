@@ -9,6 +9,11 @@ export interface StoreSettingsValues {
   cash_on_delivery_enabled: boolean;
   require_verified_phone: boolean;
   shipping_fee: number;
+  survey_daily_boosted: number;
+  survey_early_hours: number;
+  survey_early_share: number;
+  survey_trusted_answers: number;
+  survey_trusted_window: number;
   wayl_return_refunds: boolean;
 }
 
@@ -53,6 +58,47 @@ export const StoreSettingsForm = ({
           label={t("waylReturnRefunds")}
           name="waylReturnRefunds"
         />
+        <fieldset className="grid gap-3 border-t pt-4">
+          <legend className="font-medium text-sm">{t("surveys.title")}</legend>
+          <p className="text-muted-foreground text-xs">{t("surveys.hint")}</p>
+          <FieldGrid>
+            <TextField
+              defaultValue={settings.survey_trusted_answers}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("surveys.surveyTrustedAnswers")}
+              name="surveyTrustedAnswers"
+            />
+            <TextField
+              defaultValue={settings.survey_trusted_window}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("surveys.surveyTrustedWindow")}
+              name="surveyTrustedWindow"
+            />
+            <TextField
+              defaultValue={settings.survey_early_hours}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("surveys.surveyEarlyHours")}
+              name="surveyEarlyHours"
+            />
+            <TextField
+              defaultValue={settings.survey_early_share}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("surveys.surveyEarlyShare")}
+              name="surveyEarlyShare"
+            />
+            <TextField
+              defaultValue={settings.survey_daily_boosted}
+              dir="ltr"
+              inputMode="numeric"
+              label={t("surveys.surveyDailyBoosted")}
+              name="surveyDailyBoosted"
+            />
+          </FieldGrid>
+        </fieldset>
         {disabled ? null : (
           <div className="flex justify-end">
             <SubmitButton>{tCommon("save")}</SubmitButton>

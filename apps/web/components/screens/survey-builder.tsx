@@ -26,6 +26,8 @@ import {
   useSurvey,
 } from "@/lib/survey-queries";
 import {
+  QUOTA_FIELDS,
+  type QuotaField,
   type SurveyKind,
   type SurveyQuestion,
   surveyCost,
@@ -273,6 +275,57 @@ const Field = ({
     {note ? <p className="text-muted-foreground text-xs">{note}</p> : null}
   </div>
 );
+
+/**
+ * Quotas: the largest share of the responses from any one university,
+ * major, year or governorate (empty for no cap). Never sensitive fields.
+ */
+const QuotaFields = ({
+  onChange,
+  quotas,
+}: {
+  readonly onChange: (quotas: NonNullable<SurveyDraft["quotas"]>) => void;
+  readonly quotas: NonNullable<SurveyDraft["quotas"]>;
+}) => {
+  const t = useTranslations("web.club.surveys.builder.quotas");
+  const id = useId();
+  const setShare = (field: QuotaField, value: string) => {
+    const next = { ...quotas };
+    const share = Number(value);
+    if (value === "" || !Number.isFinite(share) || share <= 0) {
+      delete next[field];
+    } else {
+      next[field] = Math.min(100, Math.round(share));
+    }
+    onChange(next);
+  };
+  return (
+    <fieldset className="grid gap-3">
+      <legend className="font-medium text-sm">{t("title")}</legend>
+      <p className="text-muted-foreground text-xs">{t("note")}</p>
+      <div className="grid gap-3 sm:grid-cols-4">
+        {QUOTA_FIELDS.map((field) => (
+          <Field
+            htmlFor={`${id}-${field}`}
+            key={field}
+            label={t(`fields.${field}`)}
+          >
+            <Input
+              dir="ltr"
+              id={`${id}-${field}`}
+              max={100}
+              min={1}
+              onChange={(event) => setShare(field, event.target.value)}
+              placeholder={t("none")}
+              type="number"
+              value={quotas[field] ?? ""}
+            />
+          </Field>
+        ))}
+      </div>
+    </fieldset>
+  );
+};
 
 /** What the respondents get and what it costs the creator. */
 const RewardNote = ({ draft }: { readonly draft: SurveyDraft }) => {
@@ -528,6 +581,10 @@ const BuilderForm = ({ initial }: { readonly initial: SurveyDraft }) => {
           />
         </Field>
         <p className="text-muted-foreground text-xs">{t("targetNote")}</p>
+        <QuotaFields
+          onChange={(quotas) => set("quotas", quotas)}
+          quotas={draft.quotas ?? {}}
+        />
       </section>
 
       <section className="grid gap-4">
@@ -661,6 +718,7 @@ const EditDraft = ({ surveyId }: { readonly surveyId: string }) => {
           prompt: question.prompt,
           required: question.required,
         })),
+        quotas: (data.quotas ?? {}) as SurveyDraft["quotas"],
         students_only: data.students_only,
         title: data.title,
         universities: data.universities,

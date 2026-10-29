@@ -174,8 +174,10 @@ const SURVEY_ERRORS = {
   "Invalid answers": "invalid",
   "Not enough Bulbs for the rewards": "bulbs",
   "Only verified students create surveys": "notStudent",
+  "This survey has enough answers from people like you": "quotaFull",
   "This survey isn't open to you": "notOpen",
   "You already answered this survey": "answered",
+  "You've answered enough Boosted surveys today": "dailyLimit",
 } as const;
 
 export type SurveyError =
@@ -227,3 +229,25 @@ export const downloadText = (name: string, type: string, text: string) => {
   link.click();
   URL.revokeObjectURL(url);
 };
+
+/** Targeting fields a creator can cap the share of (`surveys.quotas`). */
+export const QUOTA_FIELDS = [
+  "university",
+  "major",
+  "year",
+  "governorate",
+] as const;
+
+export type QuotaField = (typeof QUOTA_FIELDS)[number];
+
+/** "Who answered" (`survey_audience()`): counts, the median time and groups of 5 or more. */
+export interface SurveyAudience {
+  breakdown: Partial<Record<QuotaField, { count: number; value: string }[]>>;
+  counted: number;
+  excluded: number;
+  finished: number;
+  median_seconds: number | null;
+  quotas: Partial<Record<QuotaField, number>>;
+  started: number;
+  wanted: number;
+}

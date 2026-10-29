@@ -867,7 +867,9 @@
           "notStudent": "Only verified students can create surveys.",
           "notOpen": "This survey isn't open to you.",
           "answered": "You already answered this survey.",
-          "failed": "Something went wrong. Try again."
+          "failed": "Something went wrong. Try again.",
+          "quotaFull": "This survey already has enough answers from people like you. Look for another one.",
+          "dailyLimit": "You've answered today's Boosted surveys. Come back tomorrow."
         },
         "builder": {
           "newTitle": "New survey",
@@ -929,7 +931,18 @@
           "incomplete": "Add a title (at least 3 characters) and write every question.",
           "estimate": "It takes about {minutes} min to answer.",
           "boostedNote": "It takes about {minutes} min, so each counted response earns {bulbs} Bulbs (100 a minute, from 200 to 2,000), which The IDEA gives. You pay {cost} for them with the 10% fee, and the survey opens once it's paid, for 60 days. What isn't used comes back to you when it closes, from 1,000 IQD.",
-          "boostedMedian": "After the first 10 counted responses the reward follows their real median time. If it's lower, the difference comes back at close; if it's higher, the survey pauses until you pay the difference."
+          "boostedMedian": "After the first 10 counted responses the reward follows their real median time. If it's lower, the difference comes back at close; if it's higher, the survey pauses until you pay the difference.",
+          "quotas": {
+            "title": "Quotas (optional)",
+            "note": "The largest share of the responses from any one university, major, year or governorate, in %. Leave empty for no cap.",
+            "none": "No cap",
+            "fields": {
+              "university": "University",
+              "major": "Major",
+              "year": "Year",
+              "governorate": "Governorate"
+            }
+          }
         },
         "manage": {
           "title": "Your survey",
@@ -955,7 +968,24 @@
           "excel": "Excel",
           "spss": "SPSS syntax",
           "answered": "{n} answers (counted responses)",
-          "average": "Average: {n}"
+          "average": "Average: {n}",
+          "audience": {
+            "title": "Who answered",
+            "counts": "{started} started, {finished} finished, {excluded} didn't count; {counted} of the {wanted} wanted count.",
+            "median": "The median time is about {minutes} min.",
+            "fields": {
+              "university": "University",
+              "major": "Major",
+              "year": "Year of study",
+              "governorate": "Governorate"
+            },
+            "quota": "capped at {share}%",
+            "year": "Year {n}",
+            "other": "Other (small groups)",
+            "unknown": "Not given",
+            "smallGroups": "Groups of fewer than 5 people are never shown.",
+            "note": "Respondents are The IDEA Pass users who chose to answer, some for a reward. They are not a random sample of Iraq."
+          }
         },
         "yours": {
           "created": "Your surveys",
@@ -1001,6 +1031,12 @@
           "all": "Nothing to join right now. Check back soon.",
           "events": "No upcoming events right now. Check back soon.",
           "surveys": "No surveys for you right now."
+        },
+        "access": {
+          "phone": "Boosted surveys need a verified phone of your own: one Pass per person.",
+          "verify": "Verify your phone",
+          "limit": "You've answered today's {n} Boosted surveys. More tomorrow.",
+          "trusted": "You're a trusted respondent: you see new Boosted surveys a day before everyone else."
         }
       },
       "topics": {
@@ -3655,7 +3691,16 @@
           "plusFree": "Free for Plus plans with free delivery"
         },
         "waylReturnRefunds": "Refund returns through Wayl",
-        "waylReturnRefundsHint": "Returns of orders paid online are refunded through Wayl each morning, instead of by hand in Orders → Returns. Turn on only after a partial refund has worked in Wayl's test mode."
+        "waylReturnRefundsHint": "Returns of orders paid online are refunded through Wayl each morning, instead of by hand in Orders → Returns. Turn on only after a partial refund has worked in Wayl's test mode.",
+        "surveys": {
+          "title": "Surveys",
+          "hint": "Who sees new Boosted surveys early and how many a person answers a day.",
+          "surveyTrustedAnswers": "Counted answers to be trusted",
+          "surveyTrustedWindow": "Latest answers with no failed check",
+          "surveyEarlyHours": "Early window (hours)",
+          "surveyEarlyShare": "Share of the target in the early window (%)",
+          "surveyDailyBoosted": "Boosted surveys a person answers a day"
+        }
       },
       "plans": {
         "new": "New plan",
