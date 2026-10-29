@@ -10,7 +10,7 @@ const FEED_PATH = /^([0-9a-f-]{36})\.ics$/i;
 const HISTORY_DAYS = 180;
 
 const CALENDAR_NAMES = {
-  ar: "فعاليات The IDEA",
+  ar: "فعاليات ايديا",
   en: "The IDEA events",
 } as const;
 

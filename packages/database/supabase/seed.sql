@@ -83,13 +83,13 @@ from public.products where slug = 'playstation-5-slim'
 on conflict (sku) do nothing;
 
 insert into public.posts (slug, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, published_at) values
-  ('welcome-to-the-idea', 'مرحباً بكم في The IDEA', 'Welcome to The IDEA',
+  ('welcome-to-the-idea', 'مرحباً بكم في ايديا', 'Welcome to The IDEA',
     'متجر وتأجير ونادٍ وحلول للشركات ببطاقة واحدة.', 'A store, rentals, a club and business solutions with one Pass.',
-    'نطلق اليوم منصة The IDEA الجديدة.', 'Today we are launching the new The IDEA platform.', now())
+    'نطلق اليوم منصة ايديا الجديدة.', 'Today we are launching the new The IDEA platform.', now())
 on conflict (slug) do nothing;
 
 insert into public.posts (slug, section, title_ar, title_en, excerpt_ar, excerpt_en, body_ar, body_en, published_at) values
-  ('how-plus-rentals-work', 'learn', 'كيف يعمل الإيجار في The IDEA Plus', 'How The IDEA Plus rentals work',
+  ('how-plus-rentals-work', 'learn', 'كيف يعمل الإيجار في ايديا پلص', 'How The IDEA Plus rentals work',
     'اختر، استلم، أعد: دليل قصير.', 'Pick, receive, return: a short guide.',
     'اختر ما تريد من المتجر، ونوصله إليك، وتعيده متى انتهيت.', 'Pick what you want in the store, we deliver it, and you return it when you are done.', now()),
   ('meet-the-store-team', 'stories', 'تعرّف على فريق المتجر', 'Meet the store team',
@@ -122,7 +122,7 @@ insert into public.telegram_faq (topic, question_ar, question_en, answer_ar, ans
   ('store', 'كم تستغرق عملية التوصيل؟', 'How long does delivery take?',
     'نوصل داخل بغداد في نفس اليوم أو اليوم التالي، وإلى المحافظات خلال ٢–٤ أيام.',
     'Same or next day in Baghdad, and 2–4 days to other governorates.', 1),
-  ('plus', 'كيف يعمل اشتراك Plus؟', 'How does Plus work?',
+  ('plus', 'كيف يعمل اشتراك الپلص؟', 'How does Plus work?',
     'اختر خطة، ثم اطلب الألعاب أو الكتب من التطبيق وسنوصلها إليك. أعدها متى شئت واطلب غيرها.',
     'Pick a plan, then request games or books in the app and we deliver them. Return them whenever you like and request more.', 1)
 on conflict do nothing;

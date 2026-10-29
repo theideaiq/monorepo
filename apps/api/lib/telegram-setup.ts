@@ -43,8 +43,8 @@ export const telegramApi =
 export const BOT_TEXTS = {
   ar: {
     description:
-      "أنا Droid من The IDEA في بغداد: أتابع طلباتك وتأجيرات The IDEA Plus، وأذكّرك بالمواعيد وأخبرك بالفعاليات. اربط The IDEA Pass من الزر أدناه لتصلك التحديثات هنا.",
-    short: "Droid من The IDEA: طلباتك وThe IDEA Plus والفعاليات في Telegram.",
+      "أنا الدرويد من ايديا في بغداد: أتابع طلباتك وتأجيرات ايديا پلص، وأذكّرك بالمواعيد وأخبرك بالفعاليات. اربط ايديا پاس من الزر أدناه لتصلك التحديثات هنا.",
+    short: "الدرويد من ايديا: طلباتك وايديا پلص والفعاليات في Telegram.",
   },
   en: {
     description:

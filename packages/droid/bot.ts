@@ -75,12 +75,12 @@ export const DROID_COMMANDS: Record<
   }
 > = {
   ar: {
-    admins: [{ command: "search", description: "البحث في المتجر" }],
+    admins: [{ command: "search", description: "البحث في السوگ" }],
     private: [
       { command: "start", description: "القائمة الرئيسية" },
       { command: "orders", description: "تتبّع طلباتي" },
-      { command: "bulbs", description: "رصيدي من Bulbs" },
-      { command: "search", description: "البحث في المتجر" },
+      { command: "bulbs", description: "رصيدي من الگلوبات" },
+      { command: "search", description: "البحث في السوگ" },
       { command: "support", description: "تحدّث معنا" },
     ],
   },

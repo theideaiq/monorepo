@@ -718,6 +718,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-30: Arabic names (the owner's amendment of 30 October to section
+  23, order-of-work item 1; decisions "Amendment, 30 October 2026"). Arabic
+  copy uses ايديا، السوگ، الپلص، الپاس، النادي، الشركاء، الگلوبات، الستاف
+  and الدرويد (full forms ايديا پلص, ايديا پاس, سوگ ايديا, نادي ايديا, شركاء
+  ايديا in titles and first mentions), with plans and product names in
+  Latin letters ("ايديا پلص Shine"): `ar.json`, the email and sign-in
+  templates, the legal pages, Droid, the plans in the database. Search
+  folds ب/پ, ك/ق/گ/ک, ا/أ/إ/آ and ي/ی/ى (`20270312000000_arabic_names.sql`);
+  a messages test rejects the names in Latin letters in `ar.json`. Not
+  yet: the WhatsApp templates (Meta), the published posts, folding in the
+  title search of posts, events and opportunities.
 - 2026-10-29: Get offers from shops (step 14; schema
   `20270309000000_sell_requests.sql` and `20270310000000_sell_offer_items.sql`,
   decisions Part 13; then the code). Pass → Selling (`/pass/selling`): a
