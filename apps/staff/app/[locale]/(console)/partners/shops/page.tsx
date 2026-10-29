@@ -21,11 +21,6 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const STATUS_ORDER = ["pending", "approved", "suspended", "rejected"] as const;
 
-/**
- * Shops that applied to sell on The IDEA (Partners → Selling): their
- * documents and payout details, newest applications first within each
- * status, and the decision with its note and deposit.
- */
 /** Registered business or individual trader. */
 const KindBadge = ({
   kind,
@@ -33,8 +28,18 @@ const KindBadge = ({
 }: {
   readonly kind: "individual" | "registered" | null;
   readonly labels: Record<"individual" | "registered", string>;
-}) => (kind ? <StatusBadge status="draft">{labels[kind]}</StatusBadge> : null);
+}) => {
+  if (!kind) {
+    return null;
+  }
+  return <StatusBadge status="draft">{labels[kind]}</StatusBadge>;
+};
 
+/**
+ * Shops that applied to sell on The IDEA (Partners → Selling): their
+ * documents and payout details, newest applications first within each
+ * status, and the decision with its note and deposit.
+ */
 const ShopsPage = async () => {
   const { canWrite, supabase } = await requireSection("companies");
   const locale = await getLocale();
