@@ -10,7 +10,7 @@ import {
   totp,
 } from "../fixtures";
 import { urls } from "../playwright.config";
-import { resetStaff } from "../seed";
+import { resetCompany, resetStaff } from "../seed";
 import { expectAccessible } from "./helpers";
 
 /** `?return_to=…` back to Staff's home in `locale`. */
@@ -100,6 +100,28 @@ test.describe("Staff", () => {
       page.getByRole("heading", { name: "Organizations" })
     ).toBeVisible();
     await expectAccessible(page);
+    // Club → Opportunities: an organization's listing waiting for review.
+    const db = admin();
+    const organizationId = await resetCompany();
+    await db.from("opportunities").insert({
+      kind: "internship",
+      organization_id: organizationId,
+      remote: true,
+      slug: "e2e-review-internship",
+      status: "pending",
+      title_ar: "تدريب للمراجعة",
+      title_en: "E2E Review Internship",
+    });
+    await page.goto(`${urls.staff}/club/opportunities`);
+    await expect(
+      page.getByRole("heading", { name: "Waiting for review" })
+    ).toBeVisible();
+    await expectAccessible(page);
+    await page.getByRole("link", { name: "E2E Review Internship" }).click();
+    await page.getByRole("button", { name: "Send decision" }).click();
+    await expect(page.getByText("Listed", { exact: true })).toBeVisible();
+    await expectAccessible(page);
+
     await page.goto(`${urls.staff}/partners/perks`);
     await expect(page.getByRole("heading", { name: "New perk" })).toBeVisible();
     await expectAccessible(page);
@@ -110,7 +132,6 @@ test.describe("Staff", () => {
     await expectAccessible(page);
 
     // Catalog → Checks: what the automatic checks and shops sent staff.
-    const db = admin();
     const { data: item } = await db
       .from("products")
       .select("id")

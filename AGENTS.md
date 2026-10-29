@@ -103,17 +103,19 @@ incidents) is in `docs/platform`.
   its statement) and `/selling/pickup` (its branches, each a Boxy pickup
   location), Supply `/supply` (a supplier shop's copies lent to Plus and
   kit units lent to game nights, with its fees and what each earned),
-  Perks `/perks`,
+  Opportunities `/opportunities` (jobs, internships, scholarships,
+  competitions and programs it lists in Club → Join, each reviewed by
+  The IDEA, with how many follow each), Perks `/perks`,
   Team `/team` (bulk orders for the organization, with `/team/<id>` for a
   request, and `/team/plus`, Plus for its people), Developers
   `/developers` and Organization `/organization` (with
   `/organization/members`, `/organization/billing`,
   `/organization/invoices`), plus `/new`, `/documents/<kind>/<id>` and invitations. The
   sidebar holds the organization switcher and these sections; Selling,
-  Supply, Perks, Team and Developers appear once the organization adds them
-  from Home (`organizations.features`, `components/nav-items.ts`), and the
-  bell is only in the top bar. Opportunities joins the list when it
-  ships. It holds no Staff code. No sign-in of its own: it sends
+  Supply, Opportunities, Perks, Team and Developers appear once the
+  organization adds them from Home (`organizations.features`,
+  `components/nav-items.ts`), and the bell is only in the top bar. It
+  holds no Staff code. No sign-in of its own: it sends
   people to The IDEA Pass on the website with `return_to`.
 - `apps/staff` — **Staff** (package `staff`, port 3003,
   `staff.theideaiq.com`), everything The IDEA's team uses, server-rendered
@@ -127,7 +129,9 @@ incidents) is in `docs/platform`.
     seasonal campaigns shops opt in to) · Orders and delivery
     `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
     and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·
-    Club `/club` (with `/club/telegram`) · Partners `/partners` (Team
+    Club `/club` (with `/club/opportunities`, where editors review
+    organizations' opportunities and post The IDEA's own, and
+    `/club/telegram`) · Partners `/partners` (Team
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`
     where staff approve shops, perks and sign-in) · Finance `/finance` (with

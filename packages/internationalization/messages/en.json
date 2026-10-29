@@ -1264,7 +1264,8 @@
       "developers": "Developers",
       "organization": "Organization",
       "selling": "Selling",
-      "supply": "Supply"
+      "supply": "Supply",
+      "opportunities": "Opportunities"
     },
     "roles": {
       "owner": "Owner",
@@ -2071,6 +2072,9 @@
         },
         "supply": {
           "description": "Lend copies to Plus and kit units to game nights, and earn a fee each time one goes out."
+        },
+        "opportunities": {
+          "description": "List jobs, internships, scholarships, competitions and programs in the Club. The IDEA reviews each one."
         }
       }
     },
@@ -3324,6 +3328,74 @@
           "retired": "Retired",
           "active": "In use"
         }
+      },
+      "opportunities": {
+        "description": "Jobs, internships, scholarships, competitions and programs your organization runs, listed in Club → Join with your name. The IDEA reviews each one before it appears; members can follow it to hear when it opens and before it closes.",
+        "new": "New opportunity",
+        "listTitle": "Your opportunities",
+        "listDescription": "Drafts, listings in review and those in the Club.",
+        "none": "No opportunities yet.",
+        "kinds": {
+          "job": "Job",
+          "internship": "Internship",
+          "scholarship": "Scholarship",
+          "competition": "Competition",
+          "program": "Program"
+        },
+        "statuses": {
+          "draft": "Draft",
+          "pending": "In review",
+          "changes": "Changes asked",
+          "approved": "Listed",
+          "rejected": "Not approved",
+          "closed": "Closed"
+        },
+        "featured": "Featured",
+        "closes": "Closes {date}",
+        "rolling": "Open until filled",
+        "followers": "Following: {count}",
+        "feeToApply": "{fee} to apply",
+        "reviewNote": "The IDEA: {note}",
+        "actions": {
+          "edit": "Edit",
+          "send": "Send for review",
+          "takeBack": "Back to draft",
+          "close": "Close",
+          "delete": "Delete",
+          "failed": "That didn't work. Please try again."
+        },
+        "form": {
+          "newTitle": "New opportunity",
+          "editTitle": "Edit opportunity",
+          "description": "Save a draft, then send it for review. The IDEA checks every listing before it appears in the Club.",
+          "listedNote": "This one is in the Club. Saving a change sends it back for review, and it stays hidden until approved again.",
+          "kind": "Kind",
+          "location": "Place",
+          "locationHint": "City or venue. Leave empty for online only.",
+          "titleEn": "Title in English",
+          "titleAr": "Title in Arabic",
+          "summaryEn": "One line in English",
+          "summaryAr": "One line in Arabic",
+          "opensOn": "Applications open",
+          "opensHint": "Leave empty if they are open now.",
+          "deadline": "Deadline",
+          "deadlineHint": "The last day to apply (Baghdad time). Leave empty if it stays open.",
+          "startsOn": "Starts",
+          "endsOn": "Ends",
+          "applyUrl": "Where to apply",
+          "applyUrlHint": "A page on your site (https://).",
+          "fee": "Fee to apply (IQD)",
+          "feeHint": "0 if applying is free.",
+          "remote": "Online (can be done from anywhere)",
+          "feeNote": "About any costs",
+          "descriptionEn": "Description in English",
+          "descriptionAr": "Description in Arabic",
+          "saveDraft": "Save draft",
+          "saveAndReview": "Save and send for review",
+          "sendForReview": "Send for review",
+          "cancel": "Cancel",
+          "failed": "That didn't save. Check the details and try again."
+        }
       }
     },
     "ages": {
@@ -3775,6 +3847,18 @@
         "gift_delivered": {
           "title": "Your gift has arrived",
           "body": "The gift in order #{number} was delivered. Enjoy it!"
+        },
+        "opportunity_approved": {
+          "title": "Your opportunity is in the Club",
+          "body": "\"{title}\" was approved and is now listed."
+        },
+        "opportunity_changes": {
+          "title": "Changes asked on your opportunity",
+          "body": "Open \"{title}\" in Opportunities to see what to change."
+        },
+        "opportunity_rejected": {
+          "title": "Your opportunity wasn't approved",
+          "body": "Open \"{title}\" in Opportunities to see why."
         }
       },
       "kinds": {
@@ -3988,7 +4072,8 @@
           "studentDocuments": "Student documents to check (partners)",
           "identityChecks": "Identity checks to review",
           "educatorChecks": "Educator documents to review",
-          "organizationChecks": "Organizations to verify"
+          "organizationChecks": "Organizations to verify",
+          "opportunities": "Opportunities to review"
         }
       }
     },
@@ -5198,7 +5283,8 @@
       "tabs": {
         "posts": "Club posts",
         "events": "Events",
-        "submissions": "Submissions"
+        "submissions": "Submissions",
+        "opportunities": "Opportunities"
       },
       "publish": {
         "label": "Publishing",
@@ -5329,6 +5415,76 @@
         "publishHint": "Accepted work is published in Members' work. This creates a draft with the member's name as the byline.",
         "createPost": "Create the post",
         "openPost": "Open the post"
+      },
+      "opportunities": {
+        "new": "New opportunity",
+        "title": "Title",
+        "kind": "Kind",
+        "kinds": {
+          "job": "Job",
+          "internship": "Internship",
+          "scholarship": "Scholarship",
+          "competition": "Competition",
+          "program": "Program"
+        },
+        "runBy": "Run by",
+        "theIdea": "The IDEA",
+        "deadline": "Deadline",
+        "rolling": "Open until filled",
+        "status": "Status",
+        "statuses": {
+          "draft": "Draft",
+          "pending": "In review",
+          "changes": "Changes asked",
+          "approved": "Listed",
+          "rejected": "Not approved",
+          "closed": "Closed"
+        },
+        "featured": "Featured",
+        "reviewTitle": "Waiting for review",
+        "reviewDescription": "Organizations' listings, oldest first. Approve them, ask for changes or refuse them; the organization hears.",
+        "reviewEmpty": "Nothing to review.",
+        "empty": "No opportunities yet.",
+        "deleteDescription": "It disappears from the Club and from its organization, with everyone following it.",
+        "submitted": "Sent {date}",
+        "closeConfirm": "Close this opportunity now?",
+        "close": "Close now",
+        "featuring": "Featuring",
+        "featuredDescription": "A paid extra: featured listings come first in Join and are labelled.",
+        "decision": "Decision",
+        "decisions": {
+          "approved": "Approve",
+          "changes": "Ask for changes",
+          "rejected": "Refuse"
+        },
+        "note": "Note to the organization",
+        "noteHint": "Needed when asking for changes or refusing.",
+        "sendDecision": "Send decision",
+        "featuredUntil": "Featured until",
+        "featuredHint": "Baghdad time. Empty stops featuring.",
+        "saveFeatured": "Save",
+        "location": "Place",
+        "locationHint": "City or venue. Leave empty for online only.",
+        "titleAr": "Title in Arabic",
+        "titleEn": "Title in English",
+        "summaryAr": "One line in Arabic",
+        "summaryEn": "One line in English",
+        "opensAt": "Applications open",
+        "opensHint": "Baghdad time. Empty: open now.",
+        "deadlineHint": "Baghdad time. Empty: open until filled.",
+        "startsOn": "Starts",
+        "endsOn": "Ends",
+        "applyUrl": "Where to apply",
+        "applyUrlHint": "https:// only. Empty for The IDEA's own programs applied for on the website later.",
+        "fee": "Fee to apply (IQD)",
+        "feeHint": "0 or empty if free.",
+        "feeNote": "About any costs",
+        "remote": "Online (can be done from anywhere)",
+        "descriptionAr": "Description in Arabic",
+        "descriptionEn": "Description in English",
+        "cover": "Cover image",
+        "listed": "Listed in the Club",
+        "listedHint": "The IDEA's own opportunities need no review."
       }
     },
     "telegram": {
