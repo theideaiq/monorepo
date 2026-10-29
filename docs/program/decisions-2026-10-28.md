@@ -900,3 +900,15 @@ Plus Duo waits for step 14.
 - **Kits:** Shine 10% off, Blaze 25%, on the weekend price and extra days.
 - **Tickets and programs** have no price yet, so their Plus price comes
   when paid tickets and programs are built.
+- **Bulbs on renewals:** Plus renews by invoice (Wayl subscriptions are
+  still to be checked), so "Use Bulbs on my next renewal" applies to every
+  renewal: the member picks an amount in steps of 250, up to half of the
+  next month's price; the invoice takes what they still have then (in
+  steps of 250) and the choice resets once paid. If they spend Bulbs
+  elsewhere before paying, the renewal spends only what's left. Prepaid
+  months (gifts) take Bulbs at checkout, also up to half a month.
+- **Survey credits** (10 / 25 / 50 a month, a Staff setting) arrive on the
+  1st for every Plus member, company seats included. They don't carry
+  over: on the 1st, what's left of last month's grant expires before the
+  new one, counting Plus credits as used before credits earned by
+  answering.
