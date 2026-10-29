@@ -678,6 +678,44 @@ export type Database = {
         };
         Relationships: [];
       };
+      educator_badges: {
+        Row: {
+          email_hash: string | null;
+          institution: string;
+          method: string;
+          university_id: string | null;
+          user_id: string;
+          valid_until: string;
+          verified_at: string;
+        };
+        Insert: {
+          email_hash?: string | null;
+          institution: string;
+          method: string;
+          university_id?: string | null;
+          user_id: string;
+          valid_until: string;
+          verified_at?: string;
+        };
+        Update: {
+          email_hash?: string | null;
+          institution?: string;
+          method?: string;
+          university_id?: string | null;
+          user_id?: string;
+          valid_until?: string;
+          verified_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "educator_badges_university_id_fkey";
+            columns: ["university_id"];
+            isOneToOne: false;
+            referencedRelation: "universities";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       event_rsvps: {
         Row: {
           blaze: boolean;
@@ -888,6 +926,27 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      identity_verifications: {
+        Row: {
+          legal_name: string;
+          user_id: string;
+          verified_at: string;
+          verified_by: string | null;
+        };
+        Insert: {
+          legal_name: string;
+          user_id: string;
+          verified_at?: string;
+          verified_by?: string | null;
+        };
+        Update: {
+          legal_name?: string;
+          user_id?: string;
+          verified_at?: string;
+          verified_by?: string | null;
+        };
+        Relationships: [];
       };
       invitations: {
         Row: {
@@ -5948,6 +6007,71 @@ export type Database = {
           },
         ];
       };
+      verification_requests: {
+        Row: {
+          attempts: number;
+          code_expires_at: string | null;
+          code_hash: string | null;
+          created_at: string;
+          email: string | null;
+          files: string[];
+          id: string;
+          institution: string | null;
+          kind: string;
+          method: string;
+          reject_reason: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          university_id: string | null;
+          user_id: string;
+        };
+        Insert: {
+          attempts?: number;
+          code_expires_at?: string | null;
+          code_hash?: string | null;
+          created_at?: string;
+          email?: string | null;
+          files?: string[];
+          id?: string;
+          institution?: string | null;
+          kind: string;
+          method: string;
+          reject_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          university_id?: string | null;
+          user_id: string;
+        };
+        Update: {
+          attempts?: number;
+          code_expires_at?: string | null;
+          code_hash?: string | null;
+          created_at?: string;
+          email?: string | null;
+          files?: string[];
+          id?: string;
+          institution?: string | null;
+          kind?: string;
+          method?: string;
+          reject_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          university_id?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "verification_requests_university_id_fkey";
+            columns: ["university_id"];
+            isOneToOne: false;
+            referencedRelation: "universities";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       verified_phones: {
         Row: {
           phone: string;
@@ -6750,6 +6874,24 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      confirm_educator_email: {
+        Args: { code: string };
+        Returns: {
+          email_hash: string | null;
+          institution: string;
+          method: string;
+          university_id: string | null;
+          user_id: string;
+          valid_until: string;
+          verified_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "educator_badges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       confirm_parcel_back: { Args: { parcel: string }; Returns: string };
       confirm_return_condition: {
         Args: { note?: string; ok: boolean; target: string };
@@ -7414,6 +7556,10 @@ export type Database = {
         };
       };
       is_phone_verified: { Args: { phone: string }; Returns: boolean };
+      issue_educator_code: {
+        Args: { address: string; member: string; university: string };
+        Returns: string;
+      };
       issue_invoice: {
         Args: { days?: number; purchase_order: string };
         Returns: string;
@@ -7887,6 +8033,7 @@ export type Database = {
           username: string;
         }[];
       };
+      my_verifications: { Args: Record<PropertyKey, never>; Returns: Json };
       my_whatsapp_settings: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -8382,6 +8529,11 @@ export type Database = {
         Args: { reason: string; target: string };
         Returns: undefined;
       };
+      request_educator_check: {
+        Args: { files: string[]; institution: string };
+        Returns: string;
+      };
+      request_identity_check: { Args: { files: string[] }; Returns: string };
       request_plus_seat: {
         Args: { member: string; org: string; plan: string };
         Returns: string;
@@ -8575,6 +8727,24 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      review_educator_check: {
+        Args: {
+          approve: boolean;
+          reason?: string;
+          target: string;
+          until?: string;
+        };
+        Returns: string[];
+      };
+      review_identity_check: {
+        Args: {
+          approve: boolean;
+          legal_name?: string;
+          reason?: string;
+          target: string;
+        };
+        Returns: string[];
       };
       review_pass_app: {
         Args: { approve: boolean; client: string; note?: string };
