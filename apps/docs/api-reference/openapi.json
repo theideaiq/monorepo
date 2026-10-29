@@ -119,10 +119,6 @@
           "student": {
             "$ref": "#/components/schemas/Student"
           },
-          "student_check": {
-            "$ref": "#/components/schemas/Student",
-            "description": "With the student_check scope: only verified, the university and until when."
-          },
           "student_email": {
             "type": "string",
             "format": "email"
@@ -195,6 +191,47 @@
           "role",
           "app_owner"
         ]
+      },
+      "StudentVerification": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "university",
+          "valid_until"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "started",
+              "pending",
+              "verified",
+              "rejected"
+            ]
+          },
+          "university": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The university's id, when verified.",
+            "example": "auib"
+          },
+          "valid_until": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date",
+            "description": "When verified: 30 June of the academic year.",
+            "example": "2027-06-30"
+          }
+        }
       }
     }
   },
@@ -622,6 +659,160 @@
                   "required": [
                     "error"
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student-verifications": {
+      "post": {
+        "summary": "Start a student verification",
+        "description": "Starts a verification for your app and returns where to send the student. `return_url` must be your app's website or a return address, or on a verified domain of your organization.",
+        "security": [
+          {
+            "clientBasic": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "return_url"
+                ],
+                "properties": {
+                  "return_url": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Started.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/StudentVerification"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "format": "uri",
+                          "description": "Where to send the student.",
+                          "example": "https://theideaiq.com/verify/6f1c0000-0000-4000-8000-000000000000"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "An error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/student-verifications/{id}": {
+      "get": {
+        "summary": "Read a student verification",
+        "description": "The status, and the university and expiry date when verified. Only your app's verifications.",
+        "security": [
+          {
+            "clientBasic": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentVerification"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "An error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "An error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }

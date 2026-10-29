@@ -16,7 +16,10 @@
   },
   "navbar": {
     "links": [
-      { "label": "Partners", "href": "https://partners.theideaiq.com" }
+      {
+        "label": "Partners",
+        "href": "https://partners.theideaiq.com"
+      }
     ],
     "primary": {
       "type": "button",
@@ -29,7 +32,13 @@
       {
         "tab": "Guides",
         "groups": [
-          { "group": "Get started", "pages": ["index", "quickstart"] },
+          {
+            "group": "Get started",
+            "pages": [
+              "index",
+              "quickstart"
+            ]
+          },
           {
             "group": "Sign in with The IDEA Pass",
             "pages": [
@@ -42,15 +51,36 @@
           },
           {
             "group": "The Pass card",
-            "pages": ["card/show", "card/live-card", "card/check"]
+            "pages": [
+              "card/show",
+              "card/live-card",
+              "card/check"
+            ]
           },
-          { "group": "Your apps", "pages": ["apps/register"] }
+          {
+            "group": "Student verification",
+            "pages": [
+              "student-verification/overview",
+              "student-verification/webhooks"
+            ]
+          },
+          {
+            "group": "Your apps",
+            "pages": [
+              "apps/register"
+            ]
+          }
         ]
       },
       {
         "tab": "API reference",
         "groups": [
-          { "group": "Overview", "pages": ["api-reference/introduction"] },
+          {
+            "group": "Overview",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
           {
             "group": "OpenID Connect",
             "openapi": "api-reference/openapi.json",
@@ -64,7 +94,18 @@
           {
             "group": "The Pass card",
             "openapi": "api-reference/openapi.json",
-            "pages": ["GET /oidc/card", "POST /oidc/card/check"]
+            "pages": [
+              "GET /oidc/card",
+              "POST /oidc/card/check"
+            ]
+          },
+          {
+            "group": "Student verification",
+            "openapi": "api-reference/openapi.json",
+            "pages": [
+              "POST /v1/student-verifications",
+              "GET /v1/student-verifications/{id}"
+            ]
           }
         ]
       }

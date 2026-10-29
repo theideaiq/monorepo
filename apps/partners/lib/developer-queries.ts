@@ -17,7 +17,6 @@ export const APP_ANSWERS = [
   "email",
   "pass",
   "student",
-  "student_check",
   "student_email",
   "adult",
   "plus",
@@ -223,12 +222,43 @@ export const useSetAppKeys = (org: string) => {
   });
 };
 
+/** Each app's webhook (student verification events). */
+export const useAppWebhooks = (org: string) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: async () =>
+      new Map(
+        (unwrap(await supabase.rpc("pass_app_webhooks", { org })) ?? []).map(
+          (row) => [row.client_id, row.webhook_url]
+        )
+      ),
+    queryKey: ["pass-app-webhooks", org] as const,
+  });
+};
+
+export const useSetAppWebhook = (org: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { client: string; url: string }) =>
+      unwrap(
+        await supabase.rpc("set_pass_app_webhook", {
+          client: input.client,
+          url: input.url,
+        })
+      ),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["pass-app-webhooks", org] }),
+  });
+};
+
 const ERRORS = {
   "A return address isn't on a verified domain": "redirectNotVerified",
   "An app uses this domain": "domainInUse",
   "Invalid keys": "invalidKeys",
   "Invalid return address": "invalidRedirect",
   "Not allowed": "notAllowed",
+  "The webhook isn't on a verified domain": "webhookNotVerified",
   "The website isn't on a verified domain": "websiteNotVerified",
   "This domain can't be used": "domainNotAllowed",
   "Too many apps": "tooManyApps",

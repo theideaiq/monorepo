@@ -56,3 +56,30 @@ export const callApi = async <T>(
 
   return json as T;
 };
+
+/**
+ * Calls apps/api without a session (the student verification page works
+ * without The IDEA Pass): JSON, or a form with a file.
+ */
+export const callPublicApi = async <T>(
+  path: string,
+  body: FormData | object,
+  fetchImpl: typeof fetch = fetch
+): Promise<T> => {
+  if (!env.NEXT_PUBLIC_API_URL) {
+    throw new ApiError(0, "api_not_configured");
+  }
+  const form = body instanceof FormData;
+  const response = await fetchImpl(`${env.NEXT_PUBLIC_API_URL}${path}`, {
+    body: form ? body : JSON.stringify(body),
+    headers: form ? undefined : { "Content-Type": "application/json" },
+    method: "POST",
+  });
+  const json = (await response.json().catch(() => ({}))) as {
+    error?: string;
+  };
+  if (!response.ok) {
+    throw new ApiError(response.status, json.error ?? "request_failed");
+  }
+  return json as T;
+};

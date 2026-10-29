@@ -256,7 +256,6 @@ const PASS_ANSWERS = [
   "email",
   "pass",
   "student",
-  "student_check",
   "student_email",
   "adult",
   "plus",
@@ -301,7 +300,6 @@ export const addPassPartner = staffAction(
     profile: checkbox,
     redirectUris: lines(10, 300).pipe(z.array(z.url()).min(1)),
     student: checkbox,
-    student_check: checkbox,
     student_email: checkbox,
     website: z.url().startsWith("https://"),
   }),
@@ -395,7 +393,6 @@ export const setPassPartnerAnswers = staffAction(
     plus: checkbox,
     profile: checkbox,
     student: checkbox,
-    student_check: checkbox,
     student_email: checkbox,
   }),
   async ({ input, supabase }) => {

@@ -59,6 +59,17 @@ export const buckets = {
     mimeTypes: ["image/png", "image/jpeg", "image/webp"],
     public: false,
   },
+  /**
+   * Documents for partners' student verifications under
+   * "<verification id>/…": apps/api uploads, support reads and deletes
+   * after review.
+   */
+  studentDocuments: {
+    id: "student-documents",
+    maxBytes: 10 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp", "application/pdf"],
+    public: false,
+  },
   /** Submitted work under "<author id>/…"; the author and editors read it. */
   submissions: {
     id: "submissions",

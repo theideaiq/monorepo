@@ -114,32 +114,18 @@ export const useRequestStudentReview = () => {
 
 const checkKey = (userId: string) => ["student", userId, "check"] as const;
 
-/** Whether the Pass is bare (made by the student check) and its live check. */
+/** Whether the Pass is bare (made by /verify, holding only the badge). */
 export const useStudentCheck = () => {
   const { supabase, user } = useAuth();
   return useQuery({
     enabled: Boolean(user),
     queryFn: async () => {
-      const userId = requireUserId(user?.id);
-      const [profile, check] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("student_only")
-          .eq("id", userId)
-          .maybeSingle(),
-        supabase
-          .from("student_checks")
-          .select("code, code_expires_at, kept, university_id, valid_until")
-          .eq("user_id", userId)
-          .gt("code_expires_at", new Date().toISOString())
-          .order("created_at", { ascending: false })
-          .limit(1)
-          .maybeSingle(),
-      ]);
-      return {
-        bare: unwrap(profile)?.student_only ?? false,
-        check: unwrap(check),
-      };
+      const profile = await supabase
+        .from("profiles")
+        .select("student_only")
+        .eq("id", requireUserId(user?.id))
+        .maybeSingle();
+      return { bare: unwrap(profile)?.student_only ?? false };
     },
     queryKey: checkKey(user?.id ?? ""),
   });
@@ -171,18 +157,6 @@ export const useBeginStudentCheck = () => {
   const { supabase } = useAuth();
   return useMutation({
     mutationFn: async () => unwrap(await supabase.rpc("begin_student_check")),
-  });
-};
-
-/** A one-time check, or keeping the status for the year: the code to show. */
-export const useFinishStudentCheck = () => {
-  const { supabase, user } = useAuth();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (keep: boolean) =>
-      unwrap(await supabase.rpc("finish_student_check", { keep }).single()),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: studentKey(user?.id ?? "") }),
   });
 };
 

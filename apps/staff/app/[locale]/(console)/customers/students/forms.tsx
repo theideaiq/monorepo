@@ -1,9 +1,14 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ActionForm, SubmitButton } from "@/components/admin/action-form";
 import { CheckboxField, FieldGrid, TextField } from "@/components/admin/fields";
-import { addUniversity, reviewStudentCard, saveUniversity } from "../actions";
+import {
+  addUniversity,
+  reviewStudentCard,
+  reviewStudentDocument,
+  saveUniversity,
+} from "../actions";
 
 /** Approve (until a date, by default the end of the year) or reject. */
 export const ReviewCardForm = ({
@@ -39,6 +44,50 @@ export const ReviewCardForm = ({
       >
         <input name="id" type="hidden" value={id} />
         <input name="approve" type="hidden" value="false" />
+        <TextField
+          label={t("reason")}
+          name="reason"
+          required
+          wrapperClassName="min-w-56 flex-1"
+        />
+        <SubmitButton size="sm" variant="outline">
+          {t("reject")}
+        </SubmitButton>
+      </ActionForm>
+    </div>
+  );
+};
+
+/** A partner verification's document: verify until 30 June, or reject. */
+export const ReviewDocumentForm = ({ id }: { readonly id: string }) => {
+  const t = useTranslations("admin.customers.students");
+  const locale = useLocale();
+  return (
+    <div className="grid gap-3">
+      <ActionForm
+        action={reviewStudentDocument}
+        className="flex flex-wrap gap-3"
+      >
+        <input name="id" type="hidden" value={id} />
+        <input name="approve" type="hidden" value="true" />
+        <input
+          name="locale"
+          type="hidden"
+          value={locale === "ar" ? "ar" : "en"}
+        />
+        <SubmitButton size="sm">{t("approve")}</SubmitButton>
+      </ActionForm>
+      <ActionForm
+        action={reviewStudentDocument}
+        className="flex flex-wrap items-end gap-3"
+      >
+        <input name="id" type="hidden" value={id} />
+        <input name="approve" type="hidden" value="false" />
+        <input
+          name="locale"
+          type="hidden"
+          value={locale === "ar" ? "ar" : "en"}
+        />
         <TextField
           label={t("reason")}
           name="reason"

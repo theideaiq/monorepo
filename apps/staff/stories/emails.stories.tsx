@@ -5,6 +5,10 @@ import {
   OrderConfirmationTemplate,
   orderConfirmationSubject,
 } from "@repo/email/templates/order-confirmation";
+import {
+  StudentVerificationTemplate,
+  studentVerificationSubject,
+} from "@repo/email/templates/student-verification";
 import { formatCurrency, formatDate } from "@repo/internationalization/format";
 import type { Meta, StoryObj } from "@storybook/react";
 import type { ReactElement } from "react";
@@ -134,4 +138,23 @@ const order = (lang: Lang): OrderConfirmationProps => {
 export const OrderConfirmation = email((lang) => ({
   email: <OrderConfirmationTemplate {...order(lang)} />,
   subject: orderConfirmationSubject(lang, "#10042"),
+}));
+
+/** A partner's student verification, confirmed, with the link to delete it. */
+export const StudentVerification = email((lang) => ({
+  email: (
+    <StudentVerificationTemplate
+      deleteUrl="https://theideaiq.com/verify/7c1e/delete?token=sample"
+      locale={lang}
+      outcome="verified"
+      partner={lang === "ar" ? "مكتبة دجلة" : "Tigris Books"}
+      university={
+        lang === "ar"
+          ? "الجامعة الأمريكية في بغداد"
+          : "American University of Baghdad"
+      }
+      until={formatDate("2027-06-30T12:00:00Z", lang, "long")}
+    />
+  ),
+  subject: studentVerificationSubject(lang, "verified"),
 }));

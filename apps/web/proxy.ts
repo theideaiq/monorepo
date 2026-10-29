@@ -77,6 +77,54 @@ const embedOptions = async (request: NextRequest) => {
     : noseconeOptions;
 };
 
+const VERIFY_PATH =
+  /^(\/ar)?\/verify\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?$/i;
+
+/** The origins that may frame a partner's verification (its verified domains). */
+const verificationOrigins = async (id: string) => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!(url && key)) {
+    return [];
+  }
+  try {
+    const response = await fetch(
+      `${url}/rest/v1/rpc/student_verification_origins`,
+      {
+        body: JSON.stringify({ target: id }),
+        headers: {
+          apikey: key,
+          authorization: `Bearer ${key}`,
+          "content-type": "application/json",
+        },
+        method: "POST",
+      }
+    );
+    const origins = (await response.json()) as string[] | null;
+    return response.ok && Array.isArray(origins) ? origins : [];
+  } catch {
+    return [];
+  }
+};
+
+/**
+ * A partner's student verification (/verify/<id>) keeps its opener, so a
+ * popup can tell the partner's page; `?embed=1` may be framed by the
+ * partner's verified domains only.
+ */
+const verificationOptions = async (request: NextRequest, id: string) => {
+  if (request.nextUrl.searchParams.get("embed") !== "1") {
+    return keepOpener;
+  }
+  const origins = await verificationOrigins(id);
+  return origins.length > 0
+    ? {
+        ...noseconeOptionsWith({ frameAncestors: origins }),
+        crossOriginOpenerPolicy: keepOpener.crossOriginOpenerPolicy,
+      }
+    : keepOpener;
+};
+
 /**
  * Adds the locale prefix (/ar; none for English), keeps the shared session cookie of
  * The IDEA Pass fresh (so its pages and Server Actions read a valid token)
@@ -88,7 +136,10 @@ export default async function proxy(request: NextRequest) {
   const response = internationalizationMiddleware(request);
   const { pathname, searchParams } = request.nextUrl;
   let headers = options;
-  if (isEmbedRequestPath(pathname)) {
+  const verification = VERIFY_PATH.exec(pathname)?.[2];
+  if (verification) {
+    headers = await verificationOptions(request, verification.toLowerCase());
+  } else if (isEmbedRequestPath(pathname)) {
     headers = await embedOptions(request);
   } else if (isEmbedSignIn(pathname, searchParams.get("return_to"))) {
     headers = keepOpener;

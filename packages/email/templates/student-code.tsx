@@ -17,6 +17,8 @@ export interface StudentCodeProps {
   /** The 8-digit code. */
   readonly code: string;
   readonly locale: StudentCodeLocale;
+  /** For a partner's verification: the partner's name (no Pass needed). */
+  readonly partner?: string;
   /** The university's name in the email's language. */
   readonly university: string;
 }
@@ -27,6 +29,8 @@ const copy = {
     heading: "رمز التحقق من صفة الطالب",
     intro: (university: string) =>
       `أدخل هذا الرمز في بطاقة Pass الخاصة بك لتأكيد أنك طالب في ${university}:`,
+    partnerIntro: (university: string, partner: string) =>
+      `أدخل هذا الرمز على The IDEA لتأكيد أنك طالب في ${university} لدى ${partner}:`,
     preview: (code: string) => `رمز التحقق: ${code}`,
   },
   en: {
@@ -35,6 +39,8 @@ const copy = {
     heading: "Your student verification code",
     intro: (university: string) =>
       `Enter this code in your Pass to confirm you're a student at ${university}:`,
+    partnerIntro: (university: string, partner: string) =>
+      `Enter this code on The IDEA to confirm to ${partner} that you're a student at ${university}:`,
     preview: (code: string) => `Your verification code: ${code}`,
   },
 } as const;
@@ -45,6 +51,7 @@ export const studentCodeSubject = (locale: StudentCodeLocale) =>
 export const StudentCodeTemplate = ({
   code,
   locale,
+  partner,
   university,
 }: StudentCodeProps) => {
   const text = copy[locale];
@@ -67,7 +74,9 @@ export const StudentCodeTemplate = ({
                   {text.heading}
                 </Text>
                 <Text className="m-0 text-ink-muted">
-                  {text.intro(university)}
+                  {partner
+                    ? text.partnerIntro(university, partner)
+                    : text.intro(university)}
                 </Text>
                 <Text
                   className="my-6 font-semibold text-3xl text-ink"

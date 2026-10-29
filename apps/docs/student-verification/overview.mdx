@@ -1,0 +1,89 @@
+---
+title: "Verify students"
+description: "Check that someone is a student, with or without The IDEA Pass."
+---
+
+Student verification tells you that someone is a student, at which
+university and until when. Nothing else reaches you: no name, no email,
+no Pass details. The student doesn't need The IDEA Pass.
+
+Use your app's credentials from Partners → Developers. A verification is
+yours alone: another partner needs its own, and each lasts until 30 June
+(the end of the academic year), after which the student verifies again.
+
+## 1. Start a verification
+
+From your server, with your client id and secret (HTTP Basic):
+
+```bash
+curl https://api.theideaiq.com/v1/student-verifications \
+  -u "pass_…:$CLIENT_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{ "return_url": "https://your-site.example/students/done" }'
+```
+
+```json
+{
+  "id": "6f1c…",
+  "status": "started",
+  "university": null,
+  "valid_until": null,
+  "url": "https://theideaiq.com/verify/6f1c…"
+}
+```
+
+`return_url` must be your app's website or one of its return addresses,
+or on one of your organization's verified domains. Keep the `id` with the
+person on your side.
+
+## 2. Send the student to The IDEA
+
+Open `url`:
+
+- **Redirect** (works everywhere): send the browser there. When the
+  student is done, The IDEA sends them to `return_url` with
+  `?student_verification=<id>&status=<status>`.
+- **Popup** (desktop): `window.open(url)`. When done, the popup posts
+  `{ type: "theideaiq:student_verification", id, status }` to your page
+  (its opener) and closes.
+- **Embedded** (optional): an `<iframe>` with `url + "?embed=1"`, from one
+  of your verified domains. It posts the same message to the parent page.
+  Browsers block The IDEA's session inside third-party frames, so the
+  one-tap path isn't available there; prefer the redirect or the popup.
+
+On The IDEA, a student signed in with a valid student badge shares it in
+one tap. Anyone else verifies with their university email and an emailed
+8-digit code (at once), or sends a student card or an enrollment proof
+dated within 3 months, which our team checks, usually within 1 working
+day.
+
+## 3. Read the result
+
+Don't trust the query string or the message alone: read the verification
+from your server, or wait for the [webhook](/student-verification/webhooks).
+
+```bash
+curl https://api.theideaiq.com/v1/student-verifications/6f1c… \
+  -u "pass_…:$CLIENT_SECRET"
+```
+
+```json
+{
+  "id": "6f1c…",
+  "status": "verified",
+  "university": "auib",
+  "valid_until": "2027-06-30"
+}
+```
+
+| `status` | Meaning |
+| --- | --- |
+| `started` | Not finished yet |
+| `pending` | A document is waiting for our team |
+| `verified` | A student at `university` until `valid_until` |
+| `rejected` | The document wasn't accepted; start a new verification |
+
+A verification is deleted when the student deletes it (from the
+confirmation email we send them), when it's replaced by a newer one for
+the same person, after 30 June, or a day after it was started and never
+finished. Reading a deleted one returns `404`.
