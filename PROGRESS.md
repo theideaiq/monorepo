@@ -609,6 +609,21 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   spends from 1,000 Bulbs in steps of 250 ("Using 2,250 Bulbs = 2,250 IQD
   off"), staff adjust up to 10,000,000 at a time, and the rewards policy
   and every bonus in the copy follow.
+- 2026-10-29: Surveys, part 1 (master brief step 10, section 20;
+  `20270208000000_surveys_boosted.sql`). Surveys are Free or Boosted: the
+  Bulbs and cash kinds are gone (open Bulbs surveys run out under the old
+  rules; cash surveys became Boosted). A Boosted survey is paid in IQD by
+  an order (the reward × 1.1 per response), opens for 60 days and refunds
+  what it didn't use through Wayl when that is at least 1,000 IQD. Rewards
+  are 100 Bulbs a minute (200 to 2,000), estimated from the questions and
+  reset to the median after 10 counted responses; a higher median pauses
+  collection until the creator pays the difference. A response doesn't
+  count with 2+ failed attention checks or under a third of the median
+  time; the respondent can appeal once (support decides). Respondents can
+  delete a submitted response while the survey is open (the reward
+  stays), and closing early still pays whoever started in the last hour.
+  The website, Partners and Staff screens and the refunds cron come in
+  part 1's code.
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the

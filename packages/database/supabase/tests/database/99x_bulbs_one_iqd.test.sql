@@ -98,7 +98,7 @@ select is(
 
 -- ── Surveys ─────────────────────────────────────────────────────────────────
 
-select is(private.survey_reward(40), 1000, 'the longest survey rewards 1,000 Bulbs');
+select is(private.survey_reward_for(600), 1000, 'ten minutes rewards 1,000 Bulbs');
 
 select * from finish();
 rollback;

@@ -73,11 +73,11 @@ insert into public.student_badges (user_id, university_id, valid_until, method, 
 create temporary table ids (name text primary key, id uuid);
 grant all on ids to authenticated;
 
--- ── Lengths and who creates ──
+-- ── Rewards and who creates ──
 select results_eq(
-  $$ values (private.survey_reward(1), private.survey_reward(10), private.survey_reward(40)) $$,
-  $$ values (200, 500, 1000) $$,
-  'rewards go from 200 to 1,000 Bulbs by length'
+  $$ values (private.survey_reward_for(60), private.survey_reward_for(150), private.survey_reward_for(1800)) $$,
+  $$ values (200, 250, 2000) $$,
+  'rewards are 100 Bulbs a minute, from 200 to 2,000'
 );
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000923');
@@ -148,30 +148,28 @@ select is(
     (select id::text from public.survey_questions where survey_id = (select id from ids where name = 'free') and position = 0), 'Weekly',
     (select id::text from public.survey_questions where survey_id = (select id from ids where name = 'free') and position = 1), 'Red'
   ))).counted,
-  false, 'a failed attention check doesn''t count'
+  true, 'one failed attention check still counts'
 );
-select is(public.my_survey_credits(), 0, 'and earns nothing');
+select is(public.my_survey_credits(), 1, 'and earns a credit');
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000921');
-select is(public.my_survey_credits(), 9, 'each counted response uses one of the creator''s credits');
+select is(public.my_survey_credits(), 8, 'each counted response uses one of the creator''s credits');
 select is((select count(*)::integer from public.survey_results((select id from ids where name = 'free'))), 2,
   'the creator sees the answers');
 select is((select count(*)::integer from public.survey_responses), 0, 'but not who gave them');
 
--- ── Targeting and Bulbs rewards ──
+-- ── Targeting and Boosted rewards ──
 insert into ids select 'bulbs', (public.save_survey('{
-  "title": "Medicine students", "kind": "bulbs", "wanted": 2, "majors": ["Medicine"], "min_seconds": 0,
+  "title": "Medicine students", "kind": "boosted", "wanted": 2, "majors": ["Medicine"], "min_seconds": 0,
   "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "scale", "prompt": "How tired are you?"}]}')).id;
-select throws_ok(
-  $$ select public.publish_survey((select id from ids where name = 'bulbs')) $$,
-  '23514', 'Not enough Bulbs for the rewards', 'rewards need the Bulbs to pay them'
-);
-select pg_temp.reset_role();
-insert into public.bulb_entries (user_id, amount, kind, reason) values ('00000000-0000-0000-0000-000000000921', 10000, 'bonus', 'test');
-select pg_temp.login_as('00000000-0000-0000-0000-000000000921');
 select is((public.publish_survey((select id from ids where name = 'bulbs'))).held, 440,
-  'the rewards (2 × 200) and the 10% fee are held');
+  'a Boosted survey costs the rewards (2 × 200) and the 10% fee, in IQD');
+select pg_temp.reset_role();
+update public.orders set status = 'paid', paid_at = now()
+where id = (select order_id from public.surveys where id = (select id from ids where name = 'bulbs'));
+select is((select status from public.surveys where id = (select id from ids where name = 'bulbs')), 'open',
+  'it opens once paid');
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000922');
 select is((select count(*)::integer from public.surveys_for_me()), 0, 'targeted surveys skip other majors');
@@ -183,7 +181,8 @@ select is((select available from public.my_bulbs()), 200::bigint, 'the responden
 
 select pg_temp.login_as('00000000-0000-0000-0000-000000000921');
 select is((public.close_survey((select id from ids where name = 'bulbs'))).status, 'closed', 'the creator closes it');
-select is((select available from public.my_bulbs()), 9780::bigint, 'and gets the unused Bulbs back');
+select is((select refund_amount from public.surveys where id = (select id from ids where name = 'bulbs')), 0::bigint,
+  'what wasn''t used is under 1,000 IQD, so nothing is refunded');
 
 -- ── Cash ──
 insert into ids select 'cash', (public.save_survey('{
@@ -191,7 +190,7 @@ insert into ids select 'cash', (public.save_survey('{
   "consent": "Your answers are anonymous and used for research only.",
   "questions": [{"kind": "number", "prompt": "Meals a week on campus"}]}')).id;
 select is((public.publish_survey((select id from ids where name = 'cash'))).status, 'awaiting_payment',
-  'a cash survey waits for its payment');
+  'the old cash kind is saved as Boosted and waits for its payment');
 select pg_temp.reset_role();
 update public.orders set status = 'paid', paid_at = now()
 where id = (select order_id from public.surveys where id = (select id from ids where name = 'cash'));
