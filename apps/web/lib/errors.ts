@@ -296,3 +296,22 @@ export const toRentalCartError = (error: unknown): RentalCartError => {
   }
   return "unknown";
 };
+
+export type KitCartError =
+  | "adultsOnly"
+  | "pickGames"
+  | "pickWeekend"
+  | "unavailable"
+  | "unknown";
+
+/** Putting a kit in the cart (the check_cart_kit trigger). */
+export const toKitCartError = (error: unknown): KitCartError => {
+  const message = messageOf(error);
+  const known: [string, KitCartError][] = [
+    ["18 or over", "adultsOnly"],
+    ["Choose one of the coming weekends", "pickWeekend"],
+    ["Choose the kit's games", "pickGames"],
+    ["Item not available", "unavailable"],
+  ];
+  return known.find(([text]) => message.includes(text))?.[1] ?? "unknown";
+};

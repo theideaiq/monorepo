@@ -76,6 +76,7 @@ export const resetCustomer = async () => {
   const db = admin();
   const id = await ensureUser(customer.email, customer.name);
   check(await db.from("cart_items").delete().eq("user_id", id));
+  check(await db.from("cart_kits").delete().eq("user_id", id));
   check(await db.from("wishlist_items").delete().eq("user_id", id));
   check(await db.from("plus_homes").delete().eq("user_id", id));
   check(await db.from("plus_waitlist").delete().eq("user_id", id));

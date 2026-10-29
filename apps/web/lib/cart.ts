@@ -207,3 +207,38 @@ export const freeDeliveryRemaining = (
   freeFrom === null || freeFrom === undefined || subtotal === 0
     ? 0
     : Math.max(freeFrom - subtotal, 0);
+
+/** The cart's game night kit, priced (`useCartKitLine`). */
+export interface KitLine {
+  /** A unit is still free that weekend. */
+  available: boolean;
+  deposit: number;
+  price: number;
+}
+
+/**
+ * Adds the cart's kit to its summary: its price and deposit in the totals
+ * (the deposit on its own row), and a problem when no unit is left.
+ */
+export const addKitToSummary = (
+  summary: ReturnType<typeof summarizeCart>,
+  kit: KitLine | null
+): ReturnType<typeof summarizeCart> => {
+  if (!kit) {
+    return summary;
+  }
+  const amount = kit.price + kit.deposit;
+  const problems = summary.problems + (kit.available ? 0 : 1);
+  return {
+    ...summary,
+    canCheckout: problems === 0,
+    problems,
+    totals: {
+      ...summary.totals,
+      count: summary.totals.count + 1,
+      deposits: summary.totals.deposits + kit.deposit,
+      subtotal: summary.totals.subtotal + amount,
+      total: summary.totals.total + amount,
+    },
+  };
+};

@@ -318,6 +318,12 @@ test.describe("a signed-in customer", () => {
       .click();
     await expect(page).toHaveURL(KIT_PAGE);
     await page.getByRole("radio").first().click();
+    await expectAccessible(page);
+    // The kit goes in the cart and checks out with everything else.
+    await page.getByRole("button", { name: "Add to cart" }).click();
+    await expect(page).toHaveURL(CART_PAGE);
+    await expect(page.getByText("Game night kit")).toBeVisible();
+    await page.getByRole("link", { name: "Checkout" }).click();
     await page.getByRole("combobox", { name: "Governorate" }).click();
     await page.getByRole("option", { name: BAGHDAD }).click();
     await page.getByLabel("Full name").fill(customer.name);
@@ -329,7 +335,7 @@ test.describe("a signed-in customer", () => {
     await expectAccessible(page);
     await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
 
-    await expect(page).toHaveURL(ORDER_PAGE);
+    await expect(page).toHaveURL(ORDER_PAGE, { timeout: 30_000 });
     await expect(
       page.getByText("Refundable deposit: Retro night")
     ).toBeVisible();

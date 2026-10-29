@@ -1395,6 +1395,12 @@
       "rent": {
         "label": "Rent",
         "terms": "For {days} · deposit {deposit}, refunded when you return it"
+      },
+      "kit": {
+        "label": "Game night kit",
+        "when": "From Thursday {date}{hasExtra, select, yes { · {extra} extra days} other {}}",
+        "deposit": "Deposit {deposit}, refunded when it comes back",
+        "booked": "Every kit is booked that weekend. Remove it and choose another weekend."
       }
     },
     "checkout": {
@@ -1523,9 +1529,10 @@
         "messagePlaceholder": "Happy birthday!",
         "hidePrice": "Hide the price",
         "payNote": "Gifts are paid online or with Bulbs.",
-        "noRentals": "Rentals can't be sent as gifts. Remove them from the cart to send the rest as a gift."
+        "noRentals": "Rentals and game night kits can't be sent as gifts. Remove them from the cart to send the rest as a gift."
       },
-      "rentLine": "Rent"
+      "rentLine": "Rent",
+      "kitLine": "Kit"
     },
     "orders": {
       "title": "Orders",
@@ -3200,7 +3207,17 @@
       "total": "Total",
       "depositNote": "We refund the deposit after collection, less any damage. Show your ID at the door.",
       "adultsNote": "Kits are booked by adults (18 or over).",
-      "noDepositNote": "Verified students book without a deposit."
+      "noDepositNote": "Verified students book without a deposit.",
+      "cartNote": "It goes in your cart; you choose the address in Baghdad and pay at checkout.",
+      "addToCart": "Add to cart",
+      "adding": "Adding…",
+      "errors": {
+        "adultsOnly": "Kits are for 18 and over.",
+        "pickWeekend": "Choose one of the coming weekends.",
+        "pickGames": "Choose the kit's games.",
+        "unavailable": "This kit or one of its games isn't available right now.",
+        "unknown": "We couldn't add this to your cart. Please try again."
+      }
     },
     "verifyPhone": {
       "title": "Verified phone numbers",

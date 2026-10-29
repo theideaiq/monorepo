@@ -850,6 +850,10 @@ differ from earlier parts.
     their rates).
 - **Gifts:** a cart with a rental can't be sent as a gift for now, since
   the rental comes back to whoever rented it.
-- **Next:** kit bookings join the cart; tickets, programs and digital
-  codes join when they exist. Subscriptions (Plus, Pro) keep their own
-  checkout.
+- **Kits** join the cart too: one kit booking per cart (choosing another
+  replaces it). Its price counts like rent; its deposit like the others.
+  Kits are delivered in Baghdad only, so a cart with a kit checks out to
+  a Baghdad address; a kit on its own is still delivered free. Kits
+  can't be sent as gifts.
+- **Next:** tickets, programs and digital codes join the cart when they
+  exist. Subscriptions (Plus, Pro) keep their own checkout.

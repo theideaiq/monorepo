@@ -1,7 +1,6 @@
 "use client";
 
-import { useAuth } from "@repo/auth/provider";
-import { formatPrice, localized, type PaymentMethod } from "@repo/commerce";
+import { formatPrice, localized } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
@@ -20,40 +19,20 @@ import {
 import type { Locale } from "@repo/internationalization";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
-import { ArrowLeftIcon, BanknoteIcon, LockIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { type FormEvent, type ReactNode, useId, useState } from "react";
+import { type FormEvent, useId, useState } from "react";
 import { PageHeader } from "@/components/page-header";
-import {
-  ContactCard,
-  PaymentCard,
-  resolveChoices,
-  useCheckoutAreas,
-} from "@/components/screens/checkout";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { CheckoutErrorNote } from "@/components/store/checkout-error";
-import {
-  type AddressField,
-  type AddressForm,
-  accountPhone,
-  emptyAddress,
-  validateAddress,
-} from "@/lib/address";
-import { type CheckoutError, toCheckoutError } from "@/lib/errors";
+import { toKitCartError } from "@/lib/errors";
 import {
   kitTotal,
   MAX_EXTRA_DAYS,
+  useAddKitToCart,
   useKitType,
   useKitWeekends,
 } from "@/lib/kits";
-import { orderPath, usePlaceKit } from "@/lib/order-checkout";
-import { isNativeApp } from "@/lib/platform";
-import { useProfile } from "@/lib/queries";
-import {
-  useDeliveryZones,
-  useProducts,
-  useStoreSettings,
-} from "@/lib/store-queries";
+import { useProducts } from "@/lib/store-queries";
 import { useMyStudent } from "@/lib/student-queries";
 
 type Weekend = ReturnType<typeof useKitWeekends>["data"] extends
@@ -230,10 +209,9 @@ const Row = ({
   </div>
 );
 
-/** The weekend, extra days, deposit and what's paid now. */
+/** The weekend, extra days, deposit, and "Add to cart". */
 const KitSummary = ({
   busy,
-  cash,
   deposit,
   error,
   extraDays,
@@ -242,10 +220,9 @@ const KitSummary = ({
   weekend,
 }: {
   readonly busy: boolean;
-  readonly cash: boolean;
   readonly deposit: number;
-  /** Why placing failed (CheckoutErrorNote), if it did. */
-  readonly error: ReactNode;
+  /** Why adding failed, if it did. */
+  readonly error: string | null;
   readonly extraDays: number;
   readonly name: string;
   readonly ready: boolean;
@@ -255,7 +232,6 @@ const KitSummary = ({
   const tCheckout = useTranslations("app.checkout");
   const locale = useLocale() as Locale;
   const total = kitTotal(weekend, extraDays) + deposit;
-  const amount = formatPrice(total, locale);
   return (
     <Card className="lg:sticky lg:top-4">
       <CardHeader>
@@ -279,126 +255,78 @@ const KitSummary = ({
           {deposit > 0 ? (
             <Row label={t("deposit")} value={formatPrice(deposit, locale)} />
           ) : null}
-          <Row label={t("delivery")} value={t("included")} />
           <div className="flex justify-between gap-3 border-t pt-2 font-medium">
             <dt>{t("total")}</dt>
-            <dd className="tabular-nums">{weekend ? amount : "—"}</dd>
+            <dd className="tabular-nums">
+              {weekend ? formatPrice(total, locale) : "—"}
+            </dd>
           </div>
         </dl>
         <ul className="grid gap-1 text-muted-foreground text-xs">
           <li>{deposit > 0 ? t("depositNote") : t("noDepositNote")}</li>
           <li>{t("adultsNote")}</li>
+          <li>{t("cartNote")}</li>
         </ul>
-        {error}
+        {error ? (
+          <p className="text-destructive text-sm" role="alert">
+            {error}
+          </p>
+        ) : null}
         <Button disabled={busy || !ready} size="lg" type="submit">
-          {busy
-            ? tCheckout("placing")
-            : tCheckout(cash ? "placeOrderCash" : "placeOrder", { amount })}
+          {busy ? t("adding") : t("addToCart")}
         </Button>
-        <p className="flex items-center gap-1.5 text-muted-foreground text-xs">
-          {cash ? (
-            <BanknoteIcon className="size-3.5" />
-          ) : (
-            <LockIcon className="size-3.5" />
-          )}
-          {cash ? tCheckout("cashNote", { amount }) : tCheckout("secure")}
-        </p>
       </CardContent>
     </Card>
   );
 };
 
-/** The kit, its weekends and the store's options; delivery in Baghdad. */
+/** The kit and its weekends. */
 const useKitData = (kit: string) => {
-  const profile = useProfile();
   const type = useKitType(kit);
   const weekends = useKitWeekends(kit);
-  const settings = useStoreSettings();
-  const zones = useDeliveryZones();
-  const queries = [type, weekends, settings, zones];
+  const queries = [type, weekends];
   return {
     failed: queries.some((query) => query.isError),
-    loading: profile.isPending || queries.some((query) => query.isPending),
-    profile: profile.data,
+    loading: queries.some((query) => query.isPending),
     retry: () => {
       for (const query of queries) {
         query.refetch();
       }
     },
-    settings: settings.data,
     type: type.data,
     weekends: weekends.data ?? [],
-    zones: (zones.data ?? []).filter((zone) => zone.governorate === "baghdad"),
   };
 };
 
 /**
- * Booking a game night kit: the weekend (and extra days), the PS5 kit's
- * games, the address in Baghdad and payment, then `book_kit()` and, for
- * online payment, the hosted payment page.
+ * Booking a game night kit: the weekend (and extra days) and the PS5
+ * kit's games go in the cart, which checks it out with everything else,
+ * delivered in Baghdad.
  */
 export const KitCheckout = ({ kit }: { readonly kit: string }) => {
   const t = useTranslations("app.kits");
   const locale = useLocale() as Locale;
   const router = useRouter();
-  const { user } = useAuth();
   const data = useKitData(kit);
-  const place = usePlaceKit();
-  // Verified students book without the deposit (book_kit() waives it).
+  const add = useAddKitToCart();
+  // Verified students book without the deposit (checkout waives it).
   const isStudent = useMyStudent().data?.verified ?? false;
   const [startsOn, setStartsOn] = useState<string | null>(null);
   const [extraDays, setExtraDays] = useState(0);
   const [games, setGames] = useState<string[]>([]);
-  const [payment, setPayment] = useState<PaymentMethod>("online");
-  const [form, setForm] = useState<AddressForm | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
-  const [error, setError] = useState<CheckoutError | null>(null);
-
-  const address: AddressForm = form ?? {
-    ...emptyAddress(accountPhone(user?.phone)),
-    fullName: data.profile?.full_name ?? "",
-  };
-  const set = (field: keyof AddressForm) => (value: string) =>
-    setForm({ ...address, [field]: value });
   const weekend = data.weekends.find((item) => item.startsOn === startsOn);
-  const { cash, cashOffered, paymentMethod, zone, zoneList } = resolveChoices({
-    address,
-    payment,
-    settings: data.settings,
-    subtotal: kitTotal(weekend, extraDays),
-    zones: data.zones,
-  });
-  const areas = useCheckoutAreas(zone);
-  const busy = place.isPending || place.isSuccess;
+  const busy = add.isPending || add.isSuccess;
   const { type } = data;
   const ready = Boolean(weekend && type && games.length === (type?.games ?? 0));
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(null);
-    const result = validateAddress(address, { areas, zones: zoneList });
-    setFieldErrors(result.errors);
-    if (!(result.shipping && result.zoneId && startsOn && ready)) {
+    if (!(startsOn && ready)) {
       return;
     }
-    place.mutate(
-      {
-        deliveryZone: result.zoneId,
-        extraDays,
-        games,
-        kit,
-        paymentMethod,
-        shipping: result.shipping,
-        startsOn,
-      },
-      {
-        onError: (mutationError) => setError(toCheckoutError(mutationError)),
-        onSuccess: ({ order, paymentError, url }) => {
-          if (paymentError || isNativeApp() || !url) {
-            router.replace(orderPath(order.id));
-          }
-        },
-      }
+    add.mutate(
+      { extraDays, games, kit, startsOn },
+      { onSuccess: () => router.push("/cart") }
     );
   };
 
@@ -444,34 +372,12 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
                   onChange={setGames}
                 />
               ) : null}
-              <ContactCard
-                address={address}
-                areas={areas}
-                busy={busy}
-                fieldErrors={fieldErrors}
-                onChange={set}
-                onLocation={(location) => setForm({ ...address, location })}
-                zone={zone}
-                zones={zoneList}
-              />
-              {cashOffered ? (
-                <PaymentCard
-                  busy={busy}
-                  onChange={setPayment}
-                  value={paymentMethod}
-                />
-              ) : null}
             </div>
             <KitSummary
               busy={busy}
-              cash={cash}
               deposit={isStudent ? 0 : type.deposit}
               error={
-                <CheckoutErrorNote
-                  error={error}
-                  onPhoneVerified={() => setError(null)}
-                  phone={address.phone}
-                />
+                add.isError ? t(`errors.${toKitCartError(add.error)}`) : null
               }
               extraDays={extraDays}
               name={localized(type, "name", locale)}

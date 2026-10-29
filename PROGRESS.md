@@ -699,7 +699,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   deposits; invite and coupon discounts apply to what's bought; Bulbs pay
   anything but deposits. A cart with a rental can't be sent as a gift.
   The separate rent checkout (`/rent/<item>`) still works for old links.
-  Kit bookings join the cart next.
+- 2026-10-29: Catalog, part 6 (step 11; `20270220000000_cart_kits.sql`). A
+  game night kit goes in the cart too: the kit page (weekend, extra days,
+  the PS5 kit's games) now ends in "Add to cart", and the kit checks out
+  with everything else in one order (delivered in Baghdad; on its own,
+  free as before). The cart shows its weekend and deposit; a cart with a
+  kit or a rental can't be sent as a gift. One cart now holds everything
+  bought once that exists today; tickets, programs and digital codes join
+  when they're built, and gifting Plus months is still to come.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

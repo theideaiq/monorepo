@@ -1,8 +1,8 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import { useQuery } from "@tanstack/react-query";
-import { unwrap } from "./queries";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /**
  * Game night kits (migration `20261223000000_game_night_kits.sql`): a
@@ -34,6 +34,7 @@ export const useKitType = (kit: string) => {
 export const useKitWeekends = (kit: string) => {
   const { supabase, user } = useAuth();
   return useQuery({
+    enabled: Boolean(kit),
     queryFn: async () =>
       (unwrap(await supabase.rpc("kit_weekends", { kit })) ?? []).map(
         (row) => ({
@@ -71,3 +72,97 @@ export const kitTotal = (
   weekend: { extraDayPrice: number; price: number } | undefined,
   extraDays: number
 ) => (weekend ? weekend.price + extraDays * weekend.extraDayPrice : 0);
+
+/** The kit booking waiting in the member's cart (`cart_kits`), if any. */
+export interface CartKit {
+  extra_days: number;
+  games: string[];
+  id: string;
+  kit: { name_ar: string; name_en: string; deposit: number } | null;
+  kit_type: string;
+  starts_on: string;
+}
+
+const cartKitKey = (userId: string) => [...queryKeys.cart(userId), "kit"];
+
+export const useCartKit = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () =>
+      (unwrap(
+        await supabase
+          .from("cart_kits")
+          .select(
+            "id, kit_type, starts_on, extra_days, games, kit:kit_types (name_ar, name_en, deposit)"
+          )
+          .maybeSingle()
+      ) as CartKit | null) ?? null,
+    queryKey: cartKitKey(user?.id ?? ""),
+  });
+};
+
+/**
+ * Puts a kit booking in the cart, replacing the one there (a cart holds
+ * one); the database checks it like `book_kit()`.
+ */
+export const useAddKitToCart = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (booking: {
+      extraDays: number;
+      games: string[];
+      kit: string;
+      startsOn: string;
+    }) => {
+      const userId = requireUserId(user?.id);
+      unwrap(await supabase.from("cart_kits").delete().eq("user_id", userId));
+      unwrap(
+        await supabase.from("cart_kits").insert({
+          extra_days: booking.extraDays,
+          games: booking.games,
+          kit_type: booking.kit,
+          starts_on: booking.startsOn,
+        })
+      );
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.cart(user?.id ?? ""),
+      }),
+  });
+};
+
+export const useRemoveCartKit = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      unwrap(await supabase.from("cart_kits").delete().eq("id", id));
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.cart(user?.id ?? ""),
+      }),
+  });
+};
+
+/**
+ * The cart's kit priced for the cart page and checkout summary: its
+ * weekend's price and extra days, and the deposit (none for students).
+ */
+export const useCartKitLine = (isStudent: boolean) => {
+  const kit = useCartKit().data ?? null;
+  const weekends = useKitWeekends(kit?.kit_type ?? "");
+  if (!kit) {
+    return null;
+  }
+  const weekend = weekends.data?.find((row) => row.startsOn === kit.starts_on);
+  return {
+    available: Boolean(weekend && weekend.unitsFree > 0),
+    deposit: isStudent ? 0 : (kit.kit?.deposit ?? 0),
+    item: kit,
+    price: kitTotal(weekend, kit.extra_days),
+  };
+};
