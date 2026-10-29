@@ -6,23 +6,29 @@ import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { cn } from "@repo/design-system/lib/utils";
+import type { Locale } from "@repo/internationalization";
+import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { ArrowLeftIcon, FlagIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useState } from "react";
+import { SurveyResponseStatus } from "@/components/club/survey-response-status";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
+  useMyResponse,
   useReportSurvey,
   useStartSurvey,
   useSubmitSurvey,
   useSurvey,
+  useWithdrawResponse,
 } from "@/lib/survey-queries";
 import {
   missingAnswers,
   type SurveyAnswers,
   type SurveyQuestion,
   surveyError,
+  surveyMinutes,
 } from "@/lib/surveys";
 
 const SCALE = [1, 2, 3, 4, 5] as const;
@@ -248,38 +254,120 @@ export const SurveyAnswer = ({ surveyId }: { readonly surveyId: string }) => {
       <div className="flex flex-col gap-4">
         <BackToClub />
         <p className="text-muted-foreground">{t("closed")}</p>
+        <SurveyResponseStatus open={false} surveyId={surveyId} />
       </div>
     );
   }
   return <OpenSurvey survey={data} />;
 };
 
-/** After sending: whether the answers counted, and what they earned. */
-const Thanks = ({
-  counted,
-  reward,
-}: {
-  readonly counted: boolean;
-  readonly reward: number;
-}) => {
+/** After sending: whether the answers counted, what they earned, and the rest. */
+const Thanks = ({ surveyId }: { readonly surveyId: string }) => {
   const t = useTranslations("web.club.surveys.answer");
-  let thanks = t("notCounted");
-  if (counted) {
-    thanks =
-      reward > 0
-        ? t("thanksReward", { bulbs: String(reward) })
-        : t("thanksCredit");
-  }
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title={t("thanks")} />
-      <p>{thanks}</p>
+      <SurveyResponseStatus open surveyId={surveyId} />
       <BackToClub />
     </div>
   );
 };
 
+/**
+ * Before starting: the reward, the time it takes, that there are attention
+ * checks, and the rules a response is counted by.
+ */
+const CountingRules = ({ survey }: { readonly survey: LoadedSurvey }) => {
+  const t = useTranslations("web.club.surveys.answer.rules");
+  const locale = useLocale() as Locale;
+  const seconds = survey.median_seconds ?? survey.estimated_seconds ?? 0;
+  const checks = survey.survey_questions.some(
+    (question) => question.attention_answer
+  );
+  return (
+    <section className="grid gap-2 rounded-lg border p-4 text-sm">
+      <h2 className="font-semibold">{t("title")}</h2>
+      <ul className="grid list-disc gap-1 ps-5">
+        {survey.kind === "free" ? (
+          <li>{t("credit")}</li>
+        ) : (
+          <li>{t("reward", { bulbs: formatNumber(survey.reward, locale) })}</li>
+        )}
+        {seconds > 0 ? (
+          <li>
+            {t("time", {
+              minutes: formatNumber(surveyMinutes(seconds), locale),
+            })}
+          </li>
+        ) : null}
+        {checks ? <li>{t("checks")}</li> : null}
+        <li>{t("counts")}</li>
+        <li>{t("quit")}</li>
+        <li>{t("appeal")}</li>
+      </ul>
+    </section>
+  );
+};
+
 type LoadedSurvey = NonNullable<ReturnType<typeof useSurvey>["data"]>;
+
+/** Before starting: the rules, then "I agree, start" (unless it's yours or paused). */
+const StartPanel = ({
+  onStart,
+  own,
+  start,
+  survey: data,
+}: {
+  readonly onStart: () => void;
+  readonly own: boolean;
+  readonly start: ReturnType<typeof useStartSurvey>;
+  readonly survey: LoadedSurvey;
+}) => {
+  const t = useTranslations("web.club.surveys.answer");
+  const tError = useTranslations("web.club.surveys.errors");
+  const surveyId = data.id;
+  const questions = data.survey_questions;
+  const paused = Boolean(data.paused_at);
+  return (
+    <div className="grid gap-3">
+      <CountingRules survey={data} />
+      <p className="text-muted-foreground text-sm">
+        {t("anonymous", { n: String(questions.length) })}{" "}
+        <Link className="text-pink-text underline" href="/legal/surveys">
+          {t("terms")}
+        </Link>
+      </p>
+      {own ? (
+        <p className="text-sm">
+          {t("yours")}{" "}
+          <Link
+            className="text-pink-text underline"
+            href={`/club/surveys/${encodeURIComponent(surveyId)}/results`}
+          >
+            {t("results")}
+          </Link>
+        </p>
+      ) : null}
+      {!own && paused ? (
+        <p className="text-muted-foreground text-sm">{t("paused")}</p>
+      ) : null}
+      {own || paused ? null : (
+        <Button
+          className="justify-self-start"
+          disabled={start.isPending}
+          onClick={onStart}
+        >
+          {t("agree")}
+        </Button>
+      )}
+      {start.isError ? (
+        <p className="text-destructive text-sm" role="alert">
+          {tError(surveyError(start.error.message))}
+        </p>
+      ) : null}
+    </div>
+  );
+};
 
 /** An open survey: the consent, then the questions, then the thanks. */
 const OpenSurvey = ({ survey: data }: { readonly survey: LoadedSurvey }) => {
@@ -288,16 +376,16 @@ const OpenSurvey = ({ survey: data }: { readonly survey: LoadedSurvey }) => {
   const { user } = useAuth();
   const start = useStartSurvey();
   const submit = useSubmitSurvey();
+  const quit = useWithdrawResponse();
+  const mine = useMyResponse(data.id);
   const [answers, setAnswers] = useState<SurveyAnswers>({});
   const [missing, setMissing] = useState<string[]>([]);
   const surveyId = data.id;
   const questions = data.survey_questions;
   const own = data.creator_id === user?.id;
 
-  if (submit.isSuccess) {
-    return (
-      <Thanks counted={Boolean(submit.data?.counted)} reward={data.reward} />
-    );
+  if (submit.isSuccess || mine.data?.submitted_at) {
+    return <Thanks surveyId={surveyId} />;
   }
 
   const send = (event: FormEvent<HTMLFormElement>) => {
@@ -347,13 +435,21 @@ const OpenSurvey = ({ survey: data }: { readonly survey: LoadedSurvey }) => {
                 value={answers[question.id]}
               />
             ))}
-            <Button
-              className="justify-self-start"
-              disabled={submit.isPending}
-              type="submit"
-            >
-              {submit.isPending ? t("sending") : t("submit")}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button disabled={submit.isPending} type="submit">
+                {submit.isPending ? t("sending") : t("submit")}
+              </Button>
+              <Button
+                disabled={quit.isPending}
+                onClick={() =>
+                  quit.mutate(surveyId, { onSuccess: () => start.reset() })
+                }
+                type="button"
+                variant="ghost"
+              >
+                {t("quit")}
+              </Button>
+            </div>
             {submit.isError ? (
               <p className="text-destructive text-sm" role="alert">
                 {tError(surveyError(submit.error.message))}
@@ -373,38 +469,12 @@ const OpenSurvey = ({ survey: data }: { readonly survey: LoadedSurvey }) => {
         )}
       </div>
       {start.isSuccess ? null : (
-        <div className="grid gap-2">
-          <p className="text-muted-foreground text-sm">
-            {t("anonymous", { n: String(questions.length) })}{" "}
-            <Link className="text-pink-text underline" href="/legal/surveys">
-              {t("terms")}
-            </Link>
-          </p>
-          {own ? (
-            <p className="text-sm">
-              {t("yours")}{" "}
-              <Link
-                className="text-pink-text underline"
-                href={`/club/surveys/${encodeURIComponent(surveyId)}/results`}
-              >
-                {t("results")}
-              </Link>
-            </p>
-          ) : (
-            <Button
-              className="justify-self-start"
-              disabled={start.isPending}
-              onClick={() => start.mutate(surveyId)}
-            >
-              {t("agree")}
-            </Button>
-          )}
-          {start.isError ? (
-            <p className="text-destructive text-sm" role="alert">
-              {tError(surveyError(start.error.message))}
-            </p>
-          ) : null}
-        </div>
+        <StartPanel
+          onStart={() => start.mutate(surveyId)}
+          own={own}
+          start={start}
+          survey={data}
+        />
       )}
       {own ? null : <ReportSurvey surveyId={surveyId} />}
     </div>

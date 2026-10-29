@@ -237,6 +237,21 @@ export const saveUniversity = staffAction(
   }
 );
 
+/** Decides a respondent's appeal: upheld, the response counts and is paid. */
+export const decideSurveyAppeal = staffAction(
+  "customers",
+  z.object({ id: uuid, upheld: z.enum(["true", "false"]) }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("decide_survey_appeal", {
+        target: input.id,
+        upheld: input.upheld === "true",
+      })
+    );
+    return success();
+  }
+);
+
 export const reviewSurvey = staffAction(
   "customers",
   z.object({

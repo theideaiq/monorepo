@@ -57,6 +57,10 @@ export const NOTIFICATION_EVENTS = [
   "student_rejected",
   "survey_approved",
   "survey_rejected",
+  "survey_paused",
+  "survey_appeal_upheld",
+  "survey_appeal_declined",
+  "survey_refunded",
   "product_available",
   "saved_back_in_stock",
   "saved_out_now",
@@ -213,7 +217,23 @@ const extraValues: Partial<
     const until = text(data.until);
     return { date: until ? formatDate(`${until}T12:00:00`, locale) : "" };
   },
+  survey_appeal_declined: (data) => ({ title: text(data.title) }),
+  survey_appeal_upheld: (data) => ({ title: text(data.title) }),
   survey_approved: (data) => ({ title: text(data.title) }),
+  survey_paused: (data, locale) => {
+    const reward = Number(text(data.reward));
+    return {
+      bulbs: Number.isFinite(reward) ? formatNumber(reward, locale) : "",
+      title: text(data.title),
+    };
+  },
+  survey_refunded: (data, locale) => {
+    const amount = Number(text(data.amount));
+    return {
+      amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+      title: text(data.title),
+    };
+  },
   survey_rejected: (data) => ({ title: text(data.title) }),
 };
 

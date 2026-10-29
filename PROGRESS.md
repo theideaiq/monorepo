@@ -622,8 +622,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   time; the respondent can appeal once (support decides). Respondents can
   delete a submitted response while the survey is open (the reward
   stays), and closing early still pays whoever started in the last hour.
-  The website, Partners and Staff screens and the refunds cron come in
-  part 1's code.
+  The code: the builder offers Free or Boosted with the time estimate and
+  reward; the start screen shows the reward, the time, the check
+  questions and the counting rules; after answering, members see whether
+  it counted (and why not, with one appeal) and can delete their answers;
+  creators accept a higher reward and pay the difference from Club →
+  Yours and see their refund; Staff → Customers → Surveys decides
+  appeals (an Inbox item); the daily selling cron closes surveys past 60
+  days and refunds Boosted ones through Wayl; the survey terms follow.
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the

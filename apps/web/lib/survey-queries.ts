@@ -4,7 +4,12 @@ import { useAuth } from "@repo/auth/provider";
 import type { Json } from "@repo/database";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { requireUserId, unwrap } from "./queries";
-import type { SurveyAnswers, SurveyQuestion, SurveyResult } from "./surveys";
+import type {
+  SurveyAnswers,
+  SurveyKind,
+  SurveyQuestion,
+  SurveyResult,
+} from "./surveys";
 
 /**
  * Club surveys: the ones to answer, answering, creating (verified
@@ -12,12 +17,14 @@ import type { SurveyAnswers, SurveyQuestion, SurveyResult } from "./surveys";
  */
 
 const SURVEY_COLUMNS =
-  "id, creator_id, title, description, language, consent, kind, status, wanted, reward, held, order_id, students_only, universities, majors, years, governorates, min_seconds, ethics_reference, flags, review_note, opened_at, closed_at, created_at" as const;
+  "id, creator_id, title, description, language, consent, kind, status, wanted, reward, held, order_id, students_only, universities, majors, years, governorates, min_seconds, ethics_reference, flags, review_note, opened_at, closes_at, closed_at, created_at, estimated_seconds, median_seconds, reward_pending, paused_at, topup_order_id, refund_amount, refunded_amount, refunded_at" as const;
 
 const keys = {
   credits: (userId: string) => ["survey-credits", userId] as const,
   forMe: (userId: string) => ["surveys-for-me", userId] as const,
   mine: (userId: string) => ["my-surveys", userId] as const,
+  response: (id: string, userId: string) =>
+    ["survey-response", id, userId] as const,
   results: (id: string) => ["survey-results", id] as const,
   survey: (id: string) => ["survey", id] as const,
 };
@@ -92,7 +99,7 @@ export interface SurveyDraft {
   ethics_reference: string;
   governorates: string[];
   id?: string;
-  kind: "bulbs" | "cash" | "free";
+  kind: SurveyKind;
   language: "ar" | "en";
   majors: string[];
   min_seconds: number;
@@ -238,5 +245,68 @@ export const useSetStudentProfile = () => {
       ),
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["student", user?.id ?? ""] }),
+  });
+};
+
+/** The member's own response to a survey, if they started one. */
+export const useMyResponse = (surveyId: string) => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("survey_responses")
+          .select(
+            "id, started_at, submitted_at, counted, excluded_reason, failed_checks, seconds, reward_paid, withdrawn_at, appealed_at, appeal_decided_at, appeal_upheld"
+          )
+          .eq("survey_id", surveyId)
+          .eq("user_id", requireUserId(user?.id))
+          .maybeSingle()
+      ),
+    queryKey: keys.response(surveyId, user?.id ?? ""),
+  });
+};
+
+/** Quits before submitting, or deletes a submitted response (the reward stays). */
+export const useWithdrawResponse = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (target: string) =>
+      unwrap(await supabase.rpc("withdraw_survey_response", { target })),
+    onSettled: (_data, _error, target) =>
+      Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: keys.response(target, user?.id ?? ""),
+        }),
+        queryClient.invalidateQueries({ queryKey: keys.forMe(user?.id ?? "") }),
+      ]),
+  });
+};
+
+/** Appeals a response that didn't count, once. */
+export const useAppealResponse = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ note, target }: { note: string; target: string }) =>
+      unwrap(await supabase.rpc("appeal_survey_response", { note, target })),
+    onSettled: (_data, _error, { target }) =>
+      queryClient.invalidateQueries({
+        queryKey: keys.response(target, user?.id ?? ""),
+      }),
+  });
+};
+
+/** The creator accepts the higher reward the median set: an order of the difference. */
+export const useConfirmSurveyReward = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (target: string) =>
+      unwrap(await supabase.rpc("confirm_survey_reward", { target })),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: keys.mine(user?.id ?? "") }),
   });
 };
