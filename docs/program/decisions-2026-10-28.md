@@ -1255,3 +1255,53 @@ Returns policy. Nothing new in the schema; the website points the way:
 - Pass → Selling has "Sell it yourself", next to Get offers from shops;
 - Partners `/new?for=selling` makes the organization with Selling on and
   opens the shop's application (individual trader is the default kind).
+
+## Part 15: Plus Duo (step 14)
+
+Section 17's Plus Duo, schema first (`20270314000000_plus_duo.sql`), then
+the code.
+
+- **Plans:** Glow Duo 20,750 · Shine Duo 31,750 · Blaze Duo 55,750 IQD a
+  month (`plus-<tier>-duo`), yearly at 10 months for 12 (`-duo-year`), and
+  for a verified student holder 20% off on a …750 ending (`-duo-student`:
+  15,750 · 24,750 · 43,750). `plans.duo` marks them; each has its tier's
+  slots, home swaps, Bulbs rate and features. They're added switched off
+  (in production and in the local seed) and the code that invites the
+  second person turns them on, so the current plan cards don't offer a
+  Duo before it can be shared.
+- **`plus_members`:** the holder and the partner of a Duo subscription:
+  the Pass, the role, the invite code (7 days, a new one replaces an
+  unaccepted one), invited and joined dates, a removal's end date, when
+  and why the place ended, the guardian and their decision, and on the
+  holder's row how swaps share the queues. Members, their guardians and
+  staff read it; only functions write it.
+- **The partner has no subscription.** `plus_tier`, `member_plan` and
+  `plus_rental_slots` count the live Duo a person is the partner on
+  (joined, approved by their guardian when 13–17, before a removal's end),
+  so the Bulbs rate, survey credits, early access, Plus prices, partner
+  perks and the Pass card badge are theirs. They don't take one of the
+  Plus places, and can't join with Plus of their own.
+- **Shared:** rental slots and home swaps are counted across the holder
+  and the partner; one booked swap at a time for the two; home swaps go to
+  the holder's Plus address; the holder's subscription decides pause and
+  cancel. Each keeps their own queue; `household_queue` orders both for
+  the next swap: alternating by default (whoever has fewer items at home
+  first, the holder on a tie), or one person's queue first as the holder
+  sets (`set_duo_swap_order`). A wanted item becomes a rental of whoever
+  queued it.
+- **Ages:** 13 and over. A 13–17-year-old partner needs a linked guardian,
+  who approves the place (`decide_duo_guardian`); a guardian who already
+  allows Plus has approved it.
+- **Ending:** the partner leaves at any time (`leave_duo`); the holder
+  removes them from the next renewal (`remove_duo_partner`, `keep` takes it
+  back) once their rentals are back. What a departing partner still has at
+  the shared address, and a swap they booked, pass to the holder. The
+  API's cron (`end_duo_partners`) ends places past a removal's renewal or
+  on a Duo that ended or changed to another plan, and clears expired
+  invites.
+- **Gifts:** the monthly Duo plans pass the gift check like the other
+  monthly plans; the recipient becomes the holder. A partner who receives
+  a gift leaves the Duo before redeeming it.
+- **Notifications:** `plus_duo_joined`, `plus_duo_guardian`,
+  `plus_duo_approved`, `plus_duo_declined`, `plus_duo_left`,
+  `plus_duo_removed` and `plus_duo_ended`; a booked swap notifies both.
