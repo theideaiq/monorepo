@@ -9,6 +9,7 @@ vi.mock("@repo/internationalization/navigation", () => ({
   Link: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 const RENT_PRICE = /9,750 IQD for 7 days/;
@@ -50,10 +51,8 @@ describe("single-item rent", () => {
     expect(screen.getByText(RENT_PRICE)).toBeTruthy();
     expect(screen.getByText(DEPOSIT)).toBeTruthy();
     expect(screen.getByText(LATE)).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Rent it" })).toHaveProperty(
-      "pathname",
-      "/rent/mario"
-    );
+    // Renting puts it in the cart, with everything else.
+    expect(screen.getByRole("button", { name: "Rent it" })).toBeTruthy();
   });
 
   test("Arabic counts the days in the right form", async () => {
