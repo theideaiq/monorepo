@@ -463,3 +463,34 @@ export const decideSeller = staffAction(
     return success("saved");
   }
 );
+
+/** Registered (no limit) or individual trader (a monthly sales limit). */
+export const setShopKind = staffAction(
+  "companies",
+  z.object({ id: uuid, kind: z.enum(["registered", "individual"]) }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("set_shop_kind", {
+        shop_kind: input.kind,
+        target: input.id,
+      })
+    );
+    return success();
+  }
+);
+
+/** The most an individual trader may sell in a Baghdad calendar month. */
+export const saveIndividualLimit = staffAction(
+  "companies",
+  z.object({ limit: int(0) }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("store_settings")
+        .update({ individual_monthly_limit: input.limit })
+        .eq("id", true)
+        .select("id")
+    );
+    return success();
+  }
+);

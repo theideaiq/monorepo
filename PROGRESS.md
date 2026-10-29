@@ -718,6 +718,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Verification, part 5 (step 13, Partners): Organization has
+  a Verification card (`#verification`): a domain verified in Developers
+  verifies at once, or an official letter goes to Staff; student societies
+  add the university and its approval. Selling asks whether the shop is a
+  registered business or an individual trader, and an individual trader
+  sees the month's sales against the limit. Staff → Partners → Shops shows
+  and changes the kind and sets the individual traders' monthly limit.
 - 2026-10-29: Verification, part 4 (step 13, Staff): Customers →
   Verifications (`/customers/verifications`) reviews identity checks
   (approve with the name on the card), educator documents (approve until a

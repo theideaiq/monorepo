@@ -62,15 +62,33 @@ export const useApplyToSell = (organizationId: string) => {
   const { supabase } = useAuth();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (name: string) =>
+    mutationFn: async ({ kind, name }: { kind: ShopKind; name: string }) =>
       unwrap(
         await supabase.rpc("apply_to_sell", {
           org: organizationId,
           seller_name: name.trim(),
+          shop_kind: kind,
         })
       ),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: sellerKey(organizationId) }),
+  });
+};
+
+export type ShopKind = Database["public"]["Enums"]["shop_kind"];
+
+/** An individual trader's sales this Baghdad month against the limit. */
+export const useShopLimit = (sellerId: string, enabled: boolean) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled,
+    queryFn: async () =>
+      unwrap(await supabase.rpc("shop_limit", { shop: sellerId })) as {
+        kind: ShopKind;
+        limit: number | null;
+        sold: number;
+      },
+    queryKey: ["seller", "limit", sellerId],
   });
 };
 

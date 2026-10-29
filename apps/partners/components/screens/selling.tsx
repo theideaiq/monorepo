@@ -26,11 +26,13 @@ import {
   MAX_DOCUMENTS,
   type Seller,
   type SellerDetails,
+  type ShopKind,
   useAddDocument,
   useApplyToSell,
   useRemoveDocument,
   useSavePayoutDetails,
   useSeller,
+  useShopLimit,
 } from "@/lib/seller-queries";
 
 /** The selling policy on the website, in the reader's language. */
@@ -51,9 +53,11 @@ const PolicyLink = () => {
 
 /** Owners and admins apply with the shop's name. */
 const Apply = ({
+  initialKind,
   initialName,
   organizationId,
 }: {
+  readonly initialKind: ShopKind;
   readonly initialName: string;
   readonly organizationId: string;
 }) => {
@@ -61,11 +65,12 @@ const Apply = ({
   const id = useId();
   const apply = useApplyToSell(organizationId);
   const [name, setName] = useState(initialName);
+  const [kind, setKind] = useState<ShopKind>(initialKind);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (name.trim()) {
-      apply.mutate(name);
+      apply.mutate({ kind, name });
     }
   };
 
@@ -82,6 +87,31 @@ const Apply = ({
         />
         <p className="text-muted-foreground text-xs">{t("shopNameHint")}</p>
       </div>
+      <fieldset className="grid gap-2">
+        <legend className="font-medium text-sm">{t("kind.label")}</legend>
+        {(["registered", "individual"] as const).map((value) => (
+          <label
+            className="flex items-start gap-2 text-sm"
+            htmlFor={`${id}-${value}`}
+            key={value}
+          >
+            <input
+              checked={kind === value}
+              className="mt-1"
+              id={`${id}-${value}`}
+              name={`${id}-kind`}
+              onChange={() => setKind(value)}
+              type="radio"
+            />
+            <span>
+              <span className="font-medium">{t(`kind.${value}`)}</span>
+              <span className="block text-muted-foreground text-xs">
+                {t(`kind.${value}Hint`)}
+              </span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
       {apply.isError ? (
         <p className="text-destructive text-sm" role="alert">
           {t("failed")}
@@ -115,6 +145,10 @@ const Status = ({
 }) => {
   const t = useTranslations("app.company.selling");
   const locale = useLocale();
+  const limit = useShopLimit(
+    seller.id,
+    Boolean(details) && seller.kind === "individual"
+  );
   return (
     <Card>
       <CardHeader>
@@ -123,9 +157,20 @@ const Status = ({
           <Badge variant={statusVariant[seller.status]}>
             {t(`status.${seller.status}`)}
           </Badge>
+          {seller.kind ? (
+            <Badge variant="outline">{t(`kind.${seller.kind}`)}</Badge>
+          ) : null}
         </CardTitle>
         <CardDescription>{t(`next.${seller.status}`)}</CardDescription>
       </CardHeader>
+      {limit.data?.limit ? (
+        <CardContent className="text-sm">
+          {t("kind.used", {
+            limit: formatPrice(limit.data.limit, locale),
+            sold: formatPrice(limit.data.sold, locale),
+          })}
+        </CardContent>
+      ) : null}
       {details && (details.review_note || details.deposit_required > 0) ? (
         <CardContent className="grid gap-2 text-sm">
           {details.review_note ? (
@@ -364,6 +409,7 @@ const SellingBody = () => {
           </CardHeader>
           <CardContent>
             <Apply
+              initialKind={current?.seller.kind ?? "individual"}
               initialName={current?.seller.name ?? active.name}
               organizationId={active.id}
             />

@@ -17,6 +17,7 @@ import { useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
+import { OrganizationVerificationCard } from "@/components/organization-verification";
 import { type OrganizationError, toOrganizationError } from "@/lib/errors";
 import { useSetOrganizationFeature } from "@/lib/queries";
 import { isValidSlug } from "@/lib/slug";
@@ -197,6 +198,7 @@ const KeyedSettings = () => {
   return (
     <div className="grid gap-6">
       <OrganizationSettings key={active.id} />
+      <OrganizationVerificationCard key={`verification-${active.id}`} />
       <Sections />
     </div>
   );
