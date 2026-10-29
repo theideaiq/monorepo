@@ -1716,6 +1716,175 @@ export type Database = {
           },
         ];
       };
+      member_deals: {
+        Row: {
+          amount: number;
+          answered_at: string | null;
+          buyer_id: string;
+          created_at: string;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          kind: string;
+          listing_id: string;
+          note: string | null;
+          status: Database["public"]["Enums"]["member_deal_status"];
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          answered_at?: string | null;
+          buyer_id: string;
+          created_at?: string;
+          expires_at: string;
+          finished_at?: string | null;
+          id?: string;
+          kind: string;
+          listing_id: string;
+          note?: string | null;
+          status: Database["public"]["Enums"]["member_deal_status"];
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          answered_at?: string | null;
+          buyer_id?: string;
+          created_at?: string;
+          expires_at?: string;
+          finished_at?: string | null;
+          id?: string;
+          kind?: string;
+          listing_id?: string;
+          note?: string | null;
+          status?: Database["public"]["Enums"]["member_deal_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "member_deals_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "member_listings";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      member_listings: {
+        Row: {
+          accepts_offers: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          price: number;
+          product_id: string | null;
+          removed_by: string | null;
+          removed_reason: string | null;
+          sold_at: string | null;
+          status: Database["public"]["Enums"]["member_listing_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        Insert: {
+          accepts_offers?: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          description: string;
+          expires_at?: string;
+          governorate: string;
+          id?: string;
+          number?: never;
+          photos: string[];
+          price: number;
+          product_id?: string | null;
+          removed_by?: string | null;
+          removed_reason?: string | null;
+          sold_at?: string | null;
+          status?: Database["public"]["Enums"]["member_listing_status"];
+          title: string;
+          updated_at?: string;
+          user_id: string;
+          variant_id?: string | null;
+        };
+        Update: {
+          accepts_offers?: boolean;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          description?: string;
+          expires_at?: string;
+          governorate?: string;
+          id?: string;
+          number?: never;
+          photos?: string[];
+          price?: number;
+          product_id?: string | null;
+          removed_by?: string | null;
+          removed_reason?: string | null;
+          sold_at?: string | null;
+          status?: Database["public"]["Enums"]["member_listing_status"];
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+          variant_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "member_listings_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "member_listings_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      member_messages: {
+        Row: {
+          author_id: string | null;
+          body: string;
+          created_at: string;
+          deal_id: string;
+          from_seller: boolean;
+          id: number;
+        };
+        Insert: {
+          author_id?: string | null;
+          body: string;
+          created_at?: string;
+          deal_id: string;
+          from_seller: boolean;
+          id?: never;
+        };
+        Update: {
+          author_id?: string | null;
+          body?: string;
+          created_at?: string;
+          deal_id?: string;
+          from_seller?: boolean;
+          id?: never;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "member_messages_deal_id_fkey";
+            columns: ["deal_id"];
+            isOneToOne: false;
+            referencedRelation: "member_deals";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       notifications: {
         Row: {
           created_at: string;
@@ -7327,6 +7496,29 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      answer_member_deal: {
+        Args: { accept: boolean; target: string };
+        Returns: {
+          amount: number;
+          answered_at: string | null;
+          buyer_id: string;
+          created_at: string;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          kind: string;
+          listing_id: string;
+          note: string | null;
+          status: Database["public"]["Enums"]["member_deal_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_deals";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       answer_offer: {
         Args: { answer: string; counter?: number; target: string };
         Returns: {
@@ -7553,6 +7745,29 @@ export type Database = {
           pending: number;
           value_iqd: number;
         }[];
+      };
+      buy_member_listing: {
+        Args: { amount?: number; note?: string; target: string };
+        Returns: {
+          amount: number;
+          answered_at: string | null;
+          buyer_id: string;
+          created_at: string;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          kind: string;
+          listing_id: string;
+          note: string | null;
+          status: Database["public"]["Enums"]["member_deal_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_deals";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       campaign_listings: {
         Args: { campaign_slug: string };
@@ -8326,6 +8541,45 @@ export type Database = {
         };
         Returns: string;
       };
+      create_member_listing: {
+        Args: {
+          accepts_offers?: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          description: string;
+          governorate: string;
+          photos: string[];
+          price: number;
+          title: string;
+          variant?: string;
+        };
+        Returns: {
+          accepts_offers: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          price: number;
+          product_id: string | null;
+          removed_by: string | null;
+          removed_reason: string | null;
+          sold_at: string | null;
+          status: Database["public"]["Enums"]["member_listing_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_listings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       create_order: {
         Args: {
           delivery_zone?: string;
@@ -8752,6 +9006,29 @@ export type Database = {
           status: Database["public"]["Enums"]["product_status"];
           variant_id: string;
         }[];
+      };
+      finish_member_deal: {
+        Args: { done: boolean; target: string };
+        Returns: {
+          amount: number;
+          answered_at: string | null;
+          buyer_id: string;
+          created_at: string;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          kind: string;
+          listing_id: string;
+          note: string | null;
+          status: Database["public"]["Enums"]["member_deal_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_deals";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       finish_partner_webhook: {
         Args: { delivered: boolean; error?: string; target: string };
@@ -9241,6 +9518,47 @@ export type Database = {
           rate: number;
         }[];
       };
+      member_listing: {
+        Args: { listing_number: number };
+        Returns: {
+          accepts_offers: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          first_name: string;
+          governorate: string;
+          id: string;
+          mine: boolean;
+          number: number;
+          photos: string[];
+          price: number;
+          product_id: string;
+          status: Database["public"]["Enums"]["member_listing_status"];
+          title: string;
+          variant_id: string;
+        }[];
+      };
+      member_listings_for_sale: {
+        Args: { governorate?: string; product?: string; search?: string };
+        Returns: {
+          accepts_offers: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          first_name: string;
+          governorate: string;
+          id: string;
+          mine: boolean;
+          number: number;
+          photos: string[];
+          price: number;
+          product_id: string;
+          title: string;
+          variant_id: string;
+        }[];
+      };
       must_pay_online: { Args: Record<PropertyKey, never>; Returns: boolean };
       my_birthday: { Args: Record<PropertyKey, never>; Returns: string };
       my_bulbs: {
@@ -9271,6 +9589,27 @@ export type Database = {
           invited: number;
           rewarded: number;
           rewarded_this_month: number;
+        }[];
+      };
+      my_member_deals: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          amount: number;
+          created_at: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          kind: string;
+          listing_id: string;
+          listing_number: number;
+          listing_status: Database["public"]["Enums"]["member_listing_status"];
+          note: string;
+          other_first_name: string;
+          photos: string[];
+          price: number;
+          selling: boolean;
+          status: Database["public"]["Enums"]["member_deal_status"];
+          title: string;
         }[];
       };
       my_partners: {
@@ -9888,9 +10227,69 @@ export type Database = {
       release_return_refund: { Args: { target: string }; Returns: undefined };
       release_survey_refund: { Args: { target: string }; Returns: undefined };
       remove_coupon: { Args: Record<PropertyKey, never>; Returns: undefined };
+      remove_member_listing: {
+        Args: { target: string };
+        Returns: {
+          accepts_offers: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          price: number;
+          product_id: string | null;
+          removed_by: string | null;
+          removed_reason: string | null;
+          sold_at: string | null;
+          status: Database["public"]["Enums"]["member_listing_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_listings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
       remove_plus_price: { Args: { target: string }; Returns: undefined };
       remove_student_price: { Args: { target: string }; Returns: undefined };
+      renew_member_listing: {
+        Args: { target: string };
+        Returns: {
+          accepts_offers: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          price: number;
+          product_id: string | null;
+          removed_by: string | null;
+          removed_reason: string | null;
+          sold_at: string | null;
+          status: Database["public"]["Enums"]["member_listing_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_listings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       rental_quote: {
         Args: { product: string; variant?: string };
         Returns: {
@@ -10508,6 +10907,23 @@ export type Database = {
           unit_price: number;
           unopened: boolean;
         }[];
+      };
+      send_member_message: {
+        Args: { body: string; target: string };
+        Returns: {
+          author_id: string | null;
+          body: string;
+          created_at: string;
+          deal_id: string;
+          from_seller: boolean;
+          id: number;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_messages";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       send_quote: { Args: { quote: string }; Returns: undefined };
       send_sell_message: {
@@ -11235,6 +11651,10 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      sweep_member_listings: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       sweep_offers: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -11334,6 +11754,36 @@ export type Database = {
         Returns: number;
       };
       sweep_surveys: { Args: Record<PropertyKey, never>; Returns: number };
+      take_down_member_listing: {
+        Args: { reason: string; target: string };
+        Returns: {
+          accepts_offers: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          price: number;
+          product_id: string | null;
+          removed_by: string | null;
+          removed_reason: string | null;
+          sold_at: string | null;
+          status: Database["public"]["Enums"]["member_listing_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_listings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       telegram_join_check: {
         Args: { chat: number; member: number };
         Returns: {
@@ -11343,6 +11793,41 @@ export type Database = {
         }[];
       };
       unlink_telegram: { Args: Record<PropertyKey, never>; Returns: undefined };
+      update_member_listing: {
+        Args: {
+          accepts_offers: boolean;
+          description: string;
+          price: number;
+          target: string;
+        };
+        Returns: {
+          accepts_offers: boolean;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          price: number;
+          product_id: string | null;
+          removed_by: string | null;
+          removed_reason: string | null;
+          sold_at: string | null;
+          status: Database["public"]["Enums"]["member_listing_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_listings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       update_pass_app: {
         Args: {
           answers: string[];
@@ -11376,6 +11861,29 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "kit_bookings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      withdraw_member_deal: {
+        Args: { target: string };
+        Returns: {
+          amount: number;
+          answered_at: string | null;
+          buyer_id: string;
+          created_at: string;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          kind: string;
+          listing_id: string;
+          note: string | null;
+          status: Database["public"]["Enums"]["member_deal_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "member_deals";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -11469,6 +11977,20 @@ export type Database = {
       crm_status: "lead" | "customer" | "vip" | "churned";
       invoice_status: "issued" | "paid" | "void";
       ledger_scenario: "actual" | "forecast" | "budget";
+      member_deal_status:
+        | "sent"
+        | "accepted"
+        | "declined"
+        | "withdrawn"
+        | "expired"
+        | "completed"
+        | "cancelled";
+      member_listing_status:
+        | "active"
+        | "reserved"
+        | "sold"
+        | "removed"
+        | "expired";
       notification_kind:
         | "order"
         | "rental"
@@ -11774,6 +12296,22 @@ export const Constants = {
       crm_status: ["lead", "customer", "vip", "churned"],
       invoice_status: ["issued", "paid", "void"],
       ledger_scenario: ["actual", "forecast", "budget"],
+      member_deal_status: [
+        "sent",
+        "accepted",
+        "declined",
+        "withdrawn",
+        "expired",
+        "completed",
+        "cancelled",
+      ],
+      member_listing_status: [
+        "active",
+        "reserved",
+        "sold",
+        "removed",
+        "expired",
+      ],
       notification_kind: [
         "order",
         "rental",
