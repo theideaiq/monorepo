@@ -2743,6 +2743,54 @@ export type Database = {
           },
         ];
       };
+      plus_prices: {
+        Row: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          price: number;
+          seller_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        Insert: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          price: number;
+          seller_id: string;
+          updated_at?: string;
+          variant_id: string;
+        };
+        Update: {
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          price?: number;
+          seller_id?: string;
+          updated_at?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_prices_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "plus_prices_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       plus_seats: {
         Row: {
           created_at: string;
@@ -8004,6 +8052,7 @@ export type Database = {
           condition: Database["public"]["Enums"]["product_condition"];
           deals: Json;
           lowest_30d: number;
+          plus_price: number;
           price: number;
           purpose: Database["public"]["Enums"]["stock_purpose"];
           sale_ends_at: string;
@@ -8230,6 +8279,7 @@ export type Database = {
       release_survey_refund: { Args: { target: string }; Returns: undefined };
       remove_coupon: { Args: Record<PropertyKey, never>; Returns: undefined };
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
+      remove_plus_price: { Args: { target: string }; Returns: undefined };
       remove_student_price: { Args: { target: string }; Returns: undefined };
       rental_quote: {
         Args: { product: string; variant?: string };
@@ -8877,6 +8927,30 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "plus_homes";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      set_plus_price: {
+        Args: {
+          price: number;
+          seller: string;
+          variant: string;
+          wanted: Database["public"]["Enums"]["product_condition"];
+        };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          price: number;
+          seller_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_prices";
           isOneToOne: true;
           isSetofReturn: false;
         };
