@@ -5,6 +5,7 @@ import {
   checkbox,
   int,
   lines,
+  optionalDate,
   optionalDecimal,
   optionalInt,
   optionalText,
@@ -47,6 +48,7 @@ export const productSchema = z.object({
   nameAr: text(200),
   nameEn: text(200),
   price: int(0),
+  releaseDate: optionalDate,
   /** Minimum The IDEA Plus plan tier for rental items; null = any plan. */
   rentalTier: optionalInt(1, 10),
   seller: text(120),

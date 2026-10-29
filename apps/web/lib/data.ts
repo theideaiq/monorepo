@@ -510,3 +510,45 @@ export const getCampaignListings = (slug: string) =>
     }
     return data ?? [];
   });
+
+/** A list a member shared by link: its name, their first name and products. */
+export const getSharedList = (token: string) =>
+  fallback(
+    "sharedList",
+    null as { name: string; owner: string; products: ProductCard[] } | null,
+    async () => {
+      const supabase = createPublicClient();
+      if (!supabase) {
+        return null;
+      }
+      const { data, error } = await supabase.rpc("shared_list", { token });
+      if (error) {
+        throw error;
+      }
+      const [first] = data ?? [];
+      if (!first) {
+        return null;
+      }
+      const ids = (data ?? []).flatMap((row) =>
+        row.product_id ? [row.product_id] : []
+      );
+      const products =
+        ids.length === 0
+          ? []
+          : ((
+              await supabase
+                .from("products")
+                .select(PRODUCT_CARD_COLUMNS)
+                .in("id", ids)
+                .eq("status", "active")
+            ).data ?? []);
+      const order = new Map(ids.map((id, index) => [id, index]));
+      return {
+        name: first.list_name,
+        owner: first.owner_name,
+        products: (products as unknown as ProductCard[]).sort(
+          (a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0)
+        ),
+      };
+    }
+  );

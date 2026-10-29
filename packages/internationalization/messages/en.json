@@ -1039,6 +1039,13 @@
       "posts": "Posts",
       "allProducts": "All results in the Store",
       "allRentals": "All results in Plus"
+    },
+    "sharedList": {
+      "title": "{name} · {owner}'s list",
+      "missing": "List not found",
+      "from": "A list from {owner}.",
+      "fromSomeone": "A shared list.",
+      "empty": "Nothing in this list right now."
     }
   },
   "app": {
@@ -1523,8 +1530,8 @@
       },
       "queue": {
         "title": "Your queue",
-        "description": "What you'd like next, in order. It's your Saved list.",
-        "empty": "Your queue is empty. Add items from the rental catalog.",
+        "description": "What you'd like next, in order. Swaps take from the top.",
+        "empty": "Your queue is empty. Add rentable items from their pages.",
         "up": "Move {name} up",
         "down": "Move {name} down",
         "remove": "Remove {name}"
@@ -2064,7 +2071,7 @@
     },
     "wishlist": {
       "title": "Saved",
-      "description": "Products you saved for later.",
+      "description": "What you're watching. Tell me sends news to the bell.",
       "add": "Save to wishlist",
       "remove": "Remove from wishlist",
       "save": "Save",
@@ -2077,9 +2084,64 @@
       "rentWithPlus": "Rent with Plus",
       "unavailable": "Not available right now",
       "empty": {
-        "title": "Your wishlist is empty",
-        "description": "Tap the heart on a product to save it here.",
+        "title": "Nothing saved yet",
+        "description": "Tap the heart on a product to watch it here.",
         "browse": "Browse the store"
+      },
+      "filterLabel": "Show",
+      "sortLabel": "Sort",
+      "noneMatch": "Nothing saved matches.",
+      "tabs": {
+        "saved": "Saved",
+        "lists": "Lists",
+        "queue": "Queue"
+      },
+      "filter": {
+        "all": "All",
+        "onSale": "On sale",
+        "inStock": "In stock",
+        "comingSoon": "Coming soon"
+      },
+      "sort": {
+        "recent": "Recently saved",
+        "price": "Price: low to high"
+      },
+      "state": {
+        "priceDropped": "Price dropped",
+        "inStock": "In stock",
+        "outNow": "Out now",
+        "rentableNow": "Rentable now",
+        "comingSoon": "Coming soon",
+        "unavailable": "Unavailable"
+      },
+      "tellMe": {
+        "on": "Tell me",
+        "off": "Not telling",
+        "under": "Tell me under {price}",
+        "label": "Tell me",
+        "hint": "We tell you in the bell when it's back in stock, out now or cheaper.",
+        "target": "Only below (IQD, optional)",
+        "targetPlaceholder": "25,000",
+        "saveTarget": "Save"
+      },
+      "queue": {
+        "add": "Add to queue",
+        "queued": "In your queue"
+      },
+      "lists": {
+        "description": "Group what you saved into lists. Share one by link, for a birthday or a semester's textbooks.",
+        "name": "New list",
+        "namePlaceholder": "Birthday",
+        "create": "Create list",
+        "empty": "No lists yet.",
+        "emptyList": "Nothing in this list yet. Move saved items here from the Saved tab.",
+        "count": "{count} items",
+        "delete": "Delete list",
+        "shared": "Shared by link",
+        "copyLink": "Copy link",
+        "copied": "Link copied",
+        "moveTo": "Move to list",
+        "noList": "No list"
       }
     },
     "support": {
@@ -3199,6 +3261,18 @@
         "return_refunded": {
           "title": "Refund sent",
           "body": "We refunded {amount} for return #{number} ({name})."
+        },
+        "saved_back_in_stock": {
+          "title": "Back in stock",
+          "body": "{name}, which you saved, is back in stock."
+        },
+        "saved_out_now": {
+          "title": "Out now",
+          "body": "{name}, which you saved, is out now."
+        },
+        "saved_price_drop": {
+          "title": "Price dropped",
+          "body": "{name}, which you saved, is now {price}."
         }
       },
       "kinds": {
@@ -3476,7 +3550,9 @@
         "tierOption": "Tier {tier}: {names}",
         "unknownTier": "No plan at this tier",
         "ageRating": "Age rating (PEGI)",
-        "ageRatingHint": "Shown on the product page; PEGI 18 items will be hidden from under-18 Passes."
+        "ageRatingHint": "Shown on the product page; PEGI 18 items will be hidden from under-18 Passes.",
+        "releaseDate": "Release date",
+        "releaseDateHint": "Optional. Saved shows \"Coming soon\" before it and \"Out now\" for 14 days after."
       },
       "variants": {
         "title": "Variants",

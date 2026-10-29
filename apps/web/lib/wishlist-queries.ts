@@ -11,17 +11,25 @@ import { useAddToCart } from "./store-queries";
 
 export interface WishlistItem {
   created_at: string;
-  /** The member's order; for Plus members the first rentable item is next. */
+  /** The list it is in, if any. */
+  list_id: string | null;
+  /** "Tell me": watched changes go to the bell. */
+  notify: boolean;
   position: number;
+  /** Tell me only below this price. */
+  price_target: number | null;
   product:
     | (ProductCard & {
+        release_date: string | null;
         status: string;
       })
     | null;
   product_id: string;
+  /** The price when saved, for "Price dropped". */
+  saved_price: number | null;
 }
 
-const WISHLIST_COLUMNS = `product_id, created_at, position, product:products (${PRODUCT_CARD_COLUMNS}, status)`;
+const WISHLIST_COLUMNS = `product_id, created_at, position, list_id, notify, price_target, saved_price, product:products (${PRODUCT_CARD_COLUMNS}, status, release_date)`;
 
 export const useWishlist = () => {
   const { supabase, user } = useAuth();
@@ -76,38 +84,31 @@ export const useToggleWishlist = () => {
   });
 };
 
-/** Puts Saved in a new order (the first is next in the Plus queue). */
-export const useReorderSaved = () => {
+/** Changes a saved item: "Tell me", its price target or its list. */
+export const useUpdateSaved = () => {
   const { supabase, user } = useAuth();
   const queryClient = useQueryClient();
-  const key = queryKeys.wishlist(user?.id ?? "");
-
-  return useMutation<
-    unknown,
-    Error,
-    string[],
-    { previous: WishlistItem[] | undefined }
-  >({
-    mutationFn: async (productIds: string[]) =>
-      unwrap(await supabase.rpc("reorder_saved", { products: productIds })),
-    onError: (_error, _ids, context) =>
-      queryClient.setQueryData(key, context?.previous),
-    onMutate: async (productIds) => {
-      await queryClient.cancelQueries({ queryKey: key });
-      const previous = queryClient.getQueryData<WishlistItem[]>(key);
-      if (previous) {
-        const order = new Map(productIds.map((id, index) => [id, index]));
-        queryClient.setQueryData(
-          key,
-          [...previous].sort(
-            (a, b) =>
-              (order.get(a.product_id) ?? 0) - (order.get(b.product_id) ?? 0)
-          )
-        );
-      }
-      return { previous };
-    },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: key }),
+  return useMutation({
+    mutationFn: async ({
+      changes,
+      productId,
+    }: {
+      changes: Partial<
+        Pick<WishlistItem, "list_id" | "notify" | "price_target">
+      >;
+      productId: string;
+    }) =>
+      unwrap(
+        await supabase
+          .from("wishlist_items")
+          .update(changes)
+          .eq("user_id", requireUserId(user?.id))
+          .eq("product_id", productId)
+      ),
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.wishlist(user?.id ?? ""),
+      }),
   });
 };
 
