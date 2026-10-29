@@ -18,7 +18,9 @@ incidents) is in `docs/platform`.
     `/store/campaigns/<slug>` a campaign's page, `/store/auctions` every
     live auction and `/store/auctions/<number>` one (the seller's photos,
     bidding by maximum, the history by alias; a win goes to the cart and
-    is paid online within 48 hours); The IDEA
+    is paid online within 48 hours), `/store/people` what people sell
+    themselves and `/store/people/<number>` one (buy at the price or offer
+    less; paid in cash to the seller, never through The IDEA); The IDEA
     Plus is `/plus`, everything about renting (the rental catalog with
     categories, then plans and tiers), public, with "Your Plus" (joining
     and the waitlist at `#join`; your plan, plan changes, pause and
@@ -83,9 +85,10 @@ incidents) is in `docs/platform`.
     (`isAllowedReturnTo`);
   - **The IDEA Pass pages** (`app/[locale]/pass/(member)`: `/pass` the
     Pass card, `/pass/orders`, `/pass/saved` (tabs Saved, Lists and, for
-    Plus members, Queue), `/pass/selling` (Get offers from shops: describe
-    an item with photos, compare shops' offers, accept one and arrange the
-    hand-over in messages), `/pass/bulbs` with
+    Plus members, Queue), `/pass/selling` (selling your own things to other
+    people at `#listings`, what you're buying from them at `#buying`, and
+    Get offers from shops: describe an item with photos, compare shops'
+    offers, accept one; every hand-over is arranged in messages), `/pass/bulbs` with
     invites at `#invite`, `/pass/settings` with the address book at
     `#addresses`); `/pass/embed` (outside that
     group, no header or footer) is the live card partners frame on their
@@ -145,7 +148,8 @@ incidents) is in `docs/platform`.
     IDEA's own auctions; and `/catalog/campaigns`,
     seasonal campaigns shops opt in to) · Orders and delivery
     `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
-    and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·
+    and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` (with `/customers/listings`, people's listings
+    support take down) ·
     Club `/club` (with `/club/opportunities`, where editors review
     organizations' opportunities and post The IDEA's own, selling The
     IDEA's programs as packages with their applications at

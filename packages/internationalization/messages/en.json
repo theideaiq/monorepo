@@ -353,7 +353,8 @@
         "title": "Auctions",
         "description": "Signed, limited, rare and collectible copies, each with the seller's own photos. Set your maximum and we bid for you.",
         "one": "Bid on {name}: the seller's photos of this copy, its condition, the current bid and time left."
-      }
+      },
+      "peopleLink": "From people"
     },
     "plus": {
       "meta": {
@@ -3878,7 +3879,7 @@
     },
     "selling": {
       "title": "Selling",
-      "intro": "Ask shops on The IDEA what they'd pay for your things. Describe the item, add photos, and compare their offers. You choose one or none.",
+      "intro": "Sell your own things to other people, follow what you're buying from them, or ask shops on The IDEA what they'd pay. Every hand-over is arranged in messages; no phone numbers are shared.",
       "yours": "Your requests",
       "none": "You haven't asked for offers yet.",
       "ask": {
@@ -3954,6 +3955,128 @@
         "placeholder": "Write to the shop",
         "send": "Send",
         "private": "Messages go through The IDEA. Don't share your phone number or address here."
+      },
+      "askTitle": "Get offers from shops"
+    },
+    "people": {
+      "photo": "Photo {number}",
+      "sellTitle": "Sell it yourself",
+      "sellIntro": "List your own things for other people. The buyer pays you in cash when you meet; the money never passes through The IDEA, and there's no fee.",
+      "buyingTitle": "Buying from people",
+      "buyingNone": "You haven't bought from anyone yet.",
+      "browse": "See what people are selling",
+      "problems": {
+        "adult": "You need to be 18 or over.",
+        "identity": "Verify your identity first: people sell only with a verified Pass.",
+        "verifyIdentity": "Verify your identity",
+        "phone": "Verify your phone number first.",
+        "verifyPhone": "Verify your phone",
+        "limit": "You can have at most 20 live listings.",
+        "waiting": "You can have at most 10 offers waiting at once.",
+        "photos": "Add 3 to 8 photos of the item.",
+        "area": "Choose the area the item is in.",
+        "price": "Check the price: at least 1,000 IQD, and offers only where the seller allows them.",
+        "own": "You can't buy your own item.",
+        "duplicate": "You already have an offer on this.",
+        "closed": "This can't be done now. Refresh to see where it stands.",
+        "suspended": "Your Pass is suspended.",
+        "failed": "Something went wrong. Try again."
+      },
+      "list": {
+        "title": "List an item",
+        "description": "Photos of the actual item, an honest description of any wear, and your price. It stays up for 30 days.",
+        "item": "Item name",
+        "condition": "Condition",
+        "area": "Area",
+        "chooseArea": "Choose an area",
+        "price": "Price (IQD)",
+        "acceptsOffers": "Let buyers offer less",
+        "details": "Description",
+        "photos": "Photos (3 to 8)",
+        "photosHint": "{count} chosen",
+        "list": "List it",
+        "listing": "Listing…",
+        "listed": "Listed. It's live in the Store under From people."
+      },
+      "messages": {
+        "none": "No messages yet.",
+        "you": "You",
+        "them": "Them",
+        "label": "Message",
+        "placeholder": "Agree a time and place to meet",
+        "send": "Send",
+        "private": "Messages go through The IDEA; don't share phone numbers or pay in advance."
+      },
+      "deal": {
+        "buys": "{name} buys it for {amount}",
+        "offers": "{name} offers {amount}",
+        "someone": "Someone",
+        "until": "Waiting until {time}",
+        "agreedSeller": "Agreed. Arrange the hand-over in the messages, then mark it sold.",
+        "agreedBuyer": "Agreed. Arrange the hand-over in the messages and pay in cash when you get the item.",
+        "accept": "Accept",
+        "decline": "Decline",
+        "withdraw": "Withdraw",
+        "sold": "Mark sold",
+        "callOff": "Call it off",
+        "status": {
+          "sent": "Waiting",
+          "accepted": "Agreed",
+          "declined": "Declined",
+          "withdrawn": "Withdrawn",
+          "expired": "Expired",
+          "completed": "Sold",
+          "cancelled": "Called off"
+        }
+      },
+      "listing": {
+        "offersAllowed": "Offers allowed",
+        "until": "live until {time}",
+        "takenDown": "Taken down by The IDEA: {reason}",
+        "view": "See it in the Store",
+        "waiting": "No offers yet.",
+        "noOffers": "No offers.",
+        "renew": "Put it back for 30 days",
+        "remove": "Take it down",
+        "status": {
+          "active": "Live",
+          "reserved": "Reserved",
+          "sold": "Sold",
+          "removed": "Taken down",
+          "expired": "Expired"
+        }
+      },
+      "buy": {
+        "signIn": "Sign in to buy",
+        "yours": "This is your listing.",
+        "note": "A note for the seller (optional)",
+        "buy": "Buy for {price}",
+        "offerLabel": "Or offer (IQD)",
+        "offer": "Make an offer",
+        "bought": "It's yours: the listing is reserved for you.",
+        "offered": "Offer sent. The seller has 72 hours to answer.",
+        "open": "Open your messages",
+        "cash": "You pay the seller in cash when you meet and check the item. Never pay in advance."
+      },
+      "store": {
+        "title": "From people",
+        "description": "Things people sell themselves. You pay the seller in cash when you meet; the money never passes through The IDEA.",
+        "search": "Search by title",
+        "none": "Nothing here yet.",
+        "by": "from {name}",
+        "listed": "listed {date}",
+        "offersAllowed": "offers allowed",
+        "gone": "This listing isn't available.",
+        "back": "From people",
+        "policy": "Sales between people follow the selling policy.",
+        "policyLink": "Read it",
+        "status": {
+          "active": "Live",
+          "reserved": "Reserved",
+          "sold": "Sold",
+          "removed": "Taken down",
+          "expired": "Expired"
+        }
       }
     }
   },
@@ -4381,6 +4504,38 @@
         "sell_message_shop": {
           "title": "A message from a member",
           "body": "A member wrote about {title}."
+        },
+        "member_offer_received": {
+          "title": "An offer on your listing",
+          "body": "Someone offers {amount} for {title}."
+        },
+        "member_listing_bought": {
+          "title": "Someone's buying your item",
+          "body": "{title} is reserved for a buyer at {amount}. Arrange the hand-over in the messages."
+        },
+        "member_offer_accepted": {
+          "title": "Your offer was accepted",
+          "body": "The seller accepted {amount} for {title}. Arrange the hand-over in the messages."
+        },
+        "member_offer_declined": {
+          "title": "Offer not accepted",
+          "body": "Your offer on {title} wasn't accepted."
+        },
+        "member_deal_cancelled": {
+          "title": "Sale called off",
+          "body": "The sale of {title} was called off."
+        },
+        "member_deal_completed": {
+          "title": "Sold",
+          "body": "The seller marked {title} sold."
+        },
+        "member_message": {
+          "title": "A new message",
+          "body": "A message about {title}."
+        },
+        "member_listing_removed": {
+          "title": "Listing taken down",
+          "body": "{title} was taken down: {reason}"
         }
       },
       "kinds": {
@@ -5613,6 +5768,20 @@
           "community": "Community research"
         },
         "debrief": "Debrief"
+      },
+      "listingsLink": "Listings",
+      "listings": {
+        "title": "People's listings",
+        "description": "What people sell each other, paid in cash to the seller. Take down any that break the selling policy; the seller is told why.",
+        "empty": "No live listings.",
+        "unnamed": "No name",
+        "photo": "Photo {number}",
+        "reason": "Why (the seller sees this)",
+        "takeDown": "Take down",
+        "status": {
+          "active": "Live",
+          "reserved": "Reserved"
+        }
       }
     },
     "finance": {

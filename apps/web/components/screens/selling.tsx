@@ -23,6 +23,7 @@ import { Link } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { PageHeader } from "@/components/page-header";
+import { Buying, SellYourself } from "@/components/screens/member-listings";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   MAX_PHOTOS,
@@ -482,8 +483,9 @@ const RequestCard = ({ request }: { readonly request: MySellRequest }) => {
 };
 
 /**
- * Your Pass → Selling: ask shops for offers on your own things, compare
- * their offers, accept one and arrange the hand-over in messages.
+ * Your Pass → Selling: sell your own things to other people, follow what
+ * you're buying from them, and ask shops for offers; every hand-over is
+ * arranged in messages.
  */
 export const Selling = () => {
   const t = useTranslations("app.selling");
@@ -494,6 +496,9 @@ export const Selling = () => {
       <PageHeader title={t("title")} />
       <div className="flex max-w-3xl flex-1 flex-col gap-6">
         <p className="text-muted-foreground">{t("intro")}</p>
+        <SellYourself />
+        <Buying />
+        <h2 className="font-semibold text-lg">{t("askTitle")}</h2>
         <AskForOffers />
         <section className="grid gap-4" id="offers">
           <h2 className="font-semibold text-lg">{t("yours")}</h2>
