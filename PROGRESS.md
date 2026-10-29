@@ -718,6 +718,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Opportunities, part 3 (step 14;
+  `20270304000000_opportunity_hosts.sql`). Visitors can't read
+  organizations, so each opportunity keeps its organization's name
+  (`host_name`, null for The IDEA's own), set by the database on every
+  write and when the organization is renamed. Club → Join uses it.
 - 2026-10-29: Opportunities, part 2 (step 14, Partners and Staff).
   Opportunities is a Partners section (after Supply): owners and admins
   write a draft, send it for review, take it back, close a listed one or

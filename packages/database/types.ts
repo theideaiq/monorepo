@@ -1603,6 +1603,7 @@ export type Database = {
           ends_on: string | null;
           featured_until: string | null;
           fee_note: string | null;
+          host_name: string | null;
           id: string;
           kind: Database["public"]["Enums"]["opportunity_kind"];
           location: string | null;
@@ -1637,6 +1638,7 @@ export type Database = {
           ends_on?: string | null;
           featured_until?: string | null;
           fee_note?: string | null;
+          host_name?: string | null;
           id?: string;
           kind: Database["public"]["Enums"]["opportunity_kind"];
           location?: string | null;
@@ -1671,6 +1673,7 @@ export type Database = {
           ends_on?: string | null;
           featured_until?: string | null;
           fee_note?: string | null;
+          host_name?: string | null;
           id?: string;
           kind?: Database["public"]["Enums"]["opportunity_kind"];
           location?: string | null;
