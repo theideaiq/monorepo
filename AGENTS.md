@@ -123,7 +123,8 @@ incidents) is in `docs/platform`.
     `/partners/team` with requests at `/partners/team/<id>` and Plus seats
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`
     where staff approve shops, perks and sign-in) · Finance `/finance` (with
-    `/finance/payouts`, the weekly shop payouts) · Settings
+    `/finance/payouts`, the weekly shop payouts, and `/finance/coupons`,
+    coupon codes members enter at checkout) · Settings
     `/settings` (with `/settings/audit`), and `/search`. Then `/no-access`
     (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:
     staff only, with Server Actions; every query runs as the staff member

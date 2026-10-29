@@ -59,6 +59,7 @@ describe("commerce helpers", () => {
         bulbs_discount: 0,
         bulbs_to_earn: 50,
         bulbs_used: 0,
+        coupon_code: null,
         delivery_waived: 5000,
         discount: 7000,
         discount_source: "invite",
@@ -74,6 +75,7 @@ describe("commerce helpers", () => {
       bulbsDiscount: 0,
       bulbsToEarn: 50,
       bulbsUsed: 0,
+      couponCode: null,
       deliveryWaived: 5000,
       discount: 7000,
       discountSource: "invite",
@@ -84,7 +86,11 @@ describe("commerce helpers", () => {
       total: 93_000,
       zoneId: "z1",
     });
+    expect(
+      toCheckoutQuote({ coupon_code: "EID10", discount_source: "coupon" })
+    ).toMatchObject({ couponCode: "EID10", discountSource: "coupon" });
     expect(toCheckoutQuote(null)).toMatchObject({
+      couponCode: null,
       discountSource: null,
       freeDelivery: null,
       freeFrom: null,

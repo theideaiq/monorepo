@@ -19,6 +19,7 @@ import {
   date,
   decimalIn,
   int,
+  optionalDateTime,
   optionalInt,
   optionalText,
   optionalUuid,
@@ -280,6 +281,74 @@ export const cancelPayout = staffAction(
   z.object({ id: uuid }),
   async ({ input, supabase }) => {
     check(await supabase.rpc("cancel_payout", { target: input.id }));
+    return success();
+  }
+);
+
+const COUPON_CODE = /^[A-Z0-9]{4,20}$/;
+
+/**
+ * A coupon code The IDEA pays for: a share (at most 20%) or an amount off,
+ * within the giveaway cap. Codes are stored without case or spaces.
+ */
+export const createCoupon = staffAction(
+  "finance",
+  z
+    .object({
+      amount: int(1),
+      code: z
+        .string()
+        .transform((value) => value.replaceAll(/\s/g, "").toUpperCase())
+        .pipe(z.string().regex(COUPON_CODE)),
+      description: optionalText(300),
+      endsAt: optionalDateTime,
+      kind: z.enum(Enums.coupon_kind),
+      maxDiscount: optionalInt(1),
+      maxUses: optionalInt(1),
+      minSubtotal: optionalInt(0),
+      startsAt: optionalDateTime,
+      usesPerMember: int(1, 1000),
+    })
+    .refine((input) => input.kind !== "percent" || input.amount <= 20, {
+      path: ["amount"],
+    })
+    .refine(
+      (input) =>
+        !(input.startsAt && input.endsAt) || input.endsAt > input.startsAt,
+      { path: ["endsAt"] }
+    ),
+  async ({ input, staff, supabase }) => {
+    check(
+      await supabase.from("coupons").insert({
+        amount: input.amount,
+        code: input.code,
+        created_by: staff.userId,
+        description: input.description,
+        ends_at: input.endsAt,
+        kind: input.kind,
+        max_discount: input.maxDiscount,
+        max_uses: input.maxUses,
+        min_subtotal: input.minSubtotal ?? 0,
+        uses_per_member: input.usesPerMember,
+        ...(input.startsAt ? { starts_at: input.startsAt } : {}),
+      })
+    );
+    return success("saved");
+  }
+);
+
+/** Turns a code on or off; codes are never deleted, orders refer to them. */
+export const setCouponActive = staffAction(
+  "finance",
+  z.object({ active: z.enum(["true", "false"]), id: uuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("coupons")
+        .update({ active: input.active === "true" })
+        .eq("id", input.id)
+        .select("id")
+    );
     return success();
   }
 );

@@ -432,6 +432,9 @@ const OrderView = ({
                 bulbsDiscount={order.bulbs_discount}
                 bulbsUsed={order.bulbs_used}
                 discount={order.discount}
+                discountSource={
+                  order.discount_source === "coupon" ? "coupon" : "invite"
+                }
                 shippingFee={order.shipping_fee}
                 subtotal={order.subtotal}
                 total={order.total}

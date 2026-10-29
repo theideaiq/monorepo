@@ -1196,7 +1196,8 @@
       "problems": "Fix the items marked below to check out.",
       "updateFailed": "We couldn't update your cart. Please try again.",
       "bulbs": "Bulbs ({bulbs})",
-      "discount": "Friend's invite"
+      "discount": "Friend's invite",
+      "coupon": "Coupon"
     },
     "checkout": {
       "title": "Checkout",
@@ -1292,7 +1293,24 @@
         "edit": "Edit",
         "defaultLabel": "Home"
       },
-      "oneTap": "Deliver to {label} · {payment}"
+      "oneTap": "Deliver to {label} · {payment}",
+      "coupon": {
+        "label": "Coupon code",
+        "apply": "Apply",
+        "remove": "Remove",
+        "applied": "Coupon {code} applied",
+        "notUsed": "It isn't taken off this order: it needs a bigger order, or another discount takes off more.",
+        "problem": {
+          "unknown": "We don't know that code. Check it and try again.",
+          "inactive": "That code isn't active.",
+          "not_started": "That code isn't valid yet.",
+          "ended": "That code has ended.",
+          "used_up": "That code has been used up.",
+          "used": "You've already used that code.",
+          "below_minimum": "Your order is below that code's minimum.",
+          "failed": "We couldn't apply the code. Please try again."
+        }
+      }
     },
     "orders": {
       "title": "Orders",
@@ -4262,7 +4280,8 @@
         "bulbs": "Bulbs",
         "prices": "Prices",
         "rentals": "Rental rates",
-        "payouts": "Payouts"
+        "payouts": "Payouts",
+        "coupons": "Coupons"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -4443,6 +4462,42 @@
           "cancelled": "Cancelled"
         },
         "paidOn": "{method} · {reference} · {time}"
+      },
+      "coupons": {
+        "title": "Coupons",
+        "description": "Codes The IDEA pays for. Members enter them at checkout; a code replaces a friend's invite only when it takes more off, and the 20% giveaway cap still applies.",
+        "newTitle": "New coupon",
+        "code": "Code",
+        "codeHint": "4–20 letters and digits; case and spaces don't matter.",
+        "kind": "Kind",
+        "kindPercent": "Percentage off",
+        "kindAmount": "Amount off (IQD)",
+        "amount": "Amount",
+        "amountHint": "A percentage (at most 20) or IQD.",
+        "maxDiscount": "Most it takes off (IQD)",
+        "maxDiscountHint": "Leave empty for no limit.",
+        "minSubtotal": "Smallest order (IQD)",
+        "startsAt": "Starts",
+        "endsAt": "Ends",
+        "timeHint": "Baghdad time. Empty starts now and never ends.",
+        "maxUses": "Uses in all",
+        "maxUsesHint": "Leave empty for no limit.",
+        "usesPerMember": "Uses per Pass",
+        "descriptionField": "Note for staff",
+        "create": "Create coupon",
+        "empty": "No coupons yet.",
+        "active": "Active",
+        "inactive": "Off",
+        "activate": "Turn on",
+        "deactivate": "Turn off",
+        "percentOff": "{rate}% off",
+        "amountOff": "{amount} off",
+        "upTo": "at most {amount}",
+        "minimum": "orders from {amount}",
+        "dates": "{starts} to {ends}",
+        "from": "From {starts}",
+        "uses": "Used {used} times · {perMember} per Pass",
+        "usesOf": "Used {used} of {max} times · {perMember} per Pass"
       }
     },
     "editorial": {
