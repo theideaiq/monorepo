@@ -919,3 +919,9 @@ Plus Duo waits for step 14.
   Blaze seats: an event holds a set number of seats for Blaze members;
   others can take only what's left beside the unclaimed Blaze seats, which
   open to everyone 24 hours before the start.
+- **Partner perks:** a Plus perk can be aimed at some tiers. Two of a
+  partner's perks can be paired; each person sees the better one they get
+  (Plus beats students, students beat everyone), and when the better one
+  isn't theirs yet, it shows beside theirs ("With Plus: 20%"). Of a pair
+  neither person gets, both show, as before. Partners' card check follows
+  the same rules.

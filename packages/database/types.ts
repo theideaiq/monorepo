@@ -2492,7 +2492,9 @@ export type Database = {
           id: string;
           kind: string;
           organization_id: string;
+          paired_with: string | null;
           partner_name: string;
+          plus_tiers: number[] | null;
           position: number;
           title_ar: string;
           title_en: string;
@@ -2509,7 +2511,9 @@ export type Database = {
           id?: string;
           kind?: string;
           organization_id: string;
+          paired_with?: string | null;
           partner_name: string;
+          plus_tiers?: number[] | null;
           position?: number;
           title_ar: string;
           title_en: string;
@@ -2526,7 +2530,9 @@ export type Database = {
           id?: string;
           kind?: string;
           organization_id?: string;
+          paired_with?: string | null;
           partner_name?: string;
+          plus_tiers?: number[] | null;
           position?: number;
           title_ar?: string;
           title_en?: string;
@@ -2538,6 +2544,13 @@ export type Database = {
             columns: ["organization_id"];
             isOneToOne: false;
             referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "perks_paired_with_fkey";
+            columns: ["paired_with"];
+            isOneToOne: false;
+            referencedRelation: "perks";
             referencedColumns: ["id"];
           },
         ];
@@ -7798,6 +7811,23 @@ export type Database = {
         Returns: {
           member_number: number;
           secret: string;
+        }[];
+      };
+      my_perks: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          area_ar: string;
+          area_en: string;
+          audience: string;
+          details_ar: string;
+          details_en: string;
+          id: string;
+          open: boolean;
+          partner_name: string;
+          plus_tiers: number[];
+          title_ar: string;
+          title_en: string;
+          upgrade: Json;
         }[];
       };
       my_rental_allowance: {
