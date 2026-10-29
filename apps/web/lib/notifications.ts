@@ -112,14 +112,6 @@ export const NOTIFICATION_EVENTS = [
   "sell_offer_cancelled_shop",
   "sell_message",
   "sell_message_shop",
-  "member_offer_received",
-  "member_listing_bought",
-  "member_offer_accepted",
-  "member_offer_declined",
-  "member_deal_cancelled",
-  "member_deal_completed",
-  "member_message",
-  "member_listing_removed",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -249,18 +241,6 @@ const returnValues = (
 });
 
 /** A request's item, the offer's amount and the shop (`sell_*`). */
-const memberValues = (
-  data: Record<string, Json | undefined>,
-  locale: Locale
-) => {
-  const amount = Number(text(data.amount));
-  return {
-    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
-    reason: text(data.reason),
-    title: text(data.title),
-  };
-};
-
 const sellValues = (data: Record<string, Json | undefined>, locale: Locale) => {
   const amount = Number(text(data.amount));
   return {
@@ -318,14 +298,6 @@ const extraValues: Partial<
     number: text(data.number),
   }),
   invoice_issued: invoiceValues,
-  member_deal_cancelled: memberValues,
-  member_deal_completed: memberValues,
-  member_listing_bought: memberValues,
-  member_listing_removed: memberValues,
-  member_message: memberValues,
-  member_offer_accepted: memberValues,
-  member_offer_declined: memberValues,
-  member_offer_received: memberValues,
   offer_accepted: offerValues,
   offer_countered: offerValues,
   offer_declined: offerValues,

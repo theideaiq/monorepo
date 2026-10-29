@@ -160,9 +160,6 @@ const Store = async ({ params, searchParams }: StoreProps) => {
           <Link className={chip(false)} href="/store/auctions">
             {t("store.auctionsLink")}
           </Link>
-          <Link className={chip(false)} href="/store/people">
-            {t("store.peopleLink")}
-          </Link>
         </nav>
 
         {parent && subcategories.length > 0 ? (

@@ -381,18 +381,3 @@ export const reviewOrganizationCheck = staffAction(
     return success();
   }
 );
-
-/** Support take down a person's listing that breaks the selling policy. */
-export const takeDownMemberListing = staffAction(
-  "customers",
-  z.object({ id: uuid, reason: text(500) }),
-  async ({ input, supabase }) => {
-    check(
-      await supabase.rpc("take_down_member_listing", {
-        reason: input.reason,
-        target: input.id,
-      })
-    );
-    return success();
-  }
-);

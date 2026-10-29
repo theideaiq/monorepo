@@ -5,7 +5,6 @@ type AdminClient = ReturnType<typeof createAdminClient>;
 export interface SellingSweep {
   auctions: number;
   getOffers: number;
-  listings: number;
   offers: number;
   returns: number;
   sales: number;
@@ -18,8 +17,7 @@ export interface SellingSweep {
  * unchecked returned items count as fine (`sweep_returns`), unanswered and
  * unordered offers expire (`sweep_offers`), auction deadlines are applied
  * (`settle_auctions`, which auction pages also run), requests for offers
- * from shops past their time expire (`sweep_sell_requests`), so do people's
- * listings and the offers on them (`sweep_member_listings`), shop scores are refreshed
+ * from shops past their time expire (`sweep_sell_requests`), shop scores are refreshed
  * (`refresh_seller_scores`), prices left by sales that started or ended
  * are recorded (`sweep_listing_sales`) and "was" prices older than 30 days
  * go (`refresh_was_prices`).
@@ -43,10 +41,6 @@ export const sweepSelling = async (
   if (getOffers.error) {
     throw new Error(`sweep_sell_requests: ${getOffers.error.message}`);
   }
-  const listings = await admin.rpc("sweep_member_listings");
-  if (listings.error) {
-    throw new Error(`sweep_member_listings: ${listings.error.message}`);
-  }
   const scores = await admin.rpc("refresh_seller_scores");
   if (scores.error) {
     throw new Error(`refresh_seller_scores: ${scores.error.message}`);
@@ -62,7 +56,6 @@ export const sweepSelling = async (
   return {
     auctions: auctions.data ?? 0,
     getOffers: getOffers.data ?? 0,
-    listings: listings.data ?? 0,
     offers: offers.data?.length ?? 0,
     returns: returns.data?.length ?? 0,
     sales: sales.data ?? 0,

@@ -36,17 +36,6 @@ export const buckets = {
     mimeTypes: ["image/png", "image/jpeg", "image/webp", "application/pdf"],
     public: true,
   },
-  /**
-   * Photos of an item a person sells to another person, under
-   * "<user id>/…": the seller uploads them; anyone sees them while the
-   * listing is live.
-   */
-  memberListingPhotos: {
-    id: "member-listing-photos",
-    maxBytes: 5 * 1024 * 1024,
-    mimeTypes: ["image/png", "image/jpeg", "image/webp"],
-    public: false,
-  },
   /** Private files under "<organization id>/…"; members read and write. */
   orgFiles: {
     id: "org-files",

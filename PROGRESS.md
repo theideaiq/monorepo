@@ -760,18 +760,6 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Buy It Now, 48 hours, strikes, fees). Step 14's auctions are done.
 - 2026-10-29: Auctions, parts 1 and 2 (`20270307000000_auctions.sql`,
   `20270308000000_auction_checkout.sql`, schema first; decisions Part 12).
-- 2026-10-30: People selling, part 2 (step 14, the code). Pass → Selling
-  gains "Sell it yourself" (`#listings`: list an item with 3 to 8 photos in
-  the private `member-listing-photos` bucket, condition, area, price and
-  whether offers are allowed; each listing with its offers to accept or
-  decline, marking it sold, renewing and taking it down) and "Buying from
-  people" (`#buying`); both sides write through messages. The Store has
-  From people (`/store/people`, searchable) and a listing's page
-  (`/store/people/<number>`: buy at the price or offer less, cash to the
-  seller). Staff → Customers → Listings lets support take a listing down
-  with a reason. Eight `member_*` notifications; the daily
-  `/cron/selling` also runs `sweep_member_listings`. Step 14's people
-  selling is done (auctions by people wait for the owner's call).
 - 2026-10-29: People selling, part 1 (step 14; schema
   `20270311000000_member_listings.sql`, decisions Part 14). Adults with a
   verified identity list their own things (3 to 8 photos in the private
