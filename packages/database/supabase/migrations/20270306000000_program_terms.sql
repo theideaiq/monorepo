@@ -246,3 +246,8 @@ $$;
 drop function private.program_refund_rate(uuid);
 
 revoke all on function private.application_refund_rate(uuid) from public, anon, authenticated;
+
+-- The programs' check constraints run as whoever writes the row: the
+-- service role (trusted server code and tests) writes them too.
+grant execute on function private.valid_installments(jsonb) to service_role;
+grant execute on function private.valid_refund_schedule(jsonb) to service_role;

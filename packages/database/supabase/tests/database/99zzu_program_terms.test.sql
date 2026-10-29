@@ -51,7 +51,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(6);
+select plan(7);
 
 -- A is an adult applicant, E an editor.
 delete from public.staff;
@@ -138,6 +138,18 @@ select is(
   public.end_program_application((select value::uuid from made where name = 'b'), 'visa_refused'),
   450000::bigint, 'a refused visa refunds the share accepted'
 );
+
+-- Trusted server code (the service role) writes programs too.
+select pg_temp.reset_role();
+insert into public.opportunities (id, organization_id, kind, title_ar, title_en, location, status) values
+  ('9a7a0000-0000-0000-0000-0000000000b2', null, 'program', 'برنامج آخر', 'Server Program', 'Erbil', 'approved');
+set local role service_role;
+select lives_ok(
+  $$ insert into public.programs (opportunity_id, price, installments, refund_schedule)
+     values ('9a7a0000-0000-0000-0000-0000000000b2', 500000, '[{"percent": 100}]', '[]') $$,
+  'the service role can write a program (its checks run as the writer)'
+);
+reset role;
 
 select * from finish();
 rollback;
