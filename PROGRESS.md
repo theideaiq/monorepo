@@ -603,6 +603,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   order 2,000, invite 5,000, birthday 2,500, photo review 500, event
   check-in 1,000, Telegram link 1,000. Until part 2 (the website and Staff)
   ships, screens still show the old value of a Bulb.
+- 2026-10-29: Bulbs, part 2 (step 9). The website, Staff and Droid show a
+  Bulb as 1 IQD: product pages say "Earn 195 Bulbs" (at the member's rate,
+  the store's when signed out), Plus plan cards show their rate, checkout
+  spends from 1,000 Bulbs in steps of 250 ("Using 2,250 Bulbs = 2,250 IQD
+  off"), staff adjust up to 10,000,000 at a time, and the rewards policy
+  and every bonus in the copy follow.
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the

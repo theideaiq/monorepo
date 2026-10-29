@@ -5,6 +5,7 @@ import { Button } from "@repo/design-system/components/ui/button";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
+import { formatNumber } from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import {
   ArrowDownIcon,
@@ -284,12 +285,12 @@ const RewardNote = ({ draft }: { readonly draft: SurveyDraft }) => {
     <p className="text-muted-foreground text-sm">
       {draft.kind === "bulbs"
         ? t("bulbsNote", {
-            bulbs: String(reward),
-            cost: String(cost),
+            bulbs: formatNumber(reward, locale),
+            cost: formatNumber(cost, locale),
           })
         : t("cashNote", {
-            bulbs: String(reward),
-            cost: formatPrice(cost * 100, locale),
+            bulbs: formatNumber(reward, locale),
+            cost: formatPrice(cost, locale),
           })}
     </p>
   );

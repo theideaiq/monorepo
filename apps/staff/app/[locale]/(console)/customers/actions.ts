@@ -119,6 +119,9 @@ export const checkPass = staffAction(
   }
 );
 
+/** The most Bulbs one adjustment moves (`adjust_bulbs`), 1 IQD each. */
+const MAX_ADJUSTMENT = 10_000_000;
+
 /**
  * Adds or takes away a member's Bulbs with a reason (`adjust_bulbs`: support
  * and finance staff; audited).
@@ -129,9 +132,9 @@ export const adjustBulbs = staffAction(
     bulbs: z
       .string()
       .trim()
-      .regex(/^[-−]?\d{1,6}$/)
+      .regex(/^[-−]?\d{1,8}$/)
       .transform((value) => Number(value.replace("−", "-")))
-      .refine((value) => value !== 0),
+      .refine((value) => value !== 0 && Math.abs(value) <= MAX_ADJUSTMENT),
     reason: z.string().trim().min(3).max(300),
     userId: uuid,
   }),

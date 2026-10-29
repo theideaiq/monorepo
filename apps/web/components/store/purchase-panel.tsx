@@ -2,6 +2,7 @@
 
 import { useAuth } from "@repo/auth/provider";
 import {
+  bulbsToEarn,
   formatPrice,
   HOUSE_SELLER_ID,
   liveVariants,
@@ -28,6 +29,7 @@ import { QueueButton } from "@/components/store/queue-button";
 import { RentCard } from "@/components/store/rent-card";
 import { WishlistButton } from "@/components/store/wishlist-button";
 import { pickVariant, variantForDeepLink } from "@/lib/app-product";
+import { useBulbRules, useMyBulbs } from "@/lib/bulbs-queries";
 import { MAX_QUANTITY } from "@/lib/cart";
 import { useAddToCart, useStudentPrice } from "@/lib/store-queries";
 import { MakeOffer } from "./make-offer";
@@ -294,6 +296,34 @@ const StudentPriceNote = ({
 };
 
 /**
+ * "Earn 195 Bulbs": what the price earns once delivered, at the member's
+ * rate (the store's when signed out).
+ */
+const EarnNote = ({
+  price,
+  shown,
+}: {
+  readonly price: number;
+  /** Only while the item can be bought. */
+  readonly shown: boolean;
+}) => {
+  const t = useTranslations("app.store.product");
+  const locale = useLocale();
+  const mine = useMyBulbs().data?.rate;
+  const store = useBulbRules().data?.rate;
+  const rate = mine ?? store;
+  const bulbs = rate === undefined ? 0 : bulbsToEarn(price, Number(rate));
+  if (!shown || bulbs <= 0) {
+    return null;
+  }
+  return (
+    <p className="text-muted-foreground text-sm">
+      {t("earnBulbs", { bulbs: formatNumber(bulbs, locale) })}
+    </p>
+  );
+};
+
+/**
  * Buying on the product page: option, quantity, add to cart and the
  * wishlist. The cart is the signed-in customer's: adding while signed out
  * goes to the sign-in first.
@@ -471,6 +501,7 @@ export const PurchasePanel = ({
           {t("lowest30d", { price: formatPrice(chosen.lowest_30d, locale) })}
         </p>
       ) : null}
+      <EarnNote price={price} shown={canAdd} />
       <div className="flex flex-wrap items-center gap-3">
         <QuantityStepper
           decreaseLabel={t("decrease")}

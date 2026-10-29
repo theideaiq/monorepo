@@ -46,15 +46,15 @@ const results = [
 ];
 
 describe("survey rewards", () => {
-  it("grow with length, from 2 to 10 Bulbs", () => {
-    expect(surveyReward(1)).toBe(2);
-    expect(surveyReward(4)).toBe(3);
-    expect(surveyReward(10)).toBe(5);
-    expect(surveyReward(60)).toBe(10);
+  it("grow with length, from 200 to 1,000 Bulbs", () => {
+    expect(surveyReward(1)).toBe(200);
+    expect(surveyReward(4)).toBe(300);
+    expect(surveyReward(10)).toBe(500);
+    expect(surveyReward(60)).toBe(1000);
   });
 
   it("cost the creator the rewards plus the fee", () => {
-    expect(surveyCost(2, 50)).toBe(110);
+    expect(surveyCost(200, 50)).toBe(11_000);
     expect(surveyCost(3, 7)).toBe(24);
   });
 });

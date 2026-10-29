@@ -3,6 +3,8 @@
 import { formatPhone } from "@repo/auth/phone";
 import { useAuth } from "@repo/auth/provider";
 import {
+  BULB_MIN_SPEND,
+  BULB_STEP,
   BULB_VALUE_IQD,
   type CheckoutQuote,
   formatPrice,
@@ -490,7 +492,7 @@ interface BulbsCardProps {
   readonly using: number;
 }
 
-/** Pay with Bulbs: up to the whole order, 100 IQD each. */
+/** Pay with Bulbs: up to the whole order, 1 IQD each, in steps of 250 from 1,000. */
 const BulbsCard = ({
   available,
   busy,
@@ -503,6 +505,7 @@ const BulbsCard = ({
   if (available <= 0) {
     return null;
   }
+  const enough = available >= BULB_MIN_SPEND;
   return (
     <Card>
       <CardHeader>
@@ -514,11 +517,11 @@ const BulbsCard = ({
           })}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="grid gap-2">
         <label className="flex items-center gap-3 text-sm" htmlFor="use-bulbs">
           <Checkbox
-            checked={use}
-            disabled={busy}
+            checked={use && enough}
+            disabled={busy || !enough}
             id="use-bulbs"
             onCheckedChange={(checked) => onChange(checked === true)}
           />
@@ -529,6 +532,12 @@ const BulbsCard = ({
               })
             : t("use")}
         </label>
+        <p className="text-muted-foreground text-xs">
+          {t("steps", {
+            min: formatNumber(BULB_MIN_SPEND, locale),
+            step: formatNumber(BULB_STEP, locale),
+          })}
+        </p>
       </CardContent>
     </Card>
   );

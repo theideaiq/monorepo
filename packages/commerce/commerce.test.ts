@@ -1,5 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
+  bulbsToEarn,
+  bulbsToSpend,
   cartTotals,
   deliveryFee,
   describeAttributes,
@@ -132,5 +134,18 @@ describe("planName", () => {
       "Plus Extra"
     );
     expect(planName({ name: "Plus Extra" }, "ar")).toBe("Plus Extra");
+  });
+
+  test("earns whole Bulbs at the rate", () => {
+    expect(bulbsToEarn(9750, 2)).toBe(195);
+    expect(bulbsToEarn(14_750, 3)).toBe(443);
+    expect(bulbsToEarn(0, 5)).toBe(0);
+  });
+
+  test("spends Bulbs in steps of 250, from 1,000", () => {
+    expect(bulbsToSpend(20_100, 105_000)).toBe(20_000);
+    expect(bulbsToSpend(50_000, 8000)).toBe(8000);
+    expect(bulbsToSpend(900, 105_000)).toBe(0);
+    expect(bulbsToSpend(5000, 999)).toBe(0);
   });
 });
