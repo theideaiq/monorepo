@@ -814,3 +814,25 @@ differ from earlier parts.
   payout for its items; The IDEA pays for its own stock and its own
   mistakes. Change-of-mind returns don't get it back.
 - **Offers on The IDEA's own stock:** no change.
+
+## Part 4: send as a gift
+
+- **One checkout:** "Send as a gift" is a switch on the cart's checkout.
+  The buyer picks the area (which prices delivery), adds a message, and
+  the price is hidden unless they untick it. Gifts are paid online or with
+  Bulbs; never cash, since the recipient shouldn't pay.
+- **The link:** shared from the order's page; anyone with it can see the
+  gift and accept it once. A new link replaces the old one. The recipient
+  needs a Pass to accept, and gives their own name, phone (verified when
+  the store requires it) and address in the chosen area.
+- **Nothing ships before that:** the database refuses processing,
+  shipped or delivered, and shops can't ready the lines, until the gift is
+  accepted. Unclaimed gifts aren't expired automatically; staff cancel and
+  refund them on request.
+- **Privacy:** the buyer's order page shows only the area. The address
+  sits on the buyer's order row, so a determined buyer could read it
+  through the API; hiding it fully would need a separate address store for
+  Boxy and Staff, which isn't worth it yet.
+- **Bulbs** for the purchase go to the buyer, as for any order.
+- **Not yet:** gifting Plus months and other things added to the
+  recipient's Pass; tickets and programs don't exist yet.

@@ -31,6 +31,8 @@ export const customer = {
   email: "e2e-customer@theidea.test",
   name: "E2E Customer",
 };
+/** Receives the customer's gift. */
+export const friend = { email: "e2e-friend@theidea.test", name: "E2E Friend" };
 /** Holds a staff role; the journey links an authenticator app first. */
 export const staff = { email: "e2e-staff@theidea.test", name: "E2E Staff" };
 /** Gets The IDEA Pass through the email form (deleted and re-created each run). */

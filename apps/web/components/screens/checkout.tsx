@@ -47,6 +47,12 @@ import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { CheckoutErrorNote } from "@/components/store/checkout-error";
 import { CouponField } from "@/components/store/coupon-field";
+import {
+  emptyGift,
+  GiftDetailsCard,
+  type GiftForm,
+  GiftSwitch,
+} from "@/components/store/gift-checkout";
 import { OrderSummary } from "@/components/store/order-summary";
 import {
   type AddressField,
@@ -71,7 +77,7 @@ import { useMyBulbs } from "@/lib/bulbs-queries";
 import { freeDeliveryRemaining, summarizeCart } from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
 import { useInviteDiscount } from "@/lib/invites";
-import { orderPath, usePlaceOrder } from "@/lib/order-checkout";
+import { orderPath, usePlaceGift, usePlaceOrder } from "@/lib/order-checkout";
 import { isNativeApp } from "@/lib/platform";
 import { useProfile } from "@/lib/queries";
 import {
@@ -952,6 +958,39 @@ const AddressSection = ({
   );
 };
 
+interface WhereItGoesProps extends AddressSectionProps {
+  readonly gift: GiftForm | null;
+  readonly missingGiftZone: boolean;
+  readonly onGift: (gift: GiftForm | null) => void;
+}
+
+/** "Send as a gift" and the gift's details, or the delivery address. */
+const WhereItGoes = ({
+  gift,
+  missingGiftZone,
+  onGift,
+  ...address
+}: WhereItGoesProps) => (
+  <>
+    <GiftSwitch
+      busy={address.busy}
+      gift={gift !== null}
+      onChange={(on) => onGift(on ? emptyGift : null)}
+    />
+    {gift ? (
+      <GiftDetailsCard
+        busy={address.busy}
+        form={gift}
+        missingZone={missingGiftZone}
+        onChange={onGift}
+        zones={address.zones}
+      />
+    ) : (
+      <AddressSection {...address} />
+    )}
+  </>
+);
+
 /**
  * Checkout: the delivery address and zone, online or cash payment,
  * then `create_order` (which prices the fee from the zone) and, for online
@@ -965,12 +1004,16 @@ export const Checkout = () => {
   const settings = useStoreSettings();
   const zones = useDeliveryZones();
   const place = usePlaceOrder();
+  const placeGift = usePlaceGift();
   const book = useAddressBook();
   const { address, setForm } = book;
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [useBulbs, setUseBulbs] = useState(false);
+  // A gift goes to the chosen zone and is paid online (or with Bulbs).
+  const [gift, setGift] = useState<GiftForm | null>(null);
+  const [missingGiftZone, setMissingGiftZone] = useState(false);
 
   const set = (field: keyof AddressForm) => (value: string) =>
     setForm({ ...address, [field]: value });
@@ -987,18 +1030,67 @@ export const Checkout = () => {
     zone,
     zoneList,
   } = useCheckoutPricing({
-    address,
+    address: gift
+      ? { ...address, governorate: "", zoneId: gift.zoneId }
+      : address,
     cart,
-    payment: book.payment,
+    payment: gift ? "online" : book.payment,
     settings,
     useBulbs,
     zones,
   });
-  const busy = place.isPending || place.isSuccess;
+  const busy =
+    place.isPending ||
+    place.isSuccess ||
+    placeGift.isPending ||
+    placeGift.isSuccess;
+
+  const afterPlaced = ({
+    order,
+    paymentError,
+    url,
+  }: {
+    order: { id: string };
+    paymentError: unknown;
+    url: string | null;
+  }) => {
+    if (paymentError) {
+      setCreatedOrderId(order.id);
+      return;
+    }
+    // On the web the payment page has replaced this one; the apps open
+    // it in the system browser, so show the order meanwhile.
+    if (isNativeApp() || !url) {
+      router.replace(orderPath(order.id));
+    }
+  };
+
+  const submitGift = (form: GiftForm) => {
+    setMissingGiftZone(!form.zoneId);
+    if (!form.zoneId) {
+      return;
+    }
+    placeGift.mutate(
+      {
+        deliveryZone: form.zoneId,
+        hidePrice: form.hidePrice,
+        message: form.message,
+        useBulbs: quote?.bulbsUsed ?? 0,
+      },
+      {
+        onError: (mutationError) => setError(toCheckoutError(mutationError)),
+        onSuccess: afterPlaced,
+      }
+    );
+  };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
+    if (gift) {
+      submitGift(gift);
+      return;
+    }
     const result = validateAddress(address, { areas, zones: zoneList });
     setFieldErrors(result.errors);
     if (!result.shipping) {
@@ -1018,15 +1110,7 @@ export const Checkout = () => {
           shipping: result.shipping,
           zoneId: result.zoneId,
         });
-        if (paymentError) {
-          setCreatedOrderId(order.id);
-          return;
-        }
-        // On the web the payment page has replaced this one; the apps open
-        // it in the system browser, so show the order meanwhile.
-        if (isNativeApp() || !url) {
-          router.replace(orderPath(order.id));
-        }
+        afterPlaced({ order, paymentError, url });
       },
     });
   };
@@ -1089,12 +1173,15 @@ export const Checkout = () => {
             onSubmit={submit}
           >
             <div className="grid gap-6">
-              <AddressSection
+              <WhereItGoes
                 areas={areas}
                 book={book}
                 busy={busy}
                 fieldErrors={fieldErrors}
+                gift={gift}
+                missingGiftZone={missingGiftZone}
                 onChange={set}
+                onGift={setGift}
                 zone={zone}
                 zones={zoneList}
               />
@@ -1105,7 +1192,7 @@ export const Checkout = () => {
                 use={useBulbs}
                 using={quote?.bulbsUsed ?? 0}
               />
-              {paymentOffered ? (
+              {paymentOffered && !gift ? (
                 <PaymentCard
                   busy={busy}
                   onChange={book.setPayment}
@@ -1124,7 +1211,7 @@ export const Checkout = () => {
                   phone={address.phone}
                 />
               }
-              oneTap={book.oneTap(cash)}
+              oneTap={gift ? null : book.oneTap(cash)}
               quote={quote ?? null}
               summary={summary}
             />

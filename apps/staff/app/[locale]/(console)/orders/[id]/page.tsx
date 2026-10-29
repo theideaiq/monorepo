@@ -242,6 +242,76 @@ const GuardianBadge = async ({
   return <Badge variant="outline">{t(status)}</Badge>;
 };
 
+type Supabase = Awaited<ReturnType<typeof requireSection>>["supabase"];
+
+interface OrderGift {
+  hidePrice: boolean;
+  message: string | null;
+  /** Unclaimed: it ships once the recipient gives their address. */
+  waiting: boolean;
+}
+
+/** The order's gift (message, hidden price, claimed), or null. */
+const orderGift = async (
+  supabase: Supabase,
+  order: { id: string; is_gift: boolean }
+): Promise<OrderGift | null> => {
+  if (!order.is_gift) {
+    return null;
+  }
+  const { data } = await supabase
+    .from("gifts")
+    .select("message, hide_price, claimed_at")
+    .eq("order_id", order.id)
+    .maybeSingle();
+  return {
+    hidePrice: data?.hide_price ?? false,
+    message: data?.message ?? null,
+    waiting: !data?.claimed_at,
+  };
+};
+
+/**
+ * Orders that don't move yet: a teen's, until their guardian approves it,
+ * and a gift, until its recipient gives their address.
+ */
+const isHeld = (
+  order: { guardian_status: string | null },
+  gift: OrderGift | null
+) => order.guardian_status === "pending" || gift?.waiting === true;
+
+/** Whether "Send with Boxy" can run now. */
+const canSendNow = (status: OrderStatus, held: boolean) =>
+  SENDABLE.has(status) && !held;
+
+const GiftBadge = async ({ gift }: { readonly gift: OrderGift | null }) => {
+  if (!gift) {
+    return null;
+  }
+  const t = await getTranslations("admin.orders.gift");
+  return (
+    <Badge variant="outline">{t(gift.waiting ? "waiting" : "badge")}</Badge>
+  );
+};
+
+/** The message to put in the parcel, and whether prices stay out. */
+const GiftPanel = async ({ gift }: { readonly gift: OrderGift | null }) => {
+  if (!gift) {
+    return null;
+  }
+  const t = await getTranslations("admin.orders.gift");
+  return (
+    <Panel description={t("hint")} title={t("title")}>
+      <div className="grid gap-2 text-sm">
+        <p className="whitespace-pre-line">{gift.message ?? t("noMessage")}</p>
+        {gift.hidePrice ? (
+          <p className="text-muted-foreground">{t("hidePrice")}</p>
+        ) : null}
+      </div>
+    </Panel>
+  );
+};
+
 const OrderPage = async ({ params }: OrderPageProps) => {
   const { id } = await params;
   if (!isUuid(id)) {
@@ -291,14 +361,16 @@ const OrderPage = async ({ params }: OrderPageProps) => {
     notFound();
   }
 
+  const gift = await orderGift(supabase, order);
+  const held = isHeld(order, gift);
+
   const address = parseAddress(order.shipping_address);
   const pickup = order.fulfilment === "pickup";
   const unpaid = {
     cash: order.payment_method === "cash_on_delivery",
     paid: order.paid_at !== null,
   };
-  // A teen's order moves once their guardian approves it.
-  const movable = canWrite && order.guardian_status !== "pending";
+  const movable = canWrite && !held;
   const moves = movable ? nextOrderStatuses(order.status, unpaid) : [];
   const collectCash = movable && canCollectCash(order.status, unpaid);
 
@@ -318,6 +390,7 @@ const OrderPage = async ({ params }: OrderPageProps) => {
           {tStore(`orderStatus.${order.status}`)}
         </StatusBadge>
         <GuardianBadge status={order.guardian_status} />
+        <GiftBadge gift={gift} />
       </PageHeader>
       <PageBody className="lg:grid-cols-[1fr_22rem]">
         <div className="grid content-start gap-6">
@@ -421,12 +494,13 @@ const OrderPage = async ({ params }: OrderPageProps) => {
         </div>
 
         <div className="grid content-start gap-6">
+          <GiftPanel gift={gift} />
           {pickup ? null : (
             <BoxyPanel
               addressReady={Boolean(
                 order.delivery_zone?.carrier_province && address.city.trim()
               )}
-              canSend={SENDABLE.has(order.status)}
+              canSend={canSendNow(order.status, held)}
               canWrite={canWrite}
               orderId={order.id}
               shipment={shipment}

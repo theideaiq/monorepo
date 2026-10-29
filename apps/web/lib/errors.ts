@@ -112,7 +112,10 @@ export const toCheckoutError = (error: unknown): CheckoutError => {
   if (message.includes("Account suspended")) {
     return "suspended";
   }
-  if (message.includes("Delivery zone not available")) {
+  if (
+    message.includes("Delivery zone not available") ||
+    message.includes("Choose where the gift goes")
+  ) {
     return "zoneUnavailable";
   }
   if (message.includes("Cash payment is not available")) {
@@ -246,4 +249,29 @@ export const toAgeError = (error: unknown): AgeError | null => {
     return "needsBirthday";
   }
   return null;
+};
+
+export type GiftError =
+  | "invalidAddress"
+  | "notFound"
+  | "notReady"
+  | "phoneUnverified"
+  | "suspended"
+  | "unknown"
+  | "yours";
+
+/** gift_preview() and claim_gift() failures (see the gifts migration). */
+export const toGiftError = (error: unknown): GiftError => {
+  if (codeOf(error) === NO_DATA_FOUND) {
+    return "notFound";
+  }
+  const message = messageOf(error);
+  const known: [string, GiftError][] = [
+    ["This gift is from you", "yours"],
+    ["isn't ready yet", "notReady"],
+    ["Invalid shipping address", "invalidAddress"],
+    ["Verify your phone number", "phoneUnverified"],
+    ["Account suspended", "suspended"],
+  ];
+  return known.find(([text]) => message.includes(text))?.[1] ?? "unknown";
 };
