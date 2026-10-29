@@ -78,6 +78,8 @@ export const NOTIFICATION_EVENTS = [
   "saved_price_drop",
   "offer_accepted",
   "offer_declined",
+  "opportunity_open",
+  "opportunity_deadline",
   "offer_countered",
   "return_approved",
   "return_rejected",
@@ -160,6 +162,20 @@ const itemName = (data: Record<string, Json | undefined>, locale: Locale) => {
   return (locale === "ar" ? arabic : english) || english || arabic;
 };
 
+/** An opportunity's title and deadline (`opportunity_*`). */
+const opportunityValues = (
+  data: Record<string, Json | undefined>,
+  locale: Locale
+) => {
+  const english = text(data.title_en);
+  const arabic = text(data.title_ar);
+  const deadline = text(data.deadline);
+  return {
+    date: deadline ? formatDate(deadline, locale) : "",
+    title: (locale === "ar" ? arabic : english) || english || arabic,
+  };
+};
+
 /** An offer's item and amount (`offer_*`). */
 const offerValues = (
   data: Record<string, Json | undefined>,
@@ -211,6 +227,8 @@ const extraValues: Partial<
   offer_accepted: offerValues,
   offer_countered: offerValues,
   offer_declined: offerValues,
+  opportunity_deadline: opportunityValues,
+  opportunity_open: opportunityValues,
   pass_app_approved: (data) => ({ name: text(data.name) }),
   pass_app_declined: (data) => ({ name: text(data.name) }),
   plus_invite: (data) => ({ hours: text(data.hours) }),

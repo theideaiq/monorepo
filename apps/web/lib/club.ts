@@ -3,14 +3,15 @@ import type { Enums } from "@repo/database";
 /**
  * The IDEA Club at `/club`, in three parts:
  * - **Join** (`#join`): things to take part in, by date or deadline:
- *   events and surveys, filtered with `?show=events|surveys`
- *   (opportunities join in Stage 5);
+ *   events, opportunities and surveys, filtered with
+ *   `?show=events|opportunities|surveys`;
  * - **Read** (`#read`): posts in one feed, newest first, filtered by topic
  *   (`?topic=news|stories|guides`);
  * - **Yours** (`#yours`): the member's tickets, surveys and submissions.
- * Posts and events open at `/club/<slug>`.
+ * Posts and events open at `/club/<slug>`, opportunities at
+ * `/club/opportunities/<slug>`.
  */
-export const joinFilters = ["events", "surveys"] as const;
+export const joinFilters = ["events", "opportunities", "surveys"] as const;
 
 export type JoinFilter = (typeof joinFilters)[number];
 
@@ -42,6 +43,10 @@ export const topicPath = (topic?: PostTopic) =>
 
 /** A post or an event. */
 export const clubItemPath = (slug: string) => `/club/${slug}`;
+
+/** A job, internship, scholarship, competition or program. */
+export const opportunityPath = (slug: string) =>
+  `/club/opportunities/${encodeURIComponent(slug)}`;
 
 /** A survey to answer, or (for its creator) its results. */
 export const surveyPath = (id: string) =>

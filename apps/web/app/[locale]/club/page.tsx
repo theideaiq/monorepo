@@ -7,6 +7,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ClubYours } from "@/components/club/club-yours";
 import { FeedChips } from "@/components/club/feed-chips";
 import { JoinFeed } from "@/components/club/join-feed";
+import {
+  isFeatured,
+  OpportunityCard,
+} from "@/components/club/opportunity-card";
 import { EventCard, PostCard } from "@/components/editorial-cards";
 import { LearnPrograms } from "@/components/learn-programs";
 import { PageHero } from "@/components/page-hero";
@@ -22,7 +26,7 @@ import {
   postTopics,
   topicPath,
 } from "@/lib/club";
-import { getEvents, getPosts } from "@/lib/data";
+import { getEvents, getOpportunities, getPosts } from "@/lib/data";
 import { telegram } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 
@@ -112,7 +116,10 @@ const ClubNav = async ({ locale }: { readonly locale: Locale }) => {
   );
 };
 
-/** Join: upcoming events and the member's surveys, by date or deadline. */
+/**
+ * Join: upcoming events, opportunities (featured first) and the member's
+ * surveys, by date or deadline.
+ */
 const Join = async ({
   filter,
   locale,
@@ -121,9 +128,10 @@ const Join = async ({
   readonly locale: Locale;
 }) => {
   const t = await getTranslations({ locale, namespace: "web.club" });
-  const [upcoming, past] = await Promise.all([
-    filter === "surveys" ? [] : getEvents({ limit: 48 }),
+  const [upcoming, past, opportunities] = await Promise.all([
+    filter && filter !== "events" ? [] : getEvents({ limit: 48 }),
     filter === "events" ? getEvents({ limit: 12, past: true }) : [],
+    filter && filter !== "opportunities" ? [] : getOpportunities({ limit: 48 }),
   ]);
   return (
     <section className="flex scroll-mt-24 flex-col gap-4" id="join">
@@ -143,11 +151,19 @@ const Join = async ({
         label={t("join.label")}
       />
       <JoinFeed
-        events={upcoming.map((event) => ({
-          at: event.starts_at,
-          card: <EventCard event={event} locale={locale} />,
-          key: `event-${event.id}`,
-        }))}
+        events={[
+          ...upcoming.map((event) => ({
+            at: event.starts_at,
+            card: <EventCard event={event} locale={locale} />,
+            key: `event-${event.id}`,
+          })),
+          ...opportunities.map((opportunity) => ({
+            at: opportunity.deadline,
+            card: <OpportunityCard locale={locale} opportunity={opportunity} />,
+            featured: isFeatured(opportunity),
+            key: `opportunity-${opportunity.id}`,
+          })),
+        ]}
         filter={filter}
       />
       {past.length > 0 ? (

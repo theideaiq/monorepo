@@ -4,11 +4,18 @@ import type { Locale } from "@repo/internationalization";
 import { Search as SearchIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { OpportunityCard } from "@/components/club/opportunity-card";
 import { EventCard, PostCard } from "@/components/editorial-cards";
 import { PageHero } from "@/components/page-hero";
 import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
-import { getEvents, getPosts, getProducts, getRatings } from "@/lib/data";
+import {
+  getEvents,
+  getOpportunities,
+  getPosts,
+  getProducts,
+  getRatings,
+} from "@/lib/data";
 import { localizedMetadata } from "@/lib/metadata";
 import { parseStoreQuery } from "@/lib/store-params";
 
@@ -38,8 +45,8 @@ export const generateMetadata = async ({
 
 /**
  * The one search of the website (the magnifier in the top bar): products
- * for sale and to rent, posts and events of The IDEA Club, in Arabic or
- * English.
+ * for sale and to rent, and the Club's events, opportunities and posts,
+ * in Arabic or English.
  */
 const Search = async ({ params, searchParams }: SearchProps) => {
   const { locale } = await params;
@@ -47,19 +54,25 @@ const Search = async ({ params, searchParams }: SearchProps) => {
   const { q } = parseStoreQuery(await searchParams);
   const t = await getTranslations({ locale, namespace: "web.search" });
 
-  const [products, rentals, posts, events] = q
+  const [products, rentals, posts, events, opportunities] = q
     ? await Promise.all([
         getProducts({ kind: "sale", limit: PRODUCTS + 1, search: q }),
         getProducts({ kind: "rental", limit: PRODUCTS + 1, search: q }),
         getPosts({ limit: EDITORIAL, search: q }),
         getEvents({ limit: EDITORIAL, search: q }),
+        getOpportunities({ limit: EDITORIAL, search: q }),
       ])
-    : [[], [], [], []];
+    : [[], [], [], [], []];
   const ratings = await getRatings(
     [...products, ...rentals].map((product) => product.id)
   );
   const found =
-    products.length + rentals.length + posts.length + events.length > 0;
+    products.length +
+      rentals.length +
+      posts.length +
+      events.length +
+      opportunities.length >
+    0;
 
   return (
     <>
@@ -159,6 +172,20 @@ const Search = async ({ params, searchParams }: SearchProps) => {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((event) => (
               <EventCard event={event} key={event.id} locale={locale} />
+            ))}
+          </div>
+        </Section>
+      ) : null}
+
+      {opportunities.length > 0 ? (
+        <Section className="pt-0" title={t("opportunities")}>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {opportunities.map((opportunity) => (
+              <OpportunityCard
+                key={opportunity.id}
+                locale={locale}
+                opportunity={opportunity}
+              />
             ))}
           </div>
         </Section>

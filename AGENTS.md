@@ -20,16 +20,19 @@ incidents) is in `docs/platform`.
     categories, then plans and tiers), public, with "Your Plus" (joining
     and the waitlist at `#join`; your plan, plan changes, pause and
     cancel, swaps, the queue and rentals) at `#yours` when signed in; The IDEA
-    Club is `/club` in three parts: Join at `#join` (events and the
-    member's surveys by date or deadline, `?show=events|surveys`;
-    opportunities join in Stage 5), Read at `#read` (posts by topic tag,
-    `?topic=news|stories|guides`, `posts.topics`) and Yours at `#yours`
-    (tickets with the calendar feed, the surveys you created and your
-    submissions, each linking to its receipt in `/pass/orders` when it was
-    paid for), then the Telegram rooms as one card at the bottom;
-    `/club/<slug>` is a post or an event (with RSVP); `/partners` ("For partners") presents The
+    Club is `/club` in three parts: Join at `#join` (events,
+    opportunities, featured first, and the member's surveys by date or
+    deadline, `?show=events|opportunities|surveys`), Read at `#read`
+    (posts by topic tag, `?topic=news|stories|guides`, `posts.topics`)
+    and Yours at `#yours` (tickets with the calendar feed, the surveys you
+    created, your submissions, each linking to its receipt in
+    `/pass/orders` when it was paid for, and the opportunities you
+    follow), then the Telegram rooms as one card at the bottom;
+    `/club/<slug>` is a post or an event (with RSVP) and
+    `/club/opportunities/<slug>` an opportunity (who runs it, where to
+    apply and Notify me); `/partners` ("For partners") presents The
     IDEA Partners to organizations; `/search` (the one search: products
-    to buy and rent, events and posts); `/help`
+    to buy and rent, events, opportunities and posts); `/help`
     (FAQ, the contact form at `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
     and `/help/new`); `/careers`; `/about` (the company, the
     version); `/r/<code>` (a member's invite link: 10% off a new member's

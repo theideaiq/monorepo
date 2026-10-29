@@ -10,12 +10,13 @@ import { useTranslations } from "next-intl";
 import { YourEvents } from "@/components/screens/events";
 import { YourSubmissions } from "@/components/screens/submissions";
 import { SignedInSection } from "@/components/signed-in-section";
+import { YourFollows } from "./your-follows";
 import { YourSurveys } from "./your-surveys";
 
 /**
  * The Club page's "Yours": a signed-in member's tickets (the events they're
- * going to, with the calendar feed), the surveys they created and their
- * submissions. Applications and followed opportunities join in Stage 5.
+ * going to, with the calendar feed), the surveys they created, their
+ * submissions and the opportunities they follow.
  */
 export const ClubYours = () => {
   const t = useTranslations("web.club.yours");
@@ -32,6 +33,7 @@ export const ClubYours = () => {
           <TabsTrigger value="tickets">{t("tickets")}</TabsTrigger>
           <TabsTrigger value="surveys">{t("surveys")}</TabsTrigger>
           <TabsTrigger value="submissions">{t("submissions")}</TabsTrigger>
+          <TabsTrigger value="following">{t("followingTab")}</TabsTrigger>
         </TabsList>
         <TabsContent className="pt-4" value="tickets">
           <YourEvents />
@@ -41,6 +43,9 @@ export const ClubYours = () => {
         </TabsContent>
         <TabsContent className="pt-4" value="submissions">
           <YourSubmissions />
+        </TabsContent>
+        <TabsContent className="pt-4" value="following">
+          <YourFollows />
         </TabsContent>
       </Tabs>
     </SignedInSection>

@@ -48,10 +48,14 @@ const SurveyAccessNote = () => {
   ) : null;
 };
 
-/** An event card drawn on the server, with when it starts. */
+/**
+ * An event or opportunity card drawn on the server, with when it starts or
+ * its deadline (null: open-ended). Featured opportunities come first.
+ */
 export interface JoinEvent {
-  at: string;
+  at: string | null;
   card: ReactNode;
+  featured?: boolean;
   key: string;
 }
 
@@ -130,8 +134,9 @@ const useJoinSurveys = (wanted: boolean) => {
 };
 
 /**
- * Club → Join: events and surveys in one list, soonest date or deadline
- * first, or one kind with `filter`.
+ * Club → Join: events, opportunities and surveys in one list, featured
+ * opportunities first, then soonest date or deadline, or one kind with
+ * `filter`.
  */
 export const JoinFeed = ({
   events,
@@ -141,19 +146,20 @@ export const JoinFeed = ({
   readonly filter?: JoinFilter;
 }) => {
   const t = useTranslations("web.club.join");
-  const surveys = useJoinSurveys(filter !== "events");
-  const items = byDateOrDeadline([
+  const withSurveys = !filter || filter === "surveys";
+  const surveys = useJoinSurveys(withSurveys);
+  const items = byDateOrDeadline<JoinEvent>([
     ...(filter === "surveys" ? [] : events),
     ...surveys.list.map((survey) => ({
       at: survey.closes_at,
       card: <SurveyCard survey={survey} />,
       key: `survey-${survey.id}`,
     })),
-  ]);
+  ]).sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
 
   return (
     <div className="flex flex-col gap-4">
-      {filter === "events" || surveys.signedOut ? null : <SurveyAccessNote />}
+      {withSurveys && !surveys.signedOut ? <SurveyAccessNote /> : null}
       {items.length > 0 ? (
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
