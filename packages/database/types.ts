@@ -381,6 +381,47 @@ export type Database = {
           },
         ];
       };
+      cart_kits: {
+        Row: {
+          created_at: string;
+          extra_days: number;
+          games: string[];
+          id: string;
+          kit_type: string;
+          starts_on: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          extra_days?: number;
+          games?: string[];
+          id?: string;
+          kit_type: string;
+          starts_on: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          extra_days?: number;
+          games?: string[];
+          id?: string;
+          kit_type?: string;
+          starts_on?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cart_kits_kit_type_fkey";
+            columns: ["kit_type"];
+            isOneToOne: false;
+            referencedRelation: "kit_types";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       chart_of_accounts: {
         Row: {
           active: boolean;
