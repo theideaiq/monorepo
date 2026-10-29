@@ -52,7 +52,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(30);
+select plan(32);
 
 -- M asks for offers; K is 16; O owns Shop One (W works there); T owns Shop Two.
 insert into auth.users (id, email, raw_user_meta_data) values
@@ -235,6 +235,17 @@ select pg_temp.login_as('00000000-0000-0000-0000-00000000a7c3');
 select is(
   (public.finish_sell_offer((select id from made where name = 'offer one'), true)).status::text,
   'completed', 'the shop marks the sale done'
+);
+select results_eq(
+  $$ select title, first_name, request_status::text
+     from public.shop_sell_offer_items('9a7c0000-0000-0000-0000-0000000000d1') $$,
+  $$ values ('Vinyl collection', 'Mina', 'completed') $$,
+  'the shop still reads the item its offer was for'
+);
+select pg_temp.login_as('00000000-0000-0000-0000-00000000a7c5');
+select is(
+  (select count(*)::integer from public.shop_sell_offer_items('9a7c0000-0000-0000-0000-0000000000d1')),
+  0, 'other shops don''t'
 );
 select pg_temp.reset_role();
 select results_eq(
