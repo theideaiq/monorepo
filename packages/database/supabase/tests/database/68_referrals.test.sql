@@ -138,8 +138,8 @@ where user_id = '00000000-0000-0000-0000-0000000000c2' and discount_source = 'in
 select results_eq(
   $$ select amount, status::text from public.bulb_entries
      where user_id = '00000000-0000-0000-0000-0000000000c1' and reason = 'invite' $$,
-  $$ values (50, 'pending') $$,
-  'the inviter earns 50 Bulbs, pending through the return window'
+  $$ values (5000, 'pending') $$,
+  'the inviter earns 5,000 Bulbs, pending through the return window'
 );
 select is(
   (select status::text from public.referrals where invitee_id = '00000000-0000-0000-0000-0000000000c2'),

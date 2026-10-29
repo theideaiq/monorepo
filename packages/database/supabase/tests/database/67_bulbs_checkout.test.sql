@@ -51,10 +51,10 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(17);
+select plan(18);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
--- U holds 500 usable Bulbs; R is on a Plus plan with free delivery; Q is
+-- U holds 50,000 usable Bulbs; R is on a Plus plan with free delivery; Q is
 -- invited and on the same plan.
 truncate public.products, public.orders, public.bulb_entries cascade;
 
@@ -85,7 +85,7 @@ where governorate = 'baghdad';
 update public.delivery_zones set active = true, fee = 8000 where governorate = 'basra';
 
 insert into public.bulb_entries (user_id, amount, kind, reason, created_by)
-values ('00000000-0000-0000-0000-0000000000f7', 500, 'adjustment', 'Test balance', '00000000-0000-0000-0000-0000000000f8');
+values ('00000000-0000-0000-0000-0000000000f7', 50000, 'adjustment', 'Test balance', '00000000-0000-0000-0000-0000000000f8');
 
 insert into public.orders (user_id, status, subtotal, shipping_fee, total, shipping_address)
 values ('00000000-0000-0000-0000-0000000000f8', 'delivered', 800000, 0, 800000, '{}');
@@ -96,40 +96,44 @@ select pg_temp.login_as('00000000-0000-0000-0000-0000000000f7');
 insert into public.cart_items (product_id, quantity) values ('67000000-0000-0000-0000-000000000001', 1);
 select throws_ok(
   $$ select public.create_order('{"full_name":"U","phone":"+9647700000301","governorate":"baghdad","address":"Karrada"}',
-       'delivery', 'online', null, 600) $$,
+       'delivery', 'online', null, 60000) $$,
   '23514', 'Not enough Bulbs', 'members spend only the Bulbs they have'
+);
+select is(
+  (public.checkout_quote('delivery', 'online', null, 900, 'baghdad') ->> 'bulbs_used')::int,
+  0, 'under 1,000 Bulbs spends none'
 );
 select lives_ok(
   $$ select public.create_order('{"full_name":"U","phone":"+9647700000301","governorate":"baghdad","address":"Karrada"}',
-       'delivery', 'online', null, 300) $$,
+       'delivery', 'online', null, 20100) $$,
   'members spend Bulbs at checkout'
 );
 select results_eq(
   $$ select bulbs_used, bulbs_discount, total, status::text from public.orders order by number desc limit 1 $$,
-  $$ values (300, 30000::bigint, 75000::bigint, 'pending') $$,
-  '300 Bulbs take 30,000 IQD off; the rest is paid online'
+  $$ values (20000, 20000::bigint, 85000::bigint, 'pending') $$,
+  'Bulbs are spent in steps of 250, 1 IQD each; the rest is paid online'
 );
 select is(
-  (select available from public.my_bulbs()), 200::bigint,
+  (select available from public.my_bulbs()), 30000::bigint,
   'the Bulbs leave the balance'
 );
 
 select public.cancel_order((select id from public.orders order by number desc limit 1));
 select is(
-  (select available from public.my_bulbs()), 500::bigint,
+  (select available from public.my_bulbs()), 50000::bigint,
   'cancelling the order gives the Bulbs back'
 );
 
--- A small order paid in full with Bulbs: 3,000 + 5,000 delivery = 80 Bulbs.
+-- A small order paid in full with Bulbs: 3,000 + 5,000 delivery = 8,000 Bulbs.
 insert into public.cart_items (product_id, quantity) values ('67000000-0000-0000-0000-000000000002', 1);
 select lives_ok(
   $$ select public.create_order('{"full_name":"U","phone":"+9647700000301","governorate":"baghdad","address":"Karrada"}',
-       'delivery', 'online', null, 500) $$,
+       'delivery', 'online', null, 50000) $$,
   'Bulbs can pay a whole order'
 );
 select results_eq(
   $$ select bulbs_used, total, status::text from public.orders order by number desc limit 1 $$,
-  $$ values (80, 0::bigint, 'paid') $$,
+  $$ values (8000, 0::bigint, 'paid') $$,
   'only what the order costs is spent, and it is paid at once'
 );
 
@@ -138,20 +142,20 @@ select results_eq(
 select pg_temp.reset_role();
 insert into public.orders (id, user_id, status, subtotal, shipping_fee, bulbs_used, bulbs_discount, total, shipping_address)
 values ('67000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000f7', 'shipped',
-  100000, 0, 500, 50000, 50000, '{}');
+  100000, 0, 50000, 50000, 50000, '{}');
 insert into public.order_items (order_id, product_id, name_ar, name_en, unit_price, quantity)
 values ('67000000-0000-0000-0000-0000000000a1', '67000000-0000-0000-0000-000000000001', 'سويتش', 'Switch', 100000, 1);
 update public.orders set status = 'delivered' where id = '67000000-0000-0000-0000-0000000000a1';
--- Half paid in money: 100,000 × ½ × 3% = 1,500 IQD = 15 Bulbs.
+-- Half paid in money: 100,000 × ½ × 3% = 1,500 Bulbs.
 select is(
   (select amount from public.bulb_entries where order_id = '67000000-0000-0000-0000-0000000000a1' and kind = 'purchase'),
-  15, 'cashback is earned only on what was paid in money'
+  1500, 'cashback is earned only on what was paid in money'
 );
 
 select throws_ok(
   $$ insert into public.orders (user_id, status, subtotal, shipping_fee, bulbs_used, bulbs_discount, total, shipping_address)
      values ('00000000-0000-0000-0000-0000000000f7', 'pending', 1000, 0, 1, 50, 950, '{}') $$,
-  '23514', null, 'each Bulb is worth exactly 100 IQD off'
+  '23514', null, 'each Bulb is worth exactly 1 IQD off'
 );
 
 -- ── Delivery ────────────────────────────────────────────────────────────────
@@ -171,14 +175,14 @@ select is(
   0::bigint, 'delivery in Baghdad is free for everyone from 150,000 IQD'
 );
 
--- The quote is what the order will be: 100,000 + 5,000 delivery, 30 Bulbs
--- back (3%), at most 200 under the 20% cap.
+-- The quote is what the order will be: 100,000 + 5,000 delivery, 3,000
+-- Bulbs back (3%), at most 20,000 under the 20% cap.
 insert into public.cart_items (product_id, quantity) values ('67000000-0000-0000-0000-000000000001', 1);
 select results_eq(
   $$ select (q ->> 'subtotal')::bigint, (q ->> 'shipping_fee')::bigint, (q ->> 'total')::bigint,
             (q ->> 'bulbs_to_earn')::int, (q ->> 'max_bulbs')::int, q ->> 'free_delivery'
      from public.checkout_quote('delivery', 'online', null, 0, 'baghdad') q $$,
-  $$ values (100000::bigint, 5000::bigint, 105000::bigint, 30, 200, null::text) $$,
+  $$ values (100000::bigint, 5000::bigint, 105000::bigint, 3000, 20000, null::text) $$,
   'the checkout quote prices the cart'
 );
 delete from public.cart_items where user_id = auth.uid();

@@ -105,8 +105,8 @@ select (public.create_rental_order(
 
 select results_eq(
   $$ select status::text, subtotal, shipping_fee, total, max_bulbs from public.orders where id = (select id from rented) $$,
-  $$ values ('pending', 39500::bigint, 5000::bigint, 44500::bigint, 0) $$,
-  'the order is the rent plus the deposit and delivery, and earns no Bulbs'
+  $$ values ('pending', 39500::bigint, 5000::bigint, 44500::bigint, 1950) $$,
+  'the order is the rent plus the deposit and delivery; the rent earns Bulbs (up to 20%)'
 );
 select results_eq(
   $$ select kind, unit_price from public.order_items where order_id = (select id from rented) order by kind desc $$,

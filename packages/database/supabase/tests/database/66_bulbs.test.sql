@@ -105,11 +105,11 @@ select is(private.bulb_rate('00000000-0000-0000-0000-0000000000e2'), 5::numeric,
 
 update public.orders set status = 'delivered' where id = '66000000-0000-0000-0000-0000000000b1';
 
--- M earns 3% on everything (no half-rate items since program revision
--- v2): 1,100,000 × 3% = 33,000 IQD = 330 Bulbs. Delivery earns nothing.
+-- M earns 3% on everything: 1,100,000 × 3% = 33,000 Bulbs (1 Bulb =
+-- 1 IQD). Delivery earns nothing.
 select is(
   (select amount from public.bulb_entries where order_id = '66000000-0000-0000-0000-0000000000b1' and kind = 'purchase'),
-  330, 'a delivered order earns the flat rate on every item'
+  33000, 'a delivered order earns the flat rate on every item'
 );
 select results_eq(
   $$ select status::text, available_at > now() + interval '13 days' and available_at <= now() + interval '14 days'
@@ -119,14 +119,14 @@ select results_eq(
 );
 select is(
   (select amount from public.bulb_entries where user_id = '00000000-0000-0000-0000-0000000000e1' and reason = 'first_order'),
-  20, 'the first delivered order earns a 20-Bulb bonus'
+  2000, 'the first delivered order earns a 2,000-Bulb bonus'
 );
 
 update public.orders set status = 'delivered' where id = '66000000-0000-0000-0000-0000000000b2';
--- P is on a 5% plan: 100,000 × 5% = 5,000 IQD = 50 Bulbs.
+-- P is on a 5% plan: 100,000 × 5% = 5,000 Bulbs.
 select is(
   (select amount from public.bulb_entries where order_id = '66000000-0000-0000-0000-0000000000b2' and kind = 'purchase'),
-  50, 'Plus members earn their plan''s rate'
+  5000, 'Plus members earn their plan''s rate'
 );
 
 update public.orders set status = 'shipped' where id = '66000000-0000-0000-0000-0000000000b2';
@@ -153,7 +153,7 @@ select is(
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000e1');
 select results_eq(
   $$ select available, pending, rate from public.my_bulbs() $$,
-  $$ values (0::bigint, 350::bigint, 3::numeric) $$,
+  $$ values (0::bigint, 35000::bigint, 3::numeric) $$,
   'members see their pending Bulbs and rate'
 );
 select throws_ok(
@@ -170,23 +170,23 @@ update public.bulb_entries set available_at = now() - interval '1 minute'
 where user_id = '00000000-0000-0000-0000-0000000000e1';
 select is(
   (select available from private.bulb_balance('00000000-0000-0000-0000-0000000000e1')),
-  350::bigint, 'Bulbs become usable when the return window closes'
+  35000::bigint, 'Bulbs become usable when the return window closes'
 );
 
 -- ── Staff ───────────────────────────────────────────────────────────────────
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000000e3', 'aal2');
 select throws_ok(
-  $$ select public.adjust_bulbs('00000000-0000-0000-0000-0000000000e1', 50, '') $$,
+  $$ select public.adjust_bulbs('00000000-0000-0000-0000-0000000000e1', 5000, '') $$,
   '23514', 'A reason is required', 'adjustments need a reason'
 );
 select lives_ok(
-  $$ select public.adjust_bulbs('00000000-0000-0000-0000-0000000000e1', -30, 'Damaged sleeve goodwill reversal') $$,
+  $$ select public.adjust_bulbs('00000000-0000-0000-0000-0000000000e1', -3000, 'Damaged sleeve goodwill reversal') $$,
   'support adjusts Bulbs with a reason'
 );
 select results_eq(
   $$ select available, rate from public.member_bulbs('00000000-0000-0000-0000-0000000000e1') $$,
-  $$ values (320::bigint, 3::numeric) $$,
+  $$ values (32000::bigint, 3::numeric) $$,
   'support sees a member''s balance and rate'
 );
 select throws_ok(
