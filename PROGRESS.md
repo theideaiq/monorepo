@@ -718,6 +718,11 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Opportunities, part 5b (`20270306000000_program_terms.sql`).
+  Accepting a place copies the program's refund schedule and visa share
+  onto the application, and refunds use those copies (the programs
+  policy fixes them on acceptance); a place with any installment past its
+  date, not only the first, can be released as unpaid.
 - 2026-10-29: Opportunities, part 5 (step 14; `20270305000000_programs.sql`,
   schema first). The IDEA's paid programs: a `programs` row on one of its
   own program opportunities holds the package (travel insurance always
