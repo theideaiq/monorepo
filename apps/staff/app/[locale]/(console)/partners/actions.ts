@@ -213,10 +213,19 @@ export const addPerk = staffAction(
     kind: z.enum(PERK_KINDS),
     organization: uuid,
     partnerName: text(120),
+    /** For a Plus perk, the tiers it's for (none ticked: every tier). */
+    tierBlaze: checkbox,
+    tierGlow: checkbox,
+    tierShine: checkbox,
     titleAr: text(120),
     titleEn: text(120),
   }),
   async ({ input, supabase }) => {
+    const tiers = [
+      input.tierGlow ? 1 : 0,
+      input.tierShine ? 2 : 0,
+      input.tierBlaze ? 3 : 0,
+    ].filter(Boolean);
     check(
       await supabase.from("perks").insert({
         area_ar: input.areaAr ?? "",
@@ -227,11 +236,32 @@ export const addPerk = staffAction(
         kind: input.kind,
         organization_id: input.organization,
         partner_name: input.partnerName,
+        plus_tiers:
+          input.audience === "plus" && tiers.length > 0 ? tiers : null,
         title_ar: input.titleAr,
         title_en: input.titleEn,
       })
     );
     return success();
+  }
+);
+
+/**
+ * Pairs a perk with another of the same partner's (the database links it
+ * back), or unpairs it. Each person sees the better one they get.
+ */
+export const pairPerk = staffAction(
+  "companies",
+  z.object({ id: uuid, pairedWith: optionalUuid }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("perks")
+        .update({ paired_with: input.pairedWith ?? null })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success("saved");
   }
 );
 

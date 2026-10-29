@@ -1,20 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  confirmError,
-  perkOpen,
-  studentChoice,
-  studentCodeError,
-} from "@/lib/students";
-
-describe("perks", () => {
-  it("are open to everyone, students or Plus members", () => {
-    const none = { plus: false, student: false };
-    expect(perkOpen("everyone", none)).toBe(true);
-    expect(perkOpen("students", none)).toBe(false);
-    expect(perkOpen("students", { ...none, student: true })).toBe(true);
-    expect(perkOpen("plus", { ...none, plus: true })).toBe(true);
-  });
-});
+import { confirmError, studentChoice, studentCodeError } from "@/lib/students";
 
 describe("the student price", () => {
   const glow = { amount: 14_750, id: "plus-glow" };

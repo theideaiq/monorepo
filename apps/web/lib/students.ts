@@ -1,22 +1,6 @@
 /** Who a perk is open to (`perks.audience`). */
 export type PerkAudience = "everyone" | "plus" | "students";
 
-export interface MemberBadges {
-  plus: boolean;
-  student: boolean;
-}
-
-/** Whether a perk is open to a member with these badges. */
-export const perkOpen = (audience: PerkAudience, badges: MemberBadges) => {
-  if (audience === "students") {
-    return badges.student;
-  }
-  if (audience === "plus") {
-    return badges.plus;
-  }
-  return true;
-};
-
 /** The student price of a plan, when it has one (`plans.student_of`). */
 export const studentPlanFor = <T extends { student_of: string | null }>(
   studentPlans: readonly T[] | null | undefined,

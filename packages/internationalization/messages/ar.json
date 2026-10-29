@@ -5558,7 +5558,12 @@
           "everyone": "كل حاملي Pass",
           "students": "الطلاب الموثَّقون",
           "plus": "مشتركو Plus"
-        }
+        },
+        "tiers": "فئات Plus",
+        "tiersHint": "لعرض Plus: اختر الفئات المقصودة، أو لا شيء لكل مشتركي Plus.",
+        "pairWith": "مقترن بـ",
+        "notPaired": "غير مقترن",
+        "pair": "حفظ الاقتران"
       },
       "signIn": {
         "title": "الدخول باستخدام The IDEA Pass",
@@ -5747,10 +5752,14 @@
       "description": "أبرز بطاقتك عند الدفع: يمسحها الشريك ليمنحك العرض، مرة واحدة في اليوم.",
       "audience": {
         "students": "للطلاب",
-        "plus": "لمشتركي Plus"
+        "plus": "لمشتركي Plus",
+        "plusTiers": "Plus {tiers}"
       },
       "verifyToUse": "وثّق صفتك كطالب لتستفيد منه",
-      "joinToUse": "اشترك في Plus لتستفيد منه"
+      "joinToUse": "اشترك في Plus لتستفيد منه",
+      "tierToUse": "لمشتركي Plus {tiers}",
+      "upgradePlus": "مع Plus: {title}",
+      "upgradeStudents": "للطلاب: {title}"
     },
     "authorize": {
       "meta": "الدخول باستخدام The IDEA Pass",

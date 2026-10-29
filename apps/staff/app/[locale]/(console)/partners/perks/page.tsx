@@ -19,7 +19,13 @@ import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { requireSection } from "@/lib/admin/session";
 import { CompaniesTabs } from "../_components/companies-tabs";
-import { AddPerkForm, PerkToggle } from "./forms";
+import { AddPerkForm, PairPerkForm, PerkToggle } from "./forms";
+
+const TIER_NAMES: Record<number, string> = {
+  1: "Glow",
+  2: "Shine",
+  3: "Blaze",
+};
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.companies.perks");
@@ -45,7 +51,7 @@ const PerksPage = async () => {
       supabase
         .from("perks")
         .select(
-          "id, organization_id, partner_name, kind, title_ar, title_en, audience, active"
+          "id, organization_id, partner_name, kind, title_ar, title_en, audience, plus_tiers, paired_with, active"
         )
         .order("partner_name")
         .order("position"),
@@ -98,6 +104,29 @@ const PerksPage = async () => {
                     </TableCell>
                     <TableCell>
                       {t(`audiences.${perk.audience as "everyone"}`)}
+                      {perk.plus_tiers?.length ? (
+                        <span className="block text-muted-foreground text-xs">
+                          {perk.plus_tiers
+                            .map((tier) => TIER_NAMES[tier])
+                            .join(" · ")}
+                        </span>
+                      ) : null}
+                      {canWrite ? (
+                        <PairPerkForm
+                          current={perk.paired_with}
+                          id={perk.id}
+                          options={(perks ?? [])
+                            .filter(
+                              (other) =>
+                                other.id !== perk.id &&
+                                other.organization_id === perk.organization_id
+                            )
+                            .map((other) => ({
+                              label: localized(other, "title", locale),
+                              value: other.id,
+                            }))}
+                        />
+                      ) : null}
                     </TableCell>
                     <TableCell className="text-end tabular-nums">
                       {format.number(count.get(perk.id) ?? 0)}
