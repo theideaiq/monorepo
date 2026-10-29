@@ -593,6 +593,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   product with "Tell me" on instead of writing `product_alerts`, which a
   later migration drops once this is live. Still to come in step 8: Send
   as a gift from a shared list (with the gift checkout, section 11).
+- 2026-10-29: Bulbs, part 1 (master brief step 9, section 16;
+  `20270207000000_bulbs_one_iqd.sql`). 1 Bulb = 1 IQD: every balance,
+  bonus and Bulbs amount was multiplied by 100, so nobody lost value. One
+  rate, 2% for everyone and 3% / 4% / 5% for Plus Glow / Shine / Blaze, on
+  what is paid for goods (shop items too), rentals, keeps and kits,
+  rounded to whole Bulbs; Plus fees, deposits and surveys earn nothing.
+  Bulbs are spent in steps of 250, at least 1,000 an order. Bonuses: first
+  order 2,000, invite 5,000, birthday 2,500, photo review 500, event
+  check-in 1,000, Telegram link 1,000. Until part 2 (the website and Staff)
+  ships, screens still show the old value of a Bulb.
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the
