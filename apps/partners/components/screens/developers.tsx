@@ -32,6 +32,7 @@ import {
   type PassApp,
   SENSITIVE_ANSWERS,
   useAddDomain,
+  useAppWebhooks,
   useCreateApp,
   useEndPreviousSecret,
   usePassApps,
@@ -40,6 +41,7 @@ import {
   useRotateSecret,
   useSetAppKeys,
   useSetAppState,
+  useSetAppWebhook,
   useUpdateApp,
   useVerifyDomain,
 } from "@/lib/developer-queries";
@@ -589,6 +591,56 @@ const Keys = ({
   );
 };
 
+/**
+ * Where The IDEA posts the app's events (a partner's student verifications),
+ * as JWTs signed with The IDEA's keys.
+ */
+const Webhook = ({
+  app,
+  org,
+}: {
+  readonly app: PassApp;
+  readonly org: string;
+}) => {
+  const t = useTranslations(NS);
+  const id = useId();
+  const webhooks = useAppWebhooks(org);
+  const save = useSetAppWebhook(org);
+  const current = webhooks.data?.get(app.client_id) ?? "";
+  const [url, setUrl] = useState<string | null>(null);
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    save.mutate({ client: app.client_id, url: url ?? current });
+  };
+  return (
+    <form className="grid gap-2" onSubmit={submit}>
+      <Label htmlFor={id}>{t("webhook.label")}</Label>
+      <p className="text-muted-foreground text-xs">{t("webhook.hint")}</p>
+      <Input
+        dir="ltr"
+        id={id}
+        onChange={(event) => setUrl(event.target.value)}
+        type="url"
+        value={url ?? current}
+      />
+      <Failure error={save.error} />
+      <Button
+        className="justify-self-start"
+        disabled={save.isPending}
+        size="sm"
+        type="submit"
+      >
+        {t("webhook.save")}
+      </Button>
+      {save.isSuccess ? (
+        <p className="text-muted-foreground text-xs" role="status">
+          {t("webhook.saved")}
+        </p>
+      ) : null}
+    </form>
+  );
+};
+
 /** The app's badges: testing or live, off, suspended, review. */
 const AppBadges = ({ app }: { readonly app: PassApp }) => {
   const t = useTranslations(NS);
@@ -691,6 +743,7 @@ const AppCard = ({
         <div className="grid gap-4 pt-3">
           <Secrets apiUrl={apiUrl} app={app} org={org} />
           <Keys app={app} org={org} />
+          <Webhook app={app} org={org} />
         </div>
       </details>
     </li>

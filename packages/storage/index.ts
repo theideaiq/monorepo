@@ -252,6 +252,49 @@ export const uploadStudentCard = (
   );
 };
 
+/** Uploads a document for a partner's student verification (apps/api, service role). */
+export const uploadStudentDocument = (
+  admin: Client,
+  verificationId: string,
+  file: File
+) => {
+  assertAllowed("studentDocuments", file);
+  return upload(
+    admin,
+    buckets.studentDocuments.id,
+    objectPath(verificationId, file.name),
+    file
+  );
+};
+
+/** A time-limited link to a verification document (support). */
+export const getStudentDocumentUrl = async (
+  supabase: Client,
+  path: string,
+  expiresIn = 10 * 60
+) => {
+  const { data, error } = await supabase.storage
+    .from(buckets.studentDocuments.id)
+    .createSignedUrl(path, expiresIn);
+  if (error || !data) {
+    throw new StorageError(
+      "not_found",
+      `No signed URL: ${error?.message ?? "no data"}`
+    );
+  }
+  return data.signedUrl;
+};
+
+/** Deletes a reviewed verification document. */
+export const deleteStudentDocument = async (supabase: Client, path: string) => {
+  const { error } = await supabase.storage
+    .from(buckets.studentDocuments.id)
+    .remove([path]);
+  if (error) {
+    throw new StorageError("request_failed", `Delete failed: ${error.message}`);
+  }
+};
+
 /** A time-limited link to a student card photo (its owner or support). */
 export const getStudentCardUrl = async (
   supabase: Client,

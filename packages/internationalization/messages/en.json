@@ -2559,8 +2559,8 @@
         "title": "Perks",
         "notPartner": "This organization doesn't offer perks to Pass members yet. Contact The IDEA to become a partner.",
         "checkTitle": "Check a card",
-        "checkDescription": "Scan the QR code on the customer's Pass, or type their Pass number and the 6-digit code under it. A student who checked on The IDEA shows a student code instead: scan or type it.",
-        "card": "Scanned code, Pass number or student code",
+        "checkDescription": "Scan the QR code on the customer's Pass, or type their Pass number and the 6-digit code under it.",
+        "card": "Scanned code or Pass number",
         "code": "6-digit code",
         "check": "Check",
         "invalidCard": "This card isn't valid. Ask them to open their Pass again: the code changes every 30 seconds.",
@@ -2582,8 +2582,7 @@
         "statsTitle": "Uses by month",
         "statsDescription": "How often your perks were used in the last 12 months.",
         "noUses": "No uses yet.",
-        "uses": "{uses} uses · {people} people",
-        "studentCheck": "Verified student at {university} until {date}."
+        "uses": "{uses} uses · {people} people"
       },
       "developers": {
         "title": "Sign in with The IDEA Pass",
@@ -2674,7 +2673,6 @@
           "email": "Email",
           "pass": "Pass number",
           "student": "Verified student (yes or no)",
-          "student_check": "Student check: verified yes or no, the university and until when (no name or email)",
           "student_email": "University email",
           "adult": "18 or over (yes or no)",
           "plus": "Plus member",
@@ -2698,7 +2696,14 @@
           "tooManyDomains": "A company can have up to 10 domains.",
           "tooSoon": "Wait a few seconds before checking again.",
           "notAllowed": "Only the company's owners and admins can do this.",
-          "unknown": "Something went wrong. Please try again."
+          "unknown": "Something went wrong. Please try again.",
+          "webhookNotVerified": "The webhook isn't on a verified domain."
+        },
+        "webhook": {
+          "label": "Webhook",
+          "hint": "We post each change to your student verifications here: a JWT signed with The IDEA's keys (verify it with our JWKS). It must be on a verified domain. Leave it empty to turn it off.",
+          "save": "Save the webhook",
+          "saved": "Saved."
         }
       },
       "selling": {
@@ -3662,7 +3667,8 @@
           "returnRefunds": "Return refunds to send",
           "houseOffers": "Offers on The IDEA's stock",
           "pendingPayouts": "Shop payouts to send",
-          "surveyAppeals": "Survey appeals to decide"
+          "surveyAppeals": "Survey appeals to decide",
+          "studentDocuments": "Student documents to check (partners)"
         }
       }
     },
@@ -4513,7 +4519,17 @@
         "domains": "Email domains",
         "domainsHint": "Separated by commas, e.g. auib.edu.iq",
         "listed": "Listed",
-        "add": "Add university"
+        "add": "Add university",
+        "documents": "Partner verifications: documents",
+        "documentsDescription": "Student cards and enrollment proofs (dated within 3 months) sent to verify a student for a partner. Approving verifies them until 30 June; either way the student is emailed, the partner told and the document deleted.",
+        "documentsEmpty": "No documents waiting.",
+        "documentFor": "For {partner}",
+        "documentAlt": "The student's document",
+        "openDocument": "Open the PDF",
+        "documentKinds": {
+          "card": "Student card",
+          "enrollment": "Enrollment proof"
+        }
       },
       "surveysLink": "Surveys",
       "surveys": {
@@ -5361,7 +5377,6 @@
           "profile": "Name",
           "email": "Email",
           "student": "Verified student",
-          "student_check": "Student check",
           "adult": "18 or over",
           "plus": "Plus member",
           "card": "Show the Pass card",
@@ -5544,7 +5559,6 @@
         "profile": "Your name, language and profile picture",
         "email": "Your email address",
         "student": "Whether you're a verified student, at which university and until when",
-        "student_check": "Only whether you're a verified student, at which university and until when (not your name, email or Pass)",
         "adult": "Whether you're 18 or over",
         "plus": "Whether you're a Plus member, and your plan",
         "card": "Your Pass card, to show on their site (without its scannable code)",
@@ -5600,18 +5614,8 @@
       "useEmail": "Use your university email instead",
       "notUniversityEmail": "Verify with your university email or a photo of your student card.",
       "waiting": "Your student card is waiting for review. We'll email you the result.",
-      "choose": {
-        "title": "You're verified. What now?",
-        "once": "Just this once",
-        "onceHint": "The result goes only to whoever asked. We keep nothing but a 30-day record against abuse.",
-        "keep": "Keep it for a year",
-        "keepHint": "Student prices, Plus at 20% off, student perks and student surveys work without asking again, until {date}."
-      },
       "result": {
         "verified": "Verified: student at {university} until {date}.",
-        "code": "Your student code",
-        "codeHint": "Show it to a partner; they check it in Partners. It works until {time}.",
-        "showCode": "Show my student code",
         "continue": "Continue"
       },
       "delete": "Delete your student status",
@@ -5620,6 +5624,68 @@
       "errors": {
         "failed": "Something went wrong. Try again.",
         "tooMany": "Too many checks. Try again later."
+      }
+    },
+    "partnerVerify": {
+      "title": "Verify you're a student",
+      "description": "For {partner}. No Pass needed.",
+      "notFound": "This verification link isn't valid or has expired. Start again from the website that sent you.",
+      "university": "University",
+      "chooseUniversity": "Choose your university",
+      "signInPrompt": "Have The IDEA Pass?",
+      "signIn": "Sign in to verify in one tap",
+      "useDocument": "No university email? Send a student card or enrollment proof",
+      "useEmail": "Use your university email instead",
+      "privacy": "We tell them only that you're a student, the university and until when.",
+      "privacyLink": "Privacy",
+      "share": {
+        "question": "Share your student status with {partner}?",
+        "what": "Student at {university}, until {date}.",
+        "yes": "Share",
+        "other": "Use a different email"
+      },
+      "email": {
+        "label": "Your university email",
+        "hint": "We'll email it an 8-digit code.",
+        "send": "Send the code",
+        "code": "The 8-digit code we emailed you",
+        "verify": "Verify",
+        "again": "Send a new code"
+      },
+      "document": {
+        "kind": "Document",
+        "card": "Student card",
+        "enrollment": "Enrollment proof",
+        "kindHint": "An enrollment proof must be dated within the last 3 months.",
+        "file": "Photo or PDF",
+        "email": "Your email",
+        "emailHint": "We'll email you the result.",
+        "send": "Send for checking"
+      },
+      "done": {
+        "verified": "Verified: {partner} knows you're a student at {university}, until {date}.",
+        "pending": "We're checking, usually within 1 working day. We'll email you the result.",
+        "rejected": "We couldn't accept your document. You can start again from the website that sent you.",
+        "rejectedWith": "We couldn't accept your document: {reason}",
+        "back": "Back to {partner}"
+      },
+      "delete": {
+        "title": "Delete this verification",
+        "description": "It's deleted at once, and we tell the website it was for. Your Pass, if you have one, isn't affected.",
+        "confirm": "Delete it",
+        "done": "Deleted. We've told them.",
+        "failed": "This link has already been used or isn't valid."
+      },
+      "errors": {
+        "failed": "Something went wrong. Try again.",
+        "not_university": "Use your university email (on its official domain).",
+        "too_many": "Too many codes for this address today. Try again tomorrow.",
+        "wrong_code": "That code isn't right.",
+        "code_expired": "That code has expired. Send a new one.",
+        "email_unavailable": "We can't send emails right now. Try again later.",
+        "invalid_file": "Send a photo (PNG, JPEG or WebP) or a PDF of up to 10 MB.",
+        "no_badge": "Your student badge has expired. Use your university email instead.",
+        "not_found": "This verification is already finished or has expired."
       }
     }
   }

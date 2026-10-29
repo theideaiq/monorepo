@@ -630,6 +630,24 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Yours and see their refund; Staff → Customers → Surveys decides
   appeals (an Inbox item); the daily selling cron closes surveys past 60
   days and refunds Boosted ones through Wayl; the survey terms follow.
+- 2026-10-29: Student verification for partners (owner, 2026-10-29), a
+  separate service (`20270213000000_student_verifications.sql`): a
+  partner's backend starts one with its app credentials
+  (`POST /v1/student-verifications`) and sends the student to
+  theideaiq.com/verify/<id> (redirect, popup, or `?embed=1` from its
+  verified domains), who comes back to the partner afterwards. A Pass with
+  a valid badge shares it in one tap; anyone else uses the university
+  email and an emailed 8-digit code (5 a day per address, Upstash) or a
+  student card / enrollment proof checked in Staff → Customers →
+  Students (Inbox), deleted after review. One per partner per person,
+  until 30 June; partners get only the status, university and
+  valid_until (`GET /v1/student-verifications/<id>` and a signed webhook
+  set in Partners → Developers). The confirmation email links to deleting
+  it. The shared student check (one-time checks, in-person codes, the
+  `student_check` answer) is gone from the apps; a cleanup migration drops
+  its tables. Returns now refund the original delivery fee when the return
+  isn't the customer's doing (`20270212000100_return_delivery_fee.sql`); a
+  shop at fault pays it from its payout.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

@@ -10,6 +10,7 @@ import {
   staffAction,
 } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
+import { callApi } from "@/lib/admin/api";
 import { crmContactSchema, markContactedSchema } from "@/lib/admin/crm";
 import {
   checkbox,
@@ -176,6 +177,38 @@ export const reviewStudentCard = staffAction(
     );
     if (path) {
       await removeFiles(supabase, buckets.studentCards.id, [path]);
+    }
+    return success();
+  }
+);
+
+/**
+ * A document for a partner's student verification: apps/api runs the
+ * review as the staff member, emails the student, deletes the document and
+ * tells the partner.
+ */
+export const reviewStudentDocument = staffAction(
+  "customers",
+  z.object({
+    approve: z.enum(["true", "false"]),
+    id: uuid,
+    locale: z.enum(["ar", "en"]).default("en"),
+    reason: optionalText(500),
+  }),
+  async ({ input, supabase }) => {
+    const result = await callApi(
+      supabase,
+      `/admin/student-verifications/${input.id}/review`,
+      {
+        approve: input.approve === "true",
+        locale: input.locale,
+        reason: input.reason ?? undefined,
+      }
+    );
+    if (!result.ok) {
+      throw new ActionFailure(
+        result.error === "unavailable" ? "apiUnavailable" : "unknown"
+      );
     }
     return success();
   }

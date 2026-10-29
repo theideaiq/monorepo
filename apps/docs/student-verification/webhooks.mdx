@@ -1,0 +1,36 @@
+---
+title: "Webhooks"
+description: "Hear about each change to your student verifications."
+---
+
+Set your app's webhook in Partners → Developers (an `https` address on one
+of your verified domains). We `POST` each event there as a JWT
+(`Content-Type: application/secevent+jwt`), signed with The IDEA's keys:
+
+- verify it with our JWKS (`https://api.theideaiq.com/oidc/jwks`), `iss`
+  `https://api.theideaiq.com/oidc` and `aud` your client id;
+- `jti` is the event's id (use it to skip a repeat), `type` the event and
+  `data` its content.
+
+| `type` | `data` |
+| --- | --- |
+| `student_verification.updated` | `{ "id", "status", "university", "valid_until" }`; the university and date only when `verified` |
+| `student_verification.deleted` | `{ "id", "reason" }`: `deleted_by_student`, `replaced`, `expired` or `abandoned` |
+
+Answer with any `2xx` within 10 seconds. Otherwise we try again after a
+minute, then at doubling intervals up to a day, 10 times in all.
+
+```ts
+import { createRemoteJWKSet, jwtVerify } from "jose";
+
+const jwks = createRemoteJWKSet(new URL("https://api.theideaiq.com/oidc/jwks"));
+
+export const POST = async (request: Request) => {
+  const { payload } = await jwtVerify(await request.text(), jwks, {
+    audience: process.env.IDEA_CLIENT_ID,
+    issuer: "https://api.theideaiq.com/oidc",
+  });
+  // payload.type, payload.data
+  return new Response(null, { status: 204 });
+};
+```

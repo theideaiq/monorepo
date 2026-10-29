@@ -34,10 +34,6 @@ export interface CheckedCard {
   perks?: CheckedPerk[];
   plus?: boolean;
   student?: boolean;
-  /** A student check's code: only the university and until when. */
-  student_check?: boolean;
-  university?: string;
-  until?: string;
   valid: boolean;
 }
 
