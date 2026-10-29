@@ -224,30 +224,44 @@ export const useLeaveCampaign = (sellerId: string) => {
   });
 };
 
-const studentKey = (sellerId: string) => ["student-prices", sellerId] as const;
+/** Prices only some buyers see and pay, below the listing's, paid by the shop. */
+export type MemberPriceKind = "plus" | "student";
 
-/** The shop's student prices: only verified students see and pay them. */
-export const useStudentPrices = (sellerId: string) => {
+const memberPriceKey = (kind: MemberPriceKind, sellerId: string) =>
+  [`${kind}-prices`, sellerId] as const;
+
+const MEMBER_PRICE_COLUMNS = "id, variant_id, condition, price" as const;
+
+/**
+ * The shop's student prices (verified students) or Plus prices (Plus
+ * members): only they see and pay them.
+ */
+export const useMemberPrices = (sellerId: string, kind: MemberPriceKind) => {
   const { supabase } = useAuth();
   return useQuery({
     enabled: Boolean(sellerId),
     queryFn: async () =>
       unwrap(
-        await supabase
-          .from("student_prices")
-          .select("id, variant_id, condition, price")
-          .eq("seller_id", sellerId)
+        kind === "plus"
+          ? await supabase
+              .from("plus_prices")
+              .select(MEMBER_PRICE_COLUMNS)
+              .eq("seller_id", sellerId)
+          : await supabase
+              .from("student_prices")
+              .select(MEMBER_PRICE_COLUMNS)
+              .eq("seller_id", sellerId)
       ) ?? [],
-    queryKey: studentKey(sellerId),
+    queryKey: memberPriceKey(kind, sellerId),
   });
 };
 
-export type StudentPrice = NonNullable<
-  ReturnType<typeof useStudentPrices>["data"]
+export type MemberPrice = NonNullable<
+  ReturnType<typeof useMemberPrices>["data"]
 >[number];
 
-/** Sets or changes a listing's student price (below its price). */
-export const useSetStudentPrice = (sellerId: string) => {
+/** Sets or changes a listing's student or Plus price (below its price). */
+export const useSetMemberPrice = (sellerId: string, kind: MemberPriceKind) => {
   const { supabase } = useAuth();
   const queryClient = useQueryClient();
   return useMutation({
@@ -255,27 +269,43 @@ export const useSetStudentPrice = (sellerId: string) => {
       condition: Condition;
       price: number;
       variantId: string;
-    }) =>
+    }) => {
+      const args = {
+        price: input.price,
+        seller: sellerId,
+        variant: input.variantId,
+        wanted: input.condition,
+      };
       unwrap(
-        await supabase.rpc("set_student_price", {
-          price: input.price,
-          seller: sellerId,
-          variant: input.variantId,
-          wanted: input.condition,
-        })
-      ),
+        kind === "plus"
+          ? await supabase.rpc("set_plus_price", args)
+          : await supabase.rpc("set_student_price", args)
+      );
+    },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: studentKey(sellerId) }),
+      queryClient.invalidateQueries({
+        queryKey: memberPriceKey(kind, sellerId),
+      }),
   });
 };
 
-export const useRemoveStudentPrice = (sellerId: string) => {
+export const useRemoveMemberPrice = (
+  sellerId: string,
+  kind: MemberPriceKind
+) => {
   const { supabase } = useAuth();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (target: string) =>
-      unwrap(await supabase.rpc("remove_student_price", { target })),
+    mutationFn: async (target: string) => {
+      unwrap(
+        kind === "plus"
+          ? await supabase.rpc("remove_plus_price", { target })
+          : await supabase.rpc("remove_student_price", { target })
+      );
+    },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: studentKey(sellerId) }),
+      queryClient.invalidateQueries({
+        queryKey: memberPriceKey(kind, sellerId),
+      }),
   });
 };

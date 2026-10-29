@@ -1373,7 +1373,8 @@
         "saleEnds": "ينتهي التخفيض {time}",
         "quantityDeal": "اشترِ {from} أو أكثر: خصم {rate}% على كل قطعة",
         "studentPrice": "سعر الطلاب: {price}",
-        "earnBulbs": "اكسب {bulbs} Bulbs"
+        "earnBulbs": "اكسب {bulbs} Bulbs",
+        "plusPrice": "سعر Plus: {price}"
       }
     },
     "cart": {
@@ -3182,7 +3183,14 @@
         "changeStudentPrice": "تغيير سعر الطلاب",
         "removeStudentPrice": "إزالة",
         "studentPriceHint": "يراه ويدفعه الطلاب الموثّقون فقط؛ ويتحمّل متجرك الفرق. ويبقى أقل من السعر.",
-        "studentPriceFailed": "تعذّر حفظ سعر الطلاب. يجب أن يكون أقل من السعر."
+        "studentPriceFailed": "تعذّر حفظ سعر الطلاب. يجب أن يكون أقل من السعر.",
+        "plusPrice": "سعر Plus {price}",
+        "plusPriceField": "سعر Plus (دينار)",
+        "setPlusPrice": "تعيين سعر Plus",
+        "changePlusPrice": "تغيير سعر Plus",
+        "removePlusPrice": "إزالة",
+        "plusPriceHint": "يراه ويدفعه مشتركو Plus فقط؛ ويتحمّل متجرك الفرق. ويبقى أقل من السعر.",
+        "plusPriceFailed": "تعذّر حفظ سعر Plus. يجب أن يكون أقل من السعر."
       }
     },
     "ages": {
@@ -4261,7 +4269,11 @@
         "studentPriceField": "سعر الطلاب (دينار)",
         "setStudentPrice": "تعيين سعر الطلاب",
         "removeStudentPrice": "إزالة",
-        "studentPriceHint": "للطلاب الموثّقين فقط؛ فوق الحد الأدنى للهامش."
+        "studentPriceHint": "للطلاب الموثّقين فقط؛ فوق الحد الأدنى للهامش.",
+        "plusPrice": "سعر Plus {price}",
+        "plusPriceField": "سعر Plus (دينار)",
+        "setPlusPrice": "تعيين سعر Plus",
+        "plusPriceHint": "لمشتركي Plus فقط؛ فوق حدّ الهامش الأدنى."
       }
     },
     "orders": {

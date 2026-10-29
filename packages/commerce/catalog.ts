@@ -263,6 +263,11 @@ export interface ProductOffer {
   deals: QuantityDeal[];
   /** Lowest price in the last 30 days, from price history; null for rent. */
   lowest_30d: number | null;
+  /**
+   * The listing's price for Plus members (the shop's Plus price or an
+   * early campaign price), only for them and when lower; else null.
+   */
+  plus_price: number | null;
   /** Lowest sale price; null for copies for rent. */
   price: number | null;
   purpose: "rental" | "sale";
@@ -295,6 +300,7 @@ export const getProductOffers = async (
             condition: row.condition,
             deals: (row.deals as QuantityDeal[] | null) ?? [],
             lowest_30d: (row.lowest_30d as number | null) ?? null,
+            plus_price: (row.plus_price as number | null) ?? null,
             price: (row.price as number | null) ?? null,
             purpose: row.purpose,
             sale_ends_at: (row.sale_ends_at as string | null) ?? null,

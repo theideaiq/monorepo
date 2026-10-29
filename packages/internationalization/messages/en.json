@@ -1373,7 +1373,8 @@
         "saleEnds": "Sale ends {time}",
         "quantityDeal": "Buy {from} or more: {rate}% off each",
         "studentPrice": "Student price: {price}",
-        "earnBulbs": "Earn {bulbs} Bulbs"
+        "earnBulbs": "Earn {bulbs} Bulbs",
+        "plusPrice": "Plus price: {price}"
       }
     },
     "cart": {
@@ -3182,7 +3183,14 @@
         "changeStudentPrice": "Change student price",
         "removeStudentPrice": "Remove",
         "studentPriceHint": "Only verified students see it and pay it; your shop pays the difference. It stays below the price.",
-        "studentPriceFailed": "We couldn't save the student price. It must be below the price."
+        "studentPriceFailed": "We couldn't save the student price. It must be below the price.",
+        "plusPrice": "Plus price {price}",
+        "plusPriceField": "Plus price (IQD)",
+        "setPlusPrice": "Set Plus price",
+        "changePlusPrice": "Change Plus price",
+        "removePlusPrice": "Remove",
+        "plusPriceHint": "Only Plus members see it and pay it; your shop pays the difference. It stays below the price.",
+        "plusPriceFailed": "We couldn't save the Plus price. It must be below the price."
       }
     },
     "ages": {
@@ -4261,7 +4269,11 @@
         "studentPriceField": "Student price (IQD)",
         "setStudentPrice": "Set student price",
         "removeStudentPrice": "Remove",
-        "studentPriceHint": "For verified students only; above the margin floor."
+        "studentPriceHint": "For verified students only; above the margin floor.",
+        "plusPrice": "Plus price {price}",
+        "plusPriceField": "Plus price (IQD)",
+        "setPlusPrice": "Set Plus price",
+        "plusPriceHint": "For Plus members only; above the margin floor."
       }
     },
     "orders": {
