@@ -18,7 +18,7 @@ import {
 import { usePathname, useRouter } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { Suspense, useId } from "react";
+import { type ReactNode, Suspense, useId } from "react";
 import { DeleteAccountCard } from "@/components/account/delete-account";
 import { AddressBookCard } from "@/components/address-book-settings";
 import { BirthdayCard } from "@/components/birthday-settings";
@@ -75,6 +75,56 @@ const Appearance = () => {
   );
 };
 
+const SECTIONS = ["profile", "email", "phone", "connections", "more"] as const;
+
+type SectionId = (typeof SECTIONS)[number];
+
+/** One group of settings, under its heading. */
+const Section = ({
+  children,
+  id,
+}: {
+  readonly children: ReactNode;
+  readonly id: SectionId;
+}) => {
+  const t = useTranslations("app.settings.sections");
+  return (
+    <section aria-labelledby={`settings-${id}`} className="grid gap-4" id={id}>
+      <div>
+        <h2 className="font-semibold text-lg" id={`settings-${id}`}>
+          {t(`${id}.title`)}
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          {t(`${id}.description`)}
+        </p>
+      </div>
+      {children}
+    </section>
+  );
+};
+
+/** The sign-in email, shown where it can be read and copied. */
+const EmailCard = ({ email }: { readonly email: string }) => {
+  const t = useTranslations("app.settings.profile");
+  return (
+    <Card>
+      <CardContent className="grid gap-1 pt-6 text-sm">
+        <span className="text-muted-foreground">{t("email")}</span>
+        <span className="text-start" dir="ltr">
+          {email}
+        </span>
+      </CardContent>
+    </Card>
+  );
+};
+
+/**
+ * Your Pass → Settings, in groups: your profile; Email (the address you
+ * sign in with and its password); Phone (verified numbers and WhatsApp
+ * updates); Connections (sign-in accounts, Telegram and connected sites);
+ * then addresses, birthday, guardian, verification, appearance and
+ * deleting the Pass.
+ */
 export const Settings = ({
   providers = [],
 }: {
@@ -90,66 +140,77 @@ export const Settings = ({
   return (
     <>
       <PageHeader title={t("app.settings.title")} />
-      <div className="flex max-w-2xl flex-1 flex-col gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("app.settings.profile.title")}</CardTitle>
-            <CardDescription>
-              {t("app.settings.profile.description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-6">
-            {user?.email ? (
-              <div className="grid gap-1 text-sm">
-                <span className="text-muted-foreground">
-                  {t("app.settings.profile.email")}
-                </span>
-                <span className="text-start" dir="ltr">
-                  {user.email}
-                </span>
-              </div>
-            ) : null}
-            {user?.phone ? (
-              <div className="grid gap-1 text-sm">
-                <span className="text-muted-foreground">
-                  {t("app.settings.profile.phone")}
-                </span>
-                <span className="text-start" dir="ltr">
-                  {formatPhone(user.phone)}
-                </span>
-              </div>
-            ) : null}
-            {profile.data ? (
-              <ProfileForm
-                initialMarketingOptIn={profile.data.marketing_opt_in}
-                initialName={profile.data.full_name ?? ""}
-                onSaved={(language) => {
-                  if (language !== locale) {
-                    router.replace(pathname, { locale: language });
-                  }
-                }}
-                showSaved
-                submitLabel={t("common.save")}
-              />
-            ) : (
-              <SectionSpinner />
-            )}
-          </CardContent>
-        </Card>
-        <AddressBookCard />
-        <VerifiedPhonesCard />
-        <PasswordSettingsCard />
-        <SignInMethodsCard providers={providers} />
-        <BirthdayCard />
-        <VerificationLinkCard />
-        <ConnectedSites />
-        <Suspense>
-          <GuardianCard />
-        </Suspense>
-        <WhatsAppSettingsCard />
-        <TelegramSettingsCard />
-        <Appearance />
-        <DeleteAccountCard />
+      <div className="flex max-w-2xl flex-1 flex-col gap-8">
+        <nav
+          aria-label={t("app.settings.sections.label")}
+          className="flex flex-wrap gap-2"
+        >
+          {SECTIONS.map((id) => (
+            <a
+              className="rounded-full border px-3 py-1 text-sm hover:bg-muted"
+              href={`#${id}`}
+              key={id}
+            >
+              {t(`app.settings.sections.${id}.title`)}
+            </a>
+          ))}
+        </nav>
+        <Section id="profile">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("app.settings.profile.title")}</CardTitle>
+              <CardDescription>
+                {t("app.settings.profile.description")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-6">
+              {profile.data ? (
+                <ProfileForm
+                  initialMarketingOptIn={profile.data.marketing_opt_in}
+                  initialName={profile.data.full_name ?? ""}
+                  onSaved={(language) => {
+                    if (language !== locale) {
+                      router.replace(pathname, { locale: language });
+                    }
+                  }}
+                  showSaved
+                  submitLabel={t("common.save")}
+                />
+              ) : (
+                <SectionSpinner />
+              )}
+            </CardContent>
+          </Card>
+        </Section>
+        <Section id="email">
+          {user?.email ? <EmailCard email={user.email} /> : null}
+          <PasswordSettingsCard />
+        </Section>
+        <Section id="phone">
+          {user?.phone ? (
+            <p className="text-sm">
+              {t("app.settings.profile.phone")}:{" "}
+              <span dir="ltr">{formatPhone(user.phone)}</span>
+            </p>
+          ) : null}
+          <VerifiedPhonesCard />
+          <WhatsAppSettingsCard />
+        </Section>
+        <Section id="connections">
+          <SignInMethodsCard providers={providers} />
+          <TelegramSettingsCard />
+          <ConnectedSites />
+        </Section>
+        <Section id="more">
+          <AddressBookCard />
+          <BirthdayCard />
+          <Suspense>
+            <GuardianCard />
+          </Suspense>
+          <VerificationLinkCard />
+          <Appearance />
+          <DeleteAccountCard />
+        </Section>
       </div>
     </>
   );
