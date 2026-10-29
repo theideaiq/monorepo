@@ -125,6 +125,8 @@ export const deletePost = staffAction(
 
 const eventSchema = z
   .object({
+    /** Seats held for Plus Blaze members until a day before the start. */
+    blazeSeats: optionalInt(0, 1_000_000),
     capacity: optionalInt(1, 1_000_000),
     coverImage: optionalStoragePath,
     descriptionAr: optionalText(10_000),
@@ -133,6 +135,8 @@ const eventSchema = z
     id: optionalUuid,
     location: text(300),
     published: checkbox,
+    /** When RSVPs open to everyone (Plus 48 hours before); empty: 48 hours after publishing. */
+    rsvpOpensAt: optionalDateTime,
     slug,
     startsAt: dateTime,
     titleAr: text(200),
@@ -142,6 +146,13 @@ const eventSchema = z
     (event) =>
       !event.endsAt || new Date(event.endsAt) > new Date(event.startsAt),
     { path: ["endsAt"] }
+  )
+  .refine(
+    (event) =>
+      event.capacity === null ||
+      event.capacity === undefined ||
+      (event.blazeSeats ?? 0) <= event.capacity,
+    { path: ["blazeSeats"] }
   );
 
 export const saveEvent = staffAction(
@@ -149,6 +160,7 @@ export const saveEvent = staffAction(
   eventSchema,
   async ({ input, supabase }) => {
     const row = {
+      blaze_seats: input.blazeSeats ?? 0,
       capacity: input.capacity,
       cover_image: input.coverImage,
       description_ar: input.descriptionAr,
@@ -156,6 +168,7 @@ export const saveEvent = staffAction(
       ends_at: input.endsAt,
       location: input.location,
       published: input.published,
+      rsvp_opens_at: input.rsvpOpensAt,
       slug: input.slug,
       starts_at: input.startsAt,
       title_ar: input.titleAr,

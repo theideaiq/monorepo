@@ -183,7 +183,7 @@ export const toRentalError = (error: unknown): RentalError => {
   return "unknown";
 };
 
-export type RsvpError = "closed" | "full" | "unknown";
+export type RsvpError = "closed" | "full" | "notOpen" | "unknown";
 
 /** RSVPs refused by the check_rsvp trigger. */
 export const toRsvpError = (error: unknown): RsvpError => {
@@ -193,6 +193,9 @@ export const toRsvpError = (error: unknown): RsvpError => {
   }
   if (message.includes("not open for RSVPs")) {
     return "closed";
+  }
+  if (message.includes("aren't open yet")) {
+    return "notOpen";
   }
   return "unknown";
 };

@@ -1889,8 +1889,12 @@
       "errors": {
         "full": "This event is full.",
         "closed": "RSVPs for this event are closed.",
-        "unknown": "Something went wrong. Please try again."
-      }
+        "unknown": "Something went wrong. Please try again.",
+        "notOpen": "RSVPs aren't open yet."
+      },
+      "opensOn": "RSVPs open {date}.",
+      "plusEarly": "Plus members RSVP first; everyone else from {date}.",
+      "notOpen": "Not open yet"
     },
     "submissions": {
       "title": "Submissions",
@@ -5082,7 +5086,11 @@
         "removeRsvp": "Remove this RSVP?",
         "deleteDescription": "Its RSVPs are deleted too.",
         "checkedIn": "Checked in",
-        "checkIn": "Check in"
+        "checkIn": "Check in",
+        "blazeSeats": "Blaze seats",
+        "blazeSeatsHint": "Seats held for Plus Blaze members; unclaimed ones open to everyone a day before the start.",
+        "rsvpOpens": "RSVPs open to everyone",
+        "rsvpOpensHint": "Baghdad time. Plus members can RSVP 48 hours before. Empty: 48 hours after publishing."
       },
       "submissions": {
         "all": "All submissions",

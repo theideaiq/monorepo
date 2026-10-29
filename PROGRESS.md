@@ -718,6 +718,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Plus features, part 3 (step 12; `20270224000000_club_plus.sql`).
+  Club RSVPs open at a set time (48 hours after an event is published,
+  or its start if sooner; Staff can change it on the event), and Plus
+  members can RSVP before then. Events can hold Blaze seats; any still
+  free are released 24 hours before the start. The event page shows
+  when RSVPs open, and that Plus gets in early.
 - 2026-10-29: Plus features, part 2 (step 12; `20270223000000_plus_bulbs_credits.sql`).
   Your Plus → Manage has "Use Bulbs on my next renewal": in steps of 250,
   up to half of a month's price; the renewal invoice comes down by them and

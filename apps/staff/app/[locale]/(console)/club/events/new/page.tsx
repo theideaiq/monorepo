@@ -23,6 +23,7 @@ const NewEventPage = async () => {
       <PageBody className="max-w-5xl">
         <EventForm
           endsAt=""
+          rsvpOpensAt=""
           startsAt=""
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
         />

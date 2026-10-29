@@ -74,6 +74,7 @@ const EventPage = async ({
         <EventForm
           endsAt={toBaghdadInput(event.ends_at)}
           event={event}
+          rsvpOpensAt={toBaghdadInput(event.rsvp_opens_at)}
           startsAt={toBaghdadInput(event.starts_at)}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL ?? ""}
         />
