@@ -10928,6 +10928,21 @@ export type Database = {
         }[];
       };
       shop_limit: { Args: { shop: string }; Returns: Json };
+      shop_sell_offer_items: {
+        Args: { seller: string };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          description: string;
+          first_name: string;
+          governorate: string;
+          number: number;
+          offer_id: string;
+          photos: string[];
+          request_id: string;
+          request_status: Database["public"]["Enums"]["sell_request_status"];
+          title: string;
+        }[];
+      };
       spend_renewal_bulbs: {
         Args: { bulbs: number; subscription: string };
         Returns: number;
