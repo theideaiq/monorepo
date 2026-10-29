@@ -199,7 +199,9 @@ select public.review_program_application((select value::uuid from made where nam
 select results_eq(
   $$ select position, amount, due_on from public.program_payments
      where application_id = (select value::uuid from made where name = 'a') order by position $$,
-  $$ values (1::smallint, 500000::bigint, current_date + 7), (2::smallint, 500000::bigint, current_date + 30) $$,
+  -- Due within the payment window from today in Baghdad; the second on its own date.
+  $$ values (1::smallint, 500000::bigint, (now() at time zone 'Asia/Baghdad')::date + 7),
+            (2::smallint, 500000::bigint, current_date + 30) $$,
   'accepting fixes the price in two installments'
 );
 select throws_ok(

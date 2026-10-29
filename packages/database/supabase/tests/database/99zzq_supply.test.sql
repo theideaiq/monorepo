@@ -163,6 +163,10 @@ select is((select count(*)::integer from public.supply_earnings), 0, 'or its ear
 
 -- ── Payouts ────────────────────────────────────────────────────────────────
 
+-- Fees are dated in Baghdad, batches by today's date; late in the UTC day
+-- Baghdad is already tomorrow, so date today's fees no later than today.
+select pg_temp.reset_role();
+update public.supply_earnings set earned_on = current_date where earned_on > current_date;
 select pg_temp.login_as('00000000-0000-0000-0000-00000000a294', 'aal2');
 create temporary table made on commit drop as
   select * from public.prepare_payouts(current_date)

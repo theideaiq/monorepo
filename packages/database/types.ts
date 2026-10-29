@@ -5040,6 +5040,176 @@ export type Database = {
         };
         Relationships: [];
       };
+      sell_messages: {
+        Row: {
+          author_id: string | null;
+          body: string;
+          created_at: string;
+          from_shop: boolean;
+          id: number;
+          offer_id: string;
+        };
+        Insert: {
+          author_id?: string | null;
+          body: string;
+          created_at?: string;
+          from_shop: boolean;
+          id?: never;
+          offer_id: string;
+        };
+        Update: {
+          author_id?: string | null;
+          body?: string;
+          created_at?: string;
+          from_shop?: boolean;
+          id?: never;
+          offer_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "sell_messages_offer_id_fkey";
+            columns: ["offer_id"];
+            isOneToOne: false;
+            referencedRelation: "sell_offers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      sell_offers: {
+        Row: {
+          amount: number;
+          answered_at: string | null;
+          check_method: string;
+          created_at: string;
+          created_by: string | null;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          note: string | null;
+          pay_method: string;
+          request_id: string;
+          seller_id: string;
+          status: Database["public"]["Enums"]["sell_offer_status"];
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          answered_at?: string | null;
+          check_method: string;
+          created_at?: string;
+          created_by?: string | null;
+          expires_at: string;
+          finished_at?: string | null;
+          id?: string;
+          note?: string | null;
+          pay_method: string;
+          request_id: string;
+          seller_id: string;
+          status?: Database["public"]["Enums"]["sell_offer_status"];
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          answered_at?: string | null;
+          check_method?: string;
+          created_at?: string;
+          created_by?: string | null;
+          expires_at?: string;
+          finished_at?: string | null;
+          id?: string;
+          note?: string | null;
+          pay_method?: string;
+          request_id?: string;
+          seller_id?: string;
+          status?: Database["public"]["Enums"]["sell_offer_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "sell_offers_request_id_fkey";
+            columns: ["request_id"];
+            isOneToOne: false;
+            referencedRelation: "sell_requests";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "sell_offers_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      sell_requests: {
+        Row: {
+          closed_at: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          product_id: string | null;
+          status: Database["public"]["Enums"]["sell_request_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        Insert: {
+          closed_at?: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          description: string;
+          expires_at?: string;
+          governorate: string;
+          id?: string;
+          number?: never;
+          photos: string[];
+          product_id?: string | null;
+          status?: Database["public"]["Enums"]["sell_request_status"];
+          title: string;
+          updated_at?: string;
+          user_id: string;
+          variant_id?: string | null;
+        };
+        Update: {
+          closed_at?: string | null;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          created_at?: string;
+          description?: string;
+          expires_at?: string;
+          governorate?: string;
+          id?: string;
+          number?: never;
+          photos?: string[];
+          product_id?: string | null;
+          status?: Database["public"]["Enums"]["sell_request_status"];
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+          variant_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "sell_requests_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "sell_requests_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       seller_details: {
         Row: {
           deposit_held: number;
@@ -7188,6 +7358,31 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      answer_sell_offer: {
+        Args: { accept: boolean; target: string };
+        Returns: {
+          amount: number;
+          answered_at: string | null;
+          check_method: string;
+          created_at: string;
+          created_by: string | null;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          note: string | null;
+          pay_method: string;
+          request_id: string;
+          seller_id: string;
+          status: Database["public"]["Enums"]["sell_offer_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sell_offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       appeal_survey_response: {
         Args: { note: string; target: string };
         Returns: {
@@ -7767,6 +7962,32 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      close_sell_request: {
+        Args: { target: string };
+        Returns: {
+          closed_at: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          product_id: string | null;
+          status: Database["public"]["Enums"]["sell_request_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sell_requests";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
       close_survey: {
         Args: { target: string };
@@ -8268,6 +8489,39 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      create_sell_request: {
+        Args: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          description: string;
+          governorate: string;
+          photos: string[];
+          title: string;
+          variant?: string;
+        };
+        Returns: {
+          closed_at: string | null;
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          governorate: string;
+          id: string;
+          number: number;
+          photos: string[];
+          product_id: string | null;
+          status: Database["public"]["Enums"]["sell_request_status"];
+          title: string;
+          updated_at: string;
+          user_id: string;
+          variant_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sell_requests";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       create_student_verification: {
         Args: { client: string; return_url: string };
         Returns: string;
@@ -8503,6 +8757,31 @@ export type Database = {
         Args: { delivered: boolean; error?: string; target: string };
         Returns: undefined;
       };
+      finish_sell_offer: {
+        Args: { done: boolean; target: string };
+        Returns: {
+          amount: number;
+          answered_at: string | null;
+          check_method: string;
+          created_at: string;
+          created_by: string | null;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          note: string | null;
+          pay_method: string;
+          request_id: string;
+          seller_id: string;
+          status: Database["public"]["Enums"]["sell_offer_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sell_offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       forget_student_status: {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
@@ -8734,6 +9013,38 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      make_sell_offer: {
+        Args: {
+          amount: number;
+          check_method: string;
+          note?: string;
+          pay_method: string;
+          request: string;
+          seller: string;
+        };
+        Returns: {
+          amount: number;
+          answered_at: string | null;
+          check_method: string;
+          created_at: string;
+          created_by: string | null;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          note: string | null;
+          pay_method: string;
+          request_id: string;
+          seller_id: string;
+          status: Database["public"]["Enums"]["sell_offer_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sell_offers";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -9121,6 +9432,25 @@ export type Database = {
           condition: Database["public"]["Enums"]["product_condition"];
           min_offer: number;
           seller_id: string;
+          variant_id: string;
+        }[];
+      };
+      open_sell_requests: {
+        Args: { seller: string };
+        Returns: {
+          condition: Database["public"]["Enums"]["product_condition"];
+          created_at: string;
+          description: string;
+          expires_at: string;
+          first_name: string;
+          governorate: string;
+          id: string;
+          number: number;
+          offer_amount: number;
+          offer_id: string;
+          photos: string[];
+          product_id: string;
+          title: string;
           variant_id: string;
         }[];
       };
@@ -10180,6 +10510,23 @@ export type Database = {
         }[];
       };
       send_quote: { Args: { quote: string }; Returns: undefined };
+      send_sell_message: {
+        Args: { body: string; target: string };
+        Returns: {
+          author_id: string | null;
+          body: string;
+          created_at: string;
+          from_shop: boolean;
+          id: number;
+          offer_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sell_messages";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       set_guardian_plus: {
         Args: { allow: boolean; link: string };
         Returns: undefined;
@@ -10959,6 +11306,10 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      sweep_sell_requests: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       sweep_student_checks: {
         Args: Record<PropertyKey, never>;
         Returns: string[];
@@ -11048,6 +11399,31 @@ export type Database = {
       withdraw_program_application: {
         Args: { application: string };
         Returns: number;
+      };
+      withdraw_sell_offer: {
+        Args: { target: string };
+        Returns: {
+          amount: number;
+          answered_at: string | null;
+          check_method: string;
+          created_at: string;
+          created_by: string | null;
+          expires_at: string;
+          finished_at: string | null;
+          id: string;
+          note: string | null;
+          pay_method: string;
+          request_id: string;
+          seller_id: string;
+          status: Database["public"]["Enums"]["sell_offer_status"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sell_offers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       withdraw_survey_response: {
         Args: { target: string };
@@ -11171,6 +11547,20 @@ export type Database = {
         | "rejected"
         | "cancelled";
       review_status: "published" | "hidden";
+      sell_offer_status:
+        | "sent"
+        | "accepted"
+        | "declined"
+        | "withdrawn"
+        | "expired"
+        | "completed"
+        | "cancelled";
+      sell_request_status:
+        | "open"
+        | "accepted"
+        | "completed"
+        | "closed"
+        | "expired";
       seller_line_status:
         | "waiting"
         | "ready"
@@ -11473,6 +11863,22 @@ export const Constants = {
         "cancelled",
       ],
       review_status: ["published", "hidden"],
+      sell_offer_status: [
+        "sent",
+        "accepted",
+        "declined",
+        "withdrawn",
+        "expired",
+        "completed",
+        "cancelled",
+      ],
+      sell_request_status: [
+        "open",
+        "accepted",
+        "completed",
+        "closed",
+        "expired",
+      ],
       seller_line_status: [
         "waiting",
         "ready",
