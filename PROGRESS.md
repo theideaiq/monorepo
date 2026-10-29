@@ -718,6 +718,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Supply, part 1 (step 13; `20270301000000_supply_kind.sql`,
+  `20270301000100_supply.sql`). Supplier shops lend copies to Plus and kit
+  units to game nights: staff set each supplier's fee per rental and per
+  kit booking (`set_supply_terms`), copies and units carry their supplier,
+  a rental starting or a kit going out earns the fee (`supply_earnings`),
+  and the weekly payout pays them as one Supply line. Partners → Supply
+  (`supply_items`) and the Staff screens follow.
 - 2026-10-29: Verification, part 5 (step 13, Partners): Organization has
   a Verification card (`#verification`): a domain verified in Developers
   verifies at once, or an official letter goes to Staff; student societies
