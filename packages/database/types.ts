@@ -5021,28 +5021,58 @@ export type Database = {
       };
       survey_responses: {
         Row: {
+          appeal_decided_at: string | null;
+          appeal_decided_by: string | null;
+          appeal_note: string | null;
+          appeal_upheld: boolean | null;
+          appealed_at: string | null;
           counted: boolean | null;
+          excluded_reason: string | null;
+          failed_checks: number;
           id: string;
+          reward_paid: number;
+          seconds: number | null;
           started_at: string;
           submitted_at: string | null;
           survey_id: string;
           user_id: string | null;
+          withdrawn_at: string | null;
         };
         Insert: {
+          appeal_decided_at?: string | null;
+          appeal_decided_by?: string | null;
+          appeal_note?: string | null;
+          appeal_upheld?: boolean | null;
+          appealed_at?: string | null;
           counted?: boolean | null;
+          excluded_reason?: string | null;
+          failed_checks?: number;
           id?: string;
+          reward_paid?: number;
+          seconds?: number | null;
           started_at?: string;
           submitted_at?: string | null;
           survey_id: string;
           user_id?: string | null;
+          withdrawn_at?: string | null;
         };
         Update: {
+          appeal_decided_at?: string | null;
+          appeal_decided_by?: string | null;
+          appeal_note?: string | null;
+          appeal_upheld?: boolean | null;
+          appealed_at?: string | null;
           counted?: boolean | null;
+          excluded_reason?: string | null;
+          failed_checks?: number;
           id?: string;
+          reward_paid?: number;
+          seconds?: number | null;
           started_at?: string;
           submitted_at?: string | null;
           survey_id?: string;
           user_id?: string | null;
+          withdrawn_at?: string | null;
         };
         Relationships: [
           {
@@ -5062,6 +5092,7 @@ export type Database = {
           created_at: string;
           creator_id: string | null;
           description: string;
+          estimated_seconds: number | null;
           ethics_reference: string | null;
           flags: string[];
           governorates: string[];
@@ -5070,16 +5101,25 @@ export type Database = {
           kind: string;
           language: string;
           majors: string[];
+          median_seconds: number | null;
           min_seconds: number;
           opened_at: string | null;
           order_id: string | null;
+          paused_at: string | null;
+          refund_amount: number;
+          refund_claimed_at: string | null;
+          refund_reference: string | null;
+          refunded_amount: number;
+          refunded_at: string | null;
           review_note: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
           reward: number;
+          reward_pending: number | null;
           status: string;
           students_only: boolean;
           title: string;
+          topup_order_id: string | null;
           universities: string[];
           updated_at: string;
           wanted: number;
@@ -5092,6 +5132,7 @@ export type Database = {
           created_at?: string;
           creator_id?: string | null;
           description?: string;
+          estimated_seconds?: number | null;
           ethics_reference?: string | null;
           flags?: string[];
           governorates?: string[];
@@ -5100,16 +5141,25 @@ export type Database = {
           kind?: string;
           language?: string;
           majors?: string[];
+          median_seconds?: number | null;
           min_seconds?: number;
           opened_at?: string | null;
           order_id?: string | null;
+          paused_at?: string | null;
+          refund_amount?: number;
+          refund_claimed_at?: string | null;
+          refund_reference?: string | null;
+          refunded_amount?: number;
+          refunded_at?: string | null;
           review_note?: string | null;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
           reward?: number;
+          reward_pending?: number | null;
           status?: string;
           students_only?: boolean;
           title: string;
+          topup_order_id?: string | null;
           universities?: string[];
           updated_at?: string;
           wanted?: number;
@@ -5122,6 +5172,7 @@ export type Database = {
           created_at?: string;
           creator_id?: string | null;
           description?: string;
+          estimated_seconds?: number | null;
           ethics_reference?: string | null;
           flags?: string[];
           governorates?: string[];
@@ -5130,16 +5181,25 @@ export type Database = {
           kind?: string;
           language?: string;
           majors?: string[];
+          median_seconds?: number | null;
           min_seconds?: number;
           opened_at?: string | null;
           order_id?: string | null;
+          paused_at?: string | null;
+          refund_amount?: number;
+          refund_claimed_at?: string | null;
+          refund_reference?: string | null;
+          refunded_amount?: number;
+          refunded_at?: string | null;
           review_note?: string | null;
           reviewed_at?: string | null;
           reviewed_by?: string | null;
           reward?: number;
+          reward_pending?: number | null;
           status?: string;
           students_only?: boolean;
           title?: string;
+          topup_order_id?: string | null;
           universities?: string[];
           updated_at?: string;
           wanted?: number;
@@ -5149,6 +5209,13 @@ export type Database = {
           {
             foreignKeyName: "surveys_order_id_fkey";
             columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "surveys_topup_order_id_fkey";
+            columns: ["topup_order_id"];
             isOneToOne: false;
             referencedRelation: "orders";
             referencedColumns: ["id"];
@@ -5638,6 +5705,33 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      appeal_survey_response: {
+        Args: { note: string; target: string };
+        Returns: {
+          appeal_decided_at: string | null;
+          appeal_decided_by: string | null;
+          appeal_note: string | null;
+          appeal_upheld: boolean | null;
+          appealed_at: string | null;
+          counted: boolean | null;
+          excluded_reason: string | null;
+          failed_checks: number;
+          id: string;
+          reward_paid: number;
+          seconds: number | null;
+          started_at: string;
+          submitted_at: string | null;
+          survey_id: string;
+          user_id: string | null;
+          withdrawn_at: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "survey_responses";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       apply_coupon: { Args: { entered: string }; Returns: string };
       apply_to_sell: {
         Args: { org: string; seller_name: string };
@@ -6019,6 +6113,18 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      claim_survey_refunds: {
+        Args: { max_rows?: number };
+        Returns: {
+          amount: number;
+          order_number: string;
+          payment_id: string;
+          payment_reference: string;
+          refundable: number;
+          survey_id: string;
+          title: string;
+        }[];
+      };
       claim_telegram_notifications: {
         Args: {
           max_age?: string;
@@ -6071,6 +6177,7 @@ export type Database = {
           created_at: string;
           creator_id: string | null;
           description: string;
+          estimated_seconds: number | null;
           ethics_reference: string | null;
           flags: string[];
           governorates: string[];
@@ -6079,16 +6186,25 @@ export type Database = {
           kind: string;
           language: string;
           majors: string[];
+          median_seconds: number | null;
           min_seconds: number;
           opened_at: string | null;
           order_id: string | null;
+          paused_at: string | null;
+          refund_amount: number;
+          refund_claimed_at: string | null;
+          refund_reference: string | null;
+          refunded_amount: number;
+          refunded_at: string | null;
           review_note: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
           reward: number;
+          reward_pending: number | null;
           status: string;
           students_only: boolean;
           title: string;
+          topup_order_id: string | null;
           universities: string[];
           updated_at: string;
           wanted: number;
@@ -6218,6 +6334,55 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "student_badges";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      confirm_survey_reward: {
+        Args: { target: string };
+        Returns: {
+          closed_at: string | null;
+          closes_at: string | null;
+          consent: string;
+          created_at: string;
+          creator_id: string | null;
+          description: string;
+          estimated_seconds: number | null;
+          ethics_reference: string | null;
+          flags: string[];
+          governorates: string[];
+          held: number;
+          id: string;
+          kind: string;
+          language: string;
+          majors: string[];
+          median_seconds: number | null;
+          min_seconds: number;
+          opened_at: string | null;
+          order_id: string | null;
+          paused_at: string | null;
+          refund_amount: number;
+          refund_claimed_at: string | null;
+          refund_reference: string | null;
+          refunded_amount: number;
+          refunded_at: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          reward: number;
+          reward_pending: number | null;
+          status: string;
+          students_only: boolean;
+          title: string;
+          topup_order_id: string | null;
+          universities: string[];
+          updated_at: string;
+          wanted: number;
+          years: number[];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "surveys";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -6519,6 +6684,33 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "sellers";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      decide_survey_appeal: {
+        Args: { target: string; upheld: boolean };
+        Returns: {
+          appeal_decided_at: string | null;
+          appeal_decided_by: string | null;
+          appeal_note: string | null;
+          appeal_upheld: boolean | null;
+          appealed_at: string | null;
+          counted: boolean | null;
+          excluded_reason: string | null;
+          failed_checks: number;
+          id: string;
+          reward_paid: number;
+          seconds: number | null;
+          started_at: string;
+          submitted_at: string | null;
+          survey_id: string;
+          user_id: string | null;
+          withdrawn_at: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "survey_responses";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -7305,6 +7497,7 @@ export type Database = {
           created_at: string;
           creator_id: string | null;
           description: string;
+          estimated_seconds: number | null;
           ethics_reference: string | null;
           flags: string[];
           governorates: string[];
@@ -7313,16 +7506,25 @@ export type Database = {
           kind: string;
           language: string;
           majors: string[];
+          median_seconds: number | null;
           min_seconds: number;
           opened_at: string | null;
           order_id: string | null;
+          paused_at: string | null;
+          refund_amount: number;
+          refund_claimed_at: string | null;
+          refund_reference: string | null;
+          refunded_amount: number;
+          refunded_at: string | null;
           review_note: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
           reward: number;
+          reward_pending: number | null;
           status: string;
           students_only: boolean;
           title: string;
+          topup_order_id: string | null;
           universities: string[];
           updated_at: string;
           wanted: number;
@@ -7387,6 +7589,60 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      record_survey_refund: {
+        Args: {
+          amount: number;
+          payment: string;
+          reference: string;
+          target: string;
+        };
+        Returns: {
+          closed_at: string | null;
+          closes_at: string | null;
+          consent: string;
+          created_at: string;
+          creator_id: string | null;
+          description: string;
+          estimated_seconds: number | null;
+          ethics_reference: string | null;
+          flags: string[];
+          governorates: string[];
+          held: number;
+          id: string;
+          kind: string;
+          language: string;
+          majors: string[];
+          median_seconds: number | null;
+          min_seconds: number;
+          opened_at: string | null;
+          order_id: string | null;
+          paused_at: string | null;
+          refund_amount: number;
+          refund_claimed_at: string | null;
+          refund_reference: string | null;
+          refunded_amount: number;
+          refunded_at: string | null;
+          review_note: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          reward: number;
+          reward_pending: number | null;
+          status: string;
+          students_only: boolean;
+          title: string;
+          topup_order_id: string | null;
+          universities: string[];
+          updated_at: string;
+          wanted: number;
+          years: number[];
+        };
+        SetofOptions: {
+          from: "*";
+          to: "surveys";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       redeem_perk: {
         Args: { perk: string; scanned: string };
         Returns: {
@@ -7415,6 +7671,7 @@ export type Database = {
         Returns: string;
       };
       release_return_refund: { Args: { target: string }; Returns: undefined };
+      release_survey_refund: { Args: { target: string }; Returns: undefined };
       remove_coupon: { Args: Record<PropertyKey, never>; Returns: undefined };
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
       remove_student_price: { Args: { target: string }; Returns: undefined };
@@ -7659,6 +7916,7 @@ export type Database = {
           created_at: string;
           creator_id: string | null;
           description: string;
+          estimated_seconds: number | null;
           ethics_reference: string | null;
           flags: string[];
           governorates: string[];
@@ -7667,16 +7925,25 @@ export type Database = {
           kind: string;
           language: string;
           majors: string[];
+          median_seconds: number | null;
           min_seconds: number;
           opened_at: string | null;
           order_id: string | null;
+          paused_at: string | null;
+          refund_amount: number;
+          refund_claimed_at: string | null;
+          refund_reference: string | null;
+          refunded_amount: number;
+          refunded_at: string | null;
           review_note: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
           reward: number;
+          reward_pending: number | null;
           status: string;
           students_only: boolean;
           title: string;
+          topup_order_id: string | null;
           universities: string[];
           updated_at: string;
           wanted: number;
@@ -7719,6 +7986,7 @@ export type Database = {
           created_at: string;
           creator_id: string | null;
           description: string;
+          estimated_seconds: number | null;
           ethics_reference: string | null;
           flags: string[];
           governorates: string[];
@@ -7727,16 +7995,25 @@ export type Database = {
           kind: string;
           language: string;
           majors: string[];
+          median_seconds: number | null;
           min_seconds: number;
           opened_at: string | null;
           order_id: string | null;
+          paused_at: string | null;
+          refund_amount: number;
+          refund_claimed_at: string | null;
+          refund_reference: string | null;
+          refunded_amount: number;
+          refunded_at: string | null;
           review_note: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
           reward: number;
+          reward_pending: number | null;
           status: string;
           students_only: boolean;
           title: string;
+          topup_order_id: string | null;
           universities: string[];
           updated_at: string;
           wanted: number;
@@ -8211,12 +8488,22 @@ export type Database = {
       start_survey: {
         Args: { target: string };
         Returns: {
+          appeal_decided_at: string | null;
+          appeal_decided_by: string | null;
+          appeal_note: string | null;
+          appeal_upheld: boolean | null;
+          appealed_at: string | null;
           counted: boolean | null;
+          excluded_reason: string | null;
+          failed_checks: number;
           id: string;
+          reward_paid: number;
+          seconds: number | null;
           started_at: string;
           submitted_at: string | null;
           survey_id: string;
           user_id: string | null;
+          withdrawn_at: string | null;
         };
         SetofOptions: {
           from: "*";
@@ -8228,12 +8515,22 @@ export type Database = {
       submit_survey: {
         Args: { answers: Json; target: string };
         Returns: {
+          appeal_decided_at: string | null;
+          appeal_decided_by: string | null;
+          appeal_note: string | null;
+          appeal_upheld: boolean | null;
+          appealed_at: string | null;
           counted: boolean | null;
+          excluded_reason: string | null;
+          failed_checks: number;
           id: string;
+          reward_paid: number;
+          seconds: number | null;
           started_at: string;
           submitted_at: string | null;
           survey_id: string;
           user_id: string | null;
+          withdrawn_at: string | null;
         };
         SetofOptions: {
           from: "*";
@@ -8241,6 +8538,21 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      survey_appeals: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          appealed_at: string;
+          excluded_reason: string;
+          failed_checks: number;
+          median_seconds: number;
+          min_seconds: number;
+          note: string;
+          response_id: string;
+          seconds: number;
+          survey_id: string;
+          title: string;
+        }[];
       };
       survey_results: {
         Args: { target: string };
@@ -8260,6 +8572,7 @@ export type Database = {
           created_at: string;
           creator_id: string | null;
           description: string;
+          estimated_seconds: number | null;
           ethics_reference: string | null;
           flags: string[];
           governorates: string[];
@@ -8268,16 +8581,25 @@ export type Database = {
           kind: string;
           language: string;
           majors: string[];
+          median_seconds: number | null;
           min_seconds: number;
           opened_at: string | null;
           order_id: string | null;
+          paused_at: string | null;
+          refund_amount: number;
+          refund_claimed_at: string | null;
+          refund_reference: string | null;
+          refunded_amount: number;
+          refunded_at: string | null;
           review_note: string | null;
           reviewed_at: string | null;
           reviewed_by: string | null;
           reward: number;
+          reward_pending: number | null;
           status: string;
           students_only: boolean;
           title: string;
+          topup_order_id: string | null;
           universities: string[];
           updated_at: string;
           wanted: number;
@@ -8380,6 +8702,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string[];
       };
+      sweep_surveys: { Args: Record<PropertyKey, never>; Returns: number };
       telegram_join_check: {
         Args: { chat: number; member: number };
         Returns: {
@@ -8455,6 +8778,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      withdraw_survey_response: {
+        Args: { target: string };
+        Returns: undefined;
       };
     };
     Enums: {
