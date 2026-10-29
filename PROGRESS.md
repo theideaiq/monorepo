@@ -718,6 +718,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Opportunities, part 1 (step 14;
+  `20270303000000_opportunities.sql`). Jobs, internships, scholarships,
+  competitions and programs (`opportunities`): organizations with the new
+  `opportunities` section post them as drafts and send them for review;
+  editors approve, ask for changes or refuse (`review_opportunity`,
+  owners and admins notified), feature them (`featured_until`) and post
+  The IDEA's own. Editing a listed one sends it back for review. Members
+  follow listings (`opportunity_follows`); the API cron's
+  `notify_opportunity_followers` tells followers when one opens and three
+  days before its deadline, and closes those past it. Partners, Staff and
+  Club → Join follow; paid programs come later.
 - 2026-10-29: Supply, parts 2 and 3 (step 13;
   `20270302000000_supply_feature.sql`, then the code). Supply is a
   Partners section organizations add from Home (`supply` in
