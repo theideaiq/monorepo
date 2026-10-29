@@ -2249,6 +2249,46 @@
           "failed": "We couldn't remove it. Try again."
         }
       },
+      "verification": {
+        "title": "Verification",
+        "description": "Verify who you are, and whether you teach. Your documents are checked by The IDEA's team and deleted after review.",
+        "identity": {
+          "title": "Identity",
+          "description": "Needed to sell, receive payouts, bid high amounts or rent without a deposit. We keep only your name and the date.",
+          "front": "Front of your National Card",
+          "back": "Back of your National Card",
+          "selfie": "A selfie",
+          "note": "Make sure the card is readable and your face is clear. We delete the photos once we've checked them.",
+          "send": "Send for review",
+          "failed": "They couldn't be sent. Try again.",
+          "waiting": "Your photos are waiting for review. We'll let you know.",
+          "verified": "Verified as {name} on {date}.",
+          "rejected": "We couldn't verify you: {reason}"
+        },
+        "educator": {
+          "title": "Educator badge",
+          "description": "For teachers and university staff: every student perk, including Plus at 20% off. It lasts until the end of the academic year.",
+          "how": "How to verify",
+          "byEmail": "Staff email",
+          "byDocuments": "Staff card or letter",
+          "university": "University",
+          "chooseUniversity": "Choose your university",
+          "email": "Your staff email",
+          "sendCode": "Email me a code",
+          "codeSent": "We emailed an 8-digit code to {email}. It works for 15 minutes.",
+          "code": "Code",
+          "confirm": "Verify",
+          "changeEmail": "Use another email",
+          "institution": "Where you teach or work",
+          "files": "Your staff card or a letter from your employer",
+          "filesNote": "One or two files (photos or PDF). We delete them once we've checked them.",
+          "send": "Send for review",
+          "failed": "They couldn't be sent. Try again.",
+          "waiting": "Your documents are waiting for review. We'll let you know.",
+          "verified": "Educator at {institution} until {date}.",
+          "rejected": "We couldn't verify your documents: {reason}"
+        }
+      },
       "sites": {
         "title": "Connected sites",
         "description": "Sites you signed in to with your Pass, and partners that checked your card. Disconnecting a site stops what it learns; it asks again next time.",
@@ -3534,6 +3574,22 @@
         },
         "student_rejected": {
           "title": "We couldn't verify your student card",
+          "body": "Open Settings to see why and try again."
+        },
+        "identity_verified": {
+          "title": "Your identity is verified",
+          "body": "Thanks. We've deleted your photos."
+        },
+        "identity_rejected": {
+          "title": "We couldn't verify your identity",
+          "body": "Open Settings to see why and try again."
+        },
+        "educator_verified": {
+          "title": "You have the educator badge",
+          "body": "Student prices and perks are now yours too."
+        },
+        "educator_rejected": {
+          "title": "We couldn't verify your documents",
           "body": "Open Settings to see why and try again."
         },
         "survey_approved": {

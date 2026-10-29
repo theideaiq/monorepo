@@ -718,6 +718,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Verification, part 3 (step 13, code): Pass → Settings has a
+  Verification card (`#verification`): the identity check (both sides of
+  the National Card and a selfie, uploaded to the private `verifications`
+  bucket) and the educator badge, by a staff email code (`POST
+  /pass/educator-code` in apps/api, the student code email in its educator
+  wording) or a staff card or letter for review. The four outcome
+  notifications have copy. Staff's review screens come next.
 - 2026-10-29: Verification, parts 1 and 2 (step 13; schema
   `20270227000000_identity_educators.sql`, `20270228000000_shop_org_verification.sql`).
   Identity checks (National Card both sides and a selfie, reviewed by
