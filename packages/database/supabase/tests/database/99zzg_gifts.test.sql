@@ -53,7 +53,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(20);
+select plan(21);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
 truncate public.products, public.orders cascade;
@@ -130,7 +130,7 @@ select throws_ok(
   'a new link replaces the old one'
 );
 select is(
-  public.gift_preview((select value from made where name = 'token')) - 'order_id' - 'items',
+  public.gift_preview((select value from made where name = 'token')) - 'order_id' - 'items' - 'zone_id',
   '{"from":"Bashar","message":"Happy birthday!","claimed":false,"ready":false,"status":"pending","governorate":"baghdad","total":null}'::jsonb,
   'anyone with the link sees who it''s from, the message and no price'
 );
@@ -138,6 +138,11 @@ select is(
   (public.gift_preview((select value from made where name = 'token')) -> 'items' -> 0) - 'image',
   '{"name_ar":"هدية","name_en":"Board game","quantity":1,"slug":"gift-9zzg","unit_price":null}'::jsonb,
   'and what''s inside'
+);
+select is(
+  (public.gift_preview((select value from made where name = 'token')) ->> 'zone_id')::uuid,
+  (select id from zone_id),
+  'and the zone it goes to, for the recipient''s address'
 );
 
 -- ── Claiming ────────────────────────────────────────────────────────────────

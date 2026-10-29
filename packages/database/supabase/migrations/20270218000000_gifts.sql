@@ -371,6 +371,7 @@ as $$
     'ready', o.status in ('paid', 'confirmed', 'processing', 'shipped', 'delivered'),
     'status', o.status,
     'governorate', o.shipping_address ->> 'governorate',
+    'zone_id', o.delivery_zone_id,
     'total', case when gift.hide_price then null else o.total - o.shipping_fee end,
     'items', coalesce((
       select jsonb_agg(jsonb_build_object(
@@ -590,7 +591,7 @@ begin
       'order',
       'gift_' || new.status::text,
       jsonb_build_object('number', new.number),
-      '/gifts'
+      '/pass/orders#gifts'
     );
   end if;
   return null;
