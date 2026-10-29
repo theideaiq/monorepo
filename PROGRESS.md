@@ -662,6 +662,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   picks the parent; the product forms (Staff, Partners) list subcategories
   as "Books › Comics & manga". Next: rent up to 3 for one delivery fee,
   textbook semesters, one cart, Send as a gift.
+- 2026-10-29: Catalog, part 2 (step 11; `20270216000000_rent_together.sql`).
+  Up to 3 films, books or games (board games and Books' subcategories
+  included) rent together in one order for one delivery fee
+  (`create_rentals_order`, priced by `rentals_quote`): the rent checkout
+  has "Rent more for the same delivery". Rentals get the zone's
+  free-delivery threshold on the rent (deposits don't count), as
+  purchases do. Gear and music still rent one at a time.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

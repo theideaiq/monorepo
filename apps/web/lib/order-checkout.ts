@@ -9,6 +9,7 @@ import { callApi } from "./api";
 import { rememberCheckout } from "./checkout-tracking";
 import { checkoutReturnUrl, openCheckout } from "./hosted-checkout";
 import { queryKeys, unwrap } from "./queries";
+import { type RentalItem, rentalItemsParam } from "./rent";
 
 /** The parts of an order the checkout needs. */
 export interface PayableOrder {
@@ -202,16 +203,16 @@ export const usePlaceOrder = () => {
   });
 };
 
-/** What the rent checkout sends to `create_rental_order()`. */
+/** What the rent checkout sends to `create_rentals_order()`. */
 export interface PlaceRental extends Omit<PlaceOrder, "useBulbs"> {
-  productId: string;
-  variantId: string | null;
+  /** 1 to 3 items (several only films, books or games). */
+  items: RentalItem[];
 }
 
 /**
- * Renting one item on its own: `create_rental_order()` makes an order of
- * the rent and its refundable deposit and holds a copy; it's paid like any
- * other order.
+ * Renting on its own: `create_rentals_order()` makes one order of each
+ * item's rent and refundable deposit, with one delivery fee, and holds a
+ * copy of each; it's paid like any other order.
  */
 export const usePlaceRental = () => {
   const { supabase } = useAuth();
@@ -221,21 +222,17 @@ export const usePlaceRental = () => {
   return useMutation({
     mutationFn: async ({
       deliveryZone,
+      items,
       paymentMethod,
-      productId,
       shipping,
-      variantId,
     }: PlaceRental) =>
       finish(
         unwrap(
-          await supabase.rpc("create_rental_order", {
-            // Its default is still pickup until the database drops it.
-            fulfilment: "delivery",
+          await supabase.rpc("create_rentals_order", {
+            items: rentalItemsParam(items),
             payment_method: paymentMethod,
-            rental_product: productId,
             shipping: { ...shipping },
             ...(deliveryZone ? { delivery_zone: deliveryZone } : {}),
-            ...(variantId ? { rental_variant: variantId } : {}),
           })
         ),
         paymentMethod

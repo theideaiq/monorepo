@@ -237,13 +237,26 @@ test.describe("a signed-in customer", () => {
     noErrors();
   });
 
-  test("rents an item on its own, delivered", async ({ page }) => {
+  test("rents a game and a book together, delivered", async ({ page }) => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/store/elden-ring-ps5`);
     await expect(page.getByText("Rent it on its own")).toBeVisible();
     await page.getByRole("link", { exact: true, name: "Rent it" }).click();
     await expect(page).toHaveURL(RENT_PAGE);
     await expect(page.getByText("Refundable deposit")).toBeVisible();
+
+    // Films, books and games rent together for one delivery fee.
+    await page.getByLabel("Find another item").fill("Solitude");
+    await page
+      .getByRole("listitem")
+      .filter({ hasText: "One Hundred Years of Solitude" })
+      .getByRole("button", { name: "Add" })
+      .click();
+    await expect(
+      page.getByRole("button", {
+        name: "Remove One Hundred Years of Solitude",
+      })
+    ).toBeVisible();
 
     await page.getByRole("combobox", { name: "Governorate" }).click();
     await page.getByRole("option", { name: BAGHDAD }).click();
@@ -259,6 +272,9 @@ test.describe("a signed-in customer", () => {
     await expect(page).toHaveURL(ORDER_PAGE);
     await expect(
       page.getByText("Refundable deposit: Elden Ring (PS5)")
+    ).toBeVisible();
+    await expect(
+      page.getByText("Refundable deposit: One Hundred Years of Solitude")
     ).toBeVisible();
     noErrors();
   });

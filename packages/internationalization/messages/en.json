@@ -3091,10 +3091,21 @@
       "depositNote": "We refund the deposit when you return the item, less any late fees or damage.",
       "lateNote": "Late returns cost {fee} a day. After {days} late, the item is yours at its used price.",
       "plusDelivery": "Delivery is free in Baghdad with Plus plans that include it; your order shows the final total.",
+      "freeFrom": "Delivery is free once the rent reaches {amount}, or in Baghdad with Plus plans that include it.",
       "paymentFailed": "Your rental is booked, but we couldn't open the payment page. Pay from the order.",
       "viewOrder": "View order",
       "notRentable": "This item can't be rented on its own.",
-      "days": "{count, plural, one {{n} day} other {{n} days}}"
+      "days": "{count, plural, one {{n} day} other {{n} days}}",
+      "together": {
+        "title": "Rent more for the same delivery",
+        "description": "Add films, books or games: up to {n} together, one delivery fee.",
+        "search": "Find another item",
+        "add": "Add",
+        "remove": "Remove {name}",
+        "searching": "Searching…",
+        "none": "Nothing to add matches that.",
+        "full": "That's the most for one delivery."
+      }
     },
     "kits": {
       "title": "Game night kit",

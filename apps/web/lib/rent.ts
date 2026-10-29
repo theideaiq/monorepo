@@ -66,3 +66,107 @@ export const rentPath = (slug: string, variant?: string | null) =>
   `/rent/${encodeURIComponent(slug)}${
     variant ? `?variant=${encodeURIComponent(variant)}` : ""
   }`;
+
+/** Up to this many films, books or games rent together for one delivery fee. */
+export const RENT_TOGETHER_MAX = 3;
+
+/** The top-level categories whose items rent together. */
+const RENT_TOGETHER = new Set(["films", "books", "games", "board-games"]);
+
+interface CategoryRow {
+  readonly id: string;
+  readonly parent_id?: string | null;
+  readonly slug: string;
+}
+
+/** Whether a category's items rent together (subcategories follow their parent). */
+export const rentsTogether = (
+  categoryId: string | null | undefined,
+  categories: readonly CategoryRow[]
+) => {
+  const category = categories.find((row) => row.id === categoryId);
+  const top = category?.parent_id
+    ? categories.find((row) => row.id === category.parent_id)
+    : category;
+  return top ? RENT_TOGETHER.has(top.slug) : false;
+};
+
+/** One item of a rental order. */
+export interface RentalItem {
+  productId: string;
+  variantId: string | null;
+}
+
+/** rentals_quote(): the order of 1 to 3 items, priced. */
+export interface RentalsQuote {
+  deposit: number;
+  /** Null before a zone is chosen; 0 when delivery is free. */
+  fee: number | null;
+  /** The zone's free-delivery threshold on the rent, if any. */
+  freeFrom: number | null;
+  items: (RentalQuote & RentalItem)[];
+  rent: number;
+  total: number;
+}
+
+/** The `items` argument of rentals_quote() and create_rentals_order(). */
+export const rentalItemsParam = (items: readonly RentalItem[]) =>
+  items.map((item) => ({
+    product: item.productId,
+    ...(item.variantId ? { variant: item.variantId } : {}),
+  }));
+
+interface QuoteRow {
+  deposit: number;
+  fee: number | null;
+  free_from: number | null;
+  items: {
+    days: number;
+    deposit: number;
+    late_fee: number;
+    price: number;
+    product: string;
+    variant: string | null;
+  }[];
+  rent: number;
+  total: number;
+}
+
+export const useRentalsQuote = (
+  items: readonly RentalItem[],
+  zoneId: string | null
+) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: items.length > 0,
+    placeholderData: (previous) => previous,
+    queryFn: async (): Promise<RentalsQuote> => {
+      const row = unwrap(
+        await supabase.rpc("rentals_quote", {
+          items: rentalItemsParam(items),
+          ...(zoneId ? { delivery_zone: zoneId } : {}),
+        })
+      ) as unknown as QuoteRow;
+      return {
+        deposit: row.deposit,
+        fee: row.fee,
+        freeFrom: row.free_from,
+        items: row.items.map((item) => ({
+          days: item.days,
+          deposit: item.deposit,
+          lateFee: item.late_fee,
+          price: item.price,
+          productId: item.product,
+          variantId: item.variant,
+        })),
+        rent: row.rent,
+        total: row.total,
+      };
+    },
+    queryKey: [
+      "rentals-quote",
+      items.map((item) => `${item.productId}:${item.variantId ?? ""}`),
+      zoneId ?? "",
+    ],
+  });
+};
