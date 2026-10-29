@@ -264,6 +264,32 @@ export type Database = {
         };
         Relationships: [];
       };
+      cart_coupons: {
+        Row: {
+          applied_at: string;
+          coupon_id: string;
+          user_id: string;
+        };
+        Insert: {
+          applied_at?: string;
+          coupon_id: string;
+          user_id: string;
+        };
+        Update: {
+          applied_at?: string;
+          coupon_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cart_coupons_coupon_id_fkey";
+            columns: ["coupon_id"];
+            isOneToOne: false;
+            referencedRelation: "coupons";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       cart_items: {
         Row: {
           condition: Database["public"]["Enums"]["product_condition"] | null;
@@ -380,6 +406,60 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      coupons: {
+        Row: {
+          active: boolean;
+          amount: number;
+          code: string;
+          created_at: string;
+          created_by: string | null;
+          description: string | null;
+          ends_at: string | null;
+          id: string;
+          kind: Database["public"]["Enums"]["coupon_kind"];
+          max_discount: number | null;
+          max_uses: number | null;
+          min_subtotal: number;
+          starts_at: string;
+          updated_at: string;
+          uses_per_member: number;
+        };
+        Insert: {
+          active?: boolean;
+          amount: number;
+          code: string;
+          created_at?: string;
+          created_by?: string | null;
+          description?: string | null;
+          ends_at?: string | null;
+          id?: string;
+          kind: Database["public"]["Enums"]["coupon_kind"];
+          max_discount?: number | null;
+          max_uses?: number | null;
+          min_subtotal?: number;
+          starts_at?: string;
+          updated_at?: string;
+          uses_per_member?: number;
+        };
+        Update: {
+          active?: boolean;
+          amount?: number;
+          code?: string;
+          created_at?: string;
+          created_by?: string | null;
+          description?: string | null;
+          ends_at?: string | null;
+          id?: string;
+          kind?: Database["public"]["Enums"]["coupon_kind"];
+          max_discount?: number | null;
+          max_uses?: number | null;
+          min_subtotal?: number;
+          starts_at?: string;
+          updated_at?: string;
+          uses_per_member?: number;
+        };
+        Relationships: [];
       };
       crm_contacts: {
         Row: {
@@ -1430,6 +1510,7 @@ export type Database = {
           bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
+          coupon_id: string | null;
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
@@ -1458,6 +1539,7 @@ export type Database = {
           bulbs_used?: number;
           cash_collected_by?: string | null;
           confirmation_emailed_at?: string | null;
+          coupon_id?: string | null;
           created_at?: string;
           currency?: string;
           delivery_zone_id?: string | null;
@@ -1486,6 +1568,7 @@ export type Database = {
           bulbs_used?: number;
           cash_collected_by?: string | null;
           confirmation_emailed_at?: string | null;
+          coupon_id?: string | null;
           created_at?: string;
           currency?: string;
           delivery_zone_id?: string | null;
@@ -1510,6 +1593,13 @@ export type Database = {
           user_id?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "orders_coupon_id_fkey";
+            columns: ["coupon_id"];
+            isOneToOne: false;
+            referencedRelation: "coupons";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "orders_delivery_zone_id_fkey";
             columns: ["delivery_zone_id"];
@@ -5442,6 +5532,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      apply_coupon: { Args: { entered: string }; Returns: string };
       apply_to_sell: {
         Args: { org: string; seller_name: string };
         Returns: {
@@ -5497,6 +5588,7 @@ export type Database = {
           bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
+          coupon_id: string | null;
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
@@ -6068,6 +6160,7 @@ export type Database = {
           bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
+          coupon_id: string | null;
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
@@ -6140,6 +6233,7 @@ export type Database = {
           bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
+          coupon_id: string | null;
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
@@ -6205,6 +6299,7 @@ export type Database = {
           bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
+          coupon_id: string | null;
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
@@ -6452,6 +6547,7 @@ export type Database = {
           bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
+          coupon_id: string | null;
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
@@ -6582,6 +6678,7 @@ export type Database = {
           bulbs_used: number;
           cash_collected_by: string | null;
           confirmation_emailed_at: string | null;
+          coupon_id: string | null;
           created_at: string;
           currency: string;
           delivery_zone_id: string | null;
@@ -7210,6 +7307,7 @@ export type Database = {
         Returns: string;
       };
       release_return_refund: { Args: { target: string }; Returns: undefined };
+      remove_coupon: { Args: Record<PropertyKey, never>; Returns: undefined };
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
       rental_quote: {
         Args: { product: string; variant?: string };
@@ -8228,6 +8326,7 @@ export type Database = {
         | "expiry"
         | "return";
       bulb_status: "pending" | "available" | "void";
+      coupon_kind: "percent" | "amount";
       crm_status: "lead" | "customer" | "vip" | "churned";
       invoice_status: "issued" | "paid" | "void";
       ledger_scenario: "actual" | "forecast" | "budget";
@@ -8504,6 +8603,7 @@ export const Constants = {
         "return",
       ],
       bulb_status: ["pending", "available", "void"],
+      coupon_kind: ["percent", "amount"],
       crm_status: ["lead", "customer", "vip", "churned"],
       invoice_status: ["issued", "paid", "void"],
       ledger_scenario: ["actual", "forecast", "budget"],
