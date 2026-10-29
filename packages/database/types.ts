@@ -551,6 +551,32 @@ export type Database = {
         };
         Relationships: [];
       };
+      cart_auctions: {
+        Row: {
+          auction_id: string;
+          created_at: string;
+          user_id: string;
+        };
+        Insert: {
+          auction_id: string;
+          created_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          auction_id?: string;
+          created_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cart_auctions_auction_id_fkey";
+            columns: ["auction_id"];
+            isOneToOne: false;
+            referencedRelation: "auctions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       cart_coupons: {
         Row: {
           applied_at: string;
@@ -2020,6 +2046,7 @@ export type Database = {
       order_items: {
         Row: {
           attributes: NonNullable<Json>;
+          auction_id: string | null;
           commission: number | null;
           commission_rate: number | null;
           condition: Database["public"]["Enums"]["product_condition"] | null;
@@ -2049,6 +2076,7 @@ export type Database = {
         };
         Insert: {
           attributes?: NonNullable<Json>;
+          auction_id?: string | null;
           commission?: number | null;
           commission_rate?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
@@ -2078,6 +2106,7 @@ export type Database = {
         };
         Update: {
           attributes?: NonNullable<Json>;
+          auction_id?: string | null;
           commission?: number | null;
           commission_rate?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
@@ -2106,6 +2135,13 @@ export type Database = {
           variant_id?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: "order_items_auction_id_fkey";
+            columns: ["auction_id"];
+            isOneToOne: false;
+            referencedRelation: "auctions";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "order_items_location_id_fkey";
             columns: ["location_id"];

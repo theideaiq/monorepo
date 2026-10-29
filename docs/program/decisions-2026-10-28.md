@@ -1097,6 +1097,18 @@ Plus Duo waits for step 14.
 - **Marks:** Staff (editors) confirm a mark or find it wrong. A wrong
   mark counts against the shop's score as heavily as a return (×2),
   over the last 90 days.
-- **Paying:** part 2 puts a won auction in the winner's cart and
-  checkout. Commission is at the category's rate on the final price, as
-  for any line.
+- **Paying (part 2):**
+  - A win, or a second chance, goes to the winner's cart. It leaves the
+    cart when it can no longer be paid.
+  - It is one line at the final price, for the copy held. It is paid
+    online only, never on delivery: a win can't wait for a courier.
+  - It counts as goods for free delivery, discounts, Bulbs and cashback.
+  - Commission is charged at the category's rate, as for any line.
+  - Paying sells that copy and marks the auction paid.
+  - While an order for it waits for payment (up to 24 hours), the win
+    isn't settled as unpaid. A cancelled order puts the win back in the
+    cart while there's still time to pay.
+  - A payment that arrives after the win was settled as unpaid still
+    sells the copy and lifts the strike. If the copy has gone to a second
+    chance, the late payment takes nothing and the line is refunded as
+    out of stock.
