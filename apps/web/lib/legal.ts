@@ -12,7 +12,7 @@ export const legalDocuments = [
   { slug: "delivery", updated: "2026-10-28" },
   { slug: "returns", updated: "2026-10-28" },
   { slug: "plus", updated: "2026-10-28" },
-  { slug: "rewards", updated: "2026-10-27" },
+  { slug: "rewards", updated: "2026-10-29" },
   { slug: "selling", updated: "2026-10-28" },
   { slug: "club", updated: "2026-10-28" },
   { slug: "programs", updated: "2026-10-28" },

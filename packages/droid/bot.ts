@@ -18,6 +18,7 @@
 
 import { BULB_VALUE_IQD, formatPrice } from "@repo/commerce";
 import { localePath } from "@repo/internationalization";
+import { formatNumber } from "@repo/internationalization/format";
 import { Bot, type Context, GrammyError, InlineKeyboard } from "grammy";
 import type {
   InlineQueryResultArticle,
@@ -300,10 +301,14 @@ const showBulbs = async (ctx: DroidContext) => {
   const { available, pending } = await ctx.droid.data.getBulbs(userId);
   const text = [
     t(ctx.locale, "bulbsText", {
-      available,
+      available: formatNumber(available, ctx.locale),
       worth: formatPrice(available * BULB_VALUE_IQD, ctx.locale),
     }),
-    pending > 0 ? t(ctx.locale, "bulbsPending", { pending }) : null,
+    pending > 0
+      ? t(ctx.locale, "bulbsPending", {
+          pending: formatNumber(pending, ctx.locale),
+        })
+      : null,
   ]
     .filter(Boolean)
     .join("\n");

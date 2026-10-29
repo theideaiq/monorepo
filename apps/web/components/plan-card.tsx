@@ -57,6 +57,11 @@ export const PlanCard = async ({
             })}
           </p>
         ) : null}
+        {plan.bulb_rate === null ? null : (
+          <p className="text-muted-foreground text-sm">
+            {t("bulbs", { rate: formatNumber(Number(plan.bulb_rate), locale) })}
+          </p>
+        )}
       </div>
       <ul className="flex flex-1 flex-col gap-2 text-sm">
         {list.map((feature) => (

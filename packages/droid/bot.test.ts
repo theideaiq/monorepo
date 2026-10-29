@@ -258,14 +258,14 @@ describe("private chats", () => {
 
   test("linked members see their Bulbs", async () => {
     const { data } = createFakeData({
-      bulbs: { u1: { available: 120, pending: 35 } },
+      bulbs: { u1: { available: 12_000, pending: 3500 } },
       links: { 1: "u1" },
     });
     const { send, sent } = createTestBot({ data });
     await send(callback(user(1, { language_code: "en" }), "m:bulbs"));
     const text = textOf(sent("editMessageText")[0]).replace(/\s/g, " ");
-    expect(text).toContain("120 Bulbs (worth 12,000 IQD)");
-    expect(text).toContain("Plus 35 on the way");
+    expect(text).toContain("12,000 Bulbs (worth 12,000 IQD)");
+    expect(text).toContain("Plus 3,500 on the way");
   });
 
   test("Talk to us: a ticket for members, a Telegram request otherwise", async () => {

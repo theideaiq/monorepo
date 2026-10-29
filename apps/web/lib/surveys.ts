@@ -23,9 +23,10 @@ export interface SurveyResult {
 
 /** Bulbs a response earns, by length (`private.survey_reward`). */
 export const surveyReward = (questions: number) =>
+  100 *
   Math.min(10, Math.max(2, 2 + Math.floor((Math.max(questions, 0) - 1) / 3)));
 
-/** What a rewarded survey costs its creator in Bulbs (×100 for IQD). */
+/** What a rewarded survey costs its creator in Bulbs (1 IQD each). */
 export const surveyCost = (reward: number, wanted: number, feeRate = 10) =>
   // In hundredths of a Bulb, so 2 × 50 × 1.1 is 110 and not 111.
   Math.ceil(Math.round(reward * wanted * (100 + feeRate) * 100) / 10_000);

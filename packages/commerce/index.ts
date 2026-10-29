@@ -181,8 +181,24 @@ export interface DeliveryChoice {
   zoneFee?: number | null;
 }
 
-/** 1 Bulb takes 100 IQD off an order. */
-export const BULB_VALUE_IQD = 100;
+/** 1 Bulb takes 1 IQD off an order. */
+export const BULB_VALUE_IQD = 1;
+
+/** Bulbs are spent in steps of 250 (`price_checkout()`). */
+export const BULB_STEP = 250;
+
+/** The fewest Bulbs an order takes; fewer spend nothing. */
+export const BULB_MIN_SPEND = 1000;
+
+/** The Bulbs a price earns at a rate (%), in whole Bulbs as delivered orders earn them. */
+export const bulbsToEarn = (price: number, rate: number) =>
+  Math.round((price * rate) / 100);
+
+/** The Bulbs an order takes from what the member asks: down to the step, none under the minimum. */
+export const bulbsToSpend = (wanted: number, cost: number) => {
+  const bulbs = Math.floor(Math.min(wanted, cost) / BULB_STEP) * BULB_STEP;
+  return bulbs < BULB_MIN_SPEND ? 0 : bulbs;
+};
 
 /** The IDEA as a seller: it holds its own stock and sells next to shops. */
 export const HOUSE_SELLER_ID = "00000000-0000-4000-8000-000000000001";
