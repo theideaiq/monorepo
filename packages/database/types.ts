@@ -4541,50 +4541,6 @@ export type Database = {
           },
         ];
       };
-      student_checks: {
-        Row: {
-          code: string;
-          code_expires_at: string;
-          created_at: string;
-          email_hash: string | null;
-          id: string;
-          kept: boolean;
-          university_id: string;
-          user_id: string | null;
-          valid_until: string;
-        };
-        Insert: {
-          code: string;
-          code_expires_at: string;
-          created_at?: string;
-          email_hash?: string | null;
-          id?: string;
-          kept: boolean;
-          university_id: string;
-          user_id?: string | null;
-          valid_until: string;
-        };
-        Update: {
-          code?: string;
-          code_expires_at?: string;
-          created_at?: string;
-          email_hash?: string | null;
-          id?: string;
-          kept?: boolean;
-          university_id?: string;
-          user_id?: string | null;
-          valid_until?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "student_checks_university_id_fkey";
-            columns: ["university_id"];
-            isOneToOne: false;
-            referencedRelation: "universities";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       student_prices: {
         Row: {
           condition: Database["public"]["Enums"]["product_condition"];
@@ -7004,16 +6960,6 @@ export type Database = {
       finish_partner_webhook: {
         Args: { delivered: boolean; error?: string; target: string };
         Returns: undefined;
-      };
-      finish_student_check: {
-        Args: { keep: boolean };
-        Returns: {
-          code: string;
-          code_expires_at: string;
-          kept: boolean;
-          university_id: string;
-          valid_until: string;
-        }[];
       };
       forget_student_status: {
         Args: Record<PropertyKey, never>;
