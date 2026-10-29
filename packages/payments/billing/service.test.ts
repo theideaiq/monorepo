@@ -300,6 +300,29 @@ describe("billing", () => {
     expect(state.payments.size).toBe(2);
   });
 
+  test("Bulbs chosen for a renewal come off its invoice", async () => {
+    const { billing, provider, setNow, state } = setup();
+    const { referenceId } = await billing.startCheckout({
+      owner: { userId: "user-1" },
+      planId: "pro-monthly",
+      userId: "user-1",
+    });
+    await billing.handleWebhook(provider.settle(referenceId, "paid"));
+    const [subscription] = [...state.subscriptions.values()];
+    state.renewalBulbs.set(subscription?.id ?? "", 5000);
+
+    setNow(new Date("2026-11-01T06:00:00Z"));
+    const { invoices } = await billing.issueRenewals();
+    const [invoice] = invoices;
+    expect(invoice?.amount).toBe(20_000);
+    expect(state.spentBulbs.size).toBe(0);
+
+    await billing.handleWebhook(
+      provider.settle(invoice?.referenceId ?? "", "paid")
+    );
+    expect(state.spentBulbs.get(subscription?.id ?? "")).toBe(5000);
+  });
+
   test("individual users subscribe on their own", async () => {
     const { billing, provider, state } = setup();
     const { referenceId } = await billing.startCheckout({

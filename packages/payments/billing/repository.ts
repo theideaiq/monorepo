@@ -131,10 +131,17 @@ export interface BillingRepository {
     referenceId: string;
   }) => Promise<number | null>;
   /**
+   * Bulbs the member chose for this renewal that it may take now (up to
+   * half the price, no more than they have; 1 Bulb = 1 IQD).
+   */
+  renewalBulbs: (subscriptionId: string) => Promise<number>;
+  /**
    * Pays the subscription's next period with a Plus month someone gave
    * the member, if any are left; false when none are.
    */
   spendGiftMonth: (subscriptionId: string) => Promise<boolean>;
+  /** Spends the Bulbs a paid renewal took and resets the member's choice. */
+  spendRenewalBulbs: (subscriptionId: string, bulbs: number) => Promise<void>;
   updatePayment: (referenceId: string, update: PaymentUpdate) => Promise<void>;
   updateSubscription: (id: string, update: SubscriptionUpdate) => Promise<void>;
 }
