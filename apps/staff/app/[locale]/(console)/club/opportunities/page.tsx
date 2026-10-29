@@ -49,7 +49,11 @@ const OpportunitiesPage = async ({
   const format = formatters(locale);
   const { from, page, to } = pageRange(params);
 
-  const [{ data: pending }, { count, data: all }] = await Promise.all([
+  const [
+    { data: pending },
+    { count, data: all },
+    { data: waitingApplications },
+  ] = await Promise.all([
     supabase
       .from("opportunities")
       .select(COLUMNS)
@@ -62,7 +66,30 @@ const OpportunitiesPage = async ({
       .neq("status", "pending")
       .order("updated_at", { ascending: false })
       .range(from, to),
+    // Applications to The IDEA's programs waiting for a decision (a minor's
+    // once the guardian has approved).
+    supabase
+      .from("program_applications")
+      .select(
+        "program_id, program:programs (opportunity:opportunities (id, title_ar, title_en))"
+      )
+      .eq("status", "submitted")
+      .or("guardian_status.is.null,guardian_status.eq.approved")
+      .limit(500),
   ]);
+  const waiting = new Map<string, { count: number; title: string }>();
+  for (const row of waitingApplications ?? []) {
+    const program = Array.isArray(row.program) ? row.program[0] : row.program;
+    const opportunity = Array.isArray(program?.opportunity)
+      ? program?.opportunity[0]
+      : program?.opportunity;
+    const entry = waiting.get(row.program_id) ?? {
+      count: 0,
+      title: opportunity ? localized(opportunity, "title", locale) : "—",
+    };
+    entry.count += 1;
+    waiting.set(row.program_id, entry);
+  }
   const now = Date.now();
 
   const rows = (list: typeof all) =>
@@ -133,6 +160,29 @@ const OpportunitiesPage = async ({
       </PageHeader>
       <EditorialTabs />
       <PageBody>
+        {waiting.size > 0 ? (
+          <Panel
+            description={t("programs.waitingDescription")}
+            title={t("programs.waiting")}
+          >
+            <div id="applications" />
+            <ul className="grid gap-1 text-sm">
+              {[...waiting].map(([id, entry]) => (
+                <li key={id}>
+                  <Link
+                    className="hover:underline"
+                    href={`/club/opportunities/${id}/applications`}
+                  >
+                    {t("programs.waitingLine", {
+                      count: format.number(entry.count),
+                      title: entry.title,
+                    })}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+        ) : null}
         <div id="review" />
         <Panel
           description={t("opportunities.reviewDescription")}

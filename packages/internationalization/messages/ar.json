@@ -4129,7 +4129,9 @@
           "identityChecks": "تحقق من هويات بانتظار المراجعة",
           "educatorChecks": "مستندات هيئة تدريس بانتظار المراجعة",
           "organizationChecks": "جهات بانتظار التحقق",
-          "opportunities": "فرص للمراجعة"
+          "opportunities": "فرص للمراجعة",
+          "programApplications": "طلبات برامج بانتظار القرار",
+          "programRefunds": "استردادات برامج للدفع"
         }
       }
     },
@@ -5103,7 +5105,8 @@
         "prices": "الأسعار",
         "rentals": "أسعار الإيجار",
         "payouts": "المدفوعات للمتاجر",
-        "coupons": "الكوبونات"
+        "coupons": "الكوبونات",
+        "programs": "البرامج"
       },
       "dashboard": {
         "error": "تعذّر تحميل ملخّص الدفتر.",
@@ -5287,6 +5290,28 @@
         },
         "paidOn": "{method} · {reference} · {time}",
         "summarySupply": "{lines} عناصر و{supply} رسوم توريد حتى {period} · {deducted} مخصوم"
+      },
+      "programs": {
+        "due": "استردادات للدفع",
+        "dueDescription": "ادفع كل استرداد عبر Wayl أو نقدًا ثم سجّله هنا مع مرجعه؛ يُبلَّغ العضو.",
+        "noneDue": "لا استردادات برامج للدفع.",
+        "applicant": "المتقدّم",
+        "program": "البرنامج",
+        "reason": "السبب",
+        "amount": "المبلغ",
+        "record": "التسجيل",
+        "reference": "المرجع",
+        "markRefunded": "تسجيل الاسترداد",
+        "paid": "دُفعت مؤخرًا",
+        "nonePaid": "لا شيء بعد.",
+        "paidLine": "{name} · {program}: {amount} في {date}",
+        "reasons": {
+          "withdrawn": "انسحب",
+          "guardian": "رفض وليّ الأمر",
+          "visa_refused": "رُفضت التأشيرة",
+          "unpaid": "لم يُدفع في موعده",
+          "the_idea": "ألغته The IDEA"
+        }
       },
       "coupons": {
         "title": "الكوبونات",
@@ -5541,6 +5566,119 @@
         "cover": "صورة الغلاف",
         "listed": "معروضة في النادي",
         "listedHint": "فرص The IDEA نفسها لا تحتاج مراجعة."
+      },
+      "programs": {
+        "package": "الباقة",
+        "packageDescription": "تُباع عبر السلة باقةً واحدة، ويقدّم الأعضاء طلباتهم من صفحة البرنامج.",
+        "applicationsLink": "الطلبات ({count})",
+        "price": "السعر (د.ع)",
+        "priceHint": "سعر الباقة كاملة، بمضاعفات 250 د.ع.",
+        "plusPrice": "سعر Plus (د.ع)",
+        "plusPriceHint": "اختياري وأقل من السعر؛ يُثبَّت عند قبول عضو Plus.",
+        "seats": "المقاعد",
+        "payWithinDays": "أيام دفع القسط الأول",
+        "minAge": "أصغر عمر",
+        "maxAge": "أكبر عمر",
+        "travel": "يسافر إلى الخارج",
+        "insurance": "يشمل تأمين السفر",
+        "insuranceHint": "إلزامي عندما يسافر البرنامج.",
+        "chaperone": "مرافق من The IDEA",
+        "chaperoneHint": "إلزامي عندما يمكن لمن هم دون 18 الانضمام.",
+        "passportRequired": "يضيف المتقدّمون جواز سفرهم",
+        "includesAr": "ما تشمله الباقة (بالعربية)",
+        "includesEn": "ما تشمله الباقة (بالإنجليزية)",
+        "installments": "الأقساط",
+        "installmentsHint": "حصص من السعر مجموعها 100%. الأولى مستحقة خلال مهلة الدفع بعد القبول، وكل ما بعدها في تاريخه.",
+        "share": "الحصة {number} (%)",
+        "firstDue": "مستحقة عند القبول",
+        "due": "تاريخ الاستحقاق",
+        "refunds": "الاسترداد عند الانسحاب",
+        "refundsHint": "حصة المبلغ المدفوع التي تُستَرد عند الانسحاب قبل البدء بهذا العدد من الأيام على الأقل. لا يُسترد شيء بعد آخر خطوة.",
+        "daysBefore": "أيام قبل البدء",
+        "refundShare": "المُسترد (%)",
+        "visaRefundRate": "المُسترد عند رفض التأشيرة (%)",
+        "visaRefundHint": "حصة المبلغ المدفوع التي تُستَرد عند رفض التأشيرة.",
+        "save": "حفظ الباقة",
+        "waiting": "طلبات بانتظار القرار",
+        "waitingDescription": "طلبات برامج The IDEA التي تنتظر قرارًا (طلب القاصر بعد موافقة وليّ الأمر).",
+        "waitingLine": "{title}: {count} بانتظار القرار",
+        "applications": "الطلبات",
+        "noApplications": "لا طلبات بعد.",
+        "applicant": "المتقدّم",
+        "applied": "تاريخ التقديم",
+        "status": "الحالة",
+        "paid": "المدفوع",
+        "paidOf": "{paid} من {price}",
+        "unnamed": "بلا اسم",
+        "statuses": {
+          "submitted": "مُقدَّم",
+          "waitlisted": "على قائمة الانتظار",
+          "accepted": "مقبول",
+          "confirmed": "مؤكَّد",
+          "completed": "مكتمل",
+          "refused": "مرفوض",
+          "withdrawn": "مسحوب",
+          "cancelled": "ملغى"
+        },
+        "guardian": {
+          "pending": "بانتظار وليّ الأمر",
+          "declined": "رفض وليّ الأمر"
+        },
+        "decision": "القرار",
+        "decisions": {
+          "accepted": "قبول",
+          "waitlisted": "قائمة الانتظار",
+          "refused": "رفض"
+        },
+        "note": "ملاحظة للمتقدّم",
+        "noteHint": "اختيارية؛ يقرأها مع القرار.",
+        "sendDecision": "إرسال القرار",
+        "endDescription": "يُنهي المقعد. يتبع الاسترداد قواعد البرنامج وتدفعه المالية.",
+        "outcome": "النتيجة",
+        "outcomes": {
+          "completed": "اكتمل البرنامج",
+          "visa_refused": "رُفضت التأشيرة",
+          "unpaid": "لم يُدفع في موعده",
+          "the_idea": "ألغته The IDEA (استرداد كامل)"
+        },
+        "end": "إنهاء المقعد",
+        "fromPass": "من Pass",
+        "fromApplicant": "من المتقدّم",
+        "details": {
+          "full_name": "الاسم",
+          "legal_name": "الاسم في البطاقة الوطنية",
+          "birthday": "تاريخ الميلاد",
+          "email": "البريد الإلكتروني",
+          "phone": "الهاتف",
+          "whatsapp": "واتساب",
+          "governorate": "المحافظة",
+          "area": "المنطقة",
+          "major": "التخصص",
+          "study_year": "السنة الدراسية",
+          "university": "الجامعة"
+        },
+        "emergency": "جهة الاتصال في الطوارئ",
+        "motivation": "سبب التقديم",
+        "passport": "جواز السفر",
+        "scansRemoved": "حُذفت الصور في {date}",
+        "scanMissing": "الصورة غير موجودة",
+        "openScan": "صورة",
+        "installmentsTitle": "الأقساط · {price}",
+        "plusPriceApplied": "بسعر Plus.",
+        "installmentLine": "{number}. {amount}، مستحق في {due}",
+        "paidOn": "دُفع في {date}",
+        "unpaid": "غير مدفوع",
+        "guardianName": "وليّ الأمر: {name}",
+        "reasons": {
+          "guardian": "رفض وليّ الأمر.",
+          "visa_refused": "رُفضت التأشيرة.",
+          "unpaid": "لم يُدفع في موعده.",
+          "the_idea": "ألغته The IDEA."
+        },
+        "refund": "الاسترداد",
+        "refunded": "استُرد {amount} في {date}",
+        "refundDue": "{amount} للاسترداد",
+        "refundByFinance": "تدفعه المالية من المالية ← البرامج."
       }
     },
     "telegram": {

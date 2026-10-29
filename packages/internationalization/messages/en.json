@@ -4129,7 +4129,9 @@
           "identityChecks": "Identity checks to review",
           "educatorChecks": "Educator documents to review",
           "organizationChecks": "Organizations to verify",
-          "opportunities": "Opportunities to review"
+          "opportunities": "Opportunities to review",
+          "programApplications": "Program applications to decide",
+          "programRefunds": "Program refunds to pay"
         }
       }
     },
@@ -5103,7 +5105,8 @@
         "prices": "Prices",
         "rentals": "Rental rates",
         "payouts": "Payouts",
-        "coupons": "Coupons"
+        "coupons": "Coupons",
+        "programs": "Programs"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -5287,6 +5290,28 @@
         },
         "paidOn": "{method} · {reference} · {time}",
         "summarySupply": "{lines} items and {supply} in supply fees up to {period} · {deducted} deducted"
+      },
+      "programs": {
+        "due": "Refunds to pay",
+        "dueDescription": "Pay each by Wayl or cash, then record it here with its reference; the member is told.",
+        "noneDue": "No program refunds to pay.",
+        "applicant": "Applicant",
+        "program": "Program",
+        "reason": "Why",
+        "amount": "Amount",
+        "record": "Record",
+        "reference": "Reference",
+        "markRefunded": "Mark refunded",
+        "paid": "Paid lately",
+        "nonePaid": "None yet.",
+        "paidLine": "{name} · {program}: {amount} on {date}",
+        "reasons": {
+          "withdrawn": "Withdrew",
+          "guardian": "Guardian declined",
+          "visa_refused": "Visa refused",
+          "unpaid": "Not paid by the date",
+          "the_idea": "Called off by The IDEA"
+        }
       },
       "coupons": {
         "title": "Coupons",
@@ -5541,6 +5566,119 @@
         "cover": "Cover image",
         "listed": "Listed in the Club",
         "listedHint": "The IDEA's own opportunities need no review."
+      },
+      "programs": {
+        "package": "Package",
+        "packageDescription": "Sold through the cart as one package. Members apply on the program's page.",
+        "applicationsLink": "Applications ({count})",
+        "price": "Price (IQD)",
+        "priceHint": "The whole package, in steps of 250 IQD.",
+        "plusPrice": "Plus price (IQD)",
+        "plusPriceHint": "Optional, lower than the price; fixed when a Plus member is accepted.",
+        "seats": "Seats",
+        "payWithinDays": "Days to pay the first installment",
+        "minAge": "Youngest age",
+        "maxAge": "Oldest age",
+        "travel": "Travels abroad",
+        "insurance": "Travel insurance included",
+        "insuranceHint": "Required when the program travels.",
+        "chaperone": "Chaperone from The IDEA",
+        "chaperoneHint": "Required when under-18s can join.",
+        "passportRequired": "Applicants add their passport",
+        "includesAr": "What's included (Arabic)",
+        "includesEn": "What's included (English)",
+        "installments": "Installments",
+        "installmentsHint": "Shares of the price that add up to 100%. The first is due within the payment window after acceptance; each later one on its date.",
+        "share": "Share {number} (%)",
+        "firstDue": "Due on acceptance",
+        "due": "Due on",
+        "refunds": "Refunds on withdrawing",
+        "refundsHint": "The share of what was paid that comes back when withdrawing at least this many days before the start. Nothing comes back after the last step.",
+        "daysBefore": "Days before the start",
+        "refundShare": "Refunded (%)",
+        "visaRefundRate": "Refunded on a refused visa (%)",
+        "visaRefundHint": "The share of what was paid that comes back when the visa is refused.",
+        "save": "Save package",
+        "waiting": "Applications waiting",
+        "waitingDescription": "Applications to The IDEA's programs waiting for a decision (a minor's once the guardian has approved).",
+        "waitingLine": "{title}: {count} waiting",
+        "applications": "Applications",
+        "noApplications": "No applications yet.",
+        "applicant": "Applicant",
+        "applied": "Applied",
+        "status": "Status",
+        "paid": "Paid",
+        "paidOf": "{paid} of {price}",
+        "unnamed": "No name",
+        "statuses": {
+          "submitted": "Submitted",
+          "waitlisted": "Waitlisted",
+          "accepted": "Accepted",
+          "confirmed": "Confirmed",
+          "completed": "Completed",
+          "refused": "Refused",
+          "withdrawn": "Withdrawn",
+          "cancelled": "Cancelled"
+        },
+        "guardian": {
+          "pending": "Waiting for the guardian",
+          "declined": "The guardian declined"
+        },
+        "decision": "Decision",
+        "decisions": {
+          "accepted": "Accept",
+          "waitlisted": "Waitlist",
+          "refused": "Refuse"
+        },
+        "note": "Note to the applicant",
+        "noteHint": "Optional; they read it with the decision.",
+        "sendDecision": "Send decision",
+        "endDescription": "Ends the place. The refund follows the program's rules and Finance pays it.",
+        "outcome": "Outcome",
+        "outcomes": {
+          "completed": "Program completed",
+          "visa_refused": "Visa refused",
+          "unpaid": "Not paid by the date",
+          "the_idea": "Called off by The IDEA (full refund)"
+        },
+        "end": "End place",
+        "fromPass": "From the Pass",
+        "fromApplicant": "From the applicant",
+        "details": {
+          "full_name": "Name",
+          "legal_name": "Name on the National Card",
+          "birthday": "Date of birth",
+          "email": "Email",
+          "phone": "Phone",
+          "whatsapp": "WhatsApp",
+          "governorate": "Governorate",
+          "area": "Area",
+          "major": "Major",
+          "study_year": "Year of study",
+          "university": "University"
+        },
+        "emergency": "Emergency contact",
+        "motivation": "Why they're applying",
+        "passport": "Passport",
+        "scansRemoved": "Scans deleted on {date}",
+        "scanMissing": "Scan missing",
+        "openScan": "Scan",
+        "installmentsTitle": "Installments · {price}",
+        "plusPriceApplied": "At the Plus price.",
+        "installmentLine": "{number}. {amount}, due {due}",
+        "paidOn": "paid {date}",
+        "unpaid": "not paid",
+        "guardianName": "Guardian: {name}",
+        "reasons": {
+          "guardian": "The guardian declined.",
+          "visa_refused": "The visa was refused.",
+          "unpaid": "Not paid by the date.",
+          "the_idea": "Called off by The IDEA."
+        },
+        "refund": "Refund",
+        "refunded": "{amount} refunded on {date}",
+        "refundDue": "{amount} to refund",
+        "refundByFinance": "Finance pays it from Finance → Programs."
       }
     },
     "telegram": {
