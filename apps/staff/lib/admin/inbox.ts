@@ -25,6 +25,9 @@ export const inboxItems = [
   "surveys",
   "surveyAppeals",
   "studentDocuments",
+  "identityChecks",
+  "educatorChecks",
+  "organizationChecks",
   "passApps",
   "productChecks",
   "productFlags",
@@ -48,10 +51,13 @@ const head = { count: "exact", head: true } as const;
 
 const hrefs: Record<InboxItem, string> = {
   disputedReturns: "/orders/returns",
+  educatorChecks: "/customers/verifications#educators",
   houseOffers: "/catalog/offers",
+  identityChecks: "/customers/verifications#identity",
   invoices: "/partners/invoices",
   lateShopLines: "/orders/shop-lines",
   orders: "/orders?status=awaiting",
+  organizationChecks: "/customers/verifications#organizations",
   overdueRentals: "/rentals?view=overdue",
   passApps: "/partners/sign-in",
   pendingPayouts: "/finance/payouts",
@@ -105,6 +111,9 @@ export const loadInbox = async (
     pendingPayouts,
     surveyAppeals,
     studentDocuments,
+    identityChecks,
+    educatorChecks,
+    organizationChecks,
   ] = await Promise.all([
     counted(can("support"), () =>
       supabase
@@ -204,14 +213,38 @@ export const loadInbox = async (
         .select("id", head)
         .eq("status", "pending")
     ),
+    counted(can("customers"), () =>
+      supabase
+        .from("verification_requests")
+        .select("id", head)
+        .eq("kind", "identity")
+        .eq("status", "pending")
+    ),
+    counted(can("customers"), () =>
+      supabase
+        .from("verification_requests")
+        .select("id", head)
+        .eq("kind", "educator")
+        .eq("method", "documents")
+        .eq("status", "pending")
+    ),
+    counted(can("customers"), () =>
+      supabase
+        .from("organization_verifications")
+        .select("organization_id", head)
+        .eq("status", "pending")
+    ),
   ]);
 
   const counts: Record<InboxItem, number> = {
     disputedReturns,
+    educatorChecks,
     houseOffers,
+    identityChecks,
     invoices,
     lateShopLines,
     orders,
+    organizationChecks,
     overdueRentals,
     passApps,
     pendingPayouts,

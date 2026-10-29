@@ -718,6 +718,12 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Verification, part 4 (step 13, Staff): Customers →
+  Verifications (`/customers/verifications`) reviews identity checks
+  (approve with the name on the card), educator documents (approve until a
+  date) and organizations (letter or student society approval); member
+  photos and documents are deleted from the `verifications` bucket after
+  each review. The Inbox counts all three.
 - 2026-10-29: Verification, part 3 (step 13, code): Pass → Settings has a
   Verification card (`#verification`): the identity check (both sides of
   the National Card and a selfie, uploaded to the private `verifications`

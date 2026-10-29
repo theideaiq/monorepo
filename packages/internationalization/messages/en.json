@@ -3897,7 +3897,10 @@
           "houseOffers": "Offers on The IDEA's stock",
           "pendingPayouts": "Shop payouts to send",
           "surveyAppeals": "Survey appeals to decide",
-          "studentDocuments": "Student documents to check (partners)"
+          "studentDocuments": "Student documents to check (partners)",
+          "identityChecks": "Identity checks to review",
+          "educatorChecks": "Educator documents to review",
+          "organizationChecks": "Organizations to verify"
         }
       }
     },
@@ -4740,6 +4743,7 @@
         "open": "Open ticket"
       },
       "studentsLink": "Students",
+      "verificationsLink": "Verifications",
       "students": {
         "title": "Students",
         "back": "Customers",
@@ -4773,6 +4777,33 @@
           "card": "Student card",
           "enrollment": "Enrollment proof"
         }
+      },
+      "verifications": {
+        "title": "Verifications",
+        "back": "Customers",
+        "description": "Identity checks, educator documents and organizations waiting for review. Members' photos and documents are deleted after review.",
+        "identity": "Identity",
+        "identityDescription": "Both sides of the National Card and a selfie. Approve with the name exactly as on the card.",
+        "identityEmpty": "No identity checks waiting.",
+        "educators": "Educators",
+        "educatorsDescription": "A staff card or employer letter. Approve until the end of the academic year or an earlier date.",
+        "educatorsEmpty": "No educator documents waiting.",
+        "organizations": "Organizations",
+        "organizationsDescription": "An official letter, or a student society's university approval. Letters are kept.",
+        "organizationsEmpty": "No organizations waiting.",
+        "legalName": "Name on the card",
+        "until": "Valid until",
+        "reason": "Reason (shown to them)",
+        "approve": "Approve",
+        "verify": "Verify",
+        "reject": "Reject",
+        "byDomain": "Verified domain",
+        "byLetter": "Official letter",
+        "society": "Student society at {university}",
+        "unnamed": "No name",
+        "documentAlt": "Submitted document",
+        "openDocument": "Open the PDF",
+        "noFile": "The file couldn't be opened."
       },
       "surveysLink": "Surveys",
       "surveys": {

@@ -303,3 +303,81 @@ export const reviewSurvey = staffAction(
     return success();
   }
 );
+
+// ── Verification ─────────────────────────────────────────────────────────
+
+/**
+ * Approves an identity check with the name on the card, or rejects it with
+ * a reason; the photos are deleted either way, so only the outcome is kept.
+ */
+export const reviewIdentityCheck = staffAction(
+  "customers",
+  z.object({
+    approve: z.enum(["true", "false"]),
+    id: uuid,
+    legalName: optionalText(120),
+    reason: optionalText(500),
+  }),
+  async ({ input, supabase }) => {
+    const { data: paths } = check(
+      await supabase.rpc("review_identity_check", {
+        approve: input.approve === "true",
+        legal_name: input.legalName ?? undefined,
+        reason: input.reason ?? undefined,
+        target: input.id,
+      })
+    );
+    if (paths?.length) {
+      await removeFiles(supabase, buckets.verifications.id, paths);
+    }
+    return success();
+  }
+);
+
+/**
+ * Approves a staff card or employer letter (until a date, by default the
+ * end of the academic year) or rejects it; the files are deleted either way.
+ */
+export const reviewEducatorCheck = staffAction(
+  "customers",
+  z.object({
+    approve: z.enum(["true", "false"]),
+    id: uuid,
+    reason: optionalText(500),
+    until: optionalDate,
+  }),
+  async ({ input, supabase }) => {
+    const { data: paths } = check(
+      await supabase.rpc("review_educator_check", {
+        approve: input.approve === "true",
+        reason: input.reason ?? undefined,
+        target: input.id,
+        until: input.until ?? undefined,
+      })
+    );
+    if (paths?.length) {
+      await removeFiles(supabase, buckets.verifications.id, paths);
+    }
+    return success();
+  }
+);
+
+/** Verifies an organization from its letter (and approval), or rejects it. */
+export const reviewOrganizationCheck = staffAction(
+  "customers",
+  z.object({
+    approve: z.enum(["true", "false"]),
+    id: uuid,
+    reason: optionalText(500),
+  }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("review_organization_check", {
+        approve: input.approve === "true",
+        org: input.id,
+        reason: input.reason ?? undefined,
+      })
+    );
+    return success();
+  }
+);
