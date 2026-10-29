@@ -630,6 +630,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Yours and see their refund; Staff → Customers → Surveys decides
   appeals (an Inbox item); the daily selling cron closes surveys past 60
   days and refunds Boosted ones through Wayl; the survey terms follow.
+- 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
+  Bias controls: trusted respondents (20 counted answers, no failed check
+  in the last 10) see Boosted surveys 24 hours early and fill at most half
+  the target then, taking turns (one who answered early elsewhere in the
+  last day waits); at most 5 Boosted surveys a day each; Boosted surveys
+  need a phone no other Pass has verified (once `require_verified_phone`
+  is on with Twilio); creators cap the share from one university, major,
+  year or governorate; "Who answered" gives the counts, the median time
+  and the respondents by targeting field, hiding groups under 5. The
+  thresholds are store settings.
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the

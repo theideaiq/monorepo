@@ -4373,7 +4373,12 @@ export type Database = {
           require_verified_phone: boolean;
           return_days: number;
           shipping_fee: number;
+          survey_daily_boosted: number;
+          survey_early_hours: number;
+          survey_early_share: number;
           survey_fee_rate: number;
+          survey_trusted_answers: number;
+          survey_trusted_window: number;
           survey_welcome_credits: number;
           updated_at: string;
           wayl_return_refunds: boolean;
@@ -4396,7 +4401,12 @@ export type Database = {
           require_verified_phone?: boolean;
           return_days?: number;
           shipping_fee?: number;
+          survey_daily_boosted?: number;
+          survey_early_hours?: number;
+          survey_early_share?: number;
           survey_fee_rate?: number;
+          survey_trusted_answers?: number;
+          survey_trusted_window?: number;
           survey_welcome_credits?: number;
           updated_at?: string;
           wayl_return_refunds?: boolean;
@@ -4419,7 +4429,12 @@ export type Database = {
           require_verified_phone?: boolean;
           return_days?: number;
           shipping_fee?: number;
+          survey_daily_boosted?: number;
+          survey_early_hours?: number;
+          survey_early_share?: number;
           survey_fee_rate?: number;
+          survey_trusted_answers?: number;
+          survey_trusted_window?: number;
           survey_welcome_credits?: number;
           updated_at?: string;
           wayl_return_refunds?: boolean;
@@ -5027,9 +5042,11 @@ export type Database = {
           appeal_upheld: boolean | null;
           appealed_at: string | null;
           counted: boolean | null;
+          early: boolean;
           excluded_reason: string | null;
           failed_checks: number;
           id: string;
+          respondent: NonNullable<Json>;
           reward_paid: number;
           seconds: number | null;
           started_at: string;
@@ -5045,9 +5062,11 @@ export type Database = {
           appeal_upheld?: boolean | null;
           appealed_at?: string | null;
           counted?: boolean | null;
+          early?: boolean;
           excluded_reason?: string | null;
           failed_checks?: number;
           id?: string;
+          respondent?: NonNullable<Json>;
           reward_paid?: number;
           seconds?: number | null;
           started_at?: string;
@@ -5063,9 +5082,11 @@ export type Database = {
           appeal_upheld?: boolean | null;
           appealed_at?: string | null;
           counted?: boolean | null;
+          early?: boolean;
           excluded_reason?: string | null;
           failed_checks?: number;
           id?: string;
+          respondent?: NonNullable<Json>;
           reward_paid?: number;
           seconds?: number | null;
           started_at?: string;
@@ -5106,6 +5127,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
           refund_reference: string | null;
@@ -5146,6 +5168,7 @@ export type Database = {
           opened_at?: string | null;
           order_id?: string | null;
           paused_at?: string | null;
+          quotas?: NonNullable<Json>;
           refund_amount?: number;
           refund_claimed_at?: string | null;
           refund_reference?: string | null;
@@ -5186,6 +5209,7 @@ export type Database = {
           opened_at?: string | null;
           order_id?: string | null;
           paused_at?: string | null;
+          quotas?: NonNullable<Json>;
           refund_amount?: number;
           refund_claimed_at?: string | null;
           refund_reference?: string | null;
@@ -5714,9 +5738,11 @@ export type Database = {
           appeal_upheld: boolean | null;
           appealed_at: string | null;
           counted: boolean | null;
+          early: boolean;
           excluded_reason: string | null;
           failed_checks: number;
           id: string;
+          respondent: NonNullable<Json>;
           reward_paid: number;
           seconds: number | null;
           started_at: string;
@@ -6191,6 +6217,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
           refund_reference: string | null;
@@ -6361,6 +6388,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
           refund_reference: string | null;
@@ -6697,9 +6725,11 @@ export type Database = {
           appeal_upheld: boolean | null;
           appealed_at: string | null;
           counted: boolean | null;
+          early: boolean;
           excluded_reason: string | null;
           failed_checks: number;
           id: string;
+          respondent: NonNullable<Json>;
           reward_paid: number;
           seconds: number | null;
           started_at: string;
@@ -7219,6 +7249,16 @@ export type Database = {
           verified: boolean;
         }[];
       };
+      my_survey_access: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          boosted_today: number;
+          daily_limit: number;
+          own_phone: boolean;
+          phone_required: boolean;
+          trusted: boolean;
+        }[];
+      };
       my_survey_credits: { Args: Record<PropertyKey, never>; Returns: number };
       my_swap_terms: {
         Args: Record<PropertyKey, never>;
@@ -7511,6 +7551,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
           refund_reference: string | null;
@@ -7617,6 +7658,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
           refund_reference: string | null;
@@ -7930,6 +7972,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
           refund_reference: string | null;
@@ -8000,6 +8043,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
           refund_reference: string | null;
@@ -8494,9 +8538,11 @@ export type Database = {
           appeal_upheld: boolean | null;
           appealed_at: string | null;
           counted: boolean | null;
+          early: boolean;
           excluded_reason: string | null;
           failed_checks: number;
           id: string;
+          respondent: NonNullable<Json>;
           reward_paid: number;
           seconds: number | null;
           started_at: string;
@@ -8521,9 +8567,11 @@ export type Database = {
           appeal_upheld: boolean | null;
           appealed_at: string | null;
           counted: boolean | null;
+          early: boolean;
           excluded_reason: string | null;
           failed_checks: number;
           id: string;
+          respondent: NonNullable<Json>;
           reward_paid: number;
           seconds: number | null;
           started_at: string;
@@ -8554,6 +8602,7 @@ export type Database = {
           title: string;
         }[];
       };
+      survey_audience: { Args: { target: string }; Returns: Json };
       survey_results: {
         Args: { target: string };
         Returns: {
@@ -8586,6 +8635,7 @@ export type Database = {
           opened_at: string | null;
           order_id: string | null;
           paused_at: string | null;
+          quotas: NonNullable<Json>;
           refund_amount: number;
           refund_claimed_at: string | null;
           refund_reference: string | null;
