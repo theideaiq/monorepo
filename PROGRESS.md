@@ -718,6 +718,24 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Opportunities, part 6 (step 14, the programs code). Staff:
+  The IDEA's program opportunities get a Package panel (price, Plus price,
+  seats, ages, insurance, chaperone, passport, what's included, up to 4
+  installments and 4 refund steps, the visa share); applications at
+  `/club/opportunities/<id>/applications` with the Pass details, the
+  emergency contact, signed links to the passport scans, the guardian's
+  decision, accept/waitlist/refuse and ending a place; Finance →
+  Programs pays refunds; two inbox items. Website: the program page shows
+  the package and the apply form (scans to `program-documents`), then the
+  application with "Pay … (due …)" or "Pay everything left" (the cart) and
+  Withdraw; the cart and checkout take program lines (online only, no
+  address when nothing else is bought, never a gift); Club → Yours →
+  Applications; guardians approve teens' applications in Pass →
+  Settings; eight notifications. The daily `/cron/opportunities` also
+  deletes passport scans once due. The programs policy now matches
+  (guardians approve the application only, withdraw on the page, the
+  visa share, scans deleted 30 days after). Not yet: reminders before
+  each due date, programs as gifts, a Plus price per tier.
 - 2026-10-29: Opportunities, part 5b (`20270306000000_program_terms.sql`).
   Accepting a place copies the program's refund schedule and visa share
   onto the application, and refunds use those copies (the programs
