@@ -10,7 +10,8 @@ interface OrderSummaryProps {
   readonly bulbsUsed?: number;
   /** IQD off from a friend's invite or a coupon. */
   readonly discount?: number;
-  readonly discountSource?: DiscountSource | null;
+  /** `orders.discount_source`: "coupon" labels the row as a coupon. */
+  readonly discountSource?: DiscountSource | (string & {}) | null;
   readonly shippingFee: number;
   readonly subtotal: number;
   readonly total: number;
