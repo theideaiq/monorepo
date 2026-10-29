@@ -925,3 +925,19 @@ Plus Duo waits for step 14.
   isn't theirs yet, it shows beside theirs ("With Plus: 20%"). Of a pair
   neither person gets, both show, as before. Partners' card check follows
   the same rules.
+
+## Part 8: verification (step 13)
+
+- **Identity:** the member uploads both sides of the National Card and a
+  selfie; support reads them in Staff → Inbox, types the name on the card
+  and approves or rejects. Only the name and the date are kept; the photos
+  are deleted after review. It is ready for the stages that require it
+  (people selling, payouts to people, bids above the set amount, renting
+  without a deposit); those flows check it when they are built.
+- **Educator badge:** a staff email at a listed university (an emailed
+  8-digit code, like students) or, for schools and everyone else, a staff
+  card or employer letter reviewed by support. It lasts until 30 June like
+  the student badge. Educators get every student perk (student prices,
+  Plus at 20% off, partner perks for students, creating surveys); the Pass
+  card says "Educator", and partners' student checks still answer for
+  students only.
