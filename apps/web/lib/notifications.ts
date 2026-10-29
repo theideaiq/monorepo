@@ -61,6 +61,8 @@ export const NOTIFICATION_EVENTS = [
   "survey_appeal_upheld",
   "survey_appeal_declined",
   "survey_refunded",
+  "survey_answers_expiring",
+  "survey_answers_deleted",
   "product_available",
   "saved_back_in_stock",
   "saved_out_now",
@@ -217,6 +219,11 @@ const extraValues: Partial<
     const until = text(data.until);
     return { date: until ? formatDate(`${until}T12:00:00`, locale) : "" };
   },
+  survey_answers_deleted: (data) => ({ title: text(data.title) }),
+  survey_answers_expiring: (data, locale) => ({
+    date: text(data.date) ? formatDate(text(data.date), locale) : "",
+    title: text(data.title),
+  }),
   survey_appeal_declined: (data) => ({ title: text(data.title) }),
   survey_appeal_upheld: (data) => ({ title: text(data.title) }),
   survey_approved: (data) => ({ title: text(data.title) }),

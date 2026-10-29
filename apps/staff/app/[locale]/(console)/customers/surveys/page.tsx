@@ -18,7 +18,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const FLAGS = new Set([
+  "advertising",
   "contact",
+  "deception",
   "health",
   "identity",
   "money",
@@ -40,11 +42,15 @@ const SurveysPage = async () => {
   const format = formatters(locale);
   const flagLabel = (flag: string) =>
     FLAGS.has(flag) ? t(`flags.${flag as "reported"}`) : flag;
+  const purposeLabel = (purpose: string | null) =>
+    purpose
+      ? t(`purposes.${purpose as "academic" | "community" | "market"}`)
+      : "";
 
   const { data } = await supabase
     .from("surveys")
     .select(
-      "id, creator_id, title, description, consent, kind, wanted, flags, ethics_reference, opened_at, updated_at, survey_questions (id, position, kind, prompt, options), survey_reports (reason, created_at)"
+      "id, creator_id, title, description, consent, kind, wanted, flags, ethics_reference, run_by, purpose, opened_at, updated_at, survey_debriefs (body), survey_questions (id, position, kind, prompt, options), survey_reports (reason, created_at)"
     )
     .eq("status", "review")
     .order("updated_at")
@@ -92,6 +98,14 @@ const SurveysPage = async () => {
                   {format.date(survey.updated_at)}
                   {survey.opened_at ? ` · ${t("wasOpen")}` : ""}
                 </p>
+                {survey.run_by ? (
+                  <p className="text-sm">
+                    {t("runBy", {
+                      purpose: purposeLabel(survey.purpose),
+                      runBy: survey.run_by,
+                    })}
+                  </p>
+                ) : null}
                 <p className="flex flex-wrap gap-1">
                   {survey.flags.map((flag) => (
                     <span
@@ -121,6 +135,16 @@ const SurveysPage = async () => {
                   </p>
                 ) : null}
               </details>
+              {survey.survey_debriefs ? (
+                <details>
+                  <summary className="cursor-pointer text-sm">
+                    {t("debrief")}
+                  </summary>
+                  <p className="whitespace-pre-line pt-2 text-sm">
+                    {survey.survey_debriefs.body}
+                  </p>
+                </details>
+              ) : null}
               <ol className="grid list-decimal gap-1 ps-5 text-sm">
                 {[...survey.survey_questions]
                   .sort((a, b) => a.position - b.position)

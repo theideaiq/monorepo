@@ -644,6 +644,22 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   aren't a random sample of Iraq; Club → Join says when a phone of one's
   own is needed, when today's Boosted limit is reached and when someone is
   a trusted respondent; Staff → Catalog → Settings holds the thresholds.
+- 2026-10-29: Surveys, part 3 (step 10; `20270210000000_surveys_trust.sql`).
+  Every survey shows who runs it and why (academic, market or community
+  research), needed to publish; academic surveys on sensitive topics need
+  the ethics reference; deception studies need it and a debrief, shown
+  only after submitting, and are always reviewed; the checker also flags
+  advertising. Respondents see a results summary when a survey closes (no
+  count under 5; academic surveys may turn it off), earn a contributor
+  badge on the Pass card at 10, 50 and 200 counted answers, and print a
+  participation certificate (`/club/surveys/certificate`, titles and dates,
+  never answers). Raw answers are deleted 24 months after closing (up to
+  120 with an ethics reference), with a bell notice 30 days before. The
+  builder warns that free text can identify people; exports carry "Who
+  answered" (a second Excel sheet and its own CSV) and say they're for the
+  stated purpose only. Check questions' answers come from
+  `survey_attention_answers()`; a follow-up migration hides
+  `survey_questions.attention_answer` from respondents.
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the

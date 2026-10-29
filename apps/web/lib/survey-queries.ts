@@ -9,8 +9,11 @@ import type {
   SurveyAnswers,
   SurveyAudience,
   SurveyKind,
+  SurveyPurpose,
   SurveyQuestion,
+  SurveyRecord,
   SurveyResult,
+  SurveySummary,
 } from "./surveys";
 
 /**
@@ -19,7 +22,7 @@ import type {
  */
 
 const SURVEY_COLUMNS =
-  "id, creator_id, title, quotas, description, language, consent, kind, status, wanted, reward, held, order_id, students_only, universities, majors, years, governorates, min_seconds, ethics_reference, flags, review_note, opened_at, closes_at, closed_at, created_at, estimated_seconds, median_seconds, reward_pending, paused_at, topup_order_id, refund_amount, refunded_amount, refunded_at" as const;
+  "id, creator_id, title, quotas, description, language, consent, kind, status, wanted, reward, held, order_id, students_only, universities, majors, years, governorates, min_seconds, ethics_reference, flags, review_note, opened_at, closes_at, closed_at, created_at, estimated_seconds, median_seconds, reward_pending, paused_at, topup_order_id, refund_amount, refunded_amount, refunded_at, run_by, purpose, share_summary, deception, keep_months, answers_warned_at, answers_deleted_at" as const;
 
 const keys = {
   credits: (userId: string) => ["survey-credits", userId] as const,
@@ -76,7 +79,7 @@ export const useSurvey = (id: string) => {
         await supabase
           .from("surveys")
           .select(
-            `${SURVEY_COLUMNS}, survey_questions (id, position, kind, prompt, options, required, attention_answer)`
+            `${SURVEY_COLUMNS}, survey_questions (id, position, kind, prompt, options, required, is_attention)`
           )
           .eq("id", id)
           .maybeSingle()
@@ -97,17 +100,28 @@ export const useSurvey = (id: string) => {
 
 export interface SurveyDraft {
   consent: string;
+  /** Shown to respondents after they submit a deception study. */
+  debrief: string;
+  /** A deception study: needs the ethics reference and a debrief. */
+  deception: boolean;
   description: string;
   ethics_reference: string;
   governorates: string[];
   id?: string;
+  /** Months the raw answers are kept after closing (over 24 needs an ethics reference). */
+  keep_months: number;
   kind: SurveyKind;
   language: "ar" | "en";
   majors: string[];
   min_seconds: number;
+  purpose: SurveyPurpose | "";
   questions: SurveyQuestion[];
   /** The largest share (%) of the target from one value of a field. */
   quotas?: Partial<Record<QuotaField, number>>;
+  /** Who runs it, shown on the survey. */
+  run_by: string;
+  /** Respondents see a summary when it closes (academic surveys may turn it off). */
+  share_summary: boolean;
   students_only: boolean;
   title: string;
   universities: string[];
@@ -336,5 +350,79 @@ export const useMySurveyAccess = () => {
     queryFn: async () =>
       unwrap(await supabase.rpc("my_survey_access"))?.[0] ?? null,
     queryKey: ["survey-access", user?.id ?? ""] as const,
+  });
+};
+
+/**
+ * For editing a draft: the check questions' expected answers and the
+ * debrief, which respondents never read from the survey itself.
+ */
+export const useDraftPrivate = (id: string) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    queryFn: async () => {
+      const [answers, debrief] = await Promise.all([
+        supabase.rpc("survey_attention_answers", { target: id }),
+        supabase
+          .from("survey_debriefs")
+          .select("body")
+          .eq("survey_id", id)
+          .maybeSingle(),
+      ]);
+      return {
+        attention: new Map(
+          (unwrap(answers) ?? []).map((row) => [row.question_id, row.answer])
+        ),
+        debrief: unwrap(debrief)?.body ?? "",
+      };
+    },
+    queryKey: ["survey-private", id] as const,
+  });
+};
+
+/** A deception study's debrief, once the member has submitted. */
+export const useSurveyDebrief = (id: string, enabled: boolean) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled,
+    queryFn: async () =>
+      unwrap(
+        await supabase
+          .from("survey_debriefs")
+          .select("body")
+          .eq("survey_id", id)
+          .maybeSingle()
+      )?.body ?? null,
+    queryKey: ["survey-debrief", id] as const,
+  });
+};
+
+/** The results summary of a closed survey the member answered (null when there is none). */
+export const useSurveySummary = (id: string, enabled = true) => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: enabled && Boolean(user),
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("survey_summary", {
+        target: id,
+      });
+      // Not closed, its summary turned off, or not answered: nothing to show.
+      if (error?.code === "P0002") {
+        return null;
+      }
+      return unwrap({ data, error }) as unknown as SurveySummary;
+    },
+    queryKey: ["survey-summary", id] as const,
+  });
+};
+
+/** The member's counted answers, contributor badge and surveys answered. */
+export const useMySurveyRecord = () => {
+  const { supabase, user } = useAuth();
+  return useQuery({
+    enabled: Boolean(user),
+    queryFn: async () =>
+      unwrap(await supabase.rpc("my_survey_record")) as unknown as SurveyRecord,
+    queryKey: ["survey-record", user?.id ?? ""] as const,
   });
 };
