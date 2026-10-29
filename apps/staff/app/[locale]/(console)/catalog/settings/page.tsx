@@ -18,7 +18,7 @@ const StoreSettingsPage = async () => {
     supabase
       .from("store_settings")
       .select(
-        "shipping_fee, cash_on_delivery_enabled, require_verified_phone, wayl_return_refunds"
+        "shipping_fee, cash_on_delivery_enabled, require_verified_phone, wayl_return_refunds, survey_trusted_answers, survey_trusted_window, survey_early_hours, survey_early_share, survey_daily_boosted"
       )
       .maybeSingle(),
     supabase
@@ -44,6 +44,11 @@ const StoreSettingsPage = async () => {
                 settings?.cash_on_delivery_enabled ?? false,
               require_verified_phone: settings?.require_verified_phone ?? false,
               shipping_fee: settings?.shipping_fee ?? 0,
+              survey_daily_boosted: settings?.survey_daily_boosted ?? 5,
+              survey_early_hours: settings?.survey_early_hours ?? 24,
+              survey_early_share: settings?.survey_early_share ?? 50,
+              survey_trusted_answers: settings?.survey_trusted_answers ?? 20,
+              survey_trusted_window: settings?.survey_trusted_window ?? 10,
               wayl_return_refunds: settings?.wayl_return_refunds ?? false,
             }}
           />

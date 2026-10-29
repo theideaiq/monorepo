@@ -186,6 +186,11 @@ export const saveStoreSettings = staffAction(
     cashOnDelivery: checkbox,
     requireVerifiedPhone: checkbox,
     shippingFee: int(0),
+    surveyDailyBoosted: int(1, 100),
+    surveyEarlyHours: int(0, 168),
+    surveyEarlyShare: int(0, 100),
+    surveyTrustedAnswers: int(1, 1000),
+    surveyTrustedWindow: int(1, 100),
     waylReturnRefunds: checkbox,
   }),
   async ({ input, supabase }) => {
@@ -196,6 +201,11 @@ export const saveStoreSettings = staffAction(
           cash_on_delivery_enabled: input.cashOnDelivery,
           require_verified_phone: input.requireVerifiedPhone,
           shipping_fee: input.shippingFee,
+          survey_daily_boosted: input.surveyDailyBoosted,
+          survey_early_hours: input.surveyEarlyHours,
+          survey_early_share: input.surveyEarlyShare,
+          survey_trusted_answers: input.surveyTrustedAnswers,
+          survey_trusted_window: input.surveyTrustedWindow,
           wayl_return_refunds: input.waylReturnRefunds,
         })
         .eq("id", true)

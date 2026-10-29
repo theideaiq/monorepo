@@ -12,7 +12,41 @@ import type { ReactNode } from "react";
 import { EmptyState } from "@/components/section";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { byDateOrDeadline, type JoinFilter, surveyPath } from "@/lib/club";
-import { useSurveysForMe } from "@/lib/survey-queries";
+import { useMySurveyAccess, useSurveysForMe } from "@/lib/survey-queries";
+
+/**
+ * What decides which Boosted surveys the member sees: a phone of their own
+ * (once phones are required), today's limit, and being a trusted
+ * respondent (new ones a day early).
+ */
+const SurveyAccessNote = () => {
+  const t = useTranslations("web.club.join.access");
+  const locale = useLocale() as Locale;
+  const access = useMySurveyAccess().data;
+  if (!access) {
+    return null;
+  }
+  if (access.phone_required && !access.own_phone) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        {t("phone")}{" "}
+        <Link className="text-pink-text underline" href="/pass/settings">
+          {t("verify")}
+        </Link>
+      </p>
+    );
+  }
+  if (access.boosted_today >= access.daily_limit) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        {t("limit", { n: formatNumber(access.daily_limit, locale) })}
+      </p>
+    );
+  }
+  return access.trusted ? (
+    <p className="text-muted-foreground text-sm">{t("trusted")}</p>
+  ) : null;
+};
 
 /** An event card drawn on the server, with when it starts. */
 export interface JoinEvent {
@@ -119,6 +153,7 @@ export const JoinFeed = ({
 
   return (
     <div className="flex flex-col gap-4">
+      {filter === "events" || surveys.signedOut ? null : <SurveyAccessNote />}
       {items.length > 0 ? (
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
