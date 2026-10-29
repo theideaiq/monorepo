@@ -74,7 +74,7 @@ import {
   useSaveAddress,
 } from "@/lib/address-book";
 import { useMyBulbs } from "@/lib/bulbs-queries";
-import { freeDeliveryRemaining, summarizeCart } from "@/lib/cart";
+import { freeDeliveryRemaining, isRentLine, summarizeCart } from "@/lib/cart";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
 import { useInviteDiscount } from "@/lib/invites";
 import { orderPath, usePlaceGift, usePlaceOrder } from "@/lib/order-checkout";
@@ -608,7 +608,9 @@ const SummaryCard = ({
                   ) : null}
                 </span>
                 <span className="shrink-0 text-muted-foreground tabular-nums">
-                  × {formatNumber(quantity, locale)}
+                  {isRentLine(item)
+                    ? t("rentLine")
+                    : `× ${formatNumber(quantity, locale)}`}
                 </span>
               </li>
             ))}
@@ -962,6 +964,8 @@ interface WhereItGoesProps extends AddressSectionProps {
   readonly gift: GiftForm | null;
   readonly missingGiftZone: boolean;
   readonly onGift: (gift: GiftForm | null) => void;
+  /** The cart holds a rental, so it can't be a gift. */
+  readonly rentals: boolean;
 }
 
 /** "Send as a gift" and the gift's details, or the delivery address. */
@@ -969,6 +973,7 @@ const WhereItGoes = ({
   gift,
   missingGiftZone,
   onGift,
+  rentals,
   ...address
 }: WhereItGoesProps) => (
   <>
@@ -976,6 +981,7 @@ const WhereItGoes = ({
       busy={address.busy}
       gift={gift !== null}
       onChange={(on) => onGift(on ? emptyGift : null)}
+      rentals={rentals}
     />
     {gift ? (
       <GiftDetailsCard
@@ -1182,6 +1188,7 @@ export const Checkout = () => {
                 missingGiftZone={missingGiftZone}
                 onChange={set}
                 onGift={setGift}
+                rentals={summary.lines.some((line) => isRentLine(line.item))}
                 zone={zone}
                 zones={zoneList}
               />

@@ -50,7 +50,14 @@ export interface CartItem {
   offer?: { available: number; price: number } | null;
   product: CartProduct | null;
   product_id: string;
+  /** "rent": a single rental (one copy from The IDEA); "sale": bought. */
+  purpose: "rent" | "sale";
   quantity: number;
+  /**
+   * A rent line's rate (`rental_quote`): the rent for so many days and the
+   * refundable deposit; null when it can't be rented anymore.
+   */
+  rental?: { days: number; deposit: number; price: number } | null;
   /** Who sells the line's copies: The IDEA unless it names a shop. */
   seller?: { name: string } | null;
   seller_id: string;
@@ -63,8 +70,14 @@ export interface CartLineView extends CartLine {
   available: number;
   /** False when the product was archived or can't be bought anymore. */
   buyable: boolean;
+  /** A rent line's refundable deposit (0 for what's bought). */
+  deposit: number;
   item: CartItem;
 }
+
+/** Whether a line is a rental rather than bought. */
+export const isRentLine = (item: Pick<CartItem, "purpose">) =>
+  item.purpose === "rent";
 
 /** Whether a line asks for another condition than the product's own. */
 export const isOtherCondition = (item: CartItem) =>
@@ -87,11 +100,24 @@ export const isOtherOffer = (item: CartItem) =>
  */
 export const toCartLine = (item: CartItem): CartLineView => {
   const { product } = item;
+  if (isRentLine(item)) {
+    // One copy at the rental rate; whether one is free is checked at checkout.
+    return {
+      available: item.rental ? 1 : 0,
+      buyable: product?.status === "active" && Boolean(item.rental),
+      compareAtPrice: null,
+      deposit: item.rental?.deposit ?? 0,
+      item,
+      quantity: 1,
+      unitPrice: item.rental?.price ?? 0,
+    };
+  }
   if (isOtherOffer(item)) {
     return {
       available: item.offer?.available ?? 0,
       buyable: product?.status === "active" && Boolean(item.offer),
       compareAtPrice: null,
+      deposit: 0,
       item,
       quantity: item.quantity,
       unitPrice: item.offer?.price ?? 0,
@@ -107,6 +133,7 @@ export const toCartLine = (item: CartItem): CartLineView => {
     compareAtPrice: variant
       ? variant.compare_at_price
       : (product?.compare_at_price ?? null),
+    deposit: 0,
     item,
     quantity: item.quantity,
     unitPrice: variant ? variant.price : (product?.price ?? 0),
@@ -129,11 +156,19 @@ export const summarizeCart = (
     (line) => !line.buyable || line.quantity > line.available
   );
 
+  // Deposits come back, so they're added after delivery is priced.
+  const totals = cartTotals(orderable, settings, choice);
+  const deposits = orderable.reduce((sum, line) => sum + line.deposit, 0);
   return {
     canCheckout: orderable.length > 0 && problems.length === 0,
     lines,
     problems: problems.length,
-    totals: cartTotals(orderable, settings, choice),
+    totals: {
+      ...totals,
+      deposits,
+      subtotal: totals.subtotal + deposits,
+      total: totals.total + deposits,
+    },
   };
 };
 

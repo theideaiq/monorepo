@@ -690,6 +690,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   area. Staff's order page shows the message to put in the parcel and
   whether prices stay out. Gifting Plus or other non-physical items is
   still to come.
+- 2026-10-29: Catalog, part 5 (step 11; `20270219000000_one_cart.sql`). One
+  cart: "Rent it" on a product page puts the rental in the cart beside
+  what's bought (up to 3 rentals, several only films, books and games),
+  and everything checks out in one order with one delivery fee. The cart
+  shows each rental's days and deposit, with refundable deposits on their
+  own line; free delivery counts what's bought and the rent, not the
+  deposits; invite and coupon discounts apply to what's bought; Bulbs pay
+  anything but deposits. A cart with a rental can't be sent as a gift.
+  The separate rent checkout (`/rent/<item>`) still works for old links.
+  Kit bookings join the cart next.
 - 2026-10-29: Surveys, part 2 (step 10; `20270209000000_surveys_bias.sql`).
   Bias controls: trusted respondents (20 counted answers, no failed check
   in the last 10) see Boosted surveys 24 hours early and fill at most half

@@ -836,3 +836,20 @@ differ from earlier parts.
 - **Bulbs** for the purchase go to the buyer, as for any order.
 - **Not yet:** gifting Plus months and other things added to the
   recipient's Pass; tickets and programs don't exist yet.
+
+## Part 5: one cart
+
+- **Rentals go in the cart.** "Rent it" adds a single rental beside
+  what's bought, and everything is one order with one delivery fee. Up to
+  3 rentals; several only when they're films, books or games.
+- **Money rules for a mixed cart:**
+  - deposits are refundable, so they don't count towards free delivery,
+    the giveaway cap or cashback, and Bulbs can't pay them;
+  - the rent counts towards free delivery and earns cashback, as before;
+  - invite and coupon discounts apply only to what's bought (rentals keep
+    their rates).
+- **Gifts:** a cart with a rental can't be sent as a gift for now, since
+  the rental comes back to whoever rented it.
+- **Next:** kit bookings join the cart; tickets, programs and digital
+  codes join when they exist. Subscriptions (Plus, Pro) keep their own
+  checkout.

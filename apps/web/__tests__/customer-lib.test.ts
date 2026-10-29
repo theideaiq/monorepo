@@ -55,6 +55,7 @@ const item = (overrides: Partial<CartItem> = {}): CartItem => ({
   id: "c1",
   product: product(),
   product_id: "p1",
+  purpose: "sale",
   quantity: 2,
   seller_id: HOUSE_SELLER_ID,
   variant: null,
@@ -105,11 +106,32 @@ describe("cart", () => {
     const summary = summarizeCart([item()], settings);
     expect(summary.totals).toEqual({
       count: 2,
+      deposits: 0,
       shippingFee: 5000,
       subtotal: 20_000,
       total: 25_000,
     });
     expect(summary.canCheckout).toBe(true);
+  });
+
+  test("a rent line is one copy at its rate, with its deposit", () => {
+    const rental = item({
+      id: "r1",
+      purpose: "rent",
+      quantity: 1,
+      rental: { days: 7, deposit: 30_000, price: 9750 },
+    });
+    const summary = summarizeCart([item(), rental], settings);
+    expect(summary.totals).toEqual({
+      count: 3,
+      deposits: 30_000,
+      shippingFee: 5000,
+      subtotal: 59_750,
+      total: 64_750,
+    });
+    expect(
+      lineProblem(toCartLine(item({ purpose: "rent", rental: null })))
+    ).toBe("unavailable");
   });
 
   test("blocks checkout on unavailable or short lines", () => {

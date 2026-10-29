@@ -41,18 +41,25 @@ interface GiftSwitchProps {
   readonly busy: boolean;
   readonly gift: boolean;
   readonly onChange: (gift: boolean) => void;
+  /** The cart holds a rental, which can't be a gift. */
+  readonly rentals?: boolean;
 }
 
 /** "Send as a gift": the recipient gives their own address from a link. */
-export const GiftSwitch = ({ busy, gift, onChange }: GiftSwitchProps) => {
+export const GiftSwitch = ({
+  busy,
+  gift,
+  onChange,
+  rentals = false,
+}: GiftSwitchProps) => {
   const t = useTranslations("app.checkout.gift");
   const id = useId();
   return (
     <Card>
       <CardContent className="flex items-start gap-3">
         <Checkbox
-          checked={gift}
-          disabled={busy}
+          checked={gift && !rentals}
+          disabled={busy || rentals}
           id={id}
           onCheckedChange={(checked) => onChange(checked === true)}
         />
@@ -61,7 +68,9 @@ export const GiftSwitch = ({ busy, gift, onChange }: GiftSwitchProps) => {
             <GiftIcon className="size-4" />
             {t("switch")}
           </Label>
-          <p className="text-muted-foreground text-sm">{t("switchHint")}</p>
+          <p className="text-muted-foreground text-sm">
+            {t(rentals ? "noRentals" : "switchHint")}
+          </p>
         </div>
       </CardContent>
     </Card>

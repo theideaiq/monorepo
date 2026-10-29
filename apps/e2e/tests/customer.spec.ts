@@ -185,7 +185,7 @@ const BAGHDAD = /^Baghdad/;
 const CASH_ON_DELIVERY = /^Cash on delivery/;
 const PLACE_CASH_ORDER = /^Place order · /;
 const PLACE_ORDER = /^Place order and pay /;
-const RENT_PAGE = /\/rent\/elden-ring-ps5$/;
+const CART_PAGE = /\/cart$/;
 const ORDER_PAGE = /\/pass\/orders\/[^/]+$/;
 const STUDENT_NUDGE = /^Verify as a student/;
 
@@ -239,27 +239,28 @@ test.describe("a signed-in customer", () => {
     noErrors();
   });
 
-  test("rents a game and a book together, delivered", async ({ page }) => {
+  test("rents a game and a book in the cart with something bought", async ({
+    page,
+  }) => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/store/elden-ring-ps5`);
     await expect(page.getByText("Rent it on its own")).toBeVisible();
-    await page.getByRole("link", { exact: true, name: "Rent it" }).click();
-    await expect(page).toHaveURL(RENT_PAGE);
-    await expect(page.getByText("Refundable deposit")).toBeVisible();
+    await page.getByRole("button", { exact: true, name: "Rent it" }).click();
+    await expect(page).toHaveURL(CART_PAGE);
+    await expect(page.getByText("Elden Ring").first()).toBeVisible();
 
-    // Films, books and games rent together for one delivery fee.
-    await page.getByLabel("Find another item").fill("Solitude");
-    await page
-      .getByRole("listitem")
-      .filter({ hasText: "One Hundred Years of Solitude" })
-      .getByRole("button", { name: "Add" })
-      .click();
-    await expect(
-      page.getByRole("button", {
-        name: "Remove One Hundred Years of Solitude",
-      })
-    ).toBeVisible();
+    // Films, books and games rent together, beside what's bought.
+    await page.goto(`${urls.web}/store/one-hundred-years-of-solitude`);
+    await page.getByRole("button", { exact: true, name: "Rent it" }).click();
+    await expect(page).toHaveURL(CART_PAGE);
+    await page.goto(`${urls.web}/store/${product.slug}`);
+    await page.getByRole("button", { name: "Add to cart" }).click();
+    await page.getByRole("link", { name: "View cart" }).click();
+    await expect(page.getByText("Refundable deposits")).toBeVisible();
+    await expectAccessible(page);
 
+    await page.getByRole("link", { name: "Checkout" }).click();
+    await expect(page.getByLabel("Send as a gift")).toBeDisabled();
     await page.getByRole("combobox", { name: "Governorate" }).click();
     await page.getByRole("option", { name: BAGHDAD }).click();
     await page.getByLabel("Full name").fill(customer.name);
@@ -271,7 +272,9 @@ test.describe("a signed-in customer", () => {
     await expectAccessible(page);
     await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
 
-    await expect(page).toHaveURL(ORDER_PAGE);
+    // One order: the purchase, each rent and its deposit.
+    await expect(page).toHaveURL(ORDER_PAGE, { timeout: 30_000 });
+    await expect(page.getByText(product.name).first()).toBeVisible();
     await expect(
       page.getByText("Refundable deposit: Elden Ring (PS5)")
     ).toBeVisible();

@@ -30,6 +30,7 @@ import {
   type CartLineView,
   freeDeliveryRemaining,
   isOtherCondition,
+  isRentLine,
   isShopLine,
   lineProblem,
   MAX_QUANTITY,
@@ -42,6 +43,22 @@ import {
   useUpdateCartLine,
 } from "@/lib/store-queries";
 import { useSaveForLater } from "@/lib/wishlist-queries";
+
+/** A rent line's terms: the days it's for and its refundable deposit. */
+const RentTerms = ({ line }: { readonly line: CartLineView }) => {
+  const t = useTranslations("app.cart.rent");
+  const tRent = useTranslations("app.rent");
+  const locale = useLocale();
+  const days = line.item.rental?.days ?? 0;
+  return (
+    <span className="text-muted-foreground text-xs">
+      {t("terms", {
+        days: tRent("days", { count: days, n: formatNumber(days, locale) }),
+        deposit: formatPrice(line.deposit, locale),
+      })}
+    </span>
+  );
+};
 
 const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
   const t = useTranslations("app.cart");
@@ -86,6 +103,7 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
                 {conditions(item.condition)}
               </span>
             ) : null}
+            {isRentLine(item) ? <RentTerms line={line} /> : null}
             {isShopLine(item) && item.seller ? (
               <span className="text-muted-foreground text-xs">
                 {soldBy("soldBy", { seller: item.seller.name })}
@@ -97,30 +115,38 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
           </span>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <QuantityStepper
-            decreaseLabel={t("decrease")}
-            disabled={busy || !line.buyable}
-            increaseLabel={t("increase")}
-            label={t("quantity")}
-            max={Math.max(1, Math.min(line.available, MAX_QUANTITY))}
-            onChange={(quantity) => update.mutate({ id: item.id, quantity })}
-            value={line.quantity}
-          />
+          {isRentLine(item) ? (
+            <span className="font-medium text-pink-text text-xs">
+              {t("rent.label")}
+            </span>
+          ) : (
+            <QuantityStepper
+              decreaseLabel={t("decrease")}
+              disabled={busy || !line.buyable}
+              increaseLabel={t("increase")}
+              label={t("quantity")}
+              max={Math.max(1, Math.min(line.available, MAX_QUANTITY))}
+              onChange={(quantity) => update.mutate({ id: item.id, quantity })}
+              value={line.quantity}
+            />
+          )}
           <div className="flex flex-wrap gap-1">
-            <Button
-              disabled={busy}
-              onClick={() =>
-                later.mutate({
-                  cartItemId: item.id,
-                  productId: item.product_id,
-                })
-              }
-              size="sm"
-              variant="ghost"
-            >
-              <HeartIcon />
-              {t("saveForLater")}
-            </Button>
+            {isRentLine(item) ? null : (
+              <Button
+                disabled={busy}
+                onClick={() =>
+                  later.mutate({
+                    cartItemId: item.id,
+                    productId: item.product_id,
+                  })
+                }
+                size="sm"
+                variant="ghost"
+              >
+                <HeartIcon />
+                {t("saveForLater")}
+              </Button>
+            )}
             <Button
               disabled={busy}
               onClick={() => update.mutate({ id: item.id, quantity: 0 })}
@@ -166,7 +192,10 @@ export const Cart = () => {
   const summary =
     cart.data && settings.data ? summarizeCart(cart.data, settings.data) : null;
   const remaining = summary
-    ? freeDeliveryRemaining(summary.totals.subtotal, baghdad?.free_from)
+    ? freeDeliveryRemaining(
+        summary.totals.subtotal - summary.totals.deposits,
+        baghdad?.free_from
+      )
     : 0;
 
   return (

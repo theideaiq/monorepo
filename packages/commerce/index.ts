@@ -296,12 +296,17 @@ export interface CheckoutQuote {
   couponCode: string | null;
   /** Delivery the order doesn't pay (the zone's fee when it's free). */
   deliveryWaived: number;
+  /** Refundable deposits of the cart's rentals (in the subtotal). */
+  deposits: number;
   discount: number;
   discountSource: DiscountSource | null;
   freeDelivery: FreeDeliveryReason | null;
   /** The zone's free-delivery threshold, for "add X for free delivery". */
   freeFrom: number | null;
+  /** The rent of the cart's rentals (in the subtotal). */
+  rent: number;
   shippingFee: number;
+  /** What's bought, the rent and the deposits. */
   subtotal: number;
   total: number;
   zoneId: string | null;
@@ -322,6 +327,7 @@ export const toCheckoutQuote = (json: unknown): CheckoutQuote => {
     bulbsUsed: toNumber(row.bulbs_used),
     couponCode: typeof row.coupon_code === "string" ? row.coupon_code : null,
     deliveryWaived: toNumber(row.delivery_waived),
+    deposits: toNumber(row.deposits),
     discount: toNumber(row.discount),
     discountSource: source === "invite" || source === "coupon" ? source : null,
     freeDelivery: free === "plan" || free === "threshold" ? free : null,
@@ -329,6 +335,7 @@ export const toCheckoutQuote = (json: unknown): CheckoutQuote => {
       row.free_from === null || row.free_from === undefined
         ? null
         : toNumber(row.free_from),
+    rent: toNumber(row.rent),
     shippingFee: toNumber(row.shipping_fee),
     subtotal: toNumber(row.subtotal),
     total: toNumber(row.total),

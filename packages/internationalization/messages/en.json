@@ -1342,7 +1342,13 @@
           "deposit": "Deposit {deposit}, refunded when you return it",
           "lateFee": "{fee} a day if it's late; after {days} late it's charged at its used price",
           "cta": "Rent it",
-          "rentedOut": "All copies are rented out right now."
+          "rentedOut": "All copies are rented out right now.",
+          "errors": {
+            "notTogether": "Only films, books and games rent together. Check out what's in your cart first, or remove it.",
+            "tooMany": "You can rent up to 3 items at a time.",
+            "unavailable": "This can't be rented right now.",
+            "unknown": "We couldn't add this to your cart. Please try again."
+          }
         },
         "notify": {
           "none": "No one has this on offer right now.",
@@ -1384,7 +1390,12 @@
       "bulbs": "Bulbs ({bulbs})",
       "discount": "Friend's invite",
       "coupon": "Coupon",
-      "saveForLater": "Save for later"
+      "saveForLater": "Save for later",
+      "deposits": "Refundable deposits",
+      "rent": {
+        "label": "Rent",
+        "terms": "For {days} · deposit {deposit}, refunded when you return it"
+      }
     },
     "checkout": {
       "title": "Checkout",
@@ -1511,8 +1522,10 @@
         "message": "Your message",
         "messagePlaceholder": "Happy birthday!",
         "hidePrice": "Hide the price",
-        "payNote": "Gifts are paid online or with Bulbs."
-      }
+        "payNote": "Gifts are paid online or with Bulbs.",
+        "noRentals": "Rentals can't be sent as gifts. Remove them from the cart to send the rest as a gift."
+      },
+      "rentLine": "Rent"
     },
     "orders": {
       "title": "Orders",

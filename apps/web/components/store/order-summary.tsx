@@ -8,6 +8,8 @@ interface OrderSummaryProps {
   /** IQD paid with Bulbs, and how many. */
   readonly bulbsDiscount?: number;
   readonly bulbsUsed?: number;
+  /** Refundable deposits included in `subtotal`, shown on their own row. */
+  readonly deposits?: number;
   /** IQD off from a friend's invite or a coupon. */
   readonly discount?: number;
   /** `orders.discount_source`: "coupon" labels the row as a coupon. */
@@ -24,6 +26,7 @@ interface OrderSummaryProps {
 export const OrderSummary = ({
   bulbsDiscount = 0,
   bulbsUsed = 0,
+  deposits = 0,
   discount = 0,
   discountSource = null,
   shippingFee,
@@ -38,8 +41,16 @@ export const OrderSummary = ({
     <dl className="grid gap-2 text-sm">
       <div className="flex justify-between gap-4">
         <dt className="text-muted-foreground">{t("subtotal")}</dt>
-        <dd className="tabular-nums">{formatPrice(subtotal, locale)}</dd>
+        <dd className="tabular-nums">
+          {formatPrice(subtotal - deposits, locale)}
+        </dd>
       </div>
+      {deposits > 0 ? (
+        <div className="flex justify-between gap-4">
+          <dt className="text-muted-foreground">{t("deposits")}</dt>
+          <dd className="tabular-nums">{formatPrice(deposits, locale)}</dd>
+        </div>
+      ) : null}
       <div className="flex justify-between gap-4">
         <dt className="text-muted-foreground">{t("shipping")}</dt>
         <dd className="tabular-nums">
