@@ -188,14 +188,15 @@ export const Installments = async ({
 export const StatusPanel = async ({
   application,
   guardianName,
+  overdue,
 }: {
   readonly application: Application;
   readonly guardianName: string | null;
+  /** An installment is past its date. */
+  readonly overdue: boolean;
 }) => {
   const t = await getTranslations("admin.editorial.programs");
   const status = application.status as ApplicationStatus;
-  const today = new Date().toISOString().slice(0, 10);
-  const overdue = Boolean(application.pay_by && application.pay_by < today);
   const outcomes = endOutcomes(status, overdue);
   const guardian = guardianNote(application.guardian_status);
   return (

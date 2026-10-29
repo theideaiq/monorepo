@@ -33,6 +33,8 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/pass/wishlist", "/pass/saved"],
   ["/pass/events", "/club", "#yours"],
   ["/pass/submissions", "/club", "#yours"],
+  // Program notifications link to Club → Yours (`?tab=applications`).
+  ["/club/yours", "/club", "#yours"],
   ["/post/events", "/club"],
   ["/post", "/club"],
   ["/suite", "/business"],

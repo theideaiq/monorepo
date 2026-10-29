@@ -78,6 +78,7 @@ import { useMyBulbs } from "@/lib/bulbs-queries";
 import {
   addKitToSummary,
   addPlusGiftToSummary,
+  addProgramsToSummary,
   freeDeliveryRemaining,
   isRentLine,
   type KitLine,
@@ -89,6 +90,7 @@ import { useCartKitLine } from "@/lib/kits";
 import { orderPath, usePlaceGift, usePlaceOrder } from "@/lib/order-checkout";
 import { isNativeApp } from "@/lib/platform";
 import { useCartPlusGiftLine } from "@/lib/plus-gifts";
+import { type ProgramLine, useCartProgramLines } from "@/lib/programs";
 import { useProfile } from "@/lib/queries";
 import {
   type QuoteRequest,
@@ -571,6 +573,8 @@ interface SummaryCardProps {
   readonly oneTap?: string | null;
   /** The cart's gifted Plus months, listed with the lines. */
   readonly plusName?: string | null;
+  /** The program installments in the cart, listed with the lines. */
+  readonly programNames?: readonly string[];
   /** The server's quote, once a zone is chosen. */
   readonly quote: CheckoutQuote | null;
   readonly summary: ReturnType<typeof summarizeCart>;
@@ -584,6 +588,7 @@ const SummaryCard = ({
   kitName = null,
   oneTap,
   plusName = null,
+  programNames = [],
   quote,
   summary,
 }: SummaryCardProps) => {
@@ -647,6 +652,14 @@ const SummaryCard = ({
               </span>
             </li>
           ) : null}
+          {programNames.map((name) => (
+            <li className="flex justify-between gap-3" key={name}>
+              <span className="line-clamp-1 min-w-0">{name}</span>
+              <span className="shrink-0 text-muted-foreground">
+                {t("programLine")}
+              </span>
+            </li>
+          ))}
         </ul>
         <OrderSummary {...totals} />
         {quote ? (
@@ -777,6 +790,7 @@ const useCheckoutPricing = ({
   kit,
   payment,
   plus,
+  programs,
   settings,
   useBulbs,
   zones,
@@ -792,6 +806,8 @@ const useCheckoutPricing = ({
   kit: KitLine | null;
   /** The cart's gifted Plus months: nothing to deliver. */
   plus: { price: number } | null;
+  /** The cart's program installments: paid online, nothing to deliver. */
+  programs: readonly ProgramLine[];
   payment: PaymentMethod;
   settings: ReturnType<typeof useStoreSettings>;
   useBulbs: boolean;
@@ -807,7 +823,11 @@ const useCheckoutPricing = ({
   const choices = resolveChoices({
     address,
     payment,
-    settings: settings.data,
+    // Programs are paid online, never on delivery.
+    settings:
+      programs.length > 0 && settings.data
+        ? { ...settings.data, cashOnDelivery: false }
+        : settings.data,
     subtotal: estimate?.totals.subtotal ?? 0,
     zones: kit
       ? zones.data?.filter((option) => option.governorate === "baghdad")
@@ -819,15 +839,18 @@ const useCheckoutPricing = ({
 
   const summary =
     cart.data && settings.data
-      ? addPlusGiftToSummary(
-          addKitToSummary(
-            summarizeCart(cart.data, settings.data, {
-              freeFrom: zone?.free_from,
-              zoneFee: zone?.fee,
-            }),
-            kit
+      ? addProgramsToSummary(
+          addPlusGiftToSummary(
+            addKitToSummary(
+              summarizeCart(cart.data, settings.data, {
+                freeFrom: zone?.free_from,
+                zoneFee: zone?.fee,
+              }),
+              kit
+            ),
+            plus
           ),
-          plus
+          programs
         )
       : null;
   const ships = Boolean(kit) || (summary?.lines.length ?? 0) > 0;
@@ -1026,6 +1049,8 @@ interface WhereItGoesProps extends AddressSectionProps {
   readonly gift: GiftForm | null;
   readonly missingGiftZone: boolean;
   readonly onGift: (gift: GiftForm | null) => void;
+  /** Only program installments: no address and no gift. */
+  readonly onlyPrograms: boolean;
   /** The cart holds Plus months, so it's a gift. */
   readonly plus: boolean;
   /** The cart holds a rental, so it can't be a gift. */
@@ -1039,34 +1064,51 @@ const WhereItGoes = ({
   gift,
   missingGiftZone,
   onGift,
+  onlyPrograms,
   plus,
   rentals,
   ships,
   ...address
-}: WhereItGoesProps) => (
-  <>
-    <GiftSwitch
-      busy={address.busy}
-      gift={gift !== null}
-      onChange={(on) => onGift(on ? emptyGift : null)}
-      rentals={rentals}
-      required={plus}
-    />
-    {gift ? (
-      <GiftDetailsCard
+}: WhereItGoesProps) =>
+  onlyPrograms ? (
+    <NothingToDeliver />
+  ) : (
+    <>
+      <GiftSwitch
         busy={address.busy}
-        form={gift}
-        missingZone={missingGiftZone}
-        onChange={onGift}
-        plus={plus}
-        ships={ships}
-        zones={address.zones}
+        gift={gift !== null}
+        onChange={(on) => onGift(on ? emptyGift : null)}
+        rentals={rentals}
+        required={plus}
       />
-    ) : (
-      <AddressSection {...address} />
-    )}
-  </>
-);
+      {gift ? (
+        <GiftDetailsCard
+          busy={address.busy}
+          form={gift}
+          missingZone={missingGiftZone}
+          onChange={onGift}
+          plus={plus}
+          ships={ships}
+          zones={address.zones}
+        />
+      ) : (
+        <AddressSection {...address} />
+      )}
+    </>
+  );
+
+/** Program installments alone: nothing is delivered, paid online. */
+const NothingToDeliver = () => {
+  const t = useTranslations("app.checkout");
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("programs.title")}</CardTitle>
+        <CardDescription>{t("programs.description")}</CardDescription>
+      </CardHeader>
+    </Card>
+  );
+};
 
 /** The cart's game night kit, priced, and its name. */
 const useKitInCart = () => {
@@ -1089,19 +1131,39 @@ const usePlusInCart = () => {
   };
 };
 
-/** Rentals and kits come back to whoever has them, so they aren't gifts. */
+/** The cart's program installments, and their names. */
+const useProgramsInCart = () => {
+  const locale = useLocale();
+  const programs = useCartProgramLines();
+  return {
+    programNames: programs.map((line) =>
+      line.title ? localized(line.title, "title", locale) : ""
+    ),
+    programs,
+  };
+};
+
+/**
+ * Rentals and kits come back to whoever has them, and program
+ * installments are the applicant's own, so they aren't gifts.
+ */
 const giftBlocked = (
   summary: ReturnType<typeof summarizeCart>,
-  kit: KitLine | null
-) => kit !== null || summary.lines.some((line) => isRentLine(line.item));
+  kit: KitLine | null,
+  programs = false
+) =>
+  programs ||
+  kit !== null ||
+  summary.lines.some((line) => isRentLine(line.item));
 
-/** Plus months go as a gift, which rentals and kits can't be. */
+/** Plus months go as a gift, which rentals, kits and programs can't be. */
 const orderableSummary = (
   summary: ReturnType<typeof summarizeCart>,
   kit: KitLine | null,
-  plus: boolean
+  plus: boolean,
+  programs = false
 ) =>
-  plus && giftBlocked(summary, kit)
+  plus && giftBlocked(summary, kit, programs)
     ? { ...summary, canCheckout: false }
     : summary;
 
@@ -1122,8 +1184,90 @@ const isEmpty = (
   summary: ReturnType<typeof summarizeCart> | null,
   kit: KitLine | null,
   plus: boolean,
-  busy: boolean
-) => summary !== null && summary.lines.length === 0 && !kit && !plus && !busy;
+  busy: boolean,
+  programs = false
+) =>
+  summary !== null &&
+  summary.lines.length === 0 &&
+  !kit &&
+  !plus &&
+  !programs &&
+  !busy;
+
+/**
+ * Program installments alone: nothing is delivered, so the order is placed
+ * online with no address.
+ */
+const useProgramsOnly = ({
+  fullName,
+  onError,
+  onSuccess,
+  phone,
+  place,
+  plus,
+  programs,
+  quote,
+  ships,
+}: {
+  fullName: string | null | undefined;
+  onError: (error: Error) => void;
+  onSuccess: Parameters<
+    ReturnType<typeof usePlaceOrder>["mutate"]
+  >[1] extends infer Options
+    ? Options extends { onSuccess?: infer Done }
+      ? NonNullable<Done>
+      : never
+    : never;
+  phone: string;
+  place: ReturnType<typeof usePlaceOrder>;
+  plus: boolean;
+  programs: number;
+  quote: CheckoutQuote | null | undefined;
+  ships: boolean;
+}) => ({
+  onlyPrograms: !(ships || plus) && programs > 0,
+  submitPrograms: () =>
+    place.mutate(
+      {
+        deliveryZone: null,
+        paymentMethod: "online",
+        shipping: {
+          address: "",
+          city: "",
+          full_name: fullName ?? "",
+          governorate: "",
+          landmark: "",
+          notes: "",
+          phone,
+        },
+        useBulbs: quote?.bulbsUsed ?? 0,
+      },
+      { onError, onSuccess }
+    ),
+});
+
+/** A gift, or program installments alone: placed without an address. */
+const withoutAddress = ({
+  gift,
+  onlyPrograms,
+  submitGift,
+  submitPrograms,
+}: {
+  gift: GiftForm | null;
+  onlyPrograms: boolean;
+  submitGift: (gift: GiftForm) => void;
+  submitPrograms: () => void;
+}) => {
+  if (gift) {
+    submitGift(gift);
+    return true;
+  }
+  if (onlyPrograms) {
+    submitPrograms();
+    return true;
+  }
+  return false;
+};
 
 /**
  * Checkout: the delivery address and zone, online or cash payment,
@@ -1143,6 +1287,7 @@ export const Checkout = () => {
   const { address, setForm } = book;
   const { kit, kitName } = useKitInCart();
   const { plus, plusName } = usePlusInCart();
+  const { programNames, programs } = useProgramsInCart();
   const [fieldErrors, setFieldErrors] = useState<AddressField[]>([]);
   const [error, setError] = useState<CheckoutError | null>(null);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
@@ -1181,6 +1326,7 @@ export const Checkout = () => {
     kit,
     payment: gift ? "online" : book.payment,
     plus,
+    programs,
     settings,
     useBulbs,
     zones,
@@ -1226,11 +1372,22 @@ export const Checkout = () => {
     );
   };
 
+  const { onlyPrograms, submitPrograms } = useProgramsOnly({
+    fullName: profile.data?.full_name,
+    onError: (mutationError) => setError(toCheckoutError(mutationError)),
+    onSuccess: afterPlaced,
+    phone: address.phone,
+    place,
+    plus: plus !== null,
+    programs: programs.length,
+    quote,
+    ships,
+  });
+
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-    if (gift) {
-      submitGift(gift);
+    if (withoutAddress({ gift, onlyPrograms, submitGift, submitPrograms })) {
       return;
     }
     const result = validateAddress(address, { areas, zones: zoneList });
@@ -1280,7 +1437,7 @@ export const Checkout = () => {
     profile.isPending ||
     book.loading;
   const failed = cart.isError || settings.isError || zones.isError;
-  const empty = isEmpty(summary, kit, plus !== null, busy);
+  const empty = isEmpty(summary, kit, plus !== null, busy, programs.length > 0);
 
   return (
     <>
@@ -1324,8 +1481,9 @@ export const Checkout = () => {
                 missingGiftZone={missingGiftZone}
                 onChange={set}
                 onGift={setGift}
+                onlyPrograms={onlyPrograms}
                 plus={plus !== null}
-                rentals={giftBlocked(summary, kit)}
+                rentals={giftBlocked(summary, kit, programs.length > 0)}
                 ships={ships}
                 zone={zone}
                 zones={zoneList}
@@ -1359,8 +1517,14 @@ export const Checkout = () => {
               kitName={kitName}
               oneTap={gift ? null : book.oneTap(cash)}
               plusName={plusName}
+              programNames={programNames}
               quote={quote ?? null}
-              summary={orderableSummary(summary, kit, plus !== null)}
+              summary={orderableSummary(
+                summary,
+                kit,
+                plus !== null,
+                programs.length > 0
+              )}
             />
           </form>
         ) : null}

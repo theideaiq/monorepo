@@ -12,10 +12,15 @@ export type ApplicationStatus =
 export const guardianNote = (status: string | null) =>
   status === "pending" || status === "declined" ? status : null;
 
-/** How an editor can end a place in each status. */
+/**
+ * How an editor can end a place in each status; `overdue` when an
+ * installment is past its date.
+ */
 export const endOutcomes = (status: ApplicationStatus, overdue: boolean) => {
   if (status === "confirmed") {
-    return ["completed", "visa_refused", "the_idea"] as const;
+    return overdue
+      ? (["completed", "unpaid", "visa_refused", "the_idea"] as const)
+      : (["completed", "visa_refused", "the_idea"] as const);
   }
   if (status === "accepted") {
     return overdue
@@ -27,3 +32,12 @@ export const endOutcomes = (status: ApplicationStatus, overdue: boolean) => {
   }
   return [] as const;
 };
+
+/** Whether any installment is unpaid past its date (YYYY-MM-DD, Baghdad). */
+export const hasOverdue = (
+  payments: readonly { due_on: string; paid_at: string | null }[],
+  today: string
+) =>
+  payments.some(
+    (payment) => !payment.paid_at && payment.due_on.localeCompare(today) < 0
+  );

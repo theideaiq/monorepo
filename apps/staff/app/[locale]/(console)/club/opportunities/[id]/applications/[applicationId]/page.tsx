@@ -7,6 +7,7 @@ import { PageBody, PageHeader } from "@/components/admin/page";
 import { isUuid } from "@/lib/admin/list";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
+import { hasOverdue } from "../status";
 import {
   ApplicantDetails,
   Installments,
@@ -32,6 +33,9 @@ const ApplicationPage = async ({
   const { supabase } = await requireSection("editorial");
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("admin.editorial.programs");
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Baghdad",
+  }).format(new Date());
 
   const [{ data: application }, { data: payments }, { data: listing }] =
     await Promise.all([
@@ -98,6 +102,7 @@ const ApplicationPage = async ({
                 ? (names.get(application.guardian_id) ?? null)
                 : null
             }
+            overdue={hasOverdue(payments ?? [], today)}
           />
           {application.refund_amount ? (
             <RefundPanel application={application} locale={locale} />

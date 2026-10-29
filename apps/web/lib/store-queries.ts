@@ -33,6 +33,7 @@ import {
 } from "./cart";
 import { useCartKit } from "./kits";
 import { useCartPlusGift } from "./plus-gifts";
+import { useCartPrograms } from "./programs";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /** Store catalog, cart and orders, all through RLS. */
@@ -297,14 +298,18 @@ export const useCart = () => {
 
 /**
  * Items in the cart, for the navigation badge (shares the cart query),
- * with its kit and gifted Plus months.
+ * with its kit, gifted Plus months and program installments.
  */
 export const useCartCount = () => {
   const cart = useCart();
   const kit = useCartKit().data;
   const plus = useCartPlusGift().data;
+  const programs = useCartPrograms().data?.length ?? 0;
   return (
-    (cart.data ? cartCount(cart.data) : 0) + (kit ? 1 : 0) + (plus ? 1 : 0)
+    (cart.data ? cartCount(cart.data) : 0) +
+    (kit ? 1 : 0) +
+    (plus ? 1 : 0) +
+    programs
   );
 };
 

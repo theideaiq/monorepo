@@ -806,6 +806,12 @@
             "open": "Open until filled",
             "closed": "Closed for now"
           }
+        },
+        "applicationsTab": "Applications",
+        "applications": {
+          "none": "No applications yet.",
+          "browse": "Find a program",
+          "nextDue": "next: {amount} by {date}"
         }
       },
       "surveys": {
@@ -1282,6 +1288,75 @@
         "following": "You're following it: we'll tell you when it opens and three days before it closes.",
         "failed": "That didn't work. Please try again."
       }
+    },
+    "programs": {
+      "package": "The package",
+      "free": "Free",
+      "plusPrice": "Plus price: {price}",
+      "includes": "What's included",
+      "insurance": "Travel insurance for the whole program",
+      "chaperone": "An adult chaperone from The IDEA travels with under-18s",
+      "agesFrom": "For ages {min} and over",
+      "ages": "For ages {min} to {max}",
+      "seats": "{seats} places",
+      "installments": "Paying in installments",
+      "firstInstallment": "{percent}% within {days} days of being accepted",
+      "laterInstallment": "{percent}% by {date}",
+      "refunds": "If you withdraw",
+      "refundStep": "{percent}% back up to {days} days before the start",
+      "refundAfter": "After that, nothing comes back.",
+      "noRefund": "Nothing comes back if you withdraw.",
+      "visa": "{percent}% back if your visa is refused",
+      "calledOff": "Everything back if The IDEA calls the program off",
+      "policy": "See the <link>programs policy</link>.",
+      "apply": {
+        "title": "Apply",
+        "signIn": "Sign in to apply",
+        "fromPass": "Your name, date of birth, phone, area and student badge come from your Pass.",
+        "emergencyName": "Emergency contact's name",
+        "emergencyPhone": "Emergency contact's phone",
+        "motivation": "Why you'd like to join (optional)",
+        "passport": "Passport scan",
+        "passportHint": "A photo or PDF of your passport's photo page, up to 3 files. Kept with this application only and deleted after the program.",
+        "invalid": "Add an emergency contact (a phone number like +9647…) and your passport.",
+        "sending": "Sending…",
+        "send": "Send application",
+        "errors": {
+          "birthday": "Add your date of birth in Pass → Settings first.",
+          "guardian": "Under 18, you need a guardian linked to your Pass first (Pass → Settings).",
+          "ages": "This program is for other ages.",
+          "closed": "Applications are closed.",
+          "applied": "You've already applied.",
+          "failed": "Couldn't send your application. Try again."
+        }
+      },
+      "application": {
+        "statuses": {
+          "submitted": "Application sent",
+          "waitlisted": "On the waitlist",
+          "accepted": "Accepted: pay the first installment to confirm your place",
+          "confirmed": "Your place is confirmed",
+          "completed": "Completed",
+          "refused": "Not accepted this time",
+          "withdrawn": "Withdrawn",
+          "cancelled": "Cancelled"
+        },
+        "guardianPending": "Waiting for your guardian's approval.",
+        "paid": "Paid {paid} of {price}",
+        "waitingPayment": "An installment is waiting for payment in <link>your orders</link>.",
+        "payNext": "Pay {amount} (due {due})",
+        "payAll": "Pay everything left ({amount})",
+        "payFailed": "Couldn't add it to your cart.",
+        "withdraw": "Withdraw",
+        "withdrawConfirm": "Withdraw your application? What you paid comes back by the refund schedule.",
+        "withdrawYes": "Withdraw",
+        "keep": "Keep it",
+        "withdrawFailed": "Couldn't withdraw. Try again or contact us.",
+        "withdrawn": "You've withdrawn.",
+        "withdrawnRefund": "You've withdrawn. {amount} will be refunded.",
+        "refunded": "{amount} refunded",
+        "refundDue": "{amount} to be refunded"
+      }
     }
   },
   "app": {
@@ -1467,6 +1542,12 @@
       "plus": {
         "label": "Plus as a gift",
         "months": "{count, plural, one {{months} month} other {{months} months}}, sent as a gift"
+      },
+      "program": {
+        "full": "The whole package",
+        "installment": "Installment {first} of {total}",
+        "installments": "Installments {first}–{last} of {total}",
+        "online": "Paid online"
       }
     },
     "checkout": {
@@ -1602,7 +1683,12 @@
       },
       "rentLine": "Rent",
       "kitLine": "Kit",
-      "plusLine": "Gift"
+      "plusLine": "Gift",
+      "programLine": "Program",
+      "programs": {
+        "title": "Nothing to deliver",
+        "description": "Program installments are paid online, so no address is needed."
+      }
     },
     "orders": {
       "title": "Orders",
@@ -2276,7 +2362,14 @@
         "decline": "Decline",
         "failed": "That didn't work. Try again.",
         "tooYoung": "A guardian must be 18 or over.",
-        "expired": "This invite has expired. Ask for a new code."
+        "expired": "This invite has expired. Ask for a new code.",
+        "programs": {
+          "title": "Program applications",
+          "description": "Your teen applied to one of The IDEA's programs. Approve it to send it for review; the payments that follow need no second approval.",
+          "line": "{name}: {title}",
+          "approve": "Approve",
+          "decline": "Decline"
+        }
       },
       "student": {
         "title": "Student verification",
@@ -3915,6 +4008,38 @@
         "opportunity_deadline": {
           "title": "Closing soon",
           "body": "\"{title}\" closes {date}."
+        },
+        "program_guardian_request": {
+          "title": "Approve an application",
+          "body": "{name} applied to \"{title}\". Approve it in Pass → Settings."
+        },
+        "program_guardian_approved": {
+          "title": "Your guardian approved",
+          "body": "Your application to \"{title}\" goes for review."
+        },
+        "program_guardian_declined": {
+          "title": "Your guardian declined",
+          "body": "Your application to \"{title}\" was cancelled."
+        },
+        "program_accepted": {
+          "title": "You're accepted",
+          "body": "You're accepted to \"{title}\". Pay the first installment to confirm your place."
+        },
+        "program_waitlisted": {
+          "title": "On the waitlist",
+          "body": "You're on the waitlist for \"{title}\". We'll tell you if a place opens."
+        },
+        "program_refused": {
+          "title": "Not this time",
+          "body": "Your application to \"{title}\" wasn't accepted."
+        },
+        "program_cancelled": {
+          "title": "Place cancelled",
+          "body": "{hasRefund, select, yes {Your place on \"{title}\" was cancelled; {amount} will be refunded.} other {Your place on \"{title}\" was cancelled.}}"
+        },
+        "program_refunded": {
+          "title": "Refund sent",
+          "body": "{amount} for \"{title}\" was refunded."
         }
       },
       "kinds": {

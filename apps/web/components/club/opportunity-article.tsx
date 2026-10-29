@@ -18,10 +18,12 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { CoverImage } from "@/components/cover-image";
 import { joinPath } from "@/lib/club";
-import { editorialUrl, type OpportunityRow } from "@/lib/data";
+import { editorialUrl, type OpportunityRow, type ProgramRow } from "@/lib/data";
 import { Markdown } from "@/lib/markdown";
 import { FollowButton } from "./follow-button";
 import { isFeatured } from "./opportunity-card";
+import { ProgramApply } from "./program-apply";
+import { ProgramPackage } from "./program-package";
 
 const day = (value: string) => new Date(`${value}T12:00:00`);
 
@@ -46,13 +48,68 @@ const Fact = ({
   </div>
 );
 
-/** The facts beside an opportunity, and where to apply while it's open. */
+/**
+ * Whether it's open, and where to apply: the organization's link, or here
+ * for The IDEA's own programs.
+ */
+const WhereToApply = async ({
+  closed,
+  locale,
+  notOpenYet,
+  opportunity,
+  program,
+}: {
+  readonly closed: boolean;
+  readonly locale: Locale;
+  readonly notOpenYet: boolean;
+  readonly opportunity: OpportunityRow;
+  readonly program: ProgramRow | null;
+}) => {
+  const t = await getTranslations({ locale, namespace: "web.opportunities" });
+  const open = !(closed || notOpenYet);
+  return (
+    <>
+      {closed ? <p className="text-sm">{t("closed")}</p> : null}
+      {notOpenYet && opportunity.opens_at ? (
+        <p className="text-sm">
+          {t("opensOn", { date: formatDate(opportunity.opens_at, locale) })}
+        </p>
+      ) : null}
+      {program ? (
+        <ProgramApply
+          open={open}
+          passportRequired={program.passport_required}
+          programId={program.opportunity_id}
+        />
+      ) : null}
+      {!program && opportunity.apply_url && open ? (
+        <Button asChild className="w-full">
+          <a
+            href={opportunity.apply_url}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {t("apply")}
+            <ExternalLink aria-hidden="true" />
+          </a>
+        </Button>
+      ) : null}
+    </>
+  );
+};
+
+/**
+ * The facts beside an opportunity, and where to apply while it's open: on
+ * the organization's side, or here for The IDEA's own programs.
+ */
 const Details = async ({
   locale,
   opportunity,
+  program,
 }: {
   readonly locale: Locale;
   readonly opportunity: OpportunityRow;
+  readonly program: ProgramRow | null;
 }) => {
   const t = await getTranslations({ locale, namespace: "web.opportunities" });
   const now = new Date();
@@ -92,30 +149,21 @@ const Details = async ({
           {dates}
         </Fact>
       ) : null}
-      <Fact icon={Wallet} label={t("cost")}>
-        {opportunity.applicant_fee > 0
-          ? formatPrice(opportunity.applicant_fee, locale)
-          : t("free")}
-        {opportunity.fee_note ? ` · ${opportunity.fee_note}` : ""}
-      </Fact>
-      {closed ? <p className="text-sm">{t("closed")}</p> : null}
-      {notOpenYet && opportunity.opens_at ? (
-        <p className="text-sm">
-          {t("opensOn", { date: formatDate(opportunity.opens_at, locale) })}
-        </p>
-      ) : null}
-      {opportunity.apply_url && !closed && !notOpenYet ? (
-        <Button asChild className="w-full">
-          <a
-            href={opportunity.apply_url}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {t("apply")}
-            <ExternalLink aria-hidden="true" />
-          </a>
-        </Button>
-      ) : null}
+      {program ? null : (
+        <Fact icon={Wallet} label={t("cost")}>
+          {opportunity.applicant_fee > 0
+            ? formatPrice(opportunity.applicant_fee, locale)
+            : t("free")}
+          {opportunity.fee_note ? ` · ${opportunity.fee_note}` : ""}
+        </Fact>
+      )}
+      <WhereToApply
+        closed={closed}
+        locale={locale}
+        notOpenYet={notOpenYet}
+        opportunity={opportunity}
+        program={program}
+      />
     </>
   );
 };
@@ -127,9 +175,12 @@ const Details = async ({
 export const OpportunityArticle = async ({
   locale,
   opportunity,
+  program = null,
 }: {
   readonly locale: Locale;
   readonly opportunity: OpportunityRow;
+  /** The package, for The IDEA's programs sold here. */
+  readonly program?: ProgramRow | null;
 }) => {
   const t = await getTranslations({ locale, namespace: "web.opportunities" });
   const title = localized(opportunity, "title", locale);
@@ -178,9 +229,16 @@ export const OpportunityArticle = async ({
               source={description}
             />
           ) : null}
+          {program ? (
+            <ProgramPackage locale={locale} program={program} />
+          ) : null}
         </div>
         <aside className="flex h-fit flex-col gap-4 rounded-lg border p-5">
-          <Details locale={locale} opportunity={opportunity} />
+          <Details
+            locale={locale}
+            opportunity={opportunity}
+            program={program}
+          />
           <FollowButton opportunityId={opportunity.id} />
         </aside>
       </div>

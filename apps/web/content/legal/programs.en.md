@@ -23,34 +23,33 @@ Anything not listed (for example a passport, personal spending money, or visa fe
 ## 3. Who can apply
 
 - You need The IDEA Pass, and must fit the ages and any other requirements on the program page.
-- **Under 18s** need their guardian's approval from the guardian's own Pass (see [Terms](/legal/terms)). The guardian approves the application and each payment, and signs the consent forms the program needs, such as for travel and medical care.
+- **Under 18s** need their guardian's approval from the guardian's own Pass (see [Terms](/legal/terms)). The guardian approves the application before we review it; once they have, its installments need no further approval. The guardian also signs the consent forms the program needs, such as for travel and medical care.
 - Places are limited. Sending an application doesn't guarantee a place; you have a place once we accept you and the first payment is made.
 
 ## 4. Applying
 
-- **Details from your Pass.** Your application is filled in with details you have already added to your Pass (such as your name, date of birth, contact details and student badge). You check and correct them before sending; nothing is sent without you.
+- **Details from your Pass.** Your application is filled in with details you have already added to your Pass (such as your name, date of birth, phone, area and student badge), so keep them up to date there before you apply. You add an emergency contact and, when the program asks, your passport; nothing is sent until you send the application.
 - The program may ask for more, such as a statement, a reference, school results or medical needs. Give true and complete information: false information can cost you your place.
 
 ## 5. Passports and documents
 
-- Programs that travel ask for a **scan of your passport** (and your guardian's ID for under 18s).
+- Programs that travel ask for a **scan of your passport**.
 - Each scan is **kept with that application only**, and used only for that program: visas, tickets, accommodation and insurance. We share it only with those who need it for those purposes, such as an embassy, airline, host or insurer.
-- Scans are **deleted after the program ends**. If you don't take part, they are deleted once your application is closed. See [Privacy](/legal/privacy).
+- Scans are **deleted 30 days after the program ends**. If you don't take part, they are deleted 30 days after your application closes. See [Privacy](/legal/privacy).
 
 ## 6. Price and installments
 
 - The price is in IQD, for the whole package, and shown before you apply.
-- You can pay in full, or in **installments** where the program offers them. The installment schedule (how many, how much and the due dates) is shown before you accept a place and is confirmed in Pass → Orders. Every installment is due before the program starts.
-- We remind you before each due date.
+- You can pay in full, or in **installments** where the program offers them. The installment schedule (how many, how much and the due dates) is shown on the program page before you apply and is fixed when we accept you. Each installment is paid online through the cart, and Club → Yours shows what's paid and what's next. Every installment is due before the program starts.
 - **If an installment is missed,** we tell you and give you time to pay, as shown in the schedule. If it is still unpaid after that, we may cancel your place; we then refund what you paid according to the refund schedule (section 7), as if you had cancelled on the date the installment was due.
 
 ## 7. If you cancel
 
-Each program page shows a **refund schedule by notice period**: the earlier before the start date you cancel, the more you get back. The schedule is fixed when you accept your place and is shown in Pass → Orders. To cancel, write to us; your notice counts from the day we receive it.
+Each program page shows a **refund schedule by notice period**: the earlier before the start date you cancel, the more you get back. The schedule is fixed when we accept you, and changes to the program page later don't change it. To cancel, use **Withdraw** on the program's page or write to us, any time before the program starts; your notice counts from that day.
 
 ## 8. If your visa is refused
 
-If your visa is refused, send us the proof of refusal. We refund what you paid, **minus the costs that we have actually paid and can't recover** (such as the visa fee or a non-refundable ticket). We show you what we took off and why, with receipts.
+If your visa is refused, send us the proof of refusal. We refund **the share of what you paid that the program page states** (all of it, unless the page says the program keeps part, for example for a visa fee or a non-refundable ticket bought for you). That share is fixed when we accept you.
 
 ## 9. If The IDEA cancels or changes a program
 

@@ -806,6 +806,12 @@
             "open": "مفتوحة حتى الامتلاء",
             "closed": "مغلقة حاليًا"
           }
+        },
+        "applicationsTab": "الطلبات",
+        "applications": {
+          "none": "لا طلبات بعد.",
+          "browse": "ابحث عن برنامج",
+          "nextDue": "التالي: {amount} بحلول {date}"
         }
       },
       "surveys": {
@@ -1282,6 +1288,75 @@
         "following": "أنت تتابعها: سنخبرك عندما تُفتح وقبل إغلاقها بثلاثة أيام.",
         "failed": "لم ينجح ذلك. حاول مرة أخرى."
       }
+    },
+    "programs": {
+      "package": "الباقة",
+      "free": "مجانًا",
+      "plusPrice": "سعر Plus: {price}",
+      "includes": "ما تشمله",
+      "insurance": "تأمين سفر طوال البرنامج",
+      "chaperone": "مرافق بالغ من The IDEA يسافر مع من هم دون 18",
+      "agesFrom": "للأعمار من {min} فما فوق",
+      "ages": "للأعمار من {min} إلى {max}",
+      "seats": "{seats} مقعدًا",
+      "installments": "الدفع على أقساط",
+      "firstInstallment": "{percent}% خلال {days} أيام من القبول",
+      "laterInstallment": "{percent}% بحلول {date}",
+      "refunds": "إذا انسحبت",
+      "refundStep": "يُسترد {percent}% حتى {days} يومًا قبل البدء",
+      "refundAfter": "بعد ذلك لا يُسترد شيء.",
+      "noRefund": "لا يُسترد شيء عند الانسحاب.",
+      "visa": "يُسترد {percent}% إذا رُفضت تأشيرتك",
+      "calledOff": "يُسترد كل شيء إذا ألغت The IDEA البرنامج",
+      "policy": "اطّلع على <link>سياسة البرامج</link>.",
+      "apply": {
+        "title": "قدّم طلبك",
+        "signIn": "سجّل الدخول للتقديم",
+        "fromPass": "يُؤخذ اسمك وتاريخ ميلادك وهاتفك ومنطقتك وشارة الطالب من Pass.",
+        "emergencyName": "اسم جهة الاتصال في الطوارئ",
+        "emergencyPhone": "هاتف جهة الاتصال في الطوارئ",
+        "motivation": "لماذا تودّ الانضمام (اختياري)",
+        "passport": "صورة جواز السفر",
+        "passportHint": "صورة أو PDF لصفحة الصورة في جواز سفرك، حتى 3 ملفات. تُحفظ مع هذا الطلب فقط وتُحذف بعد البرنامج.",
+        "invalid": "أضف جهة اتصال للطوارئ (رقم هاتف مثل ‎+9647…) وجواز سفرك.",
+        "sending": "جارٍ الإرسال…",
+        "send": "إرسال الطلب",
+        "errors": {
+          "birthday": "أضف تاريخ ميلادك في Pass ← الإعدادات أولًا.",
+          "guardian": "دون 18، تحتاج أولًا إلى وليّ أمر مرتبط بـ Pass (Pass ← الإعدادات).",
+          "ages": "هذا البرنامج لأعمار أخرى.",
+          "closed": "التقديم مغلق.",
+          "applied": "لقد قدّمت طلبًا من قبل.",
+          "failed": "تعذّر إرسال طلبك. حاول مجددًا."
+        }
+      },
+      "application": {
+        "statuses": {
+          "submitted": "أُرسل الطلب",
+          "waitlisted": "على قائمة الانتظار",
+          "accepted": "قُبلت: ادفع القسط الأول لتأكيد مقعدك",
+          "confirmed": "مقعدك مؤكَّد",
+          "completed": "اكتمل",
+          "refused": "لم يُقبل هذه المرة",
+          "withdrawn": "انسحبت",
+          "cancelled": "أُلغي"
+        },
+        "guardianPending": "بانتظار موافقة وليّ أمرك.",
+        "paid": "دفعت {paid} من {price}",
+        "waitingPayment": "هناك قسط ينتظر الدفع في <link>طلباتك</link>.",
+        "payNext": "ادفع {amount} (مستحق في {due})",
+        "payAll": "ادفع كل المتبقي ({amount})",
+        "payFailed": "تعذّرت إضافته إلى سلتك.",
+        "withdraw": "انسحاب",
+        "withdrawConfirm": "هل تسحب طلبك؟ يُسترد ما دفعته حسب جدول الاسترداد.",
+        "withdrawYes": "انسحاب",
+        "keep": "إبقاء الطلب",
+        "withdrawFailed": "تعذّر الانسحاب. حاول مجددًا أو تواصل معنا.",
+        "withdrawn": "لقد انسحبت.",
+        "withdrawnRefund": "لقد انسحبت. سيُسترد {amount}.",
+        "refunded": "استُرد {amount}",
+        "refundDue": "سيُسترد {amount}"
+      }
     }
   },
   "app": {
@@ -1467,6 +1542,12 @@
       "plus": {
         "label": "Plus هدية",
         "months": "{count, plural, one {شهر واحد} two {شهران} few {{months} أشهر} many {{months} شهرًا} other {{months} شهر}}، تُرسل هدية"
+      },
+      "program": {
+        "full": "الباقة كاملة",
+        "installment": "القسط {first} من {total}",
+        "installments": "الأقساط {first}–{last} من {total}",
+        "online": "يُدفع إلكترونيًا"
       }
     },
     "checkout": {
@@ -1602,7 +1683,12 @@
       },
       "rentLine": "إيجار",
       "kitLine": "طقم",
-      "plusLine": "هدية"
+      "plusLine": "هدية",
+      "programLine": "برنامج",
+      "programs": {
+        "title": "لا شيء للتوصيل",
+        "description": "تُدفع أقساط البرامج إلكترونيًا، فلا حاجة إلى عنوان."
+      }
     },
     "orders": {
       "title": "الطلبات",
@@ -2276,7 +2362,14 @@
         "decline": "رفض",
         "failed": "لم تنجح العملية. حاول مرة أخرى.",
         "tooYoung": "يجب أن يكون وليّ الأمر في سن 18 فما فوق.",
-        "expired": "انتهت صلاحية هذه الدعوة. اطلب رمزًا جديدًا."
+        "expired": "انتهت صلاحية هذه الدعوة. اطلب رمزًا جديدًا.",
+        "programs": {
+          "title": "طلبات البرامج",
+          "description": "قدّم ابنك أو ابنتك طلبًا لأحد برامج The IDEA. وافق عليه ليُرسل للمراجعة؛ لا تحتاج الدفعات التي تليه إلى موافقة ثانية.",
+          "line": "{name}: {title}",
+          "approve": "موافقة",
+          "decline": "رفض"
+        }
       },
       "student": {
         "title": "التحقق من صفة الطالب",
@@ -3915,6 +4008,38 @@
         "opportunity_deadline": {
           "title": "تُغلق قريبًا",
           "body": "\"{title}\" تُغلق {date}."
+        },
+        "program_guardian_request": {
+          "title": "وافق على طلب",
+          "body": "قدّم {name} طلبًا إلى «{title}». وافق عليه في Pass ← الإعدادات."
+        },
+        "program_guardian_approved": {
+          "title": "وافق وليّ أمرك",
+          "body": "يُرسل طلبك إلى «{title}» للمراجعة."
+        },
+        "program_guardian_declined": {
+          "title": "رفض وليّ أمرك",
+          "body": "أُلغي طلبك إلى «{title}»."
+        },
+        "program_accepted": {
+          "title": "قُبلت",
+          "body": "قُبلت في «{title}». ادفع القسط الأول لتأكيد مقعدك."
+        },
+        "program_waitlisted": {
+          "title": "على قائمة الانتظار",
+          "body": "أنت على قائمة انتظار «{title}». سنخبرك إن توفّر مقعد."
+        },
+        "program_refused": {
+          "title": "ليس هذه المرة",
+          "body": "لم يُقبل طلبك إلى «{title}»."
+        },
+        "program_cancelled": {
+          "title": "أُلغي المقعد",
+          "body": "{hasRefund, select, yes {أُلغي مقعدك في «{title}»؛ سيُسترد {amount}.} other {أُلغي مقعدك في «{title}».}}"
+        },
+        "program_refunded": {
+          "title": "أُرسل الاسترداد",
+          "body": "استُرد {amount} عن «{title}»."
         }
       },
       "kinds": {

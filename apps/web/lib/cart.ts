@@ -263,3 +263,27 @@ export const addPlusGiftToSummary = (
         },
       }
     : summary;
+
+/**
+ * Adds program installments to the cart's summary: paid online, outside
+ * free delivery and discounts (callers leave them out of the threshold).
+ */
+export const addProgramsToSummary = (
+  summary: ReturnType<typeof summarizeCart>,
+  programs: readonly { amount: number }[]
+): ReturnType<typeof summarizeCart> => {
+  if (programs.length === 0) {
+    return summary;
+  }
+  const amount = programs.reduce((sum, line) => sum + line.amount, 0);
+  return {
+    ...summary,
+    canCheckout: summary.problems === 0,
+    totals: {
+      ...summary.totals,
+      count: summary.totals.count + programs.length,
+      subtotal: summary.totals.subtotal + amount,
+      total: summary.totals.total + amount,
+    },
+  };
+};
