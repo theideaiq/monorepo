@@ -350,8 +350,8 @@ test.describe("a signed-in customer", () => {
 
   test("sends identity photos for review", async ({ page }) => {
     const noErrors = watchConsole(page);
-    await page.goto(`${urls.web}/pass/settings`);
-    const card = page.locator("#verification");
+    await page.goto(`${urls.web}/verify?kind=identity`);
+    const card = page.getByRole("region", { name: "Identity" });
     const photo = (name: string) => ({
       buffer: Buffer.from(
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
