@@ -573,6 +573,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-29: Prices, part 4 (master brief step 7, section 9;
+  `20270203000000_coupons.sql`). Staff → Finance → Coupons creates codes
+  The IDEA pays for (a share up to 20% or an amount off, an optional most
+  it takes off and smallest order, dates in Baghdad time, uses in all and
+  per Pass) and turns them on or off; each shows how many orders used it.
+  Members enter a code at checkout under the summary: it replaces a
+  friend's invite only when it takes off more, the 20% giveaway cap still
+  holds, and a code that isn't taken off says why. The receipt labels the
+  discount "Coupon". Shops are paid on their full prices. Still to come in
+  step 7: student prices.
 - 2026-10-28: Prices, part 3 (master brief step 7, section 9;
   `20270202000000_campaigns.sql`). Staff → Catalog → Campaigns creates
   seasonal campaigns (names, description, dates in Baghdad time, up to 60

@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice } from "@repo/commerce";
+import { type DiscountSource, formatPrice } from "@repo/commerce";
 import { formatNumber } from "@repo/internationalization/format";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -8,8 +8,10 @@ interface OrderSummaryProps {
   /** IQD paid with Bulbs, and how many. */
   readonly bulbsDiscount?: number;
   readonly bulbsUsed?: number;
-  /** IQD off from a friend's invite. */
+  /** IQD off from a friend's invite or a coupon. */
   readonly discount?: number;
+  /** `orders.discount_source`: "coupon" labels the row as a coupon. */
+  readonly discountSource?: DiscountSource | (string & {}) | null;
   readonly shippingFee: number;
   readonly subtotal: number;
   readonly total: number;
@@ -23,6 +25,7 @@ export const OrderSummary = ({
   bulbsDiscount = 0,
   bulbsUsed = 0,
   discount = 0,
+  discountSource = null,
   shippingFee,
   subtotal,
   total,
@@ -47,7 +50,9 @@ export const OrderSummary = ({
       </div>
       {discount > 0 ? (
         <div className="flex justify-between gap-4">
-          <dt className="text-muted-foreground">{t("discount")}</dt>
+          <dt className="text-muted-foreground">
+            {t(discountSource === "coupon" ? "coupon" : "discount")}
+          </dt>
           <dd className="tabular-nums" dir="ltr">
             −{formatPrice(discount, locale)}
           </dd>

@@ -44,6 +44,7 @@ import { Field, LandmarkFields } from "@/components/address-fields";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { CheckoutErrorNote } from "@/components/store/checkout-error";
+import { CouponField } from "@/components/store/coupon-field";
 import { OrderSummary } from "@/components/store/order-summary";
 import {
   type AddressField,
@@ -598,6 +599,12 @@ const SummaryCard = ({
             ))}
         </ul>
         <OrderSummary {...totals} />
+        {quote ? (
+          <CouponField
+            applied={quote.couponCode}
+            used={quote.discountSource === "coupon"}
+          />
+        ) : null}
         {quote?.freeDelivery === "plan" ? (
           <p className="text-muted-foreground text-xs">{t("planDelivery")}</p>
         ) : null}

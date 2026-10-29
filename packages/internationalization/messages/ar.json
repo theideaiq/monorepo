@@ -1196,7 +1196,8 @@
       "problems": "عالج المنتجات المحددة أدناه لإتمام الطلب.",
       "updateFailed": "تعذّر تحديث السلة. حاول مرة أخرى.",
       "bulbs": "Bulbs ({bulbs})",
-      "discount": "دعوة صديق"
+      "discount": "دعوة صديق",
+      "coupon": "كوبون"
     },
     "checkout": {
       "title": "إتمام الطلب",
@@ -1292,7 +1293,24 @@
         "edit": "تعديل",
         "defaultLabel": "البيت"
       },
-      "oneTap": "التوصيل إلى {label} · {payment}"
+      "oneTap": "التوصيل إلى {label} · {payment}",
+      "coupon": {
+        "label": "رمز الكوبون",
+        "apply": "تطبيق",
+        "remove": "إزالة",
+        "applied": "تم تطبيق الكوبون {code}",
+        "notUsed": "لا يُخصم من هذا الطلب: يحتاج إلى طلب أكبر، أو أن خصمًا آخر يوفّر أكثر.",
+        "problem": {
+          "unknown": "لا نعرف هذا الرمز. تحقق منه وحاول مرة أخرى.",
+          "inactive": "هذا الرمز غير مفعّل.",
+          "not_started": "هذا الرمز غير صالح بعد.",
+          "ended": "انتهت صلاحية هذا الرمز.",
+          "used_up": "نفدت استخدامات هذا الرمز.",
+          "used": "سبق أن استخدمت هذا الرمز.",
+          "below_minimum": "طلبك أقل من الحد الأدنى لهذا الرمز.",
+          "failed": "تعذّر تطبيق الرمز. حاول مرة أخرى."
+        }
+      }
     },
     "orders": {
       "title": "الطلبات",
@@ -4262,7 +4280,8 @@
         "bulbs": "Bulbs",
         "prices": "الأسعار",
         "rentals": "أسعار الإيجار",
-        "payouts": "المدفوعات للمتاجر"
+        "payouts": "المدفوعات للمتاجر",
+        "coupons": "الكوبونات"
       },
       "dashboard": {
         "error": "تعذّر تحميل ملخّص الدفتر.",
@@ -4443,6 +4462,42 @@
           "cancelled": "ملغاة"
         },
         "paidOn": "{method} · {reference} · {time}"
+      },
+      "coupons": {
+        "title": "الكوبونات",
+        "description": "رموز تتحمّل The IDEA تكلفتها. يُدخلها الأعضاء عند الدفع؛ يحلّ الرمز محل دعوة الصديق فقط عندما يخصم أكثر، ويبقى سقف الهدايا 20% ساريًا.",
+        "newTitle": "كوبون جديد",
+        "code": "الرمز",
+        "codeHint": "من 4 إلى 20 حرفًا ورقمًا؛ لا يهم حجم الأحرف ولا المسافات.",
+        "kind": "النوع",
+        "kindPercent": "نسبة خصم",
+        "kindAmount": "مبلغ خصم (دينار)",
+        "amount": "القيمة",
+        "amountHint": "نسبة مئوية (20 كحد أقصى) أو مبلغ بالدينار.",
+        "maxDiscount": "أقصى خصم (دينار)",
+        "maxDiscountHint": "اتركه فارغًا لعدم التحديد.",
+        "minSubtotal": "أصغر طلب (دينار)",
+        "startsAt": "يبدأ",
+        "endsAt": "ينتهي",
+        "timeHint": "بتوقيت بغداد. الفارغ يبدأ الآن ولا ينتهي.",
+        "maxUses": "إجمالي الاستخدامات",
+        "maxUsesHint": "اتركه فارغًا لعدم التحديد.",
+        "usesPerMember": "الاستخدامات لكل Pass",
+        "descriptionField": "ملاحظة للفريق",
+        "create": "إنشاء الكوبون",
+        "empty": "لا توجد كوبونات بعد.",
+        "active": "مفعّل",
+        "inactive": "متوقف",
+        "activate": "تفعيل",
+        "deactivate": "إيقاف",
+        "percentOff": "خصم {rate}%",
+        "amountOff": "خصم {amount}",
+        "upTo": "بحد أقصى {amount}",
+        "minimum": "للطلبات من {amount}",
+        "dates": "من {starts} إلى {ends}",
+        "from": "من {starts}",
+        "uses": "استُخدم {used} مرة · {perMember} لكل Pass",
+        "usesOf": "استُخدم {used} من {max} مرة · {perMember} لكل Pass"
       }
     },
     "editorial": {

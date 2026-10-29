@@ -191,7 +191,7 @@ export const HOUSE_SELLER_ID = "00000000-0000-4000-8000-000000000001";
 export const INVITE_DISCOUNT_CAP = 15_000;
 
 /** What takes money off an order (`orders.discount_source`). */
-export type DiscountSource = "invite";
+export type DiscountSource = "coupon" | "invite";
 
 /**
  * The delivery fee, mirroring `price_checkout()`: the zone's fee unless the subtotal reaches the zone's free-delivery
@@ -249,6 +249,8 @@ export interface CheckoutQuote {
   /** Cashback the order will earn once delivered (after the cap). */
   bulbsToEarn: number;
   bulbsUsed: number;
+  /** The cart's coupon code, when one is applied and still valid. */
+  couponCode: string | null;
   /** Delivery the order doesn't pay (the zone's fee when it's free). */
   deliveryWaived: number;
   discount: number;
@@ -275,9 +277,10 @@ export const toCheckoutQuote = (json: unknown): CheckoutQuote => {
     bulbsDiscount: toNumber(row.bulbs_discount),
     bulbsToEarn: toNumber(row.bulbs_to_earn),
     bulbsUsed: toNumber(row.bulbs_used),
+    couponCode: typeof row.coupon_code === "string" ? row.coupon_code : null,
     deliveryWaived: toNumber(row.delivery_waived),
     discount: toNumber(row.discount),
-    discountSource: source === "invite" ? source : null,
+    discountSource: source === "invite" || source === "coupon" ? source : null,
     freeDelivery: free === "plan" || free === "threshold" ? free : null,
     freeFrom:
       row.free_from === null || row.free_from === undefined

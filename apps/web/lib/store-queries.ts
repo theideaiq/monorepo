@@ -126,6 +126,43 @@ export const useCheckoutQuote = (
   });
 };
 
+/** Why a coupon code can't be used (`apply_coupon()`'s answer). */
+export type CouponProblem =
+  | "below_minimum"
+  | "ended"
+  | "inactive"
+  | "not_started"
+  | "unknown"
+  | "used"
+  | "used_up";
+
+/**
+ * Applies a coupon code to the cart (or replaces the one applied). Resolves
+ * with why it can't be used, or null; the quote is asked again either way.
+ */
+export const useApplyCoupon = () => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (entered: string) =>
+      unwrap(
+        await supabase.rpc("apply_coupon", { entered })
+      ) as CouponProblem | null,
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: ["checkout-quote"] }),
+  });
+};
+
+export const useRemoveCoupon = () => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => unwrap(await supabase.rpc("remove_coupon")),
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: ["checkout-quote"] }),
+  });
+};
+
 const CART_COLUMNS =
   "id, quantity, condition, product_id, variant_id, seller_id, seller:sellers (name), product:products (id, slug, kind, status, condition, name_ar, name_en, price, compare_at_price, currency, images, stock_count), variant:product_variants (id, label_ar, label_en, attributes, price, compare_at_price, stock_count, images)" as const;
 
