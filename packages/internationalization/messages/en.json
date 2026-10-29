@@ -1205,7 +1205,8 @@
       "updateFailed": "We couldn't update your cart. Please try again.",
       "bulbs": "Bulbs ({bulbs})",
       "discount": "Friend's invite",
-      "coupon": "Coupon"
+      "coupon": "Coupon",
+      "saveForLater": "Save for later"
     },
     "checkout": {
       "title": "Checkout",

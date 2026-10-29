@@ -158,3 +158,99 @@ export const useMoveToCart = () => {
       }),
   });
 };
+
+/**
+ * Adds products to Saved (already saved ones stay as they are): hearts
+ * from the browser at sign-in, and "Save for later" from the cart.
+ */
+const saveAll = async (
+  supabase: ReturnType<typeof useAuth>["supabase"],
+  userId: string,
+  productIds: readonly string[]
+) =>
+  unwrap(
+    await supabase.from("wishlist_items").upsert(
+      productIds.map((productId) => ({
+        product_id: productId,
+        user_id: userId,
+      })),
+      { ignoreDuplicates: true, onConflict: "user_id,product_id" }
+    )
+  );
+
+export const useSaveProducts = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (productIds: readonly string[]) =>
+      saveAll(supabase, requireUserId(user?.id), productIds),
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.wishlist(user?.id ?? ""),
+      }),
+  });
+};
+
+/** Cart → "Save for later": the line leaves the cart for Saved. */
+export const useSaveForLater = () => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      cartItemId,
+      productId,
+    }: {
+      cartItemId: string;
+      productId: string;
+    }) => {
+      await saveAll(supabase, requireUserId(user?.id), [productId]);
+      unwrap(await supabase.from("cart_items").delete().eq("id", cartItemId));
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.wishlist(user?.id ?? ""),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.cart(user?.id ?? ""),
+      });
+    },
+  });
+};
+
+/**
+ * "Notify me" on a product with nothing on offer: saves it with "Tell me"
+ * on (or turns "Tell me" off again).
+ */
+export const useNotifyMe = (productId: string) => {
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
+  const wishlist = useWishlist();
+  const saved = wishlist.data?.find((item) => item.product_id === productId);
+  const toggle = useMutation({
+    mutationFn: async (wanted: boolean) => {
+      const userId = requireUserId(user?.id);
+      unwrap(
+        await (saved
+          ? supabase
+              .from("wishlist_items")
+              .update({ notify: wanted })
+              .eq("user_id", userId)
+              .eq("product_id", productId)
+          : supabase.from("wishlist_items").insert({
+              notify: wanted,
+              product_id: productId,
+              user_id: userId,
+            }))
+      );
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.wishlist(user?.id ?? ""),
+      }),
+  });
+  return {
+    loading: wishlist.isPending,
+    on: Boolean(saved?.notify),
+    toggle,
+  };
+};

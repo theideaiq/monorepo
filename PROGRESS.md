@@ -586,10 +586,13 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   rentable product pages have Add to queue, and swaps take from the top.
   The bell tells of the first copy in stock ("Back in stock", or "Out now"
   within 14 days of a release date, which Staff set on the product) and of
-  lower prices (under the target, when set). Still to come in step 8: Save
-  for later in the cart, hearts saved in the browser when signed out,
-  "Notify me" into Saved (and dropping `product_alerts`), and Send as a
-  gift from a shared list (with the gift checkout, section 11).
+  lower prices (under the target, when set).
+- 2026-10-29: Saved, part 2 (step 8). The cart has "Save for later" (the
+  line moves to Saved). Signed out, the heart works too: hearts are kept
+  in the browser and move into Saved at sign-in. "Notify me" saves the
+  product with "Tell me" on instead of writing `product_alerts`, which a
+  later migration drops once this is live. Still to come in step 8: Send
+  as a gift from a shared list (with the gift checkout, section 11).
 - 2026-10-29: Prices, part 5 (master brief step 7, section 9;
   `20270204000000_student_prices.sql`). Shops set a student price on any
   listing in Partners → Selling → Sales and deals (below its price; the

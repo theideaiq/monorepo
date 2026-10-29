@@ -5,9 +5,13 @@ import { Button } from "@repo/design-system/components/ui/button";
 import { cn } from "@repo/design-system/lib/utils";
 import { HeartIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toggleLocalSaved, useLocallySaved } from "@/lib/local-saved";
 import { useIsWishlisted, useToggleWishlist } from "@/lib/wishlist-queries";
 
-/** Saves a product to the wishlist, or removes it (signed-in users only). */
+/**
+ * Saves a product to Saved, or removes it. Signed out, the heart is kept
+ * in this browser and moves into Saved at sign-in.
+ */
 export const WishlistButton = ({
   className,
   productId,
@@ -19,12 +23,10 @@ export const WishlistButton = ({
 }) => {
   const t = useTranslations("app.wishlist");
   const { user } = useAuth();
-  const saved = useIsWishlisted(productId);
+  const savedHere = useIsWishlisted(productId);
+  const savedLocally = useLocallySaved(productId);
   const toggle = useToggleWishlist();
-
-  if (!user) {
-    return null;
-  }
+  const saved = user ? savedHere : savedLocally;
 
   const label = saved ? t("remove") : t("add");
   const text = saved ? t("saved") : t("save");
@@ -39,7 +41,11 @@ export const WishlistButton = ({
         // Cards are links: toggling must not open the product.
         event.preventDefault();
         event.stopPropagation();
-        toggle.mutate({ productId, saved });
+        if (user) {
+          toggle.mutate({ productId, saved });
+        } else {
+          toggleLocalSaved(productId);
+        }
       }}
       size={withLabel ? "lg" : "icon"}
       title={label}

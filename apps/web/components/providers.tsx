@@ -6,14 +6,16 @@ import { type ReactNode, useState } from "react";
 import { getSupabase } from "@/lib/browser-supabase";
 import { InviteClaimer } from "./invite-claimer";
 import { NativeBridge } from "./native-bridge";
+import { SavedMerger } from "./saved-merger";
 
 interface AppProvidersProps {
   readonly children: ReactNode;
 }
 
 /**
- * Data fetching, the Supabase session, the native (Capacitor) bridge and
- * claiming a friend's invite once signed in.
+ * Data fetching, the Supabase session, the native (Capacitor) bridge, and
+ * once signed in, claiming a friend's invite and moving hearts saved in the
+ * browser into Saved.
  */
 export const AppProviders = ({ children }: AppProvidersProps) => {
   const [queryClient] = useState(
@@ -31,6 +33,7 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
       <AuthProvider client={supabase}>
         <NativeBridge />
         <InviteClaimer />
+        <SavedMerger />
         {children}
       </AuthProvider>
     </QueryClientProvider>

@@ -18,7 +18,7 @@ import {
 } from "@repo/design-system/components/ui/empty";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { ShoppingCartIcon, Trash2Icon } from "lucide-react";
+import { HeartIcon, ShoppingCartIcon, Trash2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
@@ -41,6 +41,7 @@ import {
   useStoreSettings,
   useUpdateCartLine,
 } from "@/lib/store-queries";
+import { useSaveForLater } from "@/lib/wishlist-queries";
 
 const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
   const t = useTranslations("app.cart");
@@ -48,10 +49,11 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
   const soldBy = useTranslations("app.store.product");
   const locale = useLocale();
   const update = useUpdateCartLine();
+  const later = useSaveForLater();
   const { item } = line;
   const name = item.product ? localized(item.product, "name", locale) : "";
   const problem = lineProblem(line);
-  const busy = update.isPending;
+  const busy = update.isPending || later.isPending;
 
   return (
     <li className="flex gap-3 py-4">
@@ -104,15 +106,31 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
             onChange={(quantity) => update.mutate({ id: item.id, quantity })}
             value={line.quantity}
           />
-          <Button
-            disabled={busy}
-            onClick={() => update.mutate({ id: item.id, quantity: 0 })}
-            size="sm"
-            variant="ghost"
-          >
-            <Trash2Icon />
-            {t("remove")}
-          </Button>
+          <div className="flex flex-wrap gap-1">
+            <Button
+              disabled={busy}
+              onClick={() =>
+                later.mutate({
+                  cartItemId: item.id,
+                  productId: item.product_id,
+                })
+              }
+              size="sm"
+              variant="ghost"
+            >
+              <HeartIcon />
+              {t("saveForLater")}
+            </Button>
+            <Button
+              disabled={busy}
+              onClick={() => update.mutate({ id: item.id, quantity: 0 })}
+              size="sm"
+              variant="ghost"
+            >
+              <Trash2Icon />
+              {t("remove")}
+            </Button>
+          </div>
         </div>
         {problem ? (
           <p className="text-destructive text-xs" role="alert">

@@ -1205,7 +1205,8 @@
       "updateFailed": "تعذّر تحديث السلة. حاول مرة أخرى.",
       "bulbs": "Bulbs ({bulbs})",
       "discount": "دعوة صديق",
-      "coupon": "كوبون"
+      "coupon": "كوبون",
+      "saveForLater": "احفظه لوقت لاحق"
     },
     "checkout": {
       "title": "إتمام الطلب",
