@@ -50,6 +50,10 @@
     {
       "path": "/cron/plus-credits",
       "schedule": "10 0 * * *"
+    },
+    {
+      "path": "/cron/opportunities",
+      "schedule": "5 7 * * *"
     }
   ]
 }

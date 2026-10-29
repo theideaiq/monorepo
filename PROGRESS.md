@@ -718,6 +718,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Opportunities, part 4 (step 14, the website). Club → Join
+  lists opportunities with events and surveys (featured first, then by
+  deadline; `?show=opportunities`), each naming who runs it;
+  `/club/opportunities/<slug>` has the details, where to apply while it's
+  open and Notify me (`opportunity_follows`). Club → Yours → Following
+  lists what the member follows, search finds opportunities, and the bell
+  says when one opens and that one closes in three days. The API's daily
+  `/cron/opportunities` (10:05 Baghdad) runs `notify_opportunity_followers`.
+  Next: The IDEA's paid programs.
 - 2026-10-29: Opportunities, part 3 (step 14;
   `20270304000000_opportunity_hosts.sql`). Visitors can't read
   organizations, so each opportunity keeps its organization's name

@@ -791,10 +791,22 @@
       "yours": {
         "title": "Yours",
         "submissions": "Your submissions",
-        "signedOut": "Sign in to see your tickets, the surveys you created and your submissions.",
+        "signedOut": "Sign in to see your tickets, the surveys you created, your submissions and the opportunities you follow.",
         "signIn": "Sign in",
         "surveys": "Surveys",
-        "tickets": "Your tickets"
+        "tickets": "Your tickets",
+        "followingTab": "Following",
+        "following": {
+          "none": "You don't follow any opportunities yet.",
+          "browse": "See opportunities",
+          "stop": "Stop",
+          "states": {
+            "opens": "Opens {date}",
+            "closes": "Closes {date}",
+            "open": "Open until filled",
+            "closed": "Closed for now"
+          }
+        }
       },
       "surveys": {
         "title": "Survey",
@@ -1098,7 +1110,7 @@
         "yours": "Yours"
       },
       "join": {
-        "description": "Events and surveys, soonest first.",
+        "description": "Events, opportunities and surveys, soonest first.",
         "label": "Show",
         "all": "Everything",
         "events": "Events",
@@ -1112,14 +1124,16 @@
         "empty": {
           "all": "Nothing to join right now. Check back soon.",
           "events": "No upcoming events right now. Check back soon.",
-          "surveys": "No surveys for you right now."
+          "surveys": "No surveys for you right now.",
+          "opportunities": "No opportunities open right now. Check back soon."
         },
         "access": {
           "phone": "Boosted surveys need a verified phone of your own: one Pass per person.",
           "verify": "Verify your phone",
           "limit": "You've answered today's {n} Boosted surveys. More tomorrow.",
           "trusted": "You're a trusted respondent: you see new Boosted surveys a day before everyone else."
-        }
+        },
+        "opportunities": "Opportunities"
       },
       "topics": {
         "label": "Topics",
@@ -1192,7 +1206,8 @@
       "events": "Events",
       "posts": "Posts",
       "allProducts": "All results in the Store",
-      "allRentals": "All results in Plus"
+      "allRentals": "All results in Plus",
+      "opportunities": "Opportunities"
     },
     "sharedList": {
       "title": "{name} · {owner}'s list",
@@ -1234,6 +1249,39 @@
       "claimedPlus": "It's yours: the Plus months are on your Pass.",
       "yourPlus": "See your Plus",
       "joinPlus": "Go to Plus"
+    },
+    "opportunities": {
+      "kinds": {
+        "job": "Job",
+        "internship": "Internship",
+        "scholarship": "Scholarship",
+        "competition": "Competition",
+        "program": "Program"
+      },
+      "featured": "Featured",
+      "runBy": "Run by {name}",
+      "theIdea": "The IDEA",
+      "online": "Online",
+      "opens": "Opens {date}",
+      "closes": "Closes {date}",
+      "rolling": "Open until filled",
+      "back": "All opportunities",
+      "where": "Where",
+      "deadline": "Deadline",
+      "when": "Dates",
+      "dates": "{from} – {to}",
+      "cost": "Cost to apply",
+      "free": "Free",
+      "closed": "Applications are closed. Follow it to hear when it opens again.",
+      "opensOn": "Applications open {date}.",
+      "apply": "Apply",
+      "follow": {
+        "notifyMe": "Notify me",
+        "stop": "Stop notifications",
+        "hint": "We'll tell you when it opens and three days before it closes.",
+        "following": "You're following it: we'll tell you when it opens and three days before it closes.",
+        "failed": "That didn't work. Please try again."
+      }
     }
   },
   "app": {
@@ -3859,6 +3907,14 @@
         "opportunity_rejected": {
           "title": "Your opportunity wasn't approved",
           "body": "Open \"{title}\" in Opportunities to see why."
+        },
+        "opportunity_open": {
+          "title": "It's open",
+          "body": "Applications for \"{title}\" are open."
+        },
+        "opportunity_deadline": {
+          "title": "Closing soon",
+          "body": "\"{title}\" closes {date}."
         }
       },
       "kinds": {

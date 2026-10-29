@@ -6,6 +6,7 @@ import {
   emailedCode,
   friend,
   product,
+  sessionCookies,
   signUpUser,
 } from "../fixtures";
 import { urls } from "../playwright.config";
@@ -661,4 +662,60 @@ test.describe("a signed-in customer", () => {
     await page.goto(`${urls.web}/pass/saved`);
     await expect(page).toHaveURL(new RegExp(`^${urls.web}/sign-in`));
   });
+});
+
+test("a member follows an opportunity and finds it in Club → Yours", async ({
+  context,
+  page,
+}) => {
+  await resetCustomer();
+  const db = admin();
+  // New each run: public data is cached for a while, so a listing from an
+  // earlier run could still show (and lead to a page that's gone).
+  const stamp = Date.now();
+  const slug = `e2e-exchange-${stamp}`;
+  const title = `E2E Exchange ${stamp}`;
+  await db.from("opportunities").delete().like("slug", "e2e-exchange-%");
+  const { error } = await db.from("opportunities").insert({
+    deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    kind: "program",
+    location: "Baghdad",
+    slug,
+    status: "approved",
+    summary_ar: "برنامج تبادل للاختبار",
+    summary_en: "A test exchange program",
+    title_ar: "برنامج تبادل للاختبار",
+    title_en: title,
+  });
+  if (error) {
+    throw error;
+  }
+  await context.addCookies(await sessionCookies(customer.email, urls.web));
+
+  // Its page (Club → Join lists it too, but that list is cached a while;
+  // the public journey checks it renders).
+  await page.goto(`${urls.web}/club/opportunities/${slug}`);
+  await expect(
+    page.getByRole("heading", { level: 1, name: title })
+  ).toBeVisible();
+  // Streaming can leave a hidden copy of the page; read the visible one.
+  await expect(
+    page.getByRole("article").getByText("Run by The IDEA")
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Notify me" }).click();
+  await expect(
+    page.getByRole("button", { name: "Stop notifications" })
+  ).toBeVisible();
+  await expectAccessible(page);
+
+  // Club → Yours → Following lists it.
+  await page.goto(`${urls.web}/club#yours`);
+  await page.getByRole("tab", { name: "Following" }).click();
+  // Join's card links to it too, under a longer name.
+  await expect(
+    page.getByRole("link", { exact: true, name: title })
+  ).toBeVisible();
+  await expectAccessible(page);
+
+  await db.from("opportunities").delete().eq("slug", slug);
 });

@@ -432,6 +432,81 @@ export const getEvent = async (slug: string) => {
   );
 };
 
+const OPPORTUNITY_COLUMNS =
+  "id, slug, kind, host_name, title_ar, title_en, summary_ar, summary_en, description_ar, description_en, location, remote, apply_url, applicant_fee, fee_note, opens_at, deadline, starts_on, ends_on, cover_image, status, featured_until, updated_at" as const;
+
+export type OpportunityRow = Pick<
+  Tables<"opportunities">,
+  | "applicant_fee"
+  | "apply_url"
+  | "cover_image"
+  | "deadline"
+  | "description_ar"
+  | "description_en"
+  | "ends_on"
+  | "featured_until"
+  | "fee_note"
+  | "host_name"
+  | "id"
+  | "kind"
+  | "location"
+  | "opens_at"
+  | "remote"
+  | "slug"
+  | "starts_on"
+  | "status"
+  | "summary_ar"
+  | "summary_en"
+  | "title_ar"
+  | "title_en"
+  | "updated_at"
+>;
+
+/** Listed opportunities (open or opening), soonest deadline first. */
+export const getOpportunities = ({
+  limit = 48,
+  search,
+}: {
+  limit?: number;
+  /** Only opportunities with this in their title. */
+  search?: string;
+} = {}) =>
+  fallback("opportunities", [] as OpportunityRow[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    let query = supabase
+      .from("opportunities")
+      .select(OPPORTUNITY_COLUMNS)
+      .eq("status", "approved");
+    const titled = titleSearch(search);
+    if (titled) {
+      query = query.or(titled);
+    }
+    return rows(
+      await query
+        .order("deadline", { ascending: true, nullsFirst: false })
+        .limit(limit)
+    );
+  });
+
+/** A listed or closed opportunity (closed ones can be followed for next time). */
+export const getOpportunity = async (slug: string) => {
+  const supabase = createPublicClient();
+  if (!supabase) {
+    return null;
+  }
+  return check(
+    await supabase
+      .from("opportunities")
+      .select(OPPORTUNITY_COLUMNS)
+      .eq("slug", slug)
+      .in("status", ["approved", "closed"])
+      .maybeSingle()
+  );
+};
+
 /** How many people RSVP'd, without revealing who (`event_rsvp_count`). */
 export const getRsvpCount = (eventId: string) =>
   fallback("event_rsvp_count", null as number | null, async () => {
