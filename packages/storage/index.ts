@@ -509,3 +509,42 @@ export const getReturnPhotoUrl = async (
   }
   return data.signedUrl;
 };
+
+/** Uploads a photo of an item the member asks shops for offers on. */
+export const uploadSellRequestPhoto = (
+  supabase: Client,
+  userId: string,
+  file: File
+) => {
+  assertAllowed("sellRequestPhotos", file);
+  return upload(
+    supabase,
+    buckets.sellRequestPhotos.id,
+    objectPath(userId, file.name),
+    file
+  );
+};
+
+/**
+ * Time-limited links to a request's photos (its member, support, and shops
+ * while it's open), in the same order; a photo the caller can't see is null.
+ */
+export const getSellRequestPhotoUrls = async (
+  supabase: Client,
+  paths: readonly string[],
+  expiresIn = 60 * 60
+) => {
+  if (paths.length === 0) {
+    return [];
+  }
+  const { data, error } = await supabase.storage
+    .from(buckets.sellRequestPhotos.id)
+    .createSignedUrls([...paths], expiresIn);
+  if (error || !data) {
+    throw new StorageError(
+      "not_found",
+      `No signed URLs: ${error?.message ?? "no data"}`
+    );
+  }
+  return data.map((item) => item.signedUrl ?? null);
+};

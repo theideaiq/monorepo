@@ -718,6 +718,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   first). Gifted months count for no free delivery, discount, cap or
   cashback; Bulbs pay up to half of one month. The cart badge now counts
   the kit and Plus months too. Step 11 is done.
+- 2026-10-29: Get offers from shops (step 14; schema
+  `20270309000000_sell_requests.sql` and `20270310000000_sell_offer_items.sql`,
+  decisions Part 13; then the code). Pass → Selling (`/pass/selling`): a
+  member describes an item (title, condition, area, 3 to 8 photos in the
+  private `sell-request-photos` bucket), sees shops' offers (amount, how
+  they check and pay, a note), accepts one or none, calls an accepted one
+  off and writes to the shop. Partners → Selling → Get offers: open items
+  by first name and area, one offer each, withdrawing, marking a sale done
+  or calling it off, and the messages. Seven `sell_*` notifications; the
+  daily `/cron/selling` also runs `sweep_sell_requests`. Not yet: an inbox
+  item in Staff, choosing a catalog product for the item.
 - 2026-10-29: Auctions, part 3 (step 14, the code). Website: Store →
   Auctions (`/store/auctions`) and an auction's page
   (`/store/auctions/<number>`: the seller's photos, condition and mark,

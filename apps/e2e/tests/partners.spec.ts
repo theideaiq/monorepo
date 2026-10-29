@@ -314,6 +314,11 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await expect(page.getByText("No live auctions.")).toBeVisible();
   await expectAccessible(page);
 
+  // Selling → Get offers: members' items to make an offer on.
+  await page.goto(`${urls.app}/selling/get-offers`);
+  await expect(page.getByText("Items members want to sell")).toBeVisible();
+  await expectAccessible(page);
+
   // The website lists the shop's offer and the cart line names the shop.
   await context.addCookies(await sessionCookies(customer.email, urls.web));
   await page.goto(`${urls.web}/store/${slug}`);

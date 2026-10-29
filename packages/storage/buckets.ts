@@ -72,6 +72,17 @@ export const buckets = {
     public: true,
   },
   /**
+   * Photos of an item a member asks shops for offers on, under
+   * "<user id>/…": the member uploads them; shops see them while the
+   * request is open.
+   */
+  sellRequestPhotos: {
+    id: "sell-request-photos",
+    maxBytes: 5 * 1024 * 1024,
+    mimeTypes: ["image/png", "image/jpeg", "image/webp"],
+    public: false,
+  },
+  /**
    * Student card photos under "<user id>/…": the student uploads one,
    * support reads it and deletes it after review.
    */
