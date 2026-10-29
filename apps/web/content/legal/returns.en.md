@@ -2,7 +2,7 @@ This policy explains the condition grades on The IDEA Store, the warranty each c
 
 ## 1. Who sells the item
 
-Every product page names its seller. Items sold by The IDEA say so; items sold by a shop say "Sold by [shop] · delivered and paid through The IDEA". This policy applies in the same way to both: you pay The IDEA, you contact The IDEA, and The IDEA handles your return and refund. Items people sell to each other work differently (see section 12).
+Every product page names its seller. Items sold by The IDEA say so; items sold by a shop say "Sold by [shop] · delivered and paid through The IDEA". This policy applies in the same way to both: you pay The IDEA, you contact The IDEA, and The IDEA handles your return and refund.
 
 ## 2. Condition grades
 
@@ -100,11 +100,7 @@ We send refunds the same day the return is complete.
 
 Items sold by shops on The IDEA follow this whole policy: the same 14-day window, the same condition grades and the same refunds. The IDEA collects your payment on the shop's behalf and pays the shop only after the return window has closed, so a refund never depends on the shop paying you back.
 
-## 12. Items bought from people
-
-Items that people sell to each other on The IDEA are paid to the seller in cash on delivery; the money never passes through The IDEA. This policy's returns and refunds therefore don't apply to them: check the item before you pay. If a person's item was misdescribed, report it to us; we will help you and the seller resolve it and may remove the seller. See [Selling](/legal/selling).
-
-## 13. Plus
+## 12. Plus
 
 - You can cancel any time; the plan stays active until the end of the month (or year) you paid for, once your items are back. We don't refund part of a month.
 - If you were charged by mistake or twice, contact us and we will refund the extra charge.
@@ -112,20 +108,20 @@ Items that people sell to each other on The IDEA are paid to the seller in cash 
 
 Details are in [The IDEA Plus](/legal/plus).
 
-## 14. Single-item rentals, game night kits and deposits
+## 13. Single-item rentals, game night kits and deposits
 
 - A single-item rental or a game night kit can be cancelled for a full refund until it is handed to you or to the rider.
 - A refundable deposit is returned in full when the item or kit comes back complete and undamaged, less any charges for late return, damage or loss explained to you (see [The IDEA Plus](/legal/plus)).
 
-## 15. Events and programs
+## 14. Events and programs
 
 The refund terms of a paid event are shown when you book. If we cancel an event, you get a full refund. The IDEA's programs (exchanges, trips and courses) have their own refund schedule, including refunds when a visa is refused (see [Programs](/legal/programs)).
 
-## 16. Organizations
+## 15. Organizations
 
 Orders by organizations through Partners follow this policy, unless your agreement with us says otherwise (see [Partners](/legal/business)).
 
-## 17. Age ratings
+## 16. Age ratings
 
 - **Age ratings.** Games show their PEGI age rating (3, 7, 12, 16 or 18). Games rated PEGI 18 and other mature items are hidden from and not sold to members under 18, by The IDEA or by shops.
 

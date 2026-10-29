@@ -78,11 +78,16 @@ const auctionKey = (number: number) => [...auctionsKey, number] as const;
 
 /** One auction by its number, with its history by alias. */
 export const useAuction = (number: number) => {
-  const { supabase } = useAuth();
+  const { supabase, user } = useAuth();
+  const queryClient = useQueryClient();
   return useQuery({
     enabled: Number.isInteger(number) && number > 0,
     queryFn: async () => {
       await settle(supabase);
+      // Settling can put a win in the cart: read the cart again after it.
+      queryClient.invalidateQueries({
+        queryKey: cartAuctionsKey(user?.id ?? ""),
+      });
       const auction = unwrap(
         await supabase
           .from("auctions")

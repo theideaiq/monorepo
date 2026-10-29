@@ -1,14 +1,8 @@
-This policy explains how selling works on The IDEA: shops selling through The IDEA Store, people selling their own things, "Get offers from shops" and auctions for collectibles. It applies alongside our [Terms](/legal/terms). These parts open in stages; each applies as it opens, and until then the page or button for it isn't shown.
+This policy explains how selling works on The IDEA: shops selling through The IDEA Store (businesses and individual traders), "Get offers from shops" and auctions for collectibles. It applies alongside our [Terms](/legal/terms). These parts open in stages; each applies as it opens, and until then the page or button for it isn't shown.
 
-## 1. Two ways to sell
+## 1. Who sells
 
-| | Shops | People |
-| --- | --- | --- |
-| Who | Businesses approved in Partners | Pass holders aged 18 or over with a verified Pass |
-| Where they manage sales | Partners → Selling | Pass → Selling |
-| How the buyer pays | To The IDEA, online with Wayl or in cash on delivery, as for any Store order | To the seller, in cash on delivery |
-| Does the money pass through The IDEA? | Yes, as the shop's payment agent | Never |
-| Returns and refunds | [Returns and refunds](/legal/returns), handled by The IDEA | Between buyer and seller (section 12) |
+Everyone who sells on The IDEA does it as a shop in Partners: a **registered business** (its commercial registration and the owner's ID) or an **individual trader** (the owner's ID only, with a monthly sales limit). A person who wants to sell their own things joins as an individual trader. Buyers pay The IDEA, online with Wayl or in cash on delivery, as for any Store order; The IDEA collects the money as the shop's payment agent, and returns follow [Returns and refunds](/legal/returns).
 
 ## 2. Shops: joining
 
@@ -29,7 +23,7 @@ This policy explains how selling works on The IDEA: shops selling through The ID
 - **Prices** are set by the shop. Each listing shows its price history, so a price can't be raised to make a discount look bigger.
 - **Stock** must be real: list only what you have and can send.
 - **Age ratings:** show the PEGI rating of every game; PEGI 18 and other mature items are hidden from and not sold to members under 18.
-- Items that are not allowed on The IDEA are listed in section 16.
+- Items that are not allowed on The IDEA are listed in section 12.
 
 ## 5. Shops: orders and shipping
 
@@ -62,35 +56,11 @@ Shops' items follow [Returns and refunds](/legal/returns) in full. When an item 
 
 Selling is free to start; The IDEA takes only its commission. Shops that want more can take the one paid plan, **Pro**. Its price and what it includes are shown in Partners before you subscribe, and set out in [Partners](/legal/business).
 
-## 10. People: who can sell
-
-- You must be **18 or over** with a **verified Pass** (see [Terms](/legal/terms)). Each person sells from their own Pass.
-- Sell only your own things. If you sell as a business, join as a shop.
-- People can't rent items out to each other on The IDEA.
-
-## 11. People: listings
-
-- Add **photos of the actual item**, its **condition grade** (with the meanings in [Returns and refunds](/legal/returns)) and an honest description of any wear or fault.
-- Choose a **fixed price** or let buyers make **offers**. An offer you accept is an agreement to sell at that price.
-- Keep the listing true: mark it sold or remove it as soon as the item is gone.
-
-## 12. People: paying
-
-- The buyer pays the seller **in cash on delivery**.
-- The money from people's sales **never passes through The IDEA**: we don't take payment for these items, hold it or refund it. Bulbs can't be earned or spent on them.
-- The sale is between the buyer and the seller. The buyer checks the item before paying; once paid and handed over, the sale is complete unless the two agree otherwise. If something goes wrong, tell us: we will help both sides and act against anyone who breaks this policy.
-
-## 13. People: messages and safety
-
-- Phone numbers are hidden. Buyers and sellers talk through messages in The IDEA, which we may review when one is reported or to prevent fraud (see [Privacy](/legal/privacy)).
-- Don't ask for or share phone numbers, sign-in codes or payment details in messages, and don't move a sale outside The IDEA to avoid these rules.
-- Pay only in cash on delivery. Never pay in advance for an item you haven't seen.
-
-## 14. Get offers from shops
+## 10. Get offers from shops
 
 Instead of listing an item yourself, you can ask shops on The IDEA for offers. Describe the item, its condition and photos; shops that are interested send offers through The IDEA. You choose one or none. The shop that made the offer you accept is the buyer: The IDEA passes on the offers and messages, but doesn't buy the item, set the price or guarantee the offer. The offer says how the shop checks the item and pays you.
 
-## 15. Auctions for collectibles
+## 11. Auctions for collectibles
 
 Approved shops, and The IDEA for its own copies, can auction collectibles: copies that are signed, limited or rare, products The IDEA lists as collectible, and used copies in the categories open for auctions. New copies at their usual price and rentals aren't auctioned. These rules apply to every auction:
 
@@ -105,7 +75,7 @@ Approved shops, and The IDEA for its own copies, can auction collectibles: copie
 - **Fees.** The seller pays the commission for the item's category on the final price. There are no listing fees.
 - **No shill bidding.** Sellers, and anyone acting with them, must not bid on their own items or push up prices. We check bidding patterns, cancel auctions affected by shill bidding and remove those involved.
 
-## 16. Items not allowed
+## 12. Items not allowed
 
 You may not sell, list or auction on The IDEA:
 
@@ -118,7 +88,7 @@ You may not sell, list or auction on The IDEA:
 
 We may remove any listing that breaks this policy without notice.
 
-## 17. When rules are broken
+## 13. When rules are broken
 
 We may remove listings, cancel orders or auctions, hold or set off payouts, keep the security deposit for amounts owed, and suspend selling or the Pass or organization concerned. Where we can, we tell you why first and give you a chance to respond.
 

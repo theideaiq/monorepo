@@ -760,7 +760,15 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Buy It Now, 48 hours, strikes, fees). Step 14's auctions are done.
 - 2026-10-29: Auctions, parts 1 and 2 (`20270307000000_auctions.sql`,
   `20270308000000_auction_checkout.sql`, schema first; decisions Part 12).
-- 2026-10-29: People selling, part 1 (step 14; schema
+- 2026-10-30: People selling cancelled (the owner's amendment of 30
+  October; decisions "Amendment, 30 October 2026: people selling,
+  verification and Pass settings"). People sell by joining Partners as
+  individual trader shops. `20270313000000_cancel_people_selling.sql`
+  drops the people-selling schema (never used by code); the selling,
+  returns and privacy policies no longer describe sales between people.
+  Next: all verification in `/verify`, then Pass → Settings grouped into
+  Connections, Phone (with WhatsApp) and Email.
+- 2026-10-29 (cancelled 30 October): People selling, part 1 (step 14; schema
   `20270311000000_member_listings.sql`, decisions Part 14). Adults with a
   verified identity list their own things (3 to 8 photos in the private
   `member-listing-photos` bucket, condition, area, a price of at least
