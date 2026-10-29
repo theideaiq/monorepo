@@ -6755,6 +6755,49 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      create_rentals_order: {
+        Args: {
+          delivery_zone?: string;
+          items: Json;
+          payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          shipping: Json;
+        };
+        Returns: {
+          bulbs_discount: number;
+          bulbs_used: number;
+          cash_collected_by: string | null;
+          confirmation_emailed_at: string | null;
+          coupon_id: string | null;
+          created_at: string;
+          currency: string;
+          delivery_zone_id: string | null;
+          discount: number;
+          discount_source: string | null;
+          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
+          guardian_status: string | null;
+          id: string;
+          max_bulbs: number | null;
+          number: number;
+          paid_at: string | null;
+          payment_method: Database["public"]["Enums"]["order_payment_method"];
+          shipping_address: NonNullable<Json>;
+          shipping_fee: number;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["order_status"];
+          subtotal: number;
+          total: number;
+          tracking_number: string | null;
+          tracking_url: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "orders";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       create_student_verification: {
         Args: { client: string; return_url: string };
         Returns: string;
@@ -7946,6 +7989,10 @@ export type Database = {
           late_fee: number;
           price: number;
         }[];
+      };
+      rentals_quote: {
+        Args: { delivery_zone?: string; items: Json };
+        Returns: Json;
       };
       reorder_queue: { Args: { products: string[] }; Returns: undefined };
       reorder_saved: { Args: { products: string[] }; Returns: undefined };
