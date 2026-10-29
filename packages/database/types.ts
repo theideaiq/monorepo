@@ -39,6 +39,161 @@ export type Database = {
         };
         Relationships: [];
       };
+      auction_reserves: {
+        Row: {
+          auction_id: string;
+          reserve_price: number;
+        };
+        Insert: {
+          auction_id: string;
+          reserve_price: number;
+        };
+        Update: {
+          auction_id?: string;
+          reserve_price?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "auction_reserves_auction_id_fkey";
+            columns: ["auction_id"];
+            isOneToOne: true;
+            referencedRelation: "auctions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      auctions: {
+        Row: {
+          bid_count: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          condition_note: string;
+          created_at: string;
+          current_price: number | null;
+          days: number;
+          ended_at: string | null;
+          ends_at: string;
+          final_price: number | null;
+          has_reserve: boolean;
+          id: string;
+          mark: Database["public"]["Enums"]["auction_mark"] | null;
+          mark_review: string | null;
+          mark_reviewed_at: string | null;
+          mark_reviewed_by: string | null;
+          number: number;
+          order_item_id: string | null;
+          pay_by: string | null;
+          photos: string[];
+          product_id: string;
+          reserve_met: boolean;
+          second_chance: boolean;
+          seller_id: string;
+          start_price: number;
+          starts_at: string;
+          status: Database["public"]["Enums"]["auction_status"];
+          stock_item_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        Insert: {
+          bid_count?: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          condition_note: string;
+          created_at?: string;
+          current_price?: number | null;
+          days: number;
+          ended_at?: string | null;
+          ends_at: string;
+          final_price?: number | null;
+          has_reserve?: boolean;
+          id?: string;
+          mark?: Database["public"]["Enums"]["auction_mark"] | null;
+          mark_review?: string | null;
+          mark_reviewed_at?: string | null;
+          mark_reviewed_by?: string | null;
+          number?: never;
+          order_item_id?: string | null;
+          pay_by?: string | null;
+          photos: string[];
+          product_id: string;
+          reserve_met?: boolean;
+          second_chance?: boolean;
+          seller_id: string;
+          start_price: number;
+          starts_at?: string;
+          status?: Database["public"]["Enums"]["auction_status"];
+          stock_item_id: string;
+          updated_at?: string;
+          variant_id: string;
+        };
+        Update: {
+          bid_count?: number;
+          condition?: Database["public"]["Enums"]["product_condition"];
+          condition_note?: string;
+          created_at?: string;
+          current_price?: number | null;
+          days?: number;
+          ended_at?: string | null;
+          ends_at?: string;
+          final_price?: number | null;
+          has_reserve?: boolean;
+          id?: string;
+          mark?: Database["public"]["Enums"]["auction_mark"] | null;
+          mark_review?: string | null;
+          mark_reviewed_at?: string | null;
+          mark_reviewed_by?: string | null;
+          number?: never;
+          order_item_id?: string | null;
+          pay_by?: string | null;
+          photos?: string[];
+          product_id?: string;
+          reserve_met?: boolean;
+          second_chance?: boolean;
+          seller_id?: string;
+          start_price?: number;
+          starts_at?: string;
+          status?: Database["public"]["Enums"]["auction_status"];
+          stock_item_id?: string;
+          updated_at?: string;
+          variant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "auctions_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "auctions_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "auctions_seller_id_fkey";
+            columns: ["seller_id"];
+            isOneToOne: false;
+            referencedRelation: "sellers";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "auctions_stock_item_id_fkey";
+            columns: ["stock_item_id"];
+            isOneToOne: false;
+            referencedRelation: "stock_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "auctions_variant_id_fkey";
+            columns: ["variant_id"];
+            isOneToOne: false;
+            referencedRelation: "product_variants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       audit_logs: {
         Row: {
           action: string;
@@ -83,6 +238,108 @@ export type Database = {
           term?: string;
         };
         Relationships: [];
+      };
+      bid_events: {
+        Row: {
+          alias: number;
+          amount: number;
+          auction_id: string;
+          created_at: string;
+          id: number;
+        };
+        Insert: {
+          alias: number;
+          amount: number;
+          auction_id: string;
+          created_at?: string;
+          id?: never;
+        };
+        Update: {
+          alias?: number;
+          amount?: number;
+          auction_id?: string;
+          created_at?: string;
+          id?: never;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bid_events_auction_id_fkey";
+            columns: ["auction_id"];
+            isOneToOne: false;
+            referencedRelation: "auctions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      bidding_strikes: {
+        Row: {
+          auction_id: string;
+          created_at: string;
+          user_id: string;
+        };
+        Insert: {
+          auction_id: string;
+          created_at?: string;
+          user_id: string;
+        };
+        Update: {
+          auction_id?: string;
+          created_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bidding_strikes_auction_id_fkey";
+            columns: ["auction_id"];
+            isOneToOne: false;
+            referencedRelation: "auctions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      bids: {
+        Row: {
+          alias: number;
+          amount: number;
+          auction_id: string;
+          bidder_id: string;
+          created_at: string;
+          max_amount: number;
+          outcome: string | null;
+          updated_at: string;
+          winning: boolean;
+        };
+        Insert: {
+          alias: number;
+          amount: number;
+          auction_id: string;
+          bidder_id: string;
+          created_at?: string;
+          max_amount: number;
+          outcome?: string | null;
+          updated_at?: string;
+          winning?: boolean;
+        };
+        Update: {
+          alias?: number;
+          amount?: number;
+          auction_id?: string;
+          bidder_id?: string;
+          created_at?: string;
+          max_amount?: number;
+          outcome?: string | null;
+          updated_at?: string;
+          winning?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "bids_auction_id_fkey";
+            columns: ["auction_id"];
+            isOneToOne: false;
+            referencedRelation: "auctions";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       bulb_entries: {
         Row: {
@@ -3453,6 +3710,7 @@ export type Database = {
       };
       product_categories: {
         Row: {
+          auctions: boolean;
           created_at: string;
           id: string;
           name_ar: string;
@@ -3462,6 +3720,7 @@ export type Database = {
           slug: string;
         };
         Insert: {
+          auctions?: boolean;
           created_at?: string;
           id?: string;
           name_ar: string;
@@ -3471,6 +3730,7 @@ export type Database = {
           slug: string;
         };
         Update: {
+          auctions?: boolean;
           created_at?: string;
           id?: string;
           name_ar?: string;
@@ -3701,6 +3961,7 @@ export type Database = {
         Row: {
           age_rating: number | null;
           category_id: string | null;
+          collectible: boolean;
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
           created_at: string;
@@ -3731,6 +3992,7 @@ export type Database = {
         Insert: {
           age_rating?: number | null;
           category_id?: string | null;
+          collectible?: boolean;
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
           created_at?: string;
@@ -3761,6 +4023,7 @@ export type Database = {
         Update: {
           age_rating?: number | null;
           category_id?: string | null;
+          collectible?: boolean;
           compare_at_price?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"];
           created_at?: string;
@@ -5211,6 +5474,8 @@ export type Database = {
       };
       store_settings: {
         Row: {
+          auction_identity_above: number;
+          auction_min_start: number;
           bulb_rate: number;
           cash_limit: number | null;
           cash_on_delivery_enabled: boolean;
@@ -5241,6 +5506,8 @@ export type Database = {
           wayl_return_refunds: boolean;
         };
         Insert: {
+          auction_identity_above?: number;
+          auction_min_start?: number;
           bulb_rate?: number;
           cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
@@ -5271,6 +5538,8 @@ export type Database = {
           wayl_return_refunds?: boolean;
         };
         Update: {
+          auction_identity_above?: number;
+          auction_min_start?: number;
           bulb_rate?: number;
           cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
@@ -6968,6 +7237,10 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
       };
+      bidding_blocked_until: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
       book_kit: {
         Args: {
           delivery_zone: string;
@@ -7065,6 +7338,46 @@ export type Database = {
           slug: string;
           variant_id: string;
         }[];
+      };
+      cancel_auction: {
+        Args: { target: string };
+        Returns: {
+          bid_count: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          condition_note: string;
+          created_at: string;
+          current_price: number | null;
+          days: number;
+          ended_at: string | null;
+          ends_at: string;
+          final_price: number | null;
+          has_reserve: boolean;
+          id: string;
+          mark: Database["public"]["Enums"]["auction_mark"] | null;
+          mark_review: string | null;
+          mark_reviewed_at: string | null;
+          mark_reviewed_by: string | null;
+          number: number;
+          order_item_id: string | null;
+          pay_by: string | null;
+          photos: string[];
+          product_id: string;
+          reserve_met: boolean;
+          second_chance: boolean;
+          seller_id: string;
+          start_price: number;
+          starts_at: string;
+          status: Database["public"]["Enums"]["auction_status"];
+          stock_item_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "auctions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       cancel_order: { Args: { order_id: string }; Returns: undefined };
       cancel_payout: {
@@ -7377,6 +7690,46 @@ export type Database = {
           phone: string;
           user_id: string;
         }[];
+      };
+      close_auction: {
+        Args: { target: string };
+        Returns: {
+          bid_count: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          condition_note: string;
+          created_at: string;
+          current_price: number | null;
+          days: number;
+          ended_at: string | null;
+          ends_at: string;
+          final_price: number | null;
+          has_reserve: boolean;
+          id: string;
+          mark: Database["public"]["Enums"]["auction_mark"] | null;
+          mark_review: string | null;
+          mark_reviewed_at: string | null;
+          mark_reviewed_by: string | null;
+          number: number;
+          order_item_id: string | null;
+          pay_by: string | null;
+          photos: string[];
+          product_id: string;
+          reserve_met: boolean;
+          second_chance: boolean;
+          seller_id: string;
+          start_price: number;
+          starts_at: string;
+          status: Database["public"]["Enums"]["auction_status"];
+          stock_item_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "auctions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
       };
       close_support_ticket: { Args: { ticket: string }; Returns: undefined };
       close_survey: {
@@ -8297,6 +8650,7 @@ export type Database = {
       listed_categories: {
         Args: { for_rent?: boolean };
         Returns: {
+          auctions: boolean;
           created_at: string;
           id: string;
           name_ar: string;
@@ -8685,6 +9039,46 @@ export type Database = {
         Returns: number;
       };
       notify_rentals_due_soon: { Args: { within?: string }; Returns: number };
+      offer_second_chance: {
+        Args: { target: string };
+        Returns: {
+          bid_count: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          condition_note: string;
+          created_at: string;
+          current_price: number | null;
+          days: number;
+          ended_at: string | null;
+          ends_at: string;
+          final_price: number | null;
+          has_reserve: boolean;
+          id: string;
+          mark: Database["public"]["Enums"]["auction_mark"] | null;
+          mark_review: string | null;
+          mark_reviewed_at: string | null;
+          mark_reviewed_by: string | null;
+          number: number;
+          order_item_id: string | null;
+          pay_by: string | null;
+          photos: string[];
+          product_id: string;
+          reserve_met: boolean;
+          second_chance: boolean;
+          seller_id: string;
+          start_price: number;
+          starts_at: string;
+          status: Database["public"]["Enums"]["auction_status"];
+          stock_item_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "auctions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       offerable_listings: {
         Args: { item: string };
         Returns: {
@@ -8826,6 +9220,7 @@ export type Database = {
           uses: number;
         }[];
       };
+      place_bid: { Args: { maximum: number; target: string }; Returns: Json };
       plus_renewal_bulbs: { Args: { subscription: string }; Returns: number };
       plus_status: {
         Args: Record<PropertyKey, never>;
@@ -9377,6 +9772,46 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      review_auction_mark: {
+        Args: { correct: boolean; target: string };
+        Returns: {
+          bid_count: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          condition_note: string;
+          created_at: string;
+          current_price: number | null;
+          days: number;
+          ended_at: string | null;
+          ends_at: string;
+          final_price: number | null;
+          has_reserve: boolean;
+          id: string;
+          mark: Database["public"]["Enums"]["auction_mark"] | null;
+          mark_review: string | null;
+          mark_reviewed_at: string | null;
+          mark_reviewed_by: string | null;
+          number: number;
+          order_item_id: string | null;
+          pay_by: string | null;
+          photos: string[];
+          product_id: string;
+          reserve_met: boolean;
+          second_chance: boolean;
+          seller_id: string;
+          start_price: number;
+          starts_at: string;
+          status: Database["public"]["Enums"]["auction_status"];
+          stock_item_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "auctions";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       review_educator_check: {
         Args: {
           approve: boolean;
@@ -9585,6 +10020,7 @@ export type Database = {
         Returns: {
           age_rating: number | null;
           category_id: string | null;
+          collectible: boolean;
           compare_at_price: number | null;
           condition: Database["public"]["Enums"]["product_condition"];
           created_at: string;
@@ -10055,6 +10491,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      settle_auctions: { Args: Record<PropertyKey, never>; Returns: number };
       settle_rental: {
         Args: { damage?: number; target: string };
         Returns: {
@@ -10156,6 +10593,57 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "returns";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      start_auction: {
+        Args: {
+          condition_note: string;
+          copy?: string;
+          copy_mark?: Database["public"]["Enums"]["auction_mark"];
+          days: number;
+          photos: string[];
+          reserve?: number;
+          seller: string;
+          start_price: number;
+          variant: string;
+          wanted: Database["public"]["Enums"]["product_condition"];
+        };
+        Returns: {
+          bid_count: number;
+          condition: Database["public"]["Enums"]["product_condition"];
+          condition_note: string;
+          created_at: string;
+          current_price: number | null;
+          days: number;
+          ended_at: string | null;
+          ends_at: string;
+          final_price: number | null;
+          has_reserve: boolean;
+          id: string;
+          mark: Database["public"]["Enums"]["auction_mark"] | null;
+          mark_review: string | null;
+          mark_reviewed_at: string | null;
+          mark_reviewed_by: string | null;
+          number: number;
+          order_item_id: string | null;
+          pay_by: string | null;
+          photos: string[];
+          product_id: string;
+          reserve_met: boolean;
+          second_chance: boolean;
+          seller_id: string;
+          start_price: number;
+          starts_at: string;
+          status: Database["public"]["Enums"]["auction_status"];
+          stock_item_id: string;
+          updated_at: string;
+          variant_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "auctions";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -10532,6 +11020,14 @@ export type Database = {
     };
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
+      auction_mark: "signed" | "limited" | "rare";
+      auction_status:
+        | "live"
+        | "won"
+        | "paid"
+        | "unsold"
+        | "unpaid"
+        | "cancelled";
       billing_interval: "month" | "year";
       bulb_kind:
         | "purchase"
@@ -10820,6 +11316,8 @@ export const Constants = {
   public: {
     Enums: {
       account_type: ["asset", "liability", "equity", "revenue", "expense"],
+      auction_mark: ["signed", "limited", "rare"],
+      auction_status: ["live", "won", "paid", "unsold", "unpaid", "cancelled"],
       billing_interval: ["month", "year"],
       bulb_kind: [
         "purchase",

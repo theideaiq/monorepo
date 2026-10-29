@@ -1038,3 +1038,65 @@ Plus Duo waits for step 14.
   deleted 30 days after the application ends or the program does.
 - **Not yet:** sending a program as a gift, and a Plus price per tier.
 
+
+## Part 12: auctions (step 14)
+
+- **Which copies:**
+  - any copy of a product Staff flag **Collectible**;
+  - used, refurbished or open-box copies of products in a category
+    Staff open for auctions (a subcategory follows its parent);
+  - any copy the seller marks **signed**, **limited** or **rare**.
+
+  A new copy needs the flag or a mark, so new in-print items stay at
+  their band price. Rentals are never auctioned. Kits, tickets, programs
+  and codes aren't catalogue copies, so they can't be auctioned either.
+- **Who lists:** an approved shop's owners and admins, and Staff
+  (editors) for The IDEA's own copies, as for offers. People selling
+  joins later, with identity verification.
+- **Listing:**
+  - 3 to 12 of the seller's own photos of that copy (a public bucket,
+    under the shop's folder) and a condition description;
+  - a start price of at least 25,000 IQD (a setting);
+  - optionally a hidden reserve above the start price;
+  - 3, 5, 7 or 10 days.
+
+  The copy is held while the auction runs. If the listing has no copy
+  for sale, one is added. A seller can cancel an auction until its first
+  bid.
+- **Bidding:**
+  - Proxy bidding: the bidder sets a maximum and the price moves in steps
+    of 1,000 IQD below 50,000, then 2,500, 5,000 (from 100,000), 10,000
+    (from 250,000), 25,000 (from 500,000) and 50,000 (from 1,000,000).
+  - When two maximums are equal, the earlier one leads. Once the leading
+    maximum reaches a reserve, the price jumps to the reserve.
+  - A bid in the last 2 minutes adds 2 minutes.
+  - The history shows each price by alias ("Bidder 3"). Only the bidder
+    and staff know who bid. The seller never sees bidders or their
+    maximums.
+- **Who bids:**
+  - adults (a win is a purchase that can't wait for a guardian);
+  - a verified phone number, enforced with the same switch as deliveries
+    (`require_verified_phone`, on once Twilio is configured);
+  - identity verification for a maximum above 500,000 IQD (a new setting:
+    none existed yet);
+  - nobody at the selling shop.
+- **Ending:**
+  - **Above the reserve:** the leader wins at the price showing and has
+    48 hours to pay, counted from when the win is recorded.
+  - **Unpaid:** an unpaid win is a strike. 2 strikes within 12 months
+    block bidding for 90 days; 3 block it for good. Support can lift a
+    strike given in error.
+  - **Second chance:** the seller can offer the copy once to the next
+    highest bidder, at that bidder's last bid, for 48 hours. Letting a
+    second chance pass isn't a strike.
+  - **Closing:** an unpaid auction the seller doesn't act on closes after
+    7 days, and its copy goes back on sale.
+- **Settling:** deadlines are applied by a function anyone may call. The
+  API's daily cron runs it, and auction pages call it when they load, so
+  winners hear without waiting for the cron.
+- **Marks:** Staff (editors) confirm a mark or find it wrong. A wrong
+  mark counts against the shop's score as heavily as a return (×2),
+  over the last 90 days.
+- **Paying:** part 2 puts a won auction in the winner's cart and
+  checkout. Commission is at the category's rate on the final price, as
+  for any line.
