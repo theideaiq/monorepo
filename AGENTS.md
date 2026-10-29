@@ -83,7 +83,9 @@ incidents) is in `docs/platform`.
     (`isAllowedReturnTo`);
   - **The IDEA Pass pages** (`app/[locale]/pass/(member)`: `/pass` the
     Pass card, `/pass/orders`, `/pass/saved` (tabs Saved, Lists and, for
-    Plus members, Queue), `/pass/bulbs` with
+    Plus members, Queue), `/pass/selling` (Get offers from shops: describe
+    an item with photos, compare shops' offers, accept one and arrange the
+    hand-over in messages), `/pass/bulbs` with
     invites at `#invite`, `/pass/settings` with the address book at
     `#addresses`); `/pass/embed` (outside that
     group, no header or footer) is the live card partners frame on their
@@ -109,7 +111,9 @@ incidents) is in `docs/platform`.
   counter within 48 hours, and which listings take offers, with automatic
   accept and decline amounts), `/selling/auctions` (putting a copy up for
   auction with the shop's own photos, its bids, and a second chance or
-  closing after an unpaid win), `/selling/sales` (sale prices between two
+  closing after an unpaid win), `/selling/get-offers` (members' items to
+  make an offer on, by first name and area only, and the shop's offers with
+  their messages), `/selling/sales` (sale prices between two
   days, quantity deals, student prices and taking part in campaigns), `/selling/payouts` (each weekly payout with
   its statement) and `/selling/pickup` (its branches, each a Boxy pickup
   location), Supply `/supply` (a supplier shop's copies lent to Plus and

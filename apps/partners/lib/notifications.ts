@@ -64,6 +64,13 @@ export const NOTIFICATION_EVENTS = [
   "auction_unsold",
   "auction_unpaid_shop",
   "auction_mark_wrong",
+  "sell_offer_received",
+  "sell_offer_accepted",
+  "sell_offer_completed",
+  "sell_offer_cancelled",
+  "sell_offer_cancelled_shop",
+  "sell_message",
+  "sell_message_shop",
 ] as const;
 
 export type NotificationEvent = (typeof NOTIFICATION_EVENTS)[number];
@@ -150,6 +157,16 @@ const auctionItemName = (
   return (locale === "ar" ? arabic : english) || english || arabic;
 };
 
+/** A request's item, the offer's amount and the shop (`sell_*`). */
+const sellValues = (data: Record<string, Json | undefined>, locale: Locale) => {
+  const amount = Number(text(data.amount));
+  return {
+    amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    shop: text(data.shop),
+    title: text(data.title),
+  };
+};
+
 /** An auction's item, its price and when it must be paid (`auction_*`). */
 const auctionValues = (
   data: Record<string, Json | undefined>,
@@ -198,6 +215,13 @@ const extraValues: Partial<
   pass_app_declined: (data) => ({ name: text(data.name) }),
   plus_seat_active: (data) => ({ plan: text(data.plan) }),
   quote_sent: quoteValues,
+  sell_message: sellValues,
+  sell_message_shop: sellValues,
+  sell_offer_accepted: sellValues,
+  sell_offer_cancelled: sellValues,
+  sell_offer_cancelled_shop: sellValues,
+  sell_offer_completed: sellValues,
+  sell_offer_received: sellValues,
 };
 
 /**
@@ -209,13 +233,18 @@ const extraValues: Partial<
  * The event to describe: an unpaid auction reaches the winner and the
  * shop under one name; the shop's links to Partners.
  */
+/** Events that reach the member and the shop under one name. */
+const SHOP_VARIANTS: Record<string, string> = {
+  auction_unpaid: "auction_unpaid_shop",
+  sell_message: "sell_message_shop",
+  sell_offer_cancelled: "sell_offer_cancelled_shop",
+};
+
 const eventFor = ({
   event,
   link,
 }: Pick<NotificationRow, "event"> & { link?: string | null }) =>
-  event === "auction_unpaid" && link?.startsWith("/selling")
-    ? "auction_unpaid_shop"
-    : event;
+  (link?.startsWith("/selling") ? SHOP_VARIANTS[event] : undefined) ?? event;
 
 export const describeNotification = (
   notification: Pick<NotificationRow, "data" | "event" | "kind"> & {

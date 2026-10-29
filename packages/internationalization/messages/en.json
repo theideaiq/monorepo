@@ -2117,7 +2117,8 @@
         "shopOffers": "Offers",
         "shopPayouts": "Payouts",
         "shopSales": "Sales and deals",
-        "shopAuctions": "Auctions"
+        "shopAuctions": "Auctions",
+        "shopGetOffers": "Get offers"
       },
       "members": {
         "title": "Members",
@@ -3610,6 +3611,54 @@
           "noBidder": "There's no other bidder to offer it to.",
           "failed": "That didn't work. Try again."
         }
+      },
+      "shopGetOffers": {
+        "title": "Get offers",
+        "notApproved": "Get offers opens once your shop is approved.",
+        "openTitle": "Items members want to sell",
+        "openDescription": "Make one offer per item: what you pay, how you check it and how you pay. Members see your shop's name, never your contacts.",
+        "noneOpen": "No items right now.",
+        "who": "{name} · {area}",
+        "openUntil": "Open until {time}",
+        "photo": "Photo {number}",
+        "yourOffer": "Your offer: {amount}",
+        "offersTitle": "Your offers",
+        "offersDescription": "Offers of the last 30 days. Once accepted, arrange the hand-over in the messages and mark the sale done.",
+        "noneOffers": "No offers yet.",
+        "status": {
+          "sent": "Waiting for the member",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "withdrawn": "Withdrawn",
+          "expired": "Expired",
+          "completed": "Done",
+          "cancelled": "Called off"
+        },
+        "accepted": "The member accepted. Arrange the hand-over in the messages.",
+        "withdraw": "Withdraw",
+        "done": "Mark the sale done",
+        "callOff": "Call it off",
+        "form": {
+          "amount": "Your offer (IQD)",
+          "check": "How you check it",
+          "collect": "We collect it",
+          "dropOff": "The member brings it",
+          "pay": "How you pay",
+          "cash": "Cash",
+          "transfer": "Transfer",
+          "note": "Note (optional)",
+          "send": "Send offer",
+          "sending": "Sending…",
+          "failed": "That didn't work. Refresh and try again."
+        },
+        "messages": {
+          "none": "No messages yet.",
+          "member": "The member",
+          "shop": "Your shop",
+          "label": "Message to the member",
+          "placeholder": "Write to the member",
+          "send": "Send"
+        }
       }
     },
     "ages": {
@@ -3825,6 +3874,86 @@
         "condition": "Condition",
         "product": "About this product",
         "back": "Auctions"
+      }
+    },
+    "selling": {
+      "title": "Selling",
+      "intro": "Ask shops on The IDEA what they'd pay for your things. Describe the item, add photos, and compare their offers. You choose one or none.",
+      "yours": "Your requests",
+      "none": "You haven't asked for offers yet.",
+      "ask": {
+        "title": "Get offers from shops",
+        "description": "Shops see the item, its photos and your area, with your first name only. Your request stays open for 7 days.",
+        "item": "What is it?",
+        "condition": "Condition",
+        "area": "Where is it?",
+        "chooseArea": "Choose an area",
+        "details": "Describe it",
+        "photos": "Photos of the item",
+        "photosHint": "3 to 8 photos of the item itself. Chosen: {count}",
+        "send": "Ask for offers",
+        "sending": "Sending…",
+        "sent": "Sent. Shops can now make offers.",
+        "verifyPhone": "Verify it in Settings",
+        "problems": {
+          "adult": "You need to be 18 or over to sell.",
+          "phone": "Verify your phone number first.",
+          "limit": "You can have up to 5 open requests.",
+          "photos": "Add 3 to 8 photos of the item.",
+          "area": "Choose the area the item is in.",
+          "closed": "This can't be done any more.",
+          "failed": "That didn't work. Try again."
+        }
+      },
+      "request": {
+        "status": {
+          "open": "Open",
+          "accepted": "Offer accepted",
+          "completed": "Sold",
+          "closed": "Closed",
+          "expired": "Expired"
+        },
+        "openUntil": "Open until {time}",
+        "number": "Request {number}",
+        "photo": "Photo {number}",
+        "waiting": "No offers yet. Shops have until the request closes.",
+        "noOffers": "No offers.",
+        "close": "Close without choosing"
+      },
+      "offer": {
+        "from": "{shop} offers {amount}",
+        "status": {
+          "sent": "Waiting for you",
+          "accepted": "Accepted",
+          "declined": "Declined",
+          "withdrawn": "Withdrawn",
+          "expired": "Expired",
+          "completed": "Sold",
+          "cancelled": "Called off"
+        },
+        "check": {
+          "collect": "The shop collects it",
+          "drop_off": "You bring it to the shop"
+        },
+        "pay": {
+          "cash": "Paid in cash",
+          "transfer": "Paid by transfer"
+        },
+        "until": "Answer by {time}",
+        "accept": "Accept",
+        "decline": "Decline",
+        "accepted": "You accepted this offer. Arrange the hand-over in the messages; the shop marks it done.",
+        "callOff": "Call it off",
+        "failed": "That didn't work. Refresh and try again."
+      },
+      "messages": {
+        "none": "No messages yet.",
+        "you": "You",
+        "shop": "The shop",
+        "label": "Message to the shop",
+        "placeholder": "Write to the shop",
+        "send": "Send",
+        "private": "Messages go through The IDEA. Don't share your phone number or address here."
       }
     }
   },
@@ -4224,6 +4353,34 @@
         "auction_mark_wrong": {
           "title": "An auction's mark was wrong",
           "body": "Staff found the mark on {name} wrong. It counts against your shop's score."
+        },
+        "sell_offer_received": {
+          "title": "A shop made an offer",
+          "body": "{shop} offers {amount} for {title}."
+        },
+        "sell_offer_accepted": {
+          "title": "Your offer was accepted",
+          "body": "The member accepted {amount} for {title}. Arrange the hand-over in the messages."
+        },
+        "sell_offer_completed": {
+          "title": "Sale done",
+          "body": "{shop} marked the sale of {title} done."
+        },
+        "sell_offer_cancelled": {
+          "title": "Sale called off",
+          "body": "{shop} called off the sale of {title}."
+        },
+        "sell_offer_cancelled_shop": {
+          "title": "Sale called off",
+          "body": "The member called off the sale of {title}."
+        },
+        "sell_message": {
+          "title": "A message from a shop",
+          "body": "{shop} wrote about {title}."
+        },
+        "sell_message_shop": {
+          "title": "A message from a member",
+          "body": "A member wrote about {title}."
         }
       },
       "kinds": {

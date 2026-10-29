@@ -951,3 +951,109 @@ test("a member bids on an auction, wins it and finds it in the cart", async ({
   await expect(page.getByRole("heading", { name: "Your bids" })).toBeVisible();
   await expect(page.getByText("You won", { exact: true })).toBeVisible();
 });
+
+test("a member asks shops for offers, accepts one and writes to the shop", async ({
+  context,
+  page,
+}) => {
+  await resetCustomer();
+  await resetFriend();
+  const db = admin();
+
+  // A shop to make the offer: the friend's, approved.
+  const { data: friendUser } = await db
+    .from("profiles")
+    .select("id")
+    .eq("full_name", friend.name)
+    .limit(1)
+    .single();
+  await db.from("organizations").delete().eq("slug", "e2e-buyers");
+  const { data: org, error } = await db
+    .from("organizations")
+    .insert({
+      created_by: friendUser?.id ?? "",
+      name: "E2E Buyers",
+      slug: "e2e-buyers",
+    })
+    .select("id")
+    .single();
+  if (error) {
+    throw error;
+  }
+  await db.from("organization_members").insert({
+    organization_id: org.id,
+    role: "owner",
+    user_id: friendUser?.id ?? "",
+  });
+  const { data: shop } = await db
+    .from("sellers")
+    .insert({ name: "E2E Buyers", organization_id: org.id, status: "approved" })
+    .select("id")
+    .single();
+  await db
+    .from("delivery_zones")
+    .update({ active: true })
+    .eq("governorate", "baghdad");
+  await context.addCookies(await sessionCookies(customer.email, urls.web));
+
+  // Pass → Selling: describe the item, add its photos and ask.
+  await page.goto(`${urls.web}/pass`);
+  await page
+    .getByRole("navigation", { name: "Navigation" })
+    .getByRole("link", { name: "Selling" })
+    .click();
+  // A page the dev server may still be compiling.
+  await expect(page).toHaveURL(`${urls.web}/pass/selling`, {
+    timeout: 30_000,
+  });
+  await expectAccessible(page);
+  await page.getByLabel("What is it?").fill("E2E Record Collection");
+  await page.getByLabel("Where is it?").selectOption("baghdad");
+  await page
+    .getByLabel("Describe it")
+    .fill("Thirty records, sleeves in good shape.");
+  await page.getByLabel("Photos of the item").setInputFiles(
+    [1, 2, 3].map((n) => ({
+      buffer: PIXEL,
+      mimeType: "image/png",
+      name: `record-${n}.png`,
+    }))
+  );
+  await page.getByRole("button", { name: "Ask for offers" }).click();
+  await expect(
+    page.getByText("Sent. Shops can now make offers.")
+  ).toBeVisible();
+  await expect(page.getByText("E2E Record Collection")).toBeVisible();
+
+  // The shop offers 150,000 IQD (as `make_sell_offer` would).
+  const { data: request } = await db
+    .from("sell_requests")
+    .select("id")
+    .eq("title", "E2E Record Collection")
+    .single();
+  await db.from("sell_offers").insert({
+    amount: 150_000,
+    check_method: "collect",
+    expires_at: new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString(),
+    note: "We collect on Saturday.",
+    pay_method: "cash",
+    request_id: request?.id ?? "",
+    seller_id: shop?.id ?? "",
+  });
+  await page.reload();
+  await expect(page.getByText(/^E2E Buyers offers/)).toBeVisible();
+  await expect(page.getByText("We collect on Saturday.")).toBeVisible();
+  await expectAccessible(page);
+
+  // Accepting it, then a message to the shop.
+  await page.getByRole("button", { name: "Accept" }).click();
+  await expect(page.getByText(/^You accepted this offer/)).toBeVisible();
+  await page
+    .getByLabel("Message to the shop")
+    .fill("Saturday at noon suits me.");
+  await page.getByRole("button", { exact: true, name: "Send" }).click();
+  await expect(page.getByText("Saturday at noon suits me.")).toBeVisible();
+  await expectAccessible(page);
+
+  await db.from("organizations").delete().eq("slug", "e2e-buyers");
+});
