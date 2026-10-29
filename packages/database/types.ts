@@ -326,6 +326,7 @@ export type Database = {
           created_at: string;
           id: string;
           product_id: string;
+          purpose: string;
           quantity: number;
           seller_id: string;
           updated_at: string;
@@ -337,6 +338,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           product_id: string;
+          purpose?: string;
           quantity?: number;
           seller_id?: string;
           updated_at?: string;
@@ -348,6 +350,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           product_id?: string;
+          purpose?: string;
           quantity?: number;
           seller_id?: string;
           updated_at?: string;
