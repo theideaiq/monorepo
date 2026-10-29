@@ -177,7 +177,7 @@ const StudentPrice = ({
   return (
     <Link
       className="text-pink-text text-xs hover:underline"
-      href="/pass/settings#student"
+      href="/verify?kind=student"
     >
       {t("studentOffer", {
         price: formatCurrency(studentPlan.amount, locale, studentPlan.currency),

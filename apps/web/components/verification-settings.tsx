@@ -16,6 +16,7 @@ import {
   formatCalendarDate,
   formatDate,
 } from "@repo/internationalization/format";
+import { Link } from "@repo/internationalization/navigation";
 import { ShieldCheckIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
@@ -117,9 +118,9 @@ const Identity = ({
   return (
     <section aria-labelledby="verification-identity" className="grid gap-3">
       <div>
-        <h3 className="font-medium text-sm" id="verification-identity">
+        <h2 className="font-medium" id="verification-identity">
           {t("title")}
-        </h3>
+        </h2>
         <p className="text-muted-foreground text-sm">{t("description")}</p>
       </div>
       {!(identity.verified || identity.pending) && identity.rejected_reason ? (
@@ -354,14 +355,11 @@ const Educator = ({
   }
 
   return (
-    <section
-      aria-labelledby="verification-educator"
-      className="grid gap-3 border-t pt-4"
-    >
+    <section aria-labelledby="verification-educator" className="grid gap-3">
       <div>
-        <h3 className="font-medium text-sm" id="verification-educator">
+        <h2 className="font-medium" id="verification-educator">
           {t("title")}
-        </h3>
+        </h2>
         <p className="text-muted-foreground text-sm">{t("description")}</p>
       </div>
       {!(educator.verified || educator.pending) && educator.rejected_reason ? (
@@ -375,16 +373,26 @@ const Educator = ({
 };
 
 /**
- * Pass → Settings → Verification: the identity check, needed later to sell,
- * receive payouts, bid high or rent without a deposit, and the educator
- * badge, which brings every student perk.
+ * /verify → Identity: the National Card and a selfie, reviewed by support;
+ * needed to receive payouts, bid high or rent without a deposit.
  */
-export const VerificationCard = () => {
-  const t = useTranslations("app.settings.verification");
+export const IdentitySection = () => {
   const status = useMyVerifications();
-  if (!status.data) {
-    return null;
-  }
+  return status.data ? <Identity identity={status.data.identity} /> : null;
+};
+
+/** /verify → Educator: the badge that brings every student perk. */
+export const EducatorSection = () => {
+  const status = useMyVerifications();
+  return status.data ? <Educator educator={status.data.educator} /> : null;
+};
+
+/**
+ * Pass → Settings → Verification: every verification (student, educator,
+ * identity, organizations) is in one place, /verify.
+ */
+export const VerificationLinkCard = () => {
+  const t = useTranslations("app.settings.verification");
   return (
     <Card id="verification">
       <CardHeader>
@@ -397,9 +405,10 @@ export const VerificationCard = () => {
         </CardTitle>
         <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <Identity identity={status.data.identity} />
-        <Educator educator={status.data.educator} />
+      <CardContent>
+        <Button asChild variant="outline">
+          <Link href="/verify">{t("open")}</Link>
+        </Button>
       </CardContent>
     </Card>
   );

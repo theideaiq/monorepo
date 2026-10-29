@@ -157,7 +157,7 @@ export const YourSurveys = () => {
             {t("studentsCreate")}{" "}
             <Link
               className="text-pink-text underline"
-              href="/pass/settings#student"
+              href="/verify?kind=student"
             >
               {t("verify")}
             </Link>

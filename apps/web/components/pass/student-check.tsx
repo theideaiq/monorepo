@@ -6,10 +6,12 @@ import { useAuth } from "@repo/auth/provider";
 import { localized } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Label } from "@repo/design-system/components/ui/label";
-import type { Locale } from "@repo/internationalization";
+import { type Locale, localePath } from "@repo/internationalization";
 import { formatCalendarDate } from "@repo/internationalization/format";
+import { Link } from "@repo/internationalization/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
+import { VerificationHub } from "@/components/pass/verification-hub";
 import { CardForm, EmailForm } from "@/components/student-settings";
 import { useAuthMessages } from "@/lib/auth-messages";
 import {
@@ -20,6 +22,7 @@ import {
   useStudentCheck,
   useUniversities,
 } from "@/lib/student-queries";
+import type { VerifyKind } from "@/lib/verify-kinds";
 
 const selectClassName =
   "h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs";
@@ -278,22 +281,45 @@ const SignedIn = ({ returnTo }: { readonly returnTo: string | null }) => {
 };
 
 interface StudentCheckProps {
+  /** Which verification to open for a full Pass (`?kind=`). */
+  readonly kind: VerifyKind;
+  /** Partners → Organization, where organizations are verified. */
+  readonly partnersUrl: string;
   readonly returnTo: string | null;
   readonly turnstileSiteKey?: string;
 }
 
 /**
- * theideaiq.com/verify, "Verify you're a student": the university and its
- * email, then the emailed code; or a student card photo. Nothing else is
- * asked. The result is The IDEA's student badge, until 30 June.
- * Partners' own verifications are at /verify/<id>.
+ * theideaiq.com/verify. Signed out, or with a bare Pass: "Verify you're a
+ * student", the university and its email, then the emailed code, or a
+ * student card photo; nothing else is asked, and the result is The IDEA's
+ * student badge until 30 June. With a full Pass: every verification
+ * (student, educator, identity, organizations) in one place. Partners'
+ * own verifications are at /verify/<id>.
  */
 export const StudentCheck = ({
+  kind,
+  partnersUrl,
   returnTo,
   turnstileSiteKey,
 }: StudentCheckProps) => {
   const t = useTranslations("pass.verify");
+  const locale = useLocale();
   const { user } = useAuth();
+  const check = useStudentCheck();
+  // A full Pass verifies everything here; a bare one holds only the badge.
+  if (user && check.isPending) {
+    return null;
+  }
+  if (user && check.data && !check.data.bare) {
+    return (
+      <VerificationHub
+        kind={kind}
+        partnersUrl={partnersUrl}
+        returnTo={returnTo}
+      />
+    );
+  }
   return (
     <div className="grid gap-6">
       <div className="grid gap-1 text-center">
@@ -303,7 +329,22 @@ export const StudentCheck = ({
       {user ? (
         <SignedIn returnTo={returnTo} />
       ) : (
-        <SignedOut turnstileSiteKey={turnstileSiteKey} />
+        <>
+          <SignedOut turnstileSiteKey={turnstileSiteKey} />
+          <p className="text-center text-muted-foreground text-sm">
+            <Link
+              className="underline"
+              href={{
+                pathname: "/sign-in",
+                query: {
+                  return_to: localePath(locale, `/verify?kind=${kind}`),
+                },
+              }}
+            >
+              {t("otherKinds")}
+            </Link>
+          </p>
+        </>
       )}
     </div>
   );

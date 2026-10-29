@@ -350,8 +350,8 @@ test.describe("a signed-in customer", () => {
 
   test("sends identity photos for review", async ({ page }) => {
     const noErrors = watchConsole(page);
-    await page.goto(`${urls.web}/pass/settings`);
-    const card = page.locator("#verification");
+    await page.goto(`${urls.web}/verify?kind=identity`);
+    const card = page.getByRole("region", { name: "Identity" });
     const photo = (name: string) => ({
       buffer: Buffer.from(
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
@@ -583,14 +583,16 @@ test.describe("a signed-in customer", () => {
     noErrors();
   });
 
-  test("finds student verification in Settings", async ({ page }) => {
+  test("finds student verification in /verify", async ({ page }) => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/pass`);
     await page.getByRole("link", { name: STUDENT_NUDGE }).first().click();
-    await expect(page).toHaveURL(/\/pass\/settings#student$/);
-    await expect(page.getByText("Student verification")).toBeVisible();
-    // The student card (the educator badge below has its own university).
-    const student = page.locator("#student");
+    await expect(page).toHaveURL(/\/verify\?kind=student$/);
+    // One place for every verification: student, educator, identity.
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Verification" })
+    ).toBeVisible();
+    const student = page.getByRole("region", { name: "Student verification" });
     await student
       .getByLabel("University", { exact: true })
       .selectOption("auib");
@@ -599,6 +601,10 @@ test.describe("a signed-in customer", () => {
     ).toBeVisible();
     await expect(student.getByLabel("Your university email")).toBeVisible();
     await expectAccessible(page);
+    // The identity check is a tab of the same page.
+    await page.getByRole("link", { exact: true, name: "Identity" }).click();
+    await expect(page).toHaveURL(/\/verify\?kind=identity$/);
+    await expect(page.getByRole("region", { name: "Identity" })).toBeVisible();
     noErrors();
   });
 

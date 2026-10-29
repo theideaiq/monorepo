@@ -573,6 +573,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-30: All verification in `/verify` (the owner's message of 30
+  October). With a Pass, `/verify` has tabs for student (the card that was
+  in Pass → Settings, with the major and year), educator, identity and
+  organizations (a pointer to Partners → Organization), at `?kind=`;
+  signed out or with a bare Pass it is still the student check, with a
+  link to sign in for the others. Pass → Settings keeps one Verification
+  card that opens `/verify`; stored links to `/pass/settings#student` and
+  `#verification` open the new page (`currentAppPath`).
 - 2026-10-29: Saved, lists and the Plus queue, part 1 (master brief step 8,
   section 12; `20270205000000_saved_lists_queue.sql`). Pass → Saved has
   three tabs. Saved: everything hearted, each with its state (Price

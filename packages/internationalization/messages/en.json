@@ -2439,7 +2439,7 @@
       },
       "verification": {
         "title": "Verification",
-        "description": "Verify who you are, and whether you teach. Your documents are checked by The IDEA's team and deleted after review.",
+        "description": "Student, educator, identity and organizations: every verification is in one place.",
         "identity": {
           "title": "Identity",
           "description": "Needed to sell, receive payouts, bid high amounts or rent without a deposit. We keep only your name and the date.",
@@ -2475,7 +2475,8 @@
           "waiting": "Your documents are waiting for review. We'll let you know.",
           "verified": "Educator at {institution} until {date}.",
           "rejected": "We couldn't verify your documents: {reason}"
-        }
+        },
+        "open": "Open Verification"
       },
       "sites": {
         "title": "Connected sites",
@@ -6917,7 +6918,26 @@
       "errors": {
         "failed": "Something went wrong. Try again.",
         "tooMany": "Too many checks. Try again later."
-      }
+      },
+      "hub": {
+        "title": "Verification",
+        "description": "Every verification in one place. Documents are checked by The IDEA's team and deleted after review.",
+        "kinds": "What to verify",
+        "tabs": {
+          "student": "Student",
+          "educator": "Educator",
+          "identity": "Identity",
+          "organization": "Organization"
+        },
+        "organization": {
+          "title": "Your organization",
+          "description": "Companies and student societies are verified by their owners and admins in Partners → Organization: by a domain you already proved, or an official letter.",
+          "open": "Open Partners → Organization"
+        },
+        "continue": "Continue",
+        "back": "Back to Settings"
+      },
+      "otherKinds": "Verifying your identity or as an educator? Sign in first"
     },
     "partnerVerify": {
       "title": "Verify you're a student",

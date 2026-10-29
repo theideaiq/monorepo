@@ -67,10 +67,14 @@ incidents) is in `docs/platform`.
   - **The IDEA Pass** (`app/[locale]/(pass)`): `/{locale}/sign-in` (an
     email code signs in or creates the Pass; there is no sign-up page, and
     `/onboarding` asks for the name), `/mfa`, `/tg`, `/sign-out`, the only
-    sign-in UI on the web; `/verify`, "Verify you're a student" (The
+    sign-in UI on the web; `/verify`, every verification in one place:
+    signed out (or with a bare Pass) it is "Verify you're a student" (The
     IDEA's student badge: a university email and its code, or a card
     photo; a Pass made there is bare, `profiles.student_only`, until it
-    orders, joins Plus or sets its name); and `/verify/<id>`, a partner's
+    orders, joins Plus or sets its name), and with a Pass it has tabs for
+    student, educator, identity and organizations (`?kind=`;
+    organizations are verified in Partners → Organization), which Pass →
+    Settings links to; and `/verify/<id>`, a partner's
     student verification (`student_verifications`, started by the
     partner's backend through `/v1/student-verifications` in apps/api; no
     Pass needed, one tap for a Pass with a badge, back to the partner by

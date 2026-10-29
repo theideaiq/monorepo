@@ -905,10 +905,7 @@ export const SurveyBuilder = () => {
     body = (
       <p className="text-muted-foreground">
         {tSurveys("studentsCreate")}{" "}
-        <Link
-          className="text-pink-text underline"
-          href="/pass/settings#student"
-        >
+        <Link className="text-pink-text underline" href="/verify?kind=student">
           {tSurveys("verify")}
         </Link>
       </p>

@@ -85,7 +85,7 @@ const studentPerk = (
   card: CardText,
   locale: Locale
 ): Perk => ({
-  href: "/pass/settings#student",
+  href: "/verify?kind=student",
   icon: GraduationCapIcon,
   text: student?.verified
     ? card("perks.student", {
