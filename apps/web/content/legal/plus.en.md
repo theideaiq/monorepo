@@ -8,17 +8,9 @@ Plus delivers in Baghdad. Elsewhere in Iraq, and when all places are taken, you 
 
 | Plan | Per month | Items at a time | Home swaps included | Also included | Bulbs back |
 | --- | --- | --- | --- | --- | --- |
-| Plus Glow | 14,750 IQD | 1 | 1 a month | 10 survey credits a month; campaigns 24 hours early | 3% |
-| Plus Shine | 22,750 IQD | 2 | 2 a month | Free Store delivery in Baghdad on any order; new releases in their first 30 days; 25 survey credits a month; campaigns 24 hours early; 10% off game night kits | 4% |
-| Plus Blaze | 39,750 IQD | 4 | 4 a month | Everything in Shine, with 50 survey credits a month, campaigns 48 hours early, 25% off game night kits and seats held at Club events | 5% |
-
-Every plan also gets:
-
-- **Plus prices:** lower prices some shops set for Plus members, paid by the shop.
-- **Early campaigns:** a campaign's prices before it opens to everyone (24 hours early, 48 for Blaze).
-- **Club events first:** RSVP 48 hours before everyone else. Some events hold seats for Blaze until a day before they start.
-- **Partner perks for Plus:** some are for every plan, some for certain plans; your Pass card shows the best perk you get.
-- **Survey credits:** free responses for your own surveys on the 1st of each month. They don't carry over.
+| Plus Glow | 14,750 IQD | 1 | 1 a month | — | 4% |
+| Plus Shine | 22,750 IQD | 2 | 2 a month | Free Store delivery in Baghdad on any order; new releases in their first 30 days | 5% |
+| Plus Blaze | 39,750 IQD | 4 | 4 a month | Everything in Shine; first access to Club events; 25% off game night kits | 6% |
 
 - **Yearly:** where offered, pay for 10 months and get 12.
 - **Students:** members with a verified Student badge get 20% off monthly plans, where offered.
@@ -26,16 +18,15 @@ Every plan also gets:
 
 ## 3. Joining and paying
 
-- Join from [/plus](/plus). The plan is billed in advance each month (or year) through **Wayl**: a few days before each renewal we send the payment link, until you cancel. Paying in cash is possible only with a verified Pass.
-- **Bulbs:** in Your Plus, choose "Use Bulbs on my next renewal" to pay up to half of a month with Bulbs, in steps of 250. Plus fees don't earn Bulbs; your plan's rate applies to everything else you buy and rent (see [Rewards](/legal/rewards)).
-- **Plus as a gift:** prepaid months of a plan can be sent with Send as a gift. They start Plus for the person (when a place is free) or pay their next renewals.
+- Join from [/plus](/plus). The plan is billed in advance each month (or year) through **Wayl** and renews automatically until you cancel. Paying in cash is possible only with a verified Pass.
+- Bulbs can't pay for Plus at the moment; Plus payments earn Bulbs at your plan's rate (see [Rewards](/legal/rewards)).
 - If a renewal payment fails, we try again and remind you. Until it is paid we may hold new rentals and swaps.
 - Members aged 13 to 17 need a guardian to approve Plus from the guardian's own Pass.
 - For rentals we may ask for a verified Pass (identity checked with a national ID card or passport).
 
 ## 4. How renting works
 
-- Add what you want to your **queue** (Saved → Queue), in order. When you book a home swap, the next items in it are picked for you; change them if you like.
+- Add what you want to **Saved**: for Plus members it is your rental queue, in order. We send the next available item from it.
 - **Keep items as long as you like.** There are no due dates and no late fees while your plan is active.
 - **Swaps:** our rider brings your next item and takes the last one back in one visit, on your area's delivery day.
 - New releases in their first 30 days are for Plus Shine and Plus Blaze.
@@ -84,7 +75,7 @@ Where offered, kits are rented for a weekend, from Thursday evening to Saturday 
 
 - Delivery and collection in Baghdad are included.
 - Kits are booked by an adult (18 or over). At handover you show a verified Pass and your ID, or pay a refundable deposit of 100,000 IQD.
-- Plus Shine members get 10% off and Plus Blaze members 25%. Companies and universities book kits for events through [Partners](/legal/business).
+- Plus Blaze members get 25% off. Companies and universities book kits for events through [Partners](/legal/business).
 - The damage and loss rules in section 5 apply to every part of the kit.
 
 ## 10. Deposits
