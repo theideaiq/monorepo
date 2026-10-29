@@ -9,7 +9,12 @@ import {
   signUpUser,
 } from "../fixtures";
 import { urls } from "../playwright.config";
-import { resetCustomer, resetFriend, resetSignUpUser } from "../seed";
+import {
+  resetCustomer,
+  resetFriend,
+  resetFriendForPlus,
+  resetSignUpUser,
+} from "../seed";
 import {
   expectAccessible,
   expectSignedInHome,
@@ -473,6 +478,79 @@ test.describe("a signed-in customer", () => {
       address: "Street 14",
       city: "Mansour",
       governorate: "baghdad",
+    });
+    noErrors();
+  });
+
+  test("gives Plus months, and a friend claims them", async ({
+    browser,
+    page,
+  }) => {
+    const startedAt = new Date().toISOString();
+    await page.goto(`${urls.web}/plus#yours`);
+    const give = page.locator("#give");
+    await give.getByRole("button", { exact: true, name: "1 month" }).click();
+    await give.getByRole("button", { name: "Add to cart" }).click();
+    await expect(page).toHaveURL(/\/cart$/);
+    await expect(page.getByText("Plus as a gift")).toBeVisible();
+    await page.getByRole("link", { name: "Checkout" }).click();
+
+    // Plus months are always a gift, and nothing is delivered.
+    await expect(page.getByLabel("Send as a gift")).toBeChecked();
+    await expect(
+      page.getByRole("combobox", { name: "Where it goes" })
+    ).toHaveCount(0);
+    await expectAccessible(page);
+    const paying = page.waitForResponse((response) =>
+      response.url().endsWith("/orders/checkout")
+    );
+    await page.getByRole("button", { name: PLACE_ORDER }).click();
+    await paying;
+    const db = admin();
+    const giftOrder = async () =>
+      (
+        await db
+          .from("orders")
+          .select("id")
+          .eq("is_gift", true)
+          .gte("created_at", startedAt)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle()
+      ).data;
+    await expect.poll(giftOrder, { timeout: 30_000 }).not.toBeNull();
+    const orderId = (await giftOrder())?.id ?? "";
+    expect(
+      (await db.rpc("complete_order_payment", { order_id: orderId })).error
+    ).toBeNull();
+
+    const noErrors = watchConsole(page);
+    await page.goto(`${urls.web}/pass/orders/${orderId}`);
+    await page.getByRole("button", { name: "Share the gift link" }).click();
+    const link = await page.getByLabel("The gift link").inputValue();
+
+    // The friend opens the link and adds the months to their Pass.
+    const friendId = await resetFriendForPlus();
+    const context = await browser.newContext();
+    await signIn(context, friend.email);
+    const gift = await context.newPage();
+    await gift.goto(link);
+    await expect(gift.getByText("1 month of", { exact: false })).toBeVisible();
+    await expect(gift.getByLabel("Full name")).toHaveCount(0);
+    await expectAccessible(gift);
+    await gift.getByRole("button", { name: "Add to my Pass" }).click();
+    await expect(gift.getByText("It's yours", { exact: false })).toBeVisible();
+    await context.close();
+
+    const { data: started } = await db
+      .from("subscriptions")
+      .select("provider, status, cancel_at_period_end")
+      .eq("user_id", friendId)
+      .eq("status", "active")
+      .single();
+    expect(started).toMatchObject({
+      cancel_at_period_end: true,
+      provider: "gift",
     });
     noErrors();
   });

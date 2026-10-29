@@ -15,11 +15,13 @@ export const GET = async (request: Request): Promise<Response> => {
   }
 
   try {
-    const { expired, invoices, pastDue } = await getBilling().issueRenewals();
+    const { expired, gifted, invoices, pastDue } =
+      await getBilling().issueRenewals();
     await notifyRenewalInvoices(invoices);
 
     return NextResponse.json({
       expired,
+      gifted,
       invoiced: invoices.length,
       ok: true,
       pastDue,

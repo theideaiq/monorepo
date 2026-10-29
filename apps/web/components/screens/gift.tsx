@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@repo/auth/provider";
-import { formatPrice, localized } from "@repo/commerce";
+import { formatPrice, localized, planName } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
@@ -13,7 +13,7 @@ import {
 import { localePath } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { GiftIcon } from "lucide-react";
+import { GiftIcon, SparklesIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useState } from "react";
 import { PageHeader } from "@/components/page-header";
@@ -51,6 +51,16 @@ const GiftContents = ({ gift }: { readonly gift: GiftDetails }) => {
         ) : null}
       </CardHeader>
       <CardContent className="grid gap-4">
+        {gift.plus ? (
+          <p className="flex items-center gap-2 font-medium text-sm">
+            <SparklesIcon className="size-4" />
+            {t("plusMonths", {
+              count: gift.plus.months,
+              months: formatNumber(gift.plus.months, locale),
+              plan: planName(gift.plus, locale),
+            })}
+          </p>
+        ) : null}
         <ul className="grid gap-3">
           {gift.items.map((item) => (
             <li
@@ -98,6 +108,72 @@ const GiftContents = ({ gift }: { readonly gift: GiftDetails }) => {
   );
 };
 
+/** Why claiming failed; Plus problems link to joining Plus. */
+const ClaimError = ({ error }: { readonly error: GiftError }) => {
+  const t = useTranslations("web.gift");
+  const tErrors = useTranslations("web.gift.errors");
+  const joining = error === "plusHome" || error === "plusFull";
+  return (
+    <div className="grid gap-2">
+      <p className="text-destructive text-sm" role="alert">
+        {tErrors(error)}
+      </p>
+      {joining ? (
+        <Button asChild className="justify-self-start" variant="outline">
+          <Link href="/plus#join">{t("joinPlus")}</Link>
+        </Button>
+      ) : null}
+    </div>
+  );
+};
+
+/** Claimed: the link is spent, so success is shown from here. */
+const Claimed = ({ plus }: { readonly plus: boolean }) => {
+  const t = useTranslations("web.gift");
+  return (
+    <div className="grid gap-3">
+      <p className="font-medium" role="status">
+        {t(plus ? "claimedPlus" : "claimed")}
+      </p>
+      <Button asChild className="justify-self-start" variant="outline">
+        <Link href={plus ? "/plus#yours" : "/pass/orders#gifts"}>
+          {t(plus ? "yourPlus" : "yourGifts")}
+        </Link>
+      </Button>
+    </div>
+  );
+};
+
+/** Nothing to deliver (only Plus months): one tap adds them to the Pass. */
+const ClaimPlus = ({ token }: { readonly token: string }) => {
+  const t = useTranslations("web.gift");
+  const claim = useClaimGift(token);
+  const [error, setError] = useState<GiftError | null>(null);
+  if (claim.isSuccess) {
+    return <Claimed plus />;
+  }
+  return (
+    <div className="grid gap-4">
+      <p className="text-sm">{t("claimPlusIntro")}</p>
+      {error ? <ClaimError error={error} /> : null}
+      <Button
+        className="justify-self-start"
+        disabled={claim.isPending}
+        onClick={() => {
+          setError(null);
+          claim.mutate(null, {
+            onError: (claimError) => setError(toGiftError(claimError)),
+          });
+        }}
+        size="lg"
+        type="button"
+      >
+        {claim.isPending ? t("claiming") : t("claimPlus")}
+      </Button>
+    </div>
+  );
+};
+
 /** The recipient's address, in the area the sender chose. */
 const ClaimForm = ({
   gift,
@@ -107,7 +183,6 @@ const ClaimForm = ({
   readonly token: string;
 }) => {
   const t = useTranslations("web.gift");
-  const tErrors = useTranslations("web.gift.errors");
   const locale = useLocale();
   const { user } = useAuth();
   const zones = useDeliveryZones();
@@ -125,16 +200,7 @@ const ClaimForm = ({
 
   // Claiming spends the link, so success is shown from here.
   if (claim.isSuccess) {
-    return (
-      <div className="grid gap-3">
-        <p className="font-medium" role="status">
-          {t("claimed")}
-        </p>
-        <Button asChild className="justify-self-start" variant="outline">
-          <Link href="/pass/orders#gifts">{t("yourGifts")}</Link>
-        </Button>
-      </div>
-    );
+    return <Claimed plus={false} />;
   }
   if (zones.isPending) {
     return <SectionSpinner />;
@@ -180,9 +246,7 @@ const ClaimForm = ({
         />
       ) : null}
       {error && error !== "phoneUnverified" ? (
-        <p className="text-destructive text-sm" role="alert">
-          {tErrors(error)}
-        </p>
+        <ClaimError error={error} />
       ) : null}
       <Button className="justify-self-start" disabled={busy} size="lg">
         {busy ? t("claiming") : t("claim")}
@@ -221,7 +285,11 @@ export const GiftScreen = ({ token }: { readonly token: string }) => {
   if (!gift.ready) {
     action = <p className="text-muted-foreground">{t("notReady")}</p>;
   } else if (user) {
-    action = <ClaimForm gift={gift} token={token} />;
+    action = gift.ships ? (
+      <ClaimForm gift={gift} token={token} />
+    ) : (
+      <ClaimPlus token={token} />
+    );
   } else {
     action = (
       <div className="grid gap-3">

@@ -252,10 +252,15 @@ export const toAgeError = (error: unknown): AgeError | null => {
 };
 
 export type GiftError =
+  | "company"
+  | "guardian"
   | "invalidAddress"
   | "notFound"
   | "notReady"
   | "phoneUnverified"
+  | "plusFull"
+  | "plusHome"
+  | "plusOutside"
   | "suspended"
   | "unknown"
   | "yours";
@@ -272,6 +277,12 @@ export const toGiftError = (error: unknown): GiftError => {
     ["Invalid shipping address", "invalidAddress"],
     ["Verify your phone number", "phoneUnverified"],
     ["Account suspended", "suspended"],
+    // Plus months (add_plus_gift): what joining Plus needs.
+    ["A guardian must allow Plus", "guardian"],
+    ["Your organization pays for your Plus", "company"],
+    ["Add your home in Baghdad", "plusHome"],
+    ["Plus is in Baghdad only", "plusOutside"],
+    ["Plus is full", "plusFull"],
   ];
   return known.find(([text]) => message.includes(text))?.[1] ?? "unknown";
 };

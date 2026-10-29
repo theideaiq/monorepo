@@ -31,6 +31,8 @@ import {
   isRentLine,
   MAX_QUANTITY,
 } from "./cart";
+import { useCartKit } from "./kits";
+import { useCartPlusGift } from "./plus-gifts";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /** Store catalog, cart and orders, all through RLS. */
@@ -290,10 +292,17 @@ export const useCart = () => {
   });
 };
 
-/** Items in the cart, for the navigation badge (shares the cart query). */
+/**
+ * Items in the cart, for the navigation badge (shares the cart query),
+ * with its kit and gifted Plus months.
+ */
 export const useCartCount = () => {
   const cart = useCart();
-  return cart.data ? cartCount(cart.data) : 0;
+  const kit = useCartKit().data;
+  const plus = useCartPlusGift().data;
+  return (
+    (cart.data ? cartCount(cart.data) : 0) + (kit ? 1 : 0) + (plus ? 1 : 0)
+  );
 };
 
 export interface AddToCart {

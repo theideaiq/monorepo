@@ -1,6 +1,6 @@
 "use client";
 
-import { formatPrice, localized, variantName } from "@repo/commerce";
+import { formatPrice, localized, planName, variantName } from "@repo/commerce";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
@@ -18,7 +18,12 @@ import {
 } from "@repo/design-system/components/ui/empty";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { HeartIcon, ShoppingCartIcon, Trash2Icon } from "lucide-react";
+import {
+  GiftIcon,
+  HeartIcon,
+  ShoppingCartIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
@@ -28,6 +33,7 @@ import { ProductImage } from "@/components/store/product-image";
 import { QuantityStepper } from "@/components/store/quantity-stepper";
 import {
   addKitToSummary,
+  addPlusGiftToSummary,
   type CartLineView,
   freeDeliveryRemaining,
   isOtherCondition,
@@ -38,6 +44,7 @@ import {
   summarizeCart,
 } from "@/lib/cart";
 import { useCartKitLine, useRemoveCartKit } from "@/lib/kits";
+import { useCartPlusGiftLine, useRemoveCartPlusGift } from "@/lib/plus-gifts";
 import {
   useCart,
   useDeliveryZones,
@@ -232,6 +239,52 @@ const KitRow = ({ kit }: { readonly kit: CartKitLine }) => {
   );
 };
 
+type CartPlusLine = NonNullable<ReturnType<typeof useCartPlusGiftLine>>;
+
+/** Plus months in the cart: always sent as a gift. */
+const PlusGiftRow = ({ plus }: { readonly plus: CartPlusLine }) => {
+  const t = useTranslations("app.cart.plus");
+  const tCart = useTranslations("app.cart");
+  const locale = useLocale();
+  const remove = useRemoveCartPlusGift();
+  const { months, plan } = plus.item;
+  return (
+    <li className="grid gap-2 py-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="grid min-w-0 gap-0.5">
+          <span className="font-medium text-sm">
+            {plan ? planName(plan, locale) : ""}
+          </span>
+          <span className="text-muted-foreground text-xs">
+            {t("months", {
+              count: months,
+              months: formatNumber(months, locale),
+            })}
+          </span>
+        </div>
+        <span className="shrink-0 font-medium text-sm tabular-nums">
+          {formatPrice(plus.price, locale)}
+        </span>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="flex items-center gap-1 font-medium text-pink-text text-xs">
+          <GiftIcon className="size-3.5" />
+          {t("label")}
+        </span>
+        <Button
+          disabled={remove.isPending}
+          onClick={() => remove.mutate()}
+          size="sm"
+          variant="ghost"
+        >
+          <Trash2Icon />
+          {tCart("remove")}
+        </Button>
+      </div>
+    </li>
+  );
+};
+
 /** The cart's lines and kit, priced, and whether there's anything in it. */
 const useCartSummary = (
   items: ReturnType<typeof useCart>["data"],
@@ -239,13 +292,18 @@ const useCartSummary = (
 ) => {
   const isStudent = useMyStudent().data?.verified ?? false;
   const kit = useCartKitLine(isStudent);
+  const plus = useCartPlusGiftLine();
   const summary =
     items && settings
-      ? addKitToSummary(summarizeCart(items, settings), kit)
+      ? addPlusGiftToSummary(
+          addKitToSummary(summarizeCart(items, settings), kit),
+          plus
+        )
       : null;
   return {
-    empty: summary !== null && summary.lines.length === 0 && !kit,
+    empty: summary !== null && summary.lines.length === 0 && !kit && !plus,
     kit,
+    plus,
     summary,
   };
 };
@@ -262,10 +320,14 @@ export const Cart = () => {
 
   const loading = cart.isPending || settings.isPending;
   const failed = cart.isError || settings.isError;
-  const { empty, kit, summary } = useCartSummary(cart.data, settings.data);
+  const { empty, kit, plus, summary } = useCartSummary(
+    cart.data,
+    settings.data
+  );
+  // Deposits and gifted Plus months don't count towards free delivery.
   const remaining = summary
     ? freeDeliveryRemaining(
-        summary.totals.subtotal - summary.totals.deposits,
+        summary.totals.subtotal - summary.totals.deposits - (plus?.price ?? 0),
         baghdad?.free_from
       )
     : 0;
@@ -315,6 +377,7 @@ export const Cart = () => {
                   <CartLineRow key={line.item.id} line={line} />
                 ))}
                 {kit ? <KitRow kit={kit} /> : null}
+                {plus ? <PlusGiftRow plus={plus} /> : null}
               </ul>
             </section>
             <Card className="lg:sticky lg:top-4">

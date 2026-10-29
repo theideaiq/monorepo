@@ -24,6 +24,7 @@ import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { AgeAwareError } from "@/components/age-aware-error";
+import { GivePlus } from "@/components/plus/give-plus";
 import { JoinPlus } from "@/components/plus/join-plus";
 import { ManagePlus, Queue, SwapPanel } from "@/components/plus/plus-tools";
 import { SignedInSection } from "@/components/signed-in-section";
@@ -701,6 +702,7 @@ const PlusMember = () => {
         <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
       )}
       <MyRentals />
+      <GivePlus />
       <RentalCatalog allowance={allowance.data} member={member} />
     </div>
   );
