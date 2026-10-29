@@ -97,10 +97,10 @@ insert into public.posts (slug, section, title_ar, title_en, excerpt_ar, excerpt
     'تعرّف على الفريق الذي يختار كل قطعة في المتجر.', 'Meet the team who pick every item in the store.', now())
 on conflict (slug) do nothing;
 
-insert into public.events (slug, title_ar, title_en, description_ar, description_en, location, starts_at, ends_at, capacity, published) values
+insert into public.events (slug, title_ar, title_en, description_ar, description_en, location, starts_at, ends_at, capacity, published, rsvp_opens_at) values
   ('launch-night', 'ليلة الإطلاق', 'Launch night',
     'أمسية للاحتفال بإطلاق المنصة.', 'An evening to celebrate the launch.',
-    'Baghdad', now() + interval '14 days', now() + interval '14 days 3 hours', 80, true)
+    'Baghdad', now() + interval '14 days', now() + interval '14 days 3 hours', 80, true, now())
 on conflict (slug) do nothing;
 
 insert into public.chart_of_accounts (code, name, type, category) values
