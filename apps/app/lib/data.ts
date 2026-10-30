@@ -15,6 +15,7 @@ import {
 import type { Database, Enums, Tables } from "@repo/database";
 import { log } from "@repo/observability/log";
 import { publicFileUrl } from "@repo/storage";
+import { type Availability, toAvailability } from "./plus";
 import type { FeedProduct } from "./product-feed";
 import { type Rating, type Review, ratingsById } from "./reviews";
 import { createPublicClient, supabaseUrl } from "./supabase";
@@ -172,6 +173,80 @@ export const getRentalTiers = (productIds: string[]) =>
         .in("id", productIds)
     );
     return Object.fromEntries(tiers.map((row) => [row.id, row.rental_tier]));
+  });
+
+/**
+ * Whether each of these products can be had soon in Plus
+ * (`plus_availability`), keyed by product id; products not in Plus are
+ * missing from the map.
+ */
+export const getPlusAvailability = (productIds: string[]) =>
+  fallback(
+    "plus_availability",
+    {} as Record<string, Availability>,
+    async () => {
+      const ids = [...new Set(productIds)];
+      const supabase = ids.length > 0 ? createPublicClient() : null;
+      if (!supabase) {
+        return {};
+      }
+      const answers = await Promise.all(
+        ids.map(async (id) => {
+          const { data } = await supabase.rpc("plus_availability", {
+            product: id,
+          });
+          return [id, toAvailability(data)] as const;
+        })
+      );
+      return Object.fromEntries(
+        answers.filter(
+          (entry): entry is readonly [string, Availability] => entry[1] !== null
+        )
+      );
+    }
+  );
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** An approved shop by its id (`sellers`), or null. */
+export const getShop = (id: string) =>
+  fallback("shop", null as { id: string; name: string } | null, async () => {
+    const supabase = UUID.test(id) ? createPublicClient() : null;
+    if (!supabase) {
+      return null;
+    }
+    return check(
+      await supabase
+        .from("sellers")
+        .select("id, name")
+        .eq("id", id)
+        .eq("status", "approved")
+        .eq("is_house", false)
+        .maybeSingle()
+    );
+  });
+
+/** The campaign running now (the one ending soonest), for the Store's hero. */
+export const getLiveCampaign = () =>
+  fallback("liveCampaign", null as Campaign | null, async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return null;
+    }
+    const now = new Date().toISOString();
+    return check(
+      await supabase
+        .from("campaigns")
+        .select(
+          "id, slug, name_en, name_ar, description_en, description_ar, starts_at, ends_at"
+        )
+        .eq("published", true)
+        .lte("starts_at", now)
+        .gte("ends_at", now)
+        .order("ends_at")
+        .limit(1)
+        .maybeSingle()
+    );
   });
 
 // ── Reviews ─────────────────────────────────────────────────────────────────

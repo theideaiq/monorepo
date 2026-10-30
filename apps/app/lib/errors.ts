@@ -290,27 +290,6 @@ export const toGiftError = (error: unknown): GiftError => {
   return known.find(([text]) => message.includes(text))?.[1] ?? "unknown";
 };
 
-export type RentalCartError =
-  | "notTogether"
-  | "tooMany"
-  | "unavailable"
-  | "unknown";
-
-/** Putting a rental in the cart (the check_cart_rent trigger). */
-export const toRentalCartError = (error: unknown): RentalCartError => {
-  const message = messageOf(error);
-  if (message.includes("Only films, books and games rent together")) {
-    return "notTogether";
-  }
-  if (message.includes("Rent 1 to 3 items")) {
-    return "tooMany";
-  }
-  if (message.includes("Item not available")) {
-    return "unavailable";
-  }
-  return "unknown";
-};
-
 export type KitCartError =
   | "adultsOnly"
   | "pickGames"

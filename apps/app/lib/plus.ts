@@ -38,3 +38,38 @@ export const soloPlans = <T extends { duo?: boolean | null }>(plans: T[]) =>
 /** Plans from the entry plan upwards, for explaining what each one adds. */
 export const plansByTier = <T extends PlanTier>(plans: T[]) =>
   byTier(plans) as (T & { tier: number })[];
+
+/**
+ * Whether an item in Plus can be had soon, in words
+ * (`public.plus_availability`): a copy on the shelf, every copy out with
+ * no more people queued than copies, more queued than copies, or no copy
+ * yet.
+ */
+export const AVAILABILITIES = ["now", "short", "long", "coming"] as const;
+export type Availability = (typeof AVAILABILITIES)[number];
+
+/** plus_availability()'s answer, or null when the item isn't in Plus. */
+export const toAvailability = (value: unknown): Availability | null =>
+  AVAILABILITIES.includes(value as Availability)
+    ? (value as Availability)
+    : null;
+
+/** The cheapest monthly plan for one person, for "from 14,750 a month". */
+export const cheapestMonthly = <
+  T extends { amount: number; billing_interval: string; duo?: boolean | null },
+>(
+  plans: readonly T[]
+): T | null =>
+  plans
+    .filter((plan) => !plan.duo && plan.billing_interval === "month")
+    .reduce<T | null>(
+      (lowest, plan) =>
+        lowest === null || plan.amount < lowest.amount ? plan : lowest,
+      null
+    );
+
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+/** A week before `now`, for "New this week" (ISO). */
+export const weekAgo = (now = new Date()) =>
+  new Date(now.getTime() - WEEK_MS).toISOString();

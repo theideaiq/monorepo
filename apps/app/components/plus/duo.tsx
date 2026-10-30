@@ -329,7 +329,7 @@ const AcceptInvite = ({ token }: { readonly token: string }) => {
             : t("joined", { name: holder.current ?? t("holder") })}
         </p>
         <Button asChild className="justify-self-start">
-          <Link href="/plus#yours">{t("toPlus")}</Link>
+          <Link href="/plus/plan">{t("toPlus")}</Link>
         </Button>
       </div>
     );

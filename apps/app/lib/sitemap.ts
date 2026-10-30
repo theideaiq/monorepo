@@ -5,7 +5,9 @@ import type { MetadataRoute } from "next";
 export const staticPaths = [
   "",
   "/store",
+  "/store/deals",
   "/plus",
+  "/plus/plans",
   "/club",
   "/partners",
   "/about",

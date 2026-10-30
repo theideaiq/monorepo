@@ -285,6 +285,29 @@
       },
       "title": "The Store",
       "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order here and pay through Wayl or cash on delivery.",
+      "allProducts": "Everything in the Store",
+      "shelf": {
+        "tabs": "Shelves",
+        "forYou": "For you",
+        "deals": "Deals",
+        "campaignUntil": "Until {date}",
+        "campaignCta": "See the campaign",
+        "newThisWeek": "New this week",
+        "liveAuctions": "Live auctions",
+        "becauseSaved": "Because you saved {name}",
+        "backInStock": "Back in stock",
+        "seeSaved": "See Saved",
+        "inPlus": "In Plus",
+        "plusBandFrom": "Games, books and films delivered and collected, from {price} a month.",
+        "new": "New",
+        "bestsellers": "Bestsellers",
+        "usedDeals": "Used deals",
+        "seeAll": "See all",
+        "dealsTitle": "Deals",
+        "dealsDescription": "Honest prices: each one is lower than what it cost for most of the last 30 days.",
+        "shopTitle": "{shop}",
+        "shopDescription": "Sold by {shop}, delivered and paid through The IDEA."
+      },
       "categories": "Categories",
       "allCategories": "All",
       "subcategories": "Subcategories",
@@ -309,6 +332,20 @@
       "results": "Results for “{query}”",
       "empty": "No products match your search.",
       "clear": "Clear filters",
+      "filters": {
+        "title": "Filters",
+        "button": "Filter",
+        "buttonCount": "Filter ({count})",
+        "active": "Active filters",
+        "remove": "Remove filter: {filter}",
+        "price": "Price",
+        "anyPrice": "Any price",
+        "upTo": "Up to {price}",
+        "more": "More filters",
+        "inStock": "In stock",
+        "inPlus": "In Plus",
+        "apply": "Show results"
+      },
       "product": {
         "specs": "Specifications",
         "variants": "Options",
@@ -324,6 +361,7 @@
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
         "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass.",
+        "lowest30d": "Lowest in 30 days: {price}",
         "bundle": "In this bundle",
         "bundleQuantity": "{count} ×"
       },
@@ -371,24 +409,35 @@
       "subtitle": "Books, games and movies, delivered to your door. Keep them as long as you like, then swap them for something new.",
       "cta": "Join Plus",
       "seePlans": "See the plans",
+      "homeTitle": "Your Plus",
+      "rows": {
+        "new": "New to Plus"
+      },
+      "shelf": {
+        "title": "{category} in Plus",
+        "all": "All {category} in Plus",
+        "description": "Rent {category} with The IDEA Plus: availability for every item, delivered and collected in Baghdad.",
+        "back": "Back to Plus"
+      },
+      "sheet": {
+        "title": "Plus plans",
+        "description": "Choose Glow, Shine or Blaze, monthly or yearly, for you or your Family. We check your area before you pay.",
+        "back": "Back to Plus"
+      },
       "how": {
         "title": "How it works",
         "steps": [
           {
             "title": "Choose a plan",
-            "description": "Each plan lets you keep a set number of items at a time."
+            "description": "Glow, Shine or Blaze: each keeps a set number of items at home at a time."
           },
           {
-            "title": "Request what you want",
-            "description": "Browse the rental catalog and request a game, book or movie."
+            "title": "Queue what you want",
+            "description": "Add games, books and films to your queue; we send the top ones that are free."
           },
           {
-            "title": "We deliver it",
-            "description": "Your item is delivered to your address in Iraq."
-          },
-          {
-            "title": "Return and swap",
-            "description": "Done with it? Return it and request the next one."
+            "title": "Play, then swap",
+            "description": "Keep each one as long as you like. Send one back and the next comes to your door."
           }
         ]
       },
@@ -1491,27 +1540,10 @@
         "details": "Specifications",
         "about": "About this product",
         "condition": "Condition",
-        "rentalOnly": "This item is for rent: with Plus, or on its own.",
-        "goToPlus": "Go to Plus",
         "addFailed": "We couldn't add this to your cart. Please try again.",
         "soldBy": "Sold by {seller} · delivered and paid through The IDEA",
         "verifiedSeller": "Verified seller",
         "left": "{count} left",
-        "alsoRent": "Also for rent with Plus",
-        "rent": {
-          "title": "Rent it on its own",
-          "price": "{price} for {days}",
-          "deposit": "Deposit {deposit}, refunded when you return it",
-          "lateFee": "{fee} a day if it's late; after {days} late it's charged at its used price",
-          "cta": "Rent it",
-          "rentedOut": "All copies are rented out right now.",
-          "errors": {
-            "notTogether": "Only films, books and games rent together. Check out what's in your cart first, or remove it.",
-            "tooMany": "You can rent up to 3 items at a time.",
-            "unavailable": "This can't be rented right now.",
-            "unknown": "We couldn't add this to your cart. Please try again."
-          }
-        },
         "notify": {
           "none": "No one has this on offer right now.",
           "notify": "Notify me",
@@ -1526,6 +1558,38 @@
         "studentPrice": "Student price: {price}",
         "earnBulbs": "Earn {bulbs} Bulbs",
         "plusPrice": "Plus price: {price}"
+      },
+      "getIt": {
+        "title": "Get it",
+        "new": "Buy new",
+        "used": "Buy used or open box",
+        "usedFrom": "from <amount>{price}</amount>",
+        "offers": "{count, plural, one {{n} offer} other {{n} offers}}",
+        "auction": "Auction",
+        "endsIn": "ends",
+        "copies": "Copies on offer",
+        "chooseCopy": "Choose a copy",
+        "chooseOption": "Choose an option",
+        "soldOut": "Sold out",
+        "addToCart": "Add to cart · {price}",
+        "bid": "Bid {price}",
+        "plus": {
+          "title": "In Plus",
+          "from": "From {price} {per}",
+          "join": "Join Plus to play",
+          "onTheWay": "On its way to you",
+          "seeAtHome": "See what's at home",
+          "atHome": "At home since {date}",
+          "sendBack": "Send it back",
+          "keep": "Keep it · {price}",
+          "keepFailed": "We couldn't start that. Please try again.",
+          "withPlan": "In Plus with {plan}",
+          "higherPlan": "In Plus with a higher plan",
+          "upgrade": "Upgrade",
+          "inQueue": "In your queue · #{place}",
+          "addToQueue": "Add to queue",
+          "queueFailed": "We couldn't add it to your queue. Please try again."
+        }
       }
     },
     "cart": {
@@ -1555,10 +1619,6 @@
       "coupon": "Coupon",
       "saveForLater": "Save for later",
       "deposits": "Refundable deposits",
-      "rent": {
-        "label": "Rent",
-        "terms": "For {days} · deposit {deposit}, refunded when you return it"
-      },
       "kit": {
         "label": "Game night kit",
         "when": "From Thursday {date}{hasExtra, select, yes { · {extra} extra days} other {}}",
@@ -1588,6 +1648,12 @@
     },
     "checkout": {
       "title": "Checkout",
+      "steps": {
+        "label": "Checkout steps",
+        "cart": "Cart",
+        "delivery": "Delivery and payment",
+        "done": "Done"
+      },
       "address": {
         "title": "Delivery address",
         "description": "We deliver across Iraq with Boxy and call before delivering.",
@@ -1630,6 +1696,16 @@
       "backToCart": "Back to the cart",
       "orderCreatedPaymentFailed": "Your order was placed, but the payment page didn't open. You can pay from the order page.",
       "viewOrder": "View order",
+      "done": {
+        "title": "Done",
+        "thanks": "Thank you! Your order is in.",
+        "waiting": "We're confirming your payment…",
+        "notFound": "We couldn't find this order.",
+        "total": "Total",
+        "bulbs": "You'll earn {bulbs} Bulbs once it's delivered.",
+        "track": "Track your order",
+        "pay": "Pay from your order"
+      },
       "errors": {
         "cartEmpty": "Your cart is empty.",
         "invalidAddress": "Check the delivery address and try again.",
@@ -1665,13 +1741,15 @@
       "bulbs": {
         "title": "Pay with Bulbs",
         "available": "You have {bulbs} Bulbs ({amount}).",
-        "use": "Use my Bulbs on this order",
+        "use": "Pay with my Bulbs",
         "using": "Using {bulbs} Bulbs = {amount} off",
         "steps": "Bulbs are used from {min}, in steps of {step}."
       },
       "planDelivery": "Free delivery with your Plus plan.",
       "freeDeliveryNudge": "Add {amount} more for free delivery.",
       "bulbsToEarn": "You'll earn {bulbs} Bulbs once it's delivered.",
+      "arrives": "Arrives between {from} and {to}",
+      "arrivesOn": "Arrives on {date}",
       "saved": {
         "title": "Deliver to",
         "new": "A new address",
@@ -1712,12 +1790,11 @@
         "messagePlaceholder": "Happy birthday!",
         "hidePrice": "Hide the price",
         "payNote": "Gifts are paid online or with Bulbs.",
-        "noRentals": "Rentals and game night kits can't be sent as gifts. Remove them from the cart to send the rest as a gift.",
+        "noRentals": "Game night kits can't be sent as gifts. Remove them from the cart to send the rest as a gift.",
         "plusOnly": "Plus months are always sent as a gift: they claim them from the link you send.",
-        "plusWithRentals": "Plus months are sent as a gift, and rentals and game night kits can't be. Remove one or the other to check out.",
+        "plusWithRentals": "Plus months are sent as a gift, and game night kits can't be. Remove one or the other to check out.",
         "plusNote": "The months are added to their Pass when they claim it. If they already have Plus, the months pay their next renewals."
       },
-      "rentLine": "Rent",
       "kitLine": "Kit",
       "plusLine": "Gift",
       "programLine": "Program",
@@ -1850,6 +1927,17 @@
     },
     "plus": {
       "title": "Your Plus",
+      "home": {
+        "atHome": "At home {count} of {slots}",
+        "sendBack": "Send one back",
+        "due": "Due {date}",
+        "onTheWay": "On its way",
+        "atHomeNow": "At home",
+        "nextUp": "Next up: {name}",
+        "queueEmpty": "Your queue is empty. Add what you'd like next.",
+        "seeQueue": "See your queue",
+        "yourQueue": "Your queue"
+      },
       "yourPlan": {
         "title": "Your plan",
         "none": "You're not a member yet. Choose a plan below.",
@@ -1880,6 +1968,31 @@
         "solo": "Just me",
         "duo": "Duo",
         "duoDescription": "Duo plans are for two Passes: you invite the second person from Your Plus once you've joined."
+      },
+      "sheet": {
+        "choose": "Choose a plan",
+        "items": "{count, plural, one {{n} item} other {{n} items}}",
+        "monthly": "Monthly",
+        "yearly": "Yearly · pay 10 months, get 12",
+        "yearlyHint": "Pause for up to a month a year, or cancel any time from your plan.",
+        "family": "Family",
+        "familyHint": "Family plans share the items at home with a second Pass; kids' profiles are free.",
+        "perMonth": "a month",
+        "perYear": "a year",
+        "join": "Join {plan} · {price} {per}",
+        "signIn": "Sign in to join",
+        "member": "You already have Plus.",
+        "yourPlan": "See your plan",
+        "redirecting": "Opening the payment page…"
+      },
+      "planPage": {
+        "title": "Your plan",
+        "choose": "Choose a plan",
+        "atHome": "At home",
+        "queue": "Your queue",
+        "history": "Past rentals",
+        "family": "Family",
+        "familyLink": "Family in your Pass"
       },
       "catalog": {
         "title": "Rental catalog",
@@ -3776,33 +3889,6 @@
       "needsBirthday": "Add your date of birth in Settings first.",
       "guardianRequired": "Under 18, your guardian needs to allow Plus first, in Settings."
     },
-    "rent": {
-      "title": "Rent an item",
-      "back": "Back to the item",
-      "rent": "Rent for {days}",
-      "rentUntil": "Rent for the term, until {date}",
-      "deposit": "Refundable deposit",
-      "delivery": "Delivery",
-      "total": "Total",
-      "depositNote": "We refund the deposit when you return the item, less any late fees or damage.",
-      "lateNote": "Late returns cost {fee} a day. After {days} late, the item is yours at its used price.",
-      "plusDelivery": "Delivery is free in Baghdad with Plus plans that include it; your order shows the final total.",
-      "freeFrom": "Delivery is free once the rent reaches {amount}, or in Baghdad with Plus plans that include it.",
-      "paymentFailed": "Your rental is booked, but we couldn't open the payment page. Pay from the order.",
-      "viewOrder": "View order",
-      "notRentable": "This item can't be rented on its own.",
-      "days": "{count, plural, one {{n} day} other {{n} days}}",
-      "together": {
-        "title": "Rent more for the same delivery",
-        "description": "Add films, books or games: up to {n} together, one delivery fee.",
-        "search": "Find another item",
-        "add": "Add",
-        "remove": "Remove {name}",
-        "searching": "Searching…",
-        "none": "Nothing to add matches that.",
-        "full": "That's the most for one delivery."
-      }
-    },
     "kits": {
       "title": "Game night kit",
       "back": "Back to Plus",
@@ -4586,6 +4672,17 @@
     "card": {
       "buy": "Buy",
       "rent": "Rent with Plus"
+    },
+    "cover": {
+      "plusMark": "Plus",
+      "inPlus": "In Plus",
+      "needsPlan": "Needs {plan}"
+    },
+    "availability": {
+      "now": "Available now",
+      "short": "Short wait",
+      "long": "Long wait",
+      "coming": "Coming to Plus"
     },
     "orderStatusPickup": {
       "shipped": "Ready for pickup",

@@ -50,6 +50,15 @@ export const useHasPlus = () => Boolean(usePlusPlanState().data);
 export const useIsQueued = (productId: string) =>
   useQueue().data?.some((item) => item.product_id === productId) ?? false;
 
+/** Where a product is in the member's queue (1 is next), or null. */
+export const queuePlace = (
+  items: readonly Pick<QueueItem, "product_id">[],
+  productId: string
+) => {
+  const index = items.findIndex((item) => item.product_id === productId);
+  return index === -1 ? null : index + 1;
+};
+
 const useQueueMutation = <Input>(
   run: (
     supabase: ReturnType<typeof useAuth>["supabase"],

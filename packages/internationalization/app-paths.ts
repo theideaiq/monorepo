@@ -44,6 +44,10 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/about/faq", "/help"],
   ["/about/contact", "/help", "#contact"],
   ["/i", "/r"],
+  // The UX overhaul (owner, 30 October 2026): kits are in the Store, and
+  // one-off rent is gone (its links open the product).
+  ["/kits", "/store/kits"],
+  ["/rent", "/store"],
 ];
 
 /**

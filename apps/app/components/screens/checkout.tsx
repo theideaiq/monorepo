@@ -36,17 +36,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/design-system/components/ui/select";
+import { Switch } from "@repo/design-system/components/ui/switch";
 import { Textarea } from "@repo/design-system/components/ui/textarea";
 import type { Locale } from "@repo/internationalization";
-import { formatNumber } from "@repo/internationalization/format";
+import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link, useRouter } from "@repo/internationalization/navigation";
-import { ArrowLeftIcon, BanknoteIcon, LockIcon } from "lucide-react";
+import { ArrowLeftIcon, BanknoteIcon, LockIcon, TruckIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { Field, LandmarkFields } from "@/components/address-fields";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { CheckoutErrorNote } from "@/components/store/checkout-error";
+import { CheckoutSteps } from "@/components/store/checkout-steps";
 import { CouponField } from "@/components/store/coupon-field";
 import {
   emptyGift,
@@ -81,8 +83,8 @@ import {
   addKitToSummary,
   addPlusGiftToSummary,
   addProgramsToSummary,
+  deliveryWindow,
   freeDeliveryRemaining,
-  isRentLine,
   type KitLine,
   summarizeCart,
 } from "@/lib/cart";
@@ -90,7 +92,13 @@ import { useCartDigitalLines, useInApp } from "@/lib/digital-codes";
 import { type CheckoutError, toCheckoutError } from "@/lib/errors";
 import { useInviteDiscount } from "@/lib/invites";
 import { useCartKitLine } from "@/lib/kits";
-import { orderPath, usePlaceGift, usePlaceOrder } from "@/lib/order-checkout";
+import {
+  donePath,
+  orderPath,
+  rememberBulbsToEarn,
+  usePlaceGift,
+  usePlaceOrder,
+} from "@/lib/order-checkout";
 import { isNativeApp } from "@/lib/platform";
 import { useCartPlusGiftLine } from "@/lib/plus-gifts";
 import { useCartProgramLines } from "@/lib/programs";
@@ -540,20 +548,22 @@ const BulbsCard = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-2">
-        <label className="flex items-center gap-3 text-sm" htmlFor="use-bulbs">
-          <Checkbox
+        <div className="flex min-h-11 items-center justify-between gap-3 text-sm">
+          <Label htmlFor="use-bulbs">
+            {use && enough
+              ? t("using", {
+                  amount: formatPrice(using * BULB_VALUE_IQD, locale),
+                  bulbs: formatNumber(using, locale),
+                })
+              : t("use")}
+          </Label>
+          <Switch
             checked={use && enough}
             disabled={busy || !enough}
             id="use-bulbs"
-            onCheckedChange={(checked) => onChange(checked === true)}
+            onCheckedChange={onChange}
           />
-          {use
-            ? t("using", {
-                amount: formatPrice(using * BULB_VALUE_IQD, locale),
-                bulbs: formatNumber(using, locale),
-              })
-            : t("use")}
-        </label>
+        </div>
         <p className="text-muted-foreground text-xs">
           {t("steps", {
             min: formatNumber(BULB_MIN_SPEND, locale),
@@ -585,7 +595,26 @@ interface SummaryCardProps {
   /** The server's quote, once a zone is chosen. */
   readonly quote: CheckoutQuote | null;
   readonly summary: ReturnType<typeof summarizeCart>;
+  /** Where it's delivered, for the delivery date (none when nothing ships). */
+  readonly zone?: DeliveryZone;
 }
+
+/** When it arrives, before paying: "Arrives 3 Nov – 5 Nov". */
+const DeliveryDate = ({ zone }: { readonly zone: DeliveryZone }) => {
+  const t = useTranslations("app.checkout");
+  const locale = useLocale() as Locale;
+  const { from, to } = deliveryWindow(zone);
+  const first = formatDate(from, locale);
+  const last = formatDate(to, locale);
+  return (
+    <p className="flex items-center gap-2 font-medium text-sm">
+      <TruckIcon aria-hidden="true" className="size-4 shrink-0" />
+      {first === last
+        ? t("arrivesOn", { date: first })
+        : t("arrives", { from: first, to: last })}
+    </p>
+  );
+};
 
 /** What's being ordered, the totals, and the button that places the order. */
 const SummaryCard = ({
@@ -600,6 +629,7 @@ const SummaryCard = ({
   codeNames = [],
   quote,
   summary,
+  zone,
 }: SummaryCardProps) => {
   const t = useTranslations("app.checkout");
   const locale = useLocale() as Locale;
@@ -639,9 +669,7 @@ const SummaryCard = ({
                   ) : null}
                 </span>
                 <span className="shrink-0 text-muted-foreground tabular-nums">
-                  {isRentLine(item)
-                    ? t("rentLine")
-                    : `× ${formatNumber(quantity, locale)}`}
+                  {`× ${formatNumber(quantity, locale)}`}
                 </span>
               </li>
             ))}
@@ -708,6 +736,7 @@ const SummaryCard = ({
             })}
           </p>
         ) : null}
+        {zone ? <DeliveryDate zone={zone} /> : null}
         {error}
         {oneTap ? <p className="font-medium text-sm">{oneTap}</p> : null}
         <Button disabled={busy || !summary.canCheckout} size="lg" type="submit">
@@ -1088,7 +1117,7 @@ interface WhereItGoesProps extends AddressSectionProps {
   readonly onlyPrograms: boolean;
   /** The cart holds Plus months, so it's a gift. */
   readonly plus: boolean;
-  /** The cart holds a rental, so it can't be a gift. */
+  /** The cart holds a kit or a program, so it can't be a gift. */
   readonly rentals: boolean;
   /** Something is delivered (else the gift needs no area). */
   readonly ships: boolean;
@@ -1199,17 +1228,11 @@ const useProgramsInCart = () => {
 };
 
 /**
- * Rentals and kits come back to whoever has them, and program
- * installments are the applicant's own, so they aren't gifts.
+ * Kits come back to whoever has them, and program installments are the
+ * applicant's own, so they aren't gifts.
  */
-const giftBlocked = (
-  summary: ReturnType<typeof summarizeCart>,
-  kit: KitLine | null,
-  programs = false
-) =>
-  programs ||
-  kit !== null ||
-  summary.lines.some((line) => isRentLine(line.item));
+const giftBlocked = (kit: KitLine | null, programs = false) =>
+  programs || kit !== null;
 
 /** Digital codes are bought on the website, never in the apps. */
 const withoutAppCodes = (
@@ -1218,14 +1241,14 @@ const withoutAppCodes = (
   inApp: boolean | null
 ) => (codes && inApp !== false ? { ...summary, canCheckout: false } : summary);
 
-/** Plus months go as a gift, which rentals, kits and programs can't be. */
+/** Plus months go as a gift, which kits and programs can't be. */
 const orderableSummary = (
   summary: ReturnType<typeof summarizeCart>,
   kit: KitLine | null,
   plus: boolean,
   programs = false
 ) =>
-  plus && giftBlocked(summary, kit, programs)
+  plus && giftBlocked(kit, programs)
     ? { ...summary, canCheckout: false }
     : summary;
 
@@ -1336,6 +1359,42 @@ const withoutAddress = ({
  * then `create_order` (which prices the fee from the zone) and, for online
  * payment, the hosted payment page. The order's page shows what happened.
  */
+/**
+ * Where checkout goes once the order is placed: the order's page while a
+ * guardian approves it, else Done. On the web the payment page has
+ * replaced this one and comes back to Done; the apps open it in the
+ * system browser, so they show Done meanwhile. Done is told the Bulbs
+ * the quote said the order earns.
+ */
+const placedPath = ({
+  awaitingGuardian,
+  order,
+  quote,
+  url,
+}: {
+  awaitingGuardian?: boolean;
+  order: { id: string };
+  quote: CheckoutQuote | null | undefined;
+  url: string | null;
+}) => {
+  rememberBulbsToEarn(order.id, quote?.bulbsToEarn ?? 0);
+  if (awaitingGuardian) {
+    return orderPath(order.id);
+  }
+  return isNativeApp() || !url ? donePath(order.id) : null;
+};
+
+/** The zone the order is delivered to, for its date (not a gift's). */
+const deliveredTo = ({
+  gift,
+  ships,
+  zone,
+}: {
+  gift: GiftForm | null;
+  ships: boolean;
+  zone: DeliveryZone | undefined;
+}) => (ships && !gift ? zone : undefined);
+
 export const Checkout = () => {
   const t = useTranslations("app.checkout");
   const router = useRouter();
@@ -1398,10 +1457,12 @@ export const Checkout = () => {
   });
 
   const afterPlaced = ({
+    awaitingGuardian,
     order,
     paymentError,
     url,
   }: {
+    awaitingGuardian?: boolean;
     order: { id: string };
     paymentError: unknown;
     url: string | null;
@@ -1410,10 +1471,9 @@ export const Checkout = () => {
       setCreatedOrderId(order.id);
       return;
     }
-    // On the web the payment page has replaced this one; the apps open
-    // it in the system browser, so show the order meanwhile.
-    if (isNativeApp() || !url) {
-      router.replace(orderPath(order.id));
+    const next = placedPath({ awaitingGuardian, order, quote, url });
+    if (next) {
+      router.replace(next);
     }
   };
 
@@ -1468,13 +1528,13 @@ export const Checkout = () => {
     };
     place.mutate(request, {
       onError: (mutationError) => setError(toCheckoutError(mutationError)),
-      onSuccess: ({ order, paymentError, url }) => {
+      onSuccess: (placed) => {
         book.afterOrder({
           paymentMethod: paymentOffered ? paymentMethod : null,
           shipping: result.shipping,
           zoneId: result.zoneId,
         });
-        afterPlaced({ order, paymentError, url });
+        afterPlaced(placed);
       },
     });
   };
@@ -1495,6 +1555,7 @@ export const Checkout = () => {
     );
   }
 
+  const deliveredZone = deliveredTo({ gift, ships, zone });
   const loading =
     cart.isPending ||
     settings.isPending ||
@@ -1514,6 +1575,7 @@ export const Checkout = () => {
     <>
       <PageHeader title={t("title")} />
       <div className="flex flex-1 flex-col gap-6">
+        <CheckoutSteps current="delivery" />
         <Link
           className="inline-flex items-center gap-1 self-start text-muted-foreground text-sm hover:text-foreground"
           href="/cart"
@@ -1554,7 +1616,7 @@ export const Checkout = () => {
                 onGift={setGift}
                 onlyPrograms={onlyPrograms}
                 plus={plus !== null}
-                rentals={giftBlocked(summary, kit, programs.length > 0)}
+                rentals={giftBlocked(kit, programs.length > 0)}
                 ships={ships}
                 zone={zone}
                 zones={zoneList}
@@ -1602,6 +1664,7 @@ export const Checkout = () => {
                 codes.length > 0,
                 inApp
               )}
+              zone={deliveredZone}
             />
           </form>
         ) : null}

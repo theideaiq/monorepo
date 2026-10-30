@@ -1,76 +1,198 @@
 "use client";
 
-import { formatPrice, localized, planName } from "@repo/commerce";
-import type { ProductCard } from "@repo/commerce/catalog";
-import type { RentalStatus } from "@repo/database";
+import { useAuth } from "@repo/auth/provider";
+import { localized, planName } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@repo/design-system/components/ui/card";
-import { Input } from "@repo/design-system/components/ui/input";
+import { Label } from "@repo/design-system/components/ui/label";
+import { Switch } from "@repo/design-system/components/ui/switch";
+import { cn } from "@repo/design-system/lib/utils";
 import {
   formatCurrency,
   formatDate,
   formatNumber,
 } from "@repo/internationalization/format";
-import { Link, useRouter } from "@repo/internationalization/navigation";
-import { CheckIcon, CrownIcon, SearchIcon } from "lucide-react";
+import { Link } from "@repo/internationalization/navigation";
+import { CheckIcon, CrownIcon, MoveRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useId, useState } from "react";
 import { AgeAwareError } from "@/components/age-aware-error";
 import { DuoPanel } from "@/components/plus/duo";
-import { GivePlus } from "@/components/plus/give-plus";
 import { JoinPlus } from "@/components/plus/join-plus";
-import { ManagePlus, Queue, SwapPanel } from "@/components/plus/plus-tools";
+import { ManagePlus } from "@/components/plus/plus-tools";
+import { Rail } from "@/components/shop/rail";
 import { SignedInSection } from "@/components/signed-in-section";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { ProductImage } from "@/components/store/product-image";
+import { CoverCard } from "@/components/store/cover-card";
 import {
   hasPendingCheckout,
   reportCompletedCheckout,
 } from "@/lib/checkout-tracking";
 import { isDuoPartner, type MyDuo, useMyDuo } from "@/lib/duo";
-import { toRentalError } from "@/lib/errors";
-import { orderPath, useKeepRental } from "@/lib/order-checkout";
-import { soloPlans } from "@/lib/plus";
 import { plansFor, usePlusStatus } from "@/lib/plus-launch";
 import {
   isLivePlan,
-  meetsTier,
-  planForTier,
   type RentalAllowance,
-  useCancelRental,
   usePlanCheckout,
+  usePlusAvailability,
   useRentalAllowance,
   useRentals,
-  useRentalTiers,
 } from "@/lib/plus-queries";
 import { usePlans, usePlusPayments, usePlusSubscription } from "@/lib/queries";
-import { useKeepPrice } from "@/lib/rent";
-import { useProducts } from "@/lib/store-queries";
+import { type QueueItem, useQueue } from "@/lib/queue-queries";
 import { useMyStudent, useStudentPlans } from "@/lib/student-queries";
 import { studentChoice } from "@/lib/students";
 import { useCanSellDigitalGoods } from "@/lib/use-digital-checkout";
-import { useIsWishlisted, useToggleWishlist } from "@/lib/wishlist-queries";
 
 const POLL_MS = 3000;
 
-const RENTAL_BADGE: Record<
-  RentalStatus,
-  "default" | "destructive" | "outline" | "secondary"
-> = {
-  active: "default",
-  cancelled: "outline",
-  kept: "outline",
-  overdue: "destructive",
-  requested: "secondary",
-  returned: "outline",
+/** Whether the signed-in person has Plus (their own plan or a Duo place). */
+const usePlusMember = () => {
+  const { loading, user } = useAuth();
+  const subscription = usePlusSubscription();
+  const duo = useMyDuo();
+  const member =
+    isLivePlan(subscription.data?.status) || isDuoPartner(duo.data);
+  const known =
+    !loading && (!user || (subscription.isFetched && duo.isFetched));
+  return { known, member };
+};
+
+/**
+ * /plus opens on the household's slots for a member, on the pitch for
+ * everyone else; the catalogue rows (rendered on the server) follow.
+ */
+export const PlusHomeSwitch = ({
+  member,
+  visitor,
+}: {
+  readonly member: ReactNode;
+  readonly visitor: ReactNode;
+}) => {
+  const { known, member: isMember } = usePlusMember();
+  if (!known) {
+    return <div className="min-h-24" />;
+  }
+  return isMember ? member : visitor;
+};
+
+/** What only those without Plus see (the three plan cards on /plus). */
+export const VisitorOnly = ({ children }: { readonly children: ReactNode }) => {
+  const { known, member } = usePlusMember();
+  return known && !member ? children : null;
+};
+
+/** A slot bar: one segment per item the plan keeps at home. */
+const Slots = ({ allowance }: { readonly allowance: RentalAllowance }) => (
+  <div aria-hidden="true" className="flex flex-1 gap-1">
+    {Array.from({ length: allowance.slots }, (_, index) => (
+      <span
+        className={cn(
+          "h-2 flex-1 rounded-full",
+          index < allowance.used ? "bg-idea-pink" : "bg-muted"
+        )}
+        // biome-ignore lint/suspicious/noArrayIndexKey: fixed slots
+        key={index}
+      />
+    ))}
+  </div>
+);
+
+/**
+ * What needs the member first: "At home 2 of 2", what's at home, what's
+ * next in the queue, and Send one back.
+ */
+export const HouseholdSlots = () => {
+  const t = useTranslations("app.plus.home");
+  const locale = useLocale();
+  const allowance = useRentalAllowance().data;
+  const rentals = useRentals().data ?? [];
+  const queue = useQueue();
+  const atHome = rentals.filter((rental) =>
+    ["requested", "active", "overdue"].includes(rental.status)
+  );
+  const next = queue.items[0]?.product;
+
+  if (!allowance) {
+    return <SectionSpinner className="py-6" />;
+  }
+  return (
+    <section
+      aria-labelledby="household"
+      className="grid gap-4 rounded-[28px] border bg-surface-raised p-5 md:p-6"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="font-bold text-xl" id="household">
+          {t("atHome", {
+            count: formatNumber(allowance.used, locale),
+            slots: formatNumber(allowance.slots, locale),
+          })}
+        </h2>
+        <Button asChild variant="outline">
+          <Link href="/pass/at-home">{t("sendBack")}</Link>
+        </Button>
+      </div>
+      <Slots allowance={allowance} />
+      {atHome.length > 0 ? (
+        <ul className="grid gap-1 text-sm">
+          {atHome.map((rental) => (
+            <li className="flex justify-between gap-3" key={rental.id}>
+              <span className="truncate">
+                {localized(rental, "name", locale)}
+              </span>
+              <span className="shrink-0 text-muted-foreground text-xs">
+                {rental.due_at
+                  ? t("due", { date: formatDate(rental.due_at, locale) })
+                  : t(rental.status === "requested" ? "onTheWay" : "atHomeNow")}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <p className="text-sm">
+        {next ? (
+          <Link className="hover:underline" href="/pass/queue">
+            {t("nextUp", { name: localized(next, "name", locale) })}
+          </Link>
+        ) : (
+          <span className="text-muted-foreground">{t("queueEmpty")}</span>
+        )}
+      </p>
+    </section>
+  );
+};
+
+const QueueCover = ({ item }: { readonly item: QueueItem }) => {
+  const availability = usePlusAvailability(item.product_id).data;
+  return item.product ? (
+    <CoverCard availability={availability} plus product={item.product} />
+  ) : null;
+};
+
+/** "Your queue", in order, with availability on every cover. */
+export const QueueRow = () => {
+  const t = useTranslations("app.plus.home");
+  const queue = useQueue();
+  if (queue.items.length === 0) {
+    return null;
+  }
+  return (
+    <Rail
+      action={{ href: "/pass/queue", label: t("seeQueue") }}
+      title={t("yourQueue")}
+    >
+      {queue.items.slice(0, 8).map((item) => (
+        <QueueCover item={item} key={item.product_id} />
+      ))}
+    </Rail>
+  );
 };
 
 const YourPlan = ({
@@ -148,19 +270,7 @@ const YourPlan = ({
             {t("allowance")}
           </span>
           <div className="flex items-center gap-3">
-            <div aria-hidden="true" className="flex flex-1 gap-1">
-              {Array.from({ length: allowance.slots }, (_, index) => (
-                <span
-                  className={
-                    index < allowance.used
-                      ? "h-2 flex-1 rounded-full bg-primary"
-                      : "h-2 flex-1 rounded-full bg-muted"
-                  }
-                  // biome-ignore lint/suspicious/noArrayIndexKey: fixed slots
-                  key={index}
-                />
-              ))}
-            </div>
+            <Slots allowance={allowance} />
             <span className="font-medium text-sm tabular-nums">
               {t("slots", {
                 free: formatNumber(allowance.free, locale),
@@ -174,8 +284,8 @@ const YourPlan = ({
   );
 };
 
-/** The student price under a plan: theirs, or how to get it. */
-const StudentPrice = ({
+/** The student price: applied for verified students, else how to get it. */
+const StudentNote = ({
   isStudent,
   studentPlan,
 }: {
@@ -202,509 +312,256 @@ const StudentPrice = ({
   );
 };
 
-const Plans = ({ onStarted }: { readonly onStarted: () => void }) => {
-  const t = useTranslations("app.plus.plans");
+/** What joining needs before paying: the area check, or signing in. */
+const JoinStep = ({
+  busy,
+  onJoin,
+  primary,
+}: {
+  readonly busy: boolean;
+  readonly onJoin: () => void;
+  readonly primary: string;
+}) => {
+  const t = useTranslations("app.plus.sheet");
   const tBilling = useTranslations("billing");
-  const locale = useLocale();
-  const plans = usePlans("plus");
-  const subscription = usePlusSubscription();
-  const checkout = usePlanCheckout("/plus");
+  const { loading, user } = useAuth();
+  const status = usePlusStatus();
   const canSell = useCanSellDigitalGoods();
-  const member = isLivePlan(subscription.data?.status);
-  const canJoin = usePlusStatus().data?.canJoin ?? false;
-  const [billing, setBilling] = useState<"month" | "year">("month");
-  const [duo, setDuo] = useState(false);
-  const shown = plansFor(plans.data ?? undefined, billing, duo);
-  const hasDuo = plans.data?.some((plan) => plan.duo) ?? false;
+  const { member } = usePlusMember();
+
+  if (loading || status.isPending) {
+    return <SectionSpinner className="py-4" />;
+  }
+  if (!user) {
+    return (
+      <Button asChild className="w-full" size="lg">
+        <Link
+          href={{ pathname: "/sign-in", query: { return_to: "/plus/plans" } }}
+        >
+          {t("signIn")}
+        </Link>
+      </Button>
+    );
+  }
+  if (member) {
+    return (
+      <p className="flex flex-wrap items-center gap-2 text-sm">
+        {t("member")}
+        <Link
+          className="font-medium text-pink-text hover:underline"
+          href="/plus/plan"
+        >
+          {t("yourPlan")}
+        </Link>
+      </p>
+    );
+  }
+  if (canSell === false) {
+    return (
+      <p className="rounded-md bg-muted p-4 text-sm">{tBilling("webOnly")}</p>
+    );
+  }
+  return (
+    <div className="grid gap-4">
+      {/* The area check (and the waitlist) before paying. */}
+      <JoinPlus />
+      <Button
+        className="w-full"
+        disabled={!status.data?.canJoin || busy || canSell !== true}
+        onClick={onJoin}
+        size="lg"
+      >
+        {busy ? t("redirecting") : `${primary}`}
+      </Button>
+    </div>
+  );
+};
+
+/**
+ * `/plus/plans`: Monthly or Yearly; Glow · Shine · Blaze; the Family switch
+ * (the Duo plans: a second Pass and kids' profiles, sharing the slots);
+ * the student price applied for verified students (a link to verify for
+ * others); the area check; then one button, "Join Shine · 22,750 a
+ * month". When the area isn't served or Plus is full, the waitlist.
+ */
+export const PlanSheet = () => {
+  const t = useTranslations("app.plus.sheet");
+  const tPlans = useTranslations("app.plus.plans");
+  const locale = useLocale();
+  const id = useId();
+  const plans = usePlans("plus");
+  const checkout = usePlanCheckout("/plus/plan");
   const studentPlans = useStudentPlans();
   const isStudent = useMyStudent().data?.verified ?? false;
+  const [billing, setBilling] = useState<"month" | "year">("month");
+  const [family, setFamily] = useState(false);
+  const [chosen, setChosen] = useState<string | null>(null);
+  const hasFamily = plans.data?.some((plan) => plan.duo) ?? false;
+  const shown = plansFor(plans.data ?? undefined, billing, family);
+  // Shine (the middle plan) until another is chosen.
+  const tierOf = (planId: string | null) =>
+    plans.data?.find((plan) => plan.id === planId)?.tier;
+  const picked =
+    shown.find((plan) => plan.id === chosen) ??
+    shown.find((plan) => plan.tier === tierOf(chosen)) ??
+    shown[Math.min(1, shown.length - 1)];
+  const choice = picked
+    ? studentChoice(picked, studentPlans.data, isStudent)
+    : null;
+  const per = t(billing === "year" ? "perYear" : "perMonth");
 
   return (
-    <section className="grid gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-semibold text-lg">{t("title")}</h2>
-        {hasDuo ? (
-          <fieldset className="flex gap-1 rounded-md border p-1">
-            <legend className="sr-only">{t("people")}</legend>
-            {[false, true].map((value) => (
-              <Button
-                aria-pressed={duo === value}
-                key={String(value)}
-                onClick={() => setDuo(value)}
-                size="sm"
-                type="button"
-                variant={duo === value ? "default" : "ghost"}
-              >
-                {t(value ? "duo" : "solo")}
-              </Button>
-            ))}
-          </fieldset>
-        ) : null}
-        <fieldset className="flex gap-1 rounded-md border p-1">
-          <legend className="sr-only">{t("interval")}</legend>
+    <div className="grid gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <fieldset className="flex gap-1 rounded-full border p-1">
+          <legend className="sr-only">{tPlans("interval")}</legend>
           {(["month", "year"] as const).map((value) => (
             <Button
               aria-pressed={billing === value}
+              className="rounded-full"
               key={value}
               onClick={() => setBilling(value)}
               size="sm"
               type="button"
-              variant={billing === value ? "default" : "ghost"}
+              variant={billing === value ? "secondary" : "ghost"}
             >
               {t(value === "year" ? "yearly" : "monthly")}
             </Button>
           ))}
         </fieldset>
+        {hasFamily ? (
+          <div className="flex items-center gap-3">
+            <Switch
+              checked={family}
+              id={`${id}-family`}
+              onCheckedChange={setFamily}
+            />
+            <Label htmlFor={`${id}-family`}>{t("family")}</Label>
+          </div>
+        ) : null}
       </div>
-      {canSell === false ? (
-        <p className="rounded-md bg-muted p-4 text-sm">{tBilling("webOnly")}</p>
-      ) : null}
+      <p className="text-muted-foreground text-sm">
+        {family ? t("familyHint") : t("yearlyHint")}
+      </p>
       {plans.isPending ? <SectionSpinner /> : null}
       {plans.isError ? <ErrorState onRetry={() => plans.refetch()} /> : null}
       {plans.data?.length === 0 ? (
-        <p className="text-muted-foreground">{t("empty")}</p>
+        <p className="text-muted-foreground">{tPlans("empty")}</p>
       ) : null}
-      {duo ? (
-        <p className="text-muted-foreground text-sm">{t("duoDescription")}</p>
-      ) : null}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div
+        aria-label={t("choose")}
+        className="grid gap-4 md:grid-cols-3"
+        role="radiogroup"
+      >
         {shown.map((listed) => {
-          // Verified students check out at the student price.
-          const { ids, plan, studentPlan } = studentChoice(
+          const { plan, studentPlan } = studentChoice(
             listed,
             studentPlans.data,
             isStudent
           );
-          const current = member && ids.includes(subscription.data?.plan_id);
-          const price = formatCurrency(plan.amount, locale, plan.currency);
+          const selected = listed.id === picked?.id;
           const features =
             locale === "en" ? plan.features_en : plan.features_ar;
           return (
-            <Card
-              className={current ? "border-primary" : undefined}
-              key={plan.id}
+            // biome-ignore lint/a11y/useSemanticElements: a plan card with its features, not a bare input
+            <div
+              aria-checked={selected}
+              className={cn(
+                "grid cursor-pointer content-start gap-3 rounded-[28px] border-2 bg-card p-5 outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                selected ? "border-idea-pink" : "border-border"
+              )}
+              key={listed.id}
+              onClick={() => setChosen(listed.id)}
+              onKeyDown={(event) => {
+                if (event.key === " " || event.key === "Enter") {
+                  event.preventDefault();
+                  setChosen(listed.id);
+                }
+              }}
+              role="radio"
+              tabIndex={0}
             >
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between gap-2">
-                  {planName(plan, locale)}
-                  {current ? <Badge>{t("current")}</Badge> : null}
-                </CardTitle>
-                <CardDescription>
-                  <span className="font-semibold text-2xl text-foreground tabular-nums">
-                    {price}
-                  </span>{" "}
-                  {plan.billing_interval === "year"
-                    ? tBilling("perYear")
-                    : tBilling("perMonth")}
-                </CardDescription>
-                <StudentPrice isStudent={isStudent} studentPlan={studentPlan} />
-              </CardHeader>
-              <CardContent className="grid flex-1 content-start gap-2 text-sm">
-                {plan.rental_slots ? (
-                  <p className="font-medium">
-                    {t("slots", {
-                      count: formatNumber(plan.rental_slots, locale),
-                    })}
-                  </p>
-                ) : null}
-                {features.length ? (
-                  <ul className="grid gap-1.5">
-                    {features.map((feature) => (
-                      <li className="flex gap-2" key={feature}>
-                        <CheckIcon className="mt-0.5 size-4 shrink-0 text-pink-text" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </CardContent>
-              {canSell === true && !member && canJoin ? (
-                <CardFooter>
-                  <Button
-                    className="w-full"
-                    disabled={checkout.isPending}
-                    onClick={() =>
-                      checkout.mutate(plan, { onSuccess: onStarted })
-                    }
-                  >
-                    {checkout.isPending && checkout.variables?.id === plan.id
-                      ? t("redirecting")
-                      : t("subscribe", { amount: price })}
-                  </Button>
-                </CardFooter>
+              <span className="font-bold text-lg text-pink-text">
+                {planName(listed, locale)}
+                {listed.rental_slots
+                  ? ` · ${t("items", {
+                      count: listed.rental_slots,
+                      n: formatNumber(listed.rental_slots, locale),
+                    })}`
+                  : ""}
+              </span>
+              <span>
+                <span className="font-bold font-mono text-2xl">
+                  {formatCurrency(plan.amount, locale, plan.currency)}
+                </span>{" "}
+                <span className="text-muted-foreground text-sm">{per}</span>
+              </span>
+              <StudentNote isStudent={isStudent} studentPlan={studentPlan} />
+              {features.length ? (
+                <ul className="grid gap-1.5 text-sm">
+                  {features.map((feature) => (
+                    <li className="flex gap-2" key={feature}>
+                      <CheckIcon className="mt-0.5 size-4 shrink-0 text-pink-text" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               ) : null}
-            </Card>
+            </div>
           );
         })}
       </div>
-      {checkout.isError ? (
-        <AgeAwareError error={checkout.error} fallback={t("failed")} />
-      ) : null}
-    </section>
-  );
-};
-
-const RentalItem = ({
-  allowance,
-  member,
-  neededPlan,
-  product,
-  requiredTier,
-}: {
-  readonly allowance: RentalAllowance | undefined;
-  readonly member: boolean;
-  /** The plan that unlocks the item, when it needs a higher one. */
-  readonly neededPlan: string | null;
-  readonly product: ProductCard;
-  readonly requiredTier: number | undefined;
-}) => {
-  const t = useTranslations("app.plus");
-  const locale = useLocale();
-  const toggle = useToggleWishlist();
-  const queued = useIsWishlisted(product.id);
-  const name = localized(product, "name", locale);
-  const available = product.stock_count > 0;
-  const noSlots = member && allowance !== undefined && allowance.free <= 0;
-  // Unknown until the allowance loads: let the database decide then.
-  const tierTooLow =
-    member &&
-    allowance !== undefined &&
-    !meetsTier(requiredTier, allowance.tier);
-
-  let hint: string | null = null;
-  if (!member) {
-    hint = t("catalog.needPlan");
-  } else if (tierTooLow) {
-    hint = neededPlan
-      ? t("catalog.upgradeTo", { plan: neededPlan })
-      : t("catalog.upgrade");
-  } else if (noSlots && !queued) {
-    hint = t("catalog.queueHint");
-  }
-
-  return (
-    <li className="grid content-start gap-2">
-      <ProductImage alt={name} path={product.images[0]} />
-      <span className="line-clamp-2 font-medium text-sm">{name}</span>
-      {requiredTier ? (
-        <Badge className="justify-self-start" variant="outline">
-          <CrownIcon className="text-pink-text" />
-          {neededPlan
-            ? t("catalog.needsPlan", { plan: neededPlan })
-            : t("catalog.needsHigherPlan")}
-        </Badge>
-      ) : null}
-      <span className="text-muted-foreground text-xs">
-        {available
-          ? t("catalog.available", {
-              count: formatNumber(product.stock_count, locale),
-            })
-          : t("catalog.unavailable")}
-      </span>
-      <Button
-        aria-pressed={queued}
-        disabled={!(member && available) || tierTooLow || toggle.isPending}
-        onClick={() => toggle.mutate({ productId: product.id, saved: queued })}
-        size="sm"
-        variant={queued ? "secondary" : "outline"}
-      >
-        {queued ? t("catalog.inQueue") : t("catalog.addToQueue")}
-      </Button>
-      {hint && available ? (
-        <span className="text-muted-foreground text-xs">{hint}</span>
-      ) : null}
-    </li>
-  );
-};
-
-const RentalCatalogItem = ({
-  plans,
-  requiredTier,
-  ...props
-}: {
-  readonly allowance: RentalAllowance | undefined;
-  readonly member: boolean;
-  readonly plans:
-    | readonly { name: string; name_ar: string | null; tier: number | null }[]
-    | undefined;
-  readonly product: ProductCard;
-  readonly requiredTier: number | undefined;
-}) => {
-  const locale = useLocale();
-  const plan = requiredTier ? planForTier(plans, requiredTier) : undefined;
-  return (
-    <RentalItem
-      {...props}
-      neededPlan={plan ? planName(plan, locale) : null}
-      requiredTier={requiredTier}
-    />
-  );
-};
-
-const RentalCatalog = ({
-  allowance,
-  member,
-}: {
-  readonly allowance: RentalAllowance | undefined;
-  readonly member: boolean;
-}) => {
-  const t = useTranslations("app.plus.catalog");
-  const [search, setSearch] = useState("");
-  const products = useProducts({
-    kind: "rental",
-    limit: 48,
-    search: search.trim() || undefined,
-  });
-  const tiers = useRentalTiers(
-    products.data?.map((product) => product.id) ?? []
-  );
-  const plans = usePlans("plus");
-
-  return (
-    <section className="grid gap-4">
-      <div className="grid gap-1">
-        <h2 className="font-semibold text-lg">{t("title")}</h2>
-        <p className="text-muted-foreground text-sm">{t("description")}</p>
-      </div>
-      <search className="relative max-w-md">
-        <SearchIcon className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          aria-label={t("search")}
-          className="ps-9"
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder={t("search")}
-          type="search"
-          value={search}
-        />
-      </search>
-      {products.isPending ? <SectionSpinner /> : null}
-      {products.isError ? (
-        <ErrorState onRetry={() => products.refetch()} />
-      ) : null}
-      {products.data?.length === 0 ? (
-        <p className="text-muted-foreground text-sm">{t("empty")}</p>
-      ) : null}
-      {products.data?.length ? (
-        <ul className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
-          {products.data.map((product) => (
-            <RentalCatalogItem
-              allowance={allowance}
-              key={product.id}
-              member={member}
-              plans={plans.data ? soloPlans(plans.data) : undefined}
-              product={product}
-              requiredTier={tiers.data?.get(product.id)}
-            />
-          ))}
-        </ul>
-      ) : null}
-    </section>
-  );
-};
-
-type Rental = NonNullable<ReturnType<typeof useRentals>["data"]>[number];
-
-/** Keep it: buy the rented copy, less the plan's monthly price. */
-const KeepIt = ({ rentalId }: { readonly rentalId: string }) => {
-  const t = useTranslations("app.plus.rentals");
-  const locale = useLocale();
-  const router = useRouter();
-  const price = useKeepPrice(rentalId).data;
-  const keep = useKeepRental();
-
-  if (price === undefined || price === null) {
-    return null;
-  }
-  return (
-    <div className="grid justify-items-end gap-1">
-      <Button
-        disabled={keep.isPending || keep.isSuccess}
-        onClick={() =>
-          keep.mutate(
-            { paymentMethod: "online", rentalId },
-            {
-              onSuccess: ({ order, url }) => {
-                if (!url) {
-                  router.push(orderPath(order.id));
-                }
-              },
-            }
-          )
-        }
-        size="sm"
-        variant="outline"
-      >
-        {keep.isPending
-          ? t("keeping")
-          : t("keep", { price: formatPrice(price, locale) })}
-      </Button>
-      {keep.isError ? (
-        <p className="text-destructive text-xs" role="alert">
-          {keep.error.message.includes("Already being kept")
-            ? t("keepPending")
-            : t("keepFailed")}
-        </p>
+      {choice ? (
+        <div className="grid max-w-xl gap-3">
+          <JoinStep
+            busy={checkout.isPending}
+            onJoin={() => checkout.mutate(choice.plan)}
+            primary={t("join", {
+              per,
+              plan: planName(picked ?? choice.plan, locale),
+              price: formatCurrency(
+                choice.plan.amount,
+                locale,
+                choice.plan.currency
+              ),
+            })}
+          />
+          {checkout.isError ? (
+            <AgeAwareError error={checkout.error} fallback={tPlans("failed")} />
+          ) : null}
+        </div>
       ) : null}
     </div>
   );
 };
 
-/** A single rental's terms, and what was settled at its return. */
-const SingleRentalNote = ({ rental }: { readonly rental: Rental }) => {
-  const t = useTranslations("app.plus.rentals");
-  const locale = useLocale();
-  if (rental.kind !== "single") {
-    return null;
-  }
-  const settled = rental.settled_at !== null;
-  let note = t("single", {
-    deposit: formatPrice(rental.deposit, locale),
-    fee: formatPrice(rental.late_fee, locale),
-  });
-  if (settled && (rental.amount_due ?? 0) > 0) {
-    note = t("amountDue", {
-      amount: formatPrice(rental.amount_due ?? 0, locale),
-    });
-  } else if (settled) {
-    note = t("refundDue", {
-      amount: formatPrice(rental.refund_due ?? 0, locale),
-    });
-  }
+/** Links to the Plus pages of the Pass: at home, the queue, the history. */
+const PassLinks = () => {
+  const t = useTranslations("app.plus.planPage");
+  const links = [
+    { href: "/pass/at-home", label: t("atHome") },
+    { href: "/pass/queue", label: t("queue") },
+    { href: "/pass/history", label: t("history") },
+  ];
   return (
-    <span className="text-muted-foreground text-xs">
-      {note}
-      {rental.order_id ? (
-        <>
-          {" · "}
+    <ul className="grid gap-2 sm:grid-cols-3">
+      {links.map((link) => (
+        <li key={link.href}>
           <Link
-            className="font-medium text-pink-text hover:underline"
-            href={orderPath(rental.order_id)}
+            className="flex min-h-11 items-center justify-between gap-2 rounded-lg border p-3 text-sm hover:bg-muted"
+            href={link.href}
           >
-            {t("viewOrder")}
+            {link.label}
+            <MoveRight aria-hidden="true" className="size-4 rtl:rotate-180" />
           </Link>
-        </>
-      ) : null}
-    </span>
+        </li>
+      ))}
+    </ul>
   );
 };
 
-/** One of the member's rentals: its dates, terms and what can be done. */
-const RentalRow = ({
-  cancel,
-  rental,
-}: {
-  readonly cancel: ReturnType<typeof useCancelRental>;
-  readonly rental: Rental;
-}) => {
-  const t = useTranslations("app.plus");
-  const tStatus = useTranslations("store.rentalStatus");
-  const locale = useLocale();
-  return (
-    <li
-      className="flex flex-wrap items-center justify-between gap-3 p-4"
-      key={rental.id}
-    >
-      <div className="grid min-w-0 gap-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="font-medium text-sm">
-            {localized(rental, "name", locale)}
-          </span>
-          <Badge variant={RENTAL_BADGE[rental.status]}>
-            {tStatus(rental.status)}
-          </Badge>
-        </div>
-        <span className="text-muted-foreground text-xs">
-          {rental.returned_at
-            ? t("rentals.returnedOn", {
-                date: formatDate(rental.returned_at, locale),
-              })
-            : null}
-          {!rental.returned_at && rental.due_at
-            ? t("rentals.due", {
-                date: formatDate(rental.due_at, locale),
-              })
-            : null}
-          {rental.returned_at || rental.due_at
-            ? null
-            : t("rentals.requestedOn", {
-                date: formatDate(rental.requested_at, locale),
-              })}
-        </span>
-        <SingleRentalNote rental={rental} />
-      </div>
-      {rental.kind === "plus" &&
-      (rental.status === "active" || rental.status === "overdue") ? (
-        <KeepIt rentalId={rental.id} />
-      ) : null}
-      {rental.status === "requested" &&
-      rental.kind === "plus" &&
-      rental.swap_id === null ? (
-        <Button
-          disabled={cancel.isPending}
-          onClick={() => cancel.mutate(rental.id)}
-          size="sm"
-          variant="ghost"
-        >
-          {cancel.isPending && cancel.variables === rental.id
-            ? t("rentals.cancelling")
-            : t("rentals.cancel")}
-        </Button>
-      ) : null}
-    </li>
-  );
-};
-
-const MyRentals = () => {
-  const t = useTranslations("app.plus");
-  const rentals = useRentals();
-  const cancel = useCancelRental();
-
-  return (
-    <section className="grid gap-4">
-      <h2 className="font-semibold text-lg">{t("rentals.title")}</h2>
-      {rentals.isPending ? <SectionSpinner /> : null}
-      {rentals.isError ? (
-        <ErrorState onRetry={() => rentals.refetch()} />
-      ) : null}
-      {rentals.data?.length === 0 ? (
-        <p className="text-muted-foreground text-sm">{t("rentals.empty")}</p>
-      ) : null}
-      {rentals.data?.length ? (
-        <ul className="divide-y rounded-lg border">
-          {rentals.data.map((rental) => (
-            <RentalRow cancel={cancel} key={rental.id} rental={rental} />
-          ))}
-        </ul>
-      ) : null}
-      {cancel.isError ? (
-        <p className="text-destructive text-sm" role="alert">
-          {t(`errors.${toRentalError(cancel.error)}`)}
-        </p>
-      ) : null}
-    </section>
-  );
-};
-
-/**
- * "Your Plus" at the top of /plus: the member's plan, plans, rentals
- * and the rental catalog to request from; signed out, a way to sign in.
- */
-export const YourPlus = () => {
-  const t = useTranslations("app.plus");
-  return (
-    <SignedInSection
-      id="yours"
-      returnTo="/plus"
-      signedOut={t("signedOut")}
-      signIn={t("signIn")}
-      title={t("title")}
-    >
-      <PlusMember />
-    </SignedInSection>
-  );
-};
-
-const PlusMember = () => {
+const PlanPageMember = () => {
+  const t = useTranslations("app.plus.planPage");
   const [confirming, setConfirming] = useState(hasPendingCheckout);
   const subscription = usePlusSubscription();
   const allowance = useRentalAllowance();
@@ -729,26 +586,44 @@ const PlusMember = () => {
   }, [confirming, payments.data, refetchAllowance, refetchSubscription]);
 
   return (
-    <div className="flex flex-col gap-8">
-      {member || duo ? null : <JoinPlus />}
+    <div className="flex flex-col gap-6">
       <YourPlan allowance={allowance.data} confirming={confirming} duo={duo} />
-      <DuoPanel />
-      {member ? (
-        <>
-          {partner ? null : <ManagePlus />}
-          <SwapPanel
-            duo={duo}
-            inUse={allowance.data?.used ?? 0}
-            slots={allowance.data?.slots ?? 0}
-          />
-          <Queue />
-        </>
-      ) : (
-        <Plans onStarted={() => setConfirming(hasPendingCheckout())} />
+      {member || confirming || duo ? null : (
+        <Button asChild className="self-start" size="lg">
+          <Link href="/plus/plans">{t("choose")}</Link>
+        </Button>
       )}
-      <MyRentals />
-      <GivePlus />
-      <RentalCatalog allowance={allowance.data} member={member} />
+      {member ? <PassLinks /> : null}
+      {member && !partner ? <ManagePlus /> : null}
+      <section className="grid gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-semibold text-lg">{t("family")}</h2>
+          <Link
+            className="inline-flex min-h-11 items-center gap-1 font-medium text-pink-text text-sm hover:underline"
+            href="/pass/family"
+          >
+            {t("familyLink")}
+            <MoveRight aria-hidden="true" className="size-4 rtl:rotate-180" />
+          </Link>
+        </div>
+        <DuoPanel />
+      </section>
     </div>
+  );
+};
+
+/** `/plus/plan`: your plan, change plan, pause, cancel, and Family. */
+export const PlanPage = () => {
+  const t = useTranslations("app.plus");
+  return (
+    <SignedInSection
+      id="plan"
+      returnTo="/plus/plan"
+      signedOut={t("signedOut")}
+      signIn={t("signIn")}
+      title={t("planPage.title")}
+    >
+      <PlanPageMember />
+    </SignedInSection>
   );
 };

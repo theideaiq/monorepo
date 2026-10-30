@@ -1,7 +1,16 @@
 import { describe, expect, it } from "vitest";
+import { deliveryWindow } from "@/lib/cart";
 import { appLink, pagePath } from "@/lib/links";
+import { cheapestMonthly, toAvailability } from "@/lib/plus";
 import { productJsonLd, productSpecs } from "@/lib/product";
-import { parseStoreQuery, storeQueryString } from "@/lib/store-params";
+import { queuePlace } from "@/lib/queue-queries";
+import {
+  activeFilterCount,
+  gridFilters,
+  parseStoreQuery,
+  STORE_PAGE_SIZE,
+  storeQueryString,
+} from "@/lib/store-params";
 
 describe("parseStoreQuery", () => {
   it("uses defaults for missing or invalid values", () => {
@@ -39,6 +48,78 @@ describe("parseStoreQuery", () => {
     expect(storeQueryString(query, { page: 3, sort: "price-desc" })).toContain(
       "sort=price-desc&page=3"
     );
+  });
+});
+
+describe("catalogue filters", () => {
+  it("reads the grid's filters, dropping unknown prices", () => {
+    const query = parseStoreQuery({
+      format: "Vinyl",
+      max: "50000",
+      plus: "1",
+      stock: "1",
+      sub: "board-games",
+    });
+    expect(query).toMatchObject({
+      format: "Vinyl",
+      max: 50_000,
+      plus: true,
+      stock: true,
+      sub: "board-games",
+    });
+    expect(activeFilterCount(query)).toBe(5);
+    expect(parseStoreQuery({ max: "1234", sub: "Not A Slug" })).toMatchObject({
+      max: undefined,
+      sub: undefined,
+    });
+    expect(storeQueryString(query, { page: 1, plus: undefined })).toBe(
+      "?sub=board-games&format=Vinyl&max=50000&stock=1"
+    );
+  });
+
+  it("asks for a page of the subcategory, in Plus or for sale", () => {
+    const query = parseStoreQuery({ page: "2", plus: "1", sub: "manga" });
+    expect(gridFilters(query, "books")).toMatchObject({
+      category: "manga",
+      kind: "rental",
+      limit: STORE_PAGE_SIZE + 1,
+      offset: STORE_PAGE_SIZE,
+    });
+    expect(gridFilters(parseStoreQuery({}), "books")).toMatchObject({
+      category: "books",
+      kind: "sale",
+      offset: 0,
+    });
+  });
+});
+
+describe("Plus in words", () => {
+  it("reads plus_availability and the cheapest monthly plan", () => {
+    expect(toAvailability("short")).toBe("short");
+    expect(toAvailability(null)).toBeNull();
+    expect(toAvailability("soon")).toBeNull();
+    expect(
+      cheapestMonthly([
+        { amount: 22_750, billing_interval: "month", duo: false },
+        { amount: 14_750, billing_interval: "month", duo: false },
+        { amount: 9750, billing_interval: "month", duo: true },
+        { amount: 1000, billing_interval: "year", duo: false },
+      ])?.amount
+    ).toBe(14_750);
+    expect(cheapestMonthly([])).toBeNull();
+  });
+
+  it("finds a product's place in the queue", () => {
+    const queue = [{ product_id: "a" }, { product_id: "b" }];
+    expect(queuePlace(queue, "b")).toBe(2);
+    expect(queuePlace(queue, "c")).toBeNull();
+  });
+
+  it("dates the delivery from the zone's days", () => {
+    const now = new Date("2026-11-01T09:00:00Z");
+    const { from, to } = deliveryWindow({ max_days: 3, min_days: 1 }, now);
+    expect(from.toISOString()).toBe("2026-11-02T09:00:00.000Z");
+    expect(to.toISOString()).toBe("2026-11-04T09:00:00.000Z");
   });
 });
 
