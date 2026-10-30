@@ -25,13 +25,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useCartAuctions } from "./auctions";
-import {
-  type CartItem,
-  cartCount,
-  isOtherOffer,
-  isRentLine,
-  MAX_QUANTITY,
-} from "./cart";
+import { type CartItem, cartCount, isOtherOffer, MAX_QUANTITY } from "./cart";
 import { useCartDigital } from "./digital-codes";
 import { useCartKit } from "./kits";
 import { useCartPlusGift } from "./plus-gifts";
@@ -250,49 +244,21 @@ const withOffers = async (
   });
 };
 
-/** Adds the rental rate (rent, days, deposit) to rent lines. */
-const withRentals = async (
-  supabase: ReturnType<typeof useAuth>["supabase"],
-  items: CartItem[]
-) =>
-  Promise.all(
-    items.map(async (item) => {
-      if (!isRentLine(item)) {
-        return item;
-      }
-      const { data } = await supabase
-        .rpc("rental_quote", {
-          product: item.product_id,
-          variant: item.variant_id,
-        })
-        .maybeSingle();
-      return {
-        ...item,
-        rental:
-          data && data.price !== null
-            ? { days: data.days, deposit: data.deposit, price: data.price }
-            : null,
-      };
-    })
-  );
-
 export const useCart = () => {
   const { supabase, user } = useAuth();
   return useQuery({
     enabled: Boolean(user),
     queryFn: async () =>
-      withRentals(
+      withOffers(
         supabase,
-        await withOffers(
-          supabase,
-          unwrap(
-            await supabase
-              .from("cart_items")
-              .select(CART_COLUMNS)
-              .eq("user_id", requireUserId(user?.id))
-              .order("created_at")
-          ) as unknown as CartItem[]
-        )
+        unwrap(
+          await supabase
+            .from("cart_items")
+            .select(CART_COLUMNS)
+            .eq("user_id", requireUserId(user?.id))
+            .eq("purpose", "sale")
+            .order("created_at")
+        ) as unknown as CartItem[]
       ),
     queryKey: queryKeys.cart(user?.id ?? ""),
   });
@@ -412,54 +378,6 @@ export const useAddToCart = () => {
         queryKey: queryKeys.cart(user?.id ?? ""),
       });
     },
-  });
-};
-
-/**
- * Puts a single rental in the cart (one copy from The IDEA). The database
- * keeps rent lines to 1 to 3 that rent together; a line already there is
- * left as it is.
- */
-export const useAddRental = () => {
-  const { supabase, user } = useAuth();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      productId,
-      variantId,
-    }: {
-      productId: string;
-      /** Null for a product with one version (the database fills it in). */
-      variantId: string | null;
-    }) => {
-      const userId = requireUserId(user?.id);
-      let existing = supabase
-        .from("cart_items")
-        .select("id")
-        .eq("user_id", userId)
-        .eq("product_id", productId)
-        .eq("purpose", "rent");
-      if (variantId) {
-        existing = existing.eq("variant_id", variantId);
-      }
-      if ((unwrap(await existing.limit(1)) ?? []).length > 0) {
-        return;
-      }
-      unwrap(
-        await supabase.from("cart_items").insert({
-          product_id: productId,
-          purpose: "rent",
-          user_id: userId,
-          // The default_variant trigger fills in a product's only version.
-          variant_id: variantId as string,
-        })
-      );
-    },
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.cart(user?.id ?? ""),
-      }),
   });
 };
 

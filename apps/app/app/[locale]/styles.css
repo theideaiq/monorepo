@@ -1,5 +1,28 @@
 @import "@repo/design-system/styles/globals.css";
 
+/* Plus surfaces (components/plus/plus-surface.tsx) are dark whatever the
+   theme. `.dark` there only swaps the base tokens; the roles built on them
+   were worked out on <html>, so they are worked out again here. */
+[data-surface="plus"] {
+  --background: var(--surface);
+  --foreground: var(--ink);
+  --card: var(--surface-raised);
+  --card-foreground: var(--ink);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--ink);
+  --secondary: var(--surface-sunken);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-sunken);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--surface-sunken);
+  --accent-foreground: var(--ink);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--on-status);
+  --input: var(--border-strong);
+  --ring: var(--focus-ring);
+  color-scheme: dark;
+}
+
 /* The IDEA Pass card (components/pass/live-card.tsx): it tilts and its
    holographic sheen follows the pointer; both stay still for reduced
    motion. */

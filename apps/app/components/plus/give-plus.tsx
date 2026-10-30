@@ -124,6 +124,7 @@ export const GivePlus = () => {
               )
             }
             type="button"
+            variant="outline"
           >
             {add.isPending ? t("adding") : t("addToCart")}
           </Button>

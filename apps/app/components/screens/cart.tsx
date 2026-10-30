@@ -31,6 +31,7 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
+import { CheckoutSteps } from "@/components/store/checkout-steps";
 import { OrderSummary } from "@/components/store/order-summary";
 import { productHref } from "@/components/store/product-card";
 import { ProductImage } from "@/components/store/product-image";
@@ -48,7 +49,6 @@ import {
   type CartLineView,
   freeDeliveryRemaining,
   isOtherCondition,
-  isRentLine,
   isShopLine,
   lineProblem,
   MAX_QUANTITY,
@@ -75,22 +75,6 @@ import {
 } from "@/lib/store-queries";
 import { useMyStudent } from "@/lib/student-queries";
 import { useSaveForLater } from "@/lib/wishlist-queries";
-
-/** A rent line's terms: the days it's for and its refundable deposit. */
-const RentTerms = ({ line }: { readonly line: CartLineView }) => {
-  const t = useTranslations("app.cart.rent");
-  const tRent = useTranslations("app.rent");
-  const locale = useLocale();
-  const days = line.item.rental?.days ?? 0;
-  return (
-    <span className="text-muted-foreground text-xs">
-      {t("terms", {
-        days: tRent("days", { count: days, n: formatNumber(days, locale) }),
-        deposit: formatPrice(line.deposit, locale),
-      })}
-    </span>
-  );
-};
 
 const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
   const t = useTranslations("app.cart");
@@ -135,7 +119,6 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
                 {conditions(item.condition)}
               </span>
             ) : null}
-            {isRentLine(item) ? <RentTerms line={line} /> : null}
             {isShopLine(item) && item.seller ? (
               <span className="text-muted-foreground text-xs">
                 {soldBy("soldBy", { seller: item.seller.name })}
@@ -147,38 +130,30 @@ const CartLineRow = ({ line }: { readonly line: CartLineView }) => {
           </span>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          {isRentLine(item) ? (
-            <span className="font-medium text-pink-text text-xs">
-              {t("rent.label")}
-            </span>
-          ) : (
-            <QuantityStepper
-              decreaseLabel={t("decrease")}
-              disabled={busy || !line.buyable}
-              increaseLabel={t("increase")}
-              label={t("quantity")}
-              max={Math.max(1, Math.min(line.available, MAX_QUANTITY))}
-              onChange={(quantity) => update.mutate({ id: item.id, quantity })}
-              value={line.quantity}
-            />
-          )}
+          <QuantityStepper
+            decreaseLabel={t("decrease")}
+            disabled={busy || !line.buyable}
+            increaseLabel={t("increase")}
+            label={t("quantity")}
+            max={Math.max(1, Math.min(line.available, MAX_QUANTITY))}
+            onChange={(quantity) => update.mutate({ id: item.id, quantity })}
+            value={line.quantity}
+          />
           <div className="flex flex-wrap gap-1">
-            {isRentLine(item) ? null : (
-              <Button
-                disabled={busy}
-                onClick={() =>
-                  later.mutate({
-                    cartItemId: item.id,
-                    productId: item.product_id,
-                  })
-                }
-                size="sm"
-                variant="ghost"
-              >
-                <HeartIcon />
-                {t("saveForLater")}
-              </Button>
-            )}
+            <Button
+              disabled={busy}
+              onClick={() =>
+                later.mutate({
+                  cartItemId: item.id,
+                  productId: item.product_id,
+                })
+              }
+              size="sm"
+              variant="ghost"
+            >
+              <HeartIcon />
+              {t("saveForLater")}
+            </Button>
             <Button
               disabled={busy}
               onClick={() => update.mutate({ id: item.id, quantity: 0 })}
@@ -509,6 +484,7 @@ export const Cart = () => {
     <>
       <PageHeader title={t("title")} />
       <div className="flex flex-1 flex-col gap-6">
+        <CheckoutSteps current="cart" />
         {loading && !failed ? <SectionSpinner /> : null}
         {failed ? (
           <ErrorState

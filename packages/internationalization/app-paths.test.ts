@@ -128,6 +128,10 @@ describe("currentAppPath", () => {
 
   test("opens pages that moved at their current address", () => {
     expect(currentAppPath("/pass/selling")).toBe("/pass");
+    expect(currentAppPath("/kits/retro-night")).toBe("/store/kits/retro-night");
+    expect(currentAppPath("/rent/elden-ring-ps5?variant=ps5")).toBe(
+      "/store/elden-ring-ps5?variant=ps5"
+    );
     expect(currentAppPath("/pass/support/t1")).toBe("/help/t1");
     expect(currentAppPath("/pass/wishlist")).toBe("/pass/saved");
     expect(currentAppPath("/suite")).toBe("/business");

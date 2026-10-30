@@ -25,7 +25,7 @@ vi.mock("@/lib/hosted-checkout", () => ({
 const { Checkout } = await import("@/components/screens/checkout");
 const { PurchasePanel } = await import("@/components/store/purchase-panel");
 const { YourEvents } = await import("@/components/screens/events");
-const { YourPlus } = await import("@/components/screens/plus");
+const { PlanSheet } = await import("@/components/screens/plus");
 const { RsvpButton } = await import("@/components/rsvp-button");
 const { OrderDetail } = await import("@/components/screens/order-detail");
 const { RequireOnboarding } = await import("@/components/gates");
@@ -37,7 +37,7 @@ const { rememberCheckout } = await import("@/lib/checkout-tracking");
 const USER_ID = "user-1";
 const PLACE_ORDER = /Place order and pay/;
 const PLACE_ORDER_AR = /أكّد الطلب وادفع/;
-const JOIN_FOR = /Join for/;
+const JOIN_PLAN = /^Join Plus · 15,000\sIQD a month$/;
 const PAY_NOW = /Pay now/;
 
 beforeAll(() => {
@@ -269,7 +269,7 @@ describe("checkout", () => {
     expect(url).toBe("http://localhost:3002/orders/checkout");
     expect(body).toMatchObject({
       orderId: "o1",
-      redirectUrl: "http://localhost:3001/en/pass/orders/o1",
+      redirectUrl: "http://localhost:3001/en/checkout/done/o1",
     });
     expect(track).toHaveBeenCalledWith(
       "begin_checkout",
@@ -556,10 +556,9 @@ describe("The IDEA Plus", () => {
       },
     });
     const fetchMock = stubApi();
-    renderScreen(<YourPlus />, db.supabase);
+    renderScreen(<PlanSheet />, db.supabase);
 
-    expect(await screen.findByText("Up to 2 items at a time")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: JOIN_FOR }));
+    fireEvent.click(await screen.findByRole("button", { name: JOIN_PLAN }));
 
     await waitFor(() => expect(openCheckout).toHaveBeenCalled());
     const { body, url } = requestBody(fetchMock);

@@ -336,7 +336,7 @@ export const KitCheckout = ({ kit }: { readonly kit: string }) => {
       <div className="flex flex-1 flex-col gap-6">
         <Link
           className="inline-flex items-center gap-1 self-start text-muted-foreground text-sm hover:text-foreground"
-          href="/plus#kits"
+          href="/plus"
         >
           <ArrowLeftIcon className="size-4 rtl:rotate-180" />
           {t("back")}

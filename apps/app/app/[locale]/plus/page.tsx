@@ -1,7 +1,6 @@
 import { formatPrice, localized, planName } from "@repo/commerce";
 import { Highlight } from "@repo/design-system/components/brand/highlight";
 import { PinkBand } from "@repo/design-system/components/brand/pink-band";
-import { Badge } from "@repo/design-system/components/ui/badge";
 import { Button } from "@repo/design-system/components/ui/button";
 import type { Locale, Messages } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
@@ -9,311 +8,245 @@ import { Link } from "@repo/internationalization/navigation";
 import { MoveRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Pagination } from "@/components/pagination";
 import { PlanCard } from "@/components/plan-card";
-import { ProductCard } from "@/components/product-card";
-import { YourPlus } from "@/components/screens/plus";
-import { EmptyState, Section } from "@/components/section";
+import { PlusSurface } from "@/components/plus/plus-surface";
+import {
+  HouseholdSlots,
+  PlusHomeSwitch,
+  QueueRow,
+  VisitorOnly,
+} from "@/components/screens/plus";
+import { Section } from "@/components/section";
 import { CategoryChips } from "@/components/shop/category-chips";
+import { Rail } from "@/components/shop/rail";
+import { CoverCard } from "@/components/store/cover-card";
 import {
   getCategories,
   getKitTypes,
   getPlans,
+  getPlusAvailability,
   getProducts,
-  getRatings,
   getRentalTiers,
 } from "@/lib/data";
 import { localizedMetadata } from "@/lib/metadata";
-import { plansByTier, requiredPlan, soloPlans } from "@/lib/plus";
-import {
-  parseStoreQuery,
-  STORE_PAGE_SIZE,
-  storeQueryString,
-} from "@/lib/store-params";
+import { requiredPlan, soloPlans } from "@/lib/plus";
 
 export const revalidate = 300;
 
-interface RentProps {
+const ROW = 8;
+
+interface PlusProps {
   params: Promise<{ locale: Locale }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 type Steps = Messages["web"]["plus"]["how"]["steps"];
 
 export const generateMetadata = async ({
   params,
-  searchParams,
-}: RentProps): Promise<Metadata> => {
+}: PlusProps): Promise<Metadata> => {
   const { locale } = await params;
-  const query = parseStoreQuery(await searchParams);
   const t = await getTranslations({ locale, namespace: "web.plus.meta" });
-  const metadata = localizedMetadata(locale, "/plus", {
+  return localizedMetadata(locale, "/plus", {
     description: t("description"),
     title: t("title"),
   });
-  const filtered = Boolean(query.q || query.category || query.page > 1);
-  return filtered
-    ? { ...metadata, robots: { follow: true, index: false } }
-    : metadata;
 };
 
 /**
- * The IDEA Plus: everything about renting on one page. On the unfiltered
- * first page, "Your Plus" (the member's plan and rentals, or a way to
- * sign in) comes first; then the rental catalog (search, categories, the
- * plan each item needs) and how it works, the plans and their tiers.
+ * The IDEA Plus, darker and cover-led. A member opens on the household's
+ * slots (At home 2 of 2, what's next, Send one back); a visitor on the
+ * pitch and how it works in three steps. Then the category chips and the
+ * rows (New to Plus, Your queue, one per category) with availability on
+ * every cover, the three plan cards for visitors, and the game night
+ * kits. Plans and joining are at /plus/plans, your plan at /plus/plan.
  */
-const Rent = async ({ params, searchParams }: RentProps) => {
+const PlusPage = async ({ params }: PlusProps) => {
   const { locale } = await params;
   setRequestLocale(locale);
-  const query = parseStoreQuery(await searchParams);
   const t = await getTranslations({ locale, namespace: "web" });
 
-  const [categories, allPlans, kits, rows] = await Promise.all([
+  const [categories, allPlans, kits, fresh] = await Promise.all([
     getCategories("rental"),
     getPlans("plus"),
     getKitTypes(),
-    getProducts({
-      category: query.category,
-      kind: "rental",
-      limit: STORE_PAGE_SIZE + 1,
-      offset: (query.page - 1) * STORE_PAGE_SIZE,
-      search: query.q,
-    }),
+    getProducts({ kind: "rental", limit: ROW, sort: "newest" }),
   ]);
-  // Monthly plans on the page; the yearly ones are in Your Plus.
+  const topLevel = categories.filter((category) => !category.parent_id);
+  const perCategory = await Promise.all(
+    topLevel.map(async (category) => ({
+      category,
+      products: await getProducts({
+        category: category.slug,
+        kind: "rental",
+        limit: ROW,
+      }),
+    }))
+  );
+  const ids = [
+    ...fresh.map((product) => product.id),
+    ...perCategory.flatMap((row) => row.products.map((product) => product.id)),
+  ];
+  const [availability, tiers] = await Promise.all([
+    getPlusAvailability(ids),
+    getRentalTiers(ids),
+  ]);
   const plans = soloPlans(allPlans).filter(
     (plan) => plan.billing_interval === "month"
   );
-  // Plus Duo, from its cheapest monthly plan.
-  const duoFrom = allPlans
-    .filter((plan) => plan.duo && plan.billing_interval === "month")
-    .reduce<number | null>(
-      (lowest, plan) =>
-        lowest === null || plan.amount < lowest ? plan.amount : lowest,
-      null
-    );
-  const products = rows.slice(0, STORE_PAGE_SIZE);
-  const ids = products.map((product) => product.id);
-  const [ratings, productTiers] = await Promise.all([
-    getRatings(ids),
-    getRentalTiers(ids),
-  ]);
-  const tiers = plansByTier(plans);
   const steps = t.raw("plus.how.steps") as Steps;
-  const browsing = Boolean(query.q || query.category || query.page > 1);
+  const cover = (product: (typeof fresh)[number]) => {
+    const plan = requiredPlan(plans, tiers[product.id]);
+    return (
+      <CoverCard
+        availability={availability[product.id] ?? null}
+        key={product.id}
+        needsPlan={plan ? planName(plan, locale) : null}
+        plus
+        product={product}
+      />
+    );
+  };
+
+  const pitch = (
+    <>
+      <PinkBand
+        action={
+          <Button asChild className="gap-2" size="lg" variant="brand">
+            <Link href="/plus/plans">
+              {t("plus.cta")}
+              <MoveRight className="size-4 rtl:rotate-180" />
+            </Link>
+          </Button>
+        }
+        description={t("plus.subtitle")}
+        title={
+          <>
+            {t("plus.title")} <Highlight>{t("plus.highlight")}</Highlight>
+          </>
+        }
+        titleAs="h1"
+      />
+      <Section className="py-10" title={t("plus.how.title")}>
+        <ol className="grid gap-4 md:grid-cols-3">
+          {steps.map((step, index) => (
+            <li
+              className="flex flex-col gap-2 rounded-2xl border bg-card p-5"
+              key={step.title}
+            >
+              <span className="flex size-9 items-center justify-center rounded-full bg-brand font-bold text-brand-foreground">
+                {formatNumber(index + 1, locale)}
+              </span>
+              <h3 className="font-semibold">{step.title}</h3>
+              <p className="text-muted-foreground text-sm">
+                {step.description}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </Section>
+    </>
+  );
 
   return (
-    <>
-      <div className="container mx-auto flex flex-col gap-4 px-4 pt-6 pb-2">
-        <h1 className="font-bold text-2xl tracking-tight md:text-3xl">
-          {t("rent.title")} <Highlight>{t("rent.highlight")}</Highlight>
-        </h1>
+    <PlusSurface>
+      <PlusHomeSwitch
+        member={
+          <div className="container mx-auto grid gap-4 px-4 pt-6">
+            <h1 className="sr-only">{t("plus.homeTitle")}</h1>
+            <HouseholdSlots />
+          </div>
+        }
+        visitor={pitch}
+      />
+
+      <div className="container mx-auto px-4 pt-6">
         <CategoryChips
           categories={categories}
-          hrefFor={(slug) =>
-            `/plus${storeQueryString(query, { category: slug, page: 1 })}`
-          }
+          hrefFor={(slug) => `/plus/${encodeURIComponent(slug)}`}
           label={t("store.categories")}
           locale={locale}
         />
-        {browsing ? null : (
-          <a
-            className="inline-flex items-center gap-2 self-start rounded-full border bg-card px-4 py-2 text-sm transition-colors hover:bg-muted"
-            href="#plans"
-          >
-            {t("rent.plans")}
-            <MoveRight aria-hidden="true" className="size-4 rtl:rotate-180" />
-          </a>
-        )}
       </div>
 
-      {browsing ? null : (
-        <div className="container mx-auto px-4 pt-6">
-          <YourPlus />
-        </div>
-      )}
-
-      <section className="container mx-auto px-4 py-6">
-        {query.q ? (
-          <p className="mb-4 text-muted-foreground">
-            {t("store.results", { query: query.q })}
-          </p>
-        ) : null}
-        {products.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {products.map((product) => {
-              const plan = requiredPlan(plans, productTiers[product.id]);
-              return (
-                <ProductCard
-                  forRent
-                  key={product.id}
-                  locale={locale}
-                  planLabel={
-                    plan
-                      ? t("plus.catalog.needsPlan", {
-                          plan: planName(plan, locale),
-                        })
-                      : null
-                  }
-                  product={product}
-                  rating={ratings[product.id]}
-                />
-              );
-            })}
-          </div>
-        ) : (
-          <EmptyState>
-            {t("rent.empty")}{" "}
-            {query.q || query.category ? (
-              <Link className="text-pink-text underline" href="/plus">
-                {t("store.clear")}
-              </Link>
-            ) : null}
-          </EmptyState>
-        )}
-        <Pagination
-          hasNext={rows.length > STORE_PAGE_SIZE}
-          hrefFor={(page) => `/plus${storeQueryString(query, { page })}`}
-          locale={locale}
-          page={query.page}
-        />
-      </section>
-
-      {browsing ? null : (
-        <>
-          <Section title={t("plus.how.title")}>
-            <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {steps.map((step, index) => (
-                <li
-                  className="flex flex-col gap-2 rounded-lg border p-5"
-                  key={step.title}
-                >
-                  <span className="flex size-9 items-center justify-center rounded-full bg-brand font-bold text-brand-foreground">
-                    {formatNumber(index + 1, locale)}
-                  </span>
-                  <h3 className="font-semibold">{step.title}</h3>
-                  <p className="text-muted-foreground text-sm">
-                    {step.description}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </Section>
-
-          <Section
-            description={t("plus.plans.description")}
-            id="plans"
-            title={t("plus.plans.title")}
+      {fresh.length > 0 ? (
+        <Rail title={t("plus.rows.new")}>{fresh.map(cover)}</Rail>
+      ) : null}
+      <QueueRow />
+      {perCategory.map(({ category, products }) =>
+        products.length > 0 ? (
+          <Rail
+            action={{
+              href: `/plus/${category.slug}`,
+              label: t("store.shelf.seeAll"),
+            }}
+            key={category.id}
+            title={localized(category, "name", locale)}
           >
-            {plans.length > 0 ? (
-              <div className="grid gap-6 md:grid-cols-3">
-                {plans.map((plan, index) => (
-                  <PlanCard
-                    featured={plans.length >= 3 && index === 1}
-                    href="#yours"
-                    key={plan.id}
-                    locale={locale}
-                    plan={plan}
-                  />
-                ))}
-              </div>
-            ) : (
-              <EmptyState>{t("plus.plans.empty")}</EmptyState>
-            )}
-            {duoFrom === null ? null : (
-              <p className="text-muted-foreground text-sm">
-                {t("plus.plans.duo", { price: formatPrice(duoFrom, locale) })}
-              </p>
-            )}
-          </Section>
-
-          {kits.length > 0 ? (
-            <Section
-              description={t("plus.kits.description")}
-              id="kits"
-              title={t("plus.kits.title")}
-            >
-              <ul className="grid gap-4 md:grid-cols-3">
-                {kits.map((kit) => (
-                  <li
-                    className="flex flex-col gap-3 rounded-lg border p-5"
-                    key={kit.id}
-                  >
-                    <h3 className="font-semibold">
-                      {localized(kit, "name", locale)}
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {localized(kit, "description", locale)}
-                    </p>
-                    <p className="font-medium text-sm">
-                      {t("plus.kits.price", {
-                        extra: formatPrice(kit.extra_day_price, locale),
-                        price: formatPrice(kit.price, locale),
-                      })}
-                    </p>
-                    <Button
-                      asChild
-                      className="mt-auto self-start"
-                      variant="outline"
-                    >
-                      <Link href={`/kits/${kit.id}`}>
-                        {t("plus.kits.book")}
-                      </Link>
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </Section>
-          ) : null}
-
-          {tiers.length > 1 ? (
-            <Section
-              description={t("plus.tiers.description")}
-              title={t("plus.tiers.title")}
-            >
-              <ol className="grid gap-4 md:grid-cols-3">
-                {tiers.map((plan, index) => (
-                  <li
-                    className="flex flex-col gap-3 rounded-lg border p-5"
-                    key={plan.id}
-                  >
-                    <Badge className="px-3 py-1 text-sm" variant="brand">
-                      {planName(plan, locale)}
-                    </Badge>
-                    <p className="text-muted-foreground text-sm">
-                      {index === 0
-                        ? t("plus.tiers.entry")
-                        : t("plus.tiers.higher", {
-                            plan: planName(plan, locale),
-                          })}
-                    </p>
-                  </li>
-                ))}
-              </ol>
-            </Section>
-          ) : null}
-
-          <PinkBand
-            action={
-              <Button asChild className="gap-2" size="lg" variant="brand">
-                <a href="#yours">
-                  {t("plus.cta")}{" "}
-                  <MoveRight className="size-4 rtl:rotate-180" />
-                </a>
-              </Button>
-            }
-            description={t("plus.subtitle")}
-            title={
-              <>
-                {t("plus.title")} <Highlight>{t("plus.highlight")}</Highlight>
-              </>
-            }
-          />
-        </>
+            {products.map(cover)}
+          </Rail>
+        ) : null
       )}
-    </>
+
+      <VisitorOnly>
+        <Section
+          description={t("plus.plans.description")}
+          id="plans"
+          title={t("plus.plans.title")}
+        >
+          <div className="grid gap-6 md:grid-cols-3">
+            {plans.map((plan, index) => (
+              <PlanCard
+                featured={plans.length >= 3 && index === 1}
+                href="/plus/plans"
+                key={plan.id}
+                locale={locale}
+                plan={plan}
+              />
+            ))}
+          </div>
+        </Section>
+      </VisitorOnly>
+
+      {kits.length > 0 ? (
+        <Section
+          description={t("plus.kits.description")}
+          id="kits"
+          title={t("plus.kits.title")}
+        >
+          <ul className="grid gap-4 md:grid-cols-3">
+            {kits.map((kit) => (
+              <li
+                className="flex flex-col gap-3 rounded-2xl border bg-card p-5"
+                key={kit.id}
+              >
+                <h3 className="font-semibold">
+                  {localized(kit, "name", locale)}
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  {localized(kit, "description", locale)}
+                </p>
+                <p className="font-medium text-sm">
+                  {t("plus.kits.price", {
+                    extra: formatPrice(kit.extra_day_price, locale),
+                    price: formatPrice(kit.price, locale),
+                  })}
+                </p>
+                <Button
+                  asChild
+                  className="mt-auto self-start"
+                  variant="outline"
+                >
+                  <Link href={`/store/kits/${kit.id}`}>
+                    {t("plus.kits.book")}
+                  </Link>
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
+    </PlusSurface>
   );
 };
 
-export default Rent;
+export default PlusPage;

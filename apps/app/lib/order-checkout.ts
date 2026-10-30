@@ -9,7 +9,6 @@ import { callApi } from "./api";
 import { rememberCheckout } from "./checkout-tracking";
 import { checkoutReturnUrl, openCheckout } from "./hosted-checkout";
 import { queryKeys, unwrap } from "./queries";
-import { type RentalItem, rentalItemsParam } from "./rent";
 
 /** The parts of an order the checkout needs. */
 export interface PayableOrder {
@@ -26,9 +25,34 @@ export interface PayableOrder {
   total: number;
 }
 
-/** Where the payment page returns to: the order itself. */
+/** An order's page in the Pass. */
 export const orderPath = (orderId: string) =>
   `/pass/orders/${encodeURIComponent(orderId)}`;
+
+/** Checkout's last step, where the payment page returns to: Done. */
+export const donePath = (orderId: string) =>
+  `/checkout/done/${encodeURIComponent(orderId)}`;
+
+const bulbsKey = (orderId: string) => `checkout-bulbs:${orderId}`;
+
+/** Remembers what an order will earn (from the quote), for Done. */
+export const rememberBulbsToEarn = (orderId: string, bulbs: number) => {
+  try {
+    sessionStorage.setItem(bulbsKey(orderId), String(bulbs));
+  } catch {
+    // Done then works it out from the member's rate.
+  }
+};
+
+/** What an order will earn, as the checkout's quote said; null if unknown. */
+export const rememberedBulbsToEarn = (orderId: string) => {
+  try {
+    const value = sessionStorage.getItem(bulbsKey(orderId));
+    return value === null ? null : Number(value) || 0;
+  } catch {
+    return null;
+  }
+};
 
 const analyticsItems = (order: PayableOrder, locale: string) =>
   order.order_items.map((item) => ({
@@ -47,14 +71,22 @@ export const usePayOrder = () => {
   const locale = useLocale();
 
   return useMutation({
-    mutationFn: async (order: PayableOrder) => {
+    mutationFn: async (
+      order: PayableOrder & {
+        /** Where the payment page returns to; the order's page by default. */
+        returnPath?: string;
+      }
+    ) => {
       const { referenceId, url } = await callApi<{
         referenceId: string;
         url: string | null;
       }>(supabase, "/orders/checkout", {
         attribution: getAttribution(),
         orderId: order.id,
-        redirectUrl: checkoutReturnUrl(locale, orderPath(order.id)),
+        redirectUrl: checkoutReturnUrl(
+          locale,
+          order.returnPath ?? orderPath(order.id)
+        ),
       });
       if (url) {
         rememberCheckout({
@@ -155,7 +187,10 @@ const useFinishOrder = () => {
     }
 
     try {
-      const { url } = await pay.mutateAsync(order);
+      const { url } = await pay.mutateAsync({
+        ...order,
+        returnPath: donePath(order.id),
+      });
       return { order, paymentError: null, url };
     } catch (paymentError) {
       return { order, paymentError, url: null };
@@ -250,49 +285,6 @@ export const usePlaceGift = () => {
           queryKey: queryKeys.cart(user?.id ?? ""),
         }),
         queryClient.invalidateQueries({ queryKey: ["orders"] }),
-      ]),
-  });
-};
-
-/** What the rent checkout sends to `create_rentals_order()`. */
-export interface PlaceRental extends Omit<PlaceOrder, "useBulbs"> {
-  /** 1 to 3 items (several only films, books or games). */
-  items: RentalItem[];
-}
-
-/**
- * Renting on its own: `create_rentals_order()` makes one order of each
- * item's rent and refundable deposit, with one delivery fee, and holds a
- * copy of each; it's paid like any other order.
- */
-export const usePlaceRental = () => {
-  const { supabase } = useAuth();
-  const queryClient = useQueryClient();
-  const finish = useFinishOrder();
-
-  return useMutation({
-    mutationFn: async ({
-      deliveryZone,
-      items,
-      paymentMethod,
-      shipping,
-    }: PlaceRental) =>
-      finish(
-        unwrap(
-          await supabase.rpc("create_rentals_order", {
-            items: rentalItemsParam(items),
-            payment_method: paymentMethod,
-            shipping: { ...shipping },
-            ...(deliveryZone ? { delivery_zone: deliveryZone } : {}),
-          })
-        ),
-        paymentMethod
-      ),
-    onSettled: () =>
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["orders"] }),
-        queryClient.invalidateQueries({ queryKey: ["rentals"] }),
-        queryClient.invalidateQueries({ queryKey: ["products"] }),
       ]),
   });
 };

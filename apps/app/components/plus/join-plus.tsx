@@ -132,6 +132,7 @@ export const HomeForm = ({ onSaved }: { readonly onSaved?: () => void }) => {
         className="justify-self-start"
         disabled={setHome.isPending}
         type="submit"
+        variant="outline"
       >
         {setHome.isPending ? t("saving") : t("saveHome")}
       </Button>
@@ -311,7 +312,7 @@ const WaitlistOrHome = ({
 };
 
 /**
- * Joining The IDEA Plus (at `#join`): places left, the member's area in
+ * Joining The IDEA Plus (on /plus/plans): places left, the member's area in
  * Baghdad, and the waitlist when Plus is full or for other governorates.
  */
 export const JoinPlus = () => {
@@ -322,7 +323,7 @@ export const JoinPlus = () => {
     return null;
   }
   return (
-    <Card id="join">
+    <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MapPinIcon aria-hidden="true" className="size-5 text-pink-text" />

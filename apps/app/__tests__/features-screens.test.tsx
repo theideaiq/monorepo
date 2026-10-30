@@ -19,10 +19,10 @@ const { WriteReview } = await import("@/components/store/product-reviews");
 const { Wishlist } = await import("@/components/screens/wishlist");
 const { NewTicket } = await import("@/components/screens/new-ticket");
 const { Ticket } = await import("@/components/screens/ticket");
-const { YourPlus } = await import("@/components/screens/plus");
 const { NotificationBell } = await import("@/components/notification-bell");
 
 const USER_ID = "user-1";
+const IN_PLUS = /In Plus/;
 const HIDDEN_NOTE = /Our team hid this review/;
 
 beforeAll(() => {
@@ -174,7 +174,9 @@ describe("product page actions", () => {
       db.supabase
     );
 
-    fireEvent.click(await screen.findByRole("button", { name: "Save" }));
+    // Save is in the panel and in the phone's dock (one shows at a time).
+    const [save] = await screen.findAllByRole("button", { name: "Save" });
+    fireEvent.click(save as HTMLElement);
     await waitFor(() =>
       expect(callsTo(db.calls, "wishlist_items", "insert")[0]?.payload).toEqual(
         { product_id: "p1", user_id: USER_ID }
@@ -461,112 +463,133 @@ describe("notifications", () => {
   });
 });
 
-describe("The IDEA Plus tiers", () => {
-  test("names the plan an item needs and blocks lower tiers", async () => {
-    const rental = {
-      category_id: null,
-      compare_at_price: null,
-      condition: "used",
+describe("Get it: the Plus row", () => {
+  const PLANS = [
+    {
+      amount: 14_750,
+      billing_interval: "month",
       currency: "IQD",
-      featured: false,
-      images: [],
-      kind: "rental",
-      price: 0,
-      stock_count: 2,
-    };
+      description: null,
+      duo: false,
+      features_ar: [],
+      features_en: [],
+      id: "plus-1",
+      name: "Glow",
+      rental_slots: 1,
+      tier: 1,
+    },
+    {
+      amount: 29_750,
+      billing_interval: "month",
+      currency: "IQD",
+      description: null,
+      duo: false,
+      features_ar: [],
+      features_en: [],
+      id: "plus-3",
+      name: "Blaze",
+      rental_slots: 4,
+      tier: 3,
+    },
+  ];
+  const game = { ...product, id: "g1", rentable: true, rental_tier: 3 };
+  const render = (
+    rpcs: Record<string, { data: unknown; error: unknown }>,
+    results: Record<string, { data: unknown; error: unknown }> = {},
+    item = game
+  ) => {
     const db = fakeDb({
-      results: {
-        "plans.select": {
-          data: [
-            {
-              amount: 15_000,
-              billing_interval: "month",
-              currency: "IQD",
-              description: null,
-              features_ar: [],
-              features_en: [],
-              id: "plus-1",
-              name: "Plus",
-              rental_slots: 2,
-              tier: 1,
-            },
-            {
-              amount: 25_000,
-              billing_interval: "month",
-              currency: "IQD",
-              description: null,
-              features_ar: [],
-              features_en: [],
-              id: "plus-2",
-              name: "Plus Extra",
-              rental_slots: 4,
-              tier: 2,
-            },
-          ],
-          error: null,
-        },
-        "products.select": (call) =>
-          hasFilter(call, "in", "id")
-            ? {
-                data: [
-                  { id: "r1", rental_tier: 2 },
-                  { id: "r2", rental_tier: null },
-                ],
-                error: null,
-              }
-            : {
-                data: [
-                  {
-                    ...rental,
-                    id: "r1",
-                    name_ar: "لعبة",
-                    name_en: "Elden Ring",
-                    slug: "elden-ring",
-                  },
-                  {
-                    ...rental,
-                    id: "r2",
-                    name_ar: "كتاب",
-                    name_en: "A book",
-                    slug: "a-book",
-                  },
-                ],
-                error: null,
-              },
-        "subscriptions.select": {
-          data: [
-            {
-              cancel_at_period_end: false,
-              current_period_end: "2099-01-01T00:00:00Z",
-              id: "s1",
-              plan_id: "plus-1",
-              status: "active",
-            },
-          ],
-          error: null,
-        },
-      },
-      rpcs: {
-        my_rental_allowance: {
-          data: [{ in_use: 0, slots: 2, tier: 1 }],
-          error: null,
-        },
-        request_rental: {
-          data: null,
-          error: { code: "23514", message: "This item needs a higher plan" },
-        },
+      results: { "plans.select": { data: PLANS, error: null }, ...results },
+      rpcs: { plus_availability: { data: "short", error: null }, ...rpcs },
+    });
+    renderScreen(
+      <PurchasePanel
+        product={
+          item as unknown as Parameters<typeof PurchasePanel>[0]["product"]
+        }
+      />,
+      db.supabase
+    );
+    return db;
+  };
+
+  test("without Plus: the price from, the wait, and Join Plus to play", async () => {
+    render({ my_rental_allowance: { data: [], error: null } });
+    fireEvent.click(await screen.findByRole("radio", { name: IN_PLUS }));
+    expect(await screen.findByText("From 14,750 IQD / month")).toBeTruthy();
+    expect(await screen.findByText("Short wait")).toBeTruthy();
+    const join = screen.getAllByRole("link", { name: "Join Plus to play" });
+    expect(join[0]?.getAttribute("href")).toBe("/plus/plans");
+  });
+
+  test("a plan too low names the plan it needs and offers the upgrade", async () => {
+    render({
+      my_rental_allowance: {
+        data: [{ in_use: 0, slots: 1, tier: 1 }],
+        error: null,
       },
     });
-    renderScreen(<YourPlus />, db.supabase);
-
-    expect(await screen.findByText("Needs Plus Extra")).toBeTruthy();
+    fireEvent.click(await screen.findByRole("radio", { name: IN_PLUS }));
+    expect(await screen.findByText("In Plus with Blaze")).toBeTruthy();
     expect(
-      await screen.findByText("Upgrade to Plus Extra to rent this item.")
-    ).toBeTruthy();
-    const [locked, open] = screen.getAllByRole("button", {
+      screen.getAllByRole("link", { name: "Upgrade" })[0]?.getAttribute("href")
+    ).toBe("/plus/plan");
+  });
+
+  test("a member queues it, then sees where it is in the queue", async () => {
+    const db = render(
+      {
+        my_rental_allowance: {
+          data: [{ in_use: 0, slots: 4, tier: 3 }],
+          error: null,
+        },
+        queue_add: { data: null, error: null },
+      },
+      {}
+    );
+    fireEvent.click(await screen.findByRole("radio", { name: IN_PLUS }));
+    const [add] = await screen.findAllByRole("button", {
       name: "Add to queue",
     });
-    expect((locked as HTMLButtonElement).disabled).toBe(true);
-    expect((open as HTMLButtonElement).disabled).toBe(false);
+    fireEvent.click(add as HTMLElement);
+    await waitFor(() =>
+      expect(db.rpcCalls).toContainEqual({
+        args: { product: "g1" },
+        name: "queue_add",
+      })
+    );
+  });
+
+  test("queued: In your queue, with its place", async () => {
+    render(
+      {
+        my_rental_allowance: {
+          data: [{ in_use: 0, slots: 4, tier: 3 }],
+          error: null,
+        },
+      },
+      {
+        "rental_queue_items.select": {
+          data: [
+            {
+              position: 1,
+              product: { ...game, status: "active", variants: [] },
+              product_id: "other",
+            },
+            {
+              position: 2,
+              product: { ...game, status: "active", variants: [] },
+              product_id: "g1",
+            },
+          ],
+          error: null,
+        },
+      }
+    );
+    fireEvent.click(await screen.findByRole("radio", { name: IN_PLUS }));
+    const [queued] = await screen.findAllByRole("link", {
+      name: "In your queue · #2",
+    });
+    expect(queued?.getAttribute("href")).toBe("/pass/queue");
   });
 });

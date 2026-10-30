@@ -7,6 +7,7 @@ import { useLocale } from "next-intl";
 import { callApi } from "./api";
 import { rememberCheckout } from "./checkout-tracking";
 import { checkoutReturnUrl, openCheckout } from "./hosted-checkout";
+import { toAvailability } from "./plus";
 import { queryKeys, requireUserId, unwrap } from "./queries";
 
 /** The IDEA Plus: rental allowance, rentals and requests. */
@@ -140,6 +141,31 @@ export const useCancelRental = () => {
     mutationFn: async (rentalId: string) =>
       unwrap(await supabase.rpc("cancel_rental", { rental: rentalId })),
     onSettled: refresh,
+  });
+};
+
+/** keep_price(): what keeping a Plus rental's copy costs. */
+export const useKeepPrice = (rentalId: string | null) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: Boolean(rentalId),
+    queryFn: async () =>
+      unwrap(await supabase.rpc("keep_price", { target: rentalId ?? "" })),
+    queryKey: ["keep-price", rentalId ?? ""],
+  });
+};
+
+/** plus_availability(): now, short, long, coming, or null (not in Plus). */
+export const usePlusAvailability = (productId: string, enabled = true) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: enabled && Boolean(productId),
+    queryFn: async () =>
+      toAvailability(
+        unwrap(await supabase.rpc("plus_availability", { product: productId }))
+      ),
+    queryKey: ["plus-availability", productId],
+    staleTime: 60_000,
   });
 };
 

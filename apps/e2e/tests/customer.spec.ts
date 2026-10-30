@@ -189,14 +189,16 @@ test("security.txt is served without a locale redirect", async ({
   );
 });
 
-const JOIN_PLAN = /^Join for /;
-const KIT_PAGE = /\/kits\/retro$/;
+const JOIN_PLAN = /^Join .+ · /;
+const KIT_PAGE = /\/store\/kits\/retro$/;
 const BAGHDAD = /^Baghdad/;
 const CASH_ON_DELIVERY = /^Cash on delivery/;
 const PLACE_CASH_ORDER = /^Place order · /;
 const PLACE_ORDER = /^Place order and pay /;
 const CART_PAGE = /\/cart$/;
 const ORDER_PAGE = /\/pass\/orders\/[^/]+$/;
+const DONE_PAGE = /\/checkout\/done\/[^/]+$/;
+const IN_PLUS = /^In Plus/;
 const STUDENT_NUDGE = /^Verify as a student/;
 
 test.describe("a signed-in customer", () => {
@@ -249,48 +251,17 @@ test.describe("a signed-in customer", () => {
     noErrors();
   });
 
-  test("rents a game and a book in the cart with something bought", async ({
+  test("finds a game in Plus on its product page, and the way to join", async ({
     page,
   }) => {
     const noErrors = watchConsole(page);
     await page.goto(`${urls.web}/store/elden-ring-ps5`);
-    await expect(page.getByText("Rent it on its own")).toBeVisible();
-    await page.getByRole("button", { exact: true, name: "Rent it" }).click();
-    await expect(page).toHaveURL(CART_PAGE);
-    await expect(page.getByText("Elden Ring").first()).toBeVisible();
-
-    // Films, books and games rent together, beside what's bought.
-    await page.goto(`${urls.web}/store/one-hundred-years-of-solitude`);
-    await page.getByRole("button", { exact: true, name: "Rent it" }).click();
-    await expect(page).toHaveURL(CART_PAGE);
-    await page.goto(`${urls.web}/store/${product.slug}`);
-    await page.getByRole("button", { name: "Add to cart" }).click();
-    await page.getByRole("link", { name: "View cart" }).click();
-    await expect(page.getByText("Refundable deposits")).toBeVisible();
+    // No one-off rent: Plus is one of the ways to get it.
+    await expect(page.getByText("Rent it on its own")).toHaveCount(0);
+    await page.getByRole("radio", { name: IN_PLUS }).click();
     await expectAccessible(page);
-
-    await page.getByRole("link", { name: "Checkout" }).click();
-    await expect(page.getByLabel("Send as a gift")).toBeDisabled();
-    await page.getByRole("combobox", { name: "Governorate" }).click();
-    await page.getByRole("option", { name: BAGHDAD }).click();
-    await page.getByLabel("Full name").fill(customer.name);
-    await page.getByLabel("Mobile number").fill("07701234567");
-    await page
-      .getByLabel("Address", { exact: true })
-      .fill("Street 62, Karrada");
-    await page.getByRole("radio", { name: CASH_ON_DELIVERY }).click();
-    await expectAccessible(page);
-    await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
-
-    // One order: the purchase, each rent and its deposit.
-    await expect(page).toHaveURL(ORDER_PAGE, { timeout: 30_000 });
-    await expect(page.getByText(product.name).first()).toBeVisible();
-    await expect(
-      page.getByText("Refundable deposit: Elden Ring (PS5)")
-    ).toBeVisible();
-    await expect(
-      page.getByText("Refundable deposit: One Hundred Years of Solitude")
-    ).toBeVisible();
+    await page.getByRole("link", { name: "Join Plus to play" }).click();
+    await expect(page).toHaveURL(/\/plus\/plans$/);
     noErrors();
   });
 
@@ -298,10 +269,10 @@ test.describe("a signed-in customer", () => {
     page,
   }) => {
     const noErrors = watchConsole(page);
-    await page.goto(`${urls.web}/plus`);
-    // The page's "Join Plus" buttons share the card's title.
+    // Plans and joining: the area check comes before paying.
+    await page.goto(`${urls.web}/plus/plans`);
     await expect(
-      page.locator("#join").getByText("Join Plus", { exact: true })
+      page.getByText("Join Plus", { exact: true }).first()
     ).toBeVisible();
     await page.getByRole("combobox", { name: "Area in Baghdad" }).click();
     await page.getByRole("option", { name: "Karrada" }).click();
@@ -320,7 +291,7 @@ test.describe("a signed-in customer", () => {
 
   test("books a game night kit for a weekend", async ({ page }) => {
     const noErrors = watchConsole(page);
-    await page.goto(`${urls.web}/plus#kits`);
+    await page.goto(`${urls.web}/plus`);
     await page
       .getByRole("listitem")
       .filter({ hasText: "Retro night" })
@@ -345,7 +316,10 @@ test.describe("a signed-in customer", () => {
     await expectAccessible(page);
     await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
 
-    await expect(page).toHaveURL(ORDER_PAGE, { timeout: 30_000 });
+    // Done: the order and one next step, to its page.
+    await expect(page).toHaveURL(DONE_PAGE, { timeout: 30_000 });
+    await page.getByRole("link", { name: "Track your order" }).click();
+    await expect(page).toHaveURL(ORDER_PAGE);
     await expect(
       page.getByText("Refundable deposit: Retro night")
     ).toBeVisible();
@@ -413,7 +387,7 @@ test.describe("a signed-in customer", () => {
       page.getByText("Deliver to Home · Cash on delivery")
     ).toBeVisible();
     await page.getByRole("button", { name: PLACE_CASH_ORDER }).click();
-    await expect(page).toHaveURL(ORDER_PAGE);
+    await expect(page).toHaveURL(DONE_PAGE);
 
     const { data } = await admin()
       .from("orders")
@@ -519,7 +493,7 @@ test.describe("a signed-in customer", () => {
     page,
   }) => {
     const startedAt = new Date().toISOString();
-    await page.goto(`${urls.web}/plus#yours`);
+    await page.goto(`${urls.web}/plus/plans`);
     const give = page.locator("#give");
     await give.getByRole("button", { exact: true, name: "1 month" }).click();
     await give.getByRole("button", { name: "Add to cart" }).click();
