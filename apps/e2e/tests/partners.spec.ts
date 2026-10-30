@@ -154,6 +154,18 @@ test("a company verifies its domain and registers a Pass app", async ({
   await expectAccessible(page);
 });
 
+// Products need a picture to go live.
+const recordPhoto = "https://covers.openlibrary.org/b/id/8231856-M.jpg";
+const publishWithPhoto = async (name: string) => {
+  const { error } = await admin()
+    .from("products")
+    .update({ images: [recordPhoto], status: "active" })
+    .eq("name_en", name);
+  if (error) {
+    throw error;
+  }
+};
+
 test("a company applies to sell and, once approved, lists an offer that reaches the website", async ({
   context,
   page,
@@ -202,6 +214,7 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
     .from("products")
     .insert({
       condition: "new",
+      images: [recordPhoto],
       kind: "sale",
       name_ar: "أسطوانة للاختبار",
       name_en: "E2E Shop Record",
@@ -265,6 +278,9 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await page.getByRole("button", { name: "Send the ready rows (1)" }).click();
   await expect(page.getByText("Sent: 1 · Refused: 0")).toBeVisible();
   await expect(page.getByText("2 available · 0 sold")).toBeVisible();
+  // A product a shop creates without a photo waits as a draft; Staff add
+  // one and it goes live.
+  await publishWithPhoto("E2E Uploaded Record");
 
   // Both items as one offer: a bundle, listed as a product of its own.
   const removeBundle = async () => {
@@ -292,6 +308,7 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await expectAccessible(page);
   await page.getByRole("button", { name: "List the bundle" }).click();
   await expect(page.getByText("E2E Record Bundle")).toBeVisible();
+  await publishWithPhoto("E2E Record Bundle");
   const { data: bundle } = await db
     .from("products")
     .select("slug")
