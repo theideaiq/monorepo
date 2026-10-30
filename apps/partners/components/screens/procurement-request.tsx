@@ -227,7 +227,7 @@ const QuoteCard = ({
               {t("request.printOrder")}
             </Link>
             {invoice ? (
-              <Link className="underline" href="/organization/invoices">
+              <Link className="underline" href="/settings/invoices">
                 {t("request.invoice", {
                   number: String(invoice.number),
                   status: t(`status.invoice.${invoice.status}`),

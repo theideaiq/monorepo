@@ -11,7 +11,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -22,24 +21,19 @@ import {
   LanguageSwitcher,
   ThemeToggle,
 } from "@repo/internationalization/controls";
-import {
-  Link,
-  usePathname,
-  useRouter,
-} from "@repo/internationalization/navigation";
+import { Link, useRouter } from "@repo/internationalization/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { ExternalLinkIcon, IdCardIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useAuthMessages } from "@/lib/auth-messages";
 import { useProfile } from "@/lib/queries";
-import { isActivePath, visibleNavItems } from "./nav-items";
 import { useOrganization } from "./organization-provider";
+import { SideMenu } from "./side-menu";
 
 export const AppSidebar = () => {
   const t = useTranslations("app.nav");
   const tMeta = useTranslations("app.meta");
   const locale = useLocale();
-  const pathname = usePathname();
   const router = useRouter();
   const { active, organizations, select } = useOrganization();
   const queryClient = useQueryClient();
@@ -82,27 +76,10 @@ export const AppSidebar = () => {
         ) : null}
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("label")}</SidebarGroupLabel>
+        <SideMenu onNavigate={closeOnMobile} />
+        <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
             <SidebarMenu>
-              {visibleNavItems(active).map((item) => {
-                const title = t(item.key);
-                return (
-                  <SidebarMenuItem key={item.key}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isActivePath(pathname, item.href)}
-                      tooltip={title}
-                    >
-                      <Link href={item.href} onClick={closeOnMobile}>
-                        <item.icon />
-                        <span>{title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip={t("pass")}>
                   <a href={passUrl("/", null, locale)}>

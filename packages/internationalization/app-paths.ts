@@ -119,42 +119,68 @@ const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
 
 /**
  * Partners' sections stored at their own address, without `/business`
- * (the auction notifications link `/selling/auctions`).
+ * (the auction notifications link `/selling/auctions`; newer links use
+ * `/sell/…` and `/settings/…`).
  */
-const PARTNERS_SECTION = /^\/selling(?=[/?#]|$)/;
-const GET_OFFERS = /^\/selling\/get-offers(?=[/?#]|$)/;
-
-/** Pages of Partners that moved, as [old path, current path]. */
-const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
-  ["/procurement", "/team"],
-  ["/invoices", "/organization/invoices"],
-  ["/members", "/organization/members"],
-  ["/plus", "/team/plus"],
-  ["/billing", "/organization/billing"],
-  ["/settings", "/organization"],
-];
+const PARTNERS_SECTION = /^\/(selling|sell|organization)(?=[/?#]|$)/;
 
 /**
- * The page of Partners a stored link names: links under
- * `/business…` are its pages, which sit at the root of its own site, at
- * their current address (`/business/invoices` → `/organization/invoices`,
- * `/business/procurement/7` → `/team/7`); null for the website's
- * pages.
+ * Pages of Partners that moved, as [old path, current path, how]. By
+ * default the pages under an old path move with it (`/selling/orders` →
+ * `/sell/orders`); `"page"` sends the page and anything under it to one
+ * page, `"exact"` matches only the page itself. `/selling` and
+ * `/selling/pickup` became Shop settings, `/selling/sales` Promotions and
+ * `/organization/*` `/settings/*` (owner, 30 October 2026); Get offers
+ * from shops was removed.
  */
-export const businessPath = (path: string) => {
-  if (PARTNERS_SECTION.test(path)) {
-    // Get offers from shops was removed (owner, 30 October 2026).
-    return GET_OFFERS.test(path) ? "/selling" : path;
-  }
-  if (!BUSINESS_PATH.test(path)) {
-    return null;
-  }
-  const page = path.replace(BUSINESS_PATH, "") || "/";
+const PARTNERS_MOVED: readonly (readonly [
+  string,
+  string,
+  ("exact" | "page")?,
+])[] = [
+  ["/procurement", "/team"],
+  ["/invoices", "/settings/invoices"],
+  ["/members", "/settings/members"],
+  ["/plus", "/team/plus"],
+  ["/billing", "/settings/billing"],
+  ["/selling/get-offers", "/sell/settings", "page"],
+  ["/selling/pickup", "/sell/settings", "page"],
+  ["/selling/sales", "/sell/promotions"],
+  ["/selling", "/sell/settings", "exact"],
+  ["/selling", "/sell"],
+  ["/organization", "/settings"],
+];
+
+/** The current address of a page at the root of Partners' site. */
+const currentPartnersPage = (page: string) => {
   const url = new URL(page, "http://site.invalid");
-  for (const [from, to] of PARTNERS_MOVED) {
-    if (url.pathname === from || url.pathname.startsWith(`${from}/`)) {
+  const rest = `${url.search}${url.hash}`;
+  for (const [from, to, how] of PARTNERS_MOVED) {
+    const under = url.pathname.startsWith(`${from}/`);
+    if (url.pathname === from || (under && how === "page")) {
+      return `${to}${rest}`;
+    }
+    if (under && !how) {
       return `${to}${page.slice(from.length)}`;
     }
   }
   return page;
+};
+
+/**
+ * The page of Partners a stored link names, at its current address:
+ * links under `/business…` are its pages, which sit at the root of its own
+ * site (`/business/invoices` → `/settings/invoices`,
+ * `/business/procurement/7` → `/team/7`), and its sections stored without
+ * the prefix (`/selling/auctions` → `/sell/auctions`); null for the
+ * website's pages.
+ */
+export const businessPath = (path: string) => {
+  if (PARTNERS_SECTION.test(path)) {
+    return currentPartnersPage(path);
+  }
+  if (!BUSINESS_PATH.test(path)) {
+    return null;
+  }
+  return currentPartnersPage(path.replace(BUSINESS_PATH, "") || "/");
 };

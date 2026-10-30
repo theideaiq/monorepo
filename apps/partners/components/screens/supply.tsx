@@ -175,7 +175,7 @@ const Earnings = ({ sellerId }: { readonly sellerId: string }) => {
         <CardTitle>{t("title")}</CardTitle>
         <CardDescription>
           {t("description")}{" "}
-          <Link className="underline" href="/selling/payouts">
+          <Link className="underline" href="/sell/payouts">
             {t("payouts")}
           </Link>
         </CardDescription>
@@ -230,7 +230,7 @@ const SupplyBody = () => {
     return (
       <div className="grid max-w-xl gap-2">
         <p>{t("needsShop")}</p>
-        <Link className="text-sm underline" href="/selling">
+        <Link className="text-sm underline" href="/sell/settings">
           {t("toSelling")}
         </Link>
       </div>

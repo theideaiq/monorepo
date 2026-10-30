@@ -531,7 +531,7 @@ const AuctionsBody = () => {
  * ones and wins waiting for payment, and act on unpaid ones.
  */
 export const ShopAuctions = () => (
-  <BusinessShell feature="selling">
+  <BusinessShell feature="selling" page="auctions">
     <AuctionsBody />
   </BusinessShell>
 );

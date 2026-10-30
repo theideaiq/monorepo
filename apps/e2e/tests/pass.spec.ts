@@ -180,7 +180,7 @@ test.describe("The IDEA Pass", () => {
       await page.getByRole("button", { name: "Sign out" }).click();
       await expect(page).toHaveURL(`${urls.web}/sign-in`);
       // The shared session is gone for Partners too.
-      await page.goto(`${urls.app}/organization/invoices`);
+      await page.goto(`${urls.app}/settings/invoices`);
       await expect(page).toHaveURL(
         new RegExp(`^${urls.web}/sign-in\\?return_to=`)
       );
@@ -192,9 +192,9 @@ test.describe("The IDEA Pass", () => {
 
       // Another site of The IDEA (here Partners) is allowed too.
       await page.goto(
-        `${urls.web}/sign-in${returnTo(`${urls.app}/organization/invoices`)}`
+        `${urls.web}/sign-in${returnTo(`${urls.app}/settings/invoices`)}`
       );
-      await expect(page).toHaveURL(`${urls.app}/organization/invoices`);
+      await expect(page).toHaveURL(`${urls.app}/settings/invoices`);
 
       // Anywhere else falls back to the website.
       await page.goto(`${urls.web}/sign-in${returnTo("https://example.com/")}`);

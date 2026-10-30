@@ -404,7 +404,7 @@ const OffersBody = () => {
  * lets them expire), which listings take offers, and the last 30 days.
  */
 export const ShopOffers = () => (
-  <BusinessShell feature="selling">
+  <BusinessShell feature="selling" page="offers">
     <OffersBody />
   </BusinessShell>
 );

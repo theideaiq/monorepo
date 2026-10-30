@@ -18,7 +18,7 @@ export interface TelegramSummary {
 
 /**
  * Where a notification opens, in the member's language: a page of The IDEA
- * Business on its site (`/business/invoices` → `/organization/invoices` there), anything
+ * Business on its site (`/business/invoices` → `/settings/invoices` there), anything
  * else on the website.
  */
 export const notificationUrl = (link: string | null, locale: "ar" | "en") => {

@@ -109,38 +109,48 @@ incidents) is in `docs/platform`.
 - `apps/partners` — **Partners** (package `partners`, port 3000,
   `partners.theideaiq.com`), the organization dashboard, server-rendered
   with a `proxy.ts` (locale, session refresh, security headers): its pages
-  are at the root (`app/[locale]/(business)`): Home `/`, Selling
-  `/selling` (the shop's application, documents and payout details) with
-  `/selling/listings` (the shop's offers: find a product by ISBN, barcode or
-  title, add an offer or create the product, upload many from a
-  spreadsheet, make a bundle of the shop's own items, change copies and
-  price, flag wrong details), `/selling/orders` (the shop's order lines,
-  the customer only as "first name · area": ready for pickup at a branch,
-  print labels, out of stock), `/selling/returns` (requests to accept or
-  dispute within 48 hours, items to check once back, refused parcels to
-  confirm), `/selling/offers` (buyers' offers to accept, decline or
-  counter within 48 hours, and which listings take offers, with automatic
-  accept and decline amounts), `/selling/auctions` (putting a copy up for
-  auction with the shop's own photos, its bids, and a second chance or
-  closing after an unpaid win), `/selling/sales` (sale prices between two
-  days, quantity deals, student prices and taking part in campaigns), `/selling/payouts` (each weekly payout with
-  its statement) and `/selling/pickup` (its branches, each a Boxy pickup
-  location), Supply `/supply` (a supplier shop's copies lent to Plus and
-  kit units lent to game nights, with its fees and what each earned),
-  Opportunities `/opportunities` (jobs, internships, scholarships,
-  competitions and programs it lists in Club → Join, each reviewed by
-  The IDEA, with how many follow each), Perks `/perks`,
-  Team `/team` (bulk orders for the organization, with `/team/<id>` for a
-  request, and `/team/plus`, Plus for its people), Developers
-  `/developers` and Organization `/organization` (with
-  `/organization/members`, `/organization/billing`,
-  `/organization/invoices`), plus `/new`, `/documents/<kind>/<id>` and invitations. The
-  sidebar holds the organization switcher and these sections; Selling,
-  Supply, Opportunities, Perks, Team and Developers appear once the
-  organization adds them from Home (`organizations.features`,
-  `components/nav-items.ts`), and the bell is only in the top bar. It
-  holds no Staff code. No sign-in of its own: it sends
-  people to The IDEA Pass on the website with `return_to`.
+  are at the root (`app/[locale]/(business)`), in the menu's groups
+  (`docs/program/ux-overhaul.md`): Today `/` (key numbers: sales this
+  week, next payout, live listings, rating; then every task with its
+  deadline in deadline order with its action in the row; "List an item"
+  and "Upload a sheet"; and below, the cards that add sections); Sell:
+  `/sell/listings` (the shop's offers: find a product by ISBN, barcode or
+  title, then its photos (a new product needs at least one), then
+  condition, price and copies; upload many from a spreadsheet, make a
+  bundle of the shop's own items, search, filter and pause, change copies
+  and price, flag wrong details, and what is hidden until it has a
+  photo), `/sell/orders` (the shop's order lines, the customer only as
+  "first name · area": ready for pickup at a branch, print labels, out of
+  stock), `/sell/offers` (buyers' offers to accept, decline or counter
+  within 48 hours, and which listings take offers, with automatic accept
+  and decline amounts), `/sell/returns` (requests to accept or dispute
+  within 48 hours, items to check once back, refused parcels to confirm),
+  `/sell/auctions` (putting a copy up for auction with the shop's own
+  photos, its bids, and a second chance or closing after an unpaid win),
+  `/sell/promotions` (sale prices between two days, quantity deals,
+  student prices and taking part in campaigns), `/sell/payouts` (each
+  weekly payout with its statement) and `/sell/settings` (Shop settings:
+  the application, documents, payout details and pickup branches, each a
+  Boxy pickup location); Grow: Supply `/supply` (a supplier shop's copies
+  lent to Plus and kit units lent to game nights, with its fees and what
+  each earned), Opportunities `/opportunities` (jobs, internships,
+  scholarships, competitions and programs it lists in Club → Join, each
+  reviewed by The IDEA, with how many follow each), Perks `/perks`,
+  Affiliate `/affiliate`; Organization: Team `/team` (bulk orders for the
+  organization, with `/team/<id>` for a request, and `/team/plus`, Plus
+  for its people), Developers `/developers` and Settings `/settings`
+  (with `/settings/members`, `/settings/billing`, `/settings/invoices`),
+  plus `/new`, `/documents/<kind>/<id>` and invitations. Old addresses
+  (`/selling/*`, `/organization/*`) have no redirects; stored links map
+  through `businessPath`. Every page header is breadcrumb · title ·
+  status chip · actions at the end (primary last). The sidebar holds the
+  organization switcher and the menu (`components/nav-items.ts`):
+  sections not switched on (`organizations.features`) stay greyed with
+  "Add" (to the cards under Today), Sell is "Apply to sell" until the
+  shop is approved, and counts show only for offers, orders to pack and
+  returns; the bell is only in the top bar. It holds no Staff code. No
+  sign-in of its own: it sends people to The IDEA Pass on the website
+  with `return_to`.
 - `apps/staff` — **Staff** (package `staff`, port 3003,
   `staff.theideaiq.com`), everything The IDEA's team uses, server-rendered
   with a `proxy.ts`:

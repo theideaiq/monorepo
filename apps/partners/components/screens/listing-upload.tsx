@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@repo/design-system/components/ui/table";
 import { formatNumber } from "@repo/internationalization/format";
-import { DownloadIcon } from "lucide-react";
+import { DownloadIcon, ImageOffIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type ChangeEvent, useId, useState } from "react";
 import {
@@ -364,6 +364,10 @@ export const ListingUpload = ({ sellerId }: { readonly sellerId: string }) => {
         </div>
         <p className="text-muted-foreground text-xs">
           {t("columns", { categories: categoryList })}
+        </p>
+        <p className="flex items-start gap-2 rounded-md border bg-surface-sunken p-3 text-sm">
+          <ImageOffIcon aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+          {t("photoHint")}
         </p>
         {matchUpload.isPending ? (
           <p className="text-muted-foreground text-sm" role="status">

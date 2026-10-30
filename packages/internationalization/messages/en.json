@@ -1414,7 +1414,22 @@
       "selling": "Selling",
       "supply": "Supply",
       "opportunities": "Opportunities",
-      "affiliate": "Affiliate"
+      "affiliate": "Affiliate",
+      "today": "Today",
+      "sell": "Sell",
+      "grow": "Grow",
+      "listings": "Listings",
+      "offers": "Offers",
+      "returns": "Returns",
+      "auctions": "Auctions",
+      "promotions": "Promotions",
+      "payouts": "Payouts",
+      "shopSettings": "Shop settings",
+      "applyToSell": "Apply to sell",
+      "add": "Add",
+      "addSection": "Add {section}",
+      "toDo": "need you",
+      "breadcrumb": "Where you are"
     },
     "roles": {
       "owner": "Owner",
@@ -2281,12 +2296,56 @@
         "plan": "Partners plan: {plan}",
         "noPlan": "No Partners plan yet. See plans"
       },
+      "today": {
+        "numbers": {
+          "title": "Key numbers",
+          "salesWeek": "Sales this week",
+          "nextPayout": "Next payout",
+          "nextPayoutDate": "For the week to {date}",
+          "noPayout": "None due",
+          "liveListings": "Live listings",
+          "rating": "Rating",
+          "ratingValue": "{average} of 5",
+          "ratingCount": "Reviews: {count}",
+          "noRating": "No reviews yet"
+        },
+        "tasks": {
+          "title": "Needs you",
+          "empty": "Nothing needs you right now.",
+          "dueBy": "By {time}",
+          "overdue": "Overdue since {time}",
+          "order": "Order {number}",
+          "auction": "Auction {number}",
+          "kinds": {
+            "offer": "Answer an offer",
+            "pack": "Pack an order",
+            "returnAnswer": "Answer a return",
+            "returnCheck": "Check a return",
+            "parcelBack": "Confirm a parcel back",
+            "unpaidAuction": "Unpaid auction win",
+            "needsPhoto": "Hidden until it has a photo",
+            "quotes": "Quotes to answer: {count}",
+            "invoices": "Unpaid invoices: {count}"
+          },
+          "actions": {
+            "offer": "Answer",
+            "pack": "Pack",
+            "returnAnswer": "Answer",
+            "returnCheck": "Check",
+            "parcelBack": "Confirm",
+            "unpaidAuction": "Decide",
+            "needsPhoto": "See listing",
+            "quotes": "Answer",
+            "invoices": "See invoices"
+          }
+        }
+      },
       "organization": {
         "title": "Organization"
       },
       "sections": {
         "title": "Add to your organization",
-        "description": "Switch on what your organization does with The IDEA. You can turn sections off again in Organization.",
+        "description": "Switch on what your organization does with The IDEA. You can turn sections off again in Settings.",
         "add": "Add",
         "remove": "Remove",
         "failed": "That didn't save. Please try again.",
@@ -2294,7 +2353,7 @@
         "settingsTitle": "Sections",
         "settingsDescription": "The sections your organization uses in Partners.",
         "off": "{section} isn't switched on for {organization}.",
-        "offManage": "Add it from Home.",
+        "offManage": "Add it from Today.",
         "offAsk": "Ask an owner or admin to add it.",
         "perks": {
           "description": "Offer perks to Pass members and check their cards at your counter."
@@ -3283,8 +3342,8 @@
       "listings": {
         "title": "Listings",
         "notApproved": "Listings open once The IDEA approves your shop.",
-        "addTitle": "Add a listing",
-        "addDescription": "Scan or type the ISBN or barcode, or search by title. If the product is already on The IDEA, pick it and add your offer.",
+        "addTitle": "List an item",
+        "addDescription": "Find it first: scan or type the ISBN or barcode, or search by title. Then the photos, then condition, price and copies.",
         "find": "ISBN, barcode or title",
         "findPlaceholder": "ISBN, barcode or title",
         "findButton": "Find",
@@ -3292,7 +3351,7 @@
         "noMatch": "Nothing on The IDEA matches that title.",
         "noCodeMatch": "No product has that barcode yet.",
         "createOpen": "Create the product",
-        "createHint": "It goes live with your offer at once. The IDEA checks new products and may fix their details; you can't edit them later, only flag what's wrong.",
+        "createHint": "Not on The IDEA yet? Describe it. It goes live with your offer once it has a photo and passes The IDEA's checks. The IDEA may fix its details; you can't edit them later, only flag what's wrong.",
         "category": "Category",
         "chooseCategory": "Choose a category",
         "barcode": "ISBN or barcode",
@@ -3319,6 +3378,45 @@
         "none": "No listings yet.",
         "copies": "{available} available · {sold} sold",
         "notLive": "Not live yet",
+        "hiddenBadge": "Hidden: needs a photo",
+        "select": "Select {name}",
+        "search": "Search your listings",
+        "noneShown": "No listings match.",
+        "listItem": "List an item",
+        "uploadSheet": "Upload a sheet",
+        "filters": {
+          "label": "Show",
+          "all": "All ({count})",
+          "live": "Live ({count})",
+          "hidden": "Hidden ({count})",
+          "paused": "Paused ({count})"
+        },
+        "bulk": {
+          "selected": "Selected: {count}",
+          "pause": "Pause",
+          "clear": "Clear"
+        },
+        "steps": {
+          "find": "Find it",
+          "photos": "Photos",
+          "offer": "Condition, price and copies"
+        },
+        "photos": {
+          "hint": "At least one photo of the item, up to 10 (JPG, PNG or WebP, up to 5 MB each). The Store shows no product without one.",
+          "add": "Add a photo",
+          "addMore": "Add more photos",
+          "needed": "Add a photo",
+          "photo": "Photo {number}",
+          "remove": "Remove photo {number}",
+          "refused": "Some files weren't added: use JPG, PNG or WebP up to 5 MB.",
+          "none": "This product has no photo yet.",
+          "productPhoto": "{name}, photo {number}",
+          "productHint": "Buyers see the product's photos."
+        },
+        "hidden": {
+          "title": "Hidden until they have a photo ({count})",
+          "description": "These products wait as drafts, and the Store doesn't show them until they have a photo. Use “Details are wrong” on the listing to tell The IDEA."
+        },
         "problems": {
           "price": "Enter a price of at least {min} IQD.",
           "quantity": "Enter 0 to {max} copies.",
@@ -3337,6 +3435,7 @@
           "file": "CSV file",
           "template": "Download the template",
           "columns": "Columns: barcode, condition (new, open box, used or refurbished; new if empty), price, quantity and sku. For a barcode nobody has listed, also name_en, name_ar and category ({categories}).",
+          "photoHint": "A row that creates a new product has no photo, so that product waits as a draft, hidden from the Store, until a photo is added. Rows for products already on The IDEA go live at once. Today and Listings show what still needs a photo.",
           "checking": "Checking the rows…",
           "summary": "Found: {matched} · New products: {new} · To fix: {errors}",
           "offer": "{condition} · {price} · Copies: {copies}",
@@ -3355,7 +3454,7 @@
           },
           "status": {
             "matched": "Found",
-            "new": "New product",
+            "new": "New product (a draft until it has a photo)",
             "needsDetails": "Needs details",
             "error": "Fix this row"
           },
@@ -3428,7 +3527,7 @@
         }
       },
       "pickup": {
-        "title": "Pickup",
+        "title": "Pickup branches",
         "description": "Where couriers collect your parcels, and who they call. Each branch is a pickup location with Boxy.",
         "notApproved": "Pickup branches can be added once your shop is approved.",
         "none": "No branches yet.",

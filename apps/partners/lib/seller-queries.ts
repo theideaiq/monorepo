@@ -30,9 +30,10 @@ const unwrap = <T>({ data, error }: { data: T; error: unknown }) => {
 };
 
 /** The organization's shop with its details (null details for members). */
-export const useSeller = (organizationId: string) => {
+export const useSeller = (organizationId: string, enabled = true) => {
   const { supabase } = useAuth();
   return useQuery({
+    enabled: Boolean(organizationId) && enabled,
     queryFn: async () => {
       const seller = unwrap(
         await supabase

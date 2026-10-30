@@ -255,7 +255,7 @@ const eventFor = ({
   event,
   link,
 }: Pick<NotificationRow, "event"> & { link?: string | null }) =>
-  (link?.startsWith("/selling") ? SHOP_VARIANTS[event] : undefined) ?? event;
+  (link?.startsWith("/sell") ? SHOP_VARIANTS[event] : undefined) ?? event;
 
 export const describeNotification = (
   notification: Pick<NotificationRow, "data" | "event" | "kind"> & {
