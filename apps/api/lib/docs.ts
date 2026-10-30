@@ -1,5 +1,5 @@
 /**
- * The developer docs (apps/docs, hosted on Mintlify) at the root of this
+ * The developer docs (apps/api/docs, hosted on Mintlify) at the root of this
  * site, by rewrite: api.theideaiq.com/ is the docs, while the API keeps
  * its own paths. The rewrites are fallbacks, so every route of this app
  * (`/oidc/*`, `/webhooks/*`, `/cron/*`, …) answers first.

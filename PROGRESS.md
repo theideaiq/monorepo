@@ -221,8 +221,8 @@ decisions with a date.
       mode, then turn on Staff → Catalog → Delivery → "Refund returns
       through Wayl".
 
-- [ ] **Developer docs:** connect `apps/docs` to Mintlify (mintlify.com →
-      new deployment from GitHub, monorepo path `apps/docs`; or `bunx mint
+- [ ] **Developer docs:** connect `apps/api/docs` to Mintlify (mintlify.com →
+      new deployment from GitHub, monorepo path `apps/api/docs`; or `bunx mint
       login` then publish), and in its Custom domain settings turn on
       "Host at" `api.theideaiq.com` with no base path. Then set `DOCS_URL`
       to the deployment's `https://<subdomain>.mintlify.site` on the
@@ -1442,7 +1442,7 @@ steps need Xcode, Android Studio and the store/Firebase accounts
     carry the landmark and the pin to the courier.
 
 - 2026-10-28: Program Revision v2, item 5: developer docs at
-  `api.theideaiq.com`. `apps/docs` (Mintlify, now `docs.json`) holds The
+  `api.theideaiq.com`. `apps/api/docs` (Mintlify, now `docs.json`) holds The
   IDEA's own docs: Introduction, Quickstart, Sign in with The IDEA Pass
   (overview, scopes, consent, tokens, client authentication), the Pass card
   (showing it, the live card on your site, door checks), registering an app,

@@ -64,7 +64,7 @@ export const env = withPresets(
       // Shared secret Vercel Cron sends as a Bearer token. Generate with
       // `openssl rand -hex 32`. Cron routes reject every request when unset.
       CRON_SECRET: z.string().min(32).optional(),
-      // The developer docs (apps/docs) on Mintlify, served at this site's
+      // The developer docs (apps/api/docs) on Mintlify, served at this site's
       // root by rewrite (https://<subdomain>.mintlify.site). "/" is a 404
       // while unset.
       DOCS_URL: z.url().optional(),

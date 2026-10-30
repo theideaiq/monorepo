@@ -12,9 +12,10 @@ addons.setConfig({
     barBg: "#ffffff",
     barSelectedColor: "#d81b60",
     base: "light",
+    // The brand lockup (assets/brand, served next to the build).
+    brandImage: "brand/lockup-on-light.svg",
     brandTarget: "_self",
-    brandTitle:
-      '<span style="display:inline-flex;align-items:center;gap:8px;font-weight:700"><span style="display:inline-block;width:14px;height:14px;border-radius:22%;background:#d81b60"></span>The IDEA Design</span>',
+    brandTitle: "The IDEA Design",
     brandUrl: "/",
     colorPrimary: "#d81b60",
     colorSecondary: "#d81b60",
