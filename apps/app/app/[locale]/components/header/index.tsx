@@ -21,9 +21,11 @@ export const Header = () => {
   const pathname = usePathname();
 
   // Opaque, not translucent: the dark Plus pages scroll under it, and a see-through
-  // bar lets them wash out its links.
+  // bar lets them wash out its links. In the apps the page runs under the
+  // status bar, so the header pads by its height (--safe-area-inset-top from
+  // Capacitor's SystemBars on Android, env() on iOS and the web).
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
+    <header className="sticky top-0 z-40 w-full border-b bg-background pt-[var(--safe-area-inset-top,env(safe-area-inset-top))]">
       <div className="container mx-auto flex min-h-16 items-center gap-4 px-4">
         <Link aria-label={t("home")} className="shrink-0" href="/">
           <BrandLogo />

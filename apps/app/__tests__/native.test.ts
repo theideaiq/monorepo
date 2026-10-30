@@ -13,7 +13,9 @@ import {
 import { shareLink } from "../lib/native/share";
 import {
   isNativeShellUserAgent,
+  PUSH_USER_AGENT,
   SHELL_USER_AGENT,
+  shellHasPush,
 } from "../lib/native/user-agent";
 import { shellScript } from "../native/prepare";
 
@@ -55,11 +57,16 @@ const supabase = {
   },
 } as unknown as SupabaseClient<Database>;
 
-const asNative = (platform: "ios" | "android") => {
+/** The app shell; `push` is a build with Firebase's config (the default). */
+const asNative = (platform: "ios" | "android", push = true) => {
   (globalThis as { Capacitor?: unknown }).Capacitor = {
     getPlatform: () => platform,
     isNativePlatform: () => true,
   };
+  vi.stubGlobal("navigator", {
+    ...navigator,
+    userAgent: `Mozilla/5.0 ${SHELL_USER_AGENT}${push ? ` ${PUSH_USER_AGENT}` : ""}`,
+  });
 };
 
 beforeEach(() => {
@@ -91,6 +98,16 @@ describe("capacitor.config", () => {
     expect(isNativeShellUserAgent(`${safari} ${SHELL_USER_AGENT}`)).toBe(true);
     expect(isNativeShellUserAgent(safari)).toBe(false);
     expect(isNativeShellUserAgent(null)).toBe(false);
+    expect(shellHasPush(`${safari} ${SHELL_USER_AGENT}`)).toBe(false);
+    expect(
+      shellHasPush(`${safari} ${SHELL_USER_AGENT} ${PUSH_USER_AGENT}`)
+    ).toBe(true);
+  });
+
+  test("only a build with Firebase's config says it takes push", () => {
+    // Neither native project holds the config in the repository.
+    expect(capacitorConfig.android?.appendUserAgent).toBe(SHELL_USER_AGENT);
+    expect(capacitorConfig.ios?.appendUserAgent).toBe(SHELL_USER_AGENT);
   });
 
   test("prefers CAP_SERVER_URL, then NEXT_PUBLIC_WEB_URL, then production", () => {
@@ -138,6 +155,15 @@ describe("registerPushNotifications", () => {
     const onOpen = vi.fn();
     const dispose = await registerPushNotifications({ onOpen, supabase });
     dispose();
+    expect(plugin.listeners.size).toBe(0);
+  });
+
+  test("never asks in a build without Firebase's config (it would crash)", async () => {
+    asNative("android", false);
+    const { PushNotifications } = await import("@capacitor/push-notifications");
+    await registerPushNotifications({ onOpen: vi.fn(), supabase });
+    expect(PushNotifications.checkPermissions).not.toHaveBeenCalled();
+    expect(PushNotifications.register).not.toHaveBeenCalled();
     expect(plugin.listeners.size).toBe(0);
   });
 

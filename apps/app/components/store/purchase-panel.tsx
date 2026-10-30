@@ -567,7 +567,7 @@ const Actions = ({
       {primary ? <PrimaryAction className="flex-1" primary={primary} /> : null}
     </div>
     {/* Phones: Save at the start, the one primary at the end. */}
-    <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-30 flex gap-2 border-t bg-background/95 p-3 backdrop-blur md:hidden">
+    <div className="fixed inset-x-0 bottom-[calc(4rem+var(--safe-area-inset-bottom,env(safe-area-inset-bottom)))] z-30 flex gap-2 border-t bg-background/95 p-3 backdrop-blur md:hidden">
       <WishlistButton productId={productId} withLabel />
       {primary ? <PrimaryAction className="flex-1" primary={primary} /> : null}
     </div>

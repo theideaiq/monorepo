@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { CapacitorConfig } from "@capacitor/cli";
 import project from "@repo/config/project.json" with { type: "json" };
 
@@ -54,19 +56,32 @@ export const resolveServerUrl = (env: ServerEnv) => {
  */
 const server = resolveServerUrl(process.env);
 
+// Firebase's config is copied into each native project by hand and never
+// committed (ARCHITECTURE_AND_INTEGRATIONS.md 3.5). Only a build that has it
+// tells the website it can take push (lib/native/user-agent.ts).
+const SHELL_USER_AGENT = "TheIDEA/1";
+const withPush = (file: string) =>
+  existsSync(join(process.cwd(), file))
+    ? `${SHELL_USER_AGENT} TheIDEA-Push/1`
+    : SHELL_USER_AGENT;
+
 // The IDEA Pink: the splash, the shell behind the WebView and the status
 // bar (light icons), per docs/brand/DESIGN_SYSTEM.md section 5.
 const BACKGROUND = "#D81B60";
 
 const config: CapacitorConfig = {
+  android: {
+    appendUserAgent: withPush("android/app/google-services.json"),
+  },
   // Lets the site's server recognize the shell (lib/native/user-agent.ts), e.g.
   // to hide digital-goods checkout and ad pixels before any JavaScript runs.
   // Keep in sync with SHELL_USER_AGENT there (a test checks it).
-  appendUserAgent: "TheIDEA/1",
+  appendUserAgent: SHELL_USER_AGENT,
   appId: project.bundleId,
   appName: "The IDEA",
   backgroundColor: BACKGROUND,
   ios: {
+    appendUserAgent: withPush("ios/App/App/GoogleService-Info.plist"),
     // The WebView draws under the status bar; the site pads with the
     // --safe-area-inset-* variables.
     contentInset: "never",

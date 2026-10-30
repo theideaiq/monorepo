@@ -6,6 +6,7 @@ import {
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { callApi } from "../api";
 import { detectPlatform } from "../platform";
+import { shellHasPush } from "./user-agent";
 
 /**
  * Push notifications in the iOS/Android apps (`@capacitor/push-notifications`).
@@ -35,7 +36,9 @@ export const registerPushNotifications = async ({
   supabase,
 }: PushOptions): Promise<() => void> => {
   const platform = detectPlatform();
-  if (platform === "web") {
+  // An app built without Firebase's config can't register: asking would
+  // crash it, so it never asks.
+  if (platform === "web" || !shellHasPush(navigator.userAgent)) {
     return () => undefined;
   }
 
