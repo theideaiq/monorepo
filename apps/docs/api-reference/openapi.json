@@ -564,7 +564,7 @@
     "/oidc/card/check": {
       "post": {
         "summary": "Check a Pass card",
-        "description": "Check a scanned live card (its QR code reads IDEA:<member number>:<6 digits>). Authenticate as your app; call it from your server.",
+        "description": "Check a scanned card (its QR code reads IDEA:<member number>:<6 digits> on the live card, or IDEA:<member number>:W<30 characters> in Apple Wallet). Authenticate as your app; call it from your server.",
         "security": [
           {
             "clientBasic": []

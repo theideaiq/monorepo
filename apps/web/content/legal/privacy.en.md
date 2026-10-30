@@ -31,6 +31,7 @@ The IDEA IQ Inc. ("The IDEA", "we", "us") respects your privacy. This policy exp
 - **Wayl:** the payment status, amount and reference. Never your full card or wallet details.
 - **Boxy,** our courier: the delivery status of your parcel.
 - **Google Wallet:** if you add your card to it.
+- **Apple Wallet:** if you add your card to it. Apple Wallet's card has a code that doesn't change; you can turn it off in Your Pass at any time.
 
 ## 2. Why we use it
 

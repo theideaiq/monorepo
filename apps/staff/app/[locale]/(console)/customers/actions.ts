@@ -84,6 +84,8 @@ export const setSuspended = staffAction(
 );
 
 export interface CheckedPass {
+  /** Apple Wallet's fixed code rather than the 30-second one. */
+  fixedCode: boolean;
   memberNumber: number | null;
   memberSince: string | null;
   name: string | null;
@@ -94,7 +96,8 @@ export interface CheckedPass {
 /**
  * Checks a The IDEA Pass card at the counter: the scanned QR code
  * (`IDEA:<member number>:<code>`), or the member number and the 6-digit
- * code typed in. `check_pass` accepts only a current code.
+ * code typed in. `check_pass` accepts a current code, or an Apple Wallet
+ * card's fixed code.
  */
 export const checkPass = staffAction(
   "customers",
@@ -110,6 +113,7 @@ export const checkPass = staffAction(
     );
     const row = data?.[0];
     const result: CheckedPass = {
+      fixedCode: row?.card === "wallet",
       memberNumber: row?.member_number ?? null,
       memberSince: row?.member_since ?? null,
       name: row?.full_name ?? null,

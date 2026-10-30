@@ -4,7 +4,10 @@ description: "Scan the live card's QR code at your door."
 ---
 
 The live card's QR code reads `IDEA:<member number>:<6 digits>`; the
-digits change every 30 seconds. Send what you scanned from your server:
+digits change every 30 seconds. A card in Apple Wallet reads
+`IDEA:<member number>:W<30 characters>` instead, a code that doesn't
+change until the member adds the card again or turns it off. Send what you
+scanned, as it is, from your server:
 
 ```bash
 curl https://api.theideaiq.com/oidc/card/check \

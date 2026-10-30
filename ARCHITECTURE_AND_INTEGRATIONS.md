@@ -489,8 +489,28 @@ session in the shared cookie.
   create an issuer in the Google Pay & Wallet Console, enable the Google
   Wallet API in a Google Cloud project, create a service account there,
   add its email as a user of the issuer, and put its JSON key (or base64
-  of it) on the `api` project. Apple Wallet needs an Apple Developer pass
-  certificate and is not built yet.
+  of it) on the `api` project.
+- **Apple Wallet.** Apple Wallet can't change the code every 30 seconds,
+  so its card carries a fixed one, `IDEA:<member number>:W<30 hex
+  digits>`, kept as a hash (`private.wallet_cards`); `check_pass()` and
+  `pass_holder()` accept it, and `check_pass()` returns `card` = `wallet`
+  so Staff see a fixed code was shown. `POST /pass/apple-wallet` (the
+  member's token) issues a new card (`issue_wallet_card()`: the one
+  before stops working) and returns a link that works for five minutes;
+  `GET /pass/apple-wallet?ticket=…` serves the signed `.pkpass` (pass.json,
+  the icon and logo from `lib/pass/apple-wallet-images.ts`, the manifest
+  and a detached PKCS #7 signature with node-forge). The website shows
+  "Add to Apple Wallet" on Apple devices, with "Turn it off"
+  (`remove_wallet_card()`). Set up: in Apple Developer → Certificates,
+  Identifiers & Profiles, create a Pass Type ID (`pass.com.theideaiq.pass`)
+  and its certificate; export the certificate and its private key as PEM
+  (`openssl pkcs12 -in pass.p12 -clcerts -nokeys` and `-nocerts -nodes`),
+  download Apple's WWDR G4 intermediate (convert it to PEM), and put them
+  (PEM or base64 of it) in `APPLE_WALLET_CERTIFICATE`, `APPLE_WALLET_KEY`
+  and `APPLE_WALLET_WWDR`, with `APPLE_WALLET_PASS_TYPE_ID` and
+  `APPLE_WALLET_TEAM_ID`, on the `api` project. Apple's pass web service
+  (pushing updates to the card) isn't built: a card turned off stays in
+  Apple Wallet but is refused when scanned.
 
 ### Staff
 
@@ -2233,6 +2253,7 @@ PostHog ids.
 | `CRON_SECRET` | Feature | At least 32 characters (`openssl rand -hex 32`). Vercel sends it to the cron routes; without it every cron call is rejected. |
 | `FCM_SERVICE_ACCOUNT` | Feature | Firebase service account JSON (or base64 of it) for push notifications to the iOS/Android apps (3.5); push is off without it. **Server only.** |
 | `GOOGLE_WALLET_ISSUER_ID`, `GOOGLE_WALLET_SERVICE_ACCOUNT` | Feature | Google Wallet issuer ID and a service account key (JSON or base64) added to the issuer, for "Add to Google Wallet" on The IDEA Pass card; the button is hidden without them. **Server only.** |
+| `APPLE_WALLET_PASS_TYPE_ID`, `APPLE_WALLET_TEAM_ID`, `APPLE_WALLET_CERTIFICATE`, `APPLE_WALLET_KEY`, `APPLE_WALLET_WWDR` | Feature | The Pass Type ID, team ID, its certificate and unencrypted private key, and Apple's WWDR G4 intermediate (each PEM or base64), for "Add to Apple Wallet" on The IDEA Pass card; the button is hidden without them. **Server only.** |
 | `PUSH_WEBHOOK_SECRET` | Feature | At least 32 characters; the Supabase database webhook on `notifications` sends it to `POST /webhooks/notifications` (3.5). |
 | `WAYL_API_TOKEN`, `WAYL_WEBHOOK_SECRET` | Feature | Payments. Checkout fails in production without them. |
 | `WAYL_ENV` | Feature | `live` in Production, `test` in Preview |
