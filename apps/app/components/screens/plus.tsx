@@ -24,7 +24,6 @@ import { CheckIcon, CrownIcon, MoveRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useId, useState } from "react";
 import { AgeAwareError } from "@/components/age-aware-error";
-import { DuoPanel } from "@/components/plus/duo";
 import { JoinPlus } from "@/components/plus/join-plus";
 import { ManagePlus } from "@/components/plus/plus-tools";
 import { Rail } from "@/components/shop/rail";
@@ -606,7 +605,6 @@ const PlanPageMember = () => {
             <MoveRight aria-hidden="true" className="size-4 rtl:rotate-180" />
           </Link>
         </div>
-        <DuoPanel />
       </section>
     </div>
   );
