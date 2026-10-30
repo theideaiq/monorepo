@@ -60,13 +60,13 @@ insert into public.product_categories (id, slug, name_ar, name_en, position) val
   ('82000000-0000-0000-0000-0000000000c3', 'phones', 'الهواتف', 'Phones', 3),
   ('82000000-0000-0000-0000-0000000000c4', 'music', 'الموسيقى', 'Music', 4);
 
-insert into public.products (id, slug, kind, status, category_id, name_ar, name_en, price, stock_count) values
+insert into public.products (id, slug, kind, status, category_id, name_ar, name_en, price, stock_count, images) values
   ('82000000-0000-0000-0000-0000000000a1', 'astro-bot', 'sale', 'active', '82000000-0000-0000-0000-0000000000c1',
-    'Astro Bot', 'Astro Bot', 89750, 3),
+    'Astro Bot', 'Astro Bot', 89750, 3, '{astro.jpg}'),
   ('82000000-0000-0000-0000-0000000000a2', 'dune-part-two', 'rental', 'active', '82000000-0000-0000-0000-0000000000c2',
-    'Dune: Part Two', 'Dune: Part Two', 24750, 2),
+    'Dune: Part Two', 'Dune: Part Two', 24750, 2, '{dune.jpg}'),
   ('82000000-0000-0000-0000-0000000000a3', 'adele-21', 'sale', 'draft', '82000000-0000-0000-0000-0000000000c4',
-    'Adele – 21', 'Adele – 21', 39750, 1);
+    'Adele – 21', 'Adele – 21', 39750, 1, '{adele.jpg}');
 
 -- ── Rentable ───────────────────────────────────────────────────────────────
 

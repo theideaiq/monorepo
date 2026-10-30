@@ -200,8 +200,8 @@ select results_eq(
   $$ select p.status::text, v.barcode, (select count(*)::int from public.product_variants v2 where v2.product_id = p.id)
      from public.products p join public.product_variants v on v.product_id = p.id
      where p.name_en = 'Foundation' $$,
-  $$ values ('active', '9780553293357', 1) $$,
-  'It goes live at once with one variant carrying the barcode'
+  $$ values ('draft', '9780553293357', 1) $$,
+  'It is saved with one variant carrying the barcode, as a draft until it has a photo'
 );
 select is(
   (select status::text from public.products where name_en = 'Replica sword'), 'draft',
