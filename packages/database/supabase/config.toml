@@ -303,18 +303,24 @@ content_path = "./supabase/templates/email_change.html"
 # content_path = "./supabase/templates/password_changed_notification.html"
 
 [auth.sms]
-# Phone sign-in is switched off (decision 2026-10-24: email codes, no SMS
-# plan). The phone code path (@repo/auth/otp sendPhoneOtp/verifyPhoneOtp,
-# functions/send-sms) is kept so it can return: set enable_signup = true,
-# enable the provider below (or the Send SMS hook) and add test numbers.
-enable_signup = false
+# The phone provider: a signed-in Pass proves a number with a phone change
+# (updateUser({ phone, channel }) then verifyOtp type "phone_change"), the
+# code on WhatsApp or by SMS through Twilio Verify (@repo/auth/otp). The
+# database refuses a Pass that would start from a phone alone. Production:
+# Authentication → Sign In / Providers → Phone, provider Twilio Verify
+# (ARCHITECTURE_AND_INTEGRATIONS.md, "Phone verification").
+enable_signup = true
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = true
-# Template for sending OTP to users. The Send SMS hook (functions/send-sms)
-# builds its own bilingual message when enabled.
+# Template for sending OTP to users (Twilio Verify uses its own).
 template = "رمز التحقق: {{ .Code }} — Your code: {{ .Code }}"
 # Controls the minimum amount of time that must pass before sending another sms otp.
 max_frequency = "5s"
+
+# Numbers whose code is fixed locally; they never reach the provider (the
+# end-to-end journeys verify 0770 123 4567 with it).
+[auth.sms.test_otp]
+9647701234567 = "123456"
 
 # Configure logged in session timeouts.
 # [auth.sessions]
@@ -322,14 +328,6 @@ max_frequency = "5s"
 # timebox = "24h"
 # Force log out if the user has been inactive longer than the specified duration.
 # inactivity_timeout = "8h"
-
-# Sends auth SMS through functions/send-sms (local gateways, WhatsApp, failover)
-# instead of the built-in providers. Generate the secret in the dashboard
-# (Authentication → Hooks) and store it as SEND_SMS_HOOK_SECRET.
-# [auth.hook.send_sms]
-# enabled = true
-# uri = "http://host.docker.internal:54321/functions/v1/send-sms"
-# secrets = "env(SEND_SMS_HOOK_SECRET)"
 
 # This hook runs before a new user is created and allows developers to reject the request based on the incoming user object.
 # [auth.hook.before_user_created]
@@ -342,13 +340,12 @@ max_frequency = "5s"
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
 
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
-# Disabled with phone sign-in. To bring it back locally, enable it with these
-# placeholder credentials and add [auth.sms.test_otp] numbers (they never
-# reach the provider). Never commit real credentials.
-[auth.sms.twilio]
-enabled = false
+# Twilio Verify with placeholder credentials: locally only the test numbers
+# above get a code. Never commit real credentials.
+[auth.sms.twilio_verify]
+enabled = true
 account_sid = "AC00000000000000000000000000000000"
-message_service_sid = "MG00000000000000000000000000000000"
+message_service_sid = "VA00000000000000000000000000000000"
 auth_token = "local-development-placeholder"
 
 # Multi-factor-authentication is available to Supabase Pro plan.

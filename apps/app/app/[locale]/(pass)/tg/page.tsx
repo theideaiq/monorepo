@@ -1,3 +1,4 @@
+import { enabledProviders } from "@repo/auth/social";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { TelegramMiniApp } from "@/components/pass/telegram-mini-app";
@@ -16,7 +17,9 @@ const MiniAppPage = async () => {
       <h1 className="text-center font-semibold text-2xl tracking-tight">
         {t("title")}
       </h1>
-      <TelegramMiniApp apiUrl={env.NEXT_PUBLIC_API_URL ?? null} />
+      <TelegramMiniApp
+        providers={enabledProviders(env.NEXT_PUBLIC_AUTH_PROVIDERS)}
+      />
     </div>
   );
 };

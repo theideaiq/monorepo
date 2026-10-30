@@ -209,9 +209,10 @@ decisions with a date.
       extended quota request (development mode allows 25 listed users).
 - [ ] **Affiliates:** Staff → Finance → Affiliates is for marketing and
       finance; review the rates there before approving the first one.
-- [ ] **Twilio Verify (phone codes):** create a Twilio account and a
-      Verify service; set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and
-      `TWILIO_VERIFY_SERVICE_SID` on the theideaiq-api Vercel project. For
+- [ ] **Twilio Verify through Supabase (phone codes):** create a Twilio
+      account and a Verify service; then Supabase → Authentication → Sign
+      In / Providers → Phone: on, provider Twilio Verify, with the Account
+      SID, Auth Token and Verify service SID (nothing on Vercel). For
       WhatsApp, add a WhatsApp sender to the Verify service (needs the
       verified Meta Business); until then codes go by SMS. Once codes
       arrive, turn on Staff → Catalogue → Settings → "Require a verified
@@ -260,11 +261,16 @@ decisions with a date.
       `https://theideaiq.com` (The IDEA Pass lives on the website) and add
       `https://theideaiq.com/**`, `https://partners.theideaiq.com/**` and
       `https://staff.theideaiq.com/**` to the redirect URLs.
-- [x] **Telegram sign-in** (done 2026-10-27): in @BotFather open the bot →
-      Login Widget, add the Redirect URI
-      `https://api.theideaiq.com/auth/telegram/callback`, then set
+- [ ] **Telegram sign-in through Supabase (since 30 Oct):** in @BotFather
+      open the bot → Login Widget and add the Allowed URL
+      `https://mzqpquaghjogbfhiufjv.supabase.co/auth/v1/callback` (the old
+      `https://api.theideaiq.com/auth/telegram/callback` can go). Keep
       `TELEGRAM_LOGIN_CLIENT_ID` and `TELEGRAM_LOGIN_CLIENT_SECRET` on the
-      Vercel api project. "Continue with Telegram" appears once they're set.
+      api project, press Staff → Telegram → Bot → Set up now (it creates
+      the `custom:telegram` provider in Supabase Auth), then add `telegram`
+      to `NEXT_PUBLIC_AUTH_PROVIDERS` on theideaiq-web and redeploy it.
+      Anyone who connected Telegram before connects it again in Pass →
+      Settings (two Passes on 30 Oct).
 - [ ] **Supabase, email codes (The IDEA Pass sign-in;
       `ARCHITECTURE_AND_INTEGRATIONS.md` 2.7):**
       - Authentication → Sign In / Providers → Email: enabled, Confirm
@@ -335,9 +341,9 @@ decisions with a date.
       (`/webhooks/payments` on the API host).
 - [x] **Telegram** (done 2026-10-27): on the API project set `TELEGRAM_BOT_TOKEN`,
       `TELEGRAM_WEBHOOK_SECRET` and, for sign-in, `TELEGRAM_LOGIN_CLIENT_ID`
-      and `TELEGRAM_LOGIN_CLIENT_SECRET` (Login Widget Allowed URL
-      `https://api.theideaiq.com/auth/telegram/callback`); redeploy, then
-      Staff → Telegram → Bot → Set up now.
+      and `TELEGRAM_LOGIN_CLIENT_SECRET` (Login Widget Allowed URL: now
+      Supabase's callback, see "Telegram sign-in through Supabase");
+      redeploy, then Staff → Telegram → Bot → Set up now.
 - [x] **Primary domain:** `theideaiq.com` serves the website and
       `www.theideaiq.com` redirects to it (308), as on auibsal.org; every
       setting (`NEXT_PUBLIC_WEB_URL`, Supabase, Google, Telegram, The IDEA

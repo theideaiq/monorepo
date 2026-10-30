@@ -326,14 +326,18 @@ session in the shared cookie.
   files (2.7).
 - **Staff** sign in the same way; Staff (`apps/staff`) and the database
   still require the authenticator-app step (AAL2) afterwards.
-- **Phone sign-in is switched off, not removed.** The phone provider is
-  disabled (`[auth.sms]` in `config.toml`, and in production). The phone
-  helpers stay: `@repo/auth/phone` (normalizing and formatting Iraqi
-  numbers, used for delivery addresses, invitations and the staff lookup),
-  `sendPhoneOtp`/`verifyPhoneOtp` in `@repo/auth/otp` and the Send SMS hook
-  (`functions/send-sms`). To bring phone sign-in back: enable the provider
-  (or the hook) and a phone form next to `EmailOtpForm` (the earlier
-  `PhoneOtpForm` is in git history, `packages/auth/components/phone-otp-form.tsx`).
+- **Every sign-in method is Supabase Auth** (migration
+  `20270322000000_auth_through_supabase.sql`): email codes and passwords,
+  Google and Apple, Telegram (the custom OIDC provider `custom:telegram`)
+  and phone codes (the phone provider, Twilio Verify). No app or API
+  issues sessions or sends codes itself. A Pass starts with an email: the
+  database refuses a Telegram or phone identity on a user without one
+  (`private.require_email_first`), so Telegram and phones join a Pass
+  from Settings. The phone helpers are `@repo/auth/phone` (normalizing and
+  formatting Iraqi numbers) and `@repo/auth/otp` (`sendPhoneVerification`
+  / `verifyPhoneVerification` for verifying a number, `sendPhoneOtp` /
+  `verifyPhoneOtp` for signing in with one; there is no phone sign-in form
+  yet).
 - **Shared session cookie.** `NEXT_PUBLIC_AUTH_COOKIE_DOMAIN=.theideaiq.com`
   makes the browser client, the server client and the proxy session refresh
   (`authCookieOptions()` in `packages/auth/cookies.ts`) write the
@@ -455,38 +459,37 @@ session in the shared cookie.
   (`product_reviews.photos`, public `reviews` bucket, "<user id>/…") of a
   bought or rented product earns 5 Bulbs once; `check_in_rsvp()` (editors)
   marks `event_rsvps.checked_in_at` and pays 10 Bulbs once per event.
-- **Telegram sign-in** (migration `20261202000000_telegram_login.sql`).
-  Telegram's OpenID Connect (core.telegram.org/bots/telegram-login), run
-  by the API with the bot's Client ID and Secret (`TELEGRAM_LOGIN_*`, from
-  @BotFather → Login Widget, whose Allowed URLs include
-  `<API URL>/auth/telegram/callback`). `GET /auth/telegram/start` keeps the
-  state, PKCE verifier and `return_to` in a signed 10-minute cookie and
-  sends the browser to Telegram (scope `openid profile
-  telegram:bot_access`); `GET /auth/telegram/callback` exchanges the code
-  and checks the ID token against Telegram's keys (`jose`,
-  `lib/telegram-login`). A Telegram account already linked
-  (`telegram_members.user_id`) signs in through a one-time magic-link token
-  (`auth.admin.generateLink`) that `/sign-in/telegram` on the website
-  verifies; a new one comes back with a signed ticket: the member signs in
-  with an email code there (receipts and recovery) and
-  `POST /auth/telegram/link` links it with `link_telegram()` (service
-  only: one account per member, never someone else's; 10 Bulbs the first
-  time). From `/pass/settings` the flow runs with `mode=link`, so it
-  always links to the signed-in member and never switches accounts;
-  `unlink_telegram()` disconnects. `GET /auth/telegram/available` tells the
-  website whether to show the buttons.
+- **Telegram sign-in** (migrations `20261202000000_telegram_login.sql`
+  and `20270322000000_auth_through_supabase.sql`). Telegram's OpenID
+  Connect (core.telegram.org/bots/telegram-login) as a custom provider of
+  Supabase Auth, `custom:telegram`: issuer `https://oauth.telegram.org`,
+  the bot's Client ID and Secret (`TELEGRAM_LOGIN_*` on the API, from
+  @BotFather → Login Widget, whose Allowed URLs include Supabase's
+  `https://<project ref>.supabase.co/auth/v1/callback`), scopes `openid
+  profile telegram:bot_access`, PKCE, email optional, and the `id` claim
+  kept by the custom claims allowlist. Staff → Telegram → Bot → **Set up
+  now** creates or updates the provider (`lib/telegram-provider.ts`,
+  `POST /admin/telegram`) and shows whether it's on. The website shows
+  "Continue with Telegram" when `telegram` is in
+  `NEXT_PUBLIC_AUTH_PROVIDERS` (`@repo/auth/social`: `signInWithOAuth`,
+  and `linkIdentity` from Pass → Settings → Connections). A Telegram
+  identity signs in to the Pass it was connected to; a new Telegram
+  account can't start a Pass (the callback says to sign in with an email
+  first and connect Telegram in Settings). The database links the bot
+  account: adding or refreshing a `custom:telegram` identity calls
+  `link_telegram()` with the `id` claim (one account per Pass, never
+  someone else's; the Bulbs bonus the first time), and removing it unlinks
+  (`private.sync_telegram_identity`). Links made before Telegram moved to
+  Supabase have no identity: Settings disconnects them with
+  `unlink_telegram()` and they connect again through Supabase.
 - **The Mini App** (`/tg` on the website). Droid's "Shop the store" button
   and the chat menu button (`setChatMenuButton`, set by `telegram:setup`)
-  open the website inside Telegram. The page loads Telegram's Web App
-  script and posts its signed `initData` to `POST /auth/telegram/web-app`,
-  which checks it with the bot's token (HMAC-SHA256 with the key
-  `WebAppData`, at most an hour old; `lib/telegram-login/web-app.ts`) and
-  answers like the sign-in callback: a one-time token for a linked account
-  or a link ticket for a new one, finished by `/sign-in/telegram`. Link
-  tickets are sealed with the Login client secret, or the bot's token when
-  only the Mini App is set up. The website's security headers allow
-  Telegram Web to frame it (`telegramMiniAppCspSources`: CSP
-  `frame-ancestors` for `web.telegram.org`, no `X-Frame-Options`).
+  open the website inside Telegram. A signed-in Pass goes straight to the
+  store; otherwise the page offers "Continue with Telegram" (the same
+  Supabase sign-in), signing in with email, or browsing. The website's
+  security headers allow Telegram Web to frame it
+  (`telegramMiniAppCspSources`: CSP `frame-ancestors` for
+  `web.telegram.org`, no `X-Frame-Options`).
 - **Droid** (`packages/droid`, webhook `apps/api/app/telegram/webhook`).
   A menu in private chats: Track my order and My Bulbs for members who
   linked Telegram (`telegram_members.user_id`; others get a link to
@@ -780,7 +783,6 @@ packages/database/
     migrations/            ordered SQL migrations: the schema's history
     tests/database/        pgTAP tests (RLS and RPC behaviour)
     seed.sql               local seed data (plans)
-    functions/send-sms/    Send SMS auth hook (Edge Function; phone sign-in is off)
   types.ts                 generated TypeScript types (do not edit)
   admin.ts                 service-role client; bypasses RLS (server only)
 ```
@@ -2094,16 +2096,19 @@ until both `WHATSAPP_ACCESS_TOKEN` and `WHATSAPP_PHONE_NUMBER_ID` are set.
 ### 4.4a Phone verification
 
 Deliveries go to numbers a Pass has proved it owns. Pass → Settings →
-**Verified phone numbers** and the checkouts (when an order is refused
-with "Verify your phone number first") send a code with
-`POST /account/phone/start` and check it with `POST /account/phone/check`
-(`apps/api/lib/phone-verify`, Bearer token). The API asks **Twilio Verify**
-for the code on WhatsApp first and by SMS when WhatsApp can't deliver;
-Twilio keeps the code, its expiry and its attempt limits, and we never see
-it. On approval the API adds the number to `verified_phones` (the admin
-client; people can only read and remove their own rows). A number someone
-signed in with by SMS counts as verified too. Each Pass gets ten sends or
-checks an hour (Upstash) on top of Twilio's limits.
+**Phone and WhatsApp** and the checkouts (when an order is refused with
+"Verify your phone number first") prove a number with **Supabase Auth's
+phone change**: `updateUser({ phone, channel })` sends the code and
+`verifyOtp({ type: "phone_change" })` checks it (`@repo/auth/otp`,
+`sendPhoneVerification` / `verifyPhoneVerification`). The person picks
+WhatsApp (falls back to SMS when WhatsApp can't deliver) or SMS. Supabase's
+phone provider is **Twilio Verify**: Twilio keeps the code, its expiry and
+its attempt limits, and Supabase applies its own rate limits. The number
+becomes the Pass's phone; the database keeps every number Supabase
+confirms in `verified_phones` (`private.keep_confirmed_phone`, so earlier
+numbers stay verified; people can only read and remove their own rows).
+A number is one Pass's at a time (another Pass gets "verified on another
+Pass").
 
 The check itself is `store_settings.require_verified_phone` (Staff →
 Catalogue → Settings): off by default; when on, a customer's own delivery orders (shop, rent and game
@@ -2113,11 +2118,13 @@ scheduled jobs make aren't checked.
 **Owner setup**
 
 1. Twilio Console → create an account, then Verify → Services → create a
-   service (code length 6). Set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`
-   and `TWILIO_VERIFY_SERVICE_SID` on the `api` Vercel project.
-2. For WhatsApp: in the Verify service, add a WhatsApp sender (it needs The
+   service (code length 6).
+2. Supabase → Authentication → Sign In / Providers → **Phone**: turn it
+   on, provider **Twilio Verify**, with the Account SID, Auth Token and
+   the Verify service SID. Nothing goes on Vercel.
+3. For WhatsApp: in the Verify service, add a WhatsApp sender (it needs The
    IDEA's verified Meta Business). Until then codes go by SMS.
-3. Try it from Pass → Settings, then turn on the check in Staff →
+4. Try it from Pass → Settings, then turn on the check in Staff →
    Catalogue → Settings → **Require a verified phone for deliveries**.
 
 ### 4.5 Delivery with Boxy
@@ -2318,7 +2325,6 @@ PostHog ids.
 | `RESEND_TOKEN`, `RESEND_FROM` | Feature | Receipts, renewal invoices and the website's contact form (`POST /contact`, delivered to `supportEmail` in `project.json`); without them the form answers "unavailable" |
 | `RESEND_SEGMENT_ID` | Feature | The Resend segment newsletters go to; `/cron/newsletter-contacts` syncs the accounts there (4.3). The sync is off without it. Needs `RESEND_TOKEN` with full access (contacts), not a sending-only key. |
 | `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` | Optional | WhatsApp order updates (4.4); off without them. **Server only.** |
-| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_VERIFY_SERVICE_SID` | Optional | Phone verification codes (4.4a); "not configured" without them. **Server only.** |
 | `WHATSAPP_TEMPLATE_LANG` | Optional | `ar` (default) or `en`: the template language for customers in another language |
 | `ARCJET_KEY` | Optional | `ajkey_…`. Guards the website's public forms (`@repo/security/form`: shield, bots, 5 per 10 minutes, undeliverable addresses) |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Feature | Droid's sessions and flood counters; the contact form's one message per visitor per day |

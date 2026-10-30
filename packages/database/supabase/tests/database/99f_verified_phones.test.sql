@@ -81,7 +81,11 @@ select ok(public.is_phone_verified('+9647700009001'), 'A verified phone is verif
 select ok(not public.is_phone_verified('+9647700009999'), 'Another phone is not');
 
 select pg_temp.login_as('00000000-0000-0000-0000-0000000009f2');
-select is_empty('select 1 from public.verified_phones', 'Others'' phones stay hidden');
+select results_eq(
+  'select phone from public.verified_phones',
+  array['+9647700009002'],
+  'Others'' phones stay hidden (only the number Supabase confirmed shows)'
+);
 select ok(
   public.is_phone_verified('+9647700009002'),
   'The phone a Pass signed in with by SMS counts as verified'

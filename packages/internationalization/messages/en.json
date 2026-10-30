@@ -58,6 +58,7 @@
       "invalid_email": "Enter a valid email address, e.g. name@example.com.",
       "invalid_phone": "Enter a valid mobile number, e.g. 0770 123 4567.",
       "no_account": "There's no Pass with this email yet.",
+      "phone_taken": "This number is verified on another Pass.",
       "rate_limited": "Too many attempts. Please wait a moment and try again.",
       "signups_disabled": "New sign-ups are currently closed.",
       "unknown": "Something went wrong. Please try again."
@@ -86,7 +87,8 @@
     "callback": {
       "title": "Signing you in…",
       "failed": "We couldn't complete the sign-in. Please try again.",
-      "retry": "Back to sign in"
+      "retry": "Back to sign in",
+      "telegramEmailFirst": "No Pass is connected to this Telegram yet. Sign in with your email first, then connect Telegram in Pass → Settings."
     },
     "changeEmail": "Use a different email",
     "codeHint": "Can't find it? Check your spam folder.",
@@ -135,6 +137,7 @@
         "invalid_email": "Enter a valid email address, e.g. name@example.com.",
         "invalid_phone": "Enter a valid mobile number.",
         "no_account": "There's no Pass with this email yet.",
+        "phone_taken": "This number is verified on another Pass.",
         "rate_limited": "Too many attempts. Please wait a moment and try again.",
         "signups_disabled": "New sign-ups are currently closed.",
         "unknown": "Something went wrong. Please try again."
@@ -2423,7 +2426,8 @@
         "linkedAs": "Connected as {name}",
         "connect": "Connect Telegram",
         "disconnect": "Disconnect",
-        "failed": "We couldn't disconnect Telegram. Try again."
+        "failed": "We couldn't disconnect Telegram. Try again.",
+        "connectFailed": "We couldn't connect Telegram. Try again."
       },
       "birthday": {
         "title": "Date of birth",
@@ -3857,6 +3861,7 @@
         "invalid_phone": "We can't send a code to this number. Check it and try again.",
         "not_configured": "Phone codes aren't available yet.",
         "not_iraqi": "Codes go to Iraqi mobile numbers only, e.g. 0770 123 4567.",
+        "taken": "This number is verified on another Pass. Use another number, or contact us.",
         "too_many": "Too many tries. Wait a while and try again.",
         "unavailable": "Something went wrong. Try again.",
         "wrong_code": "That code isn't right."
@@ -6563,16 +6568,19 @@
         "login": "Sign in with Telegram",
         "loginMissing": "Not set: Continue with Telegram is hidden",
         "setupTitle": "Set up the bot",
-        "setupDescription": "Points the webhook here and publishes the commands in Arabic and English, the menu button that opens The IDEA as a Mini App, and the descriptions. Safe to repeat; waiting updates are kept.",
+        "setupDescription": "Points the webhook here and publishes the commands in Arabic and English, the menu button that opens The IDEA as a Mini App, and the descriptions, and adds Telegram sign-in to Supabase Auth once its keys are set. Safe to repeat; waiting updates are kept.",
         "setup": "Set up now",
         "ownerTitle": "Owner steps",
         "ownerDescription": "Done once on Vercel (API project), then here.",
         "owner": {
           "token": "Create the bot with @BotFather and set {token}.",
           "secret": "Set {secret} to a long random value (openssl rand -hex 32).",
-          "login": "In @BotFather, open the bot's Login Widget, add the Allowed URL {url}, and set {id} and {clientSecret}.",
-          "setup": "Redeploy the API, then press Set up now on this page."
-        }
+          "login": "In @BotFather, open the bot's Login Widget, add the Allowed URL {url} (Supabase Auth's callback), and set {id} and {clientSecret} on the API.",
+          "setup": "Redeploy the API, then press Set up now on this page: it also adds Telegram sign-in to Supabase Auth.",
+          "providers": "Add telegram to {name} on the website and redeploy it: Continue with Telegram appears on sign-in and in Pass → Settings."
+        },
+        "loginReady": "On: Telegram is a sign-in provider in Supabase Auth",
+        "loginNotInSupabase": "Keys set: press Set up now to add Telegram to Supabase Auth"
       }
     },
     "staff": {
@@ -7097,27 +7105,12 @@
       }
     },
     "telegram": {
-      "title": "Continue with Telegram",
-      "continue": "Continue with Telegram",
-      "signingIn": "Signing you in…",
-      "back": "Back to sign-in",
-      "welcome": "Your Telegram account is verified. Enter your email to finish: we'll send your receipts there and use it if you ever need to recover your Pass.",
-      "welcomeName": "Hi {name}, your Telegram account is verified. Enter your email to finish: we'll send your receipts there and use it if you ever need to recover your Pass.",
-      "errors": {
-        "cancelled": "Telegram sign-in was cancelled.",
-        "failed": "We couldn't sign you in with Telegram. Try again, or use your email.",
-        "suspended": "This Pass is suspended. Contact support.",
-        "taken": "This Telegram account is already connected to another Pass.",
-        "unavailable": "Telegram sign-in isn't available right now. Use your email instead."
-      },
       "miniApp": {
         "title": "The IDEA in Telegram",
         "opening": "Opening The IDEA…",
-        "welcome": "Connect your Pass to see your orders, Bulbs and member prices right here in Telegram.",
-        "welcomeName": "Hi {name}! Connect your Pass to see your orders, Bulbs and member prices right here in Telegram.",
-        "connect": "Connect your Pass",
-        "browse": "Browse the store",
-        "suspended": "This Pass is suspended. Contact support."
+        "welcome": "Sign in to see your orders, Bulbs and member prices right here in Telegram. New here? Sign in with your email, then connect Telegram in Settings.",
+        "email": "Sign in with email",
+        "browse": "Browse the store"
       }
     },
     "partnerPerks": {

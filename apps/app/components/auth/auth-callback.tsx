@@ -2,7 +2,7 @@
 
 import { isAllowedReturnTo } from "@repo/auth/pass";
 import { useAuth } from "@repo/auth/provider";
-import { takeReturnTo } from "@repo/auth/social";
+import { takeProvider, takeReturnTo } from "@repo/auth/social";
 import { Button } from "@repo/design-system/components/ui/button";
 import { Link, useRouter } from "@repo/internationalization/navigation";
 import { useTranslations } from "next-intl";
@@ -20,7 +20,7 @@ export const AuthCallback = () => {
   const t = useTranslations("auth.callback");
   const { supabase } = useAuth();
   const router = useRouter();
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<"telegram" | true | false>(false);
 
   useEffect(() => {
     let active = true;
@@ -35,6 +35,7 @@ export const AuthCallback = () => {
         await supabase.rpc("claim_student_from_identity");
         // Back where sign-in started (a path here or another site of The
         // IDEA), else Your Pass.
+        takeProvider();
         const returnTo = takeReturnTo();
         if (returnTo?.startsWith("/") && !returnTo.startsWith("//")) {
           window.location.assign(returnTo);
@@ -44,7 +45,9 @@ export const AuthCallback = () => {
           router.replace("/pass");
         }
       } else {
-        setFailed(true);
+        // Telegram signs in to a Pass it was connected to; a new one starts
+        // with an email.
+        setFailed(takeProvider() === "telegram" ? "telegram" : true);
       }
     });
     return () => {
@@ -58,7 +61,9 @@ export const AuthCallback = () => {
 
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-4 p-6 text-center">
-      <p role="alert">{t("failed")}</p>
+      <p role="alert">
+        {failed === "telegram" ? t("telegramEmailFirst") : t("failed")}
+      </p>
       <Button asChild variant="outline">
         <Link href="/sign-in">{t("retry")}</Link>
       </Button>

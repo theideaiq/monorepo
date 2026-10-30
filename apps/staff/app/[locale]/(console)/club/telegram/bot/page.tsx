@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { ActionButton } from "@/components/admin/action-button";
 import { PageBody, PageHeader, Panel } from "@/components/admin/page";
+import { env } from "@/env";
 import { callApi } from "@/lib/admin/api";
 import { formatters } from "@/lib/admin/format";
 import { requireSection } from "@/lib/admin/session";
@@ -17,6 +18,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 interface BotAnswer {
   configured: { bot: boolean; login: boolean; webhookSecret: boolean };
+  /** Telegram sign-in is a provider of Supabase Auth (custom:telegram). */
+  signIn?: boolean;
   status: {
     commands: number;
     description: boolean;
@@ -92,6 +95,12 @@ const StatusRows = async ({
 const BotPage = async () => {
   const { canWrite, staff, supabase } = await requireSection("telegram");
   const t = await getTranslations("admin.telegram.bot");
+  const loginText = (bot: BotAnswer) => {
+    if (!bot.configured.login) {
+      return t("loginMissing");
+    }
+    return bot.signIn ? t("loginReady") : t("loginNotInSupabase");
+  };
   const result = await callApi<BotAnswer>(supabase, "/admin/telegram", {
     action: "status",
   });
@@ -123,8 +132,11 @@ const BotPage = async () => {
                 {answer.configured.webhookSecret ? t("set") : t("missing")}
               </Row>
               {status ? <StatusRows status={status} /> : null}
-              <Row label={t("login")} ok={answer.configured.login}>
-                {answer.configured.login ? t("set") : t("loginMissing")}
+              <Row
+                label={t("login")}
+                ok={answer.configured.login && answer.signIn === true}
+              >
+                {loginText(answer)}
               </Row>
             </div>
           ) : null}
@@ -146,10 +158,13 @@ const BotPage = async () => {
               {t("owner.login", {
                 clientSecret: "TELEGRAM_LOGIN_CLIENT_SECRET",
                 id: "TELEGRAM_LOGIN_CLIENT_ID",
-                url: "https://api.theideaiq.com/auth/telegram/callback",
+                url: `${env.NEXT_PUBLIC_SUPABASE_URL ?? "https://<project>.supabase.co"}/auth/v1/callback`,
               })}
             </li>
             <li>{t("owner.setup")}</li>
+            <li>
+              {t("owner.providers", { name: "NEXT_PUBLIC_AUTH_PROVIDERS" })}
+            </li>
           </ol>
         </Panel>
       </PageBody>

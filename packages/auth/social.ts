@@ -2,21 +2,34 @@ import type { Database } from "@repo/database";
 import type { Provider, SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Signing in to The IDEA Pass with Google or Apple (Supabase Auth's OAuth
- * providers, PKCE). An address that
- * already has a Pass is linked to it when the provider says the address is
- * verified. Each provider shows only once it's set up in Supabase and named
- * in NEXT_PUBLIC_AUTH_PROVIDERS.
+ * Signing in to The IDEA Pass with Google, Apple or Telegram (Supabase
+ * Auth's OAuth providers, PKCE; Telegram is the custom OIDC provider
+ * `custom:telegram`). An address that already has a Pass is linked to it
+ * when the provider says the address is verified. Telegram has no email:
+ * it signs in to a Pass it was connected to, and a Pass starts with an
+ * email (the database refuses a Telegram-only one). Each provider shows
+ * only once it's set up in Supabase and named in NEXT_PUBLIC_AUTH_PROVIDERS.
  */
 
-export const SOCIAL_PROVIDERS = ["google", "apple"] as const;
+export const SOCIAL_PROVIDERS = ["google", "apple", "telegram"] as const;
 
 export type SocialProvider = (typeof SOCIAL_PROVIDERS)[number];
 
-/** What each provider is asked for: the email and the name, no more. */
+/** Supabase Auth's name for each provider. */
+export const SUPABASE_PROVIDER: Record<SocialProvider, Provider> = {
+  apple: "apple",
+  google: "google",
+  telegram: "custom:telegram",
+};
+
+/**
+ * What each provider is asked for: the email and the name, no more; from
+ * Telegram the profile and leave for the bot to message the person.
+ */
 const SCOPES: Record<SocialProvider, string | undefined> = {
   apple: "name email",
   google: undefined,
+  telegram: "openid profile telegram:bot_access",
 };
 
 /** The providers turned on (a comma-separated list, in the order given). */
@@ -29,6 +42,28 @@ export const enabledProviders = (list: string | undefined): SocialProvider[] =>
     );
 
 const RETURN_KEY = "theidea.pass.returnTo";
+const PROVIDER_KEY = "theidea.pass.provider";
+
+/** The provider sign-in last left for (read once by the callback), or null. */
+export const takeProvider = (): SocialProvider | null => {
+  try {
+    const value = sessionStorage.getItem(PROVIDER_KEY);
+    sessionStorage.removeItem(PROVIDER_KEY);
+    return (SOCIAL_PROVIDERS as readonly string[]).includes(value ?? "")
+      ? (value as SocialProvider)
+      : null;
+  } catch {
+    return null;
+  }
+};
+
+const rememberProvider = (provider: SocialProvider) => {
+  try {
+    sessionStorage.setItem(PROVIDER_KEY, provider);
+  } catch {
+    // Storage blocked: the callback shows the general message.
+  }
+};
 
 /** Remembers where to go after the provider sends the person back. */
 export const rememberReturnTo = (returnTo: string | null) => {
@@ -79,14 +114,15 @@ export const startSocialSignIn = async (
     scopes: SCOPES[provider],
     skipBrowserRedirect: Boolean(openExternal),
   };
+  rememberProvider(provider);
   const { data, error } = link
     ? await supabase.auth.linkIdentity({
         options,
-        provider: provider as Provider,
+        provider: SUPABASE_PROVIDER[provider],
       })
     : await supabase.auth.signInWithOAuth({
         options,
-        provider: provider as Provider,
+        provider: SUPABASE_PROVIDER[provider],
       });
   if (error) {
     return { error: error.message, ok: false as const };

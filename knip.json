@@ -32,7 +32,6 @@
   },
   "ignore": [
     "packages/design-system/components/ui/**",
-    "apps/app/native/www/**",
-    "packages/database/supabase/functions/**"
+    "apps/app/native/www/**"
   ]
 }

@@ -1,26 +1,50 @@
 "use client";
 
+import { useAuth } from "@repo/auth/provider";
+import { rememberReturnTo, startSocialSignIn } from "@repo/auth/social";
 import { Button } from "@repo/design-system/components/ui/button";
-import { useTranslations } from "next-intl";
-import { TelegramButton } from "@/components/pass/telegram-button";
+import { useMutation } from "@tanstack/react-query";
+import { SendIcon } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import {
-  useMyTelegram,
-  useTelegramAvailable,
-  useUnlinkTelegram,
-} from "@/lib/telegram-login";
+  openInSystemBrowser,
+  socialRedirect,
+} from "@/components/pass/social-buttons";
+import { isNativeApp } from "@/lib/platform";
+import { useMyTelegram, useUnlinkTelegram } from "@/lib/telegram-login";
 
 /**
  * Pass → Settings → Connections, inside the sign-in methods: the linked
  * Telegram account (sign in with it, order updates from the bot) or a
- * button to connect one (Bulbs the first time).
+ * button to connect one (Bulbs the first time), through Supabase Auth.
  */
-export const TelegramMethod = () => {
+export const TelegramMethod = ({
+  available,
+}: {
+  /** Telegram is named in NEXT_PUBLIC_AUTH_PROVIDERS. */
+  readonly available: boolean;
+}) => {
   const t = useTranslations("app.settings.telegram");
-  const available = useTelegramAvailable();
+  const locale = useLocale();
+  const { supabase } = useAuth();
   const telegram = useMyTelegram();
   const unlink = useUnlinkTelegram();
+  const connect = useMutation({
+    mutationFn: async () => {
+      rememberReturnTo(window.location.pathname);
+      const native = isNativeApp();
+      const result = await startSocialSignIn(supabase, "telegram", {
+        link: true,
+        openExternal: native ? openInSystemBrowser : undefined,
+        redirectTo: socialRedirect(locale),
+      });
+      if (!result.ok) {
+        throw new Error(result.error);
+      }
+    },
+  });
 
-  if (telegram.isPending || (!telegram.data && available.data !== true)) {
+  if (telegram.isPending || !(telegram.data || available)) {
     return null;
   }
   const linked = telegram.data;
@@ -50,17 +74,25 @@ export const TelegramMethod = () => {
           </Button>
         </div>
       ) : (
-        <TelegramButton
-          label={t("connect")}
-          link
-          returnTo={
-            typeof window === "undefined" ? null : window.location.pathname
-          }
-        />
+        <Button
+          className="w-full"
+          disabled={connect.isPending}
+          onClick={() => connect.mutate()}
+          type="button"
+          variant="outline"
+        >
+          <SendIcon aria-hidden="true" />
+          {t("connect")}
+        </Button>
       )}
       {unlink.isError ? (
         <p className="text-destructive text-sm" role="alert">
           {t("failed")}
+        </p>
+      ) : null}
+      {connect.isError ? (
+        <p className="text-destructive text-sm" role="alert">
+          {t("connectFailed")}
         </p>
       ) : null}
     </div>

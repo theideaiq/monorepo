@@ -22,8 +22,10 @@ import { isNativeApp } from "@/lib/platform";
 const NAMES: Record<string, string> = {
   apple: "Apple",
   google: "Google",
-  telegram: "Telegram",
 };
+
+/** Telegram has its own part below (the bot link and Bulbs). */
+const TELEGRAM = "custom:telegram";
 
 /**
  * Your Pass → Settings: the ways the person signs in (email, Google, Apple
@@ -85,6 +87,7 @@ export const SignInMethodsCard = ({
   }
   const linked = new Set(identities.data.map((item) => item.provider));
   const canRemove = identities.data.length > 1;
+  const methods = identities.data.filter((item) => item.provider !== TELEGRAM);
 
   return (
     <Card id="sign-in-methods">
@@ -94,7 +97,7 @@ export const SignInMethodsCard = ({
       </CardHeader>
       <CardContent className="grid gap-3">
         <ul className="grid gap-2">
-          {identities.data.map((identity) => (
+          {methods.map((identity) => (
             <li
               className="flex flex-wrap items-center justify-between gap-2 text-sm"
               key={identity.identity_id}
@@ -124,7 +127,9 @@ export const SignInMethodsCard = ({
         </ul>
         <div className="flex flex-wrap gap-2">
           {providers
-            .filter((provider) => !linked.has(provider))
+            .filter(
+              (provider) => provider !== "telegram" && !linked.has(provider)
+            )
             .map((provider) => (
               <Button
                 disabled={link.isPending}
@@ -142,7 +147,7 @@ export const SignInMethodsCard = ({
             {t("failed")}
           </p>
         ) : null}
-        <TelegramMethod />
+        <TelegramMethod available={providers.includes("telegram")} />
       </CardContent>
     </Card>
   );

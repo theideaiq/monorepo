@@ -1,6 +1,11 @@
 "use client";
 
-import { formatPhone, normalizePhone } from "@repo/auth/phone";
+import {
+  type OtpErrorCode,
+  sendPhoneVerification,
+  verifyPhoneVerification,
+} from "@repo/auth/otp";
+import { formatPhone, isIraqiMobile, normalizePhone } from "@repo/auth/phone";
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
 import {
@@ -18,38 +23,45 @@ import {
 } from "@repo/design-system/components/ui/radio-group";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, Trash2Icon } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { SectionSpinner } from "@/components/states";
-import { callApi } from "@/lib/api";
 import { queryKeys, unwrap } from "@/lib/queries";
 
-/** What the phone endpoints answer with (apps/api/lib/phone-verify). */
+/** What can go wrong, as the messages name it. */
 type PhoneProblem =
   | "expired"
   | "invalid_phone"
   | "not_configured"
   | "not_iraqi"
+  | "taken"
   | "too_many"
   | "unavailable"
   | "wrong_code";
 
-const PHONE_PROBLEMS = new Set<string>([
-  "expired",
-  "invalid_phone",
-  "not_configured",
-  "not_iraqi",
-  "too_many",
-  "wrong_code",
-]);
-
-const phoneProblem = (error: unknown): PhoneProblem => {
-  const code =
-    typeof error === "object" && error !== null && "code" in error
-      ? String(error.code)
-      : "";
-  return PHONE_PROBLEMS.has(code) ? (code as PhoneProblem) : "unavailable";
+const PROBLEMS: Partial<Record<OtpErrorCode, PhoneProblem>> = {
+  delivery_failed: "not_configured",
+  expired_code: "expired",
+  invalid_code: "wrong_code",
+  invalid_phone: "invalid_phone",
+  phone_taken: "taken",
+  rate_limited: "too_many",
 };
+
+class PhoneError extends Error {
+  readonly problem: PhoneProblem;
+  constructor(problem: PhoneProblem) {
+    super(problem);
+    this.problem = problem;
+  }
+}
+
+const fail = (code: OtpErrorCode): never => {
+  throw new PhoneError(PROBLEMS[code] ?? "unavailable");
+};
+
+const phoneProblem = (error: unknown): PhoneProblem =>
+  error instanceof PhoneError ? error.problem : "unavailable";
 
 /** The numbers the caller verified (verified_phones). */
 export const useVerifiedPhones = () => {
@@ -79,13 +91,13 @@ const CHANNELS: readonly CodeChannel[] = ["whatsapp", "sms"];
 
 /**
  * Sends a code to `phone` where the person chooses (WhatsApp, which falls
- * back to SMS, or SMS) and checks the code typed back; the number is then
- * the Pass's own (verified_phones).
+ * back to SMS, or SMS) and checks the code typed back, both through
+ * Supabase Auth (a phone change); the number is then the Pass's own
+ * (`verified_phones`, kept by the database).
  */
 export const VerifyPhone = ({ onVerified, phone }: VerifyPhoneProps) => {
   const t = useTranslations("app.verifyPhone");
   const id = useId();
-  const locale = useLocale();
   const { supabase, user } = useAuth();
   const queryClient = useQueryClient();
   const e164 = normalizePhone(phone);
@@ -97,12 +109,11 @@ export const VerifyPhone = ({ onVerified, phone }: VerifyPhoneProps) => {
   const [channel, setChannel] = useState<CodeChannel>("whatsapp");
 
   const check = useMutation({
-    mutationFn: (sent: { phone: string }) =>
-      callApi<{ phone: string }>(supabase, "/account/phone/check", {
-        code,
-        phone: sent.phone,
-      }),
-    onSuccess: async ({ phone: verified }) => {
+    mutationFn: async (sent: { phone: string }) => {
+      const result = await verifyPhoneVerification(supabase, sent.phone, code);
+      return result.ok ? result.phone : fail(result.code);
+    },
+    onSuccess: async (verified) => {
       await queryClient.invalidateQueries({
         queryKey: queryKeys.verifiedPhones(user?.id ?? ""),
       });
@@ -111,16 +122,18 @@ export const VerifyPhone = ({ onVerified, phone }: VerifyPhoneProps) => {
   });
 
   const start = useMutation({
-    mutationFn: () =>
-      callApi<{ channel: "sms" | "whatsapp"; phone: string }>(
-        supabase,
-        "/account/phone/start",
-        {
-          channel,
-          locale: locale === "ar" ? "ar" : "en",
-          phone: e164 ?? phone,
-        }
-      ),
+    mutationFn: async () => {
+      // Codes go to Iraqi mobiles only: deliveries are in Iraq.
+      if (e164 && !isIraqiMobile(e164)) {
+        throw new PhoneError("not_iraqi");
+      }
+      const result = await sendPhoneVerification(supabase, e164 ?? phone, {
+        channel,
+      });
+      return result.ok
+        ? { channel: result.value.channel, phone: result.phone }
+        : fail(result.code);
+    },
     onSuccess: (sent) => {
       setCode("");
       check.reset();

@@ -3,10 +3,13 @@ import type { AuthError, SupabaseClient } from "@supabase/supabase-js";
 import { normalizePhone } from "./phone";
 
 /**
- * One-time codes for The IDEA Pass. People sign in with an 8-digit code sent
- * by email (`sendEmailOtp` / `verifyEmailOtp`). The phone code path
- * (`sendPhoneOtp` / `verifyPhoneOtp`) is kept for when phone sign-in comes
- * back, but the phone provider is switched off (supabase/config.toml).
+ * One-time codes for The IDEA Pass, all sent and checked by Supabase Auth.
+ * People sign in with an 8-digit code sent by email (`sendEmailOtp` /
+ * `verifyEmailOtp`). A signed-in Pass proves a phone number with
+ * Supabase's phone change (`sendPhoneVerification` /
+ * `verifyPhoneVerification`), the code on WhatsApp or by SMS through
+ * Twilio Verify (the phone provider in Supabase). `sendPhoneOtp` /
+ * `verifyPhoneOtp` sign in with a phone a Pass already verified.
  */
 
 export type OtpChannel = "sms" | "whatsapp";
@@ -21,6 +24,7 @@ export type OtpErrorCode =
   | "captcha_failed"
   | "signups_disabled"
   | "delivery_failed"
+  | "phone_taken"
   | "unknown";
 
 export type OtpResult<T = undefined> =
@@ -54,6 +58,7 @@ const errorCodes: Record<string, OtpErrorCode> = {
   over_email_send_rate_limit: "rate_limited",
   over_request_rate_limit: "rate_limited",
   over_sms_send_rate_limit: "rate_limited",
+  phone_exists: "phone_taken",
   phone_provider_disabled: "delivery_failed",
   signup_disabled: "signups_disabled",
   sms_send_failed: "delivery_failed",
@@ -90,8 +95,9 @@ interface SendOtpOptions {
 }
 
 /**
- * Sends a one-time code to the phone number (SMS by default). Switched off
- * for now: needs the phone provider (or the Send SMS hook) enabled.
+ * Sends a sign-in code to a phone number (SMS by default). The database
+ * refuses a Pass that would start from a phone alone, so this signs in to
+ * a Pass that verified the number.
  */
 export const sendPhoneOtp = async (
   supabase: SupabaseClient<Database>,
@@ -144,6 +150,64 @@ export const verifyPhoneOtp = async (
   }
 
   return { ok: true, phone, value: { userId: data.user.id } };
+};
+
+interface PhoneVerificationOptions {
+  /** WhatsApp (the default; falls back to SMS when it can't deliver) or SMS. */
+  channel?: OtpChannel;
+}
+
+const updatePhone = (
+  supabase: SupabaseClient<Database>,
+  phone: string,
+  channel: OtpChannel
+) =>
+  // Supabase Auth takes the channel with the new phone (supabase-js's
+  // types don't list it yet).
+  supabase.auth.updateUser({ channel, phone } as { phone: string });
+
+/**
+ * Sends a code to a number the signed-in Pass wants to verify (Supabase's
+ * phone change). The number becomes the Pass's phone once the code is
+ * checked; a number another Pass holds is `phone_taken`.
+ */
+export const sendPhoneVerification = async (
+  supabase: SupabaseClient<Database>,
+  rawPhone: string,
+  { channel = "whatsapp" }: PhoneVerificationOptions = {}
+): Promise<OtpResult<{ channel: OtpChannel }>> => {
+  const phone = normalizePhone(rawPhone);
+  if (!phone) {
+    return invalidPhone;
+  }
+  let sentOn = channel;
+  let { error } = await updatePhone(supabase, phone, channel);
+  // No WhatsApp sender yet, or the number isn't on WhatsApp: SMS instead.
+  if (
+    error &&
+    channel === "whatsapp" &&
+    toOtpErrorCode(error) === "delivery_failed"
+  ) {
+    sentOn = "sms";
+    ({ error } = await updatePhone(supabase, phone, "sms"));
+  }
+  return error
+    ? failure(error)
+    : { ok: true, phone, value: { channel: sentOn } };
+};
+
+/** Checks the code; the number is then verified for the Pass. */
+export const verifyPhoneVerification = async (
+  supabase: SupabaseClient<Database>,
+  phone: string,
+  token: string
+): Promise<OtpResult> => {
+  const { error } = await supabase.auth.verifyOtp({
+    phone,
+    token: token.trim(),
+    type: "phone_change",
+  });
+  return error ? failure(error) : { ok: true, phone, value: undefined };
 };
 
 // Deliberately loose: the server has the final say (validation_failed).
