@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Check } from "lucide-react";
 
 /**
- * The ProductCard and PlanCard patterns (apps/web/components and
+ * The ProductCard and PlanCard patterns (apps/app/components and
  * apps/app/components/store), built from the design-system pieces. The
  * real cards load their data on the server, so this story mirrors them.
  */

@@ -18,8 +18,8 @@ const ROOTS = [
   "apps/partners/components",
   "apps/staff/app",
   "apps/staff/components",
-  "apps/web/app",
-  "apps/web/components",
+  "apps/app/app",
+  "apps/app/components",
 ];
 const IGNORED_DIRECTORIES = new Set([
   ".claude",

@@ -12,7 +12,7 @@
     "boundaries": "turbo boundaries",
     "build": "turbo build",
     "bump-ui": "bunx shadcn@latest add --all --overwrite -c packages/design-system",
-    "cap:sync": "turbo cap:sync --filter=web",
+    "cap:sync": "turbo cap:sync --filter=app",
     "check": "ultracite check",
     "check:i18n": "bun scripts/check-i18n.ts",
     "check:placeholders": "bun scripts/check-placeholders.ts",

@@ -20,7 +20,7 @@ import type { ReactElement } from "react";
 /**
  * Every email in packages/email, rendered to HTML the way Resend sends it,
  * in Arabic and English side by side. Sample data only; the props match what
- * apps/api and apps/web pass (prices and dates already formatted with
+ * apps/api and apps/app pass (prices and dates already formatted with
  * @repo/internationalization/format).
  */
 const meta = {
