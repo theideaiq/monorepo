@@ -253,6 +253,19 @@ namespaces.
   as wanted items ("Not in the store yet"); when a matching product goes
   live it joins the list and the member is told (`wanted_in_store`).
   Migration `20270320000000_connections.sql`.
+- **Vinyl from artists you listen to.** Pass → Saved → Vinyl connects
+  Spotify (sign-in: `POST /music` returns the authorize link,
+  `GET /music/spotify/callback` saves the artists and the refresh token)
+  or a Last.fm username (`POST /music`, read at once), and lists the
+  Store's live vinyl variants (`attributes.Format` = Vinyl) whose
+  product's `details.Artist` is one of them (`vinyl_from_my_artists`).
+  `GET /cron/music` (daily, 02:40 UTC) refreshes connections older than
+  7 days and removes ones the member revoked. Keys: `SPOTIFY_CLIENT_ID`,
+  `SPOTIFY_CLIENT_SECRET` (redirect URI
+  `https://api.theideaiq.com/music/spotify/callback`; a Spotify app in
+  development mode works for the 25 users added to it until Spotify
+  grants extended quota), `LASTFM_API_KEY`. Disconnecting deletes the
+  artists and the token. Migration `20270320000000_connections.sql`.
 - **Plus Duo.** A Duo plan's holder invites one more Pass from Your Plus
   (a link to `/plus/duo/<code>`, open 7 days); the second person shares
   the rental slots, home swaps and the holder's Plus address, keeps their

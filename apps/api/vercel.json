@@ -66,6 +66,10 @@
     {
       "path": "/cron/reminders",
       "schedule": "50 8 * * *"
+    },
+    {
+      "path": "/cron/music",
+      "schedule": "40 2 * * *"
     }
   ]
 }

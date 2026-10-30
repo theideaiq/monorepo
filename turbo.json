@@ -60,6 +60,8 @@
     "DISCOGS_TOKEN",
     "GOOGLE_BOOKS_API_KEY",
     "IGDB_*",
+    "LASTFM_API_KEY",
+    "SPOTIFY_*",
     "TMDB_READ_TOKEN",
     "POKEMONTCG_API_KEY",
     "PASS_OIDC_*",

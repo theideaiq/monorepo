@@ -14,6 +14,7 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { keys as boxy } from "./lib/boxy/keys";
 import { keys as lookup } from "./lib/lookup/keys";
+import { keys as music } from "./lib/music/keys";
 import { keys as oidc } from "./lib/oidc/keys";
 import { keys as appleWallet } from "./lib/pass/apple-wallet-keys";
 import { keys as phoneVerify } from "./lib/phone-verify/keys";
@@ -30,6 +31,7 @@ const presets = envPresets(
   droid(),
   email(),
   lookup(),
+  music(),
   observability(),
   oidc(),
   payments(),

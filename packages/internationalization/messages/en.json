@@ -2706,7 +2706,8 @@
       "tabs": {
         "saved": "Saved",
         "lists": "Lists",
-        "queue": "Queue"
+        "queue": "Queue",
+        "vinyl": "Vinyl"
       },
       "filter": {
         "all": "All",
@@ -2777,6 +2778,22 @@
             "unavailable": "We couldn't import the list. Try again in a moment."
           }
         }
+      },
+      "vinyl": {
+        "description": "Connect Spotify or Last.fm and we'll show the vinyl we have by the artists you listen to. We only read your top and followed artists.",
+        "spotify": "Connect Spotify",
+        "lastfm": "Last.fm username",
+        "connect": "Connect",
+        "connected": "Connected. Here's the vinyl by your artists.",
+        "connectedTo": {
+          "spotify": "Spotify: {account} · {artists} artists",
+          "lastfm": "Last.fm: {account} · {artists} artists"
+        },
+        "disconnect": "Disconnect",
+        "none": "No vinyl by your artists yet. We'll keep looking as new records arrive.",
+        "failed": "We couldn't connect. Try again in a moment.",
+        "lastfmNotFound": "We couldn't find that Last.fm username.",
+        "unavailable": "Connecting music services isn't available yet."
       }
     },
     "support": {

@@ -30,12 +30,14 @@ import {
 } from "@repo/design-system/components/ui/toggle-group";
 import { Link } from "@repo/internationalization/navigation";
 import { HeartIcon, ShoppingCartIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { PageHeader } from "@/components/page-header";
 import { Queue } from "@/components/plus/plus-tools";
 import { SavedLists } from "@/components/saved/saved-lists";
 import { TellMe } from "@/components/saved/tell-me";
+import { VinylForYou } from "@/components/saved/vinyl-for-you";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { MyBids } from "@/components/store/auctions";
 import { MyOffers } from "@/components/store/my-offers";
@@ -298,13 +300,16 @@ const EmptySaved = () => {
 /**
  * Your Pass → Saved: what the member watches, in three tabs. Saved holds
  * everything hearted (with its state, "Tell me" and actions), Lists the
- * named lists, and Queue (Plus members) what to rent next.
+ * named lists, Vinyl the Store's vinyl by the artists the member listens
+ * to, and Queue (Plus members) what to rent next.
  */
 export const Wishlist = () => {
   const t = useTranslations("app.wishlist");
   const wishlist = useWishlist();
   const lists = useSavedLists().data ?? [];
   const hasPlus = useHasPlus();
+  // Back from Spotify's sign-in (?music=connected or failed).
+  const music = useSearchParams().has("music");
   const items = (wishlist.data ?? []).filter((item) => item.product);
 
   return (
@@ -312,10 +317,11 @@ export const Wishlist = () => {
       <PageHeader title={t("title")} />
       <div className="flex max-w-3xl flex-1 flex-col gap-6">
         <p className="text-muted-foreground">{t("description")}</p>
-        <Tabs defaultValue="saved">
+        <Tabs defaultValue={music ? "vinyl" : "saved"}>
           <TabsList>
             <TabsTrigger value="saved">{t("tabs.saved")}</TabsTrigger>
             <TabsTrigger value="lists">{t("tabs.lists")}</TabsTrigger>
+            <TabsTrigger value="vinyl">{t("tabs.vinyl")}</TabsTrigger>
             {hasPlus ? (
               <TabsTrigger value="queue">{t("tabs.queue")}</TabsTrigger>
             ) : null}
@@ -334,6 +340,9 @@ export const Wishlist = () => {
           </TabsContent>
           <TabsContent className="pt-4" value="lists">
             <SavedLists items={items} />
+          </TabsContent>
+          <TabsContent className="pt-4" value="vinyl">
+            <VinylForYou />
           </TabsContent>
           {hasPlus ? (
             <TabsContent className="pt-4" value="queue">
