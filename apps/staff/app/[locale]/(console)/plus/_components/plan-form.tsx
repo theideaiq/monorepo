@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@/components/admin/fields";
 import { Panel } from "@/components/admin/page";
-import { savePlan } from "../actions";
+import { savePlan } from "../../catalog/actions";
 
 interface PlanFormProps {
   readonly disabled?: boolean;

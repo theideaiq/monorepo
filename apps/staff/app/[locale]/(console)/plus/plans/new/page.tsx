@@ -16,7 +16,7 @@ const NewPlanPage = async () => {
   return (
     <>
       <PageHeader
-        back={{ href: "/catalog/plans", label: t("tabs.plans") }}
+        back={{ href: "/plus/plans", label: t("tabs.plans") }}
         title={t("plans.new")}
       />
       <PageBody className="max-w-4xl">

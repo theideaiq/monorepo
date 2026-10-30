@@ -7,9 +7,9 @@ import {
   DetailList,
   MaybeLink,
   PageBody,
-  PageHeader,
   Panel,
 } from "@/components/admin/page";
+import { RecordHeader } from "@/components/admin/record-header";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";
@@ -37,6 +37,7 @@ const TicketPage = async ({
   }
   const { canWrite, staff, supabase } = await requireSection("support");
   const t = await getTranslations("admin.support");
+  const tNav = await getTranslations("admin.nav");
   const tStore = await getTranslations("store");
   const format = formatters(await getLocale());
 
@@ -72,23 +73,44 @@ const TicketPage = async ({
 
   return (
     <>
-      <PageHeader
-        back={{ href: "/support", label: t("title") }}
+      <RecordHeader
+        breadcrumb={[
+          { href: "/", label: tNav("dashboard") },
+          { href: "/support", label: t("title") },
+        ]}
+        chips={
+          <>
+            <StatusBadge tone={ticketStatusTone[ticket.status]}>
+              {t(`statuses.${ticket.status}`)}
+            </StatusBadge>
+            <StatusBadge tone={ticketPriorityTone[ticket.priority]}>
+              {t(`priorities.${ticket.priority}`)}
+            </StatusBadge>
+          </>
+        }
         description={t("openedOn", {
           date: format.dateTime(ticket.created_at),
         })}
+        numbers={[
+          {
+            label: t("messages"),
+            value: format.number(thread.length),
+          },
+          { label: t("customer"), value: customerName },
+          {
+            label: t("lastMessage"),
+            value: format.dateTime(ticket.last_message_at),
+          },
+        ]}
+        tabs={[
+          { href: "#thread", label: t("thread") },
+          { href: "#manage", label: t("manage") },
+        ]}
         title={`${t("number", { number: String(ticket.number) })} · ${ticket.subject}`}
-      >
-        <StatusBadge tone={ticketStatusTone[ticket.status]}>
-          {t(`statuses.${ticket.status}`)}
-        </StatusBadge>
-        <StatusBadge tone={ticketPriorityTone[ticket.priority]}>
-          {t(`priorities.${ticket.priority}`)}
-        </StatusBadge>
-      </PageHeader>
+      />
       <PageBody className="lg:grid-cols-[1fr_22rem]">
         <div className="grid content-start gap-6">
-          <Panel title={t("thread")}>
+          <Panel id="thread" title={t("thread")}>
             {thread.length === 0 ? (
               <p className="text-muted-foreground text-sm">{t("noMessages")}</p>
             ) : (
@@ -204,7 +226,7 @@ const TicketPage = async ({
               ]}
             />
           </Panel>
-          <Panel title={t("manage")}>
+          <Panel id="manage" title={t("manage")}>
             <ManageTicketForm
               assignedTo={ticket.assigned_to}
               disabled={!canWrite}

@@ -22,7 +22,7 @@ import { formatters } from "@/lib/admin/format";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
 import { supplierOptions } from "@/lib/admin/suppliers";
-import { rentalTabs } from "../tabs";
+import { plusTabs } from "../tabs";
 import {
   AddKitUnitForm,
   KitBookingActions,
@@ -144,7 +144,7 @@ const BookingRow = ({
  * deposit for someone whose ID was checked), the kits and their units.
  */
 const KitsPage = async () => {
-  const { canWrite, supabase } = await requireSection("rentals");
+  const { canWrite, staff, supabase } = await requireSection("rentals");
   const locale = await getLocale();
   const t = await getTranslations("admin.rentals");
   const format = formatters(locale);
@@ -177,7 +177,7 @@ const KitsPage = async () => {
   return (
     <>
       <PageHeader title={t("title")} />
-      <SectionTabs tabs={rentalTabs(t, null)} />
+      <SectionTabs tabs={plusTabs(t, staff.role)} />
       <PageBody className="max-w-6xl">
         <Panel description={t("kits.bookingsHint")} title={t("kits.bookings")}>
           {(bookings ?? []).length === 0 ? (

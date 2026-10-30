@@ -9,6 +9,7 @@ import {
   PageHeader,
   Panel,
 } from "@/components/admin/page";
+import { academicYearEnd } from "@/lib/admin/dates";
 import { formatters } from "@/lib/admin/format";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
@@ -17,15 +18,6 @@ import { ReviewCardForm, ReviewDocumentForm, UniversityForm } from "./forms";
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.customers.students");
   return { title: t("title") };
-};
-
-/** 30 June of the academic year today is in (Baghdad time). */
-const academicYearEnd = (today: Date) => {
-  const local = new Date(
-    today.toLocaleString("en-US", { timeZone: "Asia/Baghdad" })
-  );
-  const year = local.getFullYear() + (local.getMonth() >= 6 ? 1 : 0);
-  return `${year}-06-30`;
 };
 
 /**
@@ -95,7 +87,7 @@ const StudentsPage = async () => {
     const row = universities?.find((university) => university.id === id);
     return row ? localized(row, "name", locale) : id;
   };
-  const yearEnd = academicYearEnd(new Date());
+  const yearEnd = academicYearEnd();
 
   return (
     <>

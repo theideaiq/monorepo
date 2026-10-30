@@ -1,12 +1,16 @@
 import { categoryOptions, localized, variantName } from "@repo/commerce";
+import type { Tables } from "@repo/database";
 import type { Locale } from "@repo/internationalization";
 import { formatNumber } from "@repo/internationalization/format";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/admin/action-button";
-import { PageBody, PageHeader, Panel } from "@/components/admin/page";
+import { PageBody, Panel } from "@/components/admin/page";
+import { RecordHeader } from "@/components/admin/record-header";
+import { StatusBadge } from "@/components/admin/status-badge";
 import { env } from "@/env";
 import { tierOptions } from "@/lib/admin/catalog";
+import { formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";
 import { ratingSummary } from "@/lib/admin/reviews";
 import { canRead } from "@/lib/admin/roles";
@@ -94,6 +98,77 @@ interface ProductPageProps {
   readonly params: Promise<{ id: string }>;
 }
 
+/**
+ * The product's record header: name, status (and a warning without a
+ * picture), Delete, price, copies and variants, and the editor's parts,
+ * pictures first.
+ */
+const ProductHeader = async ({
+  canWrite,
+  copies,
+  product,
+  variants,
+}: {
+  readonly canWrite: boolean;
+  readonly copies: readonly unknown[] | null;
+  readonly product: Tables<"products">;
+  readonly variants: readonly unknown[] | null;
+}) => {
+  const locale = (await getLocale()) as Locale;
+  const t = await getTranslations("admin.catalog");
+  const tCommon = await getTranslations("admin.common");
+  const format = formatters(locale);
+  return (
+    <RecordHeader
+      actions={
+        canWrite ? (
+          <ActionButton
+            action={deleteProduct}
+            confirm={{
+              description: t("products.deleteDescription"),
+              title: tCommon("deleteConfirm"),
+            }}
+            fields={{ id: product.id }}
+            variant="destructive"
+          >
+            {tCommon("delete")}
+          </ActionButton>
+        ) : null
+      }
+      breadcrumb={[{ href: "/catalog", label: t("title") }]}
+      chips={
+        <>
+          <StatusBadge status={product.status}>
+            {t(`productStatus.${product.status}`)}
+          </StatusBadge>
+          {product.images.length === 0 ? (
+            <StatusBadge tone="warning">{t("products.noPicture")}</StatusBadge>
+          ) : null}
+        </>
+      }
+      description={<span dir="ltr">{product.slug}</span>}
+      numbers={[
+        { label: t("fields.price"), value: format.money(product.price) },
+        {
+          label: t("products.copiesCount"),
+          value: format.number(copies?.length ?? 0),
+        },
+        {
+          label: t("variants.title"),
+          value: format.number(variants?.length ?? 0),
+        },
+      ]}
+      tabs={[
+        { href: "#pictures", label: t("products.pictures") },
+        { href: "#details", label: t("products.basics") },
+        { href: "#copies", label: t("copies.title") },
+        { href: "#variants", label: t("variants.title") },
+      ]}
+      title={localized(product, "name", locale)}
+    />
+  );
+};
+
 const ProductPage = async ({ params }: ProductPageProps) => {
   const { id } = await params;
   if (!isUuid(id)) {
@@ -102,7 +177,6 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   const { canWrite, staff, supabase } = await requireSection("catalog");
   const locale = await getLocale();
   const t = await getTranslations("admin.catalog");
-  const tCommon = await getTranslations("admin.common");
 
   const [
     { data: product },
@@ -160,25 +234,12 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
   return (
     <>
-      <PageHeader
-        back={{ href: "/catalog", label: t("title") }}
-        description={product.slug}
-        title={localized(product, "name", locale)}
-      >
-        {canWrite ? (
-          <ActionButton
-            action={deleteProduct}
-            confirm={{
-              description: t("products.deleteDescription"),
-              title: tCommon("deleteConfirm"),
-            }}
-            fields={{ id: product.id }}
-            variant="destructive"
-          >
-            {tCommon("delete")}
-          </ActionButton>
-        ) : null}
-      </PageHeader>
+      <ProductHeader
+        canWrite={canWrite}
+        copies={copies}
+        product={product}
+        variants={variants}
+      />
       <PageBody className="max-w-5xl">
         {canWrite ? (
           <>
@@ -198,13 +259,15 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           tiers={tierOptions(plans ?? [])}
           variantPriced={(variants ?? []).length > 1}
         />
-        <CopiesPanel
-          copies={copies ?? []}
-          disabled={!canWrite}
-          product={product}
-          suppliers={suppliers}
-          variants={variantOptions}
-        />
+        <div className="scroll-mt-4" id="copies">
+          <CopiesPanel
+            copies={copies ?? []}
+            disabled={!canWrite}
+            product={product}
+            suppliers={suppliers}
+            variants={variantOptions}
+          />
+        </div>
         <HouseOffersPanel
           copies={copies ?? []}
           disabled={!canWrite}
@@ -230,6 +293,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
         />
         <Panel
           description={t("variants.description")}
+          id="variants"
           title={t("variants.title")}
         >
           {(variants ?? []).map((variant) => (

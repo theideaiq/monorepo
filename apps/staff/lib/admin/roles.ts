@@ -20,6 +20,7 @@ export const sections = [
   "editorial",
   "telegram",
   "staff",
+  "store",
   "audit",
 ] as const;
 
@@ -36,9 +37,10 @@ export const sectionHref: Record<Section, string> = {
   editorial: "/club",
   finance: "/finance",
   orders: "/orders",
-  rentals: "/rentals",
+  rentals: "/plus",
   reviews: "/catalog/reviews",
   staff: "/settings",
+  store: "/settings/store",
   support: "/support",
   telegram: "/club/telegram",
 };
@@ -103,21 +105,22 @@ export const canWrite = (
 ) => accessTo(role, section) === "write";
 
 /**
- * The menu, in order: each entry opens its first section the role can
- * read; the others it can read are listed under it. Entries with nothing
- * the role can read are hidden. Sellers and payouts joins when selling
- * ships.
+ * The menu, in order (Inbox · Orders · Plus · Catalog · Customers · Club ·
+ * Partners · Finance · Settings): each entry opens its first section the
+ * role can read; the others it can read are listed under it. Entries with
+ * nothing the role can read are hidden. The store's settings (delivery,
+ * checkout, auctions, surveys) live under Settings.
  */
 export const menu = [
   { id: "inbox", sections: ["dashboard", "support"] },
-  { id: "catalog", sections: ["catalog", "reviews"] },
   { id: "orders", sections: ["orders"] },
-  { id: "rentals", sections: ["rentals"] },
+  { id: "plus", sections: ["rentals"] },
+  { id: "catalog", sections: ["catalog", "reviews"] },
   { id: "customers", sections: ["customers"] },
   { id: "club", sections: ["editorial", "telegram"] },
   { id: "partners", sections: ["companies"] },
   { id: "finance", sections: ["finance", "affiliates"] },
-  { id: "settings", sections: ["staff", "audit"] },
+  { id: "settings", sections: ["staff", "store", "audit"] },
 ] as const satisfies readonly { id: string; sections: readonly Section[] }[];
 
 export type MenuId = (typeof menu)[number]["id"];

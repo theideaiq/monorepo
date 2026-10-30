@@ -23,6 +23,7 @@ export type ActionError =
   | "apiUnavailable"
   | "telegramFailed"
   | "telegramSecretMissing"
+  | "needsPicture"
   | "unknown";
 
 export type ActionNotice = "saved" | "deleted" | "sent" | "posted";
@@ -55,6 +56,11 @@ export const failure = (
   status: "error",
 });
 
+/** The form fields an error is about, to highlight them. */
+export const errorFields: Partial<Record<ActionError, string[]>> = {
+  needsPicture: ["status", "images"],
+};
+
 interface DatabaseError {
   code?: string;
   message?: string;
@@ -80,6 +86,10 @@ export const databaseError = (error: DatabaseError): ActionError => {
   }
   if (message.includes("set its price and stock on each variant")) {
     return "variantPricing";
+  }
+  // The products trigger: no product goes live without a picture.
+  if (message.includes("Add a picture before publishing")) {
+    return "needsPicture";
   }
   switch (error.code) {
     case "23505":

@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
-import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import {
   EmptyState,
@@ -21,21 +20,17 @@ import { SectionTabs } from "@/components/admin/section-tabs";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { toBaghdadInput, todayInBaghdad } from "@/lib/admin/dates";
 import { formatters } from "@/lib/admin/format";
-import { oneOf, pageRange, type SearchParams } from "@/lib/admin/list";
+import { pageRange, type SearchParams } from "@/lib/admin/list";
 import { profileNames } from "@/lib/admin/profiles";
 import { canRead } from "@/lib/admin/roles";
 import { requireSection } from "@/lib/admin/session";
-import { RentalActions } from "./rental-actions";
-import { RENTAL_VIEWS, type RentalView, rentalTabs } from "./tabs";
-
-export const generateMetadata = async (): Promise<Metadata> => {
-  const t = await getTranslations("admin.rentals");
-  return { title: t("title") };
-};
-
-const views = RENTAL_VIEWS;
-
-type View = RentalView;
+import { RentalActions } from "../rental-actions";
+import {
+  plusTabs,
+  RENTAL_VIEWS,
+  type RentalView,
+  rentalViewHref,
+} from "../tabs";
 
 const LOAN_DAYS = 14;
 
@@ -117,11 +112,16 @@ const RentalTerms = ({
   );
 };
 
-/** The IDEA Plus rentals: requests to deliver, items out, returns. */
-const RentalsPage = async ({
+/**
+ * A Plus rental list: requests to deliver (To ship), items out with
+ * members, overdue first (Coming back), or rentals already back.
+ */
+export const RentalsList = async ({
   searchParams,
+  view,
 }: {
   readonly searchParams: Promise<SearchParams>;
+  readonly view: RentalView;
 }) => {
   const { canWrite, staff, supabase } = await requireSection("rentals");
   const params = await searchParams;
@@ -129,15 +129,18 @@ const RentalsPage = async ({
   const t = await getTranslations("admin.rentals");
   const tStore = await getTranslations("store");
   const format = formatters(locale);
-  const view: View =
-    oneOf(params, "view", Object.keys(views) as View[]) ?? "requests";
   const { from, page, to } = pageRange(params);
 
-  const { count, data: rentals } = await supabase
+  let query = supabase
     .from("rentals")
     .select("*", { count: "exact" })
-    .in("status", [...views[view]])
-    .order(view === "requests" ? "requested_at" : "due_at", {
+    .in("status", [...RENTAL_VIEWS[view]]);
+  if (view === "back") {
+    // Overdue first (the enum puts overdue after active).
+    query = query.order("status", { ascending: false });
+  }
+  const { count, data: rentals } = await query
+    .order(view === "ship" ? "requested_at" : "due_at", {
       ascending: view !== "history",
       nullsFirst: false,
     })
@@ -156,7 +159,7 @@ const RentalsPage = async ({
   return (
     <>
       <PageHeader title={t("title")} />
-      <SectionTabs tabs={rentalTabs(t, view)} />
+      <SectionTabs tabs={plusTabs(t, staff.role)} />
       <PageBody>
         {(rentals ?? []).length === 0 ? (
           <EmptyState title={t(`empty.${view}`)} />
@@ -253,11 +256,9 @@ const RentalsPage = async ({
           count={count}
           page={page}
           params={params}
-          pathname="/rentals"
+          pathname={rentalViewHref[view]}
         />
       </PageBody>
     </>
   );
 };
-
-export default RentalsPage;

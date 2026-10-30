@@ -19,11 +19,12 @@ import {
 } from "@/components/admin/page";
 import { SectionTabs } from "@/components/admin/section-tabs";
 import { StatCard } from "@/components/admin/stat-card";
+import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
 import { inviteToPlus } from "../actions";
-import { rentalTabs } from "../tabs";
+import { plusTabs } from "../tabs";
 import { AreaForm, PlusSettingsForm } from "./forms";
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -37,7 +38,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
  * settings.
  */
 const PlusLaunchPage = async () => {
-  const { canWrite, supabase } = await requireSection("rentals");
+  const { canWrite, staff, supabase } = await requireSection("rentals");
   const locale = await getLocale();
   const t = await getTranslations("admin.rentals");
   const tGov = await getTranslations("admin.rentals.plus");
@@ -48,6 +49,7 @@ const PlusLaunchPage = async () => {
     { data: waitlist },
     { data: areas },
     { data: settings },
+    { data: subscribers },
   ] = await Promise.all([
     supabase.rpc("plus_status").maybeSingle(),
     supabase
@@ -67,17 +69,26 @@ const PlusLaunchPage = async () => {
       .from("store_settings")
       .select("plus_capacity, plus_invite_hours, extra_swap_fee")
       .maybeSingle(),
+    supabase
+      .from("subscriptions")
+      .select(
+        "id, user_id, status, current_period_end, cancel_at_period_end, created_at, plans!subscriptions_plan_id_fkey!inner(name, audience)"
+      )
+      .eq("plans.audience", "plus")
+      .in("status", ["active", "past_due"])
+      .order("created_at", { ascending: false })
+      .limit(200),
   ]);
-  const names = await profileNames(
-    supabase,
-    (waitlist ?? []).map((row) => row.user_id)
-  );
+  const names = await profileNames(supabase, [
+    ...(waitlist ?? []).map((row) => row.user_id),
+    ...(subscribers ?? []).map((row) => row.user_id),
+  ]);
   const members = status ? status.capacity - status.places_free : 0;
 
   return (
     <>
       <PageHeader title={t("title")} />
-      <SectionTabs tabs={rentalTabs(t, null)} />
+      <SectionTabs tabs={plusTabs(t, staff.role)} />
       <PageBody className="max-w-5xl">
         <div className="grid gap-4 sm:grid-cols-3">
           <StatCard
@@ -93,6 +104,54 @@ const PlusLaunchPage = async () => {
             value={format.number(status?.waiting ?? 0)}
           />
         </div>
+
+        <Panel title={tGov("members")}>
+          {(subscribers ?? []).length === 0 ? (
+            <EmptyState title={tGov("membersEmpty")} />
+          ) : (
+            <div className="rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t("member")}</TableHead>
+                    <TableHead>{tGov("plan")}</TableHead>
+                    <TableHead>{t("status")}</TableHead>
+                    <TableHead>{tGov("renews")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(subscribers ?? []).map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell>
+                        <MaybeLink
+                          href={row.user_id && `/customers/${row.user_id}`}
+                        >
+                          {(row.user_id && names.get(row.user_id)) ||
+                            t("unnamed")}
+                        </MaybeLink>
+                      </TableCell>
+                      <TableCell>{row.plans.name}</TableCell>
+                      <TableCell>
+                        <StatusBadge status={row.status}>
+                          {tGov(
+                            `memberStatus.${row.status === "past_due" ? "pastDue" : "active"}`
+                          )}
+                        </StatusBadge>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {row.cancel_at_period_end
+                          ? tGov("endsOn", {
+                              date: format.date(row.current_period_end),
+                            })
+                          : format.date(row.current_period_end)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </Panel>
 
         <Panel description={tGov("waitlistHint")} title={tGov("waitlist")}>
           {(waitlist ?? []).length === 0 ? (

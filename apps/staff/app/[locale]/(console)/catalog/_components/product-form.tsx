@@ -2,9 +2,14 @@
 
 import type { Tables } from "@repo/database";
 import { Constants } from "@repo/database";
+import { ImageOffIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { ActionForm, SubmitButton } from "@/components/admin/action-form";
+import {
+  ActionForm,
+  SubmitButton,
+  useFormContext,
+} from "@/components/admin/action-form";
 import {
   CheckboxField,
   FieldGrid,
@@ -96,6 +101,27 @@ const PricingPanel = ({
   );
 };
 
+/**
+ * Beside the status: the database refuses to publish a product without a
+ * picture, and says so here (not only in the toast).
+ */
+const PictureNotice = () => {
+  const { state } = useFormContext();
+  const t = useTranslations("admin.errors");
+  if (state.status !== "error" || state.error !== "needsPicture") {
+    return null;
+  }
+  return (
+    <p
+      className="flex items-start gap-1.5 font-medium text-danger text-sm"
+      role="alert"
+    >
+      <ImageOffIcon aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+      {t("needsPicture")}
+    </p>
+  );
+};
+
 export const ProductForm = ({
   categories,
   disabled = false,
@@ -119,7 +145,24 @@ export const ProductForm = ({
     <ActionForm action={saveProduct}>
       {product ? <input name="id" type="hidden" value={product.id} /> : null}
       <fieldset className="grid gap-6" disabled={disabled}>
-        <Panel title={t("products.basics")}>
+        <Panel
+          description={t("products.picturesHint")}
+          id="pictures"
+          title={t("products.pictures")}
+        >
+          <FileUpload
+            accept="image"
+            bucket="catalog"
+            defaultPaths={product?.images ?? []}
+            folder="products"
+            label={t("fields.images")}
+            max={12}
+            name="images"
+            supabaseUrl={supabaseUrl}
+          />
+        </Panel>
+
+        <Panel id="details" title={t("products.basics")}>
           <FieldGrid>
             <TextField
               defaultValue={product?.name_ar}
@@ -169,16 +212,19 @@ export const ProductForm = ({
               }))}
               value={kind}
             />
-            <SelectField
-              defaultValue={product?.status ?? "draft"}
-              hint={t("fields.statusHint")}
-              label={t("fields.status")}
-              name="status"
-              options={Enums.product_status.map((value) => ({
-                label: t(`productStatus.${value}`),
-                value,
-              }))}
-            />
+            <div className="grid content-start gap-2">
+              <SelectField
+                defaultValue={product?.status ?? "draft"}
+                hint={t("fields.statusHint")}
+                label={t("fields.status")}
+                name="status"
+                options={Enums.product_status.map((value) => ({
+                  label: t(`productStatus.${value}`),
+                  value,
+                }))}
+              />
+              <PictureNotice />
+            </div>
             <TextField
               defaultValue={product?.release_date ?? ""}
               hint={t("fields.releaseDateHint")}
@@ -248,7 +294,7 @@ export const ProductForm = ({
 
         <PricingPanel product={product} variantPriced={variantPriced} />
 
-        <Panel title={t("products.content")}>
+        <Panel id="content" title={t("products.content")}>
           <FieldGrid>
             <TextareaField
               defaultValue={product?.description_ar ?? ""}
@@ -267,16 +313,6 @@ export const ProductForm = ({
               rows={6}
             />
           </FieldGrid>
-          <FileUpload
-            accept="image"
-            bucket="catalog"
-            defaultPaths={product?.images ?? []}
-            folder="products"
-            label={t("fields.images")}
-            max={12}
-            name="images"
-            supabaseUrl={supabaseUrl}
-          />
           <KeyValueEditor
             defaultValue={
               (product?.details as Record<string, unknown> | undefined) ?? null

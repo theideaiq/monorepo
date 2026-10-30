@@ -247,7 +247,7 @@ export const savePlan = staffAction(
 
     if (input.isNew) {
       check(await supabase.from("plans").insert({ ...row, id: input.id }));
-      return success("saved", { redirectTo: `/catalog/plans/${input.id}` });
+      return success("saved", { redirectTo: `/plus/plans/${input.id}` });
     }
 
     affected(

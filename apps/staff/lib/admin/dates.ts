@@ -76,3 +76,10 @@ export const todayInBaghdad = (now: Date = new Date()) => {
   const local = new TZDate(now, TIME_ZONE);
   return `${local.getFullYear()}-${pad(local.getMonth() + 1)}-${pad(local.getDate())}`;
 };
+
+/** 30 June of the academic year today is in (YYYY-MM-DD, Baghdad). */
+export const academicYearEnd = (now: Date = new Date()) => {
+  const local = new TZDate(now, TIME_ZONE);
+  const year = local.getFullYear() + (local.getMonth() >= 6 ? 1 : 0);
+  return `${year}-06-30`;
+};
