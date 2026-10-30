@@ -8,6 +8,8 @@ import {
   PageHeader,
   Panel,
 } from "@/components/admin/page";
+import { SignedFiles, signAll } from "@/components/admin/signed-files";
+import { academicYearEnd } from "@/lib/admin/dates";
 import { formatters } from "@/lib/admin/format";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
@@ -21,64 +23,6 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.customers.verifications");
   return { title: t("title") };
 };
-
-/** 30 June of the academic year today is in (Baghdad time). */
-const academicYearEnd = (today: Date) => {
-  const local = new Date(
-    today.toLocaleString("en-US", { timeZone: "Asia/Baghdad" })
-  );
-  const year = local.getFullYear() + (local.getMonth() >= 6 ? 1 : 0);
-  return `${year}-06-30`;
-};
-
-const signAll = (paths: string[], sign: (path: string) => Promise<string>) =>
-  Promise.all(
-    paths.map(async (path) => ({
-      path,
-      url: await sign(path).catch(() => null),
-    }))
-  );
-
-/** Signed links to a request's files: images inline, PDFs as links. */
-const Files = ({
-  files,
-  imageAlt,
-  openLabel,
-  missingLabel,
-}: {
-  readonly files: { path: string; url: string | null }[];
-  readonly imageAlt: string;
-  readonly missingLabel: string;
-  readonly openLabel: string;
-}) => (
-  <div className="flex flex-wrap gap-2">
-    {files.map(({ path, url }) => {
-      if (!url) {
-        return (
-          <p className="text-muted-foreground text-sm" key={path}>
-            {missingLabel}
-          </p>
-        );
-      }
-      return (
-        <a href={url} key={path} rel="noreferrer" target="_blank">
-          {path.toLowerCase().endsWith(".pdf") ? (
-            <span className="text-sm underline">{openLabel}</span>
-          ) : (
-            // biome-ignore lint/performance/noImgElement: a short-lived signed link
-            <img
-              alt={imageAlt}
-              className="max-h-40 w-48 rounded object-contain"
-              height={160}
-              src={url}
-              width={192}
-            />
-          )}
-        </a>
-      );
-    })}
-  </div>
-);
 
 /**
  * Verification reviews: identity checks (approve with the name on the card;
@@ -138,7 +82,7 @@ const VerificationsPage = async () => {
   ]);
   const filesOf = (id: string) =>
     requestFiles[pending.findIndex((row) => row.id === id)] ?? [];
-  const yearEnd = academicYearEnd(new Date());
+  const yearEnd = academicYearEnd();
   const fileLabels = {
     imageAlt: t("documentAlt"),
     missingLabel: t("noFile"),
@@ -171,7 +115,7 @@ const VerificationsPage = async () => {
                 {" · "}
                 {format.date(row.created_at)}
               </p>
-              <Files files={filesOf(row.id)} {...fileLabels} />
+              <SignedFiles files={filesOf(row.id)} {...fileLabels} />
               {canWrite ? <ReviewIdentityForm id={row.id} /> : null}
             </div>
           ))}
@@ -190,7 +134,7 @@ const VerificationsPage = async () => {
                 {" · "}
                 {format.date(row.created_at)}
               </p>
-              <Files files={filesOf(row.id)} {...fileLabels} />
+              <SignedFiles files={filesOf(row.id)} {...fileLabels} />
               {canWrite ? (
                 <ReviewEducatorForm id={row.id} yearEnd={yearEnd} />
               ) : null}
@@ -226,7 +170,7 @@ const VerificationsPage = async () => {
                   {" · "}
                   {format.date(row.requested_at)}
                 </p>
-                <Files files={orgFiles[index] ?? []} {...fileLabels} />
+                <SignedFiles files={orgFiles[index] ?? []} {...fileLabels} />
                 {canWrite ? (
                   <ReviewOrganizationForm id={row.organization_id} />
                 ) : null}

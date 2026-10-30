@@ -14,12 +14,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/admin/action-button";
-import {
-  DetailList,
-  PageBody,
-  PageHeader,
-  Panel,
-} from "@/components/admin/page";
+import { DetailList, PageBody, Panel } from "@/components/admin/page";
+import { RecordHeader } from "@/components/admin/record-header";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { governorateName, parseAddress } from "@/lib/admin/address";
 import { type Formatters, formatters } from "@/lib/admin/format";
@@ -312,6 +308,58 @@ const GiftPanel = async ({ gift }: { readonly gift: OrderGift | null }) => {
   );
 };
 
+/**
+ * The order's record header: number, status chips, total, items and when
+ * it was paid, and the parts of the page.
+ */
+const OrderHeader = async ({
+  gift,
+  items,
+  order,
+  showPayments,
+}: {
+  readonly gift: Awaited<ReturnType<typeof orderGift>>;
+  readonly items: readonly { quantity: number }[] | null;
+  readonly order: Tables<"orders">;
+  readonly showPayments: boolean;
+}) => {
+  const t = await getTranslations("admin.orders");
+  const tStore = await getTranslations("store");
+  const format = formatters(await getLocale());
+  return (
+    <RecordHeader
+      breadcrumb={[{ href: "/orders", label: t("title") }]}
+      chips={
+        <>
+          <StatusBadge status={order.status}>
+            {tStore(`orderStatus.${order.status}`)}
+          </StatusBadge>
+          <GuardianBadge status={order.guardian_status} />
+          <GiftBadge gift={gift} />
+        </>
+      }
+      description={format.dateTime(order.created_at)}
+      numbers={[
+        { label: t("total"), value: format.money(order.total) },
+        {
+          label: t("items"),
+          value: format.number(
+            (items ?? []).reduce((sum, item) => sum + item.quantity, 0)
+          ),
+        },
+        { label: t("paidAt"), value: format.dateTime(order.paid_at) },
+      ]}
+      tabs={[
+        { href: "#items", label: t("items") },
+        ...(showPayments ? [{ href: "#payments", label: t("payments") }] : []),
+        { href: "#delivery", label: t("delivery") },
+        { href: "#notes", label: t("notes") },
+      ]}
+      title={t("orderNumber", { number: String(order.number) })}
+    />
+  );
+};
+
 const OrderPage = async ({ params }: OrderPageProps) => {
   const { id } = await params;
   if (!isUuid(id)) {
@@ -381,20 +429,15 @@ const OrderPage = async ({ params }: OrderPageProps) => {
 
   return (
     <>
-      <PageHeader
-        back={{ href: "/orders", label: t("title") }}
-        description={format.dateTime(order.created_at)}
-        title={t("orderNumber", { number: String(order.number) })}
-      >
-        <StatusBadge status={order.status}>
-          {tStore(`orderStatus.${order.status}`)}
-        </StatusBadge>
-        <GuardianBadge status={order.guardian_status} />
-        <GiftBadge gift={gift} />
-      </PageHeader>
+      <OrderHeader
+        gift={gift}
+        items={items}
+        order={order}
+        showPayments={showPayments}
+      />
       <PageBody className="lg:grid-cols-[1fr_22rem]">
         <div className="grid content-start gap-6">
-          <Panel title={t("items")}>
+          <Panel id="items" title={t("items")}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -452,7 +495,7 @@ const OrderPage = async ({ params }: OrderPageProps) => {
           </Panel>
 
           {payments ? (
-            <Panel title={t("payments")}>
+            <Panel id="payments" title={t("payments")}>
               {(payments.data ?? []).length === 0 ? (
                 <p className="text-muted-foreground text-sm">
                   {t("noPayments")}
@@ -524,7 +567,7 @@ const OrderPage = async ({ params }: OrderPageProps) => {
             />
           ) : null}
 
-          <Panel title={t("delivery")}>
+          <Panel id="delivery" title={t("delivery")}>
             <DetailList
               items={[
                 {
@@ -556,7 +599,7 @@ const OrderPage = async ({ params }: OrderPageProps) => {
             />
           </Panel>
 
-          <Panel title={t("notes")}>
+          <Panel id="notes" title={t("notes")}>
             <OrderNotesForm
               disabled={!canWrite}
               id={order.id}

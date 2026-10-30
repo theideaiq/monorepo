@@ -145,16 +145,31 @@ incidents) is in `docs/platform`.
   `staff.theideaiq.com`), everything The IDEA's team uses, server-rendered
   with a `proxy.ts`:
   - the console at its root (`app/[locale]/(console)`), one menu
-    (`menu` in `lib/admin/roles.ts`): Inbox `/` (with `/support`; key numbers by week under the inbox) ·
-    Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
+    (`menu` in `lib/admin/roles.ts`, counts only where something needs
+    action) and a command bar (Ctrl/⌘K: the role's pages, and orders,
+    products and customers through the same search as `/search`;
+    `CommandBar` in `@repo/design-system/components/command-bar`): Inbox
+    `/` (every decision in one list: support tickets, verifications,
+    product checks, returns and disputes, shops to approve, program
+    applications and submissions, `?kind=` and `?mine=1` to filter, oldest
+    first with time waiting and owner; a row opens a drawer with its facts
+    and its actions, the same Server Actions as its page, and a link to the
+    full record; J/K move; Counter mode checks a Pass; then the other work
+    and the key numbers by week; with `/support`) · Orders and delivery
+    `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
+    and return refunds) · Plus `/plus` (To ship, `/plus/coming-back`,
+    `/plus/swaps`, `/plus/kits`, `/plus/members` with the places, waitlist,
+    areas and settings, `/plus/demand`, the most-queued products against
+    their copies with how many to buy (`staff_plus_demand()`),
+    `/plus/plans` and `/plus/history`; one-off rent is gone) · Catalog
+    `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
     automatic checks on products shops create and shops' flags, and
     `/catalog/offers`, offers on The IDEA's own stock; each product's page
-    sets which of its copies take offers and auctions one;
-    `/catalog/auctions`, signed, limited and rare marks to review and The
-    IDEA's own auctions; and `/catalog/campaigns`,
-    seasonal campaigns shops opt in to) · Orders and delivery
-    `/orders` (with `/orders/shop-lines` and `/orders/returns`, disputes
-    and return refunds) · Rentals and Plus `/rentals` · Customers `/customers` ·
+    leads with its pictures (publishing without one shows "Add a picture
+    before publishing"), sets which of its copies take offers and auctions
+    one; `/catalog/auctions`, signed, limited and rare marks to review and
+    The IDEA's own auctions; and `/catalog/campaigns`, seasonal campaigns
+    shops opt in to) · Customers `/customers` ·
     Club `/club` (with `/club/opportunities`, where editors review
     organizations' opportunities and post The IDEA's own, selling The
     IDEA's programs as packages with their applications at
@@ -167,7 +182,12 @@ incidents) is in `docs/platform`.
     codes, brands and denominations with cost, margin and price, the supplier
     sync), and `/finance/coupons`,
     coupon codes members enter at checkout) · Settings
-    `/settings` (with `/settings/audit`), and `/search`. Then `/no-access`
+    `/settings` (with `/settings/store`, the store's delivery, checkout,
+    auction and survey settings, and `/settings/audit`), and `/search`.
+    Record pages (customer, order, product, ticket, event, team request)
+    share one header (`components/admin/record-header.tsx`): breadcrumb ·
+    title · status chips · actions at the end (primary last) · key
+    numbers · tabs. Then `/no-access`
     (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:
     staff only, with Server Actions; every query runs as the staff member
     so RLS applies, and staff rights need an authenticator-app (AAL2)

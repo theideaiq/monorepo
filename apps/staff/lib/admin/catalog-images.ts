@@ -1,3 +1,5 @@
+import { buckets, publicFileUrl } from "@repo/storage";
+
 /**
  * Product images are storage paths in the public `catalog` bucket or https
  * links to the cover-art sources that `catalogImagePatterns`
@@ -40,6 +42,15 @@ export const isRemoteCatalogImage = (value: string) => {
     return false;
   }
 };
+
+/**
+ * Where a product image is shown from: a remote cover as it is, a storage
+ * path as its public URL in the `catalog` bucket.
+ */
+export const catalogImageUrl = (supabaseUrl: string, image: string) =>
+  isRemoteCatalogImage(image)
+    ? image
+    : publicFileUrl(supabaseUrl, buckets.catalog.id, image);
 
 /** True for a value that may be stored in `products.images`. */
 export const isCatalogImage = (value: string) =>

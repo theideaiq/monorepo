@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
+  academicYearEnd,
   fromBaghdadInput,
   monthStart,
   monthStartIso,
@@ -35,5 +36,20 @@ describe("Baghdad date inputs", () => {
     expect(monthStart(now)).toBe("2026-11-01");
     expect(monthStart(now, -11)).toBe("2025-12-01");
     expect(monthStartIso(now)).toBe("2026-10-31T21:00:00.000Z");
+  });
+});
+
+describe("academicYearEnd", () => {
+  test("30 June of the academic year, Baghdad time", () => {
+    expect(academicYearEnd(new Date("2026-10-30T12:00:00Z"))).toBe(
+      "2027-06-30"
+    );
+    expect(academicYearEnd(new Date("2027-03-01T12:00:00Z"))).toBe(
+      "2027-06-30"
+    );
+    // 30 June 22:00 UTC is already 1 July in Baghdad.
+    expect(academicYearEnd(new Date("2027-06-30T22:00:00Z"))).toBe(
+      "2028-06-30"
+    );
   });
 });

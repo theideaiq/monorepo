@@ -21,7 +21,7 @@ import { formatters } from "@/lib/admin/format";
 import { profileNames } from "@/lib/admin/profiles";
 import { requireSection } from "@/lib/admin/session";
 import { cancelSwap, completeSwap } from "../actions";
-import { rentalTabs } from "../tabs";
+import { plusTabs } from "../tabs";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.rentals.swaps");
@@ -163,7 +163,7 @@ const SwapRow = ({
  * what goes back and what comes next.
  */
 const SwapsPage = async () => {
-  const { canWrite, supabase } = await requireSection("rentals");
+  const { canWrite, staff, supabase } = await requireSection("rentals");
   const locale = await getLocale();
   const t = await getTranslations("admin.rentals");
   const format = formatters(locale);
@@ -184,7 +184,7 @@ const SwapsPage = async () => {
   return (
     <>
       <PageHeader title={t("title")} />
-      <SectionTabs tabs={rentalTabs(t, null)} />
+      <SectionTabs tabs={plusTabs(t, staff.role)} />
       <PageBody>
         {(swaps ?? []).length === 0 ? (
           <EmptyState title={t("swaps.empty")} />

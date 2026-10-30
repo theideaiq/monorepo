@@ -11,6 +11,7 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -18,10 +19,12 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from "@repo/design-system/components/ui/sidebar";
+import type { Locale } from "@repo/internationalization";
 import {
   LanguageSwitcher,
   ThemeToggle,
 } from "@repo/internationalization/controls";
+import { formatNumber } from "@repo/internationalization/format";
 import {
   BookOpenIcon,
   HandshakeIcon,
@@ -30,12 +33,12 @@ import {
   LogOutIcon,
   type LucideIcon,
   PackageIcon,
-  RepeatIcon,
   SettingsIcon,
   ShoppingCartIcon,
+  SparklesIcon,
   UsersIcon,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { signOut } from "@/lib/admin/auth-actions";
 import { Link, usePathname } from "@/lib/admin/navigation";
 import { type MenuEntry, type MenuId, sectionHref } from "@/lib/admin/roles";
@@ -49,11 +52,13 @@ const icons: Record<MenuId, LucideIcon> = {
   inbox: InboxIcon,
   orders: ShoppingCartIcon,
   partners: HandshakeIcon,
-  rentals: RepeatIcon,
+  plus: SparklesIcon,
   settings: SettingsIcon,
 };
 
 interface AppSidebarProps {
+  /** How many items need action, per entry (absent when none). */
+  readonly counts: Partial<Record<MenuId, number>>;
   readonly menu: MenuEntry[];
   readonly name: string | null;
   readonly role: StaffRole;
@@ -63,8 +68,9 @@ interface AppSidebarProps {
  * The console navigation: search, then the menu entries the staff role can
  * use, with their other sections under them.
  */
-export const AppSidebar = ({ menu, name, role }: AppSidebarProps) => {
+export const AppSidebar = ({ counts, menu, name, role }: AppSidebarProps) => {
   const t = useTranslations("admin");
+  const locale = useLocale() as Locale;
   const tAuth = useTranslations("auth");
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
@@ -107,6 +113,7 @@ export const AppSidebar = ({ menu, name, role }: AppSidebarProps) => {
                   isActive(sectionHref[section])
                 );
                 const Icon = icons[entry.id];
+                const count = counts[entry.id];
                 return (
                   <SidebarMenuItem key={entry.id}>
                     <SidebarMenuButton
@@ -117,8 +124,23 @@ export const AppSidebar = ({ menu, name, role }: AppSidebarProps) => {
                       <Link href={href} onClick={closeOnMobile}>
                         <Icon />
                         <span>{t(`nav.${entry.label}`)}</span>
+                        {count ? (
+                          <span className="sr-only">
+                            {t("nav.waiting", {
+                              count: formatNumber(count, locale),
+                            })}
+                          </span>
+                        ) : null}
                       </Link>
                     </SidebarMenuButton>
+                    {count ? (
+                      <SidebarMenuBadge
+                        aria-hidden="true"
+                        className="bg-accent text-pink-text"
+                      >
+                        {formatNumber(count, locale)}
+                      </SidebarMenuBadge>
+                    ) : null}
                     {more.length > 0 ? (
                       <SidebarMenuSub>
                         {more.map((section) => (

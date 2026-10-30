@@ -4,6 +4,7 @@ import { cn } from "@repo/design-system/lib/utils";
 import { ChevronLeftIcon, InboxIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "@/lib/admin/navigation";
+import { CommandTrigger } from "./console-command-bar";
 
 interface PageHeaderProps {
   /** Link to the parent page, shown as a back arrow. */
@@ -13,7 +14,10 @@ interface PageHeaderProps {
   readonly title: ReactNode;
 }
 
-/** The top bar of a console page: sidebar toggle, title and actions. */
+/**
+ * The top bar of a console page: sidebar toggle, title and actions, and
+ * the command bar's button at the end.
+ */
 export const PageHeader = ({
   back,
   children,
@@ -42,6 +46,7 @@ export const PageHeader = ({
     {children ? (
       <div className="flex flex-wrap items-center gap-2">{children}</div>
     ) : null}
+    <CommandTrigger />
   </header>
 );
 
@@ -78,19 +83,23 @@ export const Panel = ({
   children,
   className,
   description,
+  id,
   title,
 }: {
   readonly actions?: ReactNode;
   readonly children: ReactNode;
   readonly className?: string;
   readonly description?: ReactNode;
+  /** An anchor for the record header's tabs (`#id`). */
+  readonly id?: string;
   readonly title?: ReactNode;
 }) => (
   <section
     className={cn(
-      "grid content-start gap-4 rounded-lg border bg-card p-4 text-card-foreground md:p-5",
+      "grid scroll-mt-4 content-start gap-4 rounded-lg border bg-card p-4 text-card-foreground md:p-5",
       className
     )}
+    id={id}
   >
     {title || actions ? (
       <div className="flex flex-wrap items-start justify-between gap-2">

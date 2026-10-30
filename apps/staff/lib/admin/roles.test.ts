@@ -5,6 +5,7 @@ import {
   canWrite,
   isStaffRole,
   menu,
+  sectionHref,
   sections,
   visibleMenu,
   visibleSections,
@@ -89,15 +90,26 @@ describe("role → sections", () => {
     ).toEqual({ id: "catalog", label: "catalog", sections: ["reviews"] });
     expect(visibleMenu("superadmin").map((entry) => entry.id)).toEqual([
       "inbox",
-      "catalog",
       "orders",
-      "rentals",
+      "plus",
+      "catalog",
       "customers",
       "club",
       "partners",
       "finance",
       "settings",
     ]);
+  });
+
+  test("the store's settings fold into Settings, Plus opens on /plus", () => {
+    const settings = visibleMenu("admin").find(
+      (entry) => entry.id === "settings"
+    );
+    // Admins can't manage staff: Settings opens the store's settings.
+    expect(settings?.sections).toEqual(["store", "audit"]);
+    expect(sectionHref.store).toBe("/settings/store");
+    expect(sectionHref.rentals).toBe("/plus");
+    expect(canRead("support", "store")).toBe(false);
   });
 
   test("no role, no access", () => {

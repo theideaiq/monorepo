@@ -25,7 +25,7 @@ const PlanPage = async ({
   return (
     <>
       <PageHeader
-        back={{ href: "/catalog/plans", label: t("tabs.plans") }}
+        back={{ href: "/plus/plans", label: t("tabs.plans") }}
         description={plan.id}
         title={plan.name}
       />

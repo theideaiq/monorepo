@@ -10,12 +10,8 @@ import {
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/admin/action-button";
-import {
-  DetailList,
-  PageBody,
-  PageHeader,
-  Panel,
-} from "@/components/admin/page";
+import { DetailList, PageBody, Panel } from "@/components/admin/page";
+import { RecordHeader } from "@/components/admin/record-header";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { isUuid } from "@/lib/admin/list";
@@ -184,22 +180,36 @@ const CompanyRequestPage = async ({
 
   return (
     <>
-      <PageHeader
-        back={{ href: "/partners/team", label: t("title") }}
+      <RecordHeader
+        actions={
+          open && can.quotes ? (
+            <ActionButton
+              action={cancelRequest}
+              confirm={{ title: t("cancelRequest") }}
+              fields={{ requestId: request.id }}
+              variant="outline"
+            >
+              {t("cancelRequest")}
+            </ActionButton>
+          ) : null
+        }
+        breadcrumb={[{ href: "/partners/team", label: t("title") }]}
+        chips={
+          <StatusBadge tone={requestTone[request.status]}>
+            {tStatus(`request.${request.status}`)}
+          </StatusBadge>
+        }
         description={request.organizations?.name}
+        numbers={[
+          { label: t("budget"), value: format.money(request.budget) },
+          { label: t("neededBy"), value: format.date(request.needed_by) },
+          {
+            label: t("quotes.title"),
+            value: format.number(quotes.length),
+          },
+        ]}
         title={`${t("number", { number: String(request.number) })} · ${request.title}`}
-      >
-        {open && can.quotes ? (
-          <ActionButton
-            action={cancelRequest}
-            confirm={{ title: t("cancelRequest") }}
-            fields={{ requestId: request.id }}
-            variant="outline"
-          >
-            {t("cancelRequest")}
-          </ActionButton>
-        ) : null}
-      </PageHeader>
+      />
       <PageBody className="xl:grid-cols-[1fr_22rem]">
         <div className="grid content-start gap-4">
           {quotes.map((quote) => (

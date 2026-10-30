@@ -11,11 +11,12 @@ import { PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { EmptyState, PageBody, PageHeader } from "@/components/admin/page";
+import { SectionTabs } from "@/components/admin/section-tabs";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { formatters } from "@/lib/admin/format";
 import { Link } from "@/lib/admin/navigation";
 import { requireSection } from "@/lib/admin/session";
-import { CatalogTabs } from "../_components/catalog-tabs";
+import { plusTabs } from "../tabs";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.catalog.tabs");
@@ -23,8 +24,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const PlansPage = async () => {
-  const { canWrite, supabase } = await requireSection("catalog");
+  const { canWrite, staff, supabase } = await requireSection("catalog");
   const t = await getTranslations("admin.catalog");
+  const tPlus = await getTranslations("admin.rentals");
   const format = formatters(await getLocale());
   const { data: plans } = await supabase
     .from("plans")
@@ -34,17 +36,17 @@ const PlansPage = async () => {
 
   return (
     <>
-      <PageHeader title={t("title")}>
+      <PageHeader title={tPlus("title")}>
         {canWrite ? (
           <Button asChild>
-            <Link href="/catalog/plans/new">
+            <Link href="/plus/plans/new">
               <PlusIcon />
               {t("plans.new")}
             </Link>
           </Button>
         ) : null}
       </PageHeader>
-      <CatalogTabs />
+      <SectionTabs tabs={plusTabs(tPlus, staff.role)} />
       <PageBody>
         {(plans ?? []).length === 0 ? (
           <EmptyState title={t("plans.empty")} />
@@ -70,7 +72,7 @@ const PlansPage = async () => {
                     <TableCell>
                       <Link
                         className="font-medium hover:underline"
-                        href={`/catalog/plans/${plan.id}`}
+                        href={`/plus/plans/${plan.id}`}
                       >
                         {plan.name}
                       </Link>

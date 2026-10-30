@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { PageBody, PageHeader, Panel } from "@/components/admin/page";
 import { requireSection } from "@/lib/admin/session";
-import { CatalogTabs } from "../_components/catalog-tabs";
-import { DeliveryZoneForm } from "../_components/delivery-zone-form";
-import { StoreSettingsForm } from "../_components/store-settings-form";
+import { DeliveryZoneForm } from "../../catalog/_components/delivery-zone-form";
+import { StoreSettingsForm } from "../../catalog/_components/store-settings-form";
 
 export const generateMetadata = async (): Promise<Metadata> => {
-  const t = await getTranslations("admin.catalog.tabs");
-  return { title: t("settings") };
+  const t = await getTranslations("admin.nav");
+  return { title: t("store") };
 };
 
 const StoreSettingsPage = async () => {
-  const { canWrite, supabase } = await requireSection("catalog");
+  const { canWrite, supabase } = await requireSection("store");
   const t = await getTranslations("admin.catalog");
+  const tNav = await getTranslations("admin.nav");
   const [{ data: settings }, { data: zones }] = await Promise.all([
     supabase
       .from("store_settings")
@@ -30,8 +30,7 @@ const StoreSettingsPage = async () => {
 
   return (
     <>
-      <PageHeader title={t("title")} />
-      <CatalogTabs />
+      <PageHeader title={tNav("store")} />
       <PageBody className="max-w-5xl">
         <Panel
           description={t("settings.description")}

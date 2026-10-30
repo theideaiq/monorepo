@@ -10,7 +10,9 @@ import {
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ActionButton } from "@/components/admin/action-button";
-import { PageBody, PageHeader, Panel } from "@/components/admin/page";
+import { PageBody, Panel } from "@/components/admin/page";
+import { RecordHeader } from "@/components/admin/record-header";
+import { StatusBadge } from "@/components/admin/status-badge";
 import { env } from "@/env";
 import { toBaghdadInput } from "@/lib/admin/dates";
 import { formatters } from "@/lib/admin/format";
@@ -53,23 +55,50 @@ const EventPage = async ({
 
   return (
     <>
-      <PageHeader
-        back={{ href: "/club/events", label: t("tabs.events") }}
+      <RecordHeader
+        actions={
+          <ActionButton
+            action={deleteEvent}
+            confirm={{
+              description: t("events.deleteDescription"),
+              title: tCommon("deleteConfirm"),
+            }}
+            fields={{ id: event.id }}
+            variant="destructive"
+          >
+            {tCommon("delete")}
+          </ActionButton>
+        }
+        breadcrumb={[
+          { href: "/club", label: t("title") },
+          { href: "/club/events", label: t("tabs.events") },
+        ]}
+        chips={
+          <StatusBadge status={event.published ? "published" : "draft"}>
+            {event.published
+              ? t("publish.states.published")
+              : t("publish.states.draft")}
+          </StatusBadge>
+        }
         description={format.dateTime(event.starts_at)}
+        numbers={[
+          {
+            href: "#rsvps",
+            label: t("events.rsvps"),
+            value: event.capacity
+              ? `${format.number(rsvps?.length ?? 0)} / ${format.number(event.capacity)}`
+              : format.number(rsvps?.length ?? 0),
+          },
+          {
+            label: t("events.checkedIn"),
+            value: format.number(
+              (rsvps ?? []).filter((rsvp) => rsvp.checked_in_at).length
+            ),
+          },
+          { label: t("events.location"), value: event.location },
+        ]}
         title={localized(event, "title", locale)}
-      >
-        <ActionButton
-          action={deleteEvent}
-          confirm={{
-            description: t("events.deleteDescription"),
-            title: tCommon("deleteConfirm"),
-          }}
-          fields={{ id: event.id }}
-          variant="destructive"
-        >
-          {tCommon("delete")}
-        </ActionButton>
-      </PageHeader>
+      />
       <PageBody className="xl:grid-cols-[1fr_22rem]">
         <EventForm
           endsAt={toBaghdadInput(event.ends_at)}
@@ -87,6 +116,7 @@ const EventPage = async ({
                 })
               : format.number(rsvps?.length ?? 0)
           }
+          id="rsvps"
           title={t("events.rsvpList")}
         >
           {(rsvps ?? []).length === 0 ? (

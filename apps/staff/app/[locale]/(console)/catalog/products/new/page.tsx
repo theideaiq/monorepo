@@ -1,7 +1,8 @@
 import { categoryOptions } from "@repo/commerce";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { PageBody, PageHeader } from "@/components/admin/page";
+import { PageBody } from "@/components/admin/page";
+import { RecordHeader } from "@/components/admin/record-header";
 import { env } from "@/env";
 import { tierOptions } from "@/lib/admin/catalog";
 import { requireSection } from "@/lib/admin/session";
@@ -31,8 +32,9 @@ const NewProductPage = async () => {
 
   return (
     <>
-      <PageHeader
-        back={{ href: "/catalog", label: t("title") }}
+      <RecordHeader
+        breadcrumb={[{ href: "/catalog", label: t("title") }]}
+        description={t("products.newHint")}
         title={t("products.new")}
       />
       <PageBody className="max-w-5xl">
