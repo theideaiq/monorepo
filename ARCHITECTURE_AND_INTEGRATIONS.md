@@ -490,6 +490,14 @@ session in the shared cookie.
   Wallet API in a Google Cloud project, create a service account there,
   add its email as a user of the issuer, and put its JSON key (or base64
   of it) on the `api` project.
+- **Review requests and cart reminders.** `/cron/reminders` (hourly from
+  `.github/workflows/reminders.yml`, daily from Vercel Cron) takes what's
+  due from `take_review_requests` (orders delivered 3 days ago, once) and
+  `take_cart_reminders` (carts left 24 hours, Passes with
+  `marketing_opt_in`, once per cart change); the database adds the
+  notification (push, Telegram, WhatsApp as chosen) and the API sends the
+  email (`@repo/email/templates/reminder`). The hourly run needs the
+  `CRON_SECRET` repository secret, like the Boxy sync.
 - **Apple Wallet.** Apple Wallet can't change the code every 30 seconds,
   so its card carries a fixed one, `IDEA:<member number>:W<30 hex
   digits>`, kept as a hash (`private.wallet_cards`); `check_pass()` and

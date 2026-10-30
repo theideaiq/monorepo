@@ -4417,6 +4417,14 @@
         "digital_code_ready": {
           "title": "Your code is ready",
           "body": "{name} is in your order #{number}. Reveal it in Pass → Orders."
+        },
+        "review_request": {
+          "title": "How was your order?",
+          "body": "Tell others what you think of {name}. A review with a photo earns 500 Bulbs."
+        },
+        "cart_reminder": {
+          "title": "Still in your cart",
+          "body": "What you left in your cart is waiting. Finish your order whenever you like."
         }
       },
       "kinds": {

@@ -63,6 +63,8 @@ export const NOTIFICATION_EVENTS = [
   "plus_swap_booked",
   "plus_swap_done",
   "digital_code_ready",
+  "review_request",
+  "cart_reminder",
   "plus_duo_joined",
   "plus_duo_guardian",
   "plus_duo_approved",
@@ -346,6 +348,9 @@ const extraValues: Partial<
   return_refund_due: returnValues,
   return_refunded: returnValues,
   return_rejected: returnValues,
+  review_request: (data, locale) => ({
+    name: locale === "ar" ? text(data.name_ar) : text(data.name_en),
+  }),
   saved_back_in_stock: (data, locale) => ({ name: itemName(data, locale) }),
   saved_out_now: (data, locale) => ({ name: itemName(data, locale) }),
   saved_price_drop: (data, locale) => {
