@@ -704,7 +704,7 @@ const useBuy = (
     );
   }, [deepLinkAdd, loading]);
 
-  return { add, added, addToCart };
+  return { add, added, addToCart, sessionLoading: loading };
 };
 
 /**
@@ -749,7 +749,11 @@ export const PurchasePanel = ({
   const offer = buyTarget(way, buy, copy);
   const price = offer ? linePrice(offer, product, selection.price) : 0;
   const canAdd = selection.variant !== null && offer !== undefined;
-  const { add, added, addToCart } = useBuy(product, selection, buy);
+  const { add, added, addToCart, sessionLoading } = useBuy(
+    product,
+    selection,
+    buy
+  );
 
   const pickVariantId = (id: string) => {
     setVariantId(id);
@@ -770,7 +774,9 @@ export const PurchasePanel = ({
   };
   const primary = buying
     ? buyPrimary({
-        busy: add.isPending,
+        // Until the session loads, a signed-in shopper would look signed out
+        // and be sent to sign in.
+        busy: add.isPending || sessionLoading,
         canAdd,
         label: (key, values) => tGet(key, values),
         onAdd: () => addToCart(quantity, offer),

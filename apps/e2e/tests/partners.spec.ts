@@ -63,7 +63,11 @@ test("a company adds Team, sends a bulk request and accepts the quote", async ({
     .update({ status: "quoted" })
     .eq("id", requestId);
 
-  await page.reload();
+  // Today lists the quote to answer, with the action in the row.
+  await page.goto(urls.app);
+  await expect(page.getByText("Quotes to answer: 1")).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL(REQUEST_PATH);
   await expect(page.getByText(`Quote #${quote?.number}`)).toBeVisible();
   await page.getByLabel("Your PO reference (optional)").fill("PO-E2E-1");
   await page.getByRole("button", { name: "Accept quote" }).click();
@@ -82,9 +86,11 @@ test("a company adds Team, sends a bulk request and accepts the quote", async ({
   ).toBeVisible();
   await expectAccessible(page);
 
-  // Today lists the quote to answer, with the action in the row.
+  // Once accepted, nothing waits on Today; Settings holds the invoices.
   await page.goto(urls.app);
-  await expect(page.getByText("Quotes to answer: 1")).toBeVisible();
+  await expect(
+    page.getByText("Quotes to answer", { exact: false })
+  ).toHaveCount(0);
   await page.getByRole("link", { exact: true, name: "Settings" }).click();
   await expect(page).toHaveURL(/\/settings$/);
   await expect(page.getByText("Sections", { exact: true })).toBeVisible();

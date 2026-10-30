@@ -32,7 +32,6 @@ import {
   getCategories,
   getOffers,
   getProduct,
-  getProductSlugs,
   getRatings,
   getReviews,
   imageUrl,
@@ -43,7 +42,10 @@ import { localizedMetadata, siteUrl } from "@/lib/metadata";
 import { productJsonLd, productSpecs } from "@/lib/product";
 import { parseStoreQuery } from "@/lib/store-params";
 
-export const revalidate = 300;
+// Rendered per request, like `/store`: a category's shelf reads its filters
+// from the address (`?sub=`, `?sort=`, `?page=`), which a statically
+// regenerated page can't (production fails with DYNAMIC_SERVER_USAGE).
+export const dynamic = "force-dynamic";
 
 /** Latest published reviews listed on a product page. */
 const REVIEWS_SHOWN = 10;
@@ -58,9 +60,6 @@ const topCategory = async (slug: string) =>
   (await getCategories("sale")).find(
     (category) => !category.parent_id && category.slug === slug
   );
-
-export const generateStaticParams = async () =>
-  (await getProductSlugs()).slice(0, 200).map(({ slug }) => ({ slug }));
 
 export const generateMetadata = async ({
   params,
