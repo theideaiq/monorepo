@@ -197,7 +197,6 @@ const PLACE_CASH_ORDER = /^Place order · /;
 const PLACE_ORDER = /^Place order and pay /;
 const CART_PAGE = /\/cart$/;
 const ORDER_PAGE = /\/pass\/orders\/[^/]+$/;
-const PAYMENT_OR_ORDER = /mock-checkout|\/pass\/orders\//;
 const STUDENT_NUDGE = /^Verify as a student/;
 
 test.describe("a signed-in customer", () => {
@@ -613,8 +612,13 @@ test.describe("a signed-in customer", () => {
     );
     await page.getByRole("button", { name: PLACE_ORDER }).click();
     await paying;
-    // Off to the (mock) payment page; paid below as the webhook would.
-    await page.waitForURL(PAYMENT_OR_ORDER);
+    // Off to the payment page, or (no provider in CI) a link to the order;
+    // paid below as the webhook would.
+    await page.waitForFunction(
+      () =>
+        !location.pathname.endsWith("/checkout") ||
+        document.querySelector('a[href*="/pass/orders/"]') !== null
+    );
 
     const db = admin();
     const placed = async () =>
