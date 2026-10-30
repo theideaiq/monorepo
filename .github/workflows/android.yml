@@ -48,7 +48,8 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: gradle
-      - uses: android-actions/setup-android@v3
+      # The Android SDK comes with GitHub's Ubuntu runners (ANDROID_HOME);
+      # Gradle fetches the platform and build tools it needs.
       - run: bun install --frozen-lockfile
       # The offline screen's text and the WebView's URL (production: no
       # CAP_SERVER_URL or NEXT_PUBLIC_WEB_URL here), then Capacitor's config
