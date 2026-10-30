@@ -8,7 +8,6 @@ import { hostOf, readReturnTo, type SearchParams } from "@/lib/pass/return-to";
 import { getPassSession } from "@/lib/pass/session";
 import { PassSignIn } from "./pass-sign-in";
 import { SocialButtons } from "./social-buttons";
-import { TelegramButton } from "./telegram-button";
 
 interface AuthPageProps {
   readonly searchParams: SearchParams;
@@ -66,7 +65,6 @@ export const AuthPage = async ({ searchParams }: AuthPageProps) => {
         providers={enabledProviders(env.NEXT_PUBLIC_AUTH_PROVIDERS)}
         returnTo={returnTo}
       />
-      <TelegramButton returnTo={returnTo} />
       <AboutHelpLink />
     </div>
   );

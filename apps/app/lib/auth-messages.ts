@@ -27,6 +27,7 @@ export const useAuthMessages = (): AuthMessages => {
       invalid_email: t("errors.invalid_email"),
       invalid_phone: t("errors.invalid_phone"),
       no_account: t("errors.no_account"),
+      phone_taken: t("errors.phone_taken"),
       rate_limited: t("errors.rate_limited"),
       signups_disabled: t("errors.signups_disabled"),
       unknown: t("errors.unknown"),

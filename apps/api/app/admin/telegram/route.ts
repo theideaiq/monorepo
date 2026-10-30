@@ -1,8 +1,13 @@
+import { createAdminClient } from "@repo/database/admin";
 import { parseError } from "@repo/observability/error";
 import { log } from "@repo/observability/log";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/env";
+import {
+  syncTelegramProvider,
+  telegramProviderEnabled,
+} from "@/lib/telegram-provider";
 import { botStatus, setUpBot, telegramApi } from "@/lib/telegram-setup";
 import { requireStaffCaller } from "../_lib/staff";
 
@@ -10,9 +15,10 @@ const body = z.object({ action: z.enum(["status", "setup"]) });
 
 /**
  * Staff → Telegram → Bot: how Droid is set up (webhook, pending
- * updates, last error, commands, Mini App button, sign-in with Telegram)
- * and, for admins, setting it up again in one go. The bot token never
- * leaves the API.
+ * updates, last error, commands, Mini App button, sign-in with Telegram,
+ * the `custom:telegram` provider in Supabase Auth) and, for admins,
+ * setting it all up again in one go. The bot token and the sign-in secret
+ * never leave the API.
  */
 export const POST = async (request: Request) => {
   const caller = await requireStaffCaller(request, [
@@ -56,11 +62,20 @@ export const POST = async (request: Request) => {
         secret: env.TELEGRAM_WEBHOOK_SECRET,
         webUrl: env.NEXT_PUBLIC_WEB_URL,
       });
+      if (env.TELEGRAM_LOGIN_CLIENT_ID && env.TELEGRAM_LOGIN_CLIENT_SECRET) {
+        await syncTelegramProvider(createAdminClient(), {
+          clientId: env.TELEGRAM_LOGIN_CLIENT_ID,
+          clientSecret: env.TELEGRAM_LOGIN_CLIENT_SECRET,
+        });
+      }
     }
-    return NextResponse.json({
-      configured,
-      status: await botStatus(call, { apiUrl }),
-    });
+    const [status, signIn] = await Promise.all([
+      botStatus(call, { apiUrl }),
+      configured.login
+        ? telegramProviderEnabled(createAdminClient()).catch(() => false)
+        : false,
+    ]);
+    return NextResponse.json({ configured, signIn, status });
   } catch (error) {
     log.error(`Telegram ${parsed.data.action} failed: ${parseError(error)}`);
     return NextResponse.json(

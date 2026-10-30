@@ -732,7 +732,7 @@ test.describe("a signed-in customer", () => {
     noErrors();
   });
 
-  test("starts verifying a phone in Settings", async ({ page }) => {
+  test("verifies a phone in Settings", async ({ page }) => {
     await page.goto(`${urls.web}/pass/settings`);
     await expect(page.getByText("Phone and WhatsApp")).toBeVisible();
     // What we send: WhatsApp updates (to a verified number) and news.
@@ -747,10 +747,19 @@ test.describe("a signed-in customer", () => {
     await expect(page.getByRole("radio", { name: "WhatsApp" })).toBeChecked();
     await page.getByRole("radio", { name: "SMS (text message)" }).click();
     await expectAccessible(page);
-    // CI has no Twilio keys: the API says codes aren't available yet.
+    // Supabase Auth sends the code (a phone change); locally this number
+    // has a fixed test code (supabase/config.toml, [auth.sms.test_otp]).
     await page.getByRole("button", { name: "Send code" }).click();
     await expect(
-      page.getByText("Phone codes aren't available yet.")
+      page.getByText("We sent a code to +964 770 123 4567 by SMS.")
+    ).toBeVisible();
+    await page
+      .getByRole("textbox", { exact: true, name: "Code" })
+      .fill("123456");
+    await page.getByRole("button", { exact: true, name: "Verify" }).click();
+    // The number is listed as verified, with its remove button.
+    await expect(
+      page.getByRole("button", { name: "Remove +964 770 123 4567" })
     ).toBeVisible();
   });
 

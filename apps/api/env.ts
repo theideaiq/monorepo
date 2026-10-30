@@ -17,7 +17,6 @@ import { keys as lookup } from "./lib/lookup/keys";
 import { keys as music } from "./lib/music/keys";
 import { keys as oidc } from "./lib/oidc/keys";
 import { keys as appleWallet } from "./lib/pass/apple-wallet-keys";
-import { keys as phoneVerify } from "./lib/phone-verify/keys";
 import { keys as reloadly } from "./lib/reloadly/keys";
 import { keys as whatsapp } from "./lib/whatsapp/keys";
 
@@ -35,7 +34,6 @@ const presets = envPresets(
   observability(),
   oidc(),
   payments(),
-  phoneVerify(),
   rateLimit(),
   reloadly(),
   security(),
@@ -82,9 +80,9 @@ export const env = withPresets(
       PUSH_WEBHOOK_SECRET: z.string().min(32).optional(),
       // Optional inbox that gets an email for every paid store order.
       STORE_NOTIFICATIONS_EMAIL: z.email().optional(),
-      // Telegram sign-in (OpenID Connect): the Client ID and Secret from
-      // @BotFather → the bot → Login Widget, whose Allowed URLs include
-      // <API URL>/auth/telegram/callback. Hidden while unset.
+      // Telegram sign-in: the Client ID and Secret from @BotFather → the
+      // bot → Login Widget, which Staff → Telegram → Bot → Set up gives to
+      // Supabase Auth (the custom:telegram provider).
       TELEGRAM_LOGIN_CLIENT_ID: z.string().regex(/^\d+$/).optional(),
       TELEGRAM_LOGIN_CLIENT_SECRET: z.string().min(16).optional(),
     },

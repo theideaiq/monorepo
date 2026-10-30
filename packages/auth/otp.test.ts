@@ -3,9 +3,11 @@ import {
   normalizeEmail,
   sendEmailOtp,
   sendPhoneOtp,
+  sendPhoneVerification,
   toOtpErrorCode,
   verifyEmailOtp,
   verifyPhoneOtp,
+  verifyPhoneVerification,
 } from "./otp";
 
 const clientWith = (auth: Record<string, unknown>) =>
@@ -238,5 +240,75 @@ describe("phone OTP (switched off, kept for later)", () => {
       token: "123456",
       type: "sms",
     });
+  });
+});
+
+describe("phone verification (Supabase phone change)", () => {
+  test("sends the code on WhatsApp by default", async () => {
+    const updateUser = vi.fn().mockResolvedValue({ error: null });
+    const result = await sendPhoneVerification(
+      clientWith({ updateUser }),
+      "0770 123 4567"
+    );
+    expect(updateUser).toHaveBeenCalledWith({
+      channel: "whatsapp",
+      phone: "+9647701234567",
+    });
+    expect(result).toEqual({
+      ok: true,
+      phone: "+9647701234567",
+      value: { channel: "whatsapp" },
+    });
+  });
+
+  test("falls back to SMS when WhatsApp can't deliver", async () => {
+    const updateUser = vi
+      .fn()
+      .mockResolvedValueOnce({ error: authError("sms_send_failed", 500) })
+      .mockResolvedValueOnce({ error: null });
+    const result = await sendPhoneVerification(
+      clientWith({ updateUser }),
+      "+9647701234567"
+    );
+    expect(updateUser).toHaveBeenLastCalledWith({
+      channel: "sms",
+      phone: "+9647701234567",
+    });
+    expect(result.ok && result.value.channel).toBe("sms");
+  });
+
+  test("a number another Pass holds is taken", async () => {
+    const updateUser = vi
+      .fn()
+      .mockResolvedValue({ error: authError("phone_exists", 422) });
+    const result = await sendPhoneVerification(
+      clientWith({ updateUser }),
+      "+9647701234567",
+      { channel: "sms" }
+    );
+    expect(updateUser).toHaveBeenCalledTimes(1);
+    expect(result.ok ? null : result.code).toBe("phone_taken");
+  });
+
+  test("an invalid number never reaches Supabase", async () => {
+    const updateUser = vi.fn();
+    const result = await sendPhoneVerification(clientWith({ updateUser }), "1");
+    expect(updateUser).not.toHaveBeenCalled();
+    expect(result.ok ? null : result.code).toBe("invalid_phone");
+  });
+
+  test("checks the code as a phone change", async () => {
+    const verifyOtp = vi.fn().mockResolvedValue({ error: null });
+    const result = await verifyPhoneVerification(
+      clientWith({ verifyOtp }),
+      "+9647701234567",
+      " 123456 "
+    );
+    expect(verifyOtp).toHaveBeenCalledWith({
+      phone: "+9647701234567",
+      token: "123456",
+      type: "phone_change",
+    });
+    expect(result.ok).toBe(true);
   });
 });

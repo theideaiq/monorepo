@@ -17,6 +17,7 @@ import { isNativeApp } from "@/lib/platform";
 const NAMES: Record<SocialProvider, string> = {
   apple: "Apple",
   google: "Google",
+  telegram: "Telegram",
 };
 
 /** Where the provider sends people back: the callback page, or the app. */
