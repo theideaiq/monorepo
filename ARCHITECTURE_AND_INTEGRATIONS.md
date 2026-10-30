@@ -230,6 +230,19 @@ namespaces.
   `RELOADLY_ENVIRONMENT` (`sandbox` by default); without them nothing is
   bought and paid codes wait. Members reveal a code in Pass → Orders
   (`reveal_digital_code`). Migration `20270316000000_digital_codes.sql`.
+- **Product lookups.** Staff → Catalog → a product → Look up searches the
+  sources for the product's top-level category by barcode (GTIN/ISBN,
+  normalized by `@repo/commerce/gtin`) or title: books in Open Library and
+  Google Books, music in MusicBrainz and Discogs, games in IGDB, films in
+  TMDB, board games in BoardGameGeek, trading cards in Scryfall and the
+  Pokémon TCG API. `POST /lookup` in `apps/api` (staff, or a member of an
+  organization with selling) runs them side by side and lists what each
+  found; Use stores the source's ID in `products.external_ids`, adds the
+  details the product lacks, the picture when it has none, and the barcode
+  on its only variant. Keys, all optional (a source without its key is
+  skipped): `DISCOGS_TOKEN`, `IGDB_CLIENT_ID` and `IGDB_CLIENT_SECRET`
+  (a Twitch app), `TMDB_READ_TOKEN`, `BGG_TOKEN`, `GOOGLE_BOOKS_API_KEY`,
+  `POKEMONTCG_API_KEY`. Open Library, MusicBrainz and Scryfall need none.
 - **Plus Duo.** A Duo plan's holder invites one more Pass from Your Plus
   (a link to `/plus/duo/<code>`, open 7 days); the second person shares
   the rental slots, home swaps and the holder's Plus address, keeps their

@@ -4974,6 +4974,29 @@
           "wikipedia": "Wikipedia"
         }
       },
+      "lookup": {
+        "title": "البحث عن المنتج",
+        "description": "ابحث عن هذا المنتج في قواعد بيانات الكتب والموسيقى والألعاب والأفلام وألعاب الطاولة والبطاقات، ثم استخدم نتيجة مطابقة لإضافة رقمه في المصدر والتفاصيل الناقصة والصورة والباركود.",
+        "barcode": "الباركود (ISBN أو UPC أو EAN)",
+        "text": "العنوان",
+        "creator": "الفنان أو المؤلف أو الصانع",
+        "search": "بحث",
+        "none": "لم نجد شيئًا. جرّب العنوان من دون الطبعة، أو الباركود.",
+        "failed": "لم نتمكن من البحث في: {sources}.",
+        "linked": "مرتبط",
+        "use": "استخدام",
+        "source": {
+          "openlibrary": "Open Library",
+          "googlebooks": "Google Books",
+          "musicbrainz": "MusicBrainz",
+          "discogs": "Discogs",
+          "igdb": "IGDB",
+          "tmdb": "TMDB",
+          "bgg": "BoardGameGeek",
+          "scryfall": "Scryfall",
+          "pokemontcg": "Pokémon TCG"
+        }
+      },
       "copies": {
         "variant": "الخيار",
         "variantNumber": "الخيار {number}",

@@ -17,11 +17,17 @@ describe("catalog images", () => {
       "*.archive.org",
       "covers.openlibrary.org",
       "upload.wikimedia.org",
+      "books.google.com",
+      "i.discogs.com",
+      "images.igdb.com",
+      "image.tmdb.org",
+      "cards.scryfall.io",
+      "images.pokemontcg.io",
     ]);
   });
 
   test("works without Supabase and spots the local stack", () => {
-    expect(catalogImagePatterns()).toHaveLength(5);
+    expect(catalogImagePatterns()).toHaveLength(11);
     expect(isLocalUrl("http://127.0.0.1:54321")).toBe(true);
     expect(isLocalUrl("https://abc.supabase.co")).toBe(false);
     expect(isLocalUrl(undefined)).toBe(false);

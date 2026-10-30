@@ -12,6 +12,12 @@ export const REMOTE_IMAGE_HOSTS = [
   "archive.org",
   "covers.openlibrary.org",
   "upload.wikimedia.org",
+  "books.google.com",
+  "i.discogs.com",
+  "images.igdb.com",
+  "image.tmdb.org",
+  "cards.scryfall.io",
+  "images.pokemontcg.io",
 ] as const;
 
 const STORAGE_PATH = /^(?!.*\.\.)[\w!.()+, /-]{1,700}$/;

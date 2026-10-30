@@ -4974,6 +4974,29 @@
           "wikipedia": "Wikipedia"
         }
       },
+      "lookup": {
+        "title": "Look up",
+        "description": "Find this item in book, music, game, film, board game and card databases, then use a match to add its source ID, missing details, picture and barcode.",
+        "barcode": "Barcode (ISBN, UPC or EAN)",
+        "text": "Title",
+        "creator": "Artist, author or maker",
+        "search": "Search",
+        "none": "Nothing found. Try the title without the edition, or the barcode.",
+        "failed": "Not checked: {sources}.",
+        "linked": "Linked",
+        "use": "Use",
+        "source": {
+          "openlibrary": "Open Library",
+          "googlebooks": "Google Books",
+          "musicbrainz": "MusicBrainz",
+          "discogs": "Discogs",
+          "igdb": "IGDB",
+          "tmdb": "TMDB",
+          "bgg": "BoardGameGeek",
+          "scryfall": "Scryfall",
+          "pokemontcg": "Pokémon TCG"
+        }
+      },
       "copies": {
         "variant": "Variant",
         "variantNumber": "Variant {number}",
