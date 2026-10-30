@@ -3,6 +3,7 @@ import { Input } from "@repo/design-system/components/ui/input";
 import type { Locale } from "@repo/internationalization";
 import { Search as SearchIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { after } from "next/server";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { OpportunityCard } from "@/components/club/opportunity-card";
 import { EventCard, PostCard } from "@/components/editorial-cards";
@@ -15,6 +16,7 @@ import {
   getPosts,
   getProducts,
   getRatings,
+  recordSearchMiss,
 } from "@/lib/data";
 import { localizedMetadata } from "@/lib/metadata";
 import { parseStoreQuery } from "@/lib/store-params";
@@ -63,6 +65,10 @@ const Search = async ({ params, searchParams }: SearchProps) => {
         getOpportunities({ limit: EDITORIAL, search: q }),
       ])
     : [[], [], [], [], []];
+  if (q && products.length + rentals.length === 0) {
+    // After the page is sent: Staff see what people looked for in vain.
+    after(() => recordSearchMiss(q));
+  }
   const ratings = await getRatings(
     [...products, ...rentals].map((product) => product.id)
   );

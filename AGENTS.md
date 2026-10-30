@@ -145,7 +145,7 @@ incidents) is in `docs/platform`.
   `staff.theideaiq.com`), everything The IDEA's team uses, server-rendered
   with a `proxy.ts`:
   - the console at its root (`app/[locale]/(console)`), one menu
-    (`menu` in `lib/admin/roles.ts`): Inbox `/` (with `/support`) ·
+    (`menu` in `lib/admin/roles.ts`): Inbox `/` (with `/support`; key numbers by week under the inbox) ·
     Catalog `/catalog` (with `/catalog/reviews` and `/catalog/checks`, the
     automatic checks on products shops create and shops' flags, and
     `/catalog/offers`, offers on The IDEA's own stock; each product's page
