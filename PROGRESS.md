@@ -578,6 +578,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Store → Textbooks and Pass → Selling ("Sell it yourself") link to
   Partners `/new?for=selling`, which makes the organization with Selling
   on and opens the shop's application. Next in step 14: Plus Duo.
+- 2026-10-30: Digital codes, part 1 (section 15, the schema
+  `20270316000000_digital_codes.sql`, decisions Part 16). Brands per store
+  region and denominations priced in IQD from the supplier's USD cost plus
+  a margin; the remembered store region; codes in the cart, paid online
+  only with a verified phone, without Bulbs, discounts or cashback, a
+  limit for new Passes and a hold on large first orders; codes bought by
+  the API's job, revealed with a tap, never returned once revealed,
+  replaced when invalid, every step logged. Open: the supplier discount
+  comparison on the top 10 brands (Reloadly, LikeCard, Golden Codes)
+  needs each supplier's quotes. Next: the API job (Reloadly), the website
+  and Staff.
 - 2026-10-30: Plus Duo, part 2 (step 14, the code; decisions Part 15).
   Your Plus: Plans "Just me" / "Duo", the Plus Duo card (invite link,
   the second person, swap order, remove or keep, leave), swaps from both

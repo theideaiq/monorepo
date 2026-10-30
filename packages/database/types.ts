@@ -603,6 +603,35 @@ export type Database = {
           },
         ];
       };
+      cart_digital: {
+        Row: {
+          created_at: string;
+          product_id: string;
+          quantity: number;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          product_id: string;
+          quantity?: number;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          product_id?: string;
+          quantity?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cart_digital_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "digital_products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       cart_items: {
         Row: {
           condition: Database["public"]["Enums"]["product_condition"] | null;
@@ -987,6 +1016,267 @@ export type Database = {
           plus_free_delivery?: boolean;
           position?: number;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      digital_brands: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          id: string;
+          image_path: string | null;
+          kind: string;
+          name_ar: string;
+          name_en: string;
+          platform: string | null;
+          position: number;
+          redeem_ar: string | null;
+          redeem_en: string | null;
+          region: string;
+          region_ar: string;
+          region_en: string;
+          slug: string;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          id?: string;
+          image_path?: string | null;
+          kind: string;
+          name_ar: string;
+          name_en: string;
+          platform?: string | null;
+          position?: number;
+          redeem_ar?: string | null;
+          redeem_en?: string | null;
+          region: string;
+          region_ar: string;
+          region_en: string;
+          slug: string;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          id?: string;
+          image_path?: string | null;
+          kind?: string;
+          name_ar?: string;
+          name_en?: string;
+          platform?: string | null;
+          position?: number;
+          redeem_ar?: string | null;
+          redeem_en?: string | null;
+          region?: string;
+          region_ar?: string;
+          region_en?: string;
+          slug?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      digital_code_events: {
+        Row: {
+          actor_id: string | null;
+          code_id: string;
+          created_at: string;
+          data: NonNullable<Json>;
+          event: string;
+          id: string;
+        };
+        Insert: {
+          actor_id?: string | null;
+          code_id: string;
+          created_at?: string;
+          data?: NonNullable<Json>;
+          event: string;
+          id?: string;
+        };
+        Update: {
+          actor_id?: string | null;
+          code_id?: string;
+          created_at?: string;
+          data?: NonNullable<Json>;
+          event?: string;
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "digital_code_events_code_id_fkey";
+            columns: ["code_id"];
+            isOneToOne: false;
+            referencedRelation: "digital_codes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      digital_codes: {
+        Row: {
+          bought_at: string | null;
+          code: string | null;
+          created_at: string;
+          delivered_at: string | null;
+          failure: string | null;
+          id: string;
+          order_id: string;
+          order_item_id: string;
+          pin: string | null;
+          product_id: string | null;
+          replaces_id: string | null;
+          revealed_at: string | null;
+          serial: string | null;
+          status: string;
+          supplier: string;
+          transaction_id: string | null;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          bought_at?: string | null;
+          code?: string | null;
+          created_at?: string;
+          delivered_at?: string | null;
+          failure?: string | null;
+          id?: string;
+          order_id: string;
+          order_item_id: string;
+          pin?: string | null;
+          product_id?: string | null;
+          replaces_id?: string | null;
+          revealed_at?: string | null;
+          serial?: string | null;
+          status?: string;
+          supplier: string;
+          transaction_id?: string | null;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          bought_at?: string | null;
+          code?: string | null;
+          created_at?: string;
+          delivered_at?: string | null;
+          failure?: string | null;
+          id?: string;
+          order_id?: string;
+          order_item_id?: string;
+          pin?: string | null;
+          product_id?: string | null;
+          replaces_id?: string | null;
+          revealed_at?: string | null;
+          serial?: string | null;
+          status?: string;
+          supplier?: string;
+          transaction_id?: string | null;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "digital_codes_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "digital_codes_order_item_id_fkey";
+            columns: ["order_item_id"];
+            isOneToOne: false;
+            referencedRelation: "order_items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "digital_codes_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "digital_products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "digital_codes_replaces_id_fkey";
+            columns: ["replaces_id"];
+            isOneToOne: false;
+            referencedRelation: "digital_codes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      digital_products: {
+        Row: {
+          active: boolean;
+          brand_id: string;
+          cost_usd: number;
+          created_at: string;
+          face_currency: string;
+          face_value: number;
+          id: string;
+          margin_rate: number | null;
+          position: number;
+          price: number;
+          supplier: string;
+          supplier_product_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          active?: boolean;
+          brand_id: string;
+          cost_usd: number;
+          created_at?: string;
+          face_currency: string;
+          face_value: number;
+          id?: string;
+          margin_rate?: number | null;
+          position?: number;
+          price?: number;
+          supplier: string;
+          supplier_product_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          active?: boolean;
+          brand_id?: string;
+          cost_usd?: number;
+          created_at?: string;
+          face_currency?: string;
+          face_value?: number;
+          id?: string;
+          margin_rate?: number | null;
+          position?: number;
+          price?: number;
+          supplier?: string;
+          supplier_product_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "digital_products_brand_id_fkey";
+            columns: ["brand_id"];
+            isOneToOne: false;
+            referencedRelation: "digital_brands";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      digital_store_regions: {
+        Row: {
+          platform: string;
+          region: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          platform: string;
+          region: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          platform?: string;
+          region?: string;
+          updated_at?: string;
+          user_id?: string;
         };
         Relationships: [];
       };
@@ -2050,6 +2340,7 @@ export type Database = {
           commission: number | null;
           commission_rate: number | null;
           condition: Database["public"]["Enums"]["product_condition"] | null;
+          digital_product_id: string | null;
           id: string;
           kind: string;
           location_id: string | null;
@@ -2080,6 +2371,7 @@ export type Database = {
           commission?: number | null;
           commission_rate?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
+          digital_product_id?: string | null;
           id?: string;
           kind?: string;
           location_id?: string | null;
@@ -2110,6 +2402,7 @@ export type Database = {
           commission?: number | null;
           commission_rate?: number | null;
           condition?: Database["public"]["Enums"]["product_condition"] | null;
+          digital_product_id?: string | null;
           id?: string;
           kind?: string;
           location_id?: string | null;
@@ -2140,6 +2433,13 @@ export type Database = {
             columns: ["auction_id"];
             isOneToOne: false;
             referencedRelation: "auctions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "order_items_digital_product_id_fkey";
+            columns: ["digital_product_id"];
+            isOneToOne: false;
+            referencedRelation: "digital_products";
             referencedColumns: ["id"];
           },
           {
@@ -5754,6 +6054,11 @@ export type Database = {
           cash_limit: number | null;
           cash_on_delivery_enabled: boolean;
           delivery_cost: number;
+          digital_hold_above: number;
+          digital_iqd_per_usd: number;
+          digital_margin_rate: number;
+          digital_new_pass_days: number;
+          digital_new_pass_limit: number;
           extra_swap_fee: number;
           id: boolean;
           individual_monthly_limit: number;
@@ -5786,6 +6091,11 @@ export type Database = {
           cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
           delivery_cost?: number;
+          digital_hold_above?: number;
+          digital_iqd_per_usd?: number;
+          digital_margin_rate?: number;
+          digital_new_pass_days?: number;
+          digital_new_pass_limit?: number;
           extra_swap_fee?: number;
           id?: boolean;
           individual_monthly_limit?: number;
@@ -5818,6 +6128,11 @@ export type Database = {
           cash_limit?: number | null;
           cash_on_delivery_enabled?: boolean;
           delivery_cost?: number;
+          digital_hold_above?: number;
+          digital_iqd_per_usd?: number;
+          digital_margin_rate?: number;
+          digital_new_pass_days?: number;
+          digital_new_pass_limit?: number;
           extra_swap_fee?: number;
           id?: boolean;
           individual_monthly_limit?: number;
@@ -8843,6 +9158,16 @@ export type Database = {
         Args: { target: string; token: string };
         Returns: boolean;
       };
+      deliver_digital_code: {
+        Args: {
+          code: string;
+          pin?: string;
+          serial?: string;
+          target: string;
+          transaction_id?: string;
+        };
+        Returns: undefined;
+      };
       disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
       duo_approvals: {
         Args: Record<PropertyKey, never>;
@@ -8886,6 +9211,10 @@ export type Database = {
           plus_opens_at: string;
           seats_left: number;
         }[];
+      };
+      fail_digital_code: {
+        Args: { reason: string; target: string };
+        Returns: undefined;
       };
       find_by_barcode: {
         Args: { code: string };
@@ -10071,6 +10400,10 @@ export type Database = {
         Args: { device_platform: string; device_token: string };
         Returns: string;
       };
+      release_digital_codes: {
+        Args: { target_order: string };
+        Returns: number;
+      };
       release_return_refund: { Args: { target: string }; Returns: undefined };
       release_survey_refund: { Args: { target: string }; Returns: undefined };
       remove_coupon: { Args: Record<PropertyKey, never>; Returns: undefined };
@@ -10137,6 +10470,10 @@ export type Database = {
       };
       reorder_queue: { Args: { products: string[] }; Returns: undefined };
       reorder_saved: { Args: { products: string[] }; Returns: undefined };
+      replace_digital_code: {
+        Args: { reason: string; target: string };
+        Returns: string;
+      };
       report_survey: {
         Args: { reason: string; target: string };
         Returns: undefined;
@@ -10350,6 +10687,15 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      retry_digital_code: { Args: { target: string }; Returns: undefined };
+      reveal_digital_code: {
+        Args: { target: string };
+        Returns: {
+          code: string;
+          pin: string;
+          serial: string;
+        }[];
       };
       review_auction_mark: {
         Args: { correct: boolean; target: string };
@@ -10736,6 +11082,21 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "sell_messages";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      set_digital_store_region: {
+        Args: { platform: string; region: string };
+        Returns: {
+          platform: string;
+          region: string;
+          updated_at: string;
+          user_id: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "digital_store_regions";
           isOneToOne: true;
           isSetofReturn: false;
         };
@@ -11187,6 +11548,30 @@ export type Database = {
         Args: { bulbs: number; subscription: string };
         Returns: number;
       };
+      staff_digital_products: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          active: boolean;
+          brand_id: string;
+          cost_usd: number;
+          created_at: string;
+          face_currency: string;
+          face_value: number;
+          id: string;
+          margin_rate: number | null;
+          position: number;
+          price: number;
+          supplier: string;
+          supplier_product_id: string;
+          updated_at: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "digital_products";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
       staff_mark_return_received: {
         Args: { target: string };
         Returns: {
@@ -11574,6 +11959,18 @@ export type Database = {
         Returns: number;
       };
       sweep_surveys: { Args: Record<PropertyKey, never>; Returns: number };
+      take_digital_codes: {
+        Args: { batch?: number };
+        Returns: {
+          code_id: string;
+          face_currency: string;
+          face_value: number;
+          order_id: string;
+          supplier: string;
+          supplier_product_id: string;
+          user_id: string;
+        }[];
+      };
       telegram_join_check: {
         Args: { chat: number; member: number };
         Returns: {
