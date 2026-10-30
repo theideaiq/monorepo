@@ -60,6 +60,16 @@ describe("Twilio Verify client", () => {
     expect(calls[1]?.form.get("Channel")).toBe("sms");
   });
 
+  test("sends by SMS when the person chose SMS", async () => {
+    const { calls, fetch } = fakeFetch([Response.json({ status: "pending" })]);
+    expect(await startVerification(config(fetch), PHONE, "en", "sms")).toEqual({
+      channel: "sms",
+      status: "sent",
+    });
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.form.get("Channel")).toBe("sms");
+  });
+
   test("stops at Twilio's limits", async () => {
     const { calls, fetch } = fakeFetch([
       Response.json({ code: 60_203 }, { status: 429 }),
@@ -138,7 +148,17 @@ describe("phone endpoints", () => {
       body: { channel: "whatsapp", ok: true, phone: PHONE },
       status: 200,
     });
-    expect(d.verify?.start).toHaveBeenCalledWith(PHONE, "en");
+    expect(d.verify?.start).toHaveBeenCalledWith(PHONE, "en", undefined);
+  });
+
+  test("pass on where the person wants the code", async () => {
+    const d = deps();
+    await handlePhoneStart(
+      post({ channel: "sms", locale: "ar", phone: "0770 123 4567" }),
+      USER,
+      d
+    );
+    expect(d.verify?.start).toHaveBeenCalledWith(PHONE, "ar", "sms");
   });
 
   test("refuse numbers that aren't valid", async () => {

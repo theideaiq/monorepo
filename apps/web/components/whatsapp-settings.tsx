@@ -1,29 +1,23 @@
 "use client";
 
-import { formatPhone, isIraqiMobile, normalizePhone } from "@repo/auth/phone";
+import { formatPhone } from "@repo/auth/phone";
 import { useAuth } from "@repo/auth/provider";
 import { Button } from "@repo/design-system/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@repo/design-system/components/ui/card";
 import { Checkbox } from "@repo/design-system/components/ui/checkbox";
-import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/design-system/components/ui/select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { SectionSpinner } from "@/components/states";
-import { queryKeys, requireUserId, unwrap } from "@/lib/queries";
-
-/** An Iraqi mobile number in E.164 (+964…), or null. */
-const contactPhone = (value: string) => {
-  const e164 = normalizePhone(value);
-  return e164 && isIraqiMobile(e164) ? e164 : null;
-};
+import { useVerifiedPhones } from "@/components/verify-phone";
+import { queryKeys, requireUserId, unwrap, useProfile } from "@/lib/queries";
 
 interface WhatsAppSettings {
   optIn: boolean;
@@ -44,101 +38,126 @@ export const useWhatsAppSettings = () => {
   });
 };
 
-type Problem = "phone" | "phoneRequired";
+/**
+ * Which verified number updates go to: the one already chosen while it is
+ * still verified, else the most recently verified one.
+ */
+export const updatesPhone = (
+  chosen: string | null,
+  verified: readonly string[]
+): string | null =>
+  chosen && verified.includes(chosen) ? chosen : (verified[0] ?? null);
 
-/** What to store: the number in E.164 (or none) and the consent. */
-export const whatsappUpdate = (
-  phoneInput: string,
-  optIn: boolean
-): { problem: Problem } | { optIn: boolean; phone: string | null } => {
-  const trimmed = phoneInput.trim();
-  if (!trimmed) {
-    return optIn ? { problem: "phoneRequired" } : { optIn, phone: null };
-  }
-  const phone = contactPhone(trimmed);
-  return phone ? { optIn, phone } : { problem: "phone" };
-};
-
-const WhatsAppForm = ({ initial }: { readonly initial: WhatsAppSettings }) => {
-  const t = useTranslations("app.settings.whatsapp");
+const MessagesForm = ({
+  initial,
+  marketing: initialMarketing,
+  verified,
+}: {
+  readonly initial: WhatsAppSettings;
+  readonly marketing: boolean;
+  readonly verified: readonly string[];
+}) => {
+  const t = useTranslations("app.settings.messages");
   const tCommon = useTranslations("common");
   const id = useId();
   const { supabase, user } = useAuth();
   const queryClient = useQueryClient();
-  const [phone, setPhone] = useState(
-    initial.phone ? formatPhone(initial.phone, "national") : ""
-  );
-  const [optIn, setOptIn] = useState(initial.optIn);
-  const [problem, setProblem] = useState<Problem | null>(null);
+  const [phone, setPhone] = useState(updatesPhone(initial.phone, verified));
+  const [updates, setUpdates] = useState(initial.optIn && phone !== null);
+  const [marketing, setMarketing] = useState(initialMarketing);
   const [saved, setSaved] = useState(false);
 
   const save = useMutation({
-    mutationFn: async (values: { optIn: boolean; phone: string | null }) => {
+    mutationFn: async () => {
       unwrap(
         await supabase
           .from("profiles")
           .update({
-            whatsapp_opt_in: values.optIn,
-            whatsapp_phone: values.phone,
+            marketing_opt_in: marketing,
+            whatsapp_opt_in: updates && phone !== null,
+            whatsapp_phone: phone,
           })
           .eq("id", requireUserId(user?.id))
       );
     },
     onSuccess: async () => {
       setSaved(true);
-      await queryClient.invalidateQueries({
-        queryKey: queryKeys.whatsappSettings(user?.id ?? ""),
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.whatsappSettings(user?.id ?? ""),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.profile(user?.id ?? ""),
+        }),
+      ]);
     },
   });
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSaved(false);
-    const result = whatsappUpdate(phone, optIn);
-    if ("problem" in result) {
-      setProblem(result.problem);
-      return;
-    }
-    setProblem(null);
-    save.mutate(result);
+    save.mutate();
   };
 
   return (
     <form className="grid gap-4" noValidate onSubmit={submit}>
-      <div className="grid gap-2">
-        <Label htmlFor={`${id}-phone`}>{t("phone")}</Label>
-        <Input
-          autoComplete="tel"
-          dir="ltr"
-          id={`${id}-phone`}
-          inputMode="tel"
-          maxLength={20}
-          onChange={(event) => setPhone(event.target.value)}
-          placeholder={t("phonePlaceholder")}
-          type="tel"
-          value={phone}
-        />
+      <div className="grid gap-3 rounded-md border p-3">
+        <div className="flex items-start gap-3">
+          <Checkbox
+            aria-describedby={`${id}-updates-hint`}
+            checked={updates}
+            disabled={verified.length === 0}
+            id={`${id}-updates`}
+            onCheckedChange={(checked) => setUpdates(checked === true)}
+          />
+          <div className="grid gap-1">
+            <Label htmlFor={`${id}-updates`}>{t("updates")}</Label>
+            <p
+              className="text-muted-foreground text-xs"
+              id={`${id}-updates-hint`}
+            >
+              {verified.length === 0 ? t("verifyFirst") : t("updatesHint")}
+            </p>
+          </div>
+        </div>
+        {updates && verified.length > 1 ? (
+          <div className="grid gap-2 ps-7">
+            <Label htmlFor={`${id}-phone`}>{t("number")}</Label>
+            <Select
+              onValueChange={(value) => setPhone(value)}
+              value={phone ?? undefined}
+            >
+              <SelectTrigger className="max-w-56" dir="ltr" id={`${id}-phone`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {verified.map((number) => (
+                  <SelectItem dir="ltr" key={number} value={number}>
+                    {formatPhone(number)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ) : null}
       </div>
       <div className="flex items-start gap-3 rounded-md border p-3">
         <Checkbox
-          aria-describedby={`${id}-hint`}
-          checked={optIn}
-          id={`${id}-opt-in`}
-          onCheckedChange={(checked) => setOptIn(checked === true)}
+          aria-describedby={`${id}-marketing-hint`}
+          checked={marketing}
+          id={`${id}-marketing`}
+          onCheckedChange={(checked) => setMarketing(checked === true)}
         />
         <div className="grid gap-1">
-          <Label htmlFor={`${id}-opt-in`}>{t("optIn")}</Label>
-          <p className="text-muted-foreground text-xs" id={`${id}-hint`}>
-            {t("optInHint")}
+          <Label htmlFor={`${id}-marketing`}>{t("marketing")}</Label>
+          <p
+            className="text-muted-foreground text-xs"
+            id={`${id}-marketing-hint`}
+          >
+            {t("marketingHint")}
           </p>
         </div>
       </div>
-      {problem ? (
-        <p className="text-destructive text-sm" role="alert">
-          {t(`problems.${problem}`)}
-        </p>
-      ) : null}
       {save.isError ? (
         <p className="text-destructive text-sm" role="alert">
           {t("failed")}
@@ -160,24 +179,32 @@ const WhatsAppForm = ({ initial }: { readonly initial: WhatsAppSettings }) => {
   );
 };
 
-/** Settings card: order updates on WhatsApp, with the customer's consent. */
-export const WhatsAppSettingsCard = () => {
-  const t = useTranslations("app.settings.whatsapp");
+/**
+ * Pass → Settings → Phone: what we send besides the codes. WhatsApp
+ * updates go to a verified number and cover what Boxy (delivery, on
+ * WhatsApp itself) and Wayl (no messages to customers) don't; news and
+ * offers are the marketing consent (profiles.marketing_opt_in).
+ */
+export const MessagesSettings = () => {
+  const t = useTranslations("app.settings.messages");
   const settings = useWhatsAppSettings();
+  const phones = useVerifiedPhones();
+  const profile = useProfile();
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {settings.data ? (
-          <WhatsAppForm initial={settings.data} />
-        ) : (
-          <SectionSpinner />
-        )}
-      </CardContent>
-    </Card>
+    <div className="grid gap-3 border-t pt-4">
+      <h3 className="font-medium">{t("title")}</h3>
+      {settings.data && phones.data && profile.data ? (
+        <MessagesForm
+          initial={settings.data}
+          // Re-start the form when a number is verified or removed.
+          key={phones.data.map(({ phone }) => phone).join()}
+          marketing={profile.data.marketing_opt_in}
+          verified={phones.data.map(({ phone }) => phone)}
+        />
+      ) : (
+        <SectionSpinner />
+      )}
+    </div>
   );
 };

@@ -87,14 +87,19 @@ const sendOn = async (
 };
 
 /**
- * Sends a code to `to` (E.164) on WhatsApp, or by SMS when WhatsApp can't
- * deliver it (no WhatsApp sender yet, or the number isn't on WhatsApp).
+ * Sends a code to `to` (E.164) where the person chose: by SMS, or on
+ * WhatsApp (the default), falling back to SMS when WhatsApp can't deliver
+ * it (no WhatsApp sender yet, or the number isn't on WhatsApp).
  */
 export const startVerification = async (
   config: VerifyConfig,
   to: string,
-  locale: "ar" | "en"
+  locale: "ar" | "en",
+  channel: VerifyChannel = "whatsapp"
 ): Promise<StartResult> => {
+  if (channel === "sms") {
+    return sendOn(config, to, "sms", locale);
+  }
   const whatsapp = await sendOn(config, to, "whatsapp", locale);
   if (whatsapp.status === "failed" || whatsapp.status === "invalid_phone") {
     return sendOn(config, to, "sms", locale);

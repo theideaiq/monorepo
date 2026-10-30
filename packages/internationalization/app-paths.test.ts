@@ -21,6 +21,7 @@ describe("currentAppPath", () => {
 
   test("opens pages that moved at their current address", () => {
     expect(currentAppPath("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
+    expect(currentAppPath("/pass/selling")).toBe("/pass");
     expect(currentAppPath("/pass/support/t1")).toBe("/help/t1");
     expect(currentAppPath("/pass/wishlist")).toBe("/pass/saved");
     expect(currentAppPath("/club/yours?tab=applications")).toBe(
@@ -47,6 +48,7 @@ describe("currentAppPath", () => {
 
 test("businessPath strips Partners' prefix", () => {
   expect(businessPath("/business/developers")).toBe("/developers");
+  expect(businessPath("/selling/get-offers?request=r1")).toBe("/selling");
   expect(businessPath("/business/perks?x=1")).toBe("/perks?x=1");
   expect(businessPath("/business")).toBe("/");
   expect(businessPath("/selling/auctions")).toBe("/selling/auctions");

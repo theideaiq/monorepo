@@ -16,6 +16,7 @@ import {
   openInSystemBrowser,
   socialRedirect,
 } from "@/components/pass/social-buttons";
+import { TelegramMethod } from "@/components/telegram-settings";
 import { isNativeApp } from "@/lib/platform";
 
 const NAMES: Record<string, string> = {
@@ -141,6 +142,7 @@ export const SignInMethodsCard = ({
             {t("failed")}
           </p>
         ) : null}
+        <TelegramMethod />
       </CardContent>
     </Card>
   );

@@ -12,10 +12,14 @@ import {
 } from "@repo/design-system/components/ui/card";
 import { Input } from "@repo/design-system/components/ui/input";
 import { Label } from "@repo/design-system/components/ui/label";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@repo/design-system/components/ui/radio-group";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, Trash2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { type FormEvent, useId, useState } from "react";
+import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { SectionSpinner } from "@/components/states";
 import { callApi } from "@/lib/api";
 import { queryKeys, unwrap } from "@/lib/queries";
@@ -69,9 +73,14 @@ interface VerifyPhoneProps {
   readonly phone: string;
 }
 
+type CodeChannel = "sms" | "whatsapp";
+
+const CHANNELS: readonly CodeChannel[] = ["whatsapp", "sms"];
+
 /**
- * Sends a code to `phone` (WhatsApp, else SMS) and checks the code typed
- * back; the number is then the Pass's own (verified_phones).
+ * Sends a code to `phone` where the person chooses (WhatsApp, which falls
+ * back to SMS, or SMS) and checks the code typed back; the number is then
+ * the Pass's own (verified_phones).
  */
 export const VerifyPhone = ({ onVerified, phone }: VerifyPhoneProps) => {
   const t = useTranslations("app.verifyPhone");
@@ -85,6 +94,7 @@ export const VerifyPhone = ({ onVerified, phone }: VerifyPhoneProps) => {
     phone: string;
   } | null>(null);
   const [code, setCode] = useState("");
+  const [channel, setChannel] = useState<CodeChannel>("whatsapp");
 
   const check = useMutation({
     mutationFn: (sent: { phone: string }) =>
@@ -105,7 +115,11 @@ export const VerifyPhone = ({ onVerified, phone }: VerifyPhoneProps) => {
       callApi<{ channel: "sms" | "whatsapp"; phone: string }>(
         supabase,
         "/account/phone/start",
-        { locale: locale === "ar" ? "ar" : "en", phone: e164 ?? phone }
+        {
+          channel,
+          locale: locale === "ar" ? "ar" : "en",
+          phone: e164 ?? phone,
+        }
       ),
     onSuccess: (sent) => {
       setCode("");
@@ -122,6 +136,23 @@ export const VerifyPhone = ({ onVerified, phone }: VerifyPhoneProps) => {
     return (
       <div className="grid gap-2">
         <p className="text-sm">{t("intro", { phone: shown })}</p>
+        <fieldset className="grid gap-2">
+          <legend className="mb-1 font-medium text-sm">{t("via")}</legend>
+          <RadioGroup
+            className="flex flex-wrap gap-4"
+            onValueChange={(value) => setChannel(value as CodeChannel)}
+            value={channel}
+          >
+            {CHANNELS.map((option) => (
+              <div className="flex items-center gap-2" key={option}>
+                <RadioGroupItem id={`${id}-${option}`} value={option} />
+                <Label htmlFor={`${id}-${option}`}>
+                  {t(option === "whatsapp" ? "viaWhatsApp" : "viaSms")}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        </fieldset>
         {problem ? (
           <p className="text-destructive text-sm" role="alert">
             {t(`problems.${problem}`)}
@@ -193,8 +224,15 @@ export const VerifyPhone = ({ onVerified, phone }: VerifyPhoneProps) => {
   );
 };
 
-/** Pass → Settings: the verified numbers, with remove and add. */
-export const VerifiedPhonesCard = () => {
+/**
+ * Pass → Settings → Phone: the verified numbers, with remove and add, and
+ * below them (`children`) what we send to them.
+ */
+export const VerifiedPhonesCard = ({
+  children,
+}: {
+  readonly children?: ReactNode;
+}) => {
   const t = useTranslations("app.verifyPhone");
   const id = useId();
   const { supabase, user } = useAuth();
@@ -286,6 +324,7 @@ export const VerifiedPhonesCard = () => {
             </div>
           </form>
         )}
+        {children}
       </CardContent>
     </Card>
   );
