@@ -9,7 +9,9 @@ type RemotePattern = NonNullable<
  * Where catalog images may come from: the Supabase `catalog` bucket and the
  * cover-art sources the initial catalog links to (album covers from the
  * Cover Art Archive, which redirects to archive.org; book covers from Open
- * Library; game, film and product images from Wikimedia). Next.js fetches
+ * Library; game, film and product images from Wikimedia) and the product
+ * lookups' sources (Google Books, Discogs, IGDB, TMDB, Scryfall, the
+ * Pokémon TCG API). Next.js fetches
  * them on the server and serves them from /_next/image, so browsers only
  * load images from the app's own origin.
  */
@@ -31,6 +33,12 @@ export const catalogImagePatterns = (supabaseUrl?: string): RemotePattern[] => {
     { hostname: "*.archive.org", protocol: "https" },
     { hostname: "covers.openlibrary.org", protocol: "https" },
     { hostname: "upload.wikimedia.org", protocol: "https" },
+    { hostname: "books.google.com", protocol: "https" },
+    { hostname: "i.discogs.com", protocol: "https" },
+    { hostname: "images.igdb.com", protocol: "https" },
+    { hostname: "image.tmdb.org", protocol: "https" },
+    { hostname: "cards.scryfall.io", protocol: "https" },
+    { hostname: "images.pokemontcg.io", protocol: "https" },
   ];
 };
 

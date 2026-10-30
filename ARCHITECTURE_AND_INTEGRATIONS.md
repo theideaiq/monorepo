@@ -13,6 +13,7 @@ by step.
 | [3. Build, sync and release the iOS and Android apps](#3-build-sync-and-release-the-ios-and-android-apps) | ship the mobile apps |
 | [4. Marketing tracking and Wayl payments](#4-marketing-tracking-and-wayl-payments) | set up ads attribution, newsletters or take real payments |
 | [5. Vercel environment variables](#5-vercel-environment-variables) | deploy the web apps |
+| [6. Search, shopping and trust](#6-search-shopping-and-trust) | get found in search, list products in Meta's catalog, set up email authentication |
 
 `AGENTS.md` holds the short list of coding rules; this document is the long
 form.
@@ -230,6 +231,53 @@ namespaces.
   `RELOADLY_ENVIRONMENT` (`sandbox` by default); without them nothing is
   bought and paid codes wait. Members reveal a code in Pass → Orders
   (`reveal_digital_code`). Migration `20270316000000_digital_codes.sql`.
+- **Product lookups.** Staff → Catalog → a product → Look up searches the
+  sources for the product's top-level category by barcode (GTIN/ISBN,
+  normalized by `@repo/commerce/gtin`) or title: books in Open Library and
+  Google Books, music in MusicBrainz and Discogs, games in IGDB, films in
+  TMDB, board games in BoardGameGeek, trading cards in Scryfall and the
+  Pokémon TCG API. `POST /lookup` in `apps/api` (staff, or a member of an
+  organization with selling) runs them side by side and lists what each
+  found; Use stores the source's ID in `products.external_ids`, adds the
+  details the product lacks, the picture when it has none, and the barcode
+  on its only variant. Keys, all optional (a source without its key is
+  skipped): `DISCOGS_TOKEN`, `IGDB_CLIENT_ID` and `IGDB_CLIENT_SECRET`
+  (a Twitch app), `TMDB_READ_TOKEN`, `BGG_TOKEN`, `GOOGLE_BOOKS_API_KEY`,
+  `POKEMONTCG_API_KEY`. Open Library, MusicBrainz and Scryfall need none.
+- **Import your list.** Pass → Saved → Lists → a list → Import your list
+  takes a Goodreads, The StoryGraph or Letterboxd export (read in the
+  browser, `apps/web/lib/list-import.ts`: the to-read shelf or the
+  watchlist) or a public Discogs wantlist or Steam wishlist (read by
+  `POST /lists/import` in `apps/api`; `DISCOGS_TOKEN` raises Discogs' rate
+  limit, Steam needs no key). `import_list_items` adds what the store has
+  to the list with price-drop and back-in-stock alerts and keeps the rest
+  as wanted items ("Not in the store yet"); when a matching product goes
+  live it joins the list and the member is told (`wanted_in_store`).
+  Migration `20270320000000_connections.sql`.
+- **Vinyl from artists you listen to.** Pass → Saved → Vinyl connects
+  Spotify (sign-in: `POST /music` returns the authorize link,
+  `GET /music/spotify/callback` saves the artists and the refresh token)
+  or a Last.fm username (`POST /music`, read at once), and lists the
+  Store's live vinyl variants (`attributes.Format` = Vinyl) whose
+  product's `details.Artist` is one of them (`vinyl_from_my_artists`).
+  `GET /cron/music` (daily, 02:40 UTC) refreshes connections older than
+  7 days and removes ones the member revoked. Keys: `SPOTIFY_CLIENT_ID`,
+  `SPOTIFY_CLIENT_SECRET` (redirect URI
+  `https://api.theideaiq.com/music/spotify/callback`; a Spotify app in
+  development mode works for the 25 users added to it until Spotify
+  grants extended quota), `LASTFM_API_KEY`. Disconnecting deletes the
+  artists and the token. Migration `20270320000000_connections.sql`.
+- **Affiliates.** Partners → Affiliate (a section added from Home): owners
+  and admins apply (`apply_affiliate`); Staff → Finance → Affiliates
+  (marketing and finance) approve with a code, refuse or suspend
+  (`decide_affiliate`, which makes or turns off the 5% coupon); finance
+  sets `affiliate_rates` and records payouts (`affiliate_balances`,
+  `record_affiliate_payout`, from 25,000 IQD). Commission is written by a
+  trigger on orders: on delivery (available after the return window),
+  voided or clawed back on cancellation or refund. The website's
+  `/a/<code>` puts the code on the member's cart (`apply_coupon`), or
+  keeps it on the device for 30 days until they sign in. Migration
+  `20270321000000_affiliates.sql`.
 - **Plus Duo.** A Duo plan's holder invites one more Pass from Your Plus
   (a link to `/plus/duo/<code>`, open 7 days); the second person shares
   the rental slots, home swaps and the holder's Plus address, keeps their
@@ -2321,3 +2369,105 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 
 Supabase's redirect URLs include `https://partners.theideaiq.com/**` and
 `https://staff.theideaiq.com/**`.
+
+## 6. Search, shopping and trust
+
+What is free to set up now; everything here needs the owner's accounts.
+
+### 6.1 What the website already does
+
+- **Product markup:** each product page has schema.org `Product` data (a
+  `ProductGroup` with one `Product` per version when it comes in several)
+  with price in IQD, availability, condition, GTIN, and ratings from real
+  reviews (`apps/web/lib/product.ts`).
+- **Sitemaps:** `/sitemap.xml` lists every page in Arabic and English with
+  hreflang alternates (`apps/web/app/sitemap.ts`); `/robots.txt` points to
+  it. Personal links (`/r/<code>`, `/a/<code>`) are never indexed.
+- **Product feed:** `/feeds/products.xml` (English) and
+  `/feeds/products.xml?lang=ar` (Arabic): RSS 2.0 with Google's `g:`
+  fields, one item per product for sale (its id is the product's, the one
+  the Meta Pixel sends; the price is its lowest live version's), refreshed
+  hourly (`apps/web/lib/product-feed.ts`).
+
+### 6.2 Google Search Console and Bing Webmaster Tools
+
+1. search.google.com/search-console → Add property → **Domain**
+   `theideaiq.com` → copy the TXT record → add it in Cloudflare DNS (Type
+   TXT, Name `@`) → Verify.
+2. Sitemaps → submit `https://theideaiq.com/sitemap.xml`.
+3. bing.com/webmasters → **Import from Google Search Console** (it copies
+   the site and the sitemap).
+
+### 6.3 Google Merchant Center: not yet
+
+Merchant Center's supported countries do not include Iraq (checked 30
+October 2026), so products can't be shown to shoppers in Iraq through free
+listings or Shopping ads. The feed is ready for when that changes: add it
+in Merchant Center → Products → Feeds as a scheduled fetch of the URL above.
+
+### 6.4 Meta catalog
+
+1. business.facebook.com → Commerce Manager → Add catalog → E-commerce →
+   **Upload product info** → Data feed → Scheduled feed → URL
+   `https://theideaiq.com/feeds/products.xml`, daily, currency IQD.
+2. Add a second feed for Arabic (`?lang=ar`) as a **language feed**
+   (Catalog → Data sources → Add items → Language and country).
+3. Connect the catalog to the Meta Pixel (Events Manager → the pixel →
+   Settings → Catalog), so catalog ads can match `ViewContent` and
+   `Purchase` (the site already sends them with `content_ids`).
+
+### 6.5 Meta Business verification
+
+business.facebook.com → Settings → Security Centre → **Start
+verification**: the legal name, address and phone exactly as on the
+company registration certificate, a document showing them (registration
+certificate or a utility bill), and a code by phone, email or domain
+(choose domain: a TXT record or a meta tag). Verification unlocks the
+WhatsApp Business sender for codes and higher ad limits.
+
+### 6.6 Email authentication (SPF, DKIM, DMARC)
+
+Checked 30 October 2026: Resend shows theideaiq.com as verified (SPF and
+DKIM on `send.theideaiq.com` and `resend._domainkey`), and
+`_dmarc.theideaiq.com` is `v=DMARC1; p=none; rua=…@dmarc-reports.cloudflare.net`.
+
+1. Leave `p=none` for 2–4 weeks and read Cloudflare → Email → DMARC
+   Management: every source sending as theideaiq.com should pass.
+2. Then tighten it: `v=DMARC1; p=quarantine; pct=100; rua=<the same
+   address>; adkim=r; aspf=r`, and after another clean month `p=reject`.
+3. The root domain has no SPF record and no MX record, so nothing can be
+   sent or received at `@theideaiq.com` except through Resend. If no
+   mailbox is planned, add a TXT record `v=spf1 -all` on `@`; if one is
+   (Google Workspace, Zoho, Cloudflare Email Routing for
+   `support@theideaiq.com`), add its MX and SPF records instead.
+
+### 6.7 PCI DSS SAQ A
+
+The IDEA never sees card numbers: checkout sends the customer to Wayl's
+hosted payment page (`apps/api` creates the link; the website redirects),
+so the self-assessment is **SAQ A** (v4.0.1). Fill it in once a year:
+
+- Eligibility: card payments only through Wayl's page; no card data stored,
+  processed or sent by The IDEA's systems; Wayl is PCI DSS compliant (ask
+  Wayl for its Attestation of Compliance and keep it).
+- The page that redirects (checkout) is protected against script attacks:
+  a Content Security Policy is set by `@repo/security`, scripts load only
+  from the site and the listed tag hosts, and no third-party script runs
+  on checkout beyond analytics.
+- Requirements to answer: 2 (vendor defaults, Vercel and Supabase managed),
+  6.3.3 (patching: `bun audit` in CI), 8 (unique staff accounts, MFA on
+  Vercel, Supabase, GitHub, Cloudflare and Wayl), 9 (no paper card data),
+  11.3.2 (Wayl's ASV scans cover its page; ask whether The IDEA needs its
+  own), 12.8 (the list of service providers: Wayl, Vercel, Supabase,
+  Cloudflare, with their AOCs).
+
+Download the SAQ A and Attestation from pcisecuritystandards.org →
+Document Library and send them to Wayl if asked.
+
+### 6.8 Accessibility statement
+
+Published at `/legal/accessibility` (Arabic and English,
+`apps/web/content/legal/accessibility.*.md`) against WCAG 2.2 AA; the
+end-to-end tests run axe on the main pages. Review it once a year and
+after big design changes.
+

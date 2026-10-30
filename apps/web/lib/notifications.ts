@@ -65,6 +65,7 @@ export const NOTIFICATION_EVENTS = [
   "digital_code_ready",
   "review_request",
   "cart_reminder",
+  "wanted_in_store",
   "plus_duo_joined",
   "plus_duo_guardian",
   "plus_duo_approved",
@@ -394,6 +395,7 @@ const extraValues: Partial<
     };
   },
   survey_rejected: (data) => ({ title: text(data.title) }),
+  wanted_in_store: (data, locale) => ({ name: itemName(data, locale) }),
 };
 
 /**

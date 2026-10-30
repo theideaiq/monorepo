@@ -1426,3 +1426,44 @@ The brief names Apple Wallet without details; these are the choices made.
   clean-up migration. Shops still sell through Partners, and Store →
   Textbooks still links students to Partners to sell as traders.
 
+## Amendment, 30 October 2026 (second, continued): insights, reminders, connections and affiliates
+
+The owner's second message of 30 October 2026 asked for, among others:
+empty searches and key metrics in Staff, a check of referral rewards,
+review requests and cart reminders, product lookups, "Import your list",
+"Vinyl from artists you listen to", and affiliates back, in Partners.
+The choices made where the message gave no detail:
+
+- **Referrals:** the invite reward is 5,000 Bulbs (the old 50 × 100), which
+  matches the rewards policy at 1 Bulb = 1 IQD. Production had no invite
+  entries to convert.
+- **Key metrics:** Staff's home page shows the last 8 weeks (Monday,
+  Baghdad time): orders placed and paid, new Passes, Plus sign-ups and
+  cancellations, carts started and cart-to-paid conversion
+  (`staff_metrics`). Empty searches are folded like search itself and
+  listed in Staff → Catalog → Searches (`search_misses`).
+- **Review requests** go 3 to 10 days after delivery (not for gifts), once
+  per order; **cart reminders** 24 hours to 7 days after a cart was left,
+  only with marketing consent and once per cart change (migration
+  `20270319000000_reminders.sql`), by notification and email.
+- **Product lookups** (Staff → a product → Look up) search by barcode or
+  title in the product's family: Open Library and Google Books, MusicBrainz
+  and Discogs, IGDB, TMDB, BoardGameGeek, Scryfall and the Pokémon TCG API.
+  Using a match only fills what the product lacks.
+- **Import your list** takes the to-read shelf of Goodreads and The
+  StoryGraph, Letterboxd's watchlist, a Discogs wantlist and a Steam
+  wishlist. Matches join the list with alerts; the rest wait as "Not in the
+  store yet" and join the list when the product goes live.
+- **Vinyl from artists you listen to** reads top and followed artists from
+  Spotify (sign-in) or Last.fm (a username), refreshed weekly, and matches
+  the product's `details.Artist` on live vinyl variants.
+- **Affiliates** come back as a Partners section with the rules affiliates
+  had before v2: the code is a 5% coupon, once per member (the link
+  theideaiq.com/a/<code> puts it on the cart); commission on delivered
+  orders by top-level category (8% music, books, films and board games; 3%
+  games, gear and trading cards; 20% Plus months; finance sets them),
+  payable after the return window, voided or clawed back on cancellation
+  or refund; monthly payouts from 25,000 IQD to ZainCash, FIB, Qi or a
+  bank. Marketing and finance approve; finance pays (migration
+  `20270321000000_affiliates.sql`). `/a/<code>` no longer redirects to
+  `/r`.

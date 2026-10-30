@@ -19,7 +19,7 @@ export const config = {
   // sitemap and /.well-known (app links: apple-app-site-association,
   // assetlinks.json).
   matcher: [
-    "/((?!_next/static|_next/image|ingest|\\.well-known|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/((?!_next/static|_next/image|ingest|\\.well-known|favicon.ico|robots.txt|sitemap.xml|feeds/|.*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
   ],
 };
 

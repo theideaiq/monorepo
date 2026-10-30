@@ -15,6 +15,7 @@ import {
 import type { Database, Enums, Tables } from "@repo/database";
 import { log } from "@repo/observability/log";
 import { publicFileUrl } from "@repo/storage";
+import type { FeedProduct } from "./product-feed";
 import { type Rating, type Review, ratingsById } from "./reviews";
 import { createPublicClient, supabaseUrl } from "./supabase";
 
@@ -705,3 +706,25 @@ export const recordSearchMiss = async (term: string) => {
     log.warn(`Search miss not recorded: ${error.message}`);
   }
 };
+
+// ── Product feed ────────────────────────────────────────────────────────────
+
+/** Live products for sale with their variants, for `/feeds/products.xml`. */
+export const getFeedProducts = () =>
+  fallback("feedProducts", [] as FeedProduct[], async () => {
+    const supabase = createPublicClient();
+    if (!supabase) {
+      return [];
+    }
+    return rows(
+      await supabase
+        .from("products")
+        .select(
+          "id, slug, name_ar, name_en, description_ar, description_en, condition, currency, images, details, category:product_categories (name_ar, name_en), variants:product_variants (barcode, price, stock_count, images, active)"
+        )
+        .eq("status", "active")
+        .eq("kind", "sale")
+        .order("updated_at", { ascending: false })
+        .limit(5000)
+    ) as FeedProduct[];
+  });

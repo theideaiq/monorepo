@@ -17,10 +17,78 @@ import { CoverFinder } from "../../_components/cover-finder";
 import { HouseAuctionPanel } from "../../_components/house-auction-panel";
 import { HouseOffersPanel } from "../../_components/house-offers-panel";
 import { HouseSalesPanel } from "../../_components/house-sales-panel";
+import { LookupPanel } from "../../_components/lookup-panel";
 import { ProductForm } from "../../_components/product-form";
 import { RatingPanel } from "../../_components/rating-panel";
 import { VariantForm } from "../../_components/variant-form";
 import { deleteProduct } from "../../actions";
+
+const LOOKUP_FAMILIES = new Set([
+  "board-games",
+  "books",
+  "films",
+  "games",
+  "music",
+  "trading-cards",
+]);
+
+const CREATOR_DETAILS = ["Artist", "Author", "Director", "Developer"];
+
+/** The lookup family: the slug of the product's top-level category. */
+const lookupFamily = (
+  categories: readonly { id: string; parent_id: string | null; slug: string }[],
+  categoryId: string | null
+) => {
+  let category = categories.find((item) => item.id === categoryId);
+  for (let depth = 0; category?.parent_id && depth < 5; depth += 1) {
+    const parentId = category.parent_id;
+    category = categories.find((item) => item.id === parentId);
+  }
+  return category && LOOKUP_FAMILIES.has(category.slug) ? category.slug : null;
+};
+
+const lookupCreator = (details: Record<string, unknown>) => {
+  const key = CREATOR_DETAILS.find((name) => typeof details[name] === "string");
+  return key ? String(details[key]) : null;
+};
+
+/** The product's category slug, and what the Look up panel starts with (null outside its families). */
+const lookupProps = (
+  product: {
+    category_id: string | null;
+    details: unknown;
+    external_ids: unknown;
+    id: string;
+    name_en: string;
+  },
+  variants: readonly { barcode: string | null }[] | null,
+  allCategories:
+    | readonly { id: string; parent_id: string | null; slug: string }[]
+    | null
+) => {
+  const categories = allCategories ?? [];
+  const categorySlug =
+    categories.find((category) => category.id === product.category_id)?.slug ??
+    null;
+  const family = lookupFamily(categories, product.category_id);
+  if (!family) {
+    return { categorySlug, panel: null };
+  }
+  const [only] = variants ?? [];
+  return {
+    categorySlug,
+    panel: {
+      barcode: variants?.length === 1 ? (only?.barcode ?? null) : null,
+      creator: lookupCreator(
+        (product.details ?? {}) as Record<string, unknown>
+      ),
+      family,
+      linked: (product.external_ids ?? {}) as Record<string, unknown>,
+      productId: product.id,
+      title: product.name_en,
+    },
+  };
+};
 
 interface ProductPageProps {
   readonly params: Promise<{ id: string }>;
@@ -79,6 +147,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
   if (!product) {
     notFound();
   }
+  const lookup = lookupProps(product, variants, categories);
   const variantOptions = (variants ?? []).map((variant, index) => ({
     id: variant.id,
     label:
@@ -112,14 +181,12 @@ const ProductPage = async ({ params }: ProductPageProps) => {
       </PageHeader>
       <PageBody className="max-w-5xl">
         {canWrite ? (
-          <CoverFinder
-            categorySlug={
-              categories?.find(
-                (category) => category.id === product.category_id
-              )?.slug ?? null
-            }
-            product={product}
-          />
+          <>
+            <CoverFinder categorySlug={lookup.categorySlug} product={product} />
+            {lookup.panel ? (
+              <LookupPanel {...lookup.panel} key={product.updated_at} />
+            ) : null}
+          </>
         ) : null}
         {/* A new key after each save (e.g. a cover found above) reloads the images. */}
         <ProductForm

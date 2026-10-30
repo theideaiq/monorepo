@@ -10,12 +10,15 @@ import { formatNumber } from "@repo/internationalization/format";
 import { CopyIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
+import { ImportList, WantedItems } from "@/components/saved/import-list";
 import {
   type SavedList,
   useCreateList,
   useDeleteList,
   useSavedLists,
   useShareList,
+  useWantedItems,
+  type WantedItem,
 } from "@/lib/list-queries";
 import type { WishlistItem } from "@/lib/wishlist-queries";
 
@@ -25,9 +28,11 @@ export const sharedListPath = (token: string) => `/lists/${token}`;
 const ListCard = ({
   items,
   list,
+  wanted,
 }: {
   readonly items: readonly WishlistItem[];
   readonly list: SavedList;
+  readonly wanted: readonly WantedItem[];
 }) => {
   const t = useTranslations("app.wishlist.lists");
   const locale = useLocale() as Locale;
@@ -78,6 +83,8 @@ const ListCard = ({
       ) : (
         <p className="text-muted-foreground text-sm">{t("emptyList")}</p>
       )}
+      <WantedItems items={wanted} />
+      <ImportList listId={list.id} />
       <div className="flex flex-wrap items-center gap-3">
         <Switch
           checked={list.shared}
@@ -105,6 +112,7 @@ export const SavedLists = ({
 }) => {
   const t = useTranslations("app.wishlist.lists");
   const lists = useSavedLists();
+  const wanted = useWantedItems().data ?? [];
   const create = useCreateList();
   const id = useId();
   const [name, setName] = useState("");
@@ -144,6 +152,7 @@ export const SavedLists = ({
             items={items.filter((item) => item.list_id === list.id)}
             key={list.id}
             list={list}
+            wanted={wanted.filter((item) => item.list_id === list.id)}
           />
         ))}
       </ul>

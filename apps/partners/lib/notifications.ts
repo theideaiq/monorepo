@@ -56,6 +56,10 @@ export const NOTIFICATION_EVENTS = [
   "opportunity_approved",
   "opportunity_changes",
   "opportunity_rejected",
+  "affiliate_approved",
+  "affiliate_rejected",
+  "affiliate_suspended",
+  "affiliate_paid",
   "auction_outbid",
   "auction_won",
   "auction_unpaid",
@@ -191,6 +195,13 @@ const extraValues: Partial<
     ) => Record<string, string>
   >
 > = {
+  affiliate_approved: (data) => ({ code: text(data.code) }),
+  affiliate_paid: (data, locale) => {
+    const amount = Number(text(data.amount));
+    return {
+      amount: Number.isFinite(amount) ? formatPrice(amount, locale) : "",
+    };
+  },
   auction_mark_wrong: auctionValues,
   auction_outbid: auctionValues,
   auction_second_chance: auctionValues,
