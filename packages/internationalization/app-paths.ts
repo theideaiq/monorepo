@@ -33,6 +33,8 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/pass/wishlist", "/pass/saved"],
   ["/pass/events", "/club", "#yours"],
   ["/pass/submissions", "/club", "#yours"],
+  // Get offers from shops left the Pass (owner, 30 October 2026).
+  ["/pass/selling", "/pass"],
   // Program notifications link to Club → Yours (`?tab=applications`).
   ["/club/yours", "/club", "#yours"],
   ["/post/events", "/club"],
@@ -121,6 +123,7 @@ const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;
  * (the auction notifications link `/selling/auctions`).
  */
 const PARTNERS_SECTION = /^\/selling(?=[/?#]|$)/;
+const GET_OFFERS = /^\/selling\/get-offers(?=[/?#]|$)/;
 
 /** Pages of Partners that moved, as [old path, current path]. */
 const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
@@ -141,7 +144,8 @@ const PARTNERS_MOVED: readonly (readonly [string, string])[] = [
  */
 export const businessPath = (path: string) => {
   if (PARTNERS_SECTION.test(path)) {
-    return path;
+    // Get offers from shops was removed (owner, 30 October 2026).
+    return GET_OFFERS.test(path) ? "/selling" : path;
   }
   if (!BUSINESS_PATH.test(path)) {
     return null;

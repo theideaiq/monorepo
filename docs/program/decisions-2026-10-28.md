@@ -1401,3 +1401,28 @@ The brief names Apple Wallet without details; these are the choices made.
   devices only once `APPLE_WALLET_*` are set; it needs a paid Apple
   Developer Program membership and a Pass Type ID (open in PROGRESS.md).
 
+## Amendment, 30 October 2026 (second): Pass settings, selling and order updates
+
+- **Order updates on WhatsApp:** not built as our own feature. Wayl's API
+  (`openapi.v1.json`: links, products, refunds) takes no customer phone
+  or email, so Wayl never messages our customers; its hosted checkout only
+  asks for a WhatsApp number to sign the payer in. Boxy receives the
+  customer's phone with every parcel and its service includes WhatsApp
+  delivery messages (confirmation, scheduling, a voice call when there's
+  no reply). So delivery updates come from Boxy; the "Order updates on
+  WhatsApp" choice in Pass → Settings covers what neither sends (the order
+  placed and paid, rental and Plus reminders, support replies) through the
+  existing `whatsapp_opt_in`, now only to a verified number.
+- **Phone and WhatsApp, one card:** verifying a number asks where the
+  code goes (WhatsApp, falling back to SMS, or SMS: `channel` on
+  `POST /account/phone/start`). Under the numbers: "Order updates on
+  WhatsApp" (to a verified number, chosen when there are several) and
+  "Send me news and offers" (`marketing_opt_in`, moved from Profile).
+- **Connections, one card:** Telegram is listed with the other sign-in
+  methods (Google, Apple, email), then connected sites.
+- **Selling leaves the Pass:** Pass → Selling (Get offers from shops) and
+  Partners → Selling → Get offers are removed; old links to
+  `/pass/selling` open the Pass. The tables stay, unused, until a later
+  clean-up migration. Shops still sell through Partners, and Store →
+  Textbooks still links students to Partners to sell as traders.
+

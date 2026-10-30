@@ -7,8 +7,8 @@ import { handlePhoneStart } from "@/lib/phone-verify/handler";
 export const OPTIONS = preflight;
 
 /**
- * Sends a code (WhatsApp, else SMS) to the number the caller wants to
- * verify. Answers with the number in E.164 and how the code was sent.
+ * Sends a code to the number the caller wants to verify, on WhatsApp
+ * (else SMS) or by SMS, as they chose. Answers with the number in E.164 and how the code was sent.
  */
 export const POST = async (request: Request) => {
   const headers = corsHeaders(request);

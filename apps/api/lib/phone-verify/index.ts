@@ -48,7 +48,8 @@ export const phoneDeps = (): PhoneDeps => {
     verify: config
       ? {
           check: (phone, code) => checkVerification(config, phone, code),
-          start: (phone, locale) => startVerification(config, phone, locale),
+          start: (phone, locale, channel) =>
+            startVerification(config, phone, locale, channel),
         }
       : undefined,
   };

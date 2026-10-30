@@ -1,6 +1,6 @@
 import { isIraqiMobile, normalizePhone } from "@repo/auth/phone";
 import { z } from "zod";
-import type { CheckResult, StartResult } from "./client";
+import type { CheckResult, StartResult, VerifyChannel } from "./client";
 
 /** Error codes the website translates; never raw messages. */
 export type PhoneError =
@@ -29,7 +29,11 @@ export interface PhoneDeps {
   verify:
     | {
         check: (phone: string, code: string) => Promise<CheckResult>;
-        start: (phone: string, locale: "ar" | "en") => Promise<StartResult>;
+        start: (
+          phone: string,
+          locale: "ar" | "en",
+          channel?: VerifyChannel
+        ) => Promise<StartResult>;
       }
     | undefined;
 }
@@ -40,6 +44,8 @@ const fail = (status: number, error: PhoneError): PhoneResult => ({
 });
 
 const startSchema = z.object({
+  // Where the person wants the code: WhatsApp (the default) or SMS.
+  channel: z.enum(["whatsapp", "sms"]).optional(),
   locale: z.enum(["ar", "en"]).default("ar"),
   phone: z.string().min(1).max(40),
 });
@@ -74,7 +80,11 @@ export const handlePhoneStart = async (
   }
 
   try {
-    const result = await deps.verify.start(phone, parsed.data.locale);
+    const result = await deps.verify.start(
+      phone,
+      parsed.data.locale,
+      parsed.data.channel
+    );
     if (result.status === "sent") {
       return {
         body: { channel: result.channel, ok: true, phone },

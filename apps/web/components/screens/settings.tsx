@@ -29,10 +29,9 @@ import { PasswordSettingsCard } from "@/components/password-settings";
 import { ProfileForm } from "@/components/profile-form";
 import { SignInMethodsCard } from "@/components/sign-in-methods";
 import { SectionSpinner } from "@/components/states";
-import { TelegramSettingsCard } from "@/components/telegram-settings";
 import { VerificationLinkCard } from "@/components/verification-settings";
 import { VerifiedPhonesCard } from "@/components/verify-phone";
-import { WhatsAppSettingsCard } from "@/components/whatsapp-settings";
+import { MessagesSettings } from "@/components/whatsapp-settings";
 import { useProfile } from "@/lib/queries";
 
 const THEMES = ["light", "dark", "system"] as const;
@@ -166,7 +165,6 @@ export const Settings = ({
             <CardContent className="grid gap-6">
               {profile.data ? (
                 <ProfileForm
-                  initialMarketingOptIn={profile.data.marketing_opt_in}
                   initialName={profile.data.full_name ?? ""}
                   onSaved={(language) => {
                     if (language !== locale) {
@@ -193,12 +191,12 @@ export const Settings = ({
               <span dir="ltr">{formatPhone(user.phone)}</span>
             </p>
           ) : null}
-          <VerifiedPhonesCard />
-          <WhatsAppSettingsCard />
+          <VerifiedPhonesCard>
+            <MessagesSettings />
+          </VerifiedPhonesCard>
         </Section>
         <Section id="connections">
           <SignInMethodsCard providers={providers} />
-          <TelegramSettingsCard />
           <ConnectedSites />
         </Section>
         <Section id="more">

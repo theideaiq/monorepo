@@ -581,6 +581,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-30: Owner's second amendment (decisions "Amendment, 30 October
+  2026 (second)"). No order updates of our own on WhatsApp: Boxy messages
+  customers about deliveries and Wayl can't message them. Pass → Settings
+  → Phone is one card: the code on WhatsApp or by SMS, then WhatsApp order
+  updates to a verified number and news and offers. Connections lists
+  Telegram with the sign-in methods. Pass → Selling and Partners → Get
+  offers are gone. Next: Staff's empty searches and key metrics, the
+  referral check, affiliates in Partners, review requests and cart
+  reminders, product lookups, list imports, vinyl from your artists, the
+  shopping feeds and the free checks.
 - 2026-10-30: Apple Wallet (step 14, the last item; decisions Part 17).
   Part 1, the schema `20270317000000_apple_wallet.sql`: the Apple Wallet
   card's fixed code (`IDEA:<member number>:W<code>`, kept as a hash),
