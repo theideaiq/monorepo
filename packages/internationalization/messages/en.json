@@ -1376,6 +1376,9 @@
       "failed": "We couldn't apply the code. You can type it at checkout.",
       "join": "Get your Pass",
       "shop": "Shop now"
+    },
+    "feed": {
+      "title": "The IDEA store"
     }
   },
   "app": {

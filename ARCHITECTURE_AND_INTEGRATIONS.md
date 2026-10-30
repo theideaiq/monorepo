@@ -13,6 +13,7 @@ by step.
 | [3. Build, sync and release the iOS and Android apps](#3-build-sync-and-release-the-ios-and-android-apps) | ship the mobile apps |
 | [4. Marketing tracking and Wayl payments](#4-marketing-tracking-and-wayl-payments) | set up ads attribution, newsletters or take real payments |
 | [5. Vercel environment variables](#5-vercel-environment-variables) | deploy the web apps |
+| [6. Search, shopping and trust](#6-search-shopping-and-trust) | get found in search, list products in Meta's catalog, set up email authentication |
 
 `AGENTS.md` holds the short list of coding rules; this document is the long
 form.
@@ -2368,3 +2369,105 @@ After changing variables, redeploy (**Deployments → … → Redeploy**). Keep 
 
 Supabase's redirect URLs include `https://partners.theideaiq.com/**` and
 `https://staff.theideaiq.com/**`.
+
+## 6. Search, shopping and trust
+
+What is free to set up now; everything here needs the owner's accounts.
+
+### 6.1 What the website already does
+
+- **Product markup:** each product page has schema.org `Product` data (a
+  `ProductGroup` with one `Product` per version when it comes in several)
+  with price in IQD, availability, condition, GTIN, and ratings from real
+  reviews (`apps/web/lib/product.ts`).
+- **Sitemaps:** `/sitemap.xml` lists every page in Arabic and English with
+  hreflang alternates (`apps/web/app/sitemap.ts`); `/robots.txt` points to
+  it. Personal links (`/r/<code>`, `/a/<code>`) are never indexed.
+- **Product feed:** `/feeds/products.xml` (English) and
+  `/feeds/products.xml?lang=ar` (Arabic): RSS 2.0 with Google's `g:`
+  fields, one item per product for sale (its id is the product's, the one
+  the Meta Pixel sends; the price is its lowest live version's), refreshed
+  hourly (`apps/web/lib/product-feed.ts`).
+
+### 6.2 Google Search Console and Bing Webmaster Tools
+
+1. search.google.com/search-console → Add property → **Domain**
+   `theideaiq.com` → copy the TXT record → add it in Cloudflare DNS (Type
+   TXT, Name `@`) → Verify.
+2. Sitemaps → submit `https://theideaiq.com/sitemap.xml`.
+3. bing.com/webmasters → **Import from Google Search Console** (it copies
+   the site and the sitemap).
+
+### 6.3 Google Merchant Center: not yet
+
+Merchant Center's supported countries do not include Iraq (checked 30
+October 2026), so products can't be shown to shoppers in Iraq through free
+listings or Shopping ads. The feed is ready for when that changes: add it
+in Merchant Center → Products → Feeds as a scheduled fetch of the URL above.
+
+### 6.4 Meta catalog
+
+1. business.facebook.com → Commerce Manager → Add catalog → E-commerce →
+   **Upload product info** → Data feed → Scheduled feed → URL
+   `https://theideaiq.com/feeds/products.xml`, daily, currency IQD.
+2. Add a second feed for Arabic (`?lang=ar`) as a **language feed**
+   (Catalog → Data sources → Add items → Language and country).
+3. Connect the catalog to the Meta Pixel (Events Manager → the pixel →
+   Settings → Catalog), so catalog ads can match `ViewContent` and
+   `Purchase` (the site already sends them with `content_ids`).
+
+### 6.5 Meta Business verification
+
+business.facebook.com → Settings → Security Centre → **Start
+verification**: the legal name, address and phone exactly as on the
+company registration certificate, a document showing them (registration
+certificate or a utility bill), and a code by phone, email or domain
+(choose domain: a TXT record or a meta tag). Verification unlocks the
+WhatsApp Business sender for codes and higher ad limits.
+
+### 6.6 Email authentication (SPF, DKIM, DMARC)
+
+Checked 30 October 2026: Resend shows theideaiq.com as verified (SPF and
+DKIM on `send.theideaiq.com` and `resend._domainkey`), and
+`_dmarc.theideaiq.com` is `v=DMARC1; p=none; rua=…@dmarc-reports.cloudflare.net`.
+
+1. Leave `p=none` for 2–4 weeks and read Cloudflare → Email → DMARC
+   Management: every source sending as theideaiq.com should pass.
+2. Then tighten it: `v=DMARC1; p=quarantine; pct=100; rua=<the same
+   address>; adkim=r; aspf=r`, and after another clean month `p=reject`.
+3. The root domain has no SPF record and no MX record, so nothing can be
+   sent or received at `@theideaiq.com` except through Resend. If no
+   mailbox is planned, add a TXT record `v=spf1 -all` on `@`; if one is
+   (Google Workspace, Zoho, Cloudflare Email Routing for
+   `support@theideaiq.com`), add its MX and SPF records instead.
+
+### 6.7 PCI DSS SAQ A
+
+The IDEA never sees card numbers: checkout sends the customer to Wayl's
+hosted payment page (`apps/api` creates the link; the website redirects),
+so the self-assessment is **SAQ A** (v4.0.1). Fill it in once a year:
+
+- Eligibility: card payments only through Wayl's page; no card data stored,
+  processed or sent by The IDEA's systems; Wayl is PCI DSS compliant (ask
+  Wayl for its Attestation of Compliance and keep it).
+- The page that redirects (checkout) is protected against script attacks:
+  a Content Security Policy is set by `@repo/security`, scripts load only
+  from the site and the listed tag hosts, and no third-party script runs
+  on checkout beyond analytics.
+- Requirements to answer: 2 (vendor defaults, Vercel and Supabase managed),
+  6.3.3 (patching: `bun audit` in CI), 8 (unique staff accounts, MFA on
+  Vercel, Supabase, GitHub, Cloudflare and Wayl), 9 (no paper card data),
+  11.3.2 (Wayl's ASV scans cover its page; ask whether The IDEA needs its
+  own), 12.8 (the list of service providers: Wayl, Vercel, Supabase,
+  Cloudflare, with their AOCs).
+
+Download the SAQ A and Attestation from pcisecuritystandards.org →
+Document Library and send them to Wayl if asked.
+
+### 6.8 Accessibility statement
+
+Published at `/legal/accessibility` (Arabic and English,
+`apps/web/content/legal/accessibility.*.md`) against WCAG 2.2 AA; the
+end-to-end tests run axe on the main pages. Review it once a year and
+after big design changes.
+

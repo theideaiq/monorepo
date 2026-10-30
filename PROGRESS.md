@@ -181,13 +181,34 @@ decisions with a date.
 
 ## Launch checklist (needs an owner with access)
 
-- [ ] **Owner decisions of 2026-10-28** (`docs/program/decisions-2026-10-28.md`):
-      SPF, DKIM and DMARC; Meta Business verification; Google Search
-      Console and Bing Webmaster Tools; the PCI SAQ A self-assessment; a
-      WCAG 2.2 AA accessibility statement; compare digital-code suppliers'
-      discounts on the top 10 brands (Reloadly, LikeCard, Golden Codes) and
-      record the result here; ask Boxy whether a reverse-pickup order type
-      is planned.
+- [ ] **Owner decisions of 2026-10-28** (`docs/program/decisions-2026-10-28.md`;
+      steps in ARCHITECTURE_AND_INTEGRATIONS.md section 6): DMARC from
+      `p=none` to `quarantine`, then `reject` (SPF and DKIM pass in Resend);
+      a root SPF or MX record for `@theideaiq.com`; Meta Business
+      verification; Google Search Console (domain TXT) and Bing (import);
+      the PCI SAQ A self-assessment with Wayl's AOC; compare digital-code
+      suppliers' discounts on the top 10 brands (Reloadly, LikeCard, Golden
+      Codes) and record the result here; ask Boxy whether a reverse-pickup
+      order type is planned. Done in code: the accessibility statement,
+      product markup, sitemaps with both languages, and the product feed.
+- [ ] **Meta catalog:** Commerce Manager → a catalog with the scheduled
+      feed `https://theideaiq.com/feeds/products.xml` (and `?lang=ar` as
+      its language feed), connected to the Pixel. Google Merchant Center
+      waits until it supports Iraq.
+- [ ] **Reminders:** add the repository secret `CRON_SECRET` (the same
+      value as the api project's) so `.github/workflows/reminders.yml`
+      sends review requests and cart reminders hourly.
+- [ ] **Product lookups (all optional, each source is skipped without its
+      key; api project):** `DISCOGS_TOKEN`, `IGDB_CLIENT_ID` and
+      `IGDB_CLIENT_SECRET` (a Twitch app), `TMDB_READ_TOKEN`, `BGG_TOKEN`,
+      `GOOGLE_BOOKS_API_KEY`, `POKEMONTCG_API_KEY`.
+- [ ] **Vinyl from artists you listen to (api project):** `LASTFM_API_KEY`;
+      a Spotify app with the redirect URI
+      `https://api.theideaiq.com/music/spotify/callback`, then
+      `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`, and Spotify's
+      extended quota request (development mode allows 25 listed users).
+- [ ] **Affiliates:** Staff → Finance → Affiliates is for marketing and
+      finance; review the rates there before approving the first one.
 - [ ] **Twilio Verify (phone codes):** create a Twilio account and a
       Verify service; set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and
       `TWILIO_VERIFY_SERVICE_SID` on the theideaiq-api Vercel project. For
