@@ -11,45 +11,42 @@ incidents) is in `docs/platform`.
 - `apps/app` — **theideaiq.com**, everything customers see (Next.js, i18n
   routes under `app/[locale]`), with a `proxy.ts` (locale, session refresh,
   security headers) and the cookie session (`@repo/auth/server`):
-  - the public pages, organised like the menu (Store · Plus · Club · Pass,
-    a bottom tab bar on phones): The IDEA Store is Home (`/`), the
-    storefront (categories, featured and new products), with
-    `/store` the full catalog and product pages (buying, reviews), and
-    `/store/campaigns/<slug>` a campaign's page, `/store/codes` gift cards and
-    codes by store region (the website only, never in the apps), `/store/auctions` every
-    live auction and `/store/auctions/<number>` one (the seller's photos,
-    bidding by maximum, the history by alias; a win goes to the cart and
-    is paid online within 48 hours); The IDEA
-    Plus is `/plus`, everything about renting (the rental catalog with
-    categories, then plans and tiers), public, with "Your Plus" (joining
-    and the waitlist at `#join`; your plan, plan changes, pause and
-    cancel, Plus Duo (inviting the second person, sharing, the swap
-    order, leaving), swaps, the queue and rentals) at `#yours` when signed
-    in, and `/plus/duo/<code>` a Duo invite to accept; The IDEA
-    Club is `/club` in three parts: Join at `#join` (events,
-    opportunities, featured first, and the member's surveys by date or
-    deadline, `?show=events|opportunities|surveys`), Read at `#read`
-    (posts by topic tag, `?topic=news|stories|guides`, `posts.topics`)
-    and Yours at `#yours` (tickets with the calendar feed, the surveys you
-    created, your submissions, each linking to its receipt in
-    `/pass/orders` when it was paid for, your applications to The IDEA's
-    programs and the opportunities you follow; `?tab=` opens one), then
-    the Telegram rooms as one card at the bottom;
-    `/club/<slug>` is a post or an event (with RSVP) and
-    `/club/opportunities/<slug>` an opportunity (who runs it, where to
-    apply and Notify me; for The IDEA's own programs, the package, the
-    application with passport scans, its installments, which go through
-    the cart, and withdrawing); `/partners` ("For partners") presents The
-    IDEA Partners to organizations; `/search` (the one search: products
-    to buy and rent, events, opportunities and posts); `/help`
-    (FAQ, the contact form at `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
-    and `/help/new`); `/careers`; `/about` (the company, the
-    version); `/r/<code>` (a member's invite link: 10% off a new member's
-    first order) and legal pages at `/legal/<policy>` (Markdown in
-    `apps/app/content/legal`). Each place has one way in. Phones: the top
-    bar holds the logo, search, Saved (the heart), the bell and the cart;
-    the tabs Store · Plus · Club · Pass, with the cart in the top bar (never a
-    tab). Wider
+  - the public pages, organised like the four tabs (Store · Plus · Club ·
+    Pass, a bottom tab bar on phones; the full map is
+    `docs/program/ux-overhaul.md`). Store and Plus share one catalogue
+    (every product can be bought, and those in a Plus category can also go
+    in the Plus queue; there is no one-off renting, and a product without
+    a picture is never listed). The IDEA Store is Home (`/`, shelves),
+    with `/store` the whole catalogue, `/store/<category>` a category,
+    `/store/deals`, `/store/shops/<shop>` a shop, `/store/kits/<kit>` a
+    game night kit, product pages (Buy, Add to Plus, reviews),
+    `/store/campaigns/<slug>` a campaign's page, `/store/codes` gift cards
+    and codes by store region (the website only, never in the apps),
+    `/store/auctions` every live auction and `/store/auctions/<number>`
+    one (the seller's photos, bidding by maximum, the history by alias; a
+    win goes to the cart and is paid online within 48 hours). The IDEA
+    Plus is `/plus` (the same products as shelves, with when each is
+    available: now, soon, later or coming), `/plus/<category>`,
+    `/plus/plans` the plans and tiers with joining and the waitlist, and
+    `/plus/plan` your plan (changes, pause, cancel; Family links to the
+    Pass). The IDEA Club is `/club` with `/club/events[/<slug>]` (RSVP),
+    `/club/opportunities[/<slug>]` (who runs it, where to apply and Notify
+    me; for The IDEA's own programs, the package, the application with
+    passport scans, its installments, which go through the cart, and
+    withdrawing), `/club/surveys` and `/club/read[/<slug>]` (posts by
+    topic), then the Telegram rooms; your tickets, applications and
+    surveys are in the Pass. `/checkout/done/<order>` follows a paid
+    order. `/partners` ("For partners") presents The IDEA Partners to
+    organizations; `/search` (the one search: products, events,
+    opportunities and posts); `/help` (FAQ, the contact form at
+    `#contact`, Ask Droid and the member's support tickets at `/help/<id>`
+    and `/help/new`); `/careers`; `/about` (the company, the version);
+    `/r/<code>` (a member's invite link: 10% off a new member's first
+    order); `/family/<code>` a Family (Duo) invite to accept; and legal
+    pages at `/legal/<policy>` (Markdown in `apps/app/content/legal`).
+    Each place has one way in. Phones: the top bar holds the logo, search,
+    Saved (the heart), the bell and the cart; the tabs Store · Plus ·
+    Club · Pass, with the cart in the top bar (never a tab). Wider
     screens: logo · Store · Plus · Club · search · Saved · bell · cart ·
     Pass avatar ("Sign in" when signed out). The heart has no badge and
     opens `/pass/saved`; the bell shows only when signed in and only in
@@ -88,17 +85,21 @@ incidents) is in `docs/platform`.
     apps link here with `passUrl()` from `@repo/auth/pass` (based on
     `NEXT_PUBLIC_WEB_URL`), which only returns to allowlisted hosts
     (`isAllowedReturnTo`);
-  - **The IDEA Pass pages** (`app/[locale]/pass/(member)`: `/pass` the
-    Pass card, `/pass/orders`, `/pass/saved` (tabs Saved, Lists and, for
-    Plus members, Queue), `/pass/bulbs` with
-    invites at `#invite`, `/pass/settings` in sections: Profile, Email (the
-    sign-in address and password), Phone (one card: verified numbers, each
-    code sent on WhatsApp or by SMS as the person picks, then WhatsApp order
-    updates to a verified number and news and offers, the marketing
-    consent), Connections (one card of sign-in methods with Telegram, then
-    connected sites) and More
-    (the address book at `#addresses`, birthday, guardian, verification,
-    appearance, deleting the Pass)); `/pass/embed` (outside that
+  - **The IDEA Pass pages** (`app/[locale]/pass/(member)`): `/pass` the
+    Pass card, Today (what needs you now) and the Library shelves on top:
+    `/pass/at-home` (Plus items you have, swaps and Keep it),
+    `/pass/queue`, `/pass/history` (orders and rentals), `/pass/saved`,
+    `/pass/lists`, `/pass/tickets`, `/pass/applications`, `/pass/codes`;
+    `/pass/family` (Family: kids' profiles under 13 with their own queue,
+    linked teens who ask before they get something, the guardian link and
+    Plus Duo), `/pass/bulbs` with invites at `#invite`, and
+    `/pass/settings/<section>`: Profile, Email (the sign-in address and
+    password), Phone (one card: verified numbers, each code sent on
+    WhatsApp or by SMS as the person picks, then WhatsApp order updates to
+    a verified number and news and offers, the marketing consent),
+    Connections (one card of sign-in methods with Telegram, then connected
+    sites) and More (the address book, birthday, verification, appearance,
+    deleting the Pass); `/pass/embed` (outside that
     group, no header or footer) is the live card partners frame on their
     own sites, with its connect popup at `/pass/embed/connect`; `/lists/<token>`
     is a list a member shared by link; and the cart and checkout (`app/[locale]/(checkout)`): client components that query with
@@ -148,7 +149,10 @@ incidents) is in `docs/platform`.
   sections not switched on (`organizations.features`) stay greyed with
   "Add" (to the cards under Today), Sell is "Apply to sell" until the
   shop is approved, and counts show only for offers, orders to pack and
-  returns; the bell is only in the top bar. It holds no Staff code. No
+  returns; the bell is only in the top bar; Ctrl/⌘K opens a command bar
+  over the menu's pages. A listing goes live only with a photo: a shop adds
+  photos to a held draft from its listings (`add_listing_photos`). It
+  holds no Staff code. No
   sign-in of its own: it sends people to The IDEA Pass on the website
   with `return_to`.
 - `apps/staff` — **Staff** (package `staff`, port 3003,

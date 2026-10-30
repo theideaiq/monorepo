@@ -108,7 +108,7 @@ load on every page (never inside the iOS/Android apps).
 
 | Area | Routes | Code |
 | --- | --- | --- |
-| Public pages | The IDEA Store: `/{locale}`, `/store`, `/store/<slug>`; The IDEA Plus: `/plus` (rental catalog, plans, tiers; "Your Plus" at `#yours` when signed in: membership, plans, rentals, rental requests); The IDEA Club: `/club` (one feed with chips, `?show=events\|news\|stories\|guides`; "Yours" at `#yours`: your events with the calendar feed and your submissions; the Telegram rooms card) and `/club/<slug>` (a post or an event); `/partners` ("For partners"); `/search` (products to buy and rent, events and posts); `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
+| Public pages | The IDEA Store: `/{locale}` (shelves), `/store`, `/store/<category>`, `/store/deals`, `/store/shops/<shop>`, `/store/kits/<kit>` and product pages; The IDEA Plus: `/plus` (the same catalogue with each item's availability, `plus_availability()`), `/plus/<category>`, `/plus/plans`, `/plus/plan` (your plan); The IDEA Club: `/club`, `/club/events[/<slug>]`, `/club/opportunities[/<slug>]`, `/club/surveys`, `/club/read[/<slug>]`; `/family/<code>` (a Duo invite); `/checkout/done/<order>`; `/partners` ("For partners"); `/search`; `/help` (FAQ, contact form at `#contact`, Ask Droid, the member's support tickets at `/help/<id>` and `/help/new`); `/careers`; `/about`; `/r/<code>`; `/legal/<policy>`. The full map is `docs/program/ux-overhaul.md` | `app/[locale]/*` (Server Components, ISR), with client islands for buying (`components/store/purchase-panel.tsx`), reviews (`WriteReview`) and RSVPs (`components/rsvp-button.tsx`) |
 | The IDEA Pass (sign-in) | `/{locale}/sign-in`, `/mfa`, `/tg`, `/sign-out`, `/auth/callback`, `/onboarding` | `app/[locale]/(pass)`, `components/pass`, `lib/pass` |
 | The IDEA Pass (pages) | `/{locale}/pass` (the membership card), `/pass/orders` (orders), `/pass/orders/<id>`, `/pass/saved` (saved items), `/pass/bulbs` (Bulbs, then invites at `#invite`), `/pass/settings` (with language and theme); `/pass/embed?client_id=…` (the live card in a partner's frame) and `/pass/embed/connect` (its popup) | `app/[locale]/pass/(member)`, `app/[locale]/pass/embed`, `components/screens` (client components with TanStack Query) |
 | Cart and checkout | `/{locale}/cart`, `/checkout` | `app/[locale]/(checkout)` |
@@ -278,16 +278,26 @@ namespaces.
   `/a/<code>` puts the code on the member's cart (`apply_coupon`), or
   keeps it on the device for 30 days until they sign in. Migration
   `20270321000000_affiliates.sql`.
-- **Plus Duo.** A Duo plan's holder invites one more Pass from Your Plus
-  (a link to `/plus/duo/<code>`, open 7 days); the second person shares
+- **Plus Duo.** A Duo plan's holder invites one more Pass from Pass → Family
+  (a link to `/family/<code>`, open 7 days); the second person shares
   the rental slots, home swaps and the holder's Plus address, keeps their
   own queue and has the plan's benefits on their own Pass. A 13–17-year-old
-  needs their guardian's approval (Pass → Settings → Guardian). The
+  needs their guardian's approval (Pass → Family). The
   partner leaves at any time; the holder removes them from the next
   renewal. `GET /cron/plus-duo` (daily, 06:25 UTC) ends places that are
   over (`end_duo_partners`). Table `plus_members`; migration
   `20270314000000_plus_duo.sql`.
 - **Indexing.** Every page sends `noindex`.
+- **Family.** Pass → Family (`/pass/family`) holds kids' profiles under 13
+  (`family_profiles`, `add_family_profile()`, `remove_family_profile()`),
+  each with its own Plus queue checked against the item's age rating
+  (`queue_add_for_profile()`, `rental_queue_items.for_profile`); linked
+  teens (through `guardian_links`) ask before they get something
+  (`ask_family()`, never for 18+ items; `family_requests`), and the
+  manager answers (`decide_family_request()`, notifications
+  `family_request*`); and Plus Duo. Migration `20270324000000_ux_overhaul.sql`,
+  which also turns off one-off renting (cart rent lines are refused) and
+  adds `staff_plus_demand()` and `add_listing_photos()`.
 
 ### The IDEA Pass
 
@@ -815,6 +825,8 @@ Current schema:
 | `…_droid.sql` | Telegram bot tables: `telegram_chats`, `telegram_members`, `telegram_requests`, `telegram_faq` |
 | `…_staff_mfa.sql` | Staff rights require an authenticator-app session (`aal2` claim) in every policy |
 | `…_retire_back_office_extras.sql` | Moves the retired `marketing_segments`, `marketing_campaigns`, `staff_plan`, `equity_rounds`, `equity_holders` and `fixed_assets` (and their enums) to the `archive` schema, which no client role can reach, and drops `fixed_asset_schedule()`; adds the newsletter sync bookkeeping (`private.newsletter_contacts`, the service-only `newsletter_audience()` and `mark_newsletter_synced()`, see 4.3) |
+| `…_one_catalogue.sql` | One catalogue for Store and Plus: `product_categories.in_plus`, `rentable` from Plus categories and copies, rent-only items for sale, a picture required to publish (`require_photo`, `has_photo()`) |
+| `…_ux_overhaul.sql` | `plus_availability()`, `staff_plus_demand()`, Family (`family_profiles`, `family_requests`, `rental_queue_items.for_profile`, `add_family_profile()`, `queue_add_for_profile()`, `ask_family()`, `decide_family_request()`), one-off renting off (`check_cart_rent`, public rent RPCs dropped), `add_listing_photos()` |
 
 ### 2.2 Run the database locally
 
