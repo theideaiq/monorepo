@@ -261,7 +261,7 @@ const AdultGuardian = () => {
 };
 
 /**
- * Your Pass → Settings: guardians. Teens (13–17) invite one; adults accept
+ * Pass → Family: guardians. Teens (13–17) invite one; adults accept
  * an invite and approve their teens' orders and The IDEA Plus.
  */
 export const GuardianCard = () => {

@@ -84,7 +84,7 @@ const sendOne = async (
       locale,
       settings:
         kind === "cart"
-          ? webLink(deps.webUrl, locale, "/pass/settings#phone")
+          ? webLink(deps.webUrl, locale, "/pass/settings/phone")
           : undefined,
     }),
     subject: reminderSubject(kind, locale),

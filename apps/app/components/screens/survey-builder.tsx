@@ -922,10 +922,10 @@ export const SurveyBuilder = () => {
     <div className="flex flex-col gap-6">
       <Link
         className="inline-flex items-center gap-1 self-start text-muted-foreground text-sm hover:text-foreground"
-        href="/club#yours"
+        href="/pass/applications?tab=surveys"
       >
         <ArrowLeftIcon aria-hidden="true" className="size-4 rtl:rotate-180" />
-        {tSurveys("back")}
+        {tSurveys("backToYours")}
       </Link>
       <PageHeader title={edit ? t("editTitle") : t("newTitle")} />
       {body}

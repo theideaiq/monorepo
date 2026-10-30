@@ -95,7 +95,10 @@ export const NotificationBell = () => {
     if (!notification.read_at) {
       markRead.mutate([notification.id]);
     }
-    const href = notificationHref(notification.link, locale);
+    const href = notificationHref(notification.link, locale, undefined, {
+      event: notification.event,
+      kind: notification.kind,
+    });
     setOpen(false);
     if (href?.startsWith("http")) {
       window.location.assign(href);

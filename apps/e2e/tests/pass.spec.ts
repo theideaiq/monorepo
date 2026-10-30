@@ -129,7 +129,7 @@ test.describe("The IDEA Pass", () => {
       );
 
       // Settings lists it; disconnecting removes it.
-      await page.goto(`${urls.web}/pass/settings`);
+      await page.goto(`${urls.web}/pass/settings/connections`);
       const sites = page.locator("#sites");
       await expect(sites.getByText(partner.name)).toBeVisible();
       await sites.getByRole("button", { name: "Disconnect" }).click();

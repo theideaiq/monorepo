@@ -9,9 +9,10 @@ const pages = [
   { name: "product page", path: `/store/${product.slug}` },
   { name: "Plus", path: "/plus" },
   { name: "Club", path: "/club" },
-  { name: "Club events", path: "/club?show=events" },
-  { name: "Club opportunities", path: "/club?show=opportunities" },
-  { name: "Club guides", path: "/club?topic=guides" },
+  { name: "Club events", path: "/club/events" },
+  { name: "Club opportunities", path: "/club/opportunities" },
+  { name: "Club surveys", path: "/club/surveys" },
+  { name: "Club guides", path: "/club/read?topic=guides" },
   { name: "Partners", path: "/partners" },
   { name: "About", path: "/about" },
   { name: "Help", path: "/help" },
@@ -78,47 +79,52 @@ test.describe("public site", () => {
     });
   });
 
-  test("the Club is Join, Read and Yours, with Telegram at the bottom", async ({
+  test("the Club has a page for each part, with Telegram at the bottom", async ({
     page,
   }) => {
     await page.goto(`${urls.web}/club`);
-    const parts = page.getByRole("navigation", { exact: true, name: "Club" });
-    for (const name of ["Join", "Read", "Yours"]) {
+    const parts = page.getByRole("navigation", { name: "Club pages" });
+    for (const name of ["Events", "Opportunities", "Surveys", "Read"]) {
       await expect(parts.getByRole("link", { name })).toBeVisible();
-      await expect(
-        page.getByRole("heading", { exact: true, level: 2, name })
-      ).toBeVisible();
     }
-    // Signed out, Join asks for a Pass before showing surveys.
     await expect(
-      page.getByText("Sign in to see the surveys you can answer.")
+      parts.getByRole("link", { exact: true, name: "Club" })
+    ).toHaveAttribute("aria-current", "page");
+    // The member's own are in the Pass.
+    await expect(
+      page.getByRole("link", { name: /are in your Pass/ })
+    ).toHaveAttribute("href", "/pass/tickets");
+    await expect(
+      page.getByRole("heading", { name: "The Club on Telegram" })
     ).toBeVisible();
 
-    // Telegram is one card, after Yours.
-    const yours = await page
-      .getByRole("heading", { exact: true, level: 2, name: "Yours" })
-      .boundingBox();
-    const telegram = await page
-      .getByRole("heading", { name: "The Club on Telegram" })
-      .boundingBox();
-    expect(telegram?.y ?? 0).toBeGreaterThan(yours?.y ?? 0);
-
     // Read filters by topic.
+    await parts.getByRole("link", { name: "Read" }).click();
+    await expect(page).toHaveURL(/\/club\/read$/);
     const topics = page.getByRole("navigation", { name: "Topics" });
     await topics.getByRole("link", { name: "Guides" }).click();
-    await expect(page).toHaveURL(/\/club\?topic=guides#read$/);
+    await expect(page).toHaveURL(/\/club\/read\?topic=guides$/);
     await expect(
       page
         .getByRole("navigation", { name: "Topics" })
         .getByRole("link", { name: "Guides" })
     ).toHaveAttribute("aria-current", "page");
 
-    // Join filters by kind.
+    // Signed out, the surveys page asks for a Pass.
     await page
-      .getByRole("navigation", { name: "Show" })
+      .getByRole("navigation", { name: "Club pages" })
+      .getByRole("link", { name: "Surveys" })
+      .click();
+    await expect(page).toHaveURL(/\/club\/surveys$/);
+    await expect(
+      page.getByText("Sign in to see the surveys you can answer.")
+    ).toBeVisible();
+
+    await page
+      .getByRole("navigation", { name: "Club pages" })
       .getByRole("link", { name: "Events" })
       .click();
-    await expect(page).toHaveURL(/\/club\?show=events#join$/);
+    await expect(page).toHaveURL(/\/club\/events$/);
     await expectAccessible(page);
   });
 

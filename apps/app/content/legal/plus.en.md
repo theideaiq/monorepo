@@ -51,7 +51,7 @@ Every plan also gets:
 
 ## 6. Keep it
 
-Love something you are renting? Buy that copy at its used price, minus one month's fee of your plan, from [Your Plus](/plus#yours). It is then yours and leaves your rental slots.
+Love something you are renting? Buy that copy at its used price, minus one month's fee of your plan, from [At home](/pass/at-home) in your Pass. It is then yours and leaves your rental slots.
 
 ## 7. Changing, pausing and cancelling
 

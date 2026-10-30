@@ -73,7 +73,7 @@ const REFUSAL_LINKS: Partial<Record<Refusal, "identity" | "phone">> = {
 };
 const FIX_PATHS = {
   identity: "/verify?kind=identity",
-  phone: "/pass/settings",
+  phone: "/pass/settings/phone",
 } as const;
 
 const Photos = ({

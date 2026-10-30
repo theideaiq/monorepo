@@ -19,22 +19,14 @@ import {
   SelectValue,
 } from "@repo/design-system/components/ui/select";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@repo/design-system/components/ui/tabs";
-import {
   ToggleGroup,
   ToggleGroupItem,
 } from "@repo/design-system/components/ui/toggle-group";
 import { Link } from "@repo/internationalization/navigation";
 import { HeartIcon, ShoppingCartIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { PageHeader } from "@/components/page-header";
-import { Queue } from "@/components/plus/plus-tools";
 import { SavedLists } from "@/components/saved/saved-lists";
 import { TellMe } from "@/components/saved/tell-me";
 import { VinylForYou } from "@/components/saved/vinyl-for-you";
@@ -46,7 +38,6 @@ import { productHref } from "@/components/store/product-card";
 import { ProductImage } from "@/components/store/product-image";
 import { QueueButton } from "@/components/store/queue-button";
 import { type SavedList, useSavedLists } from "@/lib/list-queries";
-import { useHasPlus } from "@/lib/queue-queries";
 import {
   type SavedFilter,
   type SavedSort,
@@ -298,18 +289,15 @@ const EmptySaved = () => {
 };
 
 /**
- * Your Pass → Saved: what the member watches, in three tabs. Saved holds
- * everything hearted (with its state, "Tell me" and actions), Lists the
- * named lists, Vinyl the Store's vinyl by the artists the member listens
- * to, and Queue (Plus members) what to rent next.
+ * Pass → Saved (`/pass/saved`): everything hearted (with its state,
+ * "Tell me" and actions), the member's offers and bids, and the Store's
+ * vinyl by the artists they listen to. Lists (`/pass/lists`) and the Plus
+ * queue (`/pass/queue`) have pages of their own.
  */
 export const Wishlist = () => {
   const t = useTranslations("app.wishlist");
   const wishlist = useWishlist();
   const lists = useSavedLists().data ?? [];
-  const hasPlus = useHasPlus();
-  // Back from Spotify's sign-in (?music=connected or failed).
-  const music = useSearchParams().has("music");
   const items = (wishlist.data ?? []).filter((item) => item.product);
 
   return (
@@ -317,39 +305,33 @@ export const Wishlist = () => {
       <PageHeader title={t("title")} />
       <div className="flex max-w-3xl flex-1 flex-col gap-6">
         <p className="text-muted-foreground">{t("description")}</p>
-        <Tabs defaultValue={music ? "vinyl" : "saved"}>
-          <TabsList>
-            <TabsTrigger value="saved">{t("tabs.saved")}</TabsTrigger>
-            <TabsTrigger value="lists">{t("tabs.lists")}</TabsTrigger>
-            <TabsTrigger value="vinyl">{t("tabs.vinyl")}</TabsTrigger>
-            {hasPlus ? (
-              <TabsTrigger value="queue">{t("tabs.queue")}</TabsTrigger>
-            ) : null}
-          </TabsList>
-          <TabsContent className="grid gap-6 pt-4" value="saved">
-            {wishlist.isPending ? <SectionSpinner /> : null}
-            {wishlist.isError ? (
-              <ErrorState onRetry={() => wishlist.refetch()} />
-            ) : null}
-            {wishlist.data && items.length === 0 ? <EmptySaved /> : null}
-            {items.length > 0 ? (
-              <SavedItems items={items} lists={lists} />
-            ) : null}
-            <MyOffers />
-            <MyBids />
-          </TabsContent>
-          <TabsContent className="pt-4" value="lists">
-            <SavedLists items={items} />
-          </TabsContent>
-          <TabsContent className="pt-4" value="vinyl">
-            <VinylForYou />
-          </TabsContent>
-          {hasPlus ? (
-            <TabsContent className="pt-4" value="queue">
-              <Queue />
-            </TabsContent>
-          ) : null}
-        </Tabs>
+        {wishlist.isPending ? <SectionSpinner /> : null}
+        {wishlist.isError ? (
+          <ErrorState onRetry={() => wishlist.refetch()} />
+        ) : null}
+        {wishlist.data && items.length === 0 ? <EmptySaved /> : null}
+        {items.length > 0 ? <SavedItems items={items} lists={lists} /> : null}
+        <MyOffers />
+        <MyBids />
+        <section className="grid gap-3 border-t pt-6">
+          <h2 className="font-semibold text-lg">{t("tabs.vinyl")}</h2>
+          <VinylForYou />
+        </section>
+      </div>
+    </>
+  );
+};
+
+/** Pass → Lists (`/pass/lists`): the member's named lists, to share. */
+export const Lists = () => {
+  const t = useTranslations("app.wishlist");
+  const wishlist = useWishlist();
+  const items = (wishlist.data ?? []).filter((item) => item.product);
+  return (
+    <>
+      <PageHeader title={t("tabs.lists")} />
+      <div className="flex max-w-3xl flex-1 flex-col gap-6">
+        {wishlist.isPending ? <SectionSpinner /> : <SavedLists items={items} />}
       </div>
     </>
   );

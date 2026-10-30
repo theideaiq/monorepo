@@ -127,7 +127,7 @@ const Home = async ({ params }: HomeProps) => {
 
       {events.length > 0 ? (
         <Rail
-          action={{ href: "/club?show=events#join", label: t("ui.viewAll") }}
+          action={{ href: "/club/events", label: t("ui.viewAll") }}
           title={t("home.events.title")}
         >
           {events.map((event) => (

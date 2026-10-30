@@ -144,7 +144,7 @@ test.describe("the live card on a partner's site", () => {
     ).toBeVisible();
 
     // Settings lists it; stopping it there ends the frame's token.
-    await page.goto(`${urls.web}/pass/settings`);
+    await page.goto(`${urls.web}/pass/settings/connections`);
     const sites = page.locator("#sites");
     await expect(sites.getByText("Sites showing your live card")).toBeVisible();
     await sites.getByRole("button", { name: "Stop" }).click();

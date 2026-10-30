@@ -12,6 +12,10 @@ import { requireUserId, unwrap } from "./queries";
  */
 
 export interface QueueItem {
+  /** The kid's profile it was queued for (Family). */
+  for_profile?: string | null;
+  /** The linked teen it was approved for (Family). */
+  for_user?: string | null;
   position: number;
   product: (ProductCard & { status: string }) | null;
   product_id: string;
@@ -19,7 +23,7 @@ export interface QueueItem {
 
 const queueKey = (userId: string) => ["rental-queue", userId] as const;
 
-const QUEUE_COLUMNS = `product_id, position, product:products (${PRODUCT_CARD_COLUMNS}, status)`;
+const QUEUE_COLUMNS = `product_id, position, for_profile, for_user, product:products (${PRODUCT_CARD_COLUMNS}, status)`;
 
 /** The member's queue, in order, without items that can't be rented now. */
 export const useQueue = () => {

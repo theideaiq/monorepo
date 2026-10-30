@@ -59,10 +59,11 @@ export const registerPushNotifications = async ({
     PushNotifications.addListener(
       "pushNotificationActionPerformed",
       ({ notification }) => {
-        const link = safeNextPath(
-          (notification.data as { link?: string } | undefined)?.link
-        );
-        onOpen(link ? currentAppPath(link) : "/");
+        const data = notification.data as
+          | { event?: string; link?: string }
+          | undefined;
+        const link = safeNextPath(data?.link);
+        onOpen(link ? currentAppPath(link, { event: data?.event }) : "/");
       }
     ),
   ]);

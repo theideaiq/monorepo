@@ -39,10 +39,10 @@ export const SurveyCertificate = () => {
       <div className="flex flex-wrap items-center justify-between gap-2 print:hidden">
         <Link
           className="inline-flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
-          href="/club#yours"
+          href="/pass/applications?tab=surveys"
         >
           <ArrowLeftIcon aria-hidden="true" className="size-4 rtl:rotate-180" />
-          {tSurveys("back")}
+          {tSurveys("backToYours")}
         </Link>
         <Button className="gap-2" onClick={() => window.print()}>
           <PrinterIcon aria-hidden="true" className="size-4" />

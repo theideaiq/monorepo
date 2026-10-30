@@ -4,7 +4,7 @@ import { formatDate, formatDateTime } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { CalendarDays, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { clubItemPath } from "@/lib/club";
+import { eventPath, postPath } from "@/lib/club";
 import { type EventRow, editorialUrl, type PostSummary } from "@/lib/data";
 import { CoverImage } from "./cover-image";
 
@@ -24,7 +24,7 @@ export const PostCard = async ({
   const excerpt = localized(post, "excerpt", locale);
 
   return (
-    <Link className={cardClass} href={clubItemPath(post.slug)}>
+    <Link className={cardClass} href={postPath(post.slug)}>
       <CoverImage alt={title} src={editorialUrl(post.cover_image)} />
       <div className="flex flex-col gap-2 px-1 pb-1">
         <p className="flex flex-wrap items-center gap-x-2 text-muted-foreground text-xs">
@@ -65,7 +65,7 @@ export const EventCard = ({
   const title = localized(event, "title", locale);
 
   return (
-    <Link className={cardClass} href={clubItemPath(event.slug)}>
+    <Link className={cardClass} href={eventPath(event.slug)}>
       <CoverImage alt={title} src={editorialUrl(event.cover_image)} />
       <div className="flex flex-col gap-2 px-1 pb-1">
         <h3 className="font-semibold text-lg leading-snug group-hover:text-pink-text">

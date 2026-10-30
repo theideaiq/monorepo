@@ -125,7 +125,16 @@ describe("notifications", () => {
     expect(notificationHref("/pass/orders/o1")).toBe("/pass/orders/o1");
     // Links stored before Your Pass moved under /pass.
     expect(notificationHref("/orders/o1")).toBe("/pass/orders/o1");
-    expect(notificationHref("/pass/plus?plan=p1")).toBe("/plus?plan=p1#yours");
+    expect(notificationHref("/pass/plus?plan=p1")).toBe("/plus/plan?plan=p1");
+    // Your Plus is now several pages: the event picks one.
+    expect(notificationHref("/plus#yours")).toBe("/plus/plan");
+    expect(
+      notificationHref("/plus#yours", "en", "", {
+        event: "plus_swap_done",
+        kind: "plus",
+      })
+    ).toBe("/pass/at-home");
+    expect(notificationHref("/pass/settings#guardian")).toBe("/pass/family");
     expect(notificationHref("/events")).toBe("/events");
     // Company pages are on Partners, at the root of its site.
     expect(

@@ -1,19 +1,30 @@
 import { localized } from "@repo/commerce";
 import type { Locale } from "@repo/internationalization";
 import { localePath } from "@repo/internationalization";
-import { formatDate } from "@repo/internationalization/format";
+import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
 import { JsonLd } from "@repo/seo/json-ld";
 import { MoveLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { CoverImage } from "@/components/cover-image";
-import { clubItemPath, topicPath } from "@/lib/club";
+import { postPath, topicPath } from "@/lib/club";
 import { editorialUrl, getPost } from "@/lib/data";
-import { Markdown } from "@/lib/markdown";
+import { Markdown, markdownToText } from "@/lib/markdown";
 import { siteUrl } from "@/lib/metadata";
 
-/** A post: its topics, date, byline, cover and body. */
+const WORDS = /\s+/;
+/** Words read a minute, in Arabic and English alike. */
+const WORDS_A_MINUTE = 200;
+
+/** About how many minutes a text takes to read (at least one). */
+export const readingMinutes = (text: string) =>
+  Math.max(
+    1,
+    Math.round(text.split(WORDS).filter(Boolean).length / WORDS_A_MINUTE)
+  );
+
+/** A post: its topics, date, reading time, byline, cover and body. */
 export const PostArticle = async ({
   locale,
   slug,
@@ -31,6 +42,8 @@ export const PostArticle = async ({
   const cover = editorialUrl(post.cover_image);
   const topicNames = post.topics.map((tag) => t(`topics.${tag}`));
   const author = post.byline ?? t("theIdea");
+  const body = localized(post, "body", locale);
+  const minutes = readingMinutes(markdownToText(body, body.length));
 
   return (
     <article className="container mx-auto max-w-3xl px-4 py-10">
@@ -47,7 +60,7 @@ export const PostArticle = async ({
           headline: title,
           ...(cover ? { image: [cover] } : {}),
           mainEntityOfPage: new URL(
-            localePath(locale, clubItemPath(slug)),
+            localePath(locale, postPath(slug)),
             siteUrl()
           ).href,
         }}
@@ -73,6 +86,9 @@ export const PostArticle = async ({
           <time dateTime={post.published_at}>
             {formatDate(post.published_at, locale, "long")}
           </time>
+          <span>
+            {t("readingTime", { minutes: formatNumber(minutes, locale) })}
+          </span>
         </p>
         <h1 className="text-balance font-bold text-4xl tracking-tight">
           {title}
@@ -94,7 +110,7 @@ export const PostArticle = async ({
       <Markdown
         className="prose prose-neutral dark:prose-invert max-w-none"
         locale={locale}
-        source={localized(post, "body", locale)}
+        source={body}
       />
     </article>
   );
