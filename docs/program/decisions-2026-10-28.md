@@ -1331,7 +1331,7 @@ job (Reloadly), the website and Staff.
   denomination's own), rounded up to 250; a new rate or margin reprices
   everything. Members see brands, denominations and prices, never costs
   or supplier ids (column grants; Staff read the full rows through
-  `staff_digital_products`). Editors manage brands; finance sets margins
+  `staff_digital_products`). Editors and finance manage brands (names, regions, on or off); finance sets margins
   and switches denominations on or off; the supplier sync writes costs.
 - **Regions:** every line names its store region; the region a member's
   account is on is remembered per platform (`digital_store_regions`,

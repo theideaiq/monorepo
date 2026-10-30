@@ -162,16 +162,16 @@ alter table public.digital_products enable row level security;
 
 create policy "Everyone sees active brands, staff see all" on public.digital_brands
   for select to anon, authenticated using (active or (select private.is_staff()));
-create policy "Editors add brands" on public.digital_brands
+create policy "Editors and finance add brands" on public.digital_brands
   for insert to authenticated
-  with check ((select private.has_staff_role('{admin,editor}'::public.staff_role[])));
-create policy "Editors edit brands" on public.digital_brands
+  with check ((select private.has_staff_role('{admin,editor,finance}'::public.staff_role[])));
+create policy "Editors and finance edit brands" on public.digital_brands
   for update to authenticated
-  using ((select private.has_staff_role('{admin,editor}'::public.staff_role[])))
-  with check ((select private.has_staff_role('{admin,editor}'::public.staff_role[])));
-create policy "Editors remove brands" on public.digital_brands
+  using ((select private.has_staff_role('{admin,editor,finance}'::public.staff_role[])))
+  with check ((select private.has_staff_role('{admin,editor,finance}'::public.staff_role[])));
+create policy "Editors and finance remove brands" on public.digital_brands
   for delete to authenticated
-  using ((select private.has_staff_role('{admin,editor}'::public.staff_role[])));
+  using ((select private.has_staff_role('{admin,editor,finance}'::public.staff_role[])));
 
 create policy "Everyone sees active denominations, staff see all" on public.digital_products
   for select to anon, authenticated using (

@@ -52,7 +52,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(36);
+select plan(37);
 
 -- M has a verified phone; N doesn't; F is new and limited; S is finance.
 insert into auth.users (id, email, raw_user_meta_data) values
@@ -286,6 +286,11 @@ select throws_ok(
 );
 select pg_temp.login_as('00000000-0000-0000-0000-00000000c0d4', 'aal2');
 select is(public.release_digital_codes((select id from made where name = 'big')), 1, 'finance releases it');
+select results_eq(
+  $$ update public.digital_brands set name_ar = 'بلايستيشن' where slug = 'playstation-us' returning name_ar $$,
+  $$ values ('بلايستيشن') $$,
+  'finance names a brand in Arabic'
+);
 
 -- ── Cancelling ──
 select pg_temp.reset_role();
