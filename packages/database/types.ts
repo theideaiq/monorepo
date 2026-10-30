@@ -1630,6 +1630,68 @@ export type Database = {
         };
         Relationships: [];
       };
+      family_profiles: {
+        Row: {
+          birthday: string;
+          created_at: string;
+          id: string;
+          manager_id: string;
+          name: string;
+        };
+        Insert: {
+          birthday: string;
+          created_at?: string;
+          id?: string;
+          manager_id: string;
+          name: string;
+        };
+        Update: {
+          birthday?: string;
+          created_at?: string;
+          id?: string;
+          manager_id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      family_requests: {
+        Row: {
+          created_at: string;
+          decided_at: string | null;
+          id: string;
+          manager_id: string;
+          product_id: string;
+          status: string;
+          teen_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          decided_at?: string | null;
+          id?: string;
+          manager_id: string;
+          product_id: string;
+          status?: string;
+          teen_id: string;
+        };
+        Update: {
+          created_at?: string;
+          decided_at?: string | null;
+          id?: string;
+          manager_id?: string;
+          product_id?: string;
+          status?: string;
+          teen_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "family_requests_product_id_fkey";
+            columns: ["product_id"];
+            isOneToOne: false;
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       financial_settings: {
         Row: {
           base_currency: string;
@@ -5302,23 +5364,36 @@ export type Database = {
       rental_queue_items: {
         Row: {
           created_at: string;
+          for_profile: string | null;
+          for_user: string | null;
           position: number;
           product_id: string;
           user_id: string;
         };
         Insert: {
           created_at?: string;
+          for_profile?: string | null;
+          for_user?: string | null;
           position: number;
           product_id: string;
           user_id: string;
         };
         Update: {
           created_at?: string;
+          for_profile?: string | null;
+          for_user?: string | null;
           position?: number;
           product_id?: string;
           user_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "rental_queue_items_for_profile_fkey";
+            columns: ["for_profile"];
+            isOneToOne: false;
+            referencedRelation: "family_profiles";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "rental_queue_items_product_id_fkey";
             columns: ["product_id"];
@@ -8027,6 +8102,10 @@ export type Database = {
         Args: { days?: number; seat: string };
         Returns: string;
       };
+      add_family_profile: {
+        Args: { birthday: string; name: string };
+        Returns: string;
+      };
       add_pass_domain: {
         Args: { name: string; org: string };
         Returns: {
@@ -8230,6 +8309,7 @@ export type Database = {
         };
         Returns: string;
       };
+      ask_family: { Args: { product: string }; Returns: string };
       begin_student_check: {
         Args: Record<PropertyKey, never>;
         Returns: boolean;
@@ -9169,98 +9249,6 @@ export type Database = {
         };
         Returns: Json;
       };
-      create_rental_order: {
-        Args: {
-          delivery_zone?: string;
-          fulfilment?: Database["public"]["Enums"]["order_fulfilment"];
-          payment_method?: Database["public"]["Enums"]["order_payment_method"];
-          rental_product: string;
-          rental_variant?: string;
-          shipping: Json;
-        };
-        Returns: {
-          bulbs_discount: number;
-          bulbs_used: number;
-          cash_collected_by: string | null;
-          confirmation_emailed_at: string | null;
-          coupon_id: string | null;
-          created_at: string;
-          currency: string;
-          delivery_zone_id: string | null;
-          discount: number;
-          discount_source: string | null;
-          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
-          guardian_status: string | null;
-          id: string;
-          is_gift: boolean;
-          max_bulbs: number | null;
-          number: number;
-          paid_at: string | null;
-          payment_method: Database["public"]["Enums"]["order_payment_method"];
-          review_requested_at: string | null;
-          shipping_address: NonNullable<Json>;
-          shipping_fee: number;
-          staff_note: string | null;
-          status: Database["public"]["Enums"]["order_status"];
-          subtotal: number;
-          total: number;
-          tracking_number: string | null;
-          tracking_url: string | null;
-          updated_at: string;
-          user_id: string | null;
-        };
-        SetofOptions: {
-          from: "*";
-          to: "orders";
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
-      };
-      create_rentals_order: {
-        Args: {
-          delivery_zone?: string;
-          items: Json;
-          payment_method?: Database["public"]["Enums"]["order_payment_method"];
-          shipping: Json;
-        };
-        Returns: {
-          bulbs_discount: number;
-          bulbs_used: number;
-          cash_collected_by: string | null;
-          confirmation_emailed_at: string | null;
-          coupon_id: string | null;
-          created_at: string;
-          currency: string;
-          delivery_zone_id: string | null;
-          discount: number;
-          discount_source: string | null;
-          fulfilment: Database["public"]["Enums"]["order_fulfilment"];
-          guardian_status: string | null;
-          id: string;
-          is_gift: boolean;
-          max_bulbs: number | null;
-          number: number;
-          paid_at: string | null;
-          payment_method: Database["public"]["Enums"]["order_payment_method"];
-          review_requested_at: string | null;
-          shipping_address: NonNullable<Json>;
-          shipping_fee: number;
-          staff_note: string | null;
-          status: Database["public"]["Enums"]["order_status"];
-          subtotal: number;
-          total: number;
-          tracking_number: string | null;
-          tracking_url: string | null;
-          updated_at: string;
-          user_id: string | null;
-        };
-        SetofOptions: {
-          from: "*";
-          to: "orders";
-          isOneToOne: true;
-          isSetofReturn: false;
-        };
-      };
       create_sell_request: {
         Args: {
           condition: Database["public"]["Enums"]["product_condition"];
@@ -9361,6 +9349,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      decide_family_request: {
+        Args: { approve: boolean; request: string };
+        Returns: undefined;
       };
       decide_guardian_order: {
         Args: { approve: boolean; target: string };
@@ -10502,6 +10494,7 @@ export type Database = {
         }[];
       };
       place_bid: { Args: { maximum: number; target: string }; Returns: Json };
+      plus_availability: { Args: { product: string }; Returns: string };
       plus_renewal_bulbs: { Args: { subscription: string }; Returns: number };
       plus_status: {
         Args: Record<PropertyKey, never>;
@@ -10658,6 +10651,10 @@ export type Database = {
         };
       };
       queue_add: { Args: { product: string }; Returns: undefined };
+      queue_add_for_profile: {
+        Args: { product: string; profile: string };
+        Returns: undefined;
+      };
       queue_due_telegram_posts: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -10839,43 +10836,13 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      remove_family_profile: { Args: { profile: string }; Returns: undefined };
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
       remove_plus_price: { Args: { target: string }; Returns: undefined };
       remove_student_price: { Args: { target: string }; Returns: undefined };
       remove_wallet_card: {
         Args: Record<PropertyKey, never>;
         Returns: undefined;
-      };
-      rental_quote: {
-        Args: { product: string; variant?: string };
-        Returns: {
-          days: number;
-          deposit: number;
-          late_fee: number;
-          price: number;
-        }[];
-      };
-      rental_term: {
-        Args: Record<PropertyKey, never>;
-        Returns: {
-          created_at: string;
-          ends_on: string;
-          id: string;
-          name_ar: string;
-          name_en: string;
-          starts_on: string;
-          updated_at: string;
-        }[];
-        SetofOptions: {
-          from: "*";
-          to: "academic_terms";
-          isOneToOne: false;
-          isSetofReturn: true;
-        };
-      };
-      rentals_quote: {
-        Args: { delivery_zone?: string; items: Json };
-        Returns: Json;
       };
       reorder_queue: { Args: { products: string[] }; Returns: undefined };
       reorder_saved: { Args: { products: string[] }; Returns: undefined };
@@ -11755,7 +11722,6 @@ export type Database = {
           isSetofReturn: false;
         };
       };
-      set_rental_deposit_rate: { Args: { rate: number }; Returns: undefined };
       set_seller_plan: {
         Args: {
           billing?: string;
@@ -12050,6 +12016,21 @@ export type Database = {
           plus_cancellations: number;
           plus_joins: number;
           week: string;
+        }[];
+      };
+      staff_plus_demand: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          available: number;
+          copies: number;
+          images: string[];
+          name_ar: string;
+          name_en: string;
+          product_id: string;
+          queued: number;
+          rented_out: number;
+          slug: string;
+          suggested: number;
         }[];
       };
       start_auction: {

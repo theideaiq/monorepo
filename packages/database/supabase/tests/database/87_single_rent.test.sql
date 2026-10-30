@@ -1,4 +1,5 @@
--- Program revision v1, step 5a: single-item rent, deposits, late fees and Keep it.
+-- Keep it: a Plus member buys the copy they are renting (renting one item
+-- on its own is gone).
 begin;
 -- <preamble>
 -- Shared pgTAP preamble. Each test file includes a copy between the preamble
@@ -50,10 +51,10 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(22);
+select plan(5);
 
 -- ── Fixtures ────────────────────────────────────────────────────────────────
--- R rents on their own; M has The IDEA Plus; S is support.
+-- M has The IDEA Plus.
 truncate public.products, public.orders, public.rentals cascade;
 delete from public.staff;
 
@@ -79,121 +80,8 @@ insert into public.products (id, slug, name_ar, name_en, price, stock_count, sta
   ('87000000-0000-0000-0000-000000000001', 'rent-game', 'لعبة', 'Game', 59750, 3, 'active', 'rental',
    '50000000-0000-0000-0000-000000000001');
 
--- ── Rates ───────────────────────────────────────────────────────────────────
-
-select pg_temp.login_anon();
-select results_eq(
-  $$ select price, days, late_fee, deposit from public.rental_quote('87000000-0000-0000-0000-000000000001') $$,
-  $$ values (9750::bigint, 7, 1750::bigint, 29750::bigint) $$,
-  'a game rents for 9,750 for 7 days, 1,750 a day late, with half its price as deposit'
-);
-
-select pg_temp.login_as('00000000-0000-0000-0000-000000000871');
-select is_empty(
-  $$ update public.rental_rates set price = 1 returning 1 $$,
-  'customers can''t change the rates'
-);
-
--- ── Renting one item ────────────────────────────────────────────────────────
-
 create temporary table rented (id uuid) on commit drop;
 grant all on rented to authenticated;
-insert into rented
-select (public.create_rental_order(
-  '87000000-0000-0000-0000-000000000001',
-  '{"full_name":"R","phone":"+9647700000871","governorate":"baghdad","address":"Karrada"}', 'delivery', 'online')).id;
-
-select results_eq(
-  $$ select status::text, subtotal, shipping_fee, total, max_bulbs from public.orders where id = (select id from rented) $$,
-  $$ values ('pending', 39500::bigint, 5000::bigint, 44500::bigint, 1950) $$,
-  'the order is the rent plus the deposit and delivery; the rent earns Bulbs (up to 20%)'
-);
-select results_eq(
-  $$ select kind, unit_price from public.order_items where order_id = (select id from rented) order by kind desc $$,
-  $$ values ('rental', 9750::bigint), ('deposit', 29750::bigint) $$,
-  'with a rental line and a deposit line'
-);
-select results_eq(
-  $$ select kind, status::text, days, late_fee, deposit from public.rentals where order_id = (select id from rented) $$,
-  $$ values ('single', 'requested', 7, 1750::bigint, 29750::bigint) $$,
-  'and a single-item rental holding a copy'
-);
-
-select pg_temp.reset_role();
-select throws_ok(
-  $$ update public.rentals set status = 'active' where order_id = (select id from rented) $$,
-  '23514', 'Waiting for payment',
-  'the rental can''t start before it''s paid'
-);
-select public.complete_order_payment((select id from rented));
-select is(
-  (select count(*) from public.stock_items where product_id = '87000000-0000-0000-0000-000000000001' and status = 'rented')::integer,
-  1,
-  'paying keeps the held copy rented (no extra copy is sold)'
-);
-update public.orders set status = 'delivered' where id = (select id from rented);
-select results_eq(
-  $$ select status::text, due_at - started_at from public.rentals where order_id = (select id from rented) $$,
-  $$ values ('active', interval '7 days') $$,
-  'delivering it starts the rental for 7 days'
-);
-
--- Returned 3 days late.
-update public.rentals set started_at = now() - interval '10 days', due_at = now() - interval '3 days', status = 'returned', returned_at = now()
-where order_id = (select id from rented);
-
-select pg_temp.login_as('00000000-0000-0000-0000-000000000871');
-select throws_ok(
-  $$ select public.settle_rental((select id from public.rentals where order_id = (select id from rented))) $$,
-  '42501', 'Not allowed',
-  'only support settles'
-);
-select pg_temp.login_as('00000000-0000-0000-0000-000000000873', 'aal2');
-select results_eq(
-  $$ select late_charge, refund_due, amount_due from public.settle_rental((select id from public.rentals where order_id = (select id from rented)), 0) $$,
-  $$ values (5250::bigint, 24500::bigint, 0::bigint) $$,
-  '3 days late: 5,250 comes out of the deposit and 24,500 goes back'
-);
-
--- Kept: 15 days late and not returned.
-select pg_temp.login_as('00000000-0000-0000-0000-000000000871');
-truncate rented;
-insert into rented
-select (public.create_rental_order(
-  '87000000-0000-0000-0000-000000000001',
-  '{"full_name":"R","phone":"+9647700000871","governorate":"baghdad","address":"Karrada"}', 'delivery', 'cash_on_delivery')).id;
-select is(
-  (select status::text from public.orders where id = (select id from rented)), 'confirmed',
-  'a cash rental is confirmed at once'
-);
-select pg_temp.reset_role();
-update public.orders set status = 'delivered' where id = (select id from rented);
-update public.rentals set started_at = now() - interval '22 days', due_at = now() - interval '15 days' where order_id = (select id from rented);
-select pg_temp.login_as('00000000-0000-0000-0000-000000000873', 'aal2');
-select results_eq(
-  $$ select status::text, refund_due, amount_due from public.settle_rental((select id from public.rentals where order_id = (select id from rented))) $$,
-  $$ values ('kept', 0::bigint, 5000::bigint) $$,
-  '14 days late or more, the item is kept at its used price (34,750) less the deposit'
-);
-
--- Cancelled before it starts: the copy comes back.
-select pg_temp.login_as('00000000-0000-0000-0000-000000000871');
-truncate rented;
-insert into rented
-select (public.create_rental_order(
-  '87000000-0000-0000-0000-000000000001',
-  '{"full_name":"R","phone":"+9647700000871","governorate":"baghdad","address":"Karrada"}', 'delivery', 'online')).id;
-select public.cancel_order((select id from rented));
-select pg_temp.reset_role();
-select is(
-  (select status::text from public.rentals where order_id = (select id from rented)), 'cancelled',
-  'cancelling the order cancels the rental'
-);
-select is(
-  (select count(*) from public.stock_items where product_id = '87000000-0000-0000-0000-000000000001' and status = 'available')::integer,
-  2,
-  'and frees its copy'
-);
 
 -- ── Keep it ─────────────────────────────────────────────────────────────────
 
@@ -231,26 +119,6 @@ select is(
   (select status::text from public.stock_items where order_item_id = (select i.id from public.order_items i where i.order_id = (select id from rented))),
   'sold',
   'and the member owns that copy'
-);
-
--- Finance sets the rates and the deposit; nobody else does.
-select pg_temp.login_as('00000000-0000-0000-0000-000000000873', 'aal2');
-select throws_ok(
-  $$ select public.set_rental_deposit_rate(40) $$,
-  '42501', 'Not allowed',
-  'only finance sets the deposit rate'
-);
-select pg_temp.login_as('00000000-0000-0000-0000-000000000874', 'aal2');
-select lives_ok(
-  $$ select public.set_rental_deposit_rate(40) $$,
-  'finance sets the deposit rate'
-);
-update public.rental_rates set price = 4750 where true;
-select pg_temp.reset_role();
-select results_eq(
-  $$ select rental_deposit_rate, (select min(price) from public.rental_rates) from public.store_settings $$,
-  $$ values (40::numeric(5, 2), 4750::bigint) $$,
-  'and edits the rates'
 );
 
 select * from finish();
