@@ -59,7 +59,7 @@ flowchart LR
 | `apps/partners` | 3000 | **The IDEA Partners** (`partners.theideaiq.com`), the organization dashboard at its root (see [The IDEA Partners](#the-idea-partners)). No sign-in of its own: it sends people to The IDEA Pass on the website. | Vercel (`theideaiq-partners`) |
 | `apps/staff` | 3003 | **Staff** (`staff.theideaiq.com`), everything The IDEA's team uses, at its root (see [Staff](#staff)), and **The IDEA Design** at `/design` (see [The IDEA Design](#the-idea-design)). No sign-in of its own: it sends people to The IDEA Pass on the website. Storybook dev runs on port 6006. | Vercel (`theideaiq-staff`) |
 | `apps/api` | 3002 | Everything that needs a secret: Wayl checkout and webhooks, cron jobs, account and organization deletion, push notifications, Staff's privileged steps (`app/admin/*`), the website's contact form and status badge. Route handlers only. | Vercel |
-| `apps/docs` | 3004 | Developer docs (Sign in with The IDEA Pass, the Pass card, apps, API reference), served at the root of api.theideaiq.com by rewrite (`DOCS_URL`). | Mintlify |
+| `apps/api/docs` | 3004 | Developer docs (Sign in with The IDEA Pass, the Pass card, apps, API reference), served at the root of api.theideaiq.com by rewrite (`DOCS_URL`). | Mintlify |
 
 ### The IDEA Design
 

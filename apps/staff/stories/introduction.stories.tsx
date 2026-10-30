@@ -1,3 +1,4 @@
+import { NameTile } from "@repo/design-system/components/brand/name-tile";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
@@ -115,7 +116,7 @@ const Introduction = () => (
   <main className="mx-auto grid max-w-5xl gap-10 p-6 md:p-10">
     <header className="grid gap-3">
       <div className="flex items-center gap-3">
-        <span className="inline-block size-6 rounded-[22%] bg-idea-pink" />
+        <NameTile shape="square" size={32} />
         <h1 className="font-bold text-3xl tracking-tight">The IDEA Design</h1>
       </div>
       <p className="max-w-3xl text-muted-foreground">

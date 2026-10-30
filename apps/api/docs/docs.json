@@ -8,6 +8,23 @@
     "light": "#F06292",
     "dark": "#D81B60"
   },
+  "background": {
+    "color": {
+      "light": "#FBF8EF",
+      "dark": "#121318"
+    }
+  },
+  "fonts": {
+    "family": "Alexandria",
+    "weight": 400,
+    "heading": {
+      "family": "Alexandria",
+      "weight": 700
+    }
+  },
+  "appearance": {
+    "default": "system"
+  },
   "favicon": "/favicon.svg",
   "logo": {
     "light": "/logo/light.svg",

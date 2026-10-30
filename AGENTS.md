@@ -193,13 +193,15 @@ incidents) is in `docs/platform`.
 - `apps/api` — webhooks (Wayl, Telegram), cron jobs, the calendar feed and
   privileged endpoints, including `app/admin/*` for Staff and the
   website's contact form and status badge. The only app with secrets.
-- `apps/docs` — The IDEA's developer docs (Mintlify, `docs.json`): Sign in
-  with The IDEA Pass, the Pass card, registering an app and the API
-  reference (`api-reference/openapi.json`). Mintlify hosts them and
-  `apps/api` serves them at the root of `api.theideaiq.com` by fallback
-  rewrites (`lib/docs.ts`, `DOCS_URL`); the API keeps `/oidc/*`,
-  `/webhooks/*`, `/cron/*` and its other paths, and new endpoints go under
-  `/v1/*`. `bunx mint dev` previews them, `bunx mint validate` checks them.
+- `apps/api/docs` — The IDEA's developer docs (Mintlify, `docs.json`), kept
+  with the API they describe: Sign in with The IDEA Pass, the Pass card,
+  registering an app and the API reference (`api-reference/openapi.json`).
+  Mintlify hosts them (monorepo path `apps/api/docs`) and `apps/api`
+  serves them at the root of `api.theideaiq.com` by fallback rewrites
+  (`lib/docs.ts`, `DOCS_URL`); the API keeps `/oidc/*`, `/webhooks/*`,
+  `/cron/*` and its other paths, and new endpoints go under `/v1/*`.
+  `bun run --cwd apps/api docs:dev` previews them, `docs:check` checks
+  their links.
 - `packages/commerce` (catalog, prices, cart totals) and `packages/droid`
   (Telegram bot) are The IDEA's own packages; the rest come from the template.
 - `packages/*` — shared code, imported as `@repo/<name>`. `@repo` is a fixed
@@ -240,7 +242,7 @@ bun run gen:package         # scaffold packages/<name>
 Run `check`, `typecheck` and `test` before every commit, and `db:test` for
 any schema change. CI (`.github/workflows/ci.yml`) also runs `bun audit`,
 the boundaries and unused-code checks, every build (api, partners, staff,
-web), a scan of the client bundles for secret names (including
+app), a scan of the client bundles for secret names (including
 `apps/staff/public/design`), the pgTAP suites, integration tests against a
 local stack (`SUPABASE_INTEGRATION=1`) and the end-to-end journeys.
 

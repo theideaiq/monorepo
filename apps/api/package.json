@@ -6,6 +6,8 @@
     "build": "next build",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "next dev -p 3002",
+    "docs:check": "cd docs && bunx mint broken-links",
+    "docs:dev": "cd docs && bunx mint dev --port 3004",
     "oidc:key": "bun scripts/oidc-key.ts",
     "start": "next start -p 3002",
     "telegram:setup": "bun scripts/telegram-setup.ts",
