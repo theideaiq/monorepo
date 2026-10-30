@@ -2334,6 +2334,7 @@ PostHog ids.
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | Optional | `Payment Completed` events |
 | `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` | Optional | |
 | `BETTERSTACK_API_KEY`, `BETTERSTACK_URL` | Optional | Better Stack Uptime token and public status page, for the website's status badge (`GET /status`); without them the badge is hidden |
+| `NEXT_PUBLIC_BETTER_STACK_SOURCE_TOKEN`, `NEXT_PUBLIC_BETTER_STACK_INGESTING_URL` | Optional | Better Stack logs (`@logtail/next`, `@repo/observability/log`): the ingest-only token and host of the log source, on every Vercel project. Logs go to the console without them. |
 | `LIVEBLOCKS_SECRET` | Feature, if `collaboration` is kept | `sk_…` |
 | `SVIX_TOKEN` | Feature, if `webhooks` is kept | Customer webhook portal |
 
