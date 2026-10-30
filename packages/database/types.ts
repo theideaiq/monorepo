@@ -3164,6 +3164,7 @@ export type Database = {
           created_at: string;
           currency: string;
           description: string | null;
+          duo: boolean;
           features_ar: string[];
           features_en: string[];
           free_delivery: boolean;
@@ -3185,6 +3186,7 @@ export type Database = {
           created_at?: string;
           currency?: string;
           description?: string | null;
+          duo?: boolean;
           features_ar?: string[];
           features_en?: string[];
           free_delivery?: boolean;
@@ -3206,6 +3208,7 @@ export type Database = {
           created_at?: string;
           currency?: string;
           description?: string | null;
+          duo?: boolean;
           features_ar?: string[];
           features_en?: string[];
           free_delivery?: boolean;
@@ -3328,6 +3331,71 @@ export type Database = {
             columns: ["area_id"];
             isOneToOne: false;
             referencedRelation: "plus_areas";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      plus_members: {
+        Row: {
+          created_at: string;
+          end_reason: string | null;
+          ends_at: string | null;
+          guardian_id: string | null;
+          guardian_status: string | null;
+          id: string;
+          invite_expires_at: string | null;
+          invite_token: string | null;
+          invited_at: string;
+          joined_at: string | null;
+          left_at: string | null;
+          role: string;
+          subscription_id: string;
+          swap_order: string;
+          updated_at: string;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          end_reason?: string | null;
+          ends_at?: string | null;
+          guardian_id?: string | null;
+          guardian_status?: string | null;
+          id?: string;
+          invite_expires_at?: string | null;
+          invite_token?: string | null;
+          invited_at?: string;
+          joined_at?: string | null;
+          left_at?: string | null;
+          role: string;
+          subscription_id: string;
+          swap_order?: string;
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          end_reason?: string | null;
+          ends_at?: string | null;
+          guardian_id?: string | null;
+          guardian_status?: string | null;
+          id?: string;
+          invite_expires_at?: string | null;
+          invite_token?: string | null;
+          invited_at?: string;
+          joined_at?: string | null;
+          left_at?: string | null;
+          role?: string;
+          subscription_id?: string;
+          swap_order?: string;
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plus_members_subscription_id_fkey";
+            columns: ["subscription_id"];
+            isOneToOne: false;
+            referencedRelation: "subscriptions";
             referencedColumns: ["id"];
           },
         ];
@@ -7265,6 +7333,33 @@ export type Database = {
       };
     };
     Functions: {
+      accept_duo_invite: {
+        Args: { token: string };
+        Returns: {
+          created_at: string;
+          end_reason: string | null;
+          ends_at: string | null;
+          guardian_id: string | null;
+          guardian_status: string | null;
+          id: string;
+          invite_expires_at: string | null;
+          invite_token: string | null;
+          invited_at: string;
+          joined_at: string | null;
+          left_at: string | null;
+          role: string;
+          subscription_id: string;
+          swap_order: string;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_members";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       accept_guardian: { Args: { invite_code: string }; Returns: string };
       accept_invitation: {
         Args: { invitation_token: string };
@@ -8554,6 +8649,33 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      decide_duo_guardian: {
+        Args: { approve: boolean; place: string };
+        Returns: {
+          created_at: string;
+          end_reason: string | null;
+          ends_at: string | null;
+          guardian_id: string | null;
+          guardian_status: string | null;
+          id: string;
+          invite_expires_at: string | null;
+          invite_token: string | null;
+          invited_at: string;
+          joined_at: string | null;
+          left_at: string | null;
+          role: string;
+          subscription_id: string;
+          swap_order: string;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_members";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       decide_guardian_order: {
         Args: { approve: boolean; target: string };
         Returns: {
@@ -8722,6 +8844,29 @@ export type Database = {
         Returns: boolean;
       };
       disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
+      duo_approvals: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          holder_name: string;
+          joined_at: string;
+          place: string;
+          plan_id: string;
+          teen_name: string;
+        }[];
+      };
+      duo_invite: {
+        Args: { token: string };
+        Returns: {
+          expires_at: string;
+          holder_name: string;
+          open: boolean;
+          plan_id: string;
+          plan_name: string;
+          plan_name_ar: string;
+          tier: number;
+        }[];
+      };
+      end_duo_partners: { Args: Record<PropertyKey, never>; Returns: number };
       end_listing_sale: { Args: { target: string }; Returns: undefined };
       end_pass_card_embed: { Args: { client: string }; Returns: undefined };
       end_plus_seat: { Args: { seat: string }; Returns: undefined };
@@ -8825,7 +8970,46 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      household_queue: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          first_name: string;
+          name_ar: string;
+          name_en: string;
+          product_id: string;
+          queue_position: number;
+          turn: number;
+          user_id: string;
+        }[];
+      };
       import_products: { Args: { items: Json }; Returns: Json };
+      invite_duo_partner: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          created_at: string;
+          end_reason: string | null;
+          ends_at: string | null;
+          guardian_id: string | null;
+          guardian_status: string | null;
+          id: string;
+          invite_expires_at: string | null;
+          invite_token: string | null;
+          invited_at: string;
+          joined_at: string | null;
+          left_at: string | null;
+          role: string;
+          subscription_id: string;
+          swap_order: string;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_members";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       invite_guardian: { Args: Record<PropertyKey, never>; Returns: string };
       invite_to_plus: {
         Args: { member: string };
@@ -8935,6 +9119,7 @@ export type Database = {
         Args: { campaign: string; seller: string };
         Returns: undefined;
       };
+      leave_duo: { Args: Record<PropertyKey, never>; Returns: undefined };
       leave_plus_waitlist: {
         Args: Record<PropertyKey, never>;
         Returns: undefined;
@@ -9252,6 +9437,7 @@ export type Database = {
         }[];
       };
       my_calendar_token: { Args: Record<PropertyKey, never>; Returns: string };
+      my_duo: { Args: Record<PropertyKey, never>; Returns: Json };
       my_guardian: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -9888,6 +10074,33 @@ export type Database = {
       release_return_refund: { Args: { target: string }; Returns: undefined };
       release_survey_refund: { Args: { target: string }; Returns: undefined };
       remove_coupon: { Args: Record<PropertyKey, never>; Returns: undefined };
+      remove_duo_partner: {
+        Args: { keep?: boolean };
+        Returns: {
+          created_at: string;
+          end_reason: string | null;
+          ends_at: string | null;
+          guardian_id: string | null;
+          guardian_status: string | null;
+          id: string;
+          invite_expires_at: string | null;
+          invite_token: string | null;
+          invited_at: string;
+          joined_at: string | null;
+          left_at: string | null;
+          role: string;
+          subscription_id: string;
+          swap_order: string;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_members";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
       remove_plus_price: { Args: { target: string }; Returns: undefined };
       remove_student_price: { Args: { target: string }; Returns: undefined };
@@ -10523,6 +10736,33 @@ export type Database = {
         SetofOptions: {
           from: "*";
           to: "sell_messages";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      set_duo_swap_order: {
+        Args: { swap_order: string };
+        Returns: {
+          created_at: string;
+          end_reason: string | null;
+          ends_at: string | null;
+          guardian_id: string | null;
+          guardian_status: string | null;
+          id: string;
+          invite_expires_at: string | null;
+          invite_token: string | null;
+          invited_at: string;
+          joined_at: string | null;
+          left_at: string | null;
+          role: string;
+          subscription_id: string;
+          swap_order: string;
+          updated_at: string;
+          user_id: string | null;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "plus_members";
           isOneToOne: true;
           isSetofReturn: false;
         };

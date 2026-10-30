@@ -10,8 +10,8 @@ values
 on conflict (id) do nothing;
 
 -- The Plus plans come from the migrations, switched off until Plus
--- launches; locally they're on.
-update public.plans set active = true where audience = 'plus';
+-- launches; locally they're on. Duo stays off until its screens ship.
+update public.plans set active = true where audience = 'plus' and not duo;
 
 insert into public.product_categories (id, slug, name_ar, name_en, position) values
   ('50000000-0000-0000-0000-000000000005', 'music', 'الموسيقى', 'Music', 1),
