@@ -62,6 +62,10 @@
     {
       "path": "/cron/opportunities",
       "schedule": "5 7 * * *"
+    },
+    {
+      "path": "/cron/reminders",
+      "schedule": "50 8 * * *"
     }
   ]
 }

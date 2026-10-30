@@ -6,6 +6,10 @@ import {
   orderConfirmationSubject,
 } from "@repo/email/templates/order-confirmation";
 import {
+  ReminderTemplate,
+  reminderSubject,
+} from "@repo/email/templates/reminder";
+import {
   StudentVerificationTemplate,
   studentVerificationSubject,
 } from "@repo/email/templates/student-verification";
@@ -157,4 +161,47 @@ export const StudentVerification = email((lang) => ({
     />
   ),
   subject: studentVerificationSubject(lang, "verified"),
+}));
+
+const records = (lang: Lang) => [
+  {
+    href: "https://theideaiq.com/store/kind-of-blue#reviews",
+    name:
+      lang === "ar" ? "مايلز ديفيس: Kind of Blue" : "Miles Davis: Kind of Blue",
+  },
+  {
+    href: "https://theideaiq.com/store/blue-train#reviews",
+    name:
+      lang === "ar" ? "جون كولترين: Blue Train" : "John Coltrane: Blue Train",
+  },
+];
+
+/** Three days after delivery: review what you bought. */
+export const ReviewRequest = email((lang) => ({
+  email: (
+    <ReminderTemplate
+      action={records(lang)[0].href}
+      items={records(lang)}
+      kind="review"
+      locale={lang}
+    />
+  ),
+  subject: reminderSubject("review", lang),
+}));
+
+/** A cart left for a day (Passes that allow news and offers). */
+export const CartReminder = email((lang) => ({
+  email: (
+    <ReminderTemplate
+      action="https://theideaiq.com/cart"
+      items={records(lang).map((item, index) => ({
+        ...item,
+        quantity: index + 1,
+      }))}
+      kind="cart"
+      locale={lang}
+      settings="https://theideaiq.com/pass/settings#phone"
+    />
+  ),
+  subject: reminderSubject("cart", lang),
 }));
