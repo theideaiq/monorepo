@@ -20,7 +20,6 @@
     "apps/app": {
       "entry": ["lib/native/*.ts"],
       "ignoreDependencies": [
-        "@capacitor/android",
         "@capacitor/ios",
         "@capacitor/splash-screen",
         "@capacitor/status-bar"
