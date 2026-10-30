@@ -37,7 +37,7 @@ export const NewOrganization = () => {
                 .update({ features: ["selling"] })
                 .eq("id", organizationId);
             }
-            router.push(selling ? "/selling" : "/");
+            router.push(selling ? "/sell/settings" : "/");
           }}
         />
       </div>

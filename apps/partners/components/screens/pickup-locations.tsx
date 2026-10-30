@@ -16,10 +16,8 @@ import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { MapPinIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
-import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
 import { ErrorState, SectionSpinner } from "@/components/states";
-import { useSeller } from "@/lib/seller-queries";
 import {
   type LocationInput,
   type ShopLocation,
@@ -282,30 +280,26 @@ const LocationRow = ({
   );
 };
 
-const PickupBody = () => {
+/**
+ * Sell → Shop settings → Pickup branches: the shop's branches, each a Boxy
+ * pickup location with the contact the courier calls to collect parcels
+ * (once the shop is approved).
+ */
+export const PickupBranches = ({ sellerId }: { readonly sellerId: string }) => {
   const t = useTranslations("app.company.pickup");
-  const { active, canManage } = useActiveOrganization();
-  const shop = useSeller(active.id);
-  const sellerId = shop.data?.seller.id ?? "";
+  const { canManage } = useActiveOrganization();
   const locations = useShopLocations(sellerId);
   const [adding, setAdding] = useState(false);
 
-  if (shop.isPending || (sellerId && locations.isPending)) {
+  if (locations.isPending) {
     return <SectionSpinner />;
   }
-  if (shop.isError || locations.isError) {
-    return (
-      <ErrorState
-        onRetry={() => (shop.isError ? shop.refetch() : locations.refetch())}
-      />
-    );
-  }
-  if (shop.data?.seller.status !== "approved") {
-    return <p className="text-muted-foreground">{t("notApproved")}</p>;
+  if (locations.isError) {
+    return <ErrorState onRetry={() => locations.refetch()} />;
   }
 
   return (
-    <Card className="max-w-3xl">
+    <Card className="scroll-mt-4" id="pickup">
       <CardHeader>
         <CardTitle>{t("title")}</CardTitle>
         <CardDescription>{t("description")}</CardDescription>
@@ -341,13 +335,3 @@ const PickupBody = () => {
     </Card>
   );
 };
-
-/**
- * Partners → Selling → Pickup: the shop's branches, each a Boxy pickup
- * location with the contact the courier calls to collect parcels.
- */
-export const PickupLocations = () => (
-  <BusinessShell feature="selling">
-    <PickupBody />
-  </BusinessShell>
-);

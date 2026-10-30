@@ -3,14 +3,12 @@ import { Selling } from "@/components/screens/selling";
 import { SectionSpinner } from "@/components/states";
 import { titleFrom } from "@/lib/metadata";
 
-export const generateMetadata = titleFrom((t) =>
-  t("app.company.selling.title")
-);
+export const generateMetadata = titleFrom((t) => t("app.nav.shopSettings"));
 
-const SellingPage = () => (
+const ShopSettingsPage = () => (
   <Suspense fallback={<SectionSpinner />}>
     <Selling />
   </Suspense>
 );
 
-export default SellingPage;
+export default ShopSettingsPage;

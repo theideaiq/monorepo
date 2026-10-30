@@ -48,21 +48,42 @@ describe("currentAppPath", () => {
 
 test("businessPath strips Partners' prefix", () => {
   expect(businessPath("/business/developers")).toBe("/developers");
-  expect(businessPath("/selling/get-offers?request=r1")).toBe("/selling");
   expect(businessPath("/business/perks?x=1")).toBe("/perks?x=1");
   expect(businessPath("/business")).toBe("/");
-  expect(businessPath("/selling/auctions")).toBe("/selling/auctions");
+  expect(businessPath("/sell/orders")).toBe("/sell/orders");
   expect(businessPath("/sellingstuff")).toBeNull();
+  expect(businessPath("/sellers")).toBeNull();
+  expect(businessPath("/organizations")).toBeNull();
   expect(businessPath("/businesses")).toBeNull();
   expect(businessPath("/pass")).toBeNull();
+  expect(businessPath("/settings")).toBeNull();
 });
 
 test("businessPath opens moved pages at their current address", () => {
-  expect(businessPath("/business/invoices")).toBe("/organization/invoices");
+  expect(businessPath("/business/invoices")).toBe("/settings/invoices");
   expect(businessPath("/business/procurement/r1")).toBe("/team/r1");
   expect(businessPath("/business/procurement?x=1")).toBe("/team?x=1");
-  expect(businessPath("/business/settings")).toBe("/organization");
+  expect(businessPath("/business/settings")).toBe("/settings");
   expect(businessPath("/business/plus-other")).toBe("/plus-other");
+  expect(businessPath("/business/organization#verification")).toBe(
+    "/settings#verification"
+  );
+  expect(businessPath("/organization/members")).toBe("/settings/members");
+  expect(businessPath("/organization")).toBe("/settings");
+});
+
+test("businessPath moves Selling to Sell", () => {
+  expect(businessPath("/selling/auctions")).toBe("/sell/auctions");
+  expect(businessPath("/selling/orders?line=1")).toBe("/sell/orders?line=1");
+  expect(businessPath("/business/selling/offers")).toBe("/sell/offers");
+  expect(businessPath("/selling/sales")).toBe("/sell/promotions");
+  expect(businessPath("/selling")).toBe("/sell/settings");
+  expect(businessPath("/selling#documents")).toBe("/sell/settings#documents");
+  expect(businessPath("/selling/pickup")).toBe("/sell/settings");
+  expect(businessPath("/selling/get-offers?request=r1")).toBe(
+    "/sell/settings?request=r1"
+  );
+  expect(businessPath("/selling/get-offers/r1")).toBe("/sell/settings");
 });
 
 test("safeNextPath refuses other sites", () => {

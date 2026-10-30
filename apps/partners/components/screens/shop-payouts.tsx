@@ -174,7 +174,7 @@ const PayoutsBody = () => {
  * statement (items paid after commission, fees deducted).
  */
 export const ShopPayouts = () => (
-  <BusinessShell feature="selling">
+  <BusinessShell feature="selling" page="payouts">
     <PayoutsBody />
   </BusinessShell>
 );

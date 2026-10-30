@@ -1,6 +1,6 @@
 import type { OrganizationFeature } from "@repo/auth/organizations";
 import { describe, expect, test, vi } from "vitest";
-import { visibleNavItems } from "@/components/nav-items";
+import { type MenuGroup, menuFor } from "@/components/nav-items";
 import { ApiError, callApi } from "@/lib/api";
 import { developerError } from "@/lib/developer-queries";
 import { toInvitationError, toOrganizationError } from "@/lib/errors";
@@ -111,40 +111,77 @@ describe("callApi", () => {
   });
 });
 
-describe("visibleNavItems", () => {
+describe("menuFor", () => {
   const org = (
     role: "admin" | "member" | "owner",
     features: OrganizationFeature[]
   ) => ({ features, id: "o", name: "Org", role, slug: "org" });
-  const keys = (items: { key: string }[]) => items.map((item) => item.key);
+  /** Each group as its entries: a page's key, "+feature" or "apply". */
+  const shape = (groups: MenuGroup[]) =>
+    Object.fromEntries(
+      groups.map((group) => [
+        group.key,
+        group.entries.map((entry) => {
+          if (entry.kind === "link") {
+            return entry.item.key;
+          }
+          return entry.kind === "add" ? `+${entry.feature}` : "apply";
+        }),
+      ])
+    );
 
-  test("shows Home and Organization, plus the sections switched on", () => {
-    expect(keys(visibleNavItems(org("owner", [])))).toEqual([
-      "home",
-      "organization",
-    ]);
+  test("keeps its shape: sections not switched on are greyed with Add", () => {
+    expect(shape(menuFor(org("owner", []), false))).toEqual({
+      grow: ["+supply", "+opportunities", "+perks", "+affiliate"],
+      organization: ["+team", "+developers", "settings"],
+      sell: ["+selling"],
+      today: ["today"],
+    });
     expect(
-      keys(visibleNavItems(org("owner", ["developers", "perks", "team"])))
-    ).toEqual(["home", "perks", "team", "developers", "organization"]);
+      shape(menuFor(org("owner", ["developers", "perks", "team"]), false))
+    ).toEqual({
+      grow: ["+supply", "+opportunities", "perks", "+affiliate"],
+      organization: ["team", "developers", "settings"],
+      sell: ["+selling"],
+      today: ["today"],
+    });
   });
 
-  test("puts Supply right after Selling, for every member", () => {
-    expect(keys(visibleNavItems(org("member", ["supply", "selling"])))).toEqual(
-      ["home", "selling", "supply", "organization"]
-    );
+  test("Sell is Apply to sell until the shop is approved", () => {
+    expect(shape(menuFor(org("member", ["selling"]), false)).sell).toEqual([
+      "apply",
+    ]);
+    expect(shape(menuFor(org("member", ["selling"]), true)).sell).toEqual([
+      "listings",
+      "orders",
+      "offers",
+      "returns",
+      "auctions",
+      "promotions",
+      "payouts",
+      "shopSettings",
+    ]);
+  });
+
+  test("counts only where something needs action", () => {
+    const counted = menuFor(org("owner", ["selling"]), true)
+      .flatMap((group) => group.entries)
+      .flatMap((entry) =>
+        entry.kind === "link" && entry.item.count ? [entry.item.count] : []
+      );
+    expect(counted).toEqual(["orders", "offers", "returns"]);
   });
 
   test("keeps Developers for owners and admins", () => {
-    expect(keys(visibleNavItems(org("member", ["developers"])))).toEqual([
-      "home",
-      "organization",
-    ]);
-    expect(keys(visibleNavItems(org("admin", ["developers"])))).toContain(
-      "developers"
-    );
+    expect(
+      shape(menuFor(org("member", ["developers"]), false)).organization
+    ).toEqual(["+team", "settings"]);
+    expect(
+      shape(menuFor(org("admin", ["developers"]), false)).organization
+    ).toContain("developers");
   });
 
-  test("shows only Home without an organization", () => {
-    expect(keys(visibleNavItems(null))).toEqual(["home"]);
+  test("shows only Today without an organization", () => {
+    expect(shape(menuFor(null, false))).toEqual({ today: ["today"] });
   });
 });

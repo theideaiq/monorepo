@@ -2,6 +2,8 @@
 
 import { useAuth } from "@repo/auth/provider";
 import type { Database } from "@repo/database";
+import { buckets, uploadAuctionPhoto } from "@repo/storage";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 /**
@@ -26,6 +28,37 @@ export const CONDITIONS: readonly Condition[] = [
 export const MAX_QUANTITY = 999;
 /** The lowest price an offer may have, in IQD. */
 export const MIN_PRICE = 250;
+/** Photos of a new product (the database takes up to 10). */
+export const MAX_LISTING_PHOTOS = 10;
+
+type Client = SupabaseClient<Database>;
+
+/**
+ * Uploads the shop's photos of a new product to the shop's own public
+ * photo folder (which its owners and admins write) and returns their
+ * addresses, for `products.images`.
+ */
+const uploadPhotos = async (
+  supabase: Client,
+  sellerId: string,
+  photos: readonly File[]
+) => {
+  const uploaded = await Promise.all(
+    photos.map((file) => uploadAuctionPhoto(supabase, sellerId, file))
+  );
+  return uploaded.map(
+    (file) =>
+      supabase.storage.from(buckets.auctionPhotos.id).getPublicUrl(file.path)
+        .data.publicUrl
+  );
+};
+
+/** A product picture's address: its own, or in the catalog bucket. */
+export const pictureUrl = (supabase: Client, path: string) =>
+  path.startsWith("https://") || path.startsWith("http://")
+    ? path
+    : supabase.storage.from(buckets.catalog.id).getPublicUrl(path).data
+        .publicUrl;
 
 const listingsKey = (sellerId: string) => ["listings", sellerId] as const;
 
@@ -47,6 +80,8 @@ export const looksLikeCode = (value: string) => {
 
 export interface CatalogMatch {
   id: string;
+  /** The product's pictures (catalog paths or addresses). */
+  images: string[];
   nameAr: string;
   nameEn: string;
   slug: string;
@@ -54,10 +89,11 @@ export interface CatalogMatch {
 }
 
 const MATCH_COLUMNS =
-  "id, slug, name_en, name_ar, product_variants (id, label_en, label_ar, active)";
+  "id, slug, name_en, name_ar, images, product_variants (id, label_en, label_ar, active)";
 
 interface MatchRow {
   id: string;
+  images: string[] | null;
   name_ar: string;
   name_en: string;
   product_variants: {
@@ -71,6 +107,7 @@ interface MatchRow {
 
 const toMatch = (row: MatchRow): CatalogMatch => ({
   id: row.id,
+  images: row.images ?? [],
   nameAr: row.name_ar,
   nameEn: row.name_en,
   slug: row.slug,
@@ -206,7 +243,10 @@ export interface NewProduct {
   nameEn: string;
 }
 
-/** Creates a product nobody has listed, with the shop's offer. */
+/**
+ * Creates a product nobody has listed, with the shop's photos (at least
+ * one: the Store shows no product without a picture) and its offer.
+ */
 export const useCreateListing = (sellerId: string) => {
   const { supabase } = useAuth();
   const queryClient = useQueryClient();
@@ -214,8 +254,10 @@ export const useCreateListing = (sellerId: string) => {
     mutationFn: async ({
       product,
       offer,
+      photos,
     }: {
       offer: OfferInput;
+      photos: readonly File[];
       product: NewProduct;
     }) =>
       unwrap(
@@ -223,7 +265,7 @@ export const useCreateListing = (sellerId: string) => {
           barcode: product.barcode.trim(),
           category: product.categoryId,
           details: {},
-          images: [],
+          images: await uploadPhotos(supabase, sellerId, photos),
           listing_seller: sellerId,
           name_ar: product.nameAr.trim(),
           name_en: product.nameEn.trim(),
@@ -254,15 +296,17 @@ export const useCreateBundle = (sellerId: string) => {
     mutationFn: async ({
       bundle,
       offer,
+      photos,
     }: {
       bundle: NewBundle;
       offer: OfferInput;
+      photos: readonly File[];
     }) =>
       unwrap(
         await supabase.rpc("create_bundle", {
           bundle_seller: sellerId,
           category: bundle.categoryId,
-          images: [],
+          images: await uploadPhotos(supabase, sellerId, photos),
           items: bundle.items.map((item) => ({
             quantity: item.quantity,
             variant_id: item.variantId,
@@ -276,6 +320,31 @@ export const useCreateBundle = (sellerId: string) => {
         })
       ),
     onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: listingsKey(sellerId) }),
+  });
+};
+
+/** Pauses several offers at once (0 copies each), one by one. */
+export const usePauseListings = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (listings: readonly Listing[]) => {
+      for (const listing of listings) {
+        unwrap(
+          // biome-ignore lint/performance/noAwaitInLoops: one offer at a time, as the database checks each
+          await supabase.rpc("set_offer", {
+            offer_condition: listing.condition,
+            offer_price: listing.price,
+            offer_seller: sellerId,
+            offer_sku: listing.sku || undefined,
+            offer_variant: listing.variant_id,
+            quantity: 0,
+          })
+        );
+      }
+    },
+    onSettled: () =>
       queryClient.invalidateQueries({ queryKey: listingsKey(sellerId) }),
   });
 };
