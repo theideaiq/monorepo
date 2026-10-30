@@ -48,6 +48,10 @@
       "schedule": "40 3 * * *"
     },
     {
+      "path": "/cron/plus-duo",
+      "schedule": "25 6 * * *"
+    },
+    {
       "path": "/cron/plus-credits",
       "schedule": "10 0 * * *"
     },

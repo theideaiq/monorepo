@@ -35,6 +35,15 @@ export const customer = {
 export const friend = { email: "e2e-friend@theidea.test", name: "E2E Friend" };
 /** Holds a staff role; the journey links an authenticator app first. */
 export const staff = { email: "e2e-staff@theidea.test", name: "E2E Staff" };
+/** Plus Duo: the plan holder and the second person they invite. */
+export const duoHolder = {
+  email: "e2e-duo-holder@theidea.test",
+  name: "Dana Holder",
+};
+export const duoPartner = {
+  email: "e2e-duo-partner@theidea.test",
+  name: "Sami Partner",
+};
 /** Gets The IDEA Pass through the email form (deleted and re-created each run). */
 export const signUpUser = {
   email: "e2e-signup@theidea.test",

@@ -224,6 +224,7 @@ export type Plan = Pick<
   | "bulb_rate"
   | "currency"
   | "description"
+  | "duo"
   | "features_ar"
   | "features_en"
   | "id"
@@ -243,7 +244,7 @@ export const getPlans = (audience: "business" | "plus") =>
       await supabase
         .from("plans")
         .select(
-          "id, name, name_ar, description, amount, currency, billing_interval, bulb_rate, rental_slots, tier, features_ar, features_en"
+          "id, name, name_ar, description, amount, currency, billing_interval, bulb_rate, rental_slots, tier, features_ar, features_en, duo"
         )
         .eq("active", true)
         .eq("audience", audience)

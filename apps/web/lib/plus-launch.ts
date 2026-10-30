@@ -282,8 +282,14 @@ export const WEEKDAYS = [
   "saturday",
 ] as const;
 
-/** The Plus plans for one billing period, cheapest first. */
-export const plansFor = <Plan extends { billing_interval: string }>(
+/** The Plus plans for one billing period, for one person or a Duo. */
+export const plansFor = <
+  Plan extends { billing_interval: string; duo?: boolean | null },
+>(
   plans: readonly Plan[] | undefined,
-  interval: "month" | "year"
-) => (plans ?? []).filter((plan) => plan.billing_interval === interval);
+  interval: "month" | "year",
+  duo = false
+) =>
+  (plans ?? []).filter(
+    (plan) => plan.billing_interval === interval && Boolean(plan.duo) === duo
+  );

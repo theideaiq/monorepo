@@ -31,6 +31,10 @@ export const requiredPlan = <T extends PlanTier>(
   return (plan as T | undefined) ?? null;
 };
 
+/** The plans for one person, without the Duo plans (`plans.duo`). */
+export const soloPlans = <T extends { duo?: boolean | null }>(plans: T[]) =>
+  plans.filter((plan) => !plan.duo);
+
 /** Plans from the entry plan upwards, for explaining what each one adds. */
 export const plansByTier = <T extends PlanTier>(plans: T[]) =>
   byTier(plans) as (T & { tier: number })[];

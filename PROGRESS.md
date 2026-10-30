@@ -578,6 +578,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Store → Textbooks and Pass → Selling ("Sell it yourself") link to
   Partners `/new?for=selling`, which makes the organization with Selling
   on and opens the shop's application. Next in step 14: Plus Duo.
+- 2026-10-30: Plus Duo, part 2 (step 14, the code; decisions Part 15).
+  Your Plus: Plans "Just me" / "Duo", the Plus Duo card (invite link,
+  the second person, swap order, remove or keep, leave), swaps from both
+  queues with the shared slots and the holder's address; the invite page
+  `/plus/duo/<code>`; guardians approve in Settings; seven `plus_duo_*`
+  notifications; `/cron/plus-duo`; the Plus policy's Plus Duo paragraph;
+  `20270315000000_plus_duo_on.sql` switches the Duo plans on; an e2e
+  journey (invite, join, shared).
 - 2026-10-30: Plus Duo, part 1 (step 14, the schema
   `20270314000000_plus_duo.sql`, decisions Part 15). Duo plans (Glow
   20,750 · Shine 31,750 · Blaze 55,750 IQD a month, yearly and student

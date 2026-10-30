@@ -24,7 +24,7 @@ import {
   getRentalTiers,
 } from "@/lib/data";
 import { localizedMetadata } from "@/lib/metadata";
-import { plansByTier, requiredPlan } from "@/lib/plus";
+import { plansByTier, requiredPlan, soloPlans } from "@/lib/plus";
 import {
   parseStoreQuery,
   STORE_PAGE_SIZE,
@@ -82,7 +82,17 @@ const Rent = async ({ params, searchParams }: RentProps) => {
     }),
   ]);
   // Monthly plans on the page; the yearly ones are in Your Plus.
-  const plans = allPlans.filter((plan) => plan.billing_interval === "month");
+  const plans = soloPlans(allPlans).filter(
+    (plan) => plan.billing_interval === "month"
+  );
+  // Plus Duo, from its cheapest monthly plan.
+  const duoFrom = allPlans
+    .filter((plan) => plan.duo && plan.billing_interval === "month")
+    .reduce<number | null>(
+      (lowest, plan) =>
+        lowest === null || plan.amount < lowest ? plan.amount : lowest,
+      null
+    );
   const products = rows.slice(0, STORE_PAGE_SIZE);
   const ids = products.map((product) => product.id);
   const [ratings, productTiers] = await Promise.all([
@@ -210,6 +220,11 @@ const Rent = async ({ params, searchParams }: RentProps) => {
               </div>
             ) : (
               <EmptyState>{t("plus.plans.empty")}</EmptyState>
+            )}
+            {duoFrom === null ? null : (
+              <p className="text-muted-foreground text-sm">
+                {t("plus.plans.duo", { price: formatPrice(duoFrom, locale) })}
+              </p>
             )}
           </Section>
 

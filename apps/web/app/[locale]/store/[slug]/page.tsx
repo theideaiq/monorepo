@@ -41,7 +41,7 @@ import {
 } from "@/lib/data";
 import { markdownToText } from "@/lib/markdown";
 import { localizedMetadata, siteUrl } from "@/lib/metadata";
-import { requiredPlan } from "@/lib/plus";
+import { requiredPlan, soloPlans } from "@/lib/plus";
 import { productJsonLd, productSpecs } from "@/lib/product";
 
 export const revalidate = 300;
@@ -77,7 +77,9 @@ const rentalPlan = async ({
   rentable,
   rental_tier: tier,
 }: Pick<ProductDetail, "rentable" | "rental_tier">) =>
-  rentable && tier !== null ? requiredPlan(await getPlans("plus"), tier) : null;
+  rentable && tier !== null
+    ? requiredPlan(soloPlans(await getPlans("plus")), tier)
+    : null;
 
 const ProductPage = async ({ params }: ProductProps) => {
   const { locale, slug } = await params;
