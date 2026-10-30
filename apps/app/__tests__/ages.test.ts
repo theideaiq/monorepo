@@ -24,9 +24,9 @@ describe("ages", () => {
     );
   });
 
-  test("the guardian's invite link opens Settings with the code", () => {
+  test("the guardian's invite link opens Family with the code", () => {
     expect(guardianInviteUrl("https://theideaiq.com", "AB12CD34EF")).toBe(
-      "https://theideaiq.com/pass/settings?guardian=AB12CD34EF#guardian"
+      "https://theideaiq.com/pass/family?guardian=AB12CD34EF"
     );
   });
 });

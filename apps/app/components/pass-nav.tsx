@@ -3,7 +3,7 @@
 import { cn } from "@repo/design-system/lib/utils";
 import { Link, usePathname } from "@repo/internationalization/navigation";
 import { useTranslations } from "next-intl";
-import { isActivePath, navItems } from "./nav-items";
+import { isActiveItem, navItems } from "./nav-items";
 
 /**
  * The sections of Your Pass: a column beside the page from tablet width up,
@@ -20,7 +20,7 @@ export const PassNav = () => {
     >
       <ul className="flex gap-1 md:flex-col">
         {navItems.map((item) => {
-          const active = isActivePath(pathname, item.href);
+          const active = isActiveItem(pathname, item);
           return (
             <li className="shrink-0" key={item.key}>
               <Link

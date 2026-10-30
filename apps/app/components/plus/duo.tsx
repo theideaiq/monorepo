@@ -329,7 +329,7 @@ const AcceptInvite = ({ token }: { readonly token: string }) => {
             : t("joined", { name: holder.current ?? t("holder") })}
         </p>
         <Button asChild className="justify-self-start">
-          <Link href="/plus#yours">{t("toPlus")}</Link>
+          <Link href="/pass/family">{t("toFamily")}</Link>
         </Button>
       </div>
     );
@@ -368,7 +368,7 @@ const AcceptInvite = ({ token }: { readonly token: string }) => {
   );
 };
 
-/** /plus/duo/<code>: an invite to share someone's Plus. */
+/** /family/<code>: an invite to share someone's Plus as their Family. */
 export const DuoInvite = ({ token }: { readonly token: string }) => {
   const t = useTranslations("app.plus.duo");
   return (

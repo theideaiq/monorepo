@@ -87,7 +87,7 @@ export const VerificationHub = ({
       ) : (
         <Link
           className="inline-flex items-center justify-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-          href="/pass/settings"
+          href="/pass/settings/profile"
         >
           <MoveLeft aria-hidden="true" className="size-4 rtl:rotate-180" />
           {t("back")}

@@ -735,7 +735,7 @@
     "club": {
       "submit": {
         "title": "Submit your work",
-        "description": "Members can submit essays, poetry, fiction, theatre or visual art from Yours on this page. Editors review every submission without seeing the author's name, and accepted work is published in Stories.",
+        "description": "Members can submit essays, poetry, fiction, theatre or visual art from their Pass. Editors review every submission without seeing the author's name, and accepted work is published in Stories.",
         "button": "Submit your work"
       },
       "learn": {
@@ -776,6 +776,7 @@
       },
       "empty": "Nothing published here yet. Check back soon.",
       "byline": "By {name}",
+      "readingTime": "{minutes} min read",
       "theIdea": "The IDEA",
       "meta": {
         "title": "The IDEA Club — join, read and take part",
@@ -783,6 +784,40 @@
       },
       "title": "Club",
       "description": "Join events and surveys, read news, stories and guides, and meet us on Telegram.",
+      "pages": {
+        "nav": {
+          "label": "Club pages",
+          "home": "Club",
+          "events": "Events",
+          "opportunities": "Opportunities",
+          "surveys": "Surveys",
+          "read": "Read"
+        },
+        "home": {
+          "thisWeek": "This week",
+          "events": "Coming up",
+          "allEvents": "All events",
+          "opportunities": "Featured opportunities",
+          "allOpportunities": "All opportunities",
+          "reads": "Latest reads",
+          "allReads": "Everything to read",
+          "yours": "Your tickets, applications and surveys are in your Pass"
+        },
+        "read": {
+          "title": "Read",
+          "description": "News, stories and guides from The IDEA and its members."
+        },
+        "opportunities": {
+          "title": "Opportunities",
+          "description": "Jobs, internships, scholarships, competitions and programs, featured first, then by deadline."
+        },
+        "surveys": {
+          "title": "Surveys",
+          "description": "Answer surveys from students and researchers, some for Bulbs.",
+          "create": "Create a survey",
+          "yours": "Your surveys"
+        }
+      },
       "pastEvents": "Past events",
       "telegram": {
         "title": "The Club on Telegram",
@@ -829,6 +864,7 @@
       "surveys": {
         "title": "Survey",
         "back": "Back to the Club",
+        "backToYours": "Back to your surveys",
         "studentsCreate": "Verified students can create surveys.",
         "verify": "Verify as a student",
         "answer": {
@@ -1406,6 +1442,13 @@
       "bulbs": "Bulbs",
       "about": "About & info",
       "saved": "Saved",
+      "atHome": "At home",
+      "queue": "Queue",
+      "history": "Past rentals",
+      "lists": "Lists",
+      "tickets": "Tickets",
+      "codes": "Codes",
+      "family": "Family",
       "home": "Home",
       "perks": "Perks",
       "team": "Team",
@@ -1457,6 +1500,167 @@
         "title": "Your next events",
         "empty": "You haven't RSVP'd to any upcoming event.",
         "browse": "See upcoming events"
+      }
+    },
+    "pass": {
+      "bulbs": "{bulbs} Bulbs to spend",
+      "familyHint": "Your partner, teens and kids on one plan",
+      "availability": {
+        "now": "Available now",
+        "short": "Short wait",
+        "long": "Long wait",
+        "coming": "Coming to Plus"
+      },
+      "today": {
+        "title": "Today",
+        "delivery": "{order} is on its way to you",
+        "dueBack": "{name} is due back on {date}",
+        "late": "{name} is late: book its return",
+        "event": "{title} today at {time}",
+        "family": "{count, plural, one {{n} Family request to answer} other {{n} Family requests to answer}}"
+      },
+      "shelves": {
+        "atHome": "At home",
+        "atHomeEmpty": "Nothing from Plus at home right now.",
+        "queue": "Up next in your queue",
+        "queueEmpty": "Your queue is empty. Add games, books and films from Plus.",
+        "bought": "Bought",
+        "boughtEmpty": "Nothing bought yet.",
+        "tickets": "Tickets",
+        "ticketsEmpty": "No upcoming events. Find one in the Club."
+      },
+      "atHome": {
+        "title": "At home",
+        "slots": "At home: {used} of {slots}",
+        "onItsWay": "On its way",
+        "dueBack": "Due back {date}",
+        "late": "Late since {date}",
+        "lateNoDate": "Late",
+        "since": "At home since {date}",
+        "emptyTitle": "Nothing at home yet",
+        "empty": "Items from your queue come with your next delivery.",
+        "toQueue": "See your queue",
+        "history": "Past rentals"
+      },
+      "history": {
+        "title": "Past rentals",
+        "emptyTitle": "No past rentals",
+        "empty": "Items you send back or keep show here.",
+        "returnedOn": "back on {date}",
+        "order": "Order"
+      },
+      "queue": {
+        "title": "Queue",
+        "description": "What you'd like next with Plus, in order. Swaps take from the top; drag an item, or use Move up and Move down.",
+        "notMember": "Your queue is used once you have Plus.",
+        "join": "See the plans",
+        "emptyTitle": "Your queue is empty",
+        "empty": "Add games, books and films from their pages in Plus.",
+        "browse": "Browse Plus",
+        "for": "For {name}",
+        "forTeen": "For your teen",
+        "up": "Move {name} up",
+        "down": "Move {name} down",
+        "more": "More for {name}",
+        "toTop": "Move to top",
+        "buyInstead": "Buy instead",
+        "queueFor": "Queue for",
+        "remove": "Remove",
+        "needsPlan": "Needs {plan}: swaps skip it on your plan",
+        "needsHigher": "Needs a higher plan: swaps skip it",
+        "moveFailed": "The queue couldn't be changed. Try again."
+      },
+      "tickets": {
+        "title": "Tickets",
+        "browse": "Find an event",
+        "applications": "Your applications, surveys and submissions"
+      },
+      "applications": {
+        "title": "Applications"
+      },
+      "codes": {
+        "title": "Codes",
+        "description": "The gift cards and game codes you bought, order by order.",
+        "emptyTitle": "No codes yet",
+        "empty": "Codes you buy show here once they're ready."
+      },
+      "family": {
+        "title": "Family",
+        "description": "One Plus plan for your household: share its items with your partner, and add your teens and kids.",
+        "teenDescription": "Your guardian looks after your Pass. Ask them for something to play.",
+        "errors": {
+          "ageRating": "This item isn't for their age.",
+          "failed": "Something went wrong. Try again.",
+          "manyKids": "You can add up to 6 kids.",
+          "needsGuardian": "Link your Pass with a guardian first.",
+          "notAdult": "A Family is managed by an adult.",
+          "notInPlus": "This item isn't in Plus.",
+          "notUnder13": "Kids' profiles are for under 13s. Teens use their own Pass."
+        },
+        "slots": {
+          "title": "Shared items",
+          "description": "Everyone in your Family rents from the same plan.",
+          "atHome": "At home: {used} of {slots}",
+          "none": "No Plus plan yet.",
+          "plan": "Your plan",
+          "join": "See the plans",
+          "atHomeLink": "At home"
+        },
+        "requests": {
+          "title": "Requests to answer",
+          "asked": "{name} asked for {item}",
+          "askedNoName": "Your teen asked for {item}",
+          "see": "See it",
+          "approve": "Add to my queue",
+          "decline": "Decline",
+          "note": "Approved items join your queue, marked for them."
+        },
+        "people": {
+          "title": "People",
+          "you": "You",
+          "manager": "Manager"
+        },
+        "kids": {
+          "kid": "Under 13",
+          "born": "Born {date}",
+          "inQueue": "In your queue for them: {items}",
+          "nothingToQueue": "Save or queue something in Plus first.",
+          "browse": "Browse Plus",
+          "queueFor": "Queue for {name}",
+          "choose": "Choose an item",
+          "queue": "Add to queue",
+          "queued": "Added to your queue for {name}.",
+          "removeConfirm": "Remove {name}'s profile? Items queued for them stay in your queue.",
+          "remove": "Remove",
+          "keep": "Keep"
+        },
+        "add": {
+          "title": "Add someone",
+          "kid": "A kid",
+          "teen": "A teen",
+          "partner": "A partner",
+          "kidHelp": "Kids under 13 have a profile in your Pass, with no sign-in. You queue items for them; nothing 18+ is offered.",
+          "name": "Name",
+          "birthday": "Birthday",
+          "adding": "Adding…",
+          "addKid": "Add the profile",
+          "over13": "Kids' profiles are for under 13s. A teen links their own Pass with you.",
+          "added": "Profile added.",
+          "teenHelp": "Teens (13 to 17) have their own Pass. They make a guardian code in their Pass → Family; enter it in the guardian card above.",
+          "partnerHelpHolder": "Invite your partner from the Duo card above: they share the items and swaps, with their own Pass and queue.",
+          "partnerHelp": "A partner shares a Family plan (Plus Glow, Shine or Blaze Duo), with their own Pass and queue.",
+          "seePlans": "See the plans"
+        },
+        "ask": {
+          "title": "Ask to play",
+          "description": "Ask {name} for something you saved that's in Plus. Once they say yes, it joins their queue for you.",
+          "none": "Save something from Plus first, then ask for it here.",
+          "browse": "Browse Plus",
+          "asked": "Asked",
+          "ask": "Ask",
+          "approved": "{item}: yes, it's in the queue",
+          "declined": "{item}: not this time"
+        }
       }
     },
     "store": {
@@ -1767,6 +1971,13 @@
         "cancelledNotice": "This order was cancelled.",
         "refundedNotice": "This order was refunded.",
         "help": "Get help with this order",
+        "helpShort": "Help",
+        "links": "Order links",
+        "return": "Return",
+        "receipt": "Receipt",
+        "review": "Review",
+        "buyAgain": "Buy again",
+        "track": "Track",
         "method": "Delivery and payment",
         "contact": "Contact",
         "confirmedNotice": "Your order is confirmed. Have {amount} ready in cash for the courier.",
@@ -2084,6 +2295,7 @@
         "joined": "You're in. You now share {name}'s Plus.",
         "joinedGuardian": "You've joined. We've asked your guardian to approve it.",
         "toPlus": "Go to Your Plus",
+        "toFamily": "Go to your Family",
         "approvalsTitle": "Plus Duo",
         "approval": "{name} wants to join {holder}'s Plus Duo.",
         "approve": "Approve",
@@ -2629,23 +2841,35 @@
         "label": "Settings sections",
         "profile": {
           "title": "Profile",
-          "description": "Your name, language and the emails you'd like from us."
+          "description": "Your name, language, birthday and verification."
         },
-        "email": {
-          "title": "Email",
-          "description": "The address your Pass signs in with, and its password."
+        "signIn": {
+          "title": "Sign-in",
+          "description": "The email your Pass signs in with, its password and your sign-in methods."
         },
         "phone": {
           "title": "Phone",
-          "description": "Your verified numbers and order updates on WhatsApp."
+          "description": "Your verified numbers."
         },
         "connections": {
           "title": "Connections",
-          "description": "Everything linked to your Pass: sign-in accounts, Telegram and the sites you signed in to with it."
+          "description": "The sites you signed in to with your Pass."
         },
-        "more": {
-          "title": "More",
-          "description": "Addresses, birthday, guardian, verification, appearance and deleting your Pass."
+        "addresses": {
+          "title": "Addresses",
+          "description": "Where we deliver."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "Order updates on WhatsApp, and news and offers."
+        },
+        "privacy": {
+          "title": "Privacy",
+          "description": "Deleting your Pass and what happens to your data."
+        },
+        "appearance": {
+          "title": "Appearance",
+          "description": "Light, dark or as your device is set."
         }
       }
     },
@@ -4538,6 +4762,18 @@
         "plus_duo_ended": {
           "title": "Your Duo place has ended",
           "body": "Your place on {holder}'s Plus has ended."
+        },
+        "family_request": {
+          "title": "A Family request",
+          "body": "{teen} asked for {name}."
+        },
+        "family_request_approved": {
+          "title": "Your guardian said yes",
+          "body": "{name} is in their queue for you."
+        },
+        "family_request_declined": {
+          "title": "Not this time",
+          "body": "Your guardian declined {name}."
         },
         "digital_code_ready": {
           "title": "Your code is ready",

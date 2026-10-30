@@ -1,6 +1,7 @@
 "use client";
 
 import { formatPhone } from "@repo/auth/phone";
+import { useAuth } from "@repo/auth/provider";
 import {
   type Fulfilment,
   formatPrice,
@@ -30,16 +31,28 @@ import {
 import { cn } from "@repo/design-system/lib/utils";
 import { formatDate, formatNumber } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { ArrowLeftIcon, CheckIcon, LifeBuoyIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ArrowLeftIcon,
+  CircleCheckIcon,
+  CircleXIcon,
+  ClockIcon,
+  LifeBuoyIcon,
+  PackageIcon,
+  ReceiptIcon,
+  TruckIcon,
+  Undo2Icon,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { type ReactNode, useEffect, useState } from "react";
+import { Dock } from "@/components/dock";
 import { PageHeader } from "@/components/page-header";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { OrderCodes } from "@/components/store/digital-codes";
 import { GiftOrderCard } from "@/components/store/gift-order";
 import { OrderReturns, ReturnLine } from "@/components/store/order-returns";
-import { OrderStatusBadge } from "@/components/store/order-status-badge";
 import { OrderSummary } from "@/components/store/order-summary";
+import { productHref } from "@/components/store/product-card";
 import { governorateName, type ShippingAddress } from "@/lib/address";
 import {
   hasPendingCheckout,
@@ -53,6 +66,7 @@ import {
   statusMessageKey,
   stepsFor,
 } from "@/lib/orders";
+import { unwrap } from "@/lib/queries";
 import {
   type OrderReturn,
   returnedQuantity,
@@ -71,48 +85,161 @@ const POLL_FOR_MS = 10 * 60_000;
 
 type Order = NonNullable<ReturnType<typeof useOrder>["data"]>;
 
-const Steps = ({ order }: { readonly order: Order }) => {
+/** The icon for the order's state, beside its word. */
+const STATE_ICONS: Partial<Record<Order["status"], typeof CircleCheckIcon>> = {
+  cancelled: CircleXIcon,
+  delivered: CircleCheckIcon,
+  pending: ClockIcon,
+  refunded: CircleXIcon,
+  shipped: TruckIcon,
+};
+
+/**
+ * The order's state in words ("On the way") with its icon, then a thin
+ * progress line of its steps (the step names under it on wider screens).
+ */
+const OrderState = ({ order }: { readonly order: Order }) => {
   const t = useTranslations("store");
   const steps = stepsFor(order.payment_method);
   const reached = orderProgress(order.status, order.payment_method);
+  const Icon = STATE_ICONS[order.status] ?? PackageIcon;
 
   return (
-    <ol
-      className={cn(
-        "grid gap-3 sm:gap-2",
-        steps.length === 4 ? "sm:grid-cols-4" : "sm:grid-cols-5"
-      )}
-    >
-      {steps.map((step, index) => {
-        const done = index <= reached;
-        return (
-          <li
-            aria-current={index === reached ? "step" : undefined}
-            className="flex items-center gap-2 sm:flex-col sm:text-center"
-            key={step}
-          >
-            <span
-              className={cn(
-                "flex size-7 shrink-0 items-center justify-center rounded-full border text-xs",
-                done
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "text-muted-foreground"
-              )}
+    <div className="grid gap-3">
+      <p className="flex items-center gap-2 font-semibold text-lg">
+        <Icon aria-hidden="true" className="size-5 text-pink-text" />
+        {t(statusMessageKey(order.status, order.fulfilment))}
+      </p>
+      {reached >= 0 ? (
+        <ol className="flex gap-1">
+          {steps.map((step, index) => (
+            <li
+              aria-current={index === reached ? "step" : undefined}
+              className="grid flex-1 gap-1.5"
+              key={step}
             >
-              {done ? <CheckIcon className="size-4" /> : null}
-            </span>
-            <span
-              className={cn(
-                "text-sm",
-                done ? "font-medium" : "text-muted-foreground"
-              )}
-            >
-              {t(statusMessageKey(step, order.fulfilment))}
-            </span>
-          </li>
-        );
-      })}
-    </ol>
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "h-1.5 rounded-full",
+                  index <= reached ? "bg-primary" : "bg-muted"
+                )}
+              />
+              <span
+                className={cn(
+                  "hidden text-xs sm:block",
+                  index <= reached ? "font-medium" : "text-muted-foreground"
+                )}
+              >
+                {t(statusMessageKey(step, order.fulfilment))}
+              </span>
+            </li>
+          ))}
+        </ol>
+      ) : null}
+    </div>
+  );
+};
+
+/** The products an order's lines came from, for Review and Buy again. */
+const useLineProducts = (productIds: readonly string[]) => {
+  const { supabase } = useAuth();
+  return useQuery({
+    enabled: productIds.length > 0,
+    queryFn: async () =>
+      new Map(
+        (
+          unwrap(
+            await supabase
+              .from("products")
+              .select("id, slug, status")
+              .in("id", [...productIds])
+          ) ?? []
+        ).map((row) => [row.id, row])
+      ),
+    queryKey: ["order-products", ...productIds],
+    staleTime: 5 * 60_000,
+  });
+};
+
+/**
+ * The phone dock's actions by the order's state: Pay while it waits for
+ * payment, Track while on the way, Review and Buy again once delivered,
+ * Buy again once cancelled.
+ */
+const OrderDock = ({
+  onPay,
+  order,
+}: {
+  readonly onPay: () => void;
+  readonly order: Order;
+}) => {
+  const t = useTranslations("app.orders.detail");
+  const tCheckout = useTranslations("app.checkout.errors");
+  const locale = useLocale();
+  const pay = usePayOrder();
+  const canSell = useCanSellDigitalGoods();
+  const ids = [
+    ...new Set(
+      order.order_items
+        .map((item) => item.product_id)
+        .filter((id): id is string => Boolean(id))
+    ),
+  ];
+  const products = useLineProducts(ids).data;
+  const first = ids
+    .map((id) => products?.get(id))
+    .find((product) => product?.status === "active");
+  const cash = order.payment_method === "cash_on_delivery";
+  const payable =
+    order.status === "pending" &&
+    order.guardian_status !== "pending" &&
+    !cash &&
+    canSell === true;
+  const track =
+    order.status === "shipped" && order.tracking_url?.startsWith("https://")
+      ? order.tracking_url
+      : null;
+  const ended = ["cancelled", "delivered", "refunded"].includes(order.status);
+
+  if (!(payable || track || (ended && first))) {
+    return null;
+  }
+  return (
+    <Dock>
+      {order.status === "delivered" && first ? (
+        <Button asChild variant="outline">
+          <Link href={`${productHref(first.slug)}#reviews`}>{t("review")}</Link>
+        </Button>
+      ) : null}
+      {ended && first ? (
+        <Button asChild>
+          <Link href={productHref(first.slug)}>{t("buyAgain")}</Link>
+        </Button>
+      ) : null}
+      {track ? (
+        <Button asChild>
+          <a href={track} rel="noopener noreferrer" target="_blank">
+            {t("track")}
+          </a>
+        </Button>
+      ) : null}
+      {payable ? (
+        <Button
+          disabled={pay.isPending}
+          onClick={() => pay.mutate(order, { onSuccess: onPay })}
+        >
+          {pay.isPending
+            ? t("paying")
+            : t("payNow", { amount: formatPrice(order.total, locale) })}
+        </Button>
+      ) : null}
+      {pay.isError ? (
+        <p className="basis-full text-destructive text-sm" role="alert">
+          {tCheckout(toCheckoutError(pay.error))}
+        </p>
+      ) : null}
+    </Dock>
   );
 };
 
@@ -337,17 +464,11 @@ const OrderView = ({
   const t = useTranslations("app.orders.detail");
   const conditions = useTranslations("store.condition");
   const soldBy = useTranslations("app.store.product");
-  const tCheckout = useTranslations("app.checkout.errors");
   const locale = useLocale();
-  const pay = usePayOrder();
-  const canSell = useCanSellDigitalGoods();
   const pending = order.status === "pending";
-  // A teen's order is paid once their guardian approves it.
-  const payable = pending && order.guardian_status !== "pending";
   const cash = order.payment_method === "cash_on_delivery";
   const cancellable = pending || (cash && order.status === "confirmed");
   const address = order.shipping_address as unknown as ShippingAddress;
-  const total = formatPrice(order.total, locale);
   const returns = useOrderReturns(order.id, order.status === "delivered");
   const names = new Map(
     order.order_items.map((item) => [item.id, localized(item, "name", locale)])
@@ -355,26 +476,17 @@ const OrderView = ({
 
   return (
     <div className="grid gap-6">
-      <OrderNotices justPaid={justPaid} order={order} watching={watching} />
-
-      {cancellable ? (
-        <div className="flex flex-wrap gap-3">
-          {payable && !cash && canSell === true ? (
-            <Button
-              disabled={pay.isPending}
-              onClick={() => pay.mutate(order, { onSuccess: onPay })}
-            >
-              {pay.isPending ? t("paying") : t("payNow", { amount: total })}
-            </Button>
-          ) : null}
-          <CancelOrder cash={cash} orderId={order.id} />
-          {pay.isError ? (
-            <p className="basis-full text-destructive text-sm" role="alert">
-              {tCheckout(toCheckoutError(pay.error))}
-            </p>
-          ) : null}
-        </div>
+      <OrderState order={order} />
+      {order.tracking_number ? (
+        <p className="text-sm">
+          <span className="text-muted-foreground">{t("tracking")}: </span>
+          <span className="font-mono" dir="ltr">
+            {order.tracking_number}
+          </span>
+        </p>
       ) : null}
+
+      <OrderNotices justPaid={justPaid} order={order} watching={watching} />
 
       {order.is_gift ? (
         <GiftOrderCard orderId={order.id} status={order.status} />
@@ -386,74 +498,43 @@ const OrderView = ({
         orderId={order.id}
       />
 
-      {orderProgress(order.status, order.payment_method) >= 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("progress")}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <Steps order={order} />
-            {order.tracking_number ? (
-              <p className="text-sm">
-                <span className="text-muted-foreground">{t("tracking")}: </span>
-                <span className="font-mono" dir="ltr">
-                  {order.tracking_number}
-                </span>
-              </p>
-            ) : null}
-            {order.tracking_url?.startsWith("https://") ? (
-              <a
-                className="font-medium text-pink-text text-sm hover:underline"
-                href={order.tracking_url}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {t("trackParcel")}
-              </a>
-            ) : null}
-          </CardContent>
-        </Card>
-      ) : null}
-
       <div className="grid items-start gap-6 lg:grid-cols-[1fr_20rem]">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("items")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="divide-y">
-              {order.order_items.map((item) => (
+        <section aria-labelledby="order-items" className="grid gap-2">
+          <h2 className="font-semibold" id="order-items">
+            {t("items")}
+          </h2>
+          <ul className="divide-y rounded-lg border bg-card px-4">
+            {order.order_items.map((item) => {
+              const details = [
+                variantName(
+                  { ...item.variant, attributes: item.attributes },
+                  locale
+                ),
+                item.condition && item.condition !== "new"
+                  ? conditions(item.condition)
+                  : "",
+                item.seller_name && item.seller_id !== HOUSE_SELLER_ID
+                  ? soldBy("soldBy", { seller: item.seller_name })
+                  : "",
+                item.quantity > 1
+                  ? `${formatNumber(item.quantity, locale)} × ${formatPrice(item.unit_price, locale)}`
+                  : "",
+              ].filter(Boolean);
+              return (
                 <li
-                  className="flex justify-between gap-4 py-3 text-sm"
+                  className="flex items-start justify-between gap-4 py-3 text-sm"
                   key={item.id}
                 >
-                  <span className="grid min-w-0 gap-0.5">
-                    <span>{localized(item, "name", locale)}</span>
-                    {variantName(
-                      { ...item.variant, attributes: item.attributes },
-                      locale
-                    ) ? (
-                      <span className="text-muted-foreground text-xs">
-                        {variantName(
-                          { ...item.variant, attributes: item.attributes },
-                          locale
-                        )}
-                      </span>
-                    ) : null}
-                    {item.condition && item.condition !== "new" ? (
-                      <span className="text-muted-foreground text-xs">
-                        {conditions(item.condition)}
-                      </span>
-                    ) : null}
-                    {item.seller_name && item.seller_id !== HOUSE_SELLER_ID ? (
-                      <span className="text-muted-foreground text-xs">
-                        {soldBy("soldBy", { seller: item.seller_name })}
-                      </span>
-                    ) : null}
-                    <span className="text-muted-foreground text-xs tabular-nums">
-                      {formatPrice(item.unit_price, locale)} ×{" "}
-                      {formatNumber(item.quantity, locale)}
+                  <span className="min-w-0">
+                    <span className="font-medium">
+                      {localized(item, "name", locale)}
                     </span>
+                    {details.length > 0 ? (
+                      <span className="text-muted-foreground text-xs">
+                        {" · "}
+                        {details.join(" · ")}
+                      </span>
+                    ) : null}
                   </span>
                   <LineAside
                     item={item}
@@ -461,10 +542,10 @@ const OrderView = ({
                     returns={returns.data}
                   />
                 </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+              );
+            })}
+          </ul>
+        </section>
         <div className="grid gap-6">
           <OrderReturns
             names={names}
@@ -499,6 +580,12 @@ const OrderView = ({
           <AddressCard address={address} order={order} />
         </div>
       </div>
+      {cancellable ? (
+        <div className="flex flex-wrap gap-3 border-t pt-6">
+          <CancelOrder cash={cash} orderId={order.id} />
+        </div>
+      ) : null}
+      <OrderDock onPay={onPay} order={order} />
     </div>
   );
 };
@@ -563,26 +650,49 @@ export const OrderDetail = ({ orderId }: OrderDetailProps) => {
         ) : null}
         {data ? (
           <>
-            <div className="flex flex-wrap items-center gap-3">
-              <h2 className="font-semibold text-xl tracking-tight">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <h2 className="font-mono font-semibold text-xl tracking-tight">
                 {t("common.orderNumber", { number: String(data.number) })}
               </h2>
-              <OrderStatusBadge status={data.status} />
               <span className="text-muted-foreground text-sm">
                 {t("orders.placed", {
                   date: formatDate(data.created_at, locale),
                 })}
               </span>
-              <Link
-                className="inline-flex items-center gap-1 text-pink-text text-sm hover:underline sm:ms-auto"
-                href={{
-                  pathname: "/help/new",
-                  query: { order: data.id, topic: "order" },
-                }}
+              <nav
+                aria-label={t("orders.detail.links")}
+                className="flex flex-wrap items-center gap-x-4 sm:ms-auto"
               >
-                <LifeBuoyIcon className="size-4" />
-                {t("orders.detail.help")}
-              </Link>
+                {data.status === "delivered" ? (
+                  <a
+                    className="inline-flex min-h-11 items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
+                    href="#order-items"
+                  >
+                    <Undo2Icon aria-hidden="true" className="size-4" />
+                    {t("orders.detail.return")}
+                  </a>
+                ) : null}
+                <Link
+                  className="inline-flex min-h-11 items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
+                  href={{
+                    pathname: "/help/new",
+                    query: { order: data.id, topic: "order" },
+                  }}
+                >
+                  <LifeBuoyIcon aria-hidden="true" className="size-4" />
+                  {t("orders.detail.helpShort")}
+                </Link>
+                {data.paid_at ? (
+                  <button
+                    className="inline-flex min-h-11 items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
+                    onClick={() => window.print()}
+                    type="button"
+                  >
+                    <ReceiptIcon aria-hidden="true" className="size-4" />
+                    {t("orders.detail.receipt")}
+                  </button>
+                ) : null}
+              </nav>
             </div>
             <OrderView
               justPaid={justPaid}

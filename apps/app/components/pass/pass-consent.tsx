@@ -142,7 +142,7 @@ const Consent = ({
         </ul>
         <p className="text-muted-foreground text-xs">
           {t("never")}{" "}
-          <Link className="underline" href="/pass/settings#sites">
+          <Link className="underline" href="/pass/settings/connections">
             {t("manage")}
           </Link>
         </p>

@@ -1,252 +1,431 @@
 "use client";
 
-import { formatPrice, localized, planName } from "@repo/commerce";
-import { Button } from "@repo/design-system/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@repo/design-system/components/ui/card";
+import { formatPrice, localized } from "@repo/commerce";
+import { Bulb } from "@repo/design-system/components/brand/bulb";
 import {
   formatDate,
   formatDateTime,
   formatNumber,
+  formatTime,
 } from "@repo/internationalization/format";
 import { Link } from "@repo/internationalization/navigation";
-import { CalendarDaysIcon, CrownIcon, PackageIcon } from "lucide-react";
+import {
+  CalendarDaysIcon,
+  ChevronRightIcon,
+  HouseIcon,
+  InboxIcon,
+  type LucideIcon,
+  MoveRight,
+  TruckIcon,
+  UsersIcon,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { AboutHelpLink } from "@/components/about-help-link";
 import { PageHeader } from "@/components/page-header";
-import { ErrorState, SectionSpinner } from "@/components/states";
+import { AskToPlay } from "@/components/pass/family";
+import { AvailabilityLabel } from "@/components/pass/plus-words";
+import { isAtHome } from "@/components/pass/rentals";
 import { OrderStatusBadge } from "@/components/store/order-status-badge";
+import { productHref } from "@/components/store/product-card";
+import { ProductImage } from "@/components/store/product-image";
+import { useMyBulbs } from "@/lib/bulbs-queries";
+import { eventPath } from "@/lib/club";
 import { upcomingRsvps, useMyRsvps } from "@/lib/community-queries";
+import { useFamilyRequests } from "@/lib/family";
 import { orderPath } from "@/lib/order-checkout";
-import { isActiveOrder } from "@/lib/orders";
-import { isLivePlan, useRentalAllowance, useRentals } from "@/lib/plus-queries";
-import { usePlans, usePlusSubscription, useProfile } from "@/lib/queries";
+import { type TodayItem, todayItems } from "@/lib/pass-today";
+import { usePlusAvailability } from "@/lib/plus-availability";
+import { useRentals } from "@/lib/plus-queries";
+import { useProfile } from "@/lib/queries";
+import { useQueue } from "@/lib/queue-queries";
+import { sectionKey, settingsPath, settingsSections } from "@/lib/settings";
 import { useOrders } from "@/lib/store-queries";
 
 const WHITESPACE = /\s+/;
+const SHELF_SIZE = 4;
 
-const ViewAll = ({ href }: { readonly href: string }) => {
-  const t = useTranslations("app.common");
-  return (
-    <CardAction>
-      <Button asChild size="sm" variant="ghost">
-        <Link href={href}>{t("viewAll")}</Link>
-      </Button>
-    </CardAction>
-  );
-};
-
-const Panel = ({
-  action,
+/** A shelf of the Library: its title, "See all", and a few things. */
+const Shelf = ({
   children,
-  icon,
+  empty,
+  href,
   title,
 }: {
-  readonly action?: ReactNode;
   readonly children: ReactNode;
-  readonly icon: ReactNode;
+  /** Shown instead of the items when there are none. */
+  readonly empty: string | null;
+  readonly href: string;
   readonly title: string;
+}) => {
+  const t = useTranslations("app.common");
+  return (
+    <section className="grid gap-3">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="font-semibold text-lg">{title}</h2>
+        <Link
+          className="inline-flex min-h-11 items-center gap-1 font-medium text-pink-text text-sm hover:underline"
+          href={href}
+        >
+          {t("viewAll")}
+          <MoveRight aria-hidden="true" className="size-4 rtl:rotate-180" />
+        </Link>
+      </div>
+      {empty ? (
+        <p className="text-muted-foreground text-sm">{empty}</p>
+      ) : (
+        children
+      )}
+    </section>
+  );
+};
+
+/** A row that opens a page: icon, label, hint and a chevron. */
+const RowLink = ({
+  hint,
+  href,
+  icon: Icon,
+  label,
+}: {
+  readonly hint?: ReactNode;
+  readonly href: string;
+  readonly icon?: LucideIcon;
+  readonly label: string;
 }) => (
-  <Card>
-    <CardHeader>
-      <CardTitle className="flex items-center gap-2">
-        {icon}
-        {title}
-      </CardTitle>
-      {action}
-    </CardHeader>
-    <CardContent>{children}</CardContent>
-  </Card>
+  <Link
+    className="flex min-h-14 items-center gap-3 p-4 transition-colors hover:bg-muted/50"
+    href={href}
+  >
+    {Icon ? (
+      <Icon aria-hidden="true" className="size-5 shrink-0 text-pink-text" />
+    ) : null}
+    <span className="grid min-w-0 flex-1 gap-0.5">
+      <span className="font-medium text-sm">{label}</span>
+      {hint ? (
+        <span className="text-muted-foreground text-xs">{hint}</span>
+      ) : null}
+    </span>
+    <ChevronRightIcon
+      aria-hidden="true"
+      className="size-4 shrink-0 text-muted-foreground rtl:rotate-180"
+    />
+  </Link>
 );
 
-const ActiveOrders = () => {
-  const t = useTranslations("app");
+const TODAY_ICONS: Record<TodayItem["kind"], LucideIcon> = {
+  delivery: TruckIcon,
+  dueBack: HouseIcon,
+  event: CalendarDaysIcon,
+  family: InboxIcon,
+};
+
+/** Today: only shown when something is due. */
+const Today = () => {
+  const t = useTranslations("app.pass.today");
+  const tCommon = useTranslations("app.common");
   const locale = useLocale();
-  const orders = useOrders();
-  const active = orders.data?.filter((order) => isActiveOrder(order.status));
+  const orders = useOrders().data ?? [];
+  const rentals = useRentals().data ?? [];
+  const rsvps = useMyRsvps().data ?? [];
+  const requests = useFamilyRequests().data ?? [];
+  const items = todayItems({
+    events: rsvps.flatMap(({ event }) =>
+      event
+        ? [
+            {
+              id: event.id,
+              slug: event.slug,
+              starts_at: event.starts_at,
+              title: localized(event, "title", locale),
+            },
+          ]
+        : []
+    ),
+    familyRequests: requests.length,
+    orders,
+    rentals: rentals.map((rental) => ({
+      ...rental,
+      name: localized(rental, "name", locale),
+    })),
+  });
+  if (items.length === 0) {
+    return null;
+  }
+
+  const row = (item: TodayItem): { href: string; label: string } => {
+    switch (item.kind) {
+      case "delivery":
+        return {
+          href: orderPath(item.id),
+          label: t("delivery", {
+            order: tCommon("orderNumber", { number: String(item.number) }),
+          }),
+        };
+      case "dueBack":
+        return {
+          href: "/pass/at-home",
+          label: item.late
+            ? t("late", { name: item.name })
+            : t("dueBack", {
+                date: formatDate(item.dueAt, locale),
+                name: item.name,
+              }),
+        };
+      case "event":
+        return {
+          href: eventPath(item.slug),
+          label: t("event", {
+            time: formatTime(item.startsAt, locale),
+            title: item.title,
+          }),
+        };
+      default:
+        return {
+          href: "/pass/family",
+          label: t("family", {
+            count: item.count,
+            n: formatNumber(item.count, locale),
+          }),
+        };
+    }
+  };
 
   return (
-    <Panel
-      action={<ViewAll href="/pass/orders" />}
-      icon={<PackageIcon className="size-5 text-pink-text" />}
-      title={t("home.orders.title")}
+    <section aria-labelledby="pass-today" className="grid gap-3">
+      <h2 className="font-semibold text-lg" id="pass-today">
+        {t("title")}
+      </h2>
+      <ul className="divide-y rounded-lg border border-idea-pink/40 bg-card">
+        {items.map((item) => {
+          const { href, label } = row(item);
+          return (
+            <li key={`${item.kind}-${item.id}`}>
+              <RowLink
+                href={href}
+                icon={TODAY_ICONS[item.kind]}
+                label={label}
+              />
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+};
+
+const AtHomeShelf = () => {
+  const t = useTranslations("app.pass.shelves");
+  const tAtHome = useTranslations("app.pass.atHome");
+  const locale = useLocale();
+  const rentals = useRentals();
+  const home = (rentals.data ?? []).filter(isAtHome);
+  return (
+    <Shelf
+      empty={rentals.data && home.length === 0 ? t("atHomeEmpty") : null}
+      href="/pass/at-home"
+      title={t("atHome")}
     >
-      {orders.isPending ? <SectionSpinner className="py-6" /> : null}
-      {orders.isError ? <ErrorState onRetry={() => orders.refetch()} /> : null}
-      {active?.length === 0 ? (
-        <div className="grid justify-items-start gap-3">
-          <p className="text-muted-foreground text-sm">
-            {t("home.orders.empty")}
-          </p>
-          <Button asChild size="sm" variant="outline">
-            <Link href="/store">{t("home.orders.browse")}</Link>
-          </Button>
-        </div>
-      ) : null}
-      {active?.length ? (
-        <ul className="divide-y">
-          {active.slice(0, 4).map((order) => (
-            <li key={order.id}>
+      <ul className="divide-y rounded-lg border bg-card">
+        {home.slice(0, SHELF_SIZE).map((rental) => (
+          <li
+            className="flex justify-between gap-3 p-3 text-sm"
+            key={rental.id}
+          >
+            <span className="truncate">
+              {localized(rental, "name", locale)}
+            </span>
+            <span className="shrink-0 text-muted-foreground text-xs">
+              {rental.due_at
+                ? tAtHome("dueBack", {
+                    date: formatDate(rental.due_at, locale),
+                  })
+                : tAtHome("onItsWay")}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Shelf>
+  );
+};
+
+const QueueShelf = () => {
+  const t = useTranslations("app.pass.shelves");
+  const locale = useLocale();
+  const queue = useQueue();
+  const next = queue.items.slice(0, SHELF_SIZE);
+  const availability = usePlusAvailability(next.map((item) => item.product_id));
+  return (
+    <Shelf
+      empty={queue.data && next.length === 0 ? t("queueEmpty") : null}
+      href="/pass/queue"
+      title={t("queue")}
+    >
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {next.map((item) => {
+          const name = item.product
+            ? localized(item.product, "name", locale)
+            : "";
+          return (
+            <li key={item.product_id}>
               <Link
-                className="flex items-center justify-between gap-3 py-2.5 hover:opacity-80"
-                href={orderPath(order.id)}
+                className="grid gap-1.5"
+                href={productHref(item.product?.slug ?? "")}
               >
-                <span className="grid gap-0.5">
-                  <span className="font-medium text-sm">
-                    {t("common.orderNumber", { number: String(order.number) })}
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    {t("home.orders.placed", {
-                      date: formatDate(order.created_at, locale),
-                    })}
-                    {" · "}
-                    {formatPrice(order.total, locale)}
-                  </span>
-                </span>
-                <OrderStatusBadge status={order.status} />
+                <ProductImage
+                  alt={name}
+                  path={item.product?.images[0]}
+                  sizes="(min-width: 640px) 12rem, 45vw"
+                />
+                <span className="line-clamp-2 font-medium text-sm">{name}</span>
+                <AvailabilityLabel
+                  availability={availability.get(item.product_id)}
+                />
               </Link>
             </li>
-          ))}
-        </ul>
-      ) : null}
-    </Panel>
+          );
+        })}
+      </ul>
+    </Shelf>
   );
 };
 
-const PlusPanel = () => {
-  const t = useTranslations("app.home.plus");
-  const tStatus = useTranslations("store.rentalStatus");
+const BoughtShelf = () => {
+  const t = useTranslations("app.pass.shelves");
+  const tCommon = useTranslations("app.common");
   const locale = useLocale();
-  const subscription = usePlusSubscription();
-  const plans = usePlans("plus");
-  const allowance = useRentalAllowance();
-  const rentals = useRentals();
-  const member = isLivePlan(subscription.data?.status);
-  const plan = plans.data?.find(
-    (item) => item.id === subscription.data?.plan_id
-  );
-  const open = rentals.data?.filter((rental) =>
-    ["requested", "active", "overdue"].includes(rental.status)
-  );
-
+  const orders = useOrders();
+  const latest = (orders.data ?? []).slice(0, SHELF_SIZE);
   return (
-    <Panel
-      action={<ViewAll href="/plus#yours" />}
-      icon={<CrownIcon className="size-5 text-pink-text" />}
-      title={t("title")}
+    <Shelf
+      empty={orders.data && latest.length === 0 ? t("boughtEmpty") : null}
+      href="/pass/orders"
+      title={t("bought")}
     >
-      {subscription.isPending ? <SectionSpinner className="py-6" /> : null}
-      {subscription.isSuccess && !member ? (
-        <div className="grid justify-items-start gap-3">
-          <p className="text-muted-foreground text-sm">{t("none")}</p>
-          <Button asChild size="sm">
-            <Link href="/plus">{t("join")}</Link>
-          </Button>
-        </div>
-      ) : null}
-      {member ? (
-        <div className="grid gap-4">
-          <div className="grid gap-1 text-sm">
-            {plan ? (
-              <span className="font-medium">
-                {t("member", { plan: planName(plan, locale) })}
+      <ul className="divide-y rounded-lg border bg-card">
+        {latest.map((order) => (
+          <li key={order.id}>
+            <Link
+              className="flex min-h-11 items-center justify-between gap-3 p-3 hover:bg-muted/50"
+              href={orderPath(order.id)}
+            >
+              <span className="grid min-w-0 gap-0.5">
+                <span className="truncate font-medium text-sm">
+                  {order.order_items
+                    .map((item) => localized(item, "name", locale))
+                    .join(" · ") ||
+                    tCommon("orderNumber", { number: String(order.number) })}
+                </span>
+                <span className="font-mono text-muted-foreground text-xs">
+                  {formatPrice(order.total, locale)}
+                </span>
               </span>
-            ) : null}
-            {subscription.data?.current_period_end ? (
-              <span className="text-muted-foreground text-xs">
-                {t("renews", {
-                  date: formatDate(
-                    subscription.data.current_period_end,
-                    locale
-                  ),
-                })}
-              </span>
-            ) : null}
-            {allowance.data ? (
-              <span className="text-muted-foreground text-xs">
-                {t("slots", {
-                  free: formatNumber(allowance.data.free, locale),
-                  slots: formatNumber(allowance.data.slots, locale),
-                })}
-              </span>
-            ) : null}
-          </div>
-          <div className="grid gap-2">
-            <span className="font-medium text-xs">{t("rentals")}</span>
-            {open?.length ? (
-              <ul className="grid gap-1.5 text-sm">
-                {open.slice(0, 4).map((rental) => (
-                  <li className="flex justify-between gap-3" key={rental.id}>
-                    <span className="truncate">
-                      {localized(rental, "name", locale)}
-                    </span>
-                    <span className="shrink-0 text-muted-foreground text-xs">
-                      {rental.due_at
-                        ? t("due", { date: formatDate(rental.due_at, locale) })
-                        : tStatus(rental.status)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-muted-foreground text-sm">{t("noRentals")}</p>
-            )}
-          </div>
-        </div>
-      ) : null}
-    </Panel>
+              <OrderStatusBadge status={order.status} />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </Shelf>
   );
 };
 
-const NextEvents = () => {
-  const t = useTranslations("app.home.events");
+const TicketsShelf = () => {
+  const t = useTranslations("app.pass.shelves");
   const locale = useLocale();
   const rsvps = useMyRsvps();
-  const next = rsvps.data ? upcomingRsvps(rsvps.data).slice(0, 3) : undefined;
-
+  const next = rsvps.data ? upcomingRsvps(rsvps.data).slice(0, SHELF_SIZE) : [];
   return (
-    <Panel
-      action={<ViewAll href="/club#yours" />}
-      icon={<CalendarDaysIcon className="size-5 text-pink-text" />}
-      title={t("title")}
+    <Shelf
+      empty={rsvps.data && next.length === 0 ? t("ticketsEmpty") : null}
+      href="/pass/tickets"
+      title={t("tickets")}
     >
-      {rsvps.isPending ? <SectionSpinner className="py-6" /> : null}
-      {next?.length === 0 ? (
-        <div className="grid justify-items-start gap-3">
-          <p className="text-muted-foreground text-sm">{t("empty")}</p>
-          <Button asChild size="sm" variant="outline">
-            <Link href="/club?show=events#join">{t("browse")}</Link>
-          </Button>
-        </div>
-      ) : null}
-      {next?.length ? (
-        <ul className="grid gap-3">
-          {next.map(({ event }) => (
-            <li className="grid gap-0.5 text-sm" key={event.id}>
+      <ul className="divide-y rounded-lg border bg-card">
+        {next.map(({ event }) => (
+          <li key={event.id}>
+            <Link
+              className="grid min-h-11 gap-0.5 p-3 text-sm hover:bg-muted/50"
+              href={eventPath(event.slug)}
+            >
               <span className="font-medium">
                 {localized(event, "title", locale)}
               </span>
               <span className="text-muted-foreground text-xs">
                 {formatDateTime(event.starts_at, locale)} · {event.location}
               </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </Shelf>
+  );
+};
+
+/** Bulbs, Family, Settings: rows that open their pages. */
+const Rows = () => {
+  const t = useTranslations("app");
+  const locale = useLocale();
+  const bulbs = useMyBulbs().data;
+  return (
+    <>
+      <ul className="divide-y rounded-lg border bg-card">
+        <li>
+          <Link
+            className="flex min-h-14 items-center gap-3 p-4 transition-colors hover:bg-muted/50"
+            href="/pass/bulbs"
+          >
+            <Bulb
+              aria-hidden="true"
+              className="size-5 shrink-0 text-idea-pink dark:text-bulb-yellow"
+            />
+            <span className="grid min-w-0 flex-1 gap-0.5">
+              <span className="font-medium text-sm">{t("nav.bulbs")}</span>
+              {bulbs ? (
+                <span className="font-mono text-muted-foreground text-xs">
+                  {t("pass.bulbs", {
+                    bulbs: formatNumber(bulbs.available, locale),
+                  })}
+                </span>
+              ) : null}
+            </span>
+            <ChevronRightIcon
+              aria-hidden="true"
+              className="size-4 shrink-0 text-muted-foreground rtl:rotate-180"
+            />
+          </Link>
+        </li>
+        <li>
+          <RowLink
+            hint={t("pass.familyHint")}
+            href="/pass/family"
+            icon={UsersIcon}
+            label={t("pass.family.title")}
+          />
+        </li>
+      </ul>
+      <section aria-labelledby="pass-settings" className="grid gap-3">
+        <h2 className="font-semibold text-lg" id="pass-settings">
+          {t("settings.title")}
+        </h2>
+        <ul className="divide-y rounded-lg border bg-card">
+          {settingsSections.map((section) => (
+            <li key={section}>
+              <RowLink
+                href={settingsPath(section)}
+                label={t(`settings.sections.${sectionKey(section)}.title`)}
+              />
             </li>
           ))}
         </ul>
-      ) : null}
-    </Panel>
+      </section>
+    </>
   );
 };
 
 /**
- * Your Pass: a greeting, the Pass card (`card`, rendered on the
- * server, with the Bulbs balance), then what's on the way: active orders,
- * Plus rentals and the next events. The Store has its own tab.
+ * `/pass`: the live card (`card`, rendered on the server), then Today
+ * (only when something is due), the Library's shelves (At home, Up next
+ * in your queue, Bought, Tickets), Bulbs, Family, Settings and About &
+ * help. Each shelf opens its page.
  */
 export const Home = ({ card }: { readonly card?: ReactNode }) => {
   const t = useTranslations("app.home");
@@ -257,21 +436,18 @@ export const Home = ({ card }: { readonly card?: ReactNode }) => {
   return (
     <>
       <PageHeader title={pass("title")} />
-      <div className="flex flex-1 flex-col gap-8">
-        <div className="grid gap-1">
-          <h2 className="font-semibold text-2xl tracking-tight">
-            {firstName
-              ? t("greeting", { name: firstName })
-              : t("greetingNoName")}
-          </h2>
-          <p className="text-muted-foreground">{t("description")}</p>
-        </div>
+      <div className="flex max-w-3xl flex-1 flex-col gap-8">
+        <h2 className="font-semibold text-2xl tracking-tight">
+          {firstName ? t("greeting", { name: firstName }) : t("greetingNoName")}
+        </h2>
         {card}
-        <div className="grid gap-4 lg:grid-cols-3">
-          <ActiveOrders />
-          <PlusPanel />
-          <NextEvents />
-        </div>
+        <Today />
+        <AskToPlay />
+        <AtHomeShelf />
+        <QueueShelf />
+        <BoughtShelf />
+        <TicketsShelf />
+        <Rows />
         <AboutHelpLink />
       </div>
     </>

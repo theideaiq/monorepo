@@ -100,7 +100,7 @@ test("a new email gets The IDEA Pass with a password and one code", async ({
   await expectSignedInHome(page);
 
   // Settings changes it (a recent sign-in needs no code).
-  await page.goto(`${urls.web}/pass/settings`);
+  await page.goto(`${urls.web}/pass/settings/sign-in`);
   await page.getByLabel("New password").fill(`${SIGN_UP_PASSWORD}y`);
   await page.getByRole("button", { name: "Save password" }).click();
   await expect(
@@ -381,7 +381,7 @@ test.describe("a signed-in customer", () => {
 
   test("saves an address, then checks out in one tap", async ({ page }) => {
     const noErrors = watchConsole(page);
-    await page.goto(`${urls.web}/pass/settings`);
+    await page.goto(`${urls.web}/pass/settings/addresses`);
     const book = page.locator("#addresses");
     await expect(
       book.getByText("No saved addresses yet.", { exact: false })
@@ -663,15 +663,15 @@ test.describe("a signed-in customer", () => {
     browser,
   }) => {
     const { partnerId } = await resetDuo();
-    // The holder invites from Your Plus.
+    // The holder invites from Pass → Family.
     const holder = await browser.newContext();
     await signIn(holder, duoHolder.email);
     const page = await holder.newPage();
     const noErrors = watchConsole(page);
-    await page.goto(`${urls.web}/plus#yours`);
+    await page.goto(`${urls.web}/pass/family`);
     await expect(page.getByText("Plus Duo", { exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Invite someone" }).click();
-    const link = page.locator("code", { hasText: "/plus/duo/" });
+    const link = page.locator("code", { hasText: "/family/" });
     await expect(link).toBeVisible();
     const url = (await link.textContent()) ?? "";
     await expectAccessible(page);
@@ -689,7 +689,7 @@ test.describe("a signed-in customer", () => {
     await expect(
       invite.getByText("You're in. You now share Dana's Plus.")
     ).toBeVisible();
-    await invite.goto(`${urls.web}/plus#yours`);
+    await invite.goto(`${urls.web}/pass/family`);
     await expect(invite.getByText(/You share Dana's Plus/)).toBeVisible();
     await partner.close();
 
@@ -733,11 +733,13 @@ test.describe("a signed-in customer", () => {
   });
 
   test("verifies a phone in Settings", async ({ page }) => {
-    await page.goto(`${urls.web}/pass/settings`);
-    await expect(page.getByText("Phone and WhatsApp")).toBeVisible();
-    // What we send: WhatsApp updates (to a verified number) and news.
+    // What we send (Settings → Notifications): WhatsApp updates, to a
+    // verified number, and news.
+    await page.goto(`${urls.web}/pass/settings/notifications`);
     await expect(page.getByLabel("Order updates on WhatsApp")).toBeVisible();
     await expect(page.getByLabel("Send me news and offers")).toBeEnabled();
+    await page.goto(`${urls.web}/pass/settings/phone`);
+    await expect(page.getByText("Phone and WhatsApp")).toBeVisible();
     await page.getByLabel("Add a number").fill("0770 123 4567");
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(
@@ -809,7 +811,7 @@ test.describe("a signed-in customer", () => {
   });
 });
 
-test("a member follows an opportunity and finds it in Club → Yours", async ({
+test("a member follows an opportunity and finds it in Pass → Applications", async ({
   context,
   page,
 }) => {
@@ -853,8 +855,8 @@ test("a member follows an opportunity and finds it in Club → Yours", async ({
   ).toBeVisible();
   await expectAccessible(page);
 
-  // Club → Yours → Following lists it.
-  await page.goto(`${urls.web}/club#yours`);
+  // Pass → Applications → Following lists it.
+  await page.goto(`${urls.web}/pass/applications?tab=following`);
   await page.getByRole("tab", { name: "Following" }).click();
   // Join's card links to it too, under a longer name.
   await expect(

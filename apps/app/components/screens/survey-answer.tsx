@@ -229,7 +229,7 @@ const BackToClub = () => {
   return (
     <Link
       className="inline-flex items-center gap-1 self-start text-muted-foreground text-sm hover:text-foreground"
-      href="/club#yours"
+      href="/club/surveys"
     >
       <ArrowLeftIcon aria-hidden="true" className="size-4 rtl:rotate-180" />
       {t("back")}

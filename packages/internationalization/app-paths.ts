@@ -20,25 +20,32 @@ const LEGACY_DETAIL_PAGES: Record<string, [string, string]> = {
 };
 
 /**
- * Pages that moved, as [old path, current path, anchor on the current
- * page]. An old path also covers the pages under it (`/pass/support/7` →
- * `/help/7`); the anchor is only added for the page itself.
+ * Pages that moved, as [old path, current path, extra]. An old path also
+ * covers the pages under it (`/pass/support/7` → `/help/7`); the extra (a
+ * query such as `topic=guides`, or an anchor) is only added for the page
+ * itself.
  */
 const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/orders", "/pass/orders"],
   ["/settings", "/pass/settings"],
   ["/support", "/help"],
   ["/pass/support", "/help"],
-  ["/pass/plus", "/plus", "#yours"],
+  ["/pass/plus", "/plus/plan"],
   ["/pass/wishlist", "/pass/saved"],
-  ["/pass/events", "/club", "#yours"],
-  ["/pass/submissions", "/club", "#yours"],
+  ["/pass/events", "/pass/tickets"],
+  ["/pass/submissions", "/pass/applications", "tab=submissions"],
   // Get offers from shops left the Pass (owner, 30 October 2026).
   ["/pass/selling", "/pass"],
-  // Program notifications link to Club → Yours (`?tab=applications`).
-  ["/club/yours", "/club", "#yours"],
-  ["/post/events", "/club"],
-  ["/post", "/club"],
+  // The UX overhaul (owner, 30 October 2026).
+  ["/kits", "/store/kits"],
+  // One-off rent is gone: its page opens the product.
+  ["/rent", "/store"],
+  ["/plus/duo", "/family"],
+  ["/post/events", "/club/events"],
+  ["/post/learn", "/club/read", "topic=guides"],
+  ["/post/news", "/club/read", "topic=news"],
+  ["/post/stories", "/club/read", "topic=stories"],
+  ["/post", "/club/read"],
   ["/suite", "/business"],
   ["/about/careers", "/careers"],
   ["/about/faq", "/help"],
@@ -46,50 +53,206 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/i", "/r"],
 ];
 
-/**
- * Sections of a page that moved to another page, by path and anchor: the
- * student and verification cards left Pass → Settings for /verify.
- */
-const MOVED_SECTIONS: Record<string, string> = {
-  "/pass/settings#student": "/verify?kind=student",
-  "/pass/settings#verification": "/verify",
+/** The Club's pages at `/club/<part>`; another `/club/<slug>` was a post or an event. */
+const CLUB_PARTS = new Set(["events", "opportunities", "read", "surveys"]);
+
+/** Club → Join's `?show=` filters, each a page now. */
+const CLUB_SHOW: Record<string, string> = {
+  events: "/club/events",
+  opportunities: "/club/opportunities",
+  surveys: "/club/surveys",
 };
 
-/** Sections of /post that were pages, now topics of the Club's Read feed. */
-const POST_SECTIONS: Record<string, string> = {
-  "/post/learn": "/club?topic=guides",
-  "/post/news": "/club?topic=news",
-  "/post/stories": "/club?topic=stories",
-};
-
-/** News, stories and guides were `/club?show=…`; they are Read's topics now. */
+/** News, stories and guides were `/club?show=…`; they are Read's topics. */
 const CLUB_TOPICS = new Set(["news", "stories", "guides"]);
 
-const moved = (pathname: string): [string, string] | null => {
-  const section = POST_SECTIONS[pathname];
-  if (section) {
-    return [section, "#read"];
+/** Club → Yours' tabs besides tickets and applications, now on /pass/applications. */
+const YOURS_TABS = new Set(["surveys", "submissions", "following"]);
+
+/** Pass → Settings' sections (`/pass/settings#…`), each a page now. */
+const SETTINGS_SECTIONS: Record<string, string> = {
+  addresses: "/pass/settings/addresses",
+  appearance: "/pass/settings/appearance",
+  birthday: "/pass/settings/profile",
+  connections: "/pass/settings/connections",
+  delete: "/pass/settings/privacy",
+  email: "/pass/settings/sign-in",
+  guardian: "/pass/family",
+  messages: "/pass/settings/notifications",
+  more: "/pass/settings",
+  password: "/pass/settings/sign-in",
+  phone: "/pass/settings/phone",
+  profile: "/pass/settings/profile",
+  sites: "/pass/settings/connections",
+  student: "/verify?kind=student",
+  telegram: "/pass/settings/connections",
+  verification: "/verify",
+  whatsapp: "/pass/settings/notifications",
+};
+
+/** Pass → Saved's tabs (`/pass/saved?tab=…`), each a page now. */
+const SAVED_TABS: Record<string, string> = {
+  lists: "/pass/lists",
+  queue: "/pass/queue",
+  saved: "/pass/saved",
+};
+
+/**
+ * What a stored link belongs to, where its path can't tell: the
+ * notification's event and kind (`plus_swap_booked`, `rental`), or the
+ * table a Club item came from.
+ */
+export interface StoredLinkContext {
+  readonly event?: string | null;
+  readonly item?: "event" | "post" | null;
+  readonly kind?: string | null;
+}
+
+/**
+ * Your Plus (`/plus#yours`) held the plan, the rentals at home and the Duo:
+ * rentals and swaps open At home, the Duo opens Family, the rest your plan.
+ */
+const yoursPage = ({ event, kind }: StoredLinkContext) => {
+  if (
+    kind === "rental" ||
+    event?.startsWith("rental_") ||
+    event?.startsWith("plus_swap")
+  ) {
+    return "/pass/at-home";
   }
-  for (const [from, to, anchor = ""] of MOVED) {
+  if (event?.startsWith("plus_duo") || event?.startsWith("family_")) {
+    return "/pass/family";
+  }
+  return "/plus/plan";
+};
+
+/** Club → Yours (`/club#yours`, `/club/yours?tab=…`): tickets, or the rest. */
+const clubYoursPage = (tab: string | null, { event }: StoredLinkContext) => {
+  if (tab === "applications" || event?.startsWith("program_")) {
+    return "/pass/applications";
+  }
+  if (tab && YOURS_TABS.has(tab)) {
+    return `/pass/applications?tab=${tab}`;
+  }
+  if (event?.startsWith("survey_")) {
+    return "/pass/applications?tab=surveys";
+  }
+  return "/pass/tickets";
+};
+
+/** A query string without some parameters, with its `?` (or empty). */
+const queryWithout = (params: URLSearchParams, ...names: string[]) => {
+  const rest = new URLSearchParams(params);
+  for (const name of names) {
+    rest.delete(name);
+  }
+  const query = rest.toString();
+  return query ? `?${query}` : "";
+};
+
+/** A page (which may hold a query) and a query string (`?…` or empty). */
+const withQuery = (page: string, query: string) =>
+  page.includes("?") && query ? `${page}&${query.slice(1)}` : `${page}${query}`;
+
+/** `/club?…` in an older shape, at its current address; null when current. */
+const clubHomePage = (url: URL) => {
+  const { hash, searchParams } = url;
+  const show = searchParams.get("show");
+  const topic = searchParams.get("topic");
+  const rest = queryWithout(searchParams, "show", "topic", "tab");
+  if (show && CLUB_TOPICS.has(show)) {
+    return withQuery(`/club/read?topic=${show}`, rest);
+  }
+  const shown = show ? CLUB_SHOW[show] : undefined;
+  if (shown) {
+    return withQuery(shown, rest);
+  }
+  if (topic) {
+    return withQuery(`/club/read?topic=${topic}`, rest);
+  }
+  if (hash === "#read") {
+    return withQuery("/club/read", rest);
+  }
+  return hash === "#join" ? `/club${url.search}` : null;
+};
+
+/** `/club…` in an older shape, at its current address; null when current. */
+const clubPage = (url: URL, context: StoredLinkContext) => {
+  const { hash, pathname, searchParams } = url;
+  if (
+    pathname === "/club/yours" ||
+    (pathname === "/club" && hash === "#yours")
+  ) {
+    return withQuery(
+      clubYoursPage(searchParams.get("tab"), context),
+      queryWithout(searchParams, "tab")
+    );
+  }
+  if (pathname === "/club") {
+    return clubHomePage(url);
+  }
+  const [, , part, ...more] = pathname.split("/");
+  if (!part || CLUB_PARTS.has(part) || more.length > 0) {
+    return null;
+  }
+  // `/club/<slug>` was a post or an event.
+  const page = context.item === "event" ? "/club/events" : "/club/read";
+  return `${page}/${part}${url.search}${hash}`;
+};
+
+/** `/pass/settings#…` and `/pass/saved?tab=…` at their pages; else null. */
+const passPage = (url: URL) => {
+  const { hash, pathname, searchParams } = url;
+  if (pathname === "/pass/settings") {
+    const page = hash ? SETTINGS_SECTIONS[hash.slice(1)] : undefined;
+    if (page) {
+      return withQuery(page, url.search);
+    }
+    // A teen's invite to their guardian (`?guardian=<code>#guardian`).
+    return searchParams.has("guardian") ? `/pass/family${url.search}` : null;
+  }
+  const tab = searchParams.get("tab");
+  const saved = tab ? SAVED_TABS[tab] : undefined;
+  if (pathname === "/pass/saved" && saved) {
+    return `${withQuery(saved, queryWithout(searchParams, "tab"))}${hash}`;
+  }
+  return null;
+};
+
+const moved = (url: URL): string | null => {
+  const { hash, pathname, search } = url;
+  for (const [from, to, extra = ""] of MOVED) {
     if (pathname === from) {
-      return [to, anchor];
+      if (extra.startsWith("#")) {
+        return `${to}${search}${hash || extra}`;
+      }
+      return `${withQuery(extra ? `${to}?${extra}` : to, search)}${hash}`;
     }
     if (pathname.startsWith(`${from}/`)) {
-      return [`${to}${pathname.slice(from.length)}`, ""];
+      return `${to}${pathname.slice(from.length)}${search}${hash}`;
     }
   }
   return null;
 };
 
 /**
- * Links stored in older shapes (notifications, emails, Telegram) open the
- * page's current URL: detail pages that took a query parameter while the
- * app was a static export (`/orders/view?id=…` → `/pass/orders/…`), and
- * pages that moved (`/pass/support/…` → `/help/…`, `/pass/plus` →
- * `/plus#yours`, `/club?show=news` → `/club?topic=news#read`). Other paths
- * are returned unchanged.
+ * Links stored in older shapes (notifications, emails, Telegram, posts)
+ * open the page's current URL: detail pages that took a query parameter
+ * while the app was a static export (`/orders/view?id=…` →
+ * `/pass/orders/…`), pages that moved (`/pass/support/…` → `/help/…`,
+ * `/kits/<kit>` → `/store/kits/<kit>`, `/plus/duo/<code>` →
+ * `/family/<code>`) and parts of pages that became pages (`/plus#join` →
+ * `/plus/plans`, `/club#yours` → `/pass/tickets`, `/pass/settings#phone`
+ * → `/pass/settings/phone`, `/pass/saved?tab=queue` → `/pass/queue`).
+ * `context` says what a link belongs to where its path can't:
+ * `/plus#yours` opens your plan, At home or Family by the notification's
+ * event, `/club/<slug>` a post (or, for an event, `/club/events/<slug>`).
+ * Other paths are returned unchanged.
  */
-export const currentAppPath = (path: string) => {
+export const currentAppPath = (
+  path: string,
+  context: StoredLinkContext = {}
+) => {
   const url = new URL(path, "http://site.invalid");
   const legacy = LEGACY_DETAIL_PAGES[url.pathname];
   const value = legacy ? url.searchParams.get(legacy[1]) : null;
@@ -98,21 +261,16 @@ export const currentAppPath = (path: string) => {
     const query = url.searchParams.toString();
     return `${legacy[0]}/${encodeURIComponent(value)}${query ? `?${query}` : ""}`;
   }
-  const section = MOVED_SECTIONS[`${url.pathname}${url.hash}`];
-  if (section) {
-    return section;
+  if (url.pathname === "/plus" && url.hash === "#join") {
+    return `/plus/plans${url.search}`;
   }
-  const show = url.searchParams.get("show");
-  if (url.pathname === "/club" && show && CLUB_TOPICS.has(show)) {
-    return `/club?topic=${show}${url.hash || "#read"}`;
+  if (url.pathname === "/plus" && url.hash === "#yours") {
+    return withQuery(yoursPage(context), url.search);
   }
-  const current = moved(url.pathname);
-  if (!current) {
-    return path;
+  if (url.pathname === "/club" || url.pathname.startsWith("/club/")) {
+    return clubPage(url, context) ?? path;
   }
-  const [page, anchor] = current;
-  const query = page.includes("?") ? url.search.replace("?", "&") : url.search;
-  return `${page}${query}${url.hash || anchor}`;
+  return passPage(url) ?? moved(url) ?? path;
 };
 
 const BUSINESS_PATH = /^\/business(?=[/?#]|$)/;

@@ -120,7 +120,7 @@ const ClaimError = ({ error }: { readonly error: GiftError }) => {
       </p>
       {joining ? (
         <Button asChild className="justify-self-start" variant="outline">
-          <Link href="/plus#join">{t("joinPlus")}</Link>
+          <Link href="/plus/plans">{t("joinPlus")}</Link>
         </Button>
       ) : null}
     </div>
@@ -136,7 +136,7 @@ const Claimed = ({ plus }: { readonly plus: boolean }) => {
         {t(plus ? "claimedPlus" : "claimed")}
       </p>
       <Button asChild className="justify-self-start" variant="outline">
-        <Link href={plus ? "/plus#yours" : "/pass/orders#gifts"}>
+        <Link href={plus ? "/plus/plan" : "/pass/orders#gifts"}>
           {t(plus ? "yourPlus" : "yourGifts")}
         </Link>
       </Button>
