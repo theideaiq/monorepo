@@ -39,6 +39,193 @@ export type Database = {
         };
         Relationships: [];
       };
+      affiliate_commissions: {
+        Row: {
+          amount: number;
+          available_at: string;
+          clawback_of: string | null;
+          created_at: string;
+          id: string;
+          order_id: string;
+          organization_id: string;
+          payout_id: string | null;
+          status: Database["public"]["Enums"]["affiliate_commission_status"];
+        };
+        Insert: {
+          amount: number;
+          available_at: string;
+          clawback_of?: string | null;
+          created_at?: string;
+          id?: string;
+          order_id: string;
+          organization_id: string;
+          payout_id?: string | null;
+          status?: Database["public"]["Enums"]["affiliate_commission_status"];
+        };
+        Update: {
+          amount?: number;
+          available_at?: string;
+          clawback_of?: string | null;
+          created_at?: string;
+          id?: string;
+          order_id?: string;
+          organization_id?: string;
+          payout_id?: string | null;
+          status?: Database["public"]["Enums"]["affiliate_commission_status"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_commissions_clawback_of_fkey";
+            columns: ["clawback_of"];
+            isOneToOne: false;
+            referencedRelation: "affiliate_commissions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "affiliate_commissions_order_id_fkey";
+            columns: ["order_id"];
+            isOneToOne: false;
+            referencedRelation: "orders";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "affiliate_commissions_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliates";
+            referencedColumns: ["organization_id"];
+          },
+          {
+            foreignKeyName: "affiliate_commissions_payout_id_fkey";
+            columns: ["payout_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliate_payouts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      affiliate_payouts: {
+        Row: {
+          account: string | null;
+          amount: number;
+          created_at: string;
+          id: string;
+          method: string;
+          organization_id: string;
+          paid_by: string | null;
+          reference: string;
+        };
+        Insert: {
+          account?: string | null;
+          amount: number;
+          created_at?: string;
+          id?: string;
+          method: string;
+          organization_id: string;
+          paid_by?: string | null;
+          reference: string;
+        };
+        Update: {
+          account?: string | null;
+          amount?: number;
+          created_at?: string;
+          id?: string;
+          method?: string;
+          organization_id?: string;
+          paid_by?: string | null;
+          reference?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_payouts_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: false;
+            referencedRelation: "affiliates";
+            referencedColumns: ["organization_id"];
+          },
+        ];
+      };
+      affiliate_rates: {
+        Row: {
+          family: string;
+          rate: number;
+          updated_at: string;
+        };
+        Insert: {
+          family: string;
+          rate: number;
+          updated_at?: string;
+        };
+        Update: {
+          family?: string;
+          rate?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      affiliates: {
+        Row: {
+          channel: string | null;
+          code: string | null;
+          coupon_id: string | null;
+          created_at: string;
+          decided_at: string | null;
+          decided_by: string | null;
+          organization_id: string;
+          payout_account: string | null;
+          payout_method: string | null;
+          pitch: string;
+          staff_note: string | null;
+          status: Database["public"]["Enums"]["affiliate_status"];
+          updated_at: string;
+        };
+        Insert: {
+          channel?: string | null;
+          code?: string | null;
+          coupon_id?: string | null;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          organization_id: string;
+          payout_account?: string | null;
+          payout_method?: string | null;
+          pitch: string;
+          staff_note?: string | null;
+          status?: Database["public"]["Enums"]["affiliate_status"];
+          updated_at?: string;
+        };
+        Update: {
+          channel?: string | null;
+          code?: string | null;
+          coupon_id?: string | null;
+          created_at?: string;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          organization_id?: string;
+          payout_account?: string | null;
+          payout_method?: string | null;
+          pitch?: string;
+          staff_note?: string | null;
+          status?: Database["public"]["Enums"]["affiliate_status"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "affiliates_coupon_id_fkey";
+            columns: ["coupon_id"];
+            isOneToOne: true;
+            referencedRelation: "coupons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "affiliates_organization_id_fkey";
+            columns: ["organization_id"];
+            isOneToOne: true;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       auction_reserves: {
         Row: {
           auction_id: string;
@@ -7881,6 +8068,18 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      affiliate_balances: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          code: string;
+          name: string;
+          organization_id: string;
+          payable: number;
+          payout_account: string;
+          payout_method: string;
+          waiting: number;
+        }[];
+      };
       answer_offer: {
         Args: { answer: string; counter?: number; target: string };
         Returns: {
@@ -7965,6 +8164,16 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      apply_affiliate: {
+        Args: {
+          channel?: string;
+          org: string;
+          payout_account?: string;
+          payout_method?: string;
+          pitch: string;
+        };
+        Returns: undefined;
       };
       apply_coupon: { Args: { entered: string }; Returns: string };
       apply_to_program: {
@@ -9113,6 +9322,15 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      decide_affiliate: {
+        Args: {
+          code?: string;
+          decision: Database["public"]["Enums"]["affiliate_status"];
+          note?: string;
+          org: string;
+        };
+        Returns: undefined;
       };
       decide_duo_guardian: {
         Args: { approve: boolean; place: string };
@@ -10441,6 +10659,10 @@ export type Database = {
         Returns: number;
       };
       received_gifts: { Args: Record<PropertyKey, never>; Returns: Json[] };
+      record_affiliate_payout: {
+        Args: { org: string; reference: string };
+        Returns: string;
+      };
       record_return_refund: {
         Args: { reference: string; target: string };
         Returns: {
@@ -12317,6 +12539,8 @@ export type Database = {
     };
     Enums: {
       account_type: "asset" | "liability" | "equity" | "revenue" | "expense";
+      affiliate_commission_status: "pending" | "void" | "paid";
+      affiliate_status: "applied" | "approved" | "rejected" | "suspended";
       auction_mark: "signed" | "limited" | "rare";
       auction_status:
         | "live"
@@ -12627,6 +12851,8 @@ export const Constants = {
   public: {
     Enums: {
       account_type: ["asset", "liability", "equity", "revenue", "expense"],
+      affiliate_commission_status: ["pending", "void", "paid"],
+      affiliate_status: ["applied", "approved", "rejected", "suspended"],
       auction_mark: ["signed", "limited", "rare"],
       auction_status: ["live", "won", "paid", "unsold", "unpaid", "cancelled"],
       billing_interval: ["month", "year"],
