@@ -102,7 +102,7 @@ describe("refreshMusicTastes", () => {
     } as never;
     const fetcher = vi.fn((url: string) =>
       Promise.resolve(
-        url.includes("accounts.spotify.com")
+        new URL(url).hostname === "accounts.spotify.com"
           ? Response.json({ error: "invalid_grant" }, { status: 400 })
           : Response.json({ topartists: { artist: [{ name: "Fairuz" }] } })
       )
