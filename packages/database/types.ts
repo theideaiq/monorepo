@@ -8177,6 +8177,7 @@ export type Database = {
       check_pass: {
         Args: { scanned: string };
         Returns: {
+          card: string;
           full_name: string;
           member_number: number;
           member_since: string;
@@ -9372,6 +9373,14 @@ export type Database = {
         Args: { address: string; member: string; university: string };
         Returns: string;
       };
+      issue_wallet_card: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          member_number: number;
+          serial: string;
+          token: string;
+        }[];
+      };
       join_campaign: {
         Args: { campaign: string; rate: number; seller: string };
         Returns: {
@@ -9877,6 +9886,7 @@ export type Database = {
         }[];
       };
       my_verifications: { Args: Record<PropertyKey, never>; Returns: Json };
+      my_wallet_card: { Args: Record<PropertyKey, never>; Returns: string };
       my_whatsapp_settings: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -10437,6 +10447,10 @@ export type Database = {
       remove_pass_domain: { Args: { target: string }; Returns: undefined };
       remove_plus_price: { Args: { target: string }; Returns: undefined };
       remove_student_price: { Args: { target: string }; Returns: undefined };
+      remove_wallet_card: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
       rental_quote: {
         Args: { product: string; variant?: string };
         Returns: {
