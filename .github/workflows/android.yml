@@ -1,0 +1,68 @@
+# The Android app (the Capacitor shell in apps/app/android, which loads
+# https://theideaiq.com): builds a debug APK and keeps it as the run's
+# "the-idea-android-debug" artifact (Actions → this run → Artifacts) for 14
+# days. Unsigned for the Play Store: for testing on a phone only. Run it by
+# hand from Actions → Android app → Run workflow, or let pushes to main that
+# touch the shell build it.
+name: Android app
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - apps/app/android/**
+      - apps/app/capacitor.config.ts
+      - apps/app/native/**
+      - .github/workflows/android.yml
+  push:
+    branches: [main]
+    paths:
+      - apps/app/android/**
+      - apps/app/capacitor.config.ts
+      - apps/app/native/**
+      - packages/internationalization/messages/**
+      - .github/workflows/android.yml
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  debug-apk:
+    name: Debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+      # The Android SDK comes with GitHub's Ubuntu runners (ANDROID_HOME);
+      # Gradle fetches the platform and build tools it needs.
+      - run: bun install --frozen-lockfile
+      # The offline screen's text and the WebView's URL (production: no
+      # CAP_SERVER_URL or NEXT_PUBLIC_WEB_URL here), then Capacitor's config
+      # and plugins into the Android project.
+      - name: Sync the shell
+        working-directory: apps/app
+        run: bun native/prepare.ts && bunx cap sync android
+      - name: Build
+        working-directory: apps/app/android
+        run: ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v6
+        with:
+          name: the-idea-android-debug
+          path: apps/app/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+          if-no-files-found: error

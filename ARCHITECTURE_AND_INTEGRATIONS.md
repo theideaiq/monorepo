@@ -1223,8 +1223,18 @@ icons, capabilities, permissions and the app-link setup. Never commit
 `google-services.json` or `GoogleService-Info.plist` (both are in
 `apps/app/.gitignore`); each machine or CI job copies them in (3.5).
 
-**Recommended hardening (Android).** Set `android:allowBackup="false"` on
-`<application>` in `AndroidManifest.xml`.
+`apps/app/android` is committed (with its icons and splash screens,
+`allowBackup="false"` and the theideaiq.com app-link intent filter);
+`apps/app/ios` still needs `bun run cap:add` on a Mac.
+
+**A test APK from CI.** `.github/workflows/android.yml` ("Android app")
+syncs the shell against https://theideaiq.com and builds a debug APK on
+every pull request and push to `main` that touches the shell, and on
+demand (Actions → Android app → Run workflow). Download it from the
+run's **Artifacts** (`the-idea-android-debug`, kept 14 days) and install
+it on a phone that allows unknown apps. It is debug-signed, so Play
+won't take it, and push needs `google-services.json`: a release build
+adds an upload key (GitHub secrets) and that file (3.5, 3.9).
 
 ### 3.4 Sync, run and live reload
 

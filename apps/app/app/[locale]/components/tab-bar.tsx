@@ -43,11 +43,11 @@ export const TabBar = () => {
       {/* Keeps the end of each page clear of the bar. */}
       <div
         aria-hidden="true"
-        className="h-[calc(4rem+env(safe-area-inset-bottom))] md:hidden"
+        className="h-[calc(4rem+var(--safe-area-inset-bottom,env(safe-area-inset-bottom)))] md:hidden"
       />
       <nav
         aria-label={t("label")}
-        className="fixed inset-x-0 bottom-0 z-40 border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t bg-background pb-[var(--safe-area-inset-bottom,env(safe-area-inset-bottom))] md:hidden"
       >
         <ul className="grid h-16 grid-cols-4">
           {tabs.map((tab) => {

@@ -19,7 +19,7 @@ export const Dock = ({
     <div aria-hidden="true" className="h-20 md:hidden" />
     <div
       className={cn(
-        "fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-30 border-t bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:static md:z-auto md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none",
+        "fixed inset-x-0 bottom-[calc(4rem+var(--safe-area-inset-bottom,env(safe-area-inset-bottom)))] z-30 border-t bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:static md:z-auto md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none",
         className
       )}
     >

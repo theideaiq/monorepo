@@ -392,15 +392,17 @@ offline screen, splash/status bar, push, share, app-link files); these
 steps need Xcode, Android Studio and the store/Firebase accounts
 (`ARCHITECTURE_AND_INTEGRATIONS.md`, section 3).
 
-- [ ] `bun run --cwd apps/app cap:add` and `cap:assets`; commit
-      `apps/app/ios` and `apps/app/android`.
+- [x] `apps/app/android` created and committed (icons, splash,
+      `allowBackup="false"`, app links); CI builds a debug APK
+      (`.github/workflows/android.yml`), 2026-10-30.
+- [ ] `bun run --cwd apps/app cap:add` for iOS on a Mac; commit
+      `apps/app/ios`.
 - [ ] Firebase project with the iOS and Android apps; APNs key uploaded;
       `GoogleService-Info.plist` / `google-services.json` copied in (not
       committed); `AppDelegate` hands Capacitor the FCM token (3.5).
 - [ ] Xcode capabilities: Push Notifications, Background Modes → Remote
       notifications, Associated Domains (`applinks:` and
-      `webcredentials:theideaiq.com`); Android `autoVerify` intent
-      filter and `allowBackup="false"` (3.3, 3.6).
+      `webcredentials:theideaiq.com`) (3.6).
 - [ ] Fill `APPLE_TEAM_ID` and `PLAY_APP_SIGNING_SHA256_FINGERPRINT` in
       `apps/app/public/.well-known/` and verify both URLs return JSON.
 - [ ] Vercel `api`: `FCM_SERVICE_ACCOUNT`, `PUSH_WEBHOOK_SECRET`; Supabase
