@@ -52,7 +52,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(50);
+select plan(51);
 
 -- H holds Shine Duo; P joins it; O has Glow of their own; X is anyone;
 -- K holds Glow Duo, T (15) joins it with G as guardian.
@@ -218,6 +218,11 @@ select throws_ok(
   'P0002', 'Not found', 'only the guardian decides'
 );
 select pg_temp.login_as('00000000-0000-0000-0000-0000000d10d4');
+select results_eq(
+  $$ select teen_name, holder_name, plan_id from public.duo_approvals() $$,
+  $$ values ('Taim', 'Karim', 'plus-glow-duo') $$,
+  'the guardian sees what they''re asked to approve'
+);
 select is(
   (public.decide_duo_guardian((select id from made where name = 't'), true)).guardian_status,
   'approved', 'the guardian approves'

@@ -8844,6 +8844,16 @@ export type Database = {
         Returns: boolean;
       };
       disconnect_pass_partner: { Args: { client: string }; Returns: undefined };
+      duo_approvals: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          holder_name: string;
+          joined_at: string;
+          place: string;
+          plan_id: string;
+          teen_name: string;
+        }[];
+      };
       duo_invite: {
         Args: { token: string };
         Returns: {

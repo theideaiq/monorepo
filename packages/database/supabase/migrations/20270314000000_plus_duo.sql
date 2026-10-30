@@ -823,6 +823,22 @@ begin
 end;
 $$;
 
+-- The places waiting for the caller's approval as a guardian, with the
+-- teen's and the holder's first names and the plan.
+create function private.duo_approvals()
+returns table (place uuid, teen_name text, holder_name text, plan_id text, joined_at timestamptz)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select m.id, private.first_name(m.user_id), private.first_name(s.user_id), s.plan_id, m.joined_at
+  from public.plus_members m
+  join public.subscriptions s on s.id = m.subscription_id
+  where m.guardian_id = (select auth.uid()) and m.guardian_status = 'pending' and m.left_at is null
+  order by m.joined_at;
+$$;
+
 -- ── Ending a place ─────────────────────────────────────────────────────────
 
 -- Ends a partner's place now: what they have at the shared address and any
@@ -1159,6 +1175,11 @@ returns public.plus_members
 language sql security invoker set search_path = ''
 as $$ select private.decide_duo_guardian(place, approve) $$;
 
+create function public.duo_approvals()
+returns table (place uuid, teen_name text, holder_name text, plan_id text, joined_at timestamptz)
+language sql security invoker set search_path = ''
+as $$ select * from private.duo_approvals() $$;
+
 create function public.leave_duo()
 returns void
 language sql security invoker set search_path = ''
@@ -1205,6 +1226,11 @@ revoke all on function private.decide_duo_guardian(uuid, boolean) from public, a
 revoke all on function public.decide_duo_guardian(uuid, boolean) from public, anon;
 grant execute on function private.decide_duo_guardian(uuid, boolean) to authenticated;
 grant execute on function public.decide_duo_guardian(uuid, boolean) to authenticated;
+
+revoke all on function private.duo_approvals() from public, anon;
+revoke all on function public.duo_approvals() from public, anon;
+grant execute on function private.duo_approvals() to authenticated;
+grant execute on function public.duo_approvals() to authenticated;
 
 revoke all on function private.leave_duo() from public, anon;
 revoke all on function public.leave_duo() from public, anon;
