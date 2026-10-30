@@ -13,11 +13,20 @@ test("a company adds Team, sends a bulk request and accepts the quote", async ({
   await resetCompany();
   await context.addCookies(await sessionCookies(customer.email, urls.app));
 
-  // A new organization starts with Home and Organization; it adds sections.
+  // A new organization opens on Today; the menu keeps its shape, with the
+  // sections it hasn't added greyed with "Add" (links to the cards below
+  // Today).
   await page.goto(urls.app);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Today" })
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { exact: true, name: "Team" })
   ).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Add Team" })).toHaveAttribute(
+    "href",
+    "/#add-sections"
+  );
   await expectAccessible(page);
   await page.getByRole("button", { name: "Add Team" }).click();
   await page.getByRole("link", { exact: true, name: "Team" }).click();
@@ -54,7 +63,11 @@ test("a company adds Team, sends a bulk request and accepts the quote", async ({
     .update({ status: "quoted" })
     .eq("id", requestId);
 
-  await page.reload();
+  // Today lists the quote to answer, with the action in the row.
+  await page.goto(urls.app);
+  await expect(page.getByText("Quotes to answer: 1")).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL(REQUEST_PATH);
   await expect(page.getByText(`Quote #${quote?.number}`)).toBeVisible();
   await page.getByLabel("Your PO reference (optional)").fill("PO-E2E-1");
   await page.getByRole("button", { name: "Accept quote" }).click();
@@ -73,9 +86,13 @@ test("a company adds Team, sends a bulk request and accepts the quote", async ({
   ).toBeVisible();
   await expectAccessible(page);
 
+  // Once accepted, nothing waits on Today; Settings holds the invoices.
   await page.goto(urls.app);
-  await expect(page.getByText("Quotes to answer")).toBeVisible();
-  await page.getByRole("link", { exact: true, name: "Organization" }).click();
+  await expect(
+    page.getByText("Quotes to answer", { exact: false })
+  ).toHaveCount(0);
+  await page.getByRole("link", { exact: true, name: "Settings" }).click();
+  await expect(page).toHaveURL(/\/settings$/);
   await expect(page.getByText("Sections", { exact: true })).toBeVisible();
   await page.getByRole("link", { exact: true, name: "Invoices" }).click();
   await expect(page.getByText("No invoices yet.")).toBeVisible();
@@ -145,7 +162,7 @@ test("a company verifies its domain and registers a Pass app", async ({
 
   // The verified domain verifies the organization at once (in Arabic, the
   // language chosen above).
-  await page.goto(`${urls.app}/ar/organization`);
+  await page.goto(`${urls.app}/ar/settings`);
   const verification = page.locator("#verification");
   await verification.getByRole("button", { exact: true, name: "وثّق" }).click();
   await expect(
@@ -174,14 +191,20 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   const db = admin();
   await context.addCookies(await sessionCookies(customer.email, urls.app));
 
-  // Selling is a section the organization adds from Home.
+  // Selling is a section the organization adds below Today; Sell is
+  // "Apply to sell" in the menu until The IDEA approves the shop.
   await page.goto(urls.app);
   await page.getByRole("button", { name: "Add Selling" }).click();
-  await page.getByRole("link", { exact: true, name: "Selling" }).click();
-  await expect(page).toHaveURL(/\/selling$/);
+  await page.getByRole("link", { exact: true, name: "Apply to sell" }).click();
+  await expect(page).toHaveURL(/\/sell\/settings$/);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Shop settings" })
+  ).toBeVisible();
   await page.getByLabel("Shop name").fill("E2E Records");
   await page.getByRole("button", { exact: true, name: "Apply" }).click();
-  await expect(page.getByText("In review", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("In review", { exact: true }).first()
+  ).toBeVisible();
   await expect(
     page.getByText("Individual trader", { exact: true }).first()
   ).toBeVisible();
@@ -206,7 +229,13 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
     throw error;
   }
   await page.reload();
-  await expect(page.getByText("Approved", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Approved", { exact: true }).first()
+  ).toBeVisible();
+  // Approved, the shop's pickup branches join its settings.
+  await expect(
+    page.getByText("Pickup branches", { exact: true })
+  ).toBeVisible();
 
   const slug = "e2e-shop-record";
   await db.from("products").delete().eq("slug", slug);
@@ -227,9 +256,9 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   if (productError) {
     throw productError;
   }
-  // The shop lists it from Selling → Listings: find, sell this, offer.
+  // The shop lists it from Sell → Listings: find, its photos, the offer.
   await page.getByRole("link", { exact: true, name: "Listings" }).click();
-  await expect(page).toHaveURL(/\/selling\/listings$/);
+  await expect(page).toHaveURL(/\/sell\/listings$/);
   await page.getByLabel("ISBN, barcode or title").fill("E2E Shop Record");
   await page.getByRole("button", { exact: true, name: "Find" }).click();
   await page.getByRole("button", { name: "Sell this" }).click();
@@ -278,9 +307,19 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await page.getByRole("button", { name: "Send the ready rows (1)" }).click();
   await expect(page.getByText("Sent: 1 · Refused: 0")).toBeVisible();
   await expect(page.getByText("2 available · 0 sold")).toBeVisible();
-  // A product a shop creates without a photo waits as a draft; Staff add
-  // one and it goes live.
+  // A product a shop creates without a photo waits as a draft: Listings
+  // and Today show it as hidden until it has one.
+  await expect(
+    page.getByText("Hidden until they have a photo (1)")
+  ).toBeVisible();
+  await page.getByRole("link", { exact: true, name: "Today" }).click();
+  await expect(page.getByText("Hidden until it has a photo")).toBeVisible();
+  await expectAccessible(page);
+  await page.getByRole("link", { name: "List an item" }).click();
+  await expect(page).toHaveURL(/\/sell\/listings#list$/);
+  // Staff add a photo and it goes live.
   await publishWithPhoto("E2E Uploaded Record");
+  await page.reload();
 
   // Both items as one offer: a bundle, listed as a product of its own.
   const removeBundle = async () => {
@@ -305,6 +344,19 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await page.getByRole("option", { name: "Music" }).click();
   await bundleForm.getByLabel("Price (IQD)").fill("49750");
   await bundleForm.getByLabel("Copies").fill("1");
+  // At least one photo: until then the button says so and waits.
+  // (The photo picker shares the name; the submit button is the one that waits.)
+  await expect(
+    bundleForm.locator("button[type=submit]", { hasText: "Add a photo" })
+  ).toBeDisabled();
+  await bundleForm.getByLabel("Add a photo").setInputFiles({
+    buffer: Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "base64"
+    ),
+    mimeType: "image/png",
+    name: "bundle.png",
+  });
   await expectAccessible(page);
   await page.getByRole("button", { name: "List the bundle" }).click();
   await expect(page.getByText("E2E Record Bundle")).toBeVisible();
@@ -325,8 +377,8 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await removeBundle();
   await removeUploaded();
 
-  // Selling → Auctions: put one of its copies up for auction.
-  await page.goto(`${urls.app}/selling/auctions`);
+  // Sell → Auctions: put one of its copies up for auction.
+  await page.goto(`${urls.app}/sell/auctions`);
   await expect(page.getByText("Put a copy up for auction")).toBeVisible();
   await expect(page.getByText("No live auctions.")).toBeVisible();
   await expectAccessible(page);
@@ -334,10 +386,16 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   // The website lists the shop's offer and the cart line names the shop.
   await context.addCookies(await sessionCookies(customer.email, urls.web));
   await page.goto(`${urls.web}/store/${slug}`);
-  const offer = page.getByRole("button", { name: /Sold by E2E Records/ });
-  await expect(offer).toHaveAttribute("aria-pressed", "true");
+  // Get it: the shop's copy is the one way to have it, chosen, with the shop
+  // named under it.
+  await expect(
+    page.getByRole("radio", { name: /^Buy used or open box/ })
+  ).toBeChecked();
+  await expect(
+    page.getByRole("link", { name: /Sold by E2E Records/ })
+  ).toBeVisible();
   await expectAccessible(page);
-  await page.getByRole("button", { name: "Add to cart" }).click();
+  await page.getByRole("button", { name: /^Add to cart/ }).click();
   await expect(
     page.getByRole("status").filter({ hasText: "Added to your cart." })
   ).toBeVisible();

@@ -7,16 +7,17 @@ import { Link, usePathname } from "@repo/internationalization/navigation";
 import { BriefcaseBusinessIcon, PlusIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
+import { ADD_SECTIONS_HREF, type NavKey } from "@/components/nav-items";
 import { useOrganization } from "@/components/organization-provider";
 import { PageHeader } from "@/components/page-header";
 import { PendingInvitations } from "./pending-invitations";
 
-/** The pages of Organization, as tabs. */
+/** The pages of Organization → Settings, as tabs. */
 const ORGANIZATION_TABS = [
-  { href: "/organization", key: "details" },
-  { href: "/organization/members", key: "members" },
-  { href: "/organization/billing", key: "billing" },
-  { href: "/organization/invoices", key: "invoices" },
+  { href: "/settings", key: "details" },
+  { href: "/settings/members", key: "members" },
+  { href: "/settings/billing", key: "billing" },
+  { href: "/settings/invoices", key: "invoices" },
 ] as const;
 
 /** The pages of Team, as tabs: bulk orders, and Plus for its people. */
@@ -25,18 +26,19 @@ const TEAM_TABS = [
   { href: "/team/plus", key: "plus" },
 ] as const;
 
-/** The pages of Selling, as tabs. */
-const SELLING_TABS = [
-  { href: "/selling", key: "shop" },
-  { href: "/selling/listings", key: "listings" },
-  { href: "/selling/orders", key: "shopOrders" },
-  { href: "/selling/returns", key: "shopReturns" },
-  { href: "/selling/offers", key: "shopOffers" },
-  { href: "/selling/auctions", key: "shopAuctions" },
-  { href: "/selling/sales", key: "shopSales" },
-  { href: "/selling/payouts", key: "shopPayouts" },
-  { href: "/selling/pickup", key: "pickup" },
-] as const;
+/** The group of the side menu each section is in (the breadcrumb). */
+const SECTION_GROUP: Record<
+  OrganizationFeature,
+  "grow" | "organization" | "sell"
+> = {
+  affiliate: "grow",
+  developers: "organization",
+  opportunities: "grow",
+  perks: "grow",
+  selling: "sell",
+  supply: "grow",
+  team: "organization",
+};
 
 /** For people without a business account: what it is, invitations, create. */
 const BusinessIntro = () => {
@@ -66,7 +68,6 @@ const BusinessIntro = () => {
 
 type TabKey =
   | (typeof ORGANIZATION_TABS)[number]["key"]
-  | (typeof SELLING_TABS)[number]["key"]
   | (typeof TEAM_TABS)[number]["key"];
 
 const SectionTabs = ({
@@ -118,7 +119,7 @@ const SectionOff = ({ feature }: { readonly feature: OrganizationFeature }) => {
         })}
       </p>
       {canManage ? (
-        <Link className="text-sm underline" href="/">
+        <Link className="text-sm underline" href={ADD_SECTIONS_HREF}>
           {t("business.sections.offManage")}
         </Link>
       ) : (
@@ -130,34 +131,65 @@ const SectionOff = ({ feature }: { readonly feature: OrganizationFeature }) => {
   );
 };
 
+/** The header's breadcrumb (the menu group) and default title. */
+const useHeading = (
+  feature: OrganizationFeature | undefined,
+  organization: boolean,
+  page: NavKey | undefined
+) => {
+  const t = useTranslations("app.nav");
+  if (feature) {
+    let title = t(feature);
+    if (page) {
+      title = t(page);
+    } else if (feature === "selling") {
+      title = t("sell");
+    }
+    return { crumb: t(SECTION_GROUP[feature]), title };
+  }
+  if (organization) {
+    return { crumb: t("organization"), title: t("settings") };
+  }
+  return { crumb: undefined, title: page ? t(page) : t("today") };
+};
+
 interface BusinessShellProps {
+  /** The header's actions, the primary last (it sits at the end). */
+  readonly actions?: ReactNode;
   readonly children: ReactNode;
   /** The section the screen belongs to, when organizations add it. */
   readonly feature?: OrganizationFeature;
-  /** Organization's pages show its tabs. */
+  /** Organization → Settings pages show its tabs. */
   readonly organization?: boolean;
+  /** The menu entry the page is, for its title (Sell's pages). */
+  readonly page?: NavKey;
+  /** The header's status chip. */
+  readonly status?: ReactNode;
+  /** The page's title (by default, its menu entry's or section's name). */
+  readonly title?: string;
 }
 
 /**
- * A screen of Partners that needs an active organization (chosen
- * in the sidebar). Without one, it shows the introduction instead; in a
- * section the organization hasn't added, it says so.
+ * A screen of Partners that needs an active organization (chosen in the
+ * sidebar). Without one, it shows the introduction instead; in a section
+ * the organization hasn't added, it says so. The header follows one
+ * pattern: breadcrumb (the menu group), title, status chip, actions.
  */
 export const BusinessShell = ({
+  actions,
   children,
   feature,
   organization = false,
+  page,
+  status,
+  title: pageTitle,
 }: BusinessShellProps) => {
   const t = useTranslations("app");
   const { active } = useOrganization();
-  let title = t("business.title");
-  if (feature) {
-    title = t(`nav.${feature}`);
-  } else if (organization) {
-    title = t("nav.organization");
-  }
+  const { crumb, title } = useHeading(feature, organization, page);
 
   let content: ReactNode;
+  let ready = false;
   if (!active) {
     content = (
       <>
@@ -168,6 +200,7 @@ export const BusinessShell = ({
   } else if (feature && !active.features.includes(feature)) {
     content = <SectionOff feature={feature} />;
   } else {
+    ready = true;
     content = (
       <>
         {organization ? (
@@ -175,9 +208,6 @@ export const BusinessShell = ({
             label={t("business.organization.title")}
             tabs={ORGANIZATION_TABS}
           />
-        ) : null}
-        {feature === "selling" ? (
-          <SectionTabs label={t("nav.selling")} tabs={SELLING_TABS} />
         ) : null}
         {feature === "team" ? (
           <SectionTabs label={t("nav.team")} tabs={TEAM_TABS} />
@@ -189,7 +219,12 @@ export const BusinessShell = ({
 
   return (
     <>
-      <PageHeader title={title} />
+      <PageHeader
+        actions={ready ? actions : undefined}
+        crumb={active ? crumb : undefined}
+        status={ready ? status : undefined}
+        title={active ? (pageTitle ?? title) : t("business.title")}
+      />
       <div className="flex flex-1 flex-col gap-6 p-4 pt-0">{content}</div>
     </>
   );

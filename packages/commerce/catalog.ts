@@ -69,16 +69,77 @@ const unwrap = <T>({
 export interface ProductFilters {
   /** Category slug. */
   category?: string;
+  /** Only products a shop created (`products.created_by_seller`). */
+  createdBySeller?: string;
   featured?: boolean;
   /** Products with a live variant in this format (`attributes.Format`). */
   format?: string;
+  /** Only products in stock. */
+  inStock?: boolean;
   kind?: ProductKind;
   limit?: number;
+  /** Only products priced at or under this (IQD). */
+  maxPrice?: number;
   offset?: number;
+  /** Only products with an honest "was" price (`compare_at_price`). */
+  onSale?: boolean;
+  /** Only products whose main listing is open box, refurbished or used. */
+  preOwned?: boolean;
   /** Arabic or English search (see `listProducts`). */
   search?: string;
+  /** Only products added since this time (ISO). */
+  since?: string;
   sort?: "newest" | "price-asc" | "price-desc";
 }
+
+type Filterable<Q> = Q & {
+  gt: (column: string, value: number) => Q;
+  gte: (column: string, value: string) => Q;
+  lte: (column: string, value: number) => Q;
+  neq: (column: string, value: string) => Q;
+  not: (column: string, operator: string, value: null) => Q;
+  eq: (column: string, value: string) => Q;
+};
+
+/**
+ * The filters every listing shares: never a product without a picture,
+ * then the optional ones.
+ */
+const withFilters = <Q>(
+  query: Q,
+  {
+    createdBySeller,
+    inStock,
+    maxPrice,
+    onSale,
+    preOwned,
+    since,
+  }: Pick<
+    ProductFilters,
+    "createdBySeller" | "inStock" | "maxPrice" | "onSale" | "preOwned" | "since"
+  >
+): Q => {
+  let next = (query as Filterable<Q>).neq("images", "{}") as Filterable<Q>;
+  if (createdBySeller) {
+    next = next.eq("created_by_seller", createdBySeller) as Filterable<Q>;
+  }
+  if (inStock) {
+    next = next.gt("stock_count", 0) as Filterable<Q>;
+  }
+  if (maxPrice !== undefined) {
+    next = next.lte("price", maxPrice) as Filterable<Q>;
+  }
+  if (onSale) {
+    next = next.not("compare_at_price", "is", null) as Filterable<Q>;
+  }
+  if (preOwned) {
+    next = next.neq("condition", "new") as Filterable<Q>;
+  }
+  if (since) {
+    next = next.gte("created_at", since) as Filterable<Q>;
+  }
+  return next;
+};
 
 /**
  * The categories a tab lists, in their order: the shop's (with products
@@ -119,7 +180,7 @@ const SEARCH_MAX_LENGTH = 100;
  * RPC: Arabic and English names, descriptions and specifications (artist,
  * author, …), normalized (no tashkeel, أ/إ/آ → ا, ى → ي, ة → ه) and ranked
  * best match first. The default sort ("newest") keeps that ranking; the
- * price sorts reorder it.
+ * price sorts reorder it. Products without a picture are never listed.
  */
 export const listProducts = async (
   supabase: Client,
@@ -132,6 +193,7 @@ export const listProducts = async (
     offset = 0,
     search,
     sort = "newest",
+    ...filters
   }: ProductFilters = {}
 ): Promise<ProductCard[]> => {
   const term = search?.trim().slice(0, SEARCH_MAX_LENGTH);
@@ -145,6 +207,7 @@ export const listProducts = async (
         search_term: term,
       })
       .select(`${PRODUCT_CARD_COLUMNS}${formatJoin}`);
+    ranked = withFilters(ranked, filters);
     if (featured) {
       ranked = ranked.eq("featured", true);
     }
@@ -165,6 +228,7 @@ export const listProducts = async (
     .from("products")
     .select(`${PRODUCT_CARD_COLUMNS}${formatJoin}`)
     .eq("status", "active");
+  query = withFilters(query, filters);
   // The Rent tab lists every rentable product (rental items, and shop
   // products with copies for rent); the shop, products for sale.
   query =

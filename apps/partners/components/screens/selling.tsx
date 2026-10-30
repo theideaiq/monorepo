@@ -20,6 +20,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { type ChangeEvent, type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
 import { useActiveOrganization } from "@/components/organization-provider";
+import { PickupBranches } from "@/components/screens/pickup-locations";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
   isIban,
@@ -425,13 +426,33 @@ const SellingBody = () => {
           <Payout details={current.details} organizationId={active.id} />
         </>
       ) : null}
+      {current?.seller.status === "approved" ? (
+        <PickupBranches sellerId={current.seller.id} />
+      ) : null}
     </div>
   );
 };
 
-/** Partners → Selling: the organization's shop on The IDEA. */
+/** The shop's status, as the header's chip. */
+const StatusChip = () => {
+  const t = useTranslations("app.company.selling");
+  const { active } = useActiveOrganization();
+  const shop = useSeller(active.id);
+  const seller = shop.data?.seller;
+  return seller ? (
+    <Badge variant={statusVariant[seller.status]}>
+      {t(`status.${seller.status}`)}
+    </Badge>
+  ) : null;
+};
+
+/**
+ * Partners → Sell → Shop settings: the organization's shop on The IDEA,
+ * in sections: the application, documents, payout details and pickup
+ * branches.
+ */
 export const Selling = () => (
-  <BusinessShell feature="selling">
+  <BusinessShell feature="selling" page="shopSettings" status={<StatusChip />}>
     <SellingBody />
   </BusinessShell>
 );

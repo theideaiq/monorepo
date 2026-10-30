@@ -12,8 +12,9 @@ import { JsonLd } from "@repo/seo/json-ld";
 import { CalendarDays, MapPin, MoveLeft, Users } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { CoverImage } from "@/components/cover-image";
+import { Dock } from "@/components/dock";
 import { RsvpButton } from "@/components/rsvp-button";
-import { clubItemPath, joinPath } from "@/lib/club";
+import { eventPath, joinPath } from "@/lib/club";
 import { editorialUrl, type getEvent, getRsvpCount } from "@/lib/data";
 import { seatsLeft } from "@/lib/events";
 import { Markdown, markdownToText } from "@/lib/markdown";
@@ -72,7 +73,7 @@ export const EventArticle = async ({
             url: siteUrl().href,
           },
           startDate: event.starts_at,
-          url: new URL(localePath(locale, clubItemPath(event.slug)), siteUrl())
+          url: new URL(localePath(locale, eventPath(event.slug)), siteUrl())
             .href,
         }}
       />
@@ -156,10 +157,14 @@ export const EventArticle = async ({
                     : t("noRsvps")}
                 </p>
               )}
-              <RsvpButton
-                eventId={event.id}
-                full={seatsLeft(event.capacity, rsvps ?? undefined) === 0}
-              />
+              <Dock>
+                <div className="grid gap-1 md:w-full">
+                  <RsvpButton
+                    eventId={event.id}
+                    full={seatsLeft(event.capacity, rsvps ?? undefined) === 0}
+                  />
+                </div>
+              </Dock>
             </>
           )}
         </aside>

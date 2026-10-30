@@ -3,7 +3,6 @@ import {
   formatPrice,
   hasPriceRange,
   localized,
-  planName,
 } from "@repo/commerce";
 import { Badge } from "@repo/design-system/components/ui/badge";
 import type { Locale } from "@repo/internationalization";
@@ -24,16 +23,15 @@ import {
   RatingLink,
   SellerLine,
 } from "@/components/product-reviews";
-import { ProductAuctions } from "@/components/store/auctions";
 import { BundleContents } from "@/components/store/bundle-contents";
+import { CategoryShelf } from "@/components/store/category-shelf";
 import { WriteReview } from "@/components/store/product-reviews";
-import { PurchasePanel } from "@/components/store/purchase-panel";
+import { EarnNote, PurchasePanel } from "@/components/store/purchase-panel";
 import {
   getBundle,
+  getCategories,
   getOffers,
-  getPlans,
   getProduct,
-  getProductSlugs,
   getRatings,
   getReviews,
   imageUrl,
@@ -41,25 +39,39 @@ import {
 } from "@/lib/data";
 import { markdownToText } from "@/lib/markdown";
 import { localizedMetadata, siteUrl } from "@/lib/metadata";
-import { requiredPlan, soloPlans } from "@/lib/plus";
 import { productJsonLd, productSpecs } from "@/lib/product";
+import { parseStoreQuery } from "@/lib/store-params";
 
-export const revalidate = 300;
+// Rendered per request, like `/store`: a category's shelf reads its filters
+// from the address (`?sub=`, `?sort=`, `?page=`), which a statically
+// regenerated page can't (production fails with DYNAMIC_SERVER_USAGE).
+export const dynamic = "force-dynamic";
 
 /** Latest published reviews listed on a product page. */
 const REVIEWS_SHOWN = 10;
 
 interface ProductProps {
   params: Promise<{ locale: Locale; slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export const generateStaticParams = async () =>
-  (await getProductSlugs()).slice(0, 200).map(({ slug }) => ({ slug }));
+/** The top-level category a slug names (a product's slug never does). */
+const topCategory = async (slug: string) =>
+  (await getCategories("sale")).find(
+    (category) => !category.parent_id && category.slug === slug
+  );
 
 export const generateMetadata = async ({
   params,
 }: ProductProps): Promise<Metadata> => {
   const { locale, slug } = await params;
+  const category = await topCategory(slug);
+  if (category) {
+    return localizedMetadata(locale, `/store/${slug}`, {
+      description: "",
+      title: localized(category, "name", locale),
+    });
+  }
   const product = await getProduct(slug);
   if (!product) {
     return {};
@@ -72,47 +84,134 @@ export const generateMetadata = async ({
   });
 };
 
-/** The Plus plan renting it needs, when it needs more than the entry plan. */
-const rentalPlan = async ({
-  rentable,
-  rental_tier: tier,
-}: Pick<ProductDetail, "rentable" | "rental_tier">) =>
-  rentable && tier !== null
-    ? requiredPlan(soloPlans(await getPlans("plus")), tier)
-    : null;
+/** The price, "Lowest in 30 days", the Bulbs it earns, stock and delivery. */
+const PriceLines = async ({
+  locale,
+  lowest30d,
+  product,
+}: {
+  readonly locale: Locale;
+  readonly lowest30d: number | null | undefined;
+  readonly product: ProductDetail;
+}) => {
+  const [t, store] = await Promise.all([
+    getTranslations({ locale, namespace: "web.store.product" }),
+    getTranslations({ locale, namespace: "store" }),
+  ]);
+  const discount = discountPercent(product.price, product.compare_at_price);
+  // Several versions at different prices: the cheapest, as "From …".
+  const priceRange = hasPriceRange(product.product_variants);
+  return (
+    <>
+      <p className="flex flex-wrap items-baseline gap-3">
+        <span className="font-bold text-2xl">
+          {priceRange ? (
+            store.rich("price.from", {
+              amount: (chunks) => <span className="font-mono">{chunks}</span>,
+              price: formatPrice(product.price, locale),
+            })
+          ) : (
+            <span className="font-mono">
+              {formatPrice(product.price, locale)}
+            </span>
+          )}
+        </span>
+        {discount > 0 && product.compare_at_price ? (
+          <>
+            <span className="font-mono text-lg text-muted-foreground line-through">
+              {formatPrice(product.compare_at_price, locale)}
+            </span>
+            <Badge>
+              {store("price.save", {
+                percent: formatNumber(discount, locale),
+              })}
+            </Badge>
+          </>
+        ) : null}
+      </p>
+      {lowest30d ? (
+        <p className="text-muted-foreground text-sm">
+          {t("lowest30d", { price: formatPrice(lowest30d, locale) })}
+        </p>
+      ) : null}
+      <EarnNote price={product.price} />
+      <p
+        className={
+          product.stock_count > 0
+            ? "text-muted-foreground text-sm"
+            : "text-destructive text-sm"
+        }
+      >
+        {stockLabel(store, product.stock_count, locale)}
+      </p>
+      <p className="flex items-center gap-2 text-muted-foreground text-sm">
+        <Truck aria-hidden="true" className="size-4" />
+        {t("delivery")}
+      </p>
+    </>
+  );
+};
 
-const ProductPage = async ({ params }: ProductProps) => {
+/**
+ * `/store/<slug>`: a top-level category's shelf, or a product: pictures
+ * at the start, the story in the middle and the Get it panel at the end
+ * (sticky on wide screens; on phones after the price, with its primary in
+ * the bottom dock).
+ */
+const ProductPage = async ({ params, searchParams }: ProductProps) => {
   const { locale, slug } = await params;
   setRequestLocale(locale);
+  const category = await topCategory(slug);
+  if (category) {
+    return (
+      <CategoryShelf
+        categories={await getCategories("sale")}
+        category={category}
+        locale={locale}
+        query={parseStoreQuery(await searchParams)}
+      />
+    );
+  }
   const product = await getProduct(slug);
   if (!product) {
     notFound();
   }
+  return <ProductView locale={locale} product={product} slug={slug} />;
+};
 
-  const [t, store, ratings, reviews, plan, offers, bundle] = await Promise.all([
+const ProductView = async ({
+  locale,
+  product,
+  slug,
+}: {
+  readonly locale: Locale;
+  readonly product: ProductDetail;
+  readonly slug: string;
+}) => {
+  const [t, store, ratings, reviews, offers, bundle] = await Promise.all([
     getTranslations({ locale, namespace: "web.store.product" }),
     getTranslations({ locale, namespace: "store" }),
     getRatings([product.id]),
     getReviews(product.id, REVIEWS_SHOWN),
-    rentalPlan(product),
     getOffers(product.id),
     getBundle(product.id),
   ]);
+  // "Lowest in 30 days": of the cheapest copy for sale.
+  const lowest30d = offers
+    .filter((offer) => offer.purpose === "sale" && offer.lowest_30d !== null)
+    .sort((a, b) => (a.price ?? 0) - (b.price ?? 0))[0]?.lowest_30d;
   const rating = ratings[product.id] ?? null;
   const name = localized(product, "name", locale);
   const description = localized(product, "description", locale);
   const images = product.images
     .map((path) => imageUrl(path))
     .filter((url): url is string => Boolean(url));
-  const discount = discountPercent(product.price, product.compare_at_price);
   const rental = product.kind === "rental";
-  // Several versions at different prices: the cheapest, as "From …".
-  const priceRange = hasPriceRange(product.product_variants);
   const specs = productSpecs(product.details);
   const pageUrl = new URL(localePath(locale, `/store/${slug}`), siteUrl()).href;
 
   return (
-    <div className="container mx-auto px-4 py-10">
+    <div className="container mx-auto px-4 py-6 md:py-10">
       <JsonLd
         code={productJsonLd({
           images,
@@ -125,20 +224,22 @@ const ProductPage = async ({ params }: ProductProps) => {
         })}
       />
       <Link
-        className="mb-6 inline-flex items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
-        href={rental ? "/plus" : "/store"}
+        className="mb-6 inline-flex min-h-11 items-center gap-2 text-muted-foreground text-sm hover:text-foreground"
+        href={product.category ? `/store/${product.category.slug}` : "/"}
       >
         <MoveLeft className="size-4 rtl:rotate-180" />
-        {rental ? t("plusBack") : t("back")}
+        {product.category
+          ? localized(product.category, "name", locale)
+          : t("back")}
       </Link>
 
-      <div className="grid gap-10 lg:grid-cols-2">
-        <div className="flex flex-col gap-3">
+      <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)_22rem]">
+        <div className="flex flex-col gap-3 lg:row-span-2">
           <CoverImage
             alt={t("image", { name, number: formatNumber(1, locale) })}
             fit="product"
             priority
-            sizes="(min-width: 1024px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 40vw, 100vw"
             src={images[0] ?? null}
           />
           {images.length > 1 ? (
@@ -151,7 +252,7 @@ const ProductPage = async ({ params }: ProductProps) => {
                       number: formatNumber(index + 2, locale),
                     })}
                     fit="product"
-                    sizes="12vw"
+                    sizes="10vw"
                     src={src}
                   />
                 </li>
@@ -160,103 +261,47 @@ const ProductPage = async ({ params }: ProductProps) => {
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">{store(`kind.${product.kind}`)}</Badge>
-              {product.category ? (
-                <Badge variant="outline">
-                  {localized(product.category, "name", locale)}
-                </Badge>
-              ) : null}
-              {product.age_rating ? (
-                <Badge variant="outline">
-                  {store("ageRating", {
-                    rating: formatNumber(product.age_rating, locale),
-                  })}
-                </Badge>
-              ) : null}
-            </div>
-            <ProductCondition locale={locale} product={product} />
-            <h1 className="font-bold text-3xl tracking-tight md:text-4xl">
-              {name}
-            </h1>
-            <SellerLine
-              locale={locale}
-              seller={product.seller}
-              verified={product.verified}
-            />
-            {rating ? <RatingLink locale={locale} rating={rating} /> : null}
-            {rental ? (
-              <p className="text-muted-foreground text-sm tabular-nums">
-                {store("price.worth", {
-                  price: formatPrice(product.price, locale),
-                })}
-              </p>
-            ) : (
-              <p className="flex flex-wrap items-baseline gap-3">
-                <span className="font-bold text-2xl">
-                  {priceRange ? (
-                    store.rich("price.from", {
-                      amount: (chunks) => (
-                        <span className="font-mono">{chunks}</span>
-                      ),
-                      price: formatPrice(product.price, locale),
-                    })
-                  ) : (
-                    <span className="font-mono">
-                      {formatPrice(product.price, locale)}
-                    </span>
-                  )}
-                </span>
-                {discount > 0 && product.compare_at_price ? (
-                  <>
-                    <span className="text-lg text-muted-foreground line-through">
-                      {formatPrice(product.compare_at_price, locale)}
-                    </span>
-                    <Badge>
-                      {store("price.save", {
-                        percent: formatNumber(discount, locale),
-                      })}
-                    </Badge>
-                  </>
-                ) : null}
-              </p>
-            )}
-            <p
-              className={
-                product.stock_count > 0
-                  ? "text-muted-foreground text-sm"
-                  : "text-destructive text-sm"
-              }
-            >
-              {stockLabel(store, product.stock_count, locale)}
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Suspense>
-              <PurchasePanel offers={offers} product={product} />
-            </Suspense>
-            <ProductAuctions productId={product.id} />
-            {plan ? (
-              <div className="flex flex-col gap-1 rounded-md border border-brand/60 bg-brand/10 p-3 text-sm">
-                <p className="font-medium">
-                  {t("requiresPlan", { plan: planName(plan, locale) })}
-                </p>
-                <p className="text-muted-foreground">
-                  {t("requiresPlanNote", { plan: planName(plan, locale) })}
-                </p>
-              </div>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-wrap gap-2">
+            {product.category ? (
+              <Badge variant="outline">
+                {localized(product.category, "name", locale)}
+              </Badge>
             ) : null}
-            {rental ? null : (
-              <p className="flex items-center gap-2 text-muted-foreground text-sm">
-                <Truck aria-hidden="true" className="size-4" />
-                {t("delivery")}
-              </p>
-            )}
+            {product.age_rating ? (
+              <Badge variant="outline">
+                {store("ageRating", {
+                  rating: formatNumber(product.age_rating, locale),
+                })}
+              </Badge>
+            ) : null}
           </div>
+          <ProductCondition locale={locale} product={product} />
+          <h1 className="font-bold text-3xl tracking-tight md:text-4xl">
+            {name}
+          </h1>
+          <SellerLine
+            locale={locale}
+            seller={product.seller}
+            verified={product.verified}
+          />
+          {rating ? <RatingLink locale={locale} rating={rating} /> : null}
+          {rental ? null : (
+            <PriceLines
+              locale={locale}
+              lowest30d={lowest30d}
+              product={product}
+            />
+          )}
+        </div>
 
+        <aside className="lg:sticky lg:top-20 lg:col-start-3 lg:row-span-2 lg:row-start-1">
+          <Suspense>
+            <PurchasePanel offers={offers} product={product} />
+          </Suspense>
+        </aside>
+
+        <div className="flex flex-col gap-6 lg:col-start-2">
           <BundleContents items={bundle} locale={locale} />
 
           {description ? (

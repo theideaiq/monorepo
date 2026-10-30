@@ -193,7 +193,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
   const perks: Perk[] = [
     plan
       ? {
-          href: "/plus#yours",
+          href: "/plus/plan",
           icon: CrownIcon,
           text:
             plan.rental_slots === null
@@ -207,7 +207,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
     { icon: TruckIcon, text: deliveryPerk },
     studentPerk(student, card, locale),
     {
-      href: "/club?show=events#join",
+      href: "/club/events",
       icon: CalendarDaysIcon,
       text: card("perks.events"),
     },

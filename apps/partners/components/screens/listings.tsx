@@ -23,8 +23,10 @@ import {
 import { Textarea } from "@repo/design-system/components/ui/textarea";
 import { formatNumber } from "@repo/internationalization/format";
 import {
+  EyeOffIcon,
   FlagIcon,
   PackageIcon,
+  PauseIcon,
   PencilIcon,
   PlusIcon,
   SearchIcon,
@@ -32,7 +34,13 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { type FormEvent, useId, useState } from "react";
 import { BusinessShell } from "@/components/business/business-shell";
+import { ListActions } from "@/components/list-actions";
 import { useActiveOrganization } from "@/components/organization-provider";
+import {
+  PhotoPicker,
+  ProductPictures,
+  Step,
+} from "@/components/screens/listing-photos";
 import { ListingUpload } from "@/components/screens/listing-upload";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import {
@@ -50,15 +58,18 @@ import {
   type OfferInput,
   offerProblem,
   toListingProblem,
+  useAddListingPhotos,
   useCatalogSearch,
   useCategories,
   useCreateBundle,
   useCreateListing,
   useFlagProduct,
   useListings,
+  usePauseListings,
   useSetOffer,
 } from "@/lib/listing-queries";
 import { useSeller } from "@/lib/seller-queries";
+import { hiddenListings } from "@/lib/today";
 
 const toInteger = (value: string) =>
   value.trim() === "" ? Number.NaN : Number(value.replaceAll(",", ""));
@@ -227,32 +238,40 @@ const SellThis = ({
   };
 
   return (
-    <form className="grid gap-4" noValidate onSubmit={submit}>
-      {match.variants.length > 1 ? (
-        <div className="grid gap-2">
-          <Label htmlFor={`${id}-variant`}>{t("version")}</Label>
-          <Select onValueChange={setVariantId} value={variantId}>
-            <SelectTrigger id={`${id}-variant`}>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {match.variants.map((variant) => (
-                <SelectItem key={variant.id} value={variant.id}>
-                  {label(variant)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      ) : null}
-      <OfferFields onChange={setOfferInput} />
+    <form className="grid gap-6" noValidate onSubmit={submit}>
+      <Step number={2} title={t("steps.photos")}>
+        <ProductPictures
+          images={match.images}
+          name={locale === "ar" ? match.nameAr : match.nameEn}
+        />
+      </Step>
+      <Step number={3} title={t("steps.offer")}>
+        {match.variants.length > 1 ? (
+          <div className="grid gap-2">
+            <Label htmlFor={`${id}-variant`}>{t("version")}</Label>
+            <Select onValueChange={setVariantId} value={variantId}>
+              <SelectTrigger id={`${id}-variant`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {match.variants.map((variant) => (
+                  <SelectItem key={variant.id} value={variant.id}>
+                    {label(variant)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ) : null}
+        <OfferFields onChange={setOfferInput} />
+      </Step>
       <Problem problem={problem} />
-      <div className="flex gap-2">
-        <Button disabled={setOffer.isPending} type="submit">
-          {t("add")}
-        </Button>
+      <div className="flex justify-end gap-2">
         <Button onClick={onDone} type="button" variant="ghost">
           {t("cancel")}
+        </Button>
+        <Button disabled={setOffer.isPending} type="submit">
+          {t("add")}
         </Button>
       </div>
     </form>
@@ -281,10 +300,14 @@ const CreateProduct = ({
   const [nameAr, setNameAr] = useState("");
   const [code, setCode] = useState(barcode);
   const [offer, setOffer] = useState(emptyOffer);
+  const [photos, setPhotos] = useState<File[]>([]);
   const [problem, setProblem] = useState<ProblemKey | null>(null);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (photos.length === 0) {
+      return;
+    }
     if (!(categoryId && (nameEn.trim() || nameAr.trim()))) {
       setProblem("details");
       return;
@@ -297,6 +320,7 @@ const CreateProduct = ({
     create.mutate(
       {
         offer,
+        photos,
         product: { barcode: code, categoryId, nameAr, nameEn },
       },
       {
@@ -307,7 +331,7 @@ const CreateProduct = ({
   };
 
   return (
-    <form className="grid gap-4" noValidate onSubmit={submit}>
+    <form className="grid gap-6" noValidate onSubmit={submit}>
       <p className="text-muted-foreground text-sm">{t("createHint")}</p>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
@@ -356,14 +380,22 @@ const CreateProduct = ({
           />
         </div>
       </div>
-      <OfferFields onChange={setOffer} />
+      <Step number={2} title={t("steps.photos")}>
+        <PhotoPicker onChange={setPhotos} photos={photos} />
+      </Step>
+      <Step number={3} title={t("steps.offer")}>
+        <OfferFields onChange={setOffer} />
+      </Step>
       <Problem problem={problem} />
-      <div className="flex gap-2">
-        <Button disabled={create.isPending} type="submit">
-          {t("create")}
-        </Button>
+      <div className="flex justify-end gap-2">
         <Button onClick={onDone} type="button" variant="ghost">
           {t("cancel")}
+        </Button>
+        <Button
+          disabled={create.isPending || photos.length === 0}
+          type="submit"
+        >
+          {photos.length === 0 ? t("photos.needed") : t("create")}
         </Button>
       </div>
     </form>
@@ -454,52 +486,56 @@ const AddListing = ({ sellerId }: { readonly sellerId: string }) => {
   const searched = Boolean(query.trim()) && search.isSuccess;
 
   return (
-    <Card>
+    <Card className="scroll-mt-4" id="list">
       <CardHeader>
         <CardTitle>{t("addTitle")}</CardTitle>
         <CardDescription>{t("addDescription")}</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <form className="flex gap-2" onSubmit={submit}>
-          <Label className="sr-only" htmlFor={`${id}-find`}>
-            {t("find")}
-          </Label>
-          <Input
-            id={`${id}-find`}
-            onChange={(event) => setTyped(event.target.value)}
-            placeholder={t("findPlaceholder")}
-            value={typed}
-          />
-          <Button disabled={typed.trim().length < 2} type="submit">
-            <SearchIcon />
-            {t("findButton")}
-          </Button>
-        </form>
-        {search.isFetching ? <SectionSpinner /> : null}
-        {chosen ? (
-          <div className="grid gap-3 rounded-md border p-4">
+      <CardContent className="grid gap-6">
+        <Step number={1} title={t("steps.find")}>
+          <form className="flex gap-2" onSubmit={submit}>
+            <Label className="sr-only" htmlFor={`${id}-find`}>
+              {t("find")}
+            </Label>
+            <Input
+              id={`${id}-find`}
+              onChange={(event) => setTyped(event.target.value)}
+              placeholder={t("findPlaceholder")}
+              value={typed}
+            />
+            <Button
+              disabled={typed.trim().length < 2}
+              type="submit"
+              variant="outline"
+            >
+              <SearchIcon />
+              {t("findButton")}
+            </Button>
+          </form>
+          {search.isFetching ? <SectionSpinner /> : null}
+          {chosen ? (
             <p className="font-medium">
               {locale === "ar" ? chosen.nameAr : chosen.nameEn}
             </p>
-            <SellThis match={chosen} onDone={reset} sellerId={sellerId} />
-          </div>
+          ) : null}
+          {searched && !chosen && !creating ? (
+            <Matches
+              code={search.data?.code ?? false}
+              matches={matches}
+              onChoose={setChosen}
+              onCreate={() => setCreating(true)}
+            />
+          ) : null}
+        </Step>
+        {chosen ? (
+          <SellThis match={chosen} onDone={reset} sellerId={sellerId} />
         ) : null}
         {creating ? (
-          <div className="rounded-md border p-4">
-            <CreateProduct
-              barcode={looksLikeCode(query) ? query : ""}
-              name={looksLikeCode(query) ? "" : query}
-              onDone={reset}
-              sellerId={sellerId}
-            />
-          </div>
-        ) : null}
-        {searched && !chosen && !creating ? (
-          <Matches
-            code={search.data?.code ?? false}
-            matches={matches}
-            onChoose={setChosen}
-            onCreate={() => setCreating(true)}
+          <CreateProduct
+            barcode={looksLikeCode(query) ? query : ""}
+            name={looksLikeCode(query) ? "" : query}
+            onDone={reset}
+            sellerId={sellerId}
           />
         ) : null}
       </CardContent>
@@ -566,10 +602,15 @@ const FlagForm = ({
 const ListingRow = ({
   canManage,
   listing,
+  onSelect,
+  selected = false,
   sellerId,
 }: {
   readonly canManage: boolean;
   readonly listing: Listing;
+  /** Ticks the row for the bulk bar (owners and admins). */
+  readonly onSelect?: (selected: boolean) => void;
+  readonly selected?: boolean;
   readonly sellerId: string;
 }) => {
   const t = useTranslations("app.company.listings");
@@ -601,21 +642,30 @@ const ListingRow = ({
     );
   };
 
+  const name = locale === "ar" ? listing.name_ar : listing.name_en;
   return (
     <li className="grid gap-3 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="grid gap-1">
-          <span className="font-medium">
-            {locale === "ar" ? listing.name_ar : listing.name_en}
-          </span>
-          <span className="text-muted-foreground text-xs">
-            {conditions(listing.condition)}
-            {listing.sku ? ` · ${listing.sku}` : ""}
-            {listing.barcode ? ` · ${listing.barcode}` : ""}
-          </span>
+        <div className="flex items-start gap-3">
+          {onSelect ? (
+            <Checkbox
+              aria-label={t("select", { name })}
+              checked={selected}
+              className="mt-1"
+              onCheckedChange={(checked) => onSelect(checked === true)}
+            />
+          ) : null}
+          <div className="grid gap-1">
+            <span className="font-medium">{name}</span>
+            <span className="text-muted-foreground text-xs">
+              {conditions(listing.condition)}
+              {listing.sku ? ` · ${listing.sku}` : ""}
+              {listing.barcode ? ` · ${listing.barcode}` : ""}
+            </span>
+          </div>
         </div>
         <div className="grid justify-items-end gap-1 text-sm">
-          <span className="font-medium tabular-nums">
+          <span className="font-medium font-mono tabular-nums">
             {formatPrice(listing.price, locale)}
           </span>
           <span className="text-muted-foreground text-xs">
@@ -624,9 +674,15 @@ const ListingRow = ({
               sold: formatNumber(listing.sold, locale),
             })}
           </span>
-          {listing.product_status === "active" ? null : (
+          {listing.product_status === "draft" ? (
+            <Badge variant="neutral">
+              <EyeOffIcon aria-hidden="true" />
+              {t("hiddenBadge")}
+            </Badge>
+          ) : null}
+          {listing.product_status === "archived" ? (
             <Badge variant="secondary">{t("notLive")}</Badge>
-          )}
+          ) : null}
         </div>
       </div>
       {mode === null ? (
@@ -766,6 +822,7 @@ const MakeBundle = ({
   const [nameEn, setNameEn] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [offer, setOffer] = useState(emptyOffer);
+  const [photos, setPhotos] = useState<File[]>([]);
   const [problem, setProblem] = useState<ProblemKey | null>(null);
 
   const reset = () => {
@@ -774,11 +831,15 @@ const MakeBundle = ({
     setCategoryId("");
     setNameEn("");
     setNameAr("");
+    setPhotos([]);
     setProblem(null);
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (photos.length === 0) {
+      return;
+    }
     const wrong =
       bundleProblem(Object.values(picks)) ??
       (categoryId && (nameEn.trim() || nameAr.trim()) ? null : "details") ??
@@ -799,6 +860,7 @@ const MakeBundle = ({
           nameEn,
         },
         offer,
+        photos,
       },
       {
         onError: (error) => setProblem(toListingProblem(error)),
@@ -860,17 +922,26 @@ const MakeBundle = ({
                 </Select>
               </div>
             </div>
+            <div className="grid gap-2">
+              <span className="font-medium text-sm">{t("steps.photos")}</span>
+              <PhotoPicker onChange={setPhotos} photos={photos} />
+            </div>
             <OfferFields onChange={setOffer} />
             <p className="text-muted-foreground text-xs">
               {bundleText("copiesHint")}
             </p>
             <Problem problem={problem} />
-            <div className="flex gap-2">
-              <Button disabled={create.isPending} type="submit">
-                {bundleText("create")}
-              </Button>
+            <div className="flex justify-end gap-2">
               <Button onClick={reset} type="button" variant="ghost">
                 {t("cancel")}
+              </Button>
+              <Button
+                disabled={create.isPending || photos.length === 0}
+                type="submit"
+              >
+                {photos.length === 0
+                  ? t("photos.needed")
+                  : bundleText("create")}
               </Button>
             </div>
           </form>
@@ -883,6 +954,252 @@ const MakeBundle = ({
             <PackageIcon />
             {bundleText("open")}
           </Button>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+type ListFilter = "all" | "hidden" | "live" | "paused";
+const FILTERS: readonly ListFilter[] = ["all", "live", "hidden", "paused"];
+
+const inFilter = (listing: Listing, filter: ListFilter) => {
+  if (filter === "live") {
+    return listing.product_status === "active" && listing.available > 0;
+  }
+  if (filter === "hidden") {
+    return listing.product_status === "draft";
+  }
+  if (filter === "paused") {
+    return listing.product_status === "active" && listing.available === 0;
+  }
+  return true;
+};
+
+/** Listings the Store hides until their product has a photo. */
+const NeedsPhoto = ({
+  canManage,
+  listings,
+  sellerId,
+}: {
+  readonly canManage: boolean;
+  readonly listings: readonly Listing[];
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.company.listings.hidden");
+  const locale = useLocale();
+  const hidden = hiddenListings(listings);
+  if (hidden.length === 0) {
+    return null;
+  }
+  return (
+    <Card className="scroll-mt-4 border-warning" id="needs-photo">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <EyeOffIcon aria-hidden="true" className="size-5" />
+          {t("title", { count: formatNumber(hidden.length, locale) })}
+        </CardTitle>
+        <CardDescription>
+          {canManage ? t("descriptionAdd") : t("description")}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ul className="grid gap-4 text-sm">
+          {hidden.map((listing) => (
+            <li className="grid gap-2" key={listing.product_id}>
+              <span className="font-medium">
+                {locale === "ar" ? listing.name_ar : listing.name_en}
+              </span>
+              {canManage ? (
+                <AddPhotos productId={listing.product_id} sellerId={sellerId} />
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  );
+};
+
+/** Photos for one hidden product, then "Add photos". */
+const AddPhotos = ({
+  productId,
+  sellerId,
+}: {
+  readonly productId: string;
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.company.listings.hidden");
+  const add = useAddListingPhotos(sellerId);
+  const [photos, setPhotos] = useState<File[]>([]);
+  return (
+    <div className="grid gap-2">
+      <PhotoPicker onChange={setPhotos} photos={photos} />
+      <div className="flex items-center gap-3">
+        <Button
+          disabled={add.isPending || photos.length === 0}
+          onClick={() =>
+            add.mutate(
+              { photos, productId },
+              { onSuccess: () => setPhotos([]) }
+            )
+          }
+          size="sm"
+          type="button"
+        >
+          {t("add")}
+        </Button>
+        {add.isSuccess ? (
+          <span className="text-muted-foreground" role="status">
+            {add.data ? t("live") : t("stillHeld")}
+          </span>
+        ) : null}
+        {add.isError ? (
+          <span className="text-destructive" role="alert">
+            {t("failed")}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+/** The shop's listings: search · filter chips · bulk bar · rows. */
+const YourListings = ({
+  canManage,
+  listings,
+  sellerId,
+}: {
+  readonly canManage: boolean;
+  readonly listings: readonly Listing[];
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.company.listings");
+  const locale = useLocale();
+  const id = useId();
+  const pause = usePauseListings(sellerId);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<ListFilter>("all");
+  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
+  const term = search.trim().toLowerCase();
+  const shown = listings.filter(
+    (listing) =>
+      inFilter(listing, filter) &&
+      (!term ||
+        [listing.name_en, listing.name_ar, listing.sku, listing.barcode].some(
+          (value) => value?.toLowerCase().includes(term)
+        ))
+  );
+  const chosen = listings.filter((listing) => selected.has(listing.offer_id));
+  const select = (offerId: string, on: boolean) => {
+    const next = new Set(selected);
+    if (on) {
+      next.add(offerId);
+    } else {
+      next.delete(offerId);
+    }
+    setSelected(next);
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("yoursTitle")}</CardTitle>
+        <CardDescription>{t("yoursDescription")}</CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-3">
+        {listings.length === 0 ? (
+          <p className="text-muted-foreground text-sm">{t("none")}</p>
+        ) : (
+          <>
+            <div className="grid gap-2">
+              <Label className="sr-only" htmlFor={`${id}-search`}>
+                {t("search")}
+              </Label>
+              <Input
+                id={`${id}-search`}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder={t("search")}
+                type="search"
+                value={search}
+              />
+              <fieldset className="flex flex-wrap gap-2">
+                <legend className="sr-only">{t("filters.label")}</legend>
+                {FILTERS.map((value) => (
+                  <Button
+                    aria-pressed={filter === value}
+                    className="rounded-full"
+                    key={value}
+                    onClick={() => setFilter(value)}
+                    size="sm"
+                    type="button"
+                    variant={filter === value ? "secondary" : "outline"}
+                  >
+                    {t(`filters.${value}`, {
+                      count: formatNumber(
+                        listings.filter((listing) => inFilter(listing, value))
+                          .length,
+                        locale
+                      ),
+                    })}
+                  </Button>
+                ))}
+              </fieldset>
+            </div>
+            {chosen.length > 0 ? (
+              <div className="flex flex-wrap items-center gap-2 rounded-md border bg-surface-sunken p-2 text-sm">
+                <span className="font-medium">
+                  {t("bulk.selected", {
+                    count: formatNumber(chosen.length, locale),
+                  })}
+                </span>
+                <Button
+                  className="ms-auto"
+                  onClick={() => setSelected(new Set())}
+                  size="sm"
+                  type="button"
+                  variant="ghost"
+                >
+                  {t("bulk.clear")}
+                </Button>
+                <Button
+                  disabled={pause.isPending}
+                  onClick={() =>
+                    pause.mutate(chosen, {
+                      onSuccess: () => setSelected(new Set()),
+                    })
+                  }
+                  size="sm"
+                  type="button"
+                  variant="outline"
+                >
+                  <PauseIcon aria-hidden="true" />
+                  {t("bulk.pause")}
+                </Button>
+              </div>
+            ) : null}
+            {pause.isError ? <Problem problem="unknown" /> : null}
+            {shown.length === 0 ? (
+              <p className="text-muted-foreground text-sm">{t("noneShown")}</p>
+            ) : (
+              <ul className="divide-y rounded-md border">
+                {shown.map((listing) => (
+                  <ListingRow
+                    canManage={canManage}
+                    key={listing.offer_id}
+                    listing={listing}
+                    onSelect={
+                      canManage
+                        ? (on) => select(listing.offer_id, on)
+                        : undefined
+                    }
+                    selected={selected.has(listing.offer_id)}
+                    sellerId={sellerId}
+                  />
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </CardContent>
     </Card>
@@ -909,45 +1226,44 @@ const ListingsBody = () => {
 
   return (
     <div className="grid max-w-3xl gap-6">
+      {listings.data ? (
+        <NeedsPhoto
+          canManage={canManage}
+          listings={listings.data}
+          sellerId={sellerId}
+        />
+      ) : null}
       {canManage ? <AddListing sellerId={sellerId} /> : null}
-      {canManage ? <ListingUpload sellerId={sellerId} /> : null}
+      {canManage ? (
+        <div className="scroll-mt-4" id="upload">
+          <ListingUpload sellerId={sellerId} />
+        </div>
+      ) : null}
       {canManage && listings.data ? (
         <MakeBundle listings={listings.data} sellerId={sellerId} />
       ) : null}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("yoursTitle")}</CardTitle>
-          <CardDescription>{t("yoursDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {listings.isPending ? <SectionSpinner /> : null}
-          {listings.isError ? (
-            <ErrorState onRetry={() => listings.refetch()} />
-          ) : null}
-          {listings.data?.length === 0 ? (
-            <p className="text-muted-foreground text-sm">{t("none")}</p>
-          ) : null}
-          {listings.data && listings.data.length > 0 ? (
-            <ul className="divide-y rounded-md border">
-              {listings.data.map((listing) => (
-                <ListingRow
-                  canManage={canManage}
-                  key={listing.offer_id}
-                  listing={listing}
-                  sellerId={sellerId}
-                />
-              ))}
-            </ul>
-          ) : null}
-        </CardContent>
-      </Card>
+      {listings.isPending ? <SectionSpinner /> : null}
+      {listings.isError ? (
+        <ErrorState onRetry={() => listings.refetch()} />
+      ) : null}
+      {listings.data ? (
+        <YourListings
+          canManage={canManage}
+          listings={listings.data}
+          sellerId={sellerId}
+        />
+      ) : null}
     </div>
   );
 };
 
-/** Partners → Selling → Listings: the shop's offers. */
+/** Partners → Sell → Listings: the shop's offers. */
 export const Listings = () => (
-  <BusinessShell feature="selling">
+  <BusinessShell
+    actions={<ListActions onPage />}
+    feature="selling"
+    page="listings"
+  >
     <ListingsBody />
   </BusinessShell>
 );

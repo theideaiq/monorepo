@@ -325,7 +325,7 @@ const ReturnsBody = () => {
  * confirm. Disputes go to The IDEA, which decides.
  */
 export const ShopReturns = () => (
-  <BusinessShell feature="selling">
+  <BusinessShell feature="selling" page="returns">
     <ReturnsBody />
   </BusinessShell>
 );

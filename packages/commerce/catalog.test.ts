@@ -7,7 +7,18 @@ type Call = [string, ...unknown[]];
 const fakeClient = (rows: unknown[] = [], categories: unknown[] = []) => {
   const calls: Call[] = [];
   const builder: Record<string, unknown> = {};
-  for (const method of ["select", "eq", "in", "order", "or"]) {
+  for (const method of [
+    "select",
+    "eq",
+    "gt",
+    "gte",
+    "in",
+    "lte",
+    "neq",
+    "not",
+    "order",
+    "or",
+  ]) {
     builder[method] = (...args: unknown[]) => {
       calls.push([method, ...args]);
       return builder;
@@ -67,6 +78,34 @@ describe("listProducts", () => {
     expect(calls).toContainEqual(["in", "category_id", ["books", "manga"]]);
     await listProducts(client, { category: "comics-manga" });
     expect(calls).toContainEqual(["in", "category_id", ["manga"]]);
+  });
+
+  test("never lists a product without a picture", async () => {
+    const { calls, client } = fakeClient();
+    await listProducts(client, {});
+    expect(calls).toContainEqual(["neq", "images", "{}"]);
+    await listProducts(client, { search: "adele" });
+    expect(calls.filter(([method]) => method === "neq")).toHaveLength(2);
+  });
+
+  test("filters a shelf: deals, new this week, a shop, a price, in stock", async () => {
+    const { calls, client } = fakeClient();
+    await listProducts(client, {
+      createdBySeller: "shop-1",
+      inStock: true,
+      maxPrice: 50_000,
+      onSale: true,
+      since: "2026-10-23T00:00:00.000Z",
+    });
+    expect(calls).toContainEqual(["eq", "created_by_seller", "shop-1"]);
+    expect(calls).toContainEqual(["gt", "stock_count", 0]);
+    expect(calls).toContainEqual(["lte", "price", 50_000]);
+    expect(calls).toContainEqual(["not", "compare_at_price", "is", null]);
+    expect(calls).toContainEqual([
+      "gte",
+      "created_at",
+      "2026-10-23T00:00:00.000Z",
+    ]);
   });
 
   test("a price sort reorders the search results", async () => {

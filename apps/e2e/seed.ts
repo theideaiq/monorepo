@@ -1,3 +1,4 @@
+import { COVER, swapInLocalCovers } from "./covers";
 import {
   admin,
   customer,
@@ -314,24 +315,31 @@ export const resetSignUpUser = async () => {
   }
 };
 
-/** An in-stock product of the journeys' own. */
+/**
+ * An in-stock product of the journeys' own, with a picture (a product without
+ * one is never listed); see covers.ts.
+ */
 export const ensureProduct = async () => {
+  await swapInLocalCovers();
   check(
-    await admin().from("products").upsert(
-      {
-        condition: "new",
-        description_ar: "مصباح مكتب يستخدم في الاختبارات الآلية.",
-        description_en: "A desk lamp used by the automated tests.",
-        kind: "sale",
-        name_ar: product.nameAr,
-        name_en: product.name,
-        price: 25_000,
-        slug: product.slug,
-        status: "active",
-        stock_count: 50,
-      },
-      { onConflict: "slug" }
-    )
+    await admin()
+      .from("products")
+      .upsert(
+        {
+          condition: "new",
+          description_ar: "مصباح مكتب يستخدم في الاختبارات الآلية.",
+          description_en: "A desk lamp used by the automated tests.",
+          images: [COVER],
+          kind: "sale",
+          name_ar: product.nameAr,
+          name_en: product.name,
+          price: 25_000,
+          slug: product.slug,
+          status: "active",
+          stock_count: 50,
+        },
+        { onConflict: "slug" }
+      )
   );
 };
 

@@ -89,7 +89,7 @@ export const GET = async (
         title:
           (locale === "en" ? event.title_en : event.title_ar) || event.title_en,
         updatedAt: new Date(event.updated_at),
-        url: `${project.url}${localePath(locale, `/club/${event.slug}`)}`,
+        url: `${project.url}${localePath(locale, `/club/events/${event.slug}`)}`,
       }))
       .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime());
 

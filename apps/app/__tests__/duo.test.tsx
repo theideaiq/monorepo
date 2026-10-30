@@ -63,7 +63,7 @@ describe("Plus Duo", () => {
       "rentalsOut"
     );
     expect(duoErrorKey(new Error("boom"))).toBe("failed");
-    expect(duoInvitePath("a/b")).toBe("/plus/duo/a%2Fb");
+    expect(duoInvitePath("a/b")).toBe("/family/a%2Fb");
   });
 
   test("Duo plans are listed apart from the plans for one person", () => {

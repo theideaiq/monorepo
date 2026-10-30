@@ -7,6 +7,7 @@ import type { Locale } from "@repo/internationalization";
 import {
   businessPath,
   currentAppPath,
+  type StoredLinkContext,
   safeNextPath,
 } from "@repo/internationalization/app-paths";
 import {
@@ -73,6 +74,9 @@ export const NOTIFICATION_EVENTS = [
   "plus_duo_left",
   "plus_duo_removed",
   "plus_duo_ended",
+  "family_request",
+  "family_request_approved",
+  "family_request_declined",
   "student_verified",
   "student_rejected",
   "identity_verified",
@@ -305,6 +309,12 @@ const extraValues: Partial<
     name: locale === "ar" ? text(data.name_ar) : text(data.name_en),
     number: text(data.number),
   }),
+  family_request: (data, locale) => ({
+    name: itemName(data, locale),
+    teen: text(data.teen),
+  }),
+  family_request_approved: (data, locale) => ({ name: itemName(data, locale) }),
+  family_request_declined: (data, locale) => ({ name: itemName(data, locale) }),
   gift_claimed: (data) => ({
     name: text(data.name),
     number: text(data.number),
@@ -468,19 +478,24 @@ export const describeNotification = (
 /**
  * The path to open, or null for a missing or unsafe link. Links under
  * `/business…` are Partners' pages, on its own site (where they
- * sit at the root: `/business/invoices` opens `/invoices` there).
+ * sit at the root: `/business/invoices` opens `/invoices` there). The
+ * notification's event and kind pick the page where an old link can't
+ * (`/plus#yours` → your plan, At home or Family).
  */
 export const notificationHref = (
   link: string | null,
   locale: Locale = "en",
-  appUrl = process.env.NEXT_PUBLIC_APP_URL ?? ""
+  appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "",
+  context: StoredLinkContext = {}
 ) => {
   const path = safeNextPath(link);
   if (!path) {
     return null;
   }
   const business = businessPath(path);
-  return business ? appLink(appUrl, locale, business) : currentAppPath(path);
+  return business
+    ? appLink(appUrl, locale, business)
+    : currentAppPath(path, context);
 };
 
 const NOTIFICATION_COLUMNS =

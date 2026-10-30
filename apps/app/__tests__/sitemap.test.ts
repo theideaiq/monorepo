@@ -34,6 +34,8 @@ describe("buildSitemap", () => {
       "/store",
       "/plus",
       "/club",
+      "/club/events",
+      "/club/read",
       "/partners",
       "/help",
       "/careers",

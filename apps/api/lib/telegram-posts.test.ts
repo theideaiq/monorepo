@@ -48,7 +48,7 @@ describe("buildPosts", () => {
         photo:
           "https://db.example.com/storage/v1/object/public/editorial/covers/a.webp",
         title: "إطلاق",
-        url: "https://theideaiq.com/ar/club/launch",
+        url: "https://theideaiq.com/ar/club/read/launch",
       },
     ]);
   });

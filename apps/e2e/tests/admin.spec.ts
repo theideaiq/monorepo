@@ -83,6 +83,28 @@ test.describe("Staff", () => {
     await expect(
       page.getByRole("heading", { name: "Key numbers by week" })
     ).toBeVisible();
+    // The Inbox: every decision in one list, filtered by kind, or Mine.
+    await expect(page.getByRole("link", { name: /^Everything/ })).toBeVisible();
+    await page.getByRole("link", { exact: true, name: "Mine" }).click();
+    await expect(page).toHaveURL(`${urls.staff}/?mine=1`);
+    await page.getByRole("link", { exact: true, name: "All" }).click();
+
+    // The command bar (Ctrl/⌘K) jumps to Plus → Demand.
+    await page.keyboard.press("Control+k");
+    const bar = page.getByRole("dialog");
+    await bar.getByRole("combobox").fill("demand");
+    await bar.getByRole("option", { name: /Plus · Demand/ }).click();
+    await expect(page).toHaveURL(`${urls.staff}/plus/demand`);
+    await expect(page.getByRole("heading", { name: "Plus" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Demand" })).toBeVisible();
+    await expectAccessible(page);
+    // Plus: To ship, Coming back and the plans moved here from the catalog.
+    await page.goto(`${urls.staff}/plus`);
+    await expect(page.getByRole("link", { name: "To ship" })).toBeVisible();
+    await page.goto(`${urls.staff}/plus/plans`);
+    await expect(page.getByRole("link", { name: "New plan" })).toBeVisible();
+    await expectAccessible(page);
+    await page.goto(`${urls.staff}/`);
 
     // Catalog → Searches: a Store search that found nothing.
     const missing = `e2e nothing ${Date.now()}`;
@@ -221,12 +243,30 @@ test.describe("Staff", () => {
       product_id: item.id,
       seller_id: "00000000-0000-4000-8000-000000000001",
     });
+    // In the Inbox: J moves to the oldest item, Enter opens its drawer,
+    // and the check is resolved there.
+    await page.goto(`${urls.staff}/?kind=checks`);
+    await expect(
+      page.getByRole("button", { name: /Automatic check.*E2E Desk Lamp/ })
+    ).toBeVisible();
+    await expectAccessible(page);
+    await page.keyboard.press("j");
+    await page.keyboard.press("Enter");
+    const drawer = page.getByRole("dialog");
+    await expect(
+      drawer.getByRole("link", { name: "Open the full record" })
+    ).toBeVisible();
+    await expect(drawer.getByText("No photo")).toBeVisible();
+    await expectAccessible(page);
+    await drawer.getByRole("button", { name: "Resolved" }).click();
+    // The flag (the next item) takes its place in the drawer.
+    await expect(drawer.getByText("The year is wrong")).toBeVisible();
+    await page.keyboard.press("Escape");
+
     await page.goto(`${urls.staff}/catalog/checks`);
-    await expect(page.getByText("No photo")).toBeVisible();
+    await expect(page.getByText("No new products to check.")).toBeVisible();
     await expect(page.getByText("The year is wrong")).toBeVisible();
     await expectAccessible(page);
-    await page.getByRole("button", { name: "Resolved" }).first().click();
-    await expect(page.getByText("No new products to check.")).toBeVisible();
     await page.getByRole("button", { name: "Resolved" }).click();
     await expect(page.getByText("No flags from shops.")).toBeVisible();
 

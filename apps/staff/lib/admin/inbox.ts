@@ -2,37 +2,30 @@ import "server-only";
 
 import { HOUSE_SELLER_ID } from "@repo/commerce";
 import type { StaffRole } from "@repo/database";
+import { cache } from "react";
 import { awaitingFulfilment } from "./fulfilment";
-import { canRead } from "./roles";
+import { type InboxKind, kindSection } from "./inbox-kinds";
+import { canRead, type MenuId } from "./roles";
 import type { ServerClient } from "./session";
 
 /**
- * The dashboard's inbox: everything waiting on staff, for the sections the
- * role can open. Each item is a count and where to work on it; only items
- * with something waiting are returned.
+ * What's waiting on staff, for the sections the role can open. The
+ * decisions (tickets, verifications, checks, returns, shops, applications,
+ * submissions) are the Inbox's list (see `inbox-rows.tsx`); this counts
+ * them for the menu, and counts the other work that has its own page
+ * ("Other work" under the list).
  */
 
 export const inboxItems = [
-  "tickets",
   "orders",
   "lateShopLines",
   "shopRefunds",
-  "disputedReturns",
-  "returnRefunds",
   "rentalRequests",
   "overdueRentals",
-  "submissions",
   "opportunities",
-  "programApplications",
   "surveys",
   "surveyAppeals",
-  "studentDocuments",
-  "identityChecks",
-  "educatorChecks",
-  "organizationChecks",
   "passApps",
-  "productChecks",
-  "productFlags",
   "houseOffers",
   "pendingPayouts",
   "programRefunds",
@@ -53,84 +46,160 @@ export interface InboxEntry {
 const head = { count: "exact", head: true } as const;
 
 const hrefs: Record<InboxItem, string> = {
-  disputedReturns: "/orders/returns",
-  educatorChecks: "/customers/verifications#educators",
   houseOffers: "/catalog/offers",
-  identityChecks: "/customers/verifications#identity",
   invoices: "/partners/invoices",
   lateShopLines: "/orders/shop-lines",
   opportunities: "/club/opportunities#review",
   orders: "/orders?status=awaiting",
-  organizationChecks: "/customers/verifications#organizations",
-  overdueRentals: "/rentals?view=overdue",
+  overdueRentals: "/plus/coming-back",
   passApps: "/partners/sign-in",
   pendingPayouts: "/finance/payouts",
   procurement: "/partners/team",
-  productChecks: "/catalog/checks",
-  productFlags: "/catalog/checks#flags",
-  programApplications: "/club/opportunities#applications",
   programRefunds: "/finance/programs",
-  rentalRequests: "/rentals",
-  returnRefunds: "/orders/returns#refunds",
+  rentalRequests: "/plus",
   seats: "/partners/team/plus",
   shopRefunds: "/orders/shop-lines#refunds",
-  studentDocuments: "/customers/students#documents",
-  submissions: "/club/submissions",
   surveyAppeals: "/customers/surveys#appeals",
   surveys: "/customers/surveys",
   telegram: "/club/telegram",
-  tickets: "/support?status=open",
 };
 
-export const loadInbox = async (
+/** Staff roles that see money (refunds, payouts, invoices). */
+export const seesMoney = (role: StaffRole) =>
+  role === "superadmin" || role === "admin" || role === "finance";
+
+type Count = () => PromiseLike<{ count: number | null }>;
+
+const counted = async (allowed: boolean, query: Count) =>
+  allowed ? ((await query()).count ?? 0) : 0;
+
+const sum = async (allowed: boolean, queries: Count[]) =>
+  allowed
+    ? (await Promise.all(queries.map((query) => counted(true, query)))).reduce(
+        (total, value) => total + value,
+        0
+      )
+    : 0;
+
+/** How many decisions of each kind wait (the Inbox's list, for the menu). */
+const loadDecisionCounts = async (
+  supabase: ServerClient,
+  role: StaffRole
+): Promise<Record<InboxKind, number>> => {
+  const can = (kind: InboxKind) => canRead(role, kindSection[kind]);
+  const [support, verifications, checks, returns, shops, applications, queue] =
+    await Promise.all([
+      counted(can("support"), () =>
+        supabase.from("support_tickets").select("id", head).eq("status", "open")
+      ),
+      sum(can("verifications"), [
+        () =>
+          supabase
+            .from("verification_requests")
+            .select("id", head)
+            .eq("status", "pending")
+            .or("kind.eq.identity,method.eq.documents"),
+        () =>
+          supabase
+            .from("organization_verifications")
+            .select("organization_id", head)
+            .eq("status", "pending"),
+        () =>
+          supabase
+            .from("student_requests")
+            .select("id", head)
+            .eq("method", "card")
+            .eq("status", "pending"),
+        () =>
+          supabase
+            .from("student_verifications")
+            .select("id", head)
+            .eq("status", "pending"),
+      ]),
+      sum(can("checks"), [
+        () =>
+          supabase
+            .from("product_checks")
+            .select("id", head)
+            .is("resolved_at", null),
+        () =>
+          supabase
+            .from("product_flags")
+            .select("id", head)
+            .is("resolved_at", null),
+      ]),
+      sum(can("returns"), [
+        () =>
+          supabase.from("returns").select("id", head).eq("status", "disputed"),
+        ...(seesMoney(role)
+          ? [
+              () =>
+                supabase
+                  .from("returns")
+                  .select("id", head)
+                  .eq("status", "refund_due"),
+            ]
+          : []),
+      ]),
+      counted(can("shops"), () =>
+        supabase
+          .from("sellers")
+          .select("id", head)
+          .eq("is_house", false)
+          .eq("status", "pending")
+      ),
+      // A minor's application waits for the guardian before review.
+      counted(can("applications"), () =>
+        supabase
+          .from("program_applications")
+          .select("id", head)
+          .eq("status", "submitted")
+          .or("guardian_status.is.null,guardian_status.eq.approved")
+      ),
+      can("submissions") ? supabase.rpc("review_queue") : null,
+    ]);
+
+  return {
+    applications,
+    checks,
+    returns,
+    shops,
+    submissions: (queue?.data ?? []).filter(
+      (row) => row.status === "pending" || row.status === "under_review"
+    ).length,
+    support,
+    verifications,
+  };
+};
+
+/** The other work waiting on staff, each with the page it's done on. */
+const loadOtherWork = async (
   supabase: ServerClient,
   role: StaffRole
 ): Promise<InboxEntry[]> => {
   const can = (section: Parameters<typeof canRead>[1]) =>
     canRead(role, section);
-  const finance = ["superadmin", "admin", "finance"].includes(role);
+  const finance = seesMoney(role);
   const today = new Date().toISOString().slice(0, 10);
-  const counted = async (
-    allowed: boolean,
-    query: () => PromiseLike<{ count: number | null }>
-  ) => (allowed ? ((await query()).count ?? 0) : 0);
 
   const [
-    tickets,
     orders,
     rentalRequests,
     overdueRentals,
-    queue,
     telegram,
     procurement,
     seats,
     invoices,
     surveys,
     passApps,
-    productChecks,
-    productFlags,
     lateShopLines,
     shopRefunds,
-    disputedReturns,
-    returnRefunds,
     houseOffers,
     pendingPayouts,
     surveyAppeals,
-    studentDocuments,
-    identityChecks,
-    educatorChecks,
-    organizationChecks,
     opportunities,
-    programApplications,
     programRefunds,
   ] = await Promise.all([
-    counted(can("support"), () =>
-      supabase
-        .from("support_tickets")
-        .select("id", head)
-        .eq("status", "open")
-        .is("assigned_to", null)
-    ),
     counted(can("orders"), () =>
       supabase
         .from("orders")
@@ -143,7 +212,6 @@ export const loadInbox = async (
     counted(can("rentals"), () =>
       supabase.from("rentals").select("id", head).eq("status", "overdue")
     ),
-    can("editorial") ? supabase.rpc("review_queue") : null,
     counted(can("telegram"), () =>
       supabase.from("telegram_requests").select("id", head).eq("status", "open")
     ),
@@ -172,12 +240,6 @@ export const loadInbox = async (
         .select("client_id", head)
         .eq("review_status", "pending")
     ),
-    counted(can("catalog"), () =>
-      supabase.from("product_checks").select("id", head).is("resolved_at", null)
-    ),
-    counted(can("catalog"), () =>
-      supabase.from("product_flags").select("id", head).is("resolved_at", null)
-    ),
     counted(can("orders"), () =>
       supabase
         .from("order_items")
@@ -192,12 +254,6 @@ export const loadInbox = async (
         .in("seller_status", ["out_of_stock", "cancelled"])
         .is("refunded_at", null)
         .not("order.paid_at", "is", null)
-    ),
-    counted(can("orders"), () =>
-      supabase.from("returns").select("id", head).eq("status", "disputed")
-    ),
-    counted(can("orders") && finance, () =>
-      supabase.from("returns").select("id", head).eq("status", "refund_due")
     ),
     counted(can("catalog"), () =>
       supabase
@@ -216,43 +272,8 @@ export const loadInbox = async (
         .not("appealed_at", "is", null)
         .is("appeal_decided_at", null)
     ),
-    counted(can("customers"), () =>
-      supabase
-        .from("student_verifications")
-        .select("id", head)
-        .eq("status", "pending")
-    ),
-    counted(can("customers"), () =>
-      supabase
-        .from("verification_requests")
-        .select("id", head)
-        .eq("kind", "identity")
-        .eq("status", "pending")
-    ),
-    counted(can("customers"), () =>
-      supabase
-        .from("verification_requests")
-        .select("id", head)
-        .eq("kind", "educator")
-        .eq("method", "documents")
-        .eq("status", "pending")
-    ),
-    counted(can("customers"), () =>
-      supabase
-        .from("organization_verifications")
-        .select("organization_id", head)
-        .eq("status", "pending")
-    ),
     counted(can("editorial"), () =>
       supabase.from("opportunities").select("id", head).eq("status", "pending")
-    ),
-    // A minor's application waits for the guardian before review.
-    counted(can("editorial"), () =>
-      supabase
-        .from("program_applications")
-        .select("id", head)
-        .eq("status", "submitted")
-        .or("guardian_status.is.null,guardian_status.eq.approved")
     ),
     counted(finance, () =>
       supabase
@@ -264,38 +285,62 @@ export const loadInbox = async (
   ]);
 
   const counts: Record<InboxItem, number> = {
-    disputedReturns,
-    educatorChecks,
     houseOffers,
-    identityChecks,
     invoices,
     lateShopLines,
     opportunities,
     orders,
-    organizationChecks,
     overdueRentals,
     passApps,
     pendingPayouts,
     procurement,
-    productChecks,
-    productFlags,
-    programApplications,
     programRefunds,
     rentalRequests,
-    returnRefunds,
     seats,
     shopRefunds,
-    studentDocuments,
-    submissions: (queue?.data ?? []).filter(
-      (row) => row.status === "pending" || row.status === "under_review"
-    ).length,
     surveyAppeals,
     surveys,
     telegram,
-    tickets,
   };
 
   return inboxItems
     .filter((id) => counts[id] > 0)
     .map((id) => ({ count: counts[id], href: hrefs[id], id }));
+};
+
+export interface InboxSummary {
+  decisions: Record<InboxKind, number>;
+  other: InboxEntry[];
+}
+
+/** Everything waiting on the role, loaded once per request. */
+export const loadInbox = cache(
+  async (supabase: ServerClient, role: StaffRole): Promise<InboxSummary> => {
+    const [decisions, other] = await Promise.all([
+      loadDecisionCounts(supabase, role),
+      loadOtherWork(supabase, role),
+    ]);
+    return { decisions, other };
+  }
+);
+
+/**
+ * The menu's counts, only where something needs action: the Inbox's
+ * decisions, orders to send (and shop lines past their time), and Plus
+ * rentals to ship or overdue.
+ */
+export const menuCounts = ({
+  decisions,
+  other,
+}: InboxSummary): Partial<Record<MenuId, number>> => {
+  const of = (id: InboxItem) =>
+    other.find((entry) => entry.id === id)?.count ?? 0;
+  const counts: Partial<Record<MenuId, number>> = {
+    inbox: Object.values(decisions).reduce((total, value) => total + value, 0),
+    orders: of("orders") + of("lateShopLines"),
+    plus: of("rentalRequests") + of("overdueRentals"),
+  };
+  return Object.fromEntries(
+    Object.entries(counts).filter(([, value]) => (value ?? 0) > 0)
+  );
 };

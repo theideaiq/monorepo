@@ -2,7 +2,8 @@ import type { Locale } from "@repo/internationalization";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { PageBody, PageHeader, Panel } from "@/components/admin/page";
+import { PageBody, Panel } from "@/components/admin/page";
+import { RecordHeader } from "@/components/admin/record-header";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { parseAddress } from "@/lib/admin/address";
 import { type Formatters, formatters } from "@/lib/admin/format";
@@ -58,7 +59,9 @@ const loadCustomer = async (
     can.orders
       ? supabase
           .from("orders")
-          .select("id, number, status, total, created_at, shipping_address")
+          .select("id, number, status, total, created_at, shipping_address", {
+            count: "exact",
+          })
           .eq("user_id", id)
           .order("created_at", { ascending: false })
           .limit(20)
@@ -91,7 +94,9 @@ const loadCustomer = async (
     can.support
       ? supabase
           .from("support_tickets")
-          .select("id, number, subject, status, last_message_at")
+          .select("id, number, subject, status, last_message_at", {
+            count: "exact",
+          })
           .eq("user_id", id)
           .order("last_message_at", { ascending: false })
           .limit(5)
@@ -137,28 +142,97 @@ const ActivityColumn = ({
 }) => (
   <div className="grid content-start gap-6">
     {orders ? (
-      <OrdersPanel format={format} id={id} orders={orders.data ?? []} />
+      <div className="scroll-mt-4" id="orders">
+        <OrdersPanel format={format} id={id} orders={orders.data ?? []} />
+      </div>
     ) : null}
 
     {rentals ? (
-      <RentalsPanel
-        format={format}
-        locale={locale}
-        rentals={rentals.data ?? []}
-      />
+      <div className="scroll-mt-4" id="rentals">
+        <RentalsPanel
+          format={format}
+          locale={locale}
+          rentals={rentals.data ?? []}
+        />
+      </div>
     ) : null}
 
     {tickets ? (
-      <SupportPanel
-        canOpen={canOpenTickets}
-        customerId={id}
-        format={format}
-        orders={orders?.data ?? []}
-        tickets={tickets.data ?? []}
-      />
+      <div className="scroll-mt-4" id="support">
+        <SupportPanel
+          canOpen={canOpenTickets}
+          customerId={id}
+          format={format}
+          orders={orders?.data ?? []}
+          tickets={tickets.data ?? []}
+        />
+      </div>
     ) : null}
   </div>
 );
+
+/**
+ * The customer's record header: name, suspended and staff chips, Suspend,
+ * how many orders and tickets, and the parts of the page.
+ */
+const CustomerHeader = async ({
+  canSuspend,
+  format,
+  loaded: { orders, profile, rentals, staffRow, tickets },
+}: {
+  readonly canSuspend: boolean;
+  readonly format: Formatters;
+  readonly loaded: Pick<
+    Loaded,
+    "orders" | "rentals" | "staffRow" | "tickets"
+  > & { profile: NonNullable<Loaded["profile"]> };
+}) => {
+  const t = await getTranslations("admin.customers");
+  const tRoles = await getTranslations("admin.roles");
+  const counted = (
+    list: { count: number | null } | null,
+    href: string,
+    label: string
+  ) => (list ? [{ href, label, value: format.number(list.count ?? 0) }] : []);
+  const tab = (shown: unknown, href: string, label: string) =>
+    shown ? [{ href, label }] : [];
+
+  return (
+    <RecordHeader
+      actions={
+        canSuspend ? (
+          <SuspendButton bannedAt={profile.banned_at} id={profile.id} />
+        ) : null
+      }
+      breadcrumb={[{ href: "/customers", label: t("title") }]}
+      chips={
+        <>
+          {profile.banned_at ? (
+            <StatusBadge tone="danger">{t("suspended")}</StatusBadge>
+          ) : null}
+          {staffRow ? (
+            <StatusBadge tone="brand">
+              {t("staffMember", { role: tRoles(staffRow.role) })}
+            </StatusBadge>
+          ) : null}
+        </>
+      }
+      description={t("joinedOn", { date: format.date(profile.created_at) })}
+      numbers={[
+        ...counted(orders, "#orders", t("ordersCount")),
+        ...counted(tickets, "#support", t("ticketsCount")),
+        { label: t("joined"), value: format.date(profile.created_at) },
+      ]}
+      tabs={[
+        ...tab(orders, "#orders", t("tabs.orders")),
+        ...tab(rentals, "#rentals", t("tabs.rentals")),
+        ...tab(tickets, "#support", t("tabs.support")),
+        { href: "#profile", label: t("tabs.profile") },
+      ]}
+      title={profile.full_name || t("unnamed")}
+    />
+  );
+};
 
 const CustomerPage = async ({
   params,
@@ -172,7 +246,6 @@ const CustomerPage = async ({
   const { canWrite, staff, supabase } = await requireSection("customers");
   const locale = await getLocale();
   const t = await getTranslations("admin.customers");
-  const tRoles = await getTranslations("admin.roles");
   const format = formatters(locale);
   const can = {
     orders: canRead(staff.role, "orders"),
@@ -199,27 +272,14 @@ const CustomerPage = async ({
 
   const lastPhone = parseAddress(orders?.data?.[0]?.shipping_address).phone;
   const isStaff = Boolean(staffRow);
-  const canSuspend = canWrite && !isStaff && id !== staff.userId;
 
   return (
     <>
-      <PageHeader
-        back={{ href: "/customers", label: t("title") }}
-        description={t("joinedOn", { date: format.date(profile.created_at) })}
-        title={profile.full_name || t("unnamed")}
-      >
-        {profile.banned_at ? (
-          <StatusBadge tone="danger">{t("suspended")}</StatusBadge>
-        ) : null}
-        {staffRow ? (
-          <StatusBadge tone="brand">
-            {t("staffMember", { role: tRoles(staffRow.role) })}
-          </StatusBadge>
-        ) : null}
-        {canSuspend ? (
-          <SuspendButton bannedAt={profile.banned_at} id={id} />
-        ) : null}
-      </PageHeader>
+      <CustomerHeader
+        canSuspend={canWrite && !isStaff && id !== staff.userId}
+        format={format}
+        loaded={{ orders, profile, rentals, staffRow, tickets }}
+      />
       <PageBody className="lg:grid-cols-[1fr_22rem]">
         <ActivityColumn
           canOpenTickets={canWriteSection(staff.role, "support")}
@@ -231,7 +291,7 @@ const CustomerPage = async ({
           tickets={tickets}
         />
 
-        <div className="grid content-start gap-6">
+        <div className="grid scroll-mt-4 content-start gap-6" id="profile">
           <ProfilePanel
             lastPhone={lastPhone}
             profile={profile}

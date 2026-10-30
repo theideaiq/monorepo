@@ -285,6 +285,29 @@
       },
       "title": "The Store",
       "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order here and pay through Wayl or cash on delivery.",
+      "allProducts": "Everything in the Store",
+      "shelf": {
+        "tabs": "Shelves",
+        "forYou": "For you",
+        "deals": "Deals",
+        "campaignUntil": "Until {date}",
+        "campaignCta": "See the campaign",
+        "newThisWeek": "New this week",
+        "liveAuctions": "Live auctions",
+        "becauseSaved": "Because you saved {name}",
+        "backInStock": "Back in stock",
+        "seeSaved": "See Saved",
+        "inPlus": "In Plus",
+        "plusBandFrom": "Games, books and films delivered and collected, from {price} a month.",
+        "new": "New",
+        "bestsellers": "Bestsellers",
+        "usedDeals": "Used deals",
+        "seeAll": "See all",
+        "dealsTitle": "Deals",
+        "dealsDescription": "Honest prices: each one is lower than what it cost for most of the last 30 days.",
+        "shopTitle": "{shop}",
+        "shopDescription": "Sold by {shop}, delivered and paid through The IDEA."
+      },
       "categories": "Categories",
       "allCategories": "All",
       "subcategories": "Subcategories",
@@ -309,6 +332,20 @@
       "results": "Results for “{query}”",
       "empty": "No products match your search.",
       "clear": "Clear filters",
+      "filters": {
+        "title": "Filters",
+        "button": "Filter",
+        "buttonCount": "Filter ({count})",
+        "active": "Active filters",
+        "remove": "Remove filter: {filter}",
+        "price": "Price",
+        "anyPrice": "Any price",
+        "upTo": "Up to {price}",
+        "more": "More filters",
+        "inStock": "In stock",
+        "inPlus": "In Plus",
+        "apply": "Show results"
+      },
       "product": {
         "specs": "Specifications",
         "variants": "Options",
@@ -324,6 +361,7 @@
         "verifiedSeller": "Verified seller",
         "requiresPlan": "Needs {plan} or a higher plan",
         "requiresPlanNote": "This item is reserved for members on {plan} and above. Members on other plans can upgrade from Your Pass.",
+        "lowest30d": "Lowest in 30 days: {price}",
         "bundle": "In this bundle",
         "bundleQuantity": "{count} ×"
       },
@@ -371,24 +409,35 @@
       "subtitle": "Books, games and movies, delivered to your door. Keep them as long as you like, then swap them for something new.",
       "cta": "Join Plus",
       "seePlans": "See the plans",
+      "homeTitle": "Your Plus",
+      "rows": {
+        "new": "New to Plus"
+      },
+      "shelf": {
+        "title": "{category} in Plus",
+        "all": "All {category} in Plus",
+        "description": "Rent {category} with The IDEA Plus: availability for every item, delivered and collected in Baghdad.",
+        "back": "Back to Plus"
+      },
+      "sheet": {
+        "title": "Plus plans",
+        "description": "Choose Glow, Shine or Blaze, monthly or yearly, for you or your Family. We check your area before you pay.",
+        "back": "Back to Plus"
+      },
       "how": {
         "title": "How it works",
         "steps": [
           {
             "title": "Choose a plan",
-            "description": "Each plan lets you keep a set number of items at a time."
+            "description": "Glow, Shine or Blaze: each keeps a set number of items at home at a time."
           },
           {
-            "title": "Request what you want",
-            "description": "Browse the rental catalog and request a game, book or movie."
+            "title": "Queue what you want",
+            "description": "Add games, books and films to your queue; we send the top ones that are free."
           },
           {
-            "title": "We deliver it",
-            "description": "Your item is delivered to your address in Iraq."
-          },
-          {
-            "title": "Return and swap",
-            "description": "Done with it? Return it and request the next one."
+            "title": "Play, then swap",
+            "description": "Keep each one as long as you like. Send one back and the next comes to your door."
           }
         ]
       },
@@ -735,7 +784,7 @@
     "club": {
       "submit": {
         "title": "Submit your work",
-        "description": "Members can submit essays, poetry, fiction, theatre or visual art from Yours on this page. Editors review every submission without seeing the author's name, and accepted work is published in Stories.",
+        "description": "Members can submit essays, poetry, fiction, theatre or visual art from their Pass. Editors review every submission without seeing the author's name, and accepted work is published in Stories.",
         "button": "Submit your work"
       },
       "learn": {
@@ -776,6 +825,7 @@
       },
       "empty": "Nothing published here yet. Check back soon.",
       "byline": "By {name}",
+      "readingTime": "{minutes} min read",
       "theIdea": "The IDEA",
       "meta": {
         "title": "The IDEA Club — join, read and take part",
@@ -783,6 +833,40 @@
       },
       "title": "Club",
       "description": "Join events and surveys, read news, stories and guides, and meet us on Telegram.",
+      "pages": {
+        "nav": {
+          "label": "Club pages",
+          "home": "Club",
+          "events": "Events",
+          "opportunities": "Opportunities",
+          "surveys": "Surveys",
+          "read": "Read"
+        },
+        "home": {
+          "thisWeek": "This week",
+          "events": "Coming up",
+          "allEvents": "All events",
+          "opportunities": "Featured opportunities",
+          "allOpportunities": "All opportunities",
+          "reads": "Latest reads",
+          "allReads": "Everything to read",
+          "yours": "Your tickets, applications and surveys are in your Pass"
+        },
+        "read": {
+          "title": "Read",
+          "description": "News, stories and guides from The IDEA and its members."
+        },
+        "opportunities": {
+          "title": "Opportunities",
+          "description": "Jobs, internships, scholarships, competitions and programs, featured first, then by deadline."
+        },
+        "surveys": {
+          "title": "Surveys",
+          "description": "Answer surveys from students and researchers, some for Bulbs.",
+          "create": "Create a survey",
+          "yours": "Your surveys"
+        }
+      },
       "pastEvents": "Past events",
       "telegram": {
         "title": "The Club on Telegram",
@@ -829,6 +913,7 @@
       "surveys": {
         "title": "Survey",
         "back": "Back to the Club",
+        "backToYours": "Back to your surveys",
         "studentsCreate": "Verified students can create surveys.",
         "verify": "Verify as a student",
         "answer": {
@@ -1406,6 +1491,13 @@
       "bulbs": "Bulbs",
       "about": "About & info",
       "saved": "Saved",
+      "atHome": "At home",
+      "queue": "Queue",
+      "history": "Past rentals",
+      "lists": "Lists",
+      "tickets": "Tickets",
+      "codes": "Codes",
+      "family": "Family",
       "home": "Home",
       "perks": "Perks",
       "team": "Team",
@@ -1414,7 +1506,31 @@
       "selling": "Selling",
       "supply": "Supply",
       "opportunities": "Opportunities",
-      "affiliate": "Affiliate"
+      "affiliate": "Affiliate",
+      "today": "Today",
+      "sell": "Sell",
+      "grow": "Grow",
+      "listings": "Listings",
+      "offers": "Offers",
+      "returns": "Returns",
+      "auctions": "Auctions",
+      "promotions": "Promotions",
+      "payouts": "Payouts",
+      "shopSettings": "Shop settings",
+      "applyToSell": "Apply to sell",
+      "add": "Add",
+      "addSection": "Add {section}",
+      "toDo": "need you",
+      "breadcrumb": "Where you are",
+      "command": {
+        "title": "Go to",
+        "description": "Jump to any page in Partners.",
+        "placeholder": "Type a page…",
+        "pages": "Pages",
+        "empty": "Nothing matches.",
+        "searching": "Searching…",
+        "open": "Go to a page"
+      }
     },
     "roles": {
       "owner": "Owner",
@@ -1459,6 +1575,167 @@
         "browse": "See upcoming events"
       }
     },
+    "pass": {
+      "bulbs": "{bulbs} Bulbs to spend",
+      "familyHint": "Your partner, teens and kids on one plan",
+      "availability": {
+        "now": "Available now",
+        "short": "Short wait",
+        "long": "Long wait",
+        "coming": "Coming to Plus"
+      },
+      "today": {
+        "title": "Today",
+        "delivery": "{order} is on its way to you",
+        "dueBack": "{name} is due back on {date}",
+        "late": "{name} is late: book its return",
+        "event": "{title} today at {time}",
+        "family": "{count, plural, one {{n} Family request to answer} other {{n} Family requests to answer}}"
+      },
+      "shelves": {
+        "atHome": "At home",
+        "atHomeEmpty": "Nothing from Plus at home right now.",
+        "queue": "Up next in your queue",
+        "queueEmpty": "Your queue is empty. Add games, books and films from Plus.",
+        "bought": "Bought",
+        "boughtEmpty": "Nothing bought yet.",
+        "tickets": "Tickets",
+        "ticketsEmpty": "No upcoming events. Find one in the Club."
+      },
+      "atHome": {
+        "title": "At home",
+        "slots": "At home: {used} of {slots}",
+        "onItsWay": "On its way",
+        "dueBack": "Due back {date}",
+        "late": "Late since {date}",
+        "lateNoDate": "Late",
+        "since": "At home since {date}",
+        "emptyTitle": "Nothing at home yet",
+        "empty": "Items from your queue come with your next delivery.",
+        "toQueue": "See your queue",
+        "history": "Past rentals"
+      },
+      "history": {
+        "title": "Past rentals",
+        "emptyTitle": "No past rentals",
+        "empty": "Items you send back or keep show here.",
+        "returnedOn": "back on {date}",
+        "order": "Order"
+      },
+      "queue": {
+        "title": "Queue",
+        "description": "What you'd like next with Plus, in order. Swaps take from the top; drag an item, or use Move up and Move down.",
+        "notMember": "Your queue is used once you have Plus.",
+        "join": "See the plans",
+        "emptyTitle": "Your queue is empty",
+        "empty": "Add games, books and films from their pages in Plus.",
+        "browse": "Browse Plus",
+        "for": "For {name}",
+        "forTeen": "For your teen",
+        "up": "Move {name} up",
+        "down": "Move {name} down",
+        "more": "More for {name}",
+        "toTop": "Move to top",
+        "buyInstead": "Buy instead",
+        "queueFor": "Queue for",
+        "remove": "Remove",
+        "needsPlan": "Needs {plan}: swaps skip it on your plan",
+        "needsHigher": "Needs a higher plan: swaps skip it",
+        "moveFailed": "The queue couldn't be changed. Try again."
+      },
+      "tickets": {
+        "title": "Tickets",
+        "browse": "Find an event",
+        "applications": "Your applications, surveys and submissions"
+      },
+      "applications": {
+        "title": "Applications"
+      },
+      "codes": {
+        "title": "Codes",
+        "description": "The gift cards and game codes you bought, order by order.",
+        "emptyTitle": "No codes yet",
+        "empty": "Codes you buy show here once they're ready."
+      },
+      "family": {
+        "title": "Family",
+        "description": "One Plus plan for your household: share its items with your partner, and add your teens and kids.",
+        "teenDescription": "Your guardian looks after your Pass. Ask them for something to play.",
+        "errors": {
+          "ageRating": "This item isn't for their age.",
+          "failed": "Something went wrong. Try again.",
+          "manyKids": "You can add up to 6 kids.",
+          "needsGuardian": "Link your Pass with a guardian first.",
+          "notAdult": "A Family is managed by an adult.",
+          "notInPlus": "This item isn't in Plus.",
+          "notUnder13": "Kids' profiles are for under 13s. Teens use their own Pass."
+        },
+        "slots": {
+          "title": "Shared items",
+          "description": "Everyone in your Family rents from the same plan.",
+          "atHome": "At home: {used} of {slots}",
+          "none": "No Plus plan yet.",
+          "plan": "Your plan",
+          "join": "See the plans",
+          "atHomeLink": "At home"
+        },
+        "requests": {
+          "title": "Requests to answer",
+          "asked": "{name} asked for {item}",
+          "askedNoName": "Your teen asked for {item}",
+          "see": "See it",
+          "approve": "Add to my queue",
+          "decline": "Decline",
+          "note": "Approved items join your queue, marked for them."
+        },
+        "people": {
+          "title": "People",
+          "you": "You",
+          "manager": "Manager"
+        },
+        "kids": {
+          "kid": "Under 13",
+          "born": "Born {date}",
+          "inQueue": "In your queue for them: {items}",
+          "nothingToQueue": "Save or queue something in Plus first.",
+          "browse": "Browse Plus",
+          "queueFor": "Queue for {name}",
+          "choose": "Choose an item",
+          "queue": "Add to queue",
+          "queued": "Added to your queue for {name}.",
+          "removeConfirm": "Remove {name}'s profile? Items queued for them stay in your queue.",
+          "remove": "Remove",
+          "keep": "Keep"
+        },
+        "add": {
+          "title": "Add someone",
+          "kid": "A kid",
+          "teen": "A teen",
+          "partner": "A partner",
+          "kidHelp": "Kids under 13 have a profile in your Pass, with no sign-in. You queue items for them; nothing 18+ is offered.",
+          "name": "Name",
+          "birthday": "Birthday",
+          "adding": "Adding…",
+          "addKid": "Add the profile",
+          "over13": "Kids' profiles are for under 13s. A teen links their own Pass with you.",
+          "added": "Profile added.",
+          "teenHelp": "Teens (13 to 17) have their own Pass. They make a guardian code in their Pass → Family; enter it in the guardian card above.",
+          "partnerHelpHolder": "Invite your partner from the Duo card above: they share the items and swaps, with their own Pass and queue.",
+          "partnerHelp": "A partner shares a Family plan (Plus Glow, Shine or Blaze Duo), with their own Pass and queue.",
+          "seePlans": "See the plans"
+        },
+        "ask": {
+          "title": "Ask to play",
+          "description": "Ask {name} for something you saved that's in Plus. Once they say yes, it joins their queue for you.",
+          "none": "Save something from Plus first, then ask for it here.",
+          "browse": "Browse Plus",
+          "asked": "Asked",
+          "ask": "Ask",
+          "approved": "{item}: yes, it's in the queue",
+          "declined": "{item}: not this time"
+        }
+      }
+    },
     "store": {
       "title": "Store",
       "description": "Gaming, tech, books and lifestyle, delivered across Iraq.",
@@ -1491,27 +1768,10 @@
         "details": "Specifications",
         "about": "About this product",
         "condition": "Condition",
-        "rentalOnly": "This item is for rent: with Plus, or on its own.",
-        "goToPlus": "Go to Plus",
         "addFailed": "We couldn't add this to your cart. Please try again.",
         "soldBy": "Sold by {seller} · delivered and paid through The IDEA",
         "verifiedSeller": "Verified seller",
         "left": "{count} left",
-        "alsoRent": "Also for rent with Plus",
-        "rent": {
-          "title": "Rent it on its own",
-          "price": "{price} for {days}",
-          "deposit": "Deposit {deposit}, refunded when you return it",
-          "lateFee": "{fee} a day if it's late; after {days} late it's charged at its used price",
-          "cta": "Rent it",
-          "rentedOut": "All copies are rented out right now.",
-          "errors": {
-            "notTogether": "Only films, books and games rent together. Check out what's in your cart first, or remove it.",
-            "tooMany": "You can rent up to 3 items at a time.",
-            "unavailable": "This can't be rented right now.",
-            "unknown": "We couldn't add this to your cart. Please try again."
-          }
-        },
         "notify": {
           "none": "No one has this on offer right now.",
           "notify": "Notify me",
@@ -1526,6 +1786,38 @@
         "studentPrice": "Student price: {price}",
         "earnBulbs": "Earn {bulbs} Bulbs",
         "plusPrice": "Plus price: {price}"
+      },
+      "getIt": {
+        "title": "Get it",
+        "new": "Buy new",
+        "used": "Buy used or open box",
+        "usedFrom": "from <amount>{price}</amount>",
+        "offers": "{count, plural, one {{n} offer} other {{n} offers}}",
+        "auction": "Auction",
+        "endsIn": "ends",
+        "copies": "Copies on offer",
+        "chooseCopy": "Choose a copy",
+        "chooseOption": "Choose an option",
+        "soldOut": "Sold out",
+        "addToCart": "Add to cart · {price}",
+        "bid": "Bid {price}",
+        "plus": {
+          "title": "In Plus",
+          "from": "From {price} {per}",
+          "join": "Join Plus to play",
+          "onTheWay": "On its way to you",
+          "seeAtHome": "See what's at home",
+          "atHome": "At home since {date}",
+          "sendBack": "Send it back",
+          "keep": "Keep it · {price}",
+          "keepFailed": "We couldn't start that. Please try again.",
+          "withPlan": "In Plus with {plan}",
+          "higherPlan": "In Plus with a higher plan",
+          "upgrade": "Upgrade",
+          "inQueue": "In your queue · #{place}",
+          "addToQueue": "Add to queue",
+          "queueFailed": "We couldn't add it to your queue. Please try again."
+        }
       }
     },
     "cart": {
@@ -1555,10 +1847,6 @@
       "coupon": "Coupon",
       "saveForLater": "Save for later",
       "deposits": "Refundable deposits",
-      "rent": {
-        "label": "Rent",
-        "terms": "For {days} · deposit {deposit}, refunded when you return it"
-      },
       "kit": {
         "label": "Game night kit",
         "when": "From Thursday {date}{hasExtra, select, yes { · {extra} extra days} other {}}",
@@ -1588,6 +1876,12 @@
     },
     "checkout": {
       "title": "Checkout",
+      "steps": {
+        "label": "Checkout steps",
+        "cart": "Cart",
+        "delivery": "Delivery and payment",
+        "done": "Done"
+      },
       "address": {
         "title": "Delivery address",
         "description": "We deliver across Iraq with Boxy and call before delivering.",
@@ -1630,6 +1924,16 @@
       "backToCart": "Back to the cart",
       "orderCreatedPaymentFailed": "Your order was placed, but the payment page didn't open. You can pay from the order page.",
       "viewOrder": "View order",
+      "done": {
+        "title": "Done",
+        "thanks": "Thank you! Your order is in.",
+        "waiting": "We're confirming your payment…",
+        "notFound": "We couldn't find this order.",
+        "total": "Total",
+        "bulbs": "You'll earn {bulbs} Bulbs once it's delivered.",
+        "track": "Track your order",
+        "pay": "Pay from your order"
+      },
       "errors": {
         "cartEmpty": "Your cart is empty.",
         "invalidAddress": "Check the delivery address and try again.",
@@ -1665,13 +1969,15 @@
       "bulbs": {
         "title": "Pay with Bulbs",
         "available": "You have {bulbs} Bulbs ({amount}).",
-        "use": "Use my Bulbs on this order",
+        "use": "Pay with my Bulbs",
         "using": "Using {bulbs} Bulbs = {amount} off",
         "steps": "Bulbs are used from {min}, in steps of {step}."
       },
       "planDelivery": "Free delivery with your Plus plan.",
       "freeDeliveryNudge": "Add {amount} more for free delivery.",
       "bulbsToEarn": "You'll earn {bulbs} Bulbs once it's delivered.",
+      "arrives": "Arrives between {from} and {to}",
+      "arrivesOn": "Arrives on {date}",
       "saved": {
         "title": "Deliver to",
         "new": "A new address",
@@ -1712,12 +2018,11 @@
         "messagePlaceholder": "Happy birthday!",
         "hidePrice": "Hide the price",
         "payNote": "Gifts are paid online or with Bulbs.",
-        "noRentals": "Rentals and game night kits can't be sent as gifts. Remove them from the cart to send the rest as a gift.",
+        "noRentals": "Game night kits can't be sent as gifts. Remove them from the cart to send the rest as a gift.",
         "plusOnly": "Plus months are always sent as a gift: they claim them from the link you send.",
-        "plusWithRentals": "Plus months are sent as a gift, and rentals and game night kits can't be. Remove one or the other to check out.",
+        "plusWithRentals": "Plus months are sent as a gift, and game night kits can't be. Remove one or the other to check out.",
         "plusNote": "The months are added to their Pass when they claim it. If they already have Plus, the months pay their next renewals."
       },
-      "rentLine": "Rent",
       "kitLine": "Kit",
       "plusLine": "Gift",
       "programLine": "Program",
@@ -1767,6 +2072,13 @@
         "cancelledNotice": "This order was cancelled.",
         "refundedNotice": "This order was refunded.",
         "help": "Get help with this order",
+        "helpShort": "Help",
+        "links": "Order links",
+        "return": "Return",
+        "receipt": "Receipt",
+        "review": "Review",
+        "buyAgain": "Buy again",
+        "track": "Track",
         "method": "Delivery and payment",
         "contact": "Contact",
         "confirmedNotice": "Your order is confirmed. Have {amount} ready in cash for the courier.",
@@ -1850,6 +2162,17 @@
     },
     "plus": {
       "title": "Your Plus",
+      "home": {
+        "atHome": "At home {count} of {slots}",
+        "sendBack": "Send one back",
+        "due": "Due {date}",
+        "onTheWay": "On its way",
+        "atHomeNow": "At home",
+        "nextUp": "Next up: {name}",
+        "queueEmpty": "Your queue is empty. Add what you'd like next.",
+        "seeQueue": "See your queue",
+        "yourQueue": "Your queue"
+      },
       "yourPlan": {
         "title": "Your plan",
         "none": "You're not a member yet. Choose a plan below.",
@@ -1875,11 +2198,37 @@
         "monthly": "Monthly",
         "yearly": "Yearly · pay 10 months, get 12",
         "studentPrice": "Student price",
-        "studentOffer": "Students: {price} a month. Verify in Settings.",
+        "studentOffer": "Students: {price} a month.",
+        "studentVerify": "Verify you're a student",
         "people": "Who it's for",
         "solo": "Just me",
         "duo": "Duo",
         "duoDescription": "Duo plans are for two Passes: you invite the second person from Your Plus once you've joined."
+      },
+      "sheet": {
+        "choose": "Choose a plan",
+        "items": "{count, plural, one {{n} item} other {{n} items}}",
+        "monthly": "Monthly",
+        "yearly": "Yearly · pay 10 months, get 12",
+        "yearlyHint": "Pause for up to a month a year, or cancel any time from your plan.",
+        "family": "Family",
+        "familyHint": "Family plans share the items at home with a second Pass; kids' profiles are free.",
+        "perMonth": "a month",
+        "perYear": "a year",
+        "join": "Join {plan} · {price} {per}",
+        "signIn": "Sign in to join",
+        "member": "You already have Plus.",
+        "yourPlan": "See your plan",
+        "redirecting": "Opening the payment page…"
+      },
+      "planPage": {
+        "title": "Your plan",
+        "choose": "Choose a plan",
+        "atHome": "At home",
+        "queue": "Your queue",
+        "history": "Past rentals",
+        "family": "Family",
+        "familyLink": "Family in your Pass"
       },
       "catalog": {
         "title": "Rental catalog",
@@ -2084,6 +2433,7 @@
         "joined": "You're in. You now share {name}'s Plus.",
         "joinedGuardian": "You've joined. We've asked your guardian to approve it.",
         "toPlus": "Go to Your Plus",
+        "toFamily": "Go to your Family",
         "approvalsTitle": "Plus Duo",
         "approval": "{name} wants to join {holder}'s Plus Duo.",
         "approve": "Approve",
@@ -2281,12 +2631,56 @@
         "plan": "Partners plan: {plan}",
         "noPlan": "No Partners plan yet. See plans"
       },
+      "today": {
+        "numbers": {
+          "title": "Key numbers",
+          "salesWeek": "Sales this week",
+          "nextPayout": "Next payout",
+          "nextPayoutDate": "For the week to {date}",
+          "noPayout": "None due",
+          "liveListings": "Live listings",
+          "rating": "Rating",
+          "ratingValue": "{average} of 5",
+          "ratingCount": "Reviews: {count}",
+          "noRating": "No reviews yet"
+        },
+        "tasks": {
+          "title": "Needs you",
+          "empty": "Nothing needs you right now.",
+          "dueBy": "By {time}",
+          "overdue": "Overdue since {time}",
+          "order": "Order {number}",
+          "auction": "Auction {number}",
+          "kinds": {
+            "offer": "Answer an offer",
+            "pack": "Pack an order",
+            "returnAnswer": "Answer a return",
+            "returnCheck": "Check a return",
+            "parcelBack": "Confirm a parcel back",
+            "unpaidAuction": "Unpaid auction win",
+            "needsPhoto": "Hidden until it has a photo",
+            "quotes": "Quotes to answer: {count}",
+            "invoices": "Unpaid invoices: {count}"
+          },
+          "actions": {
+            "offer": "Answer",
+            "pack": "Pack",
+            "returnAnswer": "Answer",
+            "returnCheck": "Check",
+            "parcelBack": "Confirm",
+            "unpaidAuction": "Decide",
+            "needsPhoto": "See listing",
+            "quotes": "Answer",
+            "invoices": "See invoices"
+          }
+        }
+      },
       "organization": {
         "title": "Organization"
       },
       "sections": {
         "title": "Add to your organization",
-        "description": "Switch on what your organization does with The IDEA. You can turn sections off again in Organization.",
+        "description": "Switch on what your organization does with The IDEA. You can turn sections off again in Settings.",
         "add": "Add",
         "remove": "Remove",
         "failed": "That didn't save. Please try again.",
@@ -2294,7 +2688,7 @@
         "settingsTitle": "Sections",
         "settingsDescription": "The sections your organization uses in Partners.",
         "off": "{section} isn't switched on for {organization}.",
-        "offManage": "Add it from Home.",
+        "offManage": "Add it from Today.",
         "offAsk": "Ask an owner or admin to add it.",
         "perks": {
           "description": "Offer perks to Pass members and check their cards at your counter."
@@ -2629,23 +3023,35 @@
         "label": "Settings sections",
         "profile": {
           "title": "Profile",
-          "description": "Your name, language and the emails you'd like from us."
+          "description": "Your name, language, birthday and verification."
         },
-        "email": {
-          "title": "Email",
-          "description": "The address your Pass signs in with, and its password."
+        "signIn": {
+          "title": "Sign-in",
+          "description": "The email your Pass signs in with, its password and your sign-in methods."
         },
         "phone": {
           "title": "Phone",
-          "description": "Your verified numbers and order updates on WhatsApp."
+          "description": "Your verified numbers."
         },
         "connections": {
           "title": "Connections",
-          "description": "Everything linked to your Pass: sign-in accounts, Telegram and the sites you signed in to with it."
+          "description": "The sites you signed in to with your Pass."
         },
-        "more": {
-          "title": "More",
-          "description": "Addresses, birthday, guardian, verification, appearance and deleting your Pass."
+        "addresses": {
+          "title": "Addresses",
+          "description": "Where we deliver."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "Order updates on WhatsApp, and news and offers."
+        },
+        "privacy": {
+          "title": "Privacy",
+          "description": "Deleting your Pass and what happens to your data."
+        },
+        "appearance": {
+          "title": "Appearance",
+          "description": "Light, dark or as your device is set."
         }
       }
     },
@@ -3283,8 +3689,8 @@
       "listings": {
         "title": "Listings",
         "notApproved": "Listings open once The IDEA approves your shop.",
-        "addTitle": "Add a listing",
-        "addDescription": "Scan or type the ISBN or barcode, or search by title. If the product is already on The IDEA, pick it and add your offer.",
+        "addTitle": "List an item",
+        "addDescription": "Find it first: scan or type the ISBN or barcode, or search by title. Then the photos, then condition, price and copies.",
         "find": "ISBN, barcode or title",
         "findPlaceholder": "ISBN, barcode or title",
         "findButton": "Find",
@@ -3292,7 +3698,7 @@
         "noMatch": "Nothing on The IDEA matches that title.",
         "noCodeMatch": "No product has that barcode yet.",
         "createOpen": "Create the product",
-        "createHint": "It goes live with your offer at once. The IDEA checks new products and may fix their details; you can't edit them later, only flag what's wrong.",
+        "createHint": "Not on The IDEA yet? Describe it. It goes live with your offer once it has a photo and passes The IDEA's checks. The IDEA may fix its details; you can't edit them later, only flag what's wrong.",
         "category": "Category",
         "chooseCategory": "Choose a category",
         "barcode": "ISBN or barcode",
@@ -3319,6 +3725,50 @@
         "none": "No listings yet.",
         "copies": "{available} available · {sold} sold",
         "notLive": "Not live yet",
+        "hiddenBadge": "Hidden: needs a photo",
+        "select": "Select {name}",
+        "search": "Search your listings",
+        "noneShown": "No listings match.",
+        "listItem": "List an item",
+        "uploadSheet": "Upload a sheet",
+        "filters": {
+          "label": "Show",
+          "all": "All ({count})",
+          "live": "Live ({count})",
+          "hidden": "Hidden ({count})",
+          "paused": "Paused ({count})"
+        },
+        "bulk": {
+          "selected": "Selected: {count}",
+          "pause": "Pause",
+          "clear": "Clear"
+        },
+        "steps": {
+          "find": "Find it",
+          "photos": "Photos",
+          "offer": "Condition, price and copies"
+        },
+        "photos": {
+          "hint": "At least one photo of the item, up to 10 (JPG, PNG or WebP, up to 5 MB each). The Store shows no product without one.",
+          "add": "Add a photo",
+          "addMore": "Add more photos",
+          "needed": "Add a photo",
+          "photo": "Photo {number}",
+          "remove": "Remove photo {number}",
+          "refused": "Some files weren't added: use JPG, PNG or WebP up to 5 MB.",
+          "none": "This product has no photo yet.",
+          "productPhoto": "{name}, photo {number}",
+          "productHint": "Buyers see the product's photos."
+        },
+        "hidden": {
+          "title": "Hidden until they have a photo ({count})",
+          "description": "These products wait as drafts, and the Store doesn't show them until they have a photo. Use “Details are wrong” on the listing to tell The IDEA.",
+          "descriptionAdd": "These products wait as drafts, and the Store doesn't show them until they have a photo. Add one below and they go live once checked.",
+          "add": "Add photos",
+          "live": "Added. It's live in the Store.",
+          "stillHeld": "Added. The IDEA is checking it before it goes live.",
+          "failed": "The photos couldn't be added. Try again."
+        },
         "problems": {
           "price": "Enter a price of at least {min} IQD.",
           "quantity": "Enter 0 to {max} copies.",
@@ -3337,6 +3787,7 @@
           "file": "CSV file",
           "template": "Download the template",
           "columns": "Columns: barcode, condition (new, open box, used or refurbished; new if empty), price, quantity and sku. For a barcode nobody has listed, also name_en, name_ar and category ({categories}).",
+          "photoHint": "A row that creates a new product has no photo, so that product waits as a draft, hidden from the Store, until a photo is added. Rows for products already on The IDEA go live at once. Today and Listings show what still needs a photo.",
           "checking": "Checking the rows…",
           "summary": "Found: {matched} · New products: {new} · To fix: {errors}",
           "offer": "{condition} · {price} · Copies: {copies}",
@@ -3355,7 +3806,7 @@
           },
           "status": {
             "matched": "Found",
-            "new": "New product",
+            "new": "New product (a draft until it has a photo)",
             "needsDetails": "Needs details",
             "error": "Fix this row"
           },
@@ -3428,7 +3879,7 @@
         }
       },
       "pickup": {
-        "title": "Pickup",
+        "title": "Pickup branches",
         "description": "Where couriers collect your parcels, and who they call. Each branch is a pickup location with Boxy.",
         "notApproved": "Pickup branches can be added once your shop is approved.",
         "none": "No branches yet.",
@@ -3775,33 +4226,6 @@
       "adultsOnly": "This is for members aged 18 and over.",
       "needsBirthday": "Add your date of birth in Settings first.",
       "guardianRequired": "Under 18, your guardian needs to allow Plus first, in Settings."
-    },
-    "rent": {
-      "title": "Rent an item",
-      "back": "Back to the item",
-      "rent": "Rent for {days}",
-      "rentUntil": "Rent for the term, until {date}",
-      "deposit": "Refundable deposit",
-      "delivery": "Delivery",
-      "total": "Total",
-      "depositNote": "We refund the deposit when you return the item, less any late fees or damage.",
-      "lateNote": "Late returns cost {fee} a day. After {days} late, the item is yours at its used price.",
-      "plusDelivery": "Delivery is free in Baghdad with Plus plans that include it; your order shows the final total.",
-      "freeFrom": "Delivery is free once the rent reaches {amount}, or in Baghdad with Plus plans that include it.",
-      "paymentFailed": "Your rental is booked, but we couldn't open the payment page. Pay from the order.",
-      "viewOrder": "View order",
-      "notRentable": "This item can't be rented on its own.",
-      "days": "{count, plural, one {{n} day} other {{n} days}}",
-      "together": {
-        "title": "Rent more for the same delivery",
-        "description": "Add films, books or games: up to {n} together, one delivery fee.",
-        "search": "Find another item",
-        "add": "Add",
-        "remove": "Remove {name}",
-        "searching": "Searching…",
-        "none": "Nothing to add matches that.",
-        "full": "That's the most for one delivery."
-      }
     },
     "kits": {
       "title": "Game night kit",
@@ -4539,6 +4963,18 @@
           "title": "Your Duo place has ended",
           "body": "Your place on {holder}'s Plus has ended."
         },
+        "family_request": {
+          "title": "A Family request",
+          "body": "{teen} asked for {name}."
+        },
+        "family_request_approved": {
+          "title": "Your guardian said yes",
+          "body": "{name} is in their queue for you."
+        },
+        "family_request_declined": {
+          "title": "Not this time",
+          "body": "Your guardian declined {name}."
+        },
         "digital_code_ready": {
           "title": "Your code is ready",
           "body": "{name} is in your order #{number}. Reveal it in Pass → Orders."
@@ -4587,6 +5023,17 @@
       "buy": "Buy",
       "rent": "Rent with Plus"
     },
+    "cover": {
+      "plusMark": "Plus",
+      "inPlus": "In Plus",
+      "needsPlan": "Needs {plan}"
+    },
+    "availability": {
+      "now": "Available now",
+      "short": "Short wait",
+      "long": "Long wait",
+      "coming": "Coming to Plus"
+    },
     "orderStatusPickup": {
       "shipped": "Ready for pickup",
       "delivered": "Picked up"
@@ -4627,17 +5074,19 @@
       "dashboard": "Inbox",
       "catalog": "Catalog",
       "orders": "Orders and delivery",
-      "rentals": "Rentals and Plus",
+      "rentals": "Plus",
       "customers": "Customers",
       "finance": "Finance",
       "editorial": "Club",
       "telegram": "Telegram",
       "staff": "Settings",
+      "store": "Store settings",
       "audit": "Audit log",
       "support": "Support",
       "reviews": "Reviews",
       "companies": "Partners",
-      "affiliates": "Affiliates"
+      "affiliates": "Affiliates",
+      "waiting": "{count} waiting"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -4660,6 +5109,7 @@
       "lastVariant": "A product needs at least one variant.",
       "chooseVariant": "This product has several variants: choose one.",
       "variantPricing": "This product has variants: set price and stock on each variant below.",
+      "needsPicture": "Add a picture before publishing",
       "notShippable": "This order can't be sent now (already sent, not paid or confirmed, or collected at the store).",
       "noDeliveryArea": "The address has no delivery area Boxy knows. Call the customer and fix the address first.",
       "carrierRejected": "Boxy didn't accept the parcel. Check the address and phone number, then try again.",
@@ -4757,36 +5207,96 @@
       "telegramRequests": "Open Telegram requests",
       "openTickets": "Open support tickets",
       "openTicketsHint": "Waiting on staff · {unassigned} unassigned",
+      "counter": {
+        "open": "Counter mode",
+        "close": "Leave counter mode"
+      },
       "inbox": {
         "title": "Waiting on you",
         "empty": "Nothing waiting. Nice.",
+        "all": "All",
+        "mine": "Mine",
+        "whose": "Whose items",
+        "kindsLabel": "Kinds of decision",
+        "everything": "Everything",
+        "listLabel": "Decisions waiting, oldest first",
+        "kinds": {
+          "support": "Support tickets",
+          "verifications": "Verifications",
+          "checks": "Product checks",
+          "returns": "Returns and disputes",
+          "shops": "Shops to approve",
+          "applications": "Applications",
+          "submissions": "Submissions"
+        },
+        "types": {
+          "ticket": "Support ticket",
+          "identity": "Identity check",
+          "educator": "Educator documents",
+          "organization": "Organization to verify",
+          "studentCard": "Student card",
+          "studentDocument": "Student document (partner)",
+          "check": "Automatic check",
+          "flag": "Flag from a shop",
+          "disputed": "Disputed return",
+          "refund": "Return refund to send",
+          "shop": "Shop application",
+          "application": "Program application",
+          "submission": "Submission"
+        },
+        "waiting": {
+          "minutes": "{count} min",
+          "hours": "{count} h",
+          "days": "{count} d"
+        },
+        "waitingLate": "{time}, over a day",
+        "unassigned": "Unassigned",
+        "noOwner": "No owner",
+        "keyboard": "move between items, Enter opens one",
+        "openRecord": "Open the full record",
+        "actions": "Decide",
+        "mineEmpty": "Nothing assigned to you.",
+        "shown": "Showing the {shown} oldest of {total}.",
+        "seeAll": "See them all",
+        "facts": {
+          "member": "Member",
+          "customer": "Customer",
+          "institution": "Institution",
+          "partner": "For",
+          "email": "Email",
+          "method": "How",
+          "sent": "Sent",
+          "order": "Order",
+          "reason": "Reason",
+          "value": "Value",
+          "customerSays": "The customer says",
+          "shopSays": "The shop says",
+          "photo": "Photo from the customer",
+          "refund": "Refund",
+          "how": "Paid back by",
+          "organization": "Organization",
+          "kind": "Type",
+          "program": "Program",
+          "price": "Price",
+          "status": "Status"
+        },
+        "other": "Other work",
         "items": {
-          "tickets": "Unassigned support tickets",
           "orders": "Orders to prepare or ship",
           "rentalRequests": "Rental requests",
           "overdueRentals": "Overdue rentals",
-          "submissions": "Submissions to review",
           "telegram": "Telegram requests",
           "procurement": "New bulk-buying requests to quote",
           "seats": "Plus seats to approve",
           "invoices": "Overdue company invoices",
           "surveys": "Surveys to review",
           "passApps": "Pass apps to review",
-          "productChecks": "New products to check",
-          "productFlags": "Products shops say are wrong",
           "lateShopLines": "Shop lines past their ready-by time",
           "shopRefunds": "Shop lines to refund",
-          "disputedReturns": "Returns to decide",
-          "returnRefunds": "Return refunds to send",
           "houseOffers": "Offers on The IDEA's stock",
           "pendingPayouts": "Shop payouts to send",
           "surveyAppeals": "Survey appeals to decide",
-          "studentDocuments": "Student documents to check (partners)",
-          "identityChecks": "Identity checks to review",
-          "educatorChecks": "Educator documents to review",
-          "organizationChecks": "Organizations to verify",
           "opportunities": "Opportunities to review",
-          "programApplications": "Program applications to decide",
           "programRefunds": "Program refunds to pay"
         }
       },
@@ -4828,6 +5338,11 @@
       },
       "products": {
         "new": "New product",
+        "pictures": "Pictures",
+        "picturesHint": "The first picture is the cover. A product can't go live without one.",
+        "noPicture": "No picture",
+        "copiesCount": "Copies",
+        "newHint": "Start with the pictures: the product can be published once it has one.",
         "search": "Search by name or slug",
         "empty": "No products match.",
         "basics": "Basics",
@@ -5503,20 +6018,20 @@
       }
     },
     "rentals": {
-      "title": "Rentals",
-      "views": {
-        "requests": "Requests",
-        "active": "Out with members",
-        "overdue": "Overdue",
-        "history": "History",
+      "title": "Plus",
+      "tabs": {
+        "ship": "To ship",
+        "back": "Coming back",
         "swaps": "Swaps",
-        "plus": "Plus places",
-        "kits": "Kits"
+        "kits": "Kits",
+        "members": "Members",
+        "demand": "Demand",
+        "plans": "Plans",
+        "history": "History"
       },
       "empty": {
-        "requests": "No requests waiting to be delivered.",
-        "active": "Nothing is out with members.",
-        "overdue": "Nothing is overdue.",
+        "ship": "Nothing waiting to go out.",
+        "back": "Nothing is out with members.",
         "history": "No returned or cancelled rentals yet."
       },
       "item": "Item",
@@ -5561,6 +6076,15 @@
         "taken": "Members",
         "free": "Places free",
         "waiting": "Waiting",
+        "members": "Members",
+        "membersEmpty": "No one has Plus yet.",
+        "plan": "Plan",
+        "renews": "Renews",
+        "endsOn": "Ends {date}",
+        "memberStatus": {
+          "active": "Active",
+          "pastDue": "Payment due"
+        },
         "waitlist": "Waitlist",
         "waitlistHint": "First come, first served. When a place opens, the next person in Baghdad is invited automatically; you can also invite anyone now.",
         "waitlistEmpty": "Nobody is waiting.",
@@ -5630,6 +6154,19 @@
         "house": "The IDEA",
         "supplier": "Owner",
         "suppliedBy": "Lent by {shop}"
+      },
+      "demand": {
+        "description": "The most-queued products against their copies for rent. One copy for every three people queued.",
+        "error": "The demand couldn't be loaded. Try again.",
+        "empty": "No one has anything in their queue yet.",
+        "product": "Product",
+        "queued": "Queued",
+        "copies": "Copies",
+        "available": "Available",
+        "out": "Out",
+        "suggested": "To buy",
+        "buy": "Buy {count} more",
+        "enough": "Enough copies"
       }
     },
     "customers": {
@@ -5664,6 +6201,14 @@
         "en": "English"
       },
       "joined": "Joined",
+      "ordersCount": "Orders",
+      "ticketsCount": "Support tickets",
+      "tabs": {
+        "orders": "Orders",
+        "rentals": "Rentals",
+        "support": "Support",
+        "profile": "Profile"
+      },
       "joinedOn": "Joined {date}",
       "unnamed": "Unnamed customer",
       "suspended": "Suspended",
@@ -5861,7 +6406,6 @@
         "settings": "Settings",
         "bulbs": "Bulbs",
         "prices": "Prices",
-        "rentals": "Rental rates",
         "payouts": "Payouts",
         "coupons": "Coupons",
         "programs": "Programs",
@@ -6006,18 +6550,6 @@
         "noCost": "No cost",
         "belowFloor": "Below the floor"
       },
-      "rentals": {
-        "title": "Single-item rent",
-        "hint": "What renting one item on its own costs, by category. Late fees come out of the deposit at return; after 14 days late the item is charged at its used price.",
-        "depositRate": "Deposit (%)",
-        "depositRateHint": "Of the item's price, refunded at return.",
-        "price": "Price (IQD)",
-        "priceHint": "Empty: not rented on its own.",
-        "days": "Days",
-        "lateFee": "Late fee per day (IQD)",
-        "perTerm": "For the term",
-        "perTermHint": "The price covers the rest of the current term, and the item is due when the term ends (textbooks)."
-      },
       "payouts": {
         "prepareTitle": "Prepare payouts",
         "prepareDescription": "Each approved shop owed more than it owes gets a payout: its items whose 14-day return window has closed with no return open, after commission, less refunds, Boxy's fee for returns that were the shop's fault and the Pro fee. Run it once a week.",
@@ -6108,15 +6640,6 @@
         "from": "From {starts}",
         "uses": "Used {used} times · {perMember} per Pass",
         "usesOf": "Used {used} of {max} times · {perMember} per Pass"
-      },
-      "terms": {
-        "title": "Terms",
-        "hint": "University terms. Textbooks and other per-term rentals run until the end of the current term, or of the next one starting within 30 days. Between terms they can't be rented.",
-        "nameAr": "Name (Arabic)",
-        "nameEn": "Name (English)",
-        "startsOn": "Starts",
-        "endsOn": "Ends",
-        "deleteDescription": "Rentals already made keep their due dates."
       },
       "codes": {
         "title": "Codes",
@@ -6680,6 +7203,7 @@
       "number": "#{number}",
       "openedOn": "Opened {date}",
       "thread": "Conversation",
+      "messages": "Messages",
       "noMessages": "No messages yet.",
       "customerBadge": "Customer",
       "staffBadge": "Staff",
@@ -6746,6 +7270,47 @@
       "requests": "Bulk-buying requests",
       "request": "Request #{number}"
     },
+    "command": {
+      "open": "Search or jump to…",
+      "title": "Command bar",
+      "description": "Jump to a page, or find an order by its number, a product or a customer.",
+      "placeholder": "Page, order number, product or customer…",
+      "empty": "Nothing found.",
+      "searching": "Searching…",
+      "pagesHeading": "Pages",
+      "pages": {
+        "plusBack": "Plus · Coming back",
+        "plusSwaps": "Plus · Swaps",
+        "plusKits": "Plus · Kits",
+        "plusMembers": "Plus · Members",
+        "plusDemand": "Plus · Demand",
+        "plusHistory": "Plus · History",
+        "plusPlans": "Plus · Plans",
+        "returns": "Returns and disputes",
+        "shopLines": "Shop lines",
+        "checks": "Product checks",
+        "offers": "Offers on our stock",
+        "auctions": "Auctions",
+        "campaigns": "Campaigns",
+        "categories": "Categories",
+        "import": "Import products",
+        "newProduct": "New product",
+        "verifications": "Verifications",
+        "students": "Students",
+        "surveys": "Surveys",
+        "events": "Events",
+        "opportunities": "Opportunities",
+        "submissions": "Submissions",
+        "shops": "Shops",
+        "partnerOrders": "Partner orders",
+        "invoices": "Invoices",
+        "perks": "Perks",
+        "payouts": "Shop payouts",
+        "coupons": "Coupons",
+        "codes": "Digital codes",
+        "programs": "Program refunds"
+      }
+    },
     "companies": {
       "title": "Partners",
       "count": "{count} requests",
@@ -6775,6 +7340,7 @@
       },
       "quotes": {
         "number": "Quote #{number}",
+        "title": "Quotes",
         "notes": "Notes for the company",
         "validUntil": "Valid until",
         "validUntilDate": "Valid until {date}",

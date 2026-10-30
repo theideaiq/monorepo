@@ -189,3 +189,8 @@ update public.product_variants v set attributes = '{"Format": "Vinyl"}'
 from public.products p
 where p.id = v.product_id and p.slug in ('kind-of-blue', 'rumours');
 
+
+-- Every listed product needs a picture: give the sample ones a cover.
+update public.products
+set images = array['https://covers.openlibrary.org/b/id/8231856-M.jpg']
+where cardinality(images) = 0;

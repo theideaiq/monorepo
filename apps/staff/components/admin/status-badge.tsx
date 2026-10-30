@@ -12,11 +12,19 @@ export type Tone =
 
 const tones: Record<Tone, string> = {
   brand: "bg-bulb-yellow/20 text-foreground border-bulb-yellow/60",
-  danger: "bg-danger/10 text-danger border-danger/40",
+  danger: "bg-danger/10 text-foreground border-danger/40",
   info: "bg-surface-sunken text-foreground border-border-strong",
   neutral: "bg-muted text-muted-foreground border-border",
-  success: "bg-success/10 text-success border-success/30",
-  warning: "bg-warning/10 text-warning border-warning/40",
+  success: "bg-success/10 text-foreground border-success/30",
+  warning: "bg-warning/10 text-foreground border-warning/40",
+};
+
+// The word stays in the body colour (a tinted word on its own tint falls under
+// 4.5:1 on a shaded table row); the icon carries the tone.
+const toneIconColours: Partial<Record<Tone, string>> = {
+  danger: "text-danger",
+  success: "text-success",
+  warning: "text-warning",
 };
 
 // Status colours always come with an icon and the word.
@@ -93,7 +101,12 @@ export const StatusBadge = ({
         className
       )}
     >
-      {Icon ? <Icon aria-hidden="true" className="size-3 shrink-0" /> : null}
+      {Icon ? (
+        <Icon
+          aria-hidden="true"
+          className={cn("size-3 shrink-0", toneIconColours[resolved])}
+        />
+      ) : null}
       {children}
     </span>
   );

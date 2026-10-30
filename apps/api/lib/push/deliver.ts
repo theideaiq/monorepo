@@ -60,7 +60,9 @@ export const deliverPushNotifications = async (
     const { body, title } = pushText(notification, notification.locale);
     const data: Record<string, string> = {
       notificationId: notification.id,
-      ...(notification.link ? { link: notification.link } : {}),
+      ...(notification.link
+        ? { event: notification.event, link: notification.link }
+        : {}),
     };
     for (const device of devices ?? []) {
       if (device.user_id !== notification.user_id) {

@@ -1,6 +1,6 @@
 import { locales } from "@repo/internationalization";
 import type { MetadataRoute } from "next";
-import { clubItemPath } from "@/lib/club";
+import { eventPath, postPath } from "@/lib/club";
 import { getEvents, getPosts, getProductSlugs } from "@/lib/data";
 import { legalDocuments } from "@/lib/legal";
 import { siteUrl } from "@/lib/metadata";
@@ -28,11 +28,11 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     })),
     ...posts.map(({ slug, updated_at }) => ({
       lastModified: updated_at,
-      path: clubItemPath(slug),
+      path: postPath(slug),
     })),
     ...[...upcoming, ...past].map(({ slug, updated_at }) => ({
       lastModified: updated_at,
-      path: clubItemPath(slug),
+      path: eventPath(slug),
     })),
   ];
 

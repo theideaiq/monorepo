@@ -193,7 +193,7 @@ const Waiting = ({
       {usable.length === 0 ? (
         <p className="text-sm">
           {t("noBranch")}{" "}
-          <Link className="underline" href="/selling/pickup">
+          <Link className="underline" href="/sell/settings#pickup">
             {t("addBranch")}
           </Link>
         </p>
@@ -337,7 +337,7 @@ const OrdersBody = () => {
  * parcel is the only place with their phone and address.
  */
 export const ShopOrders = () => (
-  <BusinessShell feature="selling">
+  <BusinessShell feature="selling" page="orders">
     <OrdersBody />
   </BusinessShell>
 );

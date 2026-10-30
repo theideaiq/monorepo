@@ -432,6 +432,16 @@ steps need Xcode, Android Studio and the store/Firebase accounts
 
 ## Decisions
 
+- 2026-10-30: **UX overhaul across the website, Partners and Staff, in one
+  PR** (`docs/program/ux-overhaul.md`). Four tabs stay (Store · Plus · Club ·
+  Pass); the Library sits at the top of the Pass (`/pass/at-home`, `/queue`,
+  `/history`, `/saved`, `/lists`, `/tickets`, `/applications`, `/codes`);
+  Store and Plus are one catalogue with their own pages, every item needs a
+  picture, one-off renting is gone, and Guardian + Duo become Family
+  (`/pass/family`, kids' profiles and teen requests). Partners opens on Today
+  with `/sell/*` and `/settings/*`; Staff on one Inbox with a `/plus` area and
+  Demand; both have a command bar. No HTTP redirects: stored links map
+  through `currentAppPath`/`businessPath`.
 - 2026-10-28: Master brief from the owner, the last word on everything
   decided so far (recorded in `docs/program/decisions-2026-10-28.md`,
   "Master brief"). Where it differs from earlier messages it wins:

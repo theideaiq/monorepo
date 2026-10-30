@@ -106,6 +106,6 @@ export const useGuardianActions = () => {
   };
 };
 
-/** The link a teen sends their guardian. */
+/** The link a teen sends their guardian: Family, with the code filled in. */
 export const guardianInviteUrl = (origin: string, code: string) =>
-  `${origin}/pass/settings?guardian=${encodeURIComponent(code)}#guardian`;
+  `${origin}/pass/family?guardian=${encodeURIComponent(code)}`;

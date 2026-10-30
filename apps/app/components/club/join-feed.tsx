@@ -30,7 +30,7 @@ const SurveyAccessNote = () => {
     return (
       <p className="text-muted-foreground text-sm">
         {t("phone")}{" "}
-        <Link className="text-pink-text underline" href="/pass/settings">
+        <Link className="text-pink-text underline" href="/pass/settings/phone">
           {t("verify")}
         </Link>
       </p>
@@ -110,7 +110,7 @@ const SignInForSurveys = () => {
       <p className="text-muted-foreground text-sm">{t("signInForSurveys")}</p>
       <Button asChild size="sm" variant="outline">
         <Link
-          href={{ pathname: "/sign-in", query: { return_to: "/club#join" } }}
+          href={{ pathname: "/sign-in", query: { return_to: "/club/surveys" } }}
         >
           {t("signIn")}
         </Link>

@@ -25,7 +25,7 @@ const VerifyPage = async ({ searchParams }: VerifyPageProps) => {
   return (
     <StudentCheck
       kind={verifyKind(typeof kind === "string" ? kind : undefined)}
-      partnersUrl={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/organization")}
+      partnersUrl={appLink(env.NEXT_PUBLIC_APP_URL, locale, "/settings")}
       returnTo={await readReturnTo(searchParams, locale)}
       turnstileSiteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
     />

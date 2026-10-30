@@ -1,15 +1,16 @@
 import type { Enums } from "@repo/database";
 
 /**
- * The IDEA Club at `/club`, in three parts:
- * - **Join** (`#join`): things to take part in, by date or deadline:
- *   events, opportunities and surveys, filtered with
- *   `?show=events|opportunities|surveys`;
- * - **Read** (`#read`): posts in one feed, newest first, filtered by topic
- *   (`?topic=news|stories|guides`);
- * - **Yours** (`#yours`): the member's tickets, surveys and submissions.
- * Posts and events open at `/club/<slug>`, opportunities at
- * `/club/opportunities/<slug>`.
+ * The IDEA Club, one page for each part:
+ * - `/club`: this week, featured events and opportunities, the latest
+ *   reads and the Telegram rooms;
+ * - `/club/events` (`/club/events/<slug>`), `/club/opportunities`
+ *   (`/club/opportunities/<slug>`) and `/club/surveys` (`/club/surveys/<id>`):
+ *   things to take part in, by date or deadline;
+ * - `/club/read` (`?topic=news|stories|guides`) and `/club/read/<slug>`:
+ *   posts, newest first.
+ * The member's tickets, applications and surveys are in the Pass
+ * (`/pass/tickets`, `/pass/applications`).
  */
 export const joinFilters = ["events", "opportunities", "surveys"] as const;
 
@@ -33,16 +34,21 @@ export const isPostTopic = (value: unknown): value is PostTopic =>
 
 export const clubPath = "/club";
 
-/** Join, showing one kind of thing (all of them without one). */
+/** The list of one kind of thing to take part in (the Club home without one). */
 export const joinPath = (filter?: JoinFilter) =>
-  filter ? `/club?show=${filter}#join` : "/club#join";
+  filter ? `/club/${filter}` : clubPath;
 
 /** Read, showing one topic (every post without one). */
 export const topicPath = (topic?: PostTopic) =>
-  topic ? `/club?topic=${topic}#read` : "/club#read";
+  topic ? `/club/read?topic=${topic}` : "/club/read";
 
-/** A post or an event. */
-export const clubItemPath = (slug: string) => `/club/${slug}`;
+/** A post (a story, guide or news item). */
+export const postPath = (slug: string) =>
+  `/club/read/${encodeURIComponent(slug)}`;
+
+/** An event, with its RSVP or ticket. */
+export const eventPath = (slug: string) =>
+  `/club/events/${encodeURIComponent(slug)}`;
 
 /** A job, internship, scholarship, competition or program. */
 export const opportunityPath = (slug: string) =>
@@ -56,13 +62,32 @@ export const surveyPath = (id: string) =>
 export const receiptPath = (orderId: string) =>
   `/pass/orders/${encodeURIComponent(orderId)}`;
 
+/** The tabs of `/pass/applications`: what the member applied to or made. */
+export const yoursTabs = [
+  "applications",
+  "surveys",
+  "submissions",
+  "following",
+] as const;
+
+export type YoursTab = (typeof yoursTabs)[number];
+
+export const isYoursTab = (value: unknown): value is YoursTab =>
+  typeof value === "string" && (yoursTabs as readonly string[]).includes(value);
+
+/** `/pass/applications`, on one of its tabs. */
+export const applicationsPath = (tab?: YoursTab) =>
+  tab && tab !== "applications"
+    ? `/pass/applications?tab=${tab}`
+    : "/pass/applications";
+
 interface Dated {
   /** When it happens, or the deadline to take part; null when open-ended. */
   at: string | null;
   key: string;
 }
 
-/** Join's order: soonest date or deadline first, open-ended ones last. */
+/** Soonest date or deadline first, open-ended ones last. */
 export const byDateOrDeadline = <T extends Dated>(items: readonly T[]) =>
   [...items].sort((a, b) => {
     if (a.at === b.at) {
@@ -76,3 +101,14 @@ export const byDateOrDeadline = <T extends Dated>(items: readonly T[]) =>
     }
     return a.at.localeCompare(b.at);
   });
+
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+/** Whether `at` falls in the seven days from `now` (the Club's "This week"). */
+export const isThisWeek = (at: string | null, now = new Date()) => {
+  if (!at) {
+    return false;
+  }
+  const time = new Date(at).getTime();
+  return time >= now.getTime() && time < now.getTime() + WEEK_MS;
+};

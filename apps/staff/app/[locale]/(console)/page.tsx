@@ -6,6 +6,8 @@ import {
   TableHeader,
   TableRow,
 } from "@repo/design-system/components/ui/table";
+import { cn } from "@repo/design-system/lib/utils";
+import type { Locale } from "@repo/internationalization";
 import {
   BookOpenIcon,
   LifeBuoyIcon,
@@ -19,16 +21,36 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
-import { PageBody, PageHeader, Panel } from "@/components/admin/page";
+import { CounterMode } from "@/components/admin/counter-mode";
+import { InboxList } from "@/components/admin/inbox-list";
+import {
+  EmptyState,
+  PageBody,
+  PageHeader,
+  Panel,
+} from "@/components/admin/page";
 import { StatCard } from "@/components/admin/stat-card";
 import { monthStartIso } from "@/lib/admin/dates";
 import { formatters } from "@/lib/admin/format";
 import { awaitingFulfilment } from "@/lib/admin/fulfilment";
 import { loadInbox } from "@/lib/admin/inbox";
+import {
+  byWaiting,
+  countByKind,
+  type InboxKind,
+  inboxHref,
+  kindHref,
+  mineOnly,
+  parseInboxFilter,
+  visibleKinds,
+} from "@/lib/admin/inbox-kinds";
+import type { SearchParams } from "@/lib/admin/list";
 import { Link } from "@/lib/admin/navigation";
-import { canRead } from "@/lib/admin/roles";
+import { canRead, canWrite } from "@/lib/admin/roles";
 import type { ServerClient } from "@/lib/admin/session";
 import { requireSection } from "@/lib/admin/session";
+import { loadInboxItems, PER_KIND } from "./_inbox/rows";
+import { CheckPass } from "./customers/_components/check-pass";
 
 export const generateMetadata = async (): Promise<Metadata> => {
   const t = await getTranslations("admin.nav");
@@ -49,8 +71,11 @@ type Access = Record<
 
 const head = { count: "exact", head: true } as const;
 
-/** How many weeks of key numbers the home page shows. */
+/** How many weeks of key numbers the Inbox shows. */
 const WEEKS = 8;
+
+/** Kinds with an owner: the only ones "Mine" can hold. */
+const OWNED: readonly InboxKind[] = ["support", "submissions"];
 
 /** Runs a count only when the role can see it (RLS would hide it anyway). */
 const countIf = async (
@@ -58,7 +83,7 @@ const countIf = async (
   query: () => PromiseLike<{ count: number | null }>
 ) => (allowed ? ((await query()).count ?? 0) : 0);
 
-/** The dashboard's numbers, each loaded only for roles that use it. */
+/** The key numbers, each loaded only for roles that use it. */
 const loadStats = async (supabase: ServerClient, can: Access) => {
   const since = monthStartIso(new Date());
 
@@ -169,12 +194,50 @@ interface Card {
   value: string;
 }
 
-/** Today's work for the signed-in role: the inbox, then the numbers. */
-const DashboardPage = async () => {
+/** A filter chip: the kind's name and how many wait. */
+const Chip = ({
+  active,
+  count,
+  href,
+  label,
+}: {
+  readonly active: boolean;
+  readonly count: string;
+  readonly href: string;
+  readonly label: string;
+}) => (
+  <Link
+    aria-current={active ? "page" : undefined}
+    className={cn(
+      "inline-flex min-h-9 items-center gap-2 whitespace-nowrap rounded-full border px-3 text-sm transition-colors",
+      active
+        ? "border-primary bg-primary/10 font-medium text-foreground"
+        : "text-muted-foreground hover:bg-accent hover:text-foreground"
+    )}
+    href={href}
+  >
+    {label}
+    <span className="tabular-nums">{count}</span>
+  </Link>
+);
+
+/**
+ * The Inbox: every decision waiting on the role in one list (filtered by
+ * kind, or "Mine"), each opening in a drawer with its actions; then the
+ * other work with its own pages, and the key numbers.
+ */
+const InboxPage = async ({
+  searchParams,
+}: {
+  readonly searchParams: Promise<SearchParams>;
+}) => {
   const { staff, supabase } = await requireSection("dashboard");
+  const filter = parseInboxFilter(await searchParams);
+  const locale = (await getLocale()) as Locale;
   const t = await getTranslations("admin.dashboard");
-  const format = formatters(await getLocale());
+  const format = formatters(locale);
   const { role } = staff;
+  const kinds = visibleKinds(role);
 
   const can: Access = {
     customers: canRead(role, "customers"),
@@ -186,11 +249,58 @@ const DashboardPage = async () => {
     support: canRead(role, "support"),
     telegram: canRead(role, "telegram"),
   };
-  const [stats, inbox, { data: weeks }] = await Promise.all([
+  // Only what the list shows: one kind, the owned kinds for Mine, or all.
+  const wanted = kinds.filter(
+    (kind) =>
+      (!filter.kind || kind === filter.kind) &&
+      (!filter.mine || OWNED.includes(kind))
+  );
+  const [stats, summary, loaded, { data: weeks }] = await Promise.all([
     loadStats(supabase, can),
     loadInbox(supabase, role),
+    loadInboxItems(
+      supabase,
+      role,
+      locale,
+      wanted,
+      filter.mine ? staff.userId : null
+    ),
     supabase.rpc("staff_metrics", { weeks: WEEKS }),
   ]);
+
+  const loadedItems = Object.values(loaded).flatMap(
+    (result) => result?.items ?? []
+  );
+  const mineRows = mineOnly(
+    loadedItems.map((item) => item.row),
+    true,
+    staff.userId
+  );
+  const mineKeys = new Set(mineRows.map((row) => row.key));
+  const shownItems = (
+    filter.mine
+      ? loadedItems.filter((item) => mineKeys.has(item.row.key))
+      : loadedItems
+  ).filter((item) => !filter.kind || item.row.kind === filter.kind);
+  const order = new Map(
+    byWaiting(shownItems.map((item) => item.row)).map((row, index) => [
+      row.key,
+      index,
+    ])
+  );
+  const items = [...shownItems].sort(
+    (a, b) => (order.get(a.row.key) ?? 0) - (order.get(b.row.key) ?? 0)
+  );
+  // Chip counts: everything waiting (or, under Mine, what's yours).
+  const counts: Record<InboxKind, number> = filter.mine
+    ? countByKind(mineRows)
+    : summary.decisions;
+  const total = kinds.reduce((sum, kind) => sum + counts[kind], 0);
+  const cut =
+    filter.kind && !filter.mine
+      ? (loaded[filter.kind]?.total ?? 0) > PER_KIND
+      : false;
+
   // Paid orders out of the people who started a cart that week.
   const conversion = (paid: number, carts: number) =>
     carts > 0 ? `${format.number(Math.round((paid / carts) * 100))}%` : "—";
@@ -225,7 +335,7 @@ const DashboardPage = async () => {
       value: format.money(stats.revenue),
     },
     {
-      href: can.rentals ? "/rentals?view=active" : undefined,
+      href: can.rentals ? "/plus/members" : undefined,
       icon: SparklesIcon,
       label: t("members"),
       show: can.members,
@@ -234,7 +344,7 @@ const DashboardPage = async () => {
     {
       attention: stats.overdueRentals > 0,
       hint: t("overdue", { count: format.number(stats.overdueRentals) }),
-      href: "/rentals",
+      href: "/plus/coming-back",
       icon: RepeatIcon,
       label: t("rentals"),
       show: can.rentals,
@@ -272,15 +382,85 @@ const DashboardPage = async () => {
         title={t("title")}
       />
       <PageBody>
-        <Panel title={t("inbox.title")}>
-          {inbox.length === 0 ? (
-            <p className="text-muted-foreground text-sm">{t("inbox.empty")}</p>
+        {canWrite(role, "customers") ? (
+          <CounterMode>
+            <CheckPass />
+          </CounterMode>
+        ) : null}
+
+        <section aria-labelledby="inbox-title" className="grid gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-semibold text-lg" id="inbox-title">
+              {t("inbox.title")}
+            </h2>
+            <nav
+              aria-label={t("inbox.whose")}
+              className="inline-flex rounded-lg border p-0.5"
+            >
+              {[false, true].map((mine) => (
+                <Link
+                  aria-current={filter.mine === mine ? "page" : undefined}
+                  className={cn(
+                    "inline-flex min-h-9 items-center rounded-md px-3 text-sm",
+                    filter.mine === mine
+                      ? "bg-accent font-medium text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                  href={inboxHref({ kind: filter.kind, mine })}
+                  key={String(mine)}
+                >
+                  {t(mine ? "inbox.mine" : "inbox.all")}
+                </Link>
+              ))}
+            </nav>
+          </div>
+          <nav
+            aria-label={t("inbox.kindsLabel")}
+            className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1"
+          >
+            <Chip
+              active={filter.kind === null}
+              count={format.number(total)}
+              href={inboxHref({ kind: null, mine: filter.mine })}
+              label={t("inbox.everything")}
+            />
+            {kinds.map((kind) => (
+              <Chip
+                active={filter.kind === kind}
+                count={format.number(counts[kind])}
+                href={inboxHref({ kind, mine: filter.mine })}
+                key={kind}
+                label={t(`inbox.kinds.${kind}`)}
+              />
+            ))}
+          </nav>
+          {items.length === 0 ? (
+            <EmptyState
+              title={t(filter.mine ? "inbox.mineEmpty" : "inbox.empty")}
+            />
           ) : (
+            <InboxList items={items} now={new Date().toISOString()} />
+          )}
+          {cut && filter.kind ? (
+            <p className="text-muted-foreground text-sm">
+              {t("inbox.shown", {
+                shown: format.number(PER_KIND),
+                total: format.number(loaded[filter.kind]?.total ?? 0),
+              })}{" "}
+              <Link className="underline" href={kindHref[filter.kind]}>
+                {t("inbox.seeAll")}
+              </Link>
+            </p>
+          ) : null}
+        </section>
+
+        {summary.other.length > 0 ? (
+          <Panel title={t("inbox.other")}>
             <ul className="divide-y text-sm">
-              {inbox.map((item) => (
+              {summary.other.map((item) => (
                 <li key={item.id}>
                   <Link
-                    className="flex items-center justify-between gap-3 py-2 hover:underline"
+                    className="flex min-h-11 items-center justify-between gap-3 py-2 hover:underline"
                     href={item.href}
                   >
                     <span>{t(`inbox.items.${item.id}`)}</span>
@@ -291,8 +471,9 @@ const DashboardPage = async () => {
                 </li>
               ))}
             </ul>
-          )}
-        </Panel>
+          </Panel>
+        ) : null}
+
         <Panel description={t("weeks.description")} title={t("weeks.title")}>
           <div className="overflow-x-auto">
             <Table>
@@ -367,4 +548,4 @@ const DashboardPage = async () => {
   );
 };
 
-export default DashboardPage;
+export default InboxPage;

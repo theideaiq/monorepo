@@ -256,8 +256,8 @@ Captions: Arabic first, English after a line break when needed; end with the act
 - **Phone tabs:** Store · Plus · Club · Pass. Hidden during sign-in and checkout.
 - **Top bar:** on phones, logo · search · Saved (heart) · bell · cart; on desktop, logo · Store · Plus · Club · search · Saved · bell · cart · Pass. Only the bell (unread) and the cart (items) show counts.
 - **Footer:** desktop only, one slim line (For partners · About · Careers · Help · Legal, language and theme). Phones and the apps have none: About & help is the last row of the Pass, and the version and build sit at the bottom of /about.
-- **Where things live:** your Pass holds the card, Orders, Bulbs, Saved (Saved · Lists · Queue) and Settings; /plus holds Your Plus (plan, rentals, swaps, "Next up"); /club holds Yours (tickets, surveys, applications).
-- **Buttons:** the primary action is pink with white text, whatever it is (buy, rent, bid); on pink panels it is yellow with dark text; secondary actions are outlined.
+- **Where things live:** your Pass holds the card, Today and the Library (At home, Queue, History, Saved, Lists, Tickets, Applications, Codes), Family, Bulbs and Settings; /plus holds the Plus shelves, the plans and your plan; /club holds events, opportunities, surveys and Read.
+- **Buttons:** the primary action is pink with white text, whatever it is (buy, add to Plus, bid); on pink panels it is yellow with dark text; secondary actions are outlined.
 - **States** show in a word with an icon: Price dropped, Back in stock (success) · Out now, Rentable now (pink) · Coming soon, Unavailable (neutral). Auctions show time left in mono; in the last hour they turn to the warning tone with "Ending soon".
 - Two themes: Paper (light) and Dark, following the system setting.
 - Icons: Lucide, 1.75px stroke, rounded joins, `currentColor`; directional icons flip in RTL. The bulb icon only for Bulbs.

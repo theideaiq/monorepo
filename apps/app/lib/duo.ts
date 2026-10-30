@@ -194,6 +194,6 @@ export const duoErrorKey = (error: Error | null): DuoError => {
   return known.find(([key]) => message.includes(key))?.[1] ?? "failed";
 };
 
-/** The invite link the holder shares. */
+/** The Family invite link the holder shares (a Duo place). */
 export const duoInvitePath = (token: string) =>
-  `/plus/duo/${encodeURIComponent(token)}`;
+  `/family/${encodeURIComponent(token)}`;

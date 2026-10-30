@@ -22,7 +22,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { ErrorState, SectionSpinner } from "@/components/states";
 import { env } from "@/env";
-import { clubItemPath } from "@/lib/club";
+import { eventPath } from "@/lib/club";
 import {
   calendarFeedUrl,
   upcomingRsvps,
@@ -137,7 +137,7 @@ export const YourEvents = () => {
                 <li className="grid gap-0.5 text-sm" key={event.id}>
                   <Link
                     className="font-medium hover:underline"
-                    href={clubItemPath(event.slug)}
+                    href={eventPath(event.slug)}
                   >
                     {localized(event, "title", locale)}
                   </Link>

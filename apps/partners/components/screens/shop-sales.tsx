@@ -624,7 +624,7 @@ const SalesBody = () => {
  * days, a share off each copy from a quantity on, and its student price.
  */
 export const ShopSales = () => (
-  <BusinessShell feature="selling">
+  <BusinessShell feature="selling" page="promotions">
     <SalesBody />
   </BusinessShell>
 );

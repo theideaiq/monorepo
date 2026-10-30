@@ -20,8 +20,10 @@ export const Header = () => {
   const t = useTranslations("web.nav");
   const pathname = usePathname();
 
+  // Opaque, not translucent: the dark Plus pages scroll under it, and a see-through
+  // bar lets them wash out its links.
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="container mx-auto flex min-h-16 items-center gap-4 px-4">
         <Link aria-label={t("home")} className="shrink-0" href="/">
           <BrandLogo />

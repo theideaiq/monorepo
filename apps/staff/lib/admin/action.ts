@@ -6,6 +6,7 @@ import {
   type ActionError,
   type ActionState,
   databaseError,
+  errorFields,
   failure,
   success,
 } from "./action-state";
@@ -106,7 +107,7 @@ export const staffAction =
       return result ?? success();
     } catch (error) {
       if (error instanceof ActionFailure) {
-        return failure(error.key);
+        return failure(error.key, errorFields[error.key]);
       }
       throw error;
     }

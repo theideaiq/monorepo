@@ -5,7 +5,7 @@ import { titleFrom } from "@/lib/app-metadata";
 
 export const generateMetadata = titleFrom((t) => t("app.wishlist.title"));
 
-/** Your Pass → Saved: the items the member hearted on product pages. */
+/** `/pass/saved`: what the member hearted, their offers and bids. */
 const SavedPage = () => (
   <Suspense fallback={<SectionSpinner />}>
     <Wishlist />

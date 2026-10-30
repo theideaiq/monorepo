@@ -51,7 +51,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(32);
+select plan(30);
 
 -- A verifies by email, B by card, C is neither, S is support, P works at
 -- the partner.
@@ -118,13 +118,6 @@ select throws_ok(
 );
 
 -- ── Deposits ──
-select pg_temp.login_as('00000000-0000-0000-0000-000000000911');
-select is((select deposit from public.rental_quote('91000000-0000-0000-0000-000000000001')), 0::bigint,
-  'a verified student rents without a deposit');
-select pg_temp.login_as('00000000-0000-0000-0000-000000000913');
-select is((select deposit from public.rental_quote('91000000-0000-0000-0000-000000000001')), 29750::bigint,
-  'others pay the deposit');
-select pg_temp.reset_role();
 insert into public.orders (id, user_id, subtotal, total, shipping_address)
 values ('91000000-0000-0000-0000-0000000000d1', '00000000-0000-0000-0000-000000000911', 0, 0, '{}');
 insert into public.order_items (order_id, name_ar, name_en, unit_price, quantity, kind)
