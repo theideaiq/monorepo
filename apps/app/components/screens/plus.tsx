@@ -299,15 +299,14 @@ const StudentNote = ({
   if (isStudent) {
     return <Badge className="w-fit">{t("studentPrice")}</Badge>;
   }
+  // Plain text: the card is a radio, so the way to verify sits below the
+  // cards (a link inside a radio is a nested control).
   return (
-    <Link
-      className="text-pink-text text-xs hover:underline"
-      href="/verify?kind=student"
-    >
+    <span className="text-pink-text text-xs">
       {t("studentOffer", {
         price: formatCurrency(studentPlan.amount, locale, studentPlan.currency),
       })}
-    </Link>
+    </span>
   );
 };
 
@@ -510,6 +509,14 @@ export const PlanSheet = () => {
           );
         })}
       </div>
+      {!isStudent && studentPlans.data?.length ? (
+        <Link
+          className="inline-flex min-h-11 items-center self-start text-pink-text text-sm hover:underline"
+          href="/verify?kind=student"
+        >
+          {tPlans("studentVerify")}
+        </Link>
+      ) : null}
       {choice ? (
         <div className="grid max-w-xl gap-3">
           <JoinStep

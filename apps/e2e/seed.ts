@@ -314,14 +314,35 @@ export const resetSignUpUser = async () => {
   }
 };
 
-/** An in-stock product of the journeys' own. */
+/** The cover every journey product shows: a 1×1 PNG in the local `catalog` bucket. */
+const COVER = "e2e/cover.png";
+/** The remote cover `supabase/seed.sql` gives the sample products. */
+const SEED_COVER = "https://covers.openlibrary.org/b/id/8231856-M.jpg";
+const COVER_PNG =
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+
+/**
+ * An in-stock product of the journeys' own, with a picture (a product without
+ * one is never listed). The seeded products' remote covers are swapped for the
+ * same local file, so no journey waits on an outside image host.
+ */
 export const ensureProduct = async () => {
+  const db = admin();
   check(
-    await admin().from("products").upsert(
+    await db.storage
+      .from("catalog")
+      .upload(COVER, Buffer.from(COVER_PNG, "base64"), {
+        contentType: "image/png",
+        upsert: true,
+      })
+  );
+  check(
+    await db.from("products").upsert(
       {
         condition: "new",
         description_ar: "مصباح مكتب يستخدم في الاختبارات الآلية.",
         description_en: "A desk lamp used by the automated tests.",
+        images: [COVER],
         kind: "sale",
         name_ar: product.nameAr,
         name_en: product.name,
@@ -332,6 +353,12 @@ export const ensureProduct = async () => {
       },
       { onConflict: "slug" }
     )
+  );
+  check(
+    await db
+      .from("products")
+      .update({ images: [COVER] })
+      .contains("images", [SEED_COVER])
   );
 };
 

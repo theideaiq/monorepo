@@ -48,13 +48,13 @@ export const AvailabilityWord = ({
   );
 };
 
-/** The small Plus mark on a cover: yellow on pink. */
+/** The small Plus mark on a cover: white on pink, the brand's primary pair (yellow on pink is too faint for small text). */
 export const PlusMark = ({ className }: { readonly className?: string }) => {
   const t = useTranslations("store.cover");
   return (
     <span
       className={cn(
-        "rounded-full bg-idea-pink px-2 py-0.5 font-bold text-bulb-yellow text-xs",
+        "rounded-full bg-idea-pink px-2 py-0.5 font-bold text-white text-xs",
         className
       )}
       title={t("inPlus")}

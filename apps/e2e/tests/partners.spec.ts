@@ -339,8 +339,9 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   await bundleForm.getByLabel("Price (IQD)").fill("49750");
   await bundleForm.getByLabel("Copies").fill("1");
   // At least one photo: until then the button says so and waits.
+  // (The photo picker shares the name; the submit button is the one that waits.)
   await expect(
-    bundleForm.getByRole("button", { name: "Add a photo" })
+    bundleForm.locator("button[type=submit]", { hasText: "Add a photo" })
   ).toBeDisabled();
   await bundleForm.getByLabel("Add a photo").setInputFiles({
     buffer: Buffer.from(
