@@ -266,6 +266,17 @@ namespaces.
   development mode works for the 25 users added to it until Spotify
   grants extended quota), `LASTFM_API_KEY`. Disconnecting deletes the
   artists and the token. Migration `20270320000000_connections.sql`.
+- **Affiliates.** Partners → Affiliate (a section added from Home): owners
+  and admins apply (`apply_affiliate`); Staff → Finance → Affiliates
+  (marketing and finance) approve with a code, refuse or suspend
+  (`decide_affiliate`, which makes or turns off the 5% coupon); finance
+  sets `affiliate_rates` and records payouts (`affiliate_balances`,
+  `record_affiliate_payout`, from 25,000 IQD). Commission is written by a
+  trigger on orders: on delivery (available after the return window),
+  voided or clawed back on cancellation or refund. The website's
+  `/a/<code>` puts the code on the member's cart (`apply_coupon`), or
+  keeps it on the device for 30 days until they sign in. Migration
+  `20270321000000_affiliates.sql`.
 - **Plus Duo.** A Duo plan's holder invites one more Pass from Your Plus
   (a link to `/plus/duo/<code>`, open 7 days); the second person shares
   the rental slots, home swaps and the holder's Plus address, keeps their

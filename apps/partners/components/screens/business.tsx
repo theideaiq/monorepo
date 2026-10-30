@@ -17,6 +17,7 @@ import {
   CodeXmlIcon,
   CrownIcon,
   FileTextIcon,
+  HandshakeIcon,
   type LucideIcon,
   PackageOpenIcon,
   PackageSearchIcon,
@@ -147,6 +148,7 @@ const Overview = () => {
 };
 
 const sectionIcons: Record<OrganizationFeature, LucideIcon> = {
+  affiliate: HandshakeIcon,
   developers: CodeXmlIcon,
   opportunities: BriefcaseIcon,
   perks: TicketPercentIcon,

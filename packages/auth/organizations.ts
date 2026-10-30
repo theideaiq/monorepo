@@ -12,6 +12,7 @@ export const organizationFeatures = [
   "selling",
   "supply",
   "opportunities",
+  "affiliate",
   "perks",
   "team",
   "developers",

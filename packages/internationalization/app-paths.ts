@@ -44,7 +44,6 @@ const MOVED: readonly (readonly [string, string, string?])[] = [
   ["/about/faq", "/help"],
   ["/about/contact", "/help", "#contact"],
   ["/i", "/r"],
-  ["/a", "/r"],
 ];
 
 /**

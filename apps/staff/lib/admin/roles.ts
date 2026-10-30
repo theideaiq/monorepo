@@ -16,6 +16,7 @@ export const sections = [
   "reviews",
   "companies",
   "finance",
+  "affiliates",
   "editorial",
   "telegram",
   "staff",
@@ -26,6 +27,7 @@ export type Section = (typeof sections)[number];
 
 /** Where each section lives in the console (paths without the locale). */
 export const sectionHref: Record<Section, string> = {
+  affiliates: "/finance/affiliates",
   audit: "/settings/audit",
   catalog: "/catalog",
   companies: "/partners/team",
@@ -65,12 +67,14 @@ const roleAccess: Record<StaffRole, AccessMap> = {
   editor: { dashboard: "read", editorial: "write" },
   finance: {
     // Finance invoices purchase orders; support handles the rest.
+    affiliates: "write",
     companies: "write",
     dashboard: "read",
     finance: "write",
     orders: "read",
   },
-  marketing: { customers: "read", dashboard: "read" },
+  // Marketing approves affiliates; finance also pays them.
+  marketing: { affiliates: "write", customers: "read", dashboard: "read" },
   superadmin: everything(),
   support: {
     companies: "write",
@@ -112,7 +116,7 @@ export const menu = [
   { id: "customers", sections: ["customers"] },
   { id: "club", sections: ["editorial", "telegram"] },
   { id: "partners", sections: ["companies"] },
-  { id: "finance", sections: ["finance"] },
+  { id: "finance", sections: ["finance", "affiliates"] },
   { id: "settings", sections: ["staff", "audit"] },
 ] as const satisfies readonly { id: string; sections: readonly Section[] }[];
 

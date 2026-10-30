@@ -6,6 +6,7 @@ import {
   BriefcaseIcon,
   Building2Icon,
   CodeXmlIcon,
+  HandshakeIcon,
   HouseIcon,
   type LucideIcon,
   PackageOpenIcon,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 
 export type NavKey =
+  | "affiliate"
   | "team"
   | "developers"
   | "home"
@@ -47,6 +49,12 @@ export const navItems: NavItem[] = [
     href: "/opportunities",
     icon: BriefcaseIcon,
     key: "opportunities",
+  },
+  {
+    feature: "affiliate",
+    href: "/affiliate",
+    icon: HandshakeIcon,
+    key: "affiliate",
   },
   { feature: "perks", href: "/perks", icon: TicketPercentIcon, key: "perks" },
   { feature: "team", href: "/team", icon: UsersIcon, key: "team" },

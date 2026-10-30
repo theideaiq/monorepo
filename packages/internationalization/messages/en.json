@@ -1366,6 +1366,16 @@
         "refunded": "{amount} refunded",
         "refundDue": "{amount} to be refunded"
       }
+    },
+    "affiliate": {
+      "title": "5% off with a partner's code",
+      "description": "A code from one of The IDEA's partners: 5% off your order.",
+      "offer": "The code {code} takes 5% off your order. Sign in or get your Pass and it goes on your cart.",
+      "applied": "The code {code} is on your cart: 5% comes off at checkout.",
+      "notUsable": "The code {code} can't be used on your order. It may have ended, or you've used it before.",
+      "failed": "We couldn't apply the code. You can type it at checkout.",
+      "join": "Get your Pass",
+      "shop": "Shop now"
     }
   },
   "app": {
@@ -1397,7 +1407,8 @@
       "organization": "Organization",
       "selling": "Selling",
       "supply": "Supply",
-      "opportunities": "Opportunities"
+      "opportunities": "Opportunities",
+      "affiliate": "Affiliate"
     },
     "roles": {
       "owner": "Owner",
@@ -2298,6 +2309,9 @@
         },
         "opportunities": {
           "description": "List jobs, internships, scholarships, competitions and programs in the Club. The IDEA reviews each one."
+        },
+        "affiliate": {
+          "description": "Share The IDEA with your followers: your code takes 5% off their order and you earn a commission on what they buy."
         }
       }
     },
@@ -3999,6 +4013,69 @@
       },
       "storeLink": "Gift cards, game currency and subscriptions for your store's region.",
       "storeLinkAction": "Gift cards and codes"
+    },
+    "affiliate": {
+      "applied": "Thanks. We're reviewing your application and will let you know.",
+      "rejected": "Your application wasn't approved. You can apply again.",
+      "rejectedWithNote": "Your application wasn't approved: {note} You can apply again.",
+      "suspended": "Your code is paused. Commission already earned is still paid.",
+      "managersOnly": "Your organization's owners and admins apply and set the payout details.",
+      "apply": {
+        "title": "Become an affiliate",
+        "description": "Tell us where you'll share The IDEA. Once we approve you, you get a code and a link: 5% off for your followers, a commission for you on each delivered order.",
+        "pitch": "How you'll share it",
+        "pitchHint": "Your audience and what you'll post, at least 10 characters.",
+        "channel": "Where",
+        "channelHint": "Your Instagram, TikTok, YouTube or website.",
+        "payoutMethod": "Payout to",
+        "payoutLater": "Choose later",
+        "payoutAccount": "Number or account",
+        "payoutAccountHint": "Your ZainCash or Qi number, FIB account or IBAN.",
+        "submit": "Send application",
+        "failed": "We couldn't save this. Try again."
+      },
+      "methods": {
+        "zaincash": "ZainCash",
+        "fib": "FIB",
+        "qi": "Qi Card",
+        "bank": "Bank transfer"
+      },
+      "code": {
+        "title": "Your code",
+        "description": "Followers type the code at checkout, or open your link and it's applied for them. Each member can use it once.",
+        "copy": "Copy link",
+        "copied": "Link copied"
+      },
+      "earnings": {
+        "title": "Earnings",
+        "description": "Commission counts once an order is delivered and becomes payable after the return window. We pay monthly once you have {minimum} or more.",
+        "payable": "Payable",
+        "waiting": "In the return window",
+        "rates": "Commission by category",
+        "commissions": "Commissions",
+        "noCommissions": "No commission yet.",
+        "payouts": "Payouts",
+        "noPayouts": "No payouts yet.",
+        "status": {
+          "pending": "Pending",
+          "paid": "Paid",
+          "void": "Cancelled"
+        }
+      },
+      "families": {
+        "music": "Music",
+        "books": "Books",
+        "films": "Films",
+        "board-games": "Board games",
+        "games": "Games",
+        "gear": "Gear",
+        "trading-cards": "Trading cards",
+        "plus": "Plus months"
+      },
+      "payout": {
+        "title": "Payout details",
+        "description": "Where we send your commission."
+      }
     }
   },
   "store": {
@@ -4469,6 +4546,22 @@
         "wanted_in_store": {
           "title": "Now in the store",
           "body": "{name} from your imported list is in the store, and in your list."
+        },
+        "affiliate_approved": {
+          "title": "You're an affiliate",
+          "body": "Your code {code} is ready to share."
+        },
+        "affiliate_rejected": {
+          "title": "Affiliate application",
+          "body": "Your application wasn't approved. See Affiliate for details."
+        },
+        "affiliate_suspended": {
+          "title": "Your affiliate code is paused",
+          "body": "See Affiliate for details."
+        },
+        "affiliate_paid": {
+          "title": "Commission paid",
+          "body": "We sent you {amount}."
         }
       },
       "kinds": {
@@ -4535,7 +4628,8 @@
       "audit": "Audit log",
       "support": "Support",
       "reviews": "Reviews",
-      "companies": "Partners"
+      "companies": "Partners",
+      "affiliates": "Affiliates"
     },
     "roles": {
       "superadmin": "Superadmin",
@@ -5763,7 +5857,8 @@
         "payouts": "Payouts",
         "coupons": "Coupons",
         "programs": "Programs",
-        "codes": "Codes"
+        "codes": "Codes",
+        "affiliates": "Affiliates"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -6878,6 +6973,39 @@
           "start": "Make a supplier"
         }
       }
+    },
+    "affiliates": {
+      "title": "Affiliates",
+      "description": "Organizations that share The IDEA for a commission: their applications, codes, rates and payouts.",
+      "applications": "Applications",
+      "noApplications": "No applications waiting.",
+      "decision": "Decision",
+      "decisions": {
+        "approved": "Approve",
+        "rejected": "Refuse",
+        "suspended": "Suspend"
+      },
+      "code": "Code",
+      "codeHint": "4 to 20 letters and digits; it becomes a 5% coupon.",
+      "note": "Note for them (optional)",
+      "save": "Save",
+      "restore": "Restore",
+      "payouts": "To pay",
+      "payoutsDescription": "Affiliates with {minimum} or more payable. Send the transfer, then record its reference: everything payable is marked paid.",
+      "noPayouts": "Nothing to pay yet.",
+      "noPayout": "No payout details",
+      "reference": "Transfer reference",
+      "markPaid": "Mark paid",
+      "all": "Affiliates",
+      "none": "No affiliates yet.",
+      "statuses": {
+        "applied": "Applied",
+        "approved": "Approved",
+        "rejected": "Refused",
+        "suspended": "Suspended"
+      },
+      "rates": "Commission rates",
+      "ratesDescription": "Percent of each delivered order's lines, by top-level category; Plus months by the plan's price. Finance changes them."
     }
   },
   "design": {
