@@ -735,8 +735,8 @@ test.describe("a signed-in customer", () => {
   test("starts verifying a phone in Settings", async ({ page }) => {
     await page.goto(`${urls.web}/pass/settings`);
     await expect(page.getByText("Phone and WhatsApp")).toBeVisible();
-    // Updates need a verified number; news and offers don't.
-    await expect(page.getByLabel("Order updates on WhatsApp")).toBeDisabled();
+    // What we send: WhatsApp updates (to a verified number) and news.
+    await expect(page.getByLabel("Order updates on WhatsApp")).toBeVisible();
     await expect(page.getByLabel("Send me news and offers")).toBeEnabled();
     await page.getByLabel("Add a number").fill("0770 123 4567");
     await page.getByRole("button", { name: "Continue" }).click();
