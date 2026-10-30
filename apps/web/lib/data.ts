@@ -690,3 +690,18 @@ export const getAuctionTitle = (number: number) =>
       return data?.product ?? null;
     }
   );
+
+/**
+ * Counts a search that found no product (`record_search_miss`), for
+ * Staff → Catalog → Searches. Failures are only logged.
+ */
+export const recordSearchMiss = async (term: string) => {
+  const supabase = createPublicClient();
+  if (!supabase) {
+    return;
+  }
+  const { error } = await supabase.rpc("record_search_miss", { term });
+  if (error) {
+    log.warn(`Search miss not recorded: ${error.message}`);
+  }
+};

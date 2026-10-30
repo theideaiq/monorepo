@@ -4635,6 +4635,17 @@
           "programApplications": "Program applications to decide",
           "programRefunds": "Program refunds to pay"
         }
+      },
+      "weeks": {
+        "title": "Key numbers by week",
+        "description": "Weeks start on Monday, Baghdad time. Conversion is paid orders out of the people who put something in their cart that week.",
+        "week": "Week of",
+        "orders": "Orders",
+        "paid": "Paid",
+        "conversion": "Cart to paid",
+        "newPasses": "New Passes",
+        "plusJoins": "Plus sign-ups",
+        "plusCancellations": "Plus cancellations"
       }
     },
     "catalog": {
@@ -4646,6 +4657,7 @@
         "settings": "Delivery",
         "import": "Import",
         "checks": "Checks",
+        "searches": "Searches",
         "offers": "Offers",
         "campaigns": "Campaigns",
         "auctions": "Auctions"
@@ -5138,6 +5150,16 @@
         "photosHint": "3 to 12 photos of this exact copy.",
         "note": "Condition",
         "start": "Start auction"
+      },
+      "searches": {
+        "title": "Searches",
+        "description": "What people searched the Store for and found nothing, most searched first. Add the product or fix its names, then clear the term.",
+        "empty": "No searches without results.",
+        "term": "Search",
+        "searches": "Times",
+        "lastSeen": "Last searched",
+        "firstSeen": "First searched",
+        "clear": "Clear"
       }
     },
     "orders": {

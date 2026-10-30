@@ -80,6 +80,17 @@ test.describe("Staff", () => {
     await expect(
       page.getByRole("heading", { name: "Waiting on you" })
     ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Key numbers by week" })
+    ).toBeVisible();
+
+    // Catalog → Searches: a Store search that found nothing.
+    const missing = `e2e nothing ${Date.now()}`;
+    await page.goto(`${urls.web}/search?q=${encodeURIComponent(missing)}`);
+    await page.goto(`${urls.staff}/catalog/searches`);
+    await expect(page.getByRole("link", { name: missing })).toBeVisible();
+    await expectAccessible(page);
+    await page.goto(`${urls.staff}/`);
 
     // Search from the sidebar.
     await page.getByRole("searchbox", { name: "Search Staff" }).fill("E2E");

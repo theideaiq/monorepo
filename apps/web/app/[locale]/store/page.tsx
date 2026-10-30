@@ -4,6 +4,7 @@ import { cn } from "@repo/design-system/lib/utils";
 import type { Locale } from "@repo/internationalization";
 import { Link } from "@repo/internationalization/navigation";
 import type { Metadata } from "next";
+import { after } from "next/server";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/page-hero";
 import { Pagination } from "@/components/pagination";
@@ -11,7 +12,13 @@ import { ProductCard } from "@/components/product-card";
 import { EmptyState, Section } from "@/components/section";
 import { CodesLink } from "@/components/store/digital-codes";
 import { env } from "@/env";
-import { getCategories, getFormats, getProducts, getRatings } from "@/lib/data";
+import {
+  getCategories,
+  getFormats,
+  getProducts,
+  getRatings,
+  recordSearchMiss,
+} from "@/lib/data";
 import { appLink } from "@/lib/links";
 import { localizedMetadata } from "@/lib/metadata";
 import {
@@ -77,6 +84,11 @@ const Store = async ({ params, searchParams }: StoreProps) => {
     }),
   ]);
   const products = rows.slice(0, STORE_PAGE_SIZE);
+  const { q } = query;
+  if (q && query.page === 1 && !query.category && rows.length === 0) {
+    // After the page is sent: Staff see what people looked for in vain.
+    after(() => recordSearchMiss(q));
+  }
   const ratings = await getRatings(products.map((product) => product.id));
   const hasNext = rows.length > STORE_PAGE_SIZE;
   const filtered = Boolean(query.q || query.category || query.format);

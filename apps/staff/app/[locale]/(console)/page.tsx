@@ -1,4 +1,12 @@
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@repo/design-system/components/ui/table";
+import {
   BookOpenIcon,
   LifeBuoyIcon,
   type LucideIcon,
@@ -40,6 +48,9 @@ type Access = Record<
 >;
 
 const head = { count: "exact", head: true } as const;
+
+/** How many weeks of key numbers the home page shows. */
+const WEEKS = 8;
 
 /** Runs a count only when the role can see it (RLS would hide it anyway). */
 const countIf = async (
@@ -175,10 +186,14 @@ const DashboardPage = async () => {
     support: canRead(role, "support"),
     telegram: canRead(role, "telegram"),
   };
-  const [stats, inbox] = await Promise.all([
+  const [stats, inbox, { data: weeks }] = await Promise.all([
     loadStats(supabase, can),
     loadInbox(supabase, role),
+    supabase.rpc("staff_metrics", { weeks: WEEKS }),
   ]);
+  // Paid orders out of the people who started a cart that week.
+  const conversion = (paid: number, carts: number) =>
+    carts > 0 ? `${format.number(Math.round((paid / carts) * 100))}%` : "—";
 
   const cards: Card[] = [
     {
@@ -277,6 +292,60 @@ const DashboardPage = async () => {
               ))}
             </ul>
           )}
+        </Panel>
+        <Panel description={t("weeks.description")} title={t("weeks.title")}>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("weeks.week")}</TableHead>
+                  <TableHead className="text-end">
+                    {t("weeks.orders")}
+                  </TableHead>
+                  <TableHead className="text-end">{t("weeks.paid")}</TableHead>
+                  <TableHead className="text-end">
+                    {t("weeks.conversion")}
+                  </TableHead>
+                  <TableHead className="text-end">
+                    {t("weeks.newPasses")}
+                  </TableHead>
+                  <TableHead className="text-end">
+                    {t("weeks.plusJoins")}
+                  </TableHead>
+                  <TableHead className="text-end">
+                    {t("weeks.plusCancellations")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {(weeks ?? []).map((week) => (
+                  <TableRow key={week.week}>
+                    <TableCell className="whitespace-nowrap">
+                      {format.date(week.week)}
+                    </TableCell>
+                    <TableCell className="text-end tabular-nums">
+                      {format.number(week.orders)}
+                    </TableCell>
+                    <TableCell className="text-end tabular-nums">
+                      {format.number(week.paid_orders)}
+                    </TableCell>
+                    <TableCell className="text-end tabular-nums">
+                      {conversion(week.paid_orders, week.carts)}
+                    </TableCell>
+                    <TableCell className="text-end tabular-nums">
+                      {format.number(week.new_passes)}
+                    </TableCell>
+                    <TableCell className="text-end tabular-nums">
+                      {format.number(week.plus_joins)}
+                    </TableCell>
+                    <TableCell className="text-end tabular-nums">
+                      {format.number(week.plus_cancellations)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </Panel>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {cards
