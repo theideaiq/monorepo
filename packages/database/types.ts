@@ -795,6 +795,21 @@ export type Database = {
           },
         ];
       };
+      cart_starts: {
+        Row: {
+          user_id: string;
+          week: string;
+        };
+        Insert: {
+          user_id: string;
+          week: string;
+        };
+        Update: {
+          user_id?: string;
+          week?: string;
+        };
+        Relationships: [];
+      };
       chart_of_accounts: {
         Row: {
           active: boolean;
@@ -5405,6 +5420,27 @@ export type Database = {
           shared?: boolean;
           updated_at?: string;
           user_id?: string;
+        };
+        Relationships: [];
+      };
+      search_misses: {
+        Row: {
+          first_seen: string;
+          last_seen: string;
+          searches: number;
+          term: string;
+        };
+        Insert: {
+          first_seen?: string;
+          last_seen?: string;
+          searches?: number;
+          term: string;
+        };
+        Update: {
+          first_seen?: string;
+          last_seen?: string;
+          searches?: number;
+          term?: string;
         };
         Relationships: [];
       };
@@ -10321,6 +10357,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      record_search_miss: { Args: { term: string }; Returns: undefined };
       record_survey_refund: {
         Args: {
           amount: number;
@@ -11633,6 +11670,18 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      staff_metrics: {
+        Args: { weeks?: number };
+        Returns: {
+          carts: number;
+          new_passes: number;
+          orders: number;
+          paid_orders: number;
+          plus_cancellations: number;
+          plus_joins: number;
+          week: string;
+        }[];
       };
       start_auction: {
         Args: {
