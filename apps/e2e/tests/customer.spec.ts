@@ -753,9 +753,11 @@ test.describe("a signed-in customer", () => {
     await expect(
       page.getByText("We sent a code to +964 770 123 4567 by SMS.")
     ).toBeVisible();
-    await page.getByLabel("Code").fill("123456");
+    await page
+      .getByRole("textbox", { exact: true, name: "Code" })
+      .fill("123456");
     await page.getByRole("button", { exact: true, name: "Verify" }).click();
-    await expect(page.getByText("+964 770 123 4567")).toBeVisible();
+    // The number is listed as verified, with its remove button.
     await expect(
       page.getByRole("button", { name: "Remove +964 770 123 4567" })
     ).toBeVisible();
