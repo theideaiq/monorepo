@@ -217,6 +217,19 @@ namespaces.
   order. Table `plus_seats`; RPCs `request_plus_seat`, `activate_plus_seat`,
   `decline_plus_seat`, `end_plus_seat`, `run_plus_seat_renewals`; migration
   `20261208000000_team_plus.sql`.
+- **Digital codes.** Gift cards and store codes from Reloadly (LikeCard
+  and Golden Codes later), on the website only (`/store/codes`), paid
+  online. After the payment webhook, `apps/api` buys each paid code
+  (`buyDigitalCodes`: `take_digital_codes`, one Reloadly order per code with
+  the code's id as its custom identifier, then `deliver_digital_code` or
+  `fail_digital_code`); `GET /cron/digital-codes` (daily, 07:35 UTC) and
+  Staff's Release and Retry (`POST /admin/digital-codes`) run it too.
+  Finance → Codes syncs Reloadly's catalog (`POST /admin/digital-codes/sync`:
+  brands per brand and country, added off; fixed USD denominations, costs
+  refreshed). Keys: `RELOADLY_CLIENT_ID`, `RELOADLY_CLIENT_SECRET`,
+  `RELOADLY_ENVIRONMENT` (`sandbox` by default); without them nothing is
+  bought and paid codes wait. Members reveal a code in Pass → Orders
+  (`reveal_digital_code`). Migration `20270316000000_digital_codes.sql`.
 - **Plus Duo.** A Duo plan's holder invites one more Pass from Your Plus
   (a link to `/plus/duo/<code>`, open 7 days); the second person shares
   the rental slots, home swaps and the holder's Plus address, keeps their

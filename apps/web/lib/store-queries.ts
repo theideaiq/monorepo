@@ -32,6 +32,7 @@ import {
   isRentLine,
   MAX_QUANTITY,
 } from "./cart";
+import { useCartDigital } from "./digital-codes";
 import { useCartKit } from "./kits";
 import { useCartPlusGift } from "./plus-gifts";
 import { useCartPrograms } from "./programs";
@@ -307,12 +308,17 @@ export const useCartCount = () => {
   const plus = useCartPlusGift().data;
   const programs = useCartPrograms().data?.length ?? 0;
   const auctions = useCartAuctions().data?.length ?? 0;
+  const codes = (useCartDigital().data ?? []).reduce(
+    (sum, row) => sum + row.quantity,
+    0
+  );
   return (
     (cart.data ? cartCount(cart.data) : 0) +
     (kit ? 1 : 0) +
     (plus ? 1 : 0) +
     programs +
-    auctions
+    auctions +
+    codes
   );
 };
 
@@ -477,7 +483,7 @@ export const useUpdateCartLine = () => {
 };
 
 const ORDER_COLUMNS =
-  "id, number, status, guardian_status, is_gift, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, tracking_url, paid_at, created_at, order_items (id, product_id, variant_id, seller_id, seller_name, condition, name_ar, name_en, attributes, unit_price, quantity, variant:product_variants (label_ar, label_en))" as const;
+  "id, number, status, guardian_status, is_gift, fulfilment, payment_method, delivery_zone_id, subtotal, shipping_fee, discount, discount_source, bulbs_used, bulbs_discount, total, currency, shipping_address, tracking_number, tracking_url, paid_at, created_at, order_items (id, kind, product_id, variant_id, seller_id, seller_name, condition, name_ar, name_en, attributes, unit_price, quantity, variant:product_variants (label_ar, label_en))" as const;
 
 export const useOrders = () => {
   const { supabase, user } = useAuth();

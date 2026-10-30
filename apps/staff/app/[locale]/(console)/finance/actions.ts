@@ -9,6 +9,7 @@ import {
   staffAction,
 } from "@/lib/admin/action";
 import { success } from "@/lib/admin/action-state";
+import { callApi } from "@/lib/admin/api";
 import {
   financialSettingsSchema,
   journalEntrySchema,
@@ -403,6 +404,104 @@ export const markProgramRefunded = staffAction(
         reference: input.reference ?? undefined,
       })
     );
+    return success("saved");
+  }
+);
+
+/** A denomination's own margin (empty for the store's) and whether it's on sale. */
+export const setDigitalProduct = staffAction(
+  "finance",
+  z.object({
+    active: checkbox,
+    id: uuid,
+    margin: z
+      .string()
+      .trim()
+      .transform((value) => (value === "" ? null : Number(value)))
+      .pipe(z.number().min(0).max(100).nullable()),
+  }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("digital_products")
+        .update({ active: input.active, margin_rate: input.margin })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success("saved");
+  }
+);
+
+/** Buys the codes waiting now (apps/api holds the supplier's keys). */
+const buyCodesNow = async (supabase: Parameters<typeof callApi>[0]) => {
+  const result = await callApi(supabase, "/admin/digital-codes", {});
+  if (!result.ok) {
+    throw new ActionFailure(
+      result.error === "unavailable" ? "apiUnavailable" : "unknown"
+    );
+  }
+};
+
+/** Lets a held order's codes be bought, and buys them now. */
+export const releaseDigitalCodes = staffAction(
+  "finance",
+  z.object({ order: uuid }),
+  async ({ input, supabase }) => {
+    check(
+      await supabase.rpc("release_digital_codes", { target_order: input.order })
+    );
+    await buyCodesNow(supabase);
+    return success("saved");
+  }
+);
+
+/** Tries a failed code again, now. */
+export const retryDigitalCode = staffAction(
+  "finance",
+  z.object({ id: uuid }),
+  async ({ input, supabase }) => {
+    check(await supabase.rpc("retry_digital_code", { target: input.id }));
+    await buyCodesNow(supabase);
+    return success("saved");
+  }
+);
+
+/** A brand's Arabic names and whether it's on sale. */
+export const setDigitalBrand = staffAction(
+  "finance",
+  z.object({
+    active: checkbox,
+    id: uuid,
+    nameAr: text(120),
+    regionAr: text(60),
+  }),
+  async ({ input, supabase }) => {
+    affected(
+      await supabase
+        .from("digital_brands")
+        .update({
+          active: input.active,
+          name_ar: input.nameAr,
+          region_ar: input.regionAr,
+        })
+        .eq("id", input.id)
+        .select("id")
+    );
+    return success("saved");
+  }
+);
+
+/** Reads the supplier's catalog into brands and denominations (apps/api). */
+export const syncDigitalCatalog = staffAction(
+  "finance",
+  z.object({}),
+  async ({ supabase }) => {
+    const result = await callApi(supabase, "/admin/digital-codes/sync", {});
+    if (!result.ok) {
+      throw new ActionFailure(
+        result.error === "unavailable" ? "apiUnavailable" : "unknown"
+      );
+    }
     return success("saved");
   }
 );

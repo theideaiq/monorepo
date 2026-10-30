@@ -1562,6 +1562,11 @@
         "payBy": "Won · pay by {time}",
         "won": "Won at auction",
         "online": "Paid online"
+      },
+      "digital": {
+        "online": "Paid online",
+        "quantity": "{n} × {price}",
+        "websiteOnly": "Bought on theideaiq.com, not in the app"
       }
     },
     "checkout": {
@@ -1701,9 +1706,10 @@
       "programLine": "Program",
       "programs": {
         "title": "Nothing to deliver",
-        "description": "Program installments are paid online, so no address is needed."
+        "description": "Program installments and digital codes are paid online, so no address is needed."
       },
-      "auctionLine": "Auction"
+      "auctionLine": "Auction",
+      "codeLine": "Code"
     },
     "orders": {
       "title": "Orders",
@@ -4055,6 +4061,38 @@
         "description": "Textbooks at the end of term, games you've finished, anything of your own: open a shop in Partners as an individual trader (your ID only, a monthly sales limit). Your items go on the Store; The IDEA collects the payment, Boxy collects from you, and you're paid each week.",
         "start": "Open a shop in Partners"
       }
+    },
+    "codes": {
+      "title": "Gift cards and codes",
+      "description": "Store cards, game currency and subscriptions, for the store your account is on. Delivered to your Pass in minutes.",
+      "terms": "Paid online. Your code appears in Pass → Orders once payment clears; reveal it when you're ready. A revealed code can't be returned. No Bulbs or coupons on codes.",
+      "add": "Add to cart",
+      "signIn": "Sign in to buy",
+      "whichStore": "Which store is your account on?",
+      "chooseStore": "Choose your store",
+      "storeHint": "Codes only work in their own store. We'll remember your choice.",
+      "empty": "No codes are on sale right now.",
+      "websiteOnly": "Gift cards and codes are bought on theideaiq.com, not in the app.",
+      "order": {
+        "title": "Your codes",
+        "description": "Reveal a code when you're ready to use it. Once revealed, it can't be returned.",
+        "reveal": "Reveal code",
+        "revealNote": "Revealing it means it can't be returned.",
+        "revealFailed": "We couldn't show the code. Please try again.",
+        "copy": "Copy",
+        "copied": "Copied",
+        "pin": "PIN",
+        "status": {
+          "unpaid": "Waiting for payment",
+          "checking": "We're checking this order. It won't be long.",
+          "preparing": "Getting your code ready…",
+          "ready": "Ready",
+          "replaced": "Replaced with a new code",
+          "cancelled": "Cancelled"
+        }
+      },
+      "storeLink": "Gift cards, game currency and subscriptions for your store's region.",
+      "storeLinkAction": "Gift cards and codes"
     }
   },
   "store": {
@@ -4509,6 +4547,10 @@
         "plus_duo_ended": {
           "title": "Your Duo place has ended",
           "body": "Your place on {holder}'s Plus has ended."
+        },
+        "digital_code_ready": {
+          "title": "Your code is ready",
+          "body": "{name} is in your order #{number}. Reveal it in Pass → Orders."
         }
       },
       "kinds": {
@@ -5756,7 +5798,8 @@
         "rentals": "Rental rates",
         "payouts": "Payouts",
         "coupons": "Coupons",
-        "programs": "Programs"
+        "programs": "Programs",
+        "codes": "Codes"
       },
       "dashboard": {
         "error": "The ledger summary couldn't be loaded.",
@@ -6007,6 +6050,27 @@
         "startsOn": "Starts",
         "endsOn": "Ends",
         "deleteDescription": "Rentals already made keep their due dates."
+      },
+      "codes": {
+        "title": "Codes",
+        "description": "Digital codes: what needs someone, and every denomination's cost, margin and price.",
+        "attention": "Needs attention",
+        "nothingWaiting": "Nothing is waiting.",
+        "held": "Order {order}: a large first order of codes, held for a check.",
+        "release": "Release and buy",
+        "failed": "A code couldn't be bought ({date}).",
+        "retry": "Try again",
+        "denominations": "Denominations",
+        "empty": "No brands yet. Sync from the supplier to add them; new brands start off.",
+        "brandOff": "brand off",
+        "pricing": "{supplier} · cost {cost} · price {price}",
+        "margin": "Margin %",
+        "marginDefault": "Store's",
+        "onSale": "On sale",
+        "save": "Save",
+        "sync": "Sync from Reloadly",
+        "nameAr": "Arabic name",
+        "regionAr": "Arabic region"
       }
     },
     "editorial": {

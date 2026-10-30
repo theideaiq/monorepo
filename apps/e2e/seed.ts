@@ -227,6 +227,66 @@ export const resetDuo = async () => {
   return { holderId, partnerId };
 };
 
+/**
+ * Digital codes: one brand on sale with a $20 code, and the customer a
+ * Pass of a year with a verified phone and an empty cart of codes.
+ */
+export const resetDigitalCodes = async () => {
+  const db = admin();
+  // Looked up, not reset: a reset password would end the signed-in session.
+  const id =
+    (await findUser((user) => user.email === customer.email))?.id ?? "";
+  check(await db.from("cart_digital").delete().eq("user_id", id));
+  check(
+    await db
+      .from("profiles")
+      .update({ created_at: "2025-01-01T00:00:00Z" })
+      .eq("id", id)
+  );
+  check(
+    await db
+      .from("verified_phones")
+      .upsert(
+        { phone: "+9647701234567", user_id: id },
+        { ignoreDuplicates: true, onConflict: "user_id,phone" }
+      )
+  );
+  const brand = await db
+    .from("digital_brands")
+    .upsert(
+      {
+        active: true,
+        kind: "gaming",
+        name_ar: "PlayStation",
+        name_en: "PlayStation",
+        platform: "playstation",
+        region: "US",
+        region_ar: "المتجر الأمريكي",
+        region_en: "US store",
+        slug: "e2e-playstation-us",
+      },
+      { onConflict: "slug" }
+    )
+    .select("id")
+    .single();
+  check(brand);
+  check(
+    await db.from("digital_products").upsert(
+      {
+        active: true,
+        brand_id: brand.data?.id ?? "",
+        cost_usd: 19.2,
+        face_currency: "USD",
+        face_value: 20,
+        supplier: "reloadly",
+        supplier_product_id: "e2e-psn-20",
+      },
+      { onConflict: "supplier,supplier_product_id,face_value" }
+    )
+  );
+  return id;
+};
+
 /** A staff member (admin role) with no authenticator app linked yet. */
 export const resetStaff = async () => {
   const db = admin();

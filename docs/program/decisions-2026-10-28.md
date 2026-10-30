@@ -1361,3 +1361,15 @@ job (Reloadly), the website and Staff.
 - **Suppliers:** Reloadly first; LikeCard and Golden Codes take the same
   shape (`supplier`). The discount comparison on the top 10 brands needs
   quotes from each supplier's account and is open in PROGRESS.md.
+- **Code (part 2):** Store → Gift cards and codes (`/store/codes`) lists
+  brands by platform, asks "Which store is your account on?" when a
+  platform has several regions and remembers it; codes go in the cart and
+  check out like program installments (online, no address, never a gift),
+  and checkout is closed to them in the apps. Pass → Orders shows each
+  code's state and reveals a delivered one with a tap. `apps/api` buys
+  codes after the payment webhook, daily and from Staff, one Reloadly order
+  each; an order Reloadly leaves pending is recorded as failed for Staff to
+  check and retry. Finance → Codes syncs the Reloadly catalog (new brands
+  start off, with Arabic names to fill in), edits brands and margins, and
+  releases held and retries failed codes. The returns policy has a section
+  on codes.

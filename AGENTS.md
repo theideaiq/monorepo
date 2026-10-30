@@ -15,7 +15,8 @@ incidents) is in `docs/platform`.
     a bottom tab bar on phones): The IDEA Store is Home (`/`), the
     storefront (categories, featured and new products), with
     `/store` the full catalog and product pages (buying, reviews), and
-    `/store/campaigns/<slug>` a campaign's page, `/store/auctions` every
+    `/store/campaigns/<slug>` a campaign's page, `/store/codes` gift cards and
+    codes by store region (the website only, never in the apps), `/store/auctions` every
     live auction and `/store/auctions/<number>` one (the seller's photos,
     bidding by maximum, the history by alias; a win goes to the cart and
     is paid online within 48 hours); The IDEA
@@ -163,7 +164,9 @@ incidents) is in `docs/platform`.
     at `/partners/team/plus`, then orders, invoices, `/partners/shops`
     where staff approve shops, perks and sign-in) · Finance `/finance` (with
     `/finance/payouts`, the weekly shop payouts, `/finance/programs`,
-    program refunds to pay, and `/finance/coupons`,
+    program refunds to pay, `/finance/codes`, digital codes (held and failed
+    codes, brands and denominations with cost, margin and price, the supplier
+    sync), and `/finance/coupons`,
     coupon codes members enter at checkout) · Settings
     `/settings` (with `/settings/audit`), and `/search`. Then `/no-access`
     (`app/[locale]/(auth)`), with `components/admin` and `lib/admin`:

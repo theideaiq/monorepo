@@ -50,6 +50,7 @@
     "ARCJET_KEY",
     "BETTERSTACK_*",
     "BOXY_*",
+    "RELOADLY_*",
     "CRON_SECRET",
     "DOCS_URL",
     "FCM_SERVICE_ACCOUNT",

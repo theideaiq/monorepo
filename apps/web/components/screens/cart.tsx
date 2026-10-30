@@ -54,6 +54,12 @@ import {
   MAX_QUANTITY,
   summarizeCart,
 } from "@/lib/cart";
+import {
+  type DigitalLine,
+  useCartDigitalLines,
+  useInApp,
+  useRemoveCartCode,
+} from "@/lib/digital-codes";
 import { useCartKitLine, useRemoveCartKit } from "@/lib/kits";
 import { useCartPlusGiftLine, useRemoveCartPlusGift } from "@/lib/plus-gifts";
 import {
@@ -346,6 +352,49 @@ const ProgramRow = ({ line }: { readonly line: ProgramLine }) => {
   );
 };
 
+/** A digital code in the cart: paid online, revealed in Pass → Orders. */
+const DigitalRow = ({ line }: { readonly line: DigitalLine }) => {
+  const t = useTranslations("app.cart.digital");
+  const tCart = useTranslations("app.cart");
+  const locale = useLocale();
+  const remove = useRemoveCartCode();
+  const inApp = useInApp();
+  return (
+    <li className="grid gap-2 py-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="grid min-w-0 gap-0.5">
+          <span className="font-medium text-sm">{line.name}</span>
+          {line.quantity > 1 ? (
+            <span className="text-muted-foreground text-xs">
+              {t("quantity", {
+                n: formatNumber(line.quantity, locale),
+                price: formatPrice(line.unitPrice, locale),
+              })}
+            </span>
+          ) : null}
+        </div>
+        <span className="shrink-0 font-medium text-sm tabular-nums">
+          {formatPrice(line.amount, locale)}
+        </span>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-muted-foreground text-xs">
+          {inApp ? t("websiteOnly") : t("online")}
+        </span>
+        <Button
+          disabled={remove.isPending}
+          onClick={() => remove.mutate(line.productId)}
+          size="sm"
+          variant="ghost"
+        >
+          <Trash2Icon />
+          {tCart("remove")}
+        </Button>
+      </div>
+    </li>
+  );
+};
+
 /** A won auction in the cart: paid online by its deadline. */
 const AuctionRow = ({ line }: { readonly line: AuctionLine }) => {
   const t = useTranslations("app.cart.auction");
@@ -398,6 +447,7 @@ const useCartSummary = (
   const plus = useCartPlusGiftLine();
   const programs = useCartProgramLines();
   const auctions = useCartAuctionLines();
+  const digital = useCartDigitalLines(useLocale());
   const summary =
     items && settings
       ? addAuctionsToSummary(
@@ -406,20 +456,22 @@ const useCartSummary = (
               addKitToSummary(summarizeCart(items, settings), kit),
               plus
             ),
-            programs
+            [...programs, ...digital]
           ),
           auctions
         )
       : null;
   return {
     auctions,
+    digital,
     empty:
       summary !== null &&
       summary.lines.length === 0 &&
       !kit &&
       !plus &&
       programs.length === 0 &&
-      auctions.length === 0,
+      auctions.length === 0 &&
+      digital.length === 0,
     kit,
     plus,
     programs,
@@ -439,14 +491,13 @@ export const Cart = () => {
 
   const loading = cart.isPending || settings.isPending;
   const failed = cart.isError || settings.isError;
-  const { auctions, empty, kit, plus, programs, summary } = useCartSummary(
-    cart.data,
-    settings.data
-  );
-  // Deposits, gifted Plus months and programs don't count towards free
-  // delivery.
+  const { auctions, digital, empty, kit, plus, programs, summary } =
+    useCartSummary(cart.data, settings.data);
+  // Deposits, gifted Plus months, programs and codes don't count towards
+  // free delivery.
   const outside =
-    (plus?.price ?? 0) + programs.reduce((sum, line) => sum + line.amount, 0);
+    (plus?.price ?? 0) +
+    [...programs, ...digital].reduce((sum, line) => sum + line.amount, 0);
   const remaining = summary
     ? freeDeliveryRemaining(
         summary.totals.subtotal - summary.totals.deposits - outside,
@@ -505,6 +556,9 @@ export const Cart = () => {
                 ))}
                 {auctions.map((line) => (
                   <AuctionRow key={line.auctionId} line={line} />
+                ))}
+                {digital.map((line) => (
+                  <DigitalRow key={line.productId} line={line} />
                 ))}
               </ul>
             </section>

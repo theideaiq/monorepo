@@ -7,6 +7,7 @@ import { getBilling } from "@repo/payments/server";
 import { after, NextResponse } from "next/server";
 import { env } from "@/env";
 import { reportPayment } from "@/lib/conversions";
+import { buyDigitalCodes, reloadlyFromEnv } from "@/lib/digital-codes";
 import { sendOrderEmails } from "@/lib/order-emails";
 
 /**
@@ -42,6 +43,16 @@ export const POST = async (request: Request): Promise<Response> => {
             send: sendEmail,
           }).catch((error: unknown) =>
             log.error(`Order confirmation email failed: ${parseError(error)}`)
+          )
+        );
+        // Digital codes in the order are bought now.
+        after(() =>
+          buyDigitalCodes({
+            admin: createAdminClient(),
+            logger: log,
+            reloadly: reloadlyFromEnv(),
+          }).catch((error: unknown) =>
+            log.error(`Digital codes failed: ${parseError(error)}`)
           )
         );
       }

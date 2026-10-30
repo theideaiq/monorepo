@@ -578,6 +578,14 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Store → Textbooks and Pass → Selling ("Sell it yourself") link to
   Partners `/new?for=selling`, which makes the organization with Selling
   on and opens the shop's application. Next in step 14: Plus Duo.
+- 2026-10-30: Digital codes, part 2 (section 15, the code; decisions Part
+  16). Store → Gift cards and codes with the store-region question, codes
+  in the cart and checkout (online, no address; not in the apps), Pass →
+  Orders to reveal them, the `digital_code_ready` notification, the
+  Reloadly client and buying job in apps/api (after payment, daily, from
+  Staff), Finance → Codes (catalog sync, brands, margins, holds, retries),
+  the returns policy's section on codes and an e2e journey. Open: the
+  supplier discount comparison; LikeCard and Golden Codes clients.
 - 2026-10-30: Digital codes, part 1 (section 15, the schema
   `20270316000000_digital_codes.sql`, decisions Part 16). Brands per store
   region and denominations priced in IQD from the supplier's USD cost plus
