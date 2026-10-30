@@ -5650,6 +5650,7 @@
         "invalid": "غير صالح",
         "unnamed": "بلا اسم",
         "since": "عضو منذ {date}",
+        "fixedCode": "بطاقة Apple Wallet: رمزها ثابت، فتمر لقطة الشاشة أيضًا.",
         "unknown": "لا يوجد عضو بهذا الرقم، أو انتهت صلاحية الرمز."
       },
       "bulbs": {
@@ -6955,6 +6956,10 @@
       "unavailable": "تعذّر تحميل البطاقة. تحقّق من الاتصال وحاول مجدداً.",
       "addToWallet": "إضافة إلى Google Wallet",
       "walletFailed": "تعذّر فتح Google Wallet. حاول مجدداً.",
+      "addToAppleWallet": "إضافة إلى Apple Wallet",
+      "appleWalletAdded": "في Apple Wallet منذ {date}.",
+      "appleWalletTurnOff": "إيقافها",
+      "appleWalletFailed": "تعذّر فتح Apple Wallet. حاول مجدداً.",
       "perks": {
         "title": "مع بطاقة پاسك",
         "plus": "{plan}: {slots} إيجارات في الوقت نفسه",

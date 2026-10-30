@@ -14,6 +14,7 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { keys as boxy } from "./lib/boxy/keys";
 import { keys as oidc } from "./lib/oidc/keys";
+import { keys as appleWallet } from "./lib/pass/apple-wallet-keys";
 import { keys as phoneVerify } from "./lib/phone-verify/keys";
 import { keys as reloadly } from "./lib/reloadly/keys";
 import { keys as whatsapp } from "./lib/whatsapp/keys";
@@ -21,6 +22,7 @@ import { keys as whatsapp } from "./lib/whatsapp/keys";
 const presets = envPresets(
   auth(),
   analytics(),
+  appleWallet(),
   boxy(),
   core(),
   database(),

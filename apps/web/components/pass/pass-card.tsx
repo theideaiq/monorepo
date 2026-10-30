@@ -17,6 +17,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { env } from "@/env";
 import { appLink } from "@/lib/links";
 import type { PassSession } from "@/lib/pass/session";
+import { AppleWalletButton } from "./apple-wallet-button";
 import { LiveCard } from "./live-card";
 import { PartnerPerks } from "./partner-perks";
 import { SignOutButton } from "./sign-out-button";
@@ -249,6 +250,7 @@ export const PassCard = async ({ session }: PassCardProps) => {
             plan={plan ? planName(plan, locale) : null}
           />
           <WalletButton />
+          <AppleWalletButton />
         </div>
         <Perks perks={perks} title={card("perks.title")} />
       </div>

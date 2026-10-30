@@ -1373,3 +1373,31 @@ job (Reloadly), the website and Staff.
   start off, with Arabic names to fill in), edits brands and margins, and
   releases held and retries failed codes. The returns policy has a section
   on codes.
+
+## Part 17: Apple Wallet (step 14)
+
+The brief names Apple Wallet without details; these are the choices made.
+
+- **A fixed code:** Apple Wallet can't work out a new code every 30 seconds
+  the way the website, the apps and Google Wallet do (no TOTP in PassKit).
+  So the Apple Wallet card's QR code carries a fixed code,
+  `IDEA:<member number>:W<30 hex digits>`, kept only as a SHA-256 hash
+  (`private.wallet_cards`, migration `20270317000000_apple_wallet.sql`).
+- **Replaced and turned off by the member:** each "Add to Apple Wallet"
+  issues a new code (`issue_wallet_card()`) and the card already in Apple
+  Wallet stops working; Pass → the card shows since when it's there and
+  turns it off (`remove_wallet_card()`). A suspended Pass's card is
+  refused.
+- **The counter knows:** `check_pass()` returns `card` (`live` or `wallet`)
+  and Staff → Customers → Check a Pass says a fixed code was shown (a
+  screenshot of it would pass too). Perks and partners' card checks accept
+  it the same way (`pass_holder()`).
+- **No pass web service yet:** Apple's web service (pushing updates to the
+  card) is not built, so a card turned off stays in Apple Wallet but is
+  refused when scanned. The card is in English, like the Google Wallet one.
+- **Signing:** `apps/api` signs the `.pkpass` (node-forge, detached PKCS #7
+  with SHA-256, the WWDR G4 intermediate) behind a link that works for
+  five minutes (`POST/GET /pass/apple-wallet`). The button shows on Apple
+  devices only once `APPLE_WALLET_*` are set; it needs a paid Apple
+  Developer Program membership and a Pass Type ID (open in PROGRESS.md).
+

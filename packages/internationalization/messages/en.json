@@ -5650,6 +5650,7 @@
         "invalid": "Not valid",
         "unnamed": "No name",
         "since": "Member since {date}",
+        "fixedCode": "Apple Wallet card: its code doesn't change, so a screenshot would pass too.",
         "unknown": "No Pass with this number, or the code has expired."
       },
       "bulbs": {
@@ -6955,6 +6956,10 @@
       "unavailable": "The card couldn't load. Check your connection and try again.",
       "addToWallet": "Add to Google Wallet",
       "walletFailed": "Google Wallet couldn't open. Try again.",
+      "addToAppleWallet": "Add to Apple Wallet",
+      "appleWalletAdded": "In Apple Wallet since {date}.",
+      "appleWalletTurnOff": "Turn it off",
+      "appleWalletFailed": "Apple Wallet couldn't open. Try again.",
       "perks": {
         "title": "With your Pass",
         "plus": "{plan}: {slots} rentals at a time",

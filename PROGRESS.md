@@ -347,6 +347,14 @@ decisions with a date.
       `GOOGLE_WALLET_ISSUER_ID` and `GOOGLE_WALLET_SERVICE_ACCOUNT` on the
       `api` project (`ARCHITECTURE_AND_INTEGRATIONS.md`, The IDEA Pass →
       Google Wallet). Until then the card has no wallet button.
+- [ ] **Apple Wallet (optional):** a Pass Type ID in Apple Developer →
+      Certificates, Identifiers & Profiles (needs the paid Apple Developer
+      Program), its certificate and private key exported as PEM, and
+      Apple's WWDR G4 intermediate; set `APPLE_WALLET_PASS_TYPE_ID`,
+      `APPLE_WALLET_TEAM_ID`, `APPLE_WALLET_CERTIFICATE`, `APPLE_WALLET_KEY`
+      and `APPLE_WALLET_WWDR` on the `api` project
+      (`ARCHITECTURE_AND_INTEGRATIONS.md`, Apple Wallet). Until then the
+      card has no Apple Wallet button.
 - [ ] Delete the old branches on `theideaiq/monorepo` (the session's token
       is not allowed to).
 
@@ -573,6 +581,17 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   shop's returns with the item and the customer as "first name · area",
   and `seller_parcels_back(shop)` the parcels refused at the door that it
   must confirm; shops can't read orders, lines or parcels themselves.
+- 2026-10-30: Apple Wallet (step 14, the last item; decisions Part 17).
+  Part 1, the schema `20270317000000_apple_wallet.sql`: the Apple Wallet
+  card's fixed code (`IDEA:<member number>:W<code>`, kept as a hash),
+  replaced each time it's added and turned off by the member;
+  `check_pass()` says `card` = live or wallet. Part 2: `POST/GET
+  /pass/apple-wallet` in apps/api signs the `.pkpass` (node-forge,
+  fflate) behind a five-minute link; "Add to Apple Wallet" on the Pass
+  card (Apple devices, once `APPLE_WALLET_*` are set) with "Turn it off";
+  Staff's Check a Pass says when a fixed code was shown. Open: the Apple
+  Developer Pass Type ID and certificate; the pass web service (updates).
+  Next: step 15, ongoing.
 - 2026-10-30: Textbook resale (step 14; decisions "Textbook resale"):
   students resell as individual trader shops in Partners, no new schema.
   Store → Textbooks and Pass → Selling ("Sell it yourself") link to

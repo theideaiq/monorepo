@@ -76,6 +76,9 @@ export const CheckPass = () => {
                   {t("since", { date: format.date(result.memberSince) })}
                 </span>
               ) : null}
+              {result.fixedCode ? (
+                <span className="text-muted-foreground">{t("fixedCode")}</span>
+              ) : null}
             </>
           ) : (
             <span className="text-muted-foreground">{t("unknown")}</span>
