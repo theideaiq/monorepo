@@ -8964,6 +8964,8 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: {
           first_name: string;
+          name_ar: string;
+          name_en: string;
           product_id: string;
           queue_position: number;
           turn: number;

@@ -571,7 +571,9 @@ $$;
 -- has fewer items at home first, the holder on a tie), or one person's
 -- items first, as the holder set.
 create function private.household_queue()
-returns table (user_id uuid, first_name text, product_id uuid, queue_position integer, turn integer)
+returns table (
+  user_id uuid, first_name text, product_id uuid, name_ar text, name_en text, queue_position integer, turn integer
+)
 language sql
 stable
 security definer
@@ -597,7 +599,7 @@ as $$
     from public.rental_queue_items q
     join people p on p.id = q.user_id
   )
-  select r.user_id, private.first_name(r.user_id), r.product_id, r.position,
+  select r.user_id, private.first_name(r.user_id), r.product_id, pr.name_ar, pr.name_en, r.position,
     (row_number() over (order by
       case s.swap_order
         when 'holder' then r.n
@@ -608,9 +610,11 @@ as $$
       r.holding,
       r.n
     ))::integer
-  from ranked r cross join setting s
+  from ranked r
+  join public.products pr on pr.id = r.product_id
+  cross join setting s
   where (select auth.uid()) is not null
-  order by 5;
+  order by 7;
 $$;
 
 -- ── Inviting and joining ───────────────────────────────────────────────────
@@ -999,7 +1003,14 @@ as $$
     'invite_expires_at', case when mine.role = 'holder' then partner.invite_expires_at end,
     'joined_at', partner.joined_at,
     'ends_at', partner.ends_at,
-    'swap_order', coalesce(holder.swap_order, 'alternate')
+    'swap_order', coalesce(holder.swap_order, 'alternate'),
+    -- The household's booked swap and the holder's address, which the
+    -- partner can't read themselves.
+    'swap_date', (
+      select min(sw.scheduled_for) from public.plus_swaps sw
+      where sw.user_id = any (private.plus_household((select auth.uid()))) and sw.status = 'booked'
+    ),
+    'has_home', exists (select 1 from public.plus_homes h where h.user_id = mine.holder_id)
   )
   from mine
   left join public.plus_members partner
@@ -1122,7 +1133,9 @@ $$;
 -- ── Wrappers ───────────────────────────────────────────────────────────────
 
 create function public.household_queue()
-returns table (user_id uuid, first_name text, product_id uuid, queue_position integer, turn integer)
+returns table (
+  user_id uuid, first_name text, product_id uuid, name_ar text, name_en text, queue_position integer, turn integer
+)
 language sql security invoker set search_path = ''
 as $$ select * from private.household_queue() $$;
 

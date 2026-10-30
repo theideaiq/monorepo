@@ -52,7 +52,7 @@ $$;
 
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
-select plan(49);
+select plan(50);
 
 -- H holds Shine Duo; P joins it; O has Glow of their own; X is anyone;
 -- K holds Glow Duo, T (15) joins it with G as guardian.
@@ -240,11 +240,8 @@ select public.queue_add('d10d0000-0000-0000-0000-000000000003');
 select pg_temp.login_as('00000000-0000-0000-0000-0000000d10d2');
 select public.queue_add('d10d0000-0000-0000-0000-000000000002');
 select results_eq(
-  $$ select first_name, product_id, turn from public.household_queue() $$,
-  $$ values
-    ('Huda', 'd10d0000-0000-0000-0000-000000000001'::uuid, 1),
-    ('Peri', 'd10d0000-0000-0000-0000-000000000002'::uuid, 2),
-    ('Huda', 'd10d0000-0000-0000-0000-000000000003'::uuid, 3) $$,
+  $$ select first_name, name_en, turn from public.household_queue() $$,
+  $$ values ('Huda', 'Duo game 1', 1), ('Peri', 'Duo game 2', 2), ('Huda', 'Duo game 3', 3) $$,
   'swaps alternate between the two queues'
 );
 select pg_temp.login_as('00000000-0000-0000-0000-0000000d10d2');
@@ -273,6 +270,10 @@ select results_eq(
   'to the holder''s address, each item to whoever queued it'
 );
 select pg_temp.login_as('00000000-0000-0000-0000-0000000d10d2');
+select ok(
+  (public.my_duo() ->> 'swap_date') is not null and (public.my_duo() ->> 'has_home')::boolean,
+  'the partner sees the household''s booked swap and that the holder has an address'
+);
 select results_eq(
   $$ select slots, in_use from public.my_rental_allowance() $$,
   $$ values (2, 2) $$,
