@@ -28,6 +28,10 @@ insert into public.product_categories (id, slug, name_ar, name_en, position, par
   ('50000000-0000-0000-0000-000000000008', 'textbooks', 'الكتب الدراسية', 'Textbooks', 2, '50000000-0000-0000-0000-000000000004')
 on conflict (slug) do nothing;
 
+-- Games, board games, books and films are in Plus as well as the Store.
+update public.product_categories set in_plus = true
+where slug in ('games', 'board-games', 'books', 'films');
+
 insert into public.products
   (slug, kind, status, category_id, name_ar, name_en, description_ar, description_en, price, compare_at_price, stock_count, featured, details)
 values

@@ -4361,6 +4361,7 @@ export type Database = {
           auctions: boolean;
           created_at: string;
           id: string;
+          in_plus: boolean;
           name_ar: string;
           name_en: string;
           parent_id: string | null;
@@ -4371,6 +4372,7 @@ export type Database = {
           auctions?: boolean;
           created_at?: string;
           id?: string;
+          in_plus?: boolean;
           name_ar: string;
           name_en: string;
           parent_id?: string | null;
@@ -4381,6 +4383,7 @@ export type Database = {
           auctions?: boolean;
           created_at?: string;
           id?: string;
+          in_plus?: boolean;
           name_ar?: string;
           name_en?: string;
           parent_id?: string | null;
@@ -9867,6 +9870,7 @@ export type Database = {
           auctions: boolean;
           created_at: string;
           id: string;
+          in_plus: boolean;
           name_ar: string;
           name_en: string;
           parent_id: string | null;

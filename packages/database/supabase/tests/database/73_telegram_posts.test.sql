@@ -98,10 +98,10 @@ select is(
 );
 
 -- Products: new ones that go on sale, not old ones coming back.
-insert into public.products (id, slug, name_ar, name_en, price, status, created_at) values
-  ('00000000-0000-0000-0000-00000000c001', 'tp-new', 'جديد', 'New thing', 1000, 'active', now()),
-  ('00000000-0000-0000-0000-00000000c002', 'tp-draft', 'مسودة', 'Draft thing', 1000, 'draft', now()),
-  ('00000000-0000-0000-0000-00000000c003', 'tp-old', 'قديم', 'Old thing', 1000, 'archived', now() - interval '60 days');
+insert into public.products (id, slug, name_ar, name_en, price, status, created_at, images) values
+  ('00000000-0000-0000-0000-00000000c001', 'tp-new', 'جديد', 'New thing', 1000, 'active', now(), '{new.jpg}'),
+  ('00000000-0000-0000-0000-00000000c002', 'tp-draft', 'مسودة', 'Draft thing', 1000, 'draft', now(), '{draft.jpg}'),
+  ('00000000-0000-0000-0000-00000000c003', 'tp-old', 'قديم', 'Old thing', 1000, 'archived', now() - interval '60 days', '{old.jpg}');
 update public.products set status = 'active'
   where id in ('00000000-0000-0000-0000-00000000c002', '00000000-0000-0000-0000-00000000c003');
 select results_eq(

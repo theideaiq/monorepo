@@ -871,6 +871,26 @@ steps need Xcode, Android Studio and the store/Firebase accounts
   Buy It Now, 48 hours, strikes, fees). Step 14's auctions are done.
 - 2026-10-29: Auctions, parts 1 and 2 (`20270307000000_auctions.sql`,
   `20270308000000_auction_checkout.sql`, schema first; decisions Part 12).
+- 2026-10-30: One catalogue for the Store and Plus (the owner's message of
+  30 October). The Store and Plus show the same products on their own
+  pages, with a UX inspired by the PlayStation Store and app, Netflix,
+  Netflix DVD and GameFly but in The IDEA's own style. Every game, board
+  game, book and film is bought in the Store and is in Plus (plan tiers
+  stay); rent-only items are gone. One-off rentals (renting one item
+  without Plus, renting several together, textbook terms) are removed.
+  Pictures are mandatory: products without one are hidden. Guardians and
+  Plus Duo become one family feature. Part A, the schema
+  `20270323000000_one_catalogue.sql`: `product_categories.in_plus`
+  (Games, Board games, Books with its subcategories, Films), every
+  product in one is `rentable` (listed in Plus and queueable) before any
+  copy for rent comes in; rent-only items become ordinary products; the
+  110 live products without a picture go back to draft, publishing needs
+  a picture (`Add a picture before publishing`), a live product whose
+  pictures are removed goes back to draft, and a shop's new product
+  without a photo waits as a draft. Next: B, the website (the Store and
+  Plus pages, no one-off rentals, pictures required in Staff and
+  Partners); C, dropping the one-off rental schema; D, the family
+  feature.
 - 2026-10-30: People selling cancelled (the owner's amendment of 30
   October; decisions "Amendment, 30 October 2026: people selling,
   verification and Pass settings"). People sell by joining Partners as
