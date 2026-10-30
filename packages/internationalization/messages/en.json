@@ -3415,7 +3415,12 @@
         },
         "hidden": {
           "title": "Hidden until they have a photo ({count})",
-          "description": "These products wait as drafts, and the Store doesn't show them until they have a photo. Use “Details are wrong” on the listing to tell The IDEA."
+          "description": "These products wait as drafts, and the Store doesn't show them until they have a photo. Use “Details are wrong” on the listing to tell The IDEA.",
+          "descriptionAdd": "These products wait as drafts, and the Store doesn't show them until they have a photo. Add one below and they go live once checked.",
+          "add": "Add photos",
+          "live": "Added. It's live in the Store.",
+          "stillHeld": "Added. The IDEA is checking it before it goes live.",
+          "failed": "The photos couldn't be added. Try again."
         },
         "problems": {
           "price": "Enter a price of at least {min} IQD.",

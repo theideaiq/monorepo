@@ -349,6 +349,34 @@ export const usePauseListings = (sellerId: string) => {
   });
 };
 
+/**
+ * Adds photos to a product the shop created that waits as a draft for want
+ * of one; the database checks it again and returns whether it went live.
+ */
+export const useAddListingPhotos = (sellerId: string) => {
+  const { supabase } = useAuth();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      photos,
+      productId,
+    }: {
+      photos: readonly File[];
+      productId: string;
+    }) => {
+      const images = await uploadPhotos(supabase, sellerId, photos);
+      return unwrap(
+        await supabase.rpc("add_listing_photos", {
+          photos: images,
+          product: productId,
+        })
+      );
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: listingsKey(sellerId) }),
+  });
+};
+
 /** At most this many of one item in a bundle (the database enforces it). */
 export const MAX_BUNDLE_QUANTITY = 20;
 

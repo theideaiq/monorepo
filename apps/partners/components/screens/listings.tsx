@@ -58,6 +58,7 @@ import {
   type OfferInput,
   offerProblem,
   toListingProblem,
+  useAddListingPhotos,
   useCatalogSearch,
   useCategories,
   useCreateBundle,
@@ -977,9 +978,13 @@ const inFilter = (listing: Listing, filter: ListFilter) => {
 
 /** Listings the Store hides until their product has a photo. */
 const NeedsPhoto = ({
+  canManage,
   listings,
+  sellerId,
 }: {
+  readonly canManage: boolean;
   readonly listings: readonly Listing[];
+  readonly sellerId: string;
 }) => {
   const t = useTranslations("app.company.listings.hidden");
   const locale = useLocale();
@@ -994,18 +999,68 @@ const NeedsPhoto = ({
           <EyeOffIcon aria-hidden="true" className="size-5" />
           {t("title", { count: formatNumber(hidden.length, locale) })}
         </CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
+        <CardDescription>
+          {canManage ? t("descriptionAdd") : t("description")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <ul className="grid gap-1 text-sm">
+        <ul className="grid gap-4 text-sm">
           {hidden.map((listing) => (
-            <li key={listing.product_id}>
-              {locale === "ar" ? listing.name_ar : listing.name_en}
+            <li className="grid gap-2" key={listing.product_id}>
+              <span className="font-medium">
+                {locale === "ar" ? listing.name_ar : listing.name_en}
+              </span>
+              {canManage ? (
+                <AddPhotos productId={listing.product_id} sellerId={sellerId} />
+              ) : null}
             </li>
           ))}
         </ul>
       </CardContent>
     </Card>
+  );
+};
+
+/** Photos for one hidden product, then "Add photos". */
+const AddPhotos = ({
+  productId,
+  sellerId,
+}: {
+  readonly productId: string;
+  readonly sellerId: string;
+}) => {
+  const t = useTranslations("app.company.listings.hidden");
+  const add = useAddListingPhotos(sellerId);
+  const [photos, setPhotos] = useState<File[]>([]);
+  return (
+    <div className="grid gap-2">
+      <PhotoPicker onChange={setPhotos} photos={photos} />
+      <div className="flex items-center gap-3">
+        <Button
+          disabled={add.isPending || photos.length === 0}
+          onClick={() =>
+            add.mutate(
+              { photos, productId },
+              { onSuccess: () => setPhotos([]) }
+            )
+          }
+          size="sm"
+          type="button"
+        >
+          {t("add")}
+        </Button>
+        {add.isSuccess ? (
+          <span className="text-muted-foreground" role="status">
+            {add.data ? t("live") : t("stillHeld")}
+          </span>
+        ) : null}
+        {add.isError ? (
+          <span className="text-destructive" role="alert">
+            {t("failed")}
+          </span>
+        ) : null}
+      </div>
+    </div>
   );
 };
 
@@ -1171,7 +1226,13 @@ const ListingsBody = () => {
 
   return (
     <div className="grid max-w-3xl gap-6">
-      {listings.data ? <NeedsPhoto listings={listings.data} /> : null}
+      {listings.data ? (
+        <NeedsPhoto
+          canManage={canManage}
+          listings={listings.data}
+          sellerId={sellerId}
+        />
+      ) : null}
       {canManage ? <AddListing sellerId={sellerId} /> : null}
       {canManage ? (
         <div className="scroll-mt-4" id="upload">
