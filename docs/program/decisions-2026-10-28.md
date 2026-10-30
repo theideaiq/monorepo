@@ -1316,3 +1316,48 @@ the code.
 - **Notifications:** `plus_duo_joined`, `plus_duo_guardian`,
   `plus_duo_approved`, `plus_duo_declined`, `plus_duo_left`,
   `plus_duo_removed` and `plus_duo_ended`; a booked swap notifies both.
+
+## Part 16: digital codes (section 15)
+
+Schema first (`20270316000000_digital_codes.sql`), then the API's supplier
+job (Reloadly), the website and Staff.
+
+- **Brands and denominations:** a brand is one store in one region
+  ("PlayStation · US store"), with how to redeem it in English and
+  Arabic; each denomination names its supplier, the supplier's product,
+  its face value and currency, and its USD cost. The price in IQD is the
+  cost at The IDEA's rate (`store_settings.digital_iqd_per_usd`, 1,310 to
+  start) plus the margin (`digital_margin_rate`, 8% to start, or the
+  denomination's own), rounded up to 250; a new rate or margin reprices
+  everything. Members see brands, denominations and prices, never costs
+  or supplier ids (column grants; Staff read the full rows through
+  `staff_digital_products`). Editors and finance manage brands (names, regions, on or off); finance sets margins
+  and switches denominations on or off; the supplier sync writes costs.
+- **Regions:** every line names its store region; the region a member's
+  account is on is remembered per platform (`digital_store_regions`,
+  `set_digital_store_region`), asked at checkout the first time.
+- **Checkout:** codes sit in their own cart table (`cart_digital`, up to 5
+  of a denomination). They're paid online only, need a verified phone,
+  and earn and take no Bulbs, coupons or invite discount (they're outside
+  the giveaway cap and cashback). A Pass younger than
+  `digital_new_pass_days` (30) buys up to `digital_new_pass_limit`
+  (50,000 IQD) in codes. They can't be sent as gifts.
+- **After payment:** each code is to buy, or held for Staff when it is the
+  member's first order of codes and above `digital_hold_above` (100,000
+  IQD); `release_digital_codes` lets it go. The API's job takes codes to
+  buy (`take_digital_codes`), buys each from the supplier and stores it
+  (`deliver_digital_code`) or marks it failed (`fail_digital_code`, which
+  Staff retry). The member is told it's ready (`digital_code_ready`, in the
+  app and by email with a link to Pass → Orders); the email carries no
+  code.
+- **Revealing:** the code and PIN are never readable from the table; the
+  member's deliberate tap (`reveal_digital_code`) returns them and marks
+  the code revealed. A revealed code can't be returned (a guard on
+  `returns`). A code the supplier marks invalid is replaced by a new one to
+  buy (`replace_digital_code`, by the API or finance and support).
+- **Logged:** every step of every code is in `digital_code_events`, for
+  Staff.
+- **Website only:** the code PR hides codes in the iOS and Android apps.
+- **Suppliers:** Reloadly first; LikeCard and Golden Codes take the same
+  shape (`supplier`). The discount comparison on the top 10 brands needs
+  quotes from each supplier's account and is open in PROGRESS.md.
