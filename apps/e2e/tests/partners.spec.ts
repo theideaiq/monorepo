@@ -386,10 +386,16 @@ test("a company applies to sell and, once approved, lists an offer that reaches 
   // The website lists the shop's offer and the cart line names the shop.
   await context.addCookies(await sessionCookies(customer.email, urls.web));
   await page.goto(`${urls.web}/store/${slug}`);
-  const offer = page.getByRole("button", { name: /Sold by E2E Records/ });
-  await expect(offer).toHaveAttribute("aria-pressed", "true");
+  // Get it: the shop's copy is the one way to have it, chosen, with the shop
+  // named under it.
+  await expect(
+    page.getByRole("radio", { name: /^Buy used or open box/ })
+  ).toBeChecked();
+  await expect(
+    page.getByRole("link", { name: /Sold by E2E Records/ })
+  ).toBeVisible();
   await expectAccessible(page);
-  await page.getByRole("button", { name: "Add to cart" }).click();
+  await page.getByRole("button", { name: /^Add to cart/ }).click();
   await expect(
     page.getByRole("status").filter({ hasText: "Added to your cart." })
   ).toBeVisible();
