@@ -795,6 +795,21 @@ export type Database = {
           },
         ];
       };
+      cart_reminders: {
+        Row: {
+          sent_at: string;
+          user_id: string;
+        };
+        Insert: {
+          sent_at?: string;
+          user_id: string;
+        };
+        Update: {
+          sent_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       cart_starts: {
         Row: {
           user_id: string;
@@ -2528,6 +2543,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -2558,6 +2574,7 @@ export type Database = {
           number?: never;
           paid_at?: string | null;
           payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at?: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee?: number;
           staff_note?: string | null;
@@ -2588,6 +2605,7 @@ export type Database = {
           number?: never;
           paid_at?: string | null;
           payment_method?: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at?: string | null;
           shipping_address?: NonNullable<Json>;
           shipping_fee?: number;
           staff_note?: string | null;
@@ -7947,6 +7965,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -8739,6 +8758,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -8800,6 +8820,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -8874,6 +8895,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -8918,6 +8940,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -9049,6 +9072,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -9462,6 +9486,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -9629,6 +9654,7 @@ export type Database = {
           number: number;
           paid_at: string | null;
           payment_method: Database["public"]["Enums"]["order_payment_method"];
+          review_requested_at: string | null;
           shipping_address: NonNullable<Json>;
           shipping_fee: number;
           staff_note: string | null;
@@ -12022,6 +12048,15 @@ export type Database = {
         Returns: number;
       };
       sweep_surveys: { Args: Record<PropertyKey, never>; Returns: number };
+      take_cart_reminders: {
+        Args: { batch?: number };
+        Returns: {
+          email: string;
+          items: Json;
+          locale: string;
+          user_id: string;
+        }[];
+      };
       take_digital_codes: {
         Args: { batch?: number };
         Returns: {
@@ -12031,6 +12066,17 @@ export type Database = {
           order_id: string;
           supplier: string;
           supplier_product_id: string;
+          user_id: string;
+        }[];
+      };
+      take_review_requests: {
+        Args: { batch?: number };
+        Returns: {
+          email: string;
+          items: Json;
+          locale: string;
+          number: number;
+          order_id: string;
           user_id: string;
         }[];
       };
