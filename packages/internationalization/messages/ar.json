@@ -2753,7 +2753,30 @@
         "copyLink": "نسخ الرابط",
         "copied": "تم نسخ الرابط",
         "moveTo": "نقل إلى قائمة",
-        "noList": "بلا قائمة"
+        "noList": "بلا قائمة",
+        "import": {
+          "title": "استورد قائمتك",
+          "file": "من ملف",
+          "fileHint": "ملف التصدير من Goodreads (My Books ← Import and export) أو The StoryGraph (Manage account ← Export) أو Letterboxd (Settings ← Data ← Export). نأخذ قائمة ما تنوي قراءته أو مشاهدته.",
+          "from": "أو من",
+          "discogs": "قائمة رغبات Discogs",
+          "steam": "قائمة رغبات Steam",
+          "discogsAccount": "اسم المستخدم في Discogs",
+          "steamAccount": "رابط ملفك في Steam",
+          "import": "استيراد",
+          "importing": "جارٍ الاستيراد…",
+          "done": "أضفنا {matched} إلى هذه القائمة. {wanted} غير متوفرة في المتجر بعد: سنخبرك عند وصولها.",
+          "wanted": "غير متوفرة في المتجر بعد",
+          "wantedHint": "سنضيفها إلى القائمة ونخبرك عندما تصل إلى المتجر.",
+          "remove": "إزالة {title}",
+          "problems": {
+            "file": "هذا ليس ملف تصدير من Goodreads أو StoryGraph أو Letterboxd.",
+            "empty": "لم يكن هناك شيء لاستيراده.",
+            "not_found": "لم نجد هذا الملف الشخصي.",
+            "private": "هذه القائمة خاصة. اجعلها عامة ثم حاول مرة أخرى.",
+            "unavailable": "تعذّر استيراد القائمة. حاول مرة أخرى بعد قليل."
+          }
+        }
       }
     },
     "support": {
@@ -4425,6 +4448,10 @@
         "cart_reminder": {
           "title": "ما زالت في سلتك",
           "body": "ما تركته في سلتك بانتظارك. أكمل طلبك متى شئت."
+        },
+        "wanted_in_store": {
+          "title": "وصل إلى المتجر",
+          "body": "{name} من قائمتك المستوردة صار متوفرًا في المتجر، وأضفناه إلى قائمتك."
         }
       },
       "kinds": {

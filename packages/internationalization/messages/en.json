@@ -2753,7 +2753,30 @@
         "copyLink": "Copy link",
         "copied": "Link copied",
         "moveTo": "Move to list",
-        "noList": "No list"
+        "noList": "No list",
+        "import": {
+          "title": "Import your list",
+          "file": "From a file",
+          "fileHint": "Your export from Goodreads (My Books → Import and export), The StoryGraph (Manage account → Export) or Letterboxd (Settings → Data → Export). We take your to-read shelf or watchlist.",
+          "from": "Or from",
+          "discogs": "Discogs wantlist",
+          "steam": "Steam wishlist",
+          "discogsAccount": "Discogs username",
+          "steamAccount": "Steam profile link",
+          "import": "Import",
+          "importing": "Importing…",
+          "done": "{matched} added to this list. {wanted} not in the store yet: we'll tell you when they arrive.",
+          "wanted": "Not in the store yet",
+          "wantedHint": "We'll add these to the list and tell you when they're in the store.",
+          "remove": "Remove {title}",
+          "problems": {
+            "file": "This isn't a Goodreads, StoryGraph or Letterboxd export.",
+            "empty": "There was nothing to import.",
+            "not_found": "We couldn't find that profile.",
+            "private": "That list is private. Make it public, then try again.",
+            "unavailable": "We couldn't import the list. Try again in a moment."
+          }
+        }
       }
     },
     "support": {
@@ -4425,6 +4448,10 @@
         "cart_reminder": {
           "title": "Still in your cart",
           "body": "What you left in your cart is waiting. Finish your order whenever you like."
+        },
+        "wanted_in_store": {
+          "title": "Now in the store",
+          "body": "{name} from your imported list is in the store, and in your list."
         }
       },
       "kinds": {

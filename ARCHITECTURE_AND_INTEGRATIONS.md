@@ -243,6 +243,16 @@ namespaces.
   skipped): `DISCOGS_TOKEN`, `IGDB_CLIENT_ID` and `IGDB_CLIENT_SECRET`
   (a Twitch app), `TMDB_READ_TOKEN`, `BGG_TOKEN`, `GOOGLE_BOOKS_API_KEY`,
   `POKEMONTCG_API_KEY`. Open Library, MusicBrainz and Scryfall need none.
+- **Import your list.** Pass → Saved → Lists → a list → Import your list
+  takes a Goodreads, The StoryGraph or Letterboxd export (read in the
+  browser, `apps/web/lib/list-import.ts`: the to-read shelf or the
+  watchlist) or a public Discogs wantlist or Steam wishlist (read by
+  `POST /lists/import` in `apps/api`; `DISCOGS_TOKEN` raises Discogs' rate
+  limit, Steam needs no key). `import_list_items` adds what the store has
+  to the list with price-drop and back-in-stock alerts and keeps the rest
+  as wanted items ("Not in the store yet"); when a matching product goes
+  live it joins the list and the member is told (`wanted_in_store`).
+  Migration `20270320000000_connections.sql`.
 - **Plus Duo.** A Duo plan's holder invites one more Pass from Your Plus
   (a link to `/plus/duo/<code>`, open 7 days); the second person shares
   the rental slots, home swaps and the holder's Plus address, keeps their
