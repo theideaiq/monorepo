@@ -284,7 +284,7 @@
         "description": "Gaming, tech, books and lifestyle products with delivery across Iraq. Browse The IDEA Store."
       },
       "title": "The Store",
-      "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order here and pay through Wayl or cash on delivery.",
+      "description": "Gaming, tech, books and lifestyle, delivered to all 19 governorates. Order here and pay online or cash on delivery.",
       "allProducts": "Everything in the Store",
       "shelf": {
         "tabs": "Shelves",
@@ -443,7 +443,7 @@
       },
       "plans": {
         "choose": "Choose {plan}",
-        "description": "Billed monthly through Wayl, or yearly: pay 10 months, get 12. Pause or cancel any time from Your Plus.",
+        "description": "Billed monthly online, or yearly: pay 10 months, get 12. Pause or cancel any time from Your Plus.",
         "empty": "Plans will be announced soon.",
         "featured": "Recommended",
         "perMonth": "per month",
@@ -1884,7 +1884,7 @@
       },
       "address": {
         "title": "Delivery address",
-        "description": "We deliver across Iraq with Boxy and call before delivering.",
+        "description": "We deliver across Iraq and call before delivering.",
         "fullName": "Full name",
         "phone": "Mobile number",
         "phoneHint": "For example 0770 123 4567.",
@@ -1920,7 +1920,7 @@
       "itemsCount": "Items: {count}",
       "placeOrder": "Place order and pay {amount}",
       "placing": "Placing your order…",
-      "secure": "You'll pay on Wayl's secure payment page.",
+      "secure": "You'll pay on a secure payment page.",
       "backToCart": "Back to the cart",
       "orderCreatedPaymentFailed": "Your order was placed, but the payment page didn't open. You can pay from the order page.",
       "viewOrder": "View order",
@@ -1960,7 +1960,7 @@
       "payment": {
         "title": "Payment",
         "online": "Pay online",
-        "onlineHint": "Card, Qi Card, ZainCash, FIB and more on Wayl's secure page.",
+        "onlineHint": "Card, Qi Card, ZainCash, FIB and more on a secure payment page.",
         "cash": "Cash on delivery",
         "cashHint": "Pay the courier in cash when your order arrives."
       },
@@ -2806,7 +2806,7 @@
       "messages": {
         "title": "What we send you",
         "updates": "Order updates on WhatsApp",
-        "updatesHint": "When your order is placed and paid, rental and Plus reminders, and replies from support. Boxy messages you on WhatsApp about the delivery itself.",
+        "updatesHint": "When your order is placed and paid, rental and Plus reminders, and replies from support. The courier messages you on WhatsApp about the delivery itself.",
         "verifyFirst": "Verify a number above to get updates on WhatsApp.",
         "number": "Number for updates",
         "marketing": "Send me news and offers",
@@ -3842,7 +3842,7 @@
         "title": "Orders",
         "notApproved": "Orders show here once your shop is approved.",
         "waitingTitle": "To pack",
-        "waitingDescription": "Lines to get ready within 2 days. Choose the ones packed, the branch they leave from and the parcel size, then mark them ready: Boxy gets one parcel per order and sends a courier.",
+        "waitingDescription": "Lines to get ready within 2 days. Choose the ones packed, the branch they leave from and the parcel size, then mark them ready: we book one parcel per order and send a courier.",
         "sentTitle": "Sent and closed",
         "sentDescription": "Ready, picked up, out of stock or cancelled.",
         "noneWaiting": "Nothing to pack right now.",
@@ -3868,8 +3868,8 @@
           "L": "Large"
         },
         "ready": "Ready for pickup ({count})",
-        "readyDone": "{count} parcels sent to Boxy; a courier will collect them. Print each label from the list below.",
-        "readyNoPickup": "{count} parcels sent to Boxy, but the pickup request didn't go through. Try again from Boxy or ask us.",
+        "readyDone": "{count} parcels booked; a courier will collect them. Print each label from the list below.",
+        "readyNoPickup": "{count} parcels booked, but the pickup request didn't go through. Try again or ask us.",
         "noBranch": "Add a pickup branch before marking lines ready.",
         "addBranch": "Add a branch",
         "errors": {
@@ -3880,7 +3880,7 @@
       },
       "pickup": {
         "title": "Pickup branches",
-        "description": "Where couriers collect your parcels, and who they call. Each branch is a pickup location with Boxy.",
+        "description": "Where couriers collect your parcels, and who they call. Each branch is a pickup location for our couriers.",
         "notApproved": "Pickup branches can be added once your shop is approved.",
         "none": "No branches yet.",
         "name": "Branch name",
@@ -3901,12 +3901,12 @@
         "activate": "Use again",
         "deactivate": "Stop using",
         "inactive": "Not in use",
-        "withBoxy": "With Boxy",
-        "notWithBoxy": "Not with Boxy yet",
-        "sendToBoxy": "Send to Boxy",
+        "withBoxy": "Ready for pickups",
+        "notWithBoxy": "Not set up for pickups yet",
+        "sendToBoxy": "Set up for pickups",
         "errors": {
           "save": "The branch couldn't be saved. Check the details and try again.",
-          "sync": "Boxy didn't take the branch. Check the details and try again."
+          "sync": "We couldn't set up the branch for pickups. Check the details and try again."
         }
       },
       "shopReturns": {
@@ -3931,7 +3931,7 @@
         "itemProblem": "Report a problem",
         "failed": "That didn't work. Try again.",
         "parcelsTitle": "Parcels refused at the door",
-        "parcelsDescription": "Boxy brought these back. Confirm each one is back with you; its lines are cancelled and the copies go back on sale.",
+        "parcelsDescription": "The courier brought these back. Confirm each one is back with you; its lines are cancelled and the copies go back on sale.",
         "parcelLine": "Order #{order} · {customer}",
         "returnedOn": "Returned {time}",
         "parcelBack": "It's back",
@@ -3987,7 +3987,7 @@
       "shopPayouts": {
         "title": "Payouts",
         "notApproved": "Payouts start once your shop is approved.",
-        "description": "The IDEA pays you every week for items whose 14-day return window has closed with no return open: what each sold for, after commission, less any refund, Boxy's fee for returns that were your shop's fault and the Pro fee. We send it to the payout details in Selling.",
+        "description": "The IDEA pays you every week for items whose 14-day return window has closed with no return open: what each sold for, after commission, less any refund, the delivery fee for returns that were your shop's fault and the Pro fee. We send it to the payout details in Selling.",
         "none": "No payouts yet.",
         "payout": "Payout #{number} · up to {period}",
         "status": {
