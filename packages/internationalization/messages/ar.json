@@ -1472,7 +1472,16 @@
       "add": "إضافة",
       "addSection": "إضافة {section}",
       "toDo": "بانتظارك",
-      "breadcrumb": "أين أنت"
+      "breadcrumb": "أين أنت",
+      "command": {
+        "title": "انتقل إلى",
+        "description": "انتقل إلى أي صفحة في الشركاء.",
+        "placeholder": "اكتب اسم صفحة…",
+        "pages": "الصفحات",
+        "empty": "لا شيء يطابق.",
+        "searching": "جارٍ البحث…",
+        "open": "انتقل إلى صفحة"
+      }
     },
     "roles": {
       "owner": "مالك",

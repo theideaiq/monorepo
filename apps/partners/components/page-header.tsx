@@ -9,6 +9,7 @@ import { Separator } from "@repo/design-system/components/ui/separator";
 import { SidebarTrigger } from "@repo/design-system/components/ui/sidebar";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
+import { CommandTrigger, PartnersCommandBar } from "./command-bar";
 import { NotificationBell } from "./notification-bell";
 
 interface PageHeaderProps {
@@ -45,8 +46,10 @@ export const PageHeader = ({
           </Breadcrumb>
         ) : null}
         <div className="ms-auto flex items-center gap-2">
+          <CommandTrigger />
           <NotificationBell />
         </div>
+        <PartnersCommandBar />
       </div>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <h1 className="font-semibold text-2xl tracking-tight">{title}</h1>

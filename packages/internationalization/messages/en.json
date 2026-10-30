@@ -1472,7 +1472,16 @@
       "add": "Add",
       "addSection": "Add {section}",
       "toDo": "need you",
-      "breadcrumb": "Where you are"
+      "breadcrumb": "Where you are",
+      "command": {
+        "title": "Go to",
+        "description": "Jump to any page in Partners.",
+        "placeholder": "Type a page…",
+        "pages": "Pages",
+        "empty": "Nothing matches.",
+        "searching": "Searching…",
+        "open": "Go to a page"
+      }
     },
     "roles": {
       "owner": "Owner",
