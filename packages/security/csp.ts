@@ -40,6 +40,8 @@ export const defaultCspSources: CspSources = {
     "https://*.tiktok.com",
     "https://*.posthog.com",
     "https://*.sentry.io",
+    // Better Stack logs (@logtail/next sends browser logs and web vitals).
+    "https://*.betterstackdata.com",
   ],
   frame: [
     "https://www.googletagmanager.com",
