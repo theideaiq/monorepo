@@ -52,7 +52,7 @@ $$;
 grant execute on all functions in schema pg_temp to public;
 -- </preamble>
 
-select plan(25);
+select plan(27);
 
 -- O owns Shop (M a plain member), X runs a pending shop, U a customer, A staff.
 truncate public.products, public.orders cascade;
@@ -212,6 +212,19 @@ select results_eq(
      join public.products p on p.id = c.product_id order by 1, 2 $$,
   $$ values ('Foundation', 'missing_photo'), ('Replica sword', 'banned') $$,
   'The checks send what they find to Staff'
+);
+
+create temporary table hidden_product as select id from public.products where name_en = 'Foundation';
+grant select on hidden_product to authenticated;
+select pg_temp.login_as('00000000-0000-0000-0000-000000000ae1');
+select is(
+  public.add_listing_photos((select id from hidden_product), '{https://example.iq/foundation.jpg}'),
+  true, 'The shop adds a photo to its hidden product'
+);
+select pg_temp.reset_role();
+select is(
+  (select status::text from public.products where name_en = 'Foundation'), 'active',
+  'and it goes live'
 );
 
 -- ── Flags ───────────────────────────────────────────────────────────────────

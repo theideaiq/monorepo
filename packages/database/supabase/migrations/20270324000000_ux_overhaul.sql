@@ -19,6 +19,8 @@
 --   left are removed) and the website's functions for renting one item,
 --   renting several together and textbook terms are dropped. The internals
 --   checkout still references stay, unused.
+-- * A shop adds photos to a draft product it created (`add_listing_photos`);
+--   it goes live once its checks pass.
 
 -- ── Plus availability ──────────────────────────────────────────────────────
 
@@ -442,3 +444,51 @@ drop function public.rental_quote(uuid, uuid);
 drop function public.rentals_quote(jsonb, uuid);
 drop function public.rental_term();
 drop function public.set_rental_deposit_rate(numeric);
+
+-- ── Shops: photos for a hidden product ─────────────────────────────────────
+
+-- A shop adds photos to a draft product it created (one held back for want
+-- of a photo); the checks run again and it goes live when they pass.
+-- Returns whether it is live.
+create function private.add_listing_photos(product uuid, photos text[])
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  item public.products;
+  live boolean;
+begin
+  select * into item from public.products p where p.id = product for update;
+  if item.id is null or item.created_by_seller is null or not private.can_list_for(item.created_by_seller) then
+    raise exception 'Only owners and admins of the shop that created it can add photos' using errcode = '42501';
+  end if;
+  if item.status <> 'draft' then
+    raise exception 'Only a product waiting for photos takes them here' using errcode = 'check_violation';
+  end if;
+  if coalesce(cardinality(photos), 0) not between 1 and 10 then
+    raise exception 'Add 1 to 10 photos' using errcode = 'check_violation';
+  end if;
+  update public.products p set images = photos where p.id = product;
+  update public.product_checks c set resolved_at = now()
+  where c.product_id = product and c.reason = 'missing_photo' and c.resolved_at is null;
+  live := private.check_product(product);
+  if live then
+    update public.products p set status = 'active' where p.id = product;
+  end if;
+  return live;
+end;
+$$;
+
+create function public.add_listing_photos(product uuid, photos text[])
+returns boolean
+language sql
+security invoker
+set search_path = ''
+as $$ select private.add_listing_photos(product, photos) $$;
+
+revoke all on function private.add_listing_photos(uuid, text[]) from public, anon;
+revoke all on function public.add_listing_photos(uuid, text[]) from public, anon;
+grant execute on function private.add_listing_photos(uuid, text[]) to authenticated;
+grant execute on function public.add_listing_photos(uuid, text[]) to authenticated;

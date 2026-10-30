@@ -134,7 +134,7 @@ describe("notifications", () => {
         "ar",
         "https://partners.theideaiq.com"
       )
-    ).toBe("https://partners.theideaiq.com/ar/organization/invoices");
+    ).toBe("https://partners.theideaiq.com/ar/settings/invoices");
     // Links stored while detail pages took a query parameter.
     expect(notificationHref("/orders/view?id=o1")).toBe("/pass/orders/o1");
     expect(notificationHref("/support/view?id=t%201")).toBe("/help/t%201");

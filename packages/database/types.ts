@@ -8106,6 +8106,10 @@ export type Database = {
         Args: { birthday: string; name: string };
         Returns: string;
       };
+      add_listing_photos: {
+        Args: { photos: string[]; product: string };
+        Returns: boolean;
+      };
       add_pass_domain: {
         Args: { name: string; org: string };
         Returns: {
